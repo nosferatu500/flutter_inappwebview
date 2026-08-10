@@ -55,7 +55,7 @@ import io.flutter.plugin.common.MethodChannel.Result;
 public class InAppBrowserManager extends ChannelDelegateImpl {
   protected static final String LOG_TAG = "InAppBrowserManager";
   public static final String METHOD_CHANNEL_NAME = "com.pichillilorenzo/flutter_inappbrowser";
-  
+
   @Nullable
   public InAppWebViewFlutterPlugin plugin;
   public String id;

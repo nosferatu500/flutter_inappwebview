@@ -29,14 +29,13 @@ public class WebResourceRequestExt {
     this.method = method;
   }
 
-  @RequiresApi(Build.VERSION_CODES.LOLLIPOP)
   static public WebResourceRequestExt fromWebResourceRequest(@NonNull WebResourceRequest request) { 
       boolean isRedirect = false;
       if (WebViewFeature.isFeatureSupported(WebViewFeature.WEB_RESOURCE_REQUEST_IS_REDIRECT)) {
         isRedirect = WebResourceRequestCompat.isRedirect(request);
-      } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+      } else {
         isRedirect = request.isRedirect();
-      }
+        }
       return new WebResourceRequestExt(request.getUrl().toString(),
               request.getRequestHeaders(),
               isRedirect,

@@ -11,9 +11,8 @@ import WebKit
 extension WKNavigationAction {
     public func toMap () -> [String:Any?] {
         var shouldPerformDownload: Bool? = nil
-        if #available(iOS 14.5, *) {
-            shouldPerformDownload = self.shouldPerformDownload
-        }
+        shouldPerformDownload = self.shouldPerformDownload
+
         return [
             "request": request.toMap(),
             "isForMainFrame": targetFrame?.isMainFrame ?? false,

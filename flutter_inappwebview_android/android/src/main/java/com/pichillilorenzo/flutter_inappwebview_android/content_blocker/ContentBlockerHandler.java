@@ -175,11 +175,8 @@ public class ContentBlockerHandler {
                         handler.postDelayed(new Runnable() {
                             @Override
                             public void run() {
-                                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
-                                    webView.evaluateJavascript(jsScript, null);
-                                } else {
-                                    webView.loadUrl("javascript:" + jsScript);
-                                }
+                                webView.evaluateJavascript(jsScript, null);
+
                             }
                         }, 800);
                         break;
@@ -212,7 +209,7 @@ public class ContentBlockerHandler {
                                     }
 
                                     String reasonPhrase = urlConnection.getResponseMessage();
-                                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP && reasonPhrase != null) {
+                                    if (reasonPhrase != null) {
                                         Map<String, String> responseHeaders = new HashMap<>();
                                         for (Map.Entry<String, List<String>> responseHeader : urlConnection.getHeaderFields().entrySet()) {
                                             responseHeaders.put(responseHeader.getKey(), TextUtils.join(",", responseHeader.getValue()));
@@ -273,7 +270,7 @@ public class ContentBlockerHandler {
         }
         return null;
     }
-    
+
     @Nullable
     public WebResourceResponse checkUrl(final InAppWebView webView, WebResourceRequestExt request) throws URISyntaxException, InterruptedException, MalformedURLException {
         ContentBlockerTriggerResourceType responseResourceType = getResourceTypeFromUrl(request);

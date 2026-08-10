@@ -25,5 +25,5 @@ inline webview, to use an headless webview, and to open an in-app browser window
 
   s.swift_version = '5.9'
 
-  s.platform = :ios, '13.0'
+  s.platform = :ios, '15.0'
 end

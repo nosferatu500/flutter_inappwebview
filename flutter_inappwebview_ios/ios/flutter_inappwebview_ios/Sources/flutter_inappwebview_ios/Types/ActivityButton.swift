@@ -8,7 +8,6 @@
 import Foundation
 import SafariServices
 
-@available(iOS 15.0, *)
 extension SFSafariViewController.ActivityButton {
     public static func fromMap(map: [String:Any?]?) -> SFSafariViewController.ActivityButton? {
         guard let map = map else {

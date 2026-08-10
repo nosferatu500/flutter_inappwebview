@@ -68,7 +68,6 @@ public class InAppWebViewClientCompat extends WebViewClientCompat {
     this.inAppBrowserDelegate = inAppBrowserDelegate;
   }
 
-  @RequiresApi(Build.VERSION_CODES.LOLLIPOP)
   @Override
   public boolean shouldOverrideUrlLoading(@NonNull WebView view, @NonNull WebResourceRequest request) {
     InAppWebView webView = (InAppWebView) view;
@@ -82,9 +81,9 @@ public class InAppWebViewClientCompat extends WebViewClientCompat {
       boolean isRedirect = false;
       if (WebViewFeature.isFeatureSupported(WebViewFeature.WEB_RESOURCE_REQUEST_IS_REDIRECT)) {
         isRedirect = WebResourceRequestCompat.isRedirect(request);
-      } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+      } else {
         isRedirect = request.isRedirect();
-      }
+        }
       onShouldOverrideUrlLoading(
               webView,
               request.getUrl().toString(),
@@ -140,7 +139,7 @@ public class InAppWebViewClientCompat extends WebViewClientCompat {
     if (isForMainFrame) {
       // There isn't any way to load an URL for a frame that is not the main frame,
       // so call this only on main frame.
-      if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP && headers != null)
+      if (headers != null)
         webView.loadUrl(url, headers);
       else
         webView.loadUrl(url);
@@ -244,11 +243,7 @@ public class InAppWebViewClientCompat extends WebViewClientCompat {
     }
 
     // WebView not storing cookies reliable to local device storage
-    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-      CookieManager.getInstance().flush();
-    } else {
-      CookieSyncManager.getInstance().sync();
-    }
+    CookieManager.getInstance().flush();
 
     String js = JavaScriptBridgeJS.PLATFORM_READY_JS_SOURCE();
     webView.evaluateJavascript(js, (ValueCallback<String>) null);
@@ -275,7 +270,6 @@ public class InAppWebViewClientCompat extends WebViewClientCompat {
     }
   }
 
-  @RequiresApi(api = Build.VERSION_CODES.M)
   @Override
   public void onReceivedError(@NonNull WebView view,
                               @NonNull WebResourceRequest request,
@@ -352,7 +346,6 @@ public class InAppWebViewClientCompat extends WebViewClientCompat {
     super.onReceivedError(view, errorCode, description, failingUrl);
   }
 
-  @RequiresApi(api = Build.VERSION_CODES.M)
   @Override
   public void onReceivedHttpError(@NonNull WebView view,
                                   @NonNull WebResourceRequest request,
@@ -516,7 +509,6 @@ public class InAppWebViewClientCompat extends WebViewClientCompat {
     }
   }
 
-  @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
   @Override
   public void onReceivedClientCertRequest(final WebView view, final ClientCertRequest request) {
     final String url = view.getUrl();
@@ -601,7 +593,6 @@ public class InAppWebViewClientCompat extends WebViewClientCompat {
     }
   }
 
-  @RequiresApi(api = Build.VERSION_CODES.O_MR1)
   @Override
   public void onSafeBrowsingHit(@NonNull final WebView view,
                                 @NonNull final WebResourceRequest request,
@@ -699,7 +690,7 @@ public class InAppWebViewClientCompat extends WebViewClientCompat {
 
         ByteArrayInputStream inputStream = (data != null) ? new ByteArrayInputStream(data) : null;
 
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP && statusCode != null && reasonPhrase != null) {
+        if (statusCode != null && reasonPhrase != null) {
           return new WebResourceResponse(contentType, contentEncoding, statusCode, reasonPhrase, responseHeaders, inputStream);
         } else {
           return new WebResourceResponse(contentType, contentEncoding, inputStream);
@@ -761,7 +752,6 @@ public class InAppWebViewClientCompat extends WebViewClientCompat {
     return shouldInterceptRequest(view, requestExt);
   }
 
-  @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
   @Override
   public WebResourceResponse shouldInterceptRequest(WebView view, WebResourceRequest request) {
     WebResourceRequestExt requestExt = WebResourceRequestExt.fromWebResourceRequest(request);
@@ -814,7 +804,6 @@ public class InAppWebViewClientCompat extends WebViewClientCompat {
     }
   }
 
-  @RequiresApi(api = Build.VERSION_CODES.O)
   @Override
   public boolean onRenderProcessGone(WebView view, RenderProcessGoneDetail detail) {
     final InAppWebView webView = (InAppWebView) view;

@@ -35,11 +35,8 @@ public class InAppWebViewManager: ChannelDelegate {
                 break
             case "handlesURLScheme":
                 let urlScheme = arguments!["urlScheme"] as! String
-                if #available(iOS 11.0, *) {
-                    result(WKWebView.handlesURLScheme(urlScheme))
-                } else {
-                    result(false)
-                }
+                result(WKWebView.handlesURLScheme(urlScheme))
+
                 break
             case "disposeKeepAlive":
                 let keepAliveId = arguments!["keepAliveId"] as! String
@@ -99,21 +96,16 @@ public class InAppWebViewManager: ChannelDelegate {
     }
     
     public func clearAllCache(includeDiskFiles: Bool, completionHandler: @escaping () -> Void) {
-        if #available(iOS 9.0, *) {
-            var websiteDataTypes = Set([WKWebsiteDataTypeMemoryCache])
-            if includeDiskFiles {
-                websiteDataTypes.insert(WKWebsiteDataTypeDiskCache)
-                if #available(iOS 11.3, *) {
-                    websiteDataTypes.insert(WKWebsiteDataTypeFetchCache)
-                }
-                websiteDataTypes.insert(WKWebsiteDataTypeOfflineWebApplicationCache)
-            }
-            let date = NSDate(timeIntervalSince1970: 0)
-            WKWebsiteDataStore.default().removeData(ofTypes: websiteDataTypes, modifiedSince: date as Date, completionHandler: completionHandler)
-        } else {
-            URLCache.shared.removeAllCachedResponses()
-            completionHandler()
+        var websiteDataTypes = Set([WKWebsiteDataTypeMemoryCache])
+        if includeDiskFiles {
+            websiteDataTypes.insert(WKWebsiteDataTypeDiskCache)
+            websiteDataTypes.insert(WKWebsiteDataTypeFetchCache)
+
+            websiteDataTypes.insert(WKWebsiteDataTypeOfflineWebApplicationCache)
         }
+        let date = NSDate(timeIntervalSince1970: 0)
+        WKWebsiteDataStore.default().removeData(ofTypes: websiteDataTypes, modifiedSince: date as Date, completionHandler: completionHandler)
+
     }
     
     public override func dispose() {

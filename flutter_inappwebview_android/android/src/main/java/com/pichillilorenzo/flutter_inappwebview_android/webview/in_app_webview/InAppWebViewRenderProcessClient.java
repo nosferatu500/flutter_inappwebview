@@ -39,7 +39,7 @@ public class InAppWebViewRenderProcessClient extends WebViewRenderProcessClient 
 
       @Override
       public void defaultBehaviour(@Nullable Integer result) {
-        
+
       }
 
       @Override

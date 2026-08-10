@@ -15,7 +15,6 @@ import java.util.Map;
 import io.flutter.plugin.common.MethodCall;
 import io.flutter.plugin.common.MethodChannel;
 
-@RequiresApi(api = Build.VERSION_CODES.KITKAT)
 public class PrintJobChannelDelegate extends ChannelDelegateImpl {
   @Nullable
   private PrintJobController printJobController;

@@ -21,7 +21,7 @@ import io.flutter.plugin.common.MethodChannel;
 public class HeadlessInAppWebView implements Disposable {
   protected static final String LOG_TAG = "HeadlessInAppWebView";
   public static final String METHOD_CHANNEL_NAME_PREFIX = "com.pichillilorenzo/flutter_headless_inappwebview_";
-  
+
   @NonNull
   public final String id;
   @Nullable
@@ -73,7 +73,7 @@ public class HeadlessInAppWebView implements Disposable {
       }
     }
   }
-  
+
   public void setSize(@NonNull Size2D size) {
     if (flutterWebView != null && flutterWebView.webView != null) {
       View view = flutterWebView.getView();

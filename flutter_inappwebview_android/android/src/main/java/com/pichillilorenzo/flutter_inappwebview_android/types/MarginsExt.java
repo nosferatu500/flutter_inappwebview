@@ -9,7 +9,6 @@ import androidx.annotation.RequiresApi;
 import java.util.HashMap;
 import java.util.Map;
 
-@RequiresApi(api = Build.VERSION_CODES.KITKAT)
 public class MarginsExt {
   private double top;
   private double right;

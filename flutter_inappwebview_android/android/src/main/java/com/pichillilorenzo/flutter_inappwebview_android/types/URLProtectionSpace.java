@@ -62,7 +62,7 @@ public class URLProtectionSpace {
   public void setId(@Nullable Long id) {
     this.id = id;
   }
-  
+
   public String getHost() {
     return host;
   }

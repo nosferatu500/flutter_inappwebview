@@ -114,9 +114,6 @@ public class InAppWebViewSettings: ISettings<InAppWebView> {
             settings.removeValue(forKey: "alpha")
         }
         let _ = super.parse(settings: settings)
-        if #available(iOS 13.0, *) {} else {
-            applePayAPIEnabled = false
-        }
         return self
     }
     
@@ -126,35 +123,29 @@ public class InAppWebViewSettings: ISettings<InAppWebView> {
             realSettings["isUserInteractionEnabled"] = webView.isUserInteractionEnabled
             realSettings["alpha"] = Double(webView.alpha)
             let configuration = webView.configuration
-            if #available(iOS 9.0, *) {
-                realSettings["userAgent"] = webView.customUserAgent
-                realSettings["applicationNameForUserAgent"] = configuration.applicationNameForUserAgent
-                realSettings["allowsAirPlayForMediaPlayback"] = configuration.allowsAirPlayForMediaPlayback
-                realSettings["allowsLinkPreview"] = webView.allowsLinkPreview
-                realSettings["allowsPictureInPictureMediaPlayback"] = configuration.allowsPictureInPictureMediaPlayback
-            }
+            realSettings["userAgent"] = webView.customUserAgent
+            realSettings["applicationNameForUserAgent"] = configuration.applicationNameForUserAgent
+            realSettings["allowsAirPlayForMediaPlayback"] = configuration.allowsAirPlayForMediaPlayback
+            realSettings["allowsLinkPreview"] = webView.allowsLinkPreview
+            realSettings["allowsPictureInPictureMediaPlayback"] = configuration.allowsPictureInPictureMediaPlayback
+
             realSettings["javaScriptCanOpenWindowsAutomatically"] = configuration.preferences.javaScriptCanOpenWindowsAutomatically
-            if #available(iOS 10.0, *) {
-                realSettings["mediaPlaybackRequiresUserGesture"] = configuration.mediaTypesRequiringUserActionForPlayback == .all
-                realSettings["ignoresViewportScaleLimits"] = configuration.ignoresViewportScaleLimits
-                realSettings["dataDetectorTypes"] = Util.getDataDetectorTypeString(type: configuration.dataDetectorTypes)
-            } else {
-                realSettings["mediaPlaybackRequiresUserGesture"] = configuration.mediaPlaybackRequiresUserAction
-            }
+            realSettings["mediaPlaybackRequiresUserGesture"] = configuration.mediaTypesRequiringUserActionForPlayback == .all
+            realSettings["ignoresViewportScaleLimits"] = configuration.ignoresViewportScaleLimits
+            realSettings["dataDetectorTypes"] = Util.getDataDetectorTypeString(type: configuration.dataDetectorTypes)
+
             realSettings["minimumFontSize"] = Int(configuration.preferences.minimumFontSize)
             realSettings["suppressesIncrementalRendering"] = configuration.suppressesIncrementalRendering
             realSettings["allowsBackForwardNavigationGestures"] = webView.allowsBackForwardNavigationGestures
             realSettings["allowsInlineMediaPlayback"] = configuration.allowsInlineMediaPlayback
-            if #available(iOS 13.0, *) {
-                realSettings["isFraudulentWebsiteWarningEnabled"] = configuration.preferences.isFraudulentWebsiteWarningEnabled
-                realSettings["preferredContentMode"] = configuration.defaultWebpagePreferences.preferredContentMode.rawValue
-                realSettings["automaticallyAdjustsScrollIndicatorInsets"] = webView.scrollView.automaticallyAdjustsScrollIndicatorInsets
-            }
+            realSettings["isFraudulentWebsiteWarningEnabled"] = configuration.preferences.isFraudulentWebsiteWarningEnabled
+            realSettings["preferredContentMode"] = configuration.defaultWebpagePreferences.preferredContentMode.rawValue
+            realSettings["automaticallyAdjustsScrollIndicatorInsets"] = webView.scrollView.automaticallyAdjustsScrollIndicatorInsets
+
             realSettings["selectionGranularity"] = configuration.selectionGranularity.rawValue
-            if #available(iOS 11.0, *) {
-                realSettings["accessibilityIgnoresInvertColors"] = webView.accessibilityIgnoresInvertColors
-                realSettings["contentInsetAdjustmentBehavior"] = webView.scrollView.contentInsetAdjustmentBehavior.rawValue
-            }
+            realSettings["accessibilityIgnoresInvertColors"] = webView.accessibilityIgnoresInvertColors
+            realSettings["contentInsetAdjustmentBehavior"] = webView.scrollView.contentInsetAdjustmentBehavior.rawValue
+
             realSettings["decelerationRate"] = Util.getDecelerationRateString(type: webView.scrollView.decelerationRate)
             realSettings["alwaysBounceVertical"] = webView.scrollView.alwaysBounceVertical
             realSettings["alwaysBounceHorizontal"] = webView.scrollView.alwaysBounceHorizontal
@@ -166,17 +157,15 @@ public class InAppWebViewSettings: ISettings<InAppWebView> {
             realSettings["allowFileAccessFromFileURLs"] = configuration.preferences.value(forKey: "allowFileAccessFromFileURLs")
             realSettings["isDirectionalLockEnabled"] = webView.scrollView.isDirectionalLockEnabled
             realSettings["javaScriptEnabled"] = configuration.preferences.javaScriptEnabled
-            if #available(iOS 14.0, *) {
-                realSettings["mediaType"] = webView.mediaType
-                realSettings["pageZoom"] = Float(webView.pageZoom)
-                realSettings["limitsNavigationsToAppBoundDomains"] = configuration.limitsNavigationsToAppBoundDomains
-                realSettings["javaScriptEnabled"] = configuration.defaultWebpagePreferences.allowsContentJavaScript
-            }
-            if #available(iOS 15.0, *) {
-                realSettings["isTextInteractionEnabled"] = configuration.preferences.isTextInteractionEnabled
-                realSettings["upgradeKnownHostsToHTTPS"] = configuration.upgradeKnownHostsToHTTPS
-                realSettings["underPageBackgroundColor"] = webView.underPageBackgroundColor.hexString
-            }
+            realSettings["mediaType"] = webView.mediaType
+            realSettings["pageZoom"] = Float(webView.pageZoom)
+            realSettings["limitsNavigationsToAppBoundDomains"] = configuration.limitsNavigationsToAppBoundDomains
+            realSettings["javaScriptEnabled"] = configuration.defaultWebpagePreferences.allowsContentJavaScript
+
+            realSettings["isTextInteractionEnabled"] = configuration.preferences.isTextInteractionEnabled
+            realSettings["upgradeKnownHostsToHTTPS"] = configuration.upgradeKnownHostsToHTTPS
+            realSettings["underPageBackgroundColor"] = webView.underPageBackgroundColor.hexString
+
             if #available(iOS 15.4, *) {
                 realSettings["isSiteSpecificQuirksModeEnabled"] = configuration.preferences.isSiteSpecificQuirksModeEnabled
                 realSettings["isElementFullscreenEnabled"] = configuration.preferences.isElementFullscreenEnabled

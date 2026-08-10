@@ -118,9 +118,7 @@ public class InAppBrowserActivity extends AppCompatActivity implements InAppBrow
     WindowCompat.setDecorFitsSystemWindows(getWindow(), false);
     toolbar = findViewById(R.id.toolbar);
     setSupportActionBar(toolbar);
-    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-      getWindow().setStatusBarColor(Color.TRANSPARENT);
-    }
+    getWindow().setStatusBarColor(Color.TRANSPARENT);
 
     ViewCompat.setOnApplyWindowInsetsListener(toolbar, (v, insets) -> {
       Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.statusBars());
@@ -368,7 +366,7 @@ public class InAppBrowserActivity extends AppCompatActivity implements InAppBrow
           item.setIcon(Util.drawableFromBytes(this, (byte[]) icon));
         }
         String iconColor = menuItem.getIconColor();
-        if (iconColor != null && !iconColor.isEmpty() && Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+        if (iconColor != null && !iconColor.isEmpty()) {
           item.getIcon().setTint(Color.parseColor(iconColor));
         }
       }
@@ -623,11 +621,8 @@ public class InAppBrowserActivity extends AppCompatActivity implements InAppBrow
   public void didChangeProgress(int progress) {
     if (progressBar != null) {
       progressBar.setVisibility(View.VISIBLE);
-      if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-        progressBar.setProgress(progress, true);
-      } else {
-        progressBar.setProgress(progress);
-      }
+      progressBar.setProgress(progress, true);
+
       if (progress == 100) {
         progressBar.setVisibility(View.GONE);
       }

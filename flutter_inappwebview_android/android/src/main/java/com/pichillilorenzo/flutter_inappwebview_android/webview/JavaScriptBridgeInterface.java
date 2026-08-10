@@ -118,35 +118,34 @@ public class JavaScriptBridgeInterface {
         boolean isInternalHandler = true;
         switch (handlerName) {
           case "onPrintRequest":
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-              PrintJobSettings settings = new PrintJobSettings();
-              settings.handledByClient = true;
-              final String printJobId = inAppWebView.printCurrentPage(settings);
-              if (inAppWebView != null && inAppWebView.channelDelegate != null) {
-                inAppWebView.channelDelegate.onPrintRequest(inAppWebView.getUrl(), printJobId, new WebViewChannelDelegate.PrintRequestCallback() {
-                  @Override
-                  public boolean nonNullSuccess(@NonNull Boolean handledByClient) {
-                    return !handledByClient;
-                  }
+            PrintJobSettings settings = new PrintJobSettings();
+            settings.handledByClient = true;
+            final String printJobId = inAppWebView.printCurrentPage(settings);
+            if (inAppWebView != null && inAppWebView.channelDelegate != null) {
+              inAppWebView.channelDelegate.onPrintRequest(inAppWebView.getUrl(), printJobId, new WebViewChannelDelegate.PrintRequestCallback() {
+                @Override
+                public boolean nonNullSuccess(@NonNull Boolean handledByClient) {
+                  return !handledByClient;
+                }
 
-                  @Override
-                  public void defaultBehaviour(@Nullable Boolean handledByClient) {
-                    if (inAppWebView != null && inAppWebView.plugin != null && inAppWebView.plugin.printJobManager != null) {
-                      PrintJobController printJobController = inAppWebView.plugin.printJobManager.jobs.get(printJobId);
-                      if (printJobController != null) {
-                        printJobController.disposeNoCancel();
-                      }
+                @Override
+                public void defaultBehaviour(@Nullable Boolean handledByClient) {
+                  if (inAppWebView != null && inAppWebView.plugin != null && inAppWebView.plugin.printJobManager != null) {
+                    PrintJobController printJobController = inAppWebView.plugin.printJobManager.jobs.get(printJobId);
+                    if (printJobController != null) {
+                      printJobController.disposeNoCancel();
                     }
                   }
+                }
 
-                  @Override
-                  public void error(String errorCode, @Nullable String errorMessage, @Nullable Object errorDetails) {
-                    Log.e(LOG_TAG, errorCode + ", " + ((errorMessage != null) ? errorMessage : ""));
-                    defaultBehaviour(null);
-                  }
-                });
-              }
+                @Override
+                public void error(String errorCode, @Nullable String errorMessage, @Nullable Object errorDetails) {
+                  Log.e(LOG_TAG, errorCode + ", " + ((errorMessage != null) ? errorMessage : ""));
+                  defaultBehaviour(null);
+                }
+              });
             }
+
             break;
           case "callAsyncJavaScript":
             try {
@@ -191,7 +190,6 @@ public class JavaScriptBridgeInterface {
           }
           return;
         }
-
 
         if (inAppWebView.channelDelegate != null) {
           JavaScriptHandlerFunctionData data = new JavaScriptHandlerFunctionData(origin, requestUrl, isMainFrame, args);

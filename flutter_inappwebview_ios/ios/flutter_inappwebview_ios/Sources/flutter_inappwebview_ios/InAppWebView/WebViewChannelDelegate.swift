@@ -431,23 +431,15 @@ public class WebViewChannelDelegate: ChannelDelegate {
             result(true)
             break
         case .callAsyncJavaScript:
-            if let webView = webView, #available(iOS 10.3, *) {
-                if #available(iOS 14.3, *) { // on iOS 14.0, for some reason, it crashes
-                    let functionBody = arguments!["functionBody"] as! String
-                    let functionArguments = arguments!["arguments"] as! [String:Any]
-                    var contentWorld = WKContentWorld.page
-                    if let contentWorldMap = arguments!["contentWorld"] as? [String:Any?] {
-                        contentWorld = WKContentWorld.fromMap(map: contentWorldMap, windowId: webView.windowId)!
-                    }
-                    webView.callAsyncJavaScript(functionBody: functionBody, arguments: functionArguments, contentWorld: contentWorld) { (value) in
-                        result(value)
-                    }
-                } else {
-                    let functionBody = arguments!["functionBody"] as! String
-                    let functionArguments = arguments!["arguments"] as! [String:Any]
-                    webView.callAsyncJavaScript(functionBody: functionBody, arguments: functionArguments) { (value) in
-                        result(value)
-                    }
+            if let webView = webView {
+                let functionBody = arguments!["functionBody"] as! String
+                let functionArguments = arguments!["arguments"] as! [String:Any]
+                var contentWorld = WKContentWorld.page
+                if let contentWorldMap = arguments!["contentWorld"] as? [String:Any?] {
+                    contentWorld = WKContentWorld.fromMap(map: contentWorldMap, windowId: webView.windowId)!
+                }
+                webView.callAsyncJavaScript(functionBody: functionBody, arguments: functionArguments, contentWorld: contentWorld) { (value) in
+                    result(value)
                 }
             }
             else {
@@ -1197,7 +1189,6 @@ public class WebViewChannelDelegate: ChannelDelegate {
         channel?.invokeMethod("onDidReceiveServerRedirectForProvisionalNavigation", arguments: arguments)
     }
     
-    @available(iOS 15.0, *)
     public func onCameraCaptureStateChanged(oldState: WKMediaCaptureState?, newState: WKMediaCaptureState?) {
         let arguments = [
             "oldState": oldState?.rawValue,
@@ -1206,7 +1197,6 @@ public class WebViewChannelDelegate: ChannelDelegate {
         channel?.invokeMethod("onCameraCaptureStateChanged", arguments: arguments)
     }
     
-    @available(iOS 15.0, *)
     public func onMicrophoneCaptureStateChanged(oldState: WKMediaCaptureState?, newState: WKMediaCaptureState?) {
         let arguments = [
             "oldState": oldState?.rawValue,

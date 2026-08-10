@@ -10,7 +10,6 @@ import java.util.Map;
 public class FindInteractionSettings implements ISettings<FindInteractionController> {
   public static final String LOG_TAG = "FindInteractionSettings";
 
-
   @NonNull
   @Override
   public FindInteractionSettings parse(@NonNull Map<String, Object> settings) {

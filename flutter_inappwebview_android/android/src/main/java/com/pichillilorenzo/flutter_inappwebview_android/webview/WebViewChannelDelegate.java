@@ -362,7 +362,7 @@ public class WebViewChannelDelegate extends ChannelDelegateImpl {
         result.success(true);
         break;
       case printCurrentPage:
-        if (webView != null && Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+        if (webView != null) {
           PrintJobSettings settings = new PrintJobSettings();
           Map<String, Object> settingsMap = (Map<String, Object>) call.argument("settings");
           if (settingsMap != null) {
@@ -393,7 +393,7 @@ public class WebViewChannelDelegate extends ChannelDelegateImpl {
         }
         break;
       case zoomBy:
-        if (webView != null && Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+        if (webView != null) {
           double zoomFactor = (double) call.argument("zoomFactor");
           webView.zoomBy((float) zoomFactor);
         }
@@ -410,7 +410,7 @@ public class WebViewChannelDelegate extends ChannelDelegateImpl {
         }
         break;
       case getSelectedText:
-        if ((webView instanceof InAppWebView && Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT)) {
+        if ((webView instanceof InAppWebView)) {
           webView.getSelectedText(new ValueCallback<String>() {
             @Override
             public void onReceiveValue(String value) {
@@ -576,7 +576,7 @@ public class WebViewChannelDelegate extends ChannelDelegateImpl {
         result.success(true);
         break;
       case callAsyncJavaScript:
-        if (webView != null && Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+        if (webView != null) {
           String functionBody = (String) call.argument("functionBody");
           Map<String, Object> functionArguments = (Map<String, Object>) call.argument("arguments");
           Map<String, Object> contentWorldMap = (Map<String, Object>) call.argument("contentWorld");
@@ -592,7 +592,7 @@ public class WebViewChannelDelegate extends ChannelDelegateImpl {
         }
         break;
       case isSecureContext:
-        if (webView != null && Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+        if (webView != null) {
           webView.isSecureContext(new ValueCallback<Boolean>() {
             @Override
             public void onReceiveValue(Boolean value) {

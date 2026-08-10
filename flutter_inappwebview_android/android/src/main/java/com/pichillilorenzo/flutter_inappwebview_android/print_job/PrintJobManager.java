@@ -34,7 +34,6 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 
-@RequiresApi(api = Build.VERSION_CODES.KITKAT)
 public class PrintJobManager implements Disposable {
   protected static final String LOG_TAG = "PrintJobManager";
   @Nullable

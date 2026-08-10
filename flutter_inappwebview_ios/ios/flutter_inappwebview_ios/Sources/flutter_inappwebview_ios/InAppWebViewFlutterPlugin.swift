@@ -53,12 +53,10 @@ public class InAppWebViewFlutterPlugin: NSObject, FlutterPlugin {
         chromeSafariBrowserManager = ChromeSafariBrowserManager(plugin: self)
         inAppWebViewManager = InAppWebViewManager(plugin: self)
         credentialDatabase = CredentialDatabase(plugin: self)
-        if #available(iOS 11.0, *) {
-            myCookieManager = MyCookieManager(plugin: self)
-        }
-        if #available(iOS 9.0, *) {
-            myWebStorageManager = MyWebStorageManager(plugin: self)
-        }
+        myCookieManager = MyCookieManager(plugin: self)
+
+        myWebStorageManager = MyWebStorageManager(plugin: self)
+
         webAuthenticationSessionManager = WebAuthenticationSessionManager(plugin: self)
         printJobManager = PrintJobManager(plugin: self)
         if #available(iOS 17.0, *) {
@@ -83,14 +81,12 @@ public class InAppWebViewFlutterPlugin: NSObject, FlutterPlugin {
         inAppWebViewManager = nil
         credentialDatabase?.dispose()
         credentialDatabase = nil
-        if #available(iOS 11.0, *) {
-            (myCookieManager as? MyCookieManager)?.dispose()
-            myCookieManager = nil
-        }
-        if #available(iOS 9.0, *) {
-            (myWebStorageManager as? MyWebStorageManager)?.dispose()
-            myWebStorageManager = nil
-        }
+        (myCookieManager as? MyCookieManager)?.dispose()
+        myCookieManager = nil
+
+        (myWebStorageManager as? MyWebStorageManager)?.dispose()
+        myWebStorageManager = nil
+
         webAuthenticationSessionManager?.dispose()
         webAuthenticationSessionManager = nil
         printJobManager?.dispose()

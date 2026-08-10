@@ -40,11 +40,10 @@ public class WebResourceResponseExt {
     Integer statusCode = null;
     String reasonPhrase = null;
     Map<String, String> headers = null;
-    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-      statusCode = response.getStatusCode();
-      reasonPhrase = response.getReasonPhrase();
-      headers = response.getResponseHeaders();
-    }
+    statusCode = response.getStatusCode();
+    reasonPhrase = response.getReasonPhrase();
+    headers = response.getResponseHeaders();
+
     return new WebResourceResponseExt(response.getMimeType(),
             response.getEncoding(),
             statusCode,

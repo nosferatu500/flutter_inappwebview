@@ -62,9 +62,8 @@ public class CustomTabsHelper {
 
         // Get all apps that can handle VIEW intents.
         int flags = 0;
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            flags |= PackageManager.MATCH_ALL;
-        }
+        flags |= PackageManager.MATCH_ALL;
+
         List<ResolveInfo> resolvedActivityList = pm.queryIntentActivities(activityIntent, flags);
         List<String> packagesSupportingCustomTabs = new ArrayList<>();
         for (ResolveInfo info : resolvedActivityList) {

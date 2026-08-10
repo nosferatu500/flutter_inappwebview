@@ -7,7 +7,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class DownloadStartRequest {
-  
+
   @NonNull
   private String url;
   @NonNull

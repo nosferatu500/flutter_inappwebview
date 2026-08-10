@@ -2,7 +2,6 @@ package com.pichillilorenzo.flutter_inappwebview_android.webview.in_app_webview;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
-import android.hardware.display.DisplayManager;
 import android.os.Message;
 import android.util.Log;
 import android.view.View;
@@ -41,12 +40,8 @@ public class FlutterWebView implements PlatformWebView {
 
   public FlutterWebView(final InAppWebViewFlutterPlugin plugin, final Context context, Object id,
                         HashMap<String, Object> params) {
-    DisplayListenerProxy displayListenerProxy = new DisplayListenerProxy();
-    DisplayManager displayManager = (DisplayManager) context.getSystemService(Context.DISPLAY_SERVICE);
-    displayListenerProxy.onPreWebViewInitialization(displayManager);
-
     keepAliveId = (String) params.get("keepAliveId");
-    
+
     Map<String, Object> initialSettings = (Map<String, Object>) params.get("initialSettings");
     Map<String, Object> contextMenu = (Map<String, Object>) params.get("contextMenu");
     Integer windowId = (Integer) params.get("windowId");
@@ -65,7 +60,6 @@ public class FlutterWebView implements PlatformWebView {
 
     webView = new InAppWebView(context, plugin, id, windowId, customSettings, contextMenu, 
             customSettings.useHybridComposition ? null : plugin.flutterView, userScripts);
-    displayListenerProxy.onPostWebViewInitialization(displayManager);
 
     // set MATCH_PARENT layout params to the WebView, otherwise it won't take all the available space!
     webView.setLayoutParams(new FrameLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));

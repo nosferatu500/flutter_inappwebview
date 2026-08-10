@@ -84,7 +84,6 @@ public class InAppWebViewChromeClient extends WebChromeClient implements PluginR
   protected static final FrameLayout.LayoutParams FULLSCREEN_LAYOUT_PARAMS = new FrameLayout.LayoutParams(
           ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT, Gravity.CENTER);
 
-  @RequiresApi(api = Build.VERSION_CODES.KITKAT)
   protected static final int FULLSCREEN_SYSTEM_UI_VISIBILITY_KITKAT = View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION |
           View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN |
           View.SYSTEM_UI_FLAG_LAYOUT_STABLE |
@@ -202,11 +201,8 @@ public class InAppWebViewChromeClient extends WebChromeClient implements PluginR
       this.mCustomView.setBackgroundColor(Color.BLACK);
     }
 
-    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
-      decorView.setSystemUiVisibility(FULLSCREEN_SYSTEM_UI_VISIBILITY_KITKAT);
-    } else {
-      decorView.setSystemUiVisibility(FULLSCREEN_SYSTEM_UI_VISIBILITY);
-    }
+    decorView.setSystemUiVisibility(FULLSCREEN_SYSTEM_UI_VISIBILITY_KITKAT);
+
     activity.getWindow().setFlags(WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS, WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS);
     ((FrameLayout) decorView).addView(this.mCustomView, FULLSCREEN_LAYOUT_PARAMS);
 
@@ -753,7 +749,6 @@ public class InAppWebViewChromeClient extends WebChromeClient implements PluginR
       inAppBrowserDelegate.didChangeProgress(progress);
     }
 
-
     InAppWebView webView = (InAppWebView) view;
 
     if (webView.inAppWebViewClientCompat != null) {
@@ -834,11 +829,8 @@ public class InAppWebViewChromeClient extends WebChromeClient implements PluginR
               uriArray[i] = Uri.parse(response.getFilePaths().get(i));
             }
           }
-          if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            ((ValueCallback<Uri[]>) filePathsCallback).onReceiveValue(uriArray);
-          } else {
-            ((ValueCallback<Uri>) filePathsCallback).onReceiveValue(uriArray != null ? uriArray[0] : null);
-          }
+          ((ValueCallback<Uri[]>) filePathsCallback).onReceiveValue(uriArray);
+
           return false;
         }
         return true;
@@ -848,12 +840,9 @@ public class InAppWebViewChromeClient extends WebChromeClient implements PluginR
       public void defaultBehaviour(@Nullable ShowFileChooserResponse response) {
         String[] acceptTypes = request.getAcceptTypes().toArray(new String[0]);
         boolean captureEnabled = request.isCaptureEnabled();
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-          boolean allowMultiple = request.getMode() == WebChromeClient.FileChooserParams.MODE_OPEN_MULTIPLE;
-          startPickerIntent((ValueCallback<Uri[]>) filePathsCallback, acceptTypes, allowMultiple, captureEnabled);
-        } else {
-          startPickerIntent((ValueCallback<Uri>) filePathsCallback, acceptTypes.length > 0 ? acceptTypes[0] : "", captureEnabled);
-        }
+        boolean allowMultiple = request.getMode() == WebChromeClient.FileChooserParams.MODE_OPEN_MULTIPLE;
+        startPickerIntent((ValueCallback<Uri[]>) filePathsCallback, acceptTypes, allowMultiple, captureEnabled);
+
       }
 
       @Override
@@ -890,7 +879,6 @@ public class InAppWebViewChromeClient extends WebChromeClient implements PluginR
     onShowFileChooser(new ShowFileChooserRequest(0, acceptTypes, true, null, null), filePathCallback);
   }
 
-  @TargetApi(Build.VERSION_CODES.LOLLIPOP)
   @Override
   public boolean onShowFileChooser(WebView webView, ValueCallback<Uri[]> filePathCallback, FileChooserParams fileChooserParams) {
     return onShowFileChooser(ShowFileChooserRequest.fromFileChooserParams(fileChooserParams), filePathCallback);
@@ -939,7 +927,7 @@ public class InAppWebViewChromeClient extends WebChromeClient implements PluginR
   private Uri[] getSelectedFiles(Intent data, int resultCode) {
     // we have one file selected
     if (data != null && data.getData() != null) {
-      if (resultCode == RESULT_OK && Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+      if (resultCode == RESULT_OK) {
         return WebChromeClient.FileChooserParams.parseResult(resultCode, data);
       } else {
         return null;
@@ -1036,7 +1024,6 @@ public class InAppWebViewChromeClient extends WebChromeClient implements PluginR
     }
   }
 
-  @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
   public boolean startPickerIntent(final ValueCallback<Uri[]> callback, final String[] acceptTypes,
                                    final boolean allowMultiple, final boolean captureEnabled) {
     filePathCallback = callback;
@@ -1132,7 +1119,6 @@ public class InAppWebViewChromeClient extends WebChromeClient implements PluginR
     return intent;
   }
 
-  @RequiresApi(api = Build.VERSION_CODES.KITKAT)
   private Intent getFileChooserIntent(String[] acceptTypes, boolean allowMultiple) {
     Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
     intent.addCategory(Intent.CATEGORY_OPENABLE);
@@ -1229,11 +1215,6 @@ public class InAppWebViewChromeClient extends WebChromeClient implements PluginR
       return null;
     }
 
-    // for versions below 6.0 (23) we use the old File creation & permissions model
-    if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M) {
-      return Uri.fromFile(capturedFile);
-    }
-
     Activity activity = getActivity();
     if (activity == null) {
       return null;
@@ -1267,15 +1248,6 @@ public class InAppWebViewChromeClient extends WebChromeClient implements PluginR
       dir = Environment.DIRECTORY_MOVIES;
     }
 
-    // for versions below 6.0 (23) we use the old File creation & permissions model
-    if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M) {
-      // only this Directory works on all tested Android versions
-      // ctx.getExternalFilesDir(dir) was failing on Android 5.0 (sdk 21)
-      File storageDir = Environment.getExternalStoragePublicDirectory(dir);
-      String filename = String.format("%s-%d%s", prefix, System.currentTimeMillis(), suffix);
-      return new File(storageDir, filename);
-    }
-
     Activity activity = getActivity();
     if (activity == null) {
       return null;
@@ -1293,46 +1265,45 @@ public class InAppWebViewChromeClient extends WebChromeClient implements PluginR
 
   @Override
   public void onPermissionRequest(final PermissionRequest request) {
-    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-      final WebViewChannelDelegate.PermissionRequestCallback callback = new WebViewChannelDelegate.PermissionRequestCallback() {
-        @Override
-        public boolean nonNullSuccess(@NonNull PermissionResponse response) {
-          Integer action = response.getAction();
-          if (action != null) {
-            switch (action) {
-              case 1:
-                String[] resources = new String[response.getResources().size()];
-                resources = response.getResources().toArray(resources);
-                request.grant(resources);
-                break;
-              case 0:
-              default:
-                request.deny();
-            }
-            return false;
+    final WebViewChannelDelegate.PermissionRequestCallback callback = new WebViewChannelDelegate.PermissionRequestCallback() {
+      @Override
+      public boolean nonNullSuccess(@NonNull PermissionResponse response) {
+        Integer action = response.getAction();
+        if (action != null) {
+          switch (action) {
+            case 1:
+              String[] resources = new String[response.getResources().size()];
+              resources = response.getResources().toArray(resources);
+              request.grant(resources);
+              break;
+            case 0:
+            default:
+              request.deny();
           }
-          return true;
+          return false;
         }
-
-        @Override
-        public void defaultBehaviour(@Nullable PermissionResponse response) {
-          request.deny();
-        }
-
-        @Override
-        public void error(String errorCode, @Nullable String errorMessage, @Nullable Object errorDetails) {
-          Log.e(LOG_TAG, errorCode + ", " + ((errorMessage != null) ? errorMessage : ""));
-          defaultBehaviour(null);
-        }
-      };
-
-      if (inAppWebView != null && inAppWebView.channelDelegate != null) {
-        inAppWebView.channelDelegate.onPermissionRequest(request.getOrigin().toString(),
-                Arrays.asList(request.getResources()), null, callback);
-      } else {
-        callback.defaultBehaviour(null);
+        return true;
       }
+
+      @Override
+      public void defaultBehaviour(@Nullable PermissionResponse response) {
+        request.deny();
+      }
+
+      @Override
+      public void error(String errorCode, @Nullable String errorMessage, @Nullable Object errorDetails) {
+        Log.e(LOG_TAG, errorCode + ", " + ((errorMessage != null) ? errorMessage : ""));
+        defaultBehaviour(null);
+      }
+    };
+
+    if (inAppWebView != null && inAppWebView.channelDelegate != null) {
+      inAppWebView.channelDelegate.onPermissionRequest(request.getOrigin().toString(),
+              Arrays.asList(request.getResources()), null, callback);
+    } else {
+      callback.defaultBehaviour(null);
     }
+
   }
 
   @Override
@@ -1344,8 +1315,7 @@ public class InAppWebViewChromeClient extends WebChromeClient implements PluginR
 
   @Override
   public void onPermissionRequestCanceled(PermissionRequest request) {
-    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP &&
-            inAppWebView != null && inAppWebView.channelDelegate != null) {
+    if (inAppWebView != null && inAppWebView.channelDelegate != null) {
       inAppWebView.channelDelegate.onPermissionRequestCanceled(request.getOrigin().toString(),
               Arrays.asList(request.getResources()));
     }

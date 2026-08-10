@@ -10,7 +10,6 @@ import androidx.annotation.RequiresApi;
 import java.util.HashMap;
 import java.util.Map;
 
-@RequiresApi(api = Build.VERSION_CODES.KITKAT)
 public class PrintJobInfoExt {
   private int state;
   private int copies;
@@ -23,7 +22,7 @@ public class PrintJobInfoExt {
   private String printerId;
   @Nullable
   private PrintAttributesExt attributes;
-  
+
   @Nullable
   public static PrintJobInfoExt fromPrintJobInfo(@Nullable PrintJobInfo info) {
     if (info == null) {

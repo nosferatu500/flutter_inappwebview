@@ -103,17 +103,14 @@ public class InAppWebViewFlutterPlugin implements FlutterPlugin, ActivityAware {
     inAppWebViewManager = new InAppWebViewManager(this);
     myCookieManager = new MyCookieManager(this);
     myWebStorage = new MyWebStorage(this);
-    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-      serviceWorkerManager = new ServiceWorkerManager(this);
-    }
-    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-      credentialDatabaseHandler = new CredentialDatabaseHandler(this);
-    }
+    serviceWorkerManager = new ServiceWorkerManager(this);
+
+    credentialDatabaseHandler = new CredentialDatabaseHandler(this);
+
     webViewFeatureManager = new WebViewFeatureManager(this);
     proxyManager = new ProxyManager(this);
-    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
-      printJobManager = new PrintJobManager(this);
-    }
+    printJobManager = new PrintJobManager(this);
+
     tracingControllerManager = new TracingControllerManager(this);
     processGlobalConfigManager = new ProcessGlobalConfigManager(this);
   }
@@ -148,7 +145,7 @@ public class InAppWebViewFlutterPlugin implements FlutterPlugin, ActivityAware {
       myWebStorage.dispose();
       myWebStorage = null;
     }
-    if (credentialDatabaseHandler != null && Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+    if (credentialDatabaseHandler != null) {
       credentialDatabaseHandler.dispose();
       credentialDatabaseHandler = null;
     }
@@ -156,7 +153,7 @@ public class InAppWebViewFlutterPlugin implements FlutterPlugin, ActivityAware {
       inAppWebViewManager.dispose();
       inAppWebViewManager = null;
     }
-    if (serviceWorkerManager != null && Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+    if (serviceWorkerManager != null) {
       serviceWorkerManager.dispose();
       serviceWorkerManager = null;
     }
@@ -168,7 +165,7 @@ public class InAppWebViewFlutterPlugin implements FlutterPlugin, ActivityAware {
       proxyManager.dispose();
       proxyManager = null;
     }
-    if (printJobManager != null && Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+    if (printJobManager != null) {
       printJobManager.dispose();
       printJobManager = null;
     }

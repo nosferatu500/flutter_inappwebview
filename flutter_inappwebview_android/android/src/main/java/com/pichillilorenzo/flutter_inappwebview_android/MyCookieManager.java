@@ -3,7 +3,6 @@ package com.pichillilorenzo.flutter_inappwebview_android;
 import android.os.Build;
 import android.util.Log;
 import android.webkit.CookieManager;
-import android.webkit.CookieSyncManager;
 import android.webkit.ValueCallback;
 
 import androidx.annotation.NonNull;
@@ -59,7 +58,7 @@ public class MyCookieManager extends ChannelDelegateImpl {
           String domain = (String) call.argument("domain");
           String path = (String) call.argument("path");
           String expiresDateString = (String) call.argument("expiresDate");
-          Long expiresDate = (expiresDateString != null ? new Long(expiresDateString) : null);
+          Long expiresDate = (expiresDateString != null ? Long.valueOf(expiresDateString) : null);
           Integer maxAge = (Integer) call.argument("maxAge");
           Boolean isSecure = (Boolean) call.argument("isSecure");
           Boolean isHttpOnly = (Boolean) call.argument("isHttpOnly");
@@ -184,26 +183,13 @@ public class MyCookieManager extends ChannelDelegateImpl {
 
     cookieValue += ";";
 
-    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-      cookieManager.setCookie(url, cookieValue, new ValueCallback<Boolean>() {
-        @Override
-        public void onReceiveValue(Boolean successful) {
-          result.success(successful);
-        }
-      });
-      cookieManager.flush();
-    }
-    else if (plugin != null) {
-      CookieSyncManager cookieSyncMngr = CookieSyncManager.createInstance(plugin.applicationContext);
-      cookieSyncMngr.startSync();
-      cookieManager.setCookie(url, cookieValue);
-      cookieSyncMngr.stopSync();
-      cookieSyncMngr.sync();
-      result.success(true);
-    } else {
-      cookieManager.setCookie(url, cookieValue);
-      result.success(true);
-    }
+    cookieManager.setCookie(url, cookieValue, new ValueCallback<Boolean>() {
+      @Override
+      public void onReceiveValue(Boolean successful) {
+        result.success(successful);
+      }
+    });
+    cookieManager.flush();
   }
 
   public List<Map<String, Object>> getCookies(final String url) {
@@ -302,26 +288,13 @@ public class MyCookieManager extends ChannelDelegateImpl {
 
     cookieValue += ";";
 
-    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-      cookieManager.setCookie(url, cookieValue, new ValueCallback<Boolean>() {
-        @Override
-        public void onReceiveValue(Boolean successful) {
-          result.success(successful);
-        }
-      });
-      cookieManager.flush();
-    }
-    else if (plugin != null) {
-      CookieSyncManager cookieSyncMngr = CookieSyncManager.createInstance(plugin.applicationContext);
-      cookieSyncMngr.startSync();
-      cookieManager.setCookie(url, cookieValue);
-      cookieSyncMngr.stopSync();
-      cookieSyncMngr.sync();
-      result.success(true);
-    } else {
-      cookieManager.setCookie(url, cookieValue);
-      result.success(true);
-    }
+    cookieManager.setCookie(url, cookieValue, new ValueCallback<Boolean>() {
+      @Override
+      public void onReceiveValue(Boolean successful) {
+        result.success(successful);
+      }
+    });
+    cookieManager.flush();
   }
 
   public void deleteCookies(String url, String domain, String path, final MethodChannel.Result result) {
@@ -331,16 +304,8 @@ public class MyCookieManager extends ChannelDelegateImpl {
       return;
     }
 
-    CookieSyncManager cookieSyncMngr = null;
-
     String cookiesString = cookieManager.getCookie(url);
     if (cookiesString != null) {
-
-      if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP && plugin != null) {
-        cookieSyncMngr = CookieSyncManager.createInstance(plugin.applicationContext);
-        cookieSyncMngr.startSync();
-      }
-
       String[] cookies = cookiesString.split(";");
       for (String cookie : cookies) {
         String[] nameValue = cookie.split("=", 2);
@@ -353,17 +318,10 @@ public class MyCookieManager extends ChannelDelegateImpl {
 
         cookieValue += ";";
 
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP)
-          cookieManager.setCookie(url, cookieValue, null);
-        else
-          cookieManager.setCookie(url, cookieValue);
+        cookieManager.setCookie(url, cookieValue, null);
       }
 
-      if (cookieSyncMngr != null) {
-        cookieSyncMngr.stopSync();
-        cookieSyncMngr.sync();
-      } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP)
-        cookieManager.flush();
+      cookieManager.flush();
     }
     result.success(true);
   }
@@ -375,26 +333,13 @@ public class MyCookieManager extends ChannelDelegateImpl {
       return;
     }
 
-    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-      cookieManager.removeAllCookies(new ValueCallback<Boolean>() {
-        @Override
-        public void onReceiveValue(Boolean successful) {
-          result.success(successful);
-        }
-      });
-      cookieManager.flush();
-    }
-    else if (plugin != null) {
-      CookieSyncManager cookieSyncMngr = CookieSyncManager.createInstance(plugin.applicationContext);
-      cookieSyncMngr.startSync();
-      cookieManager.removeAllCookie();
-      cookieSyncMngr.stopSync();
-      cookieSyncMngr.sync();
-      result.success(true);
-    } else {
-      cookieManager.removeAllCookie();
-      result.success(true);
-    }
+    cookieManager.removeAllCookies(new ValueCallback<Boolean>() {
+      @Override
+      public void onReceiveValue(Boolean successful) {
+        result.success(successful);
+      }
+    });
+    cookieManager.flush();
   }
 
   public void removeSessionCookies(final MethodChannel.Result result) {
@@ -404,26 +349,13 @@ public class MyCookieManager extends ChannelDelegateImpl {
       return;
     }
 
-    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-      cookieManager.removeSessionCookies(new ValueCallback<Boolean>() {
-        @Override
-        public void onReceiveValue(Boolean successful) {
-          result.success(successful);
-        }
-      });
-      cookieManager.flush();
-    }
-    else if (plugin != null) {
-      CookieSyncManager cookieSyncMngr = CookieSyncManager.createInstance(plugin.applicationContext);
-      cookieSyncMngr.startSync();
-      cookieManager.removeSessionCookie();
-      cookieSyncMngr.stopSync();
-      cookieSyncMngr.sync();
-      result.success(true);
-    } else {
-      cookieManager.removeSessionCookie();
-      result.success(true);
-    }
+    cookieManager.removeSessionCookies(new ValueCallback<Boolean>() {
+      @Override
+      public void onReceiveValue(Boolean successful) {
+        result.success(successful);
+      }
+    });
+    cookieManager.flush();
   }
 
   public void flush(MethodChannel.Result result) {
@@ -432,12 +364,7 @@ public class MyCookieManager extends ChannelDelegateImpl {
       result.success(false);
       return;
     }
-    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-      cookieManager.flush();
-    } else if (plugin != null) {
-      CookieSyncManager cookieSyncMngr = CookieSyncManager.createInstance(plugin.applicationContext);
-      cookieSyncMngr.sync();
-    }
+    cookieManager.flush();
   }
 
   public static String getCookieExpirationDate(Long timestamp) {

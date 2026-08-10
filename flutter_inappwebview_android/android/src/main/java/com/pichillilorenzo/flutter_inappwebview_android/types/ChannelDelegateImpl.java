@@ -15,7 +15,7 @@ public class ChannelDelegateImpl implements IChannelDelegate {
     this.channel = channel;
     this.channel.setMethodCallHandler(this);
   }
-  
+
   @Override
   @Nullable
   public MethodChannel getChannel() {
@@ -32,6 +32,6 @@ public class ChannelDelegateImpl implements IChannelDelegate {
 
   @Override
   public void onMethodCall(@NonNull MethodCall call, @NonNull MethodChannel.Result result) {
-    
+
   }
 }

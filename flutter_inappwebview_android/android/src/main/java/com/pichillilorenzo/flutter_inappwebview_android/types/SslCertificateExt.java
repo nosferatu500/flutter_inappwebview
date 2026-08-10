@@ -46,21 +46,13 @@ public class SslCertificateExt extends SslCertificate {
 
     byte[] x509CertificateData = null;
 
-    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
-      try {
-        X509Certificate certificate = sslCertificate.getX509Certificate();
-        if (certificate != null) {
-          x509CertificateData = certificate.getEncoded();
-        }
-      } catch (CertificateEncodingException e) {
-        e.printStackTrace();
+    try {
+      X509Certificate certificate = sslCertificate.getX509Certificate();
+      if (certificate != null) {
+        x509CertificateData = certificate.getEncoded();
       }
-    } else {
-      try {
-        x509CertificateData = Util.getX509CertFromSslCertHack(sslCertificate).getEncoded();
-      } catch (CertificateEncodingException e) {
-        e.printStackTrace();
-      }
+    } catch (CertificateEncodingException e) {
+      e.printStackTrace();
     }
 
     long validNotAfterDate = sslCertificate.getValidNotAfterDate().getTime();

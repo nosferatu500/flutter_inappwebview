@@ -31,7 +31,6 @@ public class ShowFileChooserRequest {
     this.filenameHint = filenameHint;
   }
 
-  @TargetApi(Build.VERSION_CODES.LOLLIPOP)
   public static ShowFileChooserRequest fromFileChooserParams(WebChromeClient.FileChooserParams fileChooserParams) {
     int mode = fileChooserParams.getMode();
     List<String> acceptTypes = Arrays.asList(fileChooserParams.getAcceptTypes());
@@ -63,7 +62,6 @@ public class ShowFileChooserRequest {
     showFileChooserRequestMap.put("filenameHint", filenameHint);
     return showFileChooserRequestMap;
   }
-
 
   public int getMode() {
     return mode;

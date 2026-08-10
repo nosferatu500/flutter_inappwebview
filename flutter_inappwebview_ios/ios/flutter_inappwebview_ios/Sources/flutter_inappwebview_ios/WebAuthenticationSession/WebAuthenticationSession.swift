@@ -28,15 +28,11 @@ public class WebAuthenticationSession: NSObject, ASWebAuthenticationPresentation
         self.settings = settings
         super.init()
         self.callbackURLScheme = callbackURLScheme
-        if #available(iOS 12.0, *) {
-            let session = ASWebAuthenticationSession(url: self.url, callbackURLScheme: self.callbackURLScheme, completionHandler: self.completionHandler)
-            if #available(iOS 13.0, *) {
-                session.presentationContextProvider = self
-            }
-            self.session = session
-        } else if #available(iOS 11.0, *) {
-            self.session = SFAuthenticationSession(url: self.url, callbackURLScheme: self.callbackURLScheme, completionHandler: self.completionHandler)
-        }
+        let session = ASWebAuthenticationSession(url: self.url, callbackURLScheme: self.callbackURLScheme, completionHandler: self.completionHandler)
+        session.presentationContextProvider = self
+
+        self.session = session
+
         let channel = FlutterMethodChannel(name: WebAuthenticationSession.METHOD_CHANNEL_NAME_PREFIX + id,
                                            binaryMessenger: plugin.registrar.messenger())
         self.channelDelegate = WebAuthenticationSessionChannelDelegate(webAuthenticationSession: self, channel: channel)
@@ -89,7 +85,6 @@ public class WebAuthenticationSession: NSObject, ASWebAuthenticationPresentation
         }
     }
     
-    @available(iOS 12.0, *)
     public func presentationAnchor(for session: ASWebAuthenticationSession) -> ASPresentationAnchor {
         return UIApplication.shared.windows.first { $0.isKeyWindow } ?? ASPresentationAnchor()
     }

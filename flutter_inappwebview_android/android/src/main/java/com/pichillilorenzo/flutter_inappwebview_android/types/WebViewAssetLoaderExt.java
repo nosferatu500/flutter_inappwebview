@@ -137,7 +137,7 @@ public class WebViewAssetLoaderExt implements Disposable {
 
           ByteArrayInputStream inputStream = (data != null) ? new ByteArrayInputStream(data) : null;
 
-          if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP && statusCode != null && reasonPhrase != null) {
+          if (statusCode != null && reasonPhrase != null) {
             return new WebResourceResponse(contentType, contentEncoding, statusCode, reasonPhrase, responseHeaders, inputStream);
           } else {
             return new WebResourceResponse(contentType, contentEncoding, inputStream);

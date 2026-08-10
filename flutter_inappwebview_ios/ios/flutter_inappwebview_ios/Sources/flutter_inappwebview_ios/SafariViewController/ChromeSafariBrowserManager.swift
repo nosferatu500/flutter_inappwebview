@@ -35,11 +35,8 @@ public class ChromeSafariBrowserManager: ChannelDelegate {
                 open(id: id, url: url, settings: settings,  menuItemList: menuItemList, result: result)
                 break
             case "isAvailable":
-                if #available(iOS 9.0, *) {
-                    result(true)
-                } else {
-                    result(false)
-                }
+                result(true)
+
                 break
             case "clearWebsiteData":
                 if #available(iOS 16.0, *) {
@@ -50,35 +47,29 @@ public class ChromeSafariBrowserManager: ChannelDelegate {
                     result(false)
                 }
             case "prewarmConnections":
-                if #available(iOS 15.0, *) {
-                    let stringURLs = arguments!["URLs"] as! [String]
-                    var URLs: [URL] = []
-                    for stringURL in stringURLs {
-                        if let url = URL(string: stringURL) {
-                            URLs.append(url)
-                        }
+                let stringURLs = arguments!["URLs"] as! [String]
+                var URLs: [URL] = []
+                for stringURL in stringURLs {
+                    if let url = URL(string: stringURL) {
+                        URLs.append(url)
                     }
-                    let prewarmingToken = SFSafariViewController.prewarmConnections(to: URLs)
-                    let prewarmingTokenId = NSUUID().uuidString
-                    prewarmingTokens[prewarmingTokenId] = prewarmingToken
-                    result([
-                        "id": prewarmingTokenId
-                    ])
-                } else {
-                    result(nil)
                 }
+                let prewarmingToken = SFSafariViewController.prewarmConnections(to: URLs)
+                let prewarmingTokenId = NSUUID().uuidString
+                prewarmingTokens[prewarmingTokenId] = prewarmingToken
+                result([
+                    "id": prewarmingTokenId
+                ])
+
             case "invalidatePrewarmingToken":
-                if #available(iOS 15.0, *) {
-                    let prewarmingToken = arguments!["prewarmingToken"] as! [String:Any?]
-                    if let prewarmingTokenId = prewarmingToken["id"] as? String,
-                       let prewarmingToken = prewarmingTokens[prewarmingTokenId] as? SFSafariViewController.PrewarmingToken? {
-                        prewarmingToken?.invalidate()
-                        prewarmingTokens[prewarmingTokenId] = nil
-                    }
-                    result(true)
-                } else {
-                    result(false)
+                let prewarmingToken = arguments!["prewarmingToken"] as! [String:Any?]
+                if let prewarmingTokenId = prewarmingToken["id"] as? String,
+                   let prewarmingToken = prewarmingTokens[prewarmingTokenId] as? SFSafariViewController.PrewarmingToken? {
+                    prewarmingToken?.invalidate()
+                    prewarmingTokens[prewarmingTokenId] = nil
                 }
+                result(true)
+
             default:
                 result(FlutterMethodNotImplemented)
                 break
@@ -98,15 +89,10 @@ public class ChromeSafariBrowserManager: ChannelDelegate {
                 
                 let safari: SafariViewController
                 
-                if #available(iOS 11.0, *) {
-                    let config = SFSafariViewController.Configuration()
-                    safari = SafariViewController(plugin: plugin, id: id, url: absoluteUrl, configuration: config,
-                                                  menuItemList: menuItemList, safariSettings: safariSettings)
-                } else {
-                    // Fallback on earlier versions
-                    safari = SafariViewController(plugin: plugin, id: id, url: absoluteUrl, entersReaderIfAvailable: safariSettings.entersReaderIfAvailable,
-                                                  menuItemList: menuItemList, safariSettings: safariSettings)
-                }
+                let config = SFSafariViewController.Configuration()
+                safari = SafariViewController(plugin: plugin, id: id, url: absoluteUrl, configuration: config,
+                                              menuItemList: menuItemList, safariSettings: safariSettings)
+
                 
                 safari.prepareSafariBrowser()
                 
@@ -130,15 +116,14 @@ public class ChromeSafariBrowserManager: ChannelDelegate {
             browser?.dispose()
         }
         browsers.removeAll()
-        if #available(iOS 15.0, *) {
-            let prewarmingTokensValues = prewarmingTokens.values
-            prewarmingTokensValues.forEach { (prewarmingToken: Any?) in
-                if let prewarmingToken = prewarmingToken as? SFSafariViewController.PrewarmingToken? {
-                    prewarmingToken?.invalidate()
-                }
+        let prewarmingTokensValues = prewarmingTokens.values
+        prewarmingTokensValues.forEach { (prewarmingToken: Any?) in
+            if let prewarmingToken = prewarmingToken as? SFSafariViewController.PrewarmingToken? {
+                prewarmingToken?.invalidate()
             }
-            prewarmingTokens.removeAll()
         }
+        prewarmingTokens.removeAll()
+
         plugin = nil
     }
     

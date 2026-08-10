@@ -34,11 +34,8 @@ public class WebAuthenticationSessionManager: ChannelDelegate {
                 create(id: id, url: url, callbackURLScheme: callbackURLScheme, settings: initialSettings, result: result)
                 break
             case "isAvailable":
-                if #available(iOS 11.0, *) {
-                    result(true)
-                } else {
-                    result(false)
-                }
+                result(true)
+
                 break
             default:
                 result(FlutterMethodNotImplemented)

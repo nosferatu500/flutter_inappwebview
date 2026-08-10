@@ -74,7 +74,6 @@ public class CustomTabActivityHelper implements ServiceConnectionCallback {
                 headers, referrer, requestCode);
     }
 
-    
     public static boolean isAvailable(Activity activity) {
         return CustomTabsHelper.getPackageNameToUse(activity) != null;
     }

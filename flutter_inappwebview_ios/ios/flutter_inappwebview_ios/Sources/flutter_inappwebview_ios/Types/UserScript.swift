@@ -13,7 +13,6 @@ public class UserScript: WKUserScript {
     var allowedOriginRules: [String]?
 
     private var contentWorldWrapper: Any?
-    @available(iOS 14.0, *)
     var contentWorld: WKContentWorld {
       get {
         if let value = contentWorldWrapper as? WKContentWorld {
@@ -34,13 +33,11 @@ public class UserScript: WKUserScript {
         self.allowedOriginRules = allowedOriginRules
     }
     
-    @available(iOS 14.0, *)
     public override init(source: String, injectionTime: WKUserScriptInjectionTime, forMainFrameOnly: Bool, in contentWorld: WKContentWorld) {
         super.init(source: source, injectionTime: injectionTime, forMainFrameOnly: forMainFrameOnly, in: contentWorld)
         self.contentWorld = contentWorld
     }
 
-    @available(iOS 14.0, *)
     public init(groupName: String?, source: String, injectionTime: WKUserScriptInjectionTime, forMainFrameOnly: Bool, in contentWorld: WKContentWorld, allowedOriginRules: [String]?) {
         super.init(source: UserScript.wrapSourceCodeAddChecks(source: source, allowedOriginRules: allowedOriginRules), injectionTime: injectionTime, forMainFrameOnly: forMainFrameOnly, in: contentWorld)
         self.groupName = groupName

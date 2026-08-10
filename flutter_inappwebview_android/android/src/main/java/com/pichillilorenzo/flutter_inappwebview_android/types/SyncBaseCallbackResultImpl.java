@@ -32,7 +32,7 @@ public class SyncBaseCallbackResultImpl<T> extends BaseCallbackResultImpl<T> {
       latch.countDown();
     }
   }
-  
+
   @CallSuper
   @Override
   public void error(String errorCode, @Nullable String errorMessage, @Nullable Object errorDetails) {

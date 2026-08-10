@@ -18,7 +18,7 @@ import io.flutter.plugin.common.MethodChannel;
 public class PlatformUtil extends ChannelDelegateImpl {
   protected static final String LOG_TAG = "PlatformUtil";
   public static final String METHOD_CHANNEL_NAME = "com.pichillilorenzo/flutter_inappwebview_platformutil";
-  
+
   @Nullable
   public InAppWebViewFlutterPlugin plugin;
 

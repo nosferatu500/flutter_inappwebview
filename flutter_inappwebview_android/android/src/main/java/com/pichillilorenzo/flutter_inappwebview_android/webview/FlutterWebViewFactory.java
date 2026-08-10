@@ -74,7 +74,7 @@ public class FlutterWebViewFactory extends PlatformViewFactory {
     if (shouldMakeInitialLoad) {
       flutterWebView.makeInitialLoad(params);
     }
-    
+
     return flutterWebView;
   }
 }

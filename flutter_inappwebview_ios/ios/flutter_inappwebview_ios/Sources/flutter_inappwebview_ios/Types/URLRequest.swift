@@ -66,18 +66,15 @@ extension URLRequest {
     public func toMap () -> [String:Any?] {
         var _allowsConstrainedNetworkAccess: Bool? = nil
         var _allowsExpensiveNetworkAccess: Bool? = nil
-        if #available(iOS 13.0, *) {
-            _allowsConstrainedNetworkAccess = allowsConstrainedNetworkAccess
-            _allowsExpensiveNetworkAccess = allowsExpensiveNetworkAccess
-        }
+        _allowsConstrainedNetworkAccess = allowsConstrainedNetworkAccess
+        _allowsExpensiveNetworkAccess = allowsExpensiveNetworkAccess
+
         var _assumesHTTP3Capable: Bool? = nil
-        if #available(iOS 14.5, *) {
-            _assumesHTTP3Capable = assumesHTTP3Capable
-        }
+        _assumesHTTP3Capable = assumesHTTP3Capable
+
         var _attribution: UInt? = nil
-        if #available(iOS 15.0, *) {
-            _attribution = attribution.rawValue
-        }
+        _attribution = attribution.rawValue
+
         return [
             "url": url?.absoluteString,
             "method": httpMethod,

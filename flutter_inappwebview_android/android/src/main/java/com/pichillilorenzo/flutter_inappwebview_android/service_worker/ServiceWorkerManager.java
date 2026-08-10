@@ -22,7 +22,6 @@ import java.util.Map;
 
 import io.flutter.plugin.common.MethodChannel;
 
-@RequiresApi(api = Build.VERSION_CODES.N)
 public class ServiceWorkerManager implements Disposable {
   protected static final String LOG_TAG = "ServiceWorkerManager";
   public static final String METHOD_CHANNEL_NAME = "com.pichillilorenzo/flutter_inappwebview_serviceworkercontroller";
@@ -46,7 +45,7 @@ public class ServiceWorkerManager implements Disposable {
       serviceWorkerController = ServiceWorkerControllerCompat.getInstance();
     }
   }
-  
+
   public void setServiceWorkerClient(Boolean isNull) {
     if (serviceWorkerController != null) {
       // set ServiceWorkerClient as null makes the app crashes, so just set a dummy ServiceWorkerClientCompat.

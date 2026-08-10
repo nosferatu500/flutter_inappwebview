@@ -12,11 +12,10 @@ import com.pichillilorenzo.flutter_inappwebview_android.types.PrintJobInfoExt;
 
 import io.flutter.plugin.common.MethodChannel;
 
-@RequiresApi(api = Build.VERSION_CODES.KITKAT)
 public class PrintJobController implements Disposable  {
   protected static final String LOG_TAG = "PrintJob";
   public static final String METHOD_CHANNEL_NAME_PREFIX = "com.pichillilorenzo/flutter_inappwebview_printjobcontroller_";
-  
+
   @NonNull
   public String id;
   @Nullable
@@ -52,7 +51,7 @@ public class PrintJobController implements Disposable  {
       this.job.restart();
     }
   }
-  
+
   @Nullable
   public PrintJobInfoExt getInfo() {
     if (this.job != null) {
@@ -77,7 +76,7 @@ public class PrintJobController implements Disposable  {
     }
     plugin = null;
   }
-  
+
   @Override
   public void dispose() {
     if (channelDelegate != null) {

@@ -21,12 +21,10 @@ public class WebResourceErrorExt {
     this.description = description;
   }
 
-  @RequiresApi(Build.VERSION_CODES.M)
   static public WebResourceErrorExt fromWebResourceError(@NonNull WebResourceError error) {
     return new WebResourceErrorExt(error.getErrorCode(), error.getDescription().toString());
   }
 
-  @RequiresApi(Build.VERSION_CODES.M)
   static public WebResourceErrorExt fromWebResourceError(@NonNull WebResourceErrorCompat error) {
     int type = -1;
     if (WebViewFeature.isFeatureSupported(WebViewFeature.WEB_RESOURCE_ERROR_GET_CODE)) {

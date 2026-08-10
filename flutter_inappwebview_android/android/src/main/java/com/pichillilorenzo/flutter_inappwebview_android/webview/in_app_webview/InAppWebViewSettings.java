@@ -631,12 +631,11 @@ public class InAppWebViewSettings implements ISettings<InAppWebViewInterface> {
       realSettings.put("useWideViewPort", settings.getUseWideViewPort());
       if (WebViewFeature.isFeatureSupported(WebViewFeature.SAFE_BROWSING_ENABLE)) {
         realSettings.put("safeBrowsingEnabled", WebSettingsCompat.getSafeBrowsingEnabled(settings));
-      } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+      } else {
         realSettings.put("safeBrowsingEnabled", settings.getSafeBrowsingEnabled());
-      }
-      if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-        realSettings.put("mixedContentMode", settings.getMixedContentMode());
-      }
+        }
+      realSettings.put("mixedContentMode", settings.getMixedContentMode());
+
       realSettings.put("allowContentAccess", settings.getAllowContentAccess());
       realSettings.put("allowFileAccess", settings.getAllowFileAccess());
       realSettings.put("allowFileAccessFromFileURLs", settings.getAllowFileAccessFromFileURLs());
@@ -651,16 +650,15 @@ public class InAppWebViewSettings implements ISettings<InAppWebViewInterface> {
       if (WebViewFeature.isFeatureSupported(WebViewFeature.DISABLED_ACTION_MODE_MENU_ITEMS)) {
         realSettings.put("disabledActionModeMenuItems", WebSettingsCompat.getDisabledActionModeMenuItems(settings));
       }
-      if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-        realSettings.put("disabledActionModeMenuItems", settings.getDisabledActionModeMenuItems());
-      }
+      realSettings.put("disabledActionModeMenuItems", settings.getDisabledActionModeMenuItems());
+
       realSettings.put("fantasyFontFamily", settings.getFantasyFontFamily());
       realSettings.put("fixedFontFamily", settings.getFixedFontFamily());
       if (WebViewFeature.isFeatureSupported(WebViewFeature.FORCE_DARK)) {
         realSettings.put("forceDark", WebSettingsCompat.getForceDark(settings));
-      } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+      } else {
         realSettings.put("forceDark", settings.getForceDark());
-      }
+        }
       if (WebViewFeature.isFeatureSupported(WebViewFeature.FORCE_DARK_STRATEGY)) {
         realSettings.put("forceDarkStrategy", WebSettingsCompat.getForceDarkStrategy(settings));
       }
@@ -670,9 +668,9 @@ public class InAppWebViewSettings implements ISettings<InAppWebViewInterface> {
       realSettings.put("minimumLogicalFontSize", settings.getMinimumLogicalFontSize());
       if (WebViewFeature.isFeatureSupported(WebViewFeature.OFF_SCREEN_PRERASTER)) {
         realSettings.put("offscreenPreRaster", WebSettingsCompat.getOffscreenPreRaster(settings));
-      } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+      } else {
         realSettings.put("offscreenPreRaster", settings.getOffscreenPreRaster());
-      }
+        }
       realSettings.put("sansSerifFontFamily", settings.getSansSerifFontFamily());
       realSettings.put("serifFontFamily", settings.getSerifFontFamily());
       realSettings.put("standardFontFamily", settings.getStandardFontFamily());
@@ -684,13 +682,12 @@ public class InAppWebViewSettings implements ISettings<InAppWebViewInterface> {
       realSettings.put("scrollBarDefaultDelayBeforeFade", webView.getScrollBarDefaultDelayBeforeFade());
       realSettings.put("scrollbarFadingEnabled", webView.isScrollbarFadingEnabled());
       realSettings.put("scrollBarFadeDuration", webView.getScrollBarFadeDuration());
-      if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-        Map<String, Object> rendererPriorityPolicy = new HashMap<>();
-        rendererPriorityPolicy.put("rendererRequestedPriority", webView.getRendererRequestedPriority());
-        rendererPriorityPolicy.put("waivedWhenNotVisible", webView.getRendererPriorityWaivedWhenNotVisible());
-        realSettings.put("rendererPriorityPolicy", rendererPriorityPolicy);
-      }
-      if (WebViewFeature.isFeatureSupported(WebViewFeature.ALGORITHMIC_DARKENING) && Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+      Map<String, Object> rendererPriorityPolicy = new HashMap<>();
+      rendererPriorityPolicy.put("rendererRequestedPriority", webView.getRendererRequestedPriority());
+      rendererPriorityPolicy.put("waivedWhenNotVisible", webView.getRendererPriorityWaivedWhenNotVisible());
+      realSettings.put("rendererPriorityPolicy", rendererPriorityPolicy);
+
+      if (WebViewFeature.isFeatureSupported(WebViewFeature.ALGORITHMIC_DARKENING)) {
         realSettings.put("algorithmicDarkeningAllowed", WebSettingsCompat.isAlgorithmicDarkeningAllowed(settings));
       }
       if (WebViewFeature.isFeatureSupported(WebViewFeature.ENTERPRISE_AUTHENTICATION_APP_LINK_POLICY)) {
@@ -711,11 +708,8 @@ public class InAppWebViewSettings implements ISettings<InAppWebViewInterface> {
         case "NORMAL":
           layoutAlgorithm = NORMAL;
         case "TEXT_AUTOSIZING":
-          if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
-            layoutAlgorithm = WebSettings.LayoutAlgorithm.TEXT_AUTOSIZING;
-          } else {
-            layoutAlgorithm = NORMAL;
-          }
+          layoutAlgorithm = WebSettings.LayoutAlgorithm.TEXT_AUTOSIZING;
+
           break;
       }
     }
@@ -727,11 +721,8 @@ public class InAppWebViewSettings implements ISettings<InAppWebViewInterface> {
         case NORMAL:
           return "NORMAL";
         case TEXT_AUTOSIZING:
-          if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
-            return "TEXT_AUTOSIZING";
-          } else {
-            return "NORMAL";
-          }
+          return "TEXT_AUTOSIZING";
+
         case NARROW_COLUMNS:
           return "NARROW_COLUMNS";
       }

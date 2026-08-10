@@ -15,9 +15,7 @@ extension WKUserContentController {
     // Workaround to create stored properties in an extension:
     // https://valv0.medium.com/computed-properties-and-extensions-a-pure-swift-approach-64733768112c
 
-    @available(iOS 14.0, *)
     private static var _contentWorlds = [String: Set<WKContentWorld>]()
-    @available(iOS 14.0, *)
     var contentWorlds: Set<WKContentWorld> {
         get {
             let tmpAddress = String(format: "%p", unsafeBitCast(self, to: Int.self))
@@ -54,9 +52,8 @@ extension WKUserContentController {
     }
 
     public func initialize () {
-        if #available(iOS 14.0, *) {
-            contentWorlds = Set([WKContentWorld.page])
-        }
+        contentWorlds = Set([WKContentWorld.page])
+
         pluginScripts = [
             .atDocumentStart: [],
             .atDocumentEnd: [],
@@ -70,10 +67,9 @@ extension WKUserContentController {
     public func dispose (windowId: Int64?) {
         if windowId == nil {
             let tmpAddress = String(format: "%p", unsafeBitCast(self, to: Int.self))
-            if #available(iOS 14.0, *) {
-                contentWorlds.removeAll()
-                WKUserContentController._contentWorlds.removeValue(forKey: tmpAddress)
-            }
+            contentWorlds.removeAll()
+            WKUserContentController._contentWorlds.removeValue(forKey: tmpAddress)
+
             pluginScripts.removeAll()
             WKUserContentController._pluginScripts.removeValue(forKey: tmpAddress)
             userOnlyScripts.removeAll()
@@ -121,9 +117,8 @@ extension WKUserContentController {
     }
 
     public func addUserOnlyScript(_ userOnlyScript: UserScript) {
-        if #available(iOS 14.0, *) {
-            contentWorlds.insert(userOnlyScript.contentWorld)
-        }
+        contentWorlds.insert(userOnlyScript.contentWorld)
+
         userOnlyScripts[userOnlyScript.injectionTime]!.append(userOnlyScript)
     }
 
@@ -134,9 +129,8 @@ extension WKUserContentController {
     }
 
     public func addPluginScript(_ pluginScript: PluginScript) {
-        if #available(iOS 14.0, *) {
-            contentWorlds.insert(pluginScript.contentWorld)
-        }
+        contentWorlds.insert(pluginScript.contentWorld)
+
         pluginScripts[pluginScript.injectionTime]!.append(pluginScript)
     }
 
@@ -152,7 +146,6 @@ extension WKUserContentController {
             .filter({ $0.injectionTime == .atDocumentStart && $0.requiredInAllContentWorlds })
     }
 
-    @available(iOS 14.0, *)
     public func generateCodeForScriptEvaluation(scriptMessageHandler: WKScriptMessageHandler, source: String, contentWorld: WKContentWorld) -> String {
         let (inserted, _) = contentWorlds.insert(contentWorld)
         if inserted {
@@ -197,11 +190,10 @@ extension WKUserContentController {
         pluginScripts[pluginScript.injectionTime]!.remove(pluginScript)
         for messageHandlerName in pluginScript.messageHandlerNames {
             removeScriptMessageHandler(forName: messageHandlerName)
-            if #available(iOS 14.0, *) {
-                for contentWorld in contentWorlds {
-                    removeScriptMessageHandler(forName: messageHandlerName, contentWorld: contentWorld)
-                }
+            for contentWorld in contentWorlds {
+                removeScriptMessageHandler(forName: messageHandlerName, contentWorld: contentWorld)
             }
+
         }
         removeUserScript(scriptToRemove: pluginScript)
     }
@@ -222,15 +214,13 @@ extension WKUserContentController {
                 removeScriptMessageHandler(forName: messageHandlerName)
             }
         }
-        if #available(iOS 14.0, *) {
-            removeAllScriptMessageHandlers()
-            for contentWorld in contentWorlds {
-                removeAllScriptMessageHandlers(from: contentWorld)
-            }
+        removeAllScriptMessageHandlers()
+        for contentWorld in contentWorlds {
+            removeAllScriptMessageHandlers(from: contentWorld)
         }
+
     }
 
-    @available(iOS 14.0, *)
     public func resetContentWorlds(windowId: Int64?) {
         let allUserOnlyScripts = userOnlyScripts.compactMap({ $0.value }).joined()
         let contentWorldsFiltered = contentWorlds.filter({ $0.windowId == windowId && $0 != WKContentWorld.page })
@@ -334,7 +324,6 @@ extension WKUserContentController {
         return false
     }
 
-    @available(iOS 14.0, *)
     public func containsPluginScript(pluginScript: PluginScript, in contentWorld: WKContentWorld) -> Bool {
         let userScripts = useCopyOfUserScripts()
         for script in userScripts {
@@ -345,7 +334,6 @@ extension WKUserContentController {
         return false
     }
     
-    @available(iOS 14.0, *)
     public func containsPluginScript(with groupName: String, in contentWorld: WKContentWorld) -> Bool {
         let userScripts = useCopyOfUserScripts()
         for script in userScripts {
@@ -356,7 +344,6 @@ extension WKUserContentController {
         return false
     }
 
-    @available(iOS 14.0, *)
     public func getContentWorlds(with windowId: Int64?) -> Set<WKContentWorld> {
         var contentWorldsFiltered = Set([WKContentWorld.page])
         let contentWorlds = Array(self.contentWorlds)

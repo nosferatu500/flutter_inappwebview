@@ -226,7 +226,6 @@ public class Util {
     return x509Certificate;
   }
 
-  @RequiresApi(api = Build.VERSION_CODES.KITKAT)
   public static String JSONStringify(@Nullable Object value) {
     if (value == null) {
       return "null";
@@ -243,10 +242,7 @@ public class Util {
   }
 
   public static boolean objEquals(@Nullable Object a, @Nullable Object b) {
-    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
-      return Objects.equals(a, b);
-    }
-    return (a == b) || (a != null && a.equals(b));
+    return Objects.equals(a, b);
   }
 
   public static String replaceAll(String s, String oldString, String newString) {
@@ -274,23 +270,17 @@ public class Util {
     Size2D fullscreenSize = new Size2D(-1, -1);
     WindowManager wm = (WindowManager) context.getSystemService(Context.WINDOW_SERVICE);
     if (wm != null) {
-      if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
-        final WindowMetrics metrics = wm.getCurrentWindowMetrics();
-        // Gets all excluding insets
-        final WindowInsets windowInsets = metrics.getWindowInsets();
-        Insets insets = windowInsets.getInsetsIgnoringVisibility(WindowInsets.Type.navigationBars()
-                | WindowInsets.Type.displayCutout());
-        int insetsWidth = insets.right + insets.left;
-        int insetsHeight = insets.top + insets.bottom;
-        final Rect bounds = metrics.getBounds();
-        fullscreenSize.setWidth(bounds.width() - insetsWidth);
-        fullscreenSize.setHeight(bounds.height() - insetsHeight);
-      } else {
-        DisplayMetrics displayMetrics = new DisplayMetrics();
-        wm.getDefaultDisplay().getMetrics(displayMetrics);
-        fullscreenSize.setWidth(displayMetrics.widthPixels);
-        fullscreenSize.setHeight(displayMetrics.heightPixels);
-      }
+      final WindowMetrics metrics = wm.getCurrentWindowMetrics();
+      // Gets all excluding insets
+      final WindowInsets windowInsets = metrics.getWindowInsets();
+      Insets insets = windowInsets.getInsetsIgnoringVisibility(WindowInsets.Type.navigationBars()
+              | WindowInsets.Type.displayCutout());
+      int insetsWidth = insets.right + insets.left;
+      int insetsHeight = insets.top + insets.bottom;
+      final Rect bounds = metrics.getBounds();
+      fullscreenSize.setWidth(bounds.width() - insetsWidth);
+      fullscreenSize.setHeight(bounds.height() - insetsHeight);
+
     }
     return fullscreenSize;
   }
@@ -303,7 +293,7 @@ public class Util {
       return false;
     }
   }
-  
+
   public static boolean isIPv6(String address) {
     try {
       Inet6Address.getByName(address);
@@ -348,14 +338,14 @@ public class Util {
       try {
         inputStream.close();
       } catch (IOException e) {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT && exception != null) {
+        if (exception != null) {
           exception.addSuppressed(e);
         }
       }
       try {
         outputStream.close();
       } catch (IOException e) {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT && exception != null) {
+        if (exception != null) {
           exception.addSuppressed(e);
         }
       }

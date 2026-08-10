@@ -8,7 +8,6 @@
 import Foundation
 import UIKit
 
-@available(iOS 14.5, *)
 extension UIEventAttribution {
     public static func fromMap(map: [String:Any?]?) -> UIEventAttribution? {
         guard let map = map else {

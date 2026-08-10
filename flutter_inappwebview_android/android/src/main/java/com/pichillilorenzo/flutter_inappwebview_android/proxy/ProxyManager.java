@@ -65,7 +65,7 @@ public class ProxyManager extends ChannelDelegateImpl {
         result.notImplemented();
     }
   }
-  
+
   private void setProxyOverride(ProxySettings settings, final MethodChannel.Result result) {
     if (proxyController != null) {
       ProxyConfig.Builder proxyConfigBuilder = new ProxyConfig.Builder();

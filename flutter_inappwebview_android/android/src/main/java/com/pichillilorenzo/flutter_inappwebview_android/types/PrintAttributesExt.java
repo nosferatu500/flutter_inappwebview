@@ -9,7 +9,6 @@ import androidx.annotation.RequiresApi;
 import java.util.HashMap;
 import java.util.Map;
 
-@RequiresApi(api = Build.VERSION_CODES.KITKAT)
 public class PrintAttributesExt {
   private int colorMode;
   @Nullable
@@ -30,9 +29,8 @@ public class PrintAttributesExt {
     }
     PrintAttributesExt attributesExt = new PrintAttributesExt();
     attributesExt.colorMode = attributes.getColorMode();
-    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-      attributesExt.duplex = attributes.getDuplexMode();
-    }
+    attributesExt.duplex = attributes.getDuplexMode();
+
     PrintAttributes.MediaSize mediaSize = attributes.getMediaSize();
     if (mediaSize != null) {
       attributesExt.mediaSize = MediaSizeExt.fromMediaSize(mediaSize);

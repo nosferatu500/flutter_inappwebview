@@ -28,7 +28,7 @@ import io.flutter.plugin.common.MethodChannel;
 public class WebMessageChannel implements Disposable {
   protected static final String LOG_TAG = "WebMessageChannel";
   public static final String METHOD_CHANNEL_NAME_PREFIX = "com.pichillilorenzo/flutter_inappwebview_web_message_channel_";
-  
+
   @NonNull
   public String id;
   @Nullable
@@ -67,7 +67,7 @@ public class WebMessageChannel implements Disposable {
       callback.onReceiveValue(this);
     }
   }
-  
+
   public void setWebMessageCallbackForInAppWebView(final int index, @NonNull MethodChannel.Result result) {
     if (webView != null && compatPorts.size() > 0 &&
             WebViewFeature.isFeatureSupported(WebViewFeature.WEB_MESSAGE_PORT_SET_MESSAGE_CALLBACK)) {

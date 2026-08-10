@@ -109,32 +109,31 @@ public class FlutterWebViewController: NSObject, FlutterPlatformView, Disposable
         let initialData = params["initialData"] as? [String: String?]
         
         if windowId == nil {
-            if #available(iOS 11.0, *) {
-                webView.configuration.userContentController.removeAllContentRuleLists()
-                if let contentBlockers = webView.settings?.contentBlockers, contentBlockers.count > 0 {
-                    do {
-                        let jsonData = try JSONSerialization.data(withJSONObject: contentBlockers, options: [])
-                        let blockRules = String(data: jsonData, encoding: .utf8)
-                        WKContentRuleListStore.default().compileContentRuleList(
-                            forIdentifier: "ContentBlockingRules",
-                            encodedContentRuleList: blockRules) { (contentRuleList, error) in
+            webView.configuration.userContentController.removeAllContentRuleLists()
+            if let contentBlockers = webView.settings?.contentBlockers, contentBlockers.count > 0 {
+                do {
+                    let jsonData = try JSONSerialization.data(withJSONObject: contentBlockers, options: [])
+                    let blockRules = String(data: jsonData, encoding: .utf8)
+                    WKContentRuleListStore.default().compileContentRuleList(
+                        forIdentifier: "ContentBlockingRules",
+                        encodedContentRuleList: blockRules) { (contentRuleList, error) in
 
-                                if let error = error {
-                                    print(error.localizedDescription)
-                                    return
-                                }
+                            if let error = error {
+                                print(error.localizedDescription)
+                                return
+                            }
 
-                                let configuration = webView.configuration
-                                configuration.userContentController.add(contentRuleList!)
+                            let configuration = webView.configuration
+                            configuration.userContentController.add(contentRuleList!)
 
-                                self.load(initialUrlRequest: initialUrlRequest, initialFile: initialFile, initialData: initialData)
-                        }
-                        return
-                    } catch {
-                        print(error.localizedDescription)
+                            self.load(initialUrlRequest: initialUrlRequest, initialFile: initialFile, initialData: initialData)
                     }
+                    return
+                } catch {
+                    print(error.localizedDescription)
                 }
             }
+
             load(initialUrlRequest: initialUrlRequest, initialFile: initialFile, initialData: initialData)
         }
         else if windowId != nil {

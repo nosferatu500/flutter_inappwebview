@@ -13,7 +13,6 @@ import com.pichillilorenzo.flutter_inappwebview_android.types.ResolutionExt;
 import java.util.HashMap;
 import java.util.Map;
 
-@RequiresApi(api = Build.VERSION_CODES.KITKAT)
 public class PrintJobSettings implements ISettings<PrintJobController> {
 
   public static final String LOG_TAG = "PrintJobSettings";

@@ -21,7 +21,6 @@ import java.util.Map;
 import io.flutter.plugin.common.MethodCall;
 import io.flutter.plugin.common.MethodChannel;
 
-@RequiresApi(api = Build.VERSION_CODES.N)
 public class ServiceWorkerChannelDelegate extends ChannelDelegateImpl {
   @Nullable
   private ServiceWorkerManager serviceWorkerManager;

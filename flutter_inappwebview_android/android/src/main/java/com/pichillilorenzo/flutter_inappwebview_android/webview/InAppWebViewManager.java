@@ -58,16 +58,13 @@ public class InAppWebViewManager extends ChannelDelegateImpl {
         }
         break;
       case "clearClientCertPreferences":
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-          WebView.clearClientCertPreferences(new Runnable() {
-            @Override
-            public void run() {
-              result.success(true);
-            }
-          });
-        } else {
-          result.success(false);
-        }
+        WebView.clearClientCertPreferences(new Runnable() {
+          @Override
+          public void run() {
+            result.success(true);
+          }
+        });
+
         break;
       case "getSafeBrowsingPrivacyPolicyUrl":
         if (WebViewFeature.isFeatureSupported(WebViewFeature.SAFE_BROWSING_PRIVACY_POLICY_URL)) {
@@ -112,9 +109,8 @@ public class InAppWebViewManager extends ChannelDelegateImpl {
       case "setWebContentsDebuggingEnabled":
         {
           boolean debuggingEnabled = (boolean) call.argument("debuggingEnabled");
-          if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
-            WebView.setWebContentsDebuggingEnabled(debuggingEnabled);
-          }
+          WebView.setWebContentsDebuggingEnabled(debuggingEnabled);
+
         }
         result.success(true);
         break;
@@ -135,9 +131,8 @@ public class InAppWebViewManager extends ChannelDelegateImpl {
         }
         break;
       case "disableWebView":
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
-          WebView.disableWebView();
-        }
+        WebView.disableWebView();
+
         result.success(true);
         break;
       case "disposeKeepAlive":
@@ -165,9 +160,8 @@ public class InAppWebViewManager extends ChannelDelegateImpl {
         break;
       case "enableSlowWholeDocumentDraw":
         {
-          if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            WebView.enableSlowWholeDocumentDraw();
-          }
+          WebView.enableSlowWholeDocumentDraw();
+
         }
         result.success(true);
         break;
