@@ -27,7 +27,7 @@ class X509PublicKey {
 
   Uint8List? get encoded {
     var oid = OID.fromValue(algOid);
-    var keyData = pkBlock?.subAtIndex(1)?.value ?? null;
+    var keyData = pkBlock?.subAtIndex(1)?.value;
 
     if (oid != null && algOid != null && keyData != null) {
       if (oid == OID.ecPublicKey) {

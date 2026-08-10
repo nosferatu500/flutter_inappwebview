@@ -1,9 +1,38 @@
 include: package:flutter_lints/flutter.yaml
 
+# The `linter: rules:` block that used to live here set every value to `ignore`,
+# which is only meaningful under `analyzer: errors:`. That made this file
+# invalid, which silently disabled *all* flutter_lints rules and broke pub.dev's
+# static analysis (upstream issue #2758).
+#
+# With the file valid again, flutter_lints surfaces pre-existing style
+# violations across the whole codebase. They are opted out explicitly below so
+# `flutter analyze` stays actionable; re-enable them one at a time (most are
+# auto-fixable via `dart fix --apply`). Rules that catch real defects -- such as
+# unrelated_type_equality_checks -- are deliberately left enabled.
 linter:
   rules:
-    constant_identifier_names: ignore
-    deprecated_member_use_from_same_package: ignore
+    annotate_overrides: false
+    avoid_function_literals_in_foreach_calls: false
+    avoid_init_to_null: false
+    avoid_print: false
+    avoid_return_types_on_setters: false
+    curly_braces_in_flow_control_structures: false
+    empty_catches: false
+    overridden_fields: false
+    prefer_collection_literals: false
+    prefer_conditional_assignment: false
+    prefer_const_constructors_in_immutables: false
+    prefer_final_fields: false
+    prefer_interpolation_to_compose_strings: false
+    prefer_typing_uninitialized_variables: false
+    strict_top_level_inference: false
+    unnecessary_brace_in_string_interps: false
+    unnecessary_const: false
+    unnecessary_library_name: false
+    unnecessary_new: false
+    unnecessary_this: false
+    use_super_parameters: false
 
 # Additional information about this file can be found at
 # https://dart.dev/guides/language/analysis-options

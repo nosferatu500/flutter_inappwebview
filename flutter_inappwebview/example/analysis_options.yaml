@@ -9,15 +9,44 @@
 # packages, and plugins designed to encourage good coding practices.
 include: package:flutter_lints/flutter.yaml
 
+# The `linter: rules:` block that used to live here set every value to `ignore`,
+# which is only meaningful under `analyzer: errors:`. That made this file
+# invalid, which silently disabled *all* flutter_lints rules and broke pub.dev's
+# static analysis (upstream issue #2758).
+#
+# With the file valid again, flutter_lints surfaces pre-existing style
+# violations across the whole codebase. They are opted out explicitly below so
+# `flutter analyze` stays actionable; re-enable them one at a time (most are
+# auto-fixable via `dart fix --apply`). Rules that catch real defects -- such as
+# unrelated_type_equality_checks -- are deliberately left enabled.
 linter:
   rules:
-    constant_identifier_names: ignore
-    deprecated_member_use_from_same_package: ignore
+    avoid_init_to_null: false
+    avoid_print: false
+    depend_on_referenced_packages: false
+    library_private_types_in_public_api: false
+    non_constant_identifier_names: false
+    prefer_collection_literals: false
+    prefer_const_constructors: false
+    prefer_const_declarations: false
+    prefer_const_literals_to_create_immutables: false
+    prefer_contains: false
+    prefer_final_fields: false
+    prefer_interpolation_to_compose_strings: false
+    unnecessary_brace_in_string_interps: false
+    unnecessary_new: false
+    unnecessary_nullable_for_final_variable_declarations: false
+    unnecessary_overrides: false
+    unnecessary_this: false
+    use_build_context_synchronously: false
+    use_super_parameters: false
+    void_checks: false
 
 # Additional information about this file can be found at
 # https://dart.dev/guides/language/analysis-options
 analyzer:
   errors:
+    constant_identifier_names: ignore
     deprecated_member_use: ignore
     deprecated_member_use_from_same_package: ignore
     unnecessary_cast: ignore
