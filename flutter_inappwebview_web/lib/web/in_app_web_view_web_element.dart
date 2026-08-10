@@ -21,6 +21,18 @@ extension on HTMLIFrameElement {
   external String? get csp;
 }
 
+/// Whether [sandbox] is the [Sandbox.ALLOW_ALL] sentinel, meaning "do not
+/// sandbox this iframe at all".
+///
+/// [InAppWebViewSettings.iframeSandbox] is a `Set<Sandbox>` while
+/// [Sandbox.ALLOW_ALL] is declared as a one-element `List<Sandbox>`, so
+/// comparing them with `==` is always false. That silently prevented the
+/// `sandbox` attribute from ever being removed. Compare by contents instead.
+bool _isSandboxAllowAll(Set<Sandbox>? sandbox) =>
+    sandbox != null &&
+    sandbox.length == Sandbox.ALLOW_ALL.length &&
+    sandbox.containsAll(Sandbox.ALLOW_ALL);
+
 class InAppWebViewWebElement implements Disposable {
   late dynamic _viewId;
   late BinaryMessenger _messenger;
@@ -296,12 +308,12 @@ class InAppWebViewWebElement implements Disposable {
       iframe.ariaHidden = settings!.iframeAriaHidden ?? iframe.ariaHidden;
 
       if (settings!.iframeSandbox != null &&
-          settings!.iframeSandbox != Sandbox.ALLOW_ALL) {
+          !_isSandboxAllowAll(settings!.iframeSandbox)) {
         iframe.setAttribute(
           "sandbox",
           settings!.iframeSandbox!.map((e) => e.toNativeValue()).join(" "),
         );
-      } else if (settings!.iframeSandbox == Sandbox.ALLOW_ALL) {
+      } else if (_isSandboxAllowAll(settings!.iframeSandbox)) {
         iframe.removeAttribute("sandbox");
       } else if (sandbox != Sandbox.values) {
         iframe.setAttribute(
@@ -582,12 +594,12 @@ class InAppWebViewWebElement implements Disposable {
 
     if (settings!.iframeSandbox != newSettings.iframeSandbox) {
       var sandbox = newSettings.iframeSandbox;
-      if (sandbox != null && sandbox != Sandbox.ALLOW_ALL) {
+      if (sandbox != null && !_isSandboxAllowAll(sandbox)) {
         iframe.setAttribute(
           "sandbox",
           sandbox.map((e) => e.toNativeValue()).join(" "),
         );
-      } else if (sandbox == Sandbox.ALLOW_ALL) {
+      } else if (_isSandboxAllowAll(sandbox)) {
         iframe.removeAttribute("sandbox");
       }
     } else if (sandbox != Sandbox.values) {
