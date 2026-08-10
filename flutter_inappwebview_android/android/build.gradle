@@ -22,11 +22,16 @@ rootProject.allprojects {
 apply plugin: 'com.android.library'
 
 android {
-    // Conditional for compatibility with AGP <4.2.
-    if (project.android.hasProperty("namespace")) {
-        namespace 'com.pichillilorenzo.flutter_inappwebview_android'
-    }
+    namespace 'com.pichillilorenzo.flutter_inappwebview_android'
     compileSdk = flutter.compileSdkVersion
+
+    // AGP 9 enables built-in Kotlin for every module it is applied to. This
+    // plugin has no Kotlin sources, so opt out to drop an empty Kotlin compile
+    // task and the implicit kotlin-stdlib dependency it would add to consumers.
+    // Guarded because the property does not exist on AGP 8.
+    if (hasProperty('enableKotlin')) {
+        enableKotlin = false
+    }
 
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_17
@@ -34,29 +39,26 @@ android {
     }
 
     defaultConfig {
-        minSdkVersion 19
+        minSdk = 24
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
 
         vectorDrawables.useSupportLibrary = true
+        // Shipped to consumers in the AAR; this is the only shrinker
+        // configuration a library should declare. Applying R8 to the library
+        // itself (buildTypes { release { minifyEnabled true } }) is wrong for a
+        // Flutter plugin and pulled in getDefaultProguardFile(), which AGP 9
+        // rejects for 'proguard-android.txt'.
         consumerProguardFiles 'proguard-rules.pro'
     }
-    lintOptions {
+
+    lint {
         disable 'InvalidPackage'
     }
-    buildTypes {
-        debug {
-            minifyEnabled false
-            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
-        }
-        release {
-            minifyEnabled true
-            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
-        }
-    }
-    dependencies {
-        implementation 'androidx.webkit:webkit:1.14.0'
-        implementation 'androidx.browser:browser:1.9.0'
-        implementation 'androidx.appcompat:appcompat:1.7.1'
-        implementation 'androidx.swiperefreshlayout:swiperefreshlayout:1.2.0'
-    }
+}
+
+dependencies {
+    implementation 'androidx.webkit:webkit:1.14.0'
+    implementation 'androidx.browser:browser:1.9.0'
+    implementation 'androidx.appcompat:appcompat:1.7.1'
+    implementation 'androidx.swiperefreshlayout:swiperefreshlayout:1.2.0'
 }
