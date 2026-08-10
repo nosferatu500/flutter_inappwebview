@@ -22,6 +22,7 @@ linter:
     prefer_collection_literals: false
     prefer_const_constructors_in_immutables: false
     prefer_final_fields: false
+    prefer_initializing_formals: false
     prefer_interpolation_to_compose_strings: false
     prefer_is_not_operator: false
     prefer_typing_uninitialized_variables: false

@@ -12,6 +12,7 @@ include: package:flutter_lints/flutter.yaml
 # unrelated_type_equality_checks -- are deliberately left enabled.
 linter:
   rules:
+    prefer_initializing_formals: false
     annotate_overrides: false
     avoid_return_types_on_setters: false
     library_private_types_in_public_api: false

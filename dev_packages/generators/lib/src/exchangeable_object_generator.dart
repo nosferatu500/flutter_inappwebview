@@ -196,17 +196,15 @@ class ExchangeableObjectGenerator
         classBuffer.writeln("$fieldName;");
       } else {
         final fieldLibrary = fieldElement.library;
-        if (fieldLibrary != null) {
-          ParsedLibraryResult parsed =
-              fieldLibrary.session.getParsedLibraryByElement(fieldLibrary)
-                  as ParsedLibraryResult;
-          final fieldBody = parsed
-              .getFragmentDeclaration(fieldElement.firstFragment)
-              ?.node
-              .toString()
-              .replaceAll(className ?? '', extClassName);
-          classBuffer.writeln("$fieldBody;");
-        }
+        ParsedLibraryResult parsed =
+            fieldLibrary.session.getParsedLibraryByElement(fieldLibrary)
+                as ParsedLibraryResult;
+        final fieldBody = parsed
+            .getFragmentDeclaration(fieldElement.firstFragment)
+            ?.node
+            .toString()
+            .replaceAll(className ?? '', extClassName);
+        classBuffer.writeln("$fieldBody;");
       }
     }
 
@@ -253,32 +251,30 @@ class ExchangeableObjectGenerator
     }
     if (hasCustomConstructor) {
       final library = visitor.constructor.library;
-      if (library != null) {
-        ParsedLibraryResult parsed =
-            library.session.getParsedLibraryByElement(library)
-                as ParsedLibraryResult;
-        final constructorBody = parsed
-            .getFragmentDeclaration(visitor.constructor.firstFragment)
-            ?.node;
-        if (constructorBody != null) {
-          var generatedConstructor = constructorBody
-              .toString()
-              .replaceAll(className ?? '', extClassName)
-              .replaceAll("@ExchangeableObjectConstructor()", "");
+      ParsedLibraryResult parsed =
+          library.session.getParsedLibraryByElement(library)
+              as ParsedLibraryResult;
+      final constructorBody = parsed
+          .getFragmentDeclaration(visitor.constructor.firstFragment)
+          ?.node;
+      if (constructorBody != null) {
+        var generatedConstructor = constructorBody
+            .toString()
+            .replaceAll(className ?? '', extClassName)
+            .replaceAll("@ExchangeableObjectConstructor()", "");
 
-          // Replace type names ending with _ (e.g., CompressFormat_? -> CompressFormat?)
-          // First replace _. (type access) then _? (nullable type) then _ (type name)
-          generatedConstructor = generatedConstructor
-              .replaceAll("_.", ".")
-              .replaceAll("_?", "?")
-              .replaceAll("_>", ">")
-              .replaceAllMapped(
-                RegExp(r'([A-Z][a-zA-Z0-9]*)_\b'),
-                (match) => match.group(1)!,
-              );
+        // Replace type names ending with _ (e.g., CompressFormat_? -> CompressFormat?)
+        // First replace _. (type access) then _? (nullable type) then _ (type name)
+        generatedConstructor = generatedConstructor
+            .replaceAll("_.", ".")
+            .replaceAll("_?", "?")
+            .replaceAll("_>", ">")
+            .replaceAllMapped(
+              RegExp(r'([A-Z][a-zA-Z0-9]*)_\b'),
+              (match) => match.group(1)!,
+            );
 
-          classBuffer.writeln(generatedConstructor);
-        }
+        classBuffer.writeln(generatedConstructor);
       }
     } else if (constructorFields.length > 0) {
       if (visitor.constructor.isConst) {
@@ -397,11 +393,13 @@ class ExchangeableObjectGenerator
                 fieldTypeElement.name!.replaceFirst("_", "") +
                     '.fromValue($deprecatedFieldName${deprecatedIsNullable ? '?' : ''}.toValue())${!isNullable ? '!' : ''}',
               );
-            } else if (deprecatedField.type.getDisplayString(
-                      withNullability: false,
+            } else if (Util.typeDisplayStringWithoutNullability(
+                      deprecatedField.type,
                     ) ==
                     "Uri" &&
-                newFieldElement.type.getDisplayString(withNullability: false) ==
+                Util.typeDisplayStringWithoutNullability(
+                      newFieldElement.type,
+                    ) ==
                     "WebUri") {
               if (deprecatedIsNullable) {
                 classBuffer.write(
@@ -580,29 +578,27 @@ class ExchangeableObjectGenerator
         continue;
       }
       final methodLibrary = methodElement.library;
-      if (methodLibrary != null) {
-        ParsedLibraryResult parsed =
-            methodLibrary.session.getParsedLibraryByElement(methodLibrary)
-                as ParsedLibraryResult;
-        final methodBody = parsed
-            .getFragmentDeclaration(methodElement.firstFragment)
-            ?.node;
-        if (methodBody != null) {
-          final docs = methodElement.documentationComment;
-          if (docs != null) {
-            classBuffer.writeln(docs);
-          }
-          final fieldSupportedDocs = Util.getSupportedDocs(
-            _coreCheckerSupportedPlatforms,
-            methodElement,
-          );
-          if (fieldSupportedDocs != null) {
-            classBuffer.writeln(fieldSupportedDocs);
-          }
-          classBuffer.writeln(
-            methodBody.toString().replaceAll(className ?? '', extClassName),
-          );
+      ParsedLibraryResult parsed =
+          methodLibrary.session.getParsedLibraryByElement(methodLibrary)
+              as ParsedLibraryResult;
+      final methodBody = parsed
+          .getFragmentDeclaration(methodElement.firstFragment)
+          ?.node;
+      if (methodBody != null) {
+        final docs = methodElement.documentationComment;
+        if (docs != null) {
+          classBuffer.writeln(docs);
         }
+        final fieldSupportedDocs = Util.getSupportedDocs(
+          _coreCheckerSupportedPlatforms,
+          methodElement,
+        );
+        if (fieldSupportedDocs != null) {
+          classBuffer.writeln(fieldSupportedDocs);
+        }
+        classBuffer.writeln(
+          methodBody.toString().replaceAll(className ?? '', extClassName),
+        );
       }
     }
 
@@ -753,7 +749,7 @@ class ExchangeableObjectGenerator
     // remove class reference terminating with "_"
     final classNameReference = fieldTypeElement?.name?.replaceFirst("_", "");
     final isNullable = Util.typeIsNullable(elementType);
-    final displayString = elementType.getDisplayString(withNullability: false);
+    final displayString = Util.typeDisplayStringWithoutNullability(elementType);
     if (displayString == "Uri") {
       if (!isNullable) {
         return "(Uri.tryParse($value) ?? Uri())";
@@ -884,7 +880,7 @@ class ExchangeableObjectGenerator
   String getToMapValue(String fieldName, DartType elementType) {
     final fieldTypeElement = elementType.element;
     final isNullable = Util.typeIsNullable(elementType);
-    final displayString = elementType.getDisplayString(withNullability: false);
+    final displayString = Util.typeDisplayStringWithoutNullability(elementType);
     if (displayString == "Uri") {
       return fieldName + (isNullable ? '?' : '') + '.toString()';
     } else if (displayString == "WebUri") {

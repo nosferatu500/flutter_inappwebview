@@ -346,6 +346,11 @@ class InAppWebViewWebElement implements Disposable {
     }
   }
 
+  /// Issues [urlRequest] with a raw [XMLHttpRequest].
+  ///
+  /// This used to call `HttpRequest.request` from `package:web`, which is
+  /// deprecated in favour of `package:http`. Driving [XMLHttpRequest] directly
+  /// keeps the behaviour identical without adding a dependency.
   Future<XMLHttpRequest> _makeRequest(
     URLRequest urlRequest, {
     bool? withCredentials,
@@ -353,16 +358,59 @@ class InAppWebViewWebElement implements Disposable {
     String? mimeType,
     void onProgress(ProgressEvent e)?,
   }) {
-    return HttpRequest.request(
+    final completer = Completer<XMLHttpRequest>();
+    final xhr = XMLHttpRequest();
+    xhr.open(
+      urlRequest.method ?? 'GET',
       urlRequest.url?.toString() ?? 'about:blank',
-      method: urlRequest.method,
-      requestHeaders: urlRequest.headers,
-      sendData: urlRequest.body,
-      withCredentials: withCredentials,
-      responseType: responseType,
-      mimeType: mimeType,
-      onProgress: onProgress,
+      true,
     );
+
+    if (withCredentials != null) {
+      xhr.withCredentials = withCredentials;
+    }
+    if (responseType != null) {
+      xhr.responseType = responseType;
+    }
+    if (mimeType != null) {
+      xhr.overrideMimeType(mimeType);
+    }
+    // Not a tear-off: tearing off an external extension type interop member is
+    // disallowed and breaks the dart2js/wasm build.
+    // ignore: unnecessary_lambdas
+    urlRequest.headers?.forEach(
+      (name, value) => xhr.setRequestHeader(name, value),
+    );
+    if (onProgress != null) {
+      xhr.onProgress.listen(onProgress);
+    }
+
+    xhr.onLoad.listen((ProgressEvent e) {
+      final status = xhr.status;
+      final accepted = status >= 200 && status < 300;
+      final fileUri = status == 0; // file:// URIs have a status of 0.
+      final notModified = status == 304;
+      // Redirects are specified up to 307, but higher codes are used in
+      // practice (e.g. 308). The browser resolves redirects before we see
+      // them, so anything that still arrives here is passed through.
+      final unknownRedirect = status > 307 && status < 400;
+
+      if (accepted || fileUri || notModified || unknownRedirect) {
+        completer.complete(xhr);
+      } else {
+        completer.completeError(e);
+      }
+    });
+    xhr.onError.listen(completer.completeError);
+
+    final body = urlRequest.body;
+    if (body != null) {
+      xhr.send(body.jsify());
+    } else {
+      xhr.send();
+    }
+
+    return completer.future;
   }
 
   String _convertHttpResponseToData(XMLHttpRequest httpRequest) {

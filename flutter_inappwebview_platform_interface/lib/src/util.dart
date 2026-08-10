@@ -514,13 +514,17 @@ extension UtilColor on Color {
 }
 
 extension HexColor on Color {
+  /// Converts a normalized (0.0-1.0) colour channel to its two-digit hex form.
+  static String _channelToHex(double channel) =>
+      (channel * 255.0).round().clamp(0, 255).toRadixString(16).padLeft(2, '0');
+
   /// Prefixes a hash sign if [leadingHashSign] is set to `true` (default is `true`).
   String toHex({bool leadingHashSign = true}) =>
       '${leadingHashSign ? '#' : ''}'
-      '${alpha.toRadixString(16).padLeft(2, '0')}'
-      '${red.toRadixString(16).padLeft(2, '0')}'
-      '${green.toRadixString(16).padLeft(2, '0')}'
-      '${blue.toRadixString(16).padLeft(2, '0')}';
+      '${_channelToHex(a)}'
+      '${_channelToHex(r)}'
+      '${_channelToHex(g)}'
+      '${_channelToHex(b)}';
 }
 
 extension MapSize on Size {
