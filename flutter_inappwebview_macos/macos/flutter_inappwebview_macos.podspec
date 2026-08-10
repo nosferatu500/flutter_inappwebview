@@ -5,28 +5,27 @@
 Pod::Spec.new do |s|
   s.name             = 'flutter_inappwebview_macos'
   s.version          = '0.0.1'
-  s.summary          = 'A new Flutter plugin project.'
+  s.summary          = 'macOS implementation of the flutter_inappwebview plugin.'
   s.description      = <<-DESC
-A new Flutter plugin project.
+macOS implementation of the flutter_inappwebview plugin, which allows you to add an
+inline webview, to use an headless webview, and to open an in-app browser window.
                        DESC
-  s.homepage         = 'http://example.com'
+  s.homepage         = 'https://inappwebview.dev/'
   s.license          = { :file => '../LICENSE' }
-  s.author           = { 'Your Company' => 'email@example.com' }
+  s.author           = { 'Lorenzo Pichilli' => 'pichillilorenzo@gmail.com' }
 
   s.source           = { :path => '.' }
   s.source_files     = 'flutter_inappwebview_macos/Sources/flutter_inappwebview_macos/**/*.swift'
   s.dependency 'FlutterMacOS'
   s.resource_bundles = {'flutter_inappwebview_macos_privacy' => ['flutter_inappwebview_macos/Sources/flutter_inappwebview_macos/Resources/PrivacyInfo.xcprivacy']}
 
-  # swift-collections podspec doesn't declare macOS support, so we must use OrderedSet library
-  # s.dependency 'swift-collections', '~>1.1.1'
+  # The unofficial swift-collections podspec declares iOS support only, so the
+  # CocoaPods build uses the OrderedSet pod instead. The Swift Package Manager
+  # build uses apple/swift-collections directly -- see Package.swift and the
+  # SWIFT_PACKAGE conditionals in Types/WKUserContentController.swift.
   s.dependency 'OrderedSet', '~>6.0.3'
 
-  s.platform = :osx, '10.14'
+  s.platform = :osx, '10.15'
   s.pod_target_xcconfig = { 'DEFINES_MODULE' => 'YES' }
-  s.xcconfig = {
-    'LIBRARY_SEARCH_PATHS' => '$(TOOLCHAIN_DIR)/usr/lib/swift/$(PLATFORM_NAME)/ $(SDKROOT)/usr/lib/swift',
-    'LD_RUNPATH_SEARCH_PATHS' => '/usr/lib/swift',
-  }
-  s.swift_version = '5.0'
+  s.swift_version = '5.9'
 end

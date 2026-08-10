@@ -1,17 +1,18 @@
 #
 # To learn more about a Podspec see http://guides.cocoapods.org/syntax/podspec.html.
-# Run `pod lib lint flutterplugintest.podspec' to validate before publishing.
+# Run `pod lib lint flutter_inappwebview_ios.podspec' to validate before publishing.
 #
 Pod::Spec.new do |s|
   s.name             = 'flutter_inappwebview_ios'
   s.version          = '0.0.1'
-  s.summary          = 'A new Flutter plugin.'
+  s.summary          = 'iOS implementation of the flutter_inappwebview plugin.'
   s.description      = <<-DESC
-A new Flutter plugin.
+iOS implementation of the flutter_inappwebview plugin, which allows you to add an
+inline webview, to use an headless webview, and to open an in-app browser window.
                        DESC
-  s.homepage         = 'http://example.com'
+  s.homepage         = 'https://inappwebview.dev/'
   s.license          = { :file => '../LICENSE' }
-  s.author           = { 'Your Company' => 'email@example.com' }
+  s.author           = { 'Lorenzo Pichilli' => 'pichillilorenzo@gmail.com' }
   s.source           = { :path => '.' }
   s.source_files = 'flutter_inappwebview_ios/Sources/flutter_inappwebview_ios/**/*.swift'
   s.resources = 'flutter_inappwebview_ios/Sources/flutter_inappwebview_ios/Resources/**/*.storyboard'
@@ -20,22 +21,9 @@ A new Flutter plugin.
 
   s.pod_target_xcconfig = { 'DEFINES_MODULE' => 'YES' }
 
-  s.libraries = 'swiftCoreGraphics'
-  
   s.dependency 'swift-collections', '~>1.1.1'
 
-  s.xcconfig = {
-    'LIBRARY_SEARCH_PATHS' => '$(TOOLCHAIN_DIR)/usr/lib/swift/$(PLATFORM_NAME)/ $(SDKROOT)/usr/lib/swift',
-    'LD_RUNPATH_SEARCH_PATHS' => '/usr/lib/swift',
-  }
+  s.swift_version = '5.9'
 
-  s.swift_version = '5.0'
-
-  s.platforms = { :ios => '12.0' }
-
-  s.default_subspec = 'Core'
-
-  s.subspec 'Core' do |core|
-    core.platform = :ios, '12.0'
-  end
+  s.platform = :ios, '13.0'
 end
