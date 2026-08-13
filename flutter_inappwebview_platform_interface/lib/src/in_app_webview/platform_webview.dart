@@ -1857,14 +1857,6 @@ In that case, after the `window.addEventListener("flutterInAppWebViewPlatformRea
   onFormResubmission;
 
 
-  ///{@template flutter_inappwebview_platform_interface.PlatformWebViewCreationParams.androidOnReceivedIcon}
-  ///Use [onReceivedIcon] instead.
-  ///{@endtemplate}
-  ///
-  ///{@macro flutter_inappwebview_platform_interface.PlatformWebViewCreationParams.androidOnReceivedIcon.supported_platforms}
-  @SupportedPlatforms(platforms: [AndroidPlatform()])
-  @Deprecated('Use onReceivedIcon instead')
-  final void Function(T controller, Uint8List icon)? androidOnReceivedIcon;
 
   ///{@template flutter_inappwebview_platform_interface.PlatformWebViewCreationParams.onReceivedIcon}
   ///Event fired when there is new favicon for the current page.
@@ -2690,7 +2682,6 @@ This is a limitation of the native WebKit APIs.""",
     @Deprecated('Use onFormResubmission instead')
     this.androidOnFormResubmission,
     this.onFormResubmission,
-    @Deprecated('Use onReceivedIcon instead') this.androidOnReceivedIcon,
     @Deprecated('Use onFaviconChanged instead') this.onReceivedIcon,
     this.onFaviconChanged,
     @Deprecated('Use onReceivedTouchIconUrl instead')

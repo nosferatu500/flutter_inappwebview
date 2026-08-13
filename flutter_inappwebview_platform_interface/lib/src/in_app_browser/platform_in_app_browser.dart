@@ -2028,12 +2028,6 @@ In that case, after the `window.addEventListener("flutterInAppWebViewPlatformRea
   }
 
 
-  ///{@macro flutter_inappwebview_platform_interface.PlatformWebViewCreationParams.androidOnReceivedIcon}
-  ///
-  ///{@macro flutter_inappwebview_platform_interface.PlatformInAppBrowserEvents.androidOnReceivedIcon.supported_platforms}
-  @SupportedPlatforms(platforms: [AndroidPlatform()])
-  @Deprecated('Use onReceivedIcon instead')
-  void androidOnReceivedIcon(Uint8List icon) {}
 
   ///{@macro flutter_inappwebview_platform_interface.PlatformWebViewCreationParams.onReceivedIcon}
   ///

@@ -91,7 +91,6 @@ class MacOSInAppWebViewWidgetCreationParams
     @Deprecated('Use onFormResubmission instead')
     super.androidOnFormResubmission,
     super.onFormResubmission,
-    @Deprecated('Use onReceivedIcon instead') super.androidOnReceivedIcon,
     super.onReceivedIcon,
     @Deprecated('Use onReceivedTouchIconUrl instead')
     super.androidOnReceivedTouchIconUrl,
@@ -210,7 +209,6 @@ class MacOSInAppWebViewWidgetCreationParams
         onRenderProcessUnresponsive: params.onRenderProcessUnresponsive,
         androidOnFormResubmission: params.androidOnFormResubmission,
         onFormResubmission: params.onFormResubmission,
-        androidOnReceivedIcon: params.androidOnReceivedIcon,
         onReceivedIcon: params.onReceivedIcon,
         androidOnReceivedTouchIconUrl: params.androidOnReceivedTouchIconUrl,
         onReceivedTouchIconUrl: params.onReceivedTouchIconUrl,

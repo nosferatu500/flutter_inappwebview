@@ -734,28 +734,16 @@ class AndroidInAppWebViewController extends PlatformInAppWebViewController
         break;
       case "onReceivedIcon":
         if ((webviewParams != null &&
-                (webviewParams!.onReceivedIcon != null ||
-                    // ignore: deprecated_member_use_from_same_package
-                    webviewParams!.androidOnReceivedIcon != null)) ||
+                webviewParams!.onReceivedIcon != null) ||
             _inAppBrowserEventHandler != null) {
           Uint8List icon = Uint8List.fromList(
             call.arguments["icon"].cast<int>(),
           );
 
           if (webviewParams != null) {
-            if (webviewParams!.onReceivedIcon != null)
-              webviewParams!.onReceivedIcon!(_controllerFromPlatform, icon);
-            else {
-              // ignore: deprecated_member_use_from_same_package
-              webviewParams!.androidOnReceivedIcon!(
-                _controllerFromPlatform,
-                icon,
-              );
-            }
+            webviewParams!.onReceivedIcon!(_controllerFromPlatform, icon);
           } else {
             _inAppBrowserEventHandler!.onReceivedIcon(icon);
-            // ignore: deprecated_member_use_from_same_package
-            _inAppBrowserEventHandler!.androidOnReceivedIcon(icon);
           }
         }
         break;

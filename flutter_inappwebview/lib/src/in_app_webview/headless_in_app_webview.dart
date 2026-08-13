@@ -131,9 +131,6 @@ class HeadlessInAppWebView {
     void Function(InAppWebViewController controller)? onCloseWindow,
     void Function(InAppWebViewController controller)? onWindowFocus,
     void Function(InAppWebViewController controller)? onWindowBlur,
-    @Deprecated('Use onReceivedIcon instead')
-    void Function(InAppWebViewController controller, Uint8List icon)?
-    androidOnReceivedIcon,
     @Deprecated('Use onReceivedTouchIconUrl instead')
     void Function(InAppWebViewController controller, Uri url, bool precomposed)?
     androidOnReceivedTouchIconUrl,
@@ -731,10 +728,6 @@ class HeadlessInAppWebView {
                : null,
            onFormResubmission: onFormResubmission != null
                ? (controller, url) => onFormResubmission.call(controller, url)
-               : null,
-           androidOnReceivedIcon: androidOnReceivedIcon != null
-               ? (controller, icon) =>
-                     androidOnReceivedIcon.call(controller, icon)
                : null,
            onReceivedIcon: onReceivedIcon != null
                ? (controller, icon) => onReceivedIcon.call(controller, icon)

@@ -763,21 +763,6 @@ enum PlatformInAppBrowserEventsMethod {
   @Deprecated('Use onPermissionRequest instead')
   androidOnPermissionRequest,
 
-  ///Can be used to check if the [PlatformInAppBrowserEvents.androidOnReceivedIcon] method is supported at runtime.
-  ///
-  ///{@template flutter_inappwebview_platform_interface.PlatformInAppBrowserEvents.androidOnReceivedIcon.supported_platforms}
-  ///
-  ///**Officially Supported Platforms/Implementations**:
-  ///- Android WebView
-  ///
-  ///**Parameters - Officially Supported Platforms/Implementations**:
-  ///- [icon]: all platforms
-  ///
-  ///Use the [PlatformInAppBrowserEvents.isMethodSupported] method to check if this method is supported at runtime.
-  ///{@endtemplate}
-  @Deprecated('Use onReceivedIcon instead')
-  androidOnReceivedIcon,
-
   ///Can be used to check if the [PlatformInAppBrowserEvents.androidOnReceivedLoginRequest] method is supported at runtime.
   ///
   ///{@template flutter_inappwebview_platform_interface.PlatformInAppBrowserEvents.androidOnReceivedLoginRequest.supported_platforms}
@@ -2150,11 +2135,6 @@ extension _PlatformInAppBrowserEventsMethodSupported
               TargetPlatform.android,
             ].contains(platform ?? defaultTargetPlatform);
       case PlatformInAppBrowserEventsMethod.androidOnPermissionRequest:
-        return ((kIsWeb && platform != null) || !kIsWeb) &&
-            [
-              TargetPlatform.android,
-            ].contains(platform ?? defaultTargetPlatform);
-      case PlatformInAppBrowserEventsMethod.androidOnReceivedIcon:
         return ((kIsWeb && platform != null) || !kIsWeb) &&
             [
               TargetPlatform.android,

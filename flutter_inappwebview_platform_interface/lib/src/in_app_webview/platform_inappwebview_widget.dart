@@ -120,7 +120,6 @@ class PlatformInAppWebViewWidgetCreationParams
     @Deprecated('Use onFormResubmission instead')
     super.androidOnFormResubmission,
     super.onFormResubmission,
-    @Deprecated('Use onReceivedIcon instead') super.androidOnReceivedIcon,
     super.onReceivedIcon,
     @Deprecated('Use onReceivedTouchIconUrl instead')
     super.androidOnReceivedTouchIconUrl,

@@ -309,10 +309,6 @@ class InAppBrowser implements PlatformInAppBrowserEvents {
     return null;
   }
 
-  ///Use [onReceivedIcon] instead.
-  @Deprecated('Use onReceivedIcon instead')
-  @override
-  void androidOnReceivedIcon(Uint8List icon) {}
 
   ///Use [onReceivedLoginRequest] instead.
   @Deprecated('Use onReceivedLoginRequest instead')

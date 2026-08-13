@@ -111,7 +111,6 @@ class PlatformHeadlessInAppWebViewCreationParams
     @Deprecated('Use onFormResubmission instead')
     super.androidOnFormResubmission,
     super.onFormResubmission,
-    @Deprecated('Use onReceivedIcon instead') super.androidOnReceivedIcon,
     @Deprecated('Use onFaviconChanged instead') super.onReceivedIcon,
     super.onFaviconChanged,
     @Deprecated('Use onReceivedTouchIconUrl instead')
