@@ -854,22 +854,6 @@ enum PlatformInAppBrowserEventsMethod {
   @Deprecated('Use onRenderProcessUnresponsive instead')
   androidOnRenderProcessUnresponsive,
 
-  ///Can be used to check if the [PlatformInAppBrowserEvents.androidOnSafeBrowsingHit] method is supported at runtime.
-  ///
-  ///{@template flutter_inappwebview_platform_interface.PlatformInAppBrowserEvents.androidOnSafeBrowsingHit.supported_platforms}
-  ///
-  ///**Officially Supported Platforms/Implementations**:
-  ///- Android WebView
-  ///
-  ///**Parameters - Officially Supported Platforms/Implementations**:
-  ///- [url]: all platforms
-  ///- [threatType]: all platforms
-  ///
-  ///Use the [PlatformInAppBrowserEvents.isMethodSupported] method to check if this method is supported at runtime.
-  ///{@endtemplate}
-  @Deprecated('Use onSafeBrowsingHit instead')
-  androidOnSafeBrowsingHit,
-
   ///Can be used to check if the [PlatformInAppBrowserEvents.androidOnScaleChanged] method is supported at runtime.
   ///
   ///{@template flutter_inappwebview_platform_interface.PlatformInAppBrowserEvents.androidOnScaleChanged.supported_platforms}
@@ -2212,11 +2196,6 @@ extension _PlatformInAppBrowserEventsMethodSupported
               TargetPlatform.android,
             ].contains(platform ?? defaultTargetPlatform);
       case PlatformInAppBrowserEventsMethod.androidOnRenderProcessUnresponsive:
-        return ((kIsWeb && platform != null) || !kIsWeb) &&
-            [
-              TargetPlatform.android,
-            ].contains(platform ?? defaultTargetPlatform);
-      case PlatformInAppBrowserEventsMethod.androidOnSafeBrowsingHit:
         return ((kIsWeb && platform != null) || !kIsWeb) &&
             [
               TargetPlatform.android,

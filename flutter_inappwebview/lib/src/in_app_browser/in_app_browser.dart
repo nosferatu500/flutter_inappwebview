@@ -347,15 +347,6 @@ class InAppBrowser implements PlatformInAppBrowserEvents {
     return null;
   }
 
-  ///Use [onSafeBrowsingHit] instead.
-  @Deprecated("Use onSafeBrowsingHit instead")
-  @override
-  FutureOr<SafeBrowsingResponse?>? androidOnSafeBrowsingHit(
-    Uri url,
-    SafeBrowsingThreat? threatType,
-  ) {
-    return null;
-  }
 
   ///Use [onZoomScaleChanged] instead.
   @Deprecated('Use onZoomScaleChanged instead')

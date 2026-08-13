@@ -904,9 +904,7 @@ class IOSInAppWebViewController extends PlatformInAppWebViewController
         break;
       case "onSafeBrowsingHit":
         if ((webviewParams != null &&
-                (webviewParams!.onSafeBrowsingHit != null ||
-                    // ignore: deprecated_member_use_from_same_package
-                    webviewParams!.androidOnSafeBrowsingHit != null)) ||
+                webviewParams!.onSafeBrowsingHit != null) ||
             _inAppBrowserEventHandler != null) {
           String url = call.arguments["url"];
           SafeBrowsingThreat? threatType = SafeBrowsingThreat.fromNativeValue(
@@ -915,29 +913,16 @@ class IOSInAppWebViewController extends PlatformInAppWebViewController
           WebUri uri = WebUri(url);
 
           if (webviewParams != null) {
-            if (webviewParams!.onSafeBrowsingHit != null)
-              return (await webviewParams!.onSafeBrowsingHit!(
-                _controllerFromPlatform,
-                uri,
-                threatType,
-              ))?.toMap();
-            else {
-              // ignore: deprecated_member_use_from_same_package
-              return (await webviewParams!.androidOnSafeBrowsingHit!(
-                _controllerFromPlatform,
-                uri,
-                threatType,
-              ))?.toMap();
-            }
+            return (await webviewParams!.onSafeBrowsingHit!(
+              _controllerFromPlatform,
+              uri,
+              threatType,
+            ))?.toMap();
           } else {
-            return ((await _inAppBrowserEventHandler!.onSafeBrowsingHit(
+            return (await _inAppBrowserEventHandler!.onSafeBrowsingHit(
                       uri,
                       threatType,
-                    )) ??
-                    (await _inAppBrowserEventHandler!.androidOnSafeBrowsingHit(
-                      uri,
-                      threatType,
-                    )))
+                    ))
                 ?.toMap();
           }
         }

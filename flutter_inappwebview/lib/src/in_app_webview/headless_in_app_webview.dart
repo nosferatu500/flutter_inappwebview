@@ -70,13 +70,6 @@ class HeadlessInAppWebView {
       List<String> resources,
     )?
     androidOnPermissionRequest,
-    @Deprecated('Use onSafeBrowsingHit instead')
-    FutureOr<SafeBrowsingResponse?> Function(
-      InAppWebViewController controller,
-      Uri url,
-      SafeBrowsingThreat? threatType,
-    )?
-    androidOnSafeBrowsingHit,
     InAppWebViewInitialData? initialData,
     String? initialFile,
     @Deprecated('Use initialSettings instead')
@@ -669,10 +662,6 @@ class HeadlessInAppWebView {
            onZoomScaleChanged: onZoomScaleChanged != null
                ? (controller, oldScale, newScale) =>
                      onZoomScaleChanged.call(controller, oldScale, newScale)
-               : null,
-           androidOnSafeBrowsingHit: androidOnSafeBrowsingHit != null
-               ? (controller, url, threatType) =>
-                     androidOnSafeBrowsingHit.call(controller, url, threatType)
                : null,
            onSafeBrowsingHit: onSafeBrowsingHit != null
                ? (controller, url, threatType) =>

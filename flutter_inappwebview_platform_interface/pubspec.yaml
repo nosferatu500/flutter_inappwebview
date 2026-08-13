@@ -68,3 +68,11 @@ flutter:
   #
   # For details regarding fonts in packages, see
   # https://flutter.dev/custom-fonts/#from-packages
+
+# Local development overrides. Without these each package resolves
+# flutter_inappwebview_platform_interface from pub.dev, so local API changes are
+# invisible to its siblings. pub ignores dependency_overrides in consuming
+# projects, so this affects this repo only.
+dependency_overrides:
+  flutter_inappwebview_internal_annotations:
+    path: ../dev_packages/flutter_inappwebview_internal_annotations

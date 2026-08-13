@@ -1492,19 +1492,6 @@ In that case, after the `window.addEventListener("flutterInAppWebViewPlatformRea
   final void Function(T controller, double oldScale, double newScale)?
   onZoomScaleChanged;
 
-  ///{@template flutter_inappwebview_platform_interface.PlatformWebViewCreationParams.androidOnSafeBrowsingHit}
-  ///Use [onSafeBrowsingHit] instead.
-  ///{@endtemplate}
-  ///
-  ///{@macro flutter_inappwebview_platform_interface.PlatformWebViewCreationParams.androidOnSafeBrowsingHit.supported_platforms}
-  @SupportedPlatforms(platforms: [AndroidPlatform()])
-  @Deprecated("Use onSafeBrowsingHit instead")
-  final FutureOr<SafeBrowsingResponse?> Function(
-    T controller,
-    Uri url,
-    SafeBrowsingThreat? threatType,
-  )?
-  androidOnSafeBrowsingHit;
 
   ///{@template flutter_inappwebview_platform_interface.PlatformWebViewCreationParams.onSafeBrowsingHit}
   ///Event fired when the webview notifies that a loading URL has been flagged by Safe Browsing.
@@ -2687,7 +2674,6 @@ This is a limitation of the native WebKit APIs.""",
     this.onWindowBlur,
     this.onOverScrolled,
     this.onZoomScaleChanged,
-    @Deprecated('Use onSafeBrowsingHit instead') this.androidOnSafeBrowsingHit,
     this.onSafeBrowsingHit,
     @Deprecated('Use onPermissionRequest instead')
     this.androidOnPermissionRequest,

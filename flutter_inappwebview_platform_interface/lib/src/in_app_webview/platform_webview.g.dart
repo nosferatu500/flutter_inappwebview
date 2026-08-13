@@ -200,22 +200,6 @@ enum PlatformWebViewCreationParamsProperty {
   @Deprecated('Use onRenderProcessUnresponsive instead')
   androidOnRenderProcessUnresponsive,
 
-  ///Can be used to check if the [PlatformWebViewCreationParams.androidOnSafeBrowsingHit] property is supported at runtime.
-  ///
-  ///{@template flutter_inappwebview_platform_interface.PlatformWebViewCreationParams.androidOnSafeBrowsingHit.supported_platforms}
-  ///
-  ///**Officially Supported Platforms/Implementations**:
-  ///- Android WebView
-  ///
-  ///**Parameters - Officially Supported Platforms/Implementations**:
-  ///- [url]: all platforms
-  ///- [threatType]: all platforms
-  ///
-  ///Use the [PlatformWebViewCreationParams.isPropertySupported] method to check if this property is supported at runtime.
-  ///{@endtemplate}
-  @Deprecated('Use onSafeBrowsingHit instead')
-  androidOnSafeBrowsingHit,
-
   ///Can be used to check if the [PlatformWebViewCreationParams.androidOnScaleChanged] property is supported at runtime.
   ///
   ///{@template flutter_inappwebview_platform_interface.PlatformWebViewCreationParams.androidOnScaleChanged.supported_platforms}
@@ -1781,11 +1765,6 @@ extension _PlatformWebViewCreationParamsPropertySupported
             ].contains(platform ?? defaultTargetPlatform);
       case PlatformWebViewCreationParamsProperty
           .androidOnRenderProcessUnresponsive:
-        return ((kIsWeb && platform != null) || !kIsWeb) &&
-            [
-              TargetPlatform.android,
-            ].contains(platform ?? defaultTargetPlatform);
-      case PlatformWebViewCreationParamsProperty.androidOnSafeBrowsingHit:
         return ((kIsWeb && platform != null) || !kIsWeb) &&
             [
               TargetPlatform.android,

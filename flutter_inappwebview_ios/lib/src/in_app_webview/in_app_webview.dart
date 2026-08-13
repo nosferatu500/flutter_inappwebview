@@ -67,7 +67,6 @@ class IOSInAppWebViewWidgetCreationParams
     super.onWindowBlur,
     super.onOverScrolled,
     super.onZoomScaleChanged,
-    @Deprecated('Use onSafeBrowsingHit instead') super.androidOnSafeBrowsingHit,
     super.onSafeBrowsingHit,
     @Deprecated('Use onPermissionRequest instead')
     super.androidOnPermissionRequest,
@@ -190,7 +189,6 @@ class IOSInAppWebViewWidgetCreationParams
         onWindowBlur: params.onWindowBlur,
         onOverScrolled: params.onOverScrolled,
         onZoomScaleChanged: params.onZoomScaleChanged,
-        androidOnSafeBrowsingHit: params.androidOnSafeBrowsingHit,
         onSafeBrowsingHit: params.onSafeBrowsingHit,
         androidOnPermissionRequest: params.androidOnPermissionRequest,
         onPermissionRequest: params.onPermissionRequest,

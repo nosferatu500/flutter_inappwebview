@@ -1761,17 +1761,6 @@ In that case, after the `window.addEventListener("flutterInAppWebViewPlatformRea
   )
   void onZoomScaleChanged(double oldScale, double newScale) {}
 
-  ///{@macro flutter_inappwebview_platform_interface.PlatformWebViewCreationParams.androidOnSafeBrowsingHit}
-  ///
-  ///{@macro flutter_inappwebview_platform_interface.PlatformInAppBrowserEvents.androidOnSafeBrowsingHit.supported_platforms}
-  @SupportedPlatforms(platforms: [AndroidPlatform()])
-  @Deprecated("Use onSafeBrowsingHit instead")
-  FutureOr<SafeBrowsingResponse?>? androidOnSafeBrowsingHit(
-    Uri url,
-    SafeBrowsingThreat? threatType,
-  ) {
-    return null;
-  }
 
   ///{@macro flutter_inappwebview_platform_interface.PlatformWebViewCreationParams.onSafeBrowsingHit}
   ///
