@@ -1899,16 +1899,6 @@ In that case, after the `window.addEventListener("flutterInAppWebViewPlatformRea
     return null;
   }
 
-  ///{@macro flutter_inappwebview_platform_interface.PlatformWebViewCreationParams.androidOnRenderProcessUnresponsive}
-  ///
-  ///{@macro flutter_inappwebview_platform_interface.PlatformInAppBrowserEvents.androidOnRenderProcessUnresponsive.supported_platforms}
-  @SupportedPlatforms(platforms: [AndroidPlatform()])
-  @Deprecated("Use onRenderProcessUnresponsive instead")
-  FutureOr<WebViewRenderProcessAction?>? androidOnRenderProcessUnresponsive(
-    Uri? url,
-  ) {
-    return null;
-  }
 
   ///{@macro flutter_inappwebview_platform_interface.PlatformWebViewCreationParams.onRenderProcessUnresponsive}
   ///

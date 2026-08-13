@@ -1685,15 +1685,6 @@ In that case, after the `window.addEventListener("flutterInAppWebViewPlatformRea
   )?
   shouldInterceptRequest;
 
-  ///{@template flutter_inappwebview_platform_interface.PlatformWebViewCreationParams.androidOnRenderProcessUnresponsive}
-  ///Use [onRenderProcessUnresponsive] instead.
-  ///{@endtemplate}
-  ///
-  ///{@macro flutter_inappwebview_platform_interface.PlatformWebViewCreationParams.androidOnRenderProcessUnresponsive.supported_platforms}
-  @SupportedPlatforms(platforms: [AndroidPlatform()])
-  @Deprecated("Use onRenderProcessUnresponsive instead")
-  final FutureOr<WebViewRenderProcessAction?> Function(T controller, Uri? url)?
-  androidOnRenderProcessUnresponsive;
 
   ///{@template flutter_inappwebview_platform_interface.PlatformWebViewCreationParams.onRenderProcessUnresponsive}
   ///Event called when the renderer currently associated with the WebView becomes unresponsive as a result of a long running blocking task such as the execution of JavaScript.
@@ -2609,8 +2600,6 @@ This is a limitation of the native WebKit APIs.""",
     this.shouldInterceptRequest,
     this.onRenderProcessGone,
     this.onRenderProcessResponsive,
-    @Deprecated('Use onRenderProcessUnresponsive instead')
-    this.androidOnRenderProcessUnresponsive,
     this.onRenderProcessUnresponsive,
     @Deprecated('Use onFormResubmission instead')
     this.androidOnFormResubmission,

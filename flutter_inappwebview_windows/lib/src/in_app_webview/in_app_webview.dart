@@ -86,8 +86,6 @@ class WindowsInAppWebViewWidgetCreationParams
     super.shouldInterceptRequest,
     super.onRenderProcessGone,
     super.onRenderProcessResponsive,
-    @Deprecated('Use onRenderProcessUnresponsive instead')
-    super.androidOnRenderProcessUnresponsive,
     super.onRenderProcessUnresponsive,
     @Deprecated('Use onFormResubmission instead')
     super.androidOnFormResubmission,
@@ -208,8 +206,6 @@ class WindowsInAppWebViewWidgetCreationParams
         shouldInterceptRequest: params.shouldInterceptRequest,
         onRenderProcessGone: params.onRenderProcessGone,
         onRenderProcessResponsive: params.onRenderProcessResponsive,
-        androidOnRenderProcessUnresponsive:
-            params.androidOnRenderProcessUnresponsive,
         onRenderProcessUnresponsive: params.onRenderProcessUnresponsive,
         androidOnFormResubmission: params.androidOnFormResubmission,
         onFormResubmission: params.onFormResubmission,

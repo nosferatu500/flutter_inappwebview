@@ -108,8 +108,6 @@ class PlatformInAppWebViewWidgetCreationParams
     super.shouldInterceptRequest,
     super.onRenderProcessGone,
     super.onRenderProcessResponsive,
-    @Deprecated('Use onRenderProcessUnresponsive instead')
-    super.androidOnRenderProcessUnresponsive,
     super.onRenderProcessUnresponsive,
     @Deprecated('Use onFormResubmission instead')
     super.androidOnFormResubmission,
