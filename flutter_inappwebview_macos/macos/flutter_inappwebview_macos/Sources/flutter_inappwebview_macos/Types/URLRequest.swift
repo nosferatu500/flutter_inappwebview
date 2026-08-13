@@ -30,10 +30,10 @@ extension URLRequest {
         if let _allowsCellularAccess = fromPluginMap["allowsCellularAccess"] as? Bool {
             allowsCellularAccess = _allowsCellularAccess
         }
-        if #available(macOS 10.15, *), let _allowsConstrainedNetworkAccess = fromPluginMap["allowsConstrainedNetworkAccess"] as? Bool {
+        if let _allowsConstrainedNetworkAccess = fromPluginMap["allowsConstrainedNetworkAccess"] as? Bool {
             allowsConstrainedNetworkAccess = _allowsConstrainedNetworkAccess
         }
-        if #available(macOS 10.15, *), let _allowsExpensiveNetworkAccess = fromPluginMap["allowsExpensiveNetworkAccess"] as? Bool {
+        if let _allowsExpensiveNetworkAccess = fromPluginMap["allowsExpensiveNetworkAccess"] as? Bool {
             allowsExpensiveNetworkAccess = _allowsExpensiveNetworkAccess
         }
         if let _cachePolicy = fromPluginMap["cachePolicy"] as? Int {
@@ -54,10 +54,10 @@ extension URLRequest {
         if let _mainDocumentURL = fromPluginMap["mainDocumentURL"] as? String {
             mainDocumentURL = URL(string: _mainDocumentURL)!
         }
-        if #available(macOS 11.3, *), let _assumesHTTP3Capable = fromPluginMap["assumesHTTP3Capable"] as? Bool {
+        if let _assumesHTTP3Capable = fromPluginMap["assumesHTTP3Capable"] as? Bool {
             assumesHTTP3Capable = _assumesHTTP3Capable
         }
-        if #available(macOS 12.0, *), let attributionRawValue = fromPluginMap["attribution"] as? UInt,
+        if let attributionRawValue = fromPluginMap["attribution"] as? UInt,
             let _attribution = URLRequest.Attribution(rawValue: attributionRawValue) {
             attribution = _attribution
         }
@@ -66,18 +66,15 @@ extension URLRequest {
     public func toMap () -> [String:Any?] {
         var _allowsConstrainedNetworkAccess: Bool? = nil
         var _allowsExpensiveNetworkAccess: Bool? = nil
-        if #available(macOS 10.15, *) {
-            _allowsConstrainedNetworkAccess = allowsConstrainedNetworkAccess
-            _allowsExpensiveNetworkAccess = allowsExpensiveNetworkAccess
-        }
+        _allowsConstrainedNetworkAccess = allowsConstrainedNetworkAccess
+        _allowsExpensiveNetworkAccess = allowsExpensiveNetworkAccess
+
         var _assumesHTTP3Capable: Bool? = nil
-        if #available(macOS 11.3, *) {
-            _assumesHTTP3Capable = assumesHTTP3Capable
-        }
+        _assumesHTTP3Capable = assumesHTTP3Capable
+
         var _attribution: UInt? = nil
-        if #available(macOS 12.0, *) {
-            _attribution = attribution.rawValue
-        }
+        _attribution = attribution.rawValue
+
         return [
             "url": url?.absoluteString,
             "method": httpMethod,

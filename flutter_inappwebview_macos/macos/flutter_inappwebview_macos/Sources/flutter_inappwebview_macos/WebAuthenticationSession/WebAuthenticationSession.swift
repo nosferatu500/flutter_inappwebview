@@ -28,18 +28,17 @@ public class WebAuthenticationSession: NSObject, ASWebAuthenticationPresentation
         self.settings = settings
         super.init()
         self.callbackURLScheme = callbackURLScheme
-        if #available(macOS 10.15, *) {
-            let session = ASWebAuthenticationSession(url: self.url, callbackURLScheme: self.callbackURLScheme, completionHandler: self.completionHandler)
-            session.presentationContextProvider = self
-            self.session = session
-        }
+        let session = ASWebAuthenticationSession(url: self.url, callbackURLScheme: self.callbackURLScheme, completionHandler: self.completionHandler)
+        session.presentationContextProvider = self
+        self.session = session
+
         let channel = FlutterMethodChannel(name: WebAuthenticationSession.METHOD_CHANNEL_NAME_PREFIX + id,
                                            binaryMessenger: plugin.registrar.messenger)
         self.channelDelegate = WebAuthenticationSessionChannelDelegate(webAuthenticationSession: self, channel: channel)
     }
     
     public func prepare() {
-        if #available(macOS 10.15, *), let session = session as? ASWebAuthenticationSession {
+        if let session = session as? ASWebAuthenticationSession {
             session.prefersEphemeralWebBrowserSession = settings.prefersEphemeralWebBrowserSession
         }
     }
@@ -52,7 +51,7 @@ public class WebAuthenticationSession: NSObject, ASWebAuthenticationPresentation
         guard let session = session else {
             return false
         }
-        if #available(macOS 10.15.4, *), let session = session as? ASWebAuthenticationSession {
+        if let session = session as? ASWebAuthenticationSession {
             return session.canStart
         }
         return _canStart
@@ -63,7 +62,7 @@ public class WebAuthenticationSession: NSObject, ASWebAuthenticationPresentation
             return false
         }
         var started = false
-        if #available(macOS 10.15, *), let session = session as? ASWebAuthenticationSession {
+        if let session = session as? ASWebAuthenticationSession {
             started = session.start()
         }
         if started {
@@ -76,12 +75,11 @@ public class WebAuthenticationSession: NSObject, ASWebAuthenticationPresentation
         guard let session = session else {
             return
         }
-        if #available(macOS 10.15, *), let session = session as? ASWebAuthenticationSession {
+        if let session = session as? ASWebAuthenticationSession {
             session.cancel()
         }
     }
     
-    @available(macOS 10.15, *)
     public func presentationAnchor(for session: ASWebAuthenticationSession) -> ASPresentationAnchor {
         return NSApplication.shared.windows.first { $0.isKeyWindow } ?? ASPresentationAnchor()
     }

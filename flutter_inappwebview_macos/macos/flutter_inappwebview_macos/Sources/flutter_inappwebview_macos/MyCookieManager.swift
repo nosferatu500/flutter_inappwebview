@@ -9,7 +9,6 @@ import Foundation
 import WebKit
 import FlutterMacOS
 
-@available(macOS 10.13, *)
 public class MyCookieManager: ChannelDelegate {
     static let METHOD_CHANNEL_NAME = "com.pichillilorenzo/flutter_inappwebview_cookiemanager"
     var plugin: InAppWebViewFlutterPlugin?
@@ -116,20 +115,17 @@ public class MyCookieManager: ChannelDelegate {
             properties[.init("HttpOnly")] = "YES"
         }
         if sameSite != nil {
-            if #available(macOS 10.15, *) {
-                var sameSiteValue = HTTPCookieStringPolicy(rawValue: "None")
-                switch sameSite {
-                case "Lax":
-                    sameSiteValue = HTTPCookieStringPolicy.sameSiteLax
-                case "Strict":
-                    sameSiteValue = HTTPCookieStringPolicy.sameSiteStrict
-                default:
-                    break
-                }
-                properties[.sameSitePolicy] = sameSiteValue
-            } else {
-                properties[.init("SameSite")] = sameSite
+            var sameSiteValue = HTTPCookieStringPolicy(rawValue: "None")
+            switch sameSite {
+            case "Lax":
+                sameSiteValue = HTTPCookieStringPolicy.sameSiteLax
+            case "Strict":
+                sameSiteValue = HTTPCookieStringPolicy.sameSiteStrict
+            default:
+                break
             }
+            properties[.sameSitePolicy] = sameSiteValue
+
         }
         
         if let cookie = HTTPCookie(properties: properties) {
@@ -149,11 +145,10 @@ public class MyCookieManager: ChannelDelegate {
                 for cookie in cookies {
                     if urlHost.hasSuffix(cookie.domain) || ".\(urlHost)".hasSuffix(cookie.domain) {
                         var sameSite: String? = nil
-                        if #available(macOS 10.15, *) {
-                            if let sameSiteValue = cookie.sameSitePolicy?.rawValue {
-                                sameSite = sameSiteValue.prefix(1).capitalized + sameSiteValue.dropFirst()
-                            }
+                        if let sameSiteValue = cookie.sameSitePolicy?.rawValue {
+                            sameSite = sameSiteValue.prefix(1).capitalized + sameSiteValue.dropFirst()
                         }
+
                         
                         var expiresDateTimestamp: Int64 = -1
                         if let expiresDate = cookie.expiresDate?.timeIntervalSince1970 {
@@ -190,11 +185,10 @@ public class MyCookieManager: ChannelDelegate {
         MyCookieManager.httpCookieStore.getAllCookies { (cookies) in
             for cookie in cookies {
                 var sameSite: String? = nil
-                if #available(macOS 10.15, *) {
-                    if let sameSiteValue = cookie.sameSitePolicy?.rawValue {
-                        sameSite = sameSiteValue.prefix(1).capitalized + sameSiteValue.dropFirst()
-                    }
+                if let sameSiteValue = cookie.sameSitePolicy?.rawValue {
+                    sameSite = sameSiteValue.prefix(1).capitalized + sameSiteValue.dropFirst()
                 }
+
                 
                 var expiresDateTimestamp: Int64 = -1
                 if let expiresDate = cookie.expiresDate?.timeIntervalSince1970 {

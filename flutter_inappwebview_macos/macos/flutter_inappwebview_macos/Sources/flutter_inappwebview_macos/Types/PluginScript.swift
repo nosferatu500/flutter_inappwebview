@@ -22,20 +22,17 @@ public class PluginScript: UserScript {
         self.messageHandlerNames = messageHandlerNames
     }
     
-    @available(macOS 11.0, *)
     public override init(source: String, injectionTime: WKUserScriptInjectionTime, forMainFrameOnly: Bool, in contentWorld: WKContentWorld) {
         super.init(source: source, injectionTime: injectionTime, forMainFrameOnly: forMainFrameOnly, in: contentWorld)
         self.contentWorld = contentWorld
     }
     
-    @available(macOS 11.0, *)
     public init(source: String, injectionTime: WKUserScriptInjectionTime, forMainFrameOnly: Bool, in contentWorld: WKContentWorld, requiredInAllContentWorlds: Bool = false, messageHandlerNames: [String] = []) {
         super.init(source: source, injectionTime: injectionTime, forMainFrameOnly: forMainFrameOnly, in: contentWorld)
         self.requiredInAllContentWorlds = requiredInAllContentWorlds
         self.messageHandlerNames = messageHandlerNames
     }
 
-    @available(macOS 11.0, *)
     public init(groupName: String, source: String, injectionTime: WKUserScriptInjectionTime, forMainFrameOnly: Bool, in contentWorld: WKContentWorld,
                 allowedOriginRules: [String]?, requiredInAllContentWorlds: Bool = false, messageHandlerNames: [String] = []) {
         super.init(groupName: groupName, source: source, injectionTime: injectionTime, forMainFrameOnly: forMainFrameOnly, in: contentWorld, allowedOriginRules: allowedOriginRules)
@@ -50,30 +47,18 @@ public class PluginScript: UserScript {
                            requiredInAllContentWorlds: Bool? = nil,
                            allowedOriginRules: [String]? = nil,
                            messageHandlerNames: [String]? = nil) -> PluginScript {
-        if #available(macOS 11.0, *) {
-            return PluginScript(
-                groupName: groupName ?? self.groupName!,
-                source: source ?? self.source,
-                injectionTime: injectionTime ?? self.injectionTime,
-                forMainFrameOnly: forMainFrameOnly ?? self.isForMainFrameOnly,
-                in: self.contentWorld,
-                allowedOriginRules: allowedOriginRules ?? self.allowedOriginRules,
-                requiredInAllContentWorlds: requiredInAllContentWorlds ?? self.requiredInAllContentWorlds,
-                messageHandlerNames: messageHandlerNames ?? self.messageHandlerNames
-            )
-        }
         return PluginScript(
             groupName: groupName ?? self.groupName!,
             source: source ?? self.source,
             injectionTime: injectionTime ?? self.injectionTime,
             forMainFrameOnly: forMainFrameOnly ?? self.isForMainFrameOnly,
+            in: self.contentWorld,
             allowedOriginRules: allowedOriginRules ?? self.allowedOriginRules,
             requiredInAllContentWorlds: requiredInAllContentWorlds ?? self.requiredInAllContentWorlds,
             messageHandlerNames: messageHandlerNames ?? self.messageHandlerNames
         )
     }
     
-    @available(macOS 11.0, *)
     public func copyAndSet(groupName: String? = nil,
                            source: String? = nil,
                            injectionTime: WKUserScriptInjectionTime? = nil,
@@ -95,23 +80,14 @@ public class PluginScript: UserScript {
     }
     
     static func == (lhs: PluginScript, rhs: PluginScript) -> Bool {
-        if #available(macOS 11.0, *) {
-            return lhs.groupName == rhs.groupName &&
-                lhs.source == rhs.source &&
-                lhs.injectionTime == rhs.injectionTime &&
-                lhs.isForMainFrameOnly == rhs.isForMainFrameOnly &&
-                lhs.contentWorld == rhs.contentWorld &&
-                lhs.allowedOriginRules == rhs.allowedOriginRules &&
-                lhs.requiredInAllContentWorlds == rhs.requiredInAllContentWorlds &&
-                lhs.messageHandlerNames == rhs.messageHandlerNames
-        } else {
-            return lhs.groupName == rhs.groupName &&
-                lhs.source == rhs.source &&
-                lhs.injectionTime == rhs.injectionTime &&
-                lhs.isForMainFrameOnly == rhs.isForMainFrameOnly &&
-                lhs.allowedOriginRules == rhs.allowedOriginRules &&
-                lhs.requiredInAllContentWorlds == rhs.requiredInAllContentWorlds &&
-                lhs.messageHandlerNames == rhs.messageHandlerNames
-        }
+        return lhs.groupName == rhs.groupName &&
+            lhs.source == rhs.source &&
+            lhs.injectionTime == rhs.injectionTime &&
+            lhs.isForMainFrameOnly == rhs.isForMainFrameOnly &&
+            lhs.contentWorld == rhs.contentWorld &&
+            lhs.allowedOriginRules == rhs.allowedOriginRules &&
+            lhs.requiredInAllContentWorlds == rhs.requiredInAllContentWorlds &&
+            lhs.messageHandlerNames == rhs.messageHandlerNames
+
     }
 }

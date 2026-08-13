@@ -34,11 +34,8 @@ public class WebAuthenticationSessionManager: ChannelDelegate {
                 create(id: id, url: url, callbackURLScheme: callbackURLScheme, settings: initialSettings, result: result)
                 break
             case "isAvailable":
-                if #available(macOS 10.15, *) {
-                    result(true)
-                } else {
-                    result(false)
-                }
+                result(true)
+
                 break
             default:
                 result(FlutterMethodNotImplemented)
@@ -47,7 +44,7 @@ public class WebAuthenticationSessionManager: ChannelDelegate {
     }
     
     public func create(id: String, url: String, callbackURLScheme: String?, settings: [String: Any?], result: @escaping FlutterResult) {
-        if #available(macOS 10.15, *), let plugin = plugin {
+        if let plugin = plugin {
             let sessionUrl = URL(string: url) ?? URL(string: "about:blank")!
             let initialSettings = WebAuthenticationSessionSettings()
             let _ = initialSettings.parse(settings: settings)

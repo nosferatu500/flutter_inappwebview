@@ -83,14 +83,13 @@ macos/Classes/
 │   ├── PrintJobManager.swift            # Instance management
 │   └── PrintJobSettings.swift           # Print settings
 │
-├── WebAuthenticationSession/            # ASWebAuthenticationSession (macOS 10.15+)
+├── WebAuthenticationSession/            # ASWebAuthenticationSession
 │   ├── WebAuthenticationSession.swift   # Session wrapper
 │   ├── WebAuthenticationSessionChannelDelegate.swift # Channel communication
 │   ├── WebAuthenticationSessionManager.swift # Instance management
 │   └── WebAuthenticationSessionSettings.swift # Session settings
 │
 ├── PluginScriptsJS/                     # Injected JavaScript for bridge
-│   ├── CallAsyncJavaScriptBelowIOS14WrapperJS.swift # Async JS wrapper for older macOS
 │   ├── ConsoleLogJS.swift               # Console interception
 │   ├── EnableViewportScaleJS.swift      # Viewport scaling
 │   ├── FindElementsAtPointJS.swift      # Hit-test elements
@@ -140,7 +139,7 @@ macos/Classes/
 | `Util.getAbsPathAsset(plugin:assetFilePath:)` | Get absolute path for Flutter asset |
 | `Util.convertToDictionary(text:)` | Convert JSON string to Dictionary |
 | `Util.JSONStringify(value:prettyPrinted:)` | Convert value to JSON string |
-| `Util.getContentWorld(name:)` | Get WKContentWorld by name (macOS 11+) |
+| `Util.getContentWorld(name:)` | Get WKContentWorld by name |
 | `Util.isIPv4(address:)` | Check if string is IPv4 address |
 | `Util.isIPv6(address:)` | Check if string is IPv6 address |
 | `Util.isIpAddress(address:)` | Check if string is IP address |
@@ -155,7 +154,7 @@ let url = try Util.getUrlAsset(plugin: plugin, assetFilePath: "assets/page.html"
 let dict = Util.convertToDictionary(text: jsonString)
 let json = Util.JSONStringify(value: myDict, prettyPrinted: true)
 
-// Content worlds (macOS 11+)
+// Content worlds
 let world = Util.getContentWorld(name: "myWorld")
 
 // IP validation
@@ -292,7 +291,6 @@ JavaScript files injected into WebViews for native-web communication:
 | **OnWindowBlurEventJS** | `OnWindowBlurEventJS.swift` | Triggers `onWindowBlur` callback. |
 | **OnWindowFocusEventJS** | `OnWindowFocusEventJS.swift` | Triggers `onWindowFocus` callback. |
 | **WindowIdJS** | `WindowIdJS.swift` | Manages window ID for multi-window scenarios. |
-| **CallAsyncJavaScriptBelowIOS14WrapperJS** | `CallAsyncJavaScript...swift` | Wrapper for `callAsyncJavaScript` on older macOS. |
 
 **Note:** macOS does not have `LastTouchedAnchorOrImageJS` (touch-specific) but adds `OnScrollChangedJS` for scroll tracking.
 

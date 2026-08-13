@@ -16,7 +16,7 @@ extension NSImage {
         if let name = map["name"] as? String {
             return NSImage(named: name)
         }
-        if #available(macOS 11.0, *), let systemName = map["systemName"] as? String {
+        if let systemName = map["systemName"] as? String {
             return NSImage(systemSymbolName: systemName, accessibilityDescription: nil)
         }
         if let data = map["data"] as? FlutterStandardTypedData {

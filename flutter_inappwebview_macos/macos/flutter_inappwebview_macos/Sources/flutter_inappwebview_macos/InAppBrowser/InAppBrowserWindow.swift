@@ -41,7 +41,7 @@ public class InAppBrowserWindow: NSWindow, NSWindowDelegate, NSToolbarDelegate, 
     }
     var searchBar: NSSearchField? {
         get {
-            if #available(macOS 11.0, *), let searchItem = searchItem as? NSSearchToolbarItem {
+            if let searchItem = searchItem as? NSSearchToolbarItem {
                 return searchItem.searchField
             } else {
                 return searchItem?.view as? NSSearchField
@@ -67,112 +67,85 @@ public class InAppBrowserWindow: NSWindow, NSWindowDelegate, NSToolbarDelegate, 
                                                name: NSWindow.willCloseNotification,
                                                object: NSApplication.shared.mainWindow)
         
-        if #available(macOS 10.13, *) {
-            let windowToolbar = NSToolbar()
-            windowToolbar.delegate = self
-            if #available(macOS 11.0, *) {
-                searchItem = NSSearchToolbarItem(itemIdentifier: ToolbarIdentifiers.searchBar)
-                (searchItem as! NSSearchToolbarItem).searchField.delegate = self
-                toolbarStyle = .expanded
-            } else {
-                searchItem = NSToolbarItem(itemIdentifier: ToolbarIdentifiers.searchBar)
-                let textField = NSSearchField()
-                textField.usesSingleLineMode = true
-                textField.delegate = self
-                searchItem?.view = textField
-            }
-            searchItem?.label = ""
-            windowToolbar.displayMode = .default
-            
-            backItem = NSToolbarItem(itemIdentifier: ToolbarIdentifiers.backButton)
-            backItem?.label = ""
-            if let webViewController = contentViewController as? InAppBrowserWebViewController {
-                if #available(macOS 11.0, *) {
-                    backItem?.view = NSButton(image: NSImage(systemSymbolName: "chevron.left",
-                                                                  accessibilityDescription: "Go Back")!,
-                                                   target: webViewController,
-                                                   action: #selector(InAppBrowserWebViewController.goBack))
-                } else {
-                    backItem?.view = NSButton(title: "\u{2039}",
-                                                target: webViewController,
-                                                action: #selector(InAppBrowserWebViewController.goBack))
-                }
-            }
-            
-            forwardItem = NSToolbarItem(itemIdentifier: ToolbarIdentifiers.forwardButton)
-            forwardItem?.label = ""
-            if let webViewController = contentViewController as? InAppBrowserWebViewController {
-                if #available(macOS 11.0, *) {
-                    forwardItem?.view = NSButton(image: NSImage(systemSymbolName: "chevron.right",
-                                                                  accessibilityDescription: "Go Forward")!,
-                                                   target: webViewController,
-                                                   action: #selector(InAppBrowserWebViewController.goForward))
-                } else {
-                    forwardItem?.view = NSButton(title: "\u{203A}",
-                                                   target: webViewController,
-                                                   action: #selector(InAppBrowserWebViewController.goForward))
-                }
-            }
-            
-            reloadItem = NSToolbarItem(itemIdentifier: ToolbarIdentifiers.reloadButton)
-            reloadItem?.label = ""
-            if let webViewController = contentViewController as? InAppBrowserWebViewController {
-                if #available(macOS 11.0, *) {
-                    reloadItem?.view = NSButton(image: NSImage(systemSymbolName: "arrow.counterclockwise",
-                                                                  accessibilityDescription: "Reload")!,
-                                                   target: webViewController,
-                                                   action: #selector(InAppBrowserWebViewController.reload))
-                } else {
-                    reloadItem?.view = NSButton(title: "Reload",
-                                                   target: webViewController,
-                                                   action: #selector(InAppBrowserWebViewController.reload))
-                }
-            }
-            
-            if #available(macOS 10.15, *), !menuItems.isEmpty {
-                menuItem = NSMenuToolbarItem(itemIdentifier: ToolbarIdentifiers.menuButton)
-                if let menuItem = menuItem as? NSMenuToolbarItem {
-                    menuItem.label = ""
-                    if #available(macOS 11.0, *) {
-                        menuItem.image = NSImage(systemSymbolName: "ellipsis.circle",
-                                                 accessibilityDescription: "Options")
-                        menuItem.showsIndicator = true
-                        menuItem.isBordered = true
-                    } else {
-                        menuItem.title = "Options"
-                    }
-                    let menu = NSMenu()
-                    menuItems = menuItems.sorted(by: {$0.order ?? 0 < $1.order ?? 0})
-                    for item in menuItems {
-                        if !item.showAsAction {
-                            let nsItem = NSMenuItem(title: item.title, action: #selector(InAppBrowserWebViewController.onMenuItemClicked), keyEquivalent: "")
-                            nsItem.identifier = NSUserInterfaceItemIdentifier.init(String(item.id))
-                            nsItem.image = item.icon
-                            menu.addItem(nsItem)
-                        } else {
-                            let actionItem = NSMenuToolbarItem(itemIdentifier: NSToolbarItem.Identifier(rawValue: String(item.id)))
-                            actionItem.label = ""
-                            if let webViewController = contentViewController as? InAppBrowserWebViewController {
-                                let actionButton = NSButton(title: item.title,
-                                                           target: webViewController,
-                                                           action: #selector(InAppBrowserWebViewController.onMenuItemClicked))
-                                actionButton.identifier = NSUserInterfaceItemIdentifier.init(String(item.id))
-                                actionButton.image = item.icon
-                                actionItem.view = actionButton
-                            }
-                            actionItems.append(actionItem)
-                        }
-                    }
-                    menuItem.menu = menu
-                }
-            }
-            
-            
-            if #available(macOS 10.14, *) {
-                windowToolbar.centeredItemIdentifier = ToolbarIdentifiers.searchBar
-            }
-            toolbar = windowToolbar
+        let windowToolbar = NSToolbar()
+        windowToolbar.delegate = self
+        searchItem = NSSearchToolbarItem(itemIdentifier: ToolbarIdentifiers.searchBar)
+        (searchItem as! NSSearchToolbarItem).searchField.delegate = self
+        toolbarStyle = .expanded
+
+        searchItem?.label = ""
+        windowToolbar.displayMode = .default
+
+        backItem = NSToolbarItem(itemIdentifier: ToolbarIdentifiers.backButton)
+        backItem?.label = ""
+        if let webViewController = contentViewController as? InAppBrowserWebViewController {
+            backItem?.view = NSButton(image: NSImage(systemSymbolName: "chevron.left",
+                                                          accessibilityDescription: "Go Back")!,
+                                           target: webViewController,
+                                           action: #selector(InAppBrowserWebViewController.goBack))
+
         }
+
+        forwardItem = NSToolbarItem(itemIdentifier: ToolbarIdentifiers.forwardButton)
+        forwardItem?.label = ""
+        if let webViewController = contentViewController as? InAppBrowserWebViewController {
+            forwardItem?.view = NSButton(image: NSImage(systemSymbolName: "chevron.right",
+                                                          accessibilityDescription: "Go Forward")!,
+                                           target: webViewController,
+                                           action: #selector(InAppBrowserWebViewController.goForward))
+
+        }
+
+        reloadItem = NSToolbarItem(itemIdentifier: ToolbarIdentifiers.reloadButton)
+        reloadItem?.label = ""
+        if let webViewController = contentViewController as? InAppBrowserWebViewController {
+            reloadItem?.view = NSButton(image: NSImage(systemSymbolName: "arrow.counterclockwise",
+                                                          accessibilityDescription: "Reload")!,
+                                           target: webViewController,
+                                           action: #selector(InAppBrowserWebViewController.reload))
+
+        }
+
+        if !menuItems.isEmpty {
+            menuItem = NSMenuToolbarItem(itemIdentifier: ToolbarIdentifiers.menuButton)
+            if let menuItem = menuItem as? NSMenuToolbarItem {
+                menuItem.label = ""
+                menuItem.image = NSImage(systemSymbolName: "ellipsis.circle",
+                                         accessibilityDescription: "Options")
+                menuItem.showsIndicator = true
+                menuItem.isBordered = true
+
+                let menu = NSMenu()
+                menuItems = menuItems.sorted(by: {$0.order ?? 0 < $1.order ?? 0})
+                for item in menuItems {
+                    if !item.showAsAction {
+                        let nsItem = NSMenuItem(title: item.title, action: #selector(InAppBrowserWebViewController.onMenuItemClicked), keyEquivalent: "")
+                        nsItem.identifier = NSUserInterfaceItemIdentifier.init(String(item.id))
+                        nsItem.image = item.icon
+                        menu.addItem(nsItem)
+                    } else {
+                        let actionItem = NSMenuToolbarItem(itemIdentifier: NSToolbarItem.Identifier(rawValue: String(item.id)))
+                        actionItem.label = ""
+                        if let webViewController = contentViewController as? InAppBrowserWebViewController {
+                            let actionButton = NSButton(title: item.title,
+                                                       target: webViewController,
+                                                       action: #selector(InAppBrowserWebViewController.onMenuItemClicked))
+                            actionButton.identifier = NSUserInterfaceItemIdentifier.init(String(item.id))
+                            actionButton.image = item.icon
+                            actionItem.view = actionButton
+                        }
+                        actionItems.append(actionItem)
+                    }
+                }
+                menuItem.menu = menu
+            }
+        }
+
+
+        windowToolbar.centeredItemIdentifier = ToolbarIdentifiers.searchBar
+
+        toolbar = windowToolbar
+
         
         forwardButton?.isEnabled = false
         backButton?.isEnabled = false
@@ -184,11 +157,8 @@ public class InAppBrowserWindow: NSWindow, NSWindowDelegate, NSToolbarDelegate, 
             if !browserSettings.hideToolbarTop {
                 toolbar?.isVisible = true
                 if browserSettings.hideUrlBar {
-                    if #available(macOS 11.0, *) {
-                        (searchItem as! NSSearchToolbarItem).searchField.isHidden = true
-                    } else {
-                        searchItem?.view?.isHidden = true
-                    }
+                    (searchItem as! NSSearchToolbarItem).searchField.isHidden = true
+
                 }
                 if let bgColor = browserSettings.toolbarTopBackgroundColor, !bgColor.isEmpty {
                     backgroundColor = NSColor(hexString: bgColor)
@@ -197,7 +167,7 @@ public class InAppBrowserWindow: NSWindow, NSWindowDelegate, NSToolbarDelegate, 
             else {
                 toolbar?.isVisible = false
             }
-            if #available(macOS 11.0, *), let windowTitlebarSeparatorStyle = browserSettings.windowTitlebarSeparatorStyle {
+            if let windowTitlebarSeparatorStyle = browserSettings.windowTitlebarSeparatorStyle {
                 titlebarSeparatorStyle = windowTitlebarSeparatorStyle
             }
             alphaValue = browserSettings.windowAlphaValue
@@ -261,7 +231,7 @@ public class InAppBrowserWindow: NSWindow, NSWindowDelegate, NSToolbarDelegate, 
         if (commandSelector == #selector(NSResponder.insertNewline(_:))) {
             // ENTER key
             var searchField: NSSearchField? = nil
-            if #available(macOS 11.0, *), let searchBar = searchItem as? NSSearchToolbarItem {
+            if let searchBar = searchItem as? NSSearchToolbarItem {
                 searchField = searchBar.searchField
             } else if let searchBar = searchItem {
                 searchField = searchBar.view as? NSSearchField
@@ -288,8 +258,7 @@ public class InAppBrowserWindow: NSWindow, NSWindowDelegate, NSToolbarDelegate, 
     
     public func show() {
         let mainWindow = parent ?? NSApplication.shared.mainWindow
-        if #available(macOS 10.12, *),
-           !(mainWindow?.tabbedWindows?.contains(self) ?? false),
+        if !(mainWindow?.tabbedWindows?.contains(self) ?? false),
            browserSettings?.windowType == .tabbed {
             mainWindow?.addTabbedWindow(self, ordered: .above)
         } else if !(mainWindow?.childWindows?.contains(self) ?? false) {
@@ -324,7 +293,7 @@ public class InAppBrowserWindow: NSWindow, NSWindowDelegate, NSToolbarDelegate, 
                 backgroundColor = nil
             }
         }
-        if #available(macOS 11.0, *), newSettingsMap["windowTitlebarSeparatorStyle"] != nil,
+        if newSettingsMap["windowTitlebarSeparatorStyle"] != nil,
            browserSettings?.windowTitlebarSeparatorStyle != newSettings.windowTitlebarSeparatorStyle {
             titlebarSeparatorStyle = newSettings.windowTitlebarSeparatorStyle!
         }
@@ -363,12 +332,8 @@ public class InAppBrowserWindow: NSWindow, NSWindowDelegate, NSToolbarDelegate, 
         if let webViewController = contentViewController as? InAppBrowserWebViewController {
             webViewController.dispose()
         }
-        if #available(macOS 11.0, *) {
-            (searchItem as? NSSearchToolbarItem)?.searchField.delegate = nil
-        } else {
-            (searchItem?.view as? NSTextField)?.delegate = nil
-            searchItem?.view = nil
-        }
+        (searchItem as? NSSearchToolbarItem)?.searchField.delegate = nil
+
         searchItem = nil
         (backItem?.view as? NSButton)?.target = nil
         backItem?.view = nil

@@ -89,32 +89,27 @@ public class InAppWebViewSettings: ISettings<InAppWebView> {
             realSettings["allowsAirPlayForMediaPlayback"] = configuration.allowsAirPlayForMediaPlayback
             realSettings["allowsLinkPreview"] = webView.allowsLinkPreview
             realSettings["javaScriptCanOpenWindowsAutomatically"] = configuration.preferences.javaScriptCanOpenWindowsAutomatically
-            if #available(macOS 10.12, *) {
-                realSettings["mediaPlaybackRequiresUserGesture"] = configuration.mediaTypesRequiringUserActionForPlayback == .all
-            }
+            realSettings["mediaPlaybackRequiresUserGesture"] = configuration.mediaTypesRequiringUserActionForPlayback == .all
+
             realSettings["minimumFontSize"] = Int(configuration.preferences.minimumFontSize)
             realSettings["suppressesIncrementalRendering"] = configuration.suppressesIncrementalRendering
             realSettings["allowsBackForwardNavigationGestures"] = webView.allowsBackForwardNavigationGestures
-            if #available(macOS 10.15, *) {
-                realSettings["isFraudulentWebsiteWarningEnabled"] = configuration.preferences.isFraudulentWebsiteWarningEnabled
-                realSettings["preferredContentMode"] = configuration.defaultWebpagePreferences.preferredContentMode.rawValue
-            }
+            realSettings["isFraudulentWebsiteWarningEnabled"] = configuration.preferences.isFraudulentWebsiteWarningEnabled
+            realSettings["preferredContentMode"] = configuration.defaultWebpagePreferences.preferredContentMode.rawValue
+
             realSettings["allowUniversalAccessFromFileURLs"] = configuration.value(forKey: "allowUniversalAccessFromFileURLs") as? Bool
             realSettings["allowFileAccessFromFileURLs"] = configuration.preferences.value(forKey: "allowFileAccessFromFileURLs") as? Bool
             realSettings["javaScriptEnabled"] = configuration.preferences.javaScriptEnabled
-            if #available(macOS 11.0, *) {
-                realSettings["mediaType"] = webView.mediaType
-                realSettings["pageZoom"] = Float(webView.pageZoom)
-                realSettings["limitsNavigationsToAppBoundDomains"] = configuration.limitsNavigationsToAppBoundDomains
-                realSettings["javaScriptEnabled"] = configuration.defaultWebpagePreferences.allowsContentJavaScript
-            }
-            if #available(macOS 11.3, *) {
-                realSettings["isTextInteractionEnabled"] = configuration.preferences.isTextInteractionEnabled
-                realSettings["upgradeKnownHostsToHTTPS"] = configuration.upgradeKnownHostsToHTTPS
-            }
-            if #available(macOS 12.0, *) {
-                realSettings["underPageBackgroundColor"] = webView.underPageBackgroundColor.hexString
-            }
+            realSettings["mediaType"] = webView.mediaType
+            realSettings["pageZoom"] = Float(webView.pageZoom)
+            realSettings["limitsNavigationsToAppBoundDomains"] = configuration.limitsNavigationsToAppBoundDomains
+            realSettings["javaScriptEnabled"] = configuration.defaultWebpagePreferences.allowsContentJavaScript
+
+            realSettings["isTextInteractionEnabled"] = configuration.preferences.isTextInteractionEnabled
+            realSettings["upgradeKnownHostsToHTTPS"] = configuration.upgradeKnownHostsToHTTPS
+
+            realSettings["underPageBackgroundColor"] = webView.underPageBackgroundColor.hexString
+
             if #available(macOS 12.3, *) {
                 realSettings["isSiteSpecificQuirksModeEnabled"] = configuration.preferences.isSiteSpecificQuirksModeEnabled
                 realSettings["isElementFullscreenEnabled"] = configuration.preferences.isElementFullscreenEnabled

@@ -9,7 +9,6 @@ import FlutterMacOS
 import Foundation
 import WebKit
 
-@available(macOS 10.13, *)
 public class CustomSchemeHandler: NSObject, WKURLSchemeHandler {
     var schemeHandlers: [Int: WKURLSchemeTask] = [:]
     

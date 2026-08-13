@@ -52,7 +52,6 @@ public class Util {
         return ""
     }
     
-    @available(macOS 11.0, *)
     public static func getContentWorld(name: String) -> WKContentWorld {
         switch name {
         case "defaultClient":

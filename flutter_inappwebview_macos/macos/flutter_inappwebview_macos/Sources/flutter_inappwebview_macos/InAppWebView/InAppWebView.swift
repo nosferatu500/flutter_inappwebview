@@ -45,8 +45,6 @@ public class InAppWebView: WKWebView, WKUIDelegate,
     
     var customIMPs: [IMP] = []
     
-    var callAsyncJavaScriptBelowMacOS11Results: [String:((Any?) -> Void)] = [:]
-    
     var currentOpenPanel: NSOpenPanel?
     
     fileprivate var interceptOnlyAsyncAjaxRequestsPluginScript: PluginScript?
@@ -91,17 +89,16 @@ public class InAppWebView: WKWebView, WKUIDelegate,
             options: [.new, .old],
             context: nil)
         
-        if #available(macOS 12.0, *) {
-            addObserver(self,
-                forKeyPath: #keyPath(WKWebView.cameraCaptureState),
-                options: [.new, .old],
-                context: nil)
-            
-            addObserver(self,
-                forKeyPath: #keyPath(WKWebView.microphoneCaptureState),
-                options: [.new, .old],
-                context: nil)
-        }
+        addObserver(self,
+            forKeyPath: #keyPath(WKWebView.cameraCaptureState),
+            options: [.new, .old],
+            context: nil)
+
+        addObserver(self,
+            forKeyPath: #keyPath(WKWebView.microphoneCaptureState),
+            options: [.new, .old],
+            context: nil)
+
         
         // KVO observer for fullscreenState on macOS 13.0+
         // NOTE: KVO for fullscreenState doesn't reliably fire.
@@ -136,7 +133,7 @@ public class InAppWebView: WKWebView, WKUIDelegate,
                 javaScriptBridgeEnabled = false
             }
             
-            if #available(macOS 12.0, *), settings.transparentBackground {
+            if settings.transparentBackground {
                 underPageBackgroundColor = .clear
             }
         
@@ -146,16 +143,14 @@ public class InAppWebView: WKWebView, WKUIDelegate,
                 customUserAgent = settings.userAgent
             }
 
-            if #available(macOS 11.0, *) {
-                mediaType = settings.mediaType
-                pageZoom = CGFloat(settings.pageZoom)
-            }
+            mediaType = settings.mediaType
+            pageZoom = CGFloat(settings.pageZoom)
+
             
-            if #available(macOS 12.0, *) {
-                if let underPageBackgroundColor = settings.underPageBackgroundColor, !underPageBackgroundColor.isEmpty {
-                    self.underPageBackgroundColor = NSColor(hexString: underPageBackgroundColor)
-                }
+            if let underPageBackgroundColor = settings.underPageBackgroundColor, !underPageBackgroundColor.isEmpty {
+                self.underPageBackgroundColor = NSColor(hexString: underPageBackgroundColor)
             }
+
             
             if #available(macOS 13.3, *) {
                 isInspectable = settings.isInspectable
@@ -181,18 +176,15 @@ public class InAppWebView: WKWebView, WKUIDelegate,
             configuration.preferences.javaScriptCanOpenWindowsAutomatically = settings.javaScriptCanOpenWindowsAutomatically
             configuration.preferences.minimumFontSize = CGFloat(settings.minimumFontSize)
             
-            if #available(macOS 10.15, *) {
-                configuration.preferences.isFraudulentWebsiteWarningEnabled = settings.isFraudulentWebsiteWarningEnabled
-                configuration.defaultWebpagePreferences.preferredContentMode = WKWebpagePreferences.ContentMode(rawValue: settings.preferredContentMode)!
-            }
+            configuration.preferences.isFraudulentWebsiteWarningEnabled = settings.isFraudulentWebsiteWarningEnabled
+            configuration.defaultWebpagePreferences.preferredContentMode = WKWebpagePreferences.ContentMode(rawValue: settings.preferredContentMode)!
+
             
             configuration.preferences.javaScriptEnabled = settings.javaScriptEnabled
-            if #available(macOS 11.0, *) {
-                configuration.defaultWebpagePreferences.allowsContentJavaScript = settings.javaScriptEnabled
-            }
-            if #available(macOS 11.3, *) {
-                configuration.preferences.isTextInteractionEnabled = settings.isTextInteractionEnabled
-            }
+            configuration.defaultWebpagePreferences.allowsContentJavaScript = settings.javaScriptEnabled
+
+            configuration.preferences.isTextInteractionEnabled = settings.isTextInteractionEnabled
+
             if #available(macOS 12.3, *) {
                 configuration.preferences.isSiteSpecificQuirksModeEnabled = settings.isSiteSpecificQuirksModeEnabled
                 configuration.preferences.isElementFullscreenEnabled = settings.isElementFullscreenEnabled
@@ -286,36 +278,32 @@ public class InAppWebView: WKWebView, WKUIDelegate,
                 }
             }
             
-            if #available(macOS 10.12, *) {
-                configuration.mediaTypesRequiringUserActionForPlayback = settings.mediaPlaybackRequiresUserGesture ? .all : []
-            }
+            configuration.mediaTypesRequiringUserActionForPlayback = settings.mediaPlaybackRequiresUserGesture ? .all : []
+
             
-            if #available(macOS 10.13, *) {
-                for scheme in settings.resourceCustomSchemes {
-                    configuration.setURLSchemeHandler(CustomSchemeHandler(), forURLScheme: scheme)
+            for scheme in settings.resourceCustomSchemes {
+                configuration.setURLSchemeHandler(CustomSchemeHandler(), forURLScheme: scheme)
+            }
+            if settings.sharedCookiesEnabled {
+                // More info to sending cookies with WKWebView
+                // https://stackoverflow.com/questions/26573137/can-i-set-the-cookies-to-be-used-by-a-wkwebview/26577303#26577303
+                // Set Cookies in iOS 11 and above, initialize websiteDataStore before setting cookies
+                // See also https://forums.developer.apple.com/thread/97194
+                // check if websiteDataStore has not been initialized before
+                if(!settings.incognito && !settings.cacheEnabled) {
+                    configuration.websiteDataStore = WKWebsiteDataStore.nonPersistent()
                 }
-                if settings.sharedCookiesEnabled {
-                    // More info to sending cookies with WKWebView
-                    // https://stackoverflow.com/questions/26573137/can-i-set-the-cookies-to-be-used-by-a-wkwebview/26577303#26577303
-                    // Set Cookies in iOS 11 and above, initialize websiteDataStore before setting cookies
-                    // See also https://forums.developer.apple.com/thread/97194
-                    // check if websiteDataStore has not been initialized before
-                    if(!settings.incognito && !settings.cacheEnabled) {
-                        configuration.websiteDataStore = WKWebsiteDataStore.nonPersistent()
-                    }
-                    for cookie in HTTPCookieStorage.shared.cookies ?? [] {
-                        configuration.websiteDataStore.httpCookieStore.setCookie(cookie, completionHandler: nil)
-                    }
+                for cookie in HTTPCookieStorage.shared.cookies ?? [] {
+                    configuration.websiteDataStore.httpCookieStore.setCookie(cookie, completionHandler: nil)
                 }
             }
+
             
-            if #available(macOS 11.0, *) {
-                configuration.limitsNavigationsToAppBoundDomains = settings.limitsNavigationsToAppBoundDomains
-            }
+            configuration.limitsNavigationsToAppBoundDomains = settings.limitsNavigationsToAppBoundDomains
+
             
-            if #available(macOS 11.3, *) {
-                configuration.upgradeKnownHostsToHTTPS = settings.upgradeKnownHostsToHTTPS
-            }
+            configuration.upgradeKnownHostsToHTTPS = settings.upgradeKnownHostsToHTTPS
+
         }
         
         return configuration
@@ -339,25 +327,24 @@ public class InAppWebView: WKWebView, WKUIDelegate,
             inAppBrowserDelegate?.didChangeTitle(title: newTitle)
         }
         else {
-            if #available(macOS 12.0, *) {
-                if keyPath == #keyPath(WKWebView.cameraCaptureState) || keyPath == #keyPath(WKWebView.microphoneCaptureState) {
-                    var oldState: WKMediaCaptureState? = nil
-                    if let oldValue = change?[.oldKey] as? Int {
-                        oldState = WKMediaCaptureState.init(rawValue: oldValue)
-                    }
-                    var newState: WKMediaCaptureState? = nil
-                    if let newValue = change?[.newKey] as? Int {
-                        newState = WKMediaCaptureState.init(rawValue: newValue)
-                    }
-                    if oldState != newState {
-                        if keyPath == #keyPath(WKWebView.cameraCaptureState) {
-                            channelDelegate?.onCameraCaptureStateChanged(oldState: oldState, newState: newState)
-                        } else {
-                            channelDelegate?.onMicrophoneCaptureStateChanged(oldState: oldState, newState: newState)
-                        }
+            if keyPath == #keyPath(WKWebView.cameraCaptureState) || keyPath == #keyPath(WKWebView.microphoneCaptureState) {
+                var oldState: WKMediaCaptureState? = nil
+                if let oldValue = change?[.oldKey] as? Int {
+                    oldState = WKMediaCaptureState.init(rawValue: oldValue)
+                }
+                var newState: WKMediaCaptureState? = nil
+                if let newValue = change?[.newKey] as? Int {
+                    newState = WKMediaCaptureState.init(rawValue: newValue)
+                }
+                if oldState != newState {
+                    if keyPath == #keyPath(WKWebView.cameraCaptureState) {
+                        channelDelegate?.onCameraCaptureStateChanged(oldState: oldState, newState: newState)
+                    } else {
+                        channelDelegate?.onMicrophoneCaptureStateChanged(oldState: oldState, newState: newState)
                     }
                 }
             }
+
             if #available(macOS 13.0, *) {
                 if keyPath == #keyPath(WKWebView.fullscreenState) {
                     if fullscreenState == .enteringFullscreen && !inFullscreen {
@@ -375,16 +362,12 @@ public class InAppWebView: WKWebView, WKUIDelegate,
     
     public func initializeWindowIdJS() {
         if let windowId = windowId {
-            if #available(macOS 11.0, *) {
-                let contentWorlds = configuration.userContentController.getContentWorlds(with: windowId)
-                for contentWorld in contentWorlds {
-                    let source = WindowIdJS.WINDOW_ID_INITIALIZE_JS_SOURCE().replacingOccurrences(of: PluginScriptsUtil.VAR_PLACEHOLDER_VALUE, with: String(windowId))
-                    evaluateJavascript(source: source, contentWorld: contentWorld)
-                }
-            } else {
+            let contentWorlds = configuration.userContentController.getContentWorlds(with: windowId)
+            for contentWorld in contentWorlds {
                 let source = WindowIdJS.WINDOW_ID_INITIALIZE_JS_SOURCE().replacingOccurrences(of: PluginScriptsUtil.VAR_PLACEHOLDER_VALUE, with: String(windowId))
-                evaluateJavascript(source: source)
+                evaluateJavascript(source: source, contentWorld: contentWorld)
             }
+
         }
     }
     
@@ -409,7 +392,6 @@ public class InAppWebView: WKWebView, WKUIDelegate,
             : currentIndex + steps >= 0
     }
     
-    @available(macOS 10.13, *)
     public func takeScreenshot (with: [String: Any?]?, completionHandler: @escaping (_ screenshot: Data?) -> Void) {
         var snapshotConfiguration: WKSnapshotConfiguration? = nil
         if let with = with {
@@ -420,7 +402,7 @@ public class InAppWebView: WKWebView, WKUIDelegate,
             if let snapshotWidth = with["snapshotWidth"] as? Double {
                 snapshotConfiguration!.snapshotWidth = NSNumber(value: snapshotWidth)
             }
-            if #available(macOS 10.15, *), let afterScreenUpdates = with["afterScreenUpdates"] as? Bool {
+            if let afterScreenUpdates = with["afterScreenUpdates"] as? Bool {
                 snapshotConfiguration!.afterScreenUpdates = afterScreenUpdates
             }
         }
@@ -450,7 +432,6 @@ public class InAppWebView: WKWebView, WKUIDelegate,
         })
     }
     
-    @available(macOS 11.0, *)
     public func createPdf (configuration: [String: Any?]?, completionHandler: @escaping (_ pdf: Data?) -> Void) {
         let pdfConfiguration: WKPDFConfiguration = .init()
         if let configuration = configuration {
@@ -471,7 +452,6 @@ public class InAppWebView: WKWebView, WKUIDelegate,
         }
     }
     
-    @available(macOS 11.0, *)
     public func createWebArchiveData (dataCompletionHandler: @escaping (_ webArchiveData: Data?) -> Void) {
         createWebArchiveData(completionHandler: { (result) in
             switch (result) {
@@ -486,7 +466,6 @@ public class InAppWebView: WKWebView, WKUIDelegate,
         })
     }
     
-    @available(macOS 11.0, *)
     public func saveWebArchive (filePath: String, autoname: Bool, completionHandler: @escaping (_ path: String?) -> Void) {
         createWebArchiveData(dataCompletionHandler: { (webArchiveData) in
             if let webArchiveData = webArchiveData {
@@ -568,16 +547,15 @@ public class InAppWebView: WKWebView, WKUIDelegate,
             configuration.websiteDataStore = WKWebsiteDataStore.default()
         }
         
-        if #available(macOS 10.13, *) {
-            if (newSettingsMap["sharedCookiesEnabled"] != nil && settings?.sharedCookiesEnabled != newSettings.sharedCookiesEnabled && newSettings.sharedCookiesEnabled) {
-                if(!newSettings.incognito && !newSettings.cacheEnabled) {
-                    configuration.websiteDataStore = WKWebsiteDataStore.nonPersistent()
-                }
-                for cookie in HTTPCookieStorage.shared.cookies ?? [] {
-                    configuration.websiteDataStore.httpCookieStore.setCookie(cookie, completionHandler: nil)
-                }
+        if (newSettingsMap["sharedCookiesEnabled"] != nil && settings?.sharedCookiesEnabled != newSettings.sharedCookiesEnabled && newSettings.sharedCookiesEnabled) {
+            if(!newSettings.incognito && !newSettings.cacheEnabled) {
+                configuration.websiteDataStore = WKWebsiteDataStore.nonPersistent()
+            }
+            for cookie in HTTPCookieStorage.shared.cookies ?? [] {
+                configuration.websiteDataStore.httpCookieStore.setCookie(cookie, completionHandler: nil)
             }
         }
+
         
         if newSettingsMap["enableViewportScale"] != nil && settings?.enableViewportScale != newSettings.enableViewportScale {
             if !newSettings.enableViewportScale {
@@ -659,9 +637,8 @@ public class InAppWebView: WKWebView, WKUIDelegate,
         }
         
         if newSettingsMap["mediaPlaybackRequiresUserGesture"] != nil && settings?.mediaPlaybackRequiresUserGesture != newSettings.mediaPlaybackRequiresUserGesture {
-            if #available(macOS 10.12, *) {
-                configuration.mediaTypesRequiringUserActionForPlayback = (newSettings.mediaPlaybackRequiresUserGesture) ? .all : []
-            }
+            configuration.mediaTypesRequiringUserActionForPlayback = (newSettings.mediaPlaybackRequiresUserGesture) ? .all : []
+
         }
         
         if newSettingsMap["suppressesIncrementalRendering"] != nil && settings?.suppressesIncrementalRendering != newSettings.suppressesIncrementalRendering {
@@ -680,14 +657,13 @@ public class InAppWebView: WKWebView, WKUIDelegate,
             configuration.preferences.minimumFontSize = CGFloat(newSettings.minimumFontSize)
         }
         
-        if #available(macOS 10.15, *) {
-            if newSettingsMap["isFraudulentWebsiteWarningEnabled"] != nil && settings?.isFraudulentWebsiteWarningEnabled != newSettings.isFraudulentWebsiteWarningEnabled {
-                configuration.preferences.isFraudulentWebsiteWarningEnabled = newSettings.isFraudulentWebsiteWarningEnabled
-            }
-            if newSettingsMap["preferredContentMode"] != nil && settings?.preferredContentMode != newSettings.preferredContentMode {
-                configuration.defaultWebpagePreferences.preferredContentMode = WKWebpagePreferences.ContentMode(rawValue: newSettings.preferredContentMode)!
-            }
+        if newSettingsMap["isFraudulentWebsiteWarningEnabled"] != nil && settings?.isFraudulentWebsiteWarningEnabled != newSettings.isFraudulentWebsiteWarningEnabled {
+            configuration.preferences.isFraudulentWebsiteWarningEnabled = newSettings.isFraudulentWebsiteWarningEnabled
         }
+        if newSettingsMap["preferredContentMode"] != nil && settings?.preferredContentMode != newSettings.preferredContentMode {
+            configuration.defaultWebpagePreferences.preferredContentMode = WKWebpagePreferences.ContentMode(rawValue: newSettings.preferredContentMode)!
+        }
+
         
         if newSettingsMap["allowsLinkPreview"] != nil && settings?.allowsLinkPreview != newSettings.allowsLinkPreview {
             allowsLinkPreview = newSettings.allowsLinkPreview
@@ -718,25 +694,24 @@ public class InAppWebView: WKWebView, WKUIDelegate,
             configuration.preferences.javaScriptEnabled = newSettings.javaScriptEnabled
         }
         
-        if #available(macOS 11.0, *) {
-            if settings?.mediaType != newSettings.mediaType {
-                mediaType = newSettings.mediaType
-            }
-            
-            if newSettingsMap["pageZoom"] != nil && settings?.pageZoom != newSettings.pageZoom {
-                pageZoom = CGFloat(newSettings.pageZoom)
-            }
-            
-            if newSettingsMap["limitsNavigationsToAppBoundDomains"] != nil && settings?.limitsNavigationsToAppBoundDomains != newSettings.limitsNavigationsToAppBoundDomains {
-                configuration.limitsNavigationsToAppBoundDomains = newSettings.limitsNavigationsToAppBoundDomains
-            }
-            
-            if newSettingsMap["javaScriptEnabled"] != nil && settings?.javaScriptEnabled != newSettings.javaScriptEnabled {
-                configuration.defaultWebpagePreferences.allowsContentJavaScript = newSettings.javaScriptEnabled
-            }
+        if settings?.mediaType != newSettings.mediaType {
+            mediaType = newSettings.mediaType
         }
+
+        if newSettingsMap["pageZoom"] != nil && settings?.pageZoom != newSettings.pageZoom {
+            pageZoom = CGFloat(newSettings.pageZoom)
+        }
+
+        if newSettingsMap["limitsNavigationsToAppBoundDomains"] != nil && settings?.limitsNavigationsToAppBoundDomains != newSettings.limitsNavigationsToAppBoundDomains {
+            configuration.limitsNavigationsToAppBoundDomains = newSettings.limitsNavigationsToAppBoundDomains
+        }
+
+        if newSettingsMap["javaScriptEnabled"] != nil && settings?.javaScriptEnabled != newSettings.javaScriptEnabled {
+            configuration.defaultWebpagePreferences.allowsContentJavaScript = newSettings.javaScriptEnabled
+        }
+
         
-        if #available(macOS 10.13, *), newSettingsMap["contentBlockers"] != nil {
+        if newSettingsMap["contentBlockers"] != nil {
             configuration.userContentController.removeAllContentRuleLists()
             let contentBlockers = newSettings.contentBlockers
             if contentBlockers.count > 0 {
@@ -758,21 +733,19 @@ public class InAppWebView: WKWebView, WKUIDelegate,
             }
         }
         
-        if #available(macOS 11.3, *) {
-            if newSettingsMap["upgradeKnownHostsToHTTPS"] != nil && settings?.upgradeKnownHostsToHTTPS != newSettings.upgradeKnownHostsToHTTPS {
-                configuration.upgradeKnownHostsToHTTPS = newSettings.upgradeKnownHostsToHTTPS
-            }
-            if newSettingsMap["isTextInteractionEnabled"] != nil && settings?.isTextInteractionEnabled != newSettings.isTextInteractionEnabled {
-                configuration.preferences.isTextInteractionEnabled = newSettings.isTextInteractionEnabled
-            }
+        if newSettingsMap["upgradeKnownHostsToHTTPS"] != nil && settings?.upgradeKnownHostsToHTTPS != newSettings.upgradeKnownHostsToHTTPS {
+            configuration.upgradeKnownHostsToHTTPS = newSettings.upgradeKnownHostsToHTTPS
         }
+        if newSettingsMap["isTextInteractionEnabled"] != nil && settings?.isTextInteractionEnabled != newSettings.isTextInteractionEnabled {
+            configuration.preferences.isTextInteractionEnabled = newSettings.isTextInteractionEnabled
+        }
+
         
-        if #available(macOS 12.0, *) {
-            if newSettingsMap["underPageBackgroundColor"] != nil, settings?.underPageBackgroundColor != newSettings.underPageBackgroundColor,
-               let underPageBackgroundColor = newSettings.underPageBackgroundColor, !underPageBackgroundColor.isEmpty {
-                self.underPageBackgroundColor = NSColor(hexString: underPageBackgroundColor)
-            }
+        if newSettingsMap["underPageBackgroundColor"] != nil, settings?.underPageBackgroundColor != newSettings.underPageBackgroundColor,
+           let underPageBackgroundColor = newSettings.underPageBackgroundColor, !underPageBackgroundColor.isEmpty {
+            self.underPageBackgroundColor = NSColor(hexString: underPageBackgroundColor)
         }
+
         if #available(macOS 12.3, *) {
             if newSettingsMap["isSiteSpecificQuirksModeEnabled"] != nil, settings?.isSiteSpecificQuirksModeEnabled != newSettings.isSiteSpecificQuirksModeEnabled {
                 configuration.preferences.isSiteSpecificQuirksModeEnabled = newSettings.isSiteSpecificQuirksModeEnabled
@@ -801,7 +774,7 @@ public class InAppWebView: WKWebView, WKUIDelegate,
         evaluateJavascript(source: flagVariable) { (alreadyLoaded) in
             if let alreadyLoaded = alreadyLoaded as? Bool, alreadyLoaded {
                 let enableSource = "\(flagVariable) = \(enable);"
-                if #available(macOS 11.0, *), pluginScript.requiredInAllContentWorlds {
+                if pluginScript.requiredInAllContentWorlds {
                     for contentWorld in self.configuration.userContentController.contentWorlds {
                         self.evaluateJavaScript(enableSource, frame: nil, contentWorld: contentWorld, completionHandler: nil)
                     }
@@ -813,7 +786,7 @@ public class InAppWebView: WKWebView, WKUIDelegate,
                 }
             }
             else if enable {
-                if #available(macOS 11.0, *), pluginScript.requiredInAllContentWorlds {
+                if pluginScript.requiredInAllContentWorlds {
                     for contentWorld in self.configuration.userContentController.contentWorlds {
                         self.evaluateJavaScript(pluginScript.source, frame: nil, contentWorld: contentWorld, completionHandler: nil)
                         self.configuration.userContentController.addPluginScript(pluginScript)
@@ -864,7 +837,6 @@ public class InAppWebView: WKWebView, WKUIDelegate,
         }
     }
     
-    @available(macOS 11.0, *)
     public func injectDeferredObject(source: String, contentWorld: WKContentWorld, withWrapper jsWrapper: String?, completionHandler: ((Any?) -> Void)? = nil) {
         var jsToInject = source
         if let wrapper = jsWrapper {
@@ -908,7 +880,6 @@ public class InAppWebView: WKWebView, WKUIDelegate,
     }
 #endif
     
-    @available(macOS 11.0, *)
     public func evaluateJavaScript(_ javaScript: String, frame: WKFrameInfo? = nil, contentWorld: WKContentWorld, completionHandler: ((Result<Any, Error>) -> Void)? = nil) {
         super.evaluateJavaScript(javaScript, in: frame, in: contentWorld, completionHandler: completionHandler)
     }
@@ -917,17 +888,14 @@ public class InAppWebView: WKWebView, WKUIDelegate,
         injectDeferredObject(source: source, withWrapper: nil, completionHandler: completionHandler)
     }
     
-    @available(macOS 11.0, *)
     public func evaluateJavascript(source: String, contentWorld: WKContentWorld, completionHandler: ((Any?) -> Void)? = nil) {
         injectDeferredObject(source: source, contentWorld: contentWorld, withWrapper: nil, completionHandler: completionHandler)
     }
     
-    @available(macOS 11.0, *)
     public func callAsyncJavaScript(_ functionBody: String, arguments: [String : Any] = [:], frame: WKFrameInfo? = nil, contentWorld: WKContentWorld, completionHandler: ((Result<Any, Error>) -> Void)? = nil) {
         super.callAsyncJavaScript(functionBody, arguments: arguments, in: frame, in: contentWorld, completionHandler: completionHandler)
     }
     
-    @available(macOS 11.0, *)
     public func callAsyncJavaScript(functionBody: String, arguments: [String:Any], contentWorld: WKContentWorld, completionHandler: ((Any?) -> Void)? = nil) {
         let jsToInject = configuration.userContentController.generateCodeForScriptEvaluation(scriptMessageHandler: self, source: functionBody, contentWorld: contentWorld)
         
@@ -955,45 +923,6 @@ public class InAppWebView: WKWebView, WKUIDelegate,
             }
             
             completionHandler(body)
-        }
-    }
-    
-    public func callAsyncJavaScript(functionBody: String, arguments: [String:Any], completionHandler: ((Any?) -> Void)? = nil) {
-        var jsToInject = functionBody
-        
-        let resultUuid = NSUUID().uuidString
-        if let completionHandler = completionHandler {
-            callAsyncJavaScriptBelowMacOS11Results[resultUuid] = completionHandler
-        }
-        
-        var functionArgumentNamesList: [String] = []
-        var functionArgumentValuesList: [String] = []
-        let keys = arguments.keys
-        keys.forEach { (key) in
-            functionArgumentNamesList.append(key)
-            functionArgumentValuesList.append("obj.\(key)")
-        }
-        
-        let functionArgumentNames = functionArgumentNamesList.joined(separator: ", ")
-        let functionArgumentValues = functionArgumentValuesList.joined(separator: ", ")
-        
-        jsToInject = CallAsyncJavaScriptBelowIOS14WrapperJS.CALL_ASYNC_JAVASCRIPT_BELOW_IOS_14_WRAPPER_JS()
-            .replacingOccurrences(of: PluginScriptsUtil.VAR_FUNCTION_ARGUMENT_NAMES, with: functionArgumentNames)
-            .replacingOccurrences(of: PluginScriptsUtil.VAR_FUNCTION_ARGUMENT_VALUES, with: functionArgumentValues)
-            .replacingOccurrences(of: PluginScriptsUtil.VAR_FUNCTION_ARGUMENTS_OBJ, with: Util.JSONStringify(value: arguments))
-            .replacingOccurrences(of: PluginScriptsUtil.VAR_FUNCTION_BODY, with: jsToInject)
-            .replacingOccurrences(of: PluginScriptsUtil.VAR_RESULT_UUID, with: resultUuid)
-        
-        evaluateJavaScript(jsToInject) { (value, error) in
-            if let error = error {
-                let userInfo = (error as NSError).userInfo
-                let errorMessage = userInfo["WKJavaScriptExceptionMessage"] ??
-                                   userInfo["NSLocalizedDescription"] as? String ??
-                                   error.localizedDescription
-                self.channelDelegate?.onConsoleMessage(message: String(describing: errorMessage), messageLevel: 3)
-                completionHandler?(nil)
-                self.callAsyncJavaScriptBelowMacOS11Results.removeValue(forKey: resultUuid)
-            }
         }
     }
     
@@ -1113,7 +1042,6 @@ public class InAppWebView: WKWebView, WKUIDelegate,
         return result;
     }
 
-    @available(macOS 12.0, *)
     public func webView(_ webView: WKWebView,
                         requestMediaCapturePermissionFor origin: WKSecurityOrigin,
                         initiatedByFrame frame: WKFrameInfo,
@@ -1159,7 +1087,6 @@ public class InAppWebView: WKWebView, WKUIDelegate,
         }
     }
     
-    @available(macOS 10.15, *)
     public func webView(_ webView: WKWebView,
                  decidePolicyFor navigationAction: WKNavigationAction,
                  preferences: WKWebpagePreferences,
@@ -1169,7 +1096,6 @@ public class InAppWebView: WKWebView, WKUIDelegate,
         })
     }
     
-    @available(macOS 11.3, *)
     public func download(_ download: WKDownload, decideDestinationUsing response: URLResponse, suggestedFilename: String, completionHandler: @escaping (URL?) -> Void) {
         if let url = response.url, let useOnDownloadStart = settings?.useOnDownloadStart, useOnDownloadStart {
             let downloadStartRequest = DownloadStartRequest(url: url.absoluteString,
@@ -1186,7 +1112,6 @@ public class InAppWebView: WKWebView, WKUIDelegate,
         completionHandler(nil)
     }
     
-    @available(macOS 11.3, *)
     public func webView(_ webView: WKWebView, navigationResponse: WKNavigationResponse, didBecome download: WKDownload) {
         let response = navigationResponse.response
         if let url = response.url, let useOnDownloadStart = settings?.useOnDownloadStart, useOnDownloadStart {
@@ -1276,7 +1201,7 @@ public class InAppWebView: WKWebView, WKUIDelegate,
         }
         
         if let useOnDownloadStart = settings?.useOnDownloadStart, useOnDownloadStart {
-            if #available(macOS 11.3, *), !navigationResponse.canShowMIMEType, useOnNavigationResponse == nil || !useOnNavigationResponse! {
+            if !navigationResponse.canShowMIMEType, useOnNavigationResponse == nil || !useOnNavigationResponse! {
                 decisionHandler(.download)
                 return
             } else {
@@ -1311,9 +1236,8 @@ public class InAppWebView: WKWebView, WKUIDelegate,
         disposeWebMessageChannels()
         initializeWindowIdJS()
         
-        if #available(macOS 11.0, *) {
-            configuration.userContentController.resetContentWorlds(windowId: windowId)
-        }
+        configuration.userContentController.resetContentWorlds(windowId: windowId)
+
         
         channelDelegate?.onLoadStart(url: url?.absoluteString)
         
@@ -1635,7 +1559,6 @@ public class InAppWebView: WKWebView, WKUIDelegate,
         return identityAndTrust;
     }
     
-    @available(macOS 10.12, *)
     public func webView(
         _ webView: WKWebView,
         runOpenPanelWith parameters: WKOpenPanelParameters,
@@ -1645,9 +1568,8 @@ public class InAppWebView: WKWebView, WKUIDelegate,
         let openPanel = NSOpenPanel()
         currentOpenPanel = openPanel
         openPanel.canChooseFiles = true
-        if #available(macOS 10.13.4, *) {
-            openPanel.canChooseDirectories = parameters.allowsDirectories
-        }
+        openPanel.canChooseDirectories = parameters.allowsDirectories
+
         openPanel.allowsMultipleSelection = parameters.allowsMultipleSelection
         openPanel.begin { (result) in
             if result == .OK {
@@ -2278,20 +2200,6 @@ public class InAppWebView: WKWebView, WKUIDelegate,
                         }
                     }
                     break
-                case "onCallAsyncJavaScriptResultBelowIOS14Received":
-                    if let args = body["args"] as? String, let data = args.data(using: .utf8) {
-                        let jsonArgs = try? JSONSerialization.jsonObject(with: data, options: .mutableContainers) as? [[String: Any]]
-                        if let jsonData = jsonArgs?.first,
-                           let resultUuid = jsonData["resultUuid"] as? String,
-                           let result = webView.callAsyncJavaScriptBelowMacOS11Results[resultUuid] {
-                            result([
-                                "value": jsonData["value"],
-                                "error": jsonData["error"]
-                            ])
-                            webView.callAsyncJavaScriptBelowMacOS11Results.removeValue(forKey: resultUuid)
-                        }
-                    }
-                    break
                 case "onWebMessagePortMessageReceived":
                     if let args = body["args"] as? String, let data = args.data(using: .utf8) {
                         let jsonArgs = try? JSONSerialization.jsonObject(with: data, options: .mutableContainers) as? [[String: Any]]
@@ -2434,149 +2342,144 @@ if(window.\(JavaScriptBridgeJS.get_JAVASCRIPT_BRIDGE_NAME())[\(_callHandlerID)] 
     
     public func printCurrentPage(settings: PrintJobSettings? = nil,
                                  completionHandler: PrintJobController.CompletionHandler? = nil) -> String? {
-        if #available(macOS 11.0, *) {
-            var printJobId: String? = nil
-            if let settings = settings, settings.handledByClient {
-                printJobId = NSUUID().uuidString
+        var printJobId: String? = nil
+        if let settings = settings, settings.handledByClient {
+            printJobId = NSUUID().uuidString
+        }
+
+        var printInfoDictionary: [NSPrintInfo.AttributeKey : Any] = [:]
+        if let settings = settings {
+            if let jobSavingURL = settings.jobSavingURL, let url = URL(string: jobSavingURL) {
+                printInfoDictionary[.jobSavingURL] = url
             }
-            
-            var printInfoDictionary: [NSPrintInfo.AttributeKey : Any] = [:]
-            if let settings = settings {
-                if let jobSavingURL = settings.jobSavingURL, let url = URL(string: jobSavingURL) {
-                    printInfoDictionary[.jobSavingURL] = url
-                }
-                printInfoDictionary[.copies] = settings.copies
-                if let firstPage = settings.firstPage {
-                    printInfoDictionary[.firstPage] = firstPage
-                }
-                if let lastPage = settings.lastPage {
-                    printInfoDictionary[.lastPage] = lastPage
-                }
-                printInfoDictionary[.detailedErrorReporting] = settings.detailedErrorReporting
-                printInfoDictionary[.faxNumber] = settings.faxNumber ?? ""
-                printInfoDictionary[.headerAndFooter] = settings.headerAndFooter
-                if let mustCollate = settings.mustCollate {
-                    printInfoDictionary[.mustCollate] = mustCollate
-                }
-                if let pagesAcross = settings.pagesAcross {
-                    printInfoDictionary[.pagesAcross] = pagesAcross
-                }
-                if let pagesDown = settings.pagesDown {
-                    printInfoDictionary[.pagesDown] = pagesDown
-                }
-                if let time = settings.time {
-                    printInfoDictionary[.time] = Date(timeIntervalSince1970: TimeInterval(Double(time)/1000))
-                }
+            printInfoDictionary[.copies] = settings.copies
+            if let firstPage = settings.firstPage {
+                printInfoDictionary[.firstPage] = firstPage
             }
-            
-            let printInfo = NSPrintInfo(dictionary: printInfoDictionary)
-            
-            if let settings = settings {
-                if let orientationValue = settings.orientation,
-                   let orientation = NSPrintInfo.PaperOrientation.init(rawValue: orientationValue) {
-                    printInfo.orientation = orientation
-                }
-                if let margins = settings.margins {
-                    printInfo.topMargin = margins.top
-                    printInfo.rightMargin = margins.right
-                    printInfo.bottomMargin = margins.bottom
-                    printInfo.leftMargin = margins.left
-                }
-                if let numberOfPages = settings.numberOfPages {
-                    printInfo.printSettings["com_apple_print_PrintSettings_PMLastPage"] = numberOfPages
-                }
-                if let colorMode = settings.colorMode {
-                    printInfo.printSettings["ColorModel"] = colorMode
-                }
-                if let scalingFactor = settings.scalingFactor {
-                    printInfo.scalingFactor = scalingFactor
-                }
-                if let jobDisposition = settings.jobDisposition {
-                    printInfo.jobDisposition = Util.getNSPrintInfoJobDisposition(name: jobDisposition)
-                }
-                if let paperName = settings.paperName {
-                    printInfo.paperName = NSPrinter.PaperName.init(rawValue: paperName)
-                }
-                if let horizontalPagination = settings.horizontalPagination,
-                   let pagination = NSPrintInfo.PaginationMode.init(rawValue: horizontalPagination) {
-                    printInfo.horizontalPagination = pagination
-                }
-                if let verticalPagination = settings.verticalPagination,
-                   let pagination = NSPrintInfo.PaginationMode.init(rawValue: verticalPagination) {
-                    printInfo.verticalPagination = pagination
-                }
-                printInfo.isHorizontallyCentered = settings.isHorizontallyCentered
-                printInfo.isVerticallyCentered = settings.isVerticallyCentered
+            if let lastPage = settings.lastPage {
+                printInfoDictionary[.lastPage] = lastPage
             }
-            let printOperation = printOperation(with: printInfo)
-            printOperation.jobTitle = settings?.jobName ?? (title ?? url?.absoluteString ?? "") + " Document"
-            printOperation.view?.frame = bounds
-            
-            if let settings = settings {
-                if let pageOrder = settings.pageOrder, let order = NSPrintOperation.PageOrder.init(rawValue: pageOrder) {
-                    printOperation.pageOrder = order
-                }
-                printOperation.canSpawnSeparateThread = settings.canSpawnSeparateThread
-                printOperation.showsPrintPanel = settings.showsPrintPanel
-                printOperation.showsProgressPanel = settings.showsProgressPanel
-                if settings.showsPaperOrientation {
-                    printOperation.printPanel.options.insert(.showsOrientation)
-                } else {
-                    printOperation.printPanel.options.remove(.showsOrientation)
-                }
-                if settings.showsNumberOfCopies {
-                    printOperation.printPanel.options.insert(.showsCopies)
-                } else {
-                    printOperation.printPanel.options.remove(.showsCopies)
-                }
-                if settings.showsPaperSize {
-                    printOperation.printPanel.options.insert(.showsPaperSize)
-                } else {
-                    printOperation.printPanel.options.remove(.showsPaperSize)
-                }
-                if settings.showsScaling {
-                    printOperation.printPanel.options.insert(.showsScaling)
-                } else {
-                    printOperation.printPanel.options.remove(.showsScaling)
-                }
-                if settings.showsPageRange {
-                    printOperation.printPanel.options.insert(.showsPageRange)
-                } else {
-                    printOperation.printPanel.options.remove(.showsPageRange)
-                }
-                if settings.showsPageSetupAccessory {
-                    printOperation.printPanel.options.insert(.showsPageSetupAccessory)
-                } else {
-                    printOperation.printPanel.options.remove(.showsPageSetupAccessory)
-                }
-                if settings.showsPreview {
-                    printOperation.printPanel.options.insert(.showsPreview)
-                } else {
-                    printOperation.printPanel.options.remove(.showsPreview)
-                }
-                if settings.showsPrintSelection {
-                    printOperation.printPanel.options.insert(.showsPrintSelection)
-                } else {
-                    printOperation.printPanel.options.remove(.showsPrintSelection)
-                }
+            printInfoDictionary[.detailedErrorReporting] = settings.detailedErrorReporting
+            printInfoDictionary[.faxNumber] = settings.faxNumber ?? ""
+            printInfoDictionary[.headerAndFooter] = settings.headerAndFooter
+            if let mustCollate = settings.mustCollate {
+                printInfoDictionary[.mustCollate] = mustCollate
             }
-            
-            if let id = printJobId, let plugin = plugin {
-                let printJob = PrintJobController(plugin: plugin, id: id, job: printOperation, settings: settings)
-                plugin.printJobManager?.jobs[id] = printJob
-                printJob.present(parentWindow: window, completionHandler: completionHandler)
-            } else if let window = window {
-                printJobCompletionHandler = completionHandler
-                printOperation.runModal(for: window, delegate: self, didRun: #selector(printOperationDidRun), contextInfo: nil)
+            if let pagesAcross = settings.pagesAcross {
+                printInfoDictionary[.pagesAcross] = pagesAcross
+            }
+            if let pagesDown = settings.pagesDown {
+                printInfoDictionary[.pagesDown] = pagesDown
+            }
+            if let time = settings.time {
+                printInfoDictionary[.time] = Date(timeIntervalSince1970: TimeInterval(Double(time)/1000))
+            }
+        }
+
+        let printInfo = NSPrintInfo(dictionary: printInfoDictionary)
+
+        if let settings = settings {
+            if let orientationValue = settings.orientation,
+               let orientation = NSPrintInfo.PaperOrientation.init(rawValue: orientationValue) {
+                printInfo.orientation = orientation
+            }
+            if let margins = settings.margins {
+                printInfo.topMargin = margins.top
+                printInfo.rightMargin = margins.right
+                printInfo.bottomMargin = margins.bottom
+                printInfo.leftMargin = margins.left
+            }
+            if let numberOfPages = settings.numberOfPages {
+                printInfo.printSettings["com_apple_print_PrintSettings_PMLastPage"] = numberOfPages
+            }
+            if let colorMode = settings.colorMode {
+                printInfo.printSettings["ColorModel"] = colorMode
+            }
+            if let scalingFactor = settings.scalingFactor {
+                printInfo.scalingFactor = scalingFactor
+            }
+            if let jobDisposition = settings.jobDisposition {
+                printInfo.jobDisposition = Util.getNSPrintInfoJobDisposition(name: jobDisposition)
+            }
+            if let paperName = settings.paperName {
+                printInfo.paperName = NSPrinter.PaperName.init(rawValue: paperName)
+            }
+            if let horizontalPagination = settings.horizontalPagination,
+               let pagination = NSPrintInfo.PaginationMode.init(rawValue: horizontalPagination) {
+                printInfo.horizontalPagination = pagination
+            }
+            if let verticalPagination = settings.verticalPagination,
+               let pagination = NSPrintInfo.PaginationMode.init(rawValue: verticalPagination) {
+                printInfo.verticalPagination = pagination
+            }
+            printInfo.isHorizontallyCentered = settings.isHorizontallyCentered
+            printInfo.isVerticallyCentered = settings.isVerticallyCentered
+        }
+        let printOperation = printOperation(with: printInfo)
+        printOperation.jobTitle = settings?.jobName ?? (title ?? url?.absoluteString ?? "") + " Document"
+        printOperation.view?.frame = bounds
+
+        if let settings = settings {
+            if let pageOrder = settings.pageOrder, let order = NSPrintOperation.PageOrder.init(rawValue: pageOrder) {
+                printOperation.pageOrder = order
+            }
+            printOperation.canSpawnSeparateThread = settings.canSpawnSeparateThread
+            printOperation.showsPrintPanel = settings.showsPrintPanel
+            printOperation.showsProgressPanel = settings.showsProgressPanel
+            if settings.showsPaperOrientation {
+                printOperation.printPanel.options.insert(.showsOrientation)
             } else {
-                printView(self)
+                printOperation.printPanel.options.remove(.showsOrientation)
             }
-            
-            return printJobId
+            if settings.showsNumberOfCopies {
+                printOperation.printPanel.options.insert(.showsCopies)
+            } else {
+                printOperation.printPanel.options.remove(.showsCopies)
+            }
+            if settings.showsPaperSize {
+                printOperation.printPanel.options.insert(.showsPaperSize)
+            } else {
+                printOperation.printPanel.options.remove(.showsPaperSize)
+            }
+            if settings.showsScaling {
+                printOperation.printPanel.options.insert(.showsScaling)
+            } else {
+                printOperation.printPanel.options.remove(.showsScaling)
+            }
+            if settings.showsPageRange {
+                printOperation.printPanel.options.insert(.showsPageRange)
+            } else {
+                printOperation.printPanel.options.remove(.showsPageRange)
+            }
+            if settings.showsPageSetupAccessory {
+                printOperation.printPanel.options.insert(.showsPageSetupAccessory)
+            } else {
+                printOperation.printPanel.options.remove(.showsPageSetupAccessory)
+            }
+            if settings.showsPreview {
+                printOperation.printPanel.options.insert(.showsPreview)
+            } else {
+                printOperation.printPanel.options.remove(.showsPreview)
+            }
+            if settings.showsPrintSelection {
+                printOperation.printPanel.options.insert(.showsPrintSelection)
+            } else {
+                printOperation.printPanel.options.remove(.showsPrintSelection)
+            }
+        }
+
+        if let id = printJobId, let plugin = plugin {
+            let printJob = PrintJobController(plugin: plugin, id: id, job: printOperation, settings: settings)
+            plugin.printJobManager?.jobs[id] = printJob
+            printJob.present(parentWindow: window, completionHandler: completionHandler)
+        } else if let window = window {
+            printJobCompletionHandler = completionHandler
+            printOperation.runModal(for: window, delegate: self, didRun: #selector(printOperationDidRun), contextInfo: nil)
         } else {
             printView(self)
         }
-        return nil
+
+        return printJobId
     }
     
     @objc func printOperationDidRun(printOperation: NSPrintOperation,
@@ -2778,12 +2681,10 @@ if(window.\(JavaScriptBridgeJS.get_JAVASCRIPT_BRIDGE_NAME())[\(_callHandlerID)] 
         }
     }
     
-    @available(macOS 12.0, *)
     public func saveState() -> Data? {
         return interactionState is NSData || interactionState is Data ? interactionState as? Data : nil
     }
     
-    @available(macOS 12.0, *)
     public func restoreState(state: Data) {
         interactionState = state
     }
@@ -2807,10 +2708,9 @@ if(window.\(JavaScriptBridgeJS.get_JAVASCRIPT_BRIDGE_NAME())[\(_callHandlerID)] 
         removeObserver(self, forKeyPath: #keyPath(WKWebView.estimatedProgress))
         removeObserver(self, forKeyPath: #keyPath(WKWebView.url))
         removeObserver(self, forKeyPath: #keyPath(WKWebView.title))
-        if #available(macOS 12.0, *) {
-            removeObserver(self, forKeyPath: #keyPath(WKWebView.cameraCaptureState))
-            removeObserver(self, forKeyPath: #keyPath(WKWebView.microphoneCaptureState))
-        }
+        removeObserver(self, forKeyPath: #keyPath(WKWebView.cameraCaptureState))
+        removeObserver(self, forKeyPath: #keyPath(WKWebView.microphoneCaptureState))
+
         if #available(macOS 13.0, *) {
             removeObserver(self, forKeyPath: #keyPath(WKWebView.fullscreenState))
         }
@@ -2825,9 +2725,8 @@ if(window.\(JavaScriptBridgeJS.get_JAVASCRIPT_BRIDGE_NAME())[\(_callHandlerID)] 
         if windowId == nil {
             configuration.userContentController.removeAllPluginScriptMessageHandlers()
             configuration.userContentController.removeAllUserScripts()
-            if #available(macOS 10.13, *) {
-                configuration.userContentController.removeAllContentRuleLists()
-            }
+            configuration.userContentController.removeAllContentRuleLists()
+
         } else if let wId = windowId, plugin?.inAppWebViewManager?.windowWebViews[wId] != nil {
             plugin?.inAppWebViewManager?.windowWebViews.removeValue(forKey: wId)
         }
@@ -2841,7 +2740,6 @@ if(window.\(JavaScriptBridgeJS.get_JAVASCRIPT_BRIDGE_NAME())[\(_callHandlerID)] 
         uiDelegate = nil
         navigationDelegate = nil
         isPausedTimersCompletionHandler = nil
-        callAsyncJavaScriptBelowMacOS11Results.removeAll()
         plugin = nil
     }
     

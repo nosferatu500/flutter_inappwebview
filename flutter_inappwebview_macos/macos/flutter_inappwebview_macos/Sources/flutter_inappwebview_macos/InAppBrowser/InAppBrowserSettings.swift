@@ -35,7 +35,6 @@ public class InAppBrowserSettings: ISettings<InAppBrowserWebViewController> {
         }
     }
     var _windowTitlebarSeparatorStyle: NSNumber?
-    @available(macOS 11.0, *)
     var windowTitlebarSeparatorStyle: NSTitlebarSeparatorStyle? {
         get {
             return _windowTitlebarSeparatorStyle != nil ?
@@ -82,9 +81,8 @@ public class InAppBrowserSettings: ISettings<InAppBrowserWebViewController> {
             realOptions["toolbarTopBackgroundColor"] = inAppBrowserWebViewController.window?.backgroundColor.hexString
             realOptions["windowAlphaValue"] = inAppBrowserWebViewController.window?.alphaValue
             realOptions["windowStyleMask"] = inAppBrowserWebViewController.window?.styleMask.rawValue
-            if #available(macOS 11.0, *) {
-                realOptions["windowTitlebarSeparatorStyle"] = inAppBrowserWebViewController.window?.titlebarSeparatorStyle.rawValue
-            }
+            realOptions["windowTitlebarSeparatorStyle"] = inAppBrowserWebViewController.window?.titlebarSeparatorStyle.rawValue
+
             realOptions["windowFrame"] = inAppBrowserWebViewController.window?.frame.toMap()
         }
         return realOptions

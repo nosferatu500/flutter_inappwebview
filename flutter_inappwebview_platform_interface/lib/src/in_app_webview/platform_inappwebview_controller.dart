@@ -40,7 +40,6 @@ final kJavaScriptHandlerForbiddenNames = UnmodifiableListView<String>([
   "callAsyncJavaScript",
   "evaluateJavaScriptWithContentWorld",
   "onFindResultReceived",
-  "onCallAsyncJavaScriptResultBelowIOS14Received",
   "onWebMessagePortMessageReceived",
   "onWebMessageListenerPostMessageReceived",
   "onScrollChanged",

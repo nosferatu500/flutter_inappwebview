@@ -159,7 +159,7 @@ ios/Classes/
 | `Util.getAbsPathAsset(plugin:assetFilePath:)` | Get absolute path for Flutter asset |
 | `Util.convertToDictionary(text:)` | Convert JSON string to Dictionary |
 | `Util.JSONStringify(value:prettyPrinted:)` | Convert value to JSON string |
-| `Util.getContentWorld(name:)` | Get WKContentWorld by name (iOS 14+) |
+| `Util.getContentWorld(name:)` | Get WKContentWorld by name |
 | `Util.getDataDetectorType(type:)` | Convert string to WKDataDetectorTypes |
 | `Util.getDataDetectorTypeString(type:)` | Convert WKDataDetectorTypes to strings |
 | `Util.getDecelerationRate(type:)` | Get UIScrollView.DecelerationRate |
@@ -178,7 +178,7 @@ let url = try Util.getUrlAsset(plugin: plugin, assetFilePath: "assets/page.html"
 let dict = Util.convertToDictionary(text: jsonString)
 let json = Util.JSONStringify(value: myDict, prettyPrinted: true)
 
-// Content worlds (iOS 14+)
+// Content worlds
 let world = Util.getContentWorld(name: "myWorld")
 
 // IP validation

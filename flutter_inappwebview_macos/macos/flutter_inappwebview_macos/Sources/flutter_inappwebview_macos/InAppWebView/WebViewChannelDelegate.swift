@@ -82,7 +82,7 @@ public class WebViewChannelDelegate: ChannelDelegate {
             if let webView = webView {
                 let source = arguments!["source"] as! String
                 let contentWorldMap = arguments!["contentWorld"] as? [String:Any?]
-                if #available(macOS 11.0, *), let contentWorldMap = contentWorldMap {
+                if let contentWorldMap = contentWorldMap {
                     let contentWorld = WKContentWorld.fromMap(map: contentWorldMap, windowId: webView.windowId)!
                     webView.evaluateJavascript(source: source, contentWorld: contentWorld) { (value) in
                         result(value)
@@ -149,7 +149,7 @@ public class WebViewChannelDelegate: ChannelDelegate {
             result(webView?.isLoading ?? false)
             break
         case .takeScreenshot:
-            if let webView = webView, #available(macOS 10.13, *) {
+            if let webView = webView {
                 let screenshotConfiguration = arguments!["screenshotConfiguration"] as? [String: Any?]
                 webView.takeScreenshot(with: screenshotConfiguration, completionHandler: { (screenshot) -> Void in
                     result(screenshot)
@@ -406,22 +406,14 @@ public class WebViewChannelDelegate: ChannelDelegate {
             break
         case .callAsyncJavaScript:
             if let webView = webView {
-                if #available(macOS 11.0, *) { // on iOS 14.0, for some reason, it crashes
-                    let functionBody = arguments!["functionBody"] as! String
-                    let functionArguments = arguments!["arguments"] as! [String:Any]
-                    var contentWorld = WKContentWorld.page
-                    if let contentWorldMap = arguments!["contentWorld"] as? [String:Any?] {
-                        contentWorld = WKContentWorld.fromMap(map: contentWorldMap, windowId: webView.windowId)!
-                    }
-                    webView.callAsyncJavaScript(functionBody: functionBody, arguments: functionArguments, contentWorld: contentWorld) { (value) in
-                        result(value)
-                    }
-                } else {
-                    let functionBody = arguments!["functionBody"] as! String
-                    let functionArguments = arguments!["arguments"] as! [String:Any]
-                    webView.callAsyncJavaScript(functionBody: functionBody, arguments: functionArguments) { (value) in
-                        result(value)
-                    }
+                let functionBody = arguments!["functionBody"] as! String
+                let functionArguments = arguments!["arguments"] as! [String:Any]
+                var contentWorld = WKContentWorld.page
+                if let contentWorldMap = arguments!["contentWorld"] as? [String:Any?] {
+                    contentWorld = WKContentWorld.fromMap(map: contentWorldMap, windowId: webView.windowId)!
+                }
+                webView.callAsyncJavaScript(functionBody: functionBody, arguments: functionArguments, contentWorld: contentWorld) { (value) in
+                    result(value)
                 }
             }
             else {
@@ -429,7 +421,7 @@ public class WebViewChannelDelegate: ChannelDelegate {
             }
             break
         case .createPdf:
-            if let webView = webView, #available(macOS 11.0, *) {
+            if let webView = webView {
                 let configuration = arguments!["pdfConfiguration"] as? [String: Any?]
                 webView.createPdf(configuration: configuration, completionHandler: { (pdf) -> Void in
                     result(pdf)
@@ -440,7 +432,7 @@ public class WebViewChannelDelegate: ChannelDelegate {
             }
             break
         case .createWebArchiveData:
-            if let webView = webView, #available(macOS 11.0, *) {
+            if let webView = webView {
                 webView.createWebArchiveData(dataCompletionHandler: { (webArchiveData) -> Void in
                     result(webArchiveData)
                 })
@@ -450,7 +442,7 @@ public class WebViewChannelDelegate: ChannelDelegate {
             }
             break
         case .saveWebArchive:
-            if let webView = webView, #available(macOS 11.0, *) {
+            if let webView = webView {
                 let filePath = arguments!["filePath"] as! String
                 let autoname = arguments!["autoname"] as! Bool
                 webView.saveWebArchive(filePath: filePath, autoname: autoname, completionHandler: { (path) -> Void in
@@ -553,7 +545,7 @@ public class WebViewChannelDelegate: ChannelDelegate {
             }
             break
         case .pauseAllMediaPlayback:
-            if let webView = webView, #available(macOS 12.0 , *) {
+            if let webView = webView {
                 webView.pauseAllMediaPlayback(completionHandler: { () -> Void in
                     result(true)
                 })
@@ -562,7 +554,7 @@ public class WebViewChannelDelegate: ChannelDelegate {
             }
             break
         case .setAllMediaPlaybackSuspended:
-            if let webView = webView, #available(macOS 12.0 , *) {
+            if let webView = webView {
                 let suspended = arguments!["suspended"] as! Bool
                 webView.setAllMediaPlaybackSuspended(suspended, completionHandler: { () -> Void in
                     result(true)
@@ -572,21 +564,17 @@ public class WebViewChannelDelegate: ChannelDelegate {
             }
             break
         case .closeAllMediaPresentations:
-            if let webView = self.webView, #available(macOS 11.3, *) {
-                if #available(macOS 12.0, *) {
-                    webView.closeAllMediaPresentations {
-                        result(true)
-                    }
-                } else {
-                    webView.closeAllMediaPresentations()
+            if let webView = self.webView {
+                webView.closeAllMediaPresentations {
                     result(true)
                 }
+
             } else {
                 result(false)
             }
             break
         case .requestMediaPlaybackState:
-            if let webView = webView, #available(macOS 12.0, *) {
+            if let webView = webView {
                 webView.requestMediaPlaybackState(completionHandler: { (state) -> Void in
                     result(state.rawValue)
                 })
@@ -595,7 +583,7 @@ public class WebViewChannelDelegate: ChannelDelegate {
             }
             break
         case .getMetaThemeColor:
-            if let webView = webView, #available(macOS 12.0, *) {
+            if let webView = webView {
                 result(webView.themeColor?.hexString)
             } else {
                 result(nil)
@@ -614,14 +602,14 @@ public class WebViewChannelDelegate: ChannelDelegate {
             }
             break
         case .getCameraCaptureState:
-            if let webView = webView, #available(macOS 12.0, *) {
+            if let webView = webView {
                 result(webView.cameraCaptureState.rawValue)
             } else {
                 result(nil)
             }
             break
         case .setCameraCaptureState:
-            if let webView = webView, #available(macOS 12.0, *) {
+            if let webView = webView {
                 let state = WKMediaCaptureState.init(rawValue: arguments!["state"] as! Int) ?? WKMediaCaptureState.none
                 webView.setCameraCaptureState(state) {
                     result(true)
@@ -631,14 +619,14 @@ public class WebViewChannelDelegate: ChannelDelegate {
             }
             break
         case .getMicrophoneCaptureState:
-            if let webView = webView, #available(macOS 12.0, *) {
+            if let webView = webView {
                 result(webView.microphoneCaptureState.rawValue)
             } else {
                 result(nil)
             }
             break
         case .setMicrophoneCaptureState:
-            if let webView = webView, #available(macOS 12.0, *) {
+            if let webView = webView {
                 let state = WKMediaCaptureState.init(rawValue: arguments!["state"] as! Int) ?? WKMediaCaptureState.none
                 webView.setMicrophoneCaptureState(state) {
                     result(true)
@@ -648,7 +636,7 @@ public class WebViewChannelDelegate: ChannelDelegate {
             }
             break
         case .loadSimulatedRequest:
-            if let webView = webView, #available(macOS 12.0, *) {
+            if let webView = webView {
                 let request = URLRequest.init(fromPluginMap: arguments!["urlRequest"] as! [String:Any?])
                 let data = arguments!["data"] as! FlutterStandardTypedData
                 var response: URLResponse? = nil
@@ -666,14 +654,14 @@ public class WebViewChannelDelegate: ChannelDelegate {
             }
             break
         case .saveState:
-            if let webView = webView, #available(macOS 12.0, *) {
+            if let webView = webView {
                 result(webView.saveState())
             } else {
                 result(nil)
             }
             break
         case .restoreState:
-            if let webView = webView, #available(macOS 12.0, *) {
+            if let webView = webView {
                 let state = arguments!["state"] as! FlutterStandardTypedData
                 webView.restoreState(state: state.data)
                 result(true)
@@ -1150,7 +1138,6 @@ public class WebViewChannelDelegate: ChannelDelegate {
         channel?.invokeMethod("onDidReceiveServerRedirectForProvisionalNavigation", arguments: arguments)
     }
     
-    @available(macOS 12.0, *)
     public func onCameraCaptureStateChanged(oldState: WKMediaCaptureState?, newState: WKMediaCaptureState?) {
         let arguments = [
             "oldState": oldState?.rawValue,
@@ -1159,7 +1146,6 @@ public class WebViewChannelDelegate: ChannelDelegate {
         channel?.invokeMethod("onCameraCaptureStateChanged", arguments: arguments)
     }
     
-    @available(macOS 12.0, *)
     public func onMicrophoneCaptureStateChanged(oldState: WKMediaCaptureState?, newState: WKMediaCaptureState?) {
         let arguments = [
             "oldState": oldState?.rawValue,

@@ -50,9 +50,8 @@ public class InAppWebViewFlutterPlugin: NSObject, FlutterPlugin {
         headlessInAppWebViewManager = HeadlessInAppWebViewManager(plugin: self)
         inAppWebViewManager = InAppWebViewManager(plugin: self)
         credentialDatabase = CredentialDatabase(plugin: self)
-        if #available(macOS 10.13, *) {
-            myCookieManager = MyCookieManager(plugin: self)
-        }
+        myCookieManager = MyCookieManager(plugin: self)
+
         myWebStorageManager = MyWebStorageManager(plugin: self)
         webAuthenticationSessionManager = WebAuthenticationSessionManager(plugin: self)
         printJobManager = PrintJobManager(plugin: self)
@@ -76,10 +75,9 @@ public class InAppWebViewFlutterPlugin: NSObject, FlutterPlugin {
         inAppWebViewManager = nil
         credentialDatabase?.dispose()
         credentialDatabase = nil
-        if #available(macOS 10.13, *) {
-            (myCookieManager as? MyCookieManager)?.dispose()
-            myCookieManager = nil
-        }
+        (myCookieManager as? MyCookieManager)?.dispose()
+        myCookieManager = nil
+
         myWebStorageManager?.dispose()
         myWebStorageManager = nil
         webAuthenticationSessionManager?.dispose()

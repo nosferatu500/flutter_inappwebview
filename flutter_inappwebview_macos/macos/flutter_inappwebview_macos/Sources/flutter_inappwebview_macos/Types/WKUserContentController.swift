@@ -19,9 +19,7 @@ extension WKUserContentController {
     // Workaround to create stored properties in an extension:
     // https://valv0.medium.com/computed-properties-and-extensions-a-pure-swift-approach-64733768112c
 
-    @available(macOS 11.0, *)
     private static var _contentWorlds = [String: Set<WKContentWorld>]()
-    @available(macOS 11.0, *)
     var contentWorlds: Set<WKContentWorld> {
         get {
             let tmpAddress = String(format: "%p", unsafeBitCast(self, to: Int.self))
@@ -58,9 +56,8 @@ extension WKUserContentController {
     }
 
     public func initialize () {
-        if #available(macOS 11.0, *) {
-            contentWorlds = Set([WKContentWorld.page])
-        }
+        contentWorlds = Set([WKContentWorld.page])
+
         #if SWIFT_PACKAGE
         pluginScripts = [
             .atDocumentStart: [],
@@ -85,16 +82,15 @@ extension WKUserContentController {
     public func dispose (windowId: Int64?) {
         if windowId == nil {
             let tmpAddress = String(format: "%p", unsafeBitCast(self, to: Int.self))
-            if #available(macOS 11.0, *) {
-                contentWorlds.removeAll()
-                WKUserContentController._contentWorlds.removeValue(forKey: tmpAddress)
-            }
+            contentWorlds.removeAll()
+            WKUserContentController._contentWorlds.removeValue(forKey: tmpAddress)
+
             pluginScripts.removeAll()
             WKUserContentController._pluginScripts.removeValue(forKey: tmpAddress)
             userOnlyScripts.removeAll()
             WKUserContentController._userOnlyScripts.removeValue(forKey: tmpAddress)
         }
-        else if #available(macOS 11.0, *), let windowId = windowId {
+        else if let windowId = windowId {
             let contentWorldsToRemove = contentWorlds.filter({ $0.windowId == windowId })
             for contentWorld in contentWorldsToRemove {
                 contentWorlds.remove(contentWorld)
@@ -113,7 +109,7 @@ extension WKUserContentController {
                     add(scriptMessageHandler, name: messageHandlerName)
                 }
             }
-            if #available(macOS 11.0, *), pluginScript.requiredInAllContentWorlds {
+            if pluginScript.requiredInAllContentWorlds {
                 for contentWorld in contentWorlds {
                     if !containsPluginScript(pluginScript: pluginScript, in: contentWorld) {
                         let pluginScriptWithContentWorld = pluginScript.copyAndSet(contentWorld: contentWorld)
@@ -136,9 +132,8 @@ extension WKUserContentController {
     }
 
     public func addUserOnlyScript(_ userOnlyScript: UserScript) {
-        if #available(macOS 11.0, *) {
-            contentWorlds.insert(userOnlyScript.contentWorld)
-        }
+        contentWorlds.insert(userOnlyScript.contentWorld)
+
         userOnlyScripts[userOnlyScript.injectionTime]!.append(userOnlyScript)
     }
 
@@ -149,9 +144,8 @@ extension WKUserContentController {
     }
 
     public func addPluginScript(_ pluginScript: PluginScript) {
-        if #available(macOS 11.0, *) {
-            contentWorlds.insert(pluginScript.contentWorld)
-        }
+        contentWorlds.insert(pluginScript.contentWorld)
+
         pluginScripts[pluginScript.injectionTime]!.append(pluginScript)
     }
 
@@ -167,7 +161,6 @@ extension WKUserContentController {
             .filter({ $0.injectionTime == .atDocumentStart && $0.requiredInAllContentWorlds })
     }
 
-    @available(macOS 11.0, *)
     public func generateCodeForScriptEvaluation(scriptMessageHandler: WKScriptMessageHandler, source: String, contentWorld: WKContentWorld) -> String {
         let (inserted, _) = contentWorlds.insert(contentWorld)
         if inserted {
@@ -221,11 +214,10 @@ extension WKUserContentController {
         pluginScripts[pluginScript.injectionTime]!.remove(pluginScript)
         for messageHandlerName in pluginScript.messageHandlerNames {
             removeScriptMessageHandler(forName: messageHandlerName)
-            if #available(macOS 11.0, *) {
-                for contentWorld in contentWorlds {
-                    removeScriptMessageHandler(forName: messageHandlerName, contentWorld: contentWorld)
-                }
+            for contentWorld in contentWorlds {
+                removeScriptMessageHandler(forName: messageHandlerName, contentWorld: contentWorld)
             }
+
         }
         removeUserScript(scriptToRemove: pluginScript)
     }
@@ -251,15 +243,13 @@ extension WKUserContentController {
                 removeScriptMessageHandler(forName: messageHandlerName)
             }
         }
-        if #available(macOS 11.0, *) {
-            removeAllScriptMessageHandlers()
-            for contentWorld in contentWorlds {
-                removeAllScriptMessageHandlers(from: contentWorld)
-            }
+        removeAllScriptMessageHandlers()
+        for contentWorld in contentWorlds {
+            removeAllScriptMessageHandlers(from: contentWorld)
         }
+
     }
 
-    @available(macOS 11.0, *)
     public func resetContentWorlds(windowId: Int64?) {
         let allUserOnlyScripts = userOnlyScripts.compactMap({ $0.value }).joined()
         let contentWorldsFiltered = contentWorlds.filter({ $0.windowId == windowId && $0 != WKContentWorld.page })
@@ -363,7 +353,6 @@ extension WKUserContentController {
         return false
     }
 
-    @available(macOS 11.0, *)
     public func containsPluginScript(pluginScript: PluginScript, in contentWorld: WKContentWorld) -> Bool {
         let userScripts = useCopyOfUserScripts()
         for script in userScripts {
@@ -374,7 +363,6 @@ extension WKUserContentController {
         return false
     }
     
-    @available(macOS 11.0, *)
     public func containsPluginScript(with groupName: String, in contentWorld: WKContentWorld) -> Bool {
         let userScripts = useCopyOfUserScripts()
         for script in userScripts {
@@ -385,7 +373,6 @@ extension WKUserContentController {
         return false
     }
 
-    @available(macOS 11.0, *)
     public func getContentWorlds(with windowId: Int64?) -> Set<WKContentWorld> {
         var contentWorldsFiltered = Set([WKContentWorld.page])
         let contentWorlds = Array(self.contentWorlds)
