@@ -290,14 +290,6 @@ class InAppBrowser implements PlatformInAppBrowserEvents {
     return null;
   }
 
-  ///Use [onJsBeforeUnload] instead.
-  @Deprecated('Use onJsBeforeUnload instead')
-  @override
-  FutureOr<JsBeforeUnloadResponse?>? androidOnJsBeforeUnload(
-    JsBeforeUnloadRequest jsBeforeUnloadRequest,
-  ) {
-    return null;
-  }
 
   ///Use [onPermissionRequest] instead.
   @Deprecated("Use onPermissionRequest instead")

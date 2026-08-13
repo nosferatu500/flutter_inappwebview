@@ -115,7 +115,6 @@ class PlatformHeadlessInAppWebViewCreationParams
     super.onFaviconChanged,
     @Deprecated('Use onReceivedTouchIconUrl instead')
     super.onReceivedTouchIconUrl,
-    @Deprecated('Use onJsBeforeUnload instead') super.androidOnJsBeforeUnload,
     super.onJsBeforeUnload,
     @Deprecated('Use onReceivedLoginRequest instead')
     super.onReceivedLoginRequest,

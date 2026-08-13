@@ -825,9 +825,7 @@ class IOSInAppWebViewController extends PlatformInAppWebViewController
         break;
       case "onJsBeforeUnload":
         if ((webviewParams != null &&
-                (webviewParams!.onJsBeforeUnload != null ||
-                    // ignore: deprecated_member_use_from_same_package
-                    webviewParams!.androidOnJsBeforeUnload != null)) ||
+                webviewParams!.onJsBeforeUnload != null) ||
             _inAppBrowserEventHandler != null) {
           Map<String, dynamic> arguments = call.arguments
               .cast<String, dynamic>();
@@ -835,25 +833,14 @@ class IOSInAppWebViewController extends PlatformInAppWebViewController
               JsBeforeUnloadRequest.fromMap(arguments)!;
 
           if (webviewParams != null) {
-            if (webviewParams!.onJsBeforeUnload != null)
-              return (await webviewParams!.onJsBeforeUnload!(
-                _controllerFromPlatform,
-                jsBeforeUnloadRequest,
-              ))?.toMap();
-            else {
-              // ignore: deprecated_member_use_from_same_package
-              return (await webviewParams!.androidOnJsBeforeUnload!(
-                _controllerFromPlatform,
-                jsBeforeUnloadRequest,
-              ))?.toMap();
-            }
+            return (await webviewParams!.onJsBeforeUnload!(
+              _controllerFromPlatform,
+              jsBeforeUnloadRequest,
+            ))?.toMap();
           } else {
-            return ((await _inAppBrowserEventHandler!.onJsBeforeUnload(
+            return (await _inAppBrowserEventHandler!.onJsBeforeUnload(
                       jsBeforeUnloadRequest,
-                    )) ??
-                    (await _inAppBrowserEventHandler!.androidOnJsBeforeUnload(
-                      jsBeforeUnloadRequest,
-                    )))
+                    ))
                 ?.toMap();
           }
         }

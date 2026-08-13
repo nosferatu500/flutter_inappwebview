@@ -1928,18 +1928,6 @@ In that case, after the `window.addEventListener("flutterInAppWebViewPlatformRea
   final void Function(T controller, WebUri url, bool precomposed)?
   onReceivedTouchIconUrl;
 
-  ///{@template flutter_inappwebview_platform_interface.PlatformWebViewCreationParams.androidOnJsBeforeUnload}
-  ///Use [onJsBeforeUnload] instead.
-  ///{@endtemplate}
-  ///
-  ///{@macro flutter_inappwebview_platform_interface.PlatformWebViewCreationParams.androidOnJsBeforeUnload.supported_platforms}
-  @SupportedPlatforms(platforms: [AndroidPlatform()])
-  @Deprecated('Use onJsBeforeUnload instead')
-  final FutureOr<JsBeforeUnloadResponse?> Function(
-    T controller,
-    JsBeforeUnloadRequest jsBeforeUnloadRequest,
-  )?
-  androidOnJsBeforeUnload;
 
   ///{@template flutter_inappwebview_platform_interface.PlatformWebViewCreationParams.onJsBeforeUnload}
   ///Event fired when the client should display a dialog to confirm navigation away from the current page.
@@ -2668,7 +2656,6 @@ This is a limitation of the native WebKit APIs.""",
     this.onFaviconChanged,
     @Deprecated('Use onReceivedTouchIconUrl instead')
     this.onReceivedTouchIconUrl,
-    @Deprecated('Use onJsBeforeUnload instead') this.androidOnJsBeforeUnload,
     this.onJsBeforeUnload,
     @Deprecated('Use onReceivedLoginRequest instead')
     this.onReceivedLoginRequest,

@@ -305,12 +305,6 @@ class InAppWebView extends StatefulWidget {
       Uri? url,
     )?
     androidOnFormResubmission,
-    @Deprecated('Use onJsBeforeUnload instead')
-    FutureOr<JsBeforeUnloadResponse?> Function(
-      InAppWebViewController controller,
-      JsBeforeUnloadRequest jsBeforeUnloadRequest,
-    )?
-    androidOnJsBeforeUnload,
     void Function(InAppWebViewController controller)?
     onDidReceiveServerRedirectForProvisionalNavigation,
     FutureOr<FormResubmissionAction?> Function(
@@ -730,10 +724,6 @@ class InAppWebView extends StatefulWidget {
            onReceivedTouchIconUrl: onReceivedTouchIconUrl != null
                ? (controller, url, precomposed) =>
                      onReceivedTouchIconUrl.call(controller, url, precomposed)
-               : null,
-           androidOnJsBeforeUnload: androidOnJsBeforeUnload != null
-               ? (controller, jsBeforeUnloadRequest) => androidOnJsBeforeUnload
-                     .call(controller, jsBeforeUnloadRequest)
                : null,
            onJsBeforeUnload: onJsBeforeUnload != null
                ? (controller, jsBeforeUnloadRequest) =>

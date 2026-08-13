@@ -2078,16 +2078,6 @@ In that case, after the `window.addEventListener("flutterInAppWebViewPlatformRea
   )
   void onReceivedTouchIconUrl(WebUri url, bool precomposed) {}
 
-  ///{@macro flutter_inappwebview_platform_interface.PlatformWebViewCreationParams.androidOnJsBeforeUnload}
-  ///
-  ///{@macro flutter_inappwebview_platform_interface.PlatformInAppBrowserEvents.androidOnJsBeforeUnload.supported_platforms}
-  @SupportedPlatforms(platforms: [AndroidPlatform()])
-  @Deprecated('Use onJsBeforeUnload instead')
-  FutureOr<JsBeforeUnloadResponse?>? androidOnJsBeforeUnload(
-    JsBeforeUnloadRequest jsBeforeUnloadRequest,
-  ) {
-    return null;
-  }
 
   ///{@macro flutter_inappwebview_platform_interface.PlatformWebViewCreationParams.onJsBeforeUnload}
   ///

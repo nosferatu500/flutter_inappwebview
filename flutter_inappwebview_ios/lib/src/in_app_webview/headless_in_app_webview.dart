@@ -92,7 +92,6 @@ class IOSHeadlessInAppWebViewCreationParams
     super.onReceivedIcon,
     @Deprecated('Use onReceivedTouchIconUrl instead')
     super.onReceivedTouchIconUrl,
-    @Deprecated('Use onJsBeforeUnload instead') super.androidOnJsBeforeUnload,
     super.onJsBeforeUnload,
     @Deprecated('Use onReceivedLoginRequest instead')
     super.onReceivedLoginRequest,
@@ -201,7 +200,6 @@ class IOSHeadlessInAppWebViewCreationParams
         onFormResubmission: params.onFormResubmission,
         onReceivedIcon: params.onReceivedIcon,
         onReceivedTouchIconUrl: params.onReceivedTouchIconUrl,
-        androidOnJsBeforeUnload: params.androidOnJsBeforeUnload,
         onJsBeforeUnload: params.onJsBeforeUnload,
         onReceivedLoginRequest: params.onReceivedLoginRequest,
         onPermissionRequestCanceled: params.onPermissionRequestCanceled,
