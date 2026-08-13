@@ -64,8 +64,6 @@ public class InAppWebView: WKWebView, UIScrollViewDelegate, WKUIDelegate,
     
     var customIMPs: [IMP] = []
     
-    var callAsyncJavaScriptBelowIOS14Results: [String:((Any?) -> Void)] = [:]
-    
     var oldZoomScale = Float(1.0)
     
     fileprivate var interceptOnlyAsyncAjaxRequestsPluginScript: PluginScript?
@@ -860,7 +858,7 @@ public class InAppWebView: WKWebView, UIScrollViewDelegate, WKUIDelegate,
             if let snapshotWidth = with["snapshotWidth"] as? Double {
                 snapshotConfiguration!.snapshotWidth = NSNumber(value: snapshotWidth)
             }
-            if #available(iOS 13.0, *), let afterScreenUpdates = with["afterScreenUpdates"] as? Bool {
+            if let afterScreenUpdates = with["afterScreenUpdates"] as? Bool {
                 snapshotConfiguration!.afterScreenUpdates = afterScreenUpdates
             }
         }
@@ -962,7 +960,7 @@ public class InAppWebView: WKWebView, UIScrollViewDelegate, WKUIDelegate,
     public func loadUrl(urlRequest: URLRequest, allowingReadAccessTo: URL?) {
         let url = urlRequest.url!
         
-        if #available(iOS 9.0, *), let allowingReadAccessTo = allowingReadAccessTo, url.scheme == "file", allowingReadAccessTo.scheme == "file" {
+        if let allowingReadAccessTo = allowingReadAccessTo, url.scheme == "file", allowingReadAccessTo.scheme == "file" {
             loadFileURL(url, allowingReadAccessTo: allowingReadAccessTo)
         } else {
             load(urlRequest)
@@ -979,7 +977,7 @@ public class InAppWebView: WKWebView, UIScrollViewDelegate, WKUIDelegate,
     }
     
     public func loadData(data: String, mimeType: String, encoding: String, baseUrl: URL, allowingReadAccessTo: URL?) {
-        if #available(iOS 9.0, *), let allowingReadAccessTo = allowingReadAccessTo, baseUrl.scheme == "file", allowingReadAccessTo.scheme == "file" {
+        if let allowingReadAccessTo = allowingReadAccessTo, baseUrl.scheme == "file", allowingReadAccessTo.scheme == "file" {
             loadFileURL(baseUrl, allowingReadAccessTo: allowingReadAccessTo)
         }
         
@@ -1312,7 +1310,7 @@ public class InAppWebView: WKWebView, UIScrollViewDelegate, WKUIDelegate,
         }
 
         
-        if #available(iOS 11.0, *), newSettingsMap["contentBlockers"] != nil {
+        if newSettingsMap["contentBlockers"] != nil {
             configuration.userContentController.removeAllContentRuleLists()
             let contentBlockers = newSettings.contentBlockers
             if contentBlockers.count > 0 {
@@ -1387,7 +1385,7 @@ public class InAppWebView: WKWebView, UIScrollViewDelegate, WKUIDelegate,
         evaluateJavascript(source: flagVariable) { (alreadyLoaded) in
             if let alreadyLoaded = alreadyLoaded as? Bool, alreadyLoaded {
                 let enableSource = "\(flagVariable) = \(enable);"
-                if #available(iOS 14.0, *), pluginScript.requiredInAllContentWorlds {
+                if pluginScript.requiredInAllContentWorlds {
                     for contentWorld in self.configuration.userContentController.contentWorlds {
                         self.evaluateJavaScript(enableSource, frame: nil, contentWorld: contentWorld, completionHandler: nil)
                     }
@@ -1399,7 +1397,7 @@ public class InAppWebView: WKWebView, UIScrollViewDelegate, WKUIDelegate,
                 }
             }
             else if enable {
-                if #available(iOS 14.0, *), pluginScript.requiredInAllContentWorlds {
+                if pluginScript.requiredInAllContentWorlds {
                     for contentWorld in self.configuration.userContentController.contentWorlds {
                         self.evaluateJavaScript(pluginScript.source, frame: nil, contentWorld: contentWorld, completionHandler: nil)
                         self.configuration.userContentController.addPluginScript(pluginScript)
@@ -1555,49 +1553,6 @@ public class InAppWebView: WKWebView, UIScrollViewDelegate, WKUIDelegate,
             }
             
             completionHandler(body)
-        }
-    }
-    
-    public func callAsyncJavaScript(functionBody: String, arguments: [String:Any], completionHandler: ((Any?) -> Void)? = nil) {
-        if let applePayAPIEnabled = settings?.applePayAPIEnabled, applePayAPIEnabled {
-            completionHandler?(nil)
-        }
-        
-        var jsToInject = functionBody
-        
-        let resultUuid = NSUUID().uuidString
-        if let completionHandler = completionHandler {
-            callAsyncJavaScriptBelowIOS14Results[resultUuid] = completionHandler
-        }
-        
-        var functionArgumentNamesList: [String] = []
-        var functionArgumentValuesList: [String] = []
-        let keys = arguments.keys
-        keys.forEach { (key) in
-            functionArgumentNamesList.append(key)
-            functionArgumentValuesList.append("obj.\(key)")
-        }
-        
-        let functionArgumentNames = functionArgumentNamesList.joined(separator: ", ")
-        let functionArgumentValues = functionArgumentValuesList.joined(separator: ", ")
-        
-        jsToInject = CallAsyncJavaScriptBelowIOS14WrapperJS.CALL_ASYNC_JAVASCRIPT_BELOW_IOS_14_WRAPPER_JS()
-            .replacingOccurrences(of: PluginScriptsUtil.VAR_FUNCTION_ARGUMENT_NAMES, with: functionArgumentNames)
-            .replacingOccurrences(of: PluginScriptsUtil.VAR_FUNCTION_ARGUMENT_VALUES, with: functionArgumentValues)
-            .replacingOccurrences(of: PluginScriptsUtil.VAR_FUNCTION_ARGUMENTS_OBJ, with: Util.JSONStringify(value: arguments))
-            .replacingOccurrences(of: PluginScriptsUtil.VAR_FUNCTION_BODY, with: jsToInject)
-            .replacingOccurrences(of: PluginScriptsUtil.VAR_RESULT_UUID, with: resultUuid)
-        
-        evaluateJavaScript(jsToInject) { (value, error) in
-            if let error = error {
-                let userInfo = (error as NSError).userInfo
-                let errorMessage = userInfo["WKJavaScriptExceptionMessage"] ??
-                                   userInfo["NSLocalizedDescription"] as? String ??
-                                   error.localizedDescription
-                self.channelDelegate?.onConsoleMessage(message: String(describing: errorMessage), messageLevel: 3)
-                completionHandler?(nil)
-                self.callAsyncJavaScriptBelowIOS14Results.removeValue(forKey: resultUuid)
-            }
         }
     }
     
@@ -1920,7 +1875,7 @@ public class InAppWebView: WKWebView, UIScrollViewDelegate, WKUIDelegate,
         }
         
         if let useOnDownloadStart = settings?.useOnDownloadStart, useOnDownloadStart {
-            if #available(iOS 14.5, *), !navigationResponse.canShowMIMEType, useOnNavigationResponse == nil || !useOnNavigationResponse! {
+            if !navigationResponse.canShowMIMEType, useOnNavigationResponse == nil || !useOnNavigationResponse! {
                 decisionHandler(.download)
                 return
             } else {
@@ -2997,20 +2952,6 @@ public class InAppWebView: WKWebView, UIScrollViewDelegate, WKUIDelegate,
                         }
                     }
                     break
-                case "onCallAsyncJavaScriptResultBelowIOS14Received":
-                    if let args = body["args"] as? String, let data = args.data(using: .utf8) {
-                        let jsonArgs = try? JSONSerialization.jsonObject(with: data, options: .mutableContainers) as? [[String: Any]]
-                        if let jsonData = jsonArgs?.first,
-                           let resultUuid = jsonData["resultUuid"] as? String,
-                           let result = webView.callAsyncJavaScriptBelowIOS14Results[resultUuid] {
-                            result([
-                                "value": jsonData["value"],
-                                "error": jsonData["error"]
-                            ])
-                            webView.callAsyncJavaScriptBelowIOS14Results.removeValue(forKey: resultUuid)
-                        }
-                    }
-                    break
                 case "onWebMessagePortMessageReceived":
                     if let args = body["args"] as? String, let data = args.data(using: .utf8) {
                         let jsonArgs = try? JSONSerialization.jsonObject(with: data, options: .mutableContainers) as? [[String: Any]]
@@ -3498,7 +3439,6 @@ if(window.\(JavaScriptBridgeJS.get_JAVASCRIPT_BRIDGE_NAME())[\(_callHandlerID)] 
         scrollView.delegate = nil
         isPausedTimersCompletionHandler = nil
         SharedLastTouchPointTimestamp.removeValue(forKey: self)
-        callAsyncJavaScriptBelowIOS14Results.removeAll()
         plugin = nil
     }
     

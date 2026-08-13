@@ -297,7 +297,7 @@ public class InAppBrowserWebViewController: UIViewController, InAppBrowserDelega
                 navigationItem.rightBarButtonItems = [closeButton]
             }
             
-            if #available(iOS 14.0, *), !menuItems.isEmpty {
+            if !menuItems.isEmpty {
                 var uiActions: [UIAction] = []
                 menuItems = menuItems.sorted(by: {$0.order ?? 0 < $1.order ?? 0})
                 for menuItem in menuItems {

@@ -20,7 +20,7 @@ public class WebAuthenticationSessionSettings: ISettings<WebAuthenticationSessio
     
     override func getRealSettings(obj: WebAuthenticationSession?) -> [String: Any?] {
         var realOptions: [String: Any?] = toMap()
-        if #available(iOS 12.0, *), let session = obj?.session as? ASWebAuthenticationSession {
+        if let session = obj?.session as? ASWebAuthenticationSession {
             realOptions["prefersEphemeralWebBrowserSession"] = session.prefersEphemeralWebBrowserSession
 
         }

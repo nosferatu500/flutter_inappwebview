@@ -45,7 +45,7 @@ public class SafariViewController: SFSafariViewController, SFSafariViewControlle
     public static func prepareConfig(configuration: SFSafariViewController.Configuration, safariSettings: SafariBrowserSettings) {
         configuration.entersReaderIfAvailable = safariSettings.entersReaderIfAvailable
         configuration.barCollapsingEnabled = safariSettings.barCollapsingEnabled
-        if #available(iOS 15.0, *), let activityButtonMap = safariSettings.activityButton {
+        if let activityButtonMap = safariSettings.activityButton {
             configuration.activityButton = .fromMap(map: activityButtonMap)
         }
         if #available(iOS 15.2, *), let eventAttributionMap = safariSettings.eventAttribution {

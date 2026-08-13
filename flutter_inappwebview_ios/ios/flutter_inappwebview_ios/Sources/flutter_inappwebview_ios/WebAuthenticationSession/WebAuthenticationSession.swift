@@ -39,7 +39,7 @@ public class WebAuthenticationSession: NSObject, ASWebAuthenticationPresentation
     }
     
     public func prepare() {
-        if #available(iOS 13.0, *), let session = session as? ASWebAuthenticationSession {
+        if let session = session as? ASWebAuthenticationSession {
             session.prefersEphemeralWebBrowserSession = settings.prefersEphemeralWebBrowserSession
         }
     }
@@ -52,7 +52,7 @@ public class WebAuthenticationSession: NSObject, ASWebAuthenticationPresentation
         guard let session = session else {
             return false
         }
-        if #available(iOS 13.4, *), let session = session as? ASWebAuthenticationSession {
+        if let session = session as? ASWebAuthenticationSession {
             return session.canStart
         }
         return _canStart
@@ -63,9 +63,7 @@ public class WebAuthenticationSession: NSObject, ASWebAuthenticationPresentation
             return false
         }
         var started = false
-        if #available(iOS 12.0, *), let session = session as? ASWebAuthenticationSession {
-            started = session.start()
-        } else if #available(iOS 11.0, *), let session = session as? SFAuthenticationSession {
+        if let session = session as? ASWebAuthenticationSession {
             started = session.start()
         }
         if started {
@@ -78,9 +76,7 @@ public class WebAuthenticationSession: NSObject, ASWebAuthenticationPresentation
         guard let session = session else {
             return
         }
-        if #available(iOS 12.0, *), let session = session as? ASWebAuthenticationSession {
-            session.cancel()
-        } else if #available(iOS 11.0, *), let session = session as? SFAuthenticationSession {
+        if let session = session as? ASWebAuthenticationSession {
             session.cancel()
         }
     }

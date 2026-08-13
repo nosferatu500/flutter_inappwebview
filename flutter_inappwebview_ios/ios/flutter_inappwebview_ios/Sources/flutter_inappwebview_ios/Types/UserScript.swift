@@ -74,7 +74,7 @@ public class UserScript: WKUserScript {
         }
         
         let contentWorldMap = map["contentWorld"] as? [String:Any?]
-        if #available(iOS 14.0, *), let contentWorldMap = contentWorldMap {
+        if let contentWorldMap = contentWorldMap {
             let contentWorld = WKContentWorld.fromMap(map: contentWorldMap, windowId: windowId)!
             return UserScript(
                 groupName: map["groupName"] as? String,

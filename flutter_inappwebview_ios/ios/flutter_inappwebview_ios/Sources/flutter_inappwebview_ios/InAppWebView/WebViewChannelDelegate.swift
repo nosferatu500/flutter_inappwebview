@@ -82,7 +82,7 @@ public class WebViewChannelDelegate: ChannelDelegate {
             if let webView = webView {
                 let source = arguments!["source"] as! String
                 let contentWorldMap = arguments!["contentWorld"] as? [String:Any?]
-                if #available(iOS 14.0, *), let contentWorldMap = contentWorldMap {
+                if let contentWorldMap = contentWorldMap {
                     let contentWorld = WKContentWorld.fromMap(map: contentWorldMap, windowId: webView.windowId)!
                     webView.evaluateJavascript(source: source, contentWorld: contentWorld) { (value) in
                         result(value)
@@ -149,7 +149,7 @@ public class WebViewChannelDelegate: ChannelDelegate {
             result(webView?.isLoading ?? false)
             break
         case .takeScreenshot:
-            if let webView = webView, #available(iOS 11.0, *) {
+            if let webView = webView {
                 let screenshotConfiguration = arguments!["screenshotConfiguration"] as? [String: Any?]
                 webView.takeScreenshot(with: screenshotConfiguration, completionHandler: { (screenshot) -> Void in
                     result(screenshot)
@@ -447,7 +447,7 @@ public class WebViewChannelDelegate: ChannelDelegate {
             }
             break
         case .createPdf:
-            if let webView = webView, #available(iOS 14.0, *) {
+            if let webView = webView {
                 let configuration = arguments!["pdfConfiguration"] as? [String: Any?]
                 webView.createPdf(configuration: configuration, completionHandler: { (pdf) -> Void in
                     result(pdf)
@@ -458,7 +458,7 @@ public class WebViewChannelDelegate: ChannelDelegate {
             }
             break
         case .createWebArchiveData:
-            if let webView = webView, #available(iOS 14.0, *) {
+            if let webView = webView {
                 webView.createWebArchiveData(dataCompletionHandler: { (webArchiveData) -> Void in
                     result(webArchiveData)
                 })
@@ -468,7 +468,7 @@ public class WebViewChannelDelegate: ChannelDelegate {
             }
             break
         case .saveWebArchive:
-            if let webView = webView, #available(iOS 14.0, *) {
+            if let webView = webView {
                 let filePath = arguments!["filePath"] as! String
                 let autoname = arguments!["autoname"] as! Bool
                 webView.saveWebArchive(filePath: filePath, autoname: autoname, completionHandler: { (path) -> Void in
@@ -557,7 +557,7 @@ public class WebViewChannelDelegate: ChannelDelegate {
             }
             break
         case .pauseAllMediaPlayback:
-            if let webView = webView, #available(iOS 15.0, *) {
+            if let webView = webView {
                 webView.pauseAllMediaPlayback(completionHandler: { () -> Void in
                     result(true)
                 })
@@ -566,7 +566,7 @@ public class WebViewChannelDelegate: ChannelDelegate {
             }
             break
         case .setAllMediaPlaybackSuspended:
-            if let webView = webView, #available(iOS 15.0, *) {
+            if let webView = webView {
                 let suspended = arguments!["suspended"] as! Bool
                 webView.setAllMediaPlaybackSuspended(suspended, completionHandler: { () -> Void in
                     result(true)
@@ -576,7 +576,7 @@ public class WebViewChannelDelegate: ChannelDelegate {
             }
             break
         case .closeAllMediaPresentations:
-            if let webView = self.webView, #available(iOS 14.5, *) {
+            if let webView = self.webView {
                 // closeAllMediaPresentations with completionHandler v15.0 makes the app crash
                 // with error EXC_BAD_ACCESS, so use closeAllMediaPresentations v14.5
                 if #available(iOS 16.0, *) {
@@ -592,7 +592,7 @@ public class WebViewChannelDelegate: ChannelDelegate {
             }
             break
         case .requestMediaPlaybackState:
-            if let webView = webView, #available(iOS 15.0, *) {
+            if let webView = webView {
                 webView.requestMediaPlaybackState(completionHandler: { (state) -> Void in
                     result(state.rawValue)
                 })
@@ -601,7 +601,7 @@ public class WebViewChannelDelegate: ChannelDelegate {
             }
             break
         case .getMetaThemeColor:
-            if let webView = webView, #available(iOS 15.0, *) {
+            if let webView = webView {
                 result(webView.themeColor?.hexString)
             } else {
                 result(nil)
@@ -620,14 +620,14 @@ public class WebViewChannelDelegate: ChannelDelegate {
             }
             break
         case .getCameraCaptureState:
-            if let webView = webView, #available(iOS 15.0, *) {
+            if let webView = webView {
                 result(webView.cameraCaptureState.rawValue)
             } else {
                 result(nil)
             }
             break
         case .setCameraCaptureState:
-            if let webView = webView, #available(iOS 15.0, *) {
+            if let webView = webView {
                 let state = WKMediaCaptureState.init(rawValue: arguments!["state"] as! Int) ?? WKMediaCaptureState.none
                 webView.setCameraCaptureState(state) {
                     result(true)
@@ -637,14 +637,14 @@ public class WebViewChannelDelegate: ChannelDelegate {
             }
             break
         case .getMicrophoneCaptureState:
-            if let webView = webView, #available(iOS 15.0, *) {
+            if let webView = webView {
                 result(webView.microphoneCaptureState.rawValue)
             } else {
                 result(nil)
             }
             break
         case .setMicrophoneCaptureState:
-            if let webView = webView, #available(iOS 15.0, *) {
+            if let webView = webView {
                 let state = WKMediaCaptureState.init(rawValue: arguments!["state"] as! Int) ?? WKMediaCaptureState.none
                 webView.setMicrophoneCaptureState(state) {
                     result(true)
@@ -654,7 +654,7 @@ public class WebViewChannelDelegate: ChannelDelegate {
             }
             break
         case .loadSimulatedRequest:
-            if let webView = webView, #available(iOS 15.0, *) {
+            if let webView = webView {
                 let request = URLRequest.init(fromPluginMap: arguments!["urlRequest"] as! [String:Any?])
                 let data = arguments!["data"] as! FlutterStandardTypedData
                 var response: URLResponse? = nil
@@ -685,14 +685,14 @@ public class WebViewChannelDelegate: ChannelDelegate {
             result(true)
             break
         case .saveState:
-            if let webView = webView, #available(iOS 15.0, *) {
+            if let webView = webView {
                 result(webView.saveState())
             } else {
                 result(nil)
             }
             break
         case .restoreState:
-            if let webView = webView, #available(iOS 15.0, *) {
+            if let webView = webView {
                 let state = arguments!["state"] as! FlutterStandardTypedData
                 webView.restoreState(state: state.data)
                 result(true)

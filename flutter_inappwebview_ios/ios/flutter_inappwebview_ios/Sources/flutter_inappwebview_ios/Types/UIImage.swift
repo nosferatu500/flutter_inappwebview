@@ -16,7 +16,7 @@ extension UIImage {
         if let name = map["name"] as? String {
             return UIImage(named: name)
         }
-        if #available(iOS 13.0, *), let systemName = map["systemName"] as? String {
+        if let systemName = map["systemName"] as? String {
             return UIImage(systemName: systemName)
         }
         if let data = map["data"] as? FlutterStandardTypedData {

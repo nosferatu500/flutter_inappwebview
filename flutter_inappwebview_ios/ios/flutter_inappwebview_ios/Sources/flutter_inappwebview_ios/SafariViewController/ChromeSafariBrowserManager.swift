@@ -79,7 +79,7 @@ public class ChromeSafariBrowserManager: ChannelDelegate {
     public func open(id: String, url: String, settings: [String: Any?], menuItemList: [[String: Any]], result: @escaping FlutterResult) {
         let absoluteUrl = URL(string: url)!.absoluteURL
         
-        if #available(iOS 9.0, *), let plugin = plugin {
+        if let plugin = plugin {
             
             if let flutterViewController = UIApplication.shared.visibleViewController {
                 // flutterViewController could be casted to FlutterViewController if needed

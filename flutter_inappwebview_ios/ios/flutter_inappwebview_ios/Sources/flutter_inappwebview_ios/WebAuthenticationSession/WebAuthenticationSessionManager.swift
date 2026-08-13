@@ -44,7 +44,7 @@ public class WebAuthenticationSessionManager: ChannelDelegate {
     }
     
     public func create(id: String, url: String, callbackURLScheme: String?, settings: [String: Any?], result: @escaping FlutterResult) {
-        if #available(iOS 11.0, *), let plugin = plugin {
+        if let plugin = plugin {
             let sessionUrl = URL(string: url) ?? URL(string: "about:blank")!
             let initialSettings = WebAuthenticationSessionSettings()
             let _ = initialSettings.parse(settings: settings)

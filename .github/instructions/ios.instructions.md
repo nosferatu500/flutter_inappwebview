@@ -108,7 +108,6 @@ ios/Classes/
 │   └── PullToRefreshSettings.swift      # Refresh settings
 │
 ├── PluginScriptsJS/                     # Injected JavaScript for bridge
-│   ├── CallAsyncJavaScriptBelowIOS14WrapperJS.swift # Async JS wrapper for older iOS
 │   ├── ConsoleLogJS.swift               # Console interception
 │   ├── EnableViewportScaleJS.swift      # Viewport scaling
 │   ├── FindElementsAtPointJS.swift      # Hit-test elements
@@ -139,7 +138,7 @@ ios/Classes/
 
 ## Platform Requirements
 
-- iOS 12.0+
+- iOS 15.0+ (podspec `s.platform` and `Package.swift` `platforms`)
 - Xcode version >= 15.0
 - Swift language support required
 
@@ -299,7 +298,6 @@ JavaScript files injected into WebViews for native-web communication:
 | **OnWindowBlurEventJS** | `OnWindowBlurEventJS.swift` | Listens for `blur` event on window and triggers `onWindowBlur` callback. |
 | **OnWindowFocusEventJS** | `OnWindowFocusEventJS.swift` | Listens for `focus` event on window and triggers `onWindowFocus` callback. |
 | **WindowIdJS** | `WindowIdJS.swift` | Manages window ID for multi-window scenarios (e.g., `window.open()`). |
-| **CallAsyncJavaScriptBelowIOS14WrapperJS** | `CallAsyncJavaScript...swift` | Wrapper for `callAsyncJavaScript` on iOS versions below 14 that don't support native API. |
 
 ---
 

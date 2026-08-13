@@ -75,7 +75,7 @@ extension WKUserContentController {
             userOnlyScripts.removeAll()
             WKUserContentController._userOnlyScripts.removeValue(forKey: tmpAddress)
         }
-        else if #available(iOS 14.0, *), let windowId = windowId {
+        else if let windowId = windowId {
             let contentWorldsToRemove = contentWorlds.filter({ $0.windowId == windowId })
             for contentWorld in contentWorldsToRemove {
                 contentWorlds.remove(contentWorld)
@@ -94,7 +94,7 @@ extension WKUserContentController {
                     add(scriptMessageHandler, name: messageHandlerName)
                 }
             }
-            if #available(iOS 14.0, *), pluginScript.requiredInAllContentWorlds {
+            if pluginScript.requiredInAllContentWorlds {
                 for contentWorld in contentWorlds {
                     if !containsPluginScript(pluginScript: pluginScript, in: contentWorld) {
                         let pluginScriptWithContentWorld = pluginScript.copyAndSet(contentWorld: contentWorld)
