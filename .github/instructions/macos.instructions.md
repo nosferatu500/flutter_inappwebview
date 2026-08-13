@@ -118,7 +118,8 @@ macos/Classes/
 
 ## Platform Requirements
 
-- macOS 10.14+
+- macOS 12.0+ (podspec `s.platform` and `Package.swift` `platforms`; the example apps'
+  `MACOSX_DEPLOYMENT_TARGET` and `platform :osx` match)
 - Xcode version >= 15.0
 - Swift language support required
 

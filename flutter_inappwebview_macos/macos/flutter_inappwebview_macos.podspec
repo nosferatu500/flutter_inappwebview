@@ -25,7 +25,7 @@ inline webview, to use an headless webview, and to open an in-app browser window
   # SWIFT_PACKAGE conditionals in Types/WKUserContentController.swift.
   s.dependency 'OrderedSet', '~>6.0.3'
 
-  s.platform = :osx, '10.15'
+  s.platform = :osx, '12.0'
   s.pod_target_xcconfig = { 'DEFINES_MODULE' => 'YES' }
   s.swift_version = '5.9'
 end
