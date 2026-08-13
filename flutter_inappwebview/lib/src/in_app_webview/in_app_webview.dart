@@ -286,12 +286,6 @@ class InAppWebView extends StatefulWidget {
       Uri? url,
     )?
     androidOnRenderProcessResponsive,
-    @Deprecated('Use onRenderProcessGone instead')
-    void Function(
-      InAppWebViewController controller,
-      RenderProcessGoneDetail detail,
-    )?
-    androidOnRenderProcessGone,
     @Deprecated('Use onFormResubmission instead')
     FutureOr<FormResubmissionAction?> Function(
       InAppWebViewController controller,
@@ -669,10 +663,6 @@ class InAppWebView extends StatefulWidget {
            shouldInterceptRequest: shouldInterceptRequest != null
                ? (controller, request) =>
                      shouldInterceptRequest.call(controller, request)
-               : null,
-           androidOnRenderProcessGone: androidOnRenderProcessGone != null
-               ? (controller, detail) =>
-                     androidOnRenderProcessGone.call(controller, detail)
                : null,
            onRenderProcessGone: onRenderProcessGone != null
                ? (controller, detail) =>

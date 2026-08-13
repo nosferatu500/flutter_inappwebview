@@ -175,7 +175,7 @@ class AndroidInAppWebViewOptions
   ///Set to `true` to be able to listen at the [PlatformWebViewCreationParams.androidShouldInterceptRequest] event. The default value is `false`.
   bool useShouldInterceptRequest;
 
-  ///Set to `true` to be able to listen at the [PlatformWebViewCreationParams.androidOnRenderProcessGone] event. The default value is `false`.
+  ///Set to `true` to be able to listen at the [PlatformWebViewCreationParams.onRenderProcessGone] event. The default value is `false`.
   bool useOnRenderProcessGone;
 
   ///Sets the WebView's over-scroll mode.

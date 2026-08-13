@@ -78,8 +78,6 @@ class IOSInAppWebViewWidgetCreationParams
     @Deprecated('Use shouldInterceptRequest instead')
     super.androidShouldInterceptRequest,
     super.shouldInterceptRequest,
-    @Deprecated('Use onRenderProcessGone instead')
-    super.androidOnRenderProcessGone,
     super.onRenderProcessGone,
     @Deprecated('Use onRenderProcessResponsive instead')
     super.androidOnRenderProcessResponsive,
@@ -194,7 +192,6 @@ class IOSInAppWebViewWidgetCreationParams
             params.onGeolocationPermissionsHidePrompt,
         androidShouldInterceptRequest: params.androidShouldInterceptRequest,
         shouldInterceptRequest: params.shouldInterceptRequest,
-        androidOnRenderProcessGone: params.androidOnRenderProcessGone,
         onRenderProcessGone: params.onRenderProcessGone,
         androidOnRenderProcessResponsive:
             params.androidOnRenderProcessResponsive,

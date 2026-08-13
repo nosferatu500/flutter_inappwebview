@@ -1771,15 +1771,6 @@ In that case, after the `window.addEventListener("flutterInAppWebViewPlatformRea
   )?
   onRenderProcessResponsive;
 
-  ///{@template flutter_inappwebview_platform_interface.PlatformWebViewCreationParams.androidOnRenderProcessGone}
-  ///Use [onRenderProcessGone] instead.
-  ///{@endtemplate}
-  ///
-  ///{@macro flutter_inappwebview_platform_interface.PlatformWebViewCreationParams.androidOnRenderProcessGone.supported_platforms}
-  @SupportedPlatforms(platforms: [AndroidPlatform()])
-  @Deprecated("Use onRenderProcessGone instead")
-  final void Function(T controller, RenderProcessGoneDetail detail)?
-  androidOnRenderProcessGone;
 
   ///{@template flutter_inappwebview_platform_interface.PlatformWebViewCreationParams.onRenderProcessGone}
   ///Event fired when the given WebView's render process has exited.
@@ -2625,8 +2616,6 @@ This is a limitation of the native WebKit APIs.""",
     @Deprecated('Use shouldInterceptRequest instead')
     this.androidShouldInterceptRequest,
     this.shouldInterceptRequest,
-    @Deprecated('Use onRenderProcessGone instead')
-    this.androidOnRenderProcessGone,
     this.onRenderProcessGone,
     @Deprecated('Use onRenderProcessResponsive instead')
     this.androidOnRenderProcessResponsive,

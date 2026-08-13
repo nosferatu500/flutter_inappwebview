@@ -295,10 +295,6 @@ class InAppBrowser implements PlatformInAppBrowserEvents {
 
 
 
-  ///Use [onRenderProcessGone] instead.
-  @Deprecated("Use onRenderProcessGone instead")
-  @override
-  void androidOnRenderProcessGone(RenderProcessGoneDetail detail) {}
 
   ///Use [onRenderProcessResponsive] instead.
   @Deprecated("Use onRenderProcessResponsive instead")

@@ -651,9 +651,7 @@ class IOSInAppWebViewController extends PlatformInAppWebViewController
         break;
       case "onRenderProcessGone":
         if ((webviewParams != null &&
-                (webviewParams!.onRenderProcessGone != null ||
-                    // ignore: deprecated_member_use_from_same_package
-                    webviewParams!.androidOnRenderProcessGone != null)) ||
+                webviewParams!.onRenderProcessGone != null) ||
             _inAppBrowserEventHandler != null) {
           Map<String, dynamic> arguments = call.arguments
               .cast<String, dynamic>();
@@ -662,22 +660,12 @@ class IOSInAppWebViewController extends PlatformInAppWebViewController
           )!;
 
           if (webviewParams != null) {
-            if (webviewParams!.onRenderProcessGone != null)
-              webviewParams!.onRenderProcessGone!(
-                _controllerFromPlatform,
-                detail,
-              );
-            else {
-              // ignore: deprecated_member_use_from_same_package
-              webviewParams!.androidOnRenderProcessGone!(
-                _controllerFromPlatform,
-                detail,
-              );
-            }
+            webviewParams!.onRenderProcessGone!(
+              _controllerFromPlatform,
+              detail,
+            );
           } else if (_inAppBrowserEventHandler != null) {
             _inAppBrowserEventHandler!.onRenderProcessGone(detail);
-            // ignore: deprecated_member_use_from_same_package
-            _inAppBrowserEventHandler!.androidOnRenderProcessGone(detail);
           }
         }
         break;
