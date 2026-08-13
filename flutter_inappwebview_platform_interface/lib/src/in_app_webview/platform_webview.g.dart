@@ -109,21 +109,6 @@ enum PlatformWebViewCreationParamsProperty {
   @Deprecated('Use onPermissionRequest instead')
   androidOnPermissionRequest,
 
-  ///Can be used to check if the [PlatformWebViewCreationParams.androidOnReceivedLoginRequest] property is supported at runtime.
-  ///
-  ///{@template flutter_inappwebview_platform_interface.PlatformWebViewCreationParams.androidOnReceivedLoginRequest.supported_platforms}
-  ///
-  ///**Officially Supported Platforms/Implementations**:
-  ///- Android WebView
-  ///
-  ///**Parameters - Officially Supported Platforms/Implementations**:
-  ///- [loginRequest]: all platforms
-  ///
-  ///Use the [PlatformWebViewCreationParams.isPropertySupported] method to check if this property is supported at runtime.
-  ///{@endtemplate}
-  @Deprecated('Use onReceivedLoginRequest instead')
-  androidOnReceivedLoginRequest,
-
   ///Can be used to check if the [PlatformWebViewCreationParams.androidOnReceivedTouchIconUrl] property is supported at runtime.
   ///
   ///{@template flutter_inappwebview_platform_interface.PlatformWebViewCreationParams.androidOnReceivedTouchIconUrl.supported_platforms}
@@ -1702,11 +1687,6 @@ extension _PlatformWebViewCreationParamsPropertySupported
               TargetPlatform.android,
             ].contains(platform ?? defaultTargetPlatform);
       case PlatformWebViewCreationParamsProperty.androidOnPermissionRequest:
-        return ((kIsWeb && platform != null) || !kIsWeb) &&
-            [
-              TargetPlatform.android,
-            ].contains(platform ?? defaultTargetPlatform);
-      case PlatformWebViewCreationParamsProperty.androidOnReceivedLoginRequest:
         return ((kIsWeb && platform != null) || !kIsWeb) &&
             [
               TargetPlatform.android,

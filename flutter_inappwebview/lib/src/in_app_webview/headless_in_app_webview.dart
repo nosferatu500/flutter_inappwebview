@@ -319,9 +319,6 @@ class HeadlessInAppWebView {
       JsBeforeUnloadRequest jsBeforeUnloadRequest,
     )?
     androidOnJsBeforeUnload,
-    @Deprecated('Use onReceivedLoginRequest instead')
-    void Function(InAppWebViewController controller, LoginRequest loginRequest)?
-    androidOnReceivedLoginRequest,
     void Function(InAppWebViewController controller)?
     onDidReceiveServerRedirectForProvisionalNavigation,
     FutureOr<FormResubmissionAction?> Function(
@@ -751,10 +748,6 @@ class HeadlessInAppWebView {
            onJsBeforeUnload: onJsBeforeUnload != null
                ? (controller, jsBeforeUnloadRequest) =>
                      onJsBeforeUnload.call(controller, jsBeforeUnloadRequest)
-               : null,
-           androidOnReceivedLoginRequest: androidOnReceivedLoginRequest != null
-               ? (controller, loginRequest) => androidOnReceivedLoginRequest
-                     .call(controller, loginRequest)
                : null,
            onReceivedLoginRequest: onReceivedLoginRequest != null
                ? (controller, loginRequest) =>

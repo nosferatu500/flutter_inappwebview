@@ -119,7 +119,6 @@ class PlatformHeadlessInAppWebViewCreationParams
     @Deprecated('Use onJsBeforeUnload instead') super.androidOnJsBeforeUnload,
     super.onJsBeforeUnload,
     @Deprecated('Use onReceivedLoginRequest instead')
-    super.androidOnReceivedLoginRequest,
     super.onReceivedLoginRequest,
     super.onPermissionRequestCanceled,
     super.onRequestFocus,

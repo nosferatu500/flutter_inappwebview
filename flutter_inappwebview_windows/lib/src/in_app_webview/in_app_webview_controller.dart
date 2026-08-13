@@ -962,33 +962,19 @@ class WindowsInAppWebViewController extends PlatformInAppWebViewController
         break;
       case "onReceivedLoginRequest":
         if ((webviewParams != null &&
-                (webviewParams!.onReceivedLoginRequest != null ||
-                    // ignore: deprecated_member_use_from_same_package
-                    webviewParams!.androidOnReceivedLoginRequest != null)) ||
+                webviewParams!.onReceivedLoginRequest != null) ||
             _inAppBrowserEventHandler != null) {
           Map<String, dynamic> arguments = call.arguments
               .cast<String, dynamic>();
           LoginRequest loginRequest = LoginRequest.fromMap(arguments)!;
 
           if (webviewParams != null) {
-            if (webviewParams!.onReceivedLoginRequest != null)
-              webviewParams!.onReceivedLoginRequest!(
-                _controllerFromPlatform,
-                loginRequest,
-              );
-            else {
-              // ignore: deprecated_member_use_from_same_package
-              webviewParams!.androidOnReceivedLoginRequest!(
-                _controllerFromPlatform,
-                loginRequest,
-              );
-            }
-          } else {
-            _inAppBrowserEventHandler!.onReceivedLoginRequest(loginRequest);
-            // ignore: deprecated_member_use_from_same_package
-            _inAppBrowserEventHandler!.androidOnReceivedLoginRequest(
+            webviewParams!.onReceivedLoginRequest!(
+              _controllerFromPlatform,
               loginRequest,
             );
+          } else {
+            _inAppBrowserEventHandler!.onReceivedLoginRequest(loginRequest);
           }
         }
         break;

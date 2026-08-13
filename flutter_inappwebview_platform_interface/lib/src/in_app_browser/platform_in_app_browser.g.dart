@@ -763,21 +763,6 @@ enum PlatformInAppBrowserEventsMethod {
   @Deprecated('Use onPermissionRequest instead')
   androidOnPermissionRequest,
 
-  ///Can be used to check if the [PlatformInAppBrowserEvents.androidOnReceivedLoginRequest] method is supported at runtime.
-  ///
-  ///{@template flutter_inappwebview_platform_interface.PlatformInAppBrowserEvents.androidOnReceivedLoginRequest.supported_platforms}
-  ///
-  ///**Officially Supported Platforms/Implementations**:
-  ///- Android WebView
-  ///
-  ///**Parameters - Officially Supported Platforms/Implementations**:
-  ///- [loginRequest]: all platforms
-  ///
-  ///Use the [PlatformInAppBrowserEvents.isMethodSupported] method to check if this method is supported at runtime.
-  ///{@endtemplate}
-  @Deprecated('Use onReceivedLoginRequest instead')
-  androidOnReceivedLoginRequest,
-
   ///Can be used to check if the [PlatformInAppBrowserEvents.androidOnReceivedTouchIconUrl] method is supported at runtime.
   ///
   ///{@template flutter_inappwebview_platform_interface.PlatformInAppBrowserEvents.androidOnReceivedTouchIconUrl.supported_platforms}
@@ -2135,11 +2120,6 @@ extension _PlatformInAppBrowserEventsMethodSupported
               TargetPlatform.android,
             ].contains(platform ?? defaultTargetPlatform);
       case PlatformInAppBrowserEventsMethod.androidOnPermissionRequest:
-        return ((kIsWeb && platform != null) || !kIsWeb) &&
-            [
-              TargetPlatform.android,
-            ].contains(platform ?? defaultTargetPlatform);
-      case PlatformInAppBrowserEventsMethod.androidOnReceivedLoginRequest:
         return ((kIsWeb && platform != null) || !kIsWeb) &&
             [
               TargetPlatform.android,

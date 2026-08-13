@@ -310,10 +310,6 @@ class InAppBrowser implements PlatformInAppBrowserEvents {
   }
 
 
-  ///Use [onReceivedLoginRequest] instead.
-  @Deprecated('Use onReceivedLoginRequest instead')
-  @override
-  void androidOnReceivedLoginRequest(LoginRequest loginRequest) {}
 
   ///Use [onReceivedTouchIconUrl] instead.
   @Deprecated('Use onReceivedTouchIconUrl instead')

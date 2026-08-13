@@ -96,7 +96,6 @@ class IOSHeadlessInAppWebViewCreationParams
     @Deprecated('Use onJsBeforeUnload instead') super.androidOnJsBeforeUnload,
     super.onJsBeforeUnload,
     @Deprecated('Use onReceivedLoginRequest instead')
-    super.androidOnReceivedLoginRequest,
     super.onReceivedLoginRequest,
     super.onPermissionRequestCanceled,
     super.onRequestFocus,
@@ -206,7 +205,6 @@ class IOSHeadlessInAppWebViewCreationParams
         onReceivedTouchIconUrl: params.onReceivedTouchIconUrl,
         androidOnJsBeforeUnload: params.androidOnJsBeforeUnload,
         onJsBeforeUnload: params.onJsBeforeUnload,
-        androidOnReceivedLoginRequest: params.androidOnReceivedLoginRequest,
         onReceivedLoginRequest: params.onReceivedLoginRequest,
         onPermissionRequestCanceled: params.onPermissionRequestCanceled,
         onRequestFocus: params.onRequestFocus,

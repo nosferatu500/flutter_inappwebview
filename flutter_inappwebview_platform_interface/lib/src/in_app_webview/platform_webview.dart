@@ -1984,15 +1984,6 @@ In that case, after the `window.addEventListener("flutterInAppWebViewPlatformRea
   )?
   onJsBeforeUnload;
 
-  ///{@template flutter_inappwebview_platform_interface.PlatformWebViewCreationParams.androidOnReceivedLoginRequest}
-  ///Use [onReceivedLoginRequest] instead.
-  ///{@endtemplate}
-  ///
-  ///{@macro flutter_inappwebview_platform_interface.PlatformWebViewCreationParams.androidOnReceivedLoginRequest.supported_platforms}
-  @SupportedPlatforms(platforms: [AndroidPlatform()])
-  @Deprecated('Use onReceivedLoginRequest instead')
-  final void Function(T controller, LoginRequest loginRequest)?
-  androidOnReceivedLoginRequest;
 
   ///{@template flutter_inappwebview_platform_interface.PlatformWebViewCreationParams.onReceivedLoginRequest}
   ///Event fired when a request to automatically log in the user has been processed.
@@ -2690,7 +2681,6 @@ This is a limitation of the native WebKit APIs.""",
     @Deprecated('Use onJsBeforeUnload instead') this.androidOnJsBeforeUnload,
     this.onJsBeforeUnload,
     @Deprecated('Use onReceivedLoginRequest instead')
-    this.androidOnReceivedLoginRequest,
     this.onReceivedLoginRequest,
     this.onPermissionRequestCanceled,
     this.onRequestFocus,
