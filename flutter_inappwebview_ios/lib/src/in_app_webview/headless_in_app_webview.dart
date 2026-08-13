@@ -76,8 +76,6 @@ class IOSHeadlessInAppWebViewCreationParams
     super.androidShouldInterceptRequest,
     super.shouldInterceptRequest,
     super.onRenderProcessGone,
-    @Deprecated('Use onRenderProcessResponsive instead')
-    super.androidOnRenderProcessResponsive,
     super.onRenderProcessResponsive,
     @Deprecated('Use onRenderProcessUnresponsive instead')
     super.androidOnRenderProcessUnresponsive,
@@ -184,8 +182,6 @@ class IOSHeadlessInAppWebViewCreationParams
         androidShouldInterceptRequest: params.androidShouldInterceptRequest,
         shouldInterceptRequest: params.shouldInterceptRequest,
         onRenderProcessGone: params.onRenderProcessGone,
-        androidOnRenderProcessResponsive:
-            params.androidOnRenderProcessResponsive,
         onRenderProcessResponsive: params.onRenderProcessResponsive,
         androidOnRenderProcessUnresponsive:
             params.androidOnRenderProcessUnresponsive,

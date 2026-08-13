@@ -1734,15 +1734,6 @@ In that case, after the `window.addEventListener("flutterInAppWebViewPlatformRea
   )?
   onRenderProcessUnresponsive;
 
-  ///{@template flutter_inappwebview_platform_interface.PlatformWebViewCreationParams.androidOnRenderProcessResponsive}
-  ///Use [onRenderProcessResponsive] instead.
-  ///{@endtemplate}
-  ///
-  ///{@macro flutter_inappwebview_platform_interface.PlatformWebViewCreationParams.androidOnRenderProcessResponsive.supported_platforms}
-  @SupportedPlatforms(platforms: [AndroidPlatform()])
-  @Deprecated("Use onRenderProcessResponsive instead")
-  final FutureOr<WebViewRenderProcessAction?> Function(T controller, Uri? url)?
-  androidOnRenderProcessResponsive;
 
   ///{@template flutter_inappwebview_platform_interface.PlatformWebViewCreationParams.onRenderProcessResponsive}
   ///Event called once when an unresponsive renderer currently associated with the WebView becomes responsive.
@@ -2617,8 +2608,6 @@ This is a limitation of the native WebKit APIs.""",
     this.androidShouldInterceptRequest,
     this.shouldInterceptRequest,
     this.onRenderProcessGone,
-    @Deprecated('Use onRenderProcessResponsive instead')
-    this.androidOnRenderProcessResponsive,
     this.onRenderProcessResponsive,
     @Deprecated('Use onRenderProcessUnresponsive instead')
     this.androidOnRenderProcessUnresponsive,

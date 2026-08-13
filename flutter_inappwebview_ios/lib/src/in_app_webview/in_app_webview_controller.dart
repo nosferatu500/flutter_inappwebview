@@ -619,32 +619,20 @@ class IOSInAppWebViewController extends PlatformInAppWebViewController
         break;
       case "onRenderProcessResponsive":
         if ((webviewParams != null &&
-                (webviewParams!.onRenderProcessResponsive != null ||
-                    // ignore: deprecated_member_use_from_same_package
-                    webviewParams!.androidOnRenderProcessResponsive != null)) ||
+                webviewParams!.onRenderProcessResponsive != null) ||
             _inAppBrowserEventHandler != null) {
           String? url = call.arguments["url"];
           WebUri? uri = url != null ? WebUri(url) : null;
 
           if (webviewParams != null) {
-            if (webviewParams!.onRenderProcessResponsive != null)
-              return (await webviewParams!.onRenderProcessResponsive!(
-                _controllerFromPlatform,
-                uri,
-              ))?.toNativeValue();
-            else {
-              // ignore: deprecated_member_use_from_same_package
-              return (await webviewParams!.androidOnRenderProcessResponsive!(
-                _controllerFromPlatform,
-                uri,
-              ))?.toNativeValue();
-            }
+            return (await webviewParams!.onRenderProcessResponsive!(
+              _controllerFromPlatform,
+              uri,
+            ))?.toNativeValue();
           } else {
-            return ((await _inAppBrowserEventHandler!.onRenderProcessResponsive(
+            return (await _inAppBrowserEventHandler!.onRenderProcessResponsive(
                       uri,
-                    )) ??
-                    (await _inAppBrowserEventHandler!
-                        .androidOnRenderProcessResponsive(uri)))
+                    ))
                 ?.toNativeValue();
           }
         }

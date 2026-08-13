@@ -296,14 +296,6 @@ class InAppBrowser implements PlatformInAppBrowserEvents {
 
 
 
-  ///Use [onRenderProcessResponsive] instead.
-  @Deprecated("Use onRenderProcessResponsive instead")
-  @override
-  FutureOr<WebViewRenderProcessAction?>? androidOnRenderProcessResponsive(
-    Uri? url,
-  ) {
-    return null;
-  }
 
   ///Use [onRenderProcessUnresponsive] instead.
   @Deprecated("Use onRenderProcessUnresponsive instead")

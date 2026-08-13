@@ -285,12 +285,6 @@ class HeadlessInAppWebView {
       Uri? url,
     )?
     androidOnRenderProcessUnresponsive,
-    @Deprecated('Use onRenderProcessResponsive instead')
-    FutureOr<WebViewRenderProcessAction?> Function(
-      InAppWebViewController controller,
-      Uri? url,
-    )?
-    androidOnRenderProcessResponsive,
     @Deprecated('Use onFormResubmission instead')
     FutureOr<FormResubmissionAction?> Function(
       InAppWebViewController controller,
@@ -670,11 +664,6 @@ class HeadlessInAppWebView {
            onRenderProcessGone: onRenderProcessGone != null
                ? (controller, detail) =>
                      onRenderProcessGone.call(controller, detail)
-               : null,
-           androidOnRenderProcessResponsive:
-               androidOnRenderProcessResponsive != null
-               ? (controller, url) =>
-                     androidOnRenderProcessResponsive.call(controller, url)
                : null,
            onRenderProcessResponsive: onRenderProcessResponsive != null
                ? (controller, url) =>
