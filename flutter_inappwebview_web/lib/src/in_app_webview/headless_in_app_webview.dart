@@ -89,7 +89,6 @@ class WebPlatformHeadlessInAppWebViewCreationParams
     super.onFormResubmission,
     super.onReceivedIcon,
     @Deprecated('Use onReceivedTouchIconUrl instead')
-    super.androidOnReceivedTouchIconUrl,
     super.onReceivedTouchIconUrl,
     @Deprecated('Use onJsBeforeUnload instead') super.androidOnJsBeforeUnload,
     super.onJsBeforeUnload,
@@ -199,7 +198,6 @@ class WebPlatformHeadlessInAppWebViewCreationParams
         androidOnFormResubmission: params.androidOnFormResubmission,
         onFormResubmission: params.onFormResubmission,
         onReceivedIcon: params.onReceivedIcon,
-        androidOnReceivedTouchIconUrl: params.androidOnReceivedTouchIconUrl,
         onReceivedTouchIconUrl: params.onReceivedTouchIconUrl,
         androidOnJsBeforeUnload: params.androidOnJsBeforeUnload,
         onJsBeforeUnload: params.onJsBeforeUnload,

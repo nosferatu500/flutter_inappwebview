@@ -126,9 +126,6 @@ class InAppWebView extends StatefulWidget {
     void Function(InAppWebViewController controller)? onCloseWindow,
     void Function(InAppWebViewController controller)? onWindowFocus,
     void Function(InAppWebViewController controller)? onWindowBlur,
-    @Deprecated('Use onReceivedTouchIconUrl instead')
-    void Function(InAppWebViewController controller, Uri url, bool precomposed)?
-    androidOnReceivedTouchIconUrl,
     @Deprecated('Use onDownloadStarting instead')
     void Function(InAppWebViewController controller, Uri url)? onDownloadStart,
     @Deprecated('Use onDownloadStarting instead')
@@ -729,10 +726,6 @@ class InAppWebView extends StatefulWidget {
            onFaviconChanged: onFaviconChanged != null
                ? (controller, request) =>
                      onFaviconChanged.call(controller, request)
-               : null,
-           androidOnReceivedTouchIconUrl: androidOnReceivedTouchIconUrl != null
-               ? (controller, url, precomposed) => androidOnReceivedTouchIconUrl
-                     .call(controller, url, precomposed)
                : null,
            onReceivedTouchIconUrl: onReceivedTouchIconUrl != null
                ? (controller, url, precomposed) =>

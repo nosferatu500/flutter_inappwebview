@@ -311,10 +311,6 @@ class InAppBrowser implements PlatformInAppBrowserEvents {
 
 
 
-  ///Use [onReceivedTouchIconUrl] instead.
-  @Deprecated('Use onReceivedTouchIconUrl instead')
-  @override
-  void androidOnReceivedTouchIconUrl(Uri url, bool precomposed) {}
 
   ///Use [onRenderProcessGone] instead.
   @Deprecated("Use onRenderProcessGone instead")

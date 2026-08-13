@@ -1906,15 +1906,6 @@ In that case, after the `window.addEventListener("flutterInAppWebViewPlatformRea
   )?
   onFaviconChanged;
 
-  ///{@template flutter_inappwebview_platform_interface.PlatformWebViewCreationParams.androidOnReceivedTouchIconUrl}
-  ///Use [onReceivedTouchIconUrl] instead.
-  ///{@endtemplate}
-  ///
-  ///{@macro flutter_inappwebview_platform_interface.PlatformWebViewCreationParams.androidOnReceivedTouchIconUrl.supported_platforms}
-  @SupportedPlatforms(platforms: [AndroidPlatform()])
-  @Deprecated('Use onReceivedTouchIconUrl instead')
-  final void Function(T controller, Uri url, bool precomposed)?
-  androidOnReceivedTouchIconUrl;
 
   ///{@template flutter_inappwebview_platform_interface.PlatformWebViewCreationParams.onReceivedTouchIconUrl}
   ///Event fired when there is an url for an apple-touch-icon.
@@ -2676,7 +2667,6 @@ This is a limitation of the native WebKit APIs.""",
     @Deprecated('Use onFaviconChanged instead') this.onReceivedIcon,
     this.onFaviconChanged,
     @Deprecated('Use onReceivedTouchIconUrl instead')
-    this.androidOnReceivedTouchIconUrl,
     this.onReceivedTouchIconUrl,
     @Deprecated('Use onJsBeforeUnload instead') this.androidOnJsBeforeUnload,
     this.onJsBeforeUnload,

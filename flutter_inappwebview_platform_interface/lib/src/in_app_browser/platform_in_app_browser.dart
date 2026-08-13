@@ -2063,16 +2063,10 @@ In that case, after the `window.addEventListener("flutterInAppWebViewPlatformRea
   )
   void onFaviconChanged(FaviconChangedRequest faviconChangedRequest) {}
 
-  ///{@macro flutter_inappwebview_platform_interface.PlatformWebViewCreationParams.androidOnReceivedTouchIconUrl}
-  ///
-  ///{@macro flutter_inappwebview_platform_interface.PlatformInAppBrowserEvents.androidOnReceivedTouchIconUrl.supported_platforms}
-  @SupportedPlatforms(platforms: [AndroidPlatform()])
-  @Deprecated('Use onReceivedTouchIconUrl instead')
-  void androidOnReceivedTouchIconUrl(Uri url, bool precomposed) {}
 
-  ///{@macro flutter_inappwebview_platform_interface.PlatformWebViewCreationParams.androidOnReceivedTouchIconUrl}
+  ///{@macro flutter_inappwebview_platform_interface.PlatformWebViewCreationParams.onReceivedTouchIconUrl}
   ///
-  ///{@macro flutter_inappwebview_platform_interface.PlatformInAppBrowserEvents.androidOnReceivedTouchIconUrl.supported_platforms}
+  ///{@macro flutter_inappwebview_platform_interface.PlatformInAppBrowserEvents.onReceivedTouchIconUrl.supported_platforms}
   @SupportedPlatforms(
     platforms: [
       AndroidPlatform(

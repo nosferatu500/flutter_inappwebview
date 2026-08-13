@@ -811,36 +811,20 @@ class WindowsInAppWebViewController extends PlatformInAppWebViewController
         break;
       case "onReceivedTouchIconUrl":
         if ((webviewParams != null &&
-                (webviewParams!.onReceivedTouchIconUrl != null ||
-                    // ignore: deprecated_member_use_from_same_package
-                    webviewParams!.androidOnReceivedTouchIconUrl != null)) ||
+                webviewParams!.onReceivedTouchIconUrl != null) ||
             _inAppBrowserEventHandler != null) {
           String url = call.arguments["url"];
           bool precomposed = call.arguments["precomposed"];
           WebUri uri = WebUri(url);
 
           if (webviewParams != null) {
-            if (webviewParams!.onReceivedTouchIconUrl != null)
-              webviewParams!.onReceivedTouchIconUrl!(
-                _controllerFromPlatform,
-                uri,
-                precomposed,
-              );
-            else {
-              // ignore: deprecated_member_use_from_same_package
-              webviewParams!.androidOnReceivedTouchIconUrl!(
-                _controllerFromPlatform,
-                uri,
-                precomposed,
-              );
-            }
-          } else {
-            _inAppBrowserEventHandler!.onReceivedTouchIconUrl(uri, precomposed);
-            // ignore: deprecated_member_use_from_same_package
-            _inAppBrowserEventHandler!.androidOnReceivedTouchIconUrl(
+            webviewParams!.onReceivedTouchIconUrl!(
+              _controllerFromPlatform,
               uri,
               precomposed,
             );
+          } else {
+            _inAppBrowserEventHandler!.onReceivedTouchIconUrl(uri, precomposed);
           }
         }
         break;

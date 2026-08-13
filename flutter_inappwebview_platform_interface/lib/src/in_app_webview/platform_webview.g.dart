@@ -109,22 +109,6 @@ enum PlatformWebViewCreationParamsProperty {
   @Deprecated('Use onPermissionRequest instead')
   androidOnPermissionRequest,
 
-  ///Can be used to check if the [PlatformWebViewCreationParams.androidOnReceivedTouchIconUrl] property is supported at runtime.
-  ///
-  ///{@template flutter_inappwebview_platform_interface.PlatformWebViewCreationParams.androidOnReceivedTouchIconUrl.supported_platforms}
-  ///
-  ///**Officially Supported Platforms/Implementations**:
-  ///- Android WebView
-  ///
-  ///**Parameters - Officially Supported Platforms/Implementations**:
-  ///- [url]: all platforms
-  ///- [precomposed]: all platforms
-  ///
-  ///Use the [PlatformWebViewCreationParams.isPropertySupported] method to check if this property is supported at runtime.
-  ///{@endtemplate}
-  @Deprecated('Use onReceivedTouchIconUrl instead')
-  androidOnReceivedTouchIconUrl,
-
   ///Can be used to check if the [PlatformWebViewCreationParams.androidOnRenderProcessGone] property is supported at runtime.
   ///
   ///{@template flutter_inappwebview_platform_interface.PlatformWebViewCreationParams.androidOnRenderProcessGone.supported_platforms}
@@ -1687,11 +1671,6 @@ extension _PlatformWebViewCreationParamsPropertySupported
               TargetPlatform.android,
             ].contains(platform ?? defaultTargetPlatform);
       case PlatformWebViewCreationParamsProperty.androidOnPermissionRequest:
-        return ((kIsWeb && platform != null) || !kIsWeb) &&
-            [
-              TargetPlatform.android,
-            ].contains(platform ?? defaultTargetPlatform);
-      case PlatformWebViewCreationParamsProperty.androidOnReceivedTouchIconUrl:
         return ((kIsWeb && platform != null) || !kIsWeb) &&
             [
               TargetPlatform.android,
