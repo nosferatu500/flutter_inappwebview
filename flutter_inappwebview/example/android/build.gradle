@@ -13,6 +13,19 @@ subprojects {
     project.evaluationDependsOn(':app')
 }
 
+// file_picker 11 detects AGP >= 9 and deliberately stops applying
+// org.jetbrains.kotlin.android, assuming AGP's built-in Kotlin will compile its
+// Kotlin sources. This app has to set android.builtInKotlin=false globally
+// (flutter_downloader, shared_preferences_android and url_launcher_android still
+// apply KGP, which built-in Kotlin rejects), so opt that one module back in --
+// the documented module-by-module migration path. Without this its Kotlin never
+// compiles and GeneratedPluginRegistrant fails on a missing FilePickerPlugin.
+subprojects {
+    if (name == 'file_picker') {
+        apply plugin: 'com.android.built-in-kotlin'
+    }
+}
+
 tasks.register("clean", Delete) {
     delete rootProject.buildDir
 }

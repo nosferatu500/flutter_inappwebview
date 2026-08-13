@@ -15,7 +15,7 @@ set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 # nlohmann/json version for JSON parsing
-set(NLOHMANN_JSON_VERSION "3.11.3")
+set(NLOHMANN_JSON_VERSION "3.12.0")
 
 # === WPE WebKit Backend ===
 # This plugin uses WPE WebKit for offscreen web rendering.

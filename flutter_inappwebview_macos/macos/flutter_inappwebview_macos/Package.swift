@@ -12,7 +12,7 @@ let package = Package(
         .library(name: "flutter-inappwebview-macos", targets: ["flutter_inappwebview_macos"])
     ],
     dependencies: [
-      .package(url: "https://github.com/apple/swift-collections.git", from: "1.2.1")
+      .package(url: "https://github.com/apple/swift-collections.git", from: "1.6.0")
     ],
     targets: [
         .target(
