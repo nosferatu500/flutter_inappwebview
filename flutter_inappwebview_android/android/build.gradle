@@ -1,17 +1,10 @@
-group 'com.pichillilorenzo.flutter_inappwebview_android'
-version '1.0-SNAPSHOT'
+group = 'com.pichillilorenzo.flutter_inappwebview_android'
+version = '1.0-SNAPSHOT'
 
-buildscript {
-    repositories {
-        google()
-        mavenCentral()
-    }
-
-    dependencies {
-        classpath 'com.android.tools.build:gradle:8.13.1'
-    }
-}
-
+// No buildscript block: this module requires AGP 9 and is always built as a
+// subproject of the consuming app, so it inherits AGP from the app's classpath.
+// Pinning its own AGP version here would put a second, older AGP on the
+// buildscript classpath.
 rootProject.allprojects {
     repositories {
         google()
@@ -22,16 +15,13 @@ rootProject.allprojects {
 apply plugin: 'com.android.library'
 
 android {
-    namespace 'com.pichillilorenzo.flutter_inappwebview_android'
+    namespace = 'com.pichillilorenzo.flutter_inappwebview_android'
     compileSdk = flutter.compileSdkVersion
 
     // AGP 9 enables built-in Kotlin for every module it is applied to. This
     // plugin has no Kotlin sources, so opt out to drop an empty Kotlin compile
     // task and the implicit kotlin-stdlib dependency it would add to consumers.
-    // Guarded because the property does not exist on AGP 8.
-    if (hasProperty('enableKotlin')) {
-        enableKotlin = false
-    }
+    enableKotlin = false
 
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_17
@@ -40,7 +30,7 @@ android {
 
     defaultConfig {
         minSdk = 30
-        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+        testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
 
         vectorDrawables.useSupportLibrary = true
         // Shipped to consumers in the AAR; this is the only shrinker

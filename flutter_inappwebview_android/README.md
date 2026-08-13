@@ -2,6 +2,15 @@
 
 The Android WebView implementation of [`flutter_inappwebview`](https://pub.dev/packages/flutter_inappwebview).
 
+## Requirements
+
+- [AGP](https://developer.android.com/build/releases/gradle-plugin) `>= 9.0.0` — AGP 8 and lower are
+  not supported. The module uses the AGP 9 DSL (`enableKotlin`) and declares no AGP version of its
+  own, so it builds with whatever AGP the consuming app applies.
+- Gradle `>= 9.1.0`, JDK `>= 17` (both are AGP 9 requirements)
+- `minSdk >= 30` in the consuming app: AGP rejects an app whose `minSdk` is below that of a library
+  it depends on.
+
 ## Usage
 
 This package is [endorsed](https://flutter.dev/docs/development/packages-and-plugins/developing-packages#endorsed-federated-plugin),
