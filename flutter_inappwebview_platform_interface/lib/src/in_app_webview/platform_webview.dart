@@ -1520,19 +1520,6 @@ In that case, after the `window.addEventListener("flutterInAppWebViewPlatformRea
   )?
   onSafeBrowsingHit;
 
-  ///{@template flutter_inappwebview_platform_interface.PlatformWebViewCreationParams.androidOnPermissionRequest}
-  ///Use [onPermissionRequest] instead.
-  ///{@endtemplate}
-  ///
-  ///{@macro flutter_inappwebview_platform_interface.PlatformWebViewCreationParams.androidOnPermissionRequest.supported_platforms}
-  @SupportedPlatforms(platforms: [AndroidPlatform()])
-  @Deprecated("Use onPermissionRequest instead")
-  final FutureOr<PermissionRequestResponse?> Function(
-    T controller,
-    String origin,
-    List<String> resources,
-  )?
-  androidOnPermissionRequest;
 
   ///{@template flutter_inappwebview_platform_interface.PlatformWebViewCreationParams.onPermissionRequest}
   ///Event fired when the WebView is requesting permission to access the specified resources and the permission currently isn't granted or denied.
@@ -2628,8 +2615,6 @@ This is a limitation of the native WebKit APIs.""",
     this.onOverScrolled,
     this.onZoomScaleChanged,
     this.onSafeBrowsingHit,
-    @Deprecated('Use onPermissionRequest instead')
-    this.androidOnPermissionRequest,
     this.onPermissionRequest,
     @Deprecated('Use onGeolocationPermissionsShowPrompt instead')
     this.androidOnGeolocationPermissionsShowPrompt,

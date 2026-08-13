@@ -81,7 +81,7 @@ class PermissionResponse {
   }
 }
 
-///Class that represents the response used by the [PlatformWebViewCreationParams.androidOnPermissionRequest] event.
+///Class that represents the response used by the [PlatformWebViewCreationParams.onPermissionRequest] event.
 ///Use [PermissionResponse] instead.
 @Deprecated('Use PermissionResponse instead')
 class PermissionRequestResponse {

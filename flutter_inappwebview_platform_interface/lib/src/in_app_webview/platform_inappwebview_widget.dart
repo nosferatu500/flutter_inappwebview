@@ -96,8 +96,6 @@ class PlatformInAppWebViewWidgetCreationParams
     super.onOverScrolled,
     super.onZoomScaleChanged,
     super.onSafeBrowsingHit,
-    @Deprecated('Use onPermissionRequest instead')
-    super.androidOnPermissionRequest,
     super.onPermissionRequest,
     @Deprecated('Use onGeolocationPermissionsShowPrompt instead')
     super.androidOnGeolocationPermissionsShowPrompt,

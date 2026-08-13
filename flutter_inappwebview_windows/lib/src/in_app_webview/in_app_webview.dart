@@ -74,8 +74,6 @@ class WindowsInAppWebViewWidgetCreationParams
     super.onOverScrolled,
     super.onZoomScaleChanged,
     super.onSafeBrowsingHit,
-    @Deprecated('Use onPermissionRequest instead')
-    super.androidOnPermissionRequest,
     super.onPermissionRequest,
     @Deprecated('Use onGeolocationPermissionsShowPrompt instead')
     super.androidOnGeolocationPermissionsShowPrompt,
@@ -201,7 +199,6 @@ class WindowsInAppWebViewWidgetCreationParams
         onOverScrolled: params.onOverScrolled,
         onZoomScaleChanged: params.onZoomScaleChanged,
         onSafeBrowsingHit: params.onSafeBrowsingHit,
-        androidOnPermissionRequest: params.androidOnPermissionRequest,
         onPermissionRequest: params.onPermissionRequest,
         androidOnGeolocationPermissionsShowPrompt:
             params.androidOnGeolocationPermissionsShowPrompt,

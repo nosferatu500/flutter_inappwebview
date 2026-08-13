@@ -291,15 +291,6 @@ class InAppBrowser implements PlatformInAppBrowserEvents {
   }
 
 
-  ///Use [onPermissionRequest] instead.
-  @Deprecated("Use onPermissionRequest instead")
-  @override
-  FutureOr<PermissionRequestResponse?>? androidOnPermissionRequest(
-    String origin,
-    List<String> resources,
-  ) {
-    return null;
-  }
 
 
 

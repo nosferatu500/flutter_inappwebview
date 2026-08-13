@@ -1782,17 +1782,6 @@ In that case, after the `window.addEventListener("flutterInAppWebViewPlatformRea
     return null;
   }
 
-  ///{@macro flutter_inappwebview_platform_interface.PlatformWebViewCreationParams.androidOnPermissionRequest}
-  ///
-  ///{@macro flutter_inappwebview_platform_interface.PlatformInAppBrowserEvents.androidOnPermissionRequest.supported_platforms}
-  @SupportedPlatforms(platforms: [AndroidPlatform()])
-  @Deprecated("Use onPermissionRequest instead")
-  FutureOr<PermissionRequestResponse?>? androidOnPermissionRequest(
-    String origin,
-    List<String> resources,
-  ) {
-    return null;
-  }
 
   ///{@macro flutter_inappwebview_platform_interface.PlatformWebViewCreationParams.onPermissionRequest}
   ///

@@ -58,13 +58,6 @@ class InAppWebView extends StatefulWidget {
       String origin,
     )?
     androidOnGeolocationPermissionsShowPrompt,
-    @Deprecated('Use onPermissionRequest instead')
-    FutureOr<PermissionRequestResponse?> Function(
-      InAppWebViewController controller,
-      String origin,
-      List<String> resources,
-    )?
-    androidOnPermissionRequest,
     InAppWebViewInitialData? initialData,
     String? initialFile,
     @Deprecated('Use initialSettings instead')
@@ -641,10 +634,6 @@ class InAppWebView extends StatefulWidget {
            onSafeBrowsingHit: onSafeBrowsingHit != null
                ? (controller, url, threatType) =>
                      onSafeBrowsingHit.call(controller, url, threatType)
-               : null,
-           androidOnPermissionRequest: androidOnPermissionRequest != null
-               ? (controller, origin, resources) => androidOnPermissionRequest
-                     .call(controller, origin, resources)
                : null,
            onPermissionRequest: onPermissionRequest != null
                ? (controller, permissionRequest) =>

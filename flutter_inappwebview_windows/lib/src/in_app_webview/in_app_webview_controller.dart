@@ -1146,13 +1146,8 @@ class WindowsInAppWebViewController extends PlatformInAppWebViewController
         break;
       case "onPermissionRequest":
         if ((webviewParams != null &&
-                (webviewParams!.onPermissionRequest != null ||
-                    // ignore: deprecated_member_use_from_same_package
-                    webviewParams!.androidOnPermissionRequest != null)) ||
+                webviewParams!.onPermissionRequest != null) ||
             _inAppBrowserEventHandler != null) {
-          String origin = call.arguments["origin"];
-          List<String> resources = call.arguments["resources"].cast<String>();
-
           Map<String, dynamic> arguments = call.arguments
               .cast<String, dynamic>();
           PermissionRequest permissionRequest = PermissionRequest.fromMap(
@@ -1160,25 +1155,13 @@ class WindowsInAppWebViewController extends PlatformInAppWebViewController
           )!;
 
           if (webviewParams != null) {
-            if (webviewParams!.onPermissionRequest != null)
-              return (await webviewParams!.onPermissionRequest!(
-                _controllerFromPlatform,
-                permissionRequest,
-              ))?.toMap();
-            else {
-              return (await webviewParams!.androidOnPermissionRequest!(
-                _controllerFromPlatform,
-                origin,
-                resources,
-              ))?.toMap();
-            }
+            return (await webviewParams!.onPermissionRequest!(
+              _controllerFromPlatform,
+              permissionRequest,
+            ))?.toMap();
           } else {
             return (await _inAppBrowserEventHandler!.onPermissionRequest(
                   permissionRequest,
-                ))?.toMap() ??
-                (await _inAppBrowserEventHandler!.androidOnPermissionRequest(
-                  origin,
-                  resources,
                 ))?.toMap();
           }
         }

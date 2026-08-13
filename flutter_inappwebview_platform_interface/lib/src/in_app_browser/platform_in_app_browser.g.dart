@@ -732,22 +732,6 @@ enum PlatformInAppBrowserEventsMethod {
   @Deprecated('Use onGeolocationPermissionsShowPrompt instead')
   androidOnGeolocationPermissionsShowPrompt,
 
-  ///Can be used to check if the [PlatformInAppBrowserEvents.androidOnPermissionRequest] method is supported at runtime.
-  ///
-  ///{@template flutter_inappwebview_platform_interface.PlatformInAppBrowserEvents.androidOnPermissionRequest.supported_platforms}
-  ///
-  ///**Officially Supported Platforms/Implementations**:
-  ///- Android WebView
-  ///
-  ///**Parameters - Officially Supported Platforms/Implementations**:
-  ///- [origin]: all platforms
-  ///- [resources]: all platforms
-  ///
-  ///Use the [PlatformInAppBrowserEvents.isMethodSupported] method to check if this method is supported at runtime.
-  ///{@endtemplate}
-  @Deprecated('Use onPermissionRequest instead')
-  androidOnPermissionRequest,
-
   ///Can be used to check if the [PlatformInAppBrowserEvents.androidOnRenderProcessGone] method is supported at runtime.
   ///
   ///{@template flutter_inappwebview_platform_interface.PlatformInAppBrowserEvents.androidOnRenderProcessGone.supported_platforms}
@@ -2079,11 +2063,6 @@ extension _PlatformInAppBrowserEventsMethodSupported
             ].contains(platform ?? defaultTargetPlatform);
       case PlatformInAppBrowserEventsMethod
           .androidOnGeolocationPermissionsShowPrompt:
-        return ((kIsWeb && platform != null) || !kIsWeb) &&
-            [
-              TargetPlatform.android,
-            ].contains(platform ?? defaultTargetPlatform);
-      case PlatformInAppBrowserEventsMethod.androidOnPermissionRequest:
         return ((kIsWeb && platform != null) || !kIsWeb) &&
             [
               TargetPlatform.android,

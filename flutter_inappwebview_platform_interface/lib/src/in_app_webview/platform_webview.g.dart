@@ -78,22 +78,6 @@ enum PlatformWebViewCreationParamsProperty {
   @Deprecated('Use onGeolocationPermissionsShowPrompt instead')
   androidOnGeolocationPermissionsShowPrompt,
 
-  ///Can be used to check if the [PlatformWebViewCreationParams.androidOnPermissionRequest] property is supported at runtime.
-  ///
-  ///{@template flutter_inappwebview_platform_interface.PlatformWebViewCreationParams.androidOnPermissionRequest.supported_platforms}
-  ///
-  ///**Officially Supported Platforms/Implementations**:
-  ///- Android WebView
-  ///
-  ///**Parameters - Officially Supported Platforms/Implementations**:
-  ///- [origin]: all platforms
-  ///- [resources]: all platforms
-  ///
-  ///Use the [PlatformWebViewCreationParams.isPropertySupported] method to check if this property is supported at runtime.
-  ///{@endtemplate}
-  @Deprecated('Use onPermissionRequest instead')
-  androidOnPermissionRequest,
-
   ///Can be used to check if the [PlatformWebViewCreationParams.androidOnRenderProcessGone] property is supported at runtime.
   ///
   ///{@template flutter_inappwebview_platform_interface.PlatformWebViewCreationParams.androidOnRenderProcessGone.supported_platforms}
@@ -1646,11 +1630,6 @@ extension _PlatformWebViewCreationParamsPropertySupported
             ].contains(platform ?? defaultTargetPlatform);
       case PlatformWebViewCreationParamsProperty
           .androidOnGeolocationPermissionsShowPrompt:
-        return ((kIsWeb && platform != null) || !kIsWeb) &&
-            [
-              TargetPlatform.android,
-            ].contains(platform ?? defaultTargetPlatform);
-      case PlatformWebViewCreationParamsProperty.androidOnPermissionRequest:
         return ((kIsWeb && platform != null) || !kIsWeb) &&
             [
               TargetPlatform.android,
