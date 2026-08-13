@@ -348,10 +348,6 @@ class InAppBrowser implements PlatformInAppBrowserEvents {
   }
 
 
-  ///Use [onZoomScaleChanged] instead.
-  @Deprecated('Use onZoomScaleChanged instead')
-  @override
-  void androidOnScaleChanged(double oldScale, double newScale) {}
 
   ///Use [shouldInterceptRequest] instead.
   @Deprecated("Use shouldInterceptRequest instead")

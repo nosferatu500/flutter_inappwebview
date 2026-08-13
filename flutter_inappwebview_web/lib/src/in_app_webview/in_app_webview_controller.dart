@@ -177,26 +177,15 @@ class WebPlatformInAppWebViewController extends PlatformInAppWebViewController
         break;
       case "onZoomScaleChanged":
         if ((webviewParams != null &&
-            // ignore: deprecated_member_use_from_same_package
-            (webviewParams!.androidOnScaleChanged != null ||
-                webviewParams!.onZoomScaleChanged != null))) {
+            webviewParams!.onZoomScaleChanged != null)) {
           double oldScale = call.arguments["oldScale"];
           double newScale = call.arguments["newScale"];
 
-          if (webviewParams!.onZoomScaleChanged != null)
-            webviewParams!.onZoomScaleChanged!(
-              _controllerFromPlatform,
-              oldScale,
-              newScale,
-            );
-          else {
-            // ignore: deprecated_member_use_from_same_package
-            webviewParams!.androidOnScaleChanged!(
-              _controllerFromPlatform,
-              oldScale,
-              newScale,
-            );
-          }
+          webviewParams!.onZoomScaleChanged!(
+            _controllerFromPlatform,
+            oldScale,
+            newScale,
+          );
         }
         break;
       case "onUpdateVisitedHistory":

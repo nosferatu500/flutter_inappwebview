@@ -316,13 +316,6 @@ class HeadlessInAppWebView {
       Uri? url,
     )?
     androidOnFormResubmission,
-    @Deprecated('Use onZoomScaleChanged instead')
-    void Function(
-      InAppWebViewController controller,
-      double oldScale,
-      double newScale,
-    )?
-    androidOnScaleChanged,
     @Deprecated('Use onJsBeforeUnload instead')
     FutureOr<JsBeforeUnloadResponse?> Function(
       InAppWebViewController controller,
@@ -738,10 +731,6 @@ class HeadlessInAppWebView {
                : null,
            onFormResubmission: onFormResubmission != null
                ? (controller, url) => onFormResubmission.call(controller, url)
-               : null,
-           androidOnScaleChanged: androidOnScaleChanged != null
-               ? (controller, oldScale, newScale) =>
-                     androidOnScaleChanged.call(controller, oldScale, newScale)
                : null,
            androidOnReceivedIcon: androidOnReceivedIcon != null
                ? (controller, icon) =>

@@ -724,35 +724,19 @@ class MacOSInAppWebViewController extends PlatformInAppWebViewController
         break;
       case "onZoomScaleChanged":
         if ((webviewParams != null &&
-                // ignore: deprecated_member_use_from_same_package
-                (webviewParams!.androidOnScaleChanged != null ||
-                    webviewParams!.onZoomScaleChanged != null)) ||
+                webviewParams!.onZoomScaleChanged != null) ||
             _inAppBrowserEventHandler != null) {
           double oldScale = call.arguments["oldScale"];
           double newScale = call.arguments["newScale"];
 
           if (webviewParams != null) {
-            if (webviewParams!.onZoomScaleChanged != null)
-              webviewParams!.onZoomScaleChanged!(
-                _controllerFromPlatform,
-                oldScale,
-                newScale,
-              );
-            else {
-              // ignore: deprecated_member_use_from_same_package
-              webviewParams!.androidOnScaleChanged!(
-                _controllerFromPlatform,
-                oldScale,
-                newScale,
-              );
-            }
-          } else {
-            _inAppBrowserEventHandler!.onZoomScaleChanged(oldScale, newScale);
-            // ignore: deprecated_member_use_from_same_package
-            _inAppBrowserEventHandler!.androidOnScaleChanged(
+            webviewParams!.onZoomScaleChanged!(
+              _controllerFromPlatform,
               oldScale,
               newScale,
             );
+          } else {
+            _inAppBrowserEventHandler!.onZoomScaleChanged(oldScale, newScale);
           }
         }
         break;

@@ -2027,12 +2027,6 @@ In that case, after the `window.addEventListener("flutterInAppWebViewPlatformRea
     return null;
   }
 
-  ///{@macro flutter_inappwebview_platform_interface.PlatformWebViewCreationParams.androidOnScaleChanged}
-  ///
-  ///{@macro flutter_inappwebview_platform_interface.PlatformInAppBrowserEvents.androidOnScaleChanged.supported_platforms}
-  @SupportedPlatforms(platforms: [AndroidPlatform()])
-  @Deprecated('Use onZoomScaleChanged instead')
-  void androidOnScaleChanged(double oldScale, double newScale) {}
 
   ///{@macro flutter_inappwebview_platform_interface.PlatformWebViewCreationParams.androidOnReceivedIcon}
   ///

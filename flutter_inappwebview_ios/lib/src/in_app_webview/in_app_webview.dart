@@ -92,7 +92,6 @@ class IOSInAppWebViewWidgetCreationParams
     @Deprecated('Use onFormResubmission instead')
     super.androidOnFormResubmission,
     super.onFormResubmission,
-    @Deprecated('Use onZoomScaleChanged instead') super.androidOnScaleChanged,
     @Deprecated('Use onReceivedIcon instead') super.androidOnReceivedIcon,
     super.onReceivedIcon,
     @Deprecated('Use onReceivedTouchIconUrl instead')
@@ -212,7 +211,6 @@ class IOSInAppWebViewWidgetCreationParams
         onRenderProcessUnresponsive: params.onRenderProcessUnresponsive,
         androidOnFormResubmission: params.androidOnFormResubmission,
         onFormResubmission: params.onFormResubmission,
-        androidOnScaleChanged: params.androidOnScaleChanged,
         androidOnReceivedIcon: params.androidOnReceivedIcon,
         onReceivedIcon: params.onReceivedIcon,
         androidOnReceivedTouchIconUrl: params.androidOnReceivedTouchIconUrl,

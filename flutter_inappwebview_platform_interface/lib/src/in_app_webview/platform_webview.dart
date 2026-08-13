@@ -1856,15 +1856,6 @@ In that case, after the `window.addEventListener("flutterInAppWebViewPlatformRea
   final FutureOr<FormResubmissionAction?> Function(T controller, WebUri? url)?
   onFormResubmission;
 
-  ///{@template flutter_inappwebview_platform_interface.PlatformWebViewCreationParams.androidOnScaleChanged}
-  ///Use [onZoomScaleChanged] instead.
-  ///{@endtemplate}
-  ///
-  ///{@macro flutter_inappwebview_platform_interface.PlatformWebViewCreationParams.androidOnScaleChanged.supported_platforms}
-  @SupportedPlatforms(platforms: [AndroidPlatform()])
-  @Deprecated('Use onZoomScaleChanged instead')
-  final void Function(T controller, double oldScale, double newScale)?
-  androidOnScaleChanged;
 
   ///{@template flutter_inappwebview_platform_interface.PlatformWebViewCreationParams.androidOnReceivedIcon}
   ///Use [onReceivedIcon] instead.
@@ -2699,7 +2690,6 @@ This is a limitation of the native WebKit APIs.""",
     @Deprecated('Use onFormResubmission instead')
     this.androidOnFormResubmission,
     this.onFormResubmission,
-    @Deprecated('Use onZoomScaleChanged instead') this.androidOnScaleChanged,
     @Deprecated('Use onReceivedIcon instead') this.androidOnReceivedIcon,
     @Deprecated('Use onFaviconChanged instead') this.onReceivedIcon,
     this.onFaviconChanged,

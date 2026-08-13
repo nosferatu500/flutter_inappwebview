@@ -854,22 +854,6 @@ enum PlatformInAppBrowserEventsMethod {
   @Deprecated('Use onRenderProcessUnresponsive instead')
   androidOnRenderProcessUnresponsive,
 
-  ///Can be used to check if the [PlatformInAppBrowserEvents.androidOnScaleChanged] method is supported at runtime.
-  ///
-  ///{@template flutter_inappwebview_platform_interface.PlatformInAppBrowserEvents.androidOnScaleChanged.supported_platforms}
-  ///
-  ///**Officially Supported Platforms/Implementations**:
-  ///- Android WebView
-  ///
-  ///**Parameters - Officially Supported Platforms/Implementations**:
-  ///- [oldScale]: all platforms
-  ///- [newScale]: all platforms
-  ///
-  ///Use the [PlatformInAppBrowserEvents.isMethodSupported] method to check if this method is supported at runtime.
-  ///{@endtemplate}
-  @Deprecated('Use onZoomScaleChanged instead')
-  androidOnScaleChanged,
-
   ///Can be used to check if the [PlatformInAppBrowserEvents.androidShouldInterceptRequest] method is supported at runtime.
   ///
   ///{@template flutter_inappwebview_platform_interface.PlatformInAppBrowserEvents.androidShouldInterceptRequest.supported_platforms}
@@ -2196,11 +2180,6 @@ extension _PlatformInAppBrowserEventsMethodSupported
               TargetPlatform.android,
             ].contains(platform ?? defaultTargetPlatform);
       case PlatformInAppBrowserEventsMethod.androidOnRenderProcessUnresponsive:
-        return ((kIsWeb && platform != null) || !kIsWeb) &&
-            [
-              TargetPlatform.android,
-            ].contains(platform ?? defaultTargetPlatform);
-      case PlatformInAppBrowserEventsMethod.androidOnScaleChanged:
         return ((kIsWeb && platform != null) || !kIsWeb) &&
             [
               TargetPlatform.android,
