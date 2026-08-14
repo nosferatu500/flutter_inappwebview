@@ -1403,11 +1403,6 @@ class AndroidInAppWebViewController extends PlatformInAppWebViewController
           try {
             var jsHandlerResult = null;
             if (_javaScriptHandlersMap[handlerName]
-                is JavaScriptHandlerCallback) {
-              jsHandlerResult =
-                  await (_javaScriptHandlersMap[handlerName]
-                      as JavaScriptHandlerCallback)(handlerData.args);
-            } else if (_javaScriptHandlersMap[handlerName]
                 is JavaScriptHandlerFunction) {
               jsHandlerResult =
                   await (_javaScriptHandlersMap[handlerName]

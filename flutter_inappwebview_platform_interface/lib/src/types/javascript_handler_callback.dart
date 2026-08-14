@@ -5,10 +5,6 @@ import 'package:flutter_inappwebview_platform_interface/flutter_inappwebview_pla
 
 part 'javascript_handler_callback.g.dart';
 
-///Use [JavaScriptHandlerFunction] instead.
-@Deprecated('Use JavaScriptHandlerFunction instead')
-typedef dynamic JavaScriptHandlerCallback(List<dynamic> arguments);
-
 ///This type represents a callback, added with [PlatformInAppWebViewController.addJavaScriptHandler], that listens to post messages sent from JavaScript.
 ///
 ///The Android implementation uses [addJavascriptInterface](https://developer.android.com/reference/android/webkit/WebView#addJavascriptInterface(java.lang.Object,%20java.lang.String)).

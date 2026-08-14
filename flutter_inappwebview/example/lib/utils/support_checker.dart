@@ -991,7 +991,7 @@ class SupportChecker {
           name:
               PlatformInAppWebViewControllerMethod.removeJavaScriptHandler.name,
           signature:
-              'JavaScriptHandlerCallback? removeJavaScriptHandler({required String handlerName})',
+              'Function? removeJavaScriptHandler({required String handlerName})',
           description: 'Removes a JavaScript handler.',
           className: className,
           category: 'Handlers',

@@ -59,10 +59,7 @@ export 'in_app_webview_hit_test_result_type.dart'
 export 'in_app_webview_initial_data.dart' show InAppWebViewInitialData;
 export 'in_app_webview_rect.dart' show InAppWebViewRect;
 export 'javascript_handler_callback.dart'
-    show
-        JavaScriptHandlerCallback,
-        JavaScriptHandlerFunction,
-        JavaScriptHandlerFunctionData;
+    show JavaScriptHandlerFunction, JavaScriptHandlerFunctionData;
 export 'js_alert_request.dart' show JsAlertRequest;
 export 'js_alert_response.dart' show JsAlertResponse;
 export 'js_alert_response_action.dart' show JsAlertResponseAction;
