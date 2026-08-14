@@ -51,18 +51,6 @@ enum PlatformWebViewCreationParamsProperty {
   @Deprecated('Use onFormResubmission instead')
   androidOnFormResubmission,
 
-  ///Can be used to check if the [PlatformWebViewCreationParams.androidOnGeolocationPermissionsHidePrompt] property is supported at runtime.
-  ///
-  ///{@template flutter_inappwebview_platform_interface.PlatformWebViewCreationParams.androidOnGeolocationPermissionsHidePrompt.supported_platforms}
-  ///
-  ///**Officially Supported Platforms/Implementations**:
-  ///- Android WebView
-  ///
-  ///Use the [PlatformWebViewCreationParams.isPropertySupported] method to check if this property is supported at runtime.
-  ///{@endtemplate}
-  @Deprecated('Use onGeolocationPermissionsHidePrompt instead')
-  androidOnGeolocationPermissionsHidePrompt,
-
   ///Can be used to check if the [PlatformWebViewCreationParams.contextMenu] property is supported at runtime.
   ///
   ///{@template flutter_inappwebview_platform_interface.PlatformWebViewCreationParams.contextMenu.supported_platforms}
@@ -1489,12 +1477,6 @@ extension _PlatformWebViewCreationParamsPropertySupported
   }) {
     switch (property) {
       case PlatformWebViewCreationParamsProperty.androidOnFormResubmission:
-        return ((kIsWeb && platform != null) || !kIsWeb) &&
-            [
-              TargetPlatform.android,
-            ].contains(platform ?? defaultTargetPlatform);
-      case PlatformWebViewCreationParamsProperty
-          .androidOnGeolocationPermissionsHidePrompt:
         return ((kIsWeb && platform != null) || !kIsWeb) &&
             [
               TargetPlatform.android,

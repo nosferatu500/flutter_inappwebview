@@ -515,25 +515,12 @@ class IOSInAppWebViewController extends PlatformInAppWebViewController
         break;
       case "onGeolocationPermissionsHidePrompt":
         if (webviewParams != null &&
-            (webviewParams!.onGeolocationPermissionsHidePrompt != null ||
-                // ignore: deprecated_member_use_from_same_package
-                webviewParams!.androidOnGeolocationPermissionsHidePrompt !=
-                    null)) {
-          if (webviewParams!.onGeolocationPermissionsHidePrompt != null)
-            webviewParams!.onGeolocationPermissionsHidePrompt!(
-              _controllerFromPlatform,
-            );
-          else {
-            // ignore: deprecated_member_use_from_same_package
-            webviewParams!.androidOnGeolocationPermissionsHidePrompt!(
-              _controllerFromPlatform,
-            );
-          }
+            webviewParams!.onGeolocationPermissionsHidePrompt != null) {
+          webviewParams!.onGeolocationPermissionsHidePrompt!(
+            _controllerFromPlatform,
+          );
         } else if (_inAppBrowserEventHandler != null) {
           _inAppBrowserEventHandler!.onGeolocationPermissionsHidePrompt();
-          // ignore: deprecated_member_use_from_same_package
-          _inAppBrowserEventHandler!
-              .androidOnGeolocationPermissionsHidePrompt();
         }
         break;
       case "shouldInterceptRequest":

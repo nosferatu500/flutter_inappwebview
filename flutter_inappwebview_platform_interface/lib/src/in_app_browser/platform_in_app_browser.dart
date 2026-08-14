@@ -1832,13 +1832,6 @@ In that case, after the `window.addEventListener("flutterInAppWebViewPlatformRea
     return null;
   }
 
-  ///{@macro flutter_inappwebview_platform_interface.PlatformWebViewCreationParams.androidOnGeolocationPermissionsHidePrompt}
-  ///
-  ///{@macro flutter_inappwebview_platform_interface.PlatformInAppBrowserEvents.androidOnGeolocationPermissionsHidePrompt.supported_platforms}
-  @SupportedPlatforms(platforms: [AndroidPlatform()])
-  @Deprecated("Use onGeolocationPermissionsHidePrompt instead")
-  void androidOnGeolocationPermissionsHidePrompt() {}
-
   ///{@macro flutter_inappwebview_platform_interface.PlatformWebViewCreationParams.onGeolocationPermissionsHidePrompt}
   ///
   ///{@macro flutter_inappwebview_platform_interface.PlatformInAppBrowserEvents.onGeolocationPermissionsHidePrompt.supported_platforms}

@@ -49,9 +49,6 @@ class InAppWebView extends StatefulWidget {
     bool? preventGestureDelay,
     TextDirection? layoutDirection,
     WebViewEnvironment? webViewEnvironment,
-    @Deprecated('Use onGeolocationPermissionsHidePrompt instead')
-    void Function(InAppWebViewController controller)?
-    androidOnGeolocationPermissionsHidePrompt,
     InAppWebViewInitialData? initialData,
     String? initialFile,
     @Deprecated('Use initialSettings instead')
@@ -593,11 +590,6 @@ class InAppWebView extends StatefulWidget {
                onGeolocationPermissionsShowPrompt != null
                ? (controller, origin) =>
                      onGeolocationPermissionsShowPrompt.call(controller, origin)
-               : null,
-           androidOnGeolocationPermissionsHidePrompt:
-               androidOnGeolocationPermissionsHidePrompt != null
-               ? (controller) =>
-                     androidOnGeolocationPermissionsHidePrompt.call(controller)
                : null,
            onGeolocationPermissionsHidePrompt:
                onGeolocationPermissionsHidePrompt != null

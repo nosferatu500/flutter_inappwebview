@@ -277,11 +277,6 @@ class InAppBrowser implements PlatformInAppBrowserEvents {
     return null;
   }
 
-  ///Use [onGeolocationPermissionsHidePrompt] instead.
-  @Deprecated("Use onGeolocationPermissionsHidePrompt instead")
-  @override
-  void androidOnGeolocationPermissionsHidePrompt() {}
-
   @override
   FutureOr<AjaxRequestAction?>? onAjaxProgress(AjaxRequest ajaxRequest) {
     return null;

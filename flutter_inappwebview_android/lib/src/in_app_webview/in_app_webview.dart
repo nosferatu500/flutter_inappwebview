@@ -73,8 +73,6 @@ class AndroidInAppWebViewWidgetCreationParams
     super.onSafeBrowsingHit,
     super.onPermissionRequest,
     super.onGeolocationPermissionsShowPrompt,
-    @Deprecated('Use onGeolocationPermissionsHidePrompt instead')
-    super.androidOnGeolocationPermissionsHidePrompt,
     super.onGeolocationPermissionsHidePrompt,
     super.shouldInterceptRequest,
     super.onRenderProcessGone,
@@ -173,8 +171,6 @@ class AndroidInAppWebViewWidgetCreationParams
         onPermissionRequest: params.onPermissionRequest,
         onGeolocationPermissionsShowPrompt:
             params.onGeolocationPermissionsShowPrompt,
-        androidOnGeolocationPermissionsHidePrompt:
-            params.androidOnGeolocationPermissionsHidePrompt,
         onGeolocationPermissionsHidePrompt:
             params.onGeolocationPermissionsHidePrompt,
         shouldInterceptRequest: params.shouldInterceptRequest,

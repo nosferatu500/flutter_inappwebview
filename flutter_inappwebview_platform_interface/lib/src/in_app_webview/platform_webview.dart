@@ -1587,15 +1587,6 @@ In that case, after the `window.addEventListener("flutterInAppWebViewPlatformRea
   )?
   onGeolocationPermissionsShowPrompt;
 
-  ///{@template flutter_inappwebview_platform_interface.PlatformWebViewCreationParams.androidOnGeolocationPermissionsHidePrompt}
-  ///Use [onGeolocationPermissionsHidePrompt] instead.
-  ///{@endtemplate}
-  ///
-  ///{@macro flutter_inappwebview_platform_interface.PlatformWebViewCreationParams.androidOnGeolocationPermissionsHidePrompt.supported_platforms}
-  @SupportedPlatforms(platforms: [AndroidPlatform()])
-  @Deprecated("Use onGeolocationPermissionsHidePrompt instead")
-  final void Function(T controller)? androidOnGeolocationPermissionsHidePrompt;
-
   ///{@template flutter_inappwebview_platform_interface.PlatformWebViewCreationParams.onGeolocationPermissionsHidePrompt}
   ///Notify the host application that a request for Geolocation permissions, made with a previous call to [onGeolocationPermissionsShowPrompt] has been canceled.
   ///Any related UI should therefore be hidden.
@@ -2509,8 +2500,6 @@ This is a limitation of the native WebKit APIs.""",
     this.onSafeBrowsingHit,
     this.onPermissionRequest,
     this.onGeolocationPermissionsShowPrompt,
-    @Deprecated('Use onGeolocationPermissionsHidePrompt instead')
-    this.androidOnGeolocationPermissionsHidePrompt,
     this.onGeolocationPermissionsHidePrompt,
     this.shouldInterceptRequest,
     this.onRenderProcessGone,

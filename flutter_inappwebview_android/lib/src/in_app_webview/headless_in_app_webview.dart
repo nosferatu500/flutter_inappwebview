@@ -66,8 +66,6 @@ class AndroidHeadlessInAppWebViewCreationParams
     super.onSafeBrowsingHit,
     super.onPermissionRequest,
     super.onGeolocationPermissionsShowPrompt,
-    @Deprecated('Use onGeolocationPermissionsHidePrompt instead')
-    super.androidOnGeolocationPermissionsHidePrompt,
     super.onGeolocationPermissionsHidePrompt,
     super.shouldInterceptRequest,
     super.onRenderProcessGone,
@@ -159,8 +157,6 @@ class AndroidHeadlessInAppWebViewCreationParams
         onPermissionRequest: params.onPermissionRequest,
         onGeolocationPermissionsShowPrompt:
             params.onGeolocationPermissionsShowPrompt,
-        androidOnGeolocationPermissionsHidePrompt:
-            params.androidOnGeolocationPermissionsHidePrompt,
         onGeolocationPermissionsHidePrompt:
             params.onGeolocationPermissionsHidePrompt,
         shouldInterceptRequest: params.shouldInterceptRequest,

@@ -705,18 +705,6 @@ enum PlatformInAppBrowserEventsMethod {
   @Deprecated('Use onFormResubmission instead')
   androidOnFormResubmission,
 
-  ///Can be used to check if the [PlatformInAppBrowserEvents.androidOnGeolocationPermissionsHidePrompt] method is supported at runtime.
-  ///
-  ///{@template flutter_inappwebview_platform_interface.PlatformInAppBrowserEvents.androidOnGeolocationPermissionsHidePrompt.supported_platforms}
-  ///
-  ///**Officially Supported Platforms/Implementations**:
-  ///- Android WebView
-  ///
-  ///Use the [PlatformInAppBrowserEvents.isMethodSupported] method to check if this method is supported at runtime.
-  ///{@endtemplate}
-  @Deprecated('Use onGeolocationPermissionsHidePrompt instead')
-  androidOnGeolocationPermissionsHidePrompt,
-
   ///Can be used to check if the [PlatformInAppBrowserEvents.onAcceleratorKeyPressed] method is supported at runtime.
   ///
   ///{@template flutter_inappwebview_platform_interface.PlatformInAppBrowserEvents.onAcceleratorKeyPressed.supported_platforms}
@@ -1922,12 +1910,6 @@ extension _PlatformInAppBrowserEventsMethodSupported
   }) {
     switch (method) {
       case PlatformInAppBrowserEventsMethod.androidOnFormResubmission:
-        return ((kIsWeb && platform != null) || !kIsWeb) &&
-            [
-              TargetPlatform.android,
-            ].contains(platform ?? defaultTargetPlatform);
-      case PlatformInAppBrowserEventsMethod
-          .androidOnGeolocationPermissionsHidePrompt:
         return ((kIsWeb && platform != null) || !kIsWeb) &&
             [
               TargetPlatform.android,
