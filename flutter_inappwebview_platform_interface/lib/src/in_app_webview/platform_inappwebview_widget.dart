@@ -122,7 +122,6 @@ class PlatformInAppWebViewWidgetCreationParams
     @Deprecated(
       'Use onDidReceiveServerRedirectForProvisionalNavigation instead',
     )
-    super.iosOnDidReceiveServerRedirectForProvisionalNavigation,
     super.onDidReceiveServerRedirectForProvisionalNavigation,
     @Deprecated('Use onNavigationResponse instead')
     super.iosOnNavigationResponse,

@@ -282,11 +282,6 @@ class InAppBrowser implements PlatformInAppBrowserEvents {
   @override
   void androidOnGeolocationPermissionsHidePrompt() {}
 
-  ///Use [onDidReceiveServerRedirectForProvisionalNavigation] instead.
-  @Deprecated('Use onDidReceiveServerRedirectForProvisionalNavigation instead')
-  @override
-  void iosOnDidReceiveServerRedirectForProvisionalNavigation() {}
-
   ///Use [onNavigationResponse] instead.
   @Deprecated('Use onNavigationResponse instead')
   @override

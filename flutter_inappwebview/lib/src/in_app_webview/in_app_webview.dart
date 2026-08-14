@@ -70,11 +70,6 @@ class InAppWebView extends StatefulWidget {
     onPageCommitVisible,
     void Function(InAppWebViewController controller, String? title)?
     onTitleChanged,
-    @Deprecated(
-      'Use onDidReceiveServerRedirectForProvisionalNavigation instead',
-    )
-    void Function(InAppWebViewController controller)?
-    iosOnDidReceiveServerRedirectForProvisionalNavigation,
     @Deprecated('Use onWebContentProcessDidTerminate instead')
     void Function(InAppWebViewController controller)?
     iosOnWebContentProcessDidTerminate,
@@ -682,13 +677,6 @@ class InAppWebView extends StatefulWidget {
                onWebContentProcessDidTerminate != null
                ? (controller) =>
                      onWebContentProcessDidTerminate.call(controller)
-               : null,
-           iosOnDidReceiveServerRedirectForProvisionalNavigation:
-               iosOnDidReceiveServerRedirectForProvisionalNavigation != null
-               ? (controller) =>
-                     iosOnDidReceiveServerRedirectForProvisionalNavigation.call(
-                       controller,
-                     )
                : null,
            onDidReceiveServerRedirectForProvisionalNavigation:
                onDidReceiveServerRedirectForProvisionalNavigation != null

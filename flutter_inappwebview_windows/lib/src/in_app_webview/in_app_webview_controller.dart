@@ -1150,33 +1150,14 @@ class WindowsInAppWebViewController extends PlatformInAppWebViewController
         break;
       case "onDidReceiveServerRedirectForProvisionalNavigation":
         if (webviewParams != null &&
-            (webviewParams!
-                        .onDidReceiveServerRedirectForProvisionalNavigation !=
-                    null ||
-                params
-                        .webviewParams!
-                        // ignore: deprecated_member_use_from_same_package
-                        .iosOnDidReceiveServerRedirectForProvisionalNavigation !=
-                    null)) {
-          if (webviewParams!
-                  .onDidReceiveServerRedirectForProvisionalNavigation !=
-              null)
-            webviewParams!.onDidReceiveServerRedirectForProvisionalNavigation!(
-              _controllerFromPlatform,
-            );
-          else {
-            params
-                .webviewParams!
-                // ignore: deprecated_member_use_from_same_package
-                .iosOnDidReceiveServerRedirectForProvisionalNavigation!(
-              _controllerFromPlatform,
-            );
-          }
+            webviewParams!.onDidReceiveServerRedirectForProvisionalNavigation !=
+                null) {
+          webviewParams!.onDidReceiveServerRedirectForProvisionalNavigation!(
+            _controllerFromPlatform,
+          );
         } else if (_inAppBrowserEventHandler != null) {
           _inAppBrowserEventHandler!
               .onDidReceiveServerRedirectForProvisionalNavigation();
-          _inAppBrowserEventHandler!
-              .iosOnDidReceiveServerRedirectForProvisionalNavigation();
         }
         break;
       case "onNavigationResponse":

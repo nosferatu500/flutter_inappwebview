@@ -1985,16 +1985,6 @@ In that case, after the `window.addEventListener("flutterInAppWebViewPlatformRea
   )
   final void Function(T controller)? onWebContentProcessDidTerminate;
 
-  ///{@template flutter_inappwebview_platform_interface.PlatformWebViewCreationParams.iosOnDidReceiveServerRedirectForProvisionalNavigation}
-  ///Use [onDidReceiveServerRedirectForProvisionalNavigation] instead.
-  ///{@endtemplate}
-  ///
-  ///{@macro flutter_inappwebview_platform_interface.PlatformWebViewCreationParams.iosOnDidReceiveServerRedirectForProvisionalNavigation.supported_platforms}
-  @SupportedPlatforms(platforms: [IOSPlatform()])
-  @Deprecated('Use onDidReceiveServerRedirectForProvisionalNavigation instead')
-  final void Function(T controller)?
-  iosOnDidReceiveServerRedirectForProvisionalNavigation;
-
   ///{@template flutter_inappwebview_platform_interface.PlatformWebViewCreationParams.onDidReceiveServerRedirectForProvisionalNavigation}
   ///Called when a web view receives a server redirect.
   ///{@endtemplate}
@@ -2579,7 +2569,6 @@ This is a limitation of the native WebKit APIs.""",
     @Deprecated(
       'Use onDidReceiveServerRedirectForProvisionalNavigation instead',
     )
-    this.iosOnDidReceiveServerRedirectForProvisionalNavigation,
     this.onDidReceiveServerRedirectForProvisionalNavigation,
     @Deprecated('Use onNavigationResponse instead')
     this.iosOnNavigationResponse,

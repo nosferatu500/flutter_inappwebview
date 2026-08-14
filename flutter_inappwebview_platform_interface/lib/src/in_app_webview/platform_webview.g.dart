@@ -186,18 +186,6 @@ enum PlatformWebViewCreationParamsProperty {
   ///{@endtemplate}
   initialUserScripts,
 
-  ///Can be used to check if the [PlatformWebViewCreationParams.iosOnDidReceiveServerRedirectForProvisionalNavigation] property is supported at runtime.
-  ///
-  ///{@template flutter_inappwebview_platform_interface.PlatformWebViewCreationParams.iosOnDidReceiveServerRedirectForProvisionalNavigation.supported_platforms}
-  ///
-  ///**Officially Supported Platforms/Implementations**:
-  ///- iOS WKWebView
-  ///
-  ///Use the [PlatformWebViewCreationParams.isPropertySupported] method to check if this property is supported at runtime.
-  ///{@endtemplate}
-  @Deprecated('Use onDidReceiveServerRedirectForProvisionalNavigation instead')
-  iosOnDidReceiveServerRedirectForProvisionalNavigation,
-
   ///Can be used to check if the [PlatformWebViewCreationParams.iosOnNavigationResponse] property is supported at runtime.
   ///
   ///{@template flutter_inappwebview_platform_interface.PlatformWebViewCreationParams.iosOnNavigationResponse.supported_platforms}
@@ -1629,10 +1617,6 @@ extension _PlatformWebViewCreationParamsPropertySupported
                     TargetPlatform.windows,
                     TargetPlatform.linux,
                   ].contains(platform ?? defaultTargetPlatform);
-      case PlatformWebViewCreationParamsProperty
-          .iosOnDidReceiveServerRedirectForProvisionalNavigation:
-        return ((kIsWeb && platform != null) || !kIsWeb) &&
-            [TargetPlatform.iOS].contains(platform ?? defaultTargetPlatform);
       case PlatformWebViewCreationParamsProperty.iosOnNavigationResponse:
         return ((kIsWeb && platform != null) || !kIsWeb) &&
             [TargetPlatform.iOS].contains(platform ?? defaultTargetPlatform);

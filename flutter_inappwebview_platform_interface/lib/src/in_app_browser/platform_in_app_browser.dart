@@ -2095,13 +2095,6 @@ In that case, after the `window.addEventListener("flutterInAppWebViewPlatformRea
   )
   void onWebContentProcessDidTerminate() {}
 
-  ///{@macro flutter_inappwebview_platform_interface.PlatformWebViewCreationParams.iosOnDidReceiveServerRedirectForProvisionalNavigation}
-  ///
-  ///{@macro flutter_inappwebview_platform_interface.PlatformInAppBrowserEvents.iosOnDidReceiveServerRedirectForProvisionalNavigation.supported_platforms}
-  @SupportedPlatforms(platforms: [IOSPlatform()])
-  @Deprecated('Use onDidReceiveServerRedirectForProvisionalNavigation instead')
-  void iosOnDidReceiveServerRedirectForProvisionalNavigation() {}
-
   ///{@macro flutter_inappwebview_platform_interface.PlatformWebViewCreationParams.onDidReceiveServerRedirectForProvisionalNavigation}
   ///
   ///{@macro flutter_inappwebview_platform_interface.PlatformInAppBrowserEvents.onDidReceiveServerRedirectForProvisionalNavigation.supported_platforms}

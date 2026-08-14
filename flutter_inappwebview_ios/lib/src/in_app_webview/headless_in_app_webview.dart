@@ -91,7 +91,6 @@ class IOSHeadlessInAppWebViewCreationParams
     @Deprecated(
       'Use onDidReceiveServerRedirectForProvisionalNavigation instead',
     )
-    super.iosOnDidReceiveServerRedirectForProvisionalNavigation,
     super.onDidReceiveServerRedirectForProvisionalNavigation,
     @Deprecated('Use onNavigationResponse instead')
     super.iosOnNavigationResponse,
@@ -186,8 +185,6 @@ class IOSHeadlessInAppWebViewCreationParams
         iosOnWebContentProcessDidTerminate:
             params.iosOnWebContentProcessDidTerminate,
         onWebContentProcessDidTerminate: params.onWebContentProcessDidTerminate,
-        iosOnDidReceiveServerRedirectForProvisionalNavigation:
-            params.iosOnDidReceiveServerRedirectForProvisionalNavigation,
         onDidReceiveServerRedirectForProvisionalNavigation:
             params.onDidReceiveServerRedirectForProvisionalNavigation,
         iosOnNavigationResponse: params.iosOnNavigationResponse,
