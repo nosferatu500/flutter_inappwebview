@@ -5,9 +5,9 @@ export 'ajax_request_event.dart' show AjaxRequestEvent;
 export 'ajax_request_event_type.dart' show AjaxRequestEventType;
 export 'ajax_request_headers.dart' show AjaxRequestHeaders;
 export 'ajax_request_ready_state.dart' show AjaxRequestReadyState;
-export 'attributed_string.dart' show AttributedString, IOSNSAttributedString;
+export 'attributed_string.dart' show AttributedString;
 export 'attributed_string_text_effect_style.dart'
-    show AttributedStringTextEffectStyle, IOSNSAttributedStringTextEffectStyle;
+    show AttributedStringTextEffectStyle;
 export 'cache_mode.dart' show CacheMode;
 export 'call_async_javascript_result.dart' show CallAsyncJavaScriptResult;
 export 'client_cert_challenge.dart' show ClientCertChallenge;
@@ -115,8 +115,7 @@ export 'print_job_resolution.dart' show PrintJobResolution;
 export 'print_job_state.dart' show PrintJobState;
 export 'proxy_rule.dart' show ProxyRule;
 export 'proxy_scheme_filter.dart' show ProxySchemeFilter;
-export 'pull_to_refresh_size.dart'
-    show PullToRefreshSize, AndroidPullToRefreshSize;
+export 'pull_to_refresh_size.dart' show PullToRefreshSize;
 export 'referrer_policy.dart' show ReferrerPolicy;
 export 'render_process_gone_detail.dart' show RenderProcessGoneDetail;
 export 'renderer_priority.dart' show RendererPriority;
@@ -153,7 +152,7 @@ export 'trusted_web_activity_immersive_display_mode.dart'
     show TrustedWebActivityImmersiveDisplayMode;
 export 'trusted_web_activity_screen_orientation.dart'
     show TrustedWebActivityScreenOrientation;
-export 'underline_style.dart' show UnderlineStyle, IOSNSUnderlineStyle;
+export 'underline_style.dart' show UnderlineStyle;
 export 'url_authentication_challenge.dart' show URLAuthenticationChallenge;
 export 'url_credential.dart' show URLCredential;
 export 'url_credential_persistence.dart' show URLCredentialPersistence;
