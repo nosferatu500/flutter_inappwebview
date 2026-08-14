@@ -19,10 +19,6 @@ class UserScript_ {
   ///The time at which to inject the script into the `WebView`.
   UserScriptInjectionTime_ injectionTime;
 
-  ///Use [forMainFrameOnly] instead.
-  @Deprecated("Use forMainFrameOnly instead")
-  bool? iosForMainFrameOnly;
-
   ///A Boolean value that indicates whether to inject the script into the main frame.
   ///Specify `true` to inject the script only into the main frame, or false to inject it into all frames.
   ///The default value is `true`.
@@ -67,7 +63,6 @@ class UserScript_ {
     this.groupName,
     required this.source,
     required this.injectionTime,
-    @Deprecated("Use forMainFrameOnly instead") this.iosForMainFrameOnly,
     this.forMainFrameOnly = true,
     Set<String>? allowedOriginRules,
     ContentWorld? contentWorld,
@@ -76,10 +71,5 @@ class UserScript_ {
         ? allowedOriginRules
         : Set.from(["*"]);
     this.contentWorld = contentWorld ?? ContentWorld.PAGE;
-    // ignore: deprecated_member_use_from_same_package
-    this.forMainFrameOnly = this.iosForMainFrameOnly != null
-        // ignore: deprecated_member_use_from_same_package
-        ? this.iosForMainFrameOnly!
-        : this.forMainFrameOnly;
   }
 }

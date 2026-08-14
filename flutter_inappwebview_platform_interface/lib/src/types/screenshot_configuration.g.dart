@@ -27,10 +27,6 @@ class ScreenshotConfiguration {
   ///- Windows WebView2
   CompressFormat compressFormat;
 
-  ///Use [afterScreenUpdates] instead.
-  @Deprecated('Use afterScreenUpdates instead')
-  bool? iosAfterScreenUpdates;
-
   ///Hint to the compressor, `0-100`. The value is interpreted differently depending on the [CompressFormat].
   ///[CompressFormat.PNG] is lossless, so this value is ignored.
   ///
@@ -68,13 +64,9 @@ class ScreenshotConfiguration {
     this.snapshotWidth,
     CompressFormat? compressFormat,
     this.quality = 100,
-    @Deprecated("Use afterScreenUpdates instead") this.iosAfterScreenUpdates,
     this.afterScreenUpdates = true,
   }) : compressFormat = compressFormat ?? CompressFormat.PNG {
     assert(this.quality >= 0);
-    this.afterScreenUpdates = this.iosAfterScreenUpdates != null
-        ? this.iosAfterScreenUpdates!
-        : this.afterScreenUpdates;
   }
 
   ///Gets a possible [ScreenshotConfiguration] instance from a [Map] value.
@@ -86,7 +78,6 @@ class ScreenshotConfiguration {
       return null;
     }
     final instance = ScreenshotConfiguration(
-      iosAfterScreenUpdates: map['afterScreenUpdates'],
       rect: InAppWebViewRect.fromMap(
         map['rect']?.cast<String, dynamic>(),
         enumMethod: enumMethod,

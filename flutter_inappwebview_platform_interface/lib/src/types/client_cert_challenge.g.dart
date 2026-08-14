@@ -16,14 +16,6 @@ class ClientCertChallenge extends URLAuthenticationChallenge {
   ///- Windows WebView2
   List<String>? allowedCertificateAuthorities;
 
-  ///Use [keyTypes] instead.
-  @Deprecated('Use keyTypes instead')
-  List<String>? androidKeyTypes;
-
-  ///Use [principals] instead.
-  @Deprecated('Use principals instead')
-  List<String>? androidPrincipals;
-
   ///If the server that issued this request is an http proxy.
   ///
   ///**Officially Supported Platforms/Implementations**:
@@ -49,17 +41,12 @@ class ClientCertChallenge extends URLAuthenticationChallenge {
   List<String>? principals;
   ClientCertChallenge({
     this.allowedCertificateAuthorities,
-    @Deprecated('Use keyTypes instead') this.androidKeyTypes,
-    @Deprecated('Use principals instead') this.androidPrincipals,
     this.isProxy,
     this.keyTypes,
     this.mutuallyTrustedCertificates,
     this.principals,
     required URLProtectionSpace protectionSpace,
-  }) : super(protectionSpace: protectionSpace) {
-    keyTypes = keyTypes ?? androidKeyTypes;
-    principals = principals ?? androidPrincipals;
-  }
+  }) : super(protectionSpace: protectionSpace);
 
   ///Gets a possible [ClientCertChallenge] instance from a [Map] value.
   static ClientCertChallenge? fromMap(
@@ -79,12 +66,6 @@ class ClientCertChallenge extends URLAuthenticationChallenge {
           ? List<String>.from(
               map['allowedCertificateAuthorities']!.cast<String>(),
             )
-          : null,
-      androidKeyTypes: map['keyTypes'] != null
-          ? List<String>.from(map['keyTypes']!.cast<String>())
-          : null,
-      androidPrincipals: map['principals'] != null
-          ? List<String>.from(map['principals']!.cast<String>())
           : null,
       isProxy: map['isProxy'],
       keyTypes: map['keyTypes'] != null

@@ -8,10 +8,6 @@ part of 'js_alert_request.dart';
 
 ///Class that represents the request of the [PlatformWebViewCreationParams.onJsAlert] event.
 class JsAlertRequest {
-  ///Use [isMainFrame] instead.
-  @Deprecated('Use isMainFrame instead')
-  bool? iosIsMainFrame;
-
   ///Indicates whether the request was made for the main frame.
   ///
   ///**Officially Supported Platforms/Implementations**:
@@ -24,14 +20,7 @@ class JsAlertRequest {
 
   ///The url of the page requesting the dialog.
   WebUri? url;
-  JsAlertRequest({
-    @Deprecated('Use isMainFrame instead') this.iosIsMainFrame,
-    this.isMainFrame,
-    this.message,
-    this.url,
-  }) {
-    isMainFrame = isMainFrame ?? iosIsMainFrame;
-  }
+  JsAlertRequest({this.isMainFrame, this.message, this.url});
 
   ///Gets a possible [JsAlertRequest] instance from a [Map] value.
   static JsAlertRequest? fromMap(
@@ -42,7 +31,6 @@ class JsAlertRequest {
       return null;
     }
     final instance = JsAlertRequest(
-      iosIsMainFrame: map['isMainFrame'],
       isMainFrame: map['isMainFrame'],
       message: map['message'],
       url: map['url'] != null ? WebUri(map['url']) : null,

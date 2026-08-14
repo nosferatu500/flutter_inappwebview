@@ -49,17 +49,12 @@ class UserScript {
   ///The time at which to inject the script into the `WebView`.
   UserScriptInjectionTime injectionTime;
 
-  ///Use [forMainFrameOnly] instead.
-  @Deprecated('Use forMainFrameOnly instead')
-  bool? iosForMainFrameOnly;
-
   ///The script’s source code.
   String source;
   UserScript({
     this.groupName,
     required this.source,
     required this.injectionTime,
-    @Deprecated("Use forMainFrameOnly instead") this.iosForMainFrameOnly,
     this.forMainFrameOnly = true,
     Set<String>? allowedOriginRules,
     ContentWorld? contentWorld,
@@ -68,9 +63,6 @@ class UserScript {
         ? allowedOriginRules
         : Set.from(["*"]);
     this.contentWorld = contentWorld ?? ContentWorld.PAGE;
-    this.forMainFrameOnly = this.iosForMainFrameOnly != null
-        ? this.iosForMainFrameOnly!
-        : this.forMainFrameOnly;
   }
 
   ///Gets a possible [UserScript] instance from a [Map] value.
@@ -92,7 +84,6 @@ class UserScript {
         ),
         EnumMethod.name => UserScriptInjectionTime.byName(map['injectionTime']),
       }!,
-      iosForMainFrameOnly: map['forMainFrameOnly'],
       source: map['source'],
     );
     if (map['allowedOriginRules'] != null) {

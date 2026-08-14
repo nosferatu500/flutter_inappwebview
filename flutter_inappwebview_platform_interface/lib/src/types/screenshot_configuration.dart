@@ -57,10 +57,6 @@ class ScreenshotConfiguration_ {
   )
   int quality;
 
-  ///Use [afterScreenUpdates] instead.
-  @Deprecated("Use afterScreenUpdates instead")
-  bool? iosAfterScreenUpdates;
-
   ///A Boolean value that indicates whether to take the snapshot after incorporating any pending screen updates.
   ///The default value of this property is `true`, which causes the web view to incorporate any recent changes to the view’s content and then generate the snapshot.
   ///If you change the value to `false`, the `WebView` takes the snapshot immediately, and before incorporating any new changes.
@@ -78,14 +74,8 @@ class ScreenshotConfiguration_ {
     this.snapshotWidth,
     CompressFormat_? compressFormat,
     this.quality = 100,
-    @Deprecated("Use afterScreenUpdates instead") this.iosAfterScreenUpdates,
     this.afterScreenUpdates = true,
   }) : compressFormat = compressFormat ?? CompressFormat_.PNG {
     assert(this.quality >= 0);
-    // ignore: deprecated_member_use_from_same_package
-    this.afterScreenUpdates = this.iosAfterScreenUpdates != null
-        // ignore: deprecated_member_use_from_same_package
-        ? this.iosAfterScreenUpdates!
-        : this.afterScreenUpdates;
   }
 }

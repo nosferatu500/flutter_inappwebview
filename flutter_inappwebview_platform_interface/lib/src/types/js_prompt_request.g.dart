@@ -11,10 +11,6 @@ class JsPromptRequest {
   ///The default value displayed in the prompt dialog.
   String? defaultValue;
 
-  ///Use [isMainFrame] instead.
-  @Deprecated('Use isMainFrame instead')
-  bool? iosIsMainFrame;
-
   ///Indicates whether the request was made for the main frame.
   ///
   ///**Officially Supported Platforms/Implementations**:
@@ -29,13 +25,10 @@ class JsPromptRequest {
   WebUri? url;
   JsPromptRequest({
     this.defaultValue,
-    @Deprecated('Use isMainFrame instead') this.iosIsMainFrame,
     this.isMainFrame,
     this.message,
     this.url,
-  }) {
-    isMainFrame = isMainFrame ?? iosIsMainFrame;
-  }
+  });
 
   ///Gets a possible [JsPromptRequest] instance from a [Map] value.
   static JsPromptRequest? fromMap(
@@ -47,7 +40,6 @@ class JsPromptRequest {
     }
     final instance = JsPromptRequest(
       defaultValue: map['defaultValue'],
-      iosIsMainFrame: map['isMainFrame'],
       isMainFrame: map['isMainFrame'],
       message: map['message'],
       url: map['url'] != null ? WebUri(map['url']) : null,

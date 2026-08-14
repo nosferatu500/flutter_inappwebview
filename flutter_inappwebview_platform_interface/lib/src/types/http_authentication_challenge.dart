@@ -24,19 +24,11 @@ class HttpAuthenticationChallenge_ extends URLAuthenticationChallenge_ {
   ///and the client must prompt the user for a corresponding password.
   URLCredential_? proposedCredential;
 
-  ///Use [failureResponse] instead.
-  @Deprecated("Use failureResponse instead")
-  IOSURLResponse_? iosFailureResponse;
-
   ///The URL response object representing the last authentication failure.
   ///This value is `null` if the protocol doesn’t use responses to indicate an authentication failure.
   ///
   ///**NOTE**: available only on iOS.
   URLResponse_? failureResponse;
-
-  ///Use [error] instead.
-  @Deprecated("Use error instead")
-  String? iosError;
 
   ///The error object representing the last authentication failure.
   ///This value is `null` if the protocol doesn’t use errors to indicate an authentication failure.
@@ -47,10 +39,8 @@ class HttpAuthenticationChallenge_ extends URLAuthenticationChallenge_ {
   HttpAuthenticationChallenge_({
     required this.previousFailureCount,
     required URLProtectionSpace_ protectionSpace,
-    @Deprecated("Use failureResponse instead") this.iosFailureResponse,
     this.failureResponse,
     this.proposedCredential,
-    @Deprecated("Use error instead") this.iosError,
     this.error,
   }) : super(protectionSpace: protectionSpace);
 }

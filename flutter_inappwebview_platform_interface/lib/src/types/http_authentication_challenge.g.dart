@@ -21,14 +21,6 @@ class HttpAuthenticationChallenge extends URLAuthenticationChallenge {
   ///**NOTE**: available only on iOS.
   URLResponse? failureResponse;
 
-  ///Use [error] instead.
-  @Deprecated('Use error instead')
-  String? iosError;
-
-  ///Use [failureResponse] instead.
-  @Deprecated('Use failureResponse instead')
-  IOSURLResponse? iosFailureResponse;
-
   ///A count of previous failed authentication attempts.
   int previousFailureCount;
 
@@ -42,16 +34,10 @@ class HttpAuthenticationChallenge extends URLAuthenticationChallenge {
   HttpAuthenticationChallenge({
     this.error,
     this.failureResponse,
-    @Deprecated('Use error instead') this.iosError,
-    @Deprecated('Use failureResponse instead') this.iosFailureResponse,
     required this.previousFailureCount,
     this.proposedCredential,
     required URLProtectionSpace protectionSpace,
-  }) : super(protectionSpace: protectionSpace) {
-    error = error ?? iosError;
-    failureResponse =
-        failureResponse ?? URLResponse.fromMap(iosFailureResponse?.toMap());
-  }
+  }) : super(protectionSpace: protectionSpace);
 
   ///Gets a possible [HttpAuthenticationChallenge] instance from a [Map] value.
   static HttpAuthenticationChallenge? fromMap(
@@ -68,11 +54,6 @@ class HttpAuthenticationChallenge extends URLAuthenticationChallenge {
       )!,
       error: map['error'],
       failureResponse: URLResponse.fromMap(
-        map['failureResponse']?.cast<String, dynamic>(),
-        enumMethod: enumMethod,
-      ),
-      iosError: map['error'],
-      iosFailureResponse: IOSURLResponse.fromMap(
         map['failureResponse']?.cast<String, dynamic>(),
         enumMethod: enumMethod,
       ),

@@ -52,10 +52,6 @@ class URLProtectionSpace_ {
   ///The SSL Error associated.
   SslError_? sslError;
 
-  ///Use [authenticationMethod] instead.
-  @Deprecated("Use authenticationMethod instead")
-  IOSNSURLProtectionSpaceAuthenticationMethod_? iosAuthenticationMethod;
-
   ///The authentication method used by the receiver.
   @SupportedPlatforms(
     platforms: [
@@ -72,11 +68,6 @@ class URLProtectionSpace_ {
     ],
   )
   URLProtectionSpaceAuthenticationMethod_? authenticationMethod;
-
-  ///Use [distinguishedNames] instead.
-  @Deprecated("Use distinguishedNames instead")
-  @ExchangeableObjectProperty(deserializer: _distinguishedNamesDeserializer)
-  List<X509Certificate>? iosDistinguishedNames;
 
   ///The acceptable certificate-issuing authorities for client certificate authentication.
   ///This value is `null` if the authentication method of the protection space is not client certificate.
@@ -98,10 +89,6 @@ class URLProtectionSpace_ {
   )
   List<X509Certificate>? distinguishedNames;
 
-  ///Use [receivesCredentialSecurely] instead.
-  @Deprecated("Use receivesCredentialSecurely instead")
-  bool? iosReceivesCredentialSecurely;
-
   ///A Boolean value that indicates whether the credentials for the protection space can be sent securely.
   ///This value is `true` if the credentials for the protection space represented by the receiver can be sent securely, `false` otherwise.
   @SupportedPlatforms(
@@ -119,10 +106,6 @@ class URLProtectionSpace_ {
     ],
   )
   bool? receivesCredentialSecurely;
-
-  ///Use [proxyType] instead.
-  @Deprecated("Use proxyType instead")
-  IOSNSURLProtectionSpaceProxyType_? iosProxyType;
 
   ///The receiver's proxy type.
   ///This value is `null` if the receiver does not represent a proxy protection space.
@@ -150,15 +133,9 @@ class URLProtectionSpace_ {
     this.port,
     this.sslCertificate,
     this.sslError,
-    @Deprecated("Use authenticationMethod instead")
-    this.iosAuthenticationMethod,
     this.authenticationMethod,
-    @Deprecated("Use distinguishedNames instead") this.iosDistinguishedNames,
     this.distinguishedNames,
-    @Deprecated("Use receivesCredentialSecurely instead")
-    this.iosReceivesCredentialSecurely,
     this.receivesCredentialSecurely,
-    @Deprecated("Use proxyType instead") this.iosProxyType,
     this.proxyType,
   });
 }

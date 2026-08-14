@@ -36,19 +36,10 @@ class URLCredential_ {
   ///The credential’s password.
   String? password;
 
-  ///Use [certificates] instead.
-  @Deprecated("Use certificates instead")
-  @ExchangeableObjectProperty(deserializer: _certificatesDeserializer)
-  List<X509Certificate>? iosCertificates;
-
   ///The intermediate certificates of the credential, if it is a client certificate credential.
   @ExchangeableObjectProperty(deserializer: _certificatesDeserializer)
   @SupportedPlatforms(platforms: [IOSPlatform(), MacOSPlatform()])
   List<X509Certificate>? certificates;
-
-  ///Use [persistence] instead.
-  @Deprecated("Use persistence instead")
-  IOSURLCredentialPersistence_? iosPersistence;
 
   ///The credential’s persistence setting.
   @SupportedPlatforms(platforms: [IOSPlatform(), MacOSPlatform()])
@@ -57,9 +48,7 @@ class URLCredential_ {
   URLCredential_({
     this.username,
     this.password,
-    @Deprecated("Use certificates instead") this.iosPersistence,
     this.persistence,
-    @Deprecated("Use persistence instead") this.iosCertificates,
     this.certificates,
   });
 }

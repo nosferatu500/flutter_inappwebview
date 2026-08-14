@@ -11,10 +11,6 @@ class ClientCertResponse {
   ///Indicate the [ClientCertResponseAction] to take in response of the client certificate challenge.
   ClientCertResponseAction? action;
 
-  ///Use [keyStoreType] instead.
-  @Deprecated('Use keyStoreType instead')
-  String? androidKeyStoreType;
-
   ///The certificate password.
   ///
   ///**Officially Supported Platforms/Implementations**:
@@ -45,14 +41,12 @@ class ClientCertResponse {
   ClientCertResponse({
     this.certificatePath = "",
     this.certificatePassword = "",
-    @Deprecated('Use keyStoreType instead') this.androidKeyStoreType = "PKCS12",
     this.keyStoreType = "PKCS12",
     this.selectedCertificate = -1,
     this.action = ClientCertResponseAction.CANCEL,
   }) {
     if (this.action == ClientCertResponseAction.PROCEED && !Util.isWindows)
       assert(certificatePath.isNotEmpty);
-    this.keyStoreType = this.keyStoreType ?? this.androidKeyStoreType;
     if (Util.isAndroid) assert(this.keyStoreType != null);
   }
 
@@ -72,7 +66,6 @@ class ClientCertResponse {
       EnumMethod.value => ClientCertResponseAction.fromValue(map['action']),
       EnumMethod.name => ClientCertResponseAction.byName(map['action']),
     };
-    instance.androidKeyStoreType = map['keyStoreType'];
     instance.certificatePassword = map['certificatePassword'];
     if (map['certificatePath'] != null) {
       instance.certificatePath = map['certificatePath'];

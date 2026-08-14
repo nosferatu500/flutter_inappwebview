@@ -18,10 +18,6 @@ class JsPromptRequest_ {
   ///The default value displayed in the prompt dialog.
   String? defaultValue;
 
-  ///Use [isMainFrame] instead.
-  @Deprecated("Use isMainFrame instead")
-  bool? iosIsMainFrame;
-
   ///Indicates whether the request was made for the main frame.
   @SupportedPlatforms(platforms: [IOSPlatform(), MacOSPlatform()])
   bool? isMainFrame;
@@ -30,7 +26,6 @@ class JsPromptRequest_ {
     this.url,
     this.message,
     this.defaultValue,
-    @Deprecated("Use isMainFrame instead") this.iosIsMainFrame,
     this.isMainFrame,
   });
 }

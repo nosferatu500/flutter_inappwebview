@@ -26,10 +26,6 @@ class URLRequest_ {
   ///A dictionary containing all of the HTTP header fields for a request.
   Map<String, String>? headers;
 
-  ///Use [allowsCellularAccess] instead.
-  @Deprecated("Use allowsCellularAccess instead")
-  bool? iosAllowsCellularAccess;
-
   ///A Boolean value indicating whether the request is allowed to use the built-in cellular radios to satisfy the request.
   @SupportedPlatforms(
     platforms: [
@@ -46,10 +42,6 @@ class URLRequest_ {
     ],
   )
   bool? allowsCellularAccess;
-
-  ///Use [allowsConstrainedNetworkAccess] instead.
-  @Deprecated("Use allowsConstrainedNetworkAccess instead")
-  bool? iosAllowsConstrainedNetworkAccess;
 
   ///A Boolean value that indicates whether the request may use the network when the user has specified Low Data Mode.
   @SupportedPlatforms(
@@ -70,10 +62,6 @@ class URLRequest_ {
   )
   bool? allowsConstrainedNetworkAccess;
 
-  ///Use [allowsExpensiveNetworkAccess] instead.
-  @Deprecated("Use allowsExpensiveNetworkAccess instead")
-  bool? iosAllowsExpensiveNetworkAccess;
-
   ///A Boolean value that indicates whether connections may use a network interface that the system considers expensive.
   @SupportedPlatforms(
     platforms: [
@@ -93,10 +81,6 @@ class URLRequest_ {
   )
   bool? allowsExpensiveNetworkAccess;
 
-  ///Use [cachePolicy] instead.
-  @Deprecated("Use cachePolicy instead")
-  IOSURLRequestCachePolicy_? iosCachePolicy;
-
   ///The request’s cache policy.
   @SupportedPlatforms(
     platforms: [
@@ -113,10 +97,6 @@ class URLRequest_ {
     ],
   )
   URLRequestCachePolicy_? cachePolicy;
-
-  ///Use [httpShouldHandleCookies] instead.
-  @Deprecated("Use httpShouldHandleCookies instead")
-  bool? iosHttpShouldHandleCookies;
 
   ///A Boolean value indicating whether cookies will be sent with and set for this request.
   @SupportedPlatforms(
@@ -135,10 +115,6 @@ class URLRequest_ {
   )
   bool? httpShouldHandleCookies;
 
-  ///Use [httpShouldUsePipelining] instead.
-  @Deprecated("Use httpShouldUsePipelining instead")
-  bool? iosHttpShouldUsePipelining;
-
   ///A Boolean value indicating whether the request should transmit before the previous response is received.
   @SupportedPlatforms(
     platforms: [
@@ -155,10 +131,6 @@ class URLRequest_ {
     ],
   )
   bool? httpShouldUsePipelining;
-
-  ///Use [networkServiceType] instead.
-  @Deprecated("Use networkServiceType instead")
-  IOSURLRequestNetworkServiceType_? iosNetworkServiceType;
 
   ///The service type associated with this request.
   @SupportedPlatforms(
@@ -177,10 +149,6 @@ class URLRequest_ {
   )
   URLRequestNetworkServiceType_? networkServiceType;
 
-  ///Use [timeoutInterval] instead.
-  @Deprecated("Use timeoutInterval instead")
-  double? iosTimeoutInterval;
-
   ///The timeout interval of the request.
   @SupportedPlatforms(
     platforms: [
@@ -197,10 +165,6 @@ class URLRequest_ {
     ],
   )
   double? timeoutInterval;
-
-  ///Use [mainDocumentURL] instead.
-  @Deprecated("Use mainDocumentURL instead")
-  Uri? iosMainDocumentURL;
 
   ///The main document URL associated with this request.
   ///This URL is used for the cookie “same domain as main document” policy.
@@ -267,28 +231,14 @@ class URLRequest_ {
     this.method,
     this.headers,
     this.body,
-    @Deprecated("Use allowsCellularAccess instead")
-    this.iosAllowsCellularAccess,
     this.allowsCellularAccess,
-    @Deprecated("Use allowsConstrainedNetworkAccess instead")
-    this.iosAllowsConstrainedNetworkAccess,
     this.allowsConstrainedNetworkAccess,
-    @Deprecated("Use allowsExpensiveNetworkAccess instead")
-    this.iosAllowsExpensiveNetworkAccess,
     this.allowsExpensiveNetworkAccess,
-    @Deprecated("Use cachePolicy instead") this.iosCachePolicy,
     this.cachePolicy,
-    @Deprecated("Use httpShouldHandleCookies instead")
-    this.iosHttpShouldHandleCookies,
     this.httpShouldHandleCookies,
-    @Deprecated("Use httpShouldUsePipelining instead")
-    this.iosHttpShouldUsePipelining,
     this.httpShouldUsePipelining,
-    @Deprecated("Use networkServiceType instead") this.iosNetworkServiceType,
     this.networkServiceType,
-    @Deprecated("Use timeoutInterval instead") this.iosTimeoutInterval,
     this.timeoutInterval,
-    @Deprecated("Use mainDocumentURL instead") this.iosMainDocumentURL,
     this.mainDocumentURL,
     this.assumesHTTP3Capable,
     this.attribution,

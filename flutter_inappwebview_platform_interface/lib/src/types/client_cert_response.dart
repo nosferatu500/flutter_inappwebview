@@ -22,10 +22,6 @@ class ClientCertResponse_ {
   )
   String? certificatePassword;
 
-  ///Use [keyStoreType] instead.
-  @Deprecated('Use keyStoreType instead')
-  String? androidKeyStoreType;
-
   ///An Android-specific property used by Java [KeyStore](https://developer.android.com/reference/java/security/KeyStore) class to get the instance.
   @SupportedPlatforms(platforms: [AndroidPlatform()])
   String? keyStoreType;
@@ -41,15 +37,12 @@ class ClientCertResponse_ {
   ClientCertResponse_({
     this.certificatePath = "",
     this.certificatePassword = "",
-    @Deprecated('Use keyStoreType instead') this.androidKeyStoreType = "PKCS12",
     this.keyStoreType = "PKCS12",
     this.selectedCertificate = -1,
     this.action = ClientCertResponseAction_.CANCEL,
   }) {
     if (this.action == ClientCertResponseAction_.PROCEED && !Util.isWindows)
       assert(certificatePath.isNotEmpty);
-
-    this.keyStoreType = this.keyStoreType ?? this.androidKeyStoreType;
 
     if (Util.isAndroid) assert(this.keyStoreType != null);
   }

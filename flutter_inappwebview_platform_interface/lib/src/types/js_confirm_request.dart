@@ -15,18 +15,9 @@ class JsConfirmRequest_ {
   ///Message to be displayed in the window.
   String? message;
 
-  ///Use [isMainFrame] instead.
-  @Deprecated("Use isMainFrame instead")
-  bool? iosIsMainFrame;
-
   ///Indicates whether the request was made for the main frame.
   @SupportedPlatforms(platforms: [IOSPlatform(), MacOSPlatform()])
   bool? isMainFrame;
 
-  JsConfirmRequest_({
-    this.url,
-    this.message,
-    @Deprecated("Use isMainFrame instead") this.iosIsMainFrame,
-    this.isMainFrame,
-  });
+  JsConfirmRequest_({this.url, this.message, this.isMainFrame});
 }

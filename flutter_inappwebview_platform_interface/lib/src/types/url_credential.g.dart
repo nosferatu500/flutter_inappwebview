@@ -16,14 +16,6 @@ class URLCredential {
   ///- macOS WKWebView
   List<X509Certificate>? certificates;
 
-  ///Use [certificates] instead.
-  @Deprecated('Use certificates instead')
-  List<X509Certificate>? iosCertificates;
-
-  ///Use [persistence] instead.
-  @Deprecated('Use persistence instead')
-  IOSURLCredentialPersistence? iosPersistence;
-
   ///The credential’s password.
   String? password;
 
@@ -38,19 +30,10 @@ class URLCredential {
   String? username;
   URLCredential({
     this.certificates,
-    @Deprecated('Use certificates instead') this.iosCertificates,
-    @Deprecated('Use persistence instead') this.iosPersistence,
     this.password,
     this.persistence,
     this.username,
-  }) {
-    certificates = certificates ?? iosCertificates;
-    persistence =
-        persistence ??
-        URLCredentialPersistence.fromNativeValue(
-          iosPersistence?.toNativeValue(),
-        );
-  }
+  });
 
   ///Gets a possible [URLCredential] instance from a [Map] value.
   static URLCredential? fromMap(
@@ -65,21 +48,6 @@ class URLCredential {
         map['certificates'],
         enumMethod: enumMethod,
       ),
-      iosCertificates: _certificatesDeserializer(
-        map['certificates'],
-        enumMethod: enumMethod,
-      ),
-      iosPersistence: switch (enumMethod ?? EnumMethod.nativeValue) {
-        EnumMethod.nativeValue => IOSURLCredentialPersistence.fromNativeValue(
-          map['persistence'],
-        ),
-        EnumMethod.value => IOSURLCredentialPersistence.fromValue(
-          map['persistence'],
-        ),
-        EnumMethod.name => IOSURLCredentialPersistence.byName(
-          map['persistence'],
-        ),
-      },
       password: map['password'],
       persistence: switch (enumMethod ?? EnumMethod.nativeValue) {
         EnumMethod.nativeValue => URLCredentialPersistence.fromNativeValue(
