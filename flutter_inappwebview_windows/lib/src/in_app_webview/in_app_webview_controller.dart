@@ -2305,29 +2305,6 @@ class WindowsInAppWebViewController extends PlatformInAppWebViewController
   }
 
   @override
-  @Deprecated("Use FindInteractionController.findAll instead")
-  Future<void> findAllAsync({required String find}) async {
-    Map<String, dynamic> args = <String, dynamic>{};
-    args.putIfAbsent('find', () => find);
-    await channel?.invokeMethod('findAll', args);
-  }
-
-  @override
-  @Deprecated("Use FindInteractionController.findNext instead")
-  Future<void> findNext({required bool forward}) async {
-    Map<String, dynamic> args = <String, dynamic>{};
-    args.putIfAbsent('forward', () => forward);
-    await channel?.invokeMethod('findNext', args);
-  }
-
-  @override
-  @Deprecated("Use FindInteractionController.clearMatches instead")
-  Future<void> clearMatches() async {
-    Map<String, dynamic> args = <String, dynamic>{};
-    await channel?.invokeMethod('clearMatches', args);
-  }
-
-  @override
   @Deprecated("Use tRexRunnerHtml instead")
   Future<String> getTRexRunnerHtml() async {
     return await tRexRunnerHtml;

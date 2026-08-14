@@ -9,7 +9,6 @@ import 'package:plugin_platform_interface/plugin_platform_interface.dart';
 
 import '../context_menu/main.dart';
 import '../debug_logging_settings.dart';
-import '../find_interaction/platform_find_interaction_controller.dart';
 import '../in_app_browser/platform_in_app_browser.dart';
 import '../inappwebview_platform.dart';
 import '../platform_webview_feature.dart';
@@ -4569,51 +4568,6 @@ abstract class PlatformInAppWebViewController extends PlatformInterface
   Future<InAppWebViewGroupOptions?> getOptions() {
     throw UnimplementedError(
       '${PlatformInAppWebViewControllerMethod.getOptions.name} is not implemented on the current platform',
-    );
-  }
-
-  ///{@template flutter_inappwebview_platform_interface.PlatformInAppWebViewController.findAllAsync}
-  ///Use [PlatformFindInteractionController.findAll] instead.
-  ///{@endtemplate}
-  ///
-  ///{@macro flutter_inappwebview_platform_interface.PlatformInAppWebViewController.findAllAsync.supported_platforms}
-  @SupportedPlatforms(
-    platforms: [AndroidPlatform(), IOSPlatform(), MacOSPlatform()],
-  )
-  @Deprecated("Use FindInteractionController.findAll instead")
-  Future<void> findAllAsync({required String find}) {
-    throw UnimplementedError(
-      '${PlatformInAppWebViewControllerMethod.findAllAsync.name} is not implemented on the current platform',
-    );
-  }
-
-  ///{@template flutter_inappwebview_platform_interface.PlatformInAppWebViewController.findNext}
-  ///Use [PlatformFindInteractionController.findNext] instead.
-  ///{@endtemplate}
-  ///
-  ///{@macro flutter_inappwebview_platform_interface.PlatformInAppWebViewController.findNext.supported_platforms}
-  @SupportedPlatforms(
-    platforms: [AndroidPlatform(), IOSPlatform(), MacOSPlatform()],
-  )
-  @Deprecated("Use FindInteractionController.findNext instead")
-  Future<void> findNext({required bool forward}) {
-    throw UnimplementedError(
-      '${PlatformInAppWebViewControllerMethod.findNext.name} is not implemented on the current platform',
-    );
-  }
-
-  ///{@template flutter_inappwebview_platform_interface.PlatformInAppWebViewController.clearMatches}
-  ///Use [PlatformFindInteractionController.clearMatches] instead.
-  ///{@endtemplate}
-  ///
-  ///{@macro flutter_inappwebview_platform_interface.PlatformInAppWebViewController.clearMatches.supported_platforms}
-  @SupportedPlatforms(
-    platforms: [AndroidPlatform(), IOSPlatform(), MacOSPlatform()],
-  )
-  @Deprecated("Use FindInteractionController.clearMatches instead")
-  Future<void> clearMatches() {
-    throw UnimplementedError(
-      '${PlatformInAppWebViewControllerMethod.clearMatches.name} is not implemented on the current platform',
     );
   }
 

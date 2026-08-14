@@ -310,26 +310,6 @@ class InAppWebViewController {
   @Deprecated("Use InAppWebViewController.clearAllCache instead")
   Future<void> clearCache() => platform.clearCache();
 
-  ///{@macro flutter_inappwebview_platform_interface.PlatformInAppWebViewController.findAllAsync}
-  ///
-  ///{@macro flutter_inappwebview_platform_interface.PlatformInAppWebViewController.findAllAsync.supported_platforms}
-  @Deprecated("Use FindInteractionController.findAll instead")
-  Future<void> findAllAsync({required String find}) =>
-      platform.findAllAsync(find: find);
-
-  ///{@macro flutter_inappwebview_platform_interface.PlatformInAppWebViewController.findNext}
-  ///
-  ///{@macro flutter_inappwebview_platform_interface.PlatformInAppWebViewController.findNext.supported_platforms}
-  @Deprecated("Use FindInteractionController.findNext instead")
-  Future<void> findNext({required bool forward}) =>
-      platform.findNext(forward: forward);
-
-  ///{@macro flutter_inappwebview_platform_interface.PlatformInAppWebViewController.clearMatches}
-  ///
-  ///{@macro flutter_inappwebview_platform_interface.PlatformInAppWebViewController.clearMatches.supported_platforms}
-  @Deprecated("Use FindInteractionController.clearMatches instead")
-  Future<void> clearMatches() => platform.clearMatches();
-
   ///{@macro flutter_inappwebview_platform_interface.PlatformInAppWebViewController.getTRexRunnerHtml}
   ///
   ///{@macro flutter_inappwebview_platform_interface.PlatformInAppWebViewController.getTRexRunnerHtml.supported_platforms}

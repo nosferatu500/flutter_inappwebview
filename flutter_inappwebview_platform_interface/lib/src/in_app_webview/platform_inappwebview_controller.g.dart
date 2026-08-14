@@ -425,20 +425,6 @@ enum PlatformInAppWebViewControllerMethod {
   ///{@endtemplate}
   clearHistory,
 
-  ///Can be used to check if the [PlatformInAppWebViewController.clearMatches] method is supported at runtime.
-  ///
-  ///{@template flutter_inappwebview_platform_interface.PlatformInAppWebViewController.clearMatches.supported_platforms}
-  ///
-  ///**Officially Supported Platforms/Implementations**:
-  ///- Android WebView
-  ///- iOS WKWebView
-  ///- macOS WKWebView
-  ///
-  ///Use the [PlatformInAppWebViewController.isMethodSupported] method to check if this method is supported at runtime.
-  ///{@endtemplate}
-  @Deprecated('Use FindInteractionController.clearMatches instead')
-  clearMatches,
-
   ///Can be used to check if the [PlatformInAppWebViewController.clearSslPreferences] method is supported at runtime.
   ///
   ///{@template flutter_inappwebview_platform_interface.PlatformInAppWebViewController.clearSslPreferences.supported_platforms}
@@ -595,40 +581,6 @@ enum PlatformInAppWebViewControllerMethod {
   ///Use the [PlatformInAppWebViewController.isMethodSupported] method to check if this method is supported at runtime.
   ///{@endtemplate}
   evaluateJavascript,
-
-  ///Can be used to check if the [PlatformInAppWebViewController.findAllAsync] method is supported at runtime.
-  ///
-  ///{@template flutter_inappwebview_platform_interface.PlatformInAppWebViewController.findAllAsync.supported_platforms}
-  ///
-  ///**Officially Supported Platforms/Implementations**:
-  ///- Android WebView
-  ///- iOS WKWebView
-  ///- macOS WKWebView
-  ///
-  ///**Parameters - Officially Supported Platforms/Implementations**:
-  ///- [find]: all platforms
-  ///
-  ///Use the [PlatformInAppWebViewController.isMethodSupported] method to check if this method is supported at runtime.
-  ///{@endtemplate}
-  @Deprecated('Use FindInteractionController.findAll instead')
-  findAllAsync,
-
-  ///Can be used to check if the [PlatformInAppWebViewController.findNext] method is supported at runtime.
-  ///
-  ///{@template flutter_inappwebview_platform_interface.PlatformInAppWebViewController.findNext.supported_platforms}
-  ///
-  ///**Officially Supported Platforms/Implementations**:
-  ///- Android WebView
-  ///- iOS WKWebView
-  ///- macOS WKWebView
-  ///
-  ///**Parameters - Officially Supported Platforms/Implementations**:
-  ///- [forward]: all platforms
-  ///
-  ///Use the [PlatformInAppWebViewController.isMethodSupported] method to check if this method is supported at runtime.
-  ///{@endtemplate}
-  @Deprecated('Use FindInteractionController.findNext instead')
-  findNext,
 
   ///Can be used to check if the [PlatformInAppWebViewController.getCameraCaptureState] method is supported at runtime.
   ///
@@ -2701,13 +2653,6 @@ extension _PlatformInAppWebViewControllerMethodSupported
             [
               TargetPlatform.android,
             ].contains(platform ?? defaultTargetPlatform);
-      case PlatformInAppWebViewControllerMethod.clearMatches:
-        return ((kIsWeb && platform != null) || !kIsWeb) &&
-            [
-              TargetPlatform.android,
-              TargetPlatform.iOS,
-              TargetPlatform.macOS,
-            ].contains(platform ?? defaultTargetPlatform);
       case PlatformInAppWebViewControllerMethod.clearSslPreferences:
         return ((kIsWeb && platform != null) || !kIsWeb) &&
             [
@@ -2783,20 +2728,6 @@ extension _PlatformInAppWebViewControllerMethodSupported
                     TargetPlatform.windows,
                     TargetPlatform.linux,
                   ].contains(platform ?? defaultTargetPlatform);
-      case PlatformInAppWebViewControllerMethod.findAllAsync:
-        return ((kIsWeb && platform != null) || !kIsWeb) &&
-            [
-              TargetPlatform.android,
-              TargetPlatform.iOS,
-              TargetPlatform.macOS,
-            ].contains(platform ?? defaultTargetPlatform);
-      case PlatformInAppWebViewControllerMethod.findNext:
-        return ((kIsWeb && platform != null) || !kIsWeb) &&
-            [
-              TargetPlatform.android,
-              TargetPlatform.iOS,
-              TargetPlatform.macOS,
-            ].contains(platform ?? defaultTargetPlatform);
       case PlatformInAppWebViewControllerMethod.getCameraCaptureState:
         return ((kIsWeb && platform != null) || !kIsWeb) &&
             [
