@@ -15,7 +15,7 @@ part of 'chrome_safari_browser_settings.dart';
 ///**Officially Supported Platforms/Implementations**:
 ///- Android Chrome Custom Tabs
 ///- iOS SFSafariViewController
-class ChromeSafariBrowserSettings implements ChromeSafariBrowserOptions {
+class ChromeSafariBrowserSettings {
   ///An additional button to be shown in `SFSafariViewController`'s toolbar.
   ///This allows the user to access powerful functionality from your extension without needing to first show the `UIActivityViewController`.
   ///

@@ -159,7 +159,7 @@ class AndroidLayoutAlgorithm {
   static const NORMAL = AndroidLayoutAlgorithm._internal('NORMAL', 'NORMAL');
 
   ///TEXT_AUTOSIZING boosts font size of paragraphs based on heuristics to make the text readable when viewing a wide-viewport layout in the overview mode.
-  ///It is recommended to enable zoom support [InAppWebViewOptions.supportZoom] when using this mode.
+  ///It is recommended to enable zoom support [InAppWebViewSettings.supportZoom] when using this mode.
   ///
   ///**NOTE**: available on Android 19+.
   static const TEXT_AUTOSIZING = AndroidLayoutAlgorithm._internal(

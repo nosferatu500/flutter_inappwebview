@@ -12,7 +12,6 @@ class PullToRefreshController {
   ///{@macro flutter_inappwebview_platform_interface.PlatformPullToRefreshController.supported_platforms}
   PullToRefreshController({
     void Function()? onRefresh,
-    @Deprecated("Use settings instead") PullToRefreshOptions? options,
     PullToRefreshSettings? settings,
   }) : this.fromPlatformCreationParams(
          params: PlatformPullToRefreshControllerCreationParams(

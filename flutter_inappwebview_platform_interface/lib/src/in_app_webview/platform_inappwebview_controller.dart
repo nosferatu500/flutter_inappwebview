@@ -2908,7 +2908,7 @@ abstract class PlatformInAppWebViewController extends PlatformInterface
   ///URL loads are not guaranteed to be protected by Safe Browsing until after the this method returns true.
   ///Safe Browsing is not fully supported on all devices. For those devices this method will returns false.
   ///
-  ///This should not be called if Safe Browsing has been disabled by manifest tag or [AndroidInAppWebViewOptions.safeBrowsingEnabled].
+  ///This should not be called if Safe Browsing has been disabled by manifest tag or [InAppWebViewSettings.safeBrowsingEnabled].
   ///This prepares resources used for Safe Browsing.
   ///{@endtemplate}
   ///

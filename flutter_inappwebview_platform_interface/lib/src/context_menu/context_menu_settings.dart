@@ -13,13 +13,3 @@ class ContextMenuSettings_ {
 
   ContextMenuSettings_({this.hideDefaultSystemContextMenuItems = false});
 }
-
-///Use [ContextMenuSettings] instead.
-@Deprecated("Use ContextMenuSettings instead")
-@ExchangeableObject(copyMethod: true)
-class ContextMenuOptions_ {
-  ///Whether all the default system context menu items should be hidden or not. The default value is `false`.
-  bool hideDefaultSystemContextMenuItems;
-
-  ContextMenuOptions_({this.hideDefaultSystemContextMenuItems = false});
-}

@@ -228,7 +228,7 @@ class AttributedString {
 }
 
 ///An iOS-specific class that represents a string with associated attributes
-///used by the [PlatformPullToRefreshController] and [PullToRefreshOptions] classes.
+///used by the [PlatformPullToRefreshController] and [PullToRefreshSettings] classes.
 ///Use [AttributedString] instead.
 @Deprecated('Use AttributedString instead')
 class IOSNSAttributedString {

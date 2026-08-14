@@ -759,14 +759,12 @@ class MockPlatformInAppBrowser extends PlatformInAppBrowser
   @override
   Future<void> openUrlRequest({
     required URLRequest urlRequest,
-    @Deprecated('Use settings instead') InAppBrowserClassOptions? options,
     InAppBrowserClassSettings? settings,
   }) async {}
 
   @override
   Future<void> openFile({
     required String assetFilePath,
-    @Deprecated('Use settings instead') InAppBrowserClassOptions? options,
     InAppBrowserClassSettings? settings,
   }) async {}
 
@@ -777,7 +775,6 @@ class MockPlatformInAppBrowser extends PlatformInAppBrowser
     String encoding = 'utf8',
     WebUri? baseUrl,
     WebUri? historyUrl,
-    @Deprecated('Use settings instead') InAppBrowserClassOptions? options,
     InAppBrowserClassSettings? settings,
   }) async {}
 
@@ -824,8 +821,6 @@ class MockPlatformChromeSafariBrowser extends PlatformChromeSafariBrowser
     Map<String, String>? headers,
     List<WebUri>? otherLikelyURLs,
     WebUri? referrer,
-    @Deprecated('Use settings instead')
-    ChromeSafariBrowserClassOptions? options,
     ChromeSafariBrowserSettings? settings,
   }) async {}
 

@@ -16,8 +16,7 @@ part of 'in_app_browser_settings.dart';
 ///- macOS WKWebView
 ///- Windows WebView2
 ///- Linux WPE WebKit ([Official API - GtkWindow](https://docs.gtk.org/gtk3/class.Window.html))
-class InAppBrowserSettings
-    implements BrowserOptions, AndroidOptions, IosOptions {
+class InAppBrowserSettings {
   ///Set to `false` to block the InAppBrowser WebView going back when the user click on the Android back button. The default value is `true`.
   ///
   ///**Officially Supported Platforms/Implementations**:

@@ -14,8 +14,6 @@ import '../types/trusted_web_activity_display_mode.dart';
 import '../types/trusted_web_activity_screen_orientation.dart';
 import '../types/ui_event_attribution.dart';
 import '../util.dart';
-import 'android/chrome_custom_tabs_options.dart';
-import 'apple/safari_options.dart';
 
 part 'chrome_safari_browser_settings.g.dart';
 
@@ -38,29 +36,6 @@ TrustedWebActivityDisplayMode? _deserializeDisplayMode(
   }
 }
 
-class ChromeSafariBrowserOptions {
-  Map<String, dynamic> toMap() {
-    return {};
-  }
-
-  static ChromeSafariBrowserOptions fromMap(Map<String, dynamic> map) {
-    return new ChromeSafariBrowserOptions();
-  }
-
-  ChromeSafariBrowserOptions copy() {
-    return ChromeSafariBrowserOptions.fromMap(this.toMap());
-  }
-
-  Map<String, dynamic> toJson() {
-    return this.toMap();
-  }
-
-  @override
-  String toString() {
-    return toMap().toString();
-  }
-}
-
 ///{@template flutter_inappwebview_platform_interface.ChromeSafariBrowserSettings}
 ///Class that represents the settings that can be used for an [ChromeSafariBrowser] window.
 ///{@endtemplate}
@@ -73,7 +48,7 @@ class ChromeSafariBrowserOptions {
   ],
 )
 @ExchangeableObject(copyMethod: true)
-class ChromeSafariBrowserSettings_ implements ChromeSafariBrowserOptions {
+class ChromeSafariBrowserSettings_ {
   ///The share state that should be applied to the custom tab. The default value is [CustomTabsShareState.SHARE_STATE_DEFAULT].
   @SupportedPlatforms(
     platforms: [
@@ -273,24 +248,6 @@ class ChromeSafariBrowserSettings_ implements ChromeSafariBrowserOptions {
     }
   }
 
-  @override
-  @ExchangeableObjectMethod(ignore: true)
-  ChromeSafariBrowserSettings_ copy() {
-    throw UnimplementedError();
-  }
-
-  @override
-  @ExchangeableObjectMethod(ignore: true)
-  Map<String, dynamic> toJson() {
-    throw UnimplementedError();
-  }
-
-  @override
-  @ExchangeableObjectMethod(ignore: true)
-  Map<String, dynamic> toMap() {
-    throw UnimplementedError();
-  }
-
   ///Check if the given [property] is supported by the [defaultTargetPlatform] or a specific [platform].
   static bool isPropertySupported(
     ChromeSafariBrowserSettingsProperty property, {
@@ -299,39 +256,4 @@ class ChromeSafariBrowserSettings_ implements ChromeSafariBrowserOptions {
     property,
     platform: platform,
   );
-}
-
-///Class that represents the options that can be used for an [ChromeSafariBrowser] window.
-///Use [ChromeSafariBrowserSettings] instead.
-@Deprecated('Use ChromeSafariBrowserSettings instead')
-class ChromeSafariBrowserClassOptions {
-  ///Android-specific options.
-  AndroidChromeCustomTabsOptions? android;
-
-  ///iOS-specific options.
-  IOSSafariOptions? ios;
-
-  ChromeSafariBrowserClassOptions({this.android, this.ios}) {
-    this.android = this.android ?? AndroidChromeCustomTabsOptions();
-    this.ios = this.ios ?? IOSSafariOptions();
-  }
-
-  Map<String, dynamic> toMap() {
-    Map<String, dynamic> options = {};
-    if (Util.isAndroid)
-      options.addAll(this.android?.toMap() ?? {});
-    else if (Util.isIOS)
-      options.addAll(this.ios?.toMap() ?? {});
-
-    return options;
-  }
-
-  Map<String, dynamic> toJson() {
-    return this.toMap();
-  }
-
-  @override
-  String toString() {
-    return toMap().toString();
-  }
 }
