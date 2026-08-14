@@ -48,13 +48,13 @@ class WebViewFeature {
         'ENTERPRISE_AUTHENTICATION_APP_LINK_POLICY',
       );
 
-  ///Feature for [isFeatureSupported]. This feature covers [InAppWebViewSettings.forceDark].
+  ///Feature for [isFeatureSupported]. This feature covers the deprecated Android `WebSettings.setForceDark` API.
   static const FORCE_DARK = WebViewFeature._internal(
     'FORCE_DARK',
     'FORCE_DARK',
   );
 
-  ///Feature for [isFeatureSupported]. This feature covers [InAppWebViewSettings.forceDarkStrategy].
+  ///Feature for [isFeatureSupported]. This feature covers the deprecated Android `WebSettingsCompat.setForceDarkStrategy` API.
   static const FORCE_DARK_STRATEGY = WebViewFeature._internal(
     'FORCE_DARK_STRATEGY',
     'FORCE_DARK_STRATEGY',

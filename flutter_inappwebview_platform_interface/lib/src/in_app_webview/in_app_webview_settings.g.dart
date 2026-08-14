@@ -821,38 +821,6 @@ class InAppWebViewSettings {
   ///    - This is a WPE Platform display-level setting for font rendering.
   FontSubpixelLayout? fontSubpixelLayout;
 
-  ///Use [algorithmicDarkeningAllowed] instead.
-  ///
-  ///Set the force dark mode for this WebView. The default value is [ForceDark.OFF].
-  ///
-  ///Deprecated - The "force dark" model previously implemented by WebView was complex and didn't
-  ///interoperate well with current Web standards for `prefers-color-scheme` and `color-scheme`.
-  ///In apps with `targetSdkVersion` ≥ `android.os.Build.VERSION_CODES.TIRAMISU` this API is a no-op and
-  ///WebView will always use the dark style defined by web content authors if the app's theme is dark.
-  ///To customize the behavior, refer to [algorithmicDarkeningAllowed].
-  ///
-  ///**Officially Supported Platforms/Implementations**:
-  ///- Android WebView 29+ ([Official API - WebSettings.setForceDark](https://developer.android.com/reference/android/webkit/WebSettings#setForceDark(int)))
-  @Deprecated('Use algorithmicDarkeningAllowed instead')
-  ForceDark? forceDark;
-
-  ///Use [algorithmicDarkeningAllowed] instead.
-  ///
-  ///Set how WebView content should be darkened.
-  ///The default value is [ForceDarkStrategy.PREFER_WEB_THEME_OVER_USER_AGENT_DARKENING].
-  ///
-  ///Deprecated - The "force dark" model previously implemented by WebView was complex and didn't
-  ///interoperate well with current Web standards for `prefers-color-scheme` and `color-scheme`.
-  ///In apps with `targetSdkVersion` ≥ `android.os.Build.VERSION_CODES.TIRAMISU` this API is a no-op and
-  ///WebView will always use the dark style defined by web content authors if the app's theme is dark.
-  ///To customize the behavior, refer to [algorithmicDarkeningAllowed].
-  ///
-  ///**Officially Supported Platforms/Implementations**:
-  ///- Android WebView ([Official API - WebSettingsCompat.setForceDarkStrategy](https://developer.android.com/reference/androidx/webkit/WebSettingsCompat#setForceDarkStrategy(android.webkit.WebSettings,int))):
-  ///    - it will take effect only if [WebViewFeature.isFeatureSupported] returns `true` for [WebViewFeature.FORCE_DARK_STRATEGY].
-  @Deprecated('Use algorithmicDarkeningAllowed instead')
-  ForceDarkStrategy? forceDarkStrategy;
-
   ///Specifies whether autofill for information like names, street and email addresses, phone numbers, and arbitrary input is enabled.
   ///
   ///This excludes password and credit card information.
@@ -2031,9 +1999,6 @@ class InAppWebViewSettings {
     this.disabledActionModeMenuItems,
     this.fantasyFontFamily = "fantasy",
     this.fixedFontFamily = "monospace",
-    @Deprecated("Use algorithmicDarkeningAllowed instead") this.forceDark,
-    @Deprecated("Use algorithmicDarkeningAllowed instead")
-    this.forceDarkStrategy,
     this.geolocationEnabled = true,
     this.layoutAlgorithm,
     this.loadWithOverviewMode = true,
@@ -2261,20 +2226,6 @@ class InAppWebViewSettings {
           map['fontSubpixelLayout'],
         ),
         EnumMethod.name => FontSubpixelLayout.byName(map['fontSubpixelLayout']),
-      },
-      forceDark: switch (enumMethod ?? EnumMethod.nativeValue) {
-        EnumMethod.nativeValue => ForceDark.fromNativeValue(map['forceDark']),
-        EnumMethod.value => ForceDark.fromValue(map['forceDark']),
-        EnumMethod.name => ForceDark.byName(map['forceDark']),
-      },
-      forceDarkStrategy: switch (enumMethod ?? EnumMethod.nativeValue) {
-        EnumMethod.nativeValue => ForceDarkStrategy.fromNativeValue(
-          map['forceDarkStrategy'],
-        ),
-        EnumMethod.value => ForceDarkStrategy.fromValue(
-          map['forceDarkStrategy'],
-        ),
-        EnumMethod.name => ForceDarkStrategy.byName(map['forceDarkStrategy']),
       },
       horizontalScrollbarThumbColor:
           map['horizontalScrollbarThumbColor'] != null
@@ -2783,16 +2734,6 @@ class InAppWebViewSettings {
         EnumMethod.nativeValue => fontSubpixelLayout?.toNativeValue(),
         EnumMethod.value => fontSubpixelLayout?.toValue(),
         EnumMethod.name => fontSubpixelLayout?.name(),
-      },
-      "forceDark": switch (enumMethod ?? EnumMethod.nativeValue) {
-        EnumMethod.nativeValue => forceDark?.toNativeValue(),
-        EnumMethod.value => forceDark?.toValue(),
-        EnumMethod.name => forceDark?.name(),
-      },
-      "forceDarkStrategy": switch (enumMethod ?? EnumMethod.nativeValue) {
-        EnumMethod.nativeValue => forceDarkStrategy?.toNativeValue(),
-        EnumMethod.value => forceDarkStrategy?.toValue(),
-        EnumMethod.name => forceDarkStrategy?.name(),
       },
       "generalAutofillEnabled": generalAutofillEnabled,
       "geolocationEnabled": geolocationEnabled,
@@ -3913,31 +3854,6 @@ enum InAppWebViewSettingsProperty {
   ///Use the [InAppWebViewSettings.isPropertySupported] method to check if this property is supported at runtime.
   ///{@endtemplate}
   fontSubpixelLayout,
-
-  ///Can be used to check if the [InAppWebViewSettings.forceDark] property is supported at runtime.
-  ///
-  ///{@template flutter_inappwebview_platform_interface.InAppWebViewSettings.forceDark.supported_platforms}
-  ///
-  ///**Officially Supported Platforms/Implementations**:
-  ///- Android WebView 29+ ([Official API - WebSettings.setForceDark](https://developer.android.com/reference/android/webkit/WebSettings#setForceDark(int)))
-  ///
-  ///Use the [InAppWebViewSettings.isPropertySupported] method to check if this property is supported at runtime.
-  ///{@endtemplate}
-  @Deprecated('Use algorithmicDarkeningAllowed instead')
-  forceDark,
-
-  ///Can be used to check if the [InAppWebViewSettings.forceDarkStrategy] property is supported at runtime.
-  ///
-  ///{@template flutter_inappwebview_platform_interface.InAppWebViewSettings.forceDarkStrategy.supported_platforms}
-  ///
-  ///**Officially Supported Platforms/Implementations**:
-  ///- Android WebView ([Official API - WebSettingsCompat.setForceDarkStrategy](https://developer.android.com/reference/androidx/webkit/WebSettingsCompat#setForceDarkStrategy(android.webkit.WebSettings,int))):
-  ///    - it will take effect only if [WebViewFeature.isFeatureSupported] returns `true` for [WebViewFeature.FORCE_DARK_STRATEGY].
-  ///
-  ///Use the [InAppWebViewSettings.isPropertySupported] method to check if this property is supported at runtime.
-  ///{@endtemplate}
-  @Deprecated('Use algorithmicDarkeningAllowed instead')
-  forceDarkStrategy,
 
   ///Can be used to check if the [InAppWebViewSettings.generalAutofillEnabled] property is supported at runtime.
   ///
@@ -5662,16 +5578,6 @@ extension _InAppWebViewSettingsPropertySupported on InAppWebViewSettings {
       case InAppWebViewSettingsProperty.fontSubpixelLayout:
         return ((kIsWeb && platform != null) || !kIsWeb) &&
             [TargetPlatform.linux].contains(platform ?? defaultTargetPlatform);
-      case InAppWebViewSettingsProperty.forceDark:
-        return ((kIsWeb && platform != null) || !kIsWeb) &&
-            [
-              TargetPlatform.android,
-            ].contains(platform ?? defaultTargetPlatform);
-      case InAppWebViewSettingsProperty.forceDarkStrategy:
-        return ((kIsWeb && platform != null) || !kIsWeb) &&
-            [
-              TargetPlatform.android,
-            ].contains(platform ?? defaultTargetPlatform);
       case InAppWebViewSettingsProperty.generalAutofillEnabled:
         return ((kIsWeb && platform != null) || !kIsWeb) &&
             [

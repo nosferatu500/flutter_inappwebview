@@ -8,8 +8,6 @@ import '../types/cache_mode.dart';
 import '../types/data_detector_types.dart';
 import '../types/font_hinting_style.dart';
 import '../types/font_subpixel_layout.dart';
-import '../types/force_dark.dart';
-import '../types/force_dark_strategy.dart';
 import '../types/layout_algorithm.dart';
 import '../types/mixed_content_mode.dart';
 import '../types/over_scroll_mode.dart';
@@ -858,54 +856,6 @@ because there isn't any way to make the website data store non-persistent for th
     ],
   )
   String? fixedFontFamily;
-
-  ///Use [algorithmicDarkeningAllowed] instead.
-  ///
-  ///Set the force dark mode for this WebView. The default value is [ForceDark.OFF].
-  ///
-  ///Deprecated - The "force dark" model previously implemented by WebView was complex and didn't
-  ///interoperate well with current Web standards for `prefers-color-scheme` and `color-scheme`.
-  ///In apps with `targetSdkVersion` ≥ `android.os.Build.VERSION_CODES.TIRAMISU` this API is a no-op and
-  ///WebView will always use the dark style defined by web content authors if the app's theme is dark.
-  ///To customize the behavior, refer to [algorithmicDarkeningAllowed].
-  @Deprecated("Use algorithmicDarkeningAllowed instead")
-  @ExchangeableObjectProperty(leaveDeprecatedInToMapMethod: true)
-  @SupportedPlatforms(
-    platforms: [
-      AndroidPlatform(
-        available: "29",
-        apiName: "WebSettings.setForceDark",
-        apiUrl:
-            "https://developer.android.com/reference/android/webkit/WebSettings#setForceDark(int)",
-      ),
-    ],
-  )
-  ForceDark_? forceDark;
-
-  ///Use [algorithmicDarkeningAllowed] instead.
-  ///
-  ///Set how WebView content should be darkened.
-  ///The default value is [ForceDarkStrategy.PREFER_WEB_THEME_OVER_USER_AGENT_DARKENING].
-  ///
-  ///Deprecated - The "force dark" model previously implemented by WebView was complex and didn't
-  ///interoperate well with current Web standards for `prefers-color-scheme` and `color-scheme`.
-  ///In apps with `targetSdkVersion` ≥ `android.os.Build.VERSION_CODES.TIRAMISU` this API is a no-op and
-  ///WebView will always use the dark style defined by web content authors if the app's theme is dark.
-  ///To customize the behavior, refer to [algorithmicDarkeningAllowed].
-  @Deprecated("Use algorithmicDarkeningAllowed instead")
-  @ExchangeableObjectProperty(leaveDeprecatedInToMapMethod: true)
-  @SupportedPlatforms(
-    platforms: [
-      AndroidPlatform(
-        apiName: "WebSettingsCompat.setForceDarkStrategy",
-        apiUrl:
-            "https://developer.android.com/reference/androidx/webkit/WebSettingsCompat#setForceDarkStrategy(android.webkit.WebSettings,int)",
-        note:
-            "it will take effect only if [WebViewFeature.isFeatureSupported] returns `true` for [WebViewFeature.FORCE_DARK_STRATEGY].",
-      ),
-    ],
-  )
-  ForceDarkStrategy_? forceDarkStrategy;
 
   ///Sets whether Geolocation is enabled. The default is `true`.
   @SupportedPlatforms(
@@ -3293,9 +3243,6 @@ as it can cause framerate drops on animations in Android 9 and lower (see [Hybri
     this.disabledActionModeMenuItems,
     this.fantasyFontFamily = "fantasy",
     this.fixedFontFamily = "monospace",
-    @Deprecated("Use algorithmicDarkeningAllowed instead") this.forceDark,
-    @Deprecated("Use algorithmicDarkeningAllowed instead")
-    this.forceDarkStrategy,
     this.geolocationEnabled = true,
     this.layoutAlgorithm,
     this.loadWithOverviewMode = true,

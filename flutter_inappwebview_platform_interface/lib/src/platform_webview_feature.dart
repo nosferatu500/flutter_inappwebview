@@ -178,10 +178,10 @@ class WebViewFeature_ {
   static const DISABLED_ACTION_MODE_MENU_ITEMS =
       const WebViewFeature_._internal("DISABLED_ACTION_MODE_MENU_ITEMS");
 
-  ///Feature for [isFeatureSupported]. This feature covers [InAppWebViewSettings.forceDark].
+  ///Feature for [isFeatureSupported]. This feature covers the deprecated Android `WebSettings.setForceDark` API.
   static const FORCE_DARK = const WebViewFeature_._internal("FORCE_DARK");
 
-  ///Feature for [isFeatureSupported]. This feature covers [InAppWebViewSettings.forceDarkStrategy].
+  ///Feature for [isFeatureSupported]. This feature covers the deprecated Android `WebSettingsCompat.setForceDarkStrategy` API.
   static const FORCE_DARK_STRATEGY = const WebViewFeature_._internal(
     "FORCE_DARK_STRATEGY",
   );

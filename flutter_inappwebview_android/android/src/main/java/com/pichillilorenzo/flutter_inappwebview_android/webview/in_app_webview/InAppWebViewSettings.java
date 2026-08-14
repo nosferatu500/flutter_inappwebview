@@ -82,10 +82,6 @@ public class InAppWebViewSettings implements ISettings<InAppWebViewInterface> {
   public Integer disabledActionModeMenuItems;
   public String fantasyFontFamily = "fantasy";
   public String fixedFontFamily = "monospace";
-  @Nullable @Deprecated
-  public Integer forceDark;
-  @Nullable @Deprecated
-  public Integer forceDarkStrategy;
   public Boolean geolocationEnabled = true;
   public WebSettings.LayoutAlgorithm layoutAlgorithm;
   public Boolean loadWithOverviewMode = true;
@@ -310,12 +306,6 @@ public class InAppWebViewSettings implements ISettings<InAppWebViewInterface> {
         case "fixedFontFamily":
           fixedFontFamily = (String) value;
           break;
-        case "forceDark":
-          forceDark = (Integer) value;
-          break;
-        case "forceDarkStrategy":
-          forceDarkStrategy = (Integer) value;
-          break;
         case "geolocationEnabled":
           geolocationEnabled = (Boolean) value;
           break;
@@ -522,8 +512,6 @@ public class InAppWebViewSettings implements ISettings<InAppWebViewInterface> {
     settings.put("disabledActionModeMenuItems", disabledActionModeMenuItems);
     settings.put("fantasyFontFamily", fantasyFontFamily);
     settings.put("fixedFontFamily", fixedFontFamily);
-    settings.put("forceDark", forceDark);
-    settings.put("forceDarkStrategy", forceDarkStrategy);
     settings.put("geolocationEnabled", geolocationEnabled);
     settings.put("layoutAlgorithm", getLayoutAlgorithm());
     settings.put("loadWithOverviewMode", loadWithOverviewMode);
@@ -631,14 +619,6 @@ public class InAppWebViewSettings implements ISettings<InAppWebViewInterface> {
 
       realSettings.put("fantasyFontFamily", settings.getFantasyFontFamily());
       realSettings.put("fixedFontFamily", settings.getFixedFontFamily());
-      if (WebViewFeature.isFeatureSupported(WebViewFeature.FORCE_DARK)) {
-        realSettings.put("forceDark", WebSettingsCompat.getForceDark(settings));
-      } else {
-        realSettings.put("forceDark", settings.getForceDark());
-        }
-      if (WebViewFeature.isFeatureSupported(WebViewFeature.FORCE_DARK_STRATEGY)) {
-        realSettings.put("forceDarkStrategy", WebSettingsCompat.getForceDarkStrategy(settings));
-      }
       realSettings.put("layoutAlgorithm", settings.getLayoutAlgorithm().name());
       realSettings.put("loadWithOverviewMode", settings.getLoadWithOverviewMode());
       realSettings.put("loadsImagesAutomatically", settings.getLoadsImagesAutomatically());
