@@ -94,8 +94,6 @@ class PlatformHeadlessInAppWebViewCreationParams
     super.onRenderProcessGone,
     super.onRenderProcessResponsive,
     super.onRenderProcessUnresponsive,
-    @Deprecated('Use onFormResubmission instead')
-    super.androidOnFormResubmission,
     super.onFormResubmission,
     @Deprecated('Use onFaviconChanged instead') super.onReceivedIcon,
     super.onFaviconChanged,

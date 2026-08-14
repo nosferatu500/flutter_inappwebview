@@ -270,13 +270,6 @@ class InAppBrowser implements PlatformInAppBrowserEvents {
   @mustCallSuper
   void dispose() => platform.dispose();
 
-  ///Use [onFormResubmission] instead.
-  @Deprecated('Use onFormResubmission instead')
-  @override
-  FutureOr<FormResubmissionAction?>? androidOnFormResubmission(Uri? url) {
-    return null;
-  }
-
   @override
   FutureOr<AjaxRequestAction?>? onAjaxProgress(AjaxRequest ajaxRequest) {
     return null;

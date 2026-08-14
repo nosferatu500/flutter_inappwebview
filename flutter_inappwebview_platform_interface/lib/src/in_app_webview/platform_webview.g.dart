@@ -36,21 +36,6 @@ extension _PlatformWebViewCreationParamsClassSupported
 
 ///List of [PlatformWebViewCreationParams]'s properties that can be used to check i they are supported or not by the current platform.
 enum PlatformWebViewCreationParamsProperty {
-  ///Can be used to check if the [PlatformWebViewCreationParams.androidOnFormResubmission] property is supported at runtime.
-  ///
-  ///{@template flutter_inappwebview_platform_interface.PlatformWebViewCreationParams.androidOnFormResubmission.supported_platforms}
-  ///
-  ///**Officially Supported Platforms/Implementations**:
-  ///- Android WebView
-  ///
-  ///**Parameters - Officially Supported Platforms/Implementations**:
-  ///- [url]: all platforms
-  ///
-  ///Use the [PlatformWebViewCreationParams.isPropertySupported] method to check if this property is supported at runtime.
-  ///{@endtemplate}
-  @Deprecated('Use onFormResubmission instead')
-  androidOnFormResubmission,
-
   ///Can be used to check if the [PlatformWebViewCreationParams.contextMenu] property is supported at runtime.
   ///
   ///{@template flutter_inappwebview_platform_interface.PlatformWebViewCreationParams.contextMenu.supported_platforms}
@@ -1476,11 +1461,6 @@ extension _PlatformWebViewCreationParamsPropertySupported
     TargetPlatform? platform,
   }) {
     switch (property) {
-      case PlatformWebViewCreationParamsProperty.androidOnFormResubmission:
-        return ((kIsWeb && platform != null) || !kIsWeb) &&
-            [
-              TargetPlatform.android,
-            ].contains(platform ?? defaultTargetPlatform);
       case PlatformWebViewCreationParamsProperty.contextMenu:
         return ((kIsWeb && platform != null) || !kIsWeb) &&
             [

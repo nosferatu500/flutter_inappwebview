@@ -77,8 +77,6 @@ class WindowsHeadlessInAppWebViewCreationParams
     super.onRenderProcessGone,
     super.onRenderProcessResponsive,
     super.onRenderProcessUnresponsive,
-    @Deprecated('Use onFormResubmission instead')
-    super.androidOnFormResubmission,
     super.onFormResubmission,
     super.onReceivedIcon,
     @Deprecated('Use onReceivedTouchIconUrl instead')
@@ -179,7 +177,6 @@ class WindowsHeadlessInAppWebViewCreationParams
         onRenderProcessGone: params.onRenderProcessGone,
         onRenderProcessResponsive: params.onRenderProcessResponsive,
         onRenderProcessUnresponsive: params.onRenderProcessUnresponsive,
-        androidOnFormResubmission: params.androidOnFormResubmission,
         onFormResubmission: params.onFormResubmission,
         onReceivedIcon: params.onReceivedIcon,
         onReceivedTouchIconUrl: params.onReceivedTouchIconUrl,

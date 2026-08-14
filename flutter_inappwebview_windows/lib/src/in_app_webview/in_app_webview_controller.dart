@@ -648,35 +648,20 @@ class WindowsInAppWebViewController extends PlatformInAppWebViewController
         break;
       case "onFormResubmission":
         if ((webviewParams != null &&
-                (webviewParams!.onFormResubmission != null ||
-                    // ignore: deprecated_member_use_from_same_package
-                    webviewParams!.androidOnFormResubmission != null)) ||
+                webviewParams!.onFormResubmission != null) ||
             _inAppBrowserEventHandler != null) {
           String? url = call.arguments["url"];
           WebUri? uri = url != null ? WebUri(url) : null;
 
           if (webviewParams != null) {
-            if (webviewParams!.onFormResubmission != null)
-              return (await webviewParams!.onFormResubmission!(
-                _controllerFromPlatform,
-                uri,
-              ))?.toNativeValue();
-            else {
-              // ignore: deprecated_member_use_from_same_package
-              return (await webviewParams!.androidOnFormResubmission!(
-                _controllerFromPlatform,
-                uri,
-              ))?.toNativeValue();
-            }
+            return (await webviewParams!.onFormResubmission!(
+              _controllerFromPlatform,
+              uri,
+            ))?.toNativeValue();
           } else {
-            return ((await _inAppBrowserEventHandler!.onFormResubmission(
-                      uri,
-                    )) ??
-                    // ignore: deprecated_member_use_from_same_package
-                    (await _inAppBrowserEventHandler!.androidOnFormResubmission(
-                      uri,
-                    )))
-                ?.toNativeValue();
+            return (await _inAppBrowserEventHandler!.onFormResubmission(
+              uri,
+            ))?.toNativeValue();
           }
         }
         break;

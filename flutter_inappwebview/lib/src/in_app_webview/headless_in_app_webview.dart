@@ -244,12 +244,6 @@ class HeadlessInAppWebView {
       double newScale,
     )?
     onZoomScaleChanged,
-    @Deprecated('Use onFormResubmission instead')
-    FutureOr<FormResubmissionAction?> Function(
-      InAppWebViewController controller,
-      Uri? url,
-    )?
-    androidOnFormResubmission,
     void Function(InAppWebViewController controller)?
     onDidReceiveServerRedirectForProvisionalNavigation,
     FutureOr<FormResubmissionAction?> Function(
@@ -614,10 +608,6 @@ class HeadlessInAppWebView {
            onRenderProcessUnresponsive: onRenderProcessUnresponsive != null
                ? (controller, url) =>
                      onRenderProcessUnresponsive.call(controller, url)
-               : null,
-           androidOnFormResubmission: androidOnFormResubmission != null
-               ? (controller, url) =>
-                     androidOnFormResubmission.call(controller, url)
                : null,
            onFormResubmission: onFormResubmission != null
                ? (controller, url) => onFormResubmission.call(controller, url)

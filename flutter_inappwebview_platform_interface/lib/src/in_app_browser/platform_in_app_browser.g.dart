@@ -690,21 +690,6 @@ extension _PlatformInAppBrowserMethodSupported on PlatformInAppBrowser {
 
 ///List of [PlatformInAppBrowserEvents]'s methods that can be used to check if they are supported or not by the current platform.
 enum PlatformInAppBrowserEventsMethod {
-  ///Can be used to check if the [PlatformInAppBrowserEvents.androidOnFormResubmission] method is supported at runtime.
-  ///
-  ///{@template flutter_inappwebview_platform_interface.PlatformInAppBrowserEvents.androidOnFormResubmission.supported_platforms}
-  ///
-  ///**Officially Supported Platforms/Implementations**:
-  ///- Android WebView
-  ///
-  ///**Parameters - Officially Supported Platforms/Implementations**:
-  ///- [url]: all platforms
-  ///
-  ///Use the [PlatformInAppBrowserEvents.isMethodSupported] method to check if this method is supported at runtime.
-  ///{@endtemplate}
-  @Deprecated('Use onFormResubmission instead')
-  androidOnFormResubmission,
-
   ///Can be used to check if the [PlatformInAppBrowserEvents.onAcceleratorKeyPressed] method is supported at runtime.
   ///
   ///{@template flutter_inappwebview_platform_interface.PlatformInAppBrowserEvents.onAcceleratorKeyPressed.supported_platforms}
@@ -1909,11 +1894,6 @@ extension _PlatformInAppBrowserEventsMethodSupported
     TargetPlatform? platform,
   }) {
     switch (method) {
-      case PlatformInAppBrowserEventsMethod.androidOnFormResubmission:
-        return ((kIsWeb && platform != null) || !kIsWeb) &&
-            [
-              TargetPlatform.android,
-            ].contains(platform ?? defaultTargetPlatform);
       case PlatformInAppBrowserEventsMethod.onAcceleratorKeyPressed:
         return ((kIsWeb && platform != null) || !kIsWeb) &&
             [

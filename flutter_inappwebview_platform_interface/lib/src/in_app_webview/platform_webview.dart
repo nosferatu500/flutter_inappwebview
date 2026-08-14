@@ -1749,16 +1749,6 @@ In that case, after the `window.addEventListener("flutterInAppWebViewPlatformRea
   final void Function(T controller, RenderProcessGoneDetail detail)?
   onRenderProcessGone;
 
-  ///{@template flutter_inappwebview_platform_interface.PlatformWebViewCreationParams.androidOnFormResubmission}
-  ///Use [onFormResubmission] instead.
-  ///{@endtemplate}
-  ///
-  ///{@macro flutter_inappwebview_platform_interface.PlatformWebViewCreationParams.androidOnFormResubmission.supported_platforms}
-  @SupportedPlatforms(platforms: [AndroidPlatform()])
-  @Deprecated('Use onFormResubmission instead')
-  final FutureOr<FormResubmissionAction?> Function(T controller, Uri? url)?
-  androidOnFormResubmission;
-
   ///{@template flutter_inappwebview_platform_interface.PlatformWebViewCreationParams.onFormResubmission}
   ///As the host application if the browser should resend data as the requested page was a result of a POST. The default is to not resend the data.
   ///{@endtemplate}
@@ -2505,8 +2495,6 @@ This is a limitation of the native WebKit APIs.""",
     this.onRenderProcessGone,
     this.onRenderProcessResponsive,
     this.onRenderProcessUnresponsive,
-    @Deprecated('Use onFormResubmission instead')
-    this.androidOnFormResubmission,
     this.onFormResubmission,
     @Deprecated('Use onFaviconChanged instead') this.onReceivedIcon,
     this.onFaviconChanged,

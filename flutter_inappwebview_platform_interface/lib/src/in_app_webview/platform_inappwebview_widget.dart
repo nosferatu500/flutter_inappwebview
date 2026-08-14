@@ -103,8 +103,6 @@ class PlatformInAppWebViewWidgetCreationParams
     super.onRenderProcessGone,
     super.onRenderProcessResponsive,
     super.onRenderProcessUnresponsive,
-    @Deprecated('Use onFormResubmission instead')
-    super.androidOnFormResubmission,
     super.onFormResubmission,
     super.onReceivedIcon,
     @Deprecated('Use onReceivedTouchIconUrl instead')

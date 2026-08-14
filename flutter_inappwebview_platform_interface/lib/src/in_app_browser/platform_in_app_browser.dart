@@ -1932,15 +1932,6 @@ In that case, after the `window.addEventListener("flutterInAppWebViewPlatformRea
   )
   void onRenderProcessGone(RenderProcessGoneDetail detail) {}
 
-  ///{@macro flutter_inappwebview_platform_interface.PlatformWebViewCreationParams.androidOnFormResubmission}
-  ///
-  ///{@macro flutter_inappwebview_platform_interface.PlatformInAppBrowserEvents.androidOnFormResubmission.supported_platforms}
-  @SupportedPlatforms(platforms: [AndroidPlatform()])
-  @Deprecated('Use onFormResubmission instead')
-  FutureOr<FormResubmissionAction?>? androidOnFormResubmission(Uri? url) {
-    return null;
-  }
-
   ///{@macro flutter_inappwebview_platform_interface.PlatformWebViewCreationParams.onFormResubmission}
   ///
   ///{@macro flutter_inappwebview_platform_interface.PlatformInAppBrowserEvents.onFormResubmission.supported_platforms}
