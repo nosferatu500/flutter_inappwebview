@@ -384,11 +384,6 @@ class InAppBrowser implements PlatformInAppBrowserEvents {
     return null;
   }
 
-  ///Use [onReceivedHttpError] instead.
-  @Deprecated("Use onReceivedHttpError instead")
-  @override
-  void onLoadHttpError(Uri? url, int statusCode, String description) {}
-
   @override
   void onLoadResource(LoadedResource resource) {}
 

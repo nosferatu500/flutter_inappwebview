@@ -263,9 +263,7 @@ class MacOSInAppWebViewController extends PlatformInAppWebViewController
         break;
       case "onReceivedHttpError":
         if ((webviewParams != null &&
-                (webviewParams!.onReceivedHttpError != null ||
-                    // ignore: deprecated_member_use_from_same_package
-                    webviewParams!.onLoadHttpError != null)) ||
+                webviewParams!.onReceivedHttpError != null) ||
             _inAppBrowserEventHandler != null) {
           WebResourceRequest request = WebResourceRequest.fromMap(
             call.arguments["request"].cast<String, dynamic>(),
@@ -273,32 +271,13 @@ class MacOSInAppWebViewController extends PlatformInAppWebViewController
           WebResourceResponse errorResponse = WebResourceResponse.fromMap(
             call.arguments["errorResponse"].cast<String, dynamic>(),
           )!;
-          var isForMainFrame = request.isForMainFrame ?? false;
-
           if (webviewParams != null) {
-            if (webviewParams!.onReceivedHttpError != null)
-              webviewParams!.onReceivedHttpError!(
-                _controllerFromPlatform,
-                request,
-                errorResponse,
-              );
-            else if (isForMainFrame) {
-              // ignore: deprecated_member_use_from_same_package
-              webviewParams!.onLoadHttpError!(
-                _controllerFromPlatform,
-                request.url,
-                errorResponse.statusCode ?? -1,
-                errorResponse.reasonPhrase ?? '',
-              );
-            }
+            webviewParams!.onReceivedHttpError!(
+              _controllerFromPlatform,
+              request,
+              errorResponse,
+            );
           } else {
-            if (isForMainFrame) {
-              _inAppBrowserEventHandler!.onLoadHttpError(
-                request.url,
-                errorResponse.statusCode ?? -1,
-                errorResponse.reasonPhrase ?? '',
-              );
-            }
             _inAppBrowserEventHandler!.onReceivedHttpError(
               request,
               errorResponse,

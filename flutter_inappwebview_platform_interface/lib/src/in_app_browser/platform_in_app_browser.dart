@@ -870,15 +870,6 @@ abstract class PlatformInAppBrowserEvents {
   )
   void onReceivedError(WebResourceRequest request, WebResourceError error) {}
 
-  ///{@macro flutter_inappwebview_platform_interface.PlatformWebViewCreationParams.onLoadHttpError}
-  ///
-  ///{@macro flutter_inappwebview_platform_interface.PlatformInAppBrowserEvents.onLoadHttpError.supported_platforms}
-  @SupportedPlatforms(
-    platforms: [AndroidPlatform(), IOSPlatform(), MacOSPlatform()],
-  )
-  @Deprecated("Use onReceivedHttpError instead")
-  void onLoadHttpError(Uri? url, int statusCode, String description) {}
-
   ///{@macro flutter_inappwebview_platform_interface.PlatformWebViewCreationParams.onReceivedHttpError}
   ///
   ///{@macro flutter_inappwebview_platform_interface.PlatformInAppBrowserEvents.onReceivedHttpError.supported_platforms}

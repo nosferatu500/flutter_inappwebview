@@ -1717,12 +1717,6 @@ class SupportChecker {
           category: 'Core',
         ),
         ApiEventDefinition(
-          name: PlatformWebViewCreationParamsProperty.onLoadHttpError.name,
-          description: 'Called when an HTTP error is received.',
-          className: className,
-          category: 'Core',
-        ),
-        ApiEventDefinition(
           name: PlatformWebViewCreationParamsProperty.onProgressChanged.name,
           description: 'Called when the loading progress changes.',
           className: className,

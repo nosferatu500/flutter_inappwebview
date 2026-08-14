@@ -246,23 +246,6 @@ class PlatformWebViewCreationParams<T> {
   )?
   onReceivedError;
 
-  ///{@template flutter_inappwebview_platform_interface.PlatformWebViewCreationParams.onLoadHttpError}
-  ///Use [onReceivedHttpError] instead.
-  ///{@endtemplate}
-  ///
-  ///{@macro flutter_inappwebview_platform_interface.PlatformWebViewCreationParams.onLoadHttpError.supported_platforms}
-  @SupportedPlatforms(
-    platforms: [AndroidPlatform(), IOSPlatform(), MacOSPlatform()],
-  )
-  @Deprecated("Use onReceivedHttpError instead")
-  final void Function(
-    T controller,
-    Uri? url,
-    int statusCode,
-    String description,
-  )?
-  onLoadHttpError;
-
   ///{@template flutter_inappwebview_platform_interface.PlatformWebViewCreationParams.onReceivedHttpError}
   ///Event fired when the `WebView` receives an HTTP error.
   ///
@@ -2412,7 +2395,6 @@ This is a limitation of the native WebKit APIs.""",
     this.onContentLoading,
     this.onDOMContentLoaded,
     this.onReceivedError,
-    @Deprecated("Use onReceivedHttpError instead") this.onLoadHttpError,
     this.onReceivedHttpError,
     this.onProgressChanged,
     this.onConsoleMessage,

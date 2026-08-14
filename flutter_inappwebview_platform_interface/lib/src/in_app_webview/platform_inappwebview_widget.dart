@@ -53,7 +53,6 @@ class PlatformInAppWebViewWidgetCreationParams
     super.onContentLoading,
     super.onDOMContentLoaded,
     super.onReceivedError,
-    @Deprecated("Use onReceivedHttpError instead") super.onLoadHttpError,
     super.onReceivedHttpError,
     super.onProgressChanged,
     super.onConsoleMessage,

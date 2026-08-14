@@ -137,14 +137,6 @@ class HeadlessInAppWebView {
       WebResourceError error,
     )?
     onReceivedError,
-    @Deprecated("Use onReceivedHttpError instead")
-    void Function(
-      InAppWebViewController controller,
-      Uri? url,
-      int statusCode,
-      String description,
-    )?
-    onLoadHttpError,
     void Function(
       InAppWebViewController controller,
       WebResourceRequest request,
@@ -404,10 +396,6 @@ class HeadlessInAppWebView {
            onReceivedError: onReceivedError != null
                ? (controller, request, error) =>
                      onReceivedError.call(controller, request, error)
-               : null,
-           onLoadHttpError: onLoadHttpError != null
-               ? (controller, url, statusCode, description) => onLoadHttpError
-                     .call(controller, url, statusCode, description)
                : null,
            onReceivedHttpError: onReceivedHttpError != null
                ? (controller, request, errorResponse) => onReceivedHttpError
