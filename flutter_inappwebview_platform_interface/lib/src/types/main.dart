@@ -49,7 +49,7 @@ export 'fetch_request_password_credential.dart'
 export 'force_dark.dart' show ForceDark, AndroidForceDark;
 export 'force_dark_strategy.dart' show ForceDarkStrategy;
 export 'form_resubmission_action.dart' show FormResubmissionAction;
-export 'frame_info.dart' show FrameInfo, IOSWKFrameInfo;
+export 'frame_info.dart' show FrameInfo;
 export 'geolocation_permission_show_prompt_response.dart'
     show GeolocationPermissionShowPromptResponse;
 export 'http_auth_response.dart' show HttpAuthResponse;
@@ -95,11 +95,9 @@ export 'modal_transition_style.dart'
     show ModalTransitionStyle, IOSUIModalTransitionStyle;
 export 'navigation_action.dart' show NavigationAction;
 export 'navigation_action_policy.dart' show NavigationActionPolicy;
-export 'navigation_response.dart'
-    show NavigationResponse, IOSWKNavigationResponse;
-export 'navigation_response_action.dart'
-    show NavigationResponseAction, IOSNavigationResponseAction;
-export 'navigation_type.dart' show NavigationType, IOSWKNavigationType;
+export 'navigation_response.dart' show NavigationResponse;
+export 'navigation_response_action.dart' show NavigationResponseAction;
+export 'navigation_type.dart' show NavigationType;
 export 'on_post_message_callback.dart' show OnPostMessageCallback;
 export 'over_scroll_mode.dart' show OverScrollMode, AndroidOverScrollMode;
 export 'pdf_configuration.dart' show PDFConfiguration, IOSWKPDFConfiguration;
@@ -151,11 +149,11 @@ export 'server_trust_auth_response_action.dart'
     show ServerTrustAuthResponseAction;
 export 'server_trust_challenge.dart' show ServerTrustChallenge;
 export 'should_allow_deprecated_tls_action.dart'
-    show ShouldAllowDeprecatedTLSAction, IOSShouldAllowDeprecatedTLSAction;
+    show ShouldAllowDeprecatedTLSAction;
 export 'ssl_certificate.dart' show SslCertificate;
 export 'ssl_certificate_dname.dart' show SslCertificateDName;
 export 'ssl_error.dart' show SslError;
-export 'ssl_error_type.dart' show SslErrorType, AndroidSslError, IOSSslError;
+export 'ssl_error_type.dart' show SslErrorType;
 export 'trusted_web_activity_default_display_mode.dart'
     show TrustedWebActivityDefaultDisplayMode;
 export 'trusted_web_activity_display_mode.dart'
@@ -167,23 +165,18 @@ export 'trusted_web_activity_screen_orientation.dart'
 export 'underline_style.dart' show UnderlineStyle, IOSNSUnderlineStyle;
 export 'url_authentication_challenge.dart' show URLAuthenticationChallenge;
 export 'url_credential.dart' show URLCredential;
-export 'url_credential_persistence.dart'
-    show URLCredentialPersistence, IOSURLCredentialPersistence;
+export 'url_credential_persistence.dart' show URLCredentialPersistence;
 export 'url_protection_space.dart' show URLProtectionSpace;
 export 'url_protection_space_authentication_method.dart'
-    show
-        URLProtectionSpaceAuthenticationMethod,
-        IOSNSURLProtectionSpaceAuthenticationMethod;
+    show URLProtectionSpaceAuthenticationMethod;
 export 'url_protection_space_http_auth_credentials.dart'
     show URLProtectionSpaceHttpAuthCredentials;
-export 'url_protection_space_proxy_type.dart'
-    show URLProtectionSpaceProxyType, IOSNSURLProtectionSpaceProxyType;
+export 'url_protection_space_proxy_type.dart' show URLProtectionSpaceProxyType;
 export 'url_request.dart' show URLRequest;
 export 'url_request_attribution.dart' show URLRequestAttribution;
-export 'url_request_cache_policy.dart'
-    show URLRequestCachePolicy, IOSURLRequestCachePolicy;
+export 'url_request_cache_policy.dart' show URLRequestCachePolicy;
 export 'url_request_network_service_type.dart'
-    show URLRequestNetworkServiceType, IOSURLRequestNetworkServiceType;
+    show URLRequestNetworkServiceType;
 export 'url_response.dart' show URLResponse, IOSURLResponse;
 export 'user_preferred_content_mode.dart' show UserPreferredContentMode;
 export 'user_script.dart' show UserScript;
@@ -208,7 +201,7 @@ export 'website_data_type.dart' show WebsiteDataType, IOSWKWebsiteDataType;
 export 'webview_package_info.dart'
     show WebViewPackageInfo, AndroidWebViewPackageInfo;
 export 'webview_render_process_action.dart' show WebViewRenderProcessAction;
-export 'window_features.dart' show WindowFeatures, IOSWKWindowFeatures;
+export 'window_features.dart' show WindowFeatures;
 export 'find_options.dart' show FindOptions;
 export 'find_session.dart' show FindSession;
 export 'search_result_display_style.dart' show SearchResultDisplayStyle;

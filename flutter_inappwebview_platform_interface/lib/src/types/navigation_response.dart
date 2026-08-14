@@ -24,24 +24,3 @@ class NavigationResponse_ {
     required this.canShowMIMEType,
   });
 }
-
-///An iOS-specific Class that represents the navigation response used by the [PlatformWebViewCreationParams.onNavigationResponse] event.
-///Use [NavigationResponse] instead.
-@Deprecated("Use NavigationResponse instead")
-@ExchangeableObject()
-class IOSWKNavigationResponse_ {
-  ///The URL for the response.
-  IOSURLResponse_? response;
-
-  ///A Boolean value that indicates whether the response targets the web view’s main frame.
-  bool isForMainFrame;
-
-  ///A Boolean value that indicates whether WebKit is capable of displaying the response’s MIME type natively.
-  bool canShowMIMEType;
-
-  IOSWKNavigationResponse_({
-    this.response,
-    required this.isForMainFrame,
-    required this.canShowMIMEType,
-  });
-}

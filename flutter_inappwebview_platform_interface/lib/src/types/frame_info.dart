@@ -49,27 +49,3 @@ class FrameInfo_ {
     this.kind,
   });
 }
-
-///An object that contains information about a frame on a webpage.
-///
-///**NOTE**: available only on iOS.
-///
-///Use [FrameInfo] instead.
-@Deprecated("Use FrameInfo instead")
-@ExchangeableObject()
-class IOSWKFrameInfo_ {
-  ///A Boolean value indicating whether the frame is the web site's main frame or a subframe.
-  bool isMainFrame;
-
-  ///The frame’s current request.
-  URLRequest_? request;
-
-  ///The frame’s security origin.
-  IOSWKSecurityOrigin_? securityOrigin;
-
-  IOSWKFrameInfo_({
-    required this.isMainFrame,
-    required this.request,
-    this.securityOrigin,
-  });
-}
