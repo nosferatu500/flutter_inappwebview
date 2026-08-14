@@ -1093,23 +1093,6 @@ enum PlatformInAppBrowserEventsMethod {
   ///{@endtemplate}
   onLoadResource,
 
-  ///Can be used to check if the [PlatformInAppBrowserEvents.onLoadResourceCustomScheme] method is supported at runtime.
-  ///
-  ///{@template flutter_inappwebview_platform_interface.PlatformInAppBrowserEvents.onLoadResourceCustomScheme.supported_platforms}
-  ///
-  ///**Officially Supported Platforms/Implementations**:
-  ///- Android WebView
-  ///- iOS WKWebView
-  ///- macOS WKWebView
-  ///
-  ///**Parameters - Officially Supported Platforms/Implementations**:
-  ///- [url]: all platforms
-  ///
-  ///Use the [PlatformInAppBrowserEvents.isMethodSupported] method to check if this method is supported at runtime.
-  ///{@endtemplate}
-  @Deprecated('Use onLoadResourceWithCustomScheme instead')
-  onLoadResourceCustomScheme,
-
   ///Can be used to check if the [PlatformInAppBrowserEvents.onLoadResourceWithCustomScheme] method is supported at runtime.
   ///
   ///{@template flutter_inappwebview_platform_interface.PlatformInAppBrowserEvents.onLoadResourceWithCustomScheme.supported_platforms}
@@ -1978,13 +1961,6 @@ extension _PlatformInAppBrowserEventsMethodSupported
               TargetPlatform.windows,
             ].contains(platform ?? defaultTargetPlatform);
       case PlatformInAppBrowserEventsMethod.onLoadResource:
-        return ((kIsWeb && platform != null) || !kIsWeb) &&
-            [
-              TargetPlatform.android,
-              TargetPlatform.iOS,
-              TargetPlatform.macOS,
-            ].contains(platform ?? defaultTargetPlatform);
-      case PlatformInAppBrowserEventsMethod.onLoadResourceCustomScheme:
         return ((kIsWeb && platform != null) || !kIsWeb) &&
             [
               TargetPlatform.android,

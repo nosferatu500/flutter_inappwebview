@@ -3651,7 +3651,7 @@ class InAppWebViewOptions
   ///Define whether the horizontal scrollbar should be drawn or not. The default value is `true`.
   bool horizontalScrollBarEnabled;
 
-  ///List of custom schemes that the WebView must handle. Use the [PlatformWebViewCreationParams.onLoadResourceCustomScheme] event to intercept resource requests with custom scheme.
+  ///List of custom schemes that the WebView must handle. Use the [PlatformWebViewCreationParams.onLoadResourceWithCustomScheme] event to intercept resource requests with custom scheme.
   ///
   ///**NOTE**: available on iOS 11.0+.
   List<String> resourceCustomSchemes;

@@ -377,13 +377,6 @@ class InAppBrowser implements PlatformInAppBrowserEvents {
   @override
   void onLoadResource(LoadedResource resource) {}
 
-  ///Use [onLoadResourceWithCustomScheme] instead.
-  @Deprecated('Use onLoadResourceWithCustomScheme instead')
-  @override
-  FutureOr<CustomSchemeResponse?>? onLoadResourceCustomScheme(Uri url) {
-    return null;
-  }
-
   @override
   FutureOr<CustomSchemeResponse?>? onLoadResourceWithCustomScheme(
     WebResourceRequest request,

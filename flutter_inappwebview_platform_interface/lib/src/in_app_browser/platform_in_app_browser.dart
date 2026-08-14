@@ -1051,17 +1051,6 @@ Also, this event is not called for POST requests and is not called on the first 
     return null;
   }
 
-  ///{@macro flutter_inappwebview_platform_interface.PlatformWebViewCreationParams.onLoadResourceCustomScheme}
-  ///
-  ///{@macro flutter_inappwebview_platform_interface.PlatformInAppBrowserEvents.onLoadResourceCustomScheme.supported_platforms}
-  @SupportedPlatforms(
-    platforms: [AndroidPlatform(), IOSPlatform(), MacOSPlatform()],
-  )
-  @Deprecated('Use onLoadResourceWithCustomScheme instead')
-  FutureOr<CustomSchemeResponse?>? onLoadResourceCustomScheme(Uri url) {
-    return null;
-  }
-
   ///{@macro flutter_inappwebview_platform_interface.PlatformWebViewCreationParams.onLoadResourceWithCustomScheme}
   ///
   ///{@macro flutter_inappwebview_platform_interface.PlatformInAppBrowserEvents.onLoadResourceWithCustomScheme.supported_platforms}

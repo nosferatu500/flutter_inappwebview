@@ -577,23 +577,6 @@ enum PlatformWebViewCreationParamsProperty {
   ///{@endtemplate}
   onLoadResource,
 
-  ///Can be used to check if the [PlatformWebViewCreationParams.onLoadResourceCustomScheme] property is supported at runtime.
-  ///
-  ///{@template flutter_inappwebview_platform_interface.PlatformWebViewCreationParams.onLoadResourceCustomScheme.supported_platforms}
-  ///
-  ///**Officially Supported Platforms/Implementations**:
-  ///- Android WebView
-  ///- iOS WKWebView
-  ///- macOS WKWebView
-  ///
-  ///**Parameters - Officially Supported Platforms/Implementations**:
-  ///- [url]: all platforms
-  ///
-  ///Use the [PlatformWebViewCreationParams.isPropertySupported] method to check if this property is supported at runtime.
-  ///{@endtemplate}
-  @Deprecated('Use onLoadResourceWithCustomScheme instead')
-  onLoadResourceCustomScheme,
-
   ///Can be used to check if the [PlatformWebViewCreationParams.onLoadResourceWithCustomScheme] property is supported at runtime.
   ///
   ///{@template flutter_inappwebview_platform_interface.PlatformWebViewCreationParams.onLoadResourceWithCustomScheme.supported_platforms}
@@ -1638,13 +1621,6 @@ extension _PlatformWebViewCreationParamsPropertySupported
               TargetPlatform.iOS,
               TargetPlatform.macOS,
               TargetPlatform.linux,
-            ].contains(platform ?? defaultTargetPlatform);
-      case PlatformWebViewCreationParamsProperty.onLoadResourceCustomScheme:
-        return ((kIsWeb && platform != null) || !kIsWeb) &&
-            [
-              TargetPlatform.android,
-              TargetPlatform.iOS,
-              TargetPlatform.macOS,
             ].contains(platform ?? defaultTargetPlatform);
       case PlatformWebViewCreationParamsProperty.onLoadResourceWithCustomScheme:
         return ((kIsWeb && platform != null) || !kIsWeb) &&

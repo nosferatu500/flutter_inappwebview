@@ -34,8 +34,6 @@ class LinuxInAppWebViewWidgetCreationParams
     super.onLoadResource,
     super.onScrollChanged,
     super.onDownloadStarting,
-    @Deprecated('Use onLoadResourceWithCustomScheme instead')
-    super.onLoadResourceCustomScheme,
     super.onLoadResourceWithCustomScheme,
     super.onCreateWindow,
     super.onCloseWindow,
@@ -121,7 +119,6 @@ class LinuxInAppWebViewWidgetCreationParams
         onLoadResource: params.onLoadResource,
         onScrollChanged: params.onScrollChanged,
         onDownloadStarting: params.onDownloadStarting,
-        onLoadResourceCustomScheme: params.onLoadResourceCustomScheme,
         onLoadResourceWithCustomScheme: params.onLoadResourceWithCustomScheme,
         onCreateWindow: params.onCreateWindow,
         onCloseWindow: params.onCloseWindow,

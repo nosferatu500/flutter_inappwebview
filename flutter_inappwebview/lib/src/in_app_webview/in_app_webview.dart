@@ -132,12 +132,6 @@ class InAppWebView extends StatefulWidget {
     onReceivedHttpError,
     void Function(InAppWebViewController controller, LoadedResource resource)?
     onLoadResource,
-    @Deprecated('Use onLoadResourceWithCustomScheme instead')
-    FutureOr<CustomSchemeResponse?> Function(
-      InAppWebViewController controller,
-      Uri url,
-    )?
-    onLoadResourceCustomScheme,
     FutureOr<CustomSchemeResponse?> Function(
       InAppWebViewController controller,
       WebResourceRequest request,
@@ -412,10 +406,6 @@ class InAppWebView extends StatefulWidget {
            onDownloadStarting: onDownloadStarting != null
                ? (controller, downloadStartRequest) =>
                      onDownloadStarting.call(controller, downloadStartRequest)
-               : null,
-           onLoadResourceCustomScheme: onLoadResourceCustomScheme != null
-               ? (controller, url) =>
-                     onLoadResourceCustomScheme.call(controller, url)
                : null,
            onLoadResourceWithCustomScheme:
                onLoadResourceWithCustomScheme != null

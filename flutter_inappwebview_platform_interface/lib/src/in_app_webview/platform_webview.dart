@@ -497,18 +497,6 @@ Also, this event is not called for POST requests and is not called on the first 
   )?
   onDownloadStarting;
 
-  ///{@template flutter_inappwebview_platform_interface.PlatformWebViewCreationParams.onLoadResourceCustomScheme}
-  ///Use [onLoadResourceWithCustomScheme] instead.
-  ///{@endtemplate}
-  ///
-  ///{@macro flutter_inappwebview_platform_interface.PlatformWebViewCreationParams.onLoadResourceCustomScheme.supported_platforms}
-  @SupportedPlatforms(
-    platforms: [AndroidPlatform(), IOSPlatform(), MacOSPlatform()],
-  )
-  @Deprecated('Use onLoadResourceWithCustomScheme instead')
-  final FutureOr<CustomSchemeResponse?> Function(T controller, Uri url)?
-  onLoadResourceCustomScheme;
-
   ///{@template flutter_inappwebview_platform_interface.PlatformWebViewCreationParams.onLoadResourceWithCustomScheme}
   ///Event fired when the `WebView` finds the `custom-scheme` while loading a resource.
   ///Here you can handle the url [request] and return a [CustomSchemeResponse] to load a specific resource encoded to `base64`.
@@ -2382,8 +2370,6 @@ This is a limitation of the native WebKit APIs.""",
     this.onLoadResource,
     this.onScrollChanged,
     this.onDownloadStarting,
-    @Deprecated('Use onLoadResourceWithCustomScheme instead')
-    this.onLoadResourceCustomScheme,
     this.onLoadResourceWithCustomScheme,
     this.onCreateWindow,
     this.onCloseWindow,

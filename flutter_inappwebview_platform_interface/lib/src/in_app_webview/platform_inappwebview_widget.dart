@@ -62,8 +62,6 @@ class PlatformInAppWebViewWidgetCreationParams
     super.onFaviconChanged,
     super.onScrollChanged,
     super.onDownloadStarting,
-    @Deprecated('Use onLoadResourceWithCustomScheme instead')
-    super.onLoadResourceCustomScheme,
     super.onLoadResourceWithCustomScheme,
     super.onCreateWindow,
     super.onCloseWindow,

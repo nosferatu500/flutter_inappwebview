@@ -863,34 +863,20 @@ class LinuxInAppWebViewController extends PlatformInAppWebViewController
       // onFindResultReceived is now handled by FindInteractionController
       case "onLoadResourceWithCustomScheme":
         if ((webviewParams != null &&
-                (webviewParams!.onLoadResourceWithCustomScheme != null ||
-                    // ignore: deprecated_member_use_from_same_package
-                    webviewParams!.onLoadResourceCustomScheme != null)) ||
+                webviewParams!.onLoadResourceWithCustomScheme != null) ||
             _inAppBrowserEventHandler != null) {
           Map<String, dynamic> requestMap = call.arguments
               .cast<String, dynamic>();
           WebResourceRequest request = WebResourceRequest.fromMap(requestMap)!;
 
           if (webviewParams != null) {
-            if (webviewParams!.onLoadResourceWithCustomScheme != null)
-              return (await webviewParams!.onLoadResourceWithCustomScheme!(
-                _controllerFromPlatform,
-                request,
-              ))?.toMap();
-            else {
-              return (await webviewParams!
-                      // ignore: deprecated_member_use_from_same_package
-                      .onLoadResourceCustomScheme!(
-                    _controllerFromPlatform,
-                    request.url,
-                  ))
-                  ?.toMap();
-            }
+            return (await webviewParams!.onLoadResourceWithCustomScheme!(
+              _controllerFromPlatform,
+              request,
+            ))?.toMap();
           } else {
-            return ((await _inAppBrowserEventHandler!
-                        .onLoadResourceWithCustomScheme(request)) ??
-                    (await _inAppBrowserEventHandler!
-                        .onLoadResourceCustomScheme(request.url)))
+            return (await _inAppBrowserEventHandler!
+                    .onLoadResourceWithCustomScheme(request))
                 ?.toMap();
           }
         }

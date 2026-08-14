@@ -32,8 +32,6 @@ class WebPlatformInAppWebViewWidgetCreationParams
     super.onLoadResource,
     super.onScrollChanged,
     super.onDownloadStarting,
-    @Deprecated('Use onLoadResourceWithCustomScheme instead')
-    super.onLoadResourceCustomScheme,
     super.onLoadResourceWithCustomScheme,
     super.onCreateWindow,
     super.onCloseWindow,
@@ -122,7 +120,6 @@ class WebPlatformInAppWebViewWidgetCreationParams
         onLoadResource: params.onLoadResource,
         onScrollChanged: params.onScrollChanged,
         onDownloadStarting: params.onDownloadStarting,
-        onLoadResourceCustomScheme: params.onLoadResourceCustomScheme,
         onLoadResourceWithCustomScheme: params.onLoadResourceWithCustomScheme,
         onCreateWindow: params.onCreateWindow,
         onCloseWindow: params.onCloseWindow,
