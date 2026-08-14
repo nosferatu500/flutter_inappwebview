@@ -746,8 +746,6 @@ public class WebViewChannelDelegate: ChannelDelegate {
     public func onContextMenuActionItemClicked(id: Any, title: String) {
         let arguments: [String: Any?] = [
             "id": id,
-            "iosId": id is Int64 ? String(id as! Int64) : id as! String,
-            "androidId": nil,
             "title": title
         ]
         channel?.invokeMethod("onContextMenuActionItemClicked", arguments: arguments)

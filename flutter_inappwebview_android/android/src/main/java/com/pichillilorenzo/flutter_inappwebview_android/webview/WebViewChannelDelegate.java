@@ -787,8 +787,6 @@ public class WebViewChannelDelegate extends ChannelDelegateImpl {
     if (channel == null) return;
     Map<String, Object> obj = new HashMap<>();
     obj.put("id", itemId);
-    obj.put("androidId", itemId);
-    obj.put("iosId", null);
     obj.put("title", itemTitle);
     channel.invokeMethod("onContextMenuActionItemClicked", obj);
   }
