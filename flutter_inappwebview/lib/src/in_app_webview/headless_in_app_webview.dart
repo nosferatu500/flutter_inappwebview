@@ -267,12 +267,6 @@ class HeadlessInAppWebView {
       double newScale,
     )?
     onZoomScaleChanged,
-    @Deprecated('Use shouldInterceptRequest instead')
-    FutureOr<WebResourceResponse?> Function(
-      InAppWebViewController controller,
-      WebResourceRequest request,
-    )?
-    androidShouldInterceptRequest,
     @Deprecated('Use onFormResubmission instead')
     FutureOr<FormResubmissionAction?> Function(
       InAppWebViewController controller,
@@ -632,10 +626,6 @@ class HeadlessInAppWebView {
                onGeolocationPermissionsHidePrompt != null
                ? (controller) =>
                      onGeolocationPermissionsHidePrompt.call(controller)
-               : null,
-           androidShouldInterceptRequest: androidShouldInterceptRequest != null
-               ? (controller, request) =>
-                     androidShouldInterceptRequest.call(controller, request)
                : null,
            shouldInterceptRequest: shouldInterceptRequest != null
                ? (controller, request) =>

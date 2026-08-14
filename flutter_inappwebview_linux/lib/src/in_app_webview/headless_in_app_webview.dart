@@ -71,8 +71,6 @@ class LinuxHeadlessInAppWebViewCreationParams
     @Deprecated('Use onGeolocationPermissionsHidePrompt instead')
     super.androidOnGeolocationPermissionsHidePrompt,
     super.onGeolocationPermissionsHidePrompt,
-    @Deprecated('Use shouldInterceptRequest instead')
-    super.androidShouldInterceptRequest,
     super.shouldInterceptRequest,
     super.onRenderProcessGone,
     super.onRenderProcessResponsive,
@@ -176,7 +174,6 @@ class LinuxHeadlessInAppWebViewCreationParams
             params.androidOnGeolocationPermissionsHidePrompt,
         onGeolocationPermissionsHidePrompt:
             params.onGeolocationPermissionsHidePrompt,
-        androidShouldInterceptRequest: params.androidShouldInterceptRequest,
         shouldInterceptRequest: params.shouldInterceptRequest,
         onRenderProcessGone: params.onRenderProcessGone,
         onRenderProcessResponsive: params.onRenderProcessResponsive,

@@ -1853,17 +1853,6 @@ In that case, after the `window.addEventListener("flutterInAppWebViewPlatformRea
   )
   void onGeolocationPermissionsHidePrompt() {}
 
-  ///{@macro flutter_inappwebview_platform_interface.PlatformWebViewCreationParams.androidShouldInterceptRequest}
-  ///
-  ///{@macro flutter_inappwebview_platform_interface.PlatformInAppBrowserEvents.androidShouldInterceptRequest.supported_platforms}
-  @SupportedPlatforms(platforms: [AndroidPlatform()])
-  @Deprecated("Use shouldInterceptRequest instead")
-  FutureOr<WebResourceResponse?>? androidShouldInterceptRequest(
-    WebResourceRequest request,
-  ) {
-    return null;
-  }
-
   ///{@macro flutter_inappwebview_platform_interface.PlatformWebViewCreationParams.shouldInterceptRequest}
   ///
   ///{@macro flutter_inappwebview_platform_interface.PlatformInAppBrowserEvents.shouldInterceptRequest.supported_platforms}

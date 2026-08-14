@@ -545,34 +545,21 @@ class MacOSInAppWebViewController extends PlatformInAppWebViewController
         break;
       case "shouldInterceptRequest":
         if ((webviewParams != null &&
-                (webviewParams!.shouldInterceptRequest != null ||
-                    // ignore: deprecated_member_use_from_same_package
-                    webviewParams!.androidShouldInterceptRequest != null)) ||
+                webviewParams!.shouldInterceptRequest != null) ||
             _inAppBrowserEventHandler != null) {
           Map<String, dynamic> arguments = call.arguments
               .cast<String, dynamic>();
           WebResourceRequest request = WebResourceRequest.fromMap(arguments)!;
 
           if (webviewParams != null) {
-            if (webviewParams!.shouldInterceptRequest != null)
-              return (await webviewParams!.shouldInterceptRequest!(
-                _controllerFromPlatform,
-                request,
-              ))?.toMap();
-            else {
-              // ignore: deprecated_member_use_from_same_package
-              return (await webviewParams!.androidShouldInterceptRequest!(
-                _controllerFromPlatform,
-                request,
-              ))?.toMap();
-            }
+            return (await webviewParams!.shouldInterceptRequest!(
+              _controllerFromPlatform,
+              request,
+            ))?.toMap();
           } else {
-            return ((await _inAppBrowserEventHandler!.shouldInterceptRequest(
-                      request,
-                    )) ??
-                    (await _inAppBrowserEventHandler!
-                        .androidShouldInterceptRequest(request)))
-                ?.toMap();
+            return (await _inAppBrowserEventHandler!.shouldInterceptRequest(
+              request,
+            ))?.toMap();
           }
         }
         break;

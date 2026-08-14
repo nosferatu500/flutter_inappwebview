@@ -63,21 +63,6 @@ enum PlatformWebViewCreationParamsProperty {
   @Deprecated('Use onGeolocationPermissionsHidePrompt instead')
   androidOnGeolocationPermissionsHidePrompt,
 
-  ///Can be used to check if the [PlatformWebViewCreationParams.androidShouldInterceptRequest] property is supported at runtime.
-  ///
-  ///{@template flutter_inappwebview_platform_interface.PlatformWebViewCreationParams.androidShouldInterceptRequest.supported_platforms}
-  ///
-  ///**Officially Supported Platforms/Implementations**:
-  ///- Android WebView
-  ///
-  ///**Parameters - Officially Supported Platforms/Implementations**:
-  ///- [request]: all platforms
-  ///
-  ///Use the [PlatformWebViewCreationParams.isPropertySupported] method to check if this property is supported at runtime.
-  ///{@endtemplate}
-  @Deprecated('Use shouldInterceptRequest instead')
-  androidShouldInterceptRequest,
-
   ///Can be used to check if the [PlatformWebViewCreationParams.contextMenu] property is supported at runtime.
   ///
   ///{@template flutter_inappwebview_platform_interface.PlatformWebViewCreationParams.contextMenu.supported_platforms}
@@ -1564,11 +1549,6 @@ extension _PlatformWebViewCreationParamsPropertySupported
             ].contains(platform ?? defaultTargetPlatform);
       case PlatformWebViewCreationParamsProperty
           .androidOnGeolocationPermissionsHidePrompt:
-        return ((kIsWeb && platform != null) || !kIsWeb) &&
-            [
-              TargetPlatform.android,
-            ].contains(platform ?? defaultTargetPlatform);
-      case PlatformWebViewCreationParamsProperty.androidShouldInterceptRequest:
         return ((kIsWeb && platform != null) || !kIsWeb) &&
             [
               TargetPlatform.android,

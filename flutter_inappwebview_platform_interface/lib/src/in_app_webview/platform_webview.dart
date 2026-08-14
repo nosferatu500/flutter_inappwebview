@@ -1613,19 +1613,6 @@ In that case, after the `window.addEventListener("flutterInAppWebViewPlatformRea
   )
   final void Function(T controller)? onGeolocationPermissionsHidePrompt;
 
-  ///{@template flutter_inappwebview_platform_interface.PlatformWebViewCreationParams.androidShouldInterceptRequest}
-  ///Use [shouldInterceptRequest] instead.
-  ///{@endtemplate}
-  ///
-  ///{@macro flutter_inappwebview_platform_interface.PlatformWebViewCreationParams.androidShouldInterceptRequest.supported_platforms}
-  @SupportedPlatforms(platforms: [AndroidPlatform()])
-  @Deprecated("Use shouldInterceptRequest instead")
-  final FutureOr<WebResourceResponse?> Function(
-    T controller,
-    WebResourceRequest request,
-  )?
-  androidShouldInterceptRequest;
-
   ///{@template flutter_inappwebview_platform_interface.PlatformWebViewCreationParams.shouldInterceptRequest}
   ///Notify the host application of a resource request and allow the application to return the data.
   ///If the return value is `null`, the WebView will continue to load the resource as usual.
@@ -2570,8 +2557,6 @@ This is a limitation of the native WebKit APIs.""",
     @Deprecated('Use onGeolocationPermissionsHidePrompt instead')
     this.androidOnGeolocationPermissionsHidePrompt,
     this.onGeolocationPermissionsHidePrompt,
-    @Deprecated('Use shouldInterceptRequest instead')
-    this.androidShouldInterceptRequest,
     this.shouldInterceptRequest,
     this.onRenderProcessGone,
     this.onRenderProcessResponsive,

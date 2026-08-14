@@ -172,7 +172,7 @@ class AndroidInAppWebViewOptions
   ///as it can cause framerate drops on animations in Android 9 and lower (see [Hybrid-Composition#performance](https://github.com/flutter/flutter/wiki/Hybrid-Composition#performance)).
   bool useHybridComposition;
 
-  ///Set to `true` to be able to listen at the [PlatformWebViewCreationParams.androidShouldInterceptRequest] event. The default value is `false`.
+  ///Set to `true` to be able to listen at the [PlatformWebViewCreationParams.shouldInterceptRequest] event. The default value is `false`.
   bool useShouldInterceptRequest;
 
   ///Set to `true` to be able to listen at the [PlatformWebViewCreationParams.onRenderProcessGone] event. The default value is `false`.
