@@ -1492,7 +1492,6 @@ In that case, after the `window.addEventListener("flutterInAppWebViewPlatformRea
   final void Function(T controller, double oldScale, double newScale)?
   onZoomScaleChanged;
 
-
   ///{@template flutter_inappwebview_platform_interface.PlatformWebViewCreationParams.onSafeBrowsingHit}
   ///Event fired when the webview notifies that a loading URL has been flagged by Safe Browsing.
   ///The default behavior is to show an interstitial to the user, with the reporting checkbox visible.
@@ -1519,7 +1518,6 @@ In that case, after the `window.addEventListener("flutterInAppWebViewPlatformRea
     SafeBrowsingThreat? threatType,
   )?
   onSafeBrowsingHit;
-
 
   ///{@template flutter_inappwebview_platform_interface.PlatformWebViewCreationParams.onPermissionRequest}
   ///Event fired when the WebView is requesting permission to access the specified resources and the permission currently isn't granted or denied.
@@ -1564,19 +1562,6 @@ In that case, after the `window.addEventListener("flutterInAppWebViewPlatformRea
     PermissionRequest permissionRequest,
   )?
   onPermissionRequest;
-
-  ///{@template flutter_inappwebview_platform_interface.PlatformWebViewCreationParams.androidOnGeolocationPermissionsShowPrompt}
-  ///Use [onGeolocationPermissionsShowPrompt] instead.
-  ///{@endtemplate}
-  ///
-  ///{@macro flutter_inappwebview_platform_interface.PlatformWebViewCreationParams.androidOnGeolocationPermissionsShowPrompt.supported_platforms}
-  @SupportedPlatforms(platforms: [AndroidPlatform()])
-  @Deprecated("Use onGeolocationPermissionsShowPrompt instead")
-  final FutureOr<GeolocationPermissionShowPromptResponse?> Function(
-    T controller,
-    String origin,
-  )?
-  androidOnGeolocationPermissionsShowPrompt;
 
   ///{@template flutter_inappwebview_platform_interface.PlatformWebViewCreationParams.onGeolocationPermissionsShowPrompt}
   ///Event that notifies the host application that web content from the specified origin is attempting to use the Geolocation API, but no permission state is currently set for that origin.
@@ -1685,7 +1670,6 @@ In that case, after the `window.addEventListener("flutterInAppWebViewPlatformRea
   )?
   shouldInterceptRequest;
 
-
   ///{@template flutter_inappwebview_platform_interface.PlatformWebViewCreationParams.onRenderProcessUnresponsive}
   ///Event called when the renderer currently associated with the WebView becomes unresponsive as a result of a long running blocking task such as the execution of JavaScript.
   ///
@@ -1725,7 +1709,6 @@ In that case, after the `window.addEventListener("flutterInAppWebViewPlatformRea
   )?
   onRenderProcessUnresponsive;
 
-
   ///{@template flutter_inappwebview_platform_interface.PlatformWebViewCreationParams.onRenderProcessResponsive}
   ///Event called once when an unresponsive renderer currently associated with the WebView becomes responsive.
   ///
@@ -1752,7 +1735,6 @@ In that case, after the `window.addEventListener("flutterInAppWebViewPlatformRea
     WebUri? url,
   )?
   onRenderProcessResponsive;
-
 
   ///{@template flutter_inappwebview_platform_interface.PlatformWebViewCreationParams.onRenderProcessGone}
   ///Event fired when the given WebView's render process has exited.
@@ -1816,8 +1798,6 @@ In that case, after the `window.addEventListener("flutterInAppWebViewPlatformRea
   final FutureOr<FormResubmissionAction?> Function(T controller, WebUri? url)?
   onFormResubmission;
 
-
-
   ///{@template flutter_inappwebview_platform_interface.PlatformWebViewCreationParams.onReceivedIcon}
   ///Event fired when there is new favicon for the current page.
   ///
@@ -1866,7 +1846,6 @@ In that case, after the `window.addEventListener("flutterInAppWebViewPlatformRea
   )?
   onFaviconChanged;
 
-
   ///{@template flutter_inappwebview_platform_interface.PlatformWebViewCreationParams.onReceivedTouchIconUrl}
   ///Event fired when there is an url for an apple-touch-icon.
   ///
@@ -1887,7 +1866,6 @@ In that case, after the `window.addEventListener("flutterInAppWebViewPlatformRea
   )
   final void Function(T controller, WebUri url, bool precomposed)?
   onReceivedTouchIconUrl;
-
 
   ///{@template flutter_inappwebview_platform_interface.PlatformWebViewCreationParams.onJsBeforeUnload}
   ///Event fired when the client should display a dialog to confirm navigation away from the current page.
@@ -1922,7 +1900,6 @@ In that case, after the `window.addEventListener("flutterInAppWebViewPlatformRea
     JsBeforeUnloadRequest jsBeforeUnloadRequest,
   )?
   onJsBeforeUnload;
-
 
   ///{@template flutter_inappwebview_platform_interface.PlatformWebViewCreationParams.onReceivedLoginRequest}
   ///Event fired when a request to automatically log in the user has been processed.
@@ -2589,8 +2566,6 @@ This is a limitation of the native WebKit APIs.""",
     this.onZoomScaleChanged,
     this.onSafeBrowsingHit,
     this.onPermissionRequest,
-    @Deprecated('Use onGeolocationPermissionsShowPrompt instead')
-    this.androidOnGeolocationPermissionsShowPrompt,
     this.onGeolocationPermissionsShowPrompt,
     @Deprecated('Use onGeolocationPermissionsHidePrompt instead')
     this.androidOnGeolocationPermissionsHidePrompt,

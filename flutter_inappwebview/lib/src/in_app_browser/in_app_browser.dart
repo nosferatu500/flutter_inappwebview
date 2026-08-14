@@ -282,24 +282,6 @@ class InAppBrowser implements PlatformInAppBrowserEvents {
   @override
   void androidOnGeolocationPermissionsHidePrompt() {}
 
-  ///Use [onGeolocationPermissionsShowPrompt] instead.
-  @Deprecated("Use onGeolocationPermissionsShowPrompt instead")
-  @override
-  FutureOr<GeolocationPermissionShowPromptResponse?>?
-  androidOnGeolocationPermissionsShowPrompt(String origin) {
-    return null;
-  }
-
-
-
-
-
-
-
-
-
-
-
   ///Use [shouldInterceptRequest] instead.
   @Deprecated("Use shouldInterceptRequest instead")
   @override

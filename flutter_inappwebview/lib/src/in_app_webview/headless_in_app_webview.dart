@@ -57,12 +57,6 @@ class HeadlessInAppWebView {
     @Deprecated('Use onGeolocationPermissionsHidePrompt instead')
     void Function(InAppWebViewController controller)?
     androidOnGeolocationPermissionsHidePrompt,
-    @Deprecated('Use onGeolocationPermissionsShowPrompt instead')
-    FutureOr<GeolocationPermissionShowPromptResponse?> Function(
-      InAppWebViewController controller,
-      String origin,
-    )?
-    androidOnGeolocationPermissionsShowPrompt,
     InAppWebViewInitialData? initialData,
     String? initialFile,
     @Deprecated('Use initialSettings instead')
@@ -623,14 +617,6 @@ class HeadlessInAppWebView {
            onPermissionRequest: onPermissionRequest != null
                ? (controller, permissionRequest) =>
                      onPermissionRequest.call(controller, permissionRequest)
-               : null,
-           androidOnGeolocationPermissionsShowPrompt:
-               androidOnGeolocationPermissionsShowPrompt != null
-               ? (controller, origin) =>
-                     androidOnGeolocationPermissionsShowPrompt.call(
-                       controller,
-                       origin,
-                     )
                : null,
            onGeolocationPermissionsShowPrompt:
                onGeolocationPermissionsShowPrompt != null

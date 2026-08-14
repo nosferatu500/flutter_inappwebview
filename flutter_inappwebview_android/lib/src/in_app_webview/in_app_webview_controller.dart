@@ -496,34 +496,18 @@ class AndroidInAppWebViewController extends PlatformInAppWebViewController
         break;
       case "onGeolocationPermissionsShowPrompt":
         if ((webviewParams != null &&
-                (webviewParams!.onGeolocationPermissionsShowPrompt != null ||
-                    // ignore: deprecated_member_use_from_same_package
-                    webviewParams!.androidOnGeolocationPermissionsShowPrompt !=
-                        null)) ||
+                webviewParams!.onGeolocationPermissionsShowPrompt != null) ||
             _inAppBrowserEventHandler != null) {
           String origin = call.arguments["origin"];
 
           if (webviewParams != null) {
-            if (webviewParams!.onGeolocationPermissionsShowPrompt != null)
-              return (await webviewParams!.onGeolocationPermissionsShowPrompt!(
-                _controllerFromPlatform,
-                origin,
-              ))?.toMap();
-            else {
-              return (await params
-                      .webviewParams!
-                      // ignore: deprecated_member_use_from_same_package
-                      .androidOnGeolocationPermissionsShowPrompt!(
-                    _controllerFromPlatform,
-                    origin,
-                  ))
-                  ?.toMap();
-            }
+            return (await webviewParams!.onGeolocationPermissionsShowPrompt!(
+              _controllerFromPlatform,
+              origin,
+            ))?.toMap();
           } else {
-            return ((await _inAppBrowserEventHandler!
-                        .onGeolocationPermissionsShowPrompt(origin)) ??
-                    (await _inAppBrowserEventHandler!
-                        .androidOnGeolocationPermissionsShowPrompt(origin)))
+            return (await _inAppBrowserEventHandler!
+                    .onGeolocationPermissionsShowPrompt(origin))
                 ?.toMap();
           }
         }
@@ -598,7 +582,7 @@ class AndroidInAppWebViewController extends PlatformInAppWebViewController
             ))?.toNativeValue();
           } else {
             return (await _inAppBrowserEventHandler!
-                        .onRenderProcessUnresponsive(uri))
+                    .onRenderProcessUnresponsive(uri))
                 ?.toNativeValue();
           }
         }
@@ -617,9 +601,8 @@ class AndroidInAppWebViewController extends PlatformInAppWebViewController
             ))?.toNativeValue();
           } else {
             return (await _inAppBrowserEventHandler!.onRenderProcessResponsive(
-                      uri,
-                    ))
-                ?.toNativeValue();
+              uri,
+            ))?.toNativeValue();
           }
         }
         break;
@@ -696,8 +679,7 @@ class AndroidInAppWebViewController extends PlatformInAppWebViewController
         }
         break;
       case "onReceivedIcon":
-        if ((webviewParams != null &&
-                webviewParams!.onReceivedIcon != null) ||
+        if ((webviewParams != null && webviewParams!.onReceivedIcon != null) ||
             _inAppBrowserEventHandler != null) {
           Uint8List icon = Uint8List.fromList(
             call.arguments["icon"].cast<int>(),
@@ -801,9 +783,8 @@ class AndroidInAppWebViewController extends PlatformInAppWebViewController
             ))?.toMap();
           } else {
             return (await _inAppBrowserEventHandler!.onJsBeforeUnload(
-                      jsBeforeUnloadRequest,
-                    ))
-                ?.toMap();
+              jsBeforeUnloadRequest,
+            ))?.toMap();
           }
         }
         break;
@@ -825,10 +806,9 @@ class AndroidInAppWebViewController extends PlatformInAppWebViewController
             ))?.toMap();
           } else {
             return (await _inAppBrowserEventHandler!.onSafeBrowsingHit(
-                      uri,
-                      threatType,
-                    ))
-                ?.toMap();
+              uri,
+              threatType,
+            ))?.toMap();
           }
         }
         break;
@@ -1020,8 +1000,8 @@ class AndroidInAppWebViewController extends PlatformInAppWebViewController
             ))?.toMap();
           } else {
             return (await _inAppBrowserEventHandler!.onPermissionRequest(
-                  permissionRequest,
-                ))?.toMap();
+              permissionRequest,
+            ))?.toMap();
           }
         }
         break;

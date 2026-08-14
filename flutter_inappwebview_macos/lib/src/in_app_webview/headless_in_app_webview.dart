@@ -65,8 +65,6 @@ class MacOSHeadlessInAppWebViewCreationParams
     super.onZoomScaleChanged,
     super.onSafeBrowsingHit,
     super.onPermissionRequest,
-    @Deprecated('Use onGeolocationPermissionsShowPrompt instead')
-    super.androidOnGeolocationPermissionsShowPrompt,
     super.onGeolocationPermissionsShowPrompt,
     @Deprecated('Use onGeolocationPermissionsHidePrompt instead')
     super.androidOnGeolocationPermissionsHidePrompt,
@@ -168,8 +166,6 @@ class MacOSHeadlessInAppWebViewCreationParams
         onZoomScaleChanged: params.onZoomScaleChanged,
         onSafeBrowsingHit: params.onSafeBrowsingHit,
         onPermissionRequest: params.onPermissionRequest,
-        androidOnGeolocationPermissionsShowPrompt:
-            params.androidOnGeolocationPermissionsShowPrompt,
         onGeolocationPermissionsShowPrompt:
             params.onGeolocationPermissionsShowPrompt,
         androidOnGeolocationPermissionsHidePrompt:

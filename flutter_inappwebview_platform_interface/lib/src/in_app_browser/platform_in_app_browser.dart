@@ -1761,7 +1761,6 @@ In that case, after the `window.addEventListener("flutterInAppWebViewPlatformRea
   )
   void onZoomScaleChanged(double oldScale, double newScale) {}
 
-
   ///{@macro flutter_inappwebview_platform_interface.PlatformWebViewCreationParams.onSafeBrowsingHit}
   ///
   ///{@macro flutter_inappwebview_platform_interface.PlatformInAppBrowserEvents.onSafeBrowsingHit.supported_platforms}
@@ -1781,7 +1780,6 @@ In that case, after the `window.addEventListener("flutterInAppWebViewPlatformRea
   ) {
     return null;
   }
-
 
   ///{@macro flutter_inappwebview_platform_interface.PlatformWebViewCreationParams.onPermissionRequest}
   ///
@@ -1814,16 +1812,6 @@ In that case, after the `window.addEventListener("flutterInAppWebViewPlatformRea
   FutureOr<PermissionResponse?>? onPermissionRequest(
     PermissionRequest permissionRequest,
   ) {
-    return null;
-  }
-
-  ///{@macro flutter_inappwebview_platform_interface.PlatformWebViewCreationParams.androidOnGeolocationPermissionsShowPrompt}
-  ///
-  ///{@macro flutter_inappwebview_platform_interface.PlatformInAppBrowserEvents.androidOnGeolocationPermissionsShowPrompt.supported_platforms}
-  @SupportedPlatforms(platforms: [AndroidPlatform()])
-  @Deprecated("Use onGeolocationPermissionsShowPrompt instead")
-  FutureOr<GeolocationPermissionShowPromptResponse?>?
-  androidOnGeolocationPermissionsShowPrompt(String origin) {
     return null;
   }
 
@@ -1899,7 +1887,6 @@ In that case, after the `window.addEventListener("flutterInAppWebViewPlatformRea
     return null;
   }
 
-
   ///{@macro flutter_inappwebview_platform_interface.PlatformWebViewCreationParams.onRenderProcessUnresponsive}
   ///
   ///{@macro flutter_inappwebview_platform_interface.PlatformInAppBrowserEvents.onRenderProcessUnresponsive.supported_platforms}
@@ -1924,7 +1911,6 @@ In that case, after the `window.addEventListener("flutterInAppWebViewPlatformRea
     return null;
   }
 
-
   ///{@macro flutter_inappwebview_platform_interface.PlatformWebViewCreationParams.onRenderProcessResponsive}
   ///
   ///{@macro flutter_inappwebview_platform_interface.PlatformInAppBrowserEvents.onRenderProcessResponsive.supported_platforms}
@@ -1943,7 +1929,6 @@ In that case, after the `window.addEventListener("flutterInAppWebViewPlatformRea
   ) {
     return null;
   }
-
 
   ///{@macro flutter_inappwebview_platform_interface.PlatformWebViewCreationParams.onRenderProcessGone}
   ///
@@ -1990,8 +1975,6 @@ In that case, after the `window.addEventListener("flutterInAppWebViewPlatformRea
     return null;
   }
 
-
-
   ///{@macro flutter_inappwebview_platform_interface.PlatformWebViewCreationParams.onReceivedIcon}
   ///
   ///{@macro flutter_inappwebview_platform_interface.PlatformInAppBrowserEvents.onReceivedIcon.supported_platforms}
@@ -2026,7 +2009,6 @@ In that case, after the `window.addEventListener("flutterInAppWebViewPlatformRea
   )
   void onFaviconChanged(FaviconChangedRequest faviconChangedRequest) {}
 
-
   ///{@macro flutter_inappwebview_platform_interface.PlatformWebViewCreationParams.onReceivedTouchIconUrl}
   ///
   ///{@macro flutter_inappwebview_platform_interface.PlatformInAppBrowserEvents.onReceivedTouchIconUrl.supported_platforms}
@@ -2041,7 +2023,6 @@ In that case, after the `window.addEventListener("flutterInAppWebViewPlatformRea
   )
   void onReceivedTouchIconUrl(WebUri url, bool precomposed) {}
 
-
   ///{@macro flutter_inappwebview_platform_interface.PlatformWebViewCreationParams.onJsBeforeUnload}
   ///
   ///{@macro flutter_inappwebview_platform_interface.PlatformInAppBrowserEvents.onJsBeforeUnload.supported_platforms}
@@ -2050,7 +2031,6 @@ In that case, after the `window.addEventListener("flutterInAppWebViewPlatformRea
   ) {
     return null;
   }
-
 
   ///{@macro flutter_inappwebview_platform_interface.PlatformWebViewCreationParams.onReceivedLoginRequest}
   ///
