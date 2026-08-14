@@ -97,10 +97,8 @@ export 'over_scroll_mode.dart' show OverScrollMode;
 export 'pdf_configuration.dart' show PDFConfiguration;
 export 'permission_request.dart' show PermissionRequest;
 export 'permission_resource_type.dart' show PermissionResourceType;
-export 'permission_response.dart'
-    show PermissionResponse, PermissionRequestResponse;
-export 'permission_response_action.dart'
-    show PermissionResponseAction, PermissionRequestResponseAction;
+export 'permission_response.dart' show PermissionResponse;
+export 'permission_response_action.dart' show PermissionResponseAction;
 export 'print_job_attributes.dart' show PrintJobAttributes;
 export 'print_job_color_mode.dart' show PrintJobColorMode;
 export 'print_job_dialog_kind.dart' show PrintJobDialogKind;

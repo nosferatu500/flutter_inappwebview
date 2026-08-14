@@ -20,19 +20,3 @@ class PermissionResponseAction_ {
   ///Prompt the user for permission for the requested resource.
   static const PROMPT = const PermissionResponseAction_._internal(2);
 }
-
-///Class used by [PermissionRequestResponse] class.
-///Use [PermissionResponseAction] instead.
-@Deprecated("Use PermissionResponseAction instead")
-@ExchangeableEnum()
-class PermissionRequestResponseAction_ {
-  // ignore: unused_field
-  final int _value;
-  const PermissionRequestResponseAction_._internal(this._value);
-
-  ///Denies the request.
-  static const DENY = const PermissionRequestResponseAction_._internal(0);
-
-  ///Grants origin the permission to access the given resources.
-  static const GRANT = const PermissionRequestResponseAction_._internal(1);
-}

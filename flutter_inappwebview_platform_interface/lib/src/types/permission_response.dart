@@ -23,20 +23,3 @@ class PermissionResponse_ {
     this.action = PermissionResponseAction_.DENY,
   });
 }
-
-///Class that represents the response used by the [PlatformWebViewCreationParams.onPermissionRequest] event.
-///Use [PermissionResponse] instead.
-@Deprecated("Use PermissionResponse instead")
-@ExchangeableObject()
-class PermissionRequestResponse_ {
-  ///Resources granted to be accessed by origin.
-  List<String> resources;
-
-  ///Indicate the [PermissionRequestResponseAction] to take in response of a permission request.
-  PermissionRequestResponseAction_? action;
-
-  PermissionRequestResponse_({
-    this.resources = const [],
-    this.action = PermissionRequestResponseAction_.DENY,
-  });
-}
