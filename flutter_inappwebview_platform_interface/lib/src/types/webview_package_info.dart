@@ -15,17 +15,3 @@ class WebViewPackageInfo_ {
 
   WebViewPackageInfo_({this.versionName, this.packageName});
 }
-
-///Class that represents an Android `WebView` package info.
-///Use [WebViewPackageInfo] instead.
-@Deprecated("Use WebViewPackageInfo instead")
-@ExchangeableObject()
-class AndroidWebViewPackageInfo_ {
-  ///The version name of this WebView package.
-  String? versionName;
-
-  ///The name of this WebView package.
-  String? packageName;
-
-  AndroidWebViewPackageInfo_({this.versionName, this.packageName});
-}

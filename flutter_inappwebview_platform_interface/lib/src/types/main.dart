@@ -1,5 +1,4 @@
-export 'action_mode_menu_item.dart'
-    show ActionModeMenuItem, AndroidActionModeMenuItem;
+export 'action_mode_menu_item.dart' show ActionModeMenuItem;
 export 'ajax_request.dart' show AjaxRequest;
 export 'ajax_request_action.dart' show AjaxRequestAction;
 export 'ajax_request_event.dart' show AjaxRequestEvent;
@@ -9,7 +8,7 @@ export 'ajax_request_ready_state.dart' show AjaxRequestReadyState;
 export 'attributed_string.dart' show AttributedString, IOSNSAttributedString;
 export 'attributed_string_text_effect_style.dart'
     show AttributedStringTextEffectStyle, IOSNSAttributedStringTextEffectStyle;
-export 'cache_mode.dart' show CacheMode, AndroidCacheMode;
+export 'cache_mode.dart' show CacheMode;
 export 'call_async_javascript_result.dart' show CallAsyncJavaScriptResult;
 export 'client_cert_challenge.dart' show ClientCertChallenge;
 export 'client_cert_response.dart' show ClientCertResponse;
@@ -29,10 +28,8 @@ export 'cross_origin.dart' show CrossOrigin;
 export 'css_link_html_tag_attributes.dart' show CSSLinkHtmlTagAttributes;
 export 'custom_scheme_response.dart' show CustomSchemeResponse;
 export 'custom_tabs_share_state.dart' show CustomTabsShareState;
-export 'data_detector_types.dart'
-    show DataDetectorTypes, IOSWKDataDetectorTypes;
-export 'dismiss_button_style.dart'
-    show DismissButtonStyle, IOSSafariDismissButtonStyle;
+export 'data_detector_types.dart' show DataDetectorTypes;
+export 'dismiss_button_style.dart' show DismissButtonStyle;
 export 'download_start_request.dart' show DownloadStartRequest;
 export 'favicon.dart' show Favicon;
 export 'favicon_changed_request.dart' show FaviconChangedRequest;
@@ -46,7 +43,7 @@ export 'fetch_request_federated_credential.dart'
     show FetchRequestFederatedCredential;
 export 'fetch_request_password_credential.dart'
     show FetchRequestPasswordCredential;
-export 'force_dark.dart' show ForceDark, AndroidForceDark;
+export 'force_dark.dart' show ForceDark;
 export 'force_dark_strategy.dart' show ForceDarkStrategy;
 export 'form_resubmission_action.dart' show FormResubmissionAction;
 export 'frame_info.dart' show FrameInfo;
@@ -79,7 +76,7 @@ export 'js_confirm_response_action.dart' show JsConfirmResponseAction;
 export 'js_prompt_request.dart' show JsPromptRequest;
 export 'js_prompt_response.dart' show JsPromptResponse;
 export 'js_prompt_response_action.dart' show JsPromptResponseAction;
-export 'layout_algorithm.dart' show LayoutAlgorithm, AndroidLayoutAlgorithm;
+export 'layout_algorithm.dart' show LayoutAlgorithm;
 export 'layout_in_display_cutout_mode.dart'
     show LayoutInDisplayCutoutMode, AndroidLayoutInDisplayCutoutMode;
 export 'loaded_resource.dart' show LoadedResource;
@@ -88,18 +85,16 @@ export 'media_capture_state.dart' show MediaCaptureState;
 export 'media_playback_state.dart' show MediaPlaybackState;
 export 'meta_tag.dart' show MetaTag;
 export 'meta_tag_attribute.dart' show MetaTagAttribute;
-export 'mixed_content_mode.dart' show MixedContentMode, AndroidMixedContentMode;
-export 'modal_presentation_style.dart'
-    show ModalPresentationStyle, IOSUIModalPresentationStyle;
-export 'modal_transition_style.dart'
-    show ModalTransitionStyle, IOSUIModalTransitionStyle;
+export 'mixed_content_mode.dart' show MixedContentMode;
+export 'modal_presentation_style.dart' show ModalPresentationStyle;
+export 'modal_transition_style.dart' show ModalTransitionStyle;
 export 'navigation_action.dart' show NavigationAction;
 export 'navigation_action_policy.dart' show NavigationActionPolicy;
 export 'navigation_response.dart' show NavigationResponse;
 export 'navigation_response_action.dart' show NavigationResponseAction;
 export 'navigation_type.dart' show NavigationType;
 export 'on_post_message_callback.dart' show OnPostMessageCallback;
-export 'over_scroll_mode.dart' show OverScrollMode, AndroidOverScrollMode;
+export 'over_scroll_mode.dart' show OverScrollMode;
 export 'pdf_configuration.dart' show PDFConfiguration, IOSWKPDFConfiguration;
 export 'permission_request.dart' show PermissionRequest;
 export 'permission_resource_type.dart' show PermissionResourceType;
@@ -134,16 +129,12 @@ export 'safe_browsing_threat.dart' show SafeBrowsingThreat;
 export 'sandbox.dart' show Sandbox;
 export 'screenshot_configuration.dart' show ScreenshotConfiguration;
 export 'script_html_tag_attributes.dart' show ScriptHtmlTagAttributes;
-export 'scrollbar_style.dart' show ScrollBarStyle, AndroidScrollBarStyle;
+export 'scrollbar_style.dart' show ScrollBarStyle;
 export 'scrollview_content_inset_adjustment_behavior.dart'
-    show
-        ScrollViewContentInsetAdjustmentBehavior,
-        IOSUIScrollViewContentInsetAdjustmentBehavior;
-export 'scrollview_deceleration_rate.dart'
-    show ScrollViewDecelerationRate, IOSUIScrollViewDecelerationRate;
-export 'security_origin.dart' show SecurityOrigin, IOSWKSecurityOrigin;
-export 'selection_granularity.dart'
-    show SelectionGranularity, IOSWKSelectionGranularity;
+    show ScrollViewContentInsetAdjustmentBehavior;
+export 'scrollview_deceleration_rate.dart' show ScrollViewDecelerationRate;
+export 'security_origin.dart' show SecurityOrigin;
+export 'selection_granularity.dart' show SelectionGranularity;
 export 'server_trust_auth_response.dart' show ServerTrustAuthResponse;
 export 'server_trust_auth_response_action.dart'
     show ServerTrustAuthResponseAction;
@@ -177,12 +168,11 @@ export 'url_request_attribution.dart' show URLRequestAttribution;
 export 'url_request_cache_policy.dart' show URLRequestCachePolicy;
 export 'url_request_network_service_type.dart'
     show URLRequestNetworkServiceType;
-export 'url_response.dart' show URLResponse, IOSURLResponse;
+export 'url_response.dart' show URLResponse;
 export 'user_preferred_content_mode.dart' show UserPreferredContentMode;
 export 'user_script.dart' show UserScript;
 export 'user_script_injection_time.dart' show UserScriptInjectionTime;
-export 'vertical_scrollbar_position.dart'
-    show VerticalScrollbarPosition, AndroidVerticalScrollbarPosition;
+export 'vertical_scrollbar_position.dart' show VerticalScrollbarPosition;
 export 'web_archive_format.dart' show WebArchiveFormat;
 export 'web_authentication_session_error.dart'
     show WebAuthenticationSessionError;
@@ -193,13 +183,11 @@ export 'web_resource_error.dart' show WebResourceError;
 export 'web_resource_error_type.dart' show WebResourceErrorType;
 export 'web_resource_request.dart' show WebResourceRequest;
 export 'web_resource_response.dart' show WebResourceResponse;
-export 'web_storage_origin.dart' show WebStorageOrigin, AndroidWebStorageOrigin;
+export 'web_storage_origin.dart' show WebStorageOrigin;
 export 'web_storage_type.dart' show WebStorageType;
-export 'website_data_record.dart'
-    show WebsiteDataRecord, IOSWKWebsiteDataRecord;
-export 'website_data_type.dart' show WebsiteDataType, IOSWKWebsiteDataType;
-export 'webview_package_info.dart'
-    show WebViewPackageInfo, AndroidWebViewPackageInfo;
+export 'website_data_record.dart' show WebsiteDataRecord;
+export 'website_data_type.dart' show WebsiteDataType;
+export 'webview_package_info.dart' show WebViewPackageInfo;
 export 'webview_render_process_action.dart' show WebViewRenderProcessAction;
 export 'window_features.dart' show WindowFeatures;
 export 'find_options.dart' show FindOptions;
