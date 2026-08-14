@@ -20,8 +20,7 @@ export 'web_uri.dart';
 export 'debug_logging_settings.dart';
 export 'util.dart';
 export 'platform_service_worker_controller.dart';
-export 'platform_webview_feature.dart'
-    hide WebViewFeature_, AndroidWebViewFeature_;
+export 'platform_webview_feature.dart' hide WebViewFeature_;
 export 'platform_proxy_controller.dart' hide ProxySettings_;
 export 'platform_webview_asset_loader.dart';
 export 'platform_tracing_controller.dart' hide TracingSettings_;
