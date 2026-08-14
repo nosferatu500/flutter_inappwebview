@@ -2221,15 +2221,6 @@ In that case, after the `window.addEventListener("flutterInAppWebViewPlatformRea
   )
   final InAppWebViewInitialData? initialData;
 
-  ///{@template flutter_inappwebview_platform_interface.PlatformWebViewCreationParams.initialOptions}
-  ///Use [initialSettings] instead.
-  ///{@endtemplate}
-  ///
-  ///{@macro flutter_inappwebview_platform_interface.PlatformWebViewCreationParams.initialOptions.supported_platforms}
-  @SupportedPlatforms(platforms: [AndroidPlatform(), IOSPlatform()])
-  @Deprecated('Use initialSettings instead')
-  final InAppWebViewGroupOptions? initialOptions;
-
   ///{@template flutter_inappwebview_platform_interface.PlatformWebViewCreationParams.initialSettings}
   ///Initial settings that will be used.
   ///{@endtemplate}
@@ -2405,7 +2396,6 @@ This is a limitation of the native WebKit APIs.""",
     this.initialUrlRequest,
     this.initialFile,
     this.initialData,
-    @Deprecated('Use initialSettings instead') this.initialOptions,
     this.initialSettings,
     this.contextMenu,
     this.initialUserScripts,

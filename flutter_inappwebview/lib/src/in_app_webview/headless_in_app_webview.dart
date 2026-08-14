@@ -56,8 +56,6 @@ class HeadlessInAppWebView {
     WebViewEnvironment? webViewEnvironment,
     InAppWebViewInitialData? initialData,
     String? initialFile,
-    @Deprecated('Use initialSettings instead')
-    InAppWebViewGroupOptions? initialOptions,
     InAppWebViewSettings? initialSettings,
     URLRequest? initialUrlRequest,
     UnmodifiableListView<UserScript>? initialUserScripts,
@@ -353,7 +351,6 @@ class HeadlessInAppWebView {
            initialUrlRequest: initialUrlRequest,
            initialFile: initialFile,
            initialData: initialData,
-           initialOptions: initialOptions,
            initialSettings: initialSettings,
            initialUserScripts: initialUserScripts,
            pullToRefreshController: pullToRefreshController?.platform,

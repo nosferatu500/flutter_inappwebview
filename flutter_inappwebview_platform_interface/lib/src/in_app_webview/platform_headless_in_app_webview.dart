@@ -114,7 +114,6 @@ class PlatformHeadlessInAppWebViewCreationParams
     super.initialUrlRequest,
     super.initialFile,
     super.initialData,
-    @Deprecated('Use initialSettings instead') super.initialOptions,
     super.initialSettings,
     super.contextMenu,
     super.initialUserScripts,

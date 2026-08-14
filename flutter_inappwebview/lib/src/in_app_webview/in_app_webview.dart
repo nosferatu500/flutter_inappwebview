@@ -51,8 +51,6 @@ class InAppWebView extends StatefulWidget {
     WebViewEnvironment? webViewEnvironment,
     InAppWebViewInitialData? initialData,
     String? initialFile,
-    @Deprecated('Use initialSettings instead')
-    InAppWebViewGroupOptions? initialOptions,
     InAppWebViewSettings? initialSettings,
     URLRequest? initialUrlRequest,
     UnmodifiableListView<UserScript>? initialUserScripts,
@@ -349,7 +347,6 @@ class InAppWebView extends StatefulWidget {
            initialUrlRequest: initialUrlRequest,
            initialFile: initialFile,
            initialData: initialData,
-           initialOptions: initialOptions,
            initialSettings: initialSettings,
            initialUserScripts: initialUserScripts,
            pullToRefreshController: pullToRefreshController?.platform,

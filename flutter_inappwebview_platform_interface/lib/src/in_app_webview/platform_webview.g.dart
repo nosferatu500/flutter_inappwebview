@@ -95,19 +95,6 @@ enum PlatformWebViewCreationParamsProperty {
   ///{@endtemplate}
   initialFile,
 
-  ///Can be used to check if the [PlatformWebViewCreationParams.initialOptions] property is supported at runtime.
-  ///
-  ///{@template flutter_inappwebview_platform_interface.PlatformWebViewCreationParams.initialOptions.supported_platforms}
-  ///
-  ///**Officially Supported Platforms/Implementations**:
-  ///- Android WebView
-  ///- iOS WKWebView
-  ///
-  ///Use the [PlatformWebViewCreationParams.isPropertySupported] method to check if this property is supported at runtime.
-  ///{@endtemplate}
-  @Deprecated('Use initialSettings instead')
-  initialOptions,
-
   ///Can be used to check if the [PlatformWebViewCreationParams.initialSettings] property is supported at runtime.
   ///
   ///{@template flutter_inappwebview_platform_interface.PlatformWebViewCreationParams.initialSettings.supported_platforms}
@@ -1360,12 +1347,6 @@ extension _PlatformWebViewCreationParamsPropertySupported
                     TargetPlatform.windows,
                     TargetPlatform.linux,
                   ].contains(platform ?? defaultTargetPlatform);
-      case PlatformWebViewCreationParamsProperty.initialOptions:
-        return ((kIsWeb && platform != null) || !kIsWeb) &&
-            [
-              TargetPlatform.android,
-              TargetPlatform.iOS,
-            ].contains(platform ?? defaultTargetPlatform);
       case PlatformWebViewCreationParamsProperty.initialSettings:
         return kIsWeb && platform == null
             ? true

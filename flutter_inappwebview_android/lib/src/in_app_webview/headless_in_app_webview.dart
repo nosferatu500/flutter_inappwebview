@@ -83,7 +83,6 @@ class AndroidHeadlessInAppWebViewCreationParams
     super.initialUrlRequest,
     super.initialFile,
     super.initialData,
-    @Deprecated('Use initialSettings instead') super.initialOptions,
     super.initialSettings,
     super.contextMenu,
     super.initialUserScripts,
@@ -161,7 +160,6 @@ class AndroidHeadlessInAppWebViewCreationParams
         initialUrlRequest: params.initialUrlRequest,
         initialFile: params.initialFile,
         initialData: params.initialData,
-        initialOptions: params.initialOptions,
         initialSettings: params.initialSettings,
         contextMenu: params.contextMenu,
         initialUserScripts: params.initialUserScripts,
@@ -263,10 +261,7 @@ class AndroidHeadlessInAppWebView extends PlatformHeadlessInAppWebView
     final initialSettings = params.initialSettings ?? InAppWebViewSettings();
     _inferInitialSettings(initialSettings);
 
-    Map<String, dynamic> settingsMap =
-        (params.initialSettings != null ? initialSettings.toMap() : null) ??
-        params.initialOptions?.toMap() ??
-        initialSettings.toMap();
+    Map<String, dynamic> settingsMap = initialSettings.toMap();
 
     Map<String, dynamic> pullToRefreshSettings =
         _androidParams.pullToRefreshController?.params.settings.toMap() ??

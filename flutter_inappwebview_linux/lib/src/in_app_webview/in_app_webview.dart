@@ -82,7 +82,6 @@ class LinuxInAppWebViewWidgetCreationParams
     super.initialUrlRequest,
     super.initialFile,
     super.initialData,
-    @Deprecated('Use initialSettings instead') super.initialOptions,
     super.initialSettings,
     super.contextMenu,
     super.initialUserScripts,
@@ -168,7 +167,6 @@ class LinuxInAppWebViewWidgetCreationParams
         initialUrlRequest: params.initialUrlRequest,
         initialFile: params.initialFile,
         initialData: params.initialData,
-        initialOptions: params.initialOptions,
         initialSettings: params.initialSettings,
         contextMenu: params.contextMenu,
         initialUserScripts: params.initialUserScripts,
@@ -212,11 +210,7 @@ class LinuxInAppWebViewWidget extends PlatformInAppWebViewWidget {
     final initialSettings = params.initialSettings ?? InAppWebViewSettings();
     _inferInitialSettings(initialSettings);
 
-    Map<String, dynamic> settingsMap =
-        (params.initialSettings != null ? initialSettings.toMap() : null) ??
-        // ignore: deprecated_member_use_from_same_package
-        params.initialOptions?.toMap() ??
-        initialSettings.toMap();
+    Map<String, dynamic> settingsMap = initialSettings.toMap();
 
     if ((params.headlessWebView?.isRunning() ?? false) &&
         params.keepAlive != null) {
