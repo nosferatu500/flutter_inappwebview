@@ -589,25 +589,6 @@ enum PlatformWebViewCreationParamsProperty {
   ///{@endtemplate}
   onLaunchingExternalUriScheme,
 
-  ///Can be used to check if the [PlatformWebViewCreationParams.onLoadError] property is supported at runtime.
-  ///
-  ///{@template flutter_inappwebview_platform_interface.PlatformWebViewCreationParams.onLoadError.supported_platforms}
-  ///
-  ///**Officially Supported Platforms/Implementations**:
-  ///- Android WebView
-  ///- iOS WKWebView
-  ///- macOS WKWebView
-  ///
-  ///**Parameters - Officially Supported Platforms/Implementations**:
-  ///- [url]: all platforms
-  ///- [code]: all platforms
-  ///- [message]: all platforms
-  ///
-  ///Use the [PlatformWebViewCreationParams.isPropertySupported] method to check if this property is supported at runtime.
-  ///{@endtemplate}
-  @Deprecated('Use onReceivedError instead')
-  onLoadError,
-
   ///Can be used to check if the [PlatformWebViewCreationParams.onLoadHttpError] property is supported at runtime.
   ///
   ///{@template flutter_inappwebview_platform_interface.PlatformWebViewCreationParams.onLoadHttpError.supported_platforms}
@@ -1714,13 +1695,6 @@ extension _PlatformWebViewCreationParamsPropertySupported
         return ((kIsWeb && platform != null) || !kIsWeb) &&
             [
               TargetPlatform.windows,
-            ].contains(platform ?? defaultTargetPlatform);
-      case PlatformWebViewCreationParamsProperty.onLoadError:
-        return ((kIsWeb && platform != null) || !kIsWeb) &&
-            [
-              TargetPlatform.android,
-              TargetPlatform.iOS,
-              TargetPlatform.macOS,
             ].contains(platform ?? defaultTargetPlatform);
       case PlatformWebViewCreationParamsProperty.onLoadHttpError:
         return ((kIsWeb && platform != null) || !kIsWeb) &&

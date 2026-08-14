@@ -235,10 +235,7 @@ class IOSInAppWebViewController extends PlatformInAppWebViewController
         }
         break;
       case "onReceivedError":
-        if ((webviewParams != null &&
-                (webviewParams!.onReceivedError != null ||
-                    // ignore: deprecated_member_use_from_same_package
-                    webviewParams!.onLoadError != null)) ||
+        if ((webviewParams != null && webviewParams!.onReceivedError != null) ||
             _inAppBrowserEventHandler != null) {
           WebResourceRequest request = WebResourceRequest.fromMap(
             call.arguments["request"].cast<String, dynamic>(),
@@ -246,32 +243,13 @@ class IOSInAppWebViewController extends PlatformInAppWebViewController
           WebResourceError error = WebResourceError.fromMap(
             call.arguments["error"].cast<String, dynamic>(),
           )!;
-          var isForMainFrame = request.isForMainFrame ?? false;
-
           if (webviewParams != null) {
-            if (webviewParams!.onReceivedError != null)
-              webviewParams!.onReceivedError!(
-                _controllerFromPlatform,
-                request,
-                error,
-              );
-            else if (isForMainFrame) {
-              // ignore: deprecated_member_use_from_same_package
-              webviewParams!.onLoadError!(
-                _controllerFromPlatform,
-                request.url,
-                error.type.toNativeValue() ?? -1,
-                error.description,
-              );
-            }
+            webviewParams!.onReceivedError!(
+              _controllerFromPlatform,
+              request,
+              error,
+            );
           } else {
-            if (isForMainFrame) {
-              _inAppBrowserEventHandler!.onLoadError(
-                request.url,
-                error.type.toNativeValue() ?? -1,
-                error.description,
-              );
-            }
             _inAppBrowserEventHandler!.onReceivedError(request, error);
           }
         }

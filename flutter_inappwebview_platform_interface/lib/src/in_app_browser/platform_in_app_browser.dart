@@ -841,15 +841,6 @@ abstract class PlatformInAppBrowserEvents {
   )
   void onLoadStop(WebUri? url) {}
 
-  ///{@macro flutter_inappwebview_platform_interface.PlatformWebViewCreationParams.onLoadError}
-  ///
-  ///{@macro flutter_inappwebview_platform_interface.PlatformInAppBrowserEvents.onLoadError.supported_platforms}
-  @SupportedPlatforms(
-    platforms: [AndroidPlatform(), IOSPlatform(), MacOSPlatform()],
-  )
-  @Deprecated("Use onReceivedError instead")
-  void onLoadError(Uri? url, int code, String message) {}
-
   ///{@macro flutter_inappwebview_platform_interface.PlatformWebViewCreationParams.onReceivedError}
   ///
   ///{@macro flutter_inappwebview_platform_interface.PlatformInAppBrowserEvents.onReceivedError.supported_platforms}

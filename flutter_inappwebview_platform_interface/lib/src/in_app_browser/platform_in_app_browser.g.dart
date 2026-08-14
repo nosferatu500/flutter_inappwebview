@@ -1107,25 +1107,6 @@ enum PlatformInAppBrowserEventsMethod {
   ///{@endtemplate}
   onLaunchingExternalUriScheme,
 
-  ///Can be used to check if the [PlatformInAppBrowserEvents.onLoadError] method is supported at runtime.
-  ///
-  ///{@template flutter_inappwebview_platform_interface.PlatformInAppBrowserEvents.onLoadError.supported_platforms}
-  ///
-  ///**Officially Supported Platforms/Implementations**:
-  ///- Android WebView
-  ///- iOS WKWebView
-  ///- macOS WKWebView
-  ///
-  ///**Parameters - Officially Supported Platforms/Implementations**:
-  ///- [url]: all platforms
-  ///- [code]: all platforms
-  ///- [message]: all platforms
-  ///
-  ///Use the [PlatformInAppBrowserEvents.isMethodSupported] method to check if this method is supported at runtime.
-  ///{@endtemplate}
-  @Deprecated('Use onReceivedError instead')
-  onLoadError,
-
   ///Can be used to check if the [PlatformInAppBrowserEvents.onLoadHttpError] method is supported at runtime.
   ///
   ///{@template flutter_inappwebview_platform_interface.PlatformInAppBrowserEvents.onLoadHttpError.supported_platforms}
@@ -2060,13 +2041,6 @@ extension _PlatformInAppBrowserEventsMethodSupported
         return ((kIsWeb && platform != null) || !kIsWeb) &&
             [
               TargetPlatform.windows,
-            ].contains(platform ?? defaultTargetPlatform);
-      case PlatformInAppBrowserEventsMethod.onLoadError:
-        return ((kIsWeb && platform != null) || !kIsWeb) &&
-            [
-              TargetPlatform.android,
-              TargetPlatform.iOS,
-              TargetPlatform.macOS,
             ].contains(platform ?? defaultTargetPlatform);
       case PlatformInAppBrowserEventsMethod.onLoadHttpError:
         return ((kIsWeb && platform != null) || !kIsWeb) &&

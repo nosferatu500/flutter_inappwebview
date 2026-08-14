@@ -44,7 +44,6 @@ class PlatformHeadlessInAppWebViewCreationParams
     super.onLoadStop,
     super.onContentLoading,
     super.onDOMContentLoaded,
-    @Deprecated('Use onReceivedError instead') super.onLoadError,
     super.onReceivedError,
     @Deprecated("Use onReceivedHttpError instead") super.onLoadHttpError,
     super.onReceivedHttpError,

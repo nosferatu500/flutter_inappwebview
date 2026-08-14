@@ -131,14 +131,6 @@ class HeadlessInAppWebView {
       JsPromptRequest jsPromptRequest,
     )?
     onJsPrompt,
-    @Deprecated("Use onReceivedError instead")
-    void Function(
-      InAppWebViewController controller,
-      Uri? url,
-      int code,
-      String message,
-    )?
-    onLoadError,
     void Function(
       InAppWebViewController controller,
       WebResourceRequest request,
@@ -408,10 +400,6 @@ class HeadlessInAppWebView {
                : null,
            onLoadStop: onLoadStop != null
                ? (controller, url) => onLoadStop.call(controller, url)
-               : null,
-           onLoadError: onLoadError != null
-               ? (controller, url, code, message) =>
-                     onLoadError.call(controller, url, code, message)
                : null,
            onReceivedError: onReceivedError != null
                ? (controller, request, error) =>
