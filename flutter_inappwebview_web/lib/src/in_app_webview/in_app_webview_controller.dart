@@ -218,24 +218,15 @@ class WebPlatformInAppWebViewController extends PlatformInAppWebViewController
           webviewParams!.onWindowBlur!(_controllerFromPlatform);
         break;
       case "onPrintRequest":
-        if ((webviewParams != null &&
-            (webviewParams!.onPrintRequest != null ||
-                // ignore: deprecated_member_use_from_same_package
-                webviewParams!.onPrint != null))) {
+        if (webviewParams != null && webviewParams!.onPrintRequest != null) {
           String? url = call.arguments["url"];
           WebUri? uri = url != null ? WebUri(url) : null;
 
-          if (webviewParams!.onPrintRequest != null)
-            return await webviewParams!.onPrintRequest!(
-              _controllerFromPlatform,
-              uri,
-              null,
-            );
-          else {
-            // ignore: deprecated_member_use_from_same_package
-            webviewParams!.onPrint!(_controllerFromPlatform, uri);
-            return false;
-          }
+          return await webviewParams!.onPrintRequest!(
+            _controllerFromPlatform,
+            uri,
+            null,
+          );
         }
         break;
       case "onInjectedScriptLoaded":

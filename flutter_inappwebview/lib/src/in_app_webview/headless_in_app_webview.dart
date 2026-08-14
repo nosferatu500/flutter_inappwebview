@@ -149,8 +149,6 @@ class HeadlessInAppWebView {
       InAppWebViewHitTestResult hitTestResult,
     )?
     onLongPressHitTestResult,
-    @Deprecated("Use onPrintRequest instead")
-    void Function(InAppWebViewController controller, Uri? url)? onPrint,
     FutureOr<bool?> Function(
       InAppWebViewController controller,
       WebUri? url,
@@ -479,9 +477,6 @@ class HeadlessInAppWebView {
            onUpdateVisitedHistory: onUpdateVisitedHistory != null
                ? (controller, url, isReload) =>
                      onUpdateVisitedHistory.call(controller, url, isReload)
-               : null,
-           onPrint: onPrint != null
-               ? (controller, url) => onPrint.call(controller, url)
                : null,
            onPrintRequest: onPrintRequest != null
                ? (controller, url, printJobController) =>

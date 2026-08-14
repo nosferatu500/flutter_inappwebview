@@ -1495,13 +1495,6 @@ In that case, after the `window.addEventListener("flutterInAppWebViewPlatformRea
     @SupportedPlatforms(platforms: [AndroidPlatform()]) bool? isReload,
   ) {}
 
-  ///{@macro flutter_inappwebview_platform_interface.PlatformWebViewCreationParams.onPrint}
-  ///
-  ///{@macro flutter_inappwebview_platform_interface.PlatformInAppBrowserEvents.onPrint.supported_platforms}
-  @SupportedPlatforms(platforms: [AndroidPlatform(), IOSPlatform()])
-  @Deprecated("Use onPrintRequest instead")
-  void onPrint(Uri? url) {}
-
   ///{@macro flutter_inappwebview_platform_interface.PlatformWebViewCreationParams.onPrintRequest}
   ///
   ///{@macro flutter_inappwebview_platform_interface.PlatformInAppBrowserEvents.onPrintRequest.supported_platforms}

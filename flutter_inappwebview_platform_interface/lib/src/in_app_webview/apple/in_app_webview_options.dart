@@ -203,7 +203,7 @@ class IOSInAppWebViewOptions
   ///- [PlatformWebViewCreationParams.onAjaxProgress]
   ///- [PlatformWebViewCreationParams.shouldInterceptFetchRequest]
   ///- [PlatformWebViewCreationParams.onConsoleMessage]
-  ///- [PlatformWebViewCreationParams.onPrint]
+  ///- [PlatformWebViewCreationParams.onPrintRequest]
   ///- [PlatformWebViewCreationParams.onWindowFocus]
   ///- [PlatformWebViewCreationParams.onWindowBlur]
   ///- [PlatformWebViewCreationParams.onFindResultReceived]

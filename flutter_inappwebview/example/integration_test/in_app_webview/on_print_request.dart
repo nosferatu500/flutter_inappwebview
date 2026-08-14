@@ -1,13 +1,13 @@
 part of 'main.dart';
 
-void onPrint() {
+void onPrintRequest() {
   final shouldSkip = !InAppWebView.isPropertySupported(
     PlatformWebViewCreationParamsProperty.onPrintRequest,
   );
 
   var url = !kIsWeb ? TEST_URL_1 : TEST_WEB_PLATFORM_URL_1;
 
-  skippableTestWidgets('onPrint', (WidgetTester tester) async {
+  skippableTestWidgets('onPrintRequest', (WidgetTester tester) async {
     final Completer<String> onPrintCompleter = Completer<String>();
     await tester.pumpWidget(
       Directionality(

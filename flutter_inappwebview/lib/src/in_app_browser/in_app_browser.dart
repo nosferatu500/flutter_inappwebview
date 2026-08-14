@@ -422,11 +422,6 @@ class InAppBrowser implements PlatformInAppBrowserEvents {
   @override
   void onPermissionRequestCanceled(PermissionRequest permissionRequest) {}
 
-  ///Use [onPrintRequest] instead
-  @Deprecated("Use onPrintRequest instead")
-  @override
-  void onPrint(Uri? url) {}
-
   @override
   FutureOr<bool?>? onPrintRequest(
     WebUri? url,

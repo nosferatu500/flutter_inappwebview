@@ -1111,10 +1111,7 @@ class MacOSInAppWebViewController extends PlatformInAppWebViewController
           _inAppBrowserEventHandler!.onWindowBlur();
         break;
       case "onPrintRequest":
-        if ((webviewParams != null &&
-                (webviewParams!.onPrintRequest != null ||
-                    // ignore: deprecated_member_use_from_same_package
-                    webviewParams!.onPrint != null)) ||
+        if ((webviewParams != null && webviewParams!.onPrintRequest != null) ||
             _inAppBrowserEventHandler != null) {
           String? url = call.arguments["url"];
           String? printJobId = call.arguments["printJobId"];
@@ -1126,20 +1123,12 @@ class MacOSInAppWebViewController extends PlatformInAppWebViewController
               : null;
 
           if (webviewParams != null) {
-            if (webviewParams!.onPrintRequest != null)
-              return await webviewParams!.onPrintRequest!(
-                _controllerFromPlatform,
-                uri,
-                printJob,
-              );
-            else {
-              // ignore: deprecated_member_use_from_same_package
-              webviewParams!.onPrint!(_controllerFromPlatform, uri);
-              return false;
-            }
+            return await webviewParams!.onPrintRequest!(
+              _controllerFromPlatform,
+              uri,
+              printJob,
+            );
           } else {
-            // ignore: deprecated_member_use_from_same_package
-            _inAppBrowserEventHandler!.onPrint(uri);
             return await _inAppBrowserEventHandler!.onPrintRequest(
               uri,
               printJob,

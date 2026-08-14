@@ -62,7 +62,7 @@ part 'on_load_resource_with_custom_scheme.dart';
 part 'on_navigation_response.dart';
 part 'on_page_commit_visible.dart';
 part 'on_permission_request.dart';
-part 'on_print.dart';
+part 'on_print_request.dart';
 part 'on_progress_changed.dart';
 part 'on_favicon_changed.dart';
 part 'on_received_touch_icon_url.dart';
@@ -145,7 +145,7 @@ void main() {
     safeBrowsing();
     onScrollChanged();
     sslRequest();
-    onPrint();
+    onPrintRequest();
     onWindowFocus();
     onWindowBlur();
     onPageCommitVisible();

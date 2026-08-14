@@ -78,7 +78,6 @@ class PlatformInAppWebViewWidgetCreationParams
     super.onAjaxProgress,
     super.shouldInterceptFetchRequest,
     super.onUpdateVisitedHistory,
-    @Deprecated("Use onPrintRequest instead") super.onPrint,
     super.onPrintRequest,
     super.onLongPressHitTestResult,
     super.onEnterFullscreen,

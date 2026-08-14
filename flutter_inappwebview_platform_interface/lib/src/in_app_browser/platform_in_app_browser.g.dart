@@ -1282,22 +1282,6 @@ enum PlatformInAppBrowserEventsMethod {
   ///{@endtemplate}
   onPermissionRequestCanceled,
 
-  ///Can be used to check if the [PlatformInAppBrowserEvents.onPrint] method is supported at runtime.
-  ///
-  ///{@template flutter_inappwebview_platform_interface.PlatformInAppBrowserEvents.onPrint.supported_platforms}
-  ///
-  ///**Officially Supported Platforms/Implementations**:
-  ///- Android WebView
-  ///- iOS WKWebView
-  ///
-  ///**Parameters - Officially Supported Platforms/Implementations**:
-  ///- [url]: all platforms
-  ///
-  ///Use the [PlatformInAppBrowserEvents.isMethodSupported] method to check if this method is supported at runtime.
-  ///{@endtemplate}
-  @Deprecated('Use onPrintRequest instead')
-  onPrint,
-
   ///Can be used to check if the [PlatformInAppBrowserEvents.onPrintRequest] method is supported at runtime.
   ///
   ///{@template flutter_inappwebview_platform_interface.PlatformInAppBrowserEvents.onPrintRequest.supported_platforms}
@@ -2042,12 +2026,6 @@ extension _PlatformInAppBrowserEventsMethodSupported
         return ((kIsWeb && platform != null) || !kIsWeb) &&
             [
               TargetPlatform.android,
-            ].contains(platform ?? defaultTargetPlatform);
-      case PlatformInAppBrowserEventsMethod.onPrint:
-        return ((kIsWeb && platform != null) || !kIsWeb) &&
-            [
-              TargetPlatform.android,
-              TargetPlatform.iOS,
             ].contains(platform ?? defaultTargetPlatform);
       case PlatformInAppBrowserEventsMethod.onPrintRequest:
         return ((kIsWeb && platform != null) || !kIsWeb) &&

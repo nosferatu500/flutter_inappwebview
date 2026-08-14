@@ -759,29 +759,18 @@ class LinuxInAppWebViewController extends PlatformInAppWebViewController
         }
         break;
       case "onPrintRequest":
-        if ((webviewParams != null &&
-                (webviewParams!.onPrintRequest != null ||
-                    // ignore: deprecated_member_use_from_same_package
-                    webviewParams!.onPrint != null)) ||
+        if ((webviewParams != null && webviewParams!.onPrintRequest != null) ||
             _inAppBrowserEventHandler != null) {
           String? url = call.arguments["url"];
           WebUri? uri = url != null ? WebUri(url) : null;
 
           if (webviewParams != null) {
-            if (webviewParams!.onPrintRequest != null)
-              return await webviewParams!.onPrintRequest!(
-                _controllerFromPlatform,
-                uri,
-                null, // PrintJobController not supported on Linux
-              );
-            else {
-              // ignore: deprecated_member_use_from_same_package
-              webviewParams!.onPrint!(_controllerFromPlatform, uri);
-              return false;
-            }
+            return await webviewParams!.onPrintRequest!(
+              _controllerFromPlatform,
+              uri,
+              null, // PrintJobController not supported on Linux
+            );
           } else {
-            // ignore: deprecated_member_use_from_same_package
-            _inAppBrowserEventHandler!.onPrint(uri);
             return await _inAppBrowserEventHandler!.onPrintRequest(
               uri,
               null, // PrintJobController not supported on Linux

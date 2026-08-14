@@ -1151,15 +1151,6 @@ In that case, after the `window.addEventListener("flutterInAppWebViewPlatformRea
   final void Function(T controller, WebUri? url, bool? isReload)?
   onUpdateVisitedHistory;
 
-  ///{@template flutter_inappwebview_platform_interface.PlatformWebViewCreationParams.onPrint}
-  ///Use [onPrintRequest] instead
-  ///{@endtemplate}
-  ///
-  ///{@macro flutter_inappwebview_platform_interface.PlatformWebViewCreationParams.onPrint.supported_platforms}
-  @SupportedPlatforms(platforms: [AndroidPlatform(), IOSPlatform()])
-  @Deprecated("Use onPrintRequest instead")
-  final void Function(T controller, Uri? url)? onPrint;
-
   ///{@template flutter_inappwebview_platform_interface.PlatformWebViewCreationParams.onPrintRequest}
   ///Event fired when `window.print()` is called from JavaScript side.
   ///Return `true` if you want to handle the print job.
@@ -2386,7 +2377,6 @@ This is a limitation of the native WebKit APIs.""",
     this.onAjaxProgress,
     this.shouldInterceptFetchRequest,
     this.onUpdateVisitedHistory,
-    @Deprecated("Use onPrintRequest instead") this.onPrint,
     this.onPrintRequest,
     this.onLongPressHitTestResult,
     this.onEnterFullscreen,
