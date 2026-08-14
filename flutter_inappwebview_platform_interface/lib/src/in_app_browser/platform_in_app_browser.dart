@@ -1370,19 +1370,6 @@ See `NSAppTransportSecurity` in the [Information Property List Key Reference](ht
     return null;
   }
 
-  ///{@macro flutter_inappwebview_platform_interface.PlatformWebViewCreationParams.onFindResultReceived}
-  ///
-  ///{@macro flutter_inappwebview_platform_interface.PlatformInAppBrowserEvents.onFindResultReceived.supported_platforms}
-  @SupportedPlatforms(
-    platforms: [AndroidPlatform(), IOSPlatform(), MacOSPlatform()],
-  )
-  @Deprecated('Use FindInteractionController.onFindResultReceived instead')
-  void onFindResultReceived(
-    int activeMatchOrdinal,
-    int numberOfMatches,
-    bool isDoneCounting,
-  ) {}
-
   ///{@macro flutter_inappwebview_platform_interface.PlatformWebViewCreationParams.shouldInterceptAjaxRequest}
   ///
   ///{@macro flutter_inappwebview_platform_interface.PlatformInAppBrowserEvents.shouldInterceptAjaxRequest.supported_platforms}

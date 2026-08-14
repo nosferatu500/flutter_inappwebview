@@ -956,23 +956,6 @@ See `NSAppTransportSecurity` in the [Information Property List Key Reference](ht
   )?
   onReceivedClientCertRequest;
 
-  ///{@template flutter_inappwebview_platform_interface.PlatformWebViewCreationParams.onFindResultReceived}
-  ///Use [FindInteractionController.onFindResultReceived] instead.
-  ///{@endtemplate}
-  ///
-  ///{@macro flutter_inappwebview_platform_interface.PlatformWebViewCreationParams.onFindResultReceived.supported_platforms}
-  @SupportedPlatforms(
-    platforms: [AndroidPlatform(), IOSPlatform(), MacOSPlatform()],
-  )
-  @Deprecated('Use FindInteractionController.onFindResultReceived instead')
-  final void Function(
-    T controller,
-    int activeMatchOrdinal,
-    int numberOfMatches,
-    bool isDoneCounting,
-  )?
-  onFindResultReceived;
-
   ///{@template flutter_inappwebview_platform_interface.PlatformWebViewCreationParams.shouldInterceptAjaxRequest}
   ///Event fired when an `XMLHttpRequest` is sent to a server.
   ///It gives the host application a chance to take control over the request before sending it.
@@ -2370,8 +2353,6 @@ This is a limitation of the native WebKit APIs.""",
     this.onReceivedHttpAuthRequest,
     this.onReceivedServerTrustAuthRequest,
     this.onReceivedClientCertRequest,
-    @Deprecated('Use FindInteractionController.onFindResultReceived instead')
-    this.onFindResultReceived,
     this.shouldInterceptAjaxRequest,
     this.onAjaxReadyStateChange,
     this.onAjaxProgress,

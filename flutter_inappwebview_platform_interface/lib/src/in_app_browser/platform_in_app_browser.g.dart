@@ -954,25 +954,6 @@ enum PlatformInAppBrowserEventsMethod {
   ///{@endtemplate}
   onFaviconChanged,
 
-  ///Can be used to check if the [PlatformInAppBrowserEvents.onFindResultReceived] method is supported at runtime.
-  ///
-  ///{@template flutter_inappwebview_platform_interface.PlatformInAppBrowserEvents.onFindResultReceived.supported_platforms}
-  ///
-  ///**Officially Supported Platforms/Implementations**:
-  ///- Android WebView
-  ///- iOS WKWebView
-  ///- macOS WKWebView
-  ///
-  ///**Parameters - Officially Supported Platforms/Implementations**:
-  ///- [activeMatchOrdinal]: all platforms
-  ///- [numberOfMatches]: all platforms
-  ///- [isDoneCounting]: all platforms
-  ///
-  ///Use the [PlatformInAppBrowserEvents.isMethodSupported] method to check if this method is supported at runtime.
-  ///{@endtemplate}
-  @Deprecated('Use FindInteractionController.onFindResultReceived instead')
-  onFindResultReceived,
-
   ///Can be used to check if the [PlatformInAppBrowserEvents.onFormResubmission] method is supported at runtime.
   ///
   ///{@template flutter_inappwebview_platform_interface.PlatformInAppBrowserEvents.onFormResubmission.supported_platforms}
@@ -1895,13 +1876,6 @@ extension _PlatformInAppBrowserEventsMethodSupported
             [
               TargetPlatform.android,
               TargetPlatform.windows,
-            ].contains(platform ?? defaultTargetPlatform);
-      case PlatformInAppBrowserEventsMethod.onFindResultReceived:
-        return ((kIsWeb && platform != null) || !kIsWeb) &&
-            [
-              TargetPlatform.android,
-              TargetPlatform.iOS,
-              TargetPlatform.macOS,
             ].contains(platform ?? defaultTargetPlatform);
       case PlatformInAppBrowserEventsMethod.onFormResubmission:
         return ((kIsWeb && platform != null) || !kIsWeb) &&

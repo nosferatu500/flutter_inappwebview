@@ -100,14 +100,6 @@ class HeadlessInAppWebView {
       DownloadStartRequest downloadStartRequest,
     )?
     onDownloadStarting,
-    @Deprecated('Use FindInteractionController.onFindResultReceived instead')
-    void Function(
-      InAppWebViewController controller,
-      int activeMatchOrdinal,
-      int numberOfMatches,
-      bool isDoneCounting,
-    )?
-    onFindResultReceived,
     FutureOr<JsAlertResponse?> Function(
       InAppWebViewController controller,
       JsAlertRequest jsAlertRequest,
@@ -444,19 +436,6 @@ class HeadlessInAppWebView {
            onReceivedClientCertRequest: onReceivedClientCertRequest != null
                ? (controller, challenge) =>
                      onReceivedClientCertRequest.call(controller, challenge)
-               : null,
-           onFindResultReceived: onFindResultReceived != null
-               ? (
-                   controller,
-                   activeMatchOrdinal,
-                   numberOfMatches,
-                   isDoneCounting,
-                 ) => onFindResultReceived.call(
-                   controller,
-                   activeMatchOrdinal,
-                   numberOfMatches,
-                   isDoneCounting,
-                 )
                : null,
            shouldInterceptAjaxRequest: shouldInterceptAjaxRequest != null
                ? (controller, ajaxRequest) =>

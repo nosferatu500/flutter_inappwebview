@@ -812,58 +812,35 @@ class AndroidInAppWebViewController extends PlatformInAppWebViewController
         break;
       case "onFindResultReceived":
         if ((webviewParams != null &&
-                (webviewParams!.onFindResultReceived != null ||
-                    (webviewParams!.findInteractionController != null &&
-                        webviewParams!
-                                .findInteractionController!
-                                .params
-                                .onFindResultReceived !=
-                            null))) ||
+                webviewParams!.findInteractionController != null &&
+                webviewParams!
+                        .findInteractionController!
+                        .params
+                        .onFindResultReceived !=
+                    null) ||
             _inAppBrowserEventHandler != null) {
           int activeMatchOrdinal = call.arguments["activeMatchOrdinal"];
           int numberOfMatches = call.arguments["numberOfMatches"];
           bool isDoneCounting = call.arguments["isDoneCounting"];
           if (webviewParams != null) {
-            if (webviewParams!.findInteractionController != null &&
-                webviewParams!
-                        .findInteractionController!
-                        .params
-                        .onFindResultReceived !=
-                    null)
-              webviewParams!
-                  .findInteractionController!
-                  .params
-                  .onFindResultReceived!(
-                webviewParams!.findInteractionController!,
-                activeMatchOrdinal,
-                numberOfMatches,
-                isDoneCounting,
-              );
-            else
-              webviewParams!.onFindResultReceived!(
-                _controllerFromPlatform,
-                activeMatchOrdinal,
-                numberOfMatches,
-                isDoneCounting,
-              );
-          } else {
-            if (_inAppBrowser!.findInteractionController != null &&
-                _inAppBrowser!
-                        .findInteractionController!
-                        .onFindResultReceived !=
-                    null)
-              _inAppBrowser!.findInteractionController!.onFindResultReceived!(
-                webviewParams!.findInteractionController!,
-                activeMatchOrdinal,
-                numberOfMatches,
-                isDoneCounting,
-              );
-            else
-              _inAppBrowserEventHandler!.onFindResultReceived(
-                activeMatchOrdinal,
-                numberOfMatches,
-                isDoneCounting,
-              );
+            webviewParams!
+                .findInteractionController!
+                .params
+                .onFindResultReceived!(
+              webviewParams!.findInteractionController!,
+              activeMatchOrdinal,
+              numberOfMatches,
+              isDoneCounting,
+            );
+          } else if (_inAppBrowser!.findInteractionController != null &&
+              _inAppBrowser!.findInteractionController!.onFindResultReceived !=
+                  null) {
+            _inAppBrowser!.findInteractionController!.onFindResultReceived!(
+              _inAppBrowser!.findInteractionController!,
+              activeMatchOrdinal,
+              numberOfMatches,
+              isDoneCounting,
+            );
           }
         }
         break;

@@ -1911,7 +1911,6 @@ as it can cause framerate drops on animations in Android 9 and lower (see [Hybri
   ///- [PlatformWebViewCreationParams.onPrintRequest]
   ///- [PlatformWebViewCreationParams.onWindowFocus]
   ///- [PlatformWebViewCreationParams.onWindowBlur]
-  ///- [PlatformWebViewCreationParams.onFindResultReceived]
   ///- [FindInteractionController.onFindResultReceived]
   @SupportedPlatforms(platforms: [IOSPlatform(available: "13.0")])
   bool? applePayAPIEnabled;

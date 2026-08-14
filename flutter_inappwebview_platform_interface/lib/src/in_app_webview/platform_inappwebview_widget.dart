@@ -71,8 +71,6 @@ class PlatformInAppWebViewWidgetCreationParams
     super.onReceivedHttpAuthRequest,
     super.onReceivedServerTrustAuthRequest,
     super.onReceivedClientCertRequest,
-    @Deprecated('Use FindInteractionController.onFindResultReceived instead')
-    super.onFindResultReceived,
     super.shouldInterceptAjaxRequest,
     super.onAjaxReadyStateChange,
     super.onAjaxProgress,

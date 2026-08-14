@@ -43,8 +43,6 @@ class IOSInAppWebViewWidgetCreationParams
     super.onReceivedHttpAuthRequest,
     super.onReceivedServerTrustAuthRequest,
     super.onReceivedClientCertRequest,
-    @Deprecated('Use FindInteractionController.onFindResultReceived instead')
-    super.onFindResultReceived,
     super.shouldInterceptAjaxRequest,
     super.onAjaxReadyStateChange,
     super.onAjaxProgress,
@@ -131,7 +129,6 @@ class IOSInAppWebViewWidgetCreationParams
         onReceivedServerTrustAuthRequest:
             params.onReceivedServerTrustAuthRequest,
         onReceivedClientCertRequest: params.onReceivedClientCertRequest,
-        onFindResultReceived: params.onFindResultReceived,
         shouldInterceptAjaxRequest: params.shouldInterceptAjaxRequest,
         onAjaxReadyStateChange: params.onAjaxReadyStateChange,
         onAjaxProgress: params.onAjaxProgress,

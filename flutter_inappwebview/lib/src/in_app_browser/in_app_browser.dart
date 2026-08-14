@@ -329,15 +329,6 @@ class InAppBrowser implements PlatformInAppBrowserEvents {
   @override
   void onDOMContentLoaded(WebUri? url) {}
 
-  ///Use [FindInteractionController.onFindResultReceived] instead.
-  @Deprecated('Use FindInteractionController.onFindResultReceived instead')
-  @override
-  void onFindResultReceived(
-    int activeMatchOrdinal,
-    int numberOfMatches,
-    bool isDoneCounting,
-  ) {}
-
   @override
   FutureOr<FormResubmissionAction?>? onFormResubmission(WebUri? url) {
     return null;

@@ -206,7 +206,7 @@ class IOSInAppWebViewOptions
   ///- [PlatformWebViewCreationParams.onPrintRequest]
   ///- [PlatformWebViewCreationParams.onWindowFocus]
   ///- [PlatformWebViewCreationParams.onWindowBlur]
-  ///- [PlatformWebViewCreationParams.onFindResultReceived]
+  ///- [FindInteractionController.onFindResultReceived]
   ///
   ///**NOTE**: available on iOS 13.0+.
   bool applePayAPIEnabled;

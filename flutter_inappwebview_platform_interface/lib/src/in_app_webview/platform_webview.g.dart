@@ -414,25 +414,6 @@ enum PlatformWebViewCreationParamsProperty {
   ///{@endtemplate}
   onFaviconChanged,
 
-  ///Can be used to check if the [PlatformWebViewCreationParams.onFindResultReceived] property is supported at runtime.
-  ///
-  ///{@template flutter_inappwebview_platform_interface.PlatformWebViewCreationParams.onFindResultReceived.supported_platforms}
-  ///
-  ///**Officially Supported Platforms/Implementations**:
-  ///- Android WebView
-  ///- iOS WKWebView
-  ///- macOS WKWebView
-  ///
-  ///**Parameters - Officially Supported Platforms/Implementations**:
-  ///- [activeMatchOrdinal]: all platforms
-  ///- [numberOfMatches]: all platforms
-  ///- [isDoneCounting]: all platforms
-  ///
-  ///Use the [PlatformWebViewCreationParams.isPropertySupported] method to check if this property is supported at runtime.
-  ///{@endtemplate}
-  @Deprecated('Use FindInteractionController.onFindResultReceived instead')
-  onFindResultReceived,
-
   ///Can be used to check if the [PlatformWebViewCreationParams.onFormResubmission] property is supported at runtime.
   ///
   ///{@template flutter_inappwebview_platform_interface.PlatformWebViewCreationParams.onFormResubmission.supported_platforms}
@@ -1538,13 +1519,6 @@ extension _PlatformWebViewCreationParamsPropertySupported
             [
               TargetPlatform.android,
               TargetPlatform.windows,
-            ].contains(platform ?? defaultTargetPlatform);
-      case PlatformWebViewCreationParamsProperty.onFindResultReceived:
-        return ((kIsWeb && platform != null) || !kIsWeb) &&
-            [
-              TargetPlatform.android,
-              TargetPlatform.iOS,
-              TargetPlatform.macOS,
             ].contains(platform ?? defaultTargetPlatform);
       case PlatformWebViewCreationParamsProperty.onFormResubmission:
         return ((kIsWeb && platform != null) || !kIsWeb) &&

@@ -262,7 +262,6 @@ class InAppWebViewSettings {
   ///- [PlatformWebViewCreationParams.onPrintRequest]
   ///- [PlatformWebViewCreationParams.onWindowFocus]
   ///- [PlatformWebViewCreationParams.onWindowBlur]
-  ///- [PlatformWebViewCreationParams.onFindResultReceived]
   ///- [FindInteractionController.onFindResultReceived]
   ///
   ///**Officially Supported Platforms/Implementations**:
