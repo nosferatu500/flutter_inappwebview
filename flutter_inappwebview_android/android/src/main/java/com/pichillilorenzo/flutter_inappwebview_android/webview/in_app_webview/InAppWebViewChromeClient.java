@@ -792,7 +792,7 @@ public class InAppWebViewChromeClient extends WebChromeClient implements PluginR
 
     InAppWebView webView = (InAppWebView) view;
     if (webView.channelDelegate != null) {
-      webView.channelDelegate.onReceivedIcon(byteArrayOutputStream.toByteArray());
+      webView.channelDelegate.onFaviconChanged(byteArrayOutputStream.toByteArray());
     }
   }
 

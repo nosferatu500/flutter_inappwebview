@@ -273,9 +273,6 @@ class HeadlessInAppWebView {
       PermissionRequest permissionRequest,
     )?
     onPermissionRequest,
-    @Deprecated('Use onFaviconChanged instead')
-    void Function(InAppWebViewController controller, Uint8List icon)?
-    onReceivedIcon,
     void Function(
       InAppWebViewController controller,
       FaviconChangedRequest faviconChangedRequest,
@@ -611,9 +608,6 @@ class HeadlessInAppWebView {
                : null,
            onFormResubmission: onFormResubmission != null
                ? (controller, url) => onFormResubmission.call(controller, url)
-               : null,
-           onReceivedIcon: onReceivedIcon != null
-               ? (controller, icon) => onReceivedIcon.call(controller, icon)
                : null,
            onFaviconChanged: onFaviconChanged != null
                ? (controller, request) =>

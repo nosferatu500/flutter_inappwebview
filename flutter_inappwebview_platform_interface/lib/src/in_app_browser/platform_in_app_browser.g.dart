@@ -1505,21 +1505,6 @@ enum PlatformInAppBrowserEventsMethod {
   ///{@endtemplate}
   onReceivedHttpError,
 
-  ///Can be used to check if the [PlatformInAppBrowserEvents.onReceivedIcon] method is supported at runtime.
-  ///
-  ///{@template flutter_inappwebview_platform_interface.PlatformInAppBrowserEvents.onReceivedIcon.supported_platforms}
-  ///
-  ///**Officially Supported Platforms/Implementations**:
-  ///- Android WebView ([Official API - WebChromeClient.onReceivedIcon](https://developer.android.com/reference/android/webkit/WebChromeClient#onReceivedIcon(android.webkit.WebView,%20android.graphics.Bitmap)))
-  ///
-  ///**Parameters - Officially Supported Platforms/Implementations**:
-  ///- [icon]: all platforms
-  ///
-  ///Use the [PlatformInAppBrowserEvents.isMethodSupported] method to check if this method is supported at runtime.
-  ///{@endtemplate}
-  @Deprecated('Use onFaviconChanged instead')
-  onReceivedIcon,
-
   ///Can be used to check if the [PlatformInAppBrowserEvents.onReceivedLoginRequest] method is supported at runtime.
   ///
   ///{@template flutter_inappwebview_platform_interface.PlatformInAppBrowserEvents.onReceivedLoginRequest.supported_platforms}
@@ -2237,11 +2222,6 @@ extension _PlatformInAppBrowserEventsMethodSupported
               TargetPlatform.iOS,
               TargetPlatform.macOS,
               TargetPlatform.windows,
-            ].contains(platform ?? defaultTargetPlatform);
-      case PlatformInAppBrowserEventsMethod.onReceivedIcon:
-        return ((kIsWeb && platform != null) || !kIsWeb) &&
-            [
-              TargetPlatform.android,
             ].contains(platform ?? defaultTargetPlatform);
       case PlatformInAppBrowserEventsMethod.onReceivedLoginRequest:
         return ((kIsWeb && platform != null) || !kIsWeb) &&

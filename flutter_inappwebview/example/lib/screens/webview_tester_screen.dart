@@ -1210,12 +1210,15 @@ class _WebViewTesterScreenState extends State<WebViewTesterScreen>
       // ICON EVENTS (2)
       // ============================================================
 
-      // 49. onReceivedIcon
-      onReceivedIcon: (controller, icon) {
+      // 49. onFaviconChanged
+      onFaviconChanged: (controller, request) {
         _logEvent(
           EventType.ui,
-          PlatformWebViewCreationParamsProperty.onReceivedIcon.name,
-          data: {'iconSize': icon.length},
+          PlatformWebViewCreationParamsProperty.onFaviconChanged.name,
+          data: {
+            'iconSize': request.icon?.length,
+            'url': request.url?.toString(),
+          },
         );
       },
 

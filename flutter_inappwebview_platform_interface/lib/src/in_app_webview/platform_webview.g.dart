@@ -1005,21 +1005,6 @@ enum PlatformWebViewCreationParamsProperty {
   ///{@endtemplate}
   onReceivedHttpError,
 
-  ///Can be used to check if the [PlatformWebViewCreationParams.onReceivedIcon] property is supported at runtime.
-  ///
-  ///{@template flutter_inappwebview_platform_interface.PlatformWebViewCreationParams.onReceivedIcon.supported_platforms}
-  ///
-  ///**Officially Supported Platforms/Implementations**:
-  ///- Android WebView ([Official API - WebChromeClient.onReceivedIcon](https://developer.android.com/reference/android/webkit/WebChromeClient#onReceivedIcon(android.webkit.WebView,%20android.graphics.Bitmap)))
-  ///
-  ///**Parameters - Officially Supported Platforms/Implementations**:
-  ///- [icon]: all platforms
-  ///
-  ///Use the [PlatformWebViewCreationParams.isPropertySupported] method to check if this property is supported at runtime.
-  ///{@endtemplate}
-  @Deprecated('Use onFaviconChanged instead')
-  onReceivedIcon,
-
   ///Can be used to check if the [PlatformWebViewCreationParams.onReceivedLoginRequest] property is supported at runtime.
   ///
   ///{@template flutter_inappwebview_platform_interface.PlatformWebViewCreationParams.onReceivedLoginRequest.supported_platforms}
@@ -1909,11 +1894,6 @@ extension _PlatformWebViewCreationParamsPropertySupported
               TargetPlatform.macOS,
               TargetPlatform.windows,
               TargetPlatform.linux,
-            ].contains(platform ?? defaultTargetPlatform);
-      case PlatformWebViewCreationParamsProperty.onReceivedIcon:
-        return ((kIsWeb && platform != null) || !kIsWeb) &&
-            [
-              TargetPlatform.android,
             ].contains(platform ?? defaultTargetPlatform);
       case PlatformWebViewCreationParamsProperty.onReceivedLoginRequest:
         return ((kIsWeb && platform != null) || !kIsWeb) &&

@@ -1,6 +1,5 @@
 import 'dart:async';
 import 'dart:collection';
-import 'dart:typed_data';
 import 'dart:ui';
 
 import 'package:flutter/foundation.dart';
@@ -1766,27 +1765,6 @@ In that case, after the `window.addEventListener("flutterInAppWebViewPlatformRea
   final FutureOr<FormResubmissionAction?> Function(T controller, WebUri? url)?
   onFormResubmission;
 
-  ///{@template flutter_inappwebview_platform_interface.PlatformWebViewCreationParams.onReceivedIcon}
-  ///Event fired when there is new favicon for the current page.
-  ///
-  ///[icon] represents the favicon for the current page.
-  ///
-  ///Deprecated: use [onFaviconChanged] instead.
-  ///{@endtemplate}
-  ///
-  ///{@macro flutter_inappwebview_platform_interface.PlatformWebViewCreationParams.onReceivedIcon.supported_platforms}
-  @SupportedPlatforms(
-    platforms: [
-      AndroidPlatform(
-        apiName: 'WebChromeClient.onReceivedIcon',
-        apiUrl:
-            'https://developer.android.com/reference/android/webkit/WebChromeClient#onReceivedIcon(android.webkit.WebView,%20android.graphics.Bitmap)',
-      ),
-    ],
-  )
-  @Deprecated('Use onFaviconChanged instead')
-  final void Function(T controller, Uint8List icon)? onReceivedIcon;
-
   ///{@template flutter_inappwebview_platform_interface.PlatformWebViewCreationParams.onFaviconChanged}
   ///Event fired when the favicon for the current page changes.
   ///
@@ -2496,7 +2474,6 @@ This is a limitation of the native WebKit APIs.""",
     this.onRenderProcessResponsive,
     this.onRenderProcessUnresponsive,
     this.onFormResubmission,
-    @Deprecated('Use onFaviconChanged instead') this.onReceivedIcon,
     this.onFaviconChanged,
     @Deprecated('Use onReceivedTouchIconUrl instead')
     this.onReceivedTouchIconUrl,

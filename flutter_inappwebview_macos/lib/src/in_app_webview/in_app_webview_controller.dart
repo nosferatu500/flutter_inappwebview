@@ -645,20 +645,6 @@ class MacOSInAppWebViewController extends PlatformInAppWebViewController
           }
         }
         break;
-      case "onReceivedIcon":
-        if ((webviewParams != null && webviewParams!.onReceivedIcon != null) ||
-            _inAppBrowserEventHandler != null) {
-          Uint8List icon = Uint8List.fromList(
-            call.arguments["icon"].cast<int>(),
-          );
-
-          if (webviewParams != null) {
-            webviewParams!.onReceivedIcon!(_controllerFromPlatform, icon);
-          } else {
-            _inAppBrowserEventHandler!.onReceivedIcon(icon);
-          }
-        }
-        break;
       case "onReceivedTouchIconUrl":
         if ((webviewParams != null &&
                 webviewParams!.onReceivedTouchIconUrl != null) ||

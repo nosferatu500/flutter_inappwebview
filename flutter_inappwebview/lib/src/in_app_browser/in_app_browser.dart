@@ -1,6 +1,5 @@
 import 'dart:async';
 import 'dart:collection';
-import 'dart:typed_data';
 import 'dart:ui';
 
 import 'package:flutter/foundation.dart';
@@ -488,11 +487,6 @@ class InAppBrowser implements PlatformInAppBrowserEvents {
     WebResourceRequest request,
     WebResourceResponse errorResponse,
   ) {}
-
-  ///Use [onFaviconChanged] instead.
-  @Deprecated('Use onFaviconChanged instead')
-  @override
-  void onReceivedIcon(Uint8List icon) {}
 
   @override
   void onFaviconChanged(FaviconChangedRequest faviconChangedRequest) {}

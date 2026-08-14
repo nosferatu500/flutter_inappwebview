@@ -75,7 +75,6 @@ class MacOSInAppWebViewWidgetCreationParams
     super.onRenderProcessResponsive,
     super.onRenderProcessUnresponsive,
     super.onFormResubmission,
-    super.onReceivedIcon,
     @Deprecated('Use onReceivedTouchIconUrl instead')
     super.onReceivedTouchIconUrl,
     super.onJsBeforeUnload,
@@ -171,7 +170,6 @@ class MacOSInAppWebViewWidgetCreationParams
         onRenderProcessResponsive: params.onRenderProcessResponsive,
         onRenderProcessUnresponsive: params.onRenderProcessUnresponsive,
         onFormResubmission: params.onFormResubmission,
-        onReceivedIcon: params.onReceivedIcon,
         onReceivedTouchIconUrl: params.onReceivedTouchIconUrl,
         onJsBeforeUnload: params.onJsBeforeUnload,
         onReceivedLoginRequest: params.onReceivedLoginRequest,

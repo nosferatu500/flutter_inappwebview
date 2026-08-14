@@ -2034,8 +2034,8 @@ class SupportChecker {
 
         // Icon events
         ApiEventDefinition(
-          name: PlatformWebViewCreationParamsProperty.onReceivedIcon.name,
-          description: 'Called when a favicon is received.',
+          name: PlatformWebViewCreationParamsProperty.onFaviconChanged.name,
+          description: 'Called when the favicon for the current page changes.',
           className: className,
           category: 'Icon',
         ),

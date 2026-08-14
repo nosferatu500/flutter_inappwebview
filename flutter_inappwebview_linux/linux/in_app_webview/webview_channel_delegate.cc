@@ -1830,7 +1830,7 @@ void WebViewChannelDelegate::onFaviconChanged(const std::optional<std::string>& 
 
   g_autoptr(FlValue) args = to_fl_map({{"url", make_fl_value(faviconUrl)}});
 
-  invokeMethod("onReceivedIcon", args);
+  invokeMethod("onFaviconChanged", args);
 }
 
 void WebViewChannelDelegate::onRenderProcessGone(bool didCrash) const {

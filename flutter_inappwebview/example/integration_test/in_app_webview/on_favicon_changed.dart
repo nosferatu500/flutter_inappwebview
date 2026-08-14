@@ -1,15 +1,16 @@
 part of 'main.dart';
 
-void onReceivedIcon() {
+void onFaviconChanged() {
   final shouldSkip = !InAppWebView.isPropertySupported(
-    PlatformWebViewCreationParamsProperty.onReceivedIcon,
+    PlatformWebViewCreationParamsProperty.onFaviconChanged,
   );
 
-  skippableTestWidgets('onReceivedIcon', (WidgetTester tester) async {
+  skippableTestWidgets('onFaviconChanged', (WidgetTester tester) async {
     final Completer<InAppWebViewController> controllerCompleter =
         Completer<InAppWebViewController>();
     final Completer<void> pageLoaded = Completer<void>();
-    final Completer<Uint8List> onReceivedIconCompleter = Completer<Uint8List>();
+    final Completer<FaviconChangedRequest> onFaviconChangedCompleter =
+        Completer<FaviconChangedRequest>();
 
     await tester.pumpWidget(
       Directionality(
@@ -23,9 +24,9 @@ void onReceivedIcon() {
           onLoadStop: (controller, url) {
             pageLoaded.complete();
           },
-          onReceivedIcon: (controller, icon) {
-            if (!onReceivedIconCompleter.isCompleted) {
-              onReceivedIconCompleter.complete(icon);
+          onFaviconChanged: (controller, request) {
+            if (!onFaviconChangedCompleter.isCompleted) {
+              onFaviconChangedCompleter.complete(request);
             }
           },
         ),
@@ -33,7 +34,9 @@ void onReceivedIcon() {
     );
 
     await pageLoaded.future;
-    final Uint8List icon = await onReceivedIconCompleter.future;
-    expect(icon, isNotNull);
+    final FaviconChangedRequest request =
+        await onFaviconChangedCompleter.future;
+    // Android reports the icon bytes, Windows may report the URL instead.
+    expect(request.icon ?? request.url, isNotNull);
   }, skip: shouldSkip);
 }

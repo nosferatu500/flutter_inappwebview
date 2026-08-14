@@ -104,7 +104,6 @@ class PlatformInAppWebViewWidgetCreationParams
     super.onRenderProcessResponsive,
     super.onRenderProcessUnresponsive,
     super.onFormResubmission,
-    super.onReceivedIcon,
     @Deprecated('Use onReceivedTouchIconUrl instead')
     super.onReceivedTouchIconUrl,
     super.onJsBeforeUnload,

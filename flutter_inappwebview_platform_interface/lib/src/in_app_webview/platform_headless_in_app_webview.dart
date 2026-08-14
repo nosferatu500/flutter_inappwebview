@@ -95,7 +95,6 @@ class PlatformHeadlessInAppWebViewCreationParams
     super.onRenderProcessResponsive,
     super.onRenderProcessUnresponsive,
     super.onFormResubmission,
-    @Deprecated('Use onFaviconChanged instead') super.onReceivedIcon,
     super.onFaviconChanged,
     @Deprecated('Use onReceivedTouchIconUrl instead')
     super.onReceivedTouchIconUrl,

@@ -1948,21 +1948,6 @@ In that case, after the `window.addEventListener("flutterInAppWebViewPlatformRea
     return null;
   }
 
-  ///{@macro flutter_inappwebview_platform_interface.PlatformWebViewCreationParams.onReceivedIcon}
-  ///
-  ///{@macro flutter_inappwebview_platform_interface.PlatformInAppBrowserEvents.onReceivedIcon.supported_platforms}
-  @SupportedPlatforms(
-    platforms: [
-      AndroidPlatform(
-        apiName: 'WebChromeClient.onReceivedIcon',
-        apiUrl:
-            'https://developer.android.com/reference/android/webkit/WebChromeClient#onReceivedIcon(android.webkit.WebView,%20android.graphics.Bitmap)',
-      ),
-    ],
-  )
-  @Deprecated('Use onFaviconChanged instead')
-  void onReceivedIcon(Uint8List icon) {}
-
   ///{@macro flutter_inappwebview_platform_interface.PlatformWebViewCreationParams.onFaviconChanged}
   ///
   ///{@macro flutter_inappwebview_platform_interface.PlatformInAppBrowserEvents.onFaviconChanged.supported_platforms}

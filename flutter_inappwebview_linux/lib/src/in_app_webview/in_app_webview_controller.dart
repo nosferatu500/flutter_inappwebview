@@ -690,22 +690,25 @@ class LinuxInAppWebViewController extends PlatformInAppWebViewController
         else if (_inAppBrowserEventHandler != null)
           _inAppBrowserEventHandler!.onExitFullscreen();
         break;
-      case "onReceivedIcon":
-        if ((webviewParams != null && webviewParams!.onReceivedIcon != null) ||
+      case "onFaviconChanged":
+        if ((webviewParams != null &&
+                webviewParams!.onFaviconChanged != null) ||
             _inAppBrowserEventHandler != null) {
-          // For now, we just have the URL, not the actual icon data
-          // This could be enhanced to download the favicon
+          // WebKitGTK reports the favicon URI only; the icon bytes are not
+          // available, so [FaviconChangedRequest.icon] stays null here.
           String? faviconUrl = call.arguments["url"];
           if (faviconUrl != null) {
-            // Create a placeholder Uint8List since we don't have the actual icon
-            // The favicon URL could be used to download the icon if needed
-            if (webviewParams != null && webviewParams!.onReceivedIcon != null)
-              webviewParams!.onReceivedIcon!(
+            FaviconChangedRequest request = FaviconChangedRequest(
+              url: WebUri(faviconUrl),
+            );
+            if (webviewParams != null &&
+                webviewParams!.onFaviconChanged != null)
+              webviewParams!.onFaviconChanged!(
                 _controllerFromPlatform,
-                Uint8List(0),
+                request,
               );
             else
-              _inAppBrowserEventHandler!.onReceivedIcon(Uint8List(0));
+              _inAppBrowserEventHandler!.onFaviconChanged(request);
           }
         }
         break;

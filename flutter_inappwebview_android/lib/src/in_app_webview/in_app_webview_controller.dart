@@ -637,17 +637,20 @@ class AndroidInAppWebViewController extends PlatformInAppWebViewController
           }
         }
         break;
-      case "onReceivedIcon":
-        if ((webviewParams != null && webviewParams!.onReceivedIcon != null) ||
+      case "onFaviconChanged":
+        if ((webviewParams != null &&
+                webviewParams!.onFaviconChanged != null) ||
             _inAppBrowserEventHandler != null) {
-          Uint8List icon = Uint8List.fromList(
-            call.arguments["icon"].cast<int>(),
-          );
+          Map<String, dynamic> arguments = call.arguments
+              .cast<String, dynamic>();
+          FaviconChangedRequest request = FaviconChangedRequest.fromMap(
+            arguments,
+          )!;
 
           if (webviewParams != null) {
-            webviewParams!.onReceivedIcon!(_controllerFromPlatform, icon);
+            webviewParams!.onFaviconChanged!(_controllerFromPlatform, request);
           } else {
-            _inAppBrowserEventHandler!.onReceivedIcon(icon);
+            _inAppBrowserEventHandler!.onFaviconChanged(request);
           }
         }
         break;

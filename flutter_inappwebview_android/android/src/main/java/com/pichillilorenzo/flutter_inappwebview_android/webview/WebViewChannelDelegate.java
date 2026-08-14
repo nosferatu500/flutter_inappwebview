@@ -973,12 +973,12 @@ public class WebViewChannelDelegate extends ChannelDelegateImpl {
     channel.invokeMethod("onTitleChanged", obj);
   }
 
-  public void onReceivedIcon(byte[] icon) {
+  public void onFaviconChanged(byte[] icon) {
     MethodChannel channel = getChannel();
     if (channel == null) return;
     Map<String, Object> obj = new HashMap<>();
     obj.put("icon", icon);
-    channel.invokeMethod("onReceivedIcon", obj);
+    channel.invokeMethod("onFaviconChanged", obj);
   }
 
   public void onReceivedTouchIconUrl(String url, boolean precomposed) {
