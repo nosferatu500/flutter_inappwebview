@@ -31,7 +31,6 @@ class WebPlatformInAppWebViewWidgetCreationParams
     super.shouldOverrideUrlLoading,
     super.onLoadResource,
     super.onScrollChanged,
-    @Deprecated('Use onDownloadStarting instead') super.onDownloadStartRequest,
     super.onDownloadStarting,
     @Deprecated('Use onLoadResourceWithCustomScheme instead')
     super.onLoadResourceCustomScheme,
@@ -122,7 +121,6 @@ class WebPlatformInAppWebViewWidgetCreationParams
         shouldOverrideUrlLoading: params.shouldOverrideUrlLoading,
         onLoadResource: params.onLoadResource,
         onScrollChanged: params.onScrollChanged,
-        onDownloadStartRequest: params.onDownloadStartRequest,
         onDownloadStarting: params.onDownloadStarting,
         onLoadResourceCustomScheme: params.onLoadResourceCustomScheme,
         onLoadResourceWithCustomScheme: params.onLoadResourceWithCustomScheme,
@@ -291,8 +289,7 @@ class WebPlatformInAppWebViewWidget extends PlatformInAppWebViewWidget {
         settings.useOnLoadResource == null) {
       settings.useOnLoadResource = true;
     }
-    if ((_webPlatformParams.onDownloadStartRequest != null ||
-            _webPlatformParams.onDownloadStarting != null) &&
+    if (_webPlatformParams.onDownloadStarting != null &&
         settings.useOnDownloadStart == null) {
       settings.useOnDownloadStart = true;
     }

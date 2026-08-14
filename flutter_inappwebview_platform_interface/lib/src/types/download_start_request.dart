@@ -6,7 +6,7 @@ import 'enum_method.dart';
 
 part 'download_start_request.g.dart';
 
-///Class representing a download request of the WebView used by the event [PlatformWebViewCreationParams.onDownloadStartRequest].
+///Class representing a download request of the WebView used by the event [PlatformWebViewCreationParams.onDownloadStarting].
 @ExchangeableObject()
 class DownloadStartRequest_ {
   ///The full url to the content that should be downloaded.

@@ -6,7 +6,7 @@ part of 'download_start_response.dart';
 // ExchangeableObjectGenerator
 // **************************************************************************
 
-///Class representing a download response of the WebView used by the event [PlatformWebViewCreationParams.onDownloadStartRequest].
+///Class representing a download response of the WebView used by the event [PlatformWebViewCreationParams.onDownloadStarting].
 class DownloadStartResponse {
   ///Action to take for the download request.
   ///

@@ -458,18 +458,6 @@ Also, this event is not called for POST requests and is not called on the first 
   )
   final void Function(T controller, int x, int y)? onScrollChanged;
 
-  ///{@template flutter_inappwebview_platform_interface.PlatformWebViewCreationParams.onDownloadStartRequest}
-  ///Use [onDownloadStarting] instead
-  ///{@endtemplate}
-  ///
-  ///{@macro flutter_inappwebview_platform_interface.PlatformWebViewCreationParams.onDownloadStartRequest.supported_platforms}
-  @SupportedPlatforms(
-    platforms: [AndroidPlatform(), IOSPlatform(), MacOSPlatform()],
-  )
-  @Deprecated('Use onDownloadStarting instead')
-  final void Function(T controller, DownloadStartRequest downloadStartRequest)?
-  onDownloadStartRequest;
-
   ///{@template flutter_inappwebview_platform_interface.PlatformWebViewCreationParams.onDownloadStarting}
   ///Event fired when `WebView` recognizes a downloadable file.
   ///To download the file, you can use the [flutter_downloader](https://pub.dev/packages/flutter_downloader) plugin.
@@ -2393,7 +2381,6 @@ This is a limitation of the native WebKit APIs.""",
     this.onLaunchingExternalUriScheme,
     this.onLoadResource,
     this.onScrollChanged,
-    @Deprecated('Use onDownloadStarting instead') this.onDownloadStartRequest,
     this.onDownloadStarting,
     @Deprecated('Use onLoadResourceWithCustomScheme instead')
     this.onLoadResourceCustomScheme,

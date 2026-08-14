@@ -6,7 +6,7 @@ import 'enum_method.dart';
 
 part 'download_start_response.g.dart';
 
-///Class representing a download response of the WebView used by the event [PlatformWebViewCreationParams.onDownloadStartRequest].
+///Class representing a download response of the WebView used by the event [PlatformWebViewCreationParams.onDownloadStarting].
 @ExchangeableObject()
 class DownloadStartResponse_ {
   ///Set this flag to `true` to hide the default download dialog for this download.

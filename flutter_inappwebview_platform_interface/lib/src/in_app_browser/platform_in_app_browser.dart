@@ -1026,15 +1026,6 @@ Also, this event is not called for POST requests and is not called on the first 
   )
   void onScrollChanged(int x, int y) {}
 
-  ///{@macro flutter_inappwebview_platform_interface.PlatformWebViewCreationParams.onDownloadStartRequest}
-  ///
-  ///{@macro flutter_inappwebview_platform_interface.PlatformInAppBrowserEvents.onDownloadStartRequest.supported_platforms}
-  @SupportedPlatforms(
-    platforms: [AndroidPlatform(), IOSPlatform(), MacOSPlatform()],
-  )
-  @Deprecated('Use onDownloadStarting instead')
-  void onDownloadStartRequest(DownloadStartRequest downloadStartRequest) {}
-
   ///{@macro flutter_inappwebview_platform_interface.PlatformWebViewCreationParams.onDownloadStarting}
   ///
   ///{@macro flutter_inappwebview_platform_interface.PlatformInAppBrowserEvents.onDownloadStarting.supported_platforms}

@@ -53,7 +53,7 @@ part 'load_file_url.dart';
 part 'load_url.dart';
 part 'on_console_message.dart';
 part 'on_content_size_changed.dart';
-part 'on_download_start_request.dart';
+part 'on_download_starting.dart';
 part 'on_js_before_unload.dart';
 part 'on_received_error.dart';
 part 'on_received_http_error.dart';

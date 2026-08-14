@@ -307,11 +307,6 @@ class InAppBrowser implements PlatformInAppBrowserEvents {
   @override
   void onDidReceiveServerRedirectForProvisionalNavigation() {}
 
-  ///Use [onDownloadStarting] instead
-  @Deprecated('Use onDownloadStarting instead')
-  @override
-  void onDownloadStartRequest(DownloadStartRequest downloadStartRequest) {}
-
   @override
   FutureOr<DownloadStartResponse?>? onDownloadStarting(
     DownloadStartRequest downloadStartRequest,

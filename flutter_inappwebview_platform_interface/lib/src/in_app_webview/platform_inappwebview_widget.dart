@@ -61,7 +61,6 @@ class PlatformInAppWebViewWidgetCreationParams
     super.onLoadResource,
     super.onFaviconChanged,
     super.onScrollChanged,
-    @Deprecated('Use onDownloadStarting instead') super.onDownloadStartRequest,
     super.onDownloadStarting,
     @Deprecated('Use onLoadResourceWithCustomScheme instead')
     super.onLoadResourceCustomScheme,

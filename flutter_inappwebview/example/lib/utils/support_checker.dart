@@ -1881,13 +1881,6 @@ class SupportChecker {
 
         // Download events
         ApiEventDefinition(
-          name:
-              PlatformWebViewCreationParamsProperty.onDownloadStartRequest.name,
-          description: 'Called when a download is requested.',
-          className: className,
-          category: 'Download',
-        ),
-        ApiEventDefinition(
           name: PlatformWebViewCreationParamsProperty.onDownloadStarting.name,
           description: 'Called when a download is starting.',
           className: className,

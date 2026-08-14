@@ -341,8 +341,7 @@ class AndroidInAppWebViewController extends PlatformInAppWebViewController
         break;
       case "onDownloadStarting":
         if ((webviewParams != null &&
-                (webviewParams!.onDownloadStartRequest != null ||
-                    webviewParams!.onDownloadStarting != null)) ||
+                webviewParams!.onDownloadStarting != null) ||
             _inAppBrowserEventHandler != null) {
           Map<String, dynamic> arguments = call.arguments
               .cast<String, dynamic>();
@@ -350,20 +349,11 @@ class AndroidInAppWebViewController extends PlatformInAppWebViewController
               DownloadStartRequest.fromMap(arguments)!;
 
           if (webviewParams != null) {
-            if (webviewParams!.onDownloadStarting != null)
-              return (await webviewParams!.onDownloadStarting!(
-                _controllerFromPlatform,
-                downloadStartRequest,
-              ))?.toMap();
-            else if (webviewParams!.onDownloadStartRequest != null)
-              webviewParams!.onDownloadStartRequest!(
-                _controllerFromPlatform,
-                downloadStartRequest,
-              );
-          } else {
-            _inAppBrowserEventHandler!.onDownloadStartRequest(
+            return (await webviewParams!.onDownloadStarting!(
+              _controllerFromPlatform,
               downloadStartRequest,
-            );
+            ))?.toMap();
+          } else {
             return (await _inAppBrowserEventHandler!.onDownloadStarting(
               downloadStartRequest,
             ))?.toMap();

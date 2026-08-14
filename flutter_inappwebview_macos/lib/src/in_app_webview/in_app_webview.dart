@@ -32,7 +32,6 @@ class MacOSInAppWebViewWidgetCreationParams
     super.shouldOverrideUrlLoading,
     super.onLoadResource,
     super.onScrollChanged,
-    @Deprecated('Use onDownloadStarting instead') super.onDownloadStartRequest,
     super.onDownloadStarting,
     @Deprecated('Use onLoadResourceWithCustomScheme instead')
     super.onLoadResourceCustomScheme,
@@ -123,7 +122,6 @@ class MacOSInAppWebViewWidgetCreationParams
         shouldOverrideUrlLoading: params.shouldOverrideUrlLoading,
         onLoadResource: params.onLoadResource,
         onScrollChanged: params.onScrollChanged,
-        onDownloadStartRequest: params.onDownloadStartRequest,
         onDownloadStarting: params.onDownloadStarting,
         onLoadResourceCustomScheme: params.onLoadResourceCustomScheme,
         onLoadResourceWithCustomScheme: params.onLoadResourceWithCustomScheme,
@@ -309,8 +307,7 @@ class MacOSInAppWebViewWidget extends PlatformInAppWebViewWidget {
     if (params.onLoadResource != null && settings.useOnLoadResource == null) {
       settings.useOnLoadResource = true;
     }
-    if ((params.onDownloadStartRequest != null ||
-            params.onDownloadStarting != null) &&
+    if (params.onDownloadStarting != null &&
         settings.useOnDownloadStart == null) {
       settings.useOnDownloadStart = true;
     }

@@ -90,9 +90,9 @@ class InAppWebViewSettings_ {
   )
   bool? useOnLoadResource;
 
-  ///Set to `true` to be able to listen at the [PlatformWebViewCreationParams.onDownloadStartRequest] event.
+  ///Set to `true` to be able to listen at the [PlatformWebViewCreationParams.onDownloadStarting] event.
   ///
-  ///If the [PlatformWebViewCreationParams.onDownloadStartRequest] event is implemented and this value is `null`,
+  ///If the [PlatformWebViewCreationParams.onDownloadStarting] event is implemented and this value is `null`,
   ///it will be automatically inferred as `true`, otherwise, the default value is `false`.
   ///This logic will not be applied for [PlatformInAppBrowser], where you must set the value manually.
   @SupportedPlatforms(
