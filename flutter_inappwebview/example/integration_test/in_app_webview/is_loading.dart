@@ -11,13 +11,14 @@ void isLoading() {
     final Completer<void> pageStarted = Completer<void>();
     final Completer<void> pageLoaded = Completer<void>();
 
+    await InAppWebViewController.clearAllCache();
+
     await tester.pumpWidget(
       Directionality(
         textDirection: TextDirection.ltr,
         child: InAppWebView(
           key: GlobalKey(),
           initialUrlRequest: URLRequest(url: TEST_CROSS_PLATFORM_URL_1),
-          initialSettings: InAppWebViewSettings(clearCache: true),
           onWebViewCreated: (controller) {
             controllerCompleter.complete(controller);
           },

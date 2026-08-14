@@ -289,11 +289,6 @@ public class WebViewChannelDelegate extends ChannelDelegateImpl {
           result.success(false);
         }
         break;
-      case clearCache:
-        if (webView != null)
-          webView.clearAllCache();
-        result.success(true);
-        break;
       case clearSslPreferences:
         if (webView != null)
           webView.clearSslPreferences();

@@ -81,15 +81,6 @@ public class InAppWebViewManager extends ChannelDelegateImpl {
               result.success(value);
             }
           });
-        }
-        else if (WebViewFeature.isFeatureSupported(WebViewFeature.SAFE_BROWSING_WHITELIST)) {
-          List<String> hosts = (List<String>) call.argument("hosts");
-          WebViewCompat.setSafeBrowsingWhitelist(hosts, new ValueCallback<Boolean>() {
-            @Override
-            public void onReceiveValue(Boolean value) {
-              result.success(value);
-            }
-          });
         } else
           result.success(false);
         break;

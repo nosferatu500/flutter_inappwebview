@@ -12,6 +12,8 @@ void onLoadResourceWithCustomScheme() {
         Completer<InAppWebViewController>();
     final Completer<void> imageLoaded = Completer<void>();
 
+    await InAppWebViewController.clearAllCache();
+
     await tester.pumpWidget(
       Directionality(
         textDirection: TextDirection.ltr,
@@ -20,7 +22,6 @@ void onLoadResourceWithCustomScheme() {
           initialFile:
               "test_assets/in_app_webview_on_load_resource_custom_scheme_test.html",
           initialSettings: InAppWebViewSettings(
-            clearCache: true,
             resourceCustomSchemes: ["my-special-custom-scheme"],
           ),
           onWebViewCreated: (controller) {

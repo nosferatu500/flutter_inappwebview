@@ -181,12 +181,6 @@ class WebViewFeature {
         'SAFE_BROWSING_RESPONSE_SHOW_INTERSTITIAL',
       );
 
-  ///Use [SAFE_BROWSING_ALLOWLIST] instead.
-  static const SAFE_BROWSING_WHITELIST = WebViewFeature._internal(
-    'SAFE_BROWSING_WHITELIST',
-    'SAFE_BROWSING_WHITELIST',
-  );
-
   ///Feature for [isFeatureSupported]. This feature covers [ServiceWorkerController].
   static const SERVICE_WORKER_BASIC_USAGE = WebViewFeature._internal(
     'SERVICE_WORKER_BASIC_USAGE',
@@ -358,7 +352,6 @@ class WebViewFeature {
     WebViewFeature.SAFE_BROWSING_RESPONSE_BACK_TO_SAFETY,
     WebViewFeature.SAFE_BROWSING_RESPONSE_PROCEED,
     WebViewFeature.SAFE_BROWSING_RESPONSE_SHOW_INTERSTITIAL,
-    WebViewFeature.SAFE_BROWSING_WHITELIST,
     WebViewFeature.SERVICE_WORKER_BASIC_USAGE,
     WebViewFeature.SERVICE_WORKER_BLOCK_NETWORK_LOADS,
     WebViewFeature.SERVICE_WORKER_CACHE_MODE,
@@ -515,8 +508,6 @@ class WebViewFeature {
         return 'SAFE_BROWSING_RESPONSE_PROCEED';
       case 'SAFE_BROWSING_RESPONSE_SHOW_INTERSTITIAL':
         return 'SAFE_BROWSING_RESPONSE_SHOW_INTERSTITIAL';
-      case 'SAFE_BROWSING_WHITELIST':
-        return 'SAFE_BROWSING_WHITELIST';
       case 'SERVICE_WORKER_BASIC_USAGE':
         return 'SERVICE_WORKER_BASIC_USAGE';
       case 'SERVICE_WORKER_BLOCK_NETWORK_LOADS':

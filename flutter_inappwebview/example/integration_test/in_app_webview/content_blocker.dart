@@ -9,6 +9,8 @@ void contentBlocker() {
     final Completer<InAppWebViewController> controllerCompleter =
         Completer<InAppWebViewController>();
     final Completer<void> pageLoaded = Completer<void>();
+    await InAppWebViewController.clearAllCache();
+
     await tester.pumpWidget(
       Directionality(
         textDirection: TextDirection.ltr,
@@ -19,7 +21,6 @@ void contentBlocker() {
             controllerCompleter.complete(controller);
           },
           initialSettings: InAppWebViewSettings(
-            clearCache: true,
             contentBlockers: [
               ContentBlocker(
                 trigger: ContentBlockerTrigger(

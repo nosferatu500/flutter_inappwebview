@@ -21,6 +21,8 @@ void httpAuthCredentialDatabase() {
         credential: URLCredential(username: "USERNAME", password: "PASSWORD"),
       );
 
+      await InAppWebViewController.clearAllCache();
+
       await tester.pumpWidget(
         Directionality(
           textDirection: TextDirection.ltr,
@@ -32,7 +34,6 @@ void httpAuthCredentialDatabase() {
             onWebViewCreated: (controller) {
               controllerCompleter.complete(controller);
             },
-            initialSettings: InAppWebViewSettings(clearCache: true),
             onLoadStop: (controller, url) {
               pageLoaded.complete();
             },
@@ -80,6 +81,8 @@ void httpAuthCredentialDatabase() {
           Completer<InAppWebViewController>();
       final Completer<void> pageLoaded = Completer<void>();
 
+      await InAppWebViewController.clearAllCache();
+
       await tester.pumpWidget(
         Directionality(
           textDirection: TextDirection.ltr,
@@ -91,7 +94,6 @@ void httpAuthCredentialDatabase() {
             onWebViewCreated: (controller) {
               controllerCompleter.complete(controller);
             },
-            initialSettings: InAppWebViewSettings(clearCache: true),
             onLoadStop: (controller, url) {
               pageLoaded.complete();
             },

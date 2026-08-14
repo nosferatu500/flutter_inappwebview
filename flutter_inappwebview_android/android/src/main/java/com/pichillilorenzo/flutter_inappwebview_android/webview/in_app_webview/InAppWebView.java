@@ -333,11 +333,6 @@ final public class InAppWebView extends InputAwareWebView implements InAppWebVie
 
     }
 
-    if (customSettings.clearCache)
-      clearAllCache();
-    else if (customSettings.clearSessionCache)
-      CookieManager.getInstance().removeSessionCookie();
-
     CookieManager.getInstance().setAcceptThirdPartyCookies(this, customSettings.thirdPartyCookiesEnabled);
 
     settings.setLoadWithOverviewMode(customSettings.loadWithOverviewMode);
@@ -712,31 +707,6 @@ final public class InAppWebView extends InputAwareWebView implements InAppWebVie
     return isLoading;
   }
 
-  /**
-   * @deprecated
-   */
-  @Deprecated
-  private void clearCookies() {
-    CookieManager.getInstance().removeAllCookies(new ValueCallback<Boolean>() {
-      @Override
-      public void onReceiveValue(Boolean aBoolean) {
-
-      }
-    });
-
-  }
-
-  /**
-   * @deprecated
-   */
-  @Deprecated
-  public void clearAllCache() {
-    clearCache(true);
-    clearCookies();
-    clearFormData();
-    WebStorage.getInstance().deleteAllData();
-  }
-
   public void takeScreenshot(final @Nullable Map<String, Object> screenshotConfiguration, final MethodChannel.Result result) {
     final float pixelDensity = Util.getPixelDensity(getContext());
 
@@ -900,11 +870,6 @@ final public class InAppWebView extends InputAwareWebView implements InAppWebVie
       settings.setUserAgentString(userAgentWithApplicationName);
 
     }
-
-    if (newSettingsMap.get("clearCache") != null && newCustomSettings.clearCache)
-      clearAllCache();
-    else if (newSettingsMap.get("clearSessionCache") != null && newCustomSettings.clearSessionCache)
-      CookieManager.getInstance().removeSessionCookie();
 
     if (newSettingsMap.get("thirdPartyCookiesEnabled") != null && customSettings.thirdPartyCookiesEnabled != newCustomSettings.thirdPartyCookiesEnabled)
       CookieManager.getInstance().setAcceptThirdPartyCookies(this, newCustomSettings.thirdPartyCookiesEnabled);

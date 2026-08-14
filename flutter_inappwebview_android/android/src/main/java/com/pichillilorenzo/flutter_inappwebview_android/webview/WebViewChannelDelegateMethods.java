@@ -30,11 +30,6 @@ public enum WebViewChannelDelegateMethods {
   isHidden,
   getCopyBackForwardList,
   startSafeBrowsing,
-  /**
-   * @deprecated
-   */
-  @Deprecated
-  clearCache,
   clearSslPreferences,
   /**
    * @deprecated

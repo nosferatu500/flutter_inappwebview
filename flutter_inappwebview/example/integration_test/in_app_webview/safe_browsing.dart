@@ -8,6 +8,8 @@ void safeBrowsing() {
   skippableGroup('safe browsing', () {
     skippableTestWidgets('onSafeBrowsingHit', (WidgetTester tester) async {
       final Completer<String> pageLoaded = Completer<String>();
+      await InAppWebViewController.clearAllCache();
+
       await tester.pumpWidget(
         Directionality(
           textDirection: TextDirection.ltr,
@@ -19,7 +21,6 @@ void safeBrowsing() {
             initialSettings: InAppWebViewSettings(
               // if I set javaScriptEnabled to true, it will crash!
               javaScriptEnabled: false,
-              clearCache: true,
               safeBrowsingEnabled: true,
             ),
             onWebViewCreated: (controller) {

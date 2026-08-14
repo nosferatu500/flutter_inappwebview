@@ -14,13 +14,14 @@ void onUpdateVisitedHistory() {
     final Completer<String> secondPushCompleter = Completer<String>();
     final Completer<void> pageLoaded = Completer<void>();
 
+    await InAppWebViewController.clearAllCache();
+
     await tester.pumpWidget(
       Directionality(
         textDirection: TextDirection.ltr,
         child: InAppWebView(
           key: GlobalKey(),
           initialUrlRequest: URLRequest(url: url),
-          initialSettings: InAppWebViewSettings(clearCache: true),
           onWebViewCreated: (controller) {
             controllerCompleter.complete(controller);
           },

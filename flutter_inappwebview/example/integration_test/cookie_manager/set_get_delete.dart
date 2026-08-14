@@ -9,6 +9,8 @@ void setGetDelete() {
         Completer<InAppWebViewController>();
     final Completer<String> pageLoaded = Completer<String>();
 
+    await InAppWebViewController.clearAllCache();
+
     await tester.pumpWidget(
       Directionality(
         textDirection: TextDirection.ltr,
@@ -18,7 +20,6 @@ void setGetDelete() {
           onWebViewCreated: (controller) {
             controllerCompleter.complete(controller);
           },
-          initialSettings: InAppWebViewSettings(clearCache: true),
           onLoadStop: (controller, url) {
             pageLoaded.complete(url!.toString());
           },

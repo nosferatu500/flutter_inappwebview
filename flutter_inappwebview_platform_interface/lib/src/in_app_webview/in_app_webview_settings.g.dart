@@ -336,22 +336,6 @@ class InAppWebViewSettings {
   ///- Android WebView ([Official API - WebSettings.setCacheMode](https://developer.android.com/reference/android/webkit/WebSettings#setCacheMode(int)))
   CacheMode? cacheMode;
 
-  ///Use [PlatformInAppWebViewController.clearAllCache] instead.
-  ///
-  ///**Officially Supported Platforms/Implementations**:
-  ///- Android WebView
-  ///- iOS WKWebView
-  ///- macOS WKWebView
-  @Deprecated('Use InAppWebViewController.clearAllCache instead')
-  bool? clearCache;
-
-  ///Use [PlatformCookieManager.removeSessionCookies] instead.
-  ///
-  ///**Officially Supported Platforms/Implementations**:
-  ///- Android WebView
-  @Deprecated('Use CookieManager.removeSessionCookies instead')
-  bool? clearSessionCache;
-
   ///List of [ContentBlocker] that are a set of rules used to block content in the browser window.
   ///
   ///**Officially Supported Platforms/Implementations**:
@@ -1608,15 +1592,6 @@ class InAppWebViewSettings {
   ///- Linux WPE WebKit ([Official API - WebKitSettings.sans-serif-font-family](https://wpewebkit.org/reference/stable/wpe-webkit-2.0/property.Settings.sans-serif-font-family.html))
   String? sansSerifFontFamily;
 
-  ///Sets whether the WebView should save form data. In Android O, the platform has implemented a fully functional Autofill feature to store form data.
-  ///Therefore, the Webview form data save feature is disabled. Note that the feature will continue to be supported on older versions of Android as before.
-  ///The default value is `true`.
-  ///
-  ///**Officially Supported Platforms/Implementations**:
-  ///- Android WebView ([Official API - WebSettings.setSaveFormData](https://developer.android.com/reference/android/webkit/WebSettings?hl=en#setSaveFormData(boolean)))
-  @Deprecated('')
-  bool? saveFormData;
-
   ///Defines the delay in milliseconds that a scrollbar waits before fade out.
   ///
   ///**Officially Supported Platforms/Implementations**:
@@ -2010,8 +1985,6 @@ class InAppWebViewSettings {
     this.useShouldOverrideUrlLoading,
     this.useOnLoadResource,
     this.useOnDownloadStart,
-    @Deprecated("Use InAppWebViewController.clearAllCache instead")
-    this.clearCache = false,
     this.userAgent = "",
     this.applicationNameForUserAgent = "",
     this.javaScriptEnabled = true,
@@ -2038,8 +2011,6 @@ class InAppWebViewSettings {
     this.allowFileAccessFromFileURLs = false,
     this.allowUniversalAccessFromFileURLs = false,
     this.textZoom,
-    @Deprecated("Use CookieManager.removeSessionCookies instead")
-    this.clearSessionCache = false,
     this.builtInZoomControls = true,
     this.displayZoomControls = false,
     this.databaseEnabled = true,
@@ -2073,7 +2044,6 @@ class InAppWebViewSettings {
     this.sansSerifFontFamily = "sans-serif",
     this.serifFontFamily = "sans-serif",
     this.standardFontFamily = "sans-serif",
-    @Deprecated('') this.saveFormData = true,
     this.thirdPartyCookiesEnabled = true,
     this.hardwareAcceleration = true,
     this.initialScale = 0,
@@ -2473,8 +2443,6 @@ class InAppWebViewSettings {
       EnumMethod.value => CacheMode.fromValue(map['cacheMode']),
       EnumMethod.name => CacheMode.byName(map['cacheMode']),
     };
-    instance.clearCache = map['clearCache'];
-    instance.clearSessionCache = map['clearSessionCache'];
     instance.contentBlockers = _deserializeContentBlockers(
       map['contentBlockers'],
       enumMethod: enumMethod,
@@ -2631,7 +2599,6 @@ class InAppWebViewSettings {
         : null;
     instance.safeBrowsingEnabled = map['safeBrowsingEnabled'];
     instance.sansSerifFontFamily = map['sansSerifFontFamily'];
-    instance.saveFormData = map['saveFormData'];
     instance.scrollBarStyle = switch (enumMethod ?? EnumMethod.nativeValue) {
       EnumMethod.nativeValue => ScrollBarStyle.fromNativeValue(
         map['scrollBarStyle'],
@@ -2732,8 +2699,6 @@ class InAppWebViewSettings {
         EnumMethod.value => cacheMode?.toValue(),
         EnumMethod.name => cacheMode?.name(),
       },
-      "clearCache": clearCache,
-      "clearSessionCache": clearSessionCache,
       "contentBlockers": contentBlockers
           ?.map((e) => e.toMap(enumMethod: enumMethod))
           .toList(),
@@ -2942,7 +2907,6 @@ class InAppWebViewSettings {
       "resourceCustomSchemes": resourceCustomSchemes,
       "safeBrowsingEnabled": safeBrowsingEnabled,
       "sansSerifFontFamily": sansSerifFontFamily,
-      "saveFormData": saveFormData,
       "scrollBarDefaultDelayBeforeFade": scrollBarDefaultDelayBeforeFade,
       "scrollBarFadeDuration": scrollBarFadeDuration,
       "scrollBarStyle": switch (enumMethod ?? EnumMethod.nativeValue) {
@@ -3348,32 +3312,6 @@ enum InAppWebViewSettingsProperty {
   ///Use the [InAppWebViewSettings.isPropertySupported] method to check if this property is supported at runtime.
   ///{@endtemplate}
   cacheMode,
-
-  ///Can be used to check if the [InAppWebViewSettings.clearCache] property is supported at runtime.
-  ///
-  ///{@template flutter_inappwebview_platform_interface.InAppWebViewSettings.clearCache.supported_platforms}
-  ///
-  ///**Officially Supported Platforms/Implementations**:
-  ///- Android WebView
-  ///- iOS WKWebView
-  ///- macOS WKWebView
-  ///
-  ///Use the [InAppWebViewSettings.isPropertySupported] method to check if this property is supported at runtime.
-  ///{@endtemplate}
-  @Deprecated('Use InAppWebViewController.clearAllCache instead')
-  clearCache,
-
-  ///Can be used to check if the [InAppWebViewSettings.clearSessionCache] property is supported at runtime.
-  ///
-  ///{@template flutter_inappwebview_platform_interface.InAppWebViewSettings.clearSessionCache.supported_platforms}
-  ///
-  ///**Officially Supported Platforms/Implementations**:
-  ///- Android WebView
-  ///
-  ///Use the [InAppWebViewSettings.isPropertySupported] method to check if this property is supported at runtime.
-  ///{@endtemplate}
-  @Deprecated('Use CookieManager.removeSessionCookies instead')
-  clearSessionCache,
 
   ///Can be used to check if the [InAppWebViewSettings.contentBlockers] property is supported at runtime.
   ///
@@ -4883,18 +4821,6 @@ enum InAppWebViewSettingsProperty {
   ///{@endtemplate}
   sansSerifFontFamily,
 
-  ///Can be used to check if the [InAppWebViewSettings.saveFormData] property is supported at runtime.
-  ///
-  ///{@template flutter_inappwebview_platform_interface.InAppWebViewSettings.saveFormData.supported_platforms}
-  ///
-  ///**Officially Supported Platforms/Implementations**:
-  ///- Android WebView ([Official API - WebSettings.setSaveFormData](https://developer.android.com/reference/android/webkit/WebSettings?hl=en#setSaveFormData(boolean)))
-  ///
-  ///Use the [InAppWebViewSettings.isPropertySupported] method to check if this property is supported at runtime.
-  ///{@endtemplate}
-  @Deprecated('')
-  saveFormData,
-
   ///Can be used to check if the [InAppWebViewSettings.scrollBarDefaultDelayBeforeFade] property is supported at runtime.
   ///
   ///{@template flutter_inappwebview_platform_interface.InAppWebViewSettings.scrollBarDefaultDelayBeforeFade.supported_platforms}
@@ -5519,18 +5445,6 @@ extension _InAppWebViewSettingsPropertySupported on InAppWebViewSettings {
               TargetPlatform.macOS,
             ].contains(platform ?? defaultTargetPlatform);
       case InAppWebViewSettingsProperty.cacheMode:
-        return ((kIsWeb && platform != null) || !kIsWeb) &&
-            [
-              TargetPlatform.android,
-            ].contains(platform ?? defaultTargetPlatform);
-      case InAppWebViewSettingsProperty.clearCache:
-        return ((kIsWeb && platform != null) || !kIsWeb) &&
-            [
-              TargetPlatform.android,
-              TargetPlatform.iOS,
-              TargetPlatform.macOS,
-            ].contains(platform ?? defaultTargetPlatform);
-      case InAppWebViewSettingsProperty.clearSessionCache:
         return ((kIsWeb && platform != null) || !kIsWeb) &&
             [
               TargetPlatform.android,
@@ -6166,11 +6080,6 @@ extension _InAppWebViewSettingsPropertySupported on InAppWebViewSettings {
             [
               TargetPlatform.android,
               TargetPlatform.linux,
-            ].contains(platform ?? defaultTargetPlatform);
-      case InAppWebViewSettingsProperty.saveFormData:
-        return ((kIsWeb && platform != null) || !kIsWeb) &&
-            [
-              TargetPlatform.android,
             ].contains(platform ?? defaultTargetPlatform);
       case InAppWebViewSettingsProperty.scrollBarDefaultDelayBeforeFade:
         return ((kIsWeb && platform != null) || !kIsWeb) &&

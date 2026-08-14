@@ -16,13 +16,14 @@ void onLoadResource() {
     final Completer<void> loadedResourceCompleter = Completer<void>();
     final Completer<void> pageLoaded = Completer<void>();
 
+    await InAppWebViewController.clearAllCache();
+
     await tester.pumpWidget(
       Directionality(
         textDirection: TextDirection.ltr,
         child: InAppWebView(
           key: GlobalKey(),
           initialFile: "test_assets/in_app_webview_on_load_resource_test.html",
-          initialSettings: InAppWebViewSettings(clearCache: true),
           onLoadStop: (controller, url) {
             pageLoaded.complete();
           },

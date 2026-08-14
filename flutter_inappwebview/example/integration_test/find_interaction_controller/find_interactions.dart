@@ -7,6 +7,8 @@ void findInteractions() {
     final Completer<void> pageLoaded = Completer<void>();
     final findInteractionController = FindInteractionController();
 
+    await InAppWebViewController.clearAllCache();
+
     await tester.pumpWidget(
       Directionality(
         textDirection: TextDirection.ltr,
@@ -14,10 +16,7 @@ void findInteractions() {
           key: GlobalKey(),
           initialFile: "test_assets/in_app_webview_initial_file_test.html",
           findInteractionController: findInteractionController,
-          initialSettings: InAppWebViewSettings(
-            clearCache: true,
-            isFindInteractionEnabled: true,
-          ),
+          initialSettings: InAppWebViewSettings(isFindInteractionEnabled: true),
           onLoadStop: (controller, url) {
             pageLoaded.complete();
           },
@@ -93,6 +92,8 @@ void findInteractions() {
           },
     );
 
+    await InAppWebViewController.clearAllCache();
+
     await tester.pumpWidget(
       Directionality(
         textDirection: TextDirection.ltr,
@@ -100,7 +101,6 @@ void findInteractions() {
           key: GlobalKey(),
           initialFile: "test_assets/in_app_webview_initial_file_test.html",
           initialSettings: InAppWebViewSettings(
-            clearCache: true,
             isFindInteractionEnabled: false,
           ),
           findInteractionController: findInteractionController,

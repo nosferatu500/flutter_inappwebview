@@ -106,22 +106,6 @@ public class InAppWebViewClientCompat extends WebViewClientCompat {
     return false;
   }
 
-  @Override
-  public boolean shouldOverrideUrlLoading(WebView view, String url) {
-    InAppWebView webView = (InAppWebView) view;
-
-    if (allowSyncUrlLoading(webView, url)) {
-      // Allow the request synchronously.
-      return false;
-    }
-
-    if (webView.customSettings.useShouldOverrideUrlLoading) {
-      onShouldOverrideUrlLoading(webView, url, "GET", null,true, false, false);
-      return true;
-    }
-    return false;
-  }
-
   private boolean allowSyncUrlLoading(InAppWebView webView, String url) {
     if (webView.customSettings.regexToAllowSyncUrlLoading != null) {
       Matcher m = webView.customSettings.regexToAllowSyncUrlLoading.matcher(url);
@@ -304,46 +288,6 @@ public class InAppWebViewClientCompat extends WebViewClientCompat {
               WebResourceRequestExt.fromWebResourceRequest(request),
               WebResourceErrorExt.fromWebResourceError(error));
     }
-  }
-
-  @SuppressLint("RestrictedApi")
-  @Override
-  public void onReceivedError(WebView view, int errorCode, String description, String failingUrl) {
-    final InAppWebView webView = (InAppWebView) view;
-
-    if (webView.customSettings.disableDefaultErrorPage) {
-      webView.stopLoading();
-      webView.loadUrl("about:blank");
-    }
-
-    webView.isLoading = false;
-    previousAuthRequestFailureCount = 0;
-    credentialsProposed = null;
-
-    if (inAppBrowserDelegate != null) {
-      inAppBrowserDelegate.didFailNavigation(failingUrl, errorCode, description);
-    }
-
-    WebResourceRequestExt request = new WebResourceRequestExt(
-            failingUrl,
-            null,
-            false,
-            false,
-            true,
-            "GET");
-
-    WebResourceErrorExt error = new WebResourceErrorExt(
-            errorCode,
-            description
-    );
-
-    if (webView.channelDelegate != null) {
-      webView.channelDelegate.onReceivedError(
-              request,
-              error);
-    }
-
-    super.onReceivedError(view, errorCode, description, failingUrl);
   }
 
   @Override
@@ -741,15 +685,6 @@ public class InAppWebViewClientCompat extends WebViewClientCompat {
       }
     }
     return response;
-  }
-
-  @Override
-  public WebResourceResponse shouldInterceptRequest(WebView view, final String url) {
-    WebResourceRequestExt requestExt = new WebResourceRequestExt(
-            url, null, false,
-            false, true, "GET"
-    );
-    return shouldInterceptRequest(view, requestExt);
   }
 
   @Override

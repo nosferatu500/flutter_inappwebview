@@ -13,13 +13,14 @@ void javascriptDialogs() {
         Completer<JsAlertRequest>();
     final Completer<bool> confirmCompleter = Completer<bool>();
     final Completer<String> promptCompleter = Completer<String>();
+    await InAppWebViewController.clearAllCache();
+
     await tester.pumpWidget(
       Directionality(
         textDirection: TextDirection.ltr,
         child: InAppWebView(
           key: GlobalKey(),
           initialFile: "test_assets/in_app_webview_on_js_dialog_test.html",
-          initialSettings: InAppWebViewSettings(clearCache: true),
           onWebViewCreated: (controller) {
             controllerCompleter.complete(controller);
 

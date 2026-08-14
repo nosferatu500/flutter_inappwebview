@@ -535,9 +535,6 @@ public class InAppWebView: WKWebView, UIScrollViewDelegate, WKUIDelegate,
                 isInspectable = settings.isInspectable
             }
             
-            if settings.clearCache {
-                clearCache()
-            }
         }
         
         prepareAndAddUserScripts()
@@ -1285,10 +1282,6 @@ public class InAppWebView: WKWebView, UIScrollViewDelegate, WKUIDelegate,
             configuration.preferences.setValue(newSettings.allowFileAccessFromFileURLs, forKey: "allowFileAccessFromFileURLs")
         }
         
-        if newSettingsMap["clearCache"] != nil && newSettings.clearCache {
-            clearCache()
-        }
-        
         if newSettingsMap["javaScriptEnabled"] != nil && settings?.javaScriptEnabled != newSettings.javaScriptEnabled {
             configuration.preferences.javaScriptEnabled = newSettings.javaScriptEnabled
         }
@@ -1409,13 +1402,6 @@ public class InAppWebView: WKWebView, UIScrollViewDelegate, WKUIDelegate,
                 self.configuration.userContentController.sync(scriptMessageHandler: self)
             }
         }
-    }
-    
-    @available(*, deprecated, message: "Use InAppWebViewManager.clearAllCache instead.")
-    public func clearCache() {
-        let date = NSDate(timeIntervalSince1970: 0)
-        WKWebsiteDataStore.default().removeData(ofTypes: WKWebsiteDataStore.allWebsiteDataTypes(), modifiedSince: date as Date, completionHandler:{ })
-
     }
     
     public func injectDeferredObject(source: String, withWrapper jsWrapper: String?, completionHandler: ((Any?) -> Void)? = nil) {

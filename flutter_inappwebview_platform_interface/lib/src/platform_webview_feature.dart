@@ -268,12 +268,6 @@ class WebViewFeature_ {
         "SAFE_BROWSING_RESPONSE_SHOW_INTERSTITIAL",
       );
 
-  ///Use [SAFE_BROWSING_ALLOWLIST] instead.
-  @Deprecated('Use SAFE_BROWSING_ALLOWLIST instead')
-  static const SAFE_BROWSING_WHITELIST = const WebViewFeature_._internal(
-    "SAFE_BROWSING_WHITELIST",
-  );
-
   ///Feature for [isFeatureSupported]. This feature covers [ServiceWorkerController].
   static const SERVICE_WORKER_BASIC_USAGE = const WebViewFeature_._internal(
     "SERVICE_WORKER_BASIC_USAGE",

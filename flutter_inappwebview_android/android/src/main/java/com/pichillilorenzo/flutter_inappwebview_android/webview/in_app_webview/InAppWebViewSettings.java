@@ -32,11 +32,6 @@ public class InAppWebViewSettings implements ISettings<InAppWebViewInterface> {
   public Boolean useShouldOverrideUrlLoading = false;
   public Boolean useOnLoadResource = false;
   public Boolean useOnDownloadStart = false;
-  /**
-   * @deprecated
-   */
-  @Deprecated
-  public Boolean clearCache = false;
   public String userAgent = "";
   public String applicationNameForUserAgent = "";
   public Boolean javaScriptEnabled = true;
@@ -65,11 +60,6 @@ public class InAppWebViewSettings implements ISettings<InAppWebViewInterface> {
   public Boolean allowBackgroundAudioPlaying = false;
   @Nullable
   public Integer textZoom;
-  /**
-   * @deprecated
-   */
-  @Deprecated
-  public Boolean clearSessionCache = false;
   public Boolean builtInZoomControls = true;
   public Boolean displayZoomControls = false;
   public Boolean databaseEnabled = false;
@@ -107,7 +97,6 @@ public class InAppWebViewSettings implements ISettings<InAppWebViewInterface> {
   public String sansSerifFontFamily = "sans-serif";
   public String serifFontFamily = "sans-serif";
   public String standardFontFamily = "sans-serif";
-  public Boolean saveFormData = true;
   public Boolean thirdPartyCookiesEnabled = true;
   public Boolean hardwareAcceleration = true;
   public Boolean supportMultipleWindows = false;
@@ -183,9 +172,6 @@ public class InAppWebViewSettings implements ISettings<InAppWebViewInterface> {
         case "useOnDownloadStart":
           useOnDownloadStart = (Boolean) value;
           break;
-        case "clearCache":
-          clearCache = (Boolean) value;
-          break;
         case "userAgent":
           userAgent = (String) value;
           break;
@@ -254,9 +240,6 @@ public class InAppWebViewSettings implements ISettings<InAppWebViewInterface> {
           break;
         case "textZoom":
           textZoom = (Integer) value;
-          break;
-        case "clearSessionCache":
-          clearSessionCache = (Boolean) value;
           break;
         case "builtInZoomControls":
           builtInZoomControls = (Boolean) value;
@@ -365,9 +348,6 @@ public class InAppWebViewSettings implements ISettings<InAppWebViewInterface> {
           break;
         case "standardFontFamily":
           standardFontFamily = (String) value;
-          break;
-        case "saveFormData":
-          saveFormData = (Boolean) value;
           break;
         case "thirdPartyCookiesEnabled":
           thirdPartyCookiesEnabled = (Boolean) value;
@@ -496,7 +476,6 @@ public class InAppWebViewSettings implements ISettings<InAppWebViewInterface> {
     settings.put("useShouldOverrideUrlLoading", useShouldOverrideUrlLoading);
     settings.put("useOnLoadResource", useOnLoadResource);
     settings.put("useOnDownloadStart", useOnDownloadStart);
-    settings.put("clearCache", clearCache);
     settings.put("userAgent", userAgent);
     settings.put("applicationNameForUserAgent", applicationNameForUserAgent);
     settings.put("javaScriptEnabled", javaScriptEnabled);
@@ -520,7 +499,6 @@ public class InAppWebViewSettings implements ISettings<InAppWebViewInterface> {
     settings.put("disableHorizontalScroll", disableHorizontalScroll);
     settings.put("disableContextMenu", disableContextMenu);
     settings.put("textZoom", textZoom);
-    settings.put("clearSessionCache", clearSessionCache);
     settings.put("builtInZoomControls", builtInZoomControls);
     settings.put("displayZoomControls", displayZoomControls);
     settings.put("supportZoom", supportZoom);
@@ -557,7 +535,6 @@ public class InAppWebViewSettings implements ISettings<InAppWebViewInterface> {
     settings.put("sansSerifFontFamily", sansSerifFontFamily);
     settings.put("serifFontFamily", serifFontFamily);
     settings.put("standardFontFamily", standardFontFamily);
-    settings.put("saveFormData", saveFormData);
     settings.put("thirdPartyCookiesEnabled", thirdPartyCookiesEnabled);
     settings.put("hardwareAcceleration", hardwareAcceleration);
     settings.put("supportMultipleWindows", supportMultipleWindows);
@@ -674,7 +651,6 @@ public class InAppWebViewSettings implements ISettings<InAppWebViewInterface> {
       realSettings.put("sansSerifFontFamily", settings.getSansSerifFontFamily());
       realSettings.put("serifFontFamily", settings.getSerifFontFamily());
       realSettings.put("standardFontFamily", settings.getStandardFontFamily());
-      realSettings.put("saveFormData", settings.getSaveFormData());
       realSettings.put("supportMultipleWindows", settings.supportMultipleWindows());
       realSettings.put("overScrollMode", webView.getOverScrollMode());
       realSettings.put("scrollBarStyle", webView.getScrollBarStyle());

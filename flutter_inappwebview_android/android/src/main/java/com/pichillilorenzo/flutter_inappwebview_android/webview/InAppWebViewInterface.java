@@ -55,7 +55,6 @@ public interface InAppWebViewInterface {
   InAppWebViewSettings getCustomSettings();
   Map<String, Object> getCustomSettingsMap();
   HashMap<String, Object> getCopyBackForwardList();
-  void clearAllCache();
   void clearSslPreferences();
   void findAllAsync(String find);
   void findNext(boolean forward);

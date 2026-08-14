@@ -18,6 +18,8 @@ void webViewWindows() {
       final Completer<InAppWebViewController> controllerCompleter =
           Completer<InAppWebViewController>();
       final Completer<void> pageLoaded = Completer<void>();
+      await InAppWebViewController.clearAllCache();
+
       await tester.pumpWidget(
         Directionality(
           textDirection: TextDirection.ltr,
@@ -26,7 +28,6 @@ void webViewWindows() {
             initialFile:
                 "test_assets/in_app_webview_on_create_window_test.html",
             initialSettings: InAppWebViewSettings(
-              clearCache: true,
               javaScriptCanOpenWindowsAutomatically: true,
             ),
             onWebViewCreated: (controller) {
@@ -60,6 +61,8 @@ void webViewWindows() {
       final Completer<InAppWebViewController> controllerCompleter =
           Completer<InAppWebViewController>();
       final Completer<int> onCreateWindowCompleter = Completer<int>();
+      await InAppWebViewController.clearAllCache();
+
       await tester.pumpWidget(
         Directionality(
           textDirection: TextDirection.ltr,
@@ -68,7 +71,6 @@ void webViewWindows() {
             initialFile:
                 "test_assets/in_app_webview_on_create_window_test.html",
             initialSettings: InAppWebViewSettings(
-              clearCache: true,
               javaScriptCanOpenWindowsAutomatically: true,
               supportMultipleWindows: true,
             ),
@@ -92,13 +94,14 @@ void webViewWindows() {
       final Completer<String> windowPageLoaded = Completer<String>();
       final Completer<void> onCloseWindowCompleter = Completer<void>();
 
+      await InAppWebViewController.clearAllCache();
+
       await tester.pumpWidget(
         Directionality(
           textDirection: TextDirection.ltr,
           child: InAppWebView(
             key: GlobalKey(),
             windowId: windowId,
-            initialSettings: InAppWebViewSettings(clearCache: true),
             onWebViewCreated: (controller) {
               windowControllerCompleter.complete(controller);
             },
@@ -324,6 +327,8 @@ void webViewWindows() {
       final Completer<InAppWebViewController> controllerCompleter =
           Completer<InAppWebViewController>();
       final Completer<String> onCreateWindowCalled = Completer<String>();
+      await InAppWebViewController.clearAllCache();
+
       await tester.pumpWidget(
         Directionality(
           textDirection: TextDirection.ltr,
@@ -331,7 +336,6 @@ void webViewWindows() {
             key: GlobalKey(),
             initialUrlRequest: URLRequest(url: TEST_WEB_PLATFORM_URL_1),
             initialSettings: InAppWebViewSettings(
-              clearCache: true,
               javaScriptCanOpenWindowsAutomatically: true,
             ),
             onWebViewCreated: (controller) {

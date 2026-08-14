@@ -42,8 +42,6 @@ public enum WebViewChannelDelegateMethods: String {
     case findNext = "findNext"
     @available(*, deprecated, message: "Use FindInteractionController.clearMatches instead.")
     case clearMatches = "clearMatches"
-    @available(*, deprecated, message: "Use InAppWebViewManager.clearAllCache instead.")
-    case clearCache = "clearCache"
     case scrollTo = "scrollTo"
     case scrollBy = "scrollBy"
     case pauseTimers = "pauseTimers"

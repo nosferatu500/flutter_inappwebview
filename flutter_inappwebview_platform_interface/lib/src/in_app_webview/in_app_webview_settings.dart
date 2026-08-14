@@ -100,14 +100,6 @@ class InAppWebViewSettings_ {
   )
   bool? useOnDownloadStart;
 
-  ///Use [PlatformInAppWebViewController.clearAllCache] instead.
-  @Deprecated("Use InAppWebViewController.clearAllCache instead")
-  @ExchangeableObjectProperty(leaveDeprecatedInToMapMethod: true)
-  @SupportedPlatforms(
-    platforms: [AndroidPlatform(), IOSPlatform(), MacOSPlatform()],
-  )
-  bool? clearCache;
-
   ///Sets the user-agent for the WebView.
   @SupportedPlatforms(
     platforms: [
@@ -582,12 +574,6 @@ because there isn't any way to make the website data store non-persistent for th
     ],
   )
   int? textZoom;
-
-  ///Use [PlatformCookieManager.removeSessionCookies] instead.
-  @Deprecated("Use CookieManager.removeSessionCookies instead")
-  @ExchangeableObjectProperty(leaveDeprecatedInToMapMethod: true)
-  @SupportedPlatforms(platforms: [AndroidPlatform()])
-  bool? clearSessionCache;
 
   ///Set to `true` if the WebView should use its built-in zoom mechanisms. The default value is `true`.
   @SupportedPlatforms(
@@ -1088,25 +1074,6 @@ because there isn't any way to make the website data store non-persistent for th
     ],
   )
   String? standardFontFamily;
-
-  ///Sets whether the WebView should save form data. In Android O, the platform has implemented a fully functional Autofill feature to store form data.
-  ///Therefore, the Webview form data save feature is disabled. Note that the feature will continue to be supported on older versions of Android as before.
-  ///The default value is `true`.
-  @Deprecated('')
-  @ExchangeableObjectProperty(
-    leaveDeprecatedInToMapMethod: true,
-    leaveDeprecatedInFromMapMethod: true,
-  )
-  @SupportedPlatforms(
-    platforms: [
-      AndroidPlatform(
-        apiName: "WebSettings.setSaveFormData",
-        apiUrl:
-            "https://developer.android.com/reference/android/webkit/WebSettings?hl=en#setSaveFormData(boolean)",
-      ),
-    ],
-  )
-  bool? saveFormData;
 
   ///Boolean value to enable third party cookies in the WebView.
   ///Used on Android Lollipop and above only as third party cookies are enabled by default on Android Kitkat and below and on iOS.
@@ -3280,8 +3247,6 @@ as it can cause framerate drops on animations in Android 9 and lower (see [Hybri
     this.useShouldOverrideUrlLoading,
     this.useOnLoadResource,
     this.useOnDownloadStart,
-    @Deprecated("Use InAppWebViewController.clearAllCache instead")
-    this.clearCache = false,
     this.userAgent = "",
     this.applicationNameForUserAgent = "",
     this.javaScriptEnabled = true,
@@ -3308,8 +3273,6 @@ as it can cause framerate drops on animations in Android 9 and lower (see [Hybri
     this.allowFileAccessFromFileURLs = false,
     this.allowUniversalAccessFromFileURLs = false,
     this.textZoom,
-    @Deprecated("Use CookieManager.removeSessionCookies instead")
-    this.clearSessionCache = false,
     this.builtInZoomControls = true,
     this.displayZoomControls = false,
     this.databaseEnabled = true,
@@ -3343,7 +3306,6 @@ as it can cause framerate drops on animations in Android 9 and lower (see [Hybri
     this.sansSerifFontFamily = "sans-serif",
     this.serifFontFamily = "sans-serif",
     this.standardFontFamily = "sans-serif",
-    @Deprecated('') this.saveFormData = true,
     this.thirdPartyCookiesEnabled = true,
     this.hardwareAcceleration = true,
     this.initialScale = 0,

@@ -255,10 +255,6 @@ public class WebViewChannelDelegate: ChannelDelegate {
                 result(false)
             }
             break
-        case .clearCache:
-            webView?.clearCache()
-            result(true)
-            break
         case .scrollTo:
             let x = arguments!["x"] as! Int
             let y = arguments!["y"] as! Int
