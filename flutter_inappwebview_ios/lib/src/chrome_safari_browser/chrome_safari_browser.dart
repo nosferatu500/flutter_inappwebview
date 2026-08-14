@@ -105,9 +105,6 @@ class IOSChromeSafariBrowser extends PlatformChromeSafariBrowser
         String title = call.arguments["title"];
         int id = call.arguments["id"].toInt();
         if (this._menuItems[id] != null) {
-          if (this._menuItems[id]?.action != null) {
-            this._menuItems[id]?.action!(url, title);
-          }
           if (this._menuItems[id]?.onClick != null) {
             this._menuItems[id]?.onClick!(WebUri(url), title);
           }

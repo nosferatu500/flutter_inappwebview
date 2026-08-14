@@ -13,10 +13,6 @@ part of 'chrome_safari_browser_menu_item.dart';
 ///    - Not available in an Android Trusted Web Activity.
 ///- iOS WKWebView
 class ChromeSafariBrowserMenuItem {
-  ///Use onClick instead.
-  @Deprecated('Use onClick instead')
-  void Function(String, String)? action;
-
   ///The menu item id. It should be different from [ChromeSafariBrowserActionButton.id].
   int id;
 
@@ -38,7 +34,6 @@ class ChromeSafariBrowserMenuItem {
     required this.id,
     required this.label,
     this.image,
-    @Deprecated("Use onClick instead") this.action,
     this.onClick,
   });
 

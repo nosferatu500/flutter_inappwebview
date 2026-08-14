@@ -25,10 +25,6 @@ class ChromeSafariBrowserMenuItem_ {
   ///Item image.
   UIImage_? image;
 
-  ///Use onClick instead.
-  @Deprecated("Use onClick instead")
-  void Function(String url, String title)? action;
-
   ///Callback function to be invoked when the menu item is clicked
   void Function(WebUri? url, String title)? onClick;
 
@@ -37,7 +33,6 @@ class ChromeSafariBrowserMenuItem_ {
     required this.id,
     required this.label,
     this.image,
-    @Deprecated("Use onClick instead") this.action,
     this.onClick,
   });
 }

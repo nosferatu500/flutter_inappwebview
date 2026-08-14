@@ -122,16 +122,10 @@ class AndroidChromeSafariBrowser extends PlatformChromeSafariBrowser
         String title = call.arguments["title"];
         int id = call.arguments["id"].toInt();
         if (this._actionButton?.id == id) {
-          if (this._actionButton?.action != null) {
-            this._actionButton?.action!(url, title);
-          }
           if (this._actionButton?.onClick != null) {
             this._actionButton?.onClick!(WebUri(url), title);
           }
         } else if (this._menuItems[id] != null) {
-          if (this._menuItems[id]?.action != null) {
-            this._menuItems[id]?.action!(url, title);
-          }
           if (this._menuItems[id]?.onClick != null) {
             this._menuItems[id]?.onClick!(WebUri(url), title);
           }

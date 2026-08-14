@@ -12,10 +12,6 @@ part of 'chrome_safari_action_button.dart';
 ///- Android WebView:
 ///    - Not available in an Android Trusted Web Activity.
 class ChromeSafariBrowserActionButton {
-  ///Use onClick instead.
-  @Deprecated('Use onClick instead')
-  void Function(String, String)? action;
-
   ///The description for the button. To be used for accessibility.
   String description;
 
@@ -39,7 +35,6 @@ class ChromeSafariBrowserActionButton {
     required this.id,
     required this.icon,
     required this.description,
-    @Deprecated("Use onClick instead") this.action,
     this.onClick,
     this.shouldTint = false,
   });

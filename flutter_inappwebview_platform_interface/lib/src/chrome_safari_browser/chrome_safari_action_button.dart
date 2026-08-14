@@ -29,10 +29,6 @@ class ChromeSafariBrowserActionButton_ {
   ///Whether the action button should be tinted.
   bool shouldTint;
 
-  ///Use onClick instead.
-  @Deprecated("Use onClick instead")
-  void Function(String url, String title)? action;
-
   ///Callback function to be invoked when the action button is clicked
   void Function(WebUri? url, String title)? onClick;
 
@@ -41,7 +37,6 @@ class ChromeSafariBrowserActionButton_ {
     required this.id,
     required this.icon,
     required this.description,
-    @Deprecated("Use onClick instead") this.action,
     this.onClick,
     this.shouldTint = false,
   });
