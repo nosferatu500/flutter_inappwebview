@@ -20,10 +20,6 @@ class InAppWebViewInitialData_ {
   ///The URL to use as the page's base URL. If `null` defaults to `about:blank`.
   WebUri? baseUrl;
 
-  ///Use [historyUrl] instead.
-  @Deprecated('Use historyUrl instead')
-  Uri? androidHistoryUrl;
-
   ///The URL to use as the history entry. If `null` defaults to `about:blank`. If non-null, this must be a valid URL.
   @SupportedPlatforms(platforms: [AndroidPlatform()])
   WebUri? historyUrl;
@@ -33,7 +29,6 @@ class InAppWebViewInitialData_ {
     this.mimeType = "text/html",
     this.encoding = "utf8",
     this.baseUrl,
-    @Deprecated('Use historyUrl instead') this.androidHistoryUrl,
     this.historyUrl,
   });
 }

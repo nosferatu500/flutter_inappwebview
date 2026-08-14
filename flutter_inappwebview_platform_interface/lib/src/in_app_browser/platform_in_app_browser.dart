@@ -342,7 +342,7 @@ This is a limitation of the native WebKit APIs.""",
   ///
   ///The [encoding] parameter specifies the encoding of the data. The default value is `"utf8"`.
   ///
-  ///The [androidHistoryUrl] parameter is the URL to use as the history entry. The default value is `about:blank`. If non-null, this must be a valid URL. This parameter is used only on Android.
+  ///The [historyUrl] parameter is the URL to use as the history entry. The default value is `about:blank`. If non-null, this must be a valid URL. This parameter is used only on Android.
   ///
   ///The [options] parameter specifies the options for the [PlatformInAppBrowser].
   ///
@@ -364,7 +364,6 @@ This is a limitation of the native WebKit APIs.""",
     String mimeType = "text/html",
     String encoding = "utf8",
     WebUri? baseUrl,
-    @Deprecated("Use historyUrl instead") Uri? androidHistoryUrl,
     WebUri? historyUrl,
     // ignore: deprecated_member_use_from_same_package
     @Deprecated('Use settings instead') InAppBrowserClassOptions? options,

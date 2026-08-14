@@ -513,7 +513,6 @@ class WebPlatformInAppWebViewController extends PlatformInAppWebViewController
     String mimeType = "text/html",
     String encoding = "utf8",
     WebUri? baseUrl,
-    @Deprecated('Use historyUrl instead') Uri? androidHistoryUrl,
     WebUri? historyUrl,
     @Deprecated('Use allowingReadAccessTo instead')
     Uri? iosAllowingReadAccessTo,
@@ -534,10 +533,7 @@ class WebPlatformInAppWebViewController extends PlatformInAppWebViewController
     args.putIfAbsent('baseUrl', () => baseUrl?.toString() ?? "about:blank");
     args.putIfAbsent(
       'historyUrl',
-      () =>
-          historyUrl?.toString() ??
-          androidHistoryUrl?.toString() ??
-          "about:blank",
+      () => historyUrl?.toString() ?? "about:blank",
     );
     args.putIfAbsent(
       'allowingReadAccessTo',

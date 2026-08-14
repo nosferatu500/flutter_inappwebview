@@ -1150,7 +1150,6 @@ class LinuxInAppWebViewController extends PlatformInAppWebViewController
     String mimeType = "text/html",
     String encoding = "utf8",
     WebUri? baseUrl,
-    @Deprecated('Use historyUrl instead') Uri? androidHistoryUrl,
     WebUri? historyUrl,
     @Deprecated('Use allowingReadAccessTo instead')
     Uri? iosAllowingReadAccessTo,

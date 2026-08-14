@@ -127,7 +127,6 @@ class InAppWebViewController {
     String mimeType = "text/html",
     String encoding = "utf8",
     WebUri? baseUrl,
-    @Deprecated('Use historyUrl instead') Uri? androidHistoryUrl,
     WebUri? historyUrl,
     @Deprecated('Use allowingReadAccessTo instead')
     Uri? iosAllowingReadAccessTo,
@@ -137,7 +136,6 @@ class InAppWebViewController {
     mimeType: mimeType,
     encoding: encoding,
     baseUrl: baseUrl,
-    androidHistoryUrl: androidHistoryUrl,
     historyUrl: historyUrl,
     iosAllowingReadAccessTo: iosAllowingReadAccessTo,
     allowingReadAccessTo: allowingReadAccessTo,

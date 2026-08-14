@@ -778,7 +778,6 @@ class MockPlatformInAppBrowser extends PlatformInAppBrowser
     String mimeType = 'text/html',
     String encoding = 'utf8',
     WebUri? baseUrl,
-    @Deprecated('Use historyUrl instead') Uri? androidHistoryUrl,
     WebUri? historyUrl,
     @Deprecated('Use settings instead') InAppBrowserClassOptions? options,
     InAppBrowserClassSettings? settings,

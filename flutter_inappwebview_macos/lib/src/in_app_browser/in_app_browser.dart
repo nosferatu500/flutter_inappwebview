@@ -223,7 +223,6 @@ class MacOSInAppBrowser extends PlatformInAppBrowser with ChannelController {
     String mimeType = "text/html",
     String encoding = "utf8",
     WebUri? baseUrl,
-    @Deprecated("Use historyUrl instead") Uri? androidHistoryUrl,
     WebUri? historyUrl,
     // ignore: deprecated_member_use_from_same_package
     @Deprecated('Use settings instead') InAppBrowserClassOptions? options,
@@ -239,7 +238,7 @@ class MacOSInAppBrowser extends PlatformInAppBrowser with ChannelController {
     args.putIfAbsent('baseUrl', () => baseUrl?.toString() ?? "about:blank");
     args.putIfAbsent(
       'historyUrl',
-      () => (historyUrl ?? androidHistoryUrl)?.toString() ?? "about:blank",
+      () => historyUrl?.toString() ?? "about:blank",
     );
     await _staticChannel.invokeMethod('open', args);
   }

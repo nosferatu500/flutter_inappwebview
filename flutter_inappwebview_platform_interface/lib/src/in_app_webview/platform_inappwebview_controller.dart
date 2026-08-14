@@ -594,7 +594,6 @@ abstract class PlatformInAppWebViewController extends PlatformInterface
       platforms: [AndroidPlatform(), IOSPlatform(), MacOSPlatform()],
     )
     WebUri? baseUrl,
-    @Deprecated('Use historyUrl instead') Uri? androidHistoryUrl,
     @SupportedPlatforms(platforms: [AndroidPlatform()]) WebUri? historyUrl,
     @Deprecated('Use allowingReadAccessTo instead')
     Uri? iosAllowingReadAccessTo,

@@ -8,10 +8,6 @@ part of 'in_app_webview_initial_data.dart';
 
 ///Initial [data] as a content for an `WebView` instance, using [baseUrl] as the base URL for it.
 class InAppWebViewInitialData {
-  ///Use [historyUrl] instead.
-  @Deprecated('Use historyUrl instead')
-  Uri? androidHistoryUrl;
-
   ///The URL to use as the page's base URL. If `null` defaults to `about:blank`.
   WebUri? baseUrl;
 
@@ -30,17 +26,12 @@ class InAppWebViewInitialData {
   ///The MIME type of the data, e.g. "text/html". The default value is `"text/html"`.
   String mimeType;
   InAppWebViewInitialData({
-    @Deprecated('Use historyUrl instead') this.androidHistoryUrl,
     this.baseUrl,
     required this.data,
     this.encoding = "utf8",
     this.historyUrl,
     this.mimeType = "text/html",
-  }) {
-    historyUrl =
-        historyUrl ??
-        (androidHistoryUrl != null ? WebUri.uri(androidHistoryUrl!) : null);
-  }
+  });
 
   ///Gets a possible [InAppWebViewInitialData] instance from a [Map] value.
   static InAppWebViewInitialData? fromMap(
@@ -51,9 +42,6 @@ class InAppWebViewInitialData {
       return null;
     }
     final instance = InAppWebViewInitialData(
-      androidHistoryUrl: map['historyUrl'] != null
-          ? Uri.tryParse(map['historyUrl'])
-          : null,
       baseUrl: map['baseUrl'] != null ? WebUri(map['baseUrl']) : null,
       data: map['data'],
       historyUrl: map['historyUrl'] != null ? WebUri(map['historyUrl']) : null,
