@@ -363,20 +363,6 @@ enum PlatformInAppWebViewControllerMethod {
   ///{@endtemplate}
   clearAllCache,
 
-  ///Can be used to check if the [PlatformInAppWebViewController.clearCache] method is supported at runtime.
-  ///
-  ///{@template flutter_inappwebview_platform_interface.PlatformInAppWebViewController.clearCache.supported_platforms}
-  ///
-  ///**Officially Supported Platforms/Implementations**:
-  ///- Android WebView
-  ///- iOS WKWebView
-  ///- macOS WKWebView
-  ///
-  ///Use the [PlatformInAppWebViewController.isMethodSupported] method to check if this method is supported at runtime.
-  ///{@endtemplate}
-  @Deprecated('Use InAppWebViewController.clearAllCache instead')
-  clearCache,
-
   ///Can be used to check if the [PlatformInAppWebViewController.clearClientCertPreferences] method is supported at runtime.
   ///
   ///{@template flutter_inappwebview_platform_interface.PlatformInAppWebViewController.clearClientCertPreferences.supported_platforms}
@@ -917,20 +903,6 @@ enum PlatformInAppWebViewControllerMethod {
   ///Use the [PlatformInAppWebViewController.isMethodSupported] method to check if this method is supported at runtime.
   ///{@endtemplate}
   getSafeBrowsingPrivacyPolicyUrl,
-
-  ///Can be used to check if the [PlatformInAppWebViewController.getScale] method is supported at runtime.
-  ///
-  ///{@template flutter_inappwebview_platform_interface.PlatformInAppWebViewController.getScale.supported_platforms}
-  ///
-  ///**Officially Supported Platforms/Implementations**:
-  ///- Android WebView
-  ///- iOS WKWebView
-  ///- macOS WKWebView
-  ///
-  ///Use the [PlatformInAppWebViewController.isMethodSupported] method to check if this method is supported at runtime.
-  ///{@endtemplate}
-  @Deprecated('Use getZoomScale instead')
-  getScale,
 
   ///Can be used to check if the [PlatformInAppWebViewController.getScreenScale] method is supported at runtime.
   ///
@@ -2289,21 +2261,6 @@ enum PlatformInAppWebViewControllerMethod {
   ///{@endtemplate}
   setSafeBrowsingAllowlist,
 
-  ///Can be used to check if the [PlatformInAppWebViewController.setSafeBrowsingWhitelist] method is supported at runtime.
-  ///
-  ///{@template flutter_inappwebview_platform_interface.PlatformInAppWebViewController.setSafeBrowsingWhitelist.supported_platforms}
-  ///
-  ///**Officially Supported Platforms/Implementations**:
-  ///- Android WebView
-  ///
-  ///**Parameters - Officially Supported Platforms/Implementations**:
-  ///- [hosts]: all platforms
-  ///
-  ///Use the [PlatformInAppWebViewController.isMethodSupported] method to check if this method is supported at runtime.
-  ///{@endtemplate}
-  @Deprecated('Use setSafeBrowsingAllowlist instead')
-  setSafeBrowsingWhitelist,
-
   ///Can be used to check if the [PlatformInAppWebViewController.setScreenScale] method is supported at runtime.
   ///
   ///{@template flutter_inappwebview_platform_interface.PlatformInAppWebViewController.setScreenScale.supported_platforms}
@@ -2623,13 +2580,6 @@ extension _PlatformInAppWebViewControllerMethodSupported
               TargetPlatform.macOS,
               TargetPlatform.linux,
             ].contains(platform ?? defaultTargetPlatform);
-      case PlatformInAppWebViewControllerMethod.clearCache:
-        return ((kIsWeb && platform != null) || !kIsWeb) &&
-            [
-              TargetPlatform.android,
-              TargetPlatform.iOS,
-              TargetPlatform.macOS,
-            ].contains(platform ?? defaultTargetPlatform);
       case PlatformInAppWebViewControllerMethod.clearClientCertPreferences:
         return ((kIsWeb && platform != null) || !kIsWeb) &&
             [
@@ -2912,13 +2862,6 @@ extension _PlatformInAppWebViewControllerMethodSupported
         return ((kIsWeb && platform != null) || !kIsWeb) &&
             [
               TargetPlatform.android,
-            ].contains(platform ?? defaultTargetPlatform);
-      case PlatformInAppWebViewControllerMethod.getScale:
-        return ((kIsWeb && platform != null) || !kIsWeb) &&
-            [
-              TargetPlatform.android,
-              TargetPlatform.iOS,
-              TargetPlatform.macOS,
             ].contains(platform ?? defaultTargetPlatform);
       case PlatformInAppWebViewControllerMethod.getScreenScale:
         return ((kIsWeb && platform != null) || !kIsWeb) &&
@@ -3564,11 +3507,6 @@ extension _PlatformInAppWebViewControllerMethodSupported
                     TargetPlatform.windows,
                   ].contains(platform ?? defaultTargetPlatform);
       case PlatformInAppWebViewControllerMethod.setSafeBrowsingAllowlist:
-        return ((kIsWeb && platform != null) || !kIsWeb) &&
-            [
-              TargetPlatform.android,
-            ].contains(platform ?? defaultTargetPlatform);
-      case PlatformInAppWebViewControllerMethod.setSafeBrowsingWhitelist:
         return ((kIsWeb && platform != null) || !kIsWeb) &&
             [
               TargetPlatform.android,

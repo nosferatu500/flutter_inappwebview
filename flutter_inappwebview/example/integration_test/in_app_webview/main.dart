@@ -18,7 +18,7 @@ import '../env.dart';
 part 'supported.dart';
 part 'apple_pay_api.dart';
 part 'audio_playback_policy.dart';
-part 'clear_cache.dart';
+part 'clear_all_cache.dart';
 part 'clear_client_cert_preferences.dart';
 part 'clear_focus.dart';
 part 'clear_ssl_preferences.dart';
@@ -170,7 +170,7 @@ void main() {
     injectJavascriptFile();
     injectCSS();
     takeScreenshot();
-    clearCache();
+    clearAllCache();
     tRexRunnerGame();
     pauseResumeTimers();
     printCurrentPage();

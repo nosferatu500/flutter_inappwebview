@@ -304,12 +304,6 @@ class InAppWebViewController {
   Future<WebHistory?> getCopyBackForwardList() =>
       platform.getCopyBackForwardList();
 
-  ///{@macro flutter_inappwebview_platform_interface.PlatformInAppWebViewController.clearCache}
-  ///
-  ///{@macro flutter_inappwebview_platform_interface.PlatformInAppWebViewController.clearCache.supported_platforms}
-  @Deprecated("Use InAppWebViewController.clearAllCache instead")
-  Future<void> clearCache() => platform.clearCache();
-
   ///{@macro flutter_inappwebview_platform_interface.PlatformInAppWebViewController.getTRexRunnerHtml}
   ///
   ///{@macro flutter_inappwebview_platform_interface.PlatformInAppWebViewController.getTRexRunnerHtml.supported_platforms}
@@ -399,12 +393,6 @@ class InAppWebViewController {
   ///
   ///{@macro flutter_inappwebview_platform_interface.PlatformInAppWebViewController.getZoomScale.supported_platforms}
   Future<double?> getZoomScale() => platform.getZoomScale();
-
-  ///{@macro flutter_inappwebview_platform_interface.PlatformInAppWebViewController.getScale}
-  ///
-  ///{@macro flutter_inappwebview_platform_interface.PlatformInAppWebViewController.getScale.supported_platforms}
-  @Deprecated('Use getZoomScale instead')
-  Future<double?> getScale() => platform.getScale();
 
   ///{@macro flutter_inappwebview_platform_interface.PlatformInAppWebViewController.getSelectedText}
   ///
@@ -886,15 +874,6 @@ class InAppWebViewController {
   ///{@macro flutter_inappwebview_platform_interface.PlatformInAppWebViewController.getSafeBrowsingPrivacyPolicyUrl.supported_platforms}
   static Future<WebUri?> getSafeBrowsingPrivacyPolicyUrl() =>
       PlatformInAppWebViewController.static().getSafeBrowsingPrivacyPolicyUrl();
-
-  ///{@macro flutter_inappwebview_platform_interface.PlatformInAppWebViewController.setSafeBrowsingWhitelist}
-  ///
-  ///{@macro flutter_inappwebview_platform_interface.PlatformInAppWebViewController.setSafeBrowsingWhitelist.supported_platforms}
-  @Deprecated("Use setSafeBrowsingAllowlist instead")
-  static Future<bool> setSafeBrowsingWhitelist({required List<String> hosts}) =>
-      PlatformInAppWebViewController.static().setSafeBrowsingWhitelist(
-        hosts: hosts,
-      );
 
   ///{@macro flutter_inappwebview_platform_interface.PlatformInAppWebViewController.setSafeBrowsingAllowlist}
   ///

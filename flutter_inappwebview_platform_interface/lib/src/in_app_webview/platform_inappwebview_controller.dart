@@ -1467,21 +1467,6 @@ abstract class PlatformInAppWebViewController extends PlatformInterface
     );
   }
 
-  ///{@template flutter_inappwebview_platform_interface.PlatformInAppWebViewController.clearCache}
-  ///Use [PlatformInAppWebViewController.clearAllCache] instead
-  ///{@endtemplate}
-  ///
-  ///{@macro flutter_inappwebview_platform_interface.PlatformInAppWebViewController.clearCache.supported_platforms}
-  @SupportedPlatforms(
-    platforms: [AndroidPlatform(), IOSPlatform(), MacOSPlatform()],
-  )
-  @Deprecated("Use InAppWebViewController.clearAllCache instead")
-  Future<void> clearCache() {
-    throw UnimplementedError(
-      '${PlatformInAppWebViewControllerMethod.clearCache.name} is not implemented on the current platform',
-    );
-  }
-
   ///{@template flutter_inappwebview_platform_interface.PlatformInAppWebViewController.scrollTo}
   ///Scrolls the WebView to the position.
   ///
@@ -4610,34 +4595,6 @@ abstract class PlatformInAppWebViewController extends PlatformInterface
   Future<String> getTRexRunnerCss() {
     throw UnimplementedError(
       '${PlatformInAppWebViewControllerMethod.getTRexRunnerCss.name} is not implemented on the current platform',
-    );
-  }
-
-  ///{@template flutter_inappwebview_platform_interface.PlatformInAppWebViewController.getScale}
-  ///Use [getZoomScale] instead.
-  ///{@endtemplate}
-  ///
-  ///{@macro flutter_inappwebview_platform_interface.PlatformInAppWebViewController.getScale.supported_platforms}
-  @SupportedPlatforms(
-    platforms: [AndroidPlatform(), IOSPlatform(), MacOSPlatform()],
-  )
-  @Deprecated('Use getZoomScale instead')
-  Future<double?> getScale() {
-    throw UnimplementedError(
-      '${PlatformInAppWebViewControllerMethod.getScale.name} is not implemented on the current platform',
-    );
-  }
-
-  ///{@template flutter_inappwebview_platform_interface.PlatformInAppWebViewController.setSafeBrowsingWhitelist}
-  ///Use [setSafeBrowsingAllowlist] instead.
-  ///{@endtemplate}
-  ///
-  ///{@macro flutter_inappwebview_platform_interface.PlatformInAppWebViewController.setSafeBrowsingWhitelist.supported_platforms}
-  @SupportedPlatforms(platforms: [AndroidPlatform()])
-  @Deprecated("Use setSafeBrowsingAllowlist instead")
-  Future<bool> setSafeBrowsingWhitelist({required List<String> hosts}) {
-    throw UnimplementedError(
-      '${PlatformInAppWebViewControllerMethod.setSafeBrowsingWhitelist.name} is not implemented on the current platform',
     );
   }
 

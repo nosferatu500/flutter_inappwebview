@@ -83,7 +83,7 @@ class AndroidInAppWebViewController {
     return await InAppWebViewController.getSafeBrowsingPrivacyPolicyUrl();
   }
 
-  ///Use [InAppWebViewController.setSafeBrowsingWhitelist] instead.
+  ///Use [InAppWebViewController.setSafeBrowsingAllowlist] instead.
   @Deprecated("Use InAppWebViewController.setSafeBrowsingAllowlist instead")
   static Future<bool> setSafeBrowsingWhitelist({
     required List<String> hosts,

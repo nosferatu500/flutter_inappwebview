@@ -1,6 +1,6 @@
 part of 'main.dart';
 
-void clearCache() {
+void clearAllCache() {
   final shouldSkip = !InAppWebViewController.isMethodSupported(
     PlatformInAppWebViewControllerMethod.clearAllCache,
   );

@@ -49,7 +49,7 @@ void safeBrowsing() {
       );
     });
 
-    skippableTest('setSafeBrowsingWhitelist', () async {
+    skippableTest('setSafeBrowsingAllowlist', () async {
       expect(
         await InAppWebViewController.setSafeBrowsingAllowlist(
           hosts: ["flutter.dev", "github.com"],

@@ -1994,13 +1994,6 @@ class AndroidInAppWebViewController extends PlatformInAppWebViewController
   }
 
   @override
-  @Deprecated("Use InAppWebViewController.clearAllCache instead")
-  Future<void> clearCache() async {
-    Map<String, dynamic> args = <String, dynamic>{};
-    await channel?.invokeMethod('clearCache', args);
-  }
-
-  @override
   @Deprecated("Use tRexRunnerHtml instead")
   Future<String> getTRexRunnerHtml() async {
     return await tRexRunnerHtml;
@@ -2125,12 +2118,6 @@ class AndroidInAppWebViewController extends PlatformInAppWebViewController
   Future<double?> getZoomScale() async {
     Map<String, dynamic> args = <String, dynamic>{};
     return await channel?.invokeMethod<double?>('getZoomScale', args);
-  }
-
-  @override
-  @Deprecated('Use getZoomScale instead')
-  Future<double?> getScale() async {
-    return await getZoomScale();
   }
 
   @override
@@ -2667,12 +2654,6 @@ class AndroidInAppWebViewController extends PlatformInAppWebViewController
       args,
     );
     return url != null ? WebUri(url) : null;
-  }
-
-  @override
-  @Deprecated("Use setSafeBrowsingAllowlist instead")
-  Future<bool> setSafeBrowsingWhitelist({required List<String> hosts}) async {
-    return await setSafeBrowsingAllowlist(hosts: hosts);
   }
 
   @override

@@ -2298,13 +2298,6 @@ class WindowsInAppWebViewController extends PlatformInAppWebViewController
   }
 
   @override
-  @Deprecated("Use InAppWebViewController.clearAllCache instead")
-  Future<void> clearCache() async {
-    Map<String, dynamic> args = <String, dynamic>{};
-    await channel?.invokeMethod('clearCache', args);
-  }
-
-  @override
   @Deprecated("Use tRexRunnerHtml instead")
   Future<String> getTRexRunnerHtml() async {
     return await tRexRunnerHtml;
@@ -2427,12 +2420,6 @@ class WindowsInAppWebViewController extends PlatformInAppWebViewController
   Future<double?> getZoomScale() async {
     Map<String, dynamic> args = <String, dynamic>{};
     return await channel?.invokeMethod<double?>('getZoomScale', args);
-  }
-
-  @override
-  @Deprecated('Use getZoomScale instead')
-  Future<double?> getScale() async {
-    return await getZoomScale();
   }
 
   @override
