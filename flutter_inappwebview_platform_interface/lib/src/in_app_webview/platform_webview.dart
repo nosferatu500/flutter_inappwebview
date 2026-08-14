@@ -2041,19 +2041,6 @@ In that case, after the `window.addEventListener("flutterInAppWebViewPlatformRea
   )?
   onNavigationResponse;
 
-  ///{@template flutter_inappwebview_platform_interface.PlatformWebViewCreationParams.iosShouldAllowDeprecatedTLS}
-  ///Use [shouldAllowDeprecatedTLS] instead.
-  ///{@endtemplate}
-  ///
-  ///{@macro flutter_inappwebview_platform_interface.PlatformWebViewCreationParams.iosShouldAllowDeprecatedTLS.supported_platforms}
-  @SupportedPlatforms(platforms: [IOSPlatform()])
-  @Deprecated('Use shouldAllowDeprecatedTLS instead')
-  final FutureOr<IOSShouldAllowDeprecatedTLSAction?> Function(
-    T controller,
-    URLAuthenticationChallenge challenge,
-  )?
-  iosShouldAllowDeprecatedTLS;
-
   ///{@template flutter_inappwebview_platform_interface.PlatformWebViewCreationParams.shouldAllowDeprecatedTLS}
   ///Called when a web view asks whether to continue with a connection that uses a deprecated version of TLS (v1.0 and v1.1).
   ///
@@ -2558,8 +2545,6 @@ This is a limitation of the native WebKit APIs.""",
     )
     this.onDidReceiveServerRedirectForProvisionalNavigation,
     this.onNavigationResponse,
-    @Deprecated('Use shouldAllowDeprecatedTLS instead')
-    this.iosShouldAllowDeprecatedTLS,
     this.shouldAllowDeprecatedTLS,
     this.onCameraCaptureStateChanged,
     this.onMicrophoneCaptureStateChanged,

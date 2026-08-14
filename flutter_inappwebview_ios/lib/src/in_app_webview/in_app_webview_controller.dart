@@ -1081,9 +1081,7 @@ class IOSInAppWebViewController extends PlatformInAppWebViewController
         break;
       case "shouldAllowDeprecatedTLS":
         if ((webviewParams != null &&
-                (webviewParams!.shouldAllowDeprecatedTLS != null ||
-                    // ignore: deprecated_member_use_from_same_package
-                    webviewParams!.iosShouldAllowDeprecatedTLS != null)) ||
+                webviewParams!.shouldAllowDeprecatedTLS != null) ||
             _inAppBrowserEventHandler != null) {
           Map<String, dynamic> arguments = call.arguments
               .cast<String, dynamic>();
@@ -1091,26 +1089,14 @@ class IOSInAppWebViewController extends PlatformInAppWebViewController
               URLAuthenticationChallenge.fromMap(arguments)!;
 
           if (webviewParams != null) {
-            if (webviewParams!.shouldAllowDeprecatedTLS != null)
-              return (await webviewParams!.shouldAllowDeprecatedTLS!(
-                _controllerFromPlatform,
-                challenge,
-              ))?.toNativeValue();
-            else {
-              // ignore: deprecated_member_use_from_same_package
-              return (await webviewParams!.iosShouldAllowDeprecatedTLS!(
-                _controllerFromPlatform,
-                challenge,
-              ))?.toNativeValue();
-            }
+            return (await webviewParams!.shouldAllowDeprecatedTLS!(
+              _controllerFromPlatform,
+              challenge,
+            ))?.toNativeValue();
           } else {
             return (await _inAppBrowserEventHandler!.shouldAllowDeprecatedTLS(
-                  challenge,
-                ))?.toNativeValue() ??
-                // ignore: deprecated_member_use_from_same_package
-                (await _inAppBrowserEventHandler!.iosShouldAllowDeprecatedTLS(
-                  challenge,
-                ))?.toNativeValue();
+              challenge,
+            ))?.toNativeValue();
           }
         }
         break;

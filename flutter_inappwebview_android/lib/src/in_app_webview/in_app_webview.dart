@@ -99,8 +99,6 @@ class AndroidInAppWebViewWidgetCreationParams
     )
     super.onDidReceiveServerRedirectForProvisionalNavigation,
     super.onNavigationResponse,
-    @Deprecated('Use shouldAllowDeprecatedTLS instead')
-    super.iosShouldAllowDeprecatedTLS,
     super.shouldAllowDeprecatedTLS,
     super.onCameraCaptureStateChanged,
     super.onMicrophoneCaptureStateChanged,
@@ -199,7 +197,6 @@ class AndroidInAppWebViewWidgetCreationParams
         onDidReceiveServerRedirectForProvisionalNavigation:
             params.onDidReceiveServerRedirectForProvisionalNavigation,
         onNavigationResponse: params.onNavigationResponse,
-        iosShouldAllowDeprecatedTLS: params.iosShouldAllowDeprecatedTLS,
         shouldAllowDeprecatedTLS: params.shouldAllowDeprecatedTLS,
         onCameraCaptureStateChanged: params.onCameraCaptureStateChanged,
         onMicrophoneCaptureStateChanged: params.onMicrophoneCaptureStateChanged,

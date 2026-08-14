@@ -198,21 +198,6 @@ enum PlatformWebViewCreationParamsProperty {
   @Deprecated('Use onWebContentProcessDidTerminate instead')
   iosOnWebContentProcessDidTerminate,
 
-  ///Can be used to check if the [PlatformWebViewCreationParams.iosShouldAllowDeprecatedTLS] property is supported at runtime.
-  ///
-  ///{@template flutter_inappwebview_platform_interface.PlatformWebViewCreationParams.iosShouldAllowDeprecatedTLS.supported_platforms}
-  ///
-  ///**Officially Supported Platforms/Implementations**:
-  ///- iOS WKWebView
-  ///
-  ///**Parameters - Officially Supported Platforms/Implementations**:
-  ///- [challenge]: all platforms
-  ///
-  ///Use the [PlatformWebViewCreationParams.isPropertySupported] method to check if this property is supported at runtime.
-  ///{@endtemplate}
-  @Deprecated('Use shouldAllowDeprecatedTLS instead')
-  iosShouldAllowDeprecatedTLS,
-
   ///Can be used to check if the [PlatformWebViewCreationParams.onAcceleratorKeyPressed] property is supported at runtime.
   ///
   ///{@template flutter_inappwebview_platform_interface.PlatformWebViewCreationParams.onAcceleratorKeyPressed.supported_platforms}
@@ -1604,9 +1589,6 @@ extension _PlatformWebViewCreationParamsPropertySupported
                   ].contains(platform ?? defaultTargetPlatform);
       case PlatformWebViewCreationParamsProperty
           .iosOnWebContentProcessDidTerminate:
-        return ((kIsWeb && platform != null) || !kIsWeb) &&
-            [TargetPlatform.iOS].contains(platform ?? defaultTargetPlatform);
-      case PlatformWebViewCreationParamsProperty.iosShouldAllowDeprecatedTLS:
         return ((kIsWeb && platform != null) || !kIsWeb) &&
             [TargetPlatform.iOS].contains(platform ?? defaultTargetPlatform);
       case PlatformWebViewCreationParamsProperty.onAcceleratorKeyPressed:

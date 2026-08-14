@@ -124,8 +124,6 @@ class PlatformInAppWebViewWidgetCreationParams
     )
     super.onDidReceiveServerRedirectForProvisionalNavigation,
     super.onNavigationResponse,
-    @Deprecated('Use shouldAllowDeprecatedTLS instead')
-    super.iosShouldAllowDeprecatedTLS,
     super.shouldAllowDeprecatedTLS,
     super.onCameraCaptureStateChanged,
     super.onMicrophoneCaptureStateChanged,

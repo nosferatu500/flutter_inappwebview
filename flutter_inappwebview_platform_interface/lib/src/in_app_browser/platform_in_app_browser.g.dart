@@ -729,21 +729,6 @@ enum PlatformInAppBrowserEventsMethod {
   @Deprecated('Use onWebContentProcessDidTerminate instead')
   iosOnWebContentProcessDidTerminate,
 
-  ///Can be used to check if the [PlatformInAppBrowserEvents.iosShouldAllowDeprecatedTLS] method is supported at runtime.
-  ///
-  ///{@template flutter_inappwebview_platform_interface.PlatformInAppBrowserEvents.iosShouldAllowDeprecatedTLS.supported_platforms}
-  ///
-  ///**Officially Supported Platforms/Implementations**:
-  ///- iOS WKWebView
-  ///
-  ///**Parameters - Officially Supported Platforms/Implementations**:
-  ///- [challenge]: all platforms
-  ///
-  ///Use the [PlatformInAppBrowserEvents.isMethodSupported] method to check if this method is supported at runtime.
-  ///{@endtemplate}
-  @Deprecated('Use shouldAllowDeprecatedTLS instead')
-  iosShouldAllowDeprecatedTLS,
-
   ///Can be used to check if the [PlatformInAppBrowserEvents.onAcceleratorKeyPressed] method is supported at runtime.
   ///
   ///{@template flutter_inappwebview_platform_interface.PlatformInAppBrowserEvents.onAcceleratorKeyPressed.supported_platforms}
@@ -1960,9 +1945,6 @@ extension _PlatformInAppBrowserEventsMethodSupported
               TargetPlatform.android,
             ].contains(platform ?? defaultTargetPlatform);
       case PlatformInAppBrowserEventsMethod.iosOnWebContentProcessDidTerminate:
-        return ((kIsWeb && platform != null) || !kIsWeb) &&
-            [TargetPlatform.iOS].contains(platform ?? defaultTargetPlatform);
-      case PlatformInAppBrowserEventsMethod.iosShouldAllowDeprecatedTLS:
         return ((kIsWeb && platform != null) || !kIsWeb) &&
             [TargetPlatform.iOS].contains(platform ?? defaultTargetPlatform);
       case PlatformInAppBrowserEventsMethod.onAcceleratorKeyPressed:

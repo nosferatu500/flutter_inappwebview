@@ -78,12 +78,6 @@ class HeadlessInAppWebView {
     @Deprecated('Use onWebContentProcessDidTerminate instead')
     void Function(InAppWebViewController controller)?
     iosOnWebContentProcessDidTerminate,
-    @Deprecated('Use shouldAllowDeprecatedTLS instead')
-    FutureOr<IOSShouldAllowDeprecatedTLSAction?> Function(
-      InAppWebViewController controller,
-      URLAuthenticationChallenge challenge,
-    )?
-    iosShouldAllowDeprecatedTLS,
     FutureOr<AjaxRequestAction?> Function(
       InAppWebViewController controller,
       AjaxRequest ajaxRequest,
@@ -685,10 +679,6 @@ class HeadlessInAppWebView {
            onNavigationResponse: onNavigationResponse != null
                ? (controller, navigationResponse) =>
                      onNavigationResponse.call(controller, navigationResponse)
-               : null,
-           iosShouldAllowDeprecatedTLS: iosShouldAllowDeprecatedTLS != null
-               ? (controller, challenge) =>
-                     iosShouldAllowDeprecatedTLS.call(controller, challenge)
                : null,
            shouldAllowDeprecatedTLS: shouldAllowDeprecatedTLS != null
                ? (controller, challenge) =>

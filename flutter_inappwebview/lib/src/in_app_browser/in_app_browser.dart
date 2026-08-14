@@ -287,15 +287,6 @@ class InAppBrowser implements PlatformInAppBrowserEvents {
   @override
   void iosOnWebContentProcessDidTerminate() {}
 
-  ///Use [shouldAllowDeprecatedTLS] instead.
-  @Deprecated('Use shouldAllowDeprecatedTLS instead')
-  @override
-  FutureOr<IOSShouldAllowDeprecatedTLSAction?>? iosShouldAllowDeprecatedTLS(
-    URLAuthenticationChallenge challenge,
-  ) {
-    return null;
-  }
-
   @override
   FutureOr<AjaxRequestAction?>? onAjaxProgress(AjaxRequest ajaxRequest) {
     return null;
