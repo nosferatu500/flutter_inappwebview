@@ -14,10 +14,6 @@ class TrustedWebActivityImmersiveDisplayMode_
   ///Whether the Trusted Web Activity should be in sticky immersive mode.
   bool isSticky;
 
-  ///Use [displayCutoutMode] instead.
-  @Deprecated("Use displayCutoutMode instead")
-  AndroidLayoutInDisplayCutoutMode_? layoutInDisplayCutoutMode;
-
   ///The constant defining how to deal with display cutouts.
   LayoutInDisplayCutoutMode_ displayCutoutMode;
 
@@ -27,14 +23,7 @@ class TrustedWebActivityImmersiveDisplayMode_
   TrustedWebActivityImmersiveDisplayMode_({
     required this.isSticky,
     this.displayCutoutMode = LayoutInDisplayCutoutMode_.DEFAULT,
-    this.layoutInDisplayCutoutMode,
-  }) {
-    this.displayCutoutMode = this.layoutInDisplayCutoutMode != null
-        ? LayoutInDisplayCutoutMode_.fromNativeValue(
-            layoutInDisplayCutoutMode?.toNativeValue(),
-          )!
-        : this.displayCutoutMode;
-  }
+  });
 
   @ExchangeableObjectMethod(toMapMergeWith: true)
   // ignore: unused_element

@@ -77,8 +77,7 @@ export 'js_prompt_request.dart' show JsPromptRequest;
 export 'js_prompt_response.dart' show JsPromptResponse;
 export 'js_prompt_response_action.dart' show JsPromptResponseAction;
 export 'layout_algorithm.dart' show LayoutAlgorithm;
-export 'layout_in_display_cutout_mode.dart'
-    show LayoutInDisplayCutoutMode, AndroidLayoutInDisplayCutoutMode;
+export 'layout_in_display_cutout_mode.dart' show LayoutInDisplayCutoutMode;
 export 'loaded_resource.dart' show LoadedResource;
 export 'login_request.dart' show LoginRequest;
 export 'media_capture_state.dart' show MediaCaptureState;
