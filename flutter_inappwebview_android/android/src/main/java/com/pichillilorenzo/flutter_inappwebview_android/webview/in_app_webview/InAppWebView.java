@@ -467,8 +467,6 @@ final public class InAppWebView extends InputAwareWebView implements InAppWebVie
       public void onFindResultReceived(int activeMatchOrdinal, int numberOfMatches, boolean isDoneCounting) {
         if (findInteractionController != null && findInteractionController.channelDelegate != null)
           findInteractionController.channelDelegate.onFindResultReceived(activeMatchOrdinal, numberOfMatches, isDoneCounting);
-        if (channelDelegate != null)
-          channelDelegate.onFindResultReceived(activeMatchOrdinal, numberOfMatches, isDoneCounting);
       }
     });
 

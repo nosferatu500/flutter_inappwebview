@@ -294,26 +294,6 @@ public class WebViewChannelDelegate extends ChannelDelegateImpl {
           webView.clearSslPreferences();
         result.success(true);
         break;
-      case findAll:
-        if (webView != null) {
-          String find = (String) call.argument("find");
-          webView.findAllAsync(find);
-        }
-        result.success(true);
-        break;
-      case findNext:
-        if (webView != null) {
-          Boolean forward = (Boolean) call.argument("forward");
-          webView.findNext(forward);
-        }
-        result.success(true);
-        break;
-      case clearMatches:
-        if (webView != null) {
-          webView.clearMatches();
-        }
-        result.success(true);
-        break;
       case scrollTo:
         if (webView != null) {
           Integer x = (Integer) call.argument("x");
@@ -723,20 +703,6 @@ public class WebViewChannelDelegate extends ChannelDelegateImpl {
         }
         break;
     }
-  }
-
-  /**
-   * @deprecated Use {@link FindInteractionChannelDelegate#onFindResultReceived} instead.
-   */
-  @Deprecated
-  public void onFindResultReceived(int activeMatchOrdinal, int numberOfMatches, boolean isDoneCounting) {
-    MethodChannel channel = getChannel();
-    if (channel == null) return;
-    Map<String, Object> obj = new HashMap<>();
-    obj.put("activeMatchOrdinal", activeMatchOrdinal);
-    obj.put("numberOfMatches", numberOfMatches);
-    obj.put("isDoneCounting", isDoneCounting);
-    channel.invokeMethod("onFindResultReceived", obj);
   }
 
   public void onLongPressHitTestResult(HitTestResult hitTestResult) {

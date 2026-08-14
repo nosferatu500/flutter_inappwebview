@@ -31,13 +31,6 @@ public enum WebViewChannelDelegateMethods {
   getCopyBackForwardList,
   startSafeBrowsing,
   clearSslPreferences,
-  /**
-   * @deprecated
-   */
-  @Deprecated
-  findAll,
-  findNext,
-  clearMatches,
   scrollTo,
   scrollBy,
   pause,

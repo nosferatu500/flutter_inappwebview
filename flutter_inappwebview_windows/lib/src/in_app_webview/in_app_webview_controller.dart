@@ -897,40 +897,6 @@ class WindowsInAppWebViewController extends PlatformInAppWebViewController
                 ?.toMap();
         }
         break;
-      case "onFindResultReceived":
-        if ((webviewParams != null &&
-                webviewParams!.findInteractionController != null &&
-                webviewParams!
-                        .findInteractionController!
-                        .params
-                        .onFindResultReceived !=
-                    null) ||
-            _inAppBrowserEventHandler != null) {
-          int activeMatchOrdinal = call.arguments["activeMatchOrdinal"];
-          int numberOfMatches = call.arguments["numberOfMatches"];
-          bool isDoneCounting = call.arguments["isDoneCounting"];
-          if (webviewParams != null) {
-            webviewParams!
-                .findInteractionController!
-                .params
-                .onFindResultReceived!(
-              webviewParams!.findInteractionController!,
-              activeMatchOrdinal,
-              numberOfMatches,
-              isDoneCounting,
-            );
-          } else if (_inAppBrowser!.findInteractionController != null &&
-              _inAppBrowser!.findInteractionController!.onFindResultReceived !=
-                  null) {
-            _inAppBrowser!.findInteractionController!.onFindResultReceived!(
-              _inAppBrowser!.findInteractionController!,
-              activeMatchOrdinal,
-              numberOfMatches,
-              isDoneCounting,
-            );
-          }
-        }
-        break;
       case "onPermissionRequest":
         if ((webviewParams != null &&
                 webviewParams!.onPermissionRequest != null) ||

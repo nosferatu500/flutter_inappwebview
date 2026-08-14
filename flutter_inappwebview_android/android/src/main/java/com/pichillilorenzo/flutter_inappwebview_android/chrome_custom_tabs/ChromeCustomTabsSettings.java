@@ -20,8 +20,6 @@ public class ChromeCustomTabsSettings implements ISettings<ChromeCustomTabsActiv
 
   final static String LOG_TAG = "ChromeCustomTabsSettings";
 
-  @Deprecated
-  public Boolean addDefaultShareMenuItem;
   public Integer shareState = CustomTabsIntent.SHARE_STATE_DEFAULT;
   public Boolean showTitle = true;
   @Nullable
@@ -57,9 +55,6 @@ public class ChromeCustomTabsSettings implements ISettings<ChromeCustomTabsActiv
       }
 
       switch (key) {
-        case "addDefaultShareMenuItem":
-          addDefaultShareMenuItem = (Boolean) value;
-          break;
         case "shareState":
           shareState = (Integer) value;
           break;
@@ -152,7 +147,6 @@ public class ChromeCustomTabsSettings implements ISettings<ChromeCustomTabsActiv
   @Override
   public Map<String, Object> toMap() {
     Map<String, Object> options = new HashMap<>();
-    options.put("addDefaultShareMenuItem", addDefaultShareMenuItem);
     options.put("showTitle", showTitle);
     options.put("toolbarBackgroundColor", toolbarBackgroundColor);
     options.put("navigationBarColor", navigationBarColor);

@@ -271,12 +271,7 @@ public class ChromeCustomTabsActivity extends Activity implements Disposable {
       return;
     }
 
-    if (customSettings.addDefaultShareMenuItem != null) {
-      builder.setShareState(customSettings.addDefaultShareMenuItem ?
-              CustomTabsIntent.SHARE_STATE_ON : CustomTabsIntent.SHARE_STATE_OFF);
-    } else {
-      builder.setShareState(customSettings.shareState);
-    }
+    builder.setShareState(customSettings.shareState);
 
     CustomTabColorSchemeParams.Builder defaultColorSchemeBuilder = new CustomTabColorSchemeParams.Builder();
     if (customSettings.toolbarBackgroundColor != null && !customSettings.toolbarBackgroundColor.isEmpty()) {
