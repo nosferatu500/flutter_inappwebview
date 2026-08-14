@@ -971,38 +971,6 @@ enum PlatformInAppWebViewControllerMethod {
   ///{@endtemplate}
   getSettings,
 
-  ///Can be used to check if the [PlatformInAppWebViewController.getTRexRunnerCss] method is supported at runtime.
-  ///
-  ///{@template flutter_inappwebview_platform_interface.PlatformInAppWebViewController.getTRexRunnerCss.supported_platforms}
-  ///
-  ///**Officially Supported Platforms/Implementations**:
-  ///- Android WebView
-  ///- iOS WKWebView
-  ///- macOS WKWebView
-  ///- Web \<iframe\> but requires same origin
-  ///- Windows WebView2
-  ///
-  ///Use the [PlatformInAppWebViewController.isMethodSupported] method to check if this method is supported at runtime.
-  ///{@endtemplate}
-  @Deprecated('Use tRexRunnerCss instead')
-  getTRexRunnerCss,
-
-  ///Can be used to check if the [PlatformInAppWebViewController.getTRexRunnerHtml] method is supported at runtime.
-  ///
-  ///{@template flutter_inappwebview_platform_interface.PlatformInAppWebViewController.getTRexRunnerHtml.supported_platforms}
-  ///
-  ///**Officially Supported Platforms/Implementations**:
-  ///- Android WebView
-  ///- iOS WKWebView
-  ///- macOS WKWebView
-  ///- Web \<iframe\> but requires same origin
-  ///- Windows WebView2
-  ///
-  ///Use the [PlatformInAppWebViewController.isMethodSupported] method to check if this method is supported at runtime.
-  ///{@endtemplate}
-  @Deprecated('Use tRexRunnerHtml instead')
-  getTRexRunnerHtml,
-
   ///Can be used to check if the [PlatformInAppWebViewController.getTargetRefreshRate] method is supported at runtime.
   ///
   ///{@template flutter_inappwebview_platform_interface.PlatformInAppWebViewController.getTargetRefreshRate.supported_platforms}
@@ -2861,26 +2829,6 @@ extension _PlatformInAppWebViewControllerMethodSupported
                     TargetPlatform.android,
                     TargetPlatform.iOS,
                     TargetPlatform.linux,
-                    TargetPlatform.macOS,
-                    TargetPlatform.windows,
-                  ].contains(platform ?? defaultTargetPlatform);
-      case PlatformInAppWebViewControllerMethod.getTRexRunnerCss:
-        return kIsWeb && platform == null
-            ? true
-            : ((kIsWeb && platform != null) || !kIsWeb) &&
-                  [
-                    TargetPlatform.android,
-                    TargetPlatform.iOS,
-                    TargetPlatform.macOS,
-                    TargetPlatform.windows,
-                  ].contains(platform ?? defaultTargetPlatform);
-      case PlatformInAppWebViewControllerMethod.getTRexRunnerHtml:
-        return kIsWeb && platform == null
-            ? true
-            : ((kIsWeb && platform != null) || !kIsWeb) &&
-                  [
-                    TargetPlatform.android,
-                    TargetPlatform.iOS,
                     TargetPlatform.macOS,
                     TargetPlatform.windows,
                   ].contains(platform ?? defaultTargetPlatform);

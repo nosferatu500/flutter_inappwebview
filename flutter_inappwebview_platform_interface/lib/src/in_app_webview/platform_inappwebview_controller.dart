@@ -4508,48 +4508,6 @@ abstract class PlatformInAppWebViewController extends PlatformInterface
     '${PlatformInAppWebViewControllerProperty.tRexRunnerCss.name} is not implemented on the current platform',
   );
 
-  ///{@template flutter_inappwebview_platform_interface.PlatformInAppWebViewController.getTRexRunnerHtml}
-  ///Use [tRexRunnerHtml] instead.
-  ///{@endtemplate}
-  ///
-  ///{@macro flutter_inappwebview_platform_interface.PlatformInAppWebViewController.getTRexRunnerHtml.supported_platforms}
-  @SupportedPlatforms(
-    platforms: [
-      AndroidPlatform(),
-      IOSPlatform(),
-      MacOSPlatform(),
-      WebPlatform(),
-      WindowsPlatform(),
-    ],
-  )
-  @Deprecated("Use tRexRunnerHtml instead")
-  Future<String> getTRexRunnerHtml() {
-    throw UnimplementedError(
-      '${PlatformInAppWebViewControllerMethod.getTRexRunnerHtml.name} is not implemented on the current platform',
-    );
-  }
-
-  ///{@template flutter_inappwebview_platform_interface.PlatformInAppWebViewController.getTRexRunnerCss}
-  ///Use [tRexRunnerCss] instead.
-  ///{@endtemplate}
-  ///
-  ///{@macro flutter_inappwebview_platform_interface.PlatformInAppWebViewController.getTRexRunnerCss.supported_platforms}
-  @SupportedPlatforms(
-    platforms: [
-      AndroidPlatform(),
-      IOSPlatform(),
-      MacOSPlatform(),
-      WebPlatform(),
-      WindowsPlatform(),
-    ],
-  )
-  @Deprecated("Use tRexRunnerCss instead")
-  Future<String> getTRexRunnerCss() {
-    throw UnimplementedError(
-      '${PlatformInAppWebViewControllerMethod.getTRexRunnerCss.name} is not implemented on the current platform',
-    );
-  }
-
   ///{@template flutter_inappwebview_platform_interface.PlatformInAppWebViewController.isClassSupported}
   ///Check if the current class is supported by the [defaultTargetPlatform] or a specific [platform].
   ///{@endtemplate}

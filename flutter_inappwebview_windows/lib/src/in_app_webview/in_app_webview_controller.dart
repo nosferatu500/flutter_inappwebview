@@ -2276,18 +2276,6 @@ class WindowsInAppWebViewController extends PlatformInAppWebViewController
   }
 
   @override
-  @Deprecated("Use tRexRunnerHtml instead")
-  Future<String> getTRexRunnerHtml() async {
-    return await tRexRunnerHtml;
-  }
-
-  @override
-  @Deprecated("Use tRexRunnerCss instead")
-  Future<String> getTRexRunnerCss() async {
-    return await tRexRunnerCss;
-  }
-
-  @override
   Future<void> scrollTo({
     required int x,
     required int y,

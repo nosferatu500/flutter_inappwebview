@@ -278,18 +278,6 @@ class InAppWebViewController {
   Future<WebHistory?> getCopyBackForwardList() =>
       platform.getCopyBackForwardList();
 
-  ///{@macro flutter_inappwebview_platform_interface.PlatformInAppWebViewController.getTRexRunnerHtml}
-  ///
-  ///{@macro flutter_inappwebview_platform_interface.PlatformInAppWebViewController.getTRexRunnerHtml.supported_platforms}
-  @Deprecated("Use tRexRunnerHtml instead")
-  Future<String> getTRexRunnerHtml() => platform.getTRexRunnerHtml();
-
-  ///{@macro flutter_inappwebview_platform_interface.PlatformInAppWebViewController.getTRexRunnerCss}
-  ///
-  ///{@macro flutter_inappwebview_platform_interface.PlatformInAppWebViewController.getTRexRunnerCss.supported_platforms}
-  @Deprecated("Use tRexRunnerCss instead")
-  Future<String> getTRexRunnerCss() => platform.getTRexRunnerCss();
-
   ///{@macro flutter_inappwebview_platform_interface.PlatformInAppWebViewController.scrollTo}
   ///
   ///{@macro flutter_inappwebview_platform_interface.PlatformInAppWebViewController.scrollTo.supported_platforms}
