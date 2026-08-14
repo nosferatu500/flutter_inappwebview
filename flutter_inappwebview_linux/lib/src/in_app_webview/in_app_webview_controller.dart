@@ -1129,17 +1129,13 @@ class LinuxInAppWebViewController extends PlatformInAppWebViewController
   @override
   Future<void> loadUrl({
     required URLRequest urlRequest,
-    @Deprecated('Use allowingReadAccessTo instead')
-    Uri? iosAllowingReadAccessTo,
     WebUri? allowingReadAccessTo,
   }) async {
     Map<String, dynamic> args = <String, dynamic>{};
     args.putIfAbsent('urlRequest', () => urlRequest.toMap());
     args.putIfAbsent(
       'allowingReadAccessTo',
-      () =>
-          allowingReadAccessTo?.toString() ??
-          iosAllowingReadAccessTo?.toString(),
+      () => allowingReadAccessTo?.toString(),
     );
     await channel?.invokeMethod('loadUrl', args);
   }
@@ -1151,8 +1147,6 @@ class LinuxInAppWebViewController extends PlatformInAppWebViewController
     String encoding = "utf8",
     WebUri? baseUrl,
     WebUri? historyUrl,
-    @Deprecated('Use allowingReadAccessTo instead')
-    Uri? iosAllowingReadAccessTo,
     WebUri? allowingReadAccessTo,
   }) async {
     Map<String, dynamic> args = <String, dynamic>{};

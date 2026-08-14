@@ -104,12 +104,9 @@ class InAppWebViewController {
   ///{@macro flutter_inappwebview_platform_interface.PlatformInAppWebViewController.loadUrl.supported_platforms}
   Future<void> loadUrl({
     required URLRequest urlRequest,
-    @Deprecated('Use allowingReadAccessTo instead')
-    Uri? iosAllowingReadAccessTo,
     WebUri? allowingReadAccessTo,
   }) => platform.loadUrl(
     urlRequest: urlRequest,
-    iosAllowingReadAccessTo: iosAllowingReadAccessTo,
     allowingReadAccessTo: allowingReadAccessTo,
   );
 
@@ -128,8 +125,6 @@ class InAppWebViewController {
     String encoding = "utf8",
     WebUri? baseUrl,
     WebUri? historyUrl,
-    @Deprecated('Use allowingReadAccessTo instead')
-    Uri? iosAllowingReadAccessTo,
     WebUri? allowingReadAccessTo,
   }) => platform.loadData(
     data: data,
@@ -137,7 +132,6 @@ class InAppWebViewController {
     encoding: encoding,
     baseUrl: baseUrl,
     historyUrl: historyUrl,
-    iosAllowingReadAccessTo: iosAllowingReadAccessTo,
     allowingReadAccessTo: allowingReadAccessTo,
   );
 

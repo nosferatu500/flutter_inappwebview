@@ -378,8 +378,6 @@ class MockPlatformInAppWebViewController extends PlatformInAppWebViewController
   @override
   Future<void> loadUrl({
     required URLRequest urlRequest,
-    @Deprecated('Use allowingReadAccessTo instead')
-    Uri? iosAllowingReadAccessTo,
     WebUri? allowingReadAccessTo,
   }) async {}
 

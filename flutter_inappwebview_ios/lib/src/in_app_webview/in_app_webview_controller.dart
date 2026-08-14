@@ -1662,26 +1662,18 @@ class IOSInAppWebViewController extends PlatformInAppWebViewController
   @override
   Future<void> loadUrl({
     required URLRequest urlRequest,
-    @Deprecated('Use allowingReadAccessTo instead')
-    Uri? iosAllowingReadAccessTo,
     WebUri? allowingReadAccessTo,
   }) async {
     assert(urlRequest.url != null && urlRequest.url.toString().isNotEmpty);
     assert(
       allowingReadAccessTo == null || allowingReadAccessTo.isScheme("file"),
     );
-    assert(
-      iosAllowingReadAccessTo == null ||
-          iosAllowingReadAccessTo.isScheme("file"),
-    );
 
     Map<String, dynamic> args = <String, dynamic>{};
     args.putIfAbsent('urlRequest', () => urlRequest.toMap());
     args.putIfAbsent(
       'allowingReadAccessTo',
-      () =>
-          allowingReadAccessTo?.toString() ??
-          iosAllowingReadAccessTo?.toString(),
+      () => allowingReadAccessTo?.toString(),
     );
     await channel?.invokeMethod('loadUrl', args);
   }
@@ -1705,16 +1697,10 @@ class IOSInAppWebViewController extends PlatformInAppWebViewController
     String encoding = "utf8",
     WebUri? baseUrl,
     WebUri? historyUrl,
-    @Deprecated('Use allowingReadAccessTo instead')
-    Uri? iosAllowingReadAccessTo,
     WebUri? allowingReadAccessTo,
   }) async {
     assert(
       allowingReadAccessTo == null || allowingReadAccessTo.isScheme("file"),
-    );
-    assert(
-      iosAllowingReadAccessTo == null ||
-          iosAllowingReadAccessTo.isScheme("file"),
     );
 
     Map<String, dynamic> args = <String, dynamic>{};
@@ -1728,9 +1714,7 @@ class IOSInAppWebViewController extends PlatformInAppWebViewController
     );
     args.putIfAbsent(
       'allowingReadAccessTo',
-      () =>
-          allowingReadAccessTo?.toString() ??
-          iosAllowingReadAccessTo?.toString(),
+      () => allowingReadAccessTo?.toString(),
     );
     await channel?.invokeMethod('loadData', args);
   }

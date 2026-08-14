@@ -480,8 +480,6 @@ abstract class PlatformInAppWebViewController extends PlatformInterface
   )
   Future<void> loadUrl({
     required URLRequest urlRequest,
-    @Deprecated('Use allowingReadAccessTo instead')
-    Uri? iosAllowingReadAccessTo,
     @SupportedPlatforms(platforms: [IOSPlatform(), MacOSPlatform()])
     WebUri? allowingReadAccessTo,
   }) {
@@ -595,8 +593,6 @@ abstract class PlatformInAppWebViewController extends PlatformInterface
     )
     WebUri? baseUrl,
     @SupportedPlatforms(platforms: [AndroidPlatform()]) WebUri? historyUrl,
-    @Deprecated('Use allowingReadAccessTo instead')
-    Uri? iosAllowingReadAccessTo,
     @SupportedPlatforms(platforms: [IOSPlatform(), MacOSPlatform()])
     WebUri? allowingReadAccessTo,
   }) {
