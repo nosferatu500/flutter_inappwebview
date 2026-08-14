@@ -261,19 +261,6 @@ class InAppWebViewController {
   }) =>
       platform.takeScreenshot(screenshotConfiguration: screenshotConfiguration);
 
-  ///{@macro flutter_inappwebview_platform_interface.PlatformInAppWebViewController.setOptions}
-  ///
-  ///{@macro flutter_inappwebview_platform_interface.PlatformInAppWebViewController.setOptions.supported_platforms}
-  @Deprecated('Use setSettings instead')
-  Future<void> setOptions({required InAppWebViewGroupOptions options}) =>
-      platform.setOptions(options: options);
-
-  ///{@macro flutter_inappwebview_platform_interface.PlatformInAppWebViewController.getOptions}
-  ///
-  ///{@macro flutter_inappwebview_platform_interface.PlatformInAppWebViewController.getOptions.supported_platforms}
-  @Deprecated('Use getSettings instead')
-  Future<InAppWebViewGroupOptions?> getOptions() => platform.getOptions();
-
   ///{@macro flutter_inappwebview_platform_interface.PlatformInAppWebViewController.setSettings}
   ///
   ///{@macro flutter_inappwebview_platform_interface.PlatformInAppWebViewController.setSettings.supported_platforms}

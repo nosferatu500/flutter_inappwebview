@@ -4514,48 +4514,6 @@ abstract class PlatformInAppWebViewController extends PlatformInterface
     '${PlatformInAppWebViewControllerProperty.tRexRunnerCss.name} is not implemented on the current platform',
   );
 
-  ///{@template flutter_inappwebview_platform_interface.PlatformInAppWebViewController.setOptions}
-  ///Use [setSettings] instead.
-  ///{@endtemplate}
-  ///
-  ///{@macro flutter_inappwebview_platform_interface.PlatformInAppWebViewController.setOptions.supported_platforms}
-  @SupportedPlatforms(
-    platforms: [
-      AndroidPlatform(),
-      IOSPlatform(),
-      MacOSPlatform(),
-      WebPlatform(),
-      WindowsPlatform(),
-    ],
-  )
-  @Deprecated('Use setSettings instead')
-  Future<void> setOptions({required InAppWebViewGroupOptions options}) {
-    throw UnimplementedError(
-      '${PlatformInAppWebViewControllerMethod.setOptions.name} is not implemented on the current platform',
-    );
-  }
-
-  ///{@template flutter_inappwebview_platform_interface.PlatformInAppWebViewController.getOptions}
-  ///Use [getSettings] instead.
-  ///{@endtemplate}
-  ///
-  ///{@macro flutter_inappwebview_platform_interface.PlatformInAppWebViewController.getOptions.supported_platforms}
-  @SupportedPlatforms(
-    platforms: [
-      AndroidPlatform(),
-      IOSPlatform(),
-      MacOSPlatform(),
-      WebPlatform(),
-      WindowsPlatform(),
-    ],
-  )
-  @Deprecated('Use getSettings instead')
-  Future<InAppWebViewGroupOptions?> getOptions() {
-    throw UnimplementedError(
-      '${PlatformInAppWebViewControllerMethod.getOptions.name} is not implemented on the current platform',
-    );
-  }
-
   ///{@template flutter_inappwebview_platform_interface.PlatformInAppWebViewController.getTRexRunnerHtml}
   ///Use [tRexRunnerHtml] instead.
   ///{@endtemplate}

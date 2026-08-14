@@ -131,9 +131,6 @@ abstract class PlatformChromeSafariBrowser extends PlatformInterface
     @SupportedPlatforms(platforms: [AndroidPlatform()])
     List<WebUri>? otherLikelyURLs,
     @SupportedPlatforms(platforms: [AndroidPlatform()]) WebUri? referrer,
-    @Deprecated('Use settings instead')
-    // ignore: deprecated_member_use_from_same_package
-    ChromeSafariBrowserClassOptions? options,
     ChromeSafariBrowserSettings? settings,
   }) {
     throw UnimplementedError('open is not implemented on the current platform');

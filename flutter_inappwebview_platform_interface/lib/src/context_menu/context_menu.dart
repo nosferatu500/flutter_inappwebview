@@ -35,10 +35,6 @@ class ContextMenu_ {
   final void Function(ContextMenuItem_ contextMenuItemClicked)?
   onContextMenuActionItemClicked;
 
-  ///Use [settings] instead
-  @Deprecated("Use settings instead")
-  final ContextMenuOptions_? options;
-
   ///Context menu settings.
   final ContextMenuSettings_? settings;
 
@@ -50,7 +46,6 @@ class ContextMenu_ {
     this.menuItems = const [],
     this.onCreateContextMenu,
     this.onHideContextMenu,
-    @Deprecated("Use settings instead") this.options,
     this.settings,
     this.onContextMenuActionItemClicked,
   });
@@ -59,9 +54,9 @@ class ContextMenu_ {
   // ignore: unused_element
   Map<String, dynamic> _toMapMergeWith({EnumMethod? enumMethod}) {
     return {
-      "settings":
-          (settings as ContextMenuSettings?)?.toMap(enumMethod: enumMethod) ??
-          (options as ContextMenuOptions?)?.toMap(enumMethod: enumMethod),
+      "settings": (settings as ContextMenuSettings?)?.toMap(
+        enumMethod: enumMethod,
+      ),
     };
   }
 }

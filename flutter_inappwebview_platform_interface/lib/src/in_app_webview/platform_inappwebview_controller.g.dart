@@ -841,22 +841,6 @@ enum PlatformInAppWebViewControllerMethod {
   ///{@endtemplate}
   getMicrophoneCaptureState,
 
-  ///Can be used to check if the [PlatformInAppWebViewController.getOptions] method is supported at runtime.
-  ///
-  ///{@template flutter_inappwebview_platform_interface.PlatformInAppWebViewController.getOptions.supported_platforms}
-  ///
-  ///**Officially Supported Platforms/Implementations**:
-  ///- Android WebView
-  ///- iOS WKWebView
-  ///- macOS WKWebView
-  ///- Web \<iframe\> but requires same origin
-  ///- Windows WebView2
-  ///
-  ///Use the [PlatformInAppWebViewController.isMethodSupported] method to check if this method is supported at runtime.
-  ///{@endtemplate}
-  @Deprecated('Use getSettings instead')
-  getOptions,
-
   ///Can be used to check if the [PlatformInAppWebViewController.getOriginalUrl] method is supported at runtime.
   ///
   ///{@template flutter_inappwebview_platform_interface.PlatformInAppWebViewController.getOriginalUrl.supported_platforms}
@@ -2227,25 +2211,6 @@ enum PlatformInAppWebViewControllerMethod {
   ///{@endtemplate}
   setMuted,
 
-  ///Can be used to check if the [PlatformInAppWebViewController.setOptions] method is supported at runtime.
-  ///
-  ///{@template flutter_inappwebview_platform_interface.PlatformInAppWebViewController.setOptions.supported_platforms}
-  ///
-  ///**Officially Supported Platforms/Implementations**:
-  ///- Android WebView
-  ///- iOS WKWebView
-  ///- macOS WKWebView
-  ///- Web \<iframe\> but requires same origin
-  ///- Windows WebView2
-  ///
-  ///**Parameters - Officially Supported Platforms/Implementations**:
-  ///- [options]: all platforms
-  ///
-  ///Use the [PlatformInAppWebViewController.isMethodSupported] method to check if this method is supported at runtime.
-  ///{@endtemplate}
-  @Deprecated('Use setSettings instead')
-  setOptions,
-
   ///Can be used to check if the [PlatformInAppWebViewController.setSafeBrowsingAllowlist] method is supported at runtime.
   ///
   ///{@template flutter_inappwebview_platform_interface.PlatformInAppWebViewController.setSafeBrowsingAllowlist.supported_platforms}
@@ -2828,16 +2793,6 @@ extension _PlatformInAppWebViewControllerMethodSupported
               TargetPlatform.linux,
               TargetPlatform.macOS,
             ].contains(platform ?? defaultTargetPlatform);
-      case PlatformInAppWebViewControllerMethod.getOptions:
-        return kIsWeb && platform == null
-            ? true
-            : ((kIsWeb && platform != null) || !kIsWeb) &&
-                  [
-                    TargetPlatform.android,
-                    TargetPlatform.iOS,
-                    TargetPlatform.macOS,
-                    TargetPlatform.windows,
-                  ].contains(platform ?? defaultTargetPlatform);
       case PlatformInAppWebViewControllerMethod.getOriginalUrl:
         return kIsWeb && platform == null
             ? true
@@ -3496,16 +3451,6 @@ extension _PlatformInAppWebViewControllerMethodSupported
       case PlatformInAppWebViewControllerMethod.setMuted:
         return ((kIsWeb && platform != null) || !kIsWeb) &&
             [TargetPlatform.linux].contains(platform ?? defaultTargetPlatform);
-      case PlatformInAppWebViewControllerMethod.setOptions:
-        return kIsWeb && platform == null
-            ? true
-            : ((kIsWeb && platform != null) || !kIsWeb) &&
-                  [
-                    TargetPlatform.android,
-                    TargetPlatform.iOS,
-                    TargetPlatform.macOS,
-                    TargetPlatform.windows,
-                  ].contains(platform ?? defaultTargetPlatform);
       case PlatformInAppWebViewControllerMethod.setSafeBrowsingAllowlist:
         return ((kIsWeb && platform != null) || !kIsWeb) &&
             [

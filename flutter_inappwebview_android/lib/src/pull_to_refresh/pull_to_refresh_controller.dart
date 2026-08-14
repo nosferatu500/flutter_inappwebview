@@ -13,7 +13,6 @@ class AndroidPullToRefreshControllerCreationParams
   /// Creates a new [AndroidPullToRefreshControllerCreationParams] instance.
   AndroidPullToRefreshControllerCreationParams({
     super.onRefresh,
-    super.options,
     super.settings,
   });
 
@@ -25,7 +24,6 @@ class AndroidPullToRefreshControllerCreationParams
   ) {
     return AndroidPullToRefreshControllerCreationParams(
       onRefresh: params.onRefresh,
-      options: params.options,
       settings: params.settings,
     );
   }

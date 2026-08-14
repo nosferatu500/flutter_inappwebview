@@ -39,19 +39,6 @@ enum PlatformPullToRefreshControllerCreationParamsProperty {
   ///{@endtemplate}
   onRefresh,
 
-  ///Can be used to check if the [PlatformPullToRefreshControllerCreationParams.options] property is supported at runtime.
-  ///
-  ///{@template flutter_inappwebview_platform_interface.PlatformPullToRefreshControllerCreationParams.options.supported_platforms}
-  ///
-  ///**Officially Supported Platforms/Implementations**:
-  ///- Android WebView
-  ///- iOS WKWebView
-  ///
-  ///Use the [PlatformPullToRefreshControllerCreationParams.isPropertySupported] method to check if this property is supported at runtime.
-  ///{@endtemplate}
-  @Deprecated('Use settings instead')
-  options,
-
   ///Can be used to check if the [PlatformPullToRefreshControllerCreationParams.settings] property is supported at runtime.
   ///
   ///{@template flutter_inappwebview_platform_interface.PlatformPullToRefreshControllerCreationParams.settings.supported_platforms}
@@ -73,12 +60,6 @@ extension _PlatformPullToRefreshControllerCreationParamsPropertySupported
   }) {
     switch (property) {
       case PlatformPullToRefreshControllerCreationParamsProperty.onRefresh:
-        return ((kIsWeb && platform != null) || !kIsWeb) &&
-            [
-              TargetPlatform.android,
-              TargetPlatform.iOS,
-            ].contains(platform ?? defaultTargetPlatform);
-      case PlatformPullToRefreshControllerCreationParamsProperty.options:
         return ((kIsWeb && platform != null) || !kIsWeb) &&
             [
               TargetPlatform.android,

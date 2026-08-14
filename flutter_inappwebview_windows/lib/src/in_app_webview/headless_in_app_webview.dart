@@ -278,7 +278,6 @@ class WindowsHeadlessInAppWebView extends PlatformHeadlessInAppWebView
 
     Map<String, dynamic> pullToRefreshSettings =
         _windowsParams.pullToRefreshController?.params.settings.toMap() ??
-        _windowsParams.pullToRefreshController?.params.options.toMap() ??
         PullToRefreshSettings(enabled: false).toMap();
 
     Map<String, dynamic> args = <String, dynamic>{};

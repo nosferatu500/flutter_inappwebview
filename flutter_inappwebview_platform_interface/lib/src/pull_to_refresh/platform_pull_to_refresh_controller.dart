@@ -27,20 +27,9 @@ part 'platform_pull_to_refresh_controller.g.dart';
 class PlatformPullToRefreshControllerCreationParams {
   /// Used by the platform implementation to create a new [PlatformPullToRefreshController].
   PlatformPullToRefreshControllerCreationParams({
-    @Deprecated("Use settings instead") PullToRefreshOptions? options,
     PullToRefreshSettings? settings,
     this.onRefresh,
-  }) : this.options = options ?? PullToRefreshOptions(),
-       this.settings = settings ?? PullToRefreshSettings();
-
-  ///{@template flutter_inappwebview_platform_interface.PlatformPullToRefreshControllerCreationParams.options}
-  /// Use [settings] instead.
-  ///{@endtemplate}
-  ///
-  ///{@macro flutter_inappwebview_platform_interface.PlatformPullToRefreshControllerCreationParams.options.supported_platforms}
-  @SupportedPlatforms(platforms: [AndroidPlatform(), IOSPlatform()])
-  @Deprecated("Use settings instead")
-  late PullToRefreshOptions options;
+  }) : this.settings = settings ?? PullToRefreshSettings();
 
   ///{@template flutter_inappwebview_platform_interface.PlatformPullToRefreshControllerCreationParams.settings}
   /// Initial settings.
@@ -149,12 +138,6 @@ abstract class PlatformPullToRefreshController extends PlatformInterface
 
   /// The parameters used to initialize the [PlatformPullToRefreshController].
   final PlatformPullToRefreshControllerCreationParams params;
-
-  ///{@macro flutter_inappwebview_platform_interface.PlatformPullToRefreshControllerCreationParams.options}
-  ///
-  ///{@macro flutter_inappwebview_platform_interface.PlatformPullToRefreshControllerCreationParams.options.supported_platforms}
-  @Deprecated("Use settings instead")
-  PullToRefreshOptions get options => params.options;
 
   ///{@macro flutter_inappwebview_platform_interface.PlatformPullToRefreshControllerCreationParams.settings}
   ///

@@ -29,10 +29,6 @@ class ContextMenu {
   ///Event fired when the context menu for this WebView is being hidden.
   final void Function()? onHideContextMenu;
 
-  ///Use [settings] instead
-  @Deprecated('Use settings instead')
-  final ContextMenuOptions? options;
-
   ///Context menu settings.
   final ContextMenuSettings? settings;
 
@@ -45,7 +41,6 @@ class ContextMenu {
     this.menuItems = const [],
     this.onCreateContextMenu,
     this.onHideContextMenu,
-    @Deprecated("Use settings instead") this.options,
     this.settings,
     this.onContextMenuActionItemClicked,
   });
@@ -67,10 +62,6 @@ class ContextMenu {
           )!,
         ),
       ),
-      options: ContextMenuOptions.fromMap(
-        map['settings']?.cast<String, dynamic>(),
-        enumMethod: enumMethod,
-      ),
       settings: ContextMenuSettings.fromMap(
         map['settings']?.cast<String, dynamic>(),
         enumMethod: enumMethod,
@@ -82,9 +73,9 @@ class ContextMenu {
   @ExchangeableObjectMethod(toMapMergeWith: true)
   Map<String, dynamic> _toMapMergeWith({EnumMethod? enumMethod}) {
     return {
-      "settings":
-          (settings as ContextMenuSettings?)?.toMap(enumMethod: enumMethod) ??
-          (options as ContextMenuOptions?)?.toMap(enumMethod: enumMethod),
+      "settings": (settings as ContextMenuSettings?)?.toMap(
+        enumMethod: enumMethod,
+      ),
     };
   }
 

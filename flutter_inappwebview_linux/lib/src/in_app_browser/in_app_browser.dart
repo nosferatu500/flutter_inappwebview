@@ -153,7 +153,6 @@ class LinuxInAppBrowser extends PlatformInAppBrowser with ChannelController {
   }
 
   Map<String, dynamic> _prepareOpenRequest({
-    @Deprecated('Use settings instead') InAppBrowserClassOptions? options,
     InAppBrowserClassSettings? settings,
   }) {
     assert(!_isOpened, 'The browser is already opened.');
@@ -161,13 +160,10 @@ class LinuxInAppBrowser extends PlatformInAppBrowser with ChannelController {
     _init();
 
     var initialSettings =
-        settings?.toMap() ??
-        options?.toMap() ??
-        InAppBrowserClassSettings().toMap();
+        settings?.toMap() ?? InAppBrowserClassSettings().toMap();
 
     Map<String, dynamic> pullToRefreshSettings =
         pullToRefreshController?.settings.toMap() ??
-        pullToRefreshController?.options.toMap() ??
         PullToRefreshSettings(enabled: false).toMap();
 
     List<Map<String, dynamic>> menuItemList = [];
@@ -196,16 +192,11 @@ class LinuxInAppBrowser extends PlatformInAppBrowser with ChannelController {
   @override
   Future<void> openUrlRequest({
     required URLRequest urlRequest,
-    // ignore: deprecated_member_use_from_same_package
-    @Deprecated('Use settings instead') InAppBrowserClassOptions? options,
     InAppBrowserClassSettings? settings,
   }) async {
     assert(urlRequest.url != null && urlRequest.url.toString().isNotEmpty);
 
-    Map<String, dynamic> args = _prepareOpenRequest(
-      options: options,
-      settings: settings,
-    );
+    Map<String, dynamic> args = _prepareOpenRequest(settings: settings);
     args.putIfAbsent('urlRequest', () => urlRequest.toMap());
     await _staticChannel.invokeMethod('open', args);
   }
@@ -213,16 +204,11 @@ class LinuxInAppBrowser extends PlatformInAppBrowser with ChannelController {
   @override
   Future<void> openFile({
     required String assetFilePath,
-    // ignore: deprecated_member_use_from_same_package
-    @Deprecated('Use settings instead') InAppBrowserClassOptions? options,
     InAppBrowserClassSettings? settings,
   }) async {
     assert(assetFilePath.isNotEmpty);
 
-    Map<String, dynamic> args = _prepareOpenRequest(
-      options: options,
-      settings: settings,
-    );
+    Map<String, dynamic> args = _prepareOpenRequest(settings: settings);
     args.putIfAbsent('assetFilePath', () => assetFilePath);
     await _staticChannel.invokeMethod('open', args);
   }
@@ -234,14 +220,9 @@ class LinuxInAppBrowser extends PlatformInAppBrowser with ChannelController {
     String encoding = "utf8",
     WebUri? baseUrl,
     WebUri? historyUrl,
-    // ignore: deprecated_member_use_from_same_package
-    @Deprecated('Use settings instead') InAppBrowserClassOptions? options,
     InAppBrowserClassSettings? settings,
   }) async {
-    Map<String, dynamic> args = _prepareOpenRequest(
-      options: options,
-      settings: settings,
-    );
+    Map<String, dynamic> args = _prepareOpenRequest(settings: settings);
     args.putIfAbsent('data', () => data);
     args.putIfAbsent('mimeType', () => mimeType);
     args.putIfAbsent('encoding', () => encoding);
@@ -326,34 +307,6 @@ class LinuxInAppBrowser extends PlatformInAppBrowser with ChannelController {
 
     Map<String, dynamic> args = <String, dynamic>{};
     return await channel?.invokeMethod<bool>('isHidden', args) ?? false;
-  }
-
-  @override
-  @Deprecated('Use setSettings instead')
-  Future<void> setOptions({required InAppBrowserClassOptions options}) async {
-    assert(_isOpened, 'The browser is not opened.');
-
-    Map<String, dynamic> args = <String, dynamic>{};
-    args.putIfAbsent('settings', () => options.toMap());
-    await channel?.invokeMethod('setSettings', args);
-  }
-
-  @override
-  @Deprecated('Use getSettings instead')
-  Future<InAppBrowserClassOptions?> getOptions() async {
-    assert(_isOpened, 'The browser is not opened.');
-    Map<String, dynamic> args = <String, dynamic>{};
-
-    Map<dynamic, dynamic>? options = await channel?.invokeMethod(
-      'getSettings',
-      args,
-    );
-    if (options != null) {
-      options = options.cast<String, dynamic>();
-      return InAppBrowserClassOptions.fromMap(options as Map<String, dynamic>);
-    }
-
-    return null;
   }
 
   @override

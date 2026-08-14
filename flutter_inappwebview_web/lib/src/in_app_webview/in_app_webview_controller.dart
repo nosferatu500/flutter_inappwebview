@@ -648,28 +648,6 @@ class WebPlatformInAppWebViewController extends PlatformInAppWebViewController
   }
 
   @override
-  @Deprecated('Use setSettings instead')
-  Future<void> setOptions({required InAppWebViewGroupOptions options}) async {
-    InAppWebViewSettings settings =
-        InAppWebViewSettings.fromMap(options.toMap()) ?? InAppWebViewSettings();
-    await setSettings(settings: settings);
-  }
-
-  @override
-  @Deprecated('Use getSettings instead')
-  Future<InAppWebViewGroupOptions?> getOptions() async {
-    InAppWebViewSettings? settings = await getSettings();
-
-    Map<dynamic, dynamic>? options = settings?.toMap();
-    if (options != null) {
-      options = options.cast<String, dynamic>();
-      return InAppWebViewGroupOptions.fromMap(options as Map<String, dynamic>);
-    }
-
-    return null;
-  }
-
-  @override
   Future<void> setSettings({required InAppWebViewSettings settings}) async {
     Map<String, dynamic> args = <String, dynamic>{};
 

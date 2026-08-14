@@ -120,15 +120,10 @@ class InAppBrowser implements PlatformInAppBrowserEvents {
   ///{@macro flutter_inappwebview_platform_interface.PlatformInAppBrowser.openUrlRequest.supported_platforms}
   Future<void> openUrlRequest({
     required URLRequest urlRequest,
-    @Deprecated('Use settings instead') InAppBrowserClassOptions? options,
     InAppBrowserClassSettings? settings,
   }) {
     this.platform.eventHandler = this;
-    return platform.openUrlRequest(
-      urlRequest: urlRequest,
-      options: options,
-      settings: settings,
-    );
+    return platform.openUrlRequest(urlRequest: urlRequest, settings: settings);
   }
 
   ///{@macro flutter_inappwebview_platform_interface.PlatformInAppBrowser.openFile}
@@ -136,15 +131,10 @@ class InAppBrowser implements PlatformInAppBrowserEvents {
   ///{@macro flutter_inappwebview_platform_interface.PlatformInAppBrowser.openFile.supported_platforms}
   Future<void> openFile({
     required String assetFilePath,
-    @Deprecated('Use settings instead') InAppBrowserClassOptions? options,
     InAppBrowserClassSettings? settings,
   }) {
     this.platform.eventHandler = this;
-    return platform.openFile(
-      assetFilePath: assetFilePath,
-      options: options,
-      settings: settings,
-    );
+    return platform.openFile(assetFilePath: assetFilePath, settings: settings);
   }
 
   ///{@macro flutter_inappwebview_platform_interface.PlatformInAppBrowser.openData}
@@ -156,7 +146,6 @@ class InAppBrowser implements PlatformInAppBrowserEvents {
     String encoding = "utf8",
     WebUri? baseUrl,
     WebUri? historyUrl,
-    @Deprecated('Use settings instead') InAppBrowserClassOptions? options,
     InAppBrowserClassSettings? settings,
   }) {
     this.platform.eventHandler = this;
@@ -166,7 +155,6 @@ class InAppBrowser implements PlatformInAppBrowserEvents {
       encoding: encoding,
       baseUrl: baseUrl,
       historyUrl: historyUrl,
-      options: options,
       settings: settings,
     );
   }
@@ -231,19 +219,6 @@ class InAppBrowser implements PlatformInAppBrowserEvents {
   ///
   ///{@macro flutter_inappwebview_platform_interface.PlatformInAppBrowser.isHidden.supported_platforms}
   Future<bool> isHidden() => platform.isHidden();
-
-  ///{@macro flutter_inappwebview_platform_interface.PlatformInAppBrowser.setOptions}
-  ///
-  ///{@macro flutter_inappwebview_platform_interface.PlatformInAppBrowser.setOptions.supported_platforms}
-  @Deprecated('Use setSettings instead')
-  Future<void> setOptions({required InAppBrowserClassOptions options}) =>
-      platform.setOptions(options: options);
-
-  ///{@macro flutter_inappwebview_platform_interface.PlatformInAppBrowser.getOptions}
-  ///
-  ///{@macro flutter_inappwebview_platform_interface.PlatformInAppBrowser.getOptions.supported_platforms}
-  @Deprecated('Use getSettings instead')
-  Future<InAppBrowserClassOptions?> getOptions() => platform.getOptions();
 
   ///{@macro flutter_inappwebview_platform_interface.PlatformInAppBrowser.setSettings}
   ///

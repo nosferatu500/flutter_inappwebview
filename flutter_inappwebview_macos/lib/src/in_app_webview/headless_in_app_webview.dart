@@ -251,7 +251,6 @@ class MacOSHeadlessInAppWebView extends PlatformHeadlessInAppWebView
 
     Map<String, dynamic> pullToRefreshSettings =
         _macosParams.pullToRefreshController?.params.settings.toMap() ??
-        _macosParams.pullToRefreshController?.params.options.toMap() ??
         PullToRefreshSettings(enabled: false).toMap();
 
     Map<String, dynamic> args = <String, dynamic>{};

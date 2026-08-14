@@ -225,8 +225,6 @@ class AndroidInAppWebViewWidget extends PlatformInAppWebViewWidget {
 
     Map<String, dynamic> pullToRefreshSettings =
         params.pullToRefreshController?.params.settings.toMap() ??
-        // ignore: deprecated_member_use_from_same_package
-        params.pullToRefreshController?.params.options.toMap() ??
         PullToRefreshSettings(enabled: false).toMap();
 
     if ((params.headlessWebView?.isRunning() ?? false) &&

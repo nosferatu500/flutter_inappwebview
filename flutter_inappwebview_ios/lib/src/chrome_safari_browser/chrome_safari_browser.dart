@@ -124,9 +124,6 @@ class IOSChromeSafariBrowser extends PlatformChromeSafariBrowser
     Map<String, String>? headers,
     List<WebUri>? otherLikelyURLs,
     WebUri? referrer,
-    @Deprecated('Use settings instead')
-    // ignore: deprecated_member_use_from_same_package
-    ChromeSafariBrowserClassOptions? options,
     ChromeSafariBrowserSettings? settings,
   }) async {
     assert(!_isOpened, 'The browser is already opened.');
@@ -149,9 +146,7 @@ class IOSChromeSafariBrowser extends PlatformChromeSafariBrowser
     });
 
     var initialSettings =
-        settings?.toMap() ??
-        options?.toMap() ??
-        ChromeSafariBrowserSettings().toMap();
+        settings?.toMap() ?? ChromeSafariBrowserSettings().toMap();
 
     Map<String, dynamic> args = <String, dynamic>{};
     args.putIfAbsent('id', () => id);

@@ -11,11 +11,7 @@ import 'package:flutter_inappwebview_platform_interface/flutter_inappwebview_pla
 class IOSPullToRefreshControllerCreationParams
     extends PlatformPullToRefreshControllerCreationParams {
   /// Creates a new [IOSPullToRefreshControllerCreationParams] instance.
-  IOSPullToRefreshControllerCreationParams({
-    super.onRefresh,
-    super.options,
-    super.settings,
-  });
+  IOSPullToRefreshControllerCreationParams({super.onRefresh, super.settings});
 
   /// Creates a [IOSPullToRefreshControllerCreationParams] instance based on [PlatformPullToRefreshControllerCreationParams].
   factory IOSPullToRefreshControllerCreationParams.fromPlatformPullToRefreshControllerCreationParams(
@@ -25,7 +21,6 @@ class IOSPullToRefreshControllerCreationParams
   ) {
     return IOSPullToRefreshControllerCreationParams(
       onRefresh: params.onRefresh,
-      options: params.options,
       settings: params.settings,
     );
   }

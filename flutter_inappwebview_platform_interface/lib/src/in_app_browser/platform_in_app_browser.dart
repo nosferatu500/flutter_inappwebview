@@ -248,8 +248,6 @@ This is a limitation of the native WebKit APIs.""",
   ///
   ///[urlRequest]: The [urlRequest] to load.
   ///
-  ///[options]: Options for the [PlatformInAppBrowser].
-  ///
   ///[settings]: Settings for the [PlatformInAppBrowser].
   ///{@endtemplate}
   ///
@@ -265,8 +263,6 @@ This is a limitation of the native WebKit APIs.""",
   )
   Future<void> openUrlRequest({
     required URLRequest urlRequest,
-    // ignore: deprecated_member_use_from_same_package
-    @Deprecated('Use settings instead') InAppBrowserClassOptions? options,
     InAppBrowserClassSettings? settings,
   }) {
     throw UnimplementedError(
@@ -276,8 +272,6 @@ This is a limitation of the native WebKit APIs.""",
 
   ///{@template flutter_inappwebview_platform_interface.PlatformInAppBrowser.openFile}
   ///Opens the [PlatformInAppBrowser] instance with the given [assetFilePath] file.
-  ///
-  ///[options]: Options for the [PlatformInAppBrowser].
   ///
   ///To be able to load your local files (assets, js, css, etc.), you need to add them in the `assets` section of the `pubspec.yaml` file, otherwise they cannot be found!
   ///
@@ -309,8 +303,6 @@ This is a limitation of the native WebKit APIs.""",
   ///
   ///[headers]: The additional headers to be used in the HTTP request for this URL, specified as a map from name to value.
   ///
-  ///[options]: Options for the [PlatformInAppBrowser].
-  ///
   ///[settings]: Settings for the [PlatformInAppBrowser].
   ///{@endtemplate}
   ///
@@ -326,8 +318,6 @@ This is a limitation of the native WebKit APIs.""",
   )
   Future<void> openFile({
     required String assetFilePath,
-    // ignore: deprecated_member_use_from_same_package
-    @Deprecated('Use settings instead') InAppBrowserClassOptions? options,
     InAppBrowserClassSettings? settings,
   }) {
     throw UnimplementedError(
@@ -365,8 +355,6 @@ This is a limitation of the native WebKit APIs.""",
     String encoding = "utf8",
     WebUri? baseUrl,
     WebUri? historyUrl,
-    // ignore: deprecated_member_use_from_same_package
-    @Deprecated('Use settings instead') InAppBrowserClassOptions? options,
     InAppBrowserClassSettings? settings,
   }) {
     throw UnimplementedError(
@@ -587,32 +575,6 @@ This is a limitation of the native WebKit APIs.""",
   Future<bool> isHidden() {
     throw UnimplementedError(
       'isHidden is not implemented on the current platform',
-    );
-  }
-
-  ///{@template flutter_inappwebview_platform_interface.PlatformInAppBrowser.setOptions}
-  ///Use [setSettings] instead.
-  ///{@endtemplate}
-  ///
-  ///{@macro flutter_inappwebview_platform_interface.PlatformInAppBrowser.setOptions.supported_platforms}
-  @SupportedPlatforms(platforms: [AndroidPlatform(), IOSPlatform()])
-  @Deprecated('Use setSettings instead')
-  Future<void> setOptions({required InAppBrowserClassOptions options}) {
-    throw UnimplementedError(
-      'setOptions is not implemented on the current platform',
-    );
-  }
-
-  ///{@template flutter_inappwebview_platform_interface.PlatformInAppBrowser.getOptions}
-  ///Use [getSettings] instead.
-  ///{@endtemplate}
-  ///
-  ///{@macro flutter_inappwebview_platform_interface.PlatformInAppBrowser.getOptions.supported_platforms}
-  @SupportedPlatforms(platforms: [AndroidPlatform(), IOSPlatform()])
-  @Deprecated('Use getSettings instead')
-  Future<InAppBrowserClassOptions?> getOptions() {
-    throw UnimplementedError(
-      'getOptions is not implemented on the current platform',
     );
   }
 

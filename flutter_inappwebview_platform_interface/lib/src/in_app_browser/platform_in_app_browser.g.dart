@@ -253,19 +253,6 @@ enum PlatformInAppBrowserMethod {
   ///{@endtemplate}
   dispose,
 
-  ///Can be used to check if the [PlatformInAppBrowser.getOptions] method is supported at runtime.
-  ///
-  ///{@template flutter_inappwebview_platform_interface.PlatformInAppBrowser.getOptions.supported_platforms}
-  ///
-  ///**Officially Supported Platforms/Implementations**:
-  ///- Android WebView
-  ///- iOS WKWebView
-  ///
-  ///Use the [PlatformInAppBrowser.isMethodSupported] method to check if this method is supported at runtime.
-  ///{@endtemplate}
-  @Deprecated('Use getSettings instead')
-  getOptions,
-
   ///Can be used to check if the [PlatformInAppBrowser.getSettings] method is supported at runtime.
   ///
   ///{@template flutter_inappwebview_platform_interface.PlatformInAppBrowser.getSettings.supported_platforms}
@@ -466,22 +453,6 @@ enum PlatformInAppBrowserMethod {
   ///{@endtemplate}
   removeMenuItems,
 
-  ///Can be used to check if the [PlatformInAppBrowser.setOptions] method is supported at runtime.
-  ///
-  ///{@template flutter_inappwebview_platform_interface.PlatformInAppBrowser.setOptions.supported_platforms}
-  ///
-  ///**Officially Supported Platforms/Implementations**:
-  ///- Android WebView
-  ///- iOS WKWebView
-  ///
-  ///**Parameters - Officially Supported Platforms/Implementations**:
-  ///- [options]: all platforms
-  ///
-  ///Use the [PlatformInAppBrowser.isMethodSupported] method to check if this method is supported at runtime.
-  ///{@endtemplate}
-  @Deprecated('Use setSettings instead')
-  setOptions,
-
   ///Can be used to check if the [PlatformInAppBrowser.setSettings] method is supported at runtime.
   ///
   ///{@template flutter_inappwebview_platform_interface.PlatformInAppBrowser.setSettings.supported_platforms}
@@ -553,12 +524,6 @@ extension _PlatformInAppBrowserMethodSupported on PlatformInAppBrowser {
               TargetPlatform.macOS,
               TargetPlatform.windows,
               TargetPlatform.linux,
-            ].contains(platform ?? defaultTargetPlatform);
-      case PlatformInAppBrowserMethod.getOptions:
-        return ((kIsWeb && platform != null) || !kIsWeb) &&
-            [
-              TargetPlatform.android,
-              TargetPlatform.iOS,
             ].contains(platform ?? defaultTargetPlatform);
       case PlatformInAppBrowserMethod.getSettings:
         return ((kIsWeb && platform != null) || !kIsWeb) &&
@@ -659,12 +624,6 @@ extension _PlatformInAppBrowserMethodSupported on PlatformInAppBrowser {
               TargetPlatform.android,
               TargetPlatform.iOS,
               TargetPlatform.macOS,
-            ].contains(platform ?? defaultTargetPlatform);
-      case PlatformInAppBrowserMethod.setOptions:
-        return ((kIsWeb && platform != null) || !kIsWeb) &&
-            [
-              TargetPlatform.android,
-              TargetPlatform.iOS,
             ].contains(platform ?? defaultTargetPlatform);
       case PlatformInAppBrowserMethod.setSettings:
         return ((kIsWeb && platform != null) || !kIsWeb) &&

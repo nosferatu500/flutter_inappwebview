@@ -260,7 +260,6 @@ class AndroidHeadlessInAppWebView extends PlatformHeadlessInAppWebView
 
     Map<String, dynamic> pullToRefreshSettings =
         _androidParams.pullToRefreshController?.params.settings.toMap() ??
-        _androidParams.pullToRefreshController?.params.options.toMap() ??
         PullToRefreshSettings(enabled: false).toMap();
 
     Map<String, dynamic> args = <String, dynamic>{};

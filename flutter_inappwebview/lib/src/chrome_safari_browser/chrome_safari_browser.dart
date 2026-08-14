@@ -47,9 +47,6 @@ class ChromeSafariBrowser implements PlatformChromeSafariBrowserEvents {
     Map<String, String>? headers,
     List<WebUri>? otherLikelyURLs,
     WebUri? referrer,
-    @Deprecated('Use settings instead')
-    // ignore: deprecated_member_use_from_same_package
-    ChromeSafariBrowserClassOptions? options,
     ChromeSafariBrowserSettings? settings,
   }) {
     this.platform.eventHandler = this;
@@ -57,7 +54,6 @@ class ChromeSafariBrowser implements PlatformChromeSafariBrowserEvents {
       url: url,
       headers: headers,
       otherLikelyURLs: otherLikelyURLs,
-      options: options,
       settings: settings,
     );
   }

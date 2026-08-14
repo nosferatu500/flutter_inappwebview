@@ -17,7 +17,6 @@ class PullToRefreshController {
   }) : this.fromPlatformCreationParams(
          params: PlatformPullToRefreshControllerCreationParams(
            onRefresh: onRefresh,
-           options: options,
            settings: settings,
          ),
        );
@@ -35,12 +34,6 @@ class PullToRefreshController {
 
   /// Implementation of [PlatformPullToRefreshController] for the current platform.
   final PlatformPullToRefreshController platform;
-
-  ///{@macro flutter_inappwebview_platform_interface.PlatformPullToRefreshController.options}
-  ///
-  ///{@macro flutter_inappwebview_platform_interface.PlatformPullToRefreshController.options.supported_platforms}
-  @Deprecated("Use settings instead")
-  PullToRefreshOptions get options => platform.options;
 
   ///{@macro flutter_inappwebview_platform_interface.PlatformPullToRefreshController.settings}
   ///
