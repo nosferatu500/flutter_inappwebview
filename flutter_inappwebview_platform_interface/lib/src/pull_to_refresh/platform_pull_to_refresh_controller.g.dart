@@ -171,21 +171,6 @@ enum PlatformPullToRefreshControllerMethod {
   ///{@endtemplate}
   isRefreshing,
 
-  ///Can be used to check if the [PlatformPullToRefreshController.setAttributedTitle] method is supported at runtime.
-  ///
-  ///{@template flutter_inappwebview_platform_interface.PlatformPullToRefreshController.setAttributedTitle.supported_platforms}
-  ///
-  ///**Officially Supported Platforms/Implementations**:
-  ///- iOS WKWebView ([Official API - UIRefreshControl.attributedTitle](https://developer.apple.com/documentation/uikit/uirefreshcontrol/1624845-attributedtitle))
-  ///
-  ///**Parameters - Officially Supported Platforms/Implementations**:
-  ///- [attributedTitle]: all platforms
-  ///
-  ///Use the [PlatformPullToRefreshController.isMethodSupported] method to check if this method is supported at runtime.
-  ///{@endtemplate}
-  @Deprecated('Use setStyledTitle instead')
-  setAttributedTitle,
-
   ///Can be used to check if the [PlatformPullToRefreshController.setBackgroundColor] method is supported at runtime.
   ///
   ///{@template flutter_inappwebview_platform_interface.PlatformPullToRefreshController.setBackgroundColor.supported_platforms}
@@ -259,21 +244,6 @@ enum PlatformPullToRefreshControllerMethod {
   ///{@endtemplate}
   setIndicatorSize,
 
-  ///Can be used to check if the [PlatformPullToRefreshController.setSize] method is supported at runtime.
-  ///
-  ///{@template flutter_inappwebview_platform_interface.PlatformPullToRefreshController.setSize.supported_platforms}
-  ///
-  ///**Officially Supported Platforms/Implementations**:
-  ///- Android WebView ([Official API - SwipeRefreshLayout.setSize](https://developer.android.com/reference/androidx/swiperefreshlayout/widget/SwipeRefreshLayout#setSize(int)))
-  ///
-  ///**Parameters - Officially Supported Platforms/Implementations**:
-  ///- [size]: all platforms
-  ///
-  ///Use the [PlatformPullToRefreshController.isMethodSupported] method to check if this method is supported at runtime.
-  ///{@endtemplate}
-  @Deprecated('Use setIndicatorSize instead')
-  setSize,
-
   ///Can be used to check if the [PlatformPullToRefreshController.setSlingshotDistance] method is supported at runtime.
   ///
   ///{@template flutter_inappwebview_platform_interface.PlatformPullToRefreshController.setSlingshotDistance.supported_platforms}
@@ -345,9 +315,6 @@ extension _PlatformPullToRefreshControllerMethodSupported
               TargetPlatform.android,
               TargetPlatform.iOS,
             ].contains(platform ?? defaultTargetPlatform);
-      case PlatformPullToRefreshControllerMethod.setAttributedTitle:
-        return ((kIsWeb && platform != null) || !kIsWeb) &&
-            [TargetPlatform.iOS].contains(platform ?? defaultTargetPlatform);
       case PlatformPullToRefreshControllerMethod.setBackgroundColor:
         return ((kIsWeb && platform != null) || !kIsWeb) &&
             [
@@ -372,11 +339,6 @@ extension _PlatformPullToRefreshControllerMethodSupported
               TargetPlatform.iOS,
             ].contains(platform ?? defaultTargetPlatform);
       case PlatformPullToRefreshControllerMethod.setIndicatorSize:
-        return ((kIsWeb && platform != null) || !kIsWeb) &&
-            [
-              TargetPlatform.android,
-            ].contains(platform ?? defaultTargetPlatform);
-      case PlatformPullToRefreshControllerMethod.setSize:
         return ((kIsWeb && platform != null) || !kIsWeb) &&
             [
               TargetPlatform.android,

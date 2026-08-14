@@ -149,14 +149,6 @@ class AndroidPullToRefreshController extends PlatformPullToRefreshController
         0;
   }
 
-  @Deprecated("Use setIndicatorSize instead")
-  @override
-  Future<void> setSize(AndroidPullToRefreshSize size) async {
-    Map<String, dynamic> args = <String, dynamic>{};
-    args.putIfAbsent('size', () => size.toNativeValue());
-    await channel?.invokeMethod('setSize', args);
-  }
-
   @override
   Future<void> setIndicatorSize(PullToRefreshSize size) async {
     Map<String, dynamic> args = <String, dynamic>{};

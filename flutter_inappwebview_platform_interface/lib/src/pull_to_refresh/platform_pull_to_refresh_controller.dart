@@ -393,27 +393,6 @@ abstract class PlatformPullToRefreshController extends PlatformInterface
     );
   }
 
-  ///{@template flutter_inappwebview_platform_interface.PlatformPullToRefreshController.setSize}
-  ///Use [setIndicatorSize] instead.
-  ///{@endtemplate}
-  ///
-  ///{@macro flutter_inappwebview_platform_interface.PlatformPullToRefreshController.setSize.supported_platforms}
-  @SupportedPlatforms(
-    platforms: [
-      AndroidPlatform(
-        apiName: 'SwipeRefreshLayout.setSize',
-        apiUrl:
-            'https://developer.android.com/reference/androidx/swiperefreshlayout/widget/SwipeRefreshLayout#setSize(int)',
-      ),
-    ],
-  )
-  @Deprecated("Use setIndicatorSize instead")
-  Future<void> setSize(AndroidPullToRefreshSize size) {
-    throw UnimplementedError(
-      'setSize is not implemented on the current platform',
-    );
-  }
-
   ///{@template flutter_inappwebview_platform_interface.PlatformPullToRefreshController.setIndicatorSize}
   ///Sets the size of the refresh indicator. One of [PullToRefreshSize.DEFAULT], or [PullToRefreshSize.LARGE].
   ///{@endtemplate}
@@ -431,27 +410,6 @@ abstract class PlatformPullToRefreshController extends PlatformInterface
   Future<void> setIndicatorSize(PullToRefreshSize size) {
     throw UnimplementedError(
       'setIndicatorSize is not implemented on the current platform',
-    );
-  }
-
-  ///{@template flutter_inappwebview_platform_interface.PlatformPullToRefreshController.setAttributedTitle}
-  ///Use [setStyledTitle] instead.
-  ///{@endtemplate}
-  ///
-  ///{@macro flutter_inappwebview_platform_interface.PlatformPullToRefreshController.setAttributedTitle.supported_platforms}
-  @SupportedPlatforms(
-    platforms: [
-      IOSPlatform(
-        apiName: 'UIRefreshControl.attributedTitle',
-        apiUrl:
-            'https://developer.apple.com/documentation/uikit/uirefreshcontrol/1624845-attributedtitle',
-      ),
-    ],
-  )
-  @Deprecated("Use setStyledTitle instead")
-  Future<void> setAttributedTitle(IOSNSAttributedString attributedTitle) {
-    throw UnimplementedError(
-      'setAttributedTitle is not implemented on the current platform',
     );
   }
 

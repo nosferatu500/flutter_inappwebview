@@ -120,14 +120,6 @@ class IOSPullToRefreshController extends PlatformPullToRefreshController
     await channel?.invokeMethod('setBackgroundColor', args);
   }
 
-  @Deprecated("Use setStyledTitle instead")
-  @override
-  Future<void> setAttributedTitle(IOSNSAttributedString attributedTitle) async {
-    Map<String, dynamic> args = <String, dynamic>{};
-    args.putIfAbsent('attributedTitle', () => attributedTitle.toMap());
-    await channel?.invokeMethod('setStyledTitle', args);
-  }
-
   @override
   Future<void> setStyledTitle(AttributedString attributedTitle) async {
     Map<String, dynamic> args = <String, dynamic>{};

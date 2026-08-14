@@ -98,24 +98,11 @@ class PullToRefreshController {
   Future<int> getDefaultSlingshotDistance() =>
       platform.getDefaultSlingshotDistance();
 
-  ///{@macro flutter_inappwebview_platform_interface.PlatformPullToRefreshController.setSize}
-  ///
-  ///{@macro flutter_inappwebview_platform_interface.PlatformPullToRefreshController.setSize.supported_platforms}
-  @Deprecated("Use setIndicatorSize instead")
-  Future<void> setSize(AndroidPullToRefreshSize size) => platform.setSize(size);
-
   ///{@macro flutter_inappwebview_platform_interface.PlatformPullToRefreshController.setIndicatorSize}
   ///
   ///{@macro flutter_inappwebview_platform_interface.PlatformPullToRefreshController.setIndicatorSize.supported_platforms}
   Future<void> setIndicatorSize(PullToRefreshSize size) =>
       platform.setIndicatorSize(size);
-
-  ///{@macro flutter_inappwebview_platform_interface.PlatformPullToRefreshController.setAttributedTitle}
-  ///
-  ///{@macro flutter_inappwebview_platform_interface.PlatformPullToRefreshController.setAttributedTitle.supported_platforms}
-  @Deprecated("Use setStyledTitle instead")
-  Future<void> setAttributedTitle(IOSNSAttributedString attributedTitle) =>
-      platform.setAttributedTitle(attributedTitle);
 
   ///{@macro flutter_inappwebview_platform_interface.PlatformPullToRefreshController.setStyledTitle}
   ///
