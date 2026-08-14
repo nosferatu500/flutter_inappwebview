@@ -282,15 +282,6 @@ class InAppBrowser implements PlatformInAppBrowserEvents {
   @override
   void androidOnGeolocationPermissionsHidePrompt() {}
 
-  ///Use [onNavigationResponse] instead.
-  @Deprecated('Use onNavigationResponse instead')
-  @override
-  FutureOr<IOSNavigationResponseAction?>? iosOnNavigationResponse(
-    IOSWKNavigationResponse navigationResponse,
-  ) {
-    return null;
-  }
-
   ///Use [onWebContentProcessDidTerminate] instead.
   @Deprecated('Use onWebContentProcessDidTerminate instead')
   @override

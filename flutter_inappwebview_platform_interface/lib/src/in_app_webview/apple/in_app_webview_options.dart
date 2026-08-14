@@ -152,7 +152,7 @@ class IOSInAppWebViewOptions
   ///**NOTE**: available on iOS 14.0+.
   bool limitsNavigationsToAppBoundDomains;
 
-  ///Set to `true` to be able to listen to the [PlatformWebViewCreationParams.iosOnNavigationResponse] event. The default value is `false`.
+  ///Set to `true` to be able to listen to the [PlatformWebViewCreationParams.onNavigationResponse] event. The default value is `false`.
   bool useOnNavigationResponse;
 
   ///Set to `true` to enable Apple Pay API for the `WebView` at its first page load or on the next page load (using [PlatformInAppWebViewController.setOptions]). The default value is `false`.

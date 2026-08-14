@@ -115,8 +115,6 @@ class PlatformHeadlessInAppWebViewCreationParams
       'Use onDidReceiveServerRedirectForProvisionalNavigation instead',
     )
     super.onDidReceiveServerRedirectForProvisionalNavigation,
-    @Deprecated('Use onNavigationResponse instead')
-    super.iosOnNavigationResponse,
     super.onNavigationResponse,
     @Deprecated('Use shouldAllowDeprecatedTLS instead')
     super.iosShouldAllowDeprecatedTLS,

@@ -2114,17 +2114,6 @@ In that case, after the `window.addEventListener("flutterInAppWebViewPlatformRea
   )
   void onDidReceiveServerRedirectForProvisionalNavigation() {}
 
-  ///{@macro flutter_inappwebview_platform_interface.PlatformWebViewCreationParams.iosOnNavigationResponse}
-  ///
-  ///{@macro flutter_inappwebview_platform_interface.PlatformInAppBrowserEvents.iosOnNavigationResponse.supported_platforms}
-  @SupportedPlatforms(platforms: [IOSPlatform()])
-  @Deprecated('Use onNavigationResponse instead')
-  FutureOr<IOSNavigationResponseAction?>? iosOnNavigationResponse(
-    IOSWKNavigationResponse navigationResponse,
-  ) {
-    return null;
-  }
-
   ///{@macro flutter_inappwebview_platform_interface.PlatformWebViewCreationParams.onNavigationResponse}
   ///
   ///{@macro flutter_inappwebview_platform_interface.PlatformInAppBrowserEvents.onNavigationResponse.supported_platforms}

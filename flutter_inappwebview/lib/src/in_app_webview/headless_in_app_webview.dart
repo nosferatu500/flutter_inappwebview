@@ -78,12 +78,6 @@ class HeadlessInAppWebView {
     @Deprecated('Use onWebContentProcessDidTerminate instead')
     void Function(InAppWebViewController controller)?
     iosOnWebContentProcessDidTerminate,
-    @Deprecated('Use onNavigationResponse instead')
-    FutureOr<IOSNavigationResponseAction?> Function(
-      InAppWebViewController controller,
-      IOSWKNavigationResponse navigationResponse,
-    )?
-    iosOnNavigationResponse,
     @Deprecated('Use shouldAllowDeprecatedTLS instead')
     FutureOr<IOSShouldAllowDeprecatedTLSAction?> Function(
       InAppWebViewController controller,
@@ -687,10 +681,6 @@ class HeadlessInAppWebView {
                      onDidReceiveServerRedirectForProvisionalNavigation.call(
                        controller,
                      )
-               : null,
-           iosOnNavigationResponse: iosOnNavigationResponse != null
-               ? (controller, navigationResponse) => iosOnNavigationResponse
-                     .call(controller, navigationResponse)
                : null,
            onNavigationResponse: onNavigationResponse != null
                ? (controller, navigationResponse) =>

@@ -2007,19 +2007,6 @@ In that case, after the `window.addEventListener("flutterInAppWebViewPlatformRea
   final void Function(T controller)?
   onDidReceiveServerRedirectForProvisionalNavigation;
 
-  ///{@template flutter_inappwebview_platform_interface.PlatformWebViewCreationParams.iosOnNavigationResponse}
-  ///Use [onNavigationResponse] instead.
-  ///{@endtemplate}
-  ///
-  ///{@macro flutter_inappwebview_platform_interface.PlatformWebViewCreationParams.iosOnNavigationResponse.supported_platforms}
-  @SupportedPlatforms(platforms: [IOSPlatform()])
-  @Deprecated('Use onNavigationResponse instead')
-  final FutureOr<IOSNavigationResponseAction?> Function(
-    T controller,
-    IOSWKNavigationResponse navigationResponse,
-  )?
-  iosOnNavigationResponse;
-
   ///{@template flutter_inappwebview_platform_interface.PlatformWebViewCreationParams.onNavigationResponse}
   ///Called when a web view asks for permission to navigate to new content after the response to the navigation request is known.
   ///
@@ -2570,8 +2557,6 @@ This is a limitation of the native WebKit APIs.""",
       'Use onDidReceiveServerRedirectForProvisionalNavigation instead',
     )
     this.onDidReceiveServerRedirectForProvisionalNavigation,
-    @Deprecated('Use onNavigationResponse instead')
-    this.iosOnNavigationResponse,
     this.onNavigationResponse,
     @Deprecated('Use shouldAllowDeprecatedTLS instead')
     this.iosShouldAllowDeprecatedTLS,

@@ -1066,41 +1066,23 @@ class MacOSInAppWebViewController extends PlatformInAppWebViewController
         break;
       case "onNavigationResponse":
         if ((webviewParams != null &&
-                (webviewParams!.onNavigationResponse != null ||
-                    // ignore: deprecated_member_use_from_same_package
-                    webviewParams!.iosOnNavigationResponse != null)) ||
+                webviewParams!.onNavigationResponse != null) ||
             _inAppBrowserEventHandler != null) {
           Map<String, dynamic> arguments = call.arguments
               .cast<String, dynamic>();
-          // ignore: deprecated_member_use_from_same_package
-          IOSWKNavigationResponse iosOnNavigationResponse =
-              // ignore: deprecated_member_use_from_same_package
-              IOSWKNavigationResponse.fromMap(arguments)!;
-
           NavigationResponse navigationResponse = NavigationResponse.fromMap(
             arguments,
           )!;
 
           if (webviewParams != null) {
-            if (webviewParams!.onNavigationResponse != null)
-              return (await webviewParams!.onNavigationResponse!(
-                _controllerFromPlatform,
-                navigationResponse,
-              ))?.toNativeValue();
-            else {
-              // ignore: deprecated_member_use_from_same_package
-              return (await webviewParams!.iosOnNavigationResponse!(
-                _controllerFromPlatform,
-                iosOnNavigationResponse,
-              ))?.toNativeValue();
-            }
+            return (await webviewParams!.onNavigationResponse!(
+              _controllerFromPlatform,
+              navigationResponse,
+            ))?.toNativeValue();
           } else {
             return (await _inAppBrowserEventHandler!.onNavigationResponse(
-                  navigationResponse,
-                ))?.toNativeValue() ??
-                (await _inAppBrowserEventHandler!.iosOnNavigationResponse(
-                  iosOnNavigationResponse,
-                ))?.toNativeValue();
+              navigationResponse,
+            ))?.toNativeValue();
           }
         }
         break;
