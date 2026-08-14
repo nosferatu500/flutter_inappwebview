@@ -84,8 +84,6 @@ class AndroidCookieManager extends PlatformCookieManager
     bool? isSecure,
     bool? isHttpOnly,
     HTTPCookieSameSitePolicy? sameSite,
-    @Deprecated("Use webViewController instead")
-    PlatformInAppWebViewController? iosBelow11WebViewController,
     PlatformInAppWebViewController? webViewController,
   }) async {
     assert(url.toString().isNotEmpty);
@@ -110,8 +108,6 @@ class AndroidCookieManager extends PlatformCookieManager
   @override
   Future<List<Cookie>> getCookies({
     required WebUri url,
-    @Deprecated("Use webViewController instead")
-    PlatformInAppWebViewController? iosBelow11WebViewController,
     PlatformInAppWebViewController? webViewController,
   }) async {
     assert(url.toString().isNotEmpty);
@@ -148,8 +144,6 @@ class AndroidCookieManager extends PlatformCookieManager
   Future<Cookie?> getCookie({
     required WebUri url,
     required String name,
-    @Deprecated("Use webViewController instead")
-    PlatformInAppWebViewController? iosBelow11WebViewController,
     PlatformInAppWebViewController? webViewController,
   }) async {
     assert(url.toString().isNotEmpty);
@@ -186,8 +180,6 @@ class AndroidCookieManager extends PlatformCookieManager
     required String name,
     String path = "/",
     String? domain,
-    @Deprecated("Use webViewController instead")
-    PlatformInAppWebViewController? iosBelow11WebViewController,
     PlatformInAppWebViewController? webViewController,
   }) async {
     assert(url.toString().isNotEmpty);
@@ -206,8 +198,6 @@ class AndroidCookieManager extends PlatformCookieManager
     required WebUri url,
     String path = "/",
     String? domain,
-    @Deprecated("Use webViewController instead")
-    PlatformInAppWebViewController? iosBelow11WebViewController,
     PlatformInAppWebViewController? webViewController,
   }) async {
     assert(url.toString().isNotEmpty);

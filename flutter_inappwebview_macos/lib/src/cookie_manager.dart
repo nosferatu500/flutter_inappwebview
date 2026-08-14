@@ -87,12 +87,8 @@ class MacOSCookieManager extends PlatformCookieManager with ChannelController {
     bool? isSecure,
     bool? isHttpOnly,
     HTTPCookieSameSitePolicy? sameSite,
-    @Deprecated("Use webViewController instead")
-    PlatformInAppWebViewController? iosBelow11WebViewController,
     PlatformInAppWebViewController? webViewController,
   }) async {
-    webViewController = webViewController ?? iosBelow11WebViewController;
-
     assert(url.toString().isNotEmpty);
     assert(name.isNotEmpty);
     assert(path.isNotEmpty);
@@ -187,13 +183,9 @@ class MacOSCookieManager extends PlatformCookieManager with ChannelController {
   @override
   Future<List<Cookie>> getCookies({
     required WebUri url,
-    @Deprecated("Use webViewController instead")
-    PlatformInAppWebViewController? iosBelow11WebViewController,
     PlatformInAppWebViewController? webViewController,
   }) async {
     assert(url.toString().isNotEmpty);
-
-    webViewController = webViewController ?? iosBelow11WebViewController;
 
     if (await _shouldUseJavascript()) {
       return await _getCookiesWithJavaScript(
@@ -294,14 +286,10 @@ class MacOSCookieManager extends PlatformCookieManager with ChannelController {
   Future<Cookie?> getCookie({
     required WebUri url,
     required String name,
-    @Deprecated("Use webViewController instead")
-    PlatformInAppWebViewController? iosBelow11WebViewController,
     PlatformInAppWebViewController? webViewController,
   }) async {
     assert(url.toString().isNotEmpty);
     assert(name.isNotEmpty);
-
-    webViewController = webViewController ?? iosBelow11WebViewController;
 
     if (await _shouldUseJavascript()) {
       List<Cookie> cookies = await _getCookiesWithJavaScript(
@@ -345,14 +333,10 @@ class MacOSCookieManager extends PlatformCookieManager with ChannelController {
     required String name,
     String path = "/",
     String? domain,
-    @Deprecated("Use webViewController instead")
-    PlatformInAppWebViewController? iosBelow11WebViewController,
     PlatformInAppWebViewController? webViewController,
   }) async {
     assert(url.toString().isNotEmpty);
     assert(name.isNotEmpty);
-
-    webViewController = webViewController ?? iosBelow11WebViewController;
 
     if (await _shouldUseJavascript()) {
       await _setCookieWithJavaScript(
@@ -380,13 +364,9 @@ class MacOSCookieManager extends PlatformCookieManager with ChannelController {
     required WebUri url,
     String path = "/",
     String? domain,
-    @Deprecated("Use webViewController instead")
-    PlatformInAppWebViewController? iosBelow11WebViewController,
     PlatformInAppWebViewController? webViewController,
   }) async {
     assert(url.toString().isNotEmpty);
-
-    webViewController = webViewController ?? iosBelow11WebViewController;
 
     if (await _shouldUseJavascript()) {
       List<Cookie> cookies = await _getCookiesWithJavaScript(

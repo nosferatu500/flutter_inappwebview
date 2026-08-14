@@ -90,12 +90,8 @@ class WebPlatformCookieManager extends PlatformCookieManager
     bool? isSecure,
     bool? isHttpOnly,
     HTTPCookieSameSitePolicy? sameSite,
-    @Deprecated("Use webViewController instead")
-    PlatformInAppWebViewController? iosBelow11WebViewController,
     PlatformInAppWebViewController? webViewController,
   }) async {
-    webViewController = webViewController ?? iosBelow11WebViewController;
-
     assert(url.toString().isNotEmpty);
     assert(name.isNotEmpty);
     assert(path.isNotEmpty);
@@ -174,13 +170,9 @@ class WebPlatformCookieManager extends PlatformCookieManager
   @override
   Future<List<Cookie>> getCookies({
     required WebUri url,
-    @Deprecated("Use webViewController instead")
-    PlatformInAppWebViewController? iosBelow11WebViewController,
     PlatformInAppWebViewController? webViewController,
   }) async {
     assert(url.toString().isNotEmpty);
-
-    webViewController = webViewController ?? iosBelow11WebViewController;
 
     return await _getCookiesWithJavaScript(
       url: url,
@@ -252,14 +244,10 @@ class WebPlatformCookieManager extends PlatformCookieManager
   Future<Cookie?> getCookie({
     required WebUri url,
     required String name,
-    @Deprecated("Use webViewController instead")
-    PlatformInAppWebViewController? iosBelow11WebViewController,
     PlatformInAppWebViewController? webViewController,
   }) async {
     assert(url.toString().isNotEmpty);
     assert(name.isNotEmpty);
-
-    webViewController = webViewController ?? iosBelow11WebViewController;
 
     List<Cookie> cookies = await _getCookiesWithJavaScript(
       url: url,
@@ -277,14 +265,10 @@ class WebPlatformCookieManager extends PlatformCookieManager
     required String name,
     String path = "/",
     String? domain,
-    @Deprecated("Use webViewController instead")
-    PlatformInAppWebViewController? iosBelow11WebViewController,
     PlatformInAppWebViewController? webViewController,
   }) async {
     assert(url.toString().isNotEmpty);
     assert(name.isNotEmpty);
-
-    webViewController = webViewController ?? iosBelow11WebViewController;
 
     await _setCookieWithJavaScript(
       url: url,
@@ -303,13 +287,9 @@ class WebPlatformCookieManager extends PlatformCookieManager
     required WebUri url,
     String path = "/",
     String? domain,
-    @Deprecated("Use webViewController instead")
-    PlatformInAppWebViewController? iosBelow11WebViewController,
     PlatformInAppWebViewController? webViewController,
   }) async {
     assert(url.toString().isNotEmpty);
-
-    webViewController = webViewController ?? iosBelow11WebViewController;
 
     List<Cookie> cookies = await _getCookiesWithJavaScript(
       url: url,

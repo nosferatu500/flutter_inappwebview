@@ -57,8 +57,6 @@ class LinuxCookieManager extends PlatformCookieManager {
     bool? isSecure,
     bool? isHttpOnly,
     HTTPCookieSameSitePolicy? sameSite,
-    @Deprecated("Use webViewController instead")
-    PlatformInAppWebViewController? iosBelow11WebViewController,
     PlatformInAppWebViewController? webViewController,
   }) async {
     final Map<String, dynamic> cookie = {
@@ -84,8 +82,6 @@ class LinuxCookieManager extends PlatformCookieManager {
   @override
   Future<List<Cookie>> getCookies({
     required WebUri url,
-    @Deprecated("Use webViewController instead")
-    PlatformInAppWebViewController? iosBelow11WebViewController,
     PlatformInAppWebViewController? webViewController,
   }) async {
     final result = await _channel.invokeMethod<List<dynamic>>('getCookies', {
@@ -106,8 +102,6 @@ class LinuxCookieManager extends PlatformCookieManager {
   Future<Cookie?> getCookie({
     required WebUri url,
     required String name,
-    @Deprecated("Use webViewController instead")
-    PlatformInAppWebViewController? iosBelow11WebViewController,
     PlatformInAppWebViewController? webViewController,
   }) async {
     final result = await _channel.invokeMethod<Map<dynamic, dynamic>?>(
@@ -128,8 +122,6 @@ class LinuxCookieManager extends PlatformCookieManager {
     required String name,
     String path = "/",
     String? domain,
-    @Deprecated("Use webViewController instead")
-    PlatformInAppWebViewController? iosBelow11WebViewController,
     PlatformInAppWebViewController? webViewController,
   }) async {
     final result = await _channel.invokeMethod<bool>('deleteCookie', {
@@ -147,8 +139,6 @@ class LinuxCookieManager extends PlatformCookieManager {
     required WebUri url,
     String path = "/",
     String? domain,
-    @Deprecated("Use webViewController instead")
-    PlatformInAppWebViewController? iosBelow11WebViewController,
     PlatformInAppWebViewController? webViewController,
   }) async {
     final result = await _channel.invokeMethod<bool>('deleteCookies', {

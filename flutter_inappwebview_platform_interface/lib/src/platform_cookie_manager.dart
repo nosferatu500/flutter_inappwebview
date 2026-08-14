@@ -217,8 +217,6 @@ In this case, this method will return always `true`.""",
     bool? isSecure,
     bool? isHttpOnly,
     HTTPCookieSameSitePolicy? sameSite,
-    @Deprecated("Use webViewController instead")
-    PlatformInAppWebViewController? iosBelow11WebViewController,
     @SupportedPlatforms(
       platforms: [
         MacOSPlatform(),
@@ -294,8 +292,6 @@ to get the cookies (session-only cookies and cookies with `isHttpOnly` enabled w
   )
   Future<List<Cookie>> getCookies({
     required WebUri url,
-    @Deprecated("Use webViewController instead")
-    PlatformInAppWebViewController? iosBelow11WebViewController,
     @SupportedPlatforms(
       platforms: [
         MacOSPlatform(),
@@ -372,8 +368,6 @@ to get the cookie (session-only cookie and cookie with `isHttpOnly` enabled won'
   Future<Cookie?> getCookie({
     required WebUri url,
     required String name,
-    @Deprecated("Use webViewController instead")
-    PlatformInAppWebViewController? iosBelow11WebViewController,
     @SupportedPlatforms(
       platforms: [
         MacOSPlatform(),
@@ -457,8 +451,6 @@ In this case, this method will return always `true`.""",
     required String name,
     String path = "/",
     String? domain,
-    @Deprecated("Use webViewController instead")
-    PlatformInAppWebViewController? iosBelow11WebViewController,
     @SupportedPlatforms(
       platforms: [
         MacOSPlatform(),
@@ -541,8 +533,6 @@ In this case, this method will return always `true`.""",
     required WebUri url,
     String path = "/",
     String? domain,
-    @Deprecated("Use webViewController instead")
-    PlatformInAppWebViewController? iosBelow11WebViewController,
     @SupportedPlatforms(
       platforms: [
         MacOSPlatform(),

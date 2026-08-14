@@ -69,8 +69,6 @@ class CookieManager {
     bool? isSecure,
     bool? isHttpOnly,
     HTTPCookieSameSitePolicy? sameSite,
-    @Deprecated("Use webViewController instead")
-    InAppWebViewController? iosBelow11WebViewController,
     InAppWebViewController? webViewController,
   }) => platform.setCookie(
     url: url,
@@ -83,7 +81,6 @@ class CookieManager {
     isSecure: isSecure,
     isHttpOnly: isHttpOnly,
     sameSite: sameSite,
-    iosBelow11WebViewController: iosBelow11WebViewController?.platform,
     webViewController: webViewController?.platform,
   );
 
@@ -92,12 +89,9 @@ class CookieManager {
   ///{@macro flutter_inappwebview_platform_interface.PlatformCookieManager.getCookies.supported_platforms}
   Future<List<Cookie>> getCookies({
     required WebUri url,
-    @Deprecated("Use webViewController instead")
-    InAppWebViewController? iosBelow11WebViewController,
     InAppWebViewController? webViewController,
   }) => platform.getCookies(
     url: url,
-    iosBelow11WebViewController: iosBelow11WebViewController?.platform,
     webViewController: webViewController?.platform,
   );
 
@@ -107,13 +101,10 @@ class CookieManager {
   Future<Cookie?> getCookie({
     required WebUri url,
     required String name,
-    @Deprecated("Use webViewController instead")
-    InAppWebViewController? iosBelow11WebViewController,
     InAppWebViewController? webViewController,
   }) => platform.getCookie(
     url: url,
     name: name,
-    iosBelow11WebViewController: iosBelow11WebViewController?.platform,
     webViewController: webViewController?.platform,
   );
 
@@ -125,15 +116,12 @@ class CookieManager {
     required String name,
     String path = "/",
     String? domain,
-    @Deprecated("Use webViewController instead")
-    InAppWebViewController? iosBelow11WebViewController,
     InAppWebViewController? webViewController,
   }) => platform.deleteCookie(
     url: url,
     name: name,
     path: path,
     domain: domain,
-    iosBelow11WebViewController: iosBelow11WebViewController?.platform,
     webViewController: webViewController?.platform,
   );
 
@@ -144,14 +132,11 @@ class CookieManager {
     required WebUri url,
     String path = "/",
     String? domain,
-    @Deprecated("Use webViewController instead")
-    InAppWebViewController? iosBelow11WebViewController,
     InAppWebViewController? webViewController,
   }) => platform.deleteCookies(
     url: url,
     path: path,
     domain: domain,
-    iosBelow11WebViewController: iosBelow11WebViewController?.platform,
     webViewController: webViewController?.platform,
   );
 
