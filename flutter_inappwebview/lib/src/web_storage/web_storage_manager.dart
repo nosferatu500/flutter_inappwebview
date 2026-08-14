@@ -3,9 +3,6 @@ import 'dart:async';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_inappwebview_platform_interface/flutter_inappwebview_platform_interface.dart';
 
-import 'android/web_storage_manager.dart';
-import 'ios/web_storage_manager.dart';
-
 ///{@macro flutter_inappwebview_platform_interface.PlatformWebStorageManager}
 ///
 ///{@macro flutter_inappwebview_platform_interface.PlatformWebStorageManager.supported_platforms}
@@ -43,14 +40,6 @@ class WebStorageManager {
     method,
     platform: platform,
   );
-
-  ///Use [WebStorageManager] instead.
-  @Deprecated("Use WebStorageManager instead")
-  AndroidWebStorageManager android = AndroidWebStorageManager();
-
-  ///Use [WebStorageManager] instead.
-  @Deprecated("Use WebStorageManager instead")
-  IOSWebStorageManager ios = IOSWebStorageManager();
 
   ///Gets the [WebStorageManager] shared instance.
   static WebStorageManager instance() {

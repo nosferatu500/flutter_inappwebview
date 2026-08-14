@@ -6,21 +6,11 @@ import 'package:flutter_inappwebview_platform_interface/flutter_inappwebview_pla
 import '../print_job/main.dart';
 import '../web_message/main.dart';
 import '../web_storage/web_storage.dart';
-import 'android/in_app_webview_controller.dart';
-import 'apple/in_app_webview_controller.dart';
 
 ///{@macro flutter_inappwebview_platform_interface.PlatformInAppWebViewController}
 ///
 ///{@macro flutter_inappwebview_platform_interface.PlatformInAppWebViewController.supported_platforms}
 class InAppWebViewController {
-  ///Use [InAppWebViewController] instead.
-  @Deprecated("Use InAppWebViewController instead")
-  late AndroidInAppWebViewController android;
-
-  ///Use [InAppWebViewController] instead.
-  @Deprecated("Use InAppWebViewController instead")
-  late IOSInAppWebViewController ios;
-
   /// Constructs a [InAppWebViewController].
   ///
   /// See [InAppWebViewController.fromPlatformCreationParams] for setting parameters for
@@ -30,10 +20,7 @@ class InAppWebViewController {
   }) : this.fromPlatform(platform: PlatformInAppWebViewController(params));
 
   /// Constructs a [InAppWebViewController] from a specific platform implementation.
-  InAppWebViewController.fromPlatform({required this.platform}) {
-    android = AndroidInAppWebViewController(controller: this.platform);
-    ios = IOSInAppWebViewController(controller: this.platform);
-  }
+  InAppWebViewController.fromPlatform({required this.platform});
 
   /// Implementation of [PlatformInAppWebViewController] for the current platform.
   final PlatformInAppWebViewController platform;

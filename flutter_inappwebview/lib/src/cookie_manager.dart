@@ -31,10 +31,6 @@ class CookieManager {
   /// Implementation of [PlatformCookieManager] for the current platform.
   final PlatformCookieManager platform;
 
-  ///Use [CookieManager] instead.
-  @Deprecated("Use CookieManager instead")
-  IOSCookieManager ios = IOSCookieManager.instance();
-
   static CookieManager? _instance;
 
   ///Gets the [CookieManager] shared instance.
@@ -181,32 +177,4 @@ class CookieManager {
     method,
     platform: platform,
   );
-}
-
-///Class that contains only iOS-specific methods of [CookieManager].
-///Use [CookieManager] instead.
-@Deprecated("Use CookieManager instead")
-class IOSCookieManager {
-  static IOSCookieManager? _instance;
-
-  ///Gets the [IOSCookieManager] shared instance.
-  static IOSCookieManager instance() {
-    return (_instance != null) ? _instance! : _init();
-  }
-
-  IOSCookieManager._();
-
-  static IOSCookieManager _init() {
-    _instance = IOSCookieManager._();
-    return _instance!;
-  }
-
-  ///Fetches all stored cookies.
-  ///
-  ///**NOTE**: available on iOS 11.0+.
-  ///
-  ///**Official iOS API**: https://developer.apple.com/documentation/webkit/wkhttpcookiestore/2882005-getallcookies
-  Future<List<Cookie>> getAllCookies() async {
-    return CookieManager.instance().getAllCookies();
-  }
 }
