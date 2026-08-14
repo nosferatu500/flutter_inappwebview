@@ -310,11 +310,6 @@ class InAppBrowser implements PlatformInAppBrowserEvents {
   ///Use [onDownloadStarting] instead
   @Deprecated('Use onDownloadStarting instead')
   @override
-  void onDownloadStart(Uri url) {}
-
-  ///Use [onDownloadStarting] instead
-  @Deprecated('Use onDownloadStarting instead')
-  @override
   void onDownloadStartRequest(DownloadStartRequest downloadStartRequest) {}
 
   @override

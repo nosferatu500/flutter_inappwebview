@@ -39,7 +39,6 @@ class WindowsInAppWebViewWidgetCreationParams
     super.onLoadResource,
     super.onFaviconChanged,
     super.onScrollChanged,
-    @Deprecated('Use onDownloadStarting instead') super.onDownloadStart,
     @Deprecated('Use onDownloadStarting instead') super.onDownloadStartRequest,
     super.onDownloadStarting,
     @Deprecated('Use onLoadResourceWithCustomScheme instead')
@@ -141,7 +140,6 @@ class WindowsInAppWebViewWidgetCreationParams
         onLoadResource: params.onLoadResource,
         onFaviconChanged: params.onFaviconChanged,
         onScrollChanged: params.onScrollChanged,
-        onDownloadStart: params.onDownloadStart,
         onDownloadStartRequest: params.onDownloadStartRequest,
         onDownloadStarting: params.onDownloadStarting,
         onLoadResourceCustomScheme: params.onLoadResourceCustomScheme,

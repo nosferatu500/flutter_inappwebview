@@ -349,8 +349,7 @@ class MacOSInAppWebViewController extends PlatformInAppWebViewController
         break;
       case "onDownloadStarting":
         if ((webviewParams != null &&
-                (webviewParams!.onDownloadStart != null ||
-                    webviewParams!.onDownloadStartRequest != null ||
+                (webviewParams!.onDownloadStartRequest != null ||
                     webviewParams!.onDownloadStarting != null)) ||
             _inAppBrowserEventHandler != null) {
           Map<String, dynamic> arguments = call.arguments
@@ -369,16 +368,7 @@ class MacOSInAppWebViewController extends PlatformInAppWebViewController
                 _controllerFromPlatform,
                 downloadStartRequest,
               );
-            else {
-              webviewParams!.onDownloadStart!(
-                _controllerFromPlatform,
-                downloadStartRequest.url,
-              );
-            }
           } else {
-            _inAppBrowserEventHandler!.onDownloadStart(
-              downloadStartRequest.url,
-            );
             _inAppBrowserEventHandler!.onDownloadStartRequest(
               downloadStartRequest,
             );

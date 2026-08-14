@@ -348,22 +348,6 @@ enum PlatformWebViewCreationParamsProperty {
   ///{@endtemplate}
   onDidReceiveServerRedirectForProvisionalNavigation,
 
-  ///Can be used to check if the [PlatformWebViewCreationParams.onDownloadStart] property is supported at runtime.
-  ///
-  ///{@template flutter_inappwebview_platform_interface.PlatformWebViewCreationParams.onDownloadStart.supported_platforms}
-  ///
-  ///**Officially Supported Platforms/Implementations**:
-  ///- Android WebView
-  ///- iOS WKWebView
-  ///
-  ///**Parameters - Officially Supported Platforms/Implementations**:
-  ///- [url]: all platforms
-  ///
-  ///Use the [PlatformWebViewCreationParams.isPropertySupported] method to check if this property is supported at runtime.
-  ///{@endtemplate}
-  @Deprecated('Use onDownloadStarting instead')
-  onDownloadStart,
-
   ///Can be used to check if the [PlatformWebViewCreationParams.onDownloadStartRequest] property is supported at runtime.
   ///
   ///{@template flutter_inappwebview_platform_interface.PlatformWebViewCreationParams.onDownloadStartRequest.supported_platforms}
@@ -1567,12 +1551,6 @@ extension _PlatformWebViewCreationParamsPropertySupported
             [
               TargetPlatform.iOS,
               TargetPlatform.macOS,
-            ].contains(platform ?? defaultTargetPlatform);
-      case PlatformWebViewCreationParamsProperty.onDownloadStart:
-        return ((kIsWeb && platform != null) || !kIsWeb) &&
-            [
-              TargetPlatform.android,
-              TargetPlatform.iOS,
             ].contains(platform ?? defaultTargetPlatform);
       case PlatformWebViewCreationParamsProperty.onDownloadStartRequest:
         return ((kIsWeb && platform != null) || !kIsWeb) &&

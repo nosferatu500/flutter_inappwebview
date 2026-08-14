@@ -52,7 +52,6 @@ class PlatformHeadlessInAppWebViewCreationParams
     super.onLaunchingExternalUriScheme,
     super.onLoadResource,
     super.onScrollChanged,
-    @Deprecated('Use onDownloadStarting instead') super.onDownloadStart,
     @Deprecated('Use onDownloadStarting instead') super.onDownloadStartRequest,
     super.onDownloadStarting,
     @Deprecated('Use onLoadResourceWithCustomScheme instead')

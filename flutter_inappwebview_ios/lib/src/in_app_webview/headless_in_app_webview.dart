@@ -30,7 +30,6 @@ class IOSHeadlessInAppWebViewCreationParams
     super.shouldOverrideUrlLoading,
     super.onLoadResource,
     super.onScrollChanged,
-    @Deprecated('Use onDownloadStarting instead') super.onDownloadStart,
     @Deprecated('Use onDownloadStarting instead') super.onDownloadStartRequest,
     super.onDownloadStarting,
     @Deprecated('Use onLoadResourceWithCustomScheme instead')
@@ -116,7 +115,6 @@ class IOSHeadlessInAppWebViewCreationParams
         shouldOverrideUrlLoading: params.shouldOverrideUrlLoading,
         onLoadResource: params.onLoadResource,
         onScrollChanged: params.onScrollChanged,
-        onDownloadStart: params.onDownloadStart,
         onDownloadStartRequest: params.onDownloadStartRequest,
         onDownloadStarting: params.onDownloadStarting,
         onLoadResourceCustomScheme: params.onLoadResourceCustomScheme,

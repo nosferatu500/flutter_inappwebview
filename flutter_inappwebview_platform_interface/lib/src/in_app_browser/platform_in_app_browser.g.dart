@@ -879,22 +879,6 @@ enum PlatformInAppBrowserEventsMethod {
   ///{@endtemplate}
   onDidReceiveServerRedirectForProvisionalNavigation,
 
-  ///Can be used to check if the [PlatformInAppBrowserEvents.onDownloadStart] method is supported at runtime.
-  ///
-  ///{@template flutter_inappwebview_platform_interface.PlatformInAppBrowserEvents.onDownloadStart.supported_platforms}
-  ///
-  ///**Officially Supported Platforms/Implementations**:
-  ///- Android WebView
-  ///- iOS WKWebView
-  ///
-  ///**Parameters - Officially Supported Platforms/Implementations**:
-  ///- [url]: all platforms
-  ///
-  ///Use the [PlatformInAppBrowserEvents.isMethodSupported] method to check if this method is supported at runtime.
-  ///{@endtemplate}
-  @Deprecated('Use onDownloadStarting instead')
-  onDownloadStart,
-
   ///Can be used to check if the [PlatformInAppBrowserEvents.onDownloadStartRequest] method is supported at runtime.
   ///
   ///{@template flutter_inappwebview_platform_interface.PlatformInAppBrowserEvents.onDownloadStartRequest.supported_platforms}
@@ -1922,12 +1906,6 @@ extension _PlatformInAppBrowserEventsMethodSupported
             [
               TargetPlatform.iOS,
               TargetPlatform.macOS,
-            ].contains(platform ?? defaultTargetPlatform);
-      case PlatformInAppBrowserEventsMethod.onDownloadStart:
-        return ((kIsWeb && platform != null) || !kIsWeb) &&
-            [
-              TargetPlatform.android,
-              TargetPlatform.iOS,
             ].contains(platform ?? defaultTargetPlatform);
       case PlatformInAppBrowserEventsMethod.onDownloadStartRequest:
         return ((kIsWeb && platform != null) || !kIsWeb) &&

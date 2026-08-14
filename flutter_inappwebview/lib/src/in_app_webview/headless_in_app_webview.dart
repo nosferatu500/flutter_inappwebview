@@ -96,8 +96,6 @@ class HeadlessInAppWebView {
     void Function(InAppWebViewController controller)? onWindowFocus,
     void Function(InAppWebViewController controller)? onWindowBlur,
     @Deprecated('Use onDownloadStarting instead')
-    void Function(InAppWebViewController controller, Uri url)? onDownloadStart,
-    @Deprecated('Use onDownloadStarting instead')
     void Function(
       InAppWebViewController controller,
       DownloadStartRequest downloadStartRequest,
@@ -419,9 +417,6 @@ class HeadlessInAppWebView {
                : null,
            onScrollChanged: onScrollChanged != null
                ? (controller, x, y) => onScrollChanged.call(controller, x, y)
-               : null,
-           onDownloadStart: onDownloadStart != null
-               ? (controller, url) => onDownloadStart.call(controller, url)
                : null,
            onDownloadStartRequest: onDownloadStartRequest != null
                ? (controller, downloadStartRequest) => onDownloadStartRequest

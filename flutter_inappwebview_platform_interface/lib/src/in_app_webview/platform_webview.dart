@@ -458,15 +458,6 @@ Also, this event is not called for POST requests and is not called on the first 
   )
   final void Function(T controller, int x, int y)? onScrollChanged;
 
-  ///{@template flutter_inappwebview_platform_interface.PlatformWebViewCreationParams.onDownloadStart}
-  ///Use [onDownloadStarting] instead
-  ///{@endtemplate}
-  ///
-  ///{@macro flutter_inappwebview_platform_interface.PlatformWebViewCreationParams.onDownloadStart.supported_platforms}
-  @SupportedPlatforms(platforms: [AndroidPlatform(), IOSPlatform()])
-  @Deprecated('Use onDownloadStarting instead')
-  final void Function(T controller, Uri url)? onDownloadStart;
-
   ///{@template flutter_inappwebview_platform_interface.PlatformWebViewCreationParams.onDownloadStartRequest}
   ///Use [onDownloadStarting] instead
   ///{@endtemplate}
@@ -2402,7 +2393,6 @@ This is a limitation of the native WebKit APIs.""",
     this.onLaunchingExternalUriScheme,
     this.onLoadResource,
     this.onScrollChanged,
-    @Deprecated('Use onDownloadStarting instead') this.onDownloadStart,
     @Deprecated('Use onDownloadStarting instead') this.onDownloadStartRequest,
     this.onDownloadStarting,
     @Deprecated('Use onLoadResourceWithCustomScheme instead')
