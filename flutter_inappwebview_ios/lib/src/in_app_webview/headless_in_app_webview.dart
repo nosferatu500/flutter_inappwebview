@@ -64,17 +64,12 @@ class IOSHeadlessInAppWebViewCreationParams
     super.onRenderProcessResponsive,
     super.onRenderProcessUnresponsive,
     super.onFormResubmission,
-    @Deprecated('Use onReceivedTouchIconUrl instead')
     super.onReceivedTouchIconUrl,
     super.onJsBeforeUnload,
-    @Deprecated('Use onReceivedLoginRequest instead')
     super.onReceivedLoginRequest,
     super.onPermissionRequestCanceled,
     super.onRequestFocus,
     super.onWebContentProcessDidTerminate,
-    @Deprecated(
-      'Use onDidReceiveServerRedirectForProvisionalNavigation instead',
-    )
     super.onDidReceiveServerRedirectForProvisionalNavigation,
     super.onNavigationResponse,
     super.shouldAllowDeprecatedTLS,

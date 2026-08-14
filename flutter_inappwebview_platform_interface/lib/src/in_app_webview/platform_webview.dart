@@ -2369,17 +2369,12 @@ This is a limitation of the native WebKit APIs.""",
     this.onRenderProcessUnresponsive,
     this.onFormResubmission,
     this.onFaviconChanged,
-    @Deprecated('Use onReceivedTouchIconUrl instead')
     this.onReceivedTouchIconUrl,
     this.onJsBeforeUnload,
-    @Deprecated('Use onReceivedLoginRequest instead')
     this.onReceivedLoginRequest,
     this.onPermissionRequestCanceled,
     this.onRequestFocus,
     this.onWebContentProcessDidTerminate,
-    @Deprecated(
-      'Use onDidReceiveServerRedirectForProvisionalNavigation instead',
-    )
     this.onDidReceiveServerRedirectForProvisionalNavigation,
     this.onNavigationResponse,
     this.shouldAllowDeprecatedTLS,
