@@ -1750,7 +1750,6 @@ abstract class PlatformInAppWebViewController extends PlatformInterface
   )
   Future<void> zoomBy({
     required double zoomFactor,
-    @Deprecated('Use animated instead') bool? iosAnimated,
     @SupportedPlatforms(platforms: [IOSPlatform()]) bool animated = false,
   }) {
     throw UnimplementedError(
@@ -3195,12 +3194,7 @@ abstract class PlatformInAppWebViewController extends PlatformInterface
       ),
     ],
   )
-  Future<Uint8List?> createPdf({
-    @Deprecated("Use pdfConfiguration instead")
-    // ignore: deprecated_member_use_from_same_package
-    IOSWKPDFConfiguration? iosWKPdfConfiguration,
-    PDFConfiguration? pdfConfiguration,
-  }) {
+  Future<Uint8List?> createPdf({PDFConfiguration? pdfConfiguration}) {
     throw UnimplementedError(
       '${PlatformInAppWebViewControllerMethod.createPdf.name} is not implemented on the current platform',
     );

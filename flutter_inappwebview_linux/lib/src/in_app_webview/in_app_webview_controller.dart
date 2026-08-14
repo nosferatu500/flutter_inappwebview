@@ -1448,7 +1448,6 @@ class LinuxInAppWebViewController extends PlatformInAppWebViewController
   @override
   Future<void> zoomBy({
     required double zoomFactor,
-    @Deprecated('Use animated instead') bool? iosAnimated,
     bool animated = false,
   }) async {
     Map<String, dynamic> args = <String, dynamic>{};
@@ -1692,7 +1691,6 @@ class LinuxInAppWebViewController extends PlatformInAppWebViewController
   /// For cross-platform code, use [zoomBy] instead.
   Future<void> setZoomScale({
     required double zoomScale,
-    @Deprecated('Use animated instead') bool? iosAnimated,
     bool animated = false,
   }) async {
     Map<String, dynamic> args = <String, dynamic>{};

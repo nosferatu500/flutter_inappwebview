@@ -95,7 +95,7 @@ export 'navigation_response_action.dart' show NavigationResponseAction;
 export 'navigation_type.dart' show NavigationType;
 export 'on_post_message_callback.dart' show OnPostMessageCallback;
 export 'over_scroll_mode.dart' show OverScrollMode;
-export 'pdf_configuration.dart' show PDFConfiguration, IOSWKPDFConfiguration;
+export 'pdf_configuration.dart' show PDFConfiguration;
 export 'permission_request.dart' show PermissionRequest;
 export 'permission_resource_type.dart' show PermissionResourceType;
 export 'permission_response.dart'

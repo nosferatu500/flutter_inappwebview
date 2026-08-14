@@ -348,15 +348,8 @@ class InAppWebViewController {
   ///{@macro flutter_inappwebview_platform_interface.PlatformInAppWebViewController.zoomBy}
   ///
   ///{@macro flutter_inappwebview_platform_interface.PlatformInAppWebViewController.zoomBy.supported_platforms}
-  Future<void> zoomBy({
-    required double zoomFactor,
-    @Deprecated('Use animated instead') bool? iosAnimated,
-    bool animated = false,
-  }) => platform.zoomBy(
-    zoomFactor: zoomFactor,
-    iosAnimated: iosAnimated,
-    animated: animated,
-  );
+  Future<void> zoomBy({required double zoomFactor, bool animated = false}) =>
+      platform.zoomBy(zoomFactor: zoomFactor, animated: animated);
 
   ///{@macro flutter_inappwebview_platform_interface.PlatformInAppWebViewController.getOriginalUrl}
   ///
@@ -616,15 +609,8 @@ class InAppWebViewController {
   ///{@macro flutter_inappwebview_platform_interface.PlatformInAppWebViewController.createPdf}
   ///
   ///{@macro flutter_inappwebview_platform_interface.PlatformInAppWebViewController.createPdf.supported_platforms}
-  Future<Uint8List?> createPdf({
-    @Deprecated("Use pdfConfiguration instead")
-    // ignore: deprecated_member_use_from_same_package
-    IOSWKPDFConfiguration? iosWKPdfConfiguration,
-    PDFConfiguration? pdfConfiguration,
-  }) => platform.createPdf(
-    iosWKPdfConfiguration: iosWKPdfConfiguration,
-    pdfConfiguration: pdfConfiguration,
-  );
+  Future<Uint8List?> createPdf({PDFConfiguration? pdfConfiguration}) =>
+      platform.createPdf(pdfConfiguration: pdfConfiguration);
 
   ///{@macro flutter_inappwebview_platform_interface.PlatformInAppWebViewController.createWebArchiveData}
   ///

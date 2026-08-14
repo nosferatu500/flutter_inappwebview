@@ -2074,14 +2074,13 @@ class AndroidInAppWebViewController extends PlatformInAppWebViewController
   @override
   Future<void> zoomBy({
     required double zoomFactor,
-    @Deprecated('Use animated instead') bool? iosAnimated,
     bool animated = false,
   }) async {
     assert(zoomFactor > 0.01 && zoomFactor <= 100.0);
 
     Map<String, dynamic> args = <String, dynamic>{};
     args.putIfAbsent('zoomFactor', () => zoomFactor);
-    args.putIfAbsent('animated', () => iosAnimated ?? animated);
+    args.putIfAbsent('animated', () => animated);
     return await channel?.invokeMethod('zoomBy', args);
   }
 

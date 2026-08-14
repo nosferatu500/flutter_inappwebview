@@ -2378,12 +2378,11 @@ class WindowsInAppWebViewController extends PlatformInAppWebViewController
   @override
   Future<void> zoomBy({
     required double zoomFactor,
-    @Deprecated('Use animated instead') bool? iosAnimated,
     bool animated = false,
   }) async {
     Map<String, dynamic> args = <String, dynamic>{};
     args.putIfAbsent('zoomFactor', () => zoomFactor);
-    args.putIfAbsent('animated', () => iosAnimated ?? animated);
+    args.putIfAbsent('animated', () => animated);
     return await channel?.invokeMethod('zoomBy', args);
   }
 
@@ -2763,17 +2762,9 @@ class WindowsInAppWebViewController extends PlatformInAppWebViewController
   }
 
   @override
-  Future<Uint8List?> createPdf({
-    @Deprecated("Use pdfConfiguration instead")
-    // ignore: deprecated_member_use_from_same_package
-    IOSWKPDFConfiguration? iosWKPdfConfiguration,
-    PDFConfiguration? pdfConfiguration,
-  }) async {
+  Future<Uint8List?> createPdf({PDFConfiguration? pdfConfiguration}) async {
     Map<String, dynamic> args = <String, dynamic>{};
-    args.putIfAbsent(
-      'pdfConfiguration',
-      () => pdfConfiguration?.toMap() ?? iosWKPdfConfiguration?.toMap(),
-    );
+    args.putIfAbsent('pdfConfiguration', () => pdfConfiguration?.toMap());
     return await channel?.invokeMethod<Uint8List?>('createPdf', args);
   }
 
