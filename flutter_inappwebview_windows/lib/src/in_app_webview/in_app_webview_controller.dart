@@ -1116,23 +1116,12 @@ class WindowsInAppWebViewController extends PlatformInAppWebViewController
         break;
       case "onWebContentProcessDidTerminate":
         if (webviewParams != null &&
-            (webviewParams!.onWebContentProcessDidTerminate != null ||
-                // ignore: deprecated_member_use_from_same_package
-                webviewParams!.iosOnWebContentProcessDidTerminate != null)) {
-          if (webviewParams!.onWebContentProcessDidTerminate != null)
-            webviewParams!.onWebContentProcessDidTerminate!(
-              _controllerFromPlatform,
-            );
-          else {
-            // ignore: deprecated_member_use_from_same_package
-            webviewParams!.iosOnWebContentProcessDidTerminate!(
-              _controllerFromPlatform,
-            );
-          }
+            webviewParams!.onWebContentProcessDidTerminate != null) {
+          webviewParams!.onWebContentProcessDidTerminate!(
+            _controllerFromPlatform,
+          );
         } else if (_inAppBrowserEventHandler != null) {
           _inAppBrowserEventHandler!.onWebContentProcessDidTerminate();
-          // ignore: deprecated_member_use_from_same_package
-          _inAppBrowserEventHandler!.iosOnWebContentProcessDidTerminate();
         }
         break;
       case "onPageCommitVisible":

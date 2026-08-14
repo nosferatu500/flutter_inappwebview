@@ -1949,15 +1949,6 @@ In that case, after the `window.addEventListener("flutterInAppWebViewPlatformRea
   )
   final void Function(T controller)? onRequestFocus;
 
-  ///{@template flutter_inappwebview_platform_interface.PlatformWebViewCreationParams.iosOnWebContentProcessDidTerminate}
-  ///Use [onWebContentProcessDidTerminate] instead.
-  ///{@endtemplate}
-  ///
-  ///{@macro flutter_inappwebview_platform_interface.PlatformWebViewCreationParams.iosOnWebContentProcessDidTerminate.supported_platforms}
-  @SupportedPlatforms(platforms: [IOSPlatform()])
-  @Deprecated('Use onWebContentProcessDidTerminate instead')
-  final void Function(T controller)? iosOnWebContentProcessDidTerminate;
-
   ///{@template flutter_inappwebview_platform_interface.PlatformWebViewCreationParams.onWebContentProcessDidTerminate}
   ///Invoked when the web view's web content process is terminated.
   ///Reloading the page will start a new render process if needed.
@@ -2537,8 +2528,6 @@ This is a limitation of the native WebKit APIs.""",
     this.onReceivedLoginRequest,
     this.onPermissionRequestCanceled,
     this.onRequestFocus,
-    @Deprecated('Use onWebContentProcessDidTerminate instead')
-    this.iosOnWebContentProcessDidTerminate,
     this.onWebContentProcessDidTerminate,
     @Deprecated(
       'Use onDidReceiveServerRedirectForProvisionalNavigation instead',

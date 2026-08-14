@@ -86,8 +86,6 @@ class LinuxHeadlessInAppWebViewCreationParams
     super.onReceivedLoginRequest,
     super.onPermissionRequestCanceled,
     super.onRequestFocus,
-    @Deprecated('Use onWebContentProcessDidTerminate instead')
-    super.iosOnWebContentProcessDidTerminate,
     super.onWebContentProcessDidTerminate,
     @Deprecated(
       'Use onDidReceiveServerRedirectForProvisionalNavigation instead',
@@ -181,8 +179,6 @@ class LinuxHeadlessInAppWebViewCreationParams
         onReceivedLoginRequest: params.onReceivedLoginRequest,
         onPermissionRequestCanceled: params.onPermissionRequestCanceled,
         onRequestFocus: params.onRequestFocus,
-        iosOnWebContentProcessDidTerminate:
-            params.iosOnWebContentProcessDidTerminate,
         onWebContentProcessDidTerminate: params.onWebContentProcessDidTerminate,
         onDidReceiveServerRedirectForProvisionalNavigation:
             params.onDidReceiveServerRedirectForProvisionalNavigation,

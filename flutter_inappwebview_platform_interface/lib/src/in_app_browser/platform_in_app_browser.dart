@@ -2064,13 +2064,6 @@ In that case, after the `window.addEventListener("flutterInAppWebViewPlatformRea
   )
   void onRequestFocus() {}
 
-  ///{@macro flutter_inappwebview_platform_interface.PlatformWebViewCreationParams.iosOnWebContentProcessDidTerminate}
-  ///
-  ///{@macro flutter_inappwebview_platform_interface.PlatformInAppBrowserEvents.iosOnWebContentProcessDidTerminate.supported_platforms}
-  @SupportedPlatforms(platforms: [IOSPlatform()])
-  @Deprecated('Use onWebContentProcessDidTerminate instead')
-  void iosOnWebContentProcessDidTerminate() {}
-
   ///{@macro flutter_inappwebview_platform_interface.PlatformWebViewCreationParams.onWebContentProcessDidTerminate}
   ///
   ///{@macro flutter_inappwebview_platform_interface.PlatformInAppBrowserEvents.onWebContentProcessDidTerminate.supported_platforms}

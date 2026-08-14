@@ -717,18 +717,6 @@ enum PlatformInAppBrowserEventsMethod {
   @Deprecated('Use onGeolocationPermissionsHidePrompt instead')
   androidOnGeolocationPermissionsHidePrompt,
 
-  ///Can be used to check if the [PlatformInAppBrowserEvents.iosOnWebContentProcessDidTerminate] method is supported at runtime.
-  ///
-  ///{@template flutter_inappwebview_platform_interface.PlatformInAppBrowserEvents.iosOnWebContentProcessDidTerminate.supported_platforms}
-  ///
-  ///**Officially Supported Platforms/Implementations**:
-  ///- iOS WKWebView
-  ///
-  ///Use the [PlatformInAppBrowserEvents.isMethodSupported] method to check if this method is supported at runtime.
-  ///{@endtemplate}
-  @Deprecated('Use onWebContentProcessDidTerminate instead')
-  iosOnWebContentProcessDidTerminate,
-
   ///Can be used to check if the [PlatformInAppBrowserEvents.onAcceleratorKeyPressed] method is supported at runtime.
   ///
   ///{@template flutter_inappwebview_platform_interface.PlatformInAppBrowserEvents.onAcceleratorKeyPressed.supported_platforms}
@@ -1944,9 +1932,6 @@ extension _PlatformInAppBrowserEventsMethodSupported
             [
               TargetPlatform.android,
             ].contains(platform ?? defaultTargetPlatform);
-      case PlatformInAppBrowserEventsMethod.iosOnWebContentProcessDidTerminate:
-        return ((kIsWeb && platform != null) || !kIsWeb) &&
-            [TargetPlatform.iOS].contains(platform ?? defaultTargetPlatform);
       case PlatformInAppBrowserEventsMethod.onAcceleratorKeyPressed:
         return ((kIsWeb && platform != null) || !kIsWeb) &&
             [

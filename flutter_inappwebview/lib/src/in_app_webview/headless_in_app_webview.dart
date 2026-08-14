@@ -75,9 +75,6 @@ class HeadlessInAppWebView {
     onPageCommitVisible,
     void Function(InAppWebViewController controller, String? title)?
     onTitleChanged,
-    @Deprecated('Use onWebContentProcessDidTerminate instead')
-    void Function(InAppWebViewController controller)?
-    iosOnWebContentProcessDidTerminate,
     FutureOr<AjaxRequestAction?> Function(
       InAppWebViewController controller,
       AjaxRequest ajaxRequest,
@@ -658,11 +655,6 @@ class HeadlessInAppWebView {
                : null,
            onRequestFocus: onRequestFocus != null
                ? (controller) => onRequestFocus.call(controller)
-               : null,
-           iosOnWebContentProcessDidTerminate:
-               iosOnWebContentProcessDidTerminate != null
-               ? (controller) =>
-                     iosOnWebContentProcessDidTerminate.call(controller)
                : null,
            onWebContentProcessDidTerminate:
                onWebContentProcessDidTerminate != null

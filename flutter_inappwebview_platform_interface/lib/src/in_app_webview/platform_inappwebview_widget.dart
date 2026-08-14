@@ -116,8 +116,6 @@ class PlatformInAppWebViewWidgetCreationParams
     super.onReceivedLoginRequest,
     super.onPermissionRequestCanceled,
     super.onRequestFocus,
-    @Deprecated('Use onWebContentProcessDidTerminate instead')
-    super.iosOnWebContentProcessDidTerminate,
     super.onWebContentProcessDidTerminate,
     @Deprecated(
       'Use onDidReceiveServerRedirectForProvisionalNavigation instead',

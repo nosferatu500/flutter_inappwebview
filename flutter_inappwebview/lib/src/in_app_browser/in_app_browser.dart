@@ -282,11 +282,6 @@ class InAppBrowser implements PlatformInAppBrowserEvents {
   @override
   void androidOnGeolocationPermissionsHidePrompt() {}
 
-  ///Use [onWebContentProcessDidTerminate] instead.
-  @Deprecated('Use onWebContentProcessDidTerminate instead')
-  @override
-  void iosOnWebContentProcessDidTerminate() {}
-
   @override
   FutureOr<AjaxRequestAction?>? onAjaxProgress(AjaxRequest ajaxRequest) {
     return null;

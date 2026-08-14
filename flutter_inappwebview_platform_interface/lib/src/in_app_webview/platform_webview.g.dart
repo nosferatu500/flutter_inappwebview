@@ -186,18 +186,6 @@ enum PlatformWebViewCreationParamsProperty {
   ///{@endtemplate}
   initialUserScripts,
 
-  ///Can be used to check if the [PlatformWebViewCreationParams.iosOnWebContentProcessDidTerminate] property is supported at runtime.
-  ///
-  ///{@template flutter_inappwebview_platform_interface.PlatformWebViewCreationParams.iosOnWebContentProcessDidTerminate.supported_platforms}
-  ///
-  ///**Officially Supported Platforms/Implementations**:
-  ///- iOS WKWebView
-  ///
-  ///Use the [PlatformWebViewCreationParams.isPropertySupported] method to check if this property is supported at runtime.
-  ///{@endtemplate}
-  @Deprecated('Use onWebContentProcessDidTerminate instead')
-  iosOnWebContentProcessDidTerminate,
-
   ///Can be used to check if the [PlatformWebViewCreationParams.onAcceleratorKeyPressed] property is supported at runtime.
   ///
   ///{@template flutter_inappwebview_platform_interface.PlatformWebViewCreationParams.onAcceleratorKeyPressed.supported_platforms}
@@ -1587,10 +1575,6 @@ extension _PlatformWebViewCreationParamsPropertySupported
                     TargetPlatform.windows,
                     TargetPlatform.linux,
                   ].contains(platform ?? defaultTargetPlatform);
-      case PlatformWebViewCreationParamsProperty
-          .iosOnWebContentProcessDidTerminate:
-        return ((kIsWeb && platform != null) || !kIsWeb) &&
-            [TargetPlatform.iOS].contains(platform ?? defaultTargetPlatform);
       case PlatformWebViewCreationParamsProperty.onAcceleratorKeyPressed:
         return ((kIsWeb && platform != null) || !kIsWeb) &&
             [
