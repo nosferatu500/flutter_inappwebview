@@ -8,14 +8,6 @@ part of 'navigation_action.dart';
 
 ///An object that contains information about an action that causes navigation to occur.
 class NavigationAction {
-  ///Use [hasGesture] instead.
-  @Deprecated('Use hasGesture instead')
-  bool? androidHasGesture;
-
-  ///Use [isRedirect] instead.
-  @Deprecated('Use isRedirect instead')
-  bool? androidIsRedirect;
-
   ///Gets whether a gesture (such as a click) was associated with the request.
   ///For security reasons in certain situations this method may return `false` even though
   ///the sequence of events which caused the request to be created was initiated by a user
@@ -27,18 +19,6 @@ class NavigationAction {
   ///- Windows WebView2:
   ///    - Available only if the request is associated to the [PlatformWebViewCreationParams.onCreateWindow] event
   bool? hasGesture;
-
-  ///Use [sourceFrame] instead.
-  @Deprecated('Use sourceFrame instead')
-  IOSWKFrameInfo? iosSourceFrame;
-
-  ///Use [targetFrame] instead.
-  @Deprecated('Use targetFrame instead')
-  IOSWKFrameInfo? iosTargetFrame;
-
-  ///Use [navigationType] instead.
-  @Deprecated('Use navigationType instead')
-  IOSWKNavigationType? iosWKNavigationType;
 
   ///Indicates whether the request was made for the main frame.
   ///
@@ -93,12 +73,7 @@ class NavigationAction {
   ///- macOS WKWebView ([Official API - WKNavigationAction.targetFrame](https://developer.apple.com/documentation/webkit/wknavigationaction/1401918-targetframe))
   FrameInfo? targetFrame;
   NavigationAction({
-    @Deprecated('Use hasGesture instead') this.androidHasGesture,
-    @Deprecated('Use isRedirect instead') this.androidIsRedirect,
     this.hasGesture,
-    @Deprecated('Use sourceFrame instead') this.iosSourceFrame,
-    @Deprecated('Use targetFrame instead') this.iosTargetFrame,
-    @Deprecated('Use navigationType instead') this.iosWKNavigationType,
     required this.isForMainFrame,
     this.isRedirect,
     this.navigationType,
@@ -106,15 +81,7 @@ class NavigationAction {
     this.shouldPerformDownload,
     this.sourceFrame,
     this.targetFrame,
-  }) {
-    hasGesture = hasGesture ?? androidHasGesture;
-    isRedirect = isRedirect ?? androidIsRedirect;
-    sourceFrame = sourceFrame ?? FrameInfo.fromMap(iosSourceFrame?.toMap());
-    targetFrame = targetFrame ?? FrameInfo.fromMap(iosTargetFrame?.toMap());
-    navigationType =
-        navigationType ??
-        NavigationType.fromNativeValue(iosWKNavigationType?.toNativeValue());
-  }
+  });
 
   ///Gets a possible [NavigationAction] instance from a [Map] value.
   static NavigationAction? fromMap(
@@ -125,26 +92,7 @@ class NavigationAction {
       return null;
     }
     final instance = NavigationAction(
-      androidHasGesture: map['hasGesture'],
-      androidIsRedirect: map['isRedirect'],
       hasGesture: map['hasGesture'],
-      iosSourceFrame: IOSWKFrameInfo.fromMap(
-        map['sourceFrame']?.cast<String, dynamic>(),
-        enumMethod: enumMethod,
-      ),
-      iosTargetFrame: IOSWKFrameInfo.fromMap(
-        map['targetFrame']?.cast<String, dynamic>(),
-        enumMethod: enumMethod,
-      ),
-      iosWKNavigationType: switch (enumMethod ?? EnumMethod.nativeValue) {
-        EnumMethod.nativeValue => IOSWKNavigationType.fromNativeValue(
-          map['navigationType'],
-        ),
-        EnumMethod.value => IOSWKNavigationType.fromValue(
-          map['navigationType'],
-        ),
-        EnumMethod.name => IOSWKNavigationType.byName(map['navigationType']),
-      },
       isForMainFrame: map['isForMainFrame'],
       isRedirect: map['isRedirect'],
       navigationType: switch (enumMethod ?? EnumMethod.nativeValue) {

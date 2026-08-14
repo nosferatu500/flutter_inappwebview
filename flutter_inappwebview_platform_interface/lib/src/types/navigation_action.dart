@@ -24,10 +24,6 @@ class NavigationAction_ {
   ///Also, on Android < 21, this is always `true`.
   bool isForMainFrame;
 
-  ///Use [hasGesture] instead.
-  @Deprecated('Use hasGesture instead')
-  bool? androidHasGesture;
-
   ///Gets whether a gesture (such as a click) was associated with the request.
   ///For security reasons in certain situations this method may return `false` even though
   ///the sequence of events which caused the request to be created was initiated by a user
@@ -49,10 +45,6 @@ class NavigationAction_ {
   )
   bool? hasGesture;
 
-  ///Use [isRedirect] instead.
-  @Deprecated('Use isRedirect instead')
-  bool? androidIsRedirect;
-
   ///Gets whether the request was a result of a server-side redirect.
   ///
   ///**NOTE**: If the request is associated to the [PlatformWebViewCreationParams.onCreateWindow] event, this is always `false`.
@@ -69,10 +61,6 @@ class NavigationAction_ {
     ],
   )
   bool? isRedirect;
-
-  ///Use [navigationType] instead.
-  @Deprecated("Use navigationType instead")
-  IOSWKNavigationType_? iosWKNavigationType;
 
   ///The type of action triggering the navigation.
   @SupportedPlatforms(
@@ -92,10 +80,6 @@ class NavigationAction_ {
   )
   NavigationType_? navigationType;
 
-  ///Use [sourceFrame] instead.
-  @Deprecated("Use sourceFrame instead")
-  IOSWKFrameInfo_? iosSourceFrame;
-
   ///The frame that requested the navigation.
   @SupportedPlatforms(
     platforms: [
@@ -112,10 +96,6 @@ class NavigationAction_ {
     ],
   )
   FrameInfo_? sourceFrame;
-
-  ///Use [targetFrame] instead.
-  @Deprecated("Use targetFrame instead")
-  IOSWKFrameInfo_? iosTargetFrame;
 
   ///The frame in which to display the new content.
   @SupportedPlatforms(
@@ -156,15 +136,10 @@ class NavigationAction_ {
   NavigationAction_({
     required this.request,
     required this.isForMainFrame,
-    @Deprecated('Use hasGesture instead') this.androidHasGesture,
     this.hasGesture,
-    @Deprecated('Use isRedirect instead') this.androidIsRedirect,
     this.isRedirect,
-    @Deprecated("Use navigationType instead") this.iosWKNavigationType,
     this.navigationType,
-    @Deprecated("Use sourceFrame instead") this.iosSourceFrame,
     this.sourceFrame,
-    @Deprecated("Use targetFrame instead") this.iosTargetFrame,
     this.targetFrame,
     this.shouldPerformDownload,
   });
