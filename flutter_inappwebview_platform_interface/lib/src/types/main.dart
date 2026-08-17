@@ -43,8 +43,6 @@ export 'fetch_request_federated_credential.dart'
     show FetchRequestFederatedCredential;
 export 'fetch_request_password_credential.dart'
     show FetchRequestPasswordCredential;
-export 'force_dark.dart' show ForceDark;
-export 'force_dark_strategy.dart' show ForceDarkStrategy;
 export 'form_resubmission_action.dart' show FormResubmissionAction;
 export 'frame_info.dart' show FrameInfo;
 export 'geolocation_permission_show_prompt_response.dart'

@@ -48,18 +48,6 @@ class WebViewFeature {
         'ENTERPRISE_AUTHENTICATION_APP_LINK_POLICY',
       );
 
-  ///Feature for [isFeatureSupported]. This feature covers the deprecated Android `WebSettings.setForceDark` API.
-  static const FORCE_DARK = WebViewFeature._internal(
-    'FORCE_DARK',
-    'FORCE_DARK',
-  );
-
-  ///Feature for [isFeatureSupported]. This feature covers the deprecated Android `WebSettingsCompat.setForceDarkStrategy` API.
-  static const FORCE_DARK_STRATEGY = WebViewFeature._internal(
-    'FORCE_DARK_STRATEGY',
-    'FORCE_DARK_STRATEGY',
-  );
-
   ///Feature for [isFeatureSupported]. This feature covers cookie attributes of [CookieManager.getCookie] and [CookieManager.getCookies] methods.
   static const GET_COOKIE_INFO = WebViewFeature._internal(
     'GET_COOKIE_INFO',
@@ -330,8 +318,6 @@ class WebViewFeature {
     WebViewFeature.DISABLED_ACTION_MODE_MENU_ITEMS,
     WebViewFeature.DOCUMENT_START_SCRIPT,
     WebViewFeature.ENTERPRISE_AUTHENTICATION_APP_LINK_POLICY,
-    WebViewFeature.FORCE_DARK,
-    WebViewFeature.FORCE_DARK_STRATEGY,
     WebViewFeature.GET_COOKIE_INFO,
     WebViewFeature.GET_VARIATIONS_HEADER,
     WebViewFeature.GET_WEB_CHROME_CLIENT,
@@ -464,10 +450,6 @@ class WebViewFeature {
         return 'DOCUMENT_START_SCRIPT';
       case 'ENTERPRISE_AUTHENTICATION_APP_LINK_POLICY':
         return 'ENTERPRISE_AUTHENTICATION_APP_LINK_POLICY';
-      case 'FORCE_DARK':
-        return 'FORCE_DARK';
-      case 'FORCE_DARK_STRATEGY':
-        return 'FORCE_DARK_STRATEGY';
       case 'GET_COOKIE_INFO':
         return 'GET_COOKIE_INFO';
       case 'GET_VARIATIONS_HEADER':
