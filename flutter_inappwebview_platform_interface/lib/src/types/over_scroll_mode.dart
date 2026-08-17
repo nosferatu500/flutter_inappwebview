@@ -11,11 +11,11 @@ class OverScrollMode_ {
   const OverScrollMode_._internal(this._value);
 
   ///Always allow a user to over-scroll this view, provided it is a view that can scroll.
-  static const ALWAYS = const OverScrollMode_._internal(0);
+  static const ALWAYS = OverScrollMode_._internal(0);
 
   ///Allow a user to over-scroll this view only if the content is large enough to meaningfully scroll, provided it is a view that can scroll.
-  static const IF_CONTENT_SCROLLS = const OverScrollMode_._internal(1);
+  static const IF_CONTENT_SCROLLS = OverScrollMode_._internal(1);
 
   ///Never allow a user to over-scroll this view.
-  static const NEVER = const OverScrollMode_._internal(2);
+  static const NEVER = OverScrollMode_._internal(2);
 }

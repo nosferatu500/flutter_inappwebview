@@ -10,18 +10,17 @@ class ScrollViewContentInsetAdjustmentBehavior_ {
   const ScrollViewContentInsetAdjustmentBehavior_._internal(this._value);
 
   ///Automatically adjust the scroll view insets.
-  static const AUTOMATIC =
-      const ScrollViewContentInsetAdjustmentBehavior_._internal(0);
+  static const AUTOMATIC = ScrollViewContentInsetAdjustmentBehavior_._internal(
+    0,
+  );
 
   ///Adjust the insets only in the scrollable directions.
   static const SCROLLABLE_AXES =
-      const ScrollViewContentInsetAdjustmentBehavior_._internal(1);
+      ScrollViewContentInsetAdjustmentBehavior_._internal(1);
 
   ///Do not adjust the scroll view insets.
-  static const NEVER =
-      const ScrollViewContentInsetAdjustmentBehavior_._internal(2);
+  static const NEVER = ScrollViewContentInsetAdjustmentBehavior_._internal(2);
 
   ///Always include the safe area insets in the content adjustment.
-  static const ALWAYS =
-      const ScrollViewContentInsetAdjustmentBehavior_._internal(3);
+  static const ALWAYS = ScrollViewContentInsetAdjustmentBehavior_._internal(3);
 }

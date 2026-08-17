@@ -17,14 +17,14 @@ List<X509Certificate>? _distinguishedNamesDeserializer(
   List<X509Certificate>? distinguishedNames;
   if (value != null) {
     distinguishedNames = <X509Certificate>[];
-    (value.cast<Uint8List>() as List<Uint8List>).forEach((data) {
+    for (var data in (value.cast<Uint8List>() as List<Uint8List>)) {
       try {
         distinguishedNames!.add(X509Certificate.fromData(data: data));
       } catch (e, stacktrace) {
         print(e);
         print(stacktrace);
       }
-    });
+    }
   }
   return distinguishedNames;
 }

@@ -328,7 +328,7 @@ class _TestRunnerScreenState extends State<TestRunnerScreen> {
                     const SizedBox(width: 8),
                     selector,
                     const Spacer(),
-                    if (helperText != null) helperText,
+                    ?helperText,
                   ],
                 ),
         );

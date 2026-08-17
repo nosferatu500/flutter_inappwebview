@@ -45,9 +45,10 @@ class ClientCertResponse {
     this.selectedCertificate = -1,
     this.action = ClientCertResponseAction.CANCEL,
   }) {
-    if (this.action == ClientCertResponseAction.PROCEED && !Util.isWindows)
+    if (action == ClientCertResponseAction.PROCEED && !Util.isWindows) {
       assert(certificatePath.isNotEmpty);
-    if (Util.isAndroid) assert(this.keyStoreType != null);
+    }
+    if (Util.isAndroid) assert(keyStoreType != null);
   }
 
   ///Gets a possible [ClientCertResponse] instance from a [Map] value.

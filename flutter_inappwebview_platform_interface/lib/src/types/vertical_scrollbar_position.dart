@@ -11,13 +11,15 @@ class VerticalScrollbarPosition_ {
 
   ///Position the scroll bar at the default position as determined by the system.
   static const SCROLLBAR_POSITION_DEFAULT =
-      const VerticalScrollbarPosition_._internal(0);
+      VerticalScrollbarPosition_._internal(0);
 
   ///Position the scroll bar along the left edge.
-  static const SCROLLBAR_POSITION_LEFT =
-      const VerticalScrollbarPosition_._internal(1);
+  static const SCROLLBAR_POSITION_LEFT = VerticalScrollbarPosition_._internal(
+    1,
+  );
 
   ///Position the scroll bar along the right edge.
-  static const SCROLLBAR_POSITION_RIGHT =
-      const VerticalScrollbarPosition_._internal(2);
+  static const SCROLLBAR_POSITION_RIGHT = VerticalScrollbarPosition_._internal(
+    2,
+  );
 }

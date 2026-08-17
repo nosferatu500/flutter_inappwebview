@@ -20,9 +20,9 @@ class ContextMenuItem {
   String title;
   ContextMenuItem({this.id, required this.title, this.action}) {
     if (Util.isAndroid) {
-      assert(this.id is int);
+      assert(id is int);
     }
-    assert(this.id != null && (this.id is int || this.id is String));
+    assert(id != null && (id is int || id is String));
   }
 
   ///Gets a possible [ContextMenuItem] instance from a [Map] value.

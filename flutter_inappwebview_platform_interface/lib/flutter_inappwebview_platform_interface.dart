@@ -1,3 +1,3 @@
-library flutter_inappwebview_platform_interface;
+library;
 
 export 'src/main.dart';

@@ -73,7 +73,7 @@ class MacOSInAppBrowser extends PlatformInAppBrowser with ChannelController {
   MacOSInAppBrowserCreationParams get _macosParams =>
       params as MacOSInAppBrowserCreationParams;
 
-  static const MethodChannel _staticChannel = const MethodChannel(
+  static const MethodChannel _staticChannel = MethodChannel(
     'com.pichillilorenzo/flutter_inappbrowser',
   );
 
@@ -82,7 +82,7 @@ class MacOSInAppBrowser extends PlatformInAppBrowser with ChannelController {
   @override
   ContextMenu? get contextMenu => _contextMenu;
 
-  Map<int, InAppBrowserMenuItem> _menuItems = HashMap();
+  final Map<int, InAppBrowserMenuItem> _menuItems = HashMap();
   bool _isOpened = false;
   MacOSInAppWebViewController? _webViewController;
 
@@ -91,7 +91,7 @@ class MacOSInAppBrowser extends PlatformInAppBrowser with ChannelController {
     return _isOpened ? _webViewController : null;
   }
 
-  _init() {
+  void _init() {
     channel = MethodChannel('com.pichillilorenzo/flutter_inappbrowser_$id');
     handler = _handleMethod;
     initMethodCallHandler();
@@ -100,14 +100,14 @@ class MacOSInAppBrowser extends PlatformInAppBrowser with ChannelController {
       MacOSInAppWebViewControllerCreationParams(id: id),
       channel!,
       this,
-      this.initialUserScripts,
+      initialUserScripts,
     );
     _macosParams.findInteractionController?.init(id);
   }
 
-  _debugLog(String method, dynamic args) {
+  void _debugLog(String method, dynamic args) {
     debugLog(
-      className: this.runtimeType.toString(),
+      className: runtimeType.toString(),
       id: id,
       debugLoggingSettings: PlatformInAppBrowser.debugLoggingSettings,
       method: method,
@@ -124,9 +124,9 @@ class MacOSInAppBrowser extends PlatformInAppBrowser with ChannelController {
       case "onMenuItemClicked":
         _debugLog(call.method, call.arguments);
         int id = call.arguments["id"].toInt();
-        if (this._menuItems[id] != null) {
-          if (this._menuItems[id]?.onClick != null) {
-            this._menuItems[id]?.onClick!();
+        if (_menuItems[id] != null) {
+          if (_menuItems[id]?.onClick != null) {
+            _menuItems[id]?.onClick!();
           }
         }
         break;
@@ -240,9 +240,9 @@ class MacOSInAppBrowser extends PlatformInAppBrowser with ChannelController {
 
   @override
   void addMenuItems(List<InAppBrowserMenuItem> menuItems) {
-    menuItems.forEach((menuItem) {
+    for (var menuItem in menuItems) {
       _menuItems[menuItem.id] = menuItem;
-    });
+    }
   }
 
   @override
@@ -332,7 +332,7 @@ class MacOSInAppBrowser extends PlatformInAppBrowser with ChannelController {
 
   @override
   bool isOpened() {
-    return this._isOpened;
+    return _isOpened;
   }
 
   @override

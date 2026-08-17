@@ -24,7 +24,7 @@ class MacOSWebMessageListenerCreationParams
     PlatformWebMessageListenerCreationParams params,
   ) {
     return MacOSWebMessageListenerCreationParams(
-      allowedOriginRules: params.allowedOriginRules ?? Set.from(["*"]),
+      allowedOriginRules: params.allowedOriginRules ?? {"*"},
       jsObjectName: params.jsObjectName,
       onPostMessage: params.onPostMessage,
     );
@@ -52,7 +52,7 @@ class MacOSWebMessageListener extends PlatformWebMessageListener
               ),
       ) {
     assert(
-      !this._macosParams.allowedOriginRules.contains(""),
+      !_macosParams.allowedOriginRules.contains(""),
       "allowedOriginRules cannot contain empty strings",
     );
     channel = MethodChannel(
@@ -65,7 +65,7 @@ class MacOSWebMessageListener extends PlatformWebMessageListener
   static final MacOSWebMessageListener _staticValue = MacOSWebMessageListener(
     MacOSWebMessageListenerCreationParams(
       jsObjectName: '',
-      allowedOriginRules: Set.from(["*"]),
+      allowedOriginRules: {"*"},
     ),
   );
 
@@ -85,13 +85,9 @@ class MacOSWebMessageListener extends PlatformWebMessageListener
   Future<dynamic> _handleMethod(MethodCall call) async {
     switch (call.method) {
       case "onPostMessage":
-        if (_replyProxy == null) {
-          _replyProxy = MacOSJavaScriptReplyProxy(
-            PlatformJavaScriptReplyProxyCreationParams(
-              webMessageListener: this,
-            ),
-          );
-        }
+        _replyProxy ??= MacOSJavaScriptReplyProxy(
+          PlatformJavaScriptReplyProxyCreationParams(webMessageListener: this),
+        );
         if (onPostMessage != null) {
           WebMessage? message = call.arguments["message"] != null
               ? WebMessage.fromMap(
@@ -127,12 +123,12 @@ class MacOSWebMessageListener extends PlatformWebMessageListener
 
   @override
   Map<String, dynamic> toJson() {
-    return this.toMap();
+    return toMap();
   }
 
   @override
   String toString() {
-    return 'MacOSWebMessageListener{id: ${_id}, jsObjectName: ${params.jsObjectName}, allowedOriginRules: ${params.allowedOriginRules}, replyProxy: $_replyProxy}';
+    return 'MacOSWebMessageListener{id: $_id, jsObjectName: ${params.jsObjectName}, allowedOriginRules: ${params.allowedOriginRules}, replyProxy: $_replyProxy}';
   }
 }
 

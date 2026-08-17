@@ -10,8 +10,8 @@ class SelectionGranularity_ {
   const SelectionGranularity_._internal(this._value);
 
   ///Selection granularity varies automatically based on the selection.
-  static const DYNAMIC = const SelectionGranularity_._internal(0);
+  static const DYNAMIC = SelectionGranularity_._internal(0);
 
   ///Selection endpoints can be placed at any character boundary.
-  static const CHARACTER = const SelectionGranularity_._internal(1);
+  static const CHARACTER = SelectionGranularity_._internal(1);
 }

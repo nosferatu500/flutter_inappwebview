@@ -30,7 +30,7 @@ List<ContentBlocker> _deserializeContentBlockers(
 }) {
   List<ContentBlocker> contentBlockers = [];
   if (contentBlockersMapList != null) {
-    contentBlockersMapList.forEach((contentBlocker) {
+    for (var contentBlocker in contentBlockersMapList) {
       contentBlockers.add(
         ContentBlocker.fromMap(
           Map<dynamic, Map<dynamic, dynamic>>.from(
@@ -39,7 +39,7 @@ List<ContentBlocker> _deserializeContentBlockers(
           enumMethod: enumMethod,
         ),
       );
-    });
+    }
   }
   return contentBlockers;
 }
@@ -3369,13 +3369,12 @@ as it can cause framerate drops on animations in Android 9 and lower (see [Hybri
     this.enable2DCanvasAcceleration = false,
     this.allowTopNavigationToDataUrls = false,
   }) {
-    if (this.minimumFontSize == null)
-      this.minimumFontSize = Util.isAndroid ? 8 : 0;
+    minimumFontSize ??= Util.isAndroid ? 8 : 0;
     assert(
-      this.resourceCustomSchemes == null ||
-          (this.resourceCustomSchemes != null &&
-              !this.resourceCustomSchemes!.contains("http") &&
-              !this.resourceCustomSchemes!.contains("https")),
+      resourceCustomSchemes == null ||
+          (resourceCustomSchemes != null &&
+              !resourceCustomSchemes!.contains("http") &&
+              !resourceCustomSchemes!.contains("https")),
     );
     assert(
       allowingReadAccessTo == null || allowingReadAccessTo!.isScheme("file"),

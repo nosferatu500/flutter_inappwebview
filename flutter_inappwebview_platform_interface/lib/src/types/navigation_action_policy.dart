@@ -11,13 +11,13 @@ class NavigationActionPolicy_ {
   const NavigationActionPolicy_._internal(this._value);
 
   ///Cancel the navigation.
-  static const CANCEL = const NavigationActionPolicy_._internal(0);
+  static const CANCEL = NavigationActionPolicy_._internal(0);
 
   ///Allow the navigation to continue.
-  static const ALLOW = const NavigationActionPolicy_._internal(1);
+  static const ALLOW = NavigationActionPolicy_._internal(1);
 
   ///Turn the navigation into a download.
   ///
   ///**NOTE**: available only on iOS 14.5+. It will fallback to [CANCEL].
-  static const DOWNLOAD = const NavigationActionPolicy_._internal(2);
+  static const DOWNLOAD = NavigationActionPolicy_._internal(2);
 }

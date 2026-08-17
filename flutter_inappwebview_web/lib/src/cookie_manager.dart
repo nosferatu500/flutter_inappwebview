@@ -123,19 +123,21 @@ class WebPlatformCookieManager extends PlatformCookieManager
     HTTPCookieSameSitePolicy? sameSite,
     PlatformInAppWebViewController? webViewController,
   }) async {
-    var cookieValue = name + "=" + value + "; Path=" + path;
+    var cookieValue = "$name=$value; Path=$path";
 
-    if (domain != null) cookieValue += "; Domain=" + domain;
+    if (domain != null) cookieValue += "; Domain=$domain";
 
-    if (expiresDate != null)
-      cookieValue += "; Expires=" + await _getCookieExpirationDate(expiresDate);
+    if (expiresDate != null) {
+      cookieValue += "; Expires=${await _getCookieExpirationDate(expiresDate)}";
+    }
 
-    if (maxAge != null) cookieValue += "; Max-Age=" + maxAge.toString();
+    if (maxAge != null) cookieValue += "; Max-Age=$maxAge";
 
     if (isSecure != null && isSecure) cookieValue += "; Secure";
 
-    if (sameSite != null && sameSite.isSupported())
-      cookieValue += "; SameSite=" + sameSite.toNativeValue()!;
+    if (sameSite != null && sameSite.isSupported()) {
+      cookieValue += "; SameSite=${sameSite.toNativeValue()!}";
+    }
 
     cookieValue += ";";
 
@@ -200,12 +202,12 @@ class WebPlatformCookieManager extends PlatformCookieManager
                 .split(';')
                 .map((documentCookie) => documentCookie.trim())
                 .toList();
-        documentCookies.forEach((documentCookie) {
+        for (var documentCookie in documentCookies) {
           List<String> cookie = documentCookie.split('=');
           if (cookie.length > 1) {
             cookies.add(Cookie(name: cookie[0], value: cookie[1]));
           }
-        });
+        }
         return cookies;
       }
     }
@@ -230,12 +232,12 @@ class WebPlatformCookieManager extends PlatformCookieManager
             .split(';')
             .map((documentCookie) => documentCookie.trim())
             .toList();
-    documentCookies.forEach((documentCookie) {
+    for (var documentCookie in documentCookies) {
       List<String> cookie = documentCookie.split('=');
       if (cookie.length > 1) {
         cookies.add(Cookie(name: cookie[0], value: cookie[1]));
       }
-    });
+    }
     await headlessWebView.dispose();
     return cookies;
   }
@@ -322,5 +324,5 @@ class WebPlatformCookieManager extends PlatformCookieManager
 }
 
 extension InternalCookieManager on WebPlatformCookieManager {
-  get handleMethod => _handleMethod;
+  Future<dynamic> Function(MethodCall call) get handleMethod => _handleMethod;
 }

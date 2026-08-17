@@ -66,7 +66,7 @@ class ScreenshotConfiguration {
     this.quality = 100,
     this.afterScreenUpdates = true,
   }) : compressFormat = compressFormat ?? CompressFormat.PNG {
-    assert(this.quality >= 0);
+    assert(quality >= 0);
   }
 
   ///Gets a possible [ScreenshotConfiguration] instance from a [Map] value.

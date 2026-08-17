@@ -52,11 +52,11 @@ class ClientCertChallenge_ extends URLAuthenticationChallenge_ {
   List<SslCertificate_>? mutuallyTrustedCertificates;
 
   ClientCertChallenge_({
-    required URLProtectionSpace_ protectionSpace,
+    required super.protectionSpace,
     this.principals,
     this.keyTypes,
     this.allowedCertificateAuthorities,
     this.isProxy,
     this.mutuallyTrustedCertificates,
-  }) : super(protectionSpace: protectionSpace);
+  });
 }

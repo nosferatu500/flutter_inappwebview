@@ -11,7 +11,7 @@ class InAppWebViewManager extends ChannelController {
   late BinaryMessenger _messenger;
 
   InAppWebViewManager({required BinaryMessenger messenger}) {
-    this._messenger = messenger;
+    _messenger = messenger;
     channel = MethodChannel(
       'com.pichillilorenzo/flutter_inappwebview_manager',
       const StandardMethodCodec(),

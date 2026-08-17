@@ -26,7 +26,7 @@ void main() {
           'bytes': Uint8List.fromList([1, 2, 3]),
         },
         requiredParameters: const ['count'],
-        execute: (_, __) async => null,
+        execute: (_, _) async => null,
       );
 
       final json = entry.toJson();

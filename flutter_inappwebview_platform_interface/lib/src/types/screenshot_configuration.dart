@@ -76,6 +76,6 @@ class ScreenshotConfiguration_ {
     this.quality = 100,
     this.afterScreenUpdates = true,
   }) : compressFormat = compressFormat ?? CompressFormat_.PNG {
-    assert(this.quality >= 0);
+    assert(quality >= 0);
   }
 }

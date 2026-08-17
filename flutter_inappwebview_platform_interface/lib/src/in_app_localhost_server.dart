@@ -58,13 +58,13 @@ class DefaultInAppLocalhostServer extends PlatformInAppLocalhostServer {
                 params,
               ),
       ) {
-    this._port = params.port;
-    this._directoryIndex = params.directoryIndex;
-    this._documentRoot = (params.documentRoot.endsWith('/'))
+    _port = params.port;
+    _directoryIndex = params.directoryIndex;
+    _documentRoot = (params.documentRoot.endsWith('/'))
         ? params.documentRoot
         : '${params.documentRoot}/';
-    this._shared = params.shared;
-    this._customOnData = params.onData;
+    _shared = params.shared;
+    _customOnData = params.onData;
   }
 
   @override
@@ -84,10 +84,10 @@ class DefaultInAppLocalhostServer extends PlatformInAppLocalhostServer {
 
   @override
   Future<void> start() async {
-    if (this._started) {
+    if (_started) {
       throw Exception('Server already started on http://localhost:$_port');
     }
-    this._started = true;
+    _started = true;
 
     final completer = Completer();
 
@@ -95,10 +95,10 @@ class DefaultInAppLocalhostServer extends PlatformInAppLocalhostServer {
       () {
         HttpServer.bind('127.0.0.1', _port, shared: _shared).then((server) {
           if (kDebugMode) {
-            print('Server running on http://localhost:' + _port.toString());
+            print('Server running on http://localhost:$_port');
           }
 
-          this._server = server;
+          _server = server;
 
           server.listen((HttpRequest request) async {
             if (await _customOnData?.call(request) ?? false) {
@@ -163,20 +163,20 @@ class DefaultInAppLocalhostServer extends PlatformInAppLocalhostServer {
 
   @override
   Future<void> close() async {
-    if (this._server == null) {
+    if (_server == null) {
       return;
     }
-    await this._server!.close(force: true);
+    await _server!.close(force: true);
     if (kDebugMode) {
       print('Server running on http://localhost:$_port closed');
     }
-    this._started = false;
-    this._server = null;
+    _started = false;
+    _server = null;
   }
 
   @override
   bool isRunning() {
-    return this._server != null;
+    return _server != null;
   }
 
   ContentType _getContentTypeFromMimeType(String mimeType) {

@@ -58,10 +58,10 @@ class IOSInAppWebViewController extends PlatformInAppWebViewController
     UserScriptInjectionTime.AT_DOCUMENT_START: <UserScript>[],
     UserScriptInjectionTime.AT_DOCUMENT_END: <UserScript>[],
   };
-  Set<String> _webMessageListenerObjNames = Set();
+  Set<String> _webMessageListenerObjNames = {};
   Map<String, ScriptHtmlTagAttributes> _injectedScriptsFromURL = {};
-  Set<IOSWebMessageChannel> _webMessageChannels = Set();
-  Set<IOSWebMessageListener> _webMessageListeners = Set();
+  Set<IOSWebMessageChannel> _webMessageChannels = {};
+  Set<IOSWebMessageListener> _webMessageListeners = {};
 
   // static map that contains the properties to be saved and restored for keep alive feature
   static final Map<InAppWebViewKeepAlive, InAppWebViewControllerKeepAliveProps?>
@@ -94,18 +94,18 @@ class IOSInAppWebViewController extends PlatformInAppWebViewController
       for (final userScript in initialUserScripts) {
         if (userScript.injectionTime ==
             UserScriptInjectionTime.AT_DOCUMENT_START) {
-          this._userScripts[UserScriptInjectionTime.AT_DOCUMENT_START]?.add(
+          _userScripts[UserScriptInjectionTime.AT_DOCUMENT_START]?.add(
             userScript,
           );
         } else {
-          this._userScripts[UserScriptInjectionTime.AT_DOCUMENT_END]?.add(
+          _userScripts[UserScriptInjectionTime.AT_DOCUMENT_END]?.add(
             userScript,
           );
         }
       }
     }
 
-    this._init(params);
+    _init(params);
   }
 
   static final IOSInAppWebViewController _staticValue =
@@ -130,23 +130,23 @@ class IOSInAppWebViewController extends PlatformInAppWebViewController
               ),
       ) {
     this.channel = channel;
-    this._inAppBrowser = inAppBrowser;
+    _inAppBrowser = inAppBrowser;
 
     if (initialUserScripts != null) {
       for (final userScript in initialUserScripts) {
         if (userScript.injectionTime ==
             UserScriptInjectionTime.AT_DOCUMENT_START) {
-          this._userScripts[UserScriptInjectionTime.AT_DOCUMENT_START]?.add(
+          _userScripts[UserScriptInjectionTime.AT_DOCUMENT_START]?.add(
             userScript,
           );
         } else {
-          this._userScripts[UserScriptInjectionTime.AT_DOCUMENT_END]?.add(
+          _userScripts[UserScriptInjectionTime.AT_DOCUMENT_END]?.add(
             userScript,
           );
         }
       }
     }
-    this._init(params);
+    _init(params);
   }
 
   void _init(PlatformInAppWebViewControllerCreationParams params) {
@@ -191,9 +191,9 @@ class IOSInAppWebViewController extends PlatformInAppWebViewController
     }
   }
 
-  _debugLog(String method, dynamic args) {
+  void _debugLog(String method, dynamic args) {
     debugLog(
-      className: this.runtimeType.toString(),
+      className: runtimeType.toString(),
       name: _inAppBrowser == null
           ? "WebView"
           : _inAppBrowser.runtimeType.toString(),
@@ -217,10 +217,11 @@ class IOSInAppWebViewController extends PlatformInAppWebViewController
             _inAppBrowserEventHandler != null) {
           String? url = call.arguments["url"];
           WebUri? uri = url != null ? WebUri(url) : null;
-          if (webviewParams != null && webviewParams!.onLoadStart != null)
+          if (webviewParams != null && webviewParams!.onLoadStart != null) {
             webviewParams!.onLoadStart!(_controllerFromPlatform, uri);
-          else
+          } else {
             _inAppBrowserEventHandler!.onLoadStart(uri);
+          }
         }
         break;
       case "onLoadStop":
@@ -228,10 +229,11 @@ class IOSInAppWebViewController extends PlatformInAppWebViewController
             _inAppBrowserEventHandler != null) {
           String? url = call.arguments["url"];
           WebUri? uri = url != null ? WebUri(url) : null;
-          if (webviewParams != null && webviewParams!.onLoadStop != null)
+          if (webviewParams != null && webviewParams!.onLoadStop != null) {
             webviewParams!.onLoadStop!(_controllerFromPlatform, uri);
-          else
+          } else {
             _inAppBrowserEventHandler!.onLoadStop(uri);
+          }
         }
         break;
       case "onReceivedError":
@@ -283,13 +285,15 @@ class IOSInAppWebViewController extends PlatformInAppWebViewController
                 webviewParams!.onProgressChanged != null) ||
             _inAppBrowserEventHandler != null) {
           int progress = call.arguments["progress"];
-          if (webviewParams != null && webviewParams!.onProgressChanged != null)
+          if (webviewParams != null &&
+              webviewParams!.onProgressChanged != null) {
             webviewParams!.onProgressChanged!(
               _controllerFromPlatform,
               progress,
             );
-          else
+          } else {
             _inAppBrowserEventHandler!.onProgressChanged(progress);
+          }
         }
         break;
       case "shouldOverrideUrlLoading":
@@ -303,11 +307,12 @@ class IOSInAppWebViewController extends PlatformInAppWebViewController
           )!;
 
           if (webviewParams != null &&
-              webviewParams!.shouldOverrideUrlLoading != null)
+              webviewParams!.shouldOverrideUrlLoading != null) {
             return (await webviewParams!.shouldOverrideUrlLoading!(
               _controllerFromPlatform,
               navigationAction,
             ))?.toNativeValue();
+          }
           return (await _inAppBrowserEventHandler!.shouldOverrideUrlLoading(
             navigationAction,
           ))?.toNativeValue();
@@ -320,13 +325,15 @@ class IOSInAppWebViewController extends PlatformInAppWebViewController
           Map<String, dynamic> arguments = call.arguments
               .cast<String, dynamic>();
           ConsoleMessage consoleMessage = ConsoleMessage.fromMap(arguments)!;
-          if (webviewParams != null && webviewParams!.onConsoleMessage != null)
+          if (webviewParams != null &&
+              webviewParams!.onConsoleMessage != null) {
             webviewParams!.onConsoleMessage!(
               _controllerFromPlatform,
               consoleMessage,
             );
-          else
+          } else {
             _inAppBrowserEventHandler!.onConsoleMessage(consoleMessage);
+          }
         }
         break;
       case "onScrollChanged":
@@ -334,10 +341,11 @@ class IOSInAppWebViewController extends PlatformInAppWebViewController
             _inAppBrowserEventHandler != null) {
           int x = call.arguments["x"];
           int y = call.arguments["y"];
-          if (webviewParams != null && webviewParams!.onScrollChanged != null)
+          if (webviewParams != null && webviewParams!.onScrollChanged != null) {
             webviewParams!.onScrollChanged!(_controllerFromPlatform, x, y);
-          else
+          } else {
             _inAppBrowserEventHandler!.onScrollChanged(x, y);
+          }
         }
         break;
       case "onDownloadStarting":
@@ -390,31 +398,33 @@ class IOSInAppWebViewController extends PlatformInAppWebViewController
             arguments,
           )!;
 
-          if (webviewParams != null && webviewParams!.onCreateWindow != null)
+          if (webviewParams != null && webviewParams!.onCreateWindow != null) {
             return await webviewParams!.onCreateWindow!(
               _controllerFromPlatform,
               createWindowAction,
             );
-          else
+          } else {
             return await _inAppBrowserEventHandler!.onCreateWindow(
               createWindowAction,
             );
+          }
         }
         break;
       case "onCloseWindow":
-        if (webviewParams != null && webviewParams!.onCloseWindow != null)
+        if (webviewParams != null && webviewParams!.onCloseWindow != null) {
           webviewParams!.onCloseWindow!(_controllerFromPlatform);
-        else if (_inAppBrowserEventHandler != null)
+        } else if (_inAppBrowserEventHandler != null)
           _inAppBrowserEventHandler!.onCloseWindow();
         break;
       case "onTitleChanged":
         if ((webviewParams != null && webviewParams!.onTitleChanged != null) ||
             _inAppBrowserEventHandler != null) {
           String? title = call.arguments["title"];
-          if (webviewParams != null && webviewParams!.onTitleChanged != null)
+          if (webviewParams != null && webviewParams!.onTitleChanged != null) {
             webviewParams!.onTitleChanged!(_controllerFromPlatform, title);
-          else
+          } else {
             _inAppBrowserEventHandler!.onTitleChanged(title);
+          }
         }
         break;
       case "onGeolocationPermissionsShowPrompt":
@@ -586,15 +596,16 @@ class IOSInAppWebViewController extends PlatformInAppWebViewController
               .cast<String, dynamic>();
           JsAlertRequest jsAlertRequest = JsAlertRequest.fromMap(arguments)!;
 
-          if (webviewParams != null && webviewParams!.onJsAlert != null)
+          if (webviewParams != null && webviewParams!.onJsAlert != null) {
             return (await webviewParams!.onJsAlert!(
               _controllerFromPlatform,
               jsAlertRequest,
             ))?.toMap();
-          else
+          } else {
             return (await _inAppBrowserEventHandler!.onJsAlert(
               jsAlertRequest,
             ))?.toMap();
+          }
         }
         break;
       case "onJsConfirm":
@@ -606,15 +617,16 @@ class IOSInAppWebViewController extends PlatformInAppWebViewController
             arguments,
           )!;
 
-          if (webviewParams != null && webviewParams!.onJsConfirm != null)
+          if (webviewParams != null && webviewParams!.onJsConfirm != null) {
             return (await webviewParams!.onJsConfirm!(
               _controllerFromPlatform,
               jsConfirmRequest,
             ))?.toMap();
-          else
+          } else {
             return (await _inAppBrowserEventHandler!.onJsConfirm(
               jsConfirmRequest,
             ))?.toMap();
+          }
         }
         break;
       case "onJsPrompt":
@@ -624,15 +636,16 @@ class IOSInAppWebViewController extends PlatformInAppWebViewController
               .cast<String, dynamic>();
           JsPromptRequest jsPromptRequest = JsPromptRequest.fromMap(arguments)!;
 
-          if (webviewParams != null && webviewParams!.onJsPrompt != null)
+          if (webviewParams != null && webviewParams!.onJsPrompt != null) {
             return (await webviewParams!.onJsPrompt!(
               _controllerFromPlatform,
               jsPromptRequest,
             ))?.toMap();
-          else
+          } else {
             return (await _inAppBrowserEventHandler!.onJsPrompt(
               jsPromptRequest,
             ))?.toMap();
+          }
         }
         break;
       case "onJsBeforeUnload":
@@ -709,24 +722,26 @@ class IOSInAppWebViewController extends PlatformInAppWebViewController
           )!;
 
           if (webviewParams != null &&
-              webviewParams!.onPermissionRequestCanceled != null)
+              webviewParams!.onPermissionRequestCanceled != null) {
             webviewParams!.onPermissionRequestCanceled!(
               _controllerFromPlatform,
               permissionRequest,
             );
-          else
+          } else {
             _inAppBrowserEventHandler!.onPermissionRequestCanceled(
               permissionRequest,
             );
+          }
         }
         break;
       case "onRequestFocus":
         if ((webviewParams != null && webviewParams!.onRequestFocus != null) ||
             _inAppBrowserEventHandler != null) {
-          if (webviewParams != null && webviewParams!.onRequestFocus != null)
+          if (webviewParams != null && webviewParams!.onRequestFocus != null) {
             webviewParams!.onRequestFocus!(_controllerFromPlatform);
-          else
+          } else {
             _inAppBrowserEventHandler!.onRequestFocus();
+          }
         }
         break;
       case "onReceivedHttpAuthRequest":
@@ -739,15 +754,16 @@ class IOSInAppWebViewController extends PlatformInAppWebViewController
               HttpAuthenticationChallenge.fromMap(arguments)!;
 
           if (webviewParams != null &&
-              webviewParams!.onReceivedHttpAuthRequest != null)
+              webviewParams!.onReceivedHttpAuthRequest != null) {
             return (await webviewParams!.onReceivedHttpAuthRequest!(
               _controllerFromPlatform,
               challenge,
             ))?.toMap();
-          else
+          } else {
             return (await _inAppBrowserEventHandler!.onReceivedHttpAuthRequest(
               challenge,
             ))?.toMap();
+          }
         }
         break;
       case "onReceivedServerTrustAuthRequest":
@@ -761,15 +777,16 @@ class IOSInAppWebViewController extends PlatformInAppWebViewController
           )!;
 
           if (webviewParams != null &&
-              webviewParams!.onReceivedServerTrustAuthRequest != null)
+              webviewParams!.onReceivedServerTrustAuthRequest != null) {
             return (await webviewParams!.onReceivedServerTrustAuthRequest!(
               _controllerFromPlatform,
               challenge,
             ))?.toMap();
-          else
+          } else {
             return (await _inAppBrowserEventHandler!
                     .onReceivedServerTrustAuthRequest(challenge))
                 ?.toMap();
+          }
         }
         break;
       case "onReceivedClientCertRequest":
@@ -783,15 +800,16 @@ class IOSInAppWebViewController extends PlatformInAppWebViewController
           )!;
 
           if (webviewParams != null &&
-              webviewParams!.onReceivedClientCertRequest != null)
+              webviewParams!.onReceivedClientCertRequest != null) {
             return (await webviewParams!.onReceivedClientCertRequest!(
               _controllerFromPlatform,
               challenge,
             ))?.toMap();
-          else
+          } else {
             return (await _inAppBrowserEventHandler!
                     .onReceivedClientCertRequest(challenge))
                 ?.toMap();
+          }
         }
         break;
       case "onPermissionRequest":
@@ -824,14 +842,15 @@ class IOSInAppWebViewController extends PlatformInAppWebViewController
           bool? isReload = call.arguments["isReload"];
           WebUri? uri = url != null ? WebUri(url) : null;
           if (webviewParams != null &&
-              webviewParams!.onUpdateVisitedHistory != null)
+              webviewParams!.onUpdateVisitedHistory != null) {
             webviewParams!.onUpdateVisitedHistory!(
               _controllerFromPlatform,
               uri,
               isReload,
             );
-          else
+          } else {
             _inAppBrowserEventHandler!.onUpdateVisitedHistory(uri, isReload);
+          }
         }
         break;
       case "onWebContentProcessDidTerminate":
@@ -851,10 +870,11 @@ class IOSInAppWebViewController extends PlatformInAppWebViewController
           String? url = call.arguments["url"];
           WebUri? uri = url != null ? WebUri(url) : null;
           if (webviewParams != null &&
-              webviewParams!.onPageCommitVisible != null)
+              webviewParams!.onPageCommitVisible != null) {
             webviewParams!.onPageCommitVisible!(_controllerFromPlatform, uri);
-          else
+          } else {
             _inAppBrowserEventHandler!.onPageCommitVisible(uri);
+          }
         }
         break;
       case "onDidReceiveServerRedirectForProvisionalNavigation":
@@ -922,13 +942,14 @@ class IOSInAppWebViewController extends PlatformInAppWebViewController
               InAppWebViewHitTestResult.fromMap(arguments)!;
 
           if (webviewParams != null &&
-              webviewParams!.onLongPressHitTestResult != null)
+              webviewParams!.onLongPressHitTestResult != null) {
             webviewParams!.onLongPressHitTestResult!(
               _controllerFromPlatform,
               hitTestResult,
             );
-          else
+          } else {
             _inAppBrowserEventHandler!.onLongPressHitTestResult(hitTestResult);
+          }
         }
         break;
       case "onCreateContextMenu":
@@ -997,15 +1018,15 @@ class IOSInAppWebViewController extends PlatformInAppWebViewController
         }
         break;
       case "onEnterFullscreen":
-        if (webviewParams != null && webviewParams!.onEnterFullscreen != null)
+        if (webviewParams != null && webviewParams!.onEnterFullscreen != null) {
           webviewParams!.onEnterFullscreen!(_controllerFromPlatform);
-        else if (_inAppBrowserEventHandler != null)
+        } else if (_inAppBrowserEventHandler != null)
           _inAppBrowserEventHandler!.onEnterFullscreen();
         break;
       case "onExitFullscreen":
-        if (webviewParams != null && webviewParams!.onExitFullscreen != null)
+        if (webviewParams != null && webviewParams!.onExitFullscreen != null) {
           webviewParams!.onExitFullscreen!(_controllerFromPlatform);
-        else if (_inAppBrowserEventHandler != null)
+        } else if (_inAppBrowserEventHandler != null)
           _inAppBrowserEventHandler!.onExitFullscreen();
         break;
       case "onOverScrolled":
@@ -1016,7 +1037,7 @@ class IOSInAppWebViewController extends PlatformInAppWebViewController
           bool clampedX = call.arguments["clampedX"];
           bool clampedY = call.arguments["clampedY"];
 
-          if (webviewParams != null && webviewParams!.onOverScrolled != null)
+          if (webviewParams != null && webviewParams!.onOverScrolled != null) {
             webviewParams!.onOverScrolled!(
               _controllerFromPlatform,
               x,
@@ -1024,20 +1045,21 @@ class IOSInAppWebViewController extends PlatformInAppWebViewController
               clampedX,
               clampedY,
             );
-          else
+          } else {
             _inAppBrowserEventHandler!.onOverScrolled(x, y, clampedX, clampedY);
+          }
         }
         break;
       case "onWindowFocus":
-        if (webviewParams != null && webviewParams!.onWindowFocus != null)
+        if (webviewParams != null && webviewParams!.onWindowFocus != null) {
           webviewParams!.onWindowFocus!(_controllerFromPlatform);
-        else if (_inAppBrowserEventHandler != null)
+        } else if (_inAppBrowserEventHandler != null)
           _inAppBrowserEventHandler!.onWindowFocus();
         break;
       case "onWindowBlur":
-        if (webviewParams != null && webviewParams!.onWindowBlur != null)
+        if (webviewParams != null && webviewParams!.onWindowBlur != null) {
           webviewParams!.onWindowBlur!(_controllerFromPlatform);
-        else if (_inAppBrowserEventHandler != null)
+        } else if (_inAppBrowserEventHandler != null)
           _inAppBrowserEventHandler!.onWindowBlur();
         break;
       case "onPrintRequest":
@@ -1094,17 +1116,18 @@ class IOSInAppWebViewController extends PlatformInAppWebViewController
           );
 
           if (webviewParams != null &&
-              webviewParams!.onCameraCaptureStateChanged != null)
+              webviewParams!.onCameraCaptureStateChanged != null) {
             webviewParams!.onCameraCaptureStateChanged!(
               _controllerFromPlatform,
               oldState,
               newState,
             );
-          else
+          } else {
             _inAppBrowserEventHandler!.onCameraCaptureStateChanged(
               oldState,
               newState,
             );
+          }
         }
         break;
       case "onMicrophoneCaptureStateChanged":
@@ -1119,17 +1142,18 @@ class IOSInAppWebViewController extends PlatformInAppWebViewController
           );
 
           if (webviewParams != null &&
-              webviewParams!.onMicrophoneCaptureStateChanged != null)
+              webviewParams!.onMicrophoneCaptureStateChanged != null) {
             webviewParams!.onMicrophoneCaptureStateChanged!(
               _controllerFromPlatform,
               oldState,
               newState,
             );
-          else
+          } else {
             _inAppBrowserEventHandler!.onMicrophoneCaptureStateChanged(
               oldState,
               newState,
             );
+          }
         }
         break;
       case "onContentSizeChanged":
@@ -1144,17 +1168,18 @@ class IOSInAppWebViewController extends PlatformInAppWebViewController
           )!;
 
           if (webviewParams != null &&
-              webviewParams!.onContentSizeChanged != null)
+              webviewParams!.onContentSizeChanged != null) {
             webviewParams!.onContentSizeChanged!(
               _controllerFromPlatform,
               oldContentSize,
               newContentSize,
             );
-          else
+          } else {
             _inAppBrowserEventHandler!.onContentSizeChanged(
               oldContentSize,
               newContentSize,
             );
+          }
         }
         break;
       case "onCallJsHandler":
@@ -1186,13 +1211,14 @@ class IOSInAppWebViewController extends PlatformInAppWebViewController
               var response = LoadedResource.fromMap(arguments)!;
 
               if (webviewParams != null &&
-                  webviewParams!.onLoadResource != null)
+                  webviewParams!.onLoadResource != null) {
                 webviewParams!.onLoadResource!(
                   _controllerFromPlatform,
                   response,
                 );
-              else
+              } else {
                 _inAppBrowserEventHandler!.onLoadResource(response);
+              }
             }
             return null;
           case "shouldInterceptAjaxRequest":
@@ -1204,19 +1230,20 @@ class IOSInAppWebViewController extends PlatformInAppWebViewController
               AjaxRequest request = AjaxRequest.fromMap(arguments)!;
 
               if (webviewParams != null &&
-                  webviewParams!.shouldInterceptAjaxRequest != null)
+                  webviewParams!.shouldInterceptAjaxRequest != null) {
                 return jsonEncode(
                   await params.webviewParams!.shouldInterceptAjaxRequest!(
                     _controllerFromPlatform,
                     request,
                   ),
                 );
-              else
+              } else {
                 return jsonEncode(
                   await _inAppBrowserEventHandler!.shouldInterceptAjaxRequest(
                     request,
                   ),
                 );
+              }
             }
             return null;
           case "onAjaxReadyStateChange":
@@ -1228,19 +1255,20 @@ class IOSInAppWebViewController extends PlatformInAppWebViewController
               AjaxRequest request = AjaxRequest.fromMap(arguments)!;
 
               if (webviewParams != null &&
-                  webviewParams!.onAjaxReadyStateChange != null)
+                  webviewParams!.onAjaxReadyStateChange != null) {
                 return jsonEncode(
                   (await webviewParams!.onAjaxReadyStateChange!(
                     _controllerFromPlatform,
                     request,
                   ))?.toNativeValue(),
                 );
-              else
+              } else {
                 return jsonEncode(
                   (await _inAppBrowserEventHandler!.onAjaxReadyStateChange(
                     request,
                   ))?.toNativeValue(),
                 );
+              }
             }
             return null;
           case "onAjaxProgress":
@@ -1252,19 +1280,20 @@ class IOSInAppWebViewController extends PlatformInAppWebViewController
               AjaxRequest request = AjaxRequest.fromMap(arguments)!;
 
               if (webviewParams != null &&
-                  webviewParams!.onAjaxProgress != null)
+                  webviewParams!.onAjaxProgress != null) {
                 return jsonEncode(
                   (await webviewParams!.onAjaxProgress!(
                     _controllerFromPlatform,
                     request,
                   ))?.toNativeValue(),
                 );
-              else
+              } else {
                 return jsonEncode(
                   (await _inAppBrowserEventHandler!.onAjaxProgress(
                     request,
                   ))?.toNativeValue(),
                 );
+              }
             }
             return null;
           case "shouldInterceptFetchRequest":
@@ -1276,31 +1305,32 @@ class IOSInAppWebViewController extends PlatformInAppWebViewController
               FetchRequest request = FetchRequest.fromMap(arguments)!;
 
               if (webviewParams != null &&
-                  webviewParams!.shouldInterceptFetchRequest != null)
+                  webviewParams!.shouldInterceptFetchRequest != null) {
                 return jsonEncode(
                   await webviewParams!.shouldInterceptFetchRequest!(
                     _controllerFromPlatform,
                     request,
                   ),
                 );
-              else
+              } else {
                 return jsonEncode(
                   await _inAppBrowserEventHandler!.shouldInterceptFetchRequest(
                     request,
                   ),
                 );
+              }
             }
             return null;
           case "onWindowFocus":
-            if (webviewParams != null && webviewParams!.onWindowFocus != null)
+            if (webviewParams != null && webviewParams!.onWindowFocus != null) {
               webviewParams!.onWindowFocus!(_controllerFromPlatform);
-            else if (_inAppBrowserEventHandler != null)
+            } else if (_inAppBrowserEventHandler != null)
               _inAppBrowserEventHandler!.onWindowFocus();
             return null;
           case "onWindowBlur":
-            if (webviewParams != null && webviewParams!.onWindowBlur != null)
+            if (webviewParams != null && webviewParams!.onWindowBlur != null) {
               webviewParams!.onWindowBlur!(_controllerFromPlatform);
-            else if (_inAppBrowserEventHandler != null)
+            } else if (_inAppBrowserEventHandler != null)
               _inAppBrowserEventHandler!.onWindowBlur();
             return null;
           case "onInjectedScriptLoaded":
@@ -1324,7 +1354,7 @@ class IOSInAppWebViewController extends PlatformInAppWebViewController
         if (_javaScriptHandlersMap.containsKey(handlerName)) {
           // convert result to json
           try {
-            var jsHandlerResult = null;
+            var jsHandlerResult;
             if (_javaScriptHandlersMap[handlerName]
                 is JavaScriptHandlerFunction) {
               jsHandlerResult =
@@ -1336,7 +1366,7 @@ class IOSInAppWebViewController extends PlatformInAppWebViewController
             return jsonEncode(jsHandlerResult);
           } catch (error, stacktrace) {
             developer.log(
-              error.toString() + '\n' + stacktrace.toString(),
+              '$error\n$stacktrace',
               name: 'JavaScript Handler "$handlerName"',
             );
             throw Exception(error.toString().replaceFirst('Exception: ', ''));
@@ -1400,7 +1430,7 @@ class IOSInAppWebViewController extends PlatformInAppWebViewController
             .transform(Utf8Decoder())
             .join();
       } catch (e) {
-        developer.log(e.toString(), name: this.runtimeType.toString());
+        developer.log(e.toString(), name: runtimeType.toString());
       }
     }
 
@@ -1423,11 +1453,11 @@ class IOSInAppWebViewController extends PlatformInAppWebViewController
     if (html == null || html.isEmpty) {
       return favicons;
     }
-    var assetPathBase;
+    String? assetPathBase;
 
     if (webviewUrl.isScheme("file")) {
       var assetPathSplit = webviewUrl.toString().split("/flutter_assets/");
-      assetPathBase = assetPathSplit[0] + "/flutter_assets/";
+      assetPathBase = "${assetPathSplit[0]}/flutter_assets/";
     }
 
     InAppWebViewSettings? settings = await getSettings();
@@ -1472,7 +1502,7 @@ class IOSInAppWebViewController extends PlatformInAppWebViewController
             }
             manifestUrl =
                 ((assetPathBase == null)
-                    ? webviewUrl.scheme + "://" + webviewUrl.host + "/"
+                    ? "${webviewUrl.scheme}://${webviewUrl.host}/"
                     : assetPathBase) +
                 manifestUrl;
           }
@@ -1494,8 +1524,7 @@ class IOSInAppWebViewController extends PlatformInAppWebViewController
     // try to get /favicon.ico
     try {
       HttpClient client = HttpClient();
-      var faviconUrl =
-          webviewUrl.scheme + "://" + webviewUrl.host + "/favicon.ico";
+      var faviconUrl = "${webviewUrl.scheme}://${webviewUrl.host}/favicon.ico";
       var faviconUri = WebUri(faviconUrl);
       var headRequest = await client.headUrl(faviconUri);
       var headResponse = await headRequest.close();
@@ -1504,7 +1533,7 @@ class IOSInAppWebViewController extends PlatformInAppWebViewController
       }
     } catch (e) {
       developer.log(
-        "/favicon.ico file not found: " + e.toString(),
+        "/favicon.ico file not found: $e",
         name: runtimeType.toString(),
       );
     }
@@ -1513,10 +1542,7 @@ class IOSInAppWebViewController extends PlatformInAppWebViewController
     HttpClientRequest? manifestRequest;
     HttpClientResponse? manifestResponse;
     bool manifestFound = false;
-    if (manifestUrl == null) {
-      manifestUrl =
-          webviewUrl.scheme + "://" + webviewUrl.host + "/manifest.json";
-    }
+    manifestUrl ??= "${webviewUrl.scheme}://${webviewUrl.host}/manifest.json";
     try {
       HttpClient client = HttpClient();
       manifestRequest = await client.getUrl(Uri.parse(manifestUrl));
@@ -1526,8 +1552,8 @@ class IOSInAppWebViewController extends PlatformInAppWebViewController
           manifestResponse.headers.contentType?.mimeType == "application/json";
     } catch (e) {
       developer.log(
-        "Manifest file not found: " + e.toString(),
-        name: this.runtimeType.toString(),
+        "Manifest file not found: $e",
+        name: runtimeType.toString(),
       );
     }
 
@@ -1552,8 +1578,7 @@ class IOSInAppWebViewController extends PlatformInAppWebViewController
         }
       } catch (e) {
         developer.log(
-          "Cannot get favicons from Manifest file. It might not have a valid format: " +
-              e.toString(),
+          "Cannot get favicons from Manifest file. It might not have a valid format: $e",
           error: e,
           name: runtimeType.toString(),
         );
@@ -1584,14 +1609,14 @@ class IOSInAppWebViewController extends PlatformInAppWebViewController
       }
       urlIcon =
           ((assetPathBase == null)
-              ? url.scheme + "://" + url.host + "/"
+              ? "${url.scheme}://${url.host}/"
               : assetPathBase) +
           urlIcon;
     }
     if (isManifest) {
       rel = (sizes != null)
           ? urlSplit[urlSplit.length - 1]
-                .replaceFirst("-" + sizes, "")
+                .replaceFirst("-$sizes", "")
                 .split(" ")[0]
                 .split(".")[0]
           : null;
@@ -1823,17 +1848,17 @@ class IOSInAppWebViewController extends PlatformInAppWebViewController
       !kJavaScriptHandlerForbiddenNames.contains(handlerName),
       '"$handlerName" is a forbidden name!',
     );
-    this._javaScriptHandlersMap[handlerName] = (callback);
+    _javaScriptHandlersMap[handlerName] = (callback);
   }
 
   @override
   Function? removeJavaScriptHandler({required String handlerName}) {
-    return this._javaScriptHandlersMap.remove(handlerName);
+    return _javaScriptHandlersMap.remove(handlerName);
   }
 
   @override
   bool hasJavaScriptHandler({required String handlerName}) {
-    return this._javaScriptHandlersMap.containsKey(handlerName);
+    return _javaScriptHandlersMap.containsKey(handlerName);
   }
 
   @override
@@ -2347,7 +2372,7 @@ class IOSInAppWebViewController extends PlatformInAppWebViewController
       assert(
         WebArchiveFormat.WEBARCHIVE.isSupported() &&
             filePath.endsWith(
-              "." + WebArchiveFormat.WEBARCHIVE.toNativeValue()!,
+              ".${WebArchiveFormat.WEBARCHIVE.toNativeValue()!}",
             ),
       );
     }
@@ -2383,9 +2408,7 @@ class IOSInAppWebViewController extends PlatformInAppWebViewController
     required WebMessage message,
     WebUri? targetOrigin,
   }) async {
-    if (targetOrigin == null) {
-      targetOrigin = WebUri('');
-    }
+    targetOrigin ??= WebUri('');
     Map<String, dynamic> args = <String, dynamic>{};
     args.putIfAbsent('message', () => message.toMap());
     args.putIfAbsent('targetOrigin', () => targetOrigin.toString());
@@ -2398,7 +2421,7 @@ class IOSInAppWebViewController extends PlatformInAppWebViewController
   ) async {
     assert(
       !_webMessageListeners.contains(webMessageListener),
-      "${webMessageListener} was already added.",
+      "$webMessageListener was already added.",
     );
     assert(
       !_webMessageListenerObjNames.contains(
@@ -2645,5 +2668,5 @@ class IOSInAppWebViewController extends PlatformInAppWebViewController
 }
 
 extension InternalInAppWebViewController on IOSInAppWebViewController {
-  get handleMethod => _handleMethod;
+  Future<dynamic> Function(MethodCall call) get handleMethod => _handleMethod;
 }

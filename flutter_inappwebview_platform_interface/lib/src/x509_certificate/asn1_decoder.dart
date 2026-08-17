@@ -51,12 +51,12 @@ class ASN1DERDecoder {
           if (tagNumber == ASN1IdentifierTagNumber.END_OF_CONTENT) {
             return result;
           } else if (tagNumber == ASN1IdentifierTagNumber.BOOLEAN) {
-            var value = contentData.length > 0 ? contentData.first : null;
+            var value = contentData.isNotEmpty ? contentData.first : null;
             if (value != null) {
               asn1obj.value = value > 0 ? true : false;
             }
           } else if (tagNumber == ASN1IdentifierTagNumber.INTEGER) {
-            while (contentData.length > 0 && contentData.first == 0) {
+            while (contentData.isNotEmpty && contentData.first == 0) {
               contentData.removeAt(0); // remove not significant digit
             }
             asn1obj.value = contentData;
@@ -86,7 +86,7 @@ class ASN1DERDecoder {
           } else if (tagNumber == ASN1IdentifierTagNumber.GENERALIZED_TIME) {
             asn1obj.value = generalizedTimeToDate(contentData: contentData);
           } else if (tagNumber == ASN1IdentifierTagNumber.BIT_STRING) {
-            if (contentData.length > 0) {
+            if (contentData.isNotEmpty) {
               contentData.removeAt(0); // unused bits
             }
             asn1obj.value = contentData;
@@ -95,15 +95,11 @@ class ASN1DERDecoder {
               var subIterator = contentData.iterator;
               asn1obj.sub = parse(iterator: subIterator);
             } catch (e) {
-              var str;
+              String? str;
               try {
                 str = utf8.decode(contentData);
               } catch (e) {}
-              if (str != null) {
-                asn1obj.value = str;
-              } else {
-                asn1obj.value = contentData;
-              }
+              asn1obj.value = str;
             }
           } else {
             // print("unsupported tag: ${asn1obj.identifier.tagNumber()}");
@@ -114,15 +110,11 @@ class ASN1DERDecoder {
 
           var contentData = loadSubContent(iterator: iterator);
 
-          var str;
+          String? str;
           try {
             str = utf8.decode(contentData);
           } catch (e) {}
-          if (str != null) {
-            asn1obj.value = str;
-          } else {
-            asn1obj.value = contentData;
-          }
+          asn1obj.value = str;
         }
       }
       result.add(asn1obj);
@@ -204,7 +196,7 @@ class ASN1DERDecoder {
     oid += "${(first / 40).truncate()}.${first % 40}";
 
     var t = 0;
-    while (contentData.length > 0) {
+    while (contentData.isNotEmpty) {
       var n = contentData.removeAt(0);
       t = (t << 7) | (n & 0x7F);
       if ((n & 0x80) == 0) {

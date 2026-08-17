@@ -29,7 +29,7 @@ class PlatformPullToRefreshControllerCreationParams {
   PlatformPullToRefreshControllerCreationParams({
     PullToRefreshSettings? settings,
     this.onRefresh,
-  }) : this.settings = settings ?? PullToRefreshSettings();
+  }) : settings = settings ?? PullToRefreshSettings();
 
   ///{@template flutter_inappwebview_platform_interface.PlatformPullToRefreshControllerCreationParams.settings}
   /// Initial settings.

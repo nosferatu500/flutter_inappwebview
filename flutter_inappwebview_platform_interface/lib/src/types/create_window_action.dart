@@ -46,20 +46,12 @@ class CreateWindowAction_ extends NavigationAction_ {
     required this.windowId,
     this.isDialog,
     this.windowFeatures,
-    required URLRequest_ request,
-    required bool isForMainFrame,
-    bool? hasGesture,
-    bool? isRedirect,
-    NavigationType_? navigationType,
-    FrameInfo_? sourceFrame,
-    FrameInfo_? targetFrame,
-  }) : super(
-         request: request,
-         isForMainFrame: isForMainFrame,
-         hasGesture: hasGesture,
-         isRedirect: isRedirect,
-         navigationType: navigationType,
-         sourceFrame: sourceFrame,
-         targetFrame: targetFrame,
-       );
+    required super.request,
+    required super.isForMainFrame,
+    super.hasGesture,
+    super.isRedirect,
+    super.navigationType,
+    super.sourceFrame,
+    super.targetFrame,
+  });
 }

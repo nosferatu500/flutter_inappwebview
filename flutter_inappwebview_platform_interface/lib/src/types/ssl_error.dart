@@ -15,5 +15,5 @@ class SslError_ {
   ///The message associated to the [code].
   String? message;
 
-  SslError_({this.code, this.message}) {}
+  SslError_({this.code, this.message});
 }

@@ -12,13 +12,11 @@ class LayoutAlgorithm_ {
   const LayoutAlgorithm_._internal(this._value);
 
   ///NORMAL means no rendering changes. This is the recommended choice for maximum compatibility across different platforms and Android versions.
-  static const NORMAL = const LayoutAlgorithm_._internal("NORMAL");
+  static const NORMAL = LayoutAlgorithm_._internal("NORMAL");
 
   ///TEXT_AUTOSIZING boosts font size of paragraphs based on heuristics to make the text readable when viewing a wide-viewport layout in the overview mode.
   ///It is recommended to enable zoom support [InAppWebViewSettings.supportZoom] when using this mode.
   ///
   ///**NOTE**: available on Android 19+.
-  static const TEXT_AUTOSIZING = const LayoutAlgorithm_._internal(
-    "TEXT_AUTOSIZING",
-  );
+  static const TEXT_AUTOSIZING = LayoutAlgorithm_._internal("TEXT_AUTOSIZING");
 }

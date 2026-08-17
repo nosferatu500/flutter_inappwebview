@@ -18,7 +18,7 @@ class WebsiteDataType {
   ) => WebsiteDataType._internal(value, nativeValue());
 
   ///Returns a set of all available website data types.
-  static final ALL = [
+  static final ALL = {
     WebsiteDataType.WKWebsiteDataTypeFetchCache,
     WebsiteDataType.WKWebsiteDataTypeDiskCache,
     WebsiteDataType.WKWebsiteDataTypeMemoryCache,
@@ -29,7 +29,7 @@ class WebsiteDataType {
     WebsiteDataType.WKWebsiteDataTypeWebSQLDatabases,
     WebsiteDataType.WKWebsiteDataTypeIndexedDBDatabases,
     WebsiteDataType.WKWebsiteDataTypeServiceWorkerRegistrations,
-  ].toSet();
+  };
 
   ///Cookies.
   static const WKWebsiteDataTypeCookies = WebsiteDataType._internal(

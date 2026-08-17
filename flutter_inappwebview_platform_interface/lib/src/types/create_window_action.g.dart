@@ -61,29 +61,29 @@ class CreateWindowAction extends NavigationAction {
         enumMethod: enumMethod,
       )!,
       isForMainFrame: map['isForMainFrame'],
+      hasGesture: map['hasGesture'],
+      isRedirect: map['isRedirect'],
+      navigationType: switch (enumMethod ?? EnumMethod.nativeValue) {
+        EnumMethod.nativeValue => NavigationType.fromNativeValue(
+          map['navigationType'],
+        ),
+        EnumMethod.value => NavigationType.fromValue(map['navigationType']),
+        EnumMethod.name => NavigationType.byName(map['navigationType']),
+      },
+      sourceFrame: FrameInfo.fromMap(
+        map['sourceFrame']?.cast<String, dynamic>(),
+        enumMethod: enumMethod,
+      ),
+      targetFrame: FrameInfo.fromMap(
+        map['targetFrame']?.cast<String, dynamic>(),
+        enumMethod: enumMethod,
+      ),
       isDialog: map['isDialog'],
       windowFeatures: WindowFeatures.fromMap(
         map['windowFeatures']?.cast<String, dynamic>(),
         enumMethod: enumMethod,
       ),
       windowId: map['windowId'],
-    );
-    instance.hasGesture = map['hasGesture'];
-    instance.isRedirect = map['isRedirect'];
-    instance.navigationType = switch (enumMethod ?? EnumMethod.nativeValue) {
-      EnumMethod.nativeValue => NavigationType.fromNativeValue(
-        map['navigationType'],
-      ),
-      EnumMethod.value => NavigationType.fromValue(map['navigationType']),
-      EnumMethod.name => NavigationType.byName(map['navigationType']),
-    };
-    instance.sourceFrame = FrameInfo.fromMap(
-      map['sourceFrame']?.cast<String, dynamic>(),
-      enumMethod: enumMethod,
-    );
-    instance.targetFrame = FrameInfo.fromMap(
-      map['targetFrame']?.cast<String, dynamic>(),
-      enumMethod: enumMethod,
     );
     instance.shouldPerformDownload = map['shouldPerformDownload'];
     return instance;

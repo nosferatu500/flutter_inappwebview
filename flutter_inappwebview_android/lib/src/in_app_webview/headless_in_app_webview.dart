@@ -181,7 +181,7 @@ class AndroidHeadlessInAppWebView extends PlatformHeadlessInAppWebView
   bool _started = false;
   bool _running = false;
 
-  static const MethodChannel _sharedChannel = const MethodChannel(
+  static const MethodChannel _sharedChannel = MethodChannel(
     'com.pichillilorenzo/flutter_headless_inappwebview',
   );
 
@@ -214,7 +214,7 @@ class AndroidHeadlessInAppWebView extends PlatformHeadlessInAppWebView
   AndroidHeadlessInAppWebViewCreationParams get _androidParams =>
       params as AndroidHeadlessInAppWebViewCreationParams;
 
-  _init() {
+  void _init() {
     _webViewController = AndroidInAppWebViewController(
       AndroidInAppWebViewControllerCreationParams(
         id: id,
@@ -246,6 +246,7 @@ class AndroidHeadlessInAppWebView extends PlatformHeadlessInAppWebView
     return null;
   }
 
+  @override
   Future<void> run() async {
     if (_started) {
       return;
@@ -298,9 +299,7 @@ class AndroidHeadlessInAppWebView extends PlatformHeadlessInAppWebView
     if ((params.shouldInterceptAjaxRequest != null ||
         params.onAjaxProgress != null ||
         params.onAjaxReadyStateChange != null)) {
-      if (settings.useShouldInterceptAjaxRequest == null) {
-        settings.useShouldInterceptAjaxRequest = true;
-      }
+      settings.useShouldInterceptAjaxRequest ??= true;
       if (params.onAjaxReadyStateChange != null &&
           settings.useOnAjaxReadyStateChange == null) {
         settings.useOnAjaxReadyStateChange = true;

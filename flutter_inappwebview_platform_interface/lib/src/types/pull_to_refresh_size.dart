@@ -10,8 +10,8 @@ class PullToRefreshSize_ {
   const PullToRefreshSize_._internal(this._value);
 
   ///Default size.
-  static const DEFAULT = const PullToRefreshSize_._internal(1);
+  static const DEFAULT = PullToRefreshSize_._internal(1);
 
   ///Large size.
-  static const LARGE = const PullToRefreshSize_._internal(0);
+  static const LARGE = PullToRefreshSize_._internal(0);
 }

@@ -30,9 +30,7 @@ class ServiceWorkerController {
 
   ///Gets the [ServiceWorkerController] shared instance.
   static ServiceWorkerController instance() {
-    if (_instance == null) {
-      _instance = ServiceWorkerController();
-    }
+    _instance ??= ServiceWorkerController();
     return _instance!;
   }
 
@@ -44,7 +42,7 @@ class ServiceWorkerController {
   ///{@macro flutter_inappwebview_platform_interface.PlatformServiceWorkerController.setServiceWorkerClient}
   ///
   ///{@macro flutter_inappwebview_platform_interface.PlatformServiceWorkerController.setServiceWorkerClient.supported_platforms}
-  setServiceWorkerClient(ServiceWorkerClient? value) =>
+  Future<void> setServiceWorkerClient(ServiceWorkerClient? value) =>
       platform.setServiceWorkerClient(value);
 
   ///{@macro flutter_inappwebview_platform_interface.PlatformServiceWorkerController.getAllowContentAccess}

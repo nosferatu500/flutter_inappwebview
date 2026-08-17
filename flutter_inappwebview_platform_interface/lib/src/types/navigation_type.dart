@@ -31,9 +31,7 @@ class NavigationType_ {
       EnumWindowsPlatform(value: 0),
     ],
   )
-  static const LINK_ACTIVATED = const NavigationType_._internal(
-    'LINK_ACTIVATED',
-  );
+  static const LINK_ACTIVATED = NavigationType_._internal('LINK_ACTIVATED');
 
   ///A form was submitted.
   @EnumSupportedPlatforms(
@@ -52,9 +50,7 @@ class NavigationType_ {
       ),
     ],
   )
-  static const FORM_SUBMITTED = const NavigationType_._internal(
-    'FORM_SUBMITTED',
-  );
+  static const FORM_SUBMITTED = NavigationType_._internal('FORM_SUBMITTED');
 
   ///An item from the back-forward list was requested.
   @EnumSupportedPlatforms(
@@ -79,7 +75,7 @@ class NavigationType_ {
       ),
     ],
   )
-  static const BACK_FORWARD = const NavigationType_._internal('BACK_FORWARD');
+  static const BACK_FORWARD = NavigationType_._internal('BACK_FORWARD');
 
   ///The webpage was reloaded.
   @EnumSupportedPlatforms(
@@ -104,7 +100,7 @@ class NavigationType_ {
       ),
     ],
   )
-  static const RELOAD = const NavigationType_._internal('RELOAD');
+  static const RELOAD = NavigationType_._internal('RELOAD');
 
   ///A form was resubmitted (for example by going back, going forward, or reloading).
   @EnumSupportedPlatforms(
@@ -123,9 +119,7 @@ class NavigationType_ {
       ),
     ],
   )
-  static const FORM_RESUBMITTED = const NavigationType_._internal(
-    'FORM_RESUBMITTED',
-  );
+  static const FORM_RESUBMITTED = NavigationType_._internal('FORM_RESUBMITTED');
 
   ///Navigation is taking place for some other reason.
   @EnumSupportedPlatforms(
@@ -145,5 +139,5 @@ class NavigationType_ {
       EnumWindowsPlatform(value: 3),
     ],
   )
-  static const OTHER = const NavigationType_._internal('OTHER');
+  static const OTHER = NavigationType_._internal('OTHER');
 }

@@ -40,7 +40,7 @@ class X509PublicKey {
           );
         } catch (e) {}
 
-        if (publicKeyAsn1Objects != null && publicKeyAsn1Objects.length > 0) {
+        if (publicKeyAsn1Objects != null && publicKeyAsn1Objects.isNotEmpty) {
           var publicKeyModulus = publicKeyAsn1Objects.first
               .subAtIndex(0)
               ?.value;

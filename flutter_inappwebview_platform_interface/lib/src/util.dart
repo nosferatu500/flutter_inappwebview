@@ -405,8 +405,7 @@ extension UtilColor on Color {
     hexString = hexString.trim();
     if (hexString.length == 4) {
       // convert for example #f00 to #ff0000
-      hexString =
-          "#" + (hexString[1] * 2) + (hexString[2] * 2) + (hexString[3] * 2);
+      hexString = "#${hexString[1] * 2}${hexString[2] * 2}${hexString[3] * 2}";
     }
     final buffer = StringBuffer();
     if (hexString.length == 6 || hexString.length == 7) buffer.write('ff');
@@ -587,12 +586,12 @@ void debugLog({
         '" using ' +
         args.toString();
     if (maxLogMessageLength >= 0 && message.length > maxLogMessageLength) {
-      message = message.substring(0, maxLogMessageLength) + '...';
+      message = '${message.substring(0, maxLogMessageLength)}...';
     }
     if (!debugLoggingSettings.usePrint) {
       developer.log(message, name: className);
     } else {
-      print('[${className}] $message');
+      print('[$className] $message');
     }
   }
 }
@@ -600,7 +599,7 @@ void debugLog({
 // Class used only by the build_runner for @ExchangeableObject annotation.
 // For some strange reason, Color is not recognized anymore by the dart analyzer correctly.
 class Color_ extends Color {
-  Color_(int value) : super(value);
+  Color_(super.value);
 }
 
 abstract mixin class ChannelController implements Disposable {
@@ -627,7 +626,7 @@ extension InternalChannelController on ChannelController {
 
   MethodChannel? get channel {
     assert(ChannelController.debugAssertNotDisposed(this));
-    return this._channel;
+    return _channel;
   }
 
   set handler(Future<dynamic> Function(MethodCall call)? handler) =>
@@ -637,14 +636,11 @@ extension InternalChannelController on ChannelController {
 
   bool get disposed => _channel == null;
 
-  initMethodCallHandler() {
-    assert(
-      channel != null,
-      'Method Channel for ${runtimeType} not initialized!',
-    );
+  void initMethodCallHandler() {
+    assert(channel != null, 'Method Channel for $runtimeType not initialized!');
     assert(
       handler != null,
-      'Method Call Handler for ${runtimeType} not initialized!',
+      'Method Call Handler for $runtimeType not initialized!',
     );
 
     channel?.setMethodCallHandler((call) async {
@@ -658,7 +654,7 @@ extension InternalChannelController on ChannelController {
     });
   }
 
-  disposeChannel({bool removeMethodCallHandler = true}) {
+  void disposeChannel({bool removeMethodCallHandler = true}) {
     if (removeMethodCallHandler) {
       channel?.setMethodCallHandler(null);
     }

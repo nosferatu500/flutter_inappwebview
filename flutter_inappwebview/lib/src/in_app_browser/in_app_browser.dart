@@ -48,7 +48,7 @@ class InAppBrowser implements PlatformInAppBrowserEvents {
   /// Constructs a [InAppBrowser] from a specific platform
   /// implementation.
   InAppBrowser.fromPlatform(this.platform) {
-    this.platform.eventHandler = this;
+    platform.eventHandler = this;
   }
 
   /// Implementation of [PlatformInAppBrowser] for the current platform.
@@ -122,7 +122,7 @@ class InAppBrowser implements PlatformInAppBrowserEvents {
     required URLRequest urlRequest,
     InAppBrowserClassSettings? settings,
   }) {
-    this.platform.eventHandler = this;
+    platform.eventHandler = this;
     return platform.openUrlRequest(urlRequest: urlRequest, settings: settings);
   }
 
@@ -133,7 +133,7 @@ class InAppBrowser implements PlatformInAppBrowserEvents {
     required String assetFilePath,
     InAppBrowserClassSettings? settings,
   }) {
-    this.platform.eventHandler = this;
+    platform.eventHandler = this;
     return platform.openFile(assetFilePath: assetFilePath, settings: settings);
   }
 
@@ -148,7 +148,7 @@ class InAppBrowser implements PlatformInAppBrowserEvents {
     WebUri? historyUrl,
     InAppBrowserClassSettings? settings,
   }) {
-    this.platform.eventHandler = this;
+    platform.eventHandler = this;
     return platform.openData(
       data: data,
       mimeType: mimeType,

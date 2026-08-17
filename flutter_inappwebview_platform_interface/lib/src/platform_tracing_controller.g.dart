@@ -39,7 +39,7 @@ class TracingSettings {
   ///- Android WebView ([Official API - TracingConfig](https://developer.android.com/reference/androidx/webkit/TracingConfig))
   TracingSettings({this.categories = const [], this.tracingMode}) {
     assert(
-      this.categories
+      categories
           .map(
             (e) => e.runtimeType is String || e.runtimeType is TracingCategory,
           )

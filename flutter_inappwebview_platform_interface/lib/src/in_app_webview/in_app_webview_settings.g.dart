@@ -2132,13 +2132,12 @@ class InAppWebViewSettings {
     this.enable2DCanvasAcceleration = false,
     this.allowTopNavigationToDataUrls = false,
   }) {
-    if (this.minimumFontSize == null)
-      this.minimumFontSize = Util.isAndroid ? 8 : 0;
+    minimumFontSize ??= Util.isAndroid ? 8 : 0;
     assert(
-      this.resourceCustomSchemes == null ||
-          (this.resourceCustomSchemes != null &&
-              !this.resourceCustomSchemes!.contains("http") &&
-              !this.resourceCustomSchemes!.contains("https")),
+      resourceCustomSchemes == null ||
+          (resourceCustomSchemes != null &&
+              !resourceCustomSchemes!.contains("http") &&
+              !resourceCustomSchemes!.contains("https")),
     );
     assert(
       allowingReadAccessTo == null || allowingReadAccessTo!.isScheme("file"),

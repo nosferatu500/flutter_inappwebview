@@ -171,7 +171,7 @@ class WebPlatformHeadlessInAppWebView extends PlatformHeadlessInAppWebView
   bool _started = false;
   bool _running = false;
 
-  static const MethodChannel _sharedChannel = const MethodChannel(
+  static const MethodChannel _sharedChannel = MethodChannel(
     'com.pichillilorenzo/flutter_headless_inappwebview',
   );
 
@@ -208,7 +208,7 @@ class WebPlatformHeadlessInAppWebView extends PlatformHeadlessInAppWebView
   WebPlatformHeadlessInAppWebViewCreationParams get _macosParams =>
       params as WebPlatformHeadlessInAppWebViewCreationParams;
 
-  _init() {
+  void _init() {
     _webViewController = WebPlatformInAppWebViewController(
       WebPlatformInAppWebViewControllerCreationParams(
         id: id,
@@ -238,6 +238,7 @@ class WebPlatformHeadlessInAppWebView extends PlatformHeadlessInAppWebView
     return null;
   }
 
+  @override
   Future<void> run() async {
     if (_started) {
       return;

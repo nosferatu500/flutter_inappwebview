@@ -838,7 +838,7 @@ class _WebStorageScreenState extends State<WebStorageScreen>
             shrinkWrap: true,
             physics: const NeverScrollableScrollPhysics(),
             itemCount: items.length,
-            separatorBuilder: (_, __) => const Divider(height: 1),
+            separatorBuilder: (_, _) => const Divider(height: 1),
             itemBuilder: (context, index) {
               final item = items[index];
               return ListTile(
@@ -1303,7 +1303,7 @@ class _WebStorageScreenState extends State<WebStorageScreen>
             shrinkWrap: true,
             physics: const NeverScrollableScrollPhysics(),
             itemCount: _webStorageOrigins.length,
-            separatorBuilder: (_, __) => const Divider(height: 1),
+            separatorBuilder: (_, _) => const Divider(height: 1),
             itemBuilder: (context, index) {
               final origin = _webStorageOrigins[index];
               return ListTile(
@@ -1369,7 +1369,7 @@ class _WebStorageScreenState extends State<WebStorageScreen>
             shrinkWrap: true,
             physics: const NeverScrollableScrollPhysics(),
             itemCount: _dataRecords.length,
-            separatorBuilder: (_, __) => const Divider(height: 1),
+            separatorBuilder: (_, _) => const Divider(height: 1),
             itemBuilder: (context, index) {
               final record = _dataRecords[index];
               final dataTypesStr =

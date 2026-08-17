@@ -10,11 +10,11 @@ class DismissButtonStyle_ {
   const DismissButtonStyle_._internal(this._value);
 
   ///Makes the button title the localized string "Done".
-  static const DONE = const DismissButtonStyle_._internal(0);
+  static const DONE = DismissButtonStyle_._internal(0);
 
   ///Makes the button title the localized string "Close".
-  static const CLOSE = const DismissButtonStyle_._internal(1);
+  static const CLOSE = DismissButtonStyle_._internal(1);
 
   ///Makes the button title the localized string "Cancel".
-  static const CANCEL = const DismissButtonStyle_._internal(2);
+  static const CANCEL = DismissButtonStyle_._internal(2);
 }

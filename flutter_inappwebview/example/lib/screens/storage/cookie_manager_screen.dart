@@ -878,42 +878,42 @@ class _CookieManagerScreenState extends State<CookieManagerScreen> {
                       'Name',
                       style: TextStyle(fontWeight: FontWeight.bold),
                     ),
-                    onSort: (_, __) => _onSort('name'),
+                    onSort: (_, _) => _onSort('name'),
                   ),
                   DataColumn(
                     label: const Text(
                       'Value',
                       style: TextStyle(fontWeight: FontWeight.bold),
                     ),
-                    onSort: (_, __) => _onSort('value'),
+                    onSort: (_, _) => _onSort('value'),
                   ),
                   DataColumn(
                     label: const Text(
                       'Domain',
                       style: TextStyle(fontWeight: FontWeight.bold),
                     ),
-                    onSort: (_, __) => _onSort('domain'),
+                    onSort: (_, _) => _onSort('domain'),
                   ),
                   DataColumn(
                     label: const Text(
                       'Path',
                       style: TextStyle(fontWeight: FontWeight.bold),
                     ),
-                    onSort: (_, __) => _onSort('path'),
+                    onSort: (_, _) => _onSort('path'),
                   ),
                   DataColumn(
                     label: const Text(
                       'Expires',
                       style: TextStyle(fontWeight: FontWeight.bold),
                     ),
-                    onSort: (_, __) => _onSort('expires'),
+                    onSort: (_, _) => _onSort('expires'),
                   ),
                   DataColumn(
                     label: const Text(
                       'Secure',
                       style: TextStyle(fontWeight: FontWeight.bold),
                     ),
-                    onSort: (_, __) => _onSort('secure'),
+                    onSort: (_, _) => _onSort('secure'),
                   ),
                   const DataColumn(
                     label: Text(

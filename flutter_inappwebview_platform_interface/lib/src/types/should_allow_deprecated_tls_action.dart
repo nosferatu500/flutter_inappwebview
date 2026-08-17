@@ -11,8 +11,8 @@ class ShouldAllowDeprecatedTLSAction_ {
   const ShouldAllowDeprecatedTLSAction_._internal(this._value);
 
   ///Cancel the navigation.
-  static const CANCEL = const ShouldAllowDeprecatedTLSAction_._internal(0);
+  static const CANCEL = ShouldAllowDeprecatedTLSAction_._internal(0);
 
   ///Allow the navigation to continue.
-  static const ALLOW = const ShouldAllowDeprecatedTLSAction_._internal(1);
+  static const ALLOW = ShouldAllowDeprecatedTLSAction_._internal(1);
 }

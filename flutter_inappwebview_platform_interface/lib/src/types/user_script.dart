@@ -67,9 +67,7 @@ class UserScript_ {
     Set<String>? allowedOriginRules,
     ContentWorld? contentWorld,
   }) {
-    this.allowedOriginRules = allowedOriginRules != null
-        ? allowedOriginRules
-        : Set.from(["*"]);
+    this.allowedOriginRules = allowedOriginRules ?? {"*"};
     this.contentWorld = contentWorld ?? ContentWorld.PAGE;
   }
 }

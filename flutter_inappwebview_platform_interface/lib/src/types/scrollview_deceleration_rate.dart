@@ -10,8 +10,8 @@ class ScrollViewDecelerationRate_ {
   const ScrollViewDecelerationRate_._internal(this._value);
 
   ///The default deceleration rate for a scroll view: `0.998`.
-  static const NORMAL = const ScrollViewDecelerationRate_._internal("NORMAL");
+  static const NORMAL = ScrollViewDecelerationRate_._internal("NORMAL");
 
   ///A fast deceleration rate for a scroll view: `0.99`.
-  static const FAST = const ScrollViewDecelerationRate_._internal("FAST");
+  static const FAST = ScrollViewDecelerationRate_._internal("FAST");
 }

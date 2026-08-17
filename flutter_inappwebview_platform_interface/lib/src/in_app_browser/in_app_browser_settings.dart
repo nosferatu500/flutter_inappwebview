@@ -46,6 +46,7 @@ class InAppBrowserClassSettings {
     return toMap();
   }
 
+  @override
   String toString() {
     return toMap().toString();
   }
@@ -55,9 +56,7 @@ class InAppBrowserClassSettings {
     InAppBrowserClassSettings? instance,
     EnumMethod? enumMethod,
   }) {
-    if (instance == null) {
-      instance = InAppBrowserClassSettings();
-    }
+    instance ??= InAppBrowserClassSettings();
     instance.browserSettings =
         InAppBrowserSettings.fromMap(options, enumMethod: enumMethod) ??
         InAppBrowserSettings();

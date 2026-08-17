@@ -38,9 +38,9 @@ class HttpAuthenticationChallenge_ extends URLAuthenticationChallenge_ {
 
   HttpAuthenticationChallenge_({
     required this.previousFailureCount,
-    required URLProtectionSpace_ protectionSpace,
+    required super.protectionSpace,
     this.failureResponse,
     this.proposedCredential,
     this.error,
-  }) : super(protectionSpace: protectionSpace);
+  });
 }

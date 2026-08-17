@@ -176,7 +176,7 @@ class MacOSHeadlessInAppWebView extends PlatformHeadlessInAppWebView
   bool _started = false;
   bool _running = false;
 
-  static const MethodChannel _sharedChannel = const MethodChannel(
+  static const MethodChannel _sharedChannel = MethodChannel(
     'com.pichillilorenzo/flutter_headless_inappwebview',
   );
 
@@ -209,7 +209,7 @@ class MacOSHeadlessInAppWebView extends PlatformHeadlessInAppWebView
   MacOSHeadlessInAppWebViewCreationParams get _macosParams =>
       params as MacOSHeadlessInAppWebViewCreationParams;
 
-  _init() {
+  void _init() {
     _webViewController = MacOSInAppWebViewController(
       MacOSInAppWebViewControllerCreationParams(id: id, webviewParams: params),
     );
@@ -237,6 +237,7 @@ class MacOSHeadlessInAppWebView extends PlatformHeadlessInAppWebView
     return null;
   }
 
+  @override
   Future<void> run() async {
     if (_started) {
       return;
@@ -289,9 +290,7 @@ class MacOSHeadlessInAppWebView extends PlatformHeadlessInAppWebView
     if ((params.shouldInterceptAjaxRequest != null ||
         params.onAjaxProgress != null ||
         params.onAjaxReadyStateChange != null)) {
-      if (settings.useShouldInterceptAjaxRequest == null) {
-        settings.useShouldInterceptAjaxRequest = true;
-      }
+      settings.useShouldInterceptAjaxRequest ??= true;
       if (params.onAjaxReadyStateChange != null &&
           settings.useOnAjaxReadyStateChange == null) {
         settings.useOnAjaxReadyStateChange = true;

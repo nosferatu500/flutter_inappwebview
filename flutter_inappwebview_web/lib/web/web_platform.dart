@@ -79,7 +79,7 @@ Future<String?> _dartNativeAsyncCommunication(
   if (InAppWebViewManager.webViews.containsKey(viewId)) {
     var webViewHtmlElement =
         InAppWebViewManager.webViews[viewId] as InAppWebViewWebElement;
-    var result = null;
+    var result;
     try {
       switch (method) {
         case 'onCreateWindow':
@@ -119,7 +119,7 @@ String? _dartNativeSyncCommunication(
   if (InAppWebViewManager.webViews.containsKey(viewId)) {
     var webViewHtmlElement =
         InAppWebViewManager.webViews[viewId] as InAppWebViewWebElement;
-    var result = null;
+    Object? result;
 
     try {
       switch (method) {
@@ -201,7 +201,7 @@ String? _dartNativeSyncCommunication(
       throw e;
     }
 
-    return result != null ? jsonEncode(result) : null;
+    return jsonEncode(result);
   }
   return null;
 }
