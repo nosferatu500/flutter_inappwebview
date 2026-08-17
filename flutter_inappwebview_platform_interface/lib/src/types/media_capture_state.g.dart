@@ -27,11 +27,11 @@ class MediaCaptureState {
   static const NONE = MediaCaptureState._internal(0, 0);
 
   ///Set of all values of [MediaCaptureState].
-  static final Set<MediaCaptureState> values = [
+  static final Set<MediaCaptureState> values = {
     MediaCaptureState.ACTIVE,
     MediaCaptureState.MUTED,
     MediaCaptureState.NONE,
-  ].toSet();
+  };
 
   ///Gets a possible [MediaCaptureState] instance from [int] value.
   static MediaCaptureState? fromValue(int? value) {

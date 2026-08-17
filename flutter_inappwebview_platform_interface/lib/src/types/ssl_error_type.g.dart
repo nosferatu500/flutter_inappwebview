@@ -285,7 +285,7 @@ class SslErrorType {
   });
 
   ///Set of all values of [SslErrorType].
-  static final Set<SslErrorType> values = [
+  static final Set<SslErrorType> values = {
     SslErrorType.COMMON_NAME_IS_INCORRECT,
     SslErrorType.DATE_INVALID,
     SslErrorType.DENY,
@@ -299,7 +299,7 @@ class SslErrorType {
     SslErrorType.REVOKED,
     SslErrorType.UNSPECIFIED,
     SslErrorType.UNTRUSTED,
-  ].toSet();
+  };
 
   ///Gets a possible [SslErrorType] instance from [String] value.
   static SslErrorType? fromValue(String? value) {

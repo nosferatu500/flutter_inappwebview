@@ -46,7 +46,7 @@ class AjaxRequestEventType {
   static const TIMEOUT = AjaxRequestEventType._internal('timeout', 'timeout');
 
   ///Set of all values of [AjaxRequestEventType].
-  static final Set<AjaxRequestEventType> values = [
+  static final Set<AjaxRequestEventType> values = {
     AjaxRequestEventType.ABORT,
     AjaxRequestEventType.ERROR,
     AjaxRequestEventType.LOAD,
@@ -54,7 +54,7 @@ class AjaxRequestEventType {
     AjaxRequestEventType.LOADSTART,
     AjaxRequestEventType.PROGRESS,
     AjaxRequestEventType.TIMEOUT,
-  ].toSet();
+  };
 
   ///Gets a possible [AjaxRequestEventType] instance from [String] value.
   static AjaxRequestEventType? fromValue(String? value) {

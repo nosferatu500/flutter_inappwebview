@@ -27,11 +27,11 @@ class PermissionResponseAction {
   static const PROMPT = PermissionResponseAction._internal(2, 2);
 
   ///Set of all values of [PermissionResponseAction].
-  static final Set<PermissionResponseAction> values = [
+  static final Set<PermissionResponseAction> values = {
     PermissionResponseAction.DENY,
     PermissionResponseAction.GRANT,
     PermissionResponseAction.PROMPT,
-  ].toSet();
+  };
 
   ///Gets a possible [PermissionResponseAction] instance from [int] value.
   static PermissionResponseAction? fromValue(int? value) {

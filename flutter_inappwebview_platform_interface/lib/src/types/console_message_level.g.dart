@@ -33,13 +33,13 @@ class ConsoleMessageLevel {
   static const WARNING = ConsoleMessageLevel._internal(2, 2);
 
   ///Set of all values of [ConsoleMessageLevel].
-  static final Set<ConsoleMessageLevel> values = [
+  static final Set<ConsoleMessageLevel> values = {
     ConsoleMessageLevel.DEBUG,
     ConsoleMessageLevel.ERROR,
     ConsoleMessageLevel.LOG,
     ConsoleMessageLevel.TIP,
     ConsoleMessageLevel.WARNING,
-  ].toSet();
+  };
 
   ///Gets a possible [ConsoleMessageLevel] instance from [int] value.
   static ConsoleMessageLevel? fromValue(int? value) {

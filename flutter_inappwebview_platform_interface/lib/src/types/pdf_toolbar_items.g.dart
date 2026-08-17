@@ -60,7 +60,7 @@ class PdfToolbarItems {
   static const ZOOM_OUT = PdfToolbarItems._internal(16, 16);
 
   ///Set of all values of [PdfToolbarItems].
-  static final Set<PdfToolbarItems> values = [
+  static final Set<PdfToolbarItems> values = {
     PdfToolbarItems.BOOKMARKS,
     PdfToolbarItems.FIT_PAGE,
     PdfToolbarItems.FULL_SCREEN,
@@ -75,7 +75,7 @@ class PdfToolbarItems {
     PdfToolbarItems.SEARCH,
     PdfToolbarItems.ZOOM_IN,
     PdfToolbarItems.ZOOM_OUT,
-  ].toSet();
+  };
 
   ///Gets a possible [PdfToolbarItems] instance from [int] value.
   static PdfToolbarItems? fromValue(int? value) {

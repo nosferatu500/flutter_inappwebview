@@ -27,11 +27,11 @@ class ProxySchemeFilter {
   static const MATCH_HTTPS = ProxySchemeFilter._internal('https', 'https');
 
   ///Set of all values of [ProxySchemeFilter].
-  static final Set<ProxySchemeFilter> values = [
+  static final Set<ProxySchemeFilter> values = {
     ProxySchemeFilter.MATCH_ALL_SCHEMES,
     ProxySchemeFilter.MATCH_HTTP,
     ProxySchemeFilter.MATCH_HTTPS,
-  ].toSet();
+  };
 
   ///Gets a possible [ProxySchemeFilter] instance from [String] value.
   static ProxySchemeFilter? fromValue(String? value) {

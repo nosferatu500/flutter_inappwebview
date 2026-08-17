@@ -144,14 +144,14 @@ class NavigationType {
   });
 
   ///Set of all values of [NavigationType].
-  static final Set<NavigationType> values = [
+  static final Set<NavigationType> values = {
     NavigationType.BACK_FORWARD,
     NavigationType.FORM_RESUBMITTED,
     NavigationType.FORM_SUBMITTED,
     NavigationType.LINK_ACTIVATED,
     NavigationType.OTHER,
     NavigationType.RELOAD,
-  ].toSet();
+  };
 
   ///Gets a possible [NavigationType] instance from [String] value.
   static NavigationType? fromValue(String? value) {

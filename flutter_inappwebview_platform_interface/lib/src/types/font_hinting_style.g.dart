@@ -30,12 +30,12 @@ class FontHintingStyle {
   static const SLIGHT = FontHintingStyle._internal(1, 1);
 
   ///Set of all values of [FontHintingStyle].
-  static final Set<FontHintingStyle> values = [
+  static final Set<FontHintingStyle> values = {
     FontHintingStyle.FULL,
     FontHintingStyle.MEDIUM,
     FontHintingStyle.NONE,
     FontHintingStyle.SLIGHT,
-  ].toSet();
+  };
 
   ///Gets a possible [FontHintingStyle] instance from [int] value.
   static FontHintingStyle? fromValue(int? value) {

@@ -118,14 +118,14 @@ class CustomTabsNavigationEventType {
   );
 
   ///Set of all values of [CustomTabsNavigationEventType].
-  static final Set<CustomTabsNavigationEventType> values = [
+  static final Set<CustomTabsNavigationEventType> values = {
     CustomTabsNavigationEventType.ABORTED,
     CustomTabsNavigationEventType.FAILED,
     CustomTabsNavigationEventType.FINISHED,
     CustomTabsNavigationEventType.STARTED,
     CustomTabsNavigationEventType.TAB_HIDDEN,
     CustomTabsNavigationEventType.TAB_SHOWN,
-  ].toSet();
+  };
 
   ///Gets a possible [CustomTabsNavigationEventType] instance from [int] value.
   static CustomTabsNavigationEventType? fromValue(int? value) {

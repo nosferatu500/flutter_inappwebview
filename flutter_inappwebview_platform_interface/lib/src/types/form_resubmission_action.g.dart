@@ -24,10 +24,10 @@ class FormResubmissionAction {
   static const RESEND = FormResubmissionAction._internal(0, 0);
 
   ///Set of all values of [FormResubmissionAction].
-  static final Set<FormResubmissionAction> values = [
+  static final Set<FormResubmissionAction> values = {
     FormResubmissionAction.DONT_RESEND,
     FormResubmissionAction.RESEND,
-  ].toSet();
+  };
 
   ///Gets a possible [FormResubmissionAction] instance from [int] value.
   static FormResubmissionAction? fromValue(int? value) {

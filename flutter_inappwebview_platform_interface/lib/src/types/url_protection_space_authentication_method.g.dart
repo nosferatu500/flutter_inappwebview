@@ -77,7 +77,7 @@ class URLProtectionSpaceAuthenticationMethod {
       );
 
   ///Set of all values of [URLProtectionSpaceAuthenticationMethod].
-  static final Set<URLProtectionSpaceAuthenticationMethod> values = [
+  static final Set<URLProtectionSpaceAuthenticationMethod> values = {
     URLProtectionSpaceAuthenticationMethod
         .NSURL_AUTHENTICATION_METHOD_CLIENT_CERTIFICATE,
     URLProtectionSpaceAuthenticationMethod.NSURL_AUTHENTICATION_METHOD_DEFAULT,
@@ -92,7 +92,7 @@ class URLProtectionSpaceAuthenticationMethod {
     URLProtectionSpaceAuthenticationMethod.NSURL_AUTHENTICATION_METHOD_NTLM,
     URLProtectionSpaceAuthenticationMethod
         .NSURL_AUTHENTICATION_METHOD_SERVER_TRUST,
-  ].toSet();
+  };
 
   ///Gets a possible [URLProtectionSpaceAuthenticationMethod] instance from [String] value.
   static URLProtectionSpaceAuthenticationMethod? fromValue(String? value) {

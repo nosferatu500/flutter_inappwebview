@@ -66,7 +66,7 @@ class DataDetectorTypes {
   );
 
   ///Set of all values of [DataDetectorTypes].
-  static final Set<DataDetectorTypes> values = [
+  static final Set<DataDetectorTypes> values = {
     DataDetectorTypes.ADDRESS,
     DataDetectorTypes.ALL,
     DataDetectorTypes.CALENDAR_EVENT,
@@ -77,7 +77,7 @@ class DataDetectorTypes {
     DataDetectorTypes.PHONE_NUMBER,
     DataDetectorTypes.SPOTLIGHT_SUGGESTION,
     DataDetectorTypes.TRACKING_NUMBER,
-  ].toSet();
+  };
 
   ///Gets a possible [DataDetectorTypes] instance from [String] value.
   static DataDetectorTypes? fromValue(String? value) {

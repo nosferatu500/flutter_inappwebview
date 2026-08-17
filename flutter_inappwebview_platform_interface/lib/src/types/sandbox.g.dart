@@ -90,7 +90,7 @@ class Sandbox {
   static const _NONE = Sandbox._internal('', '');
 
   ///Set of all values of [Sandbox].
-  static final Set<Sandbox> values = [
+  static final Set<Sandbox> values = {
     Sandbox.ALLOW_DOWNLOADS,
     Sandbox.ALLOW_FORMS,
     Sandbox.ALLOW_MODALS,
@@ -103,7 +103,7 @@ class Sandbox {
     Sandbox.ALLOW_SCRIPTS,
     Sandbox.ALLOW_TOP_NAVIGATION,
     Sandbox.ALLOW_TOP_NAVIGATION_BY_USER_ACTIVATION,
-  ].toSet();
+  };
 
   /// Gets a possible [Sandbox] instance value with name [name].
   ///

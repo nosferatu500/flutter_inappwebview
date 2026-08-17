@@ -28,10 +28,10 @@ class ShouldAllowDeprecatedTLSAction {
   static const CANCEL = ShouldAllowDeprecatedTLSAction._internal(0, 0);
 
   ///Set of all values of [ShouldAllowDeprecatedTLSAction].
-  static final Set<ShouldAllowDeprecatedTLSAction> values = [
+  static final Set<ShouldAllowDeprecatedTLSAction> values = {
     ShouldAllowDeprecatedTLSAction.ALLOW,
     ShouldAllowDeprecatedTLSAction.CANCEL,
-  ].toSet();
+  };
 
   ///Gets a possible [ShouldAllowDeprecatedTLSAction] instance from [int] value.
   static ShouldAllowDeprecatedTLSAction? fromValue(int? value) {

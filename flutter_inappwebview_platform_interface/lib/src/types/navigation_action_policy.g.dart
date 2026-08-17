@@ -30,11 +30,11 @@ class NavigationActionPolicy {
   static const DOWNLOAD = NavigationActionPolicy._internal(2, 2);
 
   ///Set of all values of [NavigationActionPolicy].
-  static final Set<NavigationActionPolicy> values = [
+  static final Set<NavigationActionPolicy> values = {
     NavigationActionPolicy.ALLOW,
     NavigationActionPolicy.CANCEL,
     NavigationActionPolicy.DOWNLOAD,
-  ].toSet();
+  };
 
   ///Gets a possible [NavigationActionPolicy] instance from [int] value.
   static NavigationActionPolicy? fromValue(int? value) {

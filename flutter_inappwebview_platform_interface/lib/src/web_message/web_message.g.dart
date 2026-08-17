@@ -26,10 +26,10 @@ class WebMessageType {
   static const STRING = WebMessageType._internal(0, 0);
 
   ///Set of all values of [WebMessageType].
-  static final Set<WebMessageType> values = [
+  static final Set<WebMessageType> values = {
     WebMessageType.ARRAY_BUFFER,
     WebMessageType.STRING,
-  ].toSet();
+  };
 
   ///Gets a possible [WebMessageType] instance from [int] value.
   static WebMessageType? fromValue(int? value) {

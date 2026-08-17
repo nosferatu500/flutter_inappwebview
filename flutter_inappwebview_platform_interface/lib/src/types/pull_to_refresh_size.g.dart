@@ -24,10 +24,10 @@ class PullToRefreshSize {
   static const LARGE = PullToRefreshSize._internal(0, 0);
 
   ///Set of all values of [PullToRefreshSize].
-  static final Set<PullToRefreshSize> values = [
+  static final Set<PullToRefreshSize> values = {
     PullToRefreshSize.DEFAULT,
     PullToRefreshSize.LARGE,
-  ].toSet();
+  };
 
   ///Gets a possible [PullToRefreshSize] instance from [int] value.
   static PullToRefreshSize? fromValue(int? value) {

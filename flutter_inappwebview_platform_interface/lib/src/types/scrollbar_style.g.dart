@@ -49,12 +49,12 @@ class ScrollBarStyle {
   );
 
   ///Set of all values of [ScrollBarStyle].
-  static final Set<ScrollBarStyle> values = [
+  static final Set<ScrollBarStyle> values = {
     ScrollBarStyle.SCROLLBARS_INSIDE_INSET,
     ScrollBarStyle.SCROLLBARS_INSIDE_OVERLAY,
     ScrollBarStyle.SCROLLBARS_OUTSIDE_INSET,
     ScrollBarStyle.SCROLLBARS_OUTSIDE_OVERLAY,
-  ].toSet();
+  };
 
   ///Gets a possible [ScrollBarStyle] instance from [int] value.
   static ScrollBarStyle? fromValue(int? value) {

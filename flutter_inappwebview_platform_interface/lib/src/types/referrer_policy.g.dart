@@ -69,7 +69,7 @@ class ReferrerPolicy {
   );
 
   ///Set of all values of [ReferrerPolicy].
-  static final Set<ReferrerPolicy> values = [
+  static final Set<ReferrerPolicy> values = {
     ReferrerPolicy.NO_REFERRER,
     ReferrerPolicy.NO_REFERRER_WHEN_DOWNGRADE,
     ReferrerPolicy.ORIGIN,
@@ -78,7 +78,7 @@ class ReferrerPolicy {
     ReferrerPolicy.STRICT_ORIGIN,
     ReferrerPolicy.STRICT_ORIGIN_WHEN_CROSS_ORIGIN,
     ReferrerPolicy.UNSAFE_URL,
-  ].toSet();
+  };
 
   ///Gets a possible [ReferrerPolicy] instance from [String] value.
   static ReferrerPolicy? fromValue(String? value) {

@@ -71,7 +71,7 @@ class TrustedWebActivityScreenOrientation {
       TrustedWebActivityScreenOrientation._internal(2, 2);
 
   ///Set of all values of [TrustedWebActivityScreenOrientation].
-  static final Set<TrustedWebActivityScreenOrientation> values = [
+  static final Set<TrustedWebActivityScreenOrientation> values = {
     TrustedWebActivityScreenOrientation.ANY,
     TrustedWebActivityScreenOrientation.DEFAULT,
     TrustedWebActivityScreenOrientation.LANDSCAPE,
@@ -81,7 +81,7 @@ class TrustedWebActivityScreenOrientation {
     TrustedWebActivityScreenOrientation.PORTRAIT,
     TrustedWebActivityScreenOrientation.PORTRAIT_PRIMARY,
     TrustedWebActivityScreenOrientation.PORTRAIT_SECONDARY,
-  ].toSet();
+  };
 
   ///Gets a possible [TrustedWebActivityScreenOrientation] instance from [int] value.
   static TrustedWebActivityScreenOrientation? fromValue(int? value) {

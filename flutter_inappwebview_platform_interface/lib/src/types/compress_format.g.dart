@@ -125,13 +125,13 @@ class CompressFormat {
   );
 
   ///Set of all values of [CompressFormat].
-  static final Set<CompressFormat> values = [
+  static final Set<CompressFormat> values = {
     CompressFormat.JPEG,
     CompressFormat.PNG,
     CompressFormat.WEBP,
     CompressFormat.WEBP_LOSSLESS,
     CompressFormat.WEBP_LOSSY,
-  ].toSet();
+  };
 
   ///Gets a possible [CompressFormat] instance from [String] value.
   static CompressFormat? fromValue(String? value) {

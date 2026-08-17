@@ -94,13 +94,13 @@ class EnvironmentReleaseChannels {
   );
 
   ///Set of all values of [EnvironmentReleaseChannels].
-  static final Set<EnvironmentReleaseChannels> values = [
+  static final Set<EnvironmentReleaseChannels> values = {
     EnvironmentReleaseChannels.BETA,
     EnvironmentReleaseChannels.CANARY,
     EnvironmentReleaseChannels.DEV,
     EnvironmentReleaseChannels.NONE,
     EnvironmentReleaseChannels.STABLE,
-  ].toSet();
+  };
 
   ///Gets a possible [EnvironmentReleaseChannels] instance from [int] value.
   static EnvironmentReleaseChannels? fromValue(int? value) {

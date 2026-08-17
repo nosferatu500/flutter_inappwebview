@@ -35,11 +35,11 @@ class HTTPCookieSameSitePolicy {
   static const STRICT = HTTPCookieSameSitePolicy._internal('Strict', 'Strict');
 
   ///Set of all values of [HTTPCookieSameSitePolicy].
-  static final Set<HTTPCookieSameSitePolicy> values = [
+  static final Set<HTTPCookieSameSitePolicy> values = {
     HTTPCookieSameSitePolicy.LAX,
     HTTPCookieSameSitePolicy.NONE,
     HTTPCookieSameSitePolicy.STRICT,
-  ].toSet();
+  };
 
   ///Gets a possible [HTTPCookieSameSitePolicy] instance from [String] value.
   static HTTPCookieSameSitePolicy? fromValue(String? value) {

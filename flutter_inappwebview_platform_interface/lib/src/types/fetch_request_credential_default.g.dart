@@ -10,7 +10,7 @@ part of 'fetch_request_credential_default.dart';
 class FetchRequestCredentialDefault extends FetchRequestCredential {
   ///The value of the credentials.
   String? value;
-  FetchRequestCredentialDefault({this.value, String? type}) : super(type: type);
+  FetchRequestCredentialDefault({this.value, super.type});
 
   ///Gets a possible [FetchRequestCredentialDefault] instance from a [Map] value.
   static FetchRequestCredentialDefault? fromMap(
@@ -26,11 +26,13 @@ class FetchRequestCredentialDefault extends FetchRequestCredential {
   }
 
   ///Converts instance to a map.
+  @override
   Map<String, dynamic> toMap({EnumMethod? enumMethod}) {
     return {"type": type, "value": value};
   }
 
   ///Converts instance to a map.
+  @override
   Map<String, dynamic> toJson() {
     return toMap();
   }

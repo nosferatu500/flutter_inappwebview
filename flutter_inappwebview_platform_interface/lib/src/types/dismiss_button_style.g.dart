@@ -27,11 +27,11 @@ class DismissButtonStyle {
   static const DONE = DismissButtonStyle._internal(0, 0);
 
   ///Set of all values of [DismissButtonStyle].
-  static final Set<DismissButtonStyle> values = [
+  static final Set<DismissButtonStyle> values = {
     DismissButtonStyle.CANCEL,
     DismissButtonStyle.CLOSE,
     DismissButtonStyle.DONE,
-  ].toSet();
+  };
 
   ///Gets a possible [DismissButtonStyle] instance from [int] value.
   static DismissButtonStyle? fromValue(int? value) {

@@ -63,11 +63,11 @@ class PrintJobPaginationMode {
   });
 
   ///Set of all values of [PrintJobPaginationMode].
-  static final Set<PrintJobPaginationMode> values = [
+  static final Set<PrintJobPaginationMode> values = {
     PrintJobPaginationMode.AUTOMATIC,
     PrintJobPaginationMode.CLIP,
     PrintJobPaginationMode.FIT,
-  ].toSet();
+  };
 
   ///Gets a possible [PrintJobPaginationMode] instance from [String] value.
   static PrintJobPaginationMode? fromValue(String? value) {

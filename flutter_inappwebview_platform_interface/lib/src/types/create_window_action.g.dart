@@ -28,24 +28,15 @@ class CreateWindowAction extends NavigationAction {
     this.isDialog,
     this.windowFeatures,
     required this.windowId,
-    required URLRequest request,
-    required bool isForMainFrame,
-    bool? hasGesture,
-    bool? isRedirect,
-    NavigationType? navigationType,
-    FrameInfo? sourceFrame,
-    FrameInfo? targetFrame,
-    bool? shouldPerformDownload,
-  }) : super(
-         request: request,
-         isForMainFrame: isForMainFrame,
-         hasGesture: hasGesture,
-         isRedirect: isRedirect,
-         navigationType: navigationType,
-         sourceFrame: sourceFrame,
-         targetFrame: targetFrame,
-         shouldPerformDownload: shouldPerformDownload,
-       );
+    required super.request,
+    required super.isForMainFrame,
+    super.hasGesture,
+    super.isRedirect,
+    super.navigationType,
+    super.sourceFrame,
+    super.targetFrame,
+    super.shouldPerformDownload,
+  });
 
   ///Gets a possible [CreateWindowAction] instance from a [Map] value.
   static CreateWindowAction? fromMap(
@@ -90,6 +81,7 @@ class CreateWindowAction extends NavigationAction {
   }
 
   ///Converts instance to a map.
+  @override
   Map<String, dynamic> toMap({EnumMethod? enumMethod}) {
     return {
       "request": request.toMap(enumMethod: enumMethod),
@@ -111,6 +103,7 @@ class CreateWindowAction extends NavigationAction {
   }
 
   ///Converts instance to a map.
+  @override
   Map<String, dynamic> toJson() {
     return toMap();
   }

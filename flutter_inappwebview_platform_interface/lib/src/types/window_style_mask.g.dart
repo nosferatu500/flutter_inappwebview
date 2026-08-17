@@ -183,7 +183,7 @@ class WindowStyleMask {
   });
 
   ///Set of all values of [WindowStyleMask].
-  static final Set<WindowStyleMask> values = [
+  static final Set<WindowStyleMask> values = {
     WindowStyleMask.BORDERLESS,
     WindowStyleMask.CLOSABLE,
     WindowStyleMask.DOC_MODAL_WINDOW,
@@ -195,7 +195,7 @@ class WindowStyleMask {
     WindowStyleMask.RESIZABLE,
     WindowStyleMask.TITLED,
     WindowStyleMask.UTILITY_WINDOW,
-  ].toSet();
+  };
 
   ///Gets a possible [WindowStyleMask] instance from [int] value.
   static WindowStyleMask? fromValue(int? value) {

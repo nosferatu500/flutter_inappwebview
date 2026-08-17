@@ -88,13 +88,13 @@ class FrameKind {
   });
 
   ///Set of all values of [FrameKind].
-  static final Set<FrameKind> values = [
+  static final Set<FrameKind> values = {
     FrameKind.EMBED,
     FrameKind.IFRAME,
     FrameKind.MAIN_FRAME,
     FrameKind.OBJECT,
     FrameKind.UNKNOWN,
-  ].toSet();
+  };
 
   ///Gets a possible [FrameKind] instance from [String] value.
   static FrameKind? fromValue(String? value) {

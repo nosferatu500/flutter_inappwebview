@@ -74,12 +74,12 @@ class PrintJobPageOrder {
   });
 
   ///Set of all values of [PrintJobPageOrder].
-  static final Set<PrintJobPageOrder> values = [
+  static final Set<PrintJobPageOrder> values = {
     PrintJobPageOrder.ASCENDING,
     PrintJobPageOrder.DESCENDING,
     PrintJobPageOrder.SPECIAL,
     PrintJobPageOrder.UNKNOWN,
-  ].toSet();
+  };
 
   ///Gets a possible [PrintJobPageOrder] instance from [int] value.
   static PrintJobPageOrder? fromValue(int? value) {

@@ -24,8 +24,8 @@ class FetchRequestPasswordCredential extends FetchRequestCredential {
     this.id,
     this.name,
     this.password,
-    String? type,
-  }) : super(type: type);
+    super.type,
+  });
 
   ///Gets a possible [FetchRequestPasswordCredential] instance from a [Map] value.
   static FetchRequestPasswordCredential? fromMap(
@@ -46,6 +46,7 @@ class FetchRequestPasswordCredential extends FetchRequestCredential {
   }
 
   ///Converts instance to a map.
+  @override
   Map<String, dynamic> toMap({EnumMethod? enumMethod}) {
     return {
       "type": type,
@@ -57,6 +58,7 @@ class FetchRequestPasswordCredential extends FetchRequestCredential {
   }
 
   ///Converts instance to a map.
+  @override
   Map<String, dynamic> toJson() {
     return toMap();
   }

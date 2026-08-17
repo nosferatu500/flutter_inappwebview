@@ -28,11 +28,11 @@ class RendererPriority {
   static const RENDERER_PRIORITY_WAIVED = RendererPriority._internal(0, 0);
 
   ///Set of all values of [RendererPriority].
-  static final Set<RendererPriority> values = [
+  static final Set<RendererPriority> values = {
     RendererPriority.RENDERER_PRIORITY_BOUND,
     RendererPriority.RENDERER_PRIORITY_IMPORTANT,
     RendererPriority.RENDERER_PRIORITY_WAIVED,
-  ].toSet();
+  };
 
   ///Gets a possible [RendererPriority] instance from [int] value.
   static RendererPriority? fromValue(int? value) {

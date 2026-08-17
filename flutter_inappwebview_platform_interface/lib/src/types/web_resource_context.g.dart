@@ -69,7 +69,7 @@ class WebResourceContext {
   static const XML_HTTP_REQUEST = WebResourceContext._internal(7, 7);
 
   ///Set of all values of [WebResourceContext].
-  static final Set<WebResourceContext> values = [
+  static final Set<WebResourceContext> values = {
     WebResourceContext.ALL,
     WebResourceContext.CSP_VIOLATION_REPORT,
     WebResourceContext.DOCUMENT,
@@ -87,7 +87,7 @@ class WebResourceContext {
     WebResourceContext.TEXT_TRACK,
     WebResourceContext.WEBSOCKET,
     WebResourceContext.XML_HTTP_REQUEST,
-  ].toSet();
+  };
 
   ///Gets a possible [WebResourceContext] instance from [int] value.
   static WebResourceContext? fromValue(int? value) {

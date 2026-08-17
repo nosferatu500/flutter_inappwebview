@@ -333,7 +333,7 @@ class PermissionResourceType {
       });
 
   ///Set of all values of [PermissionResourceType].
-  static final Set<PermissionResourceType> values = [
+  static final Set<PermissionResourceType> values = {
     PermissionResourceType.AUTOPLAY,
     PermissionResourceType.CAMERA,
     PermissionResourceType.CAMERA_AND_MICROPHONE,
@@ -350,7 +350,7 @@ class PermissionResourceType {
     PermissionResourceType.PROTECTED_MEDIA_ID,
     PermissionResourceType.UNKNOWN,
     PermissionResourceType.WINDOW_MANAGEMENT,
-  ].toSet();
+  };
 
   ///Gets a possible [PermissionResourceType] instance from [String] value.
   static PermissionResourceType? fromValue(String? value) {

@@ -53,7 +53,7 @@ class TracingCategory {
   static const CATEGORIES_WEB_DEVELOPER = TracingCategory._internal(4, 4);
 
   ///Set of all values of [TracingCategory].
-  static final Set<TracingCategory> values = [
+  static final Set<TracingCategory> values = {
     TracingCategory.CATEGORIES_ALL,
     TracingCategory.CATEGORIES_ANDROID_WEBVIEW,
     TracingCategory.CATEGORIES_FRAME_VIEWER,
@@ -62,7 +62,7 @@ class TracingCategory {
     TracingCategory.CATEGORIES_NONE,
     TracingCategory.CATEGORIES_RENDERING,
     TracingCategory.CATEGORIES_WEB_DEVELOPER,
-  ].toSet();
+  };
 
   ///Gets a possible [TracingCategory] instance from [int] value.
   static TracingCategory? fromValue(int? value) {

@@ -33,13 +33,13 @@ class AjaxRequestReadyState {
   static const UNSENT = AjaxRequestReadyState._internal(0, 0);
 
   ///Set of all values of [AjaxRequestReadyState].
-  static final Set<AjaxRequestReadyState> values = [
+  static final Set<AjaxRequestReadyState> values = {
     AjaxRequestReadyState.DONE,
     AjaxRequestReadyState.HEADERS_RECEIVED,
     AjaxRequestReadyState.LOADING,
     AjaxRequestReadyState.OPENED,
     AjaxRequestReadyState.UNSENT,
-  ].toSet();
+  };
 
   ///Gets a possible [AjaxRequestReadyState] instance from [int] value.
   static AjaxRequestReadyState? fromValue(int? value) {

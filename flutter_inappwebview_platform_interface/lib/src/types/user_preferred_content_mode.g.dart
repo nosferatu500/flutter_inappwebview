@@ -27,11 +27,11 @@ class UserPreferredContentMode {
   static const RECOMMENDED = UserPreferredContentMode._internal(0, 0);
 
   ///Set of all values of [UserPreferredContentMode].
-  static final Set<UserPreferredContentMode> values = [
+  static final Set<UserPreferredContentMode> values = {
     UserPreferredContentMode.DESKTOP,
     UserPreferredContentMode.MOBILE,
     UserPreferredContentMode.RECOMMENDED,
-  ].toSet();
+  };
 
   ///Gets a possible [UserPreferredContentMode] instance from [int] value.
   static UserPreferredContentMode? fromValue(int? value) {

@@ -45,7 +45,7 @@ class InAppWebViewHitTestResultType {
   static const UNKNOWN_TYPE = InAppWebViewHitTestResultType._internal(0, 0);
 
   ///Set of all values of [InAppWebViewHitTestResultType].
-  static final Set<InAppWebViewHitTestResultType> values = [
+  static final Set<InAppWebViewHitTestResultType> values = {
     InAppWebViewHitTestResultType.EDIT_TEXT_TYPE,
     InAppWebViewHitTestResultType.EMAIL_TYPE,
     InAppWebViewHitTestResultType.GEO_TYPE,
@@ -54,7 +54,7 @@ class InAppWebViewHitTestResultType {
     InAppWebViewHitTestResultType.SRC_ANCHOR_TYPE,
     InAppWebViewHitTestResultType.SRC_IMAGE_ANCHOR_TYPE,
     InAppWebViewHitTestResultType.UNKNOWN_TYPE,
-  ].toSet();
+  };
 
   ///Gets a possible [InAppWebViewHitTestResultType] instance from [int] value.
   static InAppWebViewHitTestResultType? fromValue(int? value) {

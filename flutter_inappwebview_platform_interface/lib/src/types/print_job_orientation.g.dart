@@ -64,10 +64,10 @@ class PrintJobOrientation {
   });
 
   ///Set of all values of [PrintJobOrientation].
-  static final Set<PrintJobOrientation> values = [
+  static final Set<PrintJobOrientation> values = {
     PrintJobOrientation.LANDSCAPE,
     PrintJobOrientation.PORTRAIT,
-  ].toSet();
+  };
 
   ///Gets a possible [PrintJobOrientation] instance from [int] value.
   static PrintJobOrientation? fromValue(int? value) {

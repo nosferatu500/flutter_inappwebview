@@ -21,9 +21,9 @@ class JsAlertResponseAction {
   static const CONFIRM = JsAlertResponseAction._internal(0, 0);
 
   ///Set of all values of [JsAlertResponseAction].
-  static final Set<JsAlertResponseAction> values = [
+  static final Set<JsAlertResponseAction> values = {
     JsAlertResponseAction.CONFIRM,
-  ].toSet();
+  };
 
   ///Gets a possible [JsAlertResponseAction] instance from [int] value.
   static JsAlertResponseAction? fromValue(int? value) {

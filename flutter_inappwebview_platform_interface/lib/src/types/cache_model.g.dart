@@ -65,11 +65,11 @@ class CacheModel {
   });
 
   ///Set of all values of [CacheModel].
-  static final Set<CacheModel> values = [
+  static final Set<CacheModel> values = {
     CacheModel.DOCUMENT_BROWSER,
     CacheModel.DOCUMENT_VIEWER,
     CacheModel.WEB_BROWSER,
-  ].toSet();
+  };
 
   ///Gets a possible [CacheModel] instance from [int] value.
   static CacheModel? fromValue(int? value) {

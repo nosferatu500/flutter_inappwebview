@@ -148,13 +148,13 @@ class ContentBlockerActionType {
   );
 
   ///Set of all values of [ContentBlockerActionType].
-  static final Set<ContentBlockerActionType> values = [
+  static final Set<ContentBlockerActionType> values = {
     ContentBlockerActionType.BLOCK,
     ContentBlockerActionType.BLOCK_COOKIES,
     ContentBlockerActionType.CSS_DISPLAY_NONE,
     ContentBlockerActionType.IGNORE_PREVIOUS_RULES,
     ContentBlockerActionType.MAKE_HTTPS,
-  ].toSet();
+  };
 
   ///Gets a possible [ContentBlockerActionType] instance from [String] value.
   static ContentBlockerActionType? fromValue(String? value) {

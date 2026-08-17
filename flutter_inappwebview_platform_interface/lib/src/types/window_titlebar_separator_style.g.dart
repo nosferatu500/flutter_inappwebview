@@ -86,12 +86,12 @@ class WindowTitlebarSeparatorStyle {
   );
 
   ///Set of all values of [WindowTitlebarSeparatorStyle].
-  static final Set<WindowTitlebarSeparatorStyle> values = [
+  static final Set<WindowTitlebarSeparatorStyle> values = {
     WindowTitlebarSeparatorStyle.AUTOMATIC,
     WindowTitlebarSeparatorStyle.LINE,
     WindowTitlebarSeparatorStyle.NONE,
     WindowTitlebarSeparatorStyle.SHADOW,
-  ].toSet();
+  };
 
   ///Gets a possible [WindowTitlebarSeparatorStyle] instance from [int] value.
   static WindowTitlebarSeparatorStyle? fromValue(int? value) {

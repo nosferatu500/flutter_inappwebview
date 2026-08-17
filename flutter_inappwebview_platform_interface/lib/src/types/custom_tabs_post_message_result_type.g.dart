@@ -84,12 +84,12 @@ class CustomTabsPostMessageResultType {
   );
 
   ///Set of all values of [CustomTabsPostMessageResultType].
-  static final Set<CustomTabsPostMessageResultType> values = [
+  static final Set<CustomTabsPostMessageResultType> values = {
     CustomTabsPostMessageResultType.FAILURE_DISALLOWED,
     CustomTabsPostMessageResultType.FAILURE_MESSAGING_ERROR,
     CustomTabsPostMessageResultType.FAILURE_REMOTE_ERROR,
     CustomTabsPostMessageResultType.SUCCESS,
-  ].toSet();
+  };
 
   ///Gets a possible [CustomTabsPostMessageResultType] instance from [int] value.
   static CustomTabsPostMessageResultType? fromValue(int? value) {

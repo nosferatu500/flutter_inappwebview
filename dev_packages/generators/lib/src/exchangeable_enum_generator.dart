@@ -229,7 +229,7 @@ class ExchangeableEnumGenerator
 
     if (annotation.read("valuesProperty").boolValue) {
       classBuffer.writeln('///Set of all values of [$extClassName].');
-      classBuffer.writeln('static final Set<$extClassName> values = [');
+      classBuffer.writeln('static final Set<$extClassName> values = {');
       for (final entry in fieldEntriesSorted) {
         final fieldName = entry.key;
         final fieldElement = entry.value;
@@ -241,7 +241,7 @@ class ExchangeableEnumGenerator
           classBuffer.writeln('$extClassName.$fieldName,');
         }
       }
-      classBuffer.writeln('].toSet();');
+      classBuffer.writeln('};');
     }
 
     if (annotation.read("fromValueMethod").boolValue &&

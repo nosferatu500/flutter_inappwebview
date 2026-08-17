@@ -300,7 +300,7 @@ class WebViewFeature {
   );
 
   ///Set of all values of [WebViewFeature].
-  static final Set<WebViewFeature> values = [
+  static final Set<WebViewFeature> values = {
     WebViewFeature.ALGORITHMIC_DARKENING,
     WebViewFeature.CREATE_WEB_MESSAGE_CHANNEL,
     WebViewFeature.DISABLED_ACTION_MODE_MENU_ITEMS,
@@ -347,7 +347,7 @@ class WebViewFeature {
     WebViewFeature.WEB_RESOURCE_REQUEST_IS_REDIRECT,
     WebViewFeature.WEB_VIEW_RENDERER_CLIENT_BASIC_USAGE,
     WebViewFeature.WEB_VIEW_RENDERER_TERMINATE,
-  ].toSet();
+  };
 
   ///Gets a possible [WebViewFeature] instance from [String] value.
   static WebViewFeature? fromValue(String? value) {

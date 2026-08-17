@@ -49,13 +49,13 @@ class SafeBrowsingThreat {
       SafeBrowsingThreat._internal(3, 3);
 
   ///Set of all values of [SafeBrowsingThreat].
-  static final Set<SafeBrowsingThreat> values = [
+  static final Set<SafeBrowsingThreat> values = {
     SafeBrowsingThreat.SAFE_BROWSING_THREAT_BILLING,
     SafeBrowsingThreat.SAFE_BROWSING_THREAT_MALWARE,
     SafeBrowsingThreat.SAFE_BROWSING_THREAT_PHISHING,
     SafeBrowsingThreat.SAFE_BROWSING_THREAT_UNKNOWN,
     SafeBrowsingThreat.SAFE_BROWSING_THREAT_UNWANTED_SOFTWARE,
-  ].toSet();
+  };
 
   ///Gets a possible [SafeBrowsingThreat] instance from [int] value.
   static SafeBrowsingThreat? fromValue(int? value) {

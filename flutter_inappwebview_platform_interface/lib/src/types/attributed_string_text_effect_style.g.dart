@@ -27,9 +27,9 @@ class AttributedStringTextEffectStyle {
   );
 
   ///Set of all values of [AttributedStringTextEffectStyle].
-  static final Set<AttributedStringTextEffectStyle> values = [
+  static final Set<AttributedStringTextEffectStyle> values = {
     AttributedStringTextEffectStyle.LETTERPRESS_STYLE,
-  ].toSet();
+  };
 
   ///Gets a possible [AttributedStringTextEffectStyle] instance from [String] value.
   static AttributedStringTextEffectStyle? fromValue(String? value) {

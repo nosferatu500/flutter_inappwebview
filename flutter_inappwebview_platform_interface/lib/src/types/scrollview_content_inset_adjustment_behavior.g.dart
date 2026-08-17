@@ -40,12 +40,12 @@ class ScrollViewContentInsetAdjustmentBehavior {
       ScrollViewContentInsetAdjustmentBehavior._internal(1, 1);
 
   ///Set of all values of [ScrollViewContentInsetAdjustmentBehavior].
-  static final Set<ScrollViewContentInsetAdjustmentBehavior> values = [
+  static final Set<ScrollViewContentInsetAdjustmentBehavior> values = {
     ScrollViewContentInsetAdjustmentBehavior.ALWAYS,
     ScrollViewContentInsetAdjustmentBehavior.AUTOMATIC,
     ScrollViewContentInsetAdjustmentBehavior.NEVER,
     ScrollViewContentInsetAdjustmentBehavior.SCROLLABLE_AXES,
-  ].toSet();
+  };
 
   ///Gets a possible [ScrollViewContentInsetAdjustmentBehavior] instance from [int] value.
   static ScrollViewContentInsetAdjustmentBehavior? fromValue(int? value) {

@@ -27,11 +27,11 @@ class CustomTabsShareState {
   static const SHARE_STATE_ON = CustomTabsShareState._internal(1, 1);
 
   ///Set of all values of [CustomTabsShareState].
-  static final Set<CustomTabsShareState> values = [
+  static final Set<CustomTabsShareState> values = {
     CustomTabsShareState.SHARE_STATE_DEFAULT,
     CustomTabsShareState.SHARE_STATE_OFF,
     CustomTabsShareState.SHARE_STATE_ON,
-  ].toSet();
+  };
 
   ///Gets a possible [CustomTabsShareState] instance from [int] value.
   static CustomTabsShareState? fromValue(int? value) {

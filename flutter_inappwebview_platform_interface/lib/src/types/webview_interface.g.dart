@@ -258,7 +258,7 @@ class WebViewInterface {
   );
 
   ///Set of all values of [WebViewInterface].
-  static final Set<WebViewInterface> values = [
+  static final Set<WebViewInterface> values = {
     WebViewInterface.ICoreWebView2,
     WebViewInterface.ICoreWebView2CompositionController,
     WebViewInterface.ICoreWebView2CompositionController2,
@@ -319,7 +319,7 @@ class WebViewInterface {
     WebViewInterface.ICoreWebView2_7,
     WebViewInterface.ICoreWebView2_8,
     WebViewInterface.ICoreWebView2_9,
-  ].toSet();
+  };
 
   ///Gets a possible [WebViewInterface] instance from [String] value.
   static WebViewInterface? fromValue(String? value) {

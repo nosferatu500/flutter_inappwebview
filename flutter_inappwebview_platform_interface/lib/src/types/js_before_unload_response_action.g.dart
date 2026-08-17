@@ -24,10 +24,10 @@ class JsBeforeUnloadResponseAction {
   static const CONFIRM = JsBeforeUnloadResponseAction._internal(0, 0);
 
   ///Set of all values of [JsBeforeUnloadResponseAction].
-  static final Set<JsBeforeUnloadResponseAction> values = [
+  static final Set<JsBeforeUnloadResponseAction> values = {
     JsBeforeUnloadResponseAction.CANCEL,
     JsBeforeUnloadResponseAction.CONFIRM,
-  ].toSet();
+  };
 
   ///Gets a possible [JsBeforeUnloadResponseAction] instance from [int] value.
   static JsBeforeUnloadResponseAction? fromValue(int? value) {

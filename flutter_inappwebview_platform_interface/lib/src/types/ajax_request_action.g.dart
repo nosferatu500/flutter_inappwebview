@@ -24,10 +24,10 @@ class AjaxRequestAction {
   static const PROCEED = AjaxRequestAction._internal(1, 1);
 
   ///Set of all values of [AjaxRequestAction].
-  static final Set<AjaxRequestAction> values = [
+  static final Set<AjaxRequestAction> values = {
     AjaxRequestAction.ABORT,
     AjaxRequestAction.PROCEED,
-  ].toSet();
+  };
 
   ///Gets a possible [AjaxRequestAction] instance from [int] value.
   static AjaxRequestAction? fromValue(int? value) {

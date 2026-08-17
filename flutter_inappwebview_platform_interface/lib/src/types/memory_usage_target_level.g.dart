@@ -24,10 +24,10 @@ class MemoryUsageTargetLevel {
   static const NORMAL = MemoryUsageTargetLevel._internal(0, 0);
 
   ///Set of all values of [MemoryUsageTargetLevel].
-  static final Set<MemoryUsageTargetLevel> values = [
+  static final Set<MemoryUsageTargetLevel> values = {
     MemoryUsageTargetLevel.LOW,
     MemoryUsageTargetLevel.NORMAL,
-  ].toSet();
+  };
 
   ///Gets a possible [MemoryUsageTargetLevel] instance from [int] value.
   static MemoryUsageTargetLevel? fromValue(int? value) {

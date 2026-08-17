@@ -30,11 +30,11 @@ class NavigationResponseAction {
   static const DOWNLOAD = NavigationResponseAction._internal(2, 2);
 
   ///Set of all values of [NavigationResponseAction].
-  static final Set<NavigationResponseAction> values = [
+  static final Set<NavigationResponseAction> values = {
     NavigationResponseAction.ALLOW,
     NavigationResponseAction.CANCEL,
     NavigationResponseAction.DOWNLOAD,
-  ].toSet();
+  };
 
   ///Gets a possible [NavigationResponseAction] instance from [int] value.
   static NavigationResponseAction? fromValue(int? value) {

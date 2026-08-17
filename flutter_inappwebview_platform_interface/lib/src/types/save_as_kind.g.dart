@@ -28,12 +28,12 @@ class SaveAsKind {
   static const SINGLE_FILE = SaveAsKind._internal(2, 2);
 
   ///Set of all values of [SaveAsKind].
-  static final Set<SaveAsKind> values = [
+  static final Set<SaveAsKind> values = {
     SaveAsKind.COMPLETE,
     SaveAsKind.DEFAULT,
     SaveAsKind.HTML_ONLY,
     SaveAsKind.SINGLE_FILE,
-  ].toSet();
+  };
 
   ///Gets a possible [SaveAsKind] instance from [int] value.
   static SaveAsKind? fromValue(int? value) {

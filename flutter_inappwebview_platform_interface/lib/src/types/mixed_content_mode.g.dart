@@ -36,11 +36,11 @@ class MixedContentMode {
   static const MIXED_CONTENT_NEVER_ALLOW = MixedContentMode._internal(1, 1);
 
   ///Set of all values of [MixedContentMode].
-  static final Set<MixedContentMode> values = [
+  static final Set<MixedContentMode> values = {
     MixedContentMode.MIXED_CONTENT_ALWAYS_ALLOW,
     MixedContentMode.MIXED_CONTENT_COMPATIBILITY_MODE,
     MixedContentMode.MIXED_CONTENT_NEVER_ALLOW,
-  ].toSet();
+  };
 
   ///Gets a possible [MixedContentMode] instance from [int] value.
   static MixedContentMode? fromValue(int? value) {

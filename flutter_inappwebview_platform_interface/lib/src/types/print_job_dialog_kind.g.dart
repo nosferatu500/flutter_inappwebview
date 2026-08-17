@@ -24,10 +24,10 @@ class PrintJobDialogKind {
   static const SYSTEM = PrintJobDialogKind._internal(1, 1);
 
   ///Set of all values of [PrintJobDialogKind].
-  static final Set<PrintJobDialogKind> values = [
+  static final Set<PrintJobDialogKind> values = {
     PrintJobDialogKind.BROWSER,
     PrintJobDialogKind.SYSTEM,
-  ].toSet();
+  };
 
   ///Gets a possible [PrintJobDialogKind] instance from [int] value.
   static PrintJobDialogKind? fromValue(int? value) {

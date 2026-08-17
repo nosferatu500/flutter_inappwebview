@@ -36,13 +36,13 @@ class WebResourceRequestSourceKind {
   static const SHARED_WORKER = WebResourceRequestSourceKind._internal(2, 2);
 
   ///Set of all values of [WebResourceRequestSourceKind].
-  static final Set<WebResourceRequestSourceKind> values = [
+  static final Set<WebResourceRequestSourceKind> values = {
     WebResourceRequestSourceKind.ALL,
     WebResourceRequestSourceKind.DOCUMENT,
     WebResourceRequestSourceKind.NONE,
     WebResourceRequestSourceKind.SERVICE_WORKER,
     WebResourceRequestSourceKind.SHARED_WORKER,
-  ].toSet();
+  };
 
   ///Gets a possible [WebResourceRequestSourceKind] instance from [int] value.
   static WebResourceRequestSourceKind? fromValue(int? value) {

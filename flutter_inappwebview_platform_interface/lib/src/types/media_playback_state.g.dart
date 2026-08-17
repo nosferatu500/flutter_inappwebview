@@ -30,12 +30,12 @@ class MediaPlaybackState {
   static const SUSPENDED = MediaPlaybackState._internal(3, 3);
 
   ///Set of all values of [MediaPlaybackState].
-  static final Set<MediaPlaybackState> values = [
+  static final Set<MediaPlaybackState> values = {
     MediaPlaybackState.NONE,
     MediaPlaybackState.PAUSED,
     MediaPlaybackState.PLAYING,
     MediaPlaybackState.SUSPENDED,
-  ].toSet();
+  };
 
   ///Gets a possible [MediaPlaybackState] instance from [int] value.
   static MediaPlaybackState? fromValue(int? value) {

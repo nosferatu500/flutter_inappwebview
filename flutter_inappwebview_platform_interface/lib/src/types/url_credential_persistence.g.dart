@@ -31,12 +31,12 @@ class URLCredentialPersistence {
   static const SYNCHRONIZABLE = URLCredentialPersistence._internal(3, 3);
 
   ///Set of all values of [URLCredentialPersistence].
-  static final Set<URLCredentialPersistence> values = [
+  static final Set<URLCredentialPersistence> values = {
     URLCredentialPersistence.FOR_SESSION,
     URLCredentialPersistence.NONE,
     URLCredentialPersistence.PERMANENT,
     URLCredentialPersistence.SYNCHRONIZABLE,
-  ].toSet();
+  };
 
   ///Gets a possible [URLCredentialPersistence] instance from [int] value.
   static URLCredentialPersistence? fromValue(int? value) {

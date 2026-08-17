@@ -45,8 +45,8 @@ class ClientCertChallenge extends URLAuthenticationChallenge {
     this.keyTypes,
     this.mutuallyTrustedCertificates,
     this.principals,
-    required URLProtectionSpace protectionSpace,
-  }) : super(protectionSpace: protectionSpace);
+    required super.protectionSpace,
+  });
 
   ///Gets a possible [ClientCertChallenge] instance from a [Map] value.
   static ClientCertChallenge? fromMap(
@@ -89,6 +89,7 @@ class ClientCertChallenge extends URLAuthenticationChallenge {
   }
 
   ///Converts instance to a map.
+  @override
   Map<String, dynamic> toMap({EnumMethod? enumMethod}) {
     return {
       "protectionSpace": protectionSpace.toMap(enumMethod: enumMethod),
@@ -103,6 +104,7 @@ class ClientCertChallenge extends URLAuthenticationChallenge {
   }
 
   ///Converts instance to a map.
+  @override
   Map<String, dynamic> toJson() {
     return toMap();
   }

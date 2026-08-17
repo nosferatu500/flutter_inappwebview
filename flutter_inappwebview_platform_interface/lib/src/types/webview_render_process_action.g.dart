@@ -36,9 +36,9 @@ class WebViewRenderProcessAction {
   );
 
   ///Set of all values of [WebViewRenderProcessAction].
-  static final Set<WebViewRenderProcessAction> values = [
+  static final Set<WebViewRenderProcessAction> values = {
     WebViewRenderProcessAction.TERMINATE,
-  ].toSet();
+  };
 
   ///Gets a possible [WebViewRenderProcessAction] instance from [int] value.
   static WebViewRenderProcessAction? fromValue(int? value) {

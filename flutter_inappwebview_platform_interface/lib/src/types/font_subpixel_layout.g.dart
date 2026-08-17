@@ -36,12 +36,12 @@ class FontSubpixelLayout {
   static const VRGB = FontSubpixelLayout._internal(2, 2);
 
   ///Set of all values of [FontSubpixelLayout].
-  static final Set<FontSubpixelLayout> values = [
+  static final Set<FontSubpixelLayout> values = {
     FontSubpixelLayout.BGR,
     FontSubpixelLayout.RGB,
     FontSubpixelLayout.VBGR,
     FontSubpixelLayout.VRGB,
-  ].toSet();
+  };
 
   ///Gets a possible [FontSubpixelLayout] instance from [int] value.
   static FontSubpixelLayout? fromValue(int? value) {

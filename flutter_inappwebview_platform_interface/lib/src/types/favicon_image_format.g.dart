@@ -24,10 +24,10 @@ class FaviconImageFormat {
   static const PNG = FaviconImageFormat._internal(0, 0);
 
   ///Set of all values of [FaviconImageFormat].
-  static final Set<FaviconImageFormat> values = [
+  static final Set<FaviconImageFormat> values = {
     FaviconImageFormat.JPEG,
     FaviconImageFormat.PNG,
-  ].toSet();
+  };
 
   ///Gets a possible [FaviconImageFormat] instance from [int] value.
   static FaviconImageFormat? fromValue(int? value) {

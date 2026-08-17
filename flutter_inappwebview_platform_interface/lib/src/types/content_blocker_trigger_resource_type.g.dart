@@ -52,7 +52,7 @@ class ContentBlockerTriggerResourceType {
   );
 
   ///Set of all values of [ContentBlockerTriggerResourceType].
-  static final Set<ContentBlockerTriggerResourceType> values = [
+  static final Set<ContentBlockerTriggerResourceType> values = {
     ContentBlockerTriggerResourceType.DOCUMENT,
     ContentBlockerTriggerResourceType.FONT,
     ContentBlockerTriggerResourceType.IMAGE,
@@ -61,7 +61,7 @@ class ContentBlockerTriggerResourceType {
     ContentBlockerTriggerResourceType.SCRIPT,
     ContentBlockerTriggerResourceType.STYLE_SHEET,
     ContentBlockerTriggerResourceType.SVG_DOCUMENT,
-  ].toSet();
+  };
 
   ///Gets a possible [ContentBlockerTriggerResourceType] instance from [String] value.
   static ContentBlockerTriggerResourceType? fromValue(String? value) {

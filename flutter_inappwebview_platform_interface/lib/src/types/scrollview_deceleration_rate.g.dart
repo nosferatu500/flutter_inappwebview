@@ -27,10 +27,10 @@ class ScrollViewDecelerationRate {
   );
 
   ///Set of all values of [ScrollViewDecelerationRate].
-  static final Set<ScrollViewDecelerationRate> values = [
+  static final Set<ScrollViewDecelerationRate> values = {
     ScrollViewDecelerationRate.FAST,
     ScrollViewDecelerationRate.NORMAL,
-  ].toSet();
+  };
 
   ///Gets a possible [ScrollViewDecelerationRate] instance from [String] value.
   static ScrollViewDecelerationRate? fromValue(String? value) {

@@ -50,7 +50,7 @@ class ModalPresentationStyle {
   static const POPOVER = ModalPresentationStyle._internal(7, 7);
 
   ///Set of all values of [ModalPresentationStyle].
-  static final Set<ModalPresentationStyle> values = [
+  static final Set<ModalPresentationStyle> values = {
     ModalPresentationStyle.AUTOMATIC,
     ModalPresentationStyle.CURRENT_CONTEXT,
     ModalPresentationStyle.CUSTOM,
@@ -61,7 +61,7 @@ class ModalPresentationStyle {
     ModalPresentationStyle.OVER_FULL_SCREEN,
     ModalPresentationStyle.PAGE_SHEET,
     ModalPresentationStyle.POPOVER,
-  ].toSet();
+  };
 
   ///Gets a possible [ModalPresentationStyle] instance from [int] value.
   static ModalPresentationStyle? fromValue(int? value) {

@@ -24,10 +24,10 @@ class FetchRequestAction {
   static const PROCEED = FetchRequestAction._internal(1, 1);
 
   ///Set of all values of [FetchRequestAction].
-  static final Set<FetchRequestAction> values = [
+  static final Set<FetchRequestAction> values = {
     FetchRequestAction.ABORT,
     FetchRequestAction.PROCEED,
-  ].toSet();
+  };
 
   ///Gets a possible [FetchRequestAction] instance from [int] value.
   static FetchRequestAction? fromValue(int? value) {

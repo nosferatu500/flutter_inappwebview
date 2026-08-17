@@ -38,12 +38,12 @@ class LayoutInDisplayCutoutMode {
   static const SHORT_EDGES = LayoutInDisplayCutoutMode._internal(1, 1);
 
   ///Set of all values of [LayoutInDisplayCutoutMode].
-  static final Set<LayoutInDisplayCutoutMode> values = [
+  static final Set<LayoutInDisplayCutoutMode> values = {
     LayoutInDisplayCutoutMode.ALWAYS,
     LayoutInDisplayCutoutMode.DEFAULT,
     LayoutInDisplayCutoutMode.NEVER,
     LayoutInDisplayCutoutMode.SHORT_EDGES,
-  ].toSet();
+  };
 
   ///Gets a possible [LayoutInDisplayCutoutMode] instance from [int] value.
   static LayoutInDisplayCutoutMode? fromValue(int? value) {

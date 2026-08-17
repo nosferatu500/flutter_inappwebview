@@ -27,11 +27,11 @@ class SafeBrowsingResponseAction {
   static const SHOW_INTERSTITIAL = SafeBrowsingResponseAction._internal(2, 2);
 
   ///Set of all values of [SafeBrowsingResponseAction].
-  static final Set<SafeBrowsingResponseAction> values = [
+  static final Set<SafeBrowsingResponseAction> values = {
     SafeBrowsingResponseAction.BACK_TO_SAFETY,
     SafeBrowsingResponseAction.PROCEED,
     SafeBrowsingResponseAction.SHOW_INTERSTITIAL,
-  ].toSet();
+  };
 
   ///Gets a possible [SafeBrowsingResponseAction] instance from [int] value.
   static SafeBrowsingResponseAction? fromValue(int? value) {

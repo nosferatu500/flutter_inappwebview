@@ -212,15 +212,17 @@ class ExchangeableObjectGenerator
       ConstructorElement superConstructor = superClass.constructors.first;
       for (final parameter in superConstructor.formalParameters) {
         final parameterName = parameter.name ?? '';
-        final parameterType = parameter.type;
         final isNullable = Util.typeIsNullable(parameter.type);
         // remove class reference terminating with "_"
         var defaultValueCode = parameter.defaultValueCode?.replaceFirst(
           "_.",
           ".",
         );
+        // Emit a super parameter (`required super.foo`) rather than redeclaring the parameter and
+        // forwarding it in the initializer list. The type is then inherited from the superclass
+        // constructor, so the `_`-stripping this used to need is no longer necessary either.
         var constructorField =
-            '${!isNullable && defaultValueCode == null ? 'required ' : ''}${parameterType.toString().replaceFirst("_", "")} $parameterName${defaultValueCode != null ? ' = $defaultValueCode' : ''}';
+            '${!isNullable && defaultValueCode == null ? 'required ' : ''}super.$parameterName${defaultValueCode != null ? ' = $defaultValueCode' : ''}';
         if (parameter.metadata.hasDeprecated) {
           deprecatedFields.add(parameter);
           constructorField =
@@ -228,7 +230,6 @@ class ExchangeableObjectGenerator
               constructorField;
         }
         constructorFields.add(constructorField);
-        superConstructorFields.add("$parameterName: $parameterName");
       }
     }
 
@@ -296,13 +297,15 @@ class ExchangeableObjectGenerator
     }
 
     // Add initializer list (super + field initializers)
+    // With super parameters, superConstructorFields is normally empty and no explicit super() call
+    // is needed at all.
     final hasInitializers =
-        superClass != null || initializerAssignments.isNotEmpty;
+        superConstructorFields.isNotEmpty || initializerAssignments.isNotEmpty;
     if (hasInitializers) {
       classBuffer.write(' : ');
       final initializers = <String>[];
 
-      if (superClass != null) {
+      if (superConstructorFields.isNotEmpty) {
         initializers.add('super(${superConstructorFields.join(", ")})');
       }
 
@@ -606,6 +609,10 @@ class ExchangeableObjectGenerator
         (!visitor.methods.containsKey("toMap") ||
             Util.methodHasIgnore(visitor.methods['toMap']!))) {
       classBuffer.writeln('///Converts instance to a map.');
+      // A superclass or an implemented interface declares toMap() too, so this is an override.
+      if (superClass != null || interfaces.isNotEmpty) {
+        classBuffer.writeln('@override');
+      }
       classBuffer.writeln(
         'Map<String, dynamic> toMap({EnumMethod? enumMethod}) {',
       );
@@ -689,6 +696,10 @@ class ExchangeableObjectGenerator
         (!visitor.methods.containsKey("toJson") ||
             Util.methodHasIgnore(visitor.methods['toJson']!))) {
       classBuffer.writeln('///Converts instance to a map.');
+      // A superclass or an implemented interface declares toJson() too, so this is an override.
+      if (superClass != null || interfaces.isNotEmpty) {
+        classBuffer.writeln('@override');
+      }
       classBuffer.writeln('Map<String, dynamic> toJson() {');
       classBuffer.writeln('return toMap();');
       classBuffer.writeln('}');

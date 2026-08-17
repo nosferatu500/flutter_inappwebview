@@ -30,10 +30,10 @@ class ContentBlockerTriggerLoadType {
   );
 
   ///Set of all values of [ContentBlockerTriggerLoadType].
-  static final Set<ContentBlockerTriggerLoadType> values = [
+  static final Set<ContentBlockerTriggerLoadType> values = {
     ContentBlockerTriggerLoadType.FIRST_PARTY,
     ContentBlockerTriggerLoadType.THIRD_PARTY,
-  ].toSet();
+  };
 
   ///Gets a possible [ContentBlockerTriggerLoadType] instance from [String] value.
   static ContentBlockerTriggerLoadType? fromValue(String? value) {

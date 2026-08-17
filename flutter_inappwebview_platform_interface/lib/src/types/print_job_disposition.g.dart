@@ -80,12 +80,12 @@ class PrintJobDisposition {
   });
 
   ///Set of all values of [PrintJobDisposition].
-  static final Set<PrintJobDisposition> values = [
+  static final Set<PrintJobDisposition> values = {
     PrintJobDisposition.CANCEL,
     PrintJobDisposition.PREVIEW,
     PrintJobDisposition.SAVE,
     PrintJobDisposition.SPOOL,
-  ].toSet();
+  };
 
   ///Gets a possible [PrintJobDisposition] instance from [String] value.
   static PrintJobDisposition? fromValue(String? value) {

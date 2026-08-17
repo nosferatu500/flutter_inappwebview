@@ -27,11 +27,11 @@ class SearchResultDisplayStyle {
   static const TOTAL = SearchResultDisplayStyle._internal(1, 1);
 
   ///Set of all values of [SearchResultDisplayStyle].
-  static final Set<SearchResultDisplayStyle> values = [
+  static final Set<SearchResultDisplayStyle> values = {
     SearchResultDisplayStyle.CURRENT_AND_TOTAL,
     SearchResultDisplayStyle.NONE,
     SearchResultDisplayStyle.TOTAL,
-  ].toSet();
+  };
 
   ///Gets a possible [SearchResultDisplayStyle] instance from [int] value.
   static SearchResultDisplayStyle? fromValue(int? value) {

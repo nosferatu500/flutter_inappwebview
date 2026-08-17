@@ -36,8 +36,8 @@ class HttpAuthenticationChallenge extends URLAuthenticationChallenge {
     this.failureResponse,
     required this.previousFailureCount,
     this.proposedCredential,
-    required URLProtectionSpace protectionSpace,
-  }) : super(protectionSpace: protectionSpace);
+    required super.protectionSpace,
+  });
 
   ///Gets a possible [HttpAuthenticationChallenge] instance from a [Map] value.
   static HttpAuthenticationChallenge? fromMap(
@@ -67,6 +67,7 @@ class HttpAuthenticationChallenge extends URLAuthenticationChallenge {
   }
 
   ///Converts instance to a map.
+  @override
   Map<String, dynamic> toMap({EnumMethod? enumMethod}) {
     return {
       "protectionSpace": protectionSpace.toMap(enumMethod: enumMethod),
@@ -78,6 +79,7 @@ class HttpAuthenticationChallenge extends URLAuthenticationChallenge {
   }
 
   ///Converts instance to a map.
+  @override
   Map<String, dynamic> toJson() {
     return toMap();
   }

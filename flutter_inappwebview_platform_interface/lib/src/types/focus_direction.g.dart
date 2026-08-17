@@ -74,12 +74,12 @@ class FocusDirection {
   });
 
   ///Set of all values of [FocusDirection].
-  static final Set<FocusDirection> values = [
+  static final Set<FocusDirection> values = {
     FocusDirection.DOWN,
     FocusDirection.LEFT,
     FocusDirection.RIGHT,
     FocusDirection.UP,
-  ].toSet();
+  };
 
   ///Gets a possible [FocusDirection] instance from [String] value.
   static FocusDirection? fromValue(String? value) {

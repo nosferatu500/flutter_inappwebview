@@ -29,12 +29,12 @@ class CacheMode {
   static const LOAD_NO_CACHE = CacheMode._internal(2, 2);
 
   ///Set of all values of [CacheMode].
-  static final Set<CacheMode> values = [
+  static final Set<CacheMode> values = {
     CacheMode.LOAD_CACHE_ELSE_NETWORK,
     CacheMode.LOAD_CACHE_ONLY,
     CacheMode.LOAD_DEFAULT,
     CacheMode.LOAD_NO_CACHE,
-  ].toSet();
+  };
 
   ///Gets a possible [CacheMode] instance from [int] value.
   static CacheMode? fromValue(int? value) {

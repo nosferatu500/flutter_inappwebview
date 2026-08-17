@@ -18,11 +18,13 @@ class TrustedWebActivityDefaultDisplayMode
   }
 
   ///Converts instance to a map.
+  @override
   Map<String, dynamic> toMap({EnumMethod? enumMethod}) {
     return {..._toMapMergeWith(enumMethod: enumMethod)};
   }
 
   ///Converts instance to a map.
+  @override
   Map<String, dynamic> toJson() {
     return toMap();
   }

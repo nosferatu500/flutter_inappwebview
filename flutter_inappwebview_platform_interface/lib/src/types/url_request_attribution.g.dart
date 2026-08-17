@@ -30,10 +30,10 @@ class URLRequestAttribution {
   static const USER = URLRequestAttribution._internal(1, 1);
 
   ///Set of all values of [URLRequestAttribution].
-  static final Set<URLRequestAttribution> values = [
+  static final Set<URLRequestAttribution> values = {
     URLRequestAttribution.DEVELOPER,
     URLRequestAttribution.USER,
-  ].toSet();
+  };
 
   ///Gets a possible [URLRequestAttribution] instance from [int] value.
   static URLRequestAttribution? fromValue(int? value) {

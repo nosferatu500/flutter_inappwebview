@@ -40,12 +40,12 @@ class PrintJobOutputType {
   static const PHOTO_GRAYSCALE = PrintJobOutputType._internal(3, 3);
 
   ///Set of all values of [PrintJobOutputType].
-  static final Set<PrintJobOutputType> values = [
+  static final Set<PrintJobOutputType> values = {
     PrintJobOutputType.GENERAL,
     PrintJobOutputType.GRAYSCALE,
     PrintJobOutputType.PHOTO,
     PrintJobOutputType.PHOTO_GRAYSCALE,
-  ].toSet();
+  };
 
   ///Gets a possible [PrintJobOutputType] instance from [int] value.
   static PrintJobOutputType? fromValue(int? value) {

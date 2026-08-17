@@ -95,11 +95,11 @@ class PrintJobDuplexMode {
   );
 
   ///Set of all values of [PrintJobDuplexMode].
-  static final Set<PrintJobDuplexMode> values = [
+  static final Set<PrintJobDuplexMode> values = {
     PrintJobDuplexMode.LONG_EDGE,
     PrintJobDuplexMode.NONE,
     PrintJobDuplexMode.SHORT_EDGE,
-  ].toSet();
+  };
 
   ///Gets a possible [PrintJobDuplexMode] instance from [String] value.
   static PrintJobDuplexMode? fromValue(String? value) {

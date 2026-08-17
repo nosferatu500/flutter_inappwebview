@@ -119,7 +119,7 @@ class BrowserProcessKind {
   });
 
   ///Set of all values of [BrowserProcessKind].
-  static final Set<BrowserProcessKind> values = [
+  static final Set<BrowserProcessKind> values = {
     BrowserProcessKind.BROWSER,
     BrowserProcessKind.GPU,
     BrowserProcessKind.PPAPI_BROKER,
@@ -127,7 +127,7 @@ class BrowserProcessKind {
     BrowserProcessKind.RENDERER,
     BrowserProcessKind.SANDBOX_HELPER,
     BrowserProcessKind.UTILITY,
-  ].toSet();
+  };
 
   ///Gets a possible [BrowserProcessKind] instance from [int] value.
   static BrowserProcessKind? fromValue(int? value) {

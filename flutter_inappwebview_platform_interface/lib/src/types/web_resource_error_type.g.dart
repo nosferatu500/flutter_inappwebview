@@ -1472,7 +1472,7 @@ class WebResourceErrorType {
   );
 
   ///Set of all values of [WebResourceErrorType].
-  static final Set<WebResourceErrorType> values = [
+  static final Set<WebResourceErrorType> values = {
     WebResourceErrorType.APP_TRANSPORT_SECURITY_REQUIRES_SECURE_CONNECTION,
     WebResourceErrorType.BACKGROUND_SESSION_IN_USE_BY_ANOTHER_PROCESS,
     WebResourceErrorType.BACKGROUND_SESSION_REQUIRES_SHARED_CONTAINER,
@@ -1545,7 +1545,7 @@ class WebResourceErrorType {
     WebResourceErrorType.USER_CANCELLED_AUTHENTICATION,
     WebResourceErrorType.VALID_PROXY_AUTHENTICATION_REQUIRED,
     WebResourceErrorType.ZERO_BYTE_RESOURCE,
-  ].toSet();
+  };
 
   ///Gets a possible [WebResourceErrorType] instance from [String] value.
   static WebResourceErrorType? fromValue(String? value) {

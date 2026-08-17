@@ -29,10 +29,10 @@ class CrossOrigin {
   );
 
   ///Set of all values of [CrossOrigin].
-  static final Set<CrossOrigin> values = [
+  static final Set<CrossOrigin> values = {
     CrossOrigin.ANONYMOUS,
     CrossOrigin.USE_CREDENTIALS,
-  ].toSet();
+  };
 
   ///Gets a possible [CrossOrigin] instance from [String] value.
   static CrossOrigin? fromValue(String? value) {

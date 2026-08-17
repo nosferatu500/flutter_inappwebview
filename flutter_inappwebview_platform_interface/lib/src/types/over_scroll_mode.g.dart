@@ -28,11 +28,11 @@ class OverScrollMode {
   static const NEVER = OverScrollMode._internal(2, 2);
 
   ///Set of all values of [OverScrollMode].
-  static final Set<OverScrollMode> values = [
+  static final Set<OverScrollMode> values = {
     OverScrollMode.ALWAYS,
     OverScrollMode.IF_CONTENT_SCROLLS,
     OverScrollMode.NEVER,
-  ].toSet();
+  };
 
   ///Gets a possible [OverScrollMode] instance from [int] value.
   static OverScrollMode? fromValue(int? value) {

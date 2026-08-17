@@ -85,11 +85,11 @@ class HttpAuthResponseAction {
       });
 
   ///Set of all values of [HttpAuthResponseAction].
-  static final Set<HttpAuthResponseAction> values = [
+  static final Set<HttpAuthResponseAction> values = {
     HttpAuthResponseAction.CANCEL,
     HttpAuthResponseAction.PROCEED,
     HttpAuthResponseAction.USE_SAVED_HTTP_AUTH_CREDENTIALS,
-  ].toSet();
+  };
 
   ///Gets a possible [HttpAuthResponseAction] instance from [int] value.
   static HttpAuthResponseAction? fromValue(int? value) {

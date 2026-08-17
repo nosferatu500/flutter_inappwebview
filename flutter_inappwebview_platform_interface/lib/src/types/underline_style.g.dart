@@ -45,7 +45,7 @@ class UnderlineStyle {
   static const THICK = UnderlineStyle._internal(2, 2);
 
   ///Set of all values of [UnderlineStyle].
-  static final Set<UnderlineStyle> values = [
+  static final Set<UnderlineStyle> values = {
     UnderlineStyle.BY_WORD,
     UnderlineStyle.DOUBLE,
     UnderlineStyle.PATTERN_DASH,
@@ -55,7 +55,7 @@ class UnderlineStyle {
     UnderlineStyle.SINGLE,
     UnderlineStyle.STYLE_NONE,
     UnderlineStyle.THICK,
-  ].toSet();
+  };
 
   ///Gets a possible [UnderlineStyle] instance from [int] value.
   static UnderlineStyle? fromValue(int? value) {

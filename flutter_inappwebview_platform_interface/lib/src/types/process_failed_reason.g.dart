@@ -120,14 +120,14 @@ class ProcessFailedReason {
   );
 
   ///Set of all values of [ProcessFailedReason].
-  static final Set<ProcessFailedReason> values = [
+  static final Set<ProcessFailedReason> values = {
     ProcessFailedReason.CRASHED,
     ProcessFailedReason.LAUNCH_FAILED,
     ProcessFailedReason.OUT_OF_MEMORY,
     ProcessFailedReason.TERMINATED,
     ProcessFailedReason.UNEXPECTED,
     ProcessFailedReason.UNRESPONSIVE,
-  ].toSet();
+  };
 
   ///Gets a possible [ProcessFailedReason] instance from [String] value.
   static ProcessFailedReason? fromValue(String? value) {

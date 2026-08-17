@@ -27,11 +27,11 @@ class ClientCertResponseAction {
   static const PROCEED = ClientCertResponseAction._internal(1, 1);
 
   ///Set of all values of [ClientCertResponseAction].
-  static final Set<ClientCertResponseAction> values = [
+  static final Set<ClientCertResponseAction> values = {
     ClientCertResponseAction.CANCEL,
     ClientCertResponseAction.IGNORE,
     ClientCertResponseAction.PROCEED,
-  ].toSet();
+  };
 
   ///Gets a possible [ClientCertResponseAction] instance from [int] value.
   static ClientCertResponseAction? fromValue(int? value) {

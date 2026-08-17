@@ -33,13 +33,13 @@ class SaveAsUIResult {
   static const SUCCESS = SaveAsUIResult._internal(0, 0);
 
   ///Set of all values of [SaveAsUIResult].
-  static final Set<SaveAsUIResult> values = [
+  static final Set<SaveAsUIResult> values = {
     SaveAsUIResult.CANCELLED,
     SaveAsUIResult.FILE_ALREADY_EXISTS,
     SaveAsUIResult.INVALID_PATH,
     SaveAsUIResult.KIND_NOT_SUPPORTED,
     SaveAsUIResult.SUCCESS,
-  ].toSet();
+  };
 
   ///Gets a possible [SaveAsUIResult] instance from [int] value.
   static SaveAsUIResult? fromValue(int? value) {

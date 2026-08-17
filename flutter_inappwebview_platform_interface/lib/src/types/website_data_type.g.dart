@@ -98,7 +98,7 @@ class WebsiteDataType {
   );
 
   ///Set of all values of [WebsiteDataType].
-  static final Set<WebsiteDataType> values = [
+  static final Set<WebsiteDataType> values = {
     WebsiteDataType.WKWebsiteDataTypeCookies,
     WebsiteDataType.WKWebsiteDataTypeDiskCache,
     WebsiteDataType.WKWebsiteDataTypeFetchCache,
@@ -109,7 +109,7 @@ class WebsiteDataType {
     WebsiteDataType.WKWebsiteDataTypeServiceWorkerRegistrations,
     WebsiteDataType.WKWebsiteDataTypeSessionStorage,
     WebsiteDataType.WKWebsiteDataTypeWebSQLDatabases,
-  ].toSet();
+  };
 
   ///Gets a possible [WebsiteDataType] instance from [String] value.
   static WebsiteDataType? fromValue(String? value) {

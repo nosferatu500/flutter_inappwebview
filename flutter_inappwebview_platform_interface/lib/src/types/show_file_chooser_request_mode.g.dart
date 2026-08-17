@@ -80,12 +80,12 @@ class ShowFileChooserRequestMode {
   });
 
   ///Set of all values of [ShowFileChooserRequestMode].
-  static final Set<ShowFileChooserRequestMode> values = [
+  static final Set<ShowFileChooserRequestMode> values = {
     ShowFileChooserRequestMode.OPEN,
     ShowFileChooserRequestMode.OPEN_FOLDER,
     ShowFileChooserRequestMode.OPEN_MULTIPLE,
     ShowFileChooserRequestMode.SAVE,
-  ].toSet();
+  };
 
   ///Gets a possible [ShowFileChooserRequestMode] instance from [int] value.
   static ShowFileChooserRequestMode? fromValue(int? value) {

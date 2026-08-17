@@ -29,11 +29,11 @@ class TextDirectionKind {
   static const RIGHT_TO_LEFT = TextDirectionKind._internal(2, 2);
 
   ///Set of all values of [TextDirectionKind].
-  static final Set<TextDirectionKind> values = [
+  static final Set<TextDirectionKind> values = {
     TextDirectionKind.DEFAULT,
     TextDirectionKind.LEFT_TO_RIGHT,
     TextDirectionKind.RIGHT_TO_LEFT,
-  ].toSet();
+  };
 
   ///Gets a possible [TextDirectionKind] instance from [int] value.
   static TextDirectionKind? fromValue(int? value) {

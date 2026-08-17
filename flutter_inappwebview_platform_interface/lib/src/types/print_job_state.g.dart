@@ -157,7 +157,7 @@ class PrintJobState {
   });
 
   ///Set of all values of [PrintJobState].
-  static final Set<PrintJobState> values = [
+  static final Set<PrintJobState> values = {
     PrintJobState.BLOCKED,
     PrintJobState.CANCELED,
     PrintJobState.COMPLETED,
@@ -165,7 +165,7 @@ class PrintJobState {
     PrintJobState.FAILED,
     PrintJobState.QUEUED,
     PrintJobState.STARTED,
-  ].toSet();
+  };
 
   ///Gets a possible [PrintJobState] instance from [int] value.
   static PrintJobState? fromValue(int? value) {

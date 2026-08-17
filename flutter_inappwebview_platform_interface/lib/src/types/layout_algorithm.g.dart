@@ -30,10 +30,10 @@ class LayoutAlgorithm {
   );
 
   ///Set of all values of [LayoutAlgorithm].
-  static final Set<LayoutAlgorithm> values = [
+  static final Set<LayoutAlgorithm> values = {
     LayoutAlgorithm.NORMAL,
     LayoutAlgorithm.TEXT_AUTOSIZING,
-  ].toSet();
+  };
 
   ///Gets a possible [LayoutAlgorithm] instance from [String] value.
   static LayoutAlgorithm? fromValue(String? value) {

@@ -214,7 +214,7 @@ class ProcessFailedKind {
       });
 
   ///Set of all values of [ProcessFailedKind].
-  static final Set<ProcessFailedKind> values = [
+  static final Set<ProcessFailedKind> values = {
     ProcessFailedKind.BROWSER_PROCESS_EXITED,
     ProcessFailedKind.FRAME_RENDER_PROCESS_EXITED,
     ProcessFailedKind.GPU_PROCESS_EXITED,
@@ -225,7 +225,7 @@ class ProcessFailedKind {
     ProcessFailedKind.SANDBOX_HELPER_PROCESS_EXITED,
     ProcessFailedKind.UNKNOWN_PROCESS_EXITED,
     ProcessFailedKind.UTILITY_PROCESS_EXITED,
-  ].toSet();
+  };
 
   ///Gets a possible [ProcessFailedKind] instance from [String] value.
   static ProcessFailedKind? fromValue(String? value) {

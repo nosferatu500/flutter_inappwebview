@@ -24,10 +24,10 @@ class JsPromptResponseAction {
   static const CONFIRM = JsPromptResponseAction._internal(0, 0);
 
   ///Set of all values of [JsPromptResponseAction].
-  static final Set<JsPromptResponseAction> values = [
+  static final Set<JsPromptResponseAction> values = {
     JsPromptResponseAction.CANCEL,
     JsPromptResponseAction.CONFIRM,
-  ].toSet();
+  };
 
   ///Gets a possible [JsPromptResponseAction] instance from [int] value.
   static JsPromptResponseAction? fromValue(int? value) {
