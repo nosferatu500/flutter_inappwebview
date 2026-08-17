@@ -573,7 +573,7 @@ class MockPlatformWebViewEnvironment extends PlatformWebViewEnvironment
     String? browserExecutableFolder,
   }) async => null;
 
-  @override
+  // Not declared by PlatformWebViewEnvironment - no @override.
   Future<List<BrowserProcessInfo>> getBrowserProcessInfo() async => [];
 }
 
@@ -587,7 +587,7 @@ class MockPlatformProcessGlobalConfig extends PlatformProcessGlobalConfig
     TargetPlatform? platform,
   }) => true;
 
-  @override
+  // Not declared by PlatformProcessGlobalConfig - no @override.
   Future<void> setDataDirectorySuffix({required String suffix}) async {}
 }
 
@@ -850,6 +850,7 @@ class MockPlatformChromeSafariBrowser extends PlatformChromeSafariBrowser
   @override
   void dispose() {
     eventHandler = null;
+    super.dispose();
   }
 }
 

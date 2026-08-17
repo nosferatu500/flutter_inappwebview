@@ -30,7 +30,7 @@ class ParameterValueHint<T> {
 /// and a `name()` method.
 class EnumParameterValueHint<T> extends ParameterValueHint<Object?> {
   /// The list of all available enum values.
-  /// Accepts both List<T> and Set<T> (will be converted to List internally).
+  /// Accepts both `List<T>` and `Set<T>` (will be converted to List internally).
   final List<T> enumValues;
 
   /// Whether the enum should allow multiple selections.
@@ -44,7 +44,7 @@ class EnumParameterValueHint<T> extends ParameterValueHint<Object?> {
   final String Function(T)? displayName;
 
   /// Creates an enum parameter value hint.
-  /// [values] can be a List<T> or Set<T> (common for custom enum-like classes).
+  /// [values] can be a `List<T>` or `Set<T>` (common for custom enum-like classes).
   const EnumParameterValueHint(
     Object? value,
     this.enumValues, {
