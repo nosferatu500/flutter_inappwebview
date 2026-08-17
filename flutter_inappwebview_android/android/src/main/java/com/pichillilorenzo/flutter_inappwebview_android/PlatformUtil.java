@@ -52,11 +52,13 @@ public class PlatformUtil extends ChannelDelegateImpl {
     if (locale == null) {
       return Locale.US;
     }
-    String[] localeSplit = locale.split("_");
-    String language = localeSplit[0];
-    String country = localeSplit.length > 1 ? localeSplit[1] : "";
-    String variant = localeSplit.length > 2 ? localeSplit[2] : "";
-    return new Locale(language, country, variant);
+    // Replaces the deprecated Locale(language, country, variant) constructor. Locale.of() is the
+    // direct successor but requires API 36, well above our minSdk 30, and Locale.Builder throws
+    // IllformedLocaleException on malformed subtags where the old constructor tolerated anything —
+    // this value comes straight from the public formatDate(locale: "...") API, so it must stay
+    // lenient. Locale.forLanguageTag() is lenient in the same way: it ignores ill-formed subtags
+    // rather than throwing. It parses BCP 47 tags, which use '-' where our API uses '_'.
+    return Locale.forLanguageTag(locale.replace('_', '-'));
   }
 
   public static String formatDate(long date, String format, Locale locale, TimeZone timezone) {

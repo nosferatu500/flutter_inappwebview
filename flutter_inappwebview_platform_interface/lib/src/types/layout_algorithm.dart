@@ -21,9 +21,4 @@ class LayoutAlgorithm_ {
   static const TEXT_AUTOSIZING = const LayoutAlgorithm_._internal(
     "TEXT_AUTOSIZING",
   );
-
-  ///NARROW_COLUMNS makes all columns no wider than the screen if possible. Only use this for API levels prior to `Build.VERSION_CODES.KITKAT`.
-  static const NARROW_COLUMNS = const LayoutAlgorithm_._internal(
-    "NARROW_COLUMNS",
-  );
 }

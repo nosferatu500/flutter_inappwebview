@@ -1,6 +1,5 @@
 package com.pichillilorenzo.flutter_inappwebview_android.webview.in_app_webview;
 
-import static android.webkit.WebSettings.LayoutAlgorithm.NARROW_COLUMNS;
 import static android.webkit.WebSettings.LayoutAlgorithm.NORMAL;
 
 import android.annotation.SuppressLint;
@@ -649,13 +648,11 @@ public class InAppWebViewSettings implements ISettings<InAppWebViewInterface> {
   private void setLayoutAlgorithm(String value) {
     if (value != null) {
       switch (value) {
-        case "NARROW_COLUMNS":
-          layoutAlgorithm = NARROW_COLUMNS;
         case "NORMAL":
           layoutAlgorithm = NORMAL;
+          break;
         case "TEXT_AUTOSIZING":
           layoutAlgorithm = WebSettings.LayoutAlgorithm.TEXT_AUTOSIZING;
-
           break;
       }
     }
@@ -668,9 +665,6 @@ public class InAppWebViewSettings implements ISettings<InAppWebViewInterface> {
           return "NORMAL";
         case TEXT_AUTOSIZING:
           return "TEXT_AUTOSIZING";
-
-        case NARROW_COLUMNS:
-          return "NARROW_COLUMNS";
       }
     }
     return null;

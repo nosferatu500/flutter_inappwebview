@@ -17,12 +17,6 @@ class LayoutAlgorithm {
     Function nativeValue,
   ) => LayoutAlgorithm._internal(value, nativeValue());
 
-  ///NARROW_COLUMNS makes all columns no wider than the screen if possible. Only use this for API levels prior to `Build.VERSION_CODES.KITKAT`.
-  static const NARROW_COLUMNS = LayoutAlgorithm._internal(
-    'NARROW_COLUMNS',
-    'NARROW_COLUMNS',
-  );
-
   ///NORMAL means no rendering changes. This is the recommended choice for maximum compatibility across different platforms and Android versions.
   static const NORMAL = LayoutAlgorithm._internal('NORMAL', 'NORMAL');
 
@@ -37,7 +31,6 @@ class LayoutAlgorithm {
 
   ///Set of all values of [LayoutAlgorithm].
   static final Set<LayoutAlgorithm> values = [
-    LayoutAlgorithm.NARROW_COLUMNS,
     LayoutAlgorithm.NORMAL,
     LayoutAlgorithm.TEXT_AUTOSIZING,
   ].toSet();
@@ -109,8 +102,6 @@ class LayoutAlgorithm {
   ///Gets the name of the value.
   String name() {
     switch (_value) {
-      case 'NARROW_COLUMNS':
-        return 'NARROW_COLUMNS';
       case 'NORMAL':
         return 'NORMAL';
       case 'TEXT_AUTOSIZING':
