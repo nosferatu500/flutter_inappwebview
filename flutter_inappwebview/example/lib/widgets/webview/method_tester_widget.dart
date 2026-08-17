@@ -1367,13 +1367,6 @@ class _MethodTesterWidgetState extends State<MethodTesterWidget> {
             },
           ),
           MethodEntry(
-            description: 'Starts Safe Browsing',
-            methodEnum: PlatformInAppWebViewControllerMethod.startSafeBrowsing,
-            execute: (controller, params) async {
-              return await controller.startSafeBrowsing();
-            },
-          ),
-          MethodEntry(
             description: 'Opens DevTools',
             methodEnum: PlatformInAppWebViewControllerMethod.openDevTools,
             execute: (controller, params) async {

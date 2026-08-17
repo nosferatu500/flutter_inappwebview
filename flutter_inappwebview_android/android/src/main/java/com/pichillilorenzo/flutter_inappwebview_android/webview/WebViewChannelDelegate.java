@@ -277,18 +277,6 @@ public class WebViewChannelDelegate extends ChannelDelegateImpl {
       case getCopyBackForwardList:
         result.success((webView != null) ? webView.getCopyBackForwardList() : null);
         break;
-      case startSafeBrowsing:
-        if (webView != null && WebViewFeature.isFeatureSupported(WebViewFeature.START_SAFE_BROWSING)) {
-          WebViewCompat.startSafeBrowsing(webView.getContext(), new ValueCallback<Boolean>() {
-            @Override
-            public void onReceiveValue(Boolean success) {
-              result.success(success);
-            }
-          });
-        } else {
-          result.success(false);
-        }
-        break;
       case clearSslPreferences:
         if (webView != null)
           webView.clearSslPreferences();

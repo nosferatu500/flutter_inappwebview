@@ -12,12 +12,6 @@ void supported() {
       );
       expect(
         InAppWebViewController.isMethodSupported(
-          PlatformInAppWebViewControllerMethod.startSafeBrowsing,
-        ),
-        defaultTargetPlatform == TargetPlatform.android,
-      );
-      expect(
-        InAppWebViewController.isMethodSupported(
           PlatformInAppWebViewControllerMethod.createPdf,
         ),
         [

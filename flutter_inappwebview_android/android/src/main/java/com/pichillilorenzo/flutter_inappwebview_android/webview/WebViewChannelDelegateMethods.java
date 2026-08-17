@@ -29,7 +29,6 @@ public enum WebViewChannelDelegateMethods {
   hide,
   isHidden,
   getCopyBackForwardList,
-  startSafeBrowsing,
   clearSslPreferences,
   scrollTo,
   scrollBy,

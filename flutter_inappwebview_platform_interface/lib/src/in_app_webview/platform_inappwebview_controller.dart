@@ -2901,34 +2901,6 @@ abstract class PlatformInAppWebViewController extends PlatformInterface
     );
   }
 
-  ///{@template flutter_inappwebview_platform_interface.PlatformInAppWebViewController.startSafeBrowsing}
-  ///Starts Safe Browsing initialization.
-  ///
-  ///URL loads are not guaranteed to be protected by Safe Browsing until after the this method returns true.
-  ///Safe Browsing is not fully supported on all devices. For those devices this method will returns false.
-  ///
-  ///This should not be called if Safe Browsing has been disabled by manifest tag or [InAppWebViewSettings.safeBrowsingEnabled].
-  ///This prepares resources used for Safe Browsing.
-  ///{@endtemplate}
-  ///
-  ///{@macro flutter_inappwebview_platform_interface.PlatformInAppWebViewController.startSafeBrowsing.supported_platforms}
-  @SupportedPlatforms(
-    platforms: [
-      AndroidPlatform(
-        apiName: 'WebView.startSafeBrowsing',
-        apiUrl:
-            'https://developer.android.com/reference/android/webkit/WebView#startSafeBrowsing(android.content.Context,%20android.webkit.ValueCallback%3Cjava.lang.Boolean%3E)',
-        note:
-            'This method should only be called if [WebViewFeature.isFeatureSupported] returns `true` for [WebViewFeature.START_SAFE_BROWSING].',
-      ),
-    ],
-  )
-  Future<bool> startSafeBrowsing() {
-    throw UnimplementedError(
-      '${PlatformInAppWebViewControllerMethod.startSafeBrowsing.name} is not implemented on the current platform',
-    );
-  }
-
   ///{@template flutter_inappwebview_platform_interface.PlatformInAppWebViewController.clearSslPreferences}
   ///Clears the SSL preferences table stored in response to proceeding with SSL certificate errors.
   ///{@endtemplate}

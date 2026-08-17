@@ -220,12 +220,6 @@ class WebViewFeature {
         'STARTUP_FEATURE_SET_DIRECTORY_BASE_PATHS',
       );
 
-  ///Feature for [isFeatureSupported]. This feature covers [InAppWebViewController.startSafeBrowsing].
-  static const START_SAFE_BROWSING = WebViewFeature._internal(
-    'START_SAFE_BROWSING',
-    'START_SAFE_BROWSING',
-  );
-
   ///
   static const TRACING_CONTROLLER_BASIC_USAGE = WebViewFeature._internal(
     'TRACING_CONTROLLER_BASIC_USAGE',
@@ -340,7 +334,6 @@ class WebViewFeature {
     WebViewFeature.SHOULD_OVERRIDE_WITH_REDIRECTS,
     WebViewFeature.STARTUP_FEATURE_SET_DATA_DIRECTORY_SUFFIX,
     WebViewFeature.STARTUP_FEATURE_SET_DIRECTORY_BASE_PATHS,
-    WebViewFeature.START_SAFE_BROWSING,
     WebViewFeature.TRACING_CONTROLLER_BASIC_USAGE,
     WebViewFeature.VISUAL_STATE_CALLBACK,
     WebViewFeature.WEB_MESSAGE_ARRAY_BUFFER,
@@ -499,8 +492,6 @@ class WebViewFeature {
         return 'STARTUP_FEATURE_SET_DATA_DIRECTORY_SUFFIX';
       case 'STARTUP_FEATURE_SET_DIRECTORY_BASE_PATHS':
         return 'STARTUP_FEATURE_SET_DIRECTORY_BASE_PATHS';
-      case 'START_SAFE_BROWSING':
-        return 'START_SAFE_BROWSING';
       case 'TRACING_CONTROLLER_BASIC_USAGE':
         return 'TRACING_CONTROLLER_BASIC_USAGE';
       case 'VISUAL_STATE_CALLBACK':

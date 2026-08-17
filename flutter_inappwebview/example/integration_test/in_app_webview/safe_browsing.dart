@@ -23,9 +23,6 @@ void safeBrowsing() {
               javaScriptEnabled: false,
               safeBrowsingEnabled: true,
             ),
-            onWebViewCreated: (controller) {
-              controller.startSafeBrowsing();
-            },
             onLoadStop: (controller, url) {
               pageLoaded.complete(url!.toString());
             },

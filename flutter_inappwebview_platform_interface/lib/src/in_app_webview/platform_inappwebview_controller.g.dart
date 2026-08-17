@@ -2291,18 +2291,6 @@ enum PlatformInAppWebViewControllerMethod {
   ///{@endtemplate}
   showSaveAsUI,
 
-  ///Can be used to check if the [PlatformInAppWebViewController.startSafeBrowsing] method is supported at runtime.
-  ///
-  ///{@template flutter_inappwebview_platform_interface.PlatformInAppWebViewController.startSafeBrowsing.supported_platforms}
-  ///
-  ///**Officially Supported Platforms/Implementations**:
-  ///- Android WebView ([Official API - WebView.startSafeBrowsing](https://developer.android.com/reference/android/webkit/WebView#startSafeBrowsing(android.content.Context,%20android.webkit.ValueCallback%3Cjava.lang.Boolean%3E))):
-  ///    - This method should only be called if [WebViewFeature.isFeatureSupported] returns `true` for [WebViewFeature.START_SAFE_BROWSING].
-  ///
-  ///Use the [PlatformInAppWebViewController.isMethodSupported] method to check if this method is supported at runtime.
-  ///{@endtemplate}
-  startSafeBrowsing,
-
   ///Can be used to check if the [PlatformInAppWebViewController.stopLoading] method is supported at runtime.
   ///
   ///{@template flutter_inappwebview_platform_interface.PlatformInAppWebViewController.stopLoading.supported_platforms}
@@ -3438,11 +3426,6 @@ extension _PlatformInAppWebViewControllerMethodSupported
         return ((kIsWeb && platform != null) || !kIsWeb) &&
             [
               TargetPlatform.windows,
-            ].contains(platform ?? defaultTargetPlatform);
-      case PlatformInAppWebViewControllerMethod.startSafeBrowsing:
-        return ((kIsWeb && platform != null) || !kIsWeb) &&
-            [
-              TargetPlatform.android,
             ].contains(platform ?? defaultTargetPlatform);
       case PlatformInAppWebViewControllerMethod.stopLoading:
         return kIsWeb && platform == null

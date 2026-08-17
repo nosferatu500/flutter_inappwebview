@@ -295,11 +295,6 @@ class WebViewFeature_ {
     "SHOULD_OVERRIDE_WITH_REDIRECTS",
   );
 
-  ///Feature for [isFeatureSupported]. This feature covers [InAppWebViewController.startSafeBrowsing].
-  static const START_SAFE_BROWSING = const WebViewFeature_._internal(
-    "START_SAFE_BROWSING",
-  );
-
   ///
   static const TRACING_CONTROLLER_BASIC_USAGE = const WebViewFeature_._internal(
     "TRACING_CONTROLLER_BASIC_USAGE",

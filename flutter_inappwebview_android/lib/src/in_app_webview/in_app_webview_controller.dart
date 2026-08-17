@@ -2469,13 +2469,6 @@ class AndroidInAppWebViewController extends PlatformInAppWebViewController
   }
 
   @override
-  Future<bool> startSafeBrowsing() async {
-    Map<String, dynamic> args = <String, dynamic>{};
-    return await channel?.invokeMethod<bool>('startSafeBrowsing', args) ??
-        false;
-  }
-
-  @override
   Future<void> clearSslPreferences() async {
     Map<String, dynamic> args = <String, dynamic>{};
     await channel?.invokeMethod('clearSslPreferences', args);

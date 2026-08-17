@@ -543,11 +543,6 @@ class InAppWebViewController {
   ///{@macro flutter_inappwebview_platform_interface.PlatformInAppWebViewController.canScrollHorizontally.supported_platforms}
   Future<bool> canScrollHorizontally() => platform.canScrollHorizontally();
 
-  ///{@macro flutter_inappwebview_platform_interface.PlatformInAppWebViewController.startSafeBrowsing}
-  ///
-  ///{@macro flutter_inappwebview_platform_interface.PlatformInAppWebViewController.startSafeBrowsing.supported_platforms}
-  Future<bool> startSafeBrowsing() => platform.startSafeBrowsing();
-
   ///{@macro flutter_inappwebview_platform_interface.PlatformInAppWebViewController.clearSslPreferences}
   ///
   ///{@macro flutter_inappwebview_platform_interface.PlatformInAppWebViewController.clearSslPreferences.supported_platforms}

@@ -1422,13 +1422,6 @@ class SupportChecker {
 
         // Android-specific methods
         ApiMethodDefinition(
-          name: PlatformInAppWebViewControllerMethod.startSafeBrowsing.name,
-          signature: 'Future<bool> startSafeBrowsing()',
-          description: 'Starts the Safe Browsing initialization.',
-          className: className,
-          category: 'Android',
-        ),
-        ApiMethodDefinition(
           name: PlatformInAppWebViewControllerMethod.saveWebArchive.name,
           signature:
               'Future<String?> saveWebArchive({required String basename, ...})',
