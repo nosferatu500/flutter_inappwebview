@@ -36,12 +36,12 @@ class FetchRequestPasswordCredential extends FetchRequestCredential {
       return null;
     }
     final instance = FetchRequestPasswordCredential(
+      type: map['type'],
       iconURL: map['iconURL'] != null ? WebUri(map['iconURL']) : null,
       id: map['id'],
       name: map['name'],
       password: map['password'],
     );
-    instance.type = map['type'];
     return instance;
   }
 

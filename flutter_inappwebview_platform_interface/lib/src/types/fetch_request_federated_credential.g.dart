@@ -40,13 +40,13 @@ class FetchRequestFederatedCredential extends FetchRequestCredential {
       return null;
     }
     final instance = FetchRequestFederatedCredential(
+      type: map['type'],
       iconURL: map['iconURL'] != null ? WebUri(map['iconURL']) : null,
       id: map['id'],
       name: map['name'],
       protocol: map['protocol'],
       provider: map['provider'],
     );
-    instance.type = map['type'];
     return instance;
   }
 

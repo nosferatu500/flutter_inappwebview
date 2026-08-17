@@ -138,7 +138,7 @@ class X509Extension {
 
 /// Recognition for Basic Constraint Extension (2.5.29.19)
 class BasicConstraintExtension extends X509Extension {
-  BasicConstraintExtension({required block}) : super(block: block);
+  BasicConstraintExtension({required super.block});
 
   bool get isCA {
     var data = valueAsBlock?.subAtIndex(0)?.subAtIndex(0)?.value;
@@ -169,7 +169,7 @@ class BasicConstraintExtension extends X509Extension {
 
 /// Recognition for Subject Key Identifier Extension (2.5.29.14)
 class SubjectKeyIdentifierExtension extends X509Extension {
-  SubjectKeyIdentifierExtension({required block}) : super(block: block);
+  SubjectKeyIdentifierExtension({required super.block});
 
   @override
   List<int>? get value {
@@ -216,7 +216,7 @@ class AuthorityInfoAccess {
 
 /// Recognition for Authority Info Access Extension (1.3.6.1.5.5.7.1.1)
 class AuthorityInfoAccessExtension extends X509Extension {
-  AuthorityInfoAccessExtension({required block}) : super(block: block);
+  AuthorityInfoAccessExtension({required super.block});
 
   List<AuthorityInfoAccess>? get infoAccess {
     if (valueAsBlock == null) {
@@ -259,7 +259,7 @@ class AuthorityInfoAccessExtension extends X509Extension {
 
 /// Recognition for Authority Key Identifier Extension (2.5.29.35)
 class AuthorityKeyIdentifierExtension extends X509Extension {
-  AuthorityKeyIdentifierExtension({required block}) : super(block: block);
+  AuthorityKeyIdentifierExtension({required super.block});
 
   ///AuthorityKeyIdentifier ::= SEQUENCE {
   ///   keyIdentifier             [0] KeyIdentifier           OPTIONAL,
@@ -385,7 +385,7 @@ class CertificatePolicy {
 
 /// Recognition for Certificate Policies Extension (2.5.29.32)
 class CertificatePoliciesExtension extends X509Extension {
-  CertificatePoliciesExtension({required block}) : super(block: block);
+  CertificatePoliciesExtension({required super.block});
 
   List<CertificatePolicy>? get policies {
     if (valueAsBlock == null) {
@@ -447,7 +447,7 @@ class CertificatePoliciesExtension extends X509Extension {
 }
 
 class CRLDistributionPointsExtension extends X509Extension {
-  CRLDistributionPointsExtension({required block}) : super(block: block);
+  CRLDistributionPointsExtension({required super.block});
 
   List<String>? get crls {
     if (valueAsBlock == null) {

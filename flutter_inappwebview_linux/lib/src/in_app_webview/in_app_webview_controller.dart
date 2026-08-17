@@ -421,8 +421,9 @@ class LinuxInAppWebViewController extends PlatformInAppWebViewController
       case "onCloseWindow":
         if (webviewParams != null && webviewParams!.onCloseWindow != null) {
           webviewParams!.onCloseWindow!(_controllerFromPlatform);
-        } else if (_inAppBrowserEventHandler != null)
+        } else if (_inAppBrowserEventHandler != null) {
           _inAppBrowserEventHandler!.onCloseWindow();
+        }
         break;
       case "onCreateWindow":
         if ((webviewParams != null && webviewParams!.onCreateWindow != null) ||
@@ -641,14 +642,16 @@ class LinuxInAppWebViewController extends PlatformInAppWebViewController
       case "onEnterFullscreen":
         if (webviewParams != null && webviewParams!.onEnterFullscreen != null) {
           webviewParams!.onEnterFullscreen!(_controllerFromPlatform);
-        } else if (_inAppBrowserEventHandler != null)
+        } else if (_inAppBrowserEventHandler != null) {
           _inAppBrowserEventHandler!.onEnterFullscreen();
+        }
         break;
       case "onExitFullscreen":
         if (webviewParams != null && webviewParams!.onExitFullscreen != null) {
           webviewParams!.onExitFullscreen!(_controllerFromPlatform);
-        } else if (_inAppBrowserEventHandler != null)
+        } else if (_inAppBrowserEventHandler != null) {
           _inAppBrowserEventHandler!.onExitFullscreen();
+        }
         break;
       case "onFaviconChanged":
         if ((webviewParams != null &&
@@ -1042,14 +1045,16 @@ class LinuxInAppWebViewController extends PlatformInAppWebViewController
           case "onWindowFocus":
             if (webviewParams != null && webviewParams!.onWindowFocus != null) {
               webviewParams!.onWindowFocus!(_controllerFromPlatform);
-            } else if (_inAppBrowserEventHandler != null)
+            } else if (_inAppBrowserEventHandler != null) {
               _inAppBrowserEventHandler!.onWindowFocus();
+            }
             return null;
           case "onWindowBlur":
             if (webviewParams != null && webviewParams!.onWindowBlur != null) {
               webviewParams!.onWindowBlur!(_controllerFromPlatform);
-            } else if (_inAppBrowserEventHandler != null)
+            } else if (_inAppBrowserEventHandler != null) {
               _inAppBrowserEventHandler!.onWindowBlur();
+            }
             return null;
           case "onInjectedScriptLoaded":
             String id = handlerData.args[0];
@@ -1118,7 +1123,7 @@ class LinuxInAppWebViewController extends PlatformInAppWebViewController
         if (_javaScriptHandlersMap.containsKey(handlerName)) {
           // convert result to json
           try {
-            var jsHandlerResult;
+            dynamic jsHandlerResult;
             if (_javaScriptHandlersMap[handlerName]
                 is JavaScriptHandlerFunction) {
               jsHandlerResult =

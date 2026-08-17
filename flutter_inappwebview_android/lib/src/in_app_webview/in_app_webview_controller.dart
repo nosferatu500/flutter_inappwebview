@@ -412,8 +412,9 @@ class AndroidInAppWebViewController extends PlatformInAppWebViewController
       case "onCloseWindow":
         if (webviewParams != null && webviewParams!.onCloseWindow != null) {
           webviewParams!.onCloseWindow!(_controllerFromPlatform);
-        } else if (_inAppBrowserEventHandler != null)
+        } else if (_inAppBrowserEventHandler != null) {
           _inAppBrowserEventHandler!.onCloseWindow();
+        }
         break;
       case "onTitleChanged":
         if ((webviewParams != null && webviewParams!.onTitleChanged != null) ||
@@ -1036,14 +1037,16 @@ class AndroidInAppWebViewController extends PlatformInAppWebViewController
       case "onEnterFullscreen":
         if (webviewParams != null && webviewParams!.onEnterFullscreen != null) {
           webviewParams!.onEnterFullscreen!(_controllerFromPlatform);
-        } else if (_inAppBrowserEventHandler != null)
+        } else if (_inAppBrowserEventHandler != null) {
           _inAppBrowserEventHandler!.onEnterFullscreen();
+        }
         break;
       case "onExitFullscreen":
         if (webviewParams != null && webviewParams!.onExitFullscreen != null) {
           webviewParams!.onExitFullscreen!(_controllerFromPlatform);
-        } else if (_inAppBrowserEventHandler != null)
+        } else if (_inAppBrowserEventHandler != null) {
           _inAppBrowserEventHandler!.onExitFullscreen();
+        }
         break;
       case "onOverScrolled":
         if ((webviewParams != null && webviewParams!.onOverScrolled != null) ||
@@ -1069,14 +1072,16 @@ class AndroidInAppWebViewController extends PlatformInAppWebViewController
       case "onWindowFocus":
         if (webviewParams != null && webviewParams!.onWindowFocus != null) {
           webviewParams!.onWindowFocus!(_controllerFromPlatform);
-        } else if (_inAppBrowserEventHandler != null)
+        } else if (_inAppBrowserEventHandler != null) {
           _inAppBrowserEventHandler!.onWindowFocus();
+        }
         break;
       case "onWindowBlur":
         if (webviewParams != null && webviewParams!.onWindowBlur != null) {
           webviewParams!.onWindowBlur!(_controllerFromPlatform);
-        } else if (_inAppBrowserEventHandler != null)
+        } else if (_inAppBrowserEventHandler != null) {
           _inAppBrowserEventHandler!.onWindowBlur();
+        }
         break;
       case "onPrintRequest":
         if ((webviewParams != null && webviewParams!.onPrintRequest != null) ||
@@ -1363,14 +1368,16 @@ class AndroidInAppWebViewController extends PlatformInAppWebViewController
           case "onWindowFocus":
             if (webviewParams != null && webviewParams!.onWindowFocus != null) {
               webviewParams!.onWindowFocus!(_controllerFromPlatform);
-            } else if (_inAppBrowserEventHandler != null)
+            } else if (_inAppBrowserEventHandler != null) {
               _inAppBrowserEventHandler!.onWindowFocus();
+            }
             return null;
           case "onWindowBlur":
             if (webviewParams != null && webviewParams!.onWindowBlur != null) {
               webviewParams!.onWindowBlur!(_controllerFromPlatform);
-            } else if (_inAppBrowserEventHandler != null)
+            } else if (_inAppBrowserEventHandler != null) {
               _inAppBrowserEventHandler!.onWindowBlur();
+            }
             return null;
           case "onInjectedScriptLoaded":
             String id = handlerData.args[0];
@@ -1393,7 +1400,7 @@ class AndroidInAppWebViewController extends PlatformInAppWebViewController
         if (_javaScriptHandlersMap.containsKey(handlerName)) {
           // convert result to json
           try {
-            var jsHandlerResult;
+            dynamic jsHandlerResult;
             if (_javaScriptHandlersMap[handlerName]
                 is JavaScriptHandlerFunction) {
               jsHandlerResult =

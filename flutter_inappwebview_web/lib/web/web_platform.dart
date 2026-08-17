@@ -79,7 +79,7 @@ Future<String?> _dartNativeAsyncCommunication(
   if (InAppWebViewManager.webViews.containsKey(viewId)) {
     var webViewHtmlElement =
         InAppWebViewManager.webViews[viewId] as InAppWebViewWebElement;
-    var result;
+    dynamic result;
     try {
       switch (method) {
         case 'onCreateWindow':

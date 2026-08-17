@@ -67,7 +67,7 @@ class X509Certificate {
   }
 
   ///Read possible PEM encoding
-  static Uint8List? decodeToDER({required pemData}) {
+  static Uint8List? decodeToDER({required List<int> pemData}) {
     var pem = String.fromCharCodes(pemData);
     if (pem.contains(X509Certificate.beginPemBlock)) {
       var lines = pem.split("\n");

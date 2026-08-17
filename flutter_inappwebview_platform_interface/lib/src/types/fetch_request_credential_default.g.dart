@@ -20,8 +20,10 @@ class FetchRequestCredentialDefault extends FetchRequestCredential {
     if (map == null) {
       return null;
     }
-    final instance = FetchRequestCredentialDefault(value: map['value']);
-    instance.type = map['type'];
+    final instance = FetchRequestCredentialDefault(
+      type: map['type'],
+      value: map['value'],
+    );
     return instance;
   }
 
