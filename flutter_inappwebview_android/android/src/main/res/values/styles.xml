@@ -5,7 +5,11 @@
     </style>
 
     <style name="AppTheme" parent="Theme.AppCompat.Light.NoActionBar">
-
+        <!-- InAppBrowserActivity lays out edge-to-edge and pads its toolbar by the status bar
+             inset, so the toolbar paints its own background behind the status bar. Declared here
+             instead of via the deprecated Window.setStatusBarColor(); ignored on API 35+, where
+             the platform enforces a transparent status bar anyway. -->
+        <item name="android:statusBarColor">@android:color/transparent</item>
     </style>
 
     <style name="ThemeTransparent" parent="android:Theme">

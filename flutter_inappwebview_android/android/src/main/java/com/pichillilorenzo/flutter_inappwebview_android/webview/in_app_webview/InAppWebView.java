@@ -151,7 +151,7 @@ final public class InAppWebView extends InputAwareWebView implements InAppWebVie
   @Nullable
   public Map<String, Object> contextMenu = null;
   public Handler mainLooperHandler = new Handler(getWebViewLooper());
-  static Handler mHandler = new Handler();
+  static Handler mHandler = new Handler(Looper.getMainLooper());
 
   public Runnable checkScrollStoppedTask;
   public int initialPositionScrollStoppedTask;
@@ -1561,6 +1561,12 @@ final public class InAppWebView extends InputAwareWebView implements InAppWebVie
     return rebuildActionMode(super.startActionMode(callback, type), callback);
   }
 
+  // AbsoluteLayout.LayoutParams is deprecated, but WebView extends AbsoluteLayout and
+  // AbsoluteLayout.onLayout casts every child's params to it. Any other LayoutParams type is
+  // silently replaced by ViewGroup.addView via generateLayoutParams, which drops the x/y
+  // position and would render the floating context menu at (0,0). There is no alternative
+  // while the menu is a child of the WebView.
+  @SuppressWarnings("deprecation")
   public ActionMode rebuildActionMode(
           final ActionMode actionMode,
           final ActionMode.Callback callback
@@ -1683,6 +1689,12 @@ final public class InAppWebView extends InputAwareWebView implements InAppWebVie
     return actionMode;
   }
 
+  // AbsoluteLayout.LayoutParams is deprecated, but WebView extends AbsoluteLayout and
+  // AbsoluteLayout.onLayout casts every child's params to it. Any other LayoutParams type is
+  // silently replaced by ViewGroup.addView via generateLayoutParams, which drops the x/y
+  // position and would render the floating context menu at (0,0). There is no alternative
+  // while the menu is a child of the WebView.
+  @SuppressWarnings("deprecation")
   public void onFloatingActionGlobalLayout(int x, int y) {
     int maxWidth = getWidth();
     int maxHeight = getHeight();

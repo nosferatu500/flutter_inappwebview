@@ -43,6 +43,10 @@ import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AlertDialog;
 import androidx.core.content.ContextCompat;
 import androidx.core.content.FileProvider;
+import androidx.core.view.ViewCompat;
+import androidx.core.view.WindowCompat;
+import androidx.core.view.WindowInsetsCompat;
+import androidx.core.view.WindowInsetsControllerCompat;
 
 import com.pichillilorenzo.flutter_inappwebview_android.InAppWebViewFileProvider;
 import com.pichillilorenzo.flutter_inappwebview_android.InAppWebViewFlutterPlugin;
@@ -84,26 +88,13 @@ public class InAppWebViewChromeClient extends WebChromeClient implements PluginR
   protected static final FrameLayout.LayoutParams FULLSCREEN_LAYOUT_PARAMS = new FrameLayout.LayoutParams(
           ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT, Gravity.CENTER);
 
-  protected static final int FULLSCREEN_SYSTEM_UI_VISIBILITY_KITKAT = View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION |
-          View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN |
-          View.SYSTEM_UI_FLAG_LAYOUT_STABLE |
-          View.SYSTEM_UI_FLAG_HIDE_NAVIGATION |
-          View.SYSTEM_UI_FLAG_FULLSCREEN |
-          View.SYSTEM_UI_FLAG_IMMERSIVE |
-          View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY;
-
-  protected static final int FULLSCREEN_SYSTEM_UI_VISIBILITY = View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION |
-          View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN |
-          View.SYSTEM_UI_FLAG_LAYOUT_STABLE |
-          View.SYSTEM_UI_FLAG_HIDE_NAVIGATION |
-          View.SYSTEM_UI_FLAG_FULLSCREEN;
-
   @Nullable
   private View mCustomView;
   @Nullable
   private WebChromeClient.CustomViewCallback mCustomViewCallback;
   private int mOriginalOrientation;
-  private int mOriginalSystemUiVisibility;
+  private int mOriginalSystemBarsBehavior;
+  private boolean mOriginalSystemBarsVisible;
   @Nullable
   public InAppWebViewFlutterPlugin plugin;
   @Nullable
@@ -161,7 +152,12 @@ public class InAppWebViewChromeClient extends WebChromeClient implements PluginR
       ((FrameLayout) decorView).removeView(this.mCustomView);
     }
     this.mCustomView = null;
-    decorView.setSystemUiVisibility(this.mOriginalSystemUiVisibility);
+    WindowInsetsControllerCompat insetsController =
+            WindowCompat.getInsetsController(activity.getWindow(), decorView);
+    insetsController.setSystemBarsBehavior(this.mOriginalSystemBarsBehavior);
+    if (this.mOriginalSystemBarsVisible) {
+      insetsController.show(WindowInsetsCompat.Type.systemBars());
+    }
     activity.setRequestedOrientation(this.mOriginalOrientation);
     if (this.mCustomViewCallback != null) {
       this.mCustomViewCallback.onCustomViewHidden();
@@ -194,14 +190,27 @@ public class InAppWebViewChromeClient extends WebChromeClient implements PluginR
       return;
     }
     this.mCustomView = paramView;
-    this.mOriginalSystemUiVisibility = decorView.getSystemUiVisibility();
+    WindowInsetsControllerCompat insetsController =
+            WindowCompat.getInsetsController(activity.getWindow(), decorView);
+    WindowInsetsCompat rootInsets = ViewCompat.getRootWindowInsets(decorView);
+    this.mOriginalSystemBarsVisible =
+            rootInsets == null || rootInsets.isVisible(WindowInsetsCompat.Type.systemBars());
+    this.mOriginalSystemBarsBehavior = insetsController.getSystemBarsBehavior();
     this.mOriginalOrientation = activity.getRequestedOrientation();
     this.mCustomViewCallback = paramCustomViewCallback;
     if (this.mCustomView != null) {
       this.mCustomView.setBackgroundColor(Color.BLACK);
     }
 
-    decorView.setSystemUiVisibility(FULLSCREEN_SYSTEM_UI_VISIBILITY_KITKAT);
+    // Immersive-sticky fullscreen. Replaces the SYSTEM_UI_FLAG_FULLSCREEN | _HIDE_NAVIGATION |
+    // _IMMERSIVE | _IMMERSIVE_STICKY bits of the old bitmask. The SYSTEM_UI_FLAG_LAYOUT_* bits it
+    // also carried are covered by FLAG_LAYOUT_NO_LIMITS below, which is already set here and
+    // cleared in onHideCustomView. The window's decorFitsSystemWindows state is deliberately left
+    // untouched: the host activity may legitimately own it (InAppBrowserActivity sets it false for
+    // its whole lifetime), and there is no getter to restore a previous value from.
+    insetsController.setSystemBarsBehavior(
+            WindowInsetsControllerCompat.BEHAVIOR_SHOW_TRANSIENT_BARS_BY_SWIPE);
+    insetsController.hide(WindowInsetsCompat.Type.systemBars());
 
     activity.getWindow().setFlags(WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS, WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS);
     ((FrameLayout) decorView).addView(this.mCustomView, FULLSCREEN_LAYOUT_PARAMS);

@@ -29,6 +29,8 @@ import com.pichillilorenzo.flutter_inappwebview_android.types.CustomTabsMenuItem
 import com.pichillilorenzo.flutter_inappwebview_android.types.CustomTabsSecondaryToolbar;
 import com.pichillilorenzo.flutter_inappwebview_android.types.Disposable;
 
+import androidx.core.os.BundleCompat;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -102,15 +104,15 @@ public class ChromeCustomTabsActivity extends Activity implements Disposable {
     channelDelegate = new ChromeCustomTabsChannelDelegate(this, channel);
 
     initialUrl = b.getString("url");
-    initialHeaders = (Map<String, String>) b.getSerializable("headers");
+    initialHeaders = (Map<String, String>) BundleCompat.getSerializable(b, "headers", HashMap.class);
     initialReferrer = b.getString("referrer");
     initialOtherLikelyURLs = b.getStringArrayList("otherLikelyURLs");
 
     customSettings = new ChromeCustomTabsSettings();
-    customSettings.parse((HashMap<String, Object>) b.getSerializable("settings"));
-    actionButton = CustomTabsActionButton.fromMap((Map<String, Object>) b.getSerializable("actionButton"));
-    secondaryToolbar = CustomTabsSecondaryToolbar.fromMap((Map<String, Object>) b.getSerializable("secondaryToolbar"));
-    List<Map<String, Object>> menuItemList = (List<Map<String, Object>>) b.getSerializable("menuItemList");
+    customSettings.parse((HashMap<String, Object>) BundleCompat.getSerializable(b, "settings", HashMap.class));
+    actionButton = CustomTabsActionButton.fromMap((Map<String, Object>) BundleCompat.getSerializable(b, "actionButton", HashMap.class));
+    secondaryToolbar = CustomTabsSecondaryToolbar.fromMap((Map<String, Object>) BundleCompat.getSerializable(b, "secondaryToolbar", HashMap.class));
+    List<Map<String, Object>> menuItemList = (List<Map<String, Object>>) BundleCompat.getSerializable(b, "menuItemList", ArrayList.class);
     for (Map<String, Object> menuItem : menuItemList) {
       menuItems.add(CustomTabsMenuItem.fromMap(menuItem));
     }

@@ -26,6 +26,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.view.menu.MenuBuilder;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.graphics.Insets;
+import androidx.core.os.BundleCompat;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowCompat;
 import androidx.core.view.WindowInsetsCompat;
@@ -108,7 +109,7 @@ public class InAppBrowserActivity extends AppCompatActivity implements InAppBrow
       return;
     }
 
-    Map<String, Object> settingsMap = (Map<String, Object>) b.getSerializable("settings");
+    Map<String, Object> settingsMap = (Map<String, Object>) BundleCompat.getSerializable(b, "settings", HashMap.class);
     customSettings.parse(settingsMap);
 
     windowId = b.getInt("windowId");
@@ -118,7 +119,6 @@ public class InAppBrowserActivity extends AppCompatActivity implements InAppBrow
     WindowCompat.setDecorFitsSystemWindows(getWindow(), false);
     toolbar = findViewById(R.id.toolbar);
     setSupportActionBar(toolbar);
-    getWindow().setStatusBarColor(Color.TRANSPARENT);
 
     ViewCompat.setOnApplyWindowInsetsListener(toolbar, (v, insets) -> {
       Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.statusBars());
@@ -126,7 +126,7 @@ public class InAppBrowserActivity extends AppCompatActivity implements InAppBrow
       return insets;
     });
 
-    Map<String, Object> pullToRefreshInitialSettings = (Map<String, Object>) b.getSerializable("pullToRefreshInitialSettings");
+    Map<String, Object> pullToRefreshInitialSettings = (Map<String, Object>) BundleCompat.getSerializable(b, "pullToRefreshInitialSettings", HashMap.class);
     MethodChannel pullToRefreshLayoutChannel = new MethodChannel(manager.plugin.messenger, PullToRefreshLayout.METHOD_CHANNEL_NAME_PREFIX + id);
     PullToRefreshSettings pullToRefreshSettings = new PullToRefreshSettings();
     pullToRefreshSettings.parse(pullToRefreshInitialSettings);
@@ -153,9 +153,9 @@ public class InAppBrowserActivity extends AppCompatActivity implements InAppBrow
 
     fromActivity = b.getString("fromActivity");
 
-    Map<String, Object> contextMenu = (Map<String, Object>) b.getSerializable("contextMenu");
-    List<Map<String, Object>> initialUserScripts = (List<Map<String, Object>>) b.getSerializable("initialUserScripts");
-    List<Map<String, Object>> menuItemList = (List<Map<String, Object>>) b.getSerializable("menuItems");
+    Map<String, Object> contextMenu = (Map<String, Object>) BundleCompat.getSerializable(b, "contextMenu", HashMap.class);
+    List<Map<String, Object>> initialUserScripts = (List<Map<String, Object>>) BundleCompat.getSerializable(b, "initialUserScripts", ArrayList.class);
+    List<Map<String, Object>> menuItemList = (List<Map<String, Object>>) BundleCompat.getSerializable(b, "menuItems", ArrayList.class);
     for (Map<String, Object> menuItem : menuItemList) {
       menuItems.add(InAppBrowserMenuItem.fromMap(menuItem));
     }
@@ -187,7 +187,7 @@ public class InAppBrowserActivity extends AppCompatActivity implements InAppBrow
       }
     } else {
       String initialFile = b.getString("initialFile");
-      Map<String, Object> initialUrlRequest = (Map<String, Object>) b.getSerializable("initialUrlRequest");
+      Map<String, Object> initialUrlRequest = (Map<String, Object>) BundleCompat.getSerializable(b, "initialUrlRequest", HashMap.class);
       String initialData = b.getString("initialData");
       if (initialFile != null) {
         try {
