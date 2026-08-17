@@ -538,12 +538,6 @@ class _PlatformWebMessagePort extends PlatformWebMessagePort {
   _PlatformWebMessagePort(PlatformWebMessagePortCreationParams params)
     : super.implementation(params);
 
-  static final _PlatformWebMessagePort _staticValue = _PlatformWebMessagePort(
-    const PlatformWebMessagePortCreationParams(index: 0),
-  );
-
-  factory _PlatformWebMessagePort.static() => _staticValue;
-
   @override
   Future<void> close() {
     throw UnimplementedError();

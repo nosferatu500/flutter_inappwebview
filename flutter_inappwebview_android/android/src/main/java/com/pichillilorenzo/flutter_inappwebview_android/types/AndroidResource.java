@@ -1,5 +1,6 @@
 package com.pichillilorenzo.flutter_inappwebview_android.types;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 
 import androidx.annotation.NonNull;
@@ -68,6 +69,10 @@ public class AndroidResource {
     this.defPackage = defPackage;
   }
 
+  // Resource reflection is the point of this type: the resource name/type/package arrive at
+  // runtime from Dart (e.g. a custom menu icon named by the app), so they cannot be resolved to
+  // an R constant at build time. Callers accept getIdentifier()'s 0-on-miss contract.
+  @SuppressLint("DiscouragedApi")
   public int getIdentifier(@NonNull Context ctx) {
     return ctx.getResources().getIdentifier(name, defType, defPackage);
   }

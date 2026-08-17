@@ -1,5 +1,6 @@
 package com.pichillilorenzo.flutter_inappwebview_android.webview.in_app_webview;
 
+import android.annotation.SuppressLint;
 import android.os.Handler;
 import android.os.IBinder;
 import android.view.View;
@@ -11,6 +12,10 @@ import android.view.inputmethod.InputConnection;
  *
  * https://github.com/flutter/plugins/blob/main/packages/webview_flutter/webview_flutter_android/android/src/main/java/io/flutter/plugins/webviewflutter/ThreadedInputConnectionProxyAdapterView.java
  */
+// Not inflatable from XML by design: this is a fake View handed only to InputMethodManager,
+// always constructed programmatically with the container/root/target views it proxies. A
+// (Context, AttributeSet) constructor could not populate those and would produce a broken proxy.
+@SuppressLint("ViewConstructor")
 final class ThreadedInputConnectionProxyAdapterView extends View {
     final Handler imeHandler;
     final IBinder windowToken;

@@ -53,6 +53,7 @@ import java.io.ByteArrayInputStream;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.regex.Matcher;
 
@@ -394,6 +395,11 @@ public class InAppWebViewClientCompat extends WebViewClientCompat {
     }
   }
 
+  // The plugin does not decide SSL trust: onReceivedServerTrustAuthRequest is forwarded to Dart
+  // and the app answers proceed/cancel. defaultBehaviour() below cancels, so doing nothing is
+  // secure by default — handler.proceed() runs only when the embedding app explicitly asks for
+  // it, which is the documented purpose of the callback. Lint cannot see the Dart round-trip.
+  @SuppressLint("WebViewClientOnReceivedSslError")
   @Override
   public void onReceivedSslError(final WebView view, final SslErrorHandler handler, final SslError sslError) {
     final String url = sslError.getUrl();
@@ -645,7 +651,7 @@ public class InAppWebViewClientCompat extends WebViewClientCompat {
     }
 
     final String url = request.getUrl();
-    String scheme = url.split(":")[0].toLowerCase();
+    String scheme = url.split(":")[0].toLowerCase(Locale.ROOT);
     try {
       scheme = Uri.parse(request.getUrl()).getScheme();
     } catch (Exception ignored) {}

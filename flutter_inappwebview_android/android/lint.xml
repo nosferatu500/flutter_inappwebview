@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Lint issues disabled for this module, each with the reason it does not apply here.
+  Everything not listed stays enabled: the module's lint baseline is "no findings", so a new
+  finding after a dependency or AGP bump is genuinely new and should be investigated, not added
+  to this file by reflex.
+-->
+<lint>
+
+    <!--
+      RequiresFeature (11 findings): every flagged call IS guarded by
+      WebViewFeature.isFeatureSupported(...) / isStartupFeatureSupported(...), but lint only
+      recognises the guard when it is a direct enclosing `if` in the same method. Ours are
+      routinely one frame up (the caller checks, the helper calls) or combined with other
+      conditions in the same `if`, which lint's dataflow does not follow.
+
+      Verified by hand for all 11 sites; e.g. ProcessGlobalConfigSettings.applyDirectoryBasePaths
+      is called only from a branch already testing STARTUP_FEATURE_SET_DIRECTORY_BASE_PATHS, and
+      every WebMessageChannel call sits behind the matching feature check in its caller.
+
+      Re-verify rather than trust this entry if the guard pattern in the module changes.
+    -->
+    <issue id="RequiresFeature" severity="ignore" />
+
+    <!--
+      MissingOnRenderProcessGone (3 findings): a rule added by androidx.webkit 1.16.0
+      ("Proactive Crash Prevention Lint Rule"). Both WebViewClients DO override it —
+      InAppWebViewClient.onRenderProcessGone and InAppWebViewClientCompat.onRenderProcessGone,
+      each forwarding to WebViewChannelDelegate.onRenderProcessGone so Dart can handle the crash.
+      The rule additionally fires on InAppWebView.java, which installs the client rather than
+      being one. Confirmed false positive by reading all three sites.
+    -->
+    <issue id="MissingOnRenderProcessGone" severity="ignore" />
+
+</lint>

@@ -363,6 +363,10 @@ public class InAppBrowserActivity extends AppCompatActivity implements InAppBrow
       int order = menuItem.getOrder() != null ? menuItem.getOrder() : Menu.NONE;
       MenuItem item = menu.add(Menu.NONE, menuItem.getId(), order, menuItem.getTitle());
       if (menuItem.isShowAsAction()) {
+        // Deliberate: these are menu items the embedding app explicitly declared for the
+        // InAppBrowser toolbar. SHOW_AS_ACTION_IF_ROOM would silently move them into the overflow
+        // menu on narrow screens, so an app that asked for a toolbar button would not get one.
+        //noinspection AlwaysShowAction
         item.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
       }
       Object icon = menuItem.getIcon();

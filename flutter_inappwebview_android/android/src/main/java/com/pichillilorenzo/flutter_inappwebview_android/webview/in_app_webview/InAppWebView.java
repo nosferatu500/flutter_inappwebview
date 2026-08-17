@@ -523,6 +523,11 @@ final public class InAppWebView extends InputAwareWebView implements InAppWebVie
       float m_downX;
       float m_downY;
 
+      // The listener only measures drag distance to decide whether to dismiss the floating
+      // context menu; it never consumes a click, and returns false so the WebView still receives
+      // the event and performs its own click/accessibility handling. Calling performClick() here
+      // would fire a second, synthetic click for every touch.
+      @SuppressLint("ClickableViewAccessibility")
       @Override
       public boolean onTouch(View v, MotionEvent event) {
         gestureDetector.onTouchEvent(event);
@@ -1485,6 +1490,10 @@ final public class InAppWebView extends InputAwareWebView implements InAppWebVie
   private Point lastTouch = new Point(0, 0);
 
   @Override
+  // WebView implements its own click and accessibility handling over the rendered page; there is
+  // no single "click" on the View itself for performClick() to represent. Overriding it would
+  // announce a control that does not exist to accessibility services.
+  @SuppressLint("ClickableViewAccessibility")
   public boolean onTouchEvent(MotionEvent ev) {
     if (!customSettings.isUserInteractionEnabled) {
       return true;

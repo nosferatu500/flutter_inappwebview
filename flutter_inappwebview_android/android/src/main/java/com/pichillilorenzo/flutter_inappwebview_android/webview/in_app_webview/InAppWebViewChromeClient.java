@@ -71,6 +71,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 
 import io.flutter.plugin.common.PluginRegistry;
@@ -1165,7 +1166,7 @@ public class InAppWebViewChromeClient extends WebChromeClient implements PluginR
     if (types.matches("\\.\\w+")) {
       mimeType = getMimeTypeFromExtension(types.replace(".", ""));
     }
-    return mimeType.isEmpty() || mimeType.toLowerCase().contains("image");
+    return mimeType.isEmpty() || mimeType.toLowerCase(Locale.ROOT).contains("image");
   }
 
   private Boolean acceptsImages(String[] types) {
@@ -1178,7 +1179,7 @@ public class InAppWebViewChromeClient extends WebChromeClient implements PluginR
     if (types.matches("\\.\\w+")) {
       mimeType = getMimeTypeFromExtension(types.replace(".", ""));
     }
-    return mimeType.isEmpty() || mimeType.toLowerCase().contains("video");
+    return mimeType.isEmpty() || mimeType.toLowerCase(Locale.ROOT).contains("video");
   }
 
   private Boolean acceptsVideo(String[] types) {
