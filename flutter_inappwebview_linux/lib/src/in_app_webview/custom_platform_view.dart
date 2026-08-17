@@ -662,13 +662,11 @@ class _CustomPlatformViewState extends State<CustomPlatformView> {
   void _reportSurfaceSize() async {
     final box = _key.currentContext?.findRenderObject() as RenderBox?;
     if (box != null) {
+      // Read before the await: View.of(context) must not be used across an async gap.
+      final devicePixelRatio =
+          widget.scaleFactor ?? View.of(context).devicePixelRatio;
       await _controller.ready;
-      unawaited(
-        _controller._setSize(
-          box.size,
-          widget.scaleFactor ?? window.devicePixelRatio,
-        ),
-      );
+      unawaited(_controller._setSize(box.size, devicePixelRatio));
 
       // Also report the texture offset (position within the window)
       final globalPosition = box.localToGlobal(Offset.zero);
