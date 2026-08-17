@@ -131,8 +131,6 @@ public class InAppWebViewSettings implements ISettings<InAppWebViewInterface> {
   @Nullable
   public byte[] defaultVideoPoster;
   @Nullable
-  public Set<String> requestedWithHeaderOriginAllowList;
-  @Nullable
   public Set<Pattern> javaScriptHandlersOriginAllowList;
   public Boolean javaScriptHandlersForMainFrameOnly = false;
   public Boolean javaScriptBridgeEnabled = true;
@@ -417,9 +415,6 @@ public class InAppWebViewSettings implements ISettings<InAppWebViewInterface> {
         case "defaultVideoPoster":
           defaultVideoPoster = (byte[]) value;
           break;
-        case "requestedWithHeaderOriginAllowList":
-          requestedWithHeaderOriginAllowList = new HashSet<>((List<String>) value);
-          break;
         case "javaScriptHandlersOriginAllowList":
           javaScriptHandlersOriginAllowList = new HashSet<>();
           for (String pattern : (List<String>) value) {
@@ -548,8 +543,6 @@ public class InAppWebViewSettings implements ISettings<InAppWebViewInterface> {
     settings.put("enterpriseAuthenticationAppLinkPolicyEnabled", enterpriseAuthenticationAppLinkPolicyEnabled);
     settings.put("allowBackgroundAudioPlaying", allowBackgroundAudioPlaying);
     settings.put("defaultVideoPoster", defaultVideoPoster);
-    settings.put("requestedWithHeaderOriginAllowList",
-            requestedWithHeaderOriginAllowList != null ? new ArrayList<>(requestedWithHeaderOriginAllowList) : null);
     settings.put("javaScriptHandlersOriginAllowList",
             javaScriptHandlersOriginAllowList != null ? new ArrayList<String>() {{
               for (Pattern pattern : javaScriptHandlersOriginAllowList) {
@@ -648,9 +641,6 @@ public class InAppWebViewSettings implements ISettings<InAppWebViewInterface> {
       }
       if (WebViewFeature.isFeatureSupported(WebViewFeature.ENTERPRISE_AUTHENTICATION_APP_LINK_POLICY)) {
         realSettings.put("enterpriseAuthenticationAppLinkPolicyEnabled", WebSettingsCompat.getEnterpriseAuthenticationAppLinkPolicyEnabled(settings));
-      }
-      if (WebViewFeature.isFeatureSupported(WebViewFeature.REQUESTED_WITH_HEADER_ALLOW_LIST)) {
-        realSettings.put("requestedWithHeaderOriginAllowList", new ArrayList<>(WebSettingsCompat.getRequestedWithHeaderOriginAllowList(settings)));
       }
     }
     return realSettings;

@@ -1330,26 +1330,6 @@ as it can cause framerate drops on animations in Android 9 and lower (see [Hybri
   @SupportedPlatforms(platforms: [AndroidPlatform()])
   Uint8List? defaultVideoPoster;
 
-  ///Set an allow-list of origins to receive the X-Requested-With HTTP header from the WebView owning the passed [InAppWebViewSettings].
-  ///
-  ///Historically, this header was sent on all requests from WebView, containing the app package name of the embedding app. Depending on the version of installed WebView, this may no longer be the case, as the header was deprecated in late 2022, and its use discontinued.
-  ///
-  ///Apps can use this method to restore the legacy behavior for servers that still rely on the deprecated header, but it should not be used to identify the webview to first-party servers under the control of the app developer.
-  ///
-  ///The format of the strings in the allow-list follows the origin rules of [PlatformInAppWebViewController.addWebMessageListener].
-  @SupportedPlatforms(
-    platforms: [
-      AndroidPlatform(
-        apiName: "WebSettingsCompat.setRequestedWithHeaderOriginAllowList",
-        apiUrl:
-            "https://developer.android.com/reference/androidx/webkit/WebSettingsCompat#setRequestedWithHeaderOriginAllowList(android.webkit.WebSettings,java.util.Set%3Cjava.lang.String%3E)",
-        note:
-            "available on Android only if [WebViewFeature.REQUESTED_WITH_HEADER_ALLOW_LIST] feature is supported.",
-      ),
-    ],
-  )
-  Set<String>? requestedWithHeaderOriginAllowList;
-
   ///Set to `true` to disable the bouncing of the WebView when the scrolling has reached an edge of the content. The default value is `false`.
   @SupportedPlatforms(platforms: [IOSPlatform()])
   bool? disallowOverScroll;
@@ -3279,7 +3259,6 @@ as it can cause framerate drops on animations in Android 9 and lower (see [Hybri
     this.algorithmicDarkeningAllowed = false,
     this.enterpriseAuthenticationAppLinkPolicyEnabled = true,
     this.defaultVideoPoster,
-    this.requestedWithHeaderOriginAllowList,
     this.disallowOverScroll = false,
     this.enableViewportScale = false,
     this.suppressesIncrementalRendering = false,

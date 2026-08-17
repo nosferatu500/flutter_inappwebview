@@ -120,12 +120,6 @@ class WebViewFeature {
     'RECEIVE_WEB_RESOURCE_ERROR',
   );
 
-  ///Feature for [isFeatureSupported]. This feature covers cookie attributes of [CookieManager.getCookie] and [CookieManager.getCookies] methods.
-  static const REQUESTED_WITH_HEADER_ALLOW_LIST = WebViewFeature._internal(
-    'REQUESTED_WITH_HEADER_ALLOW_LIST',
-    'REQUESTED_WITH_HEADER_ALLOW_LIST',
-  );
-
   ///Feature for [isFeatureSupported]. This feature covers [InAppWebViewController.setSafeBrowsingAllowlist].
   static const SAFE_BROWSING_ALLOWLIST = WebViewFeature._internal(
     'SAFE_BROWSING_ALLOWLIST',
@@ -330,7 +324,6 @@ class WebViewFeature {
     WebViewFeature.PROXY_OVERRIDE_REVERSE_BYPASS,
     WebViewFeature.RECEIVE_HTTP_ERROR,
     WebViewFeature.RECEIVE_WEB_RESOURCE_ERROR,
-    WebViewFeature.REQUESTED_WITH_HEADER_ALLOW_LIST,
     WebViewFeature.SAFE_BROWSING_ALLOWLIST,
     WebViewFeature.SAFE_BROWSING_ENABLE,
     WebViewFeature.SAFE_BROWSING_HIT,
@@ -474,8 +467,6 @@ class WebViewFeature {
         return 'RECEIVE_HTTP_ERROR';
       case 'RECEIVE_WEB_RESOURCE_ERROR':
         return 'RECEIVE_WEB_RESOURCE_ERROR';
-      case 'REQUESTED_WITH_HEADER_ALLOW_LIST':
-        return 'REQUESTED_WITH_HEADER_ALLOW_LIST';
       case 'SAFE_BROWSING_ALLOWLIST':
         return 'SAFE_BROWSING_ALLOWLIST';
       case 'SAFE_BROWSING_ENABLE':
