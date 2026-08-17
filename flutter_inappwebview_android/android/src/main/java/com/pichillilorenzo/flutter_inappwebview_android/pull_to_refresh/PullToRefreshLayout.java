@@ -23,6 +23,8 @@ public class PullToRefreshLayout extends SwipeRefreshLayout implements Disposabl
   public PullToRefreshChannelDelegate channelDelegate;
   public PullToRefreshSettings settings = new PullToRefreshSettings();
 
+  // See ChannelDelegateImpl: `this` is published to a platform-thread-only dispatcher.
+  @SuppressWarnings("this-escape")
   public PullToRefreshLayout(@NonNull Context context, @NonNull InAppWebViewFlutterPlugin plugin, 
                              @NonNull Object id, @NonNull PullToRefreshSettings settings) {
     super(context);

@@ -18,6 +18,13 @@ import java.util.Map;
 
 import io.flutter.plugin.common.MethodChannel;
 
+// Unchecked casts below are the Flutter codec boundary: StandardMessageCodec decodes to
+// Map<String,Object>/List<Object>, so every read of a structured value is an unverifiable
+// cast. Java cannot check these; a wrong shape throws ClassCastException at the cast site,
+// which is the intended failure mode. Suppressed at class level because the whole class is
+// that boundary. NOTE: javac does not enable -Xlint:unchecked by default; these only ever
+// appeared under -Xlint:all.
+@SuppressWarnings("unchecked")
 public class HeadlessInAppWebView implements Disposable {
   protected static final String LOG_TAG = "HeadlessInAppWebView";
   public static final String METHOD_CHANNEL_NAME_PREFIX = "com.pichillilorenzo/flutter_headless_inappwebview_";
@@ -31,6 +38,8 @@ public class HeadlessInAppWebView implements Disposable {
   @Nullable
   public InAppWebViewFlutterPlugin plugin;
 
+  // See ChannelDelegateImpl: `this` is published to a platform-thread-only dispatcher.
+  @SuppressWarnings("this-escape")
   public HeadlessInAppWebView(@NonNull final InAppWebViewFlutterPlugin plugin, @NonNull String id, @NonNull FlutterWebView flutterWebView) {
     this.id = id;
     this.plugin = plugin;

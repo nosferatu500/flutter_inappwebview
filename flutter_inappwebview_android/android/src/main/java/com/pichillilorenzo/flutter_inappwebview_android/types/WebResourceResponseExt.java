@@ -12,6 +12,13 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 
+// Unchecked casts below are the Flutter codec boundary: StandardMessageCodec decodes to
+// Map<String,Object>/List<Object>, so every read of a structured value is an unverifiable
+// cast. Java cannot check these; a wrong shape throws ClassCastException at the cast site,
+// which is the intended failure mode. Suppressed at class level because the whole class is
+// that boundary. NOTE: javac does not enable -Xlint:unchecked by default; these only ever
+// appeared under -Xlint:all.
+@SuppressWarnings("unchecked")
 public class WebResourceResponseExt {
   @Nullable
   private String contentType;

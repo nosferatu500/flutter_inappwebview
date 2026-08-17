@@ -27,6 +27,8 @@ public class PrintJobController implements Disposable  {
   @Nullable
   public PrintJobSettings settings;
 
+  // See ChannelDelegateImpl: `this` is published to a platform-thread-only dispatcher.
+  @SuppressWarnings("this-escape")
   public PrintJobController(@NonNull String id, @Nullable PrintJobSettings settings,
                             @NonNull InAppWebViewFlutterPlugin plugin) {
     this.id = id;

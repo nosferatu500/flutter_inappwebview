@@ -23,6 +23,13 @@ import java.util.UUID;
 import io.flutter.plugin.common.MethodCall;
 import io.flutter.plugin.common.MethodChannel;
 
+// Unchecked casts below are the Flutter codec boundary: StandardMessageCodec decodes to
+// Map<String,Object>/List<Object>, so every read of a structured value is an unverifiable
+// cast. Java cannot check these; a wrong shape throws ClassCastException at the cast site,
+// which is the intended failure mode. Suppressed at class level because the whole class is
+// that boundary. NOTE: javac does not enable -Xlint:unchecked by default; these only ever
+// appeared under -Xlint:all.
+@SuppressWarnings("unchecked")
 public class ChromeSafariBrowserManager extends ChannelDelegateImpl {
   protected static final String LOG_TAG = "ChromeBrowserManager";
   public static final String METHOD_CHANNEL_NAME = "com.pichillilorenzo/flutter_chromesafaribrowser";
@@ -33,6 +40,8 @@ public class ChromeSafariBrowserManager extends ChannelDelegateImpl {
   public static final Map<String, ChromeSafariBrowserManager> shared = new HashMap<>();
   public final Map<String, ChromeCustomTabsActivity> browsers = new HashMap<>();
 
+  // See ChannelDelegateImpl: `this` is published to a platform-thread-only dispatcher.
+  @SuppressWarnings("this-escape")
   public ChromeSafariBrowserManager(final InAppWebViewFlutterPlugin plugin) {
     super(new MethodChannel(plugin.messenger, METHOD_CHANNEL_NAME));
     this.id = UUID.randomUUID().toString();

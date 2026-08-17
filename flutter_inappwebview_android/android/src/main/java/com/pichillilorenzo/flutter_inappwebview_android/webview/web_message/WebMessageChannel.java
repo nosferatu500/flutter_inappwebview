@@ -38,6 +38,8 @@ public class WebMessageChannel implements Disposable {
   @Nullable
   public InAppWebViewInterface webView;
 
+  // See ChannelDelegateImpl: `this` is published to a platform-thread-only dispatcher.
+  @SuppressWarnings("this-escape")
   public WebMessageChannel(@NonNull String id, @NonNull InAppWebViewInterface webView) {
     this.id = id;
     final MethodChannel channel = new MethodChannel(webView.getPlugin().messenger, METHOD_CHANNEL_NAME_PREFIX + id);

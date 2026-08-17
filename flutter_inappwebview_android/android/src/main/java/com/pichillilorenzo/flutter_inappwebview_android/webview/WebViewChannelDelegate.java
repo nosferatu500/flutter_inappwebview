@@ -66,6 +66,13 @@ import java.util.Map;
 import io.flutter.plugin.common.MethodCall;
 import io.flutter.plugin.common.MethodChannel;
 
+// Unchecked casts below are the Flutter codec boundary: StandardMessageCodec decodes to
+// Map<String,Object>/List<Object>, so every read of a structured value is an unverifiable
+// cast. Java cannot check these; a wrong shape throws ClassCastException at the cast site,
+// which is the intended failure mode. Suppressed at class level because the whole class is
+// that boundary. NOTE: javac does not enable -Xlint:unchecked by default; these only ever
+// appeared under -Xlint:all.
+@SuppressWarnings("unchecked")
 public class WebViewChannelDelegate extends ChannelDelegateImpl {
   static final String LOG_TAG = "WebViewChannelDelegate";
 
@@ -659,6 +666,7 @@ public class WebViewChannelDelegate extends ChannelDelegateImpl {
           webView.clearFormData();
         }
         result.success(true);
+        break;
       case hideInputMethod:
         if (webView != null) {
           webView.hideInputMethod();

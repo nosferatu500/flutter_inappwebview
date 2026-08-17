@@ -21,6 +21,8 @@ public class TracingControllerManager implements Disposable {
   @Nullable
   public InAppWebViewFlutterPlugin plugin;
 
+  // See ChannelDelegateImpl: `this` is published to a platform-thread-only dispatcher.
+  @SuppressWarnings("this-escape")
   public TracingControllerManager(final InAppWebViewFlutterPlugin plugin) {
     this.plugin = plugin;
     final MethodChannel channel = new MethodChannel(plugin.messenger, METHOD_CHANNEL_NAME);

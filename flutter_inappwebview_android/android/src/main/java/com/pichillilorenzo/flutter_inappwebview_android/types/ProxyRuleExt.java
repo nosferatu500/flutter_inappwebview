@@ -24,8 +24,8 @@ public class ProxyRuleExt {
     if (map == null) {
       return null;
     }
-    String url = (String) map.get("url");
-    String schemeFilter = (String) map.get("schemeFilter");
+    String url = map.get("url");
+    String schemeFilter = map.get("schemeFilter");
     return new ProxyRuleExt(schemeFilter, url);
   }
 

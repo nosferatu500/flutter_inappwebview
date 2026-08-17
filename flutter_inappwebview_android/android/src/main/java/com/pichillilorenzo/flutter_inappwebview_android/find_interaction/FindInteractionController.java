@@ -25,6 +25,8 @@ public class FindInteractionController implements Disposable {
   @Nullable
   public String searchText;
 
+  // See ChannelDelegateImpl: `this` is published to a platform-thread-only dispatcher.
+  @SuppressWarnings("this-escape")
   public FindInteractionController(@NonNull InAppWebViewInterface webView, @NonNull InAppWebViewFlutterPlugin plugin,
                              @NonNull Object id, @Nullable FindInteractionSettings settings) {
     this.webView = webView;

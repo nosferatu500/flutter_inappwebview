@@ -52,6 +52,13 @@ import io.flutter.plugin.common.MethodChannel.Result;
 /**
  * InAppBrowserManager
  */
+// Unchecked casts below are the Flutter codec boundary: StandardMessageCodec decodes to
+// Map<String,Object>/List<Object>, so every read of a structured value is an unverifiable
+// cast. Java cannot check these; a wrong shape throws ClassCastException at the cast site,
+// which is the intended failure mode. Suppressed at class level because the whole class is
+// that boundary. NOTE: javac does not enable -Xlint:unchecked by default; these only ever
+// appeared under -Xlint:all.
+@SuppressWarnings("unchecked")
 public class InAppBrowserManager extends ChannelDelegateImpl {
   protected static final String LOG_TAG = "InAppBrowserManager";
   public static final String METHOD_CHANNEL_NAME = "com.pichillilorenzo/flutter_inappbrowser";
@@ -61,6 +68,8 @@ public class InAppBrowserManager extends ChannelDelegateImpl {
   public String id;
   public static final Map<String, InAppBrowserManager> shared = new HashMap<>();
 
+  // See ChannelDelegateImpl: `this` is published to a platform-thread-only dispatcher.
+  @SuppressWarnings("this-escape")
   public InAppBrowserManager(final InAppWebViewFlutterPlugin plugin) {
     super(new MethodChannel(plugin.messenger, METHOD_CHANNEL_NAME));
     this.id = UUID.randomUUID().toString();

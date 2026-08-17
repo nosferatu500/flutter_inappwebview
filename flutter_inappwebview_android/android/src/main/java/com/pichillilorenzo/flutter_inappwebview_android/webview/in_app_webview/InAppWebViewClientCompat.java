@@ -481,9 +481,9 @@ public class InAppWebViewClientCompat extends WebViewClientCompat {
           switch (action) {
             case 1:
               {
-                String certificatePath = (String) response.getCertificatePath();
-                String certificatePassword = (String) response.getCertificatePassword();
-                String keyStoreType = (String) response.getKeyStoreType();
+                String certificatePath = response.getCertificatePath();
+                String certificatePassword = response.getCertificatePassword();
+                String keyStoreType = response.getKeyStoreType();
                 Util.PrivateKeyAndCertificates privateKeyAndCertificates =
                         Util.loadPrivateKeyAndCertificate(webView.plugin, certificatePath, certificatePassword, keyStoreType);
                 if (privateKeyAndCertificates != null) {

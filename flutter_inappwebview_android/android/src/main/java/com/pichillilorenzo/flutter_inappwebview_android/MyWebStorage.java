@@ -80,6 +80,10 @@ public class MyWebStorage extends ChannelDelegateImpl {
     }
   }
 
+  // The raw Map is forced by the platform signature, which is literally
+  // WebStorage.getOrigins(ValueCallback<Map>) — verified against android.jar. Parameterizing the
+  // callback would no longer match the parameter type, so this cannot be typed away.
+  @SuppressWarnings("rawtypes")
   public void getOrigins(final MethodChannel.Result result) {
     if (webStorageManager == null) {
       result.success(new ArrayList<>());

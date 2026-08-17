@@ -75,6 +75,13 @@ import java.util.Map;
 
 import io.flutter.plugin.common.PluginRegistry;
 
+// Unchecked casts below are the Flutter codec boundary: StandardMessageCodec decodes to
+// Map<String,Object>/List<Object>, so every read of a structured value is an unverifiable
+// cast. Java cannot check these; a wrong shape throws ClassCastException at the cast site,
+// which is the intended failure mode. Suppressed at class level because the whole class is
+// that boundary. NOTE: javac does not enable -Xlint:unchecked by default; these only ever
+// appeared under -Xlint:all.
+@SuppressWarnings("unchecked")
 public class InAppWebViewChromeClient extends WebChromeClient implements PluginRegistry.ActivityResultListener, ActivityResultListener {
 
   protected static final String LOG_TAG = "IABWebChromeClient";
@@ -109,6 +116,8 @@ public class InAppWebViewChromeClient extends WebChromeClient implements PluginR
   @Nullable
   private Uri imageOutputFileUri;
 
+  // See ChannelDelegateImpl: `this` is published to a platform-thread-only dispatcher.
+  @SuppressWarnings("this-escape")
   public InAppWebViewChromeClient(@NonNull final InAppWebViewFlutterPlugin plugin,
                                   @NonNull InAppWebView inAppWebView, InAppBrowserDelegate inAppBrowserDelegate) {
     super();
