@@ -65,46 +65,6 @@
       "flutterMode": "release"
     },
     {
-      "name": "flutter_inappwebview_linux",
-      "cwd": "flutter_inappwebview_linux",
-      "request": "launch",
-      "type": "dart"
-    },
-    {
-      "name": "flutter_inappwebview_linux (profile mode)",
-      "cwd": "flutter_inappwebview_linux",
-      "request": "launch",
-      "type": "dart",
-      "flutterMode": "profile"
-    },
-    {
-      "name": "flutter_inappwebview_linux (release mode)",
-      "cwd": "flutter_inappwebview_linux",
-      "request": "launch",
-      "type": "dart",
-      "flutterMode": "release"
-    },
-    {
-      "name": "flutter_inappwebview_macos",
-      "cwd": "flutter_inappwebview_macos",
-      "request": "launch",
-      "type": "dart"
-    },
-    {
-      "name": "flutter_inappwebview_macos (profile mode)",
-      "cwd": "flutter_inappwebview_macos",
-      "request": "launch",
-      "type": "dart",
-      "flutterMode": "profile"
-    },
-    {
-      "name": "flutter_inappwebview_macos (release mode)",
-      "cwd": "flutter_inappwebview_macos",
-      "request": "launch",
-      "type": "dart",
-      "flutterMode": "release"
-    },
-    {
       "name": "flutter_inappwebview_platform_interface",
       "cwd": "flutter_inappwebview_platform_interface",
       "request": "launch",
@@ -120,46 +80,6 @@
     {
       "name": "flutter_inappwebview_platform_interface (release mode)",
       "cwd": "flutter_inappwebview_platform_interface",
-      "request": "launch",
-      "type": "dart",
-      "flutterMode": "release"
-    },
-    {
-      "name": "flutter_inappwebview_web",
-      "cwd": "flutter_inappwebview_web",
-      "request": "launch",
-      "type": "dart"
-    },
-    {
-      "name": "flutter_inappwebview_web (profile mode)",
-      "cwd": "flutter_inappwebview_web",
-      "request": "launch",
-      "type": "dart",
-      "flutterMode": "profile"
-    },
-    {
-      "name": "flutter_inappwebview_web (release mode)",
-      "cwd": "flutter_inappwebview_web",
-      "request": "launch",
-      "type": "dart",
-      "flutterMode": "release"
-    },
-    {
-      "name": "flutter_inappwebview_windows",
-      "cwd": "flutter_inappwebview_windows",
-      "request": "launch",
-      "type": "dart"
-    },
-    {
-      "name": "flutter_inappwebview_windows (profile mode)",
-      "cwd": "flutter_inappwebview_windows",
-      "request": "launch",
-      "type": "dart",
-      "flutterMode": "profile"
-    },
-    {
-      "name": "flutter_inappwebview_windows (release mode)",
-      "cwd": "flutter_inappwebview_windows",
       "request": "launch",
       "type": "dart",
       "flutterMode": "release"
@@ -246,86 +166,6 @@
     {
       "name": "ios example (release mode)",
       "cwd": "flutter_inappwebview_ios/example",
-      "request": "launch",
-      "type": "dart",
-      "flutterMode": "release"
-    },
-    {
-      "name": "linux example",
-      "cwd": "flutter_inappwebview_linux/example",
-      "request": "launch",
-      "type": "dart"
-    },
-    {
-      "name": "linux example (profile mode)",
-      "cwd": "flutter_inappwebview_linux/example",
-      "request": "launch",
-      "type": "dart",
-      "flutterMode": "profile"
-    },
-    {
-      "name": "linux example (release mode)",
-      "cwd": "flutter_inappwebview_linux/example",
-      "request": "launch",
-      "type": "dart",
-      "flutterMode": "release"
-    },
-    {
-      "name": "macos example",
-      "cwd": "flutter_inappwebview_macos/example",
-      "request": "launch",
-      "type": "dart"
-    },
-    {
-      "name": "macos example (profile mode)",
-      "cwd": "flutter_inappwebview_macos/example",
-      "request": "launch",
-      "type": "dart",
-      "flutterMode": "profile"
-    },
-    {
-      "name": "macos example (release mode)",
-      "cwd": "flutter_inappwebview_macos/example",
-      "request": "launch",
-      "type": "dart",
-      "flutterMode": "release"
-    },
-    {
-      "name": "web example",
-      "cwd": "flutter_inappwebview_web/example",
-      "request": "launch",
-      "type": "dart"
-    },
-    {
-      "name": "web example (profile mode)",
-      "cwd": "flutter_inappwebview_web/example",
-      "request": "launch",
-      "type": "dart",
-      "flutterMode": "profile"
-    },
-    {
-      "name": "web example (release mode)",
-      "cwd": "flutter_inappwebview_web/example",
-      "request": "launch",
-      "type": "dart",
-      "flutterMode": "release"
-    },
-    {
-      "name": "windows example",
-      "cwd": "flutter_inappwebview_windows/example",
-      "request": "launch",
-      "type": "dart"
-    },
-    {
-      "name": "windows example (profile mode)",
-      "cwd": "flutter_inappwebview_windows/example",
-      "request": "launch",
-      "type": "dart",
-      "flutterMode": "profile"
-    },
-    {
-      "name": "windows example (release mode)",
-      "cwd": "flutter_inappwebview_windows/example",
       "request": "launch",
       "type": "dart",
       "flutterMode": "release"

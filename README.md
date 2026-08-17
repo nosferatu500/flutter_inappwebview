@@ -24,10 +24,6 @@
 [![flutter_inappwebview_platform_interface version](https://img.shields.io/pub/v/flutter_inappwebview_platform_interface?include_prereleases&label=Platform%20Interface)](https://pub.dartlang.org/packages/flutter_inappwebview_platform_interface)
 [![flutter_inappwebview_android version](https://img.shields.io/pub/v/flutter_inappwebview_android?include_prereleases&label=Android)](https://pub.dartlang.org/packages/flutter_inappwebview_android)
 [![flutter_inappwebview_ios version](https://img.shields.io/pub/v/flutter_inappwebview_ios?include_prereleases&label=iOS)](https://pub.dartlang.org/packages/flutter_inappwebview_ios)
-[![flutter_inappwebview_macos version](https://img.shields.io/pub/v/flutter_inappwebview_macos?include_prereleases&label=macOS)](https://pub.dartlang.org/packages/flutter_inappwebview_macos)
-[![flutter_inappwebview_windows version](https://img.shields.io/pub/v/flutter_inappwebview_windows?include_prereleases&label=Windows)](https://pub.dartlang.org/packages/flutter_inappwebview_windows)
-[![flutter_inappwebview_linux version](https://img.shields.io/pub/v/flutter_inappwebview_linux?include_prereleases&label=linux)](https://pub.dartlang.org/packages/flutter_inappwebview_linux)
-[![flutter_inappwebview_web version](https://img.shields.io/pub/v/flutter_inappwebview_web?include_prereleases&label=Web)](https://pub.dartlang.org/packages/flutter_inappwebview_web)
 
 A Flutter plugin that allows you to add an inline webview, to use an headless webview, and to open an in-app browser window.
 
@@ -57,9 +53,6 @@ Send a submission request to the [Submit App](https://inappwebview.dev/submit-ap
 - Flutter: ">=3.32.0"
 - Android: `minSdk >= 30`, [AGP](https://developer.android.com/build/releases/gradle-plugin) version `>= 9.0.0` (AGP 8 and lower are not supported), Gradle `>= 9.1.0`, JDK `>= 17` (use [Android Studio - Android Gradle plugin Upgrade Assistant](https://developer.android.com/build/agp-upgrade-assistant) for help)
 - iOS 15.0+, Xcode version `>= 15.0`
-- macOS 12.0+, Xcode version `>= 15.0`
-- Windows: [NuGet CLI](https://learn.microsoft.com/en-us/nuget/install-nuget-client-tools?tabs=windows#nugetexe-cli) available on your PATH environment variable
-- Linux: WPE 2.0 WebKit built
 
 ## Installation
 
@@ -68,9 +61,6 @@ Add `flutter_inappwebview` as a [dependency in your pubspec.yaml file](https://f
 ### Platform Installation Setup:
 - [Android](https://inappwebview.dev/docs/intro/#setup-android)
 - [iOS](https://inappwebview.dev/docs/intro/#setup-ios)
-- [macOS](https://inappwebview.dev/docs/intro/#setup-macos)
-- [Windows](https://inappwebview.dev/docs/intro/#setup-windows)
-- [Web](https://inappwebview.dev/docs/intro/#setup-web)
 
 ## Support
 
