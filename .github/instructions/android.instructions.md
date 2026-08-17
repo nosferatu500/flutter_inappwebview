@@ -312,8 +312,8 @@ Android uses AndroidX WebKit for modern WebView features. Always check feature s
 import androidx.webkit.WebViewFeature;
 
 // Check before using modern APIs
-if (WebViewFeature.isFeatureSupported(WebViewFeature.FORCE_DARK)) {
-    WebSettingsCompat.setForceDark(webSettings, forceDarkMode);
+if (WebViewFeature.isFeatureSupported(WebViewFeature.ALGORITHMIC_DARKENING)) {
+    WebSettingsCompat.setAlgorithmicDarkeningAllowed(webSettings, true);
 }
 
 if (WebViewFeature.isFeatureSupported(WebViewFeature.WEB_MESSAGE_PORT_POST_MESSAGE)) {
@@ -322,11 +322,17 @@ if (WebViewFeature.isFeatureSupported(WebViewFeature.WEB_MESSAGE_PORT_POST_MESSA
 ```
 
 Common features:
-- `FORCE_DARK`, `FORCE_DARK_STRATEGY`
+- `ALGORITHMIC_DARKENING`
 - `WEB_MESSAGE_PORT_*`
 - `SERVICE_WORKER_*`
 - `PROXY_OVERRIDE`
 - `SAFE_BROWSING_*`
+
+> **Do not reintroduce removed APIs.** This plugin has deliberately removed its usage of
+> `WebSettingsCompat.setForceDark` / `setForceDarkStrategy` (no-ops at `targetSdk` ≥ 33) and of
+> `WebViewFeature.FORCE_DARK` / `FORCE_DARK_STRATEGY` / `START_SAFE_BROWSING` /
+> `REQUESTED_WITH_HEADER_ALLOW_LIST`, which no longer exist in its public API.
+> Use `ALGORITHMIC_DARKENING` for dark mode.
 
 ---
 

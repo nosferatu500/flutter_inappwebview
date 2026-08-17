@@ -52,11 +52,23 @@ public class ProcessGlobalConfigSettings implements ISettings<ProcessGlobalConfi
     }
     if (directoryBasePaths != null &&
             WebViewFeature.isStartupFeatureSupported(context, WebViewFeature.STARTUP_FEATURE_SET_DIRECTORY_BASE_PATHS)) {
-      config.setDirectoryBasePaths(context,
-              new File(directoryBasePaths.dataDirectoryBasePath),
-              new File(directoryBasePaths.cacheDirectoryBasePath));
+      applyDirectoryBasePaths(config, context, directoryBasePaths);
     }
     return config;
+  }
+
+  // ProcessGlobalConfig.setDirectoryBasePaths is deprecated in androidx.webkit 1.17.0 but has no
+  // successor: verified by javap over the 1.17.0 AAR, the class stores mDataDirectoryBasePath and
+  // mCacheDirectoryBasePath yet exposes no other public setter for them, and none of the 1.13-1.17
+  // release notes mention it. It is not marked for removal. Removing it would drop a capability
+  // with no alternative, so it is kept. Re-check on the next androidx.webkit bump.
+  @SuppressWarnings("deprecation")
+  private static void applyDirectoryBasePaths(@NonNull ProcessGlobalConfig config,
+                                              @NonNull Context context,
+                                              @NonNull DirectoryBasePaths basePaths) {
+    config.setDirectoryBasePaths(context,
+            new File(basePaths.dataDirectoryBasePath),
+            new File(basePaths.cacheDirectoryBasePath));
   }
   @NonNull
   public Map<String, Object> toMap() {

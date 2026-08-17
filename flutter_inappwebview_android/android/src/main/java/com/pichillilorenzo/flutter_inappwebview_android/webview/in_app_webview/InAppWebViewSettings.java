@@ -583,7 +583,7 @@ public class InAppWebViewSettings implements ISettings<InAppWebViewInterface> {
       realSettings.put("builtInZoomControls", settings.getBuiltInZoomControls());
       realSettings.put("supportZoom", settings.supportZoom());
       realSettings.put("displayZoomControls", settings.getDisplayZoomControls());
-      realSettings.put("databaseEnabled", settings.getDatabaseEnabled());
+      realSettings.put("databaseEnabled", readDatabaseEnabled(settings));
       realSettings.put("domStorageEnabled", settings.getDomStorageEnabled());
       realSettings.put("useWideViewPort", settings.getUseWideViewPort());
       if (WebViewFeature.isFeatureSupported(WebViewFeature.SAFE_BROWSING_ENABLE)) {
@@ -643,6 +643,15 @@ public class InAppWebViewSettings implements ISettings<InAppWebViewInterface> {
       }
     }
     return realSettings;
+  }
+
+  // WebSettings.getDatabaseEnabled() is deprecated by Android with no replacement offered. The
+  // matching setter is kept too (see InAppWebView.applyDatabaseEnabled), since `databaseEnabled`
+  // is a documented plugin setting. Isolated so @SuppressWarnings covers only this call rather
+  // than the whole of getRealSettings().
+  @SuppressWarnings("deprecation")
+  private static boolean readDatabaseEnabled(@NonNull WebSettings settings) {
+    return settings.getDatabaseEnabled();
   }
 
   private void setLayoutAlgorithm(String value) {

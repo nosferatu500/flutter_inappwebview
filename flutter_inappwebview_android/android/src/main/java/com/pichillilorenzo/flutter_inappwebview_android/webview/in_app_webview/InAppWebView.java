@@ -318,7 +318,7 @@ final public class InAppWebView extends InputAwareWebView implements InAppWebVie
 
     settings.setMediaPlaybackRequiresUserGesture(customSettings.mediaPlaybackRequiresUserGesture);
 
-    settings.setDatabaseEnabled(customSettings.databaseEnabled);
+    applyDatabaseEnabled(settings, customSettings.databaseEnabled);
     settings.setDomStorageEnabled(customSettings.domStorageEnabled);
 
     if (customSettings.userAgent != null && !customSettings.userAgent.isEmpty())
@@ -352,8 +352,8 @@ final public class InAppWebView extends InputAwareWebView implements InAppWebVie
 
     settings.setAllowContentAccess(customSettings.allowContentAccess);
     settings.setAllowFileAccess(customSettings.allowFileAccess);
-    settings.setAllowFileAccessFromFileURLs(customSettings.allowFileAccessFromFileURLs);
-    settings.setAllowUniversalAccessFromFileURLs(customSettings.allowUniversalAccessFromFileURLs);
+    applyAllowFileAccessFromFileURLs(settings, customSettings.allowFileAccessFromFileURLs);
+    applyAllowUniversalAccessFromFileURLs(settings, customSettings.allowUniversalAccessFromFileURLs);
     setCacheEnabled(customSettings.cacheEnabled);
     if (customSettings.appCachePath != null && !customSettings.appCachePath.isEmpty() && customSettings.cacheEnabled) {
       // removed from Android API 33+ (https://developer.android.com/sdk/api_diff/33/changes)
@@ -658,6 +658,29 @@ final public class InAppWebView extends InputAwareWebView implements InAppWebVie
     }
   }
 
+  // The three setters below are deprecated by Android with no replacement offered. They still
+  // work, and the plugin exposes each as a documented setting, so they are kept deliberately.
+  //
+  // They are isolated into one-line helpers so that @SuppressWarnings("deprecation") covers
+  // exactly the deprecated call. Annotating the enclosing prepare() / setSettings() instead would
+  // blanket several hundred lines of settings code and silently swallow any *new* deprecation
+  // introduced there — which is the opposite of what the zero-warning baseline is for.
+
+  @SuppressWarnings("deprecation")
+  private static void applyDatabaseEnabled(@NonNull WebSettings settings, boolean enabled) {
+    settings.setDatabaseEnabled(enabled);
+  }
+
+  @SuppressWarnings("deprecation")
+  private static void applyAllowFileAccessFromFileURLs(@NonNull WebSettings settings, boolean allow) {
+    settings.setAllowFileAccessFromFileURLs(allow);
+  }
+
+  @SuppressWarnings("deprecation")
+  private static void applyAllowUniversalAccessFromFileURLs(@NonNull WebSettings settings, boolean allow) {
+    settings.setAllowUniversalAccessFromFileURLs(allow);
+  }
+
   public void loadUrl(URLRequest urlRequest) {
     String url = urlRequest.getUrl();
     String method = urlRequest.getMethod();
@@ -835,7 +858,7 @@ final public class InAppWebView extends InputAwareWebView implements InAppWebVie
       settings.setMediaPlaybackRequiresUserGesture(newCustomSettings.mediaPlaybackRequiresUserGesture);
 
     if (newSettingsMap.get("databaseEnabled") != null && customSettings.databaseEnabled != newCustomSettings.databaseEnabled)
-      settings.setDatabaseEnabled(newCustomSettings.databaseEnabled);
+      applyDatabaseEnabled(settings, newCustomSettings.databaseEnabled);
 
     if (newSettingsMap.get("domStorageEnabled") != null && customSettings.domStorageEnabled != newCustomSettings.domStorageEnabled)
       settings.setDomStorageEnabled(newCustomSettings.domStorageEnabled);
@@ -897,10 +920,10 @@ final public class InAppWebView extends InputAwareWebView implements InAppWebVie
       settings.setAllowFileAccess(newCustomSettings.allowFileAccess);
 
     if (newSettingsMap.get("allowFileAccessFromFileURLs") != null && customSettings.allowFileAccessFromFileURLs != newCustomSettings.allowFileAccessFromFileURLs)
-      settings.setAllowFileAccessFromFileURLs(newCustomSettings.allowFileAccessFromFileURLs);
+      applyAllowFileAccessFromFileURLs(settings, newCustomSettings.allowFileAccessFromFileURLs);
 
     if (newSettingsMap.get("allowUniversalAccessFromFileURLs") != null && customSettings.allowUniversalAccessFromFileURLs != newCustomSettings.allowUniversalAccessFromFileURLs)
-      settings.setAllowUniversalAccessFromFileURLs(newCustomSettings.allowUniversalAccessFromFileURLs);
+      applyAllowUniversalAccessFromFileURLs(settings, newCustomSettings.allowUniversalAccessFromFileURLs);
 
     if (newSettingsMap.get("cacheEnabled") != null && customSettings.cacheEnabled != newCustomSettings.cacheEnabled)
       setCacheEnabled(newCustomSettings.cacheEnabled);
