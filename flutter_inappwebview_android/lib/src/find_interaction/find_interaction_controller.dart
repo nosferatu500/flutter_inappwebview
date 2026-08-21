@@ -1,6 +1,7 @@
 import 'package:flutter/foundation.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_inappwebview_platform_interface/flutter_inappwebview_platform_interface.dart';
+
+import '../pigeons/find_interaction.g.dart';
 
 /// Object specifying creation parameters for creating a [AndroidFindInteractionController].
 ///
@@ -27,9 +28,45 @@ class AndroidFindInteractionControllerCreationParams
   }
 }
 
+/// Receives [FindInteractionFlutterApi] events and forwards them to the controller.
+///
+/// A separate class rather than having the controller implement the generated API directly:
+/// `PlatformFindInteractionController` already exposes `onFindResultReceived` as a *getter* (the
+/// user-supplied callback), and Pigeon generates a *method* of the same name, which Dart rejects
+/// as an inconsistent inheritance.
+class _FindInteractionFlutterApiImpl implements FindInteractionFlutterApi {
+  _FindInteractionFlutterApiImpl(this._controller);
+
+  final AndroidFindInteractionController _controller;
+
+  @override
+  void onFindResultReceived(
+    int activeMatchOrdinal,
+    int numberOfMatches,
+    bool isDoneCounting,
+  ) {
+    _controller._debugLog('onFindResultReceived', {
+      'activeMatchOrdinal': activeMatchOrdinal,
+      'numberOfMatches': numberOfMatches,
+      'isDoneCounting': isDoneCounting,
+    });
+    _controller.onFindResultReceived?.call(
+      _controller,
+      activeMatchOrdinal,
+      numberOfMatches,
+      isDoneCounting,
+    );
+  }
+}
+
 ///{@macro flutter_inappwebview_platform_interface.PlatformFindInteractionController}
-class AndroidFindInteractionController extends PlatformFindInteractionController
-    with ChannelController {
+///
+/// Transport is Pigeon-generated ([FindInteractionHostApi] / [FindInteractionFlutterApi]) rather
+/// than a hand-written `MethodChannel`; this is the pilot for migrating the rest of the plugin.
+/// The public API is unchanged: everything this class exposes is still platform-interface types,
+/// and the generated ones are converted at the boundary.
+class AndroidFindInteractionController
+    extends PlatformFindInteractionController {
   /// Constructs a [AndroidFindInteractionController].
   AndroidFindInteractionController(
     PlatformFindInteractionControllerCreationParams params,
@@ -61,92 +98,99 @@ class AndroidFindInteractionController extends PlatformFindInteractionController
     );
   }
 
-  Future<dynamic> _handleMethod(MethodCall call) async {
-    _debugLog(call.method, call.arguments);
+  /// Null until [InternalFindInteractionController.init], and after [dispose].
+  ///
+  /// `AndroidFindInteractionController.static()` never calls `init`, so every method below has to
+  /// tolerate a null host API. That matches the previous behaviour, where `channel` was null and
+  /// `channel?.invokeMethod(...)` silently did nothing.
+  FindInteractionHostApi? _hostApi;
 
-    switch (call.method) {
-      case "onFindResultReceived":
-        if (onFindResultReceived != null) {
-          int activeMatchOrdinal = call.arguments["activeMatchOrdinal"];
-          int numberOfMatches = call.arguments["numberOfMatches"];
-          bool isDoneCounting = call.arguments["isDoneCounting"];
-          onFindResultReceived!(
-            this,
-            activeMatchOrdinal,
-            numberOfMatches,
-            isDoneCounting,
-          );
-        }
-        break;
-      default:
-        throw UnimplementedError("Unimplemented ${call.method} method");
-    }
-    return null;
-  }
+  /// Retained so [dispose] can unregister the handler for this instance's suffix.
+  String? _messageChannelSuffix;
 
   ///{@macro flutter_inappwebview_platform_interface.PlatformFindInteractionController.findAll}
   @override
   Future<void> findAll({String? find}) async {
-    Map<String, dynamic> args = <String, dynamic>{};
-    args.putIfAbsent('find', () => find);
-    await channel?.invokeMethod('findAll', args);
+    _debugLog('findAll', {'find': find});
+    await _hostApi?.findAll(find);
   }
 
   ///{@macro flutter_inappwebview_platform_interface.PlatformFindInteractionController.findNext}
   @override
   Future<void> findNext({bool forward = true}) async {
-    Map<String, dynamic> args = <String, dynamic>{};
-    args.putIfAbsent('forward', () => forward);
-    await channel?.invokeMethod('findNext', args);
+    _debugLog('findNext', {'forward': forward});
+    await _hostApi?.findNext(forward);
   }
 
   ///{@macro flutter_inappwebview_platform_interface.PlatformFindInteractionController.clearMatches}
   @override
   Future<void> clearMatches() async {
-    Map<String, dynamic> args = <String, dynamic>{};
-    await channel?.invokeMethod('clearMatches', args);
+    _debugLog('clearMatches', {});
+    await _hostApi?.clearMatches();
   }
 
   ///{@macro flutter_inappwebview_platform_interface.PlatformFindInteractionController.setSearchText}
   @override
   Future<void> setSearchText(String? searchText) async {
-    Map<String, dynamic> args = <String, dynamic>{};
-    args.putIfAbsent('searchText', () => searchText);
-    await channel?.invokeMethod('setSearchText', args);
+    _debugLog('setSearchText', {'searchText': searchText});
+    await _hostApi?.setSearchText(searchText);
   }
 
   ///{@macro flutter_inappwebview_platform_interface.PlatformFindInteractionController.getSearchText}
   @override
   Future<String?> getSearchText() async {
-    Map<String, dynamic> args = <String, dynamic>{};
-    return await channel?.invokeMethod<String?>('getSearchText', args);
+    _debugLog('getSearchText', {});
+    return await _hostApi?.getSearchText();
   }
 
   ///{@macro flutter_inappwebview_platform_interface.PlatformFindInteractionController.getActiveFindSession}
   @override
   Future<FindSession?> getActiveFindSession() async {
-    Map<String, dynamic> args = <String, dynamic>{};
-    Map<String, dynamic>? result = (await channel?.invokeMethod(
-      'getActiveFindSession',
-      args,
-    ))?.cast<String, dynamic>();
-    return FindSession.fromMap(result);
+    _debugLog('getActiveFindSession', {});
+    final session = await _hostApi?.getActiveFindSession();
+    if (session == null) {
+      return null;
+    }
+    return FindSession(
+      resultCount: session.resultCount,
+      highlightedResultIndex: session.highlightedResultIndex,
+      // Android always reports NONE; fromNativeValue returns null for an unknown value, and the
+      // platform-interface field is non-nullable, so fall back rather than force-unwrap.
+      searchResultDisplayStyle:
+          SearchResultDisplayStyle.fromNativeValue(
+            session.searchResultDisplayStyle,
+          ) ??
+          SearchResultDisplayStyle.NONE,
+    );
   }
 
   ///{@macro flutter_inappwebview_platform_interface.PlatformFindInteractionController.dispose}
   @override
   void dispose({bool isKeepAlive = false}) {
-    disposeChannel(removeMethodCallHandler: !isKeepAlive);
+    if (!isKeepAlive) {
+      // Mirrors disposeChannel(removeMethodCallHandler: true): drop the event handler bound to
+      // this instance's suffix, otherwise it outlives the controller.
+      FindInteractionFlutterApi.setUp(
+        null,
+        messageChannelSuffix: _messageChannelSuffix ?? '',
+      );
+      _messageChannelSuffix = null;
+    }
+    _hostApi = null;
   }
 }
 
 extension InternalFindInteractionController
     on AndroidFindInteractionController {
   void init(dynamic id) {
-    channel = MethodChannel(
-      'dev.nosferatu500.inappwebview/inappwebview_find_interaction_$id',
+    // Pigeon derives one channel per method from the schema and appends this suffix, so the id
+    // that used to be interpolated into a single channel name is passed here instead.
+    final suffix = id.toString();
+    _messageChannelSuffix = suffix;
+    _hostApi = FindInteractionHostApi(messageChannelSuffix: suffix);
+    FindInteractionFlutterApi.setUp(
+      _FindInteractionFlutterApiImpl(this),
+      messageChannelSuffix: suffix,
     );
-    handler = _handleMethod;
-    initMethodCallHandler();
   }
 }

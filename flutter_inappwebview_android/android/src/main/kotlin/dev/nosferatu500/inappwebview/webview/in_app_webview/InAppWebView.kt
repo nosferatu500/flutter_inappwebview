@@ -472,7 +472,7 @@ class InAppWebView : WebView, InAppWebViewInterface, Disposable {
     }
 
     setFindListener { activeMatchOrdinal, numberOfMatches, isDoneCounting ->
-      findInteractionController?.channelDelegate?.onFindResultReceived(
+      findInteractionController?.onFindResultReceived(
         activeMatchOrdinal, numberOfMatches, isDoneCounting
       )
     }

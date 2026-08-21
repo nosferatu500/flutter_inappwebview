@@ -28,6 +28,11 @@ dev_dependencies:
     sdk: flutter
   flutter_lints: ^6.0.0
   plugin_platform_interface: ^2.1.8
+  # Generates the typed Dart<->Kotlin transport in lib/src/pigeons/ and
+  # android/.../pigeons/. Schemas live in pigeons/; regenerate with
+  # `dart run pigeon --input pigeons/<name>.dart`. Dev-only: the generated code has
+  # no dependency on pigeon itself, so consumers never resolve it.
+  pigeon: ^27.3.2
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec
