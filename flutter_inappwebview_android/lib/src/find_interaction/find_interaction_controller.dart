@@ -144,7 +144,7 @@ extension InternalFindInteractionController
     on AndroidFindInteractionController {
   void init(dynamic id) {
     channel = MethodChannel(
-      'com.pichillilorenzo/flutter_inappwebview_find_interaction_$id',
+      'dev.nosferatu500.inappwebview/inappwebview_find_interaction_$id',
     );
     handler = _handleMethod;
     initMethodCallHandler();

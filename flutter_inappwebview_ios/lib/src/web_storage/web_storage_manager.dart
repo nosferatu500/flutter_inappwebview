@@ -40,7 +40,7 @@ class IOSWebStorageManager extends PlatformWebStorageManager
               ),
       ) {
     channel = const MethodChannel(
-      'com.pichillilorenzo/flutter_inappwebview_webstoragemanager',
+      'dev.nosferatu500.inappwebview/inappwebview_webstoragemanager',
     );
     handler = _handleMethod;
     initMethodCallHandler();

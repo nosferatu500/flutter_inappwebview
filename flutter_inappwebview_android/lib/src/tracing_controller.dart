@@ -39,7 +39,7 @@ class AndroidTracingController extends PlatformTracingController
               ),
       ) {
     channel = const MethodChannel(
-      'com.pichillilorenzo/flutter_inappwebview_tracingcontroller',
+      'dev.nosferatu500.inappwebview/inappwebview_tracingcontroller',
     );
     handler = handleMethod;
     initMethodCallHandler();

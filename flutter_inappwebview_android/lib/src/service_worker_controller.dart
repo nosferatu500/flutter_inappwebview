@@ -40,7 +40,7 @@ class AndroidServiceWorkerController extends PlatformServiceWorkerController
               ),
       ) {
     channel = const MethodChannel(
-      'com.pichillilorenzo/flutter_inappwebview_serviceworkercontroller',
+      'dev.nosferatu500.inappwebview/inappwebview_serviceworkercontroller',
     );
     handler = handleMethod;
     initMethodCallHandler();

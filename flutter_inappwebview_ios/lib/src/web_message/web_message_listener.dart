@@ -56,7 +56,7 @@ class IOSWebMessageListener extends PlatformWebMessageListener
       "allowedOriginRules cannot contain empty strings",
     );
     channel = MethodChannel(
-      'com.pichillilorenzo/flutter_inappwebview_web_message_listener_${_id}_${params.jsObjectName}',
+      'dev.nosferatu500.inappwebview/inappwebview_web_message_listener_${_id}_${params.jsObjectName}',
     );
     handler = _handleMethod;
     initMethodCallHandler();

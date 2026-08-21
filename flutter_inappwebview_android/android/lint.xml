@@ -32,4 +32,23 @@
     -->
     <issue id="MissingOnRenderProcessGone" severity="ignore" />
 
+    <!--
+      UseKtx (60 findings): a Kotlin-only style rule, so it could not fire while this module was
+      Java. It fires now purely because the sources were converted, not because any code changed
+      behaviour. The breakdown is 21x String.toColorInt, 18x Int.toDrawable, 16x String.toUri,
+      2x createBitmap, and one each of Bitmap.scale, Menu.size, Menu.get.
+
+      Every one of those extensions lives in androidx.core:core-ktx. That artifact is only on this
+      module's classpath transitively, at 1.2.0 (androidx.core:core itself resolves to 1.13.1), and
+      most of the suggested extensions were added in 1.7+ — so acting on the rule would mean
+      declaring a new runtime dependency on core-ktx for every consumer of this plugin, to gain
+      nothing but call-site syntax. The platform calls the findings flag (Color.parseColor,
+      ColorDrawable, Uri.parse, Bitmap.createBitmap/createScaledBitmap, Menu.size/getItem) are
+      correct and not deprecated.
+
+      Revisit if core-ktx ever becomes a direct dependency for an unrelated reason: at that point
+      the fixes are free and this entry should be deleted.
+    -->
+    <issue id="UseKtx" severity="ignore" />
+
 </lint>

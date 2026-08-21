@@ -11,7 +11,7 @@ import SafariServices
 import Flutter
 
 public class WebAuthenticationSession: NSObject, ASWebAuthenticationPresentationContextProviding, Disposable {
-    static let METHOD_CHANNEL_NAME_PREFIX = "com.pichillilorenzo/flutter_webauthenticationsession_"
+    static let METHOD_CHANNEL_NAME_PREFIX = "dev.nosferatu500.inappwebview/webauthenticationsession_"
     var id: String
     var plugin: InAppWebViewFlutterPlugin?
     var url: URL

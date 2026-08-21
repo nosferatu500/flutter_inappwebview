@@ -13,7 +13,7 @@ import AVFoundation
 import SafariServices
 
 public class ChromeSafariBrowserManager: ChannelDelegate {
-    static let METHOD_CHANNEL_NAME = "com.pichillilorenzo/flutter_chromesafaribrowser"
+    static let METHOD_CHANNEL_NAME = "dev.nosferatu500.inappwebview/chromesafaribrowser"
     var plugin: InAppWebViewFlutterPlugin?
     var browsers: [String: SafariViewController?] = [:]
     var prewarmingTokens: [String: Any?] = [:]

@@ -50,7 +50,7 @@ class IOSWebMessageChannel extends PlatformWebMessageChannel
               ),
       ) {
     channel = MethodChannel(
-      'com.pichillilorenzo/flutter_inappwebview_web_message_channel_${params.id}',
+      'dev.nosferatu500.inappwebview/inappwebview_web_message_channel_${params.id}',
     );
     handler = _handleMethod;
     initMethodCallHandler();

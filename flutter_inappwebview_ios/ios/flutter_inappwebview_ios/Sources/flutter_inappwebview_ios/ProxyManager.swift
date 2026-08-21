@@ -9,7 +9,7 @@ import Flutter
 
 @available(iOS 17.0, *)
 public class ProxyManager: ChannelDelegate {
-    static let METHOD_CHANNEL_NAME = "com.pichillilorenzo/flutter_inappwebview_proxycontroller"
+    static let METHOD_CHANNEL_NAME = "dev.nosferatu500.inappwebview/inappwebview_proxycontroller"
 
     private var plugin: InAppWebViewFlutterPlugin?
 

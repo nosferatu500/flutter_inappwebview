@@ -39,7 +39,7 @@ abstract mixin class AndroidPathHandler
   void _init(PlatformPathHandlerCreationParams params) {
     path = params.path;
     channel = MethodChannel(
-      'com.pichillilorenzo/flutter_inappwebview_custompathhandler_$_id',
+      'dev.nosferatu500.inappwebview/inappwebview_custompathhandler_$_id',
     );
     handler = _handleMethod;
     initMethodCallHandler();

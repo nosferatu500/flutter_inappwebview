@@ -1,4 +1,4 @@
-group = 'com.pichillilorenzo.flutter_inappwebview_android'
+group = 'dev.nosferatu500.inappwebview'
 version = '1.0-SNAPSHOT'
 
 // No buildscript block: this module requires AGP 9 and is always built as a
@@ -15,13 +15,26 @@ rootProject.allprojects {
 apply plugin: 'com.android.library'
 
 android {
-    namespace = 'com.pichillilorenzo.flutter_inappwebview_android'
+    namespace = 'dev.nosferatu500.inappwebview'
     compileSdk = flutter.compileSdkVersion
 
-    // AGP 9 enables built-in Kotlin for every module it is applied to. This
-    // plugin has no Kotlin sources, so opt out to drop an empty Kotlin compile
-    // task and the implicit kotlin-stdlib dependency it would add to consumers.
-    enableKotlin = false
+    // This module's sources are Kotlin, so built-in Kotlin must stay on -- do not
+    // reintroduce `enableKotlin = false`. Nothing else is needed here: whichever
+    // Kotlin toolchain the consuming app ends up with compiles this module.
+    //
+    //   * app on AGP 9 defaults (android.builtInKotlin=true): AGP's built-in
+    //     Kotlin is applied to every module, including this one.
+    //   * app with android.builtInKotlin=false (still required whenever some
+    //     other plugin applies org.jetbrains.kotlin.android, which built-in
+    //     Kotlin rejects): Flutter's own Gradle plugin applies `kotlin-android`
+    //     to every plugin subproject that applies AGP and does not already
+    //     declare KGP -- see FlutterPluginUtils.kt. Both example apps here take
+    //     this path.
+    //
+    // Declaring a Kotlin plugin explicitly would break one of those two cases:
+    // `com.android.built-in-kotlin` is not on this module's classpath unless the
+    // app resolves it, and applying KGP here fails under built-in Kotlin with
+    // "Cannot add extension with name 'kotlin'".
 
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_17
@@ -44,6 +57,16 @@ android {
     lint {
         disable 'InvalidPackage'
     }
+}
+
+// Kotlin defaults its jvmTarget to the Gradle JVM, which leaves it inconsistent
+// with the 17 set in compileOptions above ("Inconsistent JVM-target
+// compatibility detected"). Set it on the compile tasks rather than through a
+// DSL block: the `android { kotlinOptions { } }` extension only exists under
+// KGP, and this module is also built under AGP's built-in Kotlin, which does not
+// provide it. Task names are the same either way.
+tasks.matching { it.name ==~ /compile.*Kotlin/ }.configureEach {
+    compilerOptions.jvmTarget = org.jetbrains.kotlin.gradle.dsl.JvmTarget.JVM_17
 }
 
 dependencies {

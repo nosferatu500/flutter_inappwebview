@@ -182,7 +182,7 @@ class AndroidHeadlessInAppWebView extends PlatformHeadlessInAppWebView
   bool _running = false;
 
   static const MethodChannel _sharedChannel = MethodChannel(
-    'com.pichillilorenzo/flutter_headless_inappwebview',
+    'dev.nosferatu500.inappwebview/headless_inappwebview',
   );
 
   AndroidInAppWebViewController? _webViewController;
@@ -227,7 +227,7 @@ class AndroidHeadlessInAppWebView extends PlatformHeadlessInAppWebView
     _androidParams.pullToRefreshController?.init(id);
     _androidParams.findInteractionController?.init(id);
     channel = MethodChannel(
-      'com.pichillilorenzo/flutter_headless_inappwebview_$id',
+      'dev.nosferatu500.inappwebview/headless_inappwebview_$id',
     );
     handler = _handleMethod;
     initMethodCallHandler();

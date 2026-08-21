@@ -240,7 +240,7 @@ class AndroidInAppWebViewWidget extends PlatformInAppWebViewWidget {
 
     return PlatformViewLink(
       key: params.key,
-      viewType: 'com.pichillilorenzo/flutter_inappwebview',
+      viewType: 'dev.nosferatu500.inappwebview/inappwebview',
       surfaceFactory:
           (BuildContext context, PlatformViewController controller) {
             return AndroidViewSurface(
@@ -255,7 +255,7 @@ class AndroidInAppWebViewWidget extends PlatformInAppWebViewWidget {
         return _createAndroidViewController(
             hybridComposition: useHybridComposition,
             id: params.id,
-            viewType: 'com.pichillilorenzo/flutter_inappwebview',
+            viewType: 'dev.nosferatu500.inappwebview/inappwebview',
             layoutDirection:
                 this.params.layoutDirection ??
                 Directionality.maybeOf(context) ??

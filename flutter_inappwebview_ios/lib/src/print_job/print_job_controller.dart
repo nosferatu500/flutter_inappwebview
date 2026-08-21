@@ -36,7 +36,7 @@ class IOSPrintJobController extends PlatformPrintJobController
               ),
       ) {
     channel = MethodChannel(
-      'com.pichillilorenzo/flutter_inappwebview_printjobcontroller_${params.id}',
+      'dev.nosferatu500.inappwebview/inappwebview_printjobcontroller_${params.id}',
     );
     handler = _handleMethod;
     initMethodCallHandler();

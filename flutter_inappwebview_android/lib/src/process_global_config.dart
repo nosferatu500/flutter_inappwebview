@@ -40,7 +40,7 @@ class AndroidProcessGlobalConfig extends PlatformProcessGlobalConfig
               ),
       ) {
     channel = const MethodChannel(
-      'com.pichillilorenzo/flutter_inappwebview_processglobalconfig',
+      'dev.nosferatu500.inappwebview/inappwebview_processglobalconfig',
     );
     handler = handleMethod;
     initMethodCallHandler();

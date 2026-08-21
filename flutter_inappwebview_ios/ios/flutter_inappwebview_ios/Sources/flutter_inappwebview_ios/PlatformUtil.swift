@@ -10,7 +10,7 @@ import UIKit
 import Flutter
 
 public class PlatformUtil: ChannelDelegate {
-    static let METHOD_CHANNEL_NAME = "com.pichillilorenzo/flutter_inappwebview_platformutil"
+    static let METHOD_CHANNEL_NAME = "dev.nosferatu500.inappwebview/inappwebview_platformutil"
     var plugin: InAppWebViewFlutterPlugin?
     
     init(plugin: InAppWebViewFlutterPlugin) {

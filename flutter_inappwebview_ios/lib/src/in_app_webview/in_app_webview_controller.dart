@@ -85,7 +85,7 @@ class IOSInAppWebViewController extends PlatformInAppWebViewController
                 params,
               ),
       ) {
-    channel = MethodChannel('com.pichillilorenzo/flutter_inappwebview_$id');
+    channel = MethodChannel('dev.nosferatu500.inappwebview/inappwebview_$id');
     handler = handleMethod;
     initMethodCallHandler();
 

@@ -10,7 +10,7 @@ import WebKit
 import Flutter
 
 public class MyCookieManager: ChannelDelegate {
-    static let METHOD_CHANNEL_NAME = "com.pichillilorenzo/flutter_inappwebview_cookiemanager"
+    static let METHOD_CHANNEL_NAME = "dev.nosferatu500.inappwebview/inappwebview_cookiemanager"
     static let httpCookieStore = WKWebsiteDataStore.default().httpCookieStore
 
     private var plugin: InAppWebViewFlutterPlugin?

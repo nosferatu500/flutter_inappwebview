@@ -40,7 +40,7 @@ class IOSProxyController extends PlatformProxyController
               ),
       ) {
     channel = const MethodChannel(
-      'com.pichillilorenzo/flutter_inappwebview_proxycontroller',
+      'dev.nosferatu500.inappwebview/inappwebview_proxycontroller',
     );
     handler = handleMethod;
     initMethodCallHandler();

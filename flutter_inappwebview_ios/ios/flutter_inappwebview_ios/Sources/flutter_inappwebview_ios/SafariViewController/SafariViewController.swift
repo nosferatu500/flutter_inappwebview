@@ -10,7 +10,7 @@ import SafariServices
 import Flutter
 
 public class SafariViewController: SFSafariViewController, SFSafariViewControllerDelegate, Disposable {
-    static let METHOD_CHANNEL_NAME_PREFIX = "com.pichillilorenzo/flutter_chromesafaribrowser_"
+    static let METHOD_CHANNEL_NAME_PREFIX = "dev.nosferatu500.inappwebview/chromesafaribrowser_"
     var channelDelegate: SafariViewControllerChannelDelegate?
     var safariSettings: SafariBrowserSettings
     var id: String

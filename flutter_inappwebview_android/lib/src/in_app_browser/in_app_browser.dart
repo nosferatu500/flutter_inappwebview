@@ -79,7 +79,7 @@ class AndroidInAppBrowser extends PlatformInAppBrowser with ChannelController {
       params as AndroidInAppBrowserCreationParams;
 
   static const MethodChannel _staticChannel = MethodChannel(
-    'com.pichillilorenzo/flutter_inappbrowser',
+    'dev.nosferatu500.inappwebview/inappbrowser',
   );
 
   ContextMenu? _contextMenu;
@@ -97,7 +97,7 @@ class AndroidInAppBrowser extends PlatformInAppBrowser with ChannelController {
   }
 
   void _init() {
-    channel = MethodChannel('com.pichillilorenzo/flutter_inappbrowser_$id');
+    channel = MethodChannel('dev.nosferatu500.inappwebview/inappbrowser_$id');
     handler = _handleMethod;
     initMethodCallHandler();
 

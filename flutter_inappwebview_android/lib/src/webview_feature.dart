@@ -39,7 +39,7 @@ class AndroidWebViewFeature extends PlatformWebViewFeature
               ),
       ) {
     channel = const MethodChannel(
-      'com.pichillilorenzo/flutter_inappwebview_webviewfeature',
+      'dev.nosferatu500.inappwebview/inappwebview_webviewfeature',
     );
     handler = handleMethod;
     initMethodCallHandler();

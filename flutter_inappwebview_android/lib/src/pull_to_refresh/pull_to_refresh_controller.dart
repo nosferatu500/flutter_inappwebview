@@ -165,7 +165,7 @@ class AndroidPullToRefreshController extends PlatformPullToRefreshController
 extension InternalPullToRefreshController on AndroidPullToRefreshController {
   void init(dynamic id) {
     channel = MethodChannel(
-      'com.pichillilorenzo/flutter_inappwebview_pull_to_refresh_$id',
+      'dev.nosferatu500.inappwebview/inappwebview_pull_to_refresh_$id',
     );
     handler = _handleMethod;
     initMethodCallHandler();

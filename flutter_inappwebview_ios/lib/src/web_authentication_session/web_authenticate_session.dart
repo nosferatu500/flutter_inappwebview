@@ -61,7 +61,7 @@ class IOSWebAuthenticationSession extends PlatformWebAuthenticationSession
   late final WebAuthenticationSessionCompletionHandler onComplete;
 
   static const MethodChannel _staticChannel = MethodChannel(
-    'com.pichillilorenzo/flutter_webauthenticationsession',
+    'dev.nosferatu500.inappwebview/webauthenticationsession',
   );
 
   @override
@@ -103,7 +103,7 @@ class IOSWebAuthenticationSession extends PlatformWebAuthenticationSession
     this.initialSettings =
         initialSettings ?? WebAuthenticationSessionSettings();
     channel = MethodChannel(
-      'com.pichillilorenzo/flutter_webauthenticationsession_$id',
+      'dev.nosferatu500.inappwebview/webauthenticationsession_$id',
     );
     handler = _handleMethod;
     initMethodCallHandler();
