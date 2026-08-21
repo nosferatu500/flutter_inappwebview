@@ -102,6 +102,14 @@ class WebViewFeature {
     'MULTI_PROCESS',
   );
 
+  ///Feature for [isFeatureSupported]. This feature covers
+  ///[PlatformInAppWebViewController.setAudioMuted] and
+  ///[PlatformInAppWebViewController.isAudioMuted].
+  static const MUTE_AUDIO = WebViewFeature._internal(
+    'MUTE_AUDIO',
+    'MUTE_AUDIO',
+  );
+
   ///Feature for [isFeatureSupported]. This feature covers [InAppWebViewSettings.offscreenPreRaster].
   static const OFF_SCREEN_PRERASTER = WebViewFeature._internal(
     'OFF_SCREEN_PRERASTER',
@@ -364,6 +372,7 @@ class WebViewFeature {
     WebViewFeature.GET_WEB_VIEW_CLIENT,
     WebViewFeature.GET_WEB_VIEW_RENDERER,
     WebViewFeature.MULTI_PROCESS,
+    WebViewFeature.MUTE_AUDIO,
     WebViewFeature.OFF_SCREEN_PRERASTER,
     WebViewFeature.PAYMENT_REQUEST,
     WebViewFeature.POST_WEB_MESSAGE,
@@ -511,6 +520,8 @@ class WebViewFeature {
         return 'GET_WEB_VIEW_RENDERER';
       case 'MULTI_PROCESS':
         return 'MULTI_PROCESS';
+      case 'MUTE_AUDIO':
+        return 'MUTE_AUDIO';
       case 'OFF_SCREEN_PRERASTER':
         return 'OFF_SCREEN_PRERASTER';
       case 'PAYMENT_REQUEST':

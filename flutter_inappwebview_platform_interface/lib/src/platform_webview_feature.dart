@@ -359,6 +359,11 @@ class WebViewFeature_ {
     "ALGORITHMIC_DARKENING",
   );
 
+  ///Feature for [isFeatureSupported]. This feature covers
+  ///[PlatformInAppWebViewController.setAudioMuted] and
+  ///[PlatformInAppWebViewController.isAudioMuted].
+  static const MUTE_AUDIO = WebViewFeature_._internal("MUTE_AUDIO");
+
   ///Feature for [isFeatureSupported]. This feature covers [InAppWebViewSettings.paymentRequestEnabled].
   static const PAYMENT_REQUEST = WebViewFeature_._internal("PAYMENT_REQUEST");
 

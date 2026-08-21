@@ -822,7 +822,23 @@ class ExchangeableObjectGenerator
       }
     } else if (elementType.isDartCoreMap) {
       final genericTypes = Util.getGenericTypes(elementType);
-      return "$value${isNullable ? '?' : ''}.cast<${genericTypes.elementAt(0)}, ${genericTypes.elementAt(1)}>()";
+      final keyType = genericTypes.elementAt(0);
+      final valueType = genericTypes.elementAt(1);
+      final keyTypeReplaced = keyType.toString().replaceAll("_", "");
+      final valueTypeReplaced = valueType.toString().replaceAll("_", "");
+      if (!Util.isDartCoreType(valueType)) {
+        // The value is an exchangeable type (enum or object), so each entry needs the same
+        // conversion a List<T> element gets. Without this the emitted code was a bare
+        // `.cast<K, V>()`, which for an enum casts the raw native value straight to the enum
+        // type and throws at runtime.
+        return (isNullable ? '$value != null ? ' : '') +
+            "Map<$keyTypeReplaced, $valueTypeReplaced>.fromEntries(" +
+            "$value.entries.map((e) => MapEntry(e.key as $keyTypeReplaced, " +
+            getFromMapValue('e.value', valueType) +
+            ")))" +
+            (isNullable ? ' : null' : '');
+      }
+      return "$value${isNullable ? '?' : ''}.cast<$keyTypeReplaced, $valueTypeReplaced>()";
     } else if (fieldTypeElement != null && hasFromMapMethod(fieldTypeElement)) {
       final hasNullableFromMap = hasNullableFromMapFactory(fieldTypeElement);
       return classNameReference! +
@@ -918,6 +934,19 @@ class ExchangeableObjectGenerator
             ? "$fieldName${(isNullable ? '?' : '')}.toList()"
             : fieldName;
       }
+    } else if (elementType.isDartCoreMap) {
+      final valueType = Util.getGenericTypes(elementType).elementAt(1);
+      if (!Util.isDartCoreType(valueType)) {
+        // Mirrors the List branch above. Previously there was no Map branch here at all, so a
+        // map of exchangeable values fell through to the final `else` and was emitted bare —
+        // handing enum/object instances to StandardMessageCodec, which cannot encode them.
+        return fieldName +
+            (isNullable ? '?' : '') +
+            '.map((k, v) => MapEntry(k, ' +
+            getToMapValue('v', valueType) +
+            '))';
+      }
+      return fieldName;
     } else if (fieldTypeElement != null && hasToMapMethod(fieldTypeElement)) {
       return fieldName +
           (Util.typeIsNullable(elementType) ? '?' : '') +
