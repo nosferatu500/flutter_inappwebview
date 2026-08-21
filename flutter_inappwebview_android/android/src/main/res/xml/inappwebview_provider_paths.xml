@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  Paths served by InAppWebViewFileProvider.
+
+  Scoped deliberately. The provider has exactly one caller, InAppWebViewChromeClient.getOutputUri(),
+  which hands a content:// URI to the camera/camcorder app so an <input type="file" capture> can be
+  fulfilled. The file it shares is created by getCapturedFile() via
+  File.createTempFile(prefix, suffix, context.getExternalFilesDir(null)), i.e. directly inside the
+  app's own external files directory and nowhere else. <external-files-path path="."> covers that
+  exactly.
+
+  This used to be <external-path name="external_files" path="."/>. <external-path> resolves to
+  Environment.getExternalStorageDirectory(), the ROOT of shared external storage, so with path="."
+  the provider could mint a readable content:// URI for any file anywhere on external storage,
+  not just the plugin's own temp capture files. Nothing in the plugin ever needed that.
+
+  The resource name is prefixed rather than the generic "provider_paths", because app resources
+  override library resources of the same name during merging: an app that happened to define its
+  own res/xml/provider_paths.xml would silently replace this file and re-widen (or break) the
+  plugin's provider, with no warning at build time.
+-->
+<paths xmlns:android="http://schemas.android.com/apk/res/android">
+    <external-files-path name="inappwebview_captured_media" path="." />
+</paths>

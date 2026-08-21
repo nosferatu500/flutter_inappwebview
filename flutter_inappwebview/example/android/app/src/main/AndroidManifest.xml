@@ -52,9 +52,13 @@
             android:authorities="${applicationId}.flutter_inappwebview_android.fileprovider"
             android:exported="false"
             android:grantUriPermissions="true">
+            <!--
+              Ships with the plugin. Grants only the app's own external files directory, which is
+              the only place the plugin writes (camera capture temp files for <input type="file">).
+            -->
             <meta-data
                 android:name="android.support.FILE_PROVIDER_PATHS"
-                android:resource="@xml/provider_paths" />
+                android:resource="@xml/inappwebview_provider_paths" />
         </provider>
 
         <provider
@@ -62,9 +66,15 @@
             android:authorities="${applicationId}.flutter_downloader.provider"
             android:exported="false"
             android:grantUriPermissions="true">
+            <!--
+              flutter_downloader's own provider, with its own paths file. It previously shared the
+              plugin's `@xml/provider_paths`; that coupling is why narrowing the plugin's paths
+              would otherwise have silently changed this provider too. Each provider declares what
+              it actually needs.
+            -->
             <meta-data
                 android:name="android.support.FILE_PROVIDER_PATHS"
-                android:resource="@xml/provider_paths"/>
+                android:resource="@xml/downloader_provider_paths"/>
         </provider>
 
         <!-- Hybrid composition -->

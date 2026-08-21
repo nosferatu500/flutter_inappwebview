@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  Paths for flutter_downloader's DownloadedFileProvider, declared by this example app.
+
+  Content is carried over unchanged from the provider_paths.xml this provider used to share with
+  the plugin's own FileProvider, so flutter_downloader's behaviour here is exactly what it was. It
+  now lives in the app because it is the app's dependency, not the plugin's: the plugin narrowed
+  its own paths to @xml/inappwebview_provider_paths, and a shared file would have dragged this
+  provider along with it.
+
+  Note this is broader than a provider should normally be, exposing the whole external storage
+  root. flutter_downloader is currently unused by this example (declared in pubspec.yaml, never
+  called from Dart), so this file and the provider it configures are both dead configuration and
+  could simply be deleted. Kept for now so that removing an unrelated plugin's setup stays a
+  deliberate decision rather than a side effect. Do not copy this as an example of good practice.
+-->
+<paths xmlns:android="http://schemas.android.com/apk/res/android">
+    <external-path name="external_files" path="."/>
+</paths>
