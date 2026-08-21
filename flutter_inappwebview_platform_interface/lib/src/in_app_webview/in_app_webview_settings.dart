@@ -21,6 +21,7 @@ import '../types/scrollview_deceleration_rate.dart';
 import '../types/selection_granularity.dart';
 import '../types/user_preferred_content_mode.dart';
 import '../types/vertical_scrollbar_position.dart';
+import '../types/web_authentication_support.dart';
 
 part 'in_app_webview_settings.g.dart';
 
@@ -1324,6 +1325,27 @@ as it can cause framerate drops on animations in Android 9 and lower (see [Hybri
     ],
   )
   bool? paymentRequestEnabled;
+
+  ///Sets the level of [Web Authentication API](https://developer.mozilla.org/en-US/docs/Web/API/Web_Authentication_API)
+  ///support this WebView provides, i.e. whether web content may create and use passkeys.
+  ///
+  ///Leave `null` to keep the platform default, which is [WebAuthenticationSupport.NONE].
+  ///
+  ///Use [WebAuthenticationSupport.FOR_APP] for an app signing users in to its own service.
+  ///[WebAuthenticationSupport.FOR_BROWSER] is for apps that are themselves a browser and has
+  ///additional requirements — read the Android documentation before setting it.
+  @SupportedPlatforms(
+    platforms: [
+      AndroidPlatform(
+        apiName: "WebSettingsCompat.setWebAuthenticationSupport",
+        apiUrl:
+            "https://developer.android.com/reference/androidx/webkit/WebSettingsCompat#setWebAuthenticationSupport(android.webkit.WebSettings,int)",
+        note:
+            "available on Android only if [WebViewFeature.WEB_AUTHENTICATION] feature is supported.",
+      ),
+    ],
+  )
+  WebAuthenticationSupport_? webAuthenticationSupport;
 
   ///Sets whether EnterpriseAuthenticationAppLinkPolicy if set by admin is allowed to have any
   ///effect on WebView.
@@ -3278,6 +3300,7 @@ as it can cause framerate drops on animations in Android 9 and lower (see [Hybri
     this.horizontalScrollbarTrackColor,
     this.algorithmicDarkeningAllowed = false,
     this.paymentRequestEnabled = false,
+    this.webAuthenticationSupport,
     this.enterpriseAuthenticationAppLinkPolicyEnabled = true,
     this.defaultVideoPoster,
     this.disallowOverScroll = false,

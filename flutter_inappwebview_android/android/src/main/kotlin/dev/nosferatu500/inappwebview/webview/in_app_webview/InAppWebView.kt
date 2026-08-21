@@ -459,6 +459,13 @@ class InAppWebView : WebView, InAppWebViewInterface, Disposable {
         settings, customSettings.paymentRequestEnabled
       )
     }
+    // Null means "leave the platform default" (WEB_AUTHENTICATION_SUPPORT_NONE), so only apply an
+    // explicit choice -- same convention as mixedContentMode and the other nullable enum settings.
+    customSettings.webAuthenticationSupport?.let {
+      if (WebViewFeature.isFeatureSupported(WebViewFeature.WEB_AUTHENTICATION)) {
+        WebSettingsCompat.setWebAuthenticationSupport(settings, it)
+      }
+    }
     if (WebViewFeature.isFeatureSupported(
         WebViewFeature.ENTERPRISE_AUTHENTICATION_APP_LINK_POLICY
       )
@@ -1399,6 +1406,15 @@ class InAppWebView : WebView, InAppWebViewInterface, Disposable {
     ) {
       WebSettingsCompat.setPaymentRequestEnabled(
         settings, newCustomSettings.paymentRequestEnabled
+      )
+    }
+    if (newSettingsMap["webAuthenticationSupport"] != null &&
+      customSettings.webAuthenticationSupport !=
+      newCustomSettings.webAuthenticationSupport &&
+      WebViewFeature.isFeatureSupported(WebViewFeature.WEB_AUTHENTICATION)
+    ) {
+      WebSettingsCompat.setWebAuthenticationSupport(
+        settings, newCustomSettings.webAuthenticationSupport!!
       )
     }
     if (newSettingsMap["enterpriseAuthenticationAppLinkPolicyEnabled"] != null &&

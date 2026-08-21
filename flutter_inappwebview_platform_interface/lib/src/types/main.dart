@@ -258,3 +258,4 @@ export 'show_file_chooser_response.dart' show ShowFileChooserResponse;
 export 'cache_model.dart' show CacheModel;
 export 'font_hinting_style.dart' show FontHintingStyle;
 export 'font_subpixel_layout.dart' show FontSubpixelLayout;
+export 'web_authentication_support.dart' show WebAuthenticationSupport;
