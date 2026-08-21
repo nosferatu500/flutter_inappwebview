@@ -2310,6 +2310,21 @@ class InAppWebView : WebView, InAppWebViewInterface, Disposable {
     imm?.showSoftInput(this, 0)
   }
 
+  override fun setAudioMuted(muted: Boolean) {
+    if (WebViewFeature.isFeatureSupported(WebViewFeature.MUTE_AUDIO)) {
+      WebViewCompat.setAudioMuted(this, muted)
+    }
+  }
+
+  // False rather than throwing when the feature is missing: audio cannot have been muted through
+  // setAudioMuted in that case, so "not muted" is the accurate answer.
+  override fun isAudioMuted(): Boolean =
+    if (WebViewFeature.isFeatureSupported(WebViewFeature.MUTE_AUDIO)) {
+      WebViewCompat.isAudioMuted(this)
+    } else {
+      false
+    }
+
   override fun hideInputMethod() {
     val activity = plugin?.activity ?: return
     val imm = activity.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager?

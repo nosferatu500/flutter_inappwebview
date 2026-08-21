@@ -141,6 +141,8 @@ interface InAppWebViewInterface {
   fun setChannelDelegate(eventWebViewChannelDelegate: WebViewChannelDelegate?)
   fun showInputMethod()
   fun hideInputMethod()
+  fun setAudioMuted(muted: Boolean)
+  fun isAudioMuted(): Boolean
   fun saveState(): ByteArray?
   fun restoreState(state: ByteArray): Boolean
 }

@@ -1317,6 +1317,18 @@ enum PlatformInAppWebViewControllerMethod {
   ///{@endtemplate}
   injectJavascriptFileFromUrl,
 
+  ///Can be used to check if the [PlatformInAppWebViewController.isAudioMuted] method is supported at runtime.
+  ///
+  ///{@template flutter_inappwebview_platform_interface.PlatformInAppWebViewController.isAudioMuted.supported_platforms}
+  ///
+  ///**Officially Supported Platforms/Implementations**:
+  ///- Android WebView ([Official API - WebViewCompat.isAudioMuted](https://developer.android.com/reference/androidx/webkit/WebViewCompat#isAudioMuted(android.webkit.WebView))):
+  ///    - Requires [WebViewFeature.MUTE_AUDIO].
+  ///
+  ///Use the [PlatformInAppWebViewController.isMethodSupported] method to check if this method is supported at runtime.
+  ///{@endtemplate}
+  isAudioMuted,
+
   ///Can be used to check if the [PlatformInAppWebViewController.isInFullscreen] method is supported at runtime.
   ///
   ///{@template flutter_inappwebview_platform_interface.PlatformInAppWebViewController.isInFullscreen.supported_platforms}
@@ -2068,6 +2080,21 @@ enum PlatformInAppWebViewControllerMethod {
   ///Use the [PlatformInAppWebViewController.isMethodSupported] method to check if this method is supported at runtime.
   ///{@endtemplate}
   setAllMediaPlaybackSuspended,
+
+  ///Can be used to check if the [PlatformInAppWebViewController.setAudioMuted] method is supported at runtime.
+  ///
+  ///{@template flutter_inappwebview_platform_interface.PlatformInAppWebViewController.setAudioMuted.supported_platforms}
+  ///
+  ///**Officially Supported Platforms/Implementations**:
+  ///- Android WebView ([Official API - WebViewCompat.setAudioMuted](https://developer.android.com/reference/androidx/webkit/WebViewCompat#setAudioMuted(android.webkit.WebView,boolean))):
+  ///    - Requires [WebViewFeature.MUTE_AUDIO]. Does nothing if the feature is not supported.
+  ///
+  ///**Parameters - Officially Supported Platforms/Implementations**:
+  ///- [muted]: all platforms
+  ///
+  ///Use the [PlatformInAppWebViewController.isMethodSupported] method to check if this method is supported at runtime.
+  ///{@endtemplate}
+  setAudioMuted,
 
   ///Can be used to check if the [PlatformInAppWebViewController.setCameraCaptureState] method is supported at runtime.
   ///
@@ -3009,6 +3036,11 @@ extension _PlatformInAppWebViewControllerMethodSupported
                     TargetPlatform.linux,
                     TargetPlatform.macOS,
                   ].contains(platform ?? defaultTargetPlatform);
+      case PlatformInAppWebViewControllerMethod.isAudioMuted:
+        return ((kIsWeb && platform != null) || !kIsWeb) &&
+            [
+              TargetPlatform.android,
+            ].contains(platform ?? defaultTargetPlatform);
       case PlatformInAppWebViewControllerMethod.isInFullscreen:
         return ((kIsWeb && platform != null) || !kIsWeb) &&
             [
@@ -3344,6 +3376,11 @@ extension _PlatformInAppWebViewControllerMethodSupported
               TargetPlatform.iOS,
               TargetPlatform.macOS,
               TargetPlatform.linux,
+            ].contains(platform ?? defaultTargetPlatform);
+      case PlatformInAppWebViewControllerMethod.setAudioMuted:
+        return ((kIsWeb && platform != null) || !kIsWeb) &&
+            [
+              TargetPlatform.android,
             ].contains(platform ?? defaultTargetPlatform);
       case PlatformInAppWebViewControllerMethod.setCameraCaptureState:
         return ((kIsWeb && platform != null) || !kIsWeb) &&

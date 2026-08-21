@@ -612,6 +612,17 @@ class WebViewChannelDelegate(webView: InAppWebView, channel: MethodChannel) :
         }
       }
 
+      WebViewChannelDelegateMethods.setAudioMuted -> {
+        if (webView != null) {
+          webView.setAudioMuted(call.argument<Boolean>("muted")!!)
+          result.success(true)
+        } else {
+          result.success(false)
+        }
+      }
+
+      WebViewChannelDelegateMethods.isAudioMuted -> result.success(webView?.isAudioMuted() ?: false)
+
       WebViewChannelDelegateMethods.saveState -> result.success(webView?.saveState())
 
       WebViewChannelDelegateMethods.restoreState -> {

@@ -1999,6 +1999,57 @@ abstract class PlatformInAppWebViewController extends PlatformInterface
     );
   }
 
+  ///{@template flutter_inappwebview_platform_interface.PlatformInAppWebViewController.setAudioMuted}
+  ///Mutes or unmutes all audio output from this WebView.
+  ///
+  ///Muting is a property of the WebView itself, so it survives navigation and applies to every
+  ///media element and Web Audio context in the page, including ones created later.
+  ///
+  ///Check [isAudioMuted] to read the current state.
+  ///{@endtemplate}
+  ///
+  ///{@macro flutter_inappwebview_platform_interface.PlatformInAppWebViewController.setAudioMuted.supported_platforms}
+  @SupportedPlatforms(
+    platforms: [
+      AndroidPlatform(
+        apiName: 'WebViewCompat.setAudioMuted',
+        apiUrl:
+            'https://developer.android.com/reference/androidx/webkit/WebViewCompat#setAudioMuted(android.webkit.WebView,boolean)',
+        note:
+            'Requires [WebViewFeature.MUTE_AUDIO]. Does nothing if the feature is not supported.',
+      ),
+    ],
+  )
+  Future<void> setAudioMuted(bool muted) {
+    throw UnimplementedError(
+      '${PlatformInAppWebViewControllerMethod.setAudioMuted.name} is not implemented on the current platform',
+    );
+  }
+
+  ///{@template flutter_inappwebview_platform_interface.PlatformInAppWebViewController.isAudioMuted}
+  ///Returns whether audio output from this WebView is currently muted.
+  ///
+  ///Returns `false` when [WebViewFeature.MUTE_AUDIO] is not supported, since audio cannot have
+  ///been muted through [setAudioMuted] in that case.
+  ///{@endtemplate}
+  ///
+  ///{@macro flutter_inappwebview_platform_interface.PlatformInAppWebViewController.isAudioMuted.supported_platforms}
+  @SupportedPlatforms(
+    platforms: [
+      AndroidPlatform(
+        apiName: 'WebViewCompat.isAudioMuted',
+        apiUrl:
+            'https://developer.android.com/reference/androidx/webkit/WebViewCompat#isAudioMuted(android.webkit.WebView)',
+        note: 'Requires [WebViewFeature.MUTE_AUDIO].',
+      ),
+    ],
+  )
+  Future<bool> isAudioMuted() {
+    throw UnimplementedError(
+      '${PlatformInAppWebViewControllerMethod.isAudioMuted.name} is not implemented on the current platform',
+    );
+  }
+
   ///{@template flutter_inappwebview_platform_interface.PlatformInAppWebViewController.hideInputMethod}
   ///Request to hide the soft input view from the context of the view that is currently accepting input.
   ///{@endtemplate}

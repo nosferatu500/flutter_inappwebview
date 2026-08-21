@@ -387,6 +387,16 @@ class InAppWebViewController {
   ///{@macro flutter_inappwebview_platform_interface.PlatformInAppWebViewController.showInputMethod.supported_platforms}
   Future<void> showInputMethod() => platform.showInputMethod();
 
+  ///{@macro flutter_inappwebview_platform_interface.PlatformInAppWebViewController.setAudioMuted}
+  ///
+  ///{@macro flutter_inappwebview_platform_interface.PlatformInAppWebViewController.setAudioMuted.supported_platforms}
+  Future<void> setAudioMuted(bool muted) => platform.setAudioMuted(muted);
+
+  ///{@macro flutter_inappwebview_platform_interface.PlatformInAppWebViewController.isAudioMuted}
+  ///
+  ///{@macro flutter_inappwebview_platform_interface.PlatformInAppWebViewController.isAudioMuted.supported_platforms}
+  Future<bool> isAudioMuted() => platform.isAudioMuted();
+
   ///{@macro flutter_inappwebview_platform_interface.PlatformInAppWebViewController.hideInputMethod}
   ///
   ///{@macro flutter_inappwebview_platform_interface.PlatformInAppWebViewController.hideInputMethod.supported_platforms}

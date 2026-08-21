@@ -75,4 +75,6 @@ enum class WebViewChannelDelegateMethods {
   showInputMethod,
   saveState,
   restoreState,
+  setAudioMuted,
+  isAudioMuted,
 }

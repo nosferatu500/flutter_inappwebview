@@ -2129,6 +2129,19 @@ class AndroidInAppWebViewController extends PlatformInAppWebViewController
   }
 
   @override
+  Future<void> setAudioMuted(bool muted) async {
+    Map<String, dynamic> args = <String, dynamic>{};
+    args.putIfAbsent('muted', () => muted);
+    return await channel?.invokeMethod('setAudioMuted', args);
+  }
+
+  @override
+  Future<bool> isAudioMuted() async {
+    Map<String, dynamic> args = <String, dynamic>{};
+    return await channel?.invokeMethod<bool>('isAudioMuted', args) ?? false;
+  }
+
+  @override
   Future<void> hideInputMethod() async {
     Map<String, dynamic> args = <String, dynamic>{};
     return await channel?.invokeMethod('hideInputMethod', args);
