@@ -139,20 +139,6 @@ class FlutterWebView(
     }
   }
 
-  override fun onInputConnectionLocked() {
-    val view = webView ?: return
-    if (view.inAppBrowserDelegate == null && !view.customSettings.useHybridComposition) {
-      view.lockInputConnection()
-    }
-  }
-
-  override fun onInputConnectionUnlocked() {
-    val view = webView ?: return
-    if (view.inAppBrowserDelegate == null && !view.customSettings.useHybridComposition) {
-      view.unlockInputConnection()
-    }
-  }
-
   override fun onFlutterViewAttached(flutterView: View) {
     val view = webView ?: return
     if (!view.customSettings.useHybridComposition) {

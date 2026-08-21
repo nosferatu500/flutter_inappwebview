@@ -71,6 +71,7 @@ import dev.nosferatu500.inappwebview.print_job.PrintJobController
 import dev.nosferatu500.inappwebview.print_job.PrintJobSettings
 import dev.nosferatu500.inappwebview.pull_to_refresh.PullToRefreshLayout
 import dev.nosferatu500.inappwebview.types.ContentWorld
+import dev.nosferatu500.inappwebview.types.Disposable
 import dev.nosferatu500.inappwebview.types.DownloadStartRequest
 import dev.nosferatu500.inappwebview.types.PluginScript
 import dev.nosferatu500.inappwebview.types.PreferredContentModeOptionType
@@ -96,10 +97,28 @@ import java.util.UUID
 // cast. A wrong shape throws ClassCastException at the cast site, which is the intended
 // failure mode. Suppressed at class level because the whole class is that boundary.
 @Suppress("UNCHECKED_CAST")
-class InAppWebView : InputAwareWebView, InAppWebViewInterface {
+class InAppWebView : WebView, InAppWebViewInterface, Disposable {
 
   @JvmField var plugin: InAppWebViewFlutterPlugin? = null
   @JvmField var inAppBrowserDelegate: InAppBrowserDelegate? = null
+
+  /**
+   * The FlutterView this WebView is displayed inside, or null under hybrid composition.
+   *
+   * Set by [FlutterWebView.onFlutterViewAttached]. Only used by the three workarounds below that
+   * need the *Flutter* view's window token or focus state rather than this WebView's:
+   * hiding the keyboard when a tap lands on something non-focusable, the Android 10 clipboard fix
+   * in `onWindowStartingActionMode` (issue #678), and [hideInputMethod].
+   *
+   * This is all that survives of `InputAwareWebView`, which used to be this class's superclass and
+   * carried a pre-Android-N hack for creating InputConnections on the WebView's IME thread. That
+   * hack was dead code: it only ever ran below API 24 and this module's minSdk is 30.
+   */
+  @JvmField var containerView: View? = null
+
+  fun setContainerView(containerView: View?) {
+    this.containerView = containerView
+  }
 
   // Shadows View's int id on purpose: this is the plugin-side view identifier (a String for
   // keep-alive views, an Int otherwise), not the Android resource id.
@@ -171,7 +190,8 @@ class InAppWebView : InputAwareWebView, InAppWebViewInterface {
     contextMenu: Map<String, Any?>?,
     containerView: View?,
     userScripts: List<UserScript>
-  ) : super(context, containerView, customSettings.useHybridComposition) {
+  ) : super(context) {
+    this.containerView = containerView
     this.plugin = plugin
     this.id = id
     val channel = MethodChannel(plugin.messenger, METHOD_CHANNEL_NAME_PREFIX + id)
@@ -2334,7 +2354,6 @@ class InAppWebView : InputAwareWebView, InAppWebViewInterface {
   override fun dispose() {
     channelDelegate?.dispose()
     channelDelegate = null
-    super.dispose()
     settings.javaScriptEnabled = false
     removeJavascriptInterface(JavaScriptBridgeJS.get_JAVASCRIPT_BRIDGE_NAME())
     if (WebViewFeature.isFeatureSupported(WebViewFeature.WEB_VIEW_RENDERER_CLIENT_BASIC_USAGE)) {
