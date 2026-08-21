@@ -1,6 +1,7 @@
 package dev.nosferatu500.inappwebview.content_blocker
 
 import android.os.Handler
+import android.os.Looper
 import android.text.TextUtils
 import android.util.Log
 import android.webkit.WebResourceResponse
@@ -15,6 +16,8 @@ import java.net.URISyntaxException
 import java.net.URL
 import java.util.concurrent.CopyOnWriteArrayList
 import java.util.concurrent.CountDownLatch
+import java.util.concurrent.TimeUnit
+import java.util.concurrent.atomic.AtomicReference
 import javax.net.ssl.SSLHandshakeException
 
 class ContentBlockerHandler(ruleList: MutableList<ContentBlocker>) {
@@ -92,19 +95,38 @@ class ContentBlockerHandler(ruleList: MutableList<ContentBlocker>) {
         }
       }
 
-      val webViewUrl = arrayOfNulls<String>(1)
+      // AtomicReference rather than a one-element array: on the timeout path below there is no
+      // latch to establish a happens-before with the posted write, so the read needs to be safe
+      // on its own.
+      val webViewUrl = AtomicReference<String?>(null)
       if (trigger.loadType.isNotEmpty() || trigger.ifTopUrl.isNotEmpty() ||
         trigger.unlessTopUrl.isNotEmpty()
       ) {
-        val latch = CountDownLatch(1)
-        Handler(webView.getWebViewLooper()).post {
-          webViewUrl[0] = webView.url
-          latch.countDown()
+        val webViewLooper = webView.getWebViewLooper()
+        if (Looper.myLooper() == webViewLooper) {
+          // Already on the WebView's thread. Posting and then waiting would queue the read
+          // behind this very method and deadlock outright.
+          webViewUrl.set(webView.url)
+        } else {
+          val latch = CountDownLatch(1)
+          Handler(webViewLooper).post {
+            webViewUrl.set(webView.url)
+            latch.countDown()
+          }
+          // Bounded: if that thread is blocked or the WebView is being torn down, the posted
+          // read never runs. Giving up leaves the URL null, which the triggers below already
+          // handle -- they are simply skipped, as when the URL could not be determined.
+          if (!latch.await(Util.SYNC_CALLBACK_TIMEOUT_MILLIS, TimeUnit.MILLISECONDS)) {
+            Log.w(
+              LOG_TAG,
+              "Timed out reading the WebView URL while evaluating a content blocker trigger; " +
+                "skipping the load-type and top-URL conditions for $url"
+            )
+          }
         }
-        latch.await()
       }
 
-      val currentUrl = webViewUrl[0]
+      val currentUrl = webViewUrl.get()
       if (currentUrl != null) {
         if (trigger.loadType.isNotEmpty()) {
           val cUrl = URI(currentUrl)

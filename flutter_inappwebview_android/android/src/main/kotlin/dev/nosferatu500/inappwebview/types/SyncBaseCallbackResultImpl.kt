@@ -3,6 +3,19 @@ package dev.nosferatu500.inappwebview.types
 import androidx.annotation.CallSuper
 import java.util.concurrent.CountDownLatch
 
+/**
+ * A callback whose producer blocks a thread until the Dart side answers.
+ *
+ * Every path out of this object MUST release [latch]. The waiter is a WebView worker thread
+ * (see `Util.invokeMethodAndWaitResult`), so a leaked latch does not merely lose one result --
+ * it stalls resource loading for the rest of the WebView's life. That is why the overrides below
+ * count down in a `finally` rather than on the success path: `decodeResult` casts a value that
+ * came off the Flutter codec and can throw ClassCastException, and [nullSuccess],
+ * [nonNullSuccess] and [defaultBehaviour] are all open for subclasses to override.
+ *
+ * Counting down twice is harmless -- CountDownLatch ignores it once the count reaches zero -- so
+ * subclasses do not need to know which paths already released it.
+ */
 open class SyncBaseCallbackResultImpl<T> : BaseCallbackResultImpl<T>() {
   @JvmField
   val latch: CountDownLatch = CountDownLatch(1)
@@ -16,12 +29,14 @@ open class SyncBaseCallbackResultImpl<T> : BaseCallbackResultImpl<T>() {
   }
 
   override fun success(obj: Any?) {
-    val result = decodeResult(obj)
-    this.result = result
-    val shouldRunDefaultBehaviour = if (result == null) nullSuccess() else nonNullSuccess(result)
-    if (shouldRunDefaultBehaviour) {
-      defaultBehaviour(result)
-    } else {
+    try {
+      val result = decodeResult(obj)
+      this.result = result
+      val shouldRunDefaultBehaviour = if (result == null) nullSuccess() else nonNullSuccess(result)
+      if (shouldRunDefaultBehaviour) {
+        defaultBehaviour(result)
+      }
+    } finally {
       latch.countDown()
     }
   }
@@ -33,6 +48,10 @@ open class SyncBaseCallbackResultImpl<T> : BaseCallbackResultImpl<T>() {
 
   @CallSuper
   override fun notImplemented() {
-    defaultBehaviour(null)
+    try {
+      defaultBehaviour(null)
+    } finally {
+      latch.countDown()
+    }
   }
 }

@@ -33,6 +33,7 @@ import java.security.cert.CertificateException
 import java.security.cert.CertificateFactory
 import java.security.cert.X509Certificate
 import java.util.Objects
+import java.util.concurrent.TimeUnit
 import java.util.regex.Pattern
 import javax.net.ssl.SSLHandshakeException
 
@@ -80,16 +81,43 @@ object Util {
     return plugin.applicationContext.resources.assets.open(key)
   }
 
+  /**
+   * How long [invokeMethodAndWaitResult] waits for the Dart side before giving up.
+   *
+   * These calls block a WebView worker thread, so an answer that never arrives used to stall
+   * that thread for the rest of the WebView's life. Ten seconds is far longer than a correct
+   * handler needs and short enough to recover from: on expiry the caller takes its existing
+   * "not handled" path -- the resource just loads normally -- which is what it already did when
+   * the wait was interrupted.
+   */
+  const val SYNC_CALLBACK_TIMEOUT_MILLIS = 10_000L
+
+  /**
+   * Invokes [method] on [channel] from the main thread and blocks the calling thread until Dart
+   * answers or [timeoutMillis] elapses.
+   *
+   * Returns `null` on timeout. The caller cannot distinguish that from Dart legitimately
+   * answering `null`, and does not need to: both mean "no response to substitute".
+   */
   @JvmStatic
   @Throws(InterruptedException::class)
   fun <T> invokeMethodAndWaitResult(
     channel: MethodChannel,
     method: String,
     arguments: Any?,
-    callback: SyncBaseCallbackResultImpl<T>
+    callback: SyncBaseCallbackResultImpl<T>,
+    timeoutMillis: Long = SYNC_CALLBACK_TIMEOUT_MILLIS
   ): T? {
     Handler(Looper.getMainLooper()).post { channel.invokeMethod(method, arguments, callback) }
-    callback.latch.await()
+    if (!callback.latch.await(timeoutMillis, TimeUnit.MILLISECONDS)) {
+      Log.w(
+        LOG_TAG,
+        "Timed out after ${timeoutMillis}ms waiting for the Dart side to answer \"$method\"; " +
+          "continuing as if it had returned null. Check that the corresponding handler returns " +
+          "on every path and does not throw."
+      )
+      return null
+    }
     return callback.result
   }
 
