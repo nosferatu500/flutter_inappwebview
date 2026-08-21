@@ -466,6 +466,13 @@ class InAppWebView : WebView, InAppWebViewInterface, Disposable {
         WebSettingsCompat.setWebAuthenticationSupport(settings, it)
       }
     }
+    // Null keeps the platform default. Disabling this also stops onReceivedIcon firing, which is
+    // what feeds the onFaviconChanged event, so never apply it unless the caller asked.
+    customSettings.downloadFaviconsEnabled?.let {
+      if (WebViewFeature.isFeatureSupported(WebViewFeature.DOWNLOAD_FAVICONS_ENABLED)) {
+        WebSettingsCompat.setDownloadFaviconsEnabled(settings, it)
+      }
+    }
     if (WebViewFeature.isFeatureSupported(
         WebViewFeature.ENTERPRISE_AUTHENTICATION_APP_LINK_POLICY
       )
@@ -1415,6 +1422,15 @@ class InAppWebView : WebView, InAppWebViewInterface, Disposable {
     ) {
       WebSettingsCompat.setWebAuthenticationSupport(
         settings, newCustomSettings.webAuthenticationSupport!!
+      )
+    }
+    if (newSettingsMap["downloadFaviconsEnabled"] != null &&
+      customSettings.downloadFaviconsEnabled !=
+      newCustomSettings.downloadFaviconsEnabled &&
+      WebViewFeature.isFeatureSupported(WebViewFeature.DOWNLOAD_FAVICONS_ENABLED)
+    ) {
+      WebSettingsCompat.setDownloadFaviconsEnabled(
+        settings, newCustomSettings.downloadFaviconsEnabled!!
       )
     }
     if (newSettingsMap["enterpriseAuthenticationAppLinkPolicyEnabled"] != null &&

@@ -1347,6 +1347,28 @@ as it can cause framerate drops on animations in Android 9 and lower (see [Hybri
   )
   WebAuthenticationSupport_? webAuthenticationSupport;
 
+  ///Sets whether this WebView downloads the favicons declared by the pages it loads.
+  ///
+  ///Favicon downloading costs an extra network request per page, so turning it off is worthwhile
+  ///for a WebView whose favicons are never displayed.
+  ///
+  ///This is what drives [PlatformWebViewCreationParams.onReceivedIcon]: with downloading disabled
+  ///that event stops firing, because there is no icon to deliver.
+  ///
+  ///Leave `null` to keep the platform default.
+  @SupportedPlatforms(
+    platforms: [
+      AndroidPlatform(
+        apiName: "WebSettingsCompat.setDownloadFaviconsEnabled",
+        apiUrl:
+            "https://developer.android.com/reference/androidx/webkit/WebSettingsCompat#setDownloadFaviconsEnabled(android.webkit.WebSettings,boolean)",
+        note:
+            "available on Android only if [WebViewFeature.DOWNLOAD_FAVICONS_ENABLED] feature is supported.",
+      ),
+    ],
+  )
+  bool? downloadFaviconsEnabled;
+
   ///Sets whether EnterpriseAuthenticationAppLinkPolicy if set by admin is allowed to have any
   ///effect on WebView.
   ///
@@ -3301,6 +3323,7 @@ as it can cause framerate drops on animations in Android 9 and lower (see [Hybri
     this.algorithmicDarkeningAllowed = false,
     this.paymentRequestEnabled = false,
     this.webAuthenticationSupport,
+    this.downloadFaviconsEnabled,
     this.enterpriseAuthenticationAppLinkPolicyEnabled = true,
     this.defaultVideoPoster,
     this.disallowOverScroll = false,

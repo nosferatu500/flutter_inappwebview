@@ -41,6 +41,12 @@ class WebViewFeature {
     'DOCUMENT_START_SCRIPT',
   );
 
+  ///Feature for [isFeatureSupported]. This feature covers [InAppWebViewSettings.downloadFaviconsEnabled].
+  static const DOWNLOAD_FAVICONS_ENABLED = WebViewFeature._internal(
+    'DOWNLOAD_FAVICONS_ENABLED',
+    'DOWNLOAD_FAVICONS_ENABLED',
+  );
+
   ///Feature for [isFeatureSupported]. This feature covers [InAppWebViewSettings.enterpriseAuthenticationAppLinkPolicyEnabled].
   static const ENTERPRISE_AUTHENTICATION_APP_LINK_POLICY =
       WebViewFeature._internal(
@@ -317,6 +323,7 @@ class WebViewFeature {
     WebViewFeature.CREATE_WEB_MESSAGE_CHANNEL,
     WebViewFeature.DISABLED_ACTION_MODE_MENU_ITEMS,
     WebViewFeature.DOCUMENT_START_SCRIPT,
+    WebViewFeature.DOWNLOAD_FAVICONS_ENABLED,
     WebViewFeature.ENTERPRISE_AUTHENTICATION_APP_LINK_POLICY,
     WebViewFeature.GET_COOKIE_INFO,
     WebViewFeature.GET_VARIATIONS_HEADER,
@@ -448,6 +455,8 @@ class WebViewFeature {
         return 'DISABLED_ACTION_MODE_MENU_ITEMS';
       case 'DOCUMENT_START_SCRIPT':
         return 'DOCUMENT_START_SCRIPT';
+      case 'DOWNLOAD_FAVICONS_ENABLED':
+        return 'DOWNLOAD_FAVICONS_ENABLED';
       case 'ENTERPRISE_AUTHENTICATION_APP_LINK_POLICY':
         return 'ENTERPRISE_AUTHENTICATION_APP_LINK_POLICY';
       case 'GET_COOKIE_INFO':

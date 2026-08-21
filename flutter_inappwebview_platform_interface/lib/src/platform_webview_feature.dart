@@ -367,6 +367,11 @@ class WebViewFeature_ {
     "WEB_AUTHENTICATION",
   );
 
+  ///Feature for [isFeatureSupported]. This feature covers [InAppWebViewSettings.downloadFaviconsEnabled].
+  static const DOWNLOAD_FAVICONS_ENABLED = WebViewFeature_._internal(
+    "DOWNLOAD_FAVICONS_ENABLED",
+  );
+
   ///Feature for [isFeatureSupported]. This feature covers [InAppWebViewSettings.enterpriseAuthenticationAppLinkPolicyEnabled].
   static const ENTERPRISE_AUTHENTICATION_APP_LINK_POLICY =
       WebViewFeature_._internal("ENTERPRISE_AUTHENTICATION_APP_LINK_POLICY");
