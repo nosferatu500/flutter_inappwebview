@@ -267,3 +267,6 @@ export 'webview_media_integrity_api_status_override_rule.dart'
     show WebViewMediaIntegrityApiStatusOverrideRule;
 export 'webview_media_integrity_api_status_config.dart'
     show WebViewMediaIntegrityApiStatusConfig;
+export 'user_agent_form_factor.dart' show UserAgentFormFactor;
+export 'user_agent_brand_version.dart' show UserAgentBrandVersion;
+export 'user_agent_metadata.dart' show UserAgentMetadata;

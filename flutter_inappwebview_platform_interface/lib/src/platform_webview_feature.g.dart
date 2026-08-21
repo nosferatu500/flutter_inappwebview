@@ -250,6 +250,19 @@ class WebViewFeature {
     'TRACING_CONTROLLER_BASIC_USAGE',
   );
 
+  ///Feature for [isFeatureSupported]. This feature covers [InAppWebViewSettings.userAgentMetadata].
+  static const USER_AGENT_METADATA = WebViewFeature._internal(
+    'USER_AGENT_METADATA',
+    'USER_AGENT_METADATA',
+  );
+
+  ///Feature for [isFeatureSupported]. This feature covers [UserAgentMetadata.formFactors],
+  ///and is separate from [WebViewFeature.USER_AGENT_METADATA].
+  static const USER_AGENT_METADATA_FORM_FACTORS = WebViewFeature._internal(
+    'USER_AGENT_METADATA_FORM_FACTORS',
+    'USER_AGENT_METADATA_FORM_FACTORS',
+  );
+
   ///
   static const VISUAL_STATE_CALLBACK = WebViewFeature._internal(
     'VISUAL_STATE_CALLBACK',
@@ -375,6 +388,8 @@ class WebViewFeature {
     WebViewFeature.STARTUP_FEATURE_SET_DATA_DIRECTORY_SUFFIX,
     WebViewFeature.STARTUP_FEATURE_SET_DIRECTORY_BASE_PATHS,
     WebViewFeature.TRACING_CONTROLLER_BASIC_USAGE,
+    WebViewFeature.USER_AGENT_METADATA,
+    WebViewFeature.USER_AGENT_METADATA_FORM_FACTORS,
     WebViewFeature.VISUAL_STATE_CALLBACK,
     WebViewFeature.WEBVIEW_MEDIA_INTEGRITY_API_STATUS,
     WebViewFeature.WEB_AUTHENTICATION,
@@ -544,6 +559,10 @@ class WebViewFeature {
         return 'STARTUP_FEATURE_SET_DIRECTORY_BASE_PATHS';
       case 'TRACING_CONTROLLER_BASIC_USAGE':
         return 'TRACING_CONTROLLER_BASIC_USAGE';
+      case 'USER_AGENT_METADATA':
+        return 'USER_AGENT_METADATA';
+      case 'USER_AGENT_METADATA_FORM_FACTORS':
+        return 'USER_AGENT_METADATA_FORM_FACTORS';
       case 'VISUAL_STATE_CALLBACK':
         return 'VISUAL_STATE_CALLBACK';
       case 'WEBVIEW_MEDIA_INTEGRITY_API_STATUS':

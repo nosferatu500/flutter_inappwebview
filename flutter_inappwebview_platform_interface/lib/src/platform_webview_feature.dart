@@ -387,6 +387,17 @@ class WebViewFeature_ {
     "WEBVIEW_MEDIA_INTEGRITY_API_STATUS",
   );
 
+  ///Feature for [isFeatureSupported]. This feature covers [InAppWebViewSettings.userAgentMetadata].
+  static const USER_AGENT_METADATA = WebViewFeature_._internal(
+    "USER_AGENT_METADATA",
+  );
+
+  ///Feature for [isFeatureSupported]. This feature covers [UserAgentMetadata.formFactors],
+  ///and is separate from [WebViewFeature.USER_AGENT_METADATA].
+  static const USER_AGENT_METADATA_FORM_FACTORS = WebViewFeature_._internal(
+    "USER_AGENT_METADATA_FORM_FACTORS",
+  );
+
   ///Feature for [isFeatureSupported]. This feature covers [InAppWebViewSettings.enterpriseAuthenticationAppLinkPolicyEnabled].
   static const ENTERPRISE_AUTHENTICATION_APP_LINK_POLICY =
       WebViewFeature_._internal("ENTERPRISE_AUTHENTICATION_APP_LINK_POLICY");

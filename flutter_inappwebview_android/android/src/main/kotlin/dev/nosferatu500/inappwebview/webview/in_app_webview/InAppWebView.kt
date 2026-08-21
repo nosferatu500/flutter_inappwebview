@@ -47,6 +47,7 @@ import android.widget.HorizontalScrollView
 import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.webkit.WebSettingsCompat
+import androidx.webkit.UserAgentMetadata
 import androidx.webkit.WebViewMediaIntegrityApiStatusConfig
 import androidx.webkit.WebViewCompat
 import androidx.webkit.WebViewFeature
@@ -503,6 +504,11 @@ class InAppWebView : WebView, InAppWebViewInterface, Disposable {
         )
       }
     }
+    customSettings.userAgentMetadata?.let {
+      if (WebViewFeature.isFeatureSupported(WebViewFeature.USER_AGENT_METADATA)) {
+        WebSettingsCompat.setUserAgentMetadata(settings, buildUserAgentMetadata(it))
+      }
+    }
     if (WebViewFeature.isFeatureSupported(
         WebViewFeature.ENTERPRISE_AUTHENTICATION_APP_LINK_POLICY
       )
@@ -880,6 +886,56 @@ class InAppWebView : WebView, InAppWebViewInterface, Disposable {
       if (origin != null && status != null) {
         builder.addOverrideRule(origin, status)
       }
+    }
+    return builder.build()
+  }
+
+
+  /**
+   * Builds an androidx [UserAgentMetadata] from the map Dart sends.
+   *
+   * Every field is optional on the Dart side, so only the ones actually provided are set and the
+   * builder's own defaults survive for the rest. That is what lets a caller override, say, just the
+   * brand list without having to restate platform, model and architecture.
+   *
+   * [UserAgentMetadata.Builder.setFormFactors] is gated on a *second* feature,
+   * USER_AGENT_METADATA_FORM_FACTORS, which a WebView can lack while still supporting the rest of
+   * the metadata API. Calling it unguarded throws there, so the field is skipped rather than
+   * failing the whole assignment.
+   */
+  private fun buildUserAgentMetadata(map: Map<String, Any?>): UserAgentMetadata {
+    val builder = UserAgentMetadata.Builder()
+    (map["brandVersionList"] as? List<Map<String, Any?>>)?.let { list ->
+      builder.setBrandVersionList(
+        list.mapNotNull { item ->
+          val brand = item["brand"] as? String
+          val majorVersion = item["majorVersion"] as? String
+          val fullVersion = item["fullVersion"] as? String
+          if (brand != null && majorVersion != null && fullVersion != null) {
+            UserAgentMetadata.BrandVersion.Builder()
+              .setBrand(brand)
+              .setMajorVersion(majorVersion)
+              .setFullVersion(fullVersion)
+              .build()
+          } else {
+            null
+          }
+        }
+      )
+    }
+    (map["fullVersion"] as? String)?.let { builder.setFullVersion(it) }
+    (map["platform"] as? String)?.let { builder.setPlatform(it) }
+    (map["platformVersion"] as? String)?.let { builder.setPlatformVersion(it) }
+    (map["architecture"] as? String)?.let { builder.setArchitecture(it) }
+    (map["model"] as? String)?.let { builder.setModel(it) }
+    (map["mobile"] as? Boolean)?.let { builder.setMobile(it) }
+    (map["bitness"] as? Int)?.let { builder.setBitness(it) }
+    (map["wow64"] as? Boolean)?.let { builder.setWow64(it) }
+    if (WebViewFeature.isFeatureSupported(
+        WebViewFeature.USER_AGENT_METADATA_FORM_FACTORS
+      )
+    ) {
+      (map["formFactors"] as? List<String>)?.let { builder.setFormFactors(it) }
     }
     return builder.build()
   }
@@ -1517,6 +1573,14 @@ class InAppWebView : WebView, InAppWebViewInterface, Disposable {
       WebSettingsCompat.setWebViewMediaIntegrityApiStatus(
         settings,
         buildMediaIntegrityConfig(newCustomSettings.webViewMediaIntegrityApiStatus!!)
+      )
+    }
+    if (newSettingsMap["userAgentMetadata"] != null &&
+      customSettings.userAgentMetadata != newCustomSettings.userAgentMetadata &&
+      WebViewFeature.isFeatureSupported(WebViewFeature.USER_AGENT_METADATA)
+    ) {
+      WebSettingsCompat.setUserAgentMetadata(
+        settings, buildUserAgentMetadata(newCustomSettings.userAgentMetadata!!)
       )
     }
     if (newSettingsMap["enterpriseAuthenticationAppLinkPolicyEnabled"] != null &&

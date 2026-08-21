@@ -22,6 +22,7 @@ import '../types/scrollview_deceleration_rate.dart';
 import '../types/selection_granularity.dart';
 import '../types/user_preferred_content_mode.dart';
 import '../types/vertical_scrollbar_position.dart';
+import '../types/user_agent_metadata.dart';
 import '../types/webview_media_integrity_api_status_config.dart';
 import '../types/web_authentication_support.dart';
 
@@ -1438,6 +1439,31 @@ as it can cause framerate drops on animations in Android 9 and lower (see [Hybri
     ],
   )
   WebViewMediaIntegrityApiStatusConfig_? webViewMediaIntegrityApiStatus;
+
+  ///Overrides the [User-Agent Client Hints](https://developer.mozilla.org/en-US/docs/Web/HTTP/Client_hints#user-agent_client_hints)
+  ///this WebView reports.
+  ///
+  ///Client Hints are the structured replacement for parsing the User-Agent string, which is frozen
+  ///and progressively reduced. Prefer this over [userAgent] when you need the *content* to see a
+  ///particular brand, platform or device: the hints are what modern sites read, and unlike a
+  ///hand-written UA string they stay well-formed.
+  ///
+  ///Every field of [UserAgentMetadata] is optional, so you can override only the hints you care
+  ///about and leave the WebView's own values for the rest.
+  ///
+  ///Leave `null` to keep the platform default.
+  @SupportedPlatforms(
+    platforms: [
+      AndroidPlatform(
+        apiName: "WebSettingsCompat.setUserAgentMetadata",
+        apiUrl:
+            "https://developer.android.com/reference/androidx/webkit/WebSettingsCompat#setUserAgentMetadata(android.webkit.WebSettings,androidx.webkit.UserAgentMetadata)",
+        note:
+            "available on Android only if [WebViewFeature.USER_AGENT_METADATA] feature is supported. [UserAgentMetadata.formFactors] additionally requires [WebViewFeature.USER_AGENT_METADATA_FORM_FACTORS].",
+      ),
+    ],
+  )
+  UserAgentMetadata_? userAgentMetadata;
 
   ///Sets whether EnterpriseAuthenticationAppLinkPolicy if set by admin is allowed to have any
   ///effect on WebView.
@@ -3397,6 +3423,7 @@ as it can cause framerate drops on animations in Android 9 and lower (see [Hybri
     this.backForwardCacheEnabled,
     this.attributionRegistrationBehavior,
     this.webViewMediaIntegrityApiStatus,
+    this.userAgentMetadata,
     this.enterpriseAuthenticationAppLinkPolicyEnabled = true,
     this.defaultVideoPoster,
     this.disallowOverScroll = false,

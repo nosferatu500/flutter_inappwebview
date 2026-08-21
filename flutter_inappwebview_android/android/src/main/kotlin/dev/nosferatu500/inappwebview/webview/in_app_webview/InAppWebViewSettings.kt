@@ -106,6 +106,7 @@ class InAppWebViewSettings : ISettings<InAppWebViewInterface> {
   @JvmField var backForwardCacheEnabled: Boolean? = null
   @JvmField var attributionRegistrationBehavior: Int? = null
   @JvmField var webViewMediaIntegrityApiStatus: Map<String, Any?>? = null
+  @JvmField var userAgentMetadata: Map<String, Any?>? = null
   @JvmField var enterpriseAuthenticationAppLinkPolicyEnabled: Boolean = true
   @JvmField var webViewAssetLoader: Map<String, Any?>? = null
   @JvmField var defaultVideoPoster: ByteArray? = null
@@ -218,6 +219,7 @@ class InAppWebViewSettings : ISettings<InAppWebViewInterface> {
         "attributionRegistrationBehavior" -> attributionRegistrationBehavior = value as Int
         "webViewMediaIntegrityApiStatus" ->
           webViewMediaIntegrityApiStatus = value as Map<String, Any?>
+        "userAgentMetadata" -> userAgentMetadata = value as Map<String, Any?>
         "enterpriseAuthenticationAppLinkPolicyEnabled" ->
           enterpriseAuthenticationAppLinkPolicyEnabled = value as Boolean
         "allowBackgroundAudioPlaying" -> allowBackgroundAudioPlaying = value as Boolean
@@ -338,6 +340,7 @@ class InAppWebViewSettings : ISettings<InAppWebViewInterface> {
     settings["backForwardCacheEnabled"] = backForwardCacheEnabled
     settings["attributionRegistrationBehavior"] = attributionRegistrationBehavior
     settings["webViewMediaIntegrityApiStatus"] = webViewMediaIntegrityApiStatus
+    settings["userAgentMetadata"] = userAgentMetadata
     settings["enterpriseAuthenticationAppLinkPolicyEnabled"] =
       enterpriseAuthenticationAppLinkPolicyEnabled
     settings["allowBackgroundAudioPlaying"] = allowBackgroundAudioPlaying
@@ -456,6 +459,31 @@ class InAppWebViewSettings : ISettings<InAppWebViewInterface> {
       ) {
         realSettings["attributionRegistrationBehavior"] =
           WebSettingsCompat.getAttributionRegistrationBehavior(settings)
+      }
+      if (WebViewFeature.isFeatureSupported(WebViewFeature.USER_AGENT_METADATA)) {
+        val metadata = WebSettingsCompat.getUserAgentMetadata(settings)
+        realSettings["userAgentMetadata"] = hashMapOf<String, Any?>(
+          "brandVersionList" to metadata.brandVersionList.map {
+            hashMapOf<String, Any?>(
+              "brand" to it.brand,
+              "majorVersion" to it.majorVersion,
+              "fullVersion" to it.fullVersion
+            )
+          },
+          "fullVersion" to metadata.fullVersion,
+          "platform" to metadata.platform,
+          "platformVersion" to metadata.platformVersion,
+          "architecture" to metadata.architecture,
+          "model" to metadata.model,
+          "mobile" to metadata.isMobile,
+          "bitness" to metadata.bitness,
+          "wow64" to metadata.isWow64,
+          // Reading this without the second feature throws, same as writing it.
+          "formFactors" to if (WebViewFeature.isFeatureSupported(
+              WebViewFeature.USER_AGENT_METADATA_FORM_FACTORS
+            )
+          ) metadata.formFactors else null
+        )
       }
       if (WebViewFeature.isFeatureSupported(
           WebViewFeature.WEBVIEW_MEDIA_INTEGRITY_API_STATUS
