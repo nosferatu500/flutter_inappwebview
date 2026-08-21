@@ -103,6 +103,7 @@ class InAppWebViewSettings : ISettings<InAppWebViewInterface> {
   @JvmField var paymentRequestEnabled: Boolean = false
   @JvmField var webAuthenticationSupport: Int? = null
   @JvmField var downloadFaviconsEnabled: Boolean? = null
+  @JvmField var backForwardCacheEnabled: Boolean? = null
   @JvmField var enterpriseAuthenticationAppLinkPolicyEnabled: Boolean = true
   @JvmField var webViewAssetLoader: Map<String, Any?>? = null
   @JvmField var defaultVideoPoster: ByteArray? = null
@@ -211,6 +212,7 @@ class InAppWebViewSettings : ISettings<InAppWebViewInterface> {
         "paymentRequestEnabled" -> paymentRequestEnabled = value as Boolean
         "webAuthenticationSupport" -> webAuthenticationSupport = value as Int
         "downloadFaviconsEnabled" -> downloadFaviconsEnabled = value as Boolean
+        "backForwardCacheEnabled" -> backForwardCacheEnabled = value as Boolean
         "enterpriseAuthenticationAppLinkPolicyEnabled" ->
           enterpriseAuthenticationAppLinkPolicyEnabled = value as Boolean
         "allowBackgroundAudioPlaying" -> allowBackgroundAudioPlaying = value as Boolean
@@ -328,6 +330,7 @@ class InAppWebViewSettings : ISettings<InAppWebViewInterface> {
     settings["paymentRequestEnabled"] = paymentRequestEnabled
     settings["webAuthenticationSupport"] = webAuthenticationSupport
     settings["downloadFaviconsEnabled"] = downloadFaviconsEnabled
+    settings["backForwardCacheEnabled"] = backForwardCacheEnabled
     settings["enterpriseAuthenticationAppLinkPolicyEnabled"] =
       enterpriseAuthenticationAppLinkPolicyEnabled
     settings["allowBackgroundAudioPlaying"] = allowBackgroundAudioPlaying
@@ -435,6 +438,10 @@ class InAppWebViewSettings : ISettings<InAppWebViewInterface> {
       if (WebViewFeature.isFeatureSupported(WebViewFeature.DOWNLOAD_FAVICONS_ENABLED)) {
         realSettings["downloadFaviconsEnabled"] =
           WebSettingsCompat.getDownloadFaviconsEnabled(settings)
+      }
+      if (WebViewFeature.isFeatureSupported(WebViewFeature.BACK_FORWARD_CACHE)) {
+        realSettings["backForwardCacheEnabled"] =
+          WebSettingsCompat.getBackForwardCacheEnabled(settings)
       }
       if (WebViewFeature.isFeatureSupported(
           WebViewFeature.ENTERPRISE_AUTHENTICATION_APP_LINK_POLICY

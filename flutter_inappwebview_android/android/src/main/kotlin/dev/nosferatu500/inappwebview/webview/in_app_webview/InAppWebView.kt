@@ -473,6 +473,14 @@ class InAppWebView : WebView, InAppWebViewInterface, Disposable {
         WebSettingsCompat.setDownloadFaviconsEnabled(settings, it)
       }
     }
+    // Null keeps the platform default. Enabling this changes when the load lifecycle runs: a page
+    // restored from the back/forward cache is not re-loaded, so callbacks that fire per navigation
+    // will not fire on a cached back.
+    customSettings.backForwardCacheEnabled?.let {
+      if (WebViewFeature.isFeatureSupported(WebViewFeature.BACK_FORWARD_CACHE)) {
+        WebSettingsCompat.setBackForwardCacheEnabled(settings, it)
+      }
+    }
     if (WebViewFeature.isFeatureSupported(
         WebViewFeature.ENTERPRISE_AUTHENTICATION_APP_LINK_POLICY
       )
@@ -1431,6 +1439,15 @@ class InAppWebView : WebView, InAppWebViewInterface, Disposable {
     ) {
       WebSettingsCompat.setDownloadFaviconsEnabled(
         settings, newCustomSettings.downloadFaviconsEnabled!!
+      )
+    }
+    if (newSettingsMap["backForwardCacheEnabled"] != null &&
+      customSettings.backForwardCacheEnabled !=
+      newCustomSettings.backForwardCacheEnabled &&
+      WebViewFeature.isFeatureSupported(WebViewFeature.BACK_FORWARD_CACHE)
+    ) {
+      WebSettingsCompat.setBackForwardCacheEnabled(
+        settings, newCustomSettings.backForwardCacheEnabled!!
       )
     }
     if (newSettingsMap["enterpriseAuthenticationAppLinkPolicyEnabled"] != null &&

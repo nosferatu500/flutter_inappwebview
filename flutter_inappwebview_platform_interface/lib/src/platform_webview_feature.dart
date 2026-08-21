@@ -372,6 +372,11 @@ class WebViewFeature_ {
     "DOWNLOAD_FAVICONS_ENABLED",
   );
 
+  ///Feature for [isFeatureSupported]. This feature covers [InAppWebViewSettings.backForwardCacheEnabled].
+  static const BACK_FORWARD_CACHE = WebViewFeature_._internal(
+    "BACK_FORWARD_CACHE",
+  );
+
   ///Feature for [isFeatureSupported]. This feature covers [InAppWebViewSettings.enterpriseAuthenticationAppLinkPolicyEnabled].
   static const ENTERPRISE_AUTHENTICATION_APP_LINK_POLICY =
       WebViewFeature_._internal("ENTERPRISE_AUTHENTICATION_APP_LINK_POLICY");

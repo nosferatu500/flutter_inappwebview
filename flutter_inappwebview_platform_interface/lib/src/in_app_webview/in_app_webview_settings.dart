@@ -1369,6 +1369,31 @@ as it can cause framerate drops on animations in Android 9 and lower (see [Hybri
   )
   bool? downloadFaviconsEnabled;
 
+  ///Sets whether this WebView uses the [back/forward cache](https://web.dev/articles/bfcache).
+  ///
+  ///When enabled, a page the user navigates away from is kept in memory in a frozen state, so
+  ///going back restores it instantly instead of reloading it.
+  ///
+  ///**This changes what your load callbacks see.** A page served from the back/forward cache is
+  ///restored rather than re-loaded, so a back navigation does not repeat the full load lifecycle
+  ///the way it does without the cache. Pages that need to run work on every appearance should
+  ///listen for the web-standard `pageshow`/`pagehide` events and check their `persisted` flag,
+  ///which is the signal designed for exactly this.
+  ///
+  ///Leave `null` to keep the platform default.
+  @SupportedPlatforms(
+    platforms: [
+      AndroidPlatform(
+        apiName: "WebSettingsCompat.setBackForwardCacheEnabled",
+        apiUrl:
+            "https://developer.android.com/reference/androidx/webkit/WebSettingsCompat#setBackForwardCacheEnabled(android.webkit.WebSettings,boolean)",
+        note:
+            "available on Android only if [WebViewFeature.BACK_FORWARD_CACHE] feature is supported.",
+      ),
+    ],
+  )
+  bool? backForwardCacheEnabled;
+
   ///Sets whether EnterpriseAuthenticationAppLinkPolicy if set by admin is allowed to have any
   ///effect on WebView.
   ///
@@ -3324,6 +3349,7 @@ as it can cause framerate drops on animations in Android 9 and lower (see [Hybri
     this.paymentRequestEnabled = false,
     this.webAuthenticationSupport,
     this.downloadFaviconsEnabled,
+    this.backForwardCacheEnabled,
     this.enterpriseAuthenticationAppLinkPolicyEnabled = true,
     this.defaultVideoPoster,
     this.disallowOverScroll = false,
