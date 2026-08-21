@@ -100,6 +100,7 @@ class InAppWebViewSettings : ISettings<InAppWebViewInterface> {
   @JvmField var horizontalScrollbarThumbColor: String? = null
   @JvmField var horizontalScrollbarTrackColor: String? = null
   @JvmField var algorithmicDarkeningAllowed: Boolean = false
+  @JvmField var paymentRequestEnabled: Boolean = false
   @JvmField var enterpriseAuthenticationAppLinkPolicyEnabled: Boolean = true
   @JvmField var webViewAssetLoader: Map<String, Any?>? = null
   @JvmField var defaultVideoPoster: ByteArray? = null
@@ -205,6 +206,7 @@ class InAppWebViewSettings : ISettings<InAppWebViewInterface> {
         "horizontalScrollbarThumbColor" -> horizontalScrollbarThumbColor = value as String
         "horizontalScrollbarTrackColor" -> horizontalScrollbarTrackColor = value as String
         "algorithmicDarkeningAllowed" -> algorithmicDarkeningAllowed = value as Boolean
+        "paymentRequestEnabled" -> paymentRequestEnabled = value as Boolean
         "enterpriseAuthenticationAppLinkPolicyEnabled" ->
           enterpriseAuthenticationAppLinkPolicyEnabled = value as Boolean
         "allowBackgroundAudioPlaying" -> allowBackgroundAudioPlaying = value as Boolean
@@ -319,6 +321,7 @@ class InAppWebViewSettings : ISettings<InAppWebViewInterface> {
     settings["horizontalScrollbarThumbColor"] = horizontalScrollbarThumbColor
     settings["horizontalScrollbarTrackColor"] = horizontalScrollbarTrackColor
     settings["algorithmicDarkeningAllowed"] = algorithmicDarkeningAllowed
+    settings["paymentRequestEnabled"] = paymentRequestEnabled
     settings["enterpriseAuthenticationAppLinkPolicyEnabled"] =
       enterpriseAuthenticationAppLinkPolicyEnabled
     settings["allowBackgroundAudioPlaying"] = allowBackgroundAudioPlaying
@@ -414,6 +417,10 @@ class InAppWebViewSettings : ISettings<InAppWebViewInterface> {
       if (WebViewFeature.isFeatureSupported(WebViewFeature.ALGORITHMIC_DARKENING)) {
         realSettings["algorithmicDarkeningAllowed"] =
           WebSettingsCompat.isAlgorithmicDarkeningAllowed(settings)
+      }
+      if (WebViewFeature.isFeatureSupported(WebViewFeature.PAYMENT_REQUEST)) {
+        realSettings["paymentRequestEnabled"] =
+          WebSettingsCompat.getPaymentRequestEnabled(settings)
       }
       if (WebViewFeature.isFeatureSupported(
           WebViewFeature.ENTERPRISE_AUTHENTICATION_APP_LINK_POLICY

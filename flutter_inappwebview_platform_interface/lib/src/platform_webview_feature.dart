@@ -359,6 +359,9 @@ class WebViewFeature_ {
     "ALGORITHMIC_DARKENING",
   );
 
+  ///Feature for [isFeatureSupported]. This feature covers [InAppWebViewSettings.paymentRequestEnabled].
+  static const PAYMENT_REQUEST = WebViewFeature_._internal("PAYMENT_REQUEST");
+
   ///Feature for [isFeatureSupported]. This feature covers [InAppWebViewSettings.enterpriseAuthenticationAppLinkPolicyEnabled].
   static const ENTERPRISE_AUTHENTICATION_APP_LINK_POLICY =
       WebViewFeature_._internal("ENTERPRISE_AUTHENTICATION_APP_LINK_POLICY");

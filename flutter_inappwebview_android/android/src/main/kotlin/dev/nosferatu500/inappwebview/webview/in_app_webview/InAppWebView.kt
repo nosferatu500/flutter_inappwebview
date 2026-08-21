@@ -454,6 +454,11 @@ class InAppWebView : WebView, InAppWebViewInterface, Disposable {
         settings, customSettings.algorithmicDarkeningAllowed
       )
     }
+    if (WebViewFeature.isFeatureSupported(WebViewFeature.PAYMENT_REQUEST)) {
+      WebSettingsCompat.setPaymentRequestEnabled(
+        settings, customSettings.paymentRequestEnabled
+      )
+    }
     if (WebViewFeature.isFeatureSupported(
         WebViewFeature.ENTERPRISE_AUTHENTICATION_APP_LINK_POLICY
       )
@@ -1383,6 +1388,17 @@ class InAppWebView : WebView, InAppWebViewInterface, Disposable {
     ) {
       WebSettingsCompat.setAlgorithmicDarkeningAllowed(
         settings, newCustomSettings.algorithmicDarkeningAllowed
+      )
+    }
+    if (newSettingsMap["paymentRequestEnabled"] != null &&
+      !Util.objEquals(
+        customSettings.paymentRequestEnabled,
+        newCustomSettings.paymentRequestEnabled
+      ) &&
+      WebViewFeature.isFeatureSupported(WebViewFeature.PAYMENT_REQUEST)
+    ) {
+      WebSettingsCompat.setPaymentRequestEnabled(
+        settings, newCustomSettings.paymentRequestEnabled
       )
     }
     if (newSettingsMap["enterpriseAuthenticationAppLinkPolicyEnabled"] != null &&

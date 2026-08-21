@@ -1305,6 +1305,26 @@ as it can cause framerate drops on animations in Android 9 and lower (see [Hybri
   )
   bool? algorithmicDarkeningAllowed;
 
+  ///Sets whether the [Payment Request API](https://developer.mozilla.org/en-US/docs/Web/API/Payment_Request_API)
+  ///is enabled in this WebView.
+  ///
+  ///When enabled, `PaymentRequest` becomes available to web content, which lets a page invoke
+  ///payment handlers — including Google Pay — instead of falling back to a manual checkout form.
+  ///
+  ///The Payment Request API is disabled by default.
+  @SupportedPlatforms(
+    platforms: [
+      AndroidPlatform(
+        apiName: "WebSettingsCompat.setPaymentRequestEnabled",
+        apiUrl:
+            "https://developer.android.com/reference/androidx/webkit/WebSettingsCompat#setPaymentRequestEnabled(android.webkit.WebSettings,boolean)",
+        note:
+            "available on Android only if [WebViewFeature.PAYMENT_REQUEST] feature is supported.",
+      ),
+    ],
+  )
+  bool? paymentRequestEnabled;
+
   ///Sets whether EnterpriseAuthenticationAppLinkPolicy if set by admin is allowed to have any
   ///effect on WebView.
   ///
@@ -3257,6 +3277,7 @@ as it can cause framerate drops on animations in Android 9 and lower (see [Hybri
     this.horizontalScrollbarThumbColor,
     this.horizontalScrollbarTrackColor,
     this.algorithmicDarkeningAllowed = false,
+    this.paymentRequestEnabled = false,
     this.enterpriseAuthenticationAppLinkPolicyEnabled = true,
     this.defaultVideoPoster,
     this.disallowOverScroll = false,
