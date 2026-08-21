@@ -47,6 +47,7 @@ import android.widget.HorizontalScrollView
 import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.webkit.WebSettingsCompat
+import androidx.webkit.WebViewMediaIntegrityApiStatusConfig
 import androidx.webkit.WebViewCompat
 import androidx.webkit.WebViewFeature
 import dev.nosferatu500.inappwebview.InAppWebViewFlutterPlugin
@@ -492,6 +493,16 @@ class InAppWebView : WebView, InAppWebViewInterface, Disposable {
         WebSettingsCompat.setAttributionRegistrationBehavior(settings, it)
       }
     }
+    customSettings.webViewMediaIntegrityApiStatus?.let {
+      if (WebViewFeature.isFeatureSupported(
+          WebViewFeature.WEBVIEW_MEDIA_INTEGRITY_API_STATUS
+        )
+      ) {
+        WebSettingsCompat.setWebViewMediaIntegrityApiStatus(
+          settings, buildMediaIntegrityConfig(it)
+        )
+      }
+    }
     if (WebViewFeature.isFeatureSupported(
         WebViewFeature.ENTERPRISE_AUTHENTICATION_APP_LINK_POLICY
       )
@@ -849,6 +860,30 @@ class InAppWebView : WebView, InAppWebViewInterface, Disposable {
   }
 
   @SuppressLint("RestrictedApi")
+
+  /**
+   * Builds an androidx [WebViewMediaIntegrityApiStatusConfig] from the map Dart sends.
+   *
+   * Dart models the overrides as a list of `{origin, status}` objects rather than Android's
+   * `Map<String, Integer>`, so that the status stays a typed enum on the Dart side. The list maps
+   * one-to-one onto the builder's own per-rule `addOverrideRule`.
+   */
+  private fun buildMediaIntegrityConfig(
+    map: Map<String, Any?>
+  ): WebViewMediaIntegrityApiStatusConfig {
+    val defaultStatus = map["defaultStatus"] as Int
+    val builder = WebViewMediaIntegrityApiStatusConfig.Builder(defaultStatus)
+    val rules = map["overrideRules"] as? List<Map<String, Any?>>
+    rules?.forEach { rule ->
+      val origin = rule["origin"] as? String
+      val status = rule["status"] as? Int
+      if (origin != null && status != null) {
+        builder.addOverrideRule(origin, status)
+      }
+    }
+    return builder.build()
+  }
+
   override fun setSettings(
     newSettings: InAppWebViewSettings,
     newSettingsMap: HashMap<String, Any?>
@@ -1470,6 +1505,18 @@ class InAppWebView : WebView, InAppWebViewInterface, Disposable {
     ) {
       WebSettingsCompat.setAttributionRegistrationBehavior(
         settings, newCustomSettings.attributionRegistrationBehavior!!
+      )
+    }
+    if (newSettingsMap["webViewMediaIntegrityApiStatus"] != null &&
+      customSettings.webViewMediaIntegrityApiStatus !=
+      newCustomSettings.webViewMediaIntegrityApiStatus &&
+      WebViewFeature.isFeatureSupported(
+        WebViewFeature.WEBVIEW_MEDIA_INTEGRITY_API_STATUS
+      )
+    ) {
+      WebSettingsCompat.setWebViewMediaIntegrityApiStatus(
+        settings,
+        buildMediaIntegrityConfig(newCustomSettings.webViewMediaIntegrityApiStatus!!)
       )
     }
     if (newSettingsMap["enterpriseAuthenticationAppLinkPolicyEnabled"] != null &&

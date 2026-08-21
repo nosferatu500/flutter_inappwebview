@@ -256,6 +256,12 @@ class WebViewFeature {
     'VISUAL_STATE_CALLBACK',
   );
 
+  ///Feature for [isFeatureSupported]. This feature covers [InAppWebViewSettings.webViewMediaIntegrityApiStatus].
+  static const WEBVIEW_MEDIA_INTEGRITY_API_STATUS = WebViewFeature._internal(
+    'WEBVIEW_MEDIA_INTEGRITY_API_STATUS',
+    'WEBVIEW_MEDIA_INTEGRITY_API_STATUS',
+  );
+
   ///Feature for [isFeatureSupported]. This feature covers [InAppWebViewSettings.webAuthenticationSupport].
   static const WEB_AUTHENTICATION = WebViewFeature._internal(
     'WEB_AUTHENTICATION',
@@ -370,6 +376,7 @@ class WebViewFeature {
     WebViewFeature.STARTUP_FEATURE_SET_DIRECTORY_BASE_PATHS,
     WebViewFeature.TRACING_CONTROLLER_BASIC_USAGE,
     WebViewFeature.VISUAL_STATE_CALLBACK,
+    WebViewFeature.WEBVIEW_MEDIA_INTEGRITY_API_STATUS,
     WebViewFeature.WEB_AUTHENTICATION,
     WebViewFeature.WEB_MESSAGE_ARRAY_BUFFER,
     WebViewFeature.WEB_MESSAGE_CALLBACK_ON_MESSAGE,
@@ -539,6 +546,8 @@ class WebViewFeature {
         return 'TRACING_CONTROLLER_BASIC_USAGE';
       case 'VISUAL_STATE_CALLBACK':
         return 'VISUAL_STATE_CALLBACK';
+      case 'WEBVIEW_MEDIA_INTEGRITY_API_STATUS':
+        return 'WEBVIEW_MEDIA_INTEGRITY_API_STATUS';
       case 'WEB_AUTHENTICATION':
         return 'WEB_AUTHENTICATION';
       case 'WEB_MESSAGE_ARRAY_BUFFER':

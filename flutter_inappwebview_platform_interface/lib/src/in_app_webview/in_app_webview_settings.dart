@@ -22,6 +22,7 @@ import '../types/scrollview_deceleration_rate.dart';
 import '../types/selection_granularity.dart';
 import '../types/user_preferred_content_mode.dart';
 import '../types/vertical_scrollbar_position.dart';
+import '../types/webview_media_integrity_api_status_config.dart';
 import '../types/web_authentication_support.dart';
 
 part 'in_app_webview_settings.g.dart';
@@ -1415,6 +1416,28 @@ as it can cause framerate drops on animations in Android 9 and lower (see [Hybri
     ],
   )
   AttributionRegistrationBehavior_? attributionRegistrationBehavior;
+
+  ///Sets the [WebView Media Integrity API](https://developer.android.com/privacy-and-security/webview-media-integrity)
+  ///configuration for this WebView.
+  ///
+  ///The API lets a media provider verify that content is being played in a genuine, unmodified
+  ///WebView before serving it. The config carries a default status plus optional per-origin
+  ///overrides, so one trusted provider can be granted app identity while everything else stays
+  ///more restricted.
+  ///
+  ///Leave `null` to keep the platform default.
+  @SupportedPlatforms(
+    platforms: [
+      AndroidPlatform(
+        apiName: "WebSettingsCompat.setWebViewMediaIntegrityApiStatus",
+        apiUrl:
+            "https://developer.android.com/reference/androidx/webkit/WebSettingsCompat#setWebViewMediaIntegrityApiStatus(android.webkit.WebSettings,androidx.webkit.WebViewMediaIntegrityApiStatusConfig)",
+        note:
+            "available on Android only if [WebViewFeature.WEBVIEW_MEDIA_INTEGRITY_API_STATUS] feature is supported.",
+      ),
+    ],
+  )
+  WebViewMediaIntegrityApiStatusConfig_? webViewMediaIntegrityApiStatus;
 
   ///Sets whether EnterpriseAuthenticationAppLinkPolicy if set by admin is allowed to have any
   ///effect on WebView.
@@ -3373,6 +3396,7 @@ as it can cause framerate drops on animations in Android 9 and lower (see [Hybri
     this.downloadFaviconsEnabled,
     this.backForwardCacheEnabled,
     this.attributionRegistrationBehavior,
+    this.webViewMediaIntegrityApiStatus,
     this.enterpriseAuthenticationAppLinkPolicyEnabled = true,
     this.defaultVideoPoster,
     this.disallowOverScroll = false,

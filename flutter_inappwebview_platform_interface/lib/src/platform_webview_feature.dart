@@ -382,6 +382,11 @@ class WebViewFeature_ {
     "ATTRIBUTION_REGISTRATION_BEHAVIOR",
   );
 
+  ///Feature for [isFeatureSupported]. This feature covers [InAppWebViewSettings.webViewMediaIntegrityApiStatus].
+  static const WEBVIEW_MEDIA_INTEGRITY_API_STATUS = WebViewFeature_._internal(
+    "WEBVIEW_MEDIA_INTEGRITY_API_STATUS",
+  );
+
   ///Feature for [isFeatureSupported]. This feature covers [InAppWebViewSettings.enterpriseAuthenticationAppLinkPolicyEnabled].
   static const ENTERPRISE_AUTHENTICATION_APP_LINK_POLICY =
       WebViewFeature_._internal("ENTERPRISE_AUTHENTICATION_APP_LINK_POLICY");

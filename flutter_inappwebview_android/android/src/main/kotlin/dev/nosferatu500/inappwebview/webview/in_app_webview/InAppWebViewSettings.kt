@@ -105,6 +105,7 @@ class InAppWebViewSettings : ISettings<InAppWebViewInterface> {
   @JvmField var downloadFaviconsEnabled: Boolean? = null
   @JvmField var backForwardCacheEnabled: Boolean? = null
   @JvmField var attributionRegistrationBehavior: Int? = null
+  @JvmField var webViewMediaIntegrityApiStatus: Map<String, Any?>? = null
   @JvmField var enterpriseAuthenticationAppLinkPolicyEnabled: Boolean = true
   @JvmField var webViewAssetLoader: Map<String, Any?>? = null
   @JvmField var defaultVideoPoster: ByteArray? = null
@@ -215,6 +216,8 @@ class InAppWebViewSettings : ISettings<InAppWebViewInterface> {
         "downloadFaviconsEnabled" -> downloadFaviconsEnabled = value as Boolean
         "backForwardCacheEnabled" -> backForwardCacheEnabled = value as Boolean
         "attributionRegistrationBehavior" -> attributionRegistrationBehavior = value as Int
+        "webViewMediaIntegrityApiStatus" ->
+          webViewMediaIntegrityApiStatus = value as Map<String, Any?>
         "enterpriseAuthenticationAppLinkPolicyEnabled" ->
           enterpriseAuthenticationAppLinkPolicyEnabled = value as Boolean
         "allowBackgroundAudioPlaying" -> allowBackgroundAudioPlaying = value as Boolean
@@ -334,6 +337,7 @@ class InAppWebViewSettings : ISettings<InAppWebViewInterface> {
     settings["downloadFaviconsEnabled"] = downloadFaviconsEnabled
     settings["backForwardCacheEnabled"] = backForwardCacheEnabled
     settings["attributionRegistrationBehavior"] = attributionRegistrationBehavior
+    settings["webViewMediaIntegrityApiStatus"] = webViewMediaIntegrityApiStatus
     settings["enterpriseAuthenticationAppLinkPolicyEnabled"] =
       enterpriseAuthenticationAppLinkPolicyEnabled
     settings["allowBackgroundAudioPlaying"] = allowBackgroundAudioPlaying
@@ -452,6 +456,21 @@ class InAppWebViewSettings : ISettings<InAppWebViewInterface> {
       ) {
         realSettings["attributionRegistrationBehavior"] =
           WebSettingsCompat.getAttributionRegistrationBehavior(settings)
+      }
+      if (WebViewFeature.isFeatureSupported(
+          WebViewFeature.WEBVIEW_MEDIA_INTEGRITY_API_STATUS
+        )
+      ) {
+        val config = WebSettingsCompat.getWebViewMediaIntegrityApiStatus(settings)
+        realSettings["webViewMediaIntegrityApiStatus"] = hashMapOf<String, Any?>(
+          "defaultStatus" to config.defaultStatus,
+          // Android stores the overrides as origin -> status; Dart models them as a list of
+          // {origin, status} objects, so flip the shape back on the way out. See
+          // WebViewMediaIntegrityApiStatusConfig.overrideRules for why.
+          "overrideRules" to config.overrideRules.map { (origin, status) ->
+            hashMapOf<String, Any?>("origin" to origin, "status" to status)
+          }
+        )
       }
       if (WebViewFeature.isFeatureSupported(
           WebViewFeature.ENTERPRISE_AUTHENTICATION_APP_LINK_POLICY

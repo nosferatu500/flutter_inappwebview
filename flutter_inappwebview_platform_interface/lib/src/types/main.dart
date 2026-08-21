@@ -261,3 +261,9 @@ export 'font_subpixel_layout.dart' show FontSubpixelLayout;
 export 'web_authentication_support.dart' show WebAuthenticationSupport;
 export 'attribution_registration_behavior.dart'
     show AttributionRegistrationBehavior;
+export 'webview_media_integrity_api_status.dart'
+    show WebViewMediaIntegrityApiStatus;
+export 'webview_media_integrity_api_status_override_rule.dart'
+    show WebViewMediaIntegrityApiStatusOverrideRule;
+export 'webview_media_integrity_api_status_config.dart'
+    show WebViewMediaIntegrityApiStatusConfig;
