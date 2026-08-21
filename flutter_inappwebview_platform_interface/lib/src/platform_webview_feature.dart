@@ -377,6 +377,11 @@ class WebViewFeature_ {
     "BACK_FORWARD_CACHE",
   );
 
+  ///Feature for [isFeatureSupported]. This feature covers [InAppWebViewSettings.attributionRegistrationBehavior].
+  static const ATTRIBUTION_REGISTRATION_BEHAVIOR = WebViewFeature_._internal(
+    "ATTRIBUTION_REGISTRATION_BEHAVIOR",
+  );
+
   ///Feature for [isFeatureSupported]. This feature covers [InAppWebViewSettings.enterpriseAuthenticationAppLinkPolicyEnabled].
   static const ENTERPRISE_AUTHENTICATION_APP_LINK_POLICY =
       WebViewFeature_._internal("ENTERPRISE_AUTHENTICATION_APP_LINK_POLICY");

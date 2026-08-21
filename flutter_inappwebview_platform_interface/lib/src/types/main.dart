@@ -259,3 +259,5 @@ export 'cache_model.dart' show CacheModel;
 export 'font_hinting_style.dart' show FontHintingStyle;
 export 'font_subpixel_layout.dart' show FontSubpixelLayout;
 export 'web_authentication_support.dart' show WebAuthenticationSupport;
+export 'attribution_registration_behavior.dart'
+    show AttributionRegistrationBehavior;

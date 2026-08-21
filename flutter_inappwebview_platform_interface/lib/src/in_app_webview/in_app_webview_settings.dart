@@ -4,6 +4,7 @@ import 'package:flutter_inappwebview_internal_annotations/flutter_inappwebview_i
 import 'package:flutter_inappwebview_platform_interface/flutter_inappwebview_platform_interface.dart';
 
 import '../types/action_mode_menu_item.dart';
+import '../types/attribution_registration_behavior.dart';
 import '../types/cache_mode.dart';
 import '../types/data_detector_types.dart';
 import '../types/font_hinting_style.dart';
@@ -1393,6 +1394,27 @@ as it can cause framerate drops on animations in Android 9 and lower (see [Hybri
     ],
   )
   bool? backForwardCacheEnabled;
+
+  ///Sets how this WebView registers sources and triggers for the
+  ///[Attribution Reporting API](https://developer.android.com/design-for-safety/privacy-sandbox/attribution).
+  ///
+  ///Controls whether an ad impression and its conversion are attributed to the app or to the web.
+  ///Only relevant to apps that display ads or measure conversions in a WebView; use
+  ///[AttributionRegistrationBehavior.DISABLED] to switch attribution registration off entirely.
+  ///
+  ///Leave `null` to keep the platform default.
+  @SupportedPlatforms(
+    platforms: [
+      AndroidPlatform(
+        apiName: "WebSettingsCompat.setAttributionRegistrationBehavior",
+        apiUrl:
+            "https://developer.android.com/reference/androidx/webkit/WebSettingsCompat#setAttributionRegistrationBehavior(android.webkit.WebSettings,int)",
+        note:
+            "available on Android only if [WebViewFeature.ATTRIBUTION_REGISTRATION_BEHAVIOR] feature is supported.",
+      ),
+    ],
+  )
+  AttributionRegistrationBehavior_? attributionRegistrationBehavior;
 
   ///Sets whether EnterpriseAuthenticationAppLinkPolicy if set by admin is allowed to have any
   ///effect on WebView.
@@ -3350,6 +3372,7 @@ as it can cause framerate drops on animations in Android 9 and lower (see [Hybri
     this.webAuthenticationSupport,
     this.downloadFaviconsEnabled,
     this.backForwardCacheEnabled,
+    this.attributionRegistrationBehavior,
     this.enterpriseAuthenticationAppLinkPolicyEnabled = true,
     this.defaultVideoPoster,
     this.disallowOverScroll = false,

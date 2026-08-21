@@ -481,6 +481,17 @@ class InAppWebView : WebView, InAppWebViewInterface, Disposable {
         WebSettingsCompat.setBackForwardCacheEnabled(settings, it)
       }
     }
+    // Null keeps the platform default, which is deliberate here: this decides whether ad
+    // attribution is recorded against the app or the web, so guessing on the caller's behalf
+    // would be choosing a privacy-relevant behaviour they never asked for.
+    customSettings.attributionRegistrationBehavior?.let {
+      if (WebViewFeature.isFeatureSupported(
+          WebViewFeature.ATTRIBUTION_REGISTRATION_BEHAVIOR
+        )
+      ) {
+        WebSettingsCompat.setAttributionRegistrationBehavior(settings, it)
+      }
+    }
     if (WebViewFeature.isFeatureSupported(
         WebViewFeature.ENTERPRISE_AUTHENTICATION_APP_LINK_POLICY
       )
@@ -1448,6 +1459,17 @@ class InAppWebView : WebView, InAppWebViewInterface, Disposable {
     ) {
       WebSettingsCompat.setBackForwardCacheEnabled(
         settings, newCustomSettings.backForwardCacheEnabled!!
+      )
+    }
+    if (newSettingsMap["attributionRegistrationBehavior"] != null &&
+      customSettings.attributionRegistrationBehavior !=
+      newCustomSettings.attributionRegistrationBehavior &&
+      WebViewFeature.isFeatureSupported(
+        WebViewFeature.ATTRIBUTION_REGISTRATION_BEHAVIOR
+      )
+    ) {
+      WebSettingsCompat.setAttributionRegistrationBehavior(
+        settings, newCustomSettings.attributionRegistrationBehavior!!
       )
     }
     if (newSettingsMap["enterpriseAuthenticationAppLinkPolicyEnabled"] != null &&

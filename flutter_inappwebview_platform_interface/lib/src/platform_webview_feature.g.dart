@@ -23,6 +23,12 @@ class WebViewFeature {
     'ALGORITHMIC_DARKENING',
   );
 
+  ///Feature for [isFeatureSupported]. This feature covers [InAppWebViewSettings.attributionRegistrationBehavior].
+  static const ATTRIBUTION_REGISTRATION_BEHAVIOR = WebViewFeature._internal(
+    'ATTRIBUTION_REGISTRATION_BEHAVIOR',
+    'ATTRIBUTION_REGISTRATION_BEHAVIOR',
+  );
+
   ///Feature for [isFeatureSupported]. This feature covers [InAppWebViewSettings.backForwardCacheEnabled].
   static const BACK_FORWARD_CACHE = WebViewFeature._internal(
     'BACK_FORWARD_CACHE',
@@ -326,6 +332,7 @@ class WebViewFeature {
   ///Set of all values of [WebViewFeature].
   static final Set<WebViewFeature> values = {
     WebViewFeature.ALGORITHMIC_DARKENING,
+    WebViewFeature.ATTRIBUTION_REGISTRATION_BEHAVIOR,
     WebViewFeature.BACK_FORWARD_CACHE,
     WebViewFeature.CREATE_WEB_MESSAGE_CHANNEL,
     WebViewFeature.DISABLED_ACTION_MODE_MENU_ITEMS,
@@ -456,6 +463,8 @@ class WebViewFeature {
     switch (_value) {
       case 'ALGORITHMIC_DARKENING':
         return 'ALGORITHMIC_DARKENING';
+      case 'ATTRIBUTION_REGISTRATION_BEHAVIOR':
+        return 'ATTRIBUTION_REGISTRATION_BEHAVIOR';
       case 'BACK_FORWARD_CACHE':
         return 'BACK_FORWARD_CACHE';
       case 'CREATE_WEB_MESSAGE_CHANNEL':
