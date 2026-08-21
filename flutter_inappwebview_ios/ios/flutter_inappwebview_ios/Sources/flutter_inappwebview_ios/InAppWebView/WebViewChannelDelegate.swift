@@ -1031,6 +1031,14 @@ public class WebViewChannelDelegate: ChannelDelegate {
                 return CustomSchemeResponse.fromMap(map: obj as? [String:Any?])
             }
         }
+
+        // Same safety net the decision-handler callbacks use: if this is deallocated without Dart
+        // ever replying, the WKURLSchemeTask waiting on it would otherwise stay pending forever.
+        // CustomSchemeHandler's defaultBehaviour fails the task, and is guarded against running
+        // twice.
+        deinit {
+            self.defaultBehaviour(nil)
+        }
     }
     
     public func onLoadResourceWithCustomScheme(request: WebResourceRequest, callback: LoadResourceWithCustomSchemeCallback) {
