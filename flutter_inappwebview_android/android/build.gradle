@@ -89,4 +89,18 @@ dependencies {
     implementation 'androidx.browser:browser:1.10.0'
     implementation 'androidx.appcompat:appcompat:1.8.0'
     implementation 'androidx.swiperefreshlayout:swiperefreshlayout:1.2.0'
+
+    // JVM unit tests (src/test). These never reach a consumer: `testImplementation`
+    // is not part of the published AAR's POM.
+    //
+    // JUnit 4, not 5: AGP wires 4 up for `testDebugUnitTest` with no extra plugin,
+    // and this module cannot casually add Gradle plugins (see the note above).
+    testImplementation 'junit:junit:4.13.2'
+    // A real org.json. Unit tests otherwise link against the stub in android.jar,
+    // where every method throws "Stub!", which would make Util.JSONStringify
+    // untestable. AGP puts android.jar last on the unit-test classpath, so this
+    // wins. Deliberately NOT `testOptions.unitTests.returnDefaultValues = true`:
+    // that turns every unmocked framework call into a silent 0/null and would hide
+    // exactly the kind of bug these tests exist to catch.
+    testImplementation 'org.json:json:20250107'
 }
