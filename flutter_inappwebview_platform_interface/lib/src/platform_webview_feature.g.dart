@@ -117,6 +117,13 @@ class WebViewFeature {
     'MULTI_PROCESS',
   );
 
+  ///Feature for [isFeatureSupported]. This feature covers [PlatformProfileStore] and
+  ///[InAppWebViewSettings.profileName].
+  static const MULTI_PROFILE = WebViewFeature._internal(
+    'MULTI_PROFILE',
+    'MULTI_PROFILE',
+  );
+
   ///Feature for [isFeatureSupported]. This feature covers
   ///[PlatformInAppWebViewController.setAudioMuted] and
   ///[PlatformInAppWebViewController.isAudioMuted].
@@ -389,6 +396,7 @@ class WebViewFeature {
     WebViewFeature.GET_WEB_VIEW_CLIENT,
     WebViewFeature.GET_WEB_VIEW_RENDERER,
     WebViewFeature.MULTI_PROCESS,
+    WebViewFeature.MULTI_PROFILE,
     WebViewFeature.MUTE_AUDIO,
     WebViewFeature.OFF_SCREEN_PRERASTER,
     WebViewFeature.PAYMENT_REQUEST,
@@ -541,6 +549,8 @@ class WebViewFeature {
         return 'GET_WEB_VIEW_RENDERER';
       case 'MULTI_PROCESS':
         return 'MULTI_PROCESS';
+      case 'MULTI_PROFILE':
+        return 'MULTI_PROFILE';
       case 'MUTE_AUDIO':
         return 'MUTE_AUDIO';
       case 'OFF_SCREEN_PRERASTER':

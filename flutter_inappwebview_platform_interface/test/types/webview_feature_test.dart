@@ -1,7 +1,7 @@
 import 'package:flutter_inappwebview_platform_interface/flutter_inappwebview_platform_interface.dart';
 import 'package:flutter_test/flutter_test.dart';
 
-/// Pins the wire values of the [WebViewFeature] constants added in §15–§26.
+/// Pins the wire values of the [WebViewFeature] constants added in §15–§28.
 ///
 /// `WebViewFeatureManager` on the Android side does no mapping at all — it takes the string
 /// straight off the channel and hands it to `androidx.webkit.WebViewFeature.isFeatureSupported`:
@@ -33,6 +33,7 @@ void main() {
         'USER_AGENT_METADATA_FORM_FACTORS': 'USER_AGENT_METADATA_FORM_FACTORS',
         'DEFAULT_TRAFFICSTATS_TAGGING': 'DEFAULT_TRAFFICSTATS_TAGGING',
         'DELETE_BROWSING_DATA': 'DELETE_BROWSING_DATA',
+        'MULTI_PROFILE': 'MULTI_PROFILE',
       };
 
       final actual = <String, String?>{
@@ -58,6 +59,7 @@ void main() {
             .toNativeValue(),
         'DELETE_BROWSING_DATA': WebViewFeature.DELETE_BROWSING_DATA
             .toNativeValue(),
+        'MULTI_PROFILE': WebViewFeature.MULTI_PROFILE.toNativeValue(),
       };
 
       expect(actual, expected);
@@ -76,6 +78,7 @@ void main() {
         WebViewFeature.USER_AGENT_METADATA_FORM_FACTORS,
         WebViewFeature.DEFAULT_TRAFFICSTATS_TAGGING,
         WebViewFeature.DELETE_BROWSING_DATA,
+        WebViewFeature.MULTI_PROFILE,
       ]) {
         expect(
           WebViewFeature.fromNativeValue(feature.toNativeValue()),

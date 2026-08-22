@@ -163,6 +163,11 @@ class InAppBrowserActivity : AppCompatActivity(), InAppBrowserDelegate, Disposab
     currentWebView.customSettings = webViewSettings
     currentWebView.contextMenu = contextMenu
 
+    // Must precede prepareView(), which calls prepare(): setProfile throws once the WebView has
+    // had JavaScript evaluated on it. windowId is already assigned above, so the window case is
+    // correctly skipped inside applyProfileName().
+    currentWebView.applyProfileName()
+
     val userScripts = mutableListOf<UserScript>()
     if (initialUserScripts != null) {
       for (initialUserScript in initialUserScripts) {

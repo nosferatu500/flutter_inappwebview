@@ -11,6 +11,7 @@ export 'web_notification/main.dart';
 export 'print_job/main.dart';
 export 'find_interaction/main.dart';
 export 'service_worker_controller.dart';
+export 'profile_store.dart';
 export 'proxy_controller.dart';
 export 'webview_asset_loader.dart';
 export 'tracing_controller.dart';

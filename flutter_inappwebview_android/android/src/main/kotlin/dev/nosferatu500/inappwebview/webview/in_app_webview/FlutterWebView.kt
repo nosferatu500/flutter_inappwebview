@@ -61,6 +61,10 @@ class FlutterWebView(
     )
     webView = view
 
+    // Before anything else touches the WebView: setProfile throws once it has navigated or had
+    // JavaScript evaluated on it, and view.prepare() below does both.
+    view.applyProfileName()
+
     // set MATCH_PARENT layout params to the WebView, otherwise it won't take all the available
     // space!
     view.layoutParams = FrameLayout.LayoutParams(

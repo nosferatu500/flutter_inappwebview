@@ -12,6 +12,7 @@ import 'platform_cookie_manager.dart';
 import 'platform_http_auth_credentials_database.dart';
 import 'platform_in_app_localhost_server.dart';
 import 'platform_process_global_config.dart';
+import 'platform_profile_store.dart';
 import 'platform_proxy_controller.dart';
 import 'platform_service_worker_controller.dart';
 import 'platform_tracing_controller.dart';
@@ -466,6 +467,28 @@ abstract class InAppWebViewPlatform extends PlatformInterface {
   PlatformProcessGlobalConfig createPlatformProcessGlobalConfigStatic() {
     throw UnimplementedError(
       'createPlatformProcessGlobalConfigStatic is not implemented on the current platform.',
+    );
+  }
+
+  /// Creates a new [PlatformProfileStore].
+  ///
+  /// This function should only be called by the app-facing package.
+  /// Look at using [ProfileStore] in `flutter_inappwebview` instead.
+  PlatformProfileStore createPlatformProfileStore(
+    PlatformProfileStoreCreationParams params,
+  ) {
+    throw UnimplementedError(
+      'createPlatformProfileStore is not implemented on the current platform.',
+    );
+  }
+
+  /// Creates a new empty [PlatformProfileStore] to access static methods.
+  ///
+  /// This function should only be called by the app-facing package.
+  /// Look at using [ProfileStore] in `flutter_inappwebview` instead.
+  PlatformProfileStore createPlatformProfileStoreStatic() {
+    throw UnimplementedError(
+      'createPlatformProfileStoreStatic is not implemented on the current platform.',
     );
   }
 

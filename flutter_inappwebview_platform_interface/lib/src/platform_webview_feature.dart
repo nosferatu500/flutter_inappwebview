@@ -403,6 +403,10 @@ class WebViewFeature_ {
     "USER_AGENT_METADATA_FORM_FACTORS",
   );
 
+  ///Feature for [isFeatureSupported]. This feature covers [PlatformProfileStore] and
+  ///[InAppWebViewSettings.profileName].
+  static const MULTI_PROFILE = WebViewFeature_._internal("MULTI_PROFILE");
+
   ///Feature for [isFeatureSupported]. This feature covers
   ///[PlatformWebStorageManager.deleteBrowsingData] and
   ///[PlatformWebStorageManager.deleteBrowsingDataForSite].

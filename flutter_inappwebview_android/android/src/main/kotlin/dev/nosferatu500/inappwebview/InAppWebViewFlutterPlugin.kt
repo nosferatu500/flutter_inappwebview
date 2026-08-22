@@ -9,6 +9,7 @@ import dev.nosferatu500.inappwebview.headless_in_app_webview.HeadlessInAppWebVie
 import dev.nosferatu500.inappwebview.in_app_browser.InAppBrowserManager
 import dev.nosferatu500.inappwebview.print_job.PrintJobManager
 import dev.nosferatu500.inappwebview.process_global_config.ProcessGlobalConfigManager
+import dev.nosferatu500.inappwebview.profile.ProfileStoreManager
 import dev.nosferatu500.inappwebview.proxy.ProxyManager
 import dev.nosferatu500.inappwebview.service_worker.ServiceWorkerManager
 import dev.nosferatu500.inappwebview.tracing.TracingControllerManager
@@ -34,6 +35,7 @@ class InAppWebViewFlutterPlugin : FlutterPlugin, ActivityAware {
   @JvmField var myWebStorage: MyWebStorage? = null
   @JvmField var serviceWorkerManager: ServiceWorkerManager? = null
   @JvmField var webViewFeatureManager: WebViewFeatureManager? = null
+  @JvmField var profileStoreManager: ProfileStoreManager? = null
   @JvmField var proxyManager: ProxyManager? = null
   @JvmField var printJobManager: PrintJobManager? = null
   @JvmField var tracingControllerManager: TracingControllerManager? = null
@@ -100,6 +102,7 @@ class InAppWebViewFlutterPlugin : FlutterPlugin, ActivityAware {
     credentialDatabaseHandler = CredentialDatabaseHandler(this)
 
     webViewFeatureManager = WebViewFeatureManager(this)
+    profileStoreManager = ProfileStoreManager(this)
     proxyManager = ProxyManager(this)
     printJobManager = PrintJobManager(this)
 
@@ -130,6 +133,8 @@ class InAppWebViewFlutterPlugin : FlutterPlugin, ActivityAware {
     serviceWorkerManager = null
     webViewFeatureManager?.dispose()
     webViewFeatureManager = null
+    profileStoreManager?.dispose()
+    profileStoreManager = null
     proxyManager?.dispose()
     proxyManager = null
     printJobManager?.dispose()

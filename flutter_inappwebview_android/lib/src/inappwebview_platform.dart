@@ -8,6 +8,7 @@ import 'in_app_browser/in_app_browser.dart';
 import 'in_app_webview/main.dart';
 import 'print_job/main.dart';
 import 'process_global_config.dart';
+import 'profile_store.dart';
 import 'proxy_controller.dart';
 import 'pull_to_refresh/main.dart';
 import 'service_worker_controller.dart';
@@ -351,6 +352,26 @@ class AndroidInAppWebViewPlatform extends InAppWebViewPlatform {
   @override
   AndroidProcessGlobalConfig createPlatformProcessGlobalConfigStatic() {
     return AndroidProcessGlobalConfig.static();
+  }
+
+  /// Creates a new [AndroidProfileStore].
+  ///
+  /// This function should only be called by the app-facing package.
+  /// Look at using [ProfileStore] in `flutter_inappwebview` instead.
+  @override
+  AndroidProfileStore createPlatformProfileStore(
+    PlatformProfileStoreCreationParams params,
+  ) {
+    return AndroidProfileStore(params);
+  }
+
+  /// Creates a new empty [AndroidProfileStore] to access static methods.
+  ///
+  /// This function should only be called by the app-facing package.
+  /// Look at using [ProfileStore] in `flutter_inappwebview` instead.
+  @override
+  AndroidProfileStore createPlatformProfileStoreStatic() {
+    return AndroidProfileStore.static();
   }
 
   /// Creates a new [AndroidProxyController].

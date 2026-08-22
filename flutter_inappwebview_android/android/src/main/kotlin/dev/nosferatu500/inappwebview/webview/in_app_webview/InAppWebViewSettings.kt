@@ -107,6 +107,13 @@ class InAppWebViewSettings : ISettings<InAppWebViewInterface> {
   @JvmField var attributionRegistrationBehavior: Int? = null
   @JvmField var webViewMediaIntegrityApiStatus: Map<String, Any?>? = null
   @JvmField var userAgentMetadata: Map<String, Any?>? = null
+  // Creation-time only, and deliberately absent from two of the four sites a settings field
+  // normally has. There is no setSettings branch (androidx refuses to move a used WebView to
+  // another profile) and no getRealSettings read-back: WebViewCompat.getProfile() permanently
+  // poisons any later setProfile on that WebView, so an innocuous getSettings() call would
+  // silently take the capability away. getRealSettings starts from toMap(), so the requested value
+  // is reported without touching the WebView. Applied by InAppWebView.applyProfileName().
+  @JvmField var profileName: String? = null
   @JvmField var enterpriseAuthenticationAppLinkPolicyEnabled: Boolean = true
   @JvmField var webViewAssetLoader: Map<String, Any?>? = null
   @JvmField var defaultVideoPoster: ByteArray? = null
@@ -220,6 +227,7 @@ class InAppWebViewSettings : ISettings<InAppWebViewInterface> {
         "webViewMediaIntegrityApiStatus" ->
           webViewMediaIntegrityApiStatus = value as Map<String, Any?>
         "userAgentMetadata" -> userAgentMetadata = value as Map<String, Any?>
+        "profileName" -> profileName = value as String
         "enterpriseAuthenticationAppLinkPolicyEnabled" ->
           enterpriseAuthenticationAppLinkPolicyEnabled = value as Boolean
         "allowBackgroundAudioPlaying" -> allowBackgroundAudioPlaying = value as Boolean
@@ -341,6 +349,7 @@ class InAppWebViewSettings : ISettings<InAppWebViewInterface> {
     settings["attributionRegistrationBehavior"] = attributionRegistrationBehavior
     settings["webViewMediaIntegrityApiStatus"] = webViewMediaIntegrityApiStatus
     settings["userAgentMetadata"] = userAgentMetadata
+    settings["profileName"] = profileName
     settings["enterpriseAuthenticationAppLinkPolicyEnabled"] =
       enterpriseAuthenticationAppLinkPolicyEnabled
     settings["allowBackgroundAudioPlaying"] = allowBackgroundAudioPlaying

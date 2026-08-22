@@ -245,6 +245,35 @@ class InAppWebView : WebView, InAppWebViewInterface, Disposable {
     }
   }
 
+  /**
+   * Puts this WebView on the profile named by [InAppWebViewSettings.profileName].
+   *
+   * Must run before [prepare], and before anything else touches this WebView: androidx's
+   * `setProfile` throws once the WebView has navigated, had `evaluateJavascript` called on it, or
+   * had its profile read or set already. [prepare] does the first two, so this is not a
+   * "call it whenever" method -- the two creation paths (`FlutterWebView.init` and
+   * `InAppBrowserActivity`) call it at the only point where it can succeed.
+   */
+  fun applyProfileName() {
+    val name = customSettings.profileName ?: return
+    if (windowId != null) {
+      // This WebView is about to be handed to a WebViewTransport for a window another WebView
+      // opened, so it inherits that opener's session. Setting a profile on it is not attempted.
+      return
+    }
+    if (!WebViewFeature.isFeatureSupported(WebViewFeature.MULTI_PROFILE)) {
+      return
+    }
+    try {
+      WebViewCompat.setProfile(this, name)
+    } catch (e: IllegalStateException) {
+      // Reached only if this WebView was already used, i.e. if the call moved out of the creation
+      // path. Logged rather than thrown: a profile that could not be applied leaves the WebView on
+      // the default profile, which is the pre-feature behaviour.
+      Log.e(LOG_TAG, "profileName \"$name\" could not be applied to this WebView", e)
+    }
+  }
+
   @SuppressLint("RestrictedApi")
   fun prepare() {
     customSettings.alpha?.let { setAlpha(it.toFloat()) }
@@ -1583,6 +1612,11 @@ class InAppWebView : WebView, InAppWebViewInterface, Disposable {
         settings, buildUserAgentMetadata(newCustomSettings.userAgentMetadata!!)
       )
     }
+    // "profileName" has no branch here on purpose, and it is the only settings field in this
+    // method's contract that does not. WebViewCompat.setProfile throws IllegalStateException once
+    // the WebView has been used at all -- navigated, or had evaluateJavascript called on it -- and
+    // by the time setSettings can run, both have happened. It is applied once at creation
+    // (FlutterWebView.init, InAppBrowserActivity) and is documented as creation-time only.
     if (newSettingsMap["enterpriseAuthenticationAppLinkPolicyEnabled"] != null &&
       !Util.objEquals(
         customSettings.enterpriseAuthenticationAppLinkPolicyEnabled,

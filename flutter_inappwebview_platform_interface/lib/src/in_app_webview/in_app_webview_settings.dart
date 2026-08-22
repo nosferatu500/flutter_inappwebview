@@ -1465,6 +1465,38 @@ as it can cause framerate drops on animations in Android 9 and lower (see [Hybri
   )
   UserAgentMetadata_? userAgentMetadata;
 
+  ///Runs this WebView on the named browsing profile, creating the profile if it does not exist.
+  ///
+  ///A profile owns its own cookies, web storage, geolocation permissions and service workers, so
+  ///two WebViews on different profiles share none of that. Leave `null` to use the default profile,
+  ///which is what every WebView uses otherwise.
+  ///
+  ///**This only takes effect when the WebView is created.** The platform refuses to move a WebView
+  ///to another profile once it has been used, so changing this through
+  ///[PlatformInAppWebViewController.setSettings] does nothing — it is not applied and no error is
+  ///raised. Recreate the WebView to switch profiles.
+  ///
+  ///**The plugin's own storage APIs are not profile-aware yet.** [PlatformCookieManager],
+  ///[PlatformWebStorageManager] and [PlatformServiceWorkerController] act on the *default*
+  ///profile's data whatever this is set to, so on a non-default profile they will not read or clear
+  ///the data this WebView is actually using. Use [PlatformProfileStore] to create and delete
+  ///profiles; per-profile data access is not implemented.
+  ///
+  ///Not applied to WebViews opened as a new window by another WebView — those keep the profile of
+  ///the WebView that opened them.
+  @SupportedPlatforms(
+    platforms: [
+      AndroidPlatform(
+        apiName: "WebViewCompat.setProfile",
+        apiUrl:
+            "https://developer.android.com/reference/androidx/webkit/WebViewCompat#setProfile(android.webkit.WebView,java.lang.String)",
+        note:
+            "available on Android only if [WebViewFeature.MULTI_PROFILE] feature is supported.",
+      ),
+    ],
+  )
+  String? profileName;
+
   ///Sets whether EnterpriseAuthenticationAppLinkPolicy if set by admin is allowed to have any
   ///effect on WebView.
   ///
@@ -3424,6 +3456,7 @@ as it can cause framerate drops on animations in Android 9 and lower (see [Hybri
     this.attributionRegistrationBehavior,
     this.webViewMediaIntegrityApiStatus,
     this.userAgentMetadata,
+    this.profileName,
     this.enterpriseAuthenticationAppLinkPolicyEnabled = true,
     this.defaultVideoPoster,
     this.disallowOverScroll = false,
