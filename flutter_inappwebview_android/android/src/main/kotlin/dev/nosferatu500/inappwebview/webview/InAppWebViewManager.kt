@@ -94,6 +94,20 @@ class InAppWebViewManager(plugin: InAppWebViewFlutterPlugin) :
         }
       }
 
+      // Read as Number rather than Int: the standard codec encodes a Dart int above Int32.MAX as
+      // an int64, and the androidx javadoc documents the reserved tags in unsigned hex
+      // (0xFFFFFF00 …), so a caller following it sends a Long. toInt() keeps the same 32 bits.
+      "setDefaultTrafficStatsTag" -> {
+        if (WebViewFeature.isFeatureSupported(WebViewFeature.DEFAULT_TRAFFICSTATS_TAGGING)) {
+          WebViewCompat.setDefaultTrafficStatsTag(call.argument<Number>("tag")!!.toInt())
+          result.success(true)
+        } else {
+          // setDefaultTrafficStatsTag throws UnsupportedOperationException when the feature is
+          // missing, so the gate is required, not defensive.
+          result.success(false)
+        }
+      }
+
       "disableWebView" -> {
         WebView.disableWebView()
         result.success(true)

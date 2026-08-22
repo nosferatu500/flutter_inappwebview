@@ -41,6 +41,13 @@ class WebViewFeature {
     'CREATE_WEB_MESSAGE_CHANNEL',
   );
 
+  ///Feature for [isFeatureSupported]. This feature covers
+  ///[PlatformInAppWebViewController.setDefaultTrafficStatsTag].
+  static const DEFAULT_TRAFFICSTATS_TAGGING = WebViewFeature._internal(
+    'DEFAULT_TRAFFICSTATS_TAGGING',
+    'DEFAULT_TRAFFICSTATS_TAGGING',
+  );
+
   ///Feature for [isFeatureSupported]. This feature covers [InAppWebViewSettings.disabledActionModeMenuItems].
   static const DISABLED_ACTION_MODE_MENU_ITEMS = WebViewFeature._internal(
     'DISABLED_ACTION_MODE_MENU_ITEMS',
@@ -362,6 +369,7 @@ class WebViewFeature {
     WebViewFeature.ATTRIBUTION_REGISTRATION_BEHAVIOR,
     WebViewFeature.BACK_FORWARD_CACHE,
     WebViewFeature.CREATE_WEB_MESSAGE_CHANNEL,
+    WebViewFeature.DEFAULT_TRAFFICSTATS_TAGGING,
     WebViewFeature.DISABLED_ACTION_MODE_MENU_ITEMS,
     WebViewFeature.DOCUMENT_START_SCRIPT,
     WebViewFeature.DOWNLOAD_FAVICONS_ENABLED,
@@ -500,6 +508,8 @@ class WebViewFeature {
         return 'BACK_FORWARD_CACHE';
       case 'CREATE_WEB_MESSAGE_CHANNEL':
         return 'CREATE_WEB_MESSAGE_CHANNEL';
+      case 'DEFAULT_TRAFFICSTATS_TAGGING':
+        return 'DEFAULT_TRAFFICSTATS_TAGGING';
       case 'DISABLED_ACTION_MODE_MENU_ITEMS':
         return 'DISABLED_ACTION_MODE_MENU_ITEMS';
       case 'DOCUMENT_START_SCRIPT':

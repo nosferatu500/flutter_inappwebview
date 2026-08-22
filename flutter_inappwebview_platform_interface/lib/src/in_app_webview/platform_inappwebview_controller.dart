@@ -4312,6 +4312,45 @@ abstract class PlatformInAppWebViewController extends PlatformInterface
     );
   }
 
+  ///{@template flutter_inappwebview_platform_interface.PlatformInAppWebViewController.setDefaultTrafficStatsTag}
+  ///Sets the default `TrafficStats` tag used to account for the socket traffic caused by WebView.
+  ///
+  ///The tag is **global to the app**: it applies to every request made by the WebView library in
+  ///this process, not only to the WebView this controller belongs to. When no tag has been set,
+  ///Android accounts for WebView's socket traffic as if the tag were `0`.
+  ///
+  ///Setting a tag stops sockets from being shared with requests carrying a different tag, so
+  ///multiplexed protocols (HTTP/2, QUIC) only reuse a connection between requests with the same
+  ///tag. Changing the tag therefore costs connection reuse — set it once, early, rather than
+  ///switching it per navigation.
+  ///
+  ///[tag] is a 32-bit value. Tags from `0xFFFFFF00` to `0xFFFFFFFF` — equivalently `-256` to `-1`,
+  ///the same bit patterns read as a signed 32-bit int — are reserved for system services such as
+  ///`DownloadManager` and must not be used.
+  ///
+  ///Returns `true` if the tag was applied, or `false` when
+  ///[WebViewFeature.DEFAULT_TRAFFICSTATS_TAGGING] is not supported by the current WebView
+  ///provider, in which case nothing happened and WebView's traffic stays accounted as tag `0`.
+  ///{@endtemplate}
+  ///
+  ///{@macro flutter_inappwebview_platform_interface.PlatformInAppWebViewController.setDefaultTrafficStatsTag.supported_platforms}
+  @SupportedPlatforms(
+    platforms: [
+      AndroidPlatform(
+        apiName: 'WebViewCompat.setDefaultTrafficStatsTag',
+        apiUrl:
+            'https://developer.android.com/reference/androidx/webkit/WebViewCompat#setDefaultTrafficStatsTag(int)',
+        note:
+            'Requires [WebViewFeature.DEFAULT_TRAFFICSTATS_TAGGING]. Returns `false` and does nothing if the feature is not supported.',
+      ),
+    ],
+  )
+  Future<bool> setDefaultTrafficStatsTag(int tag) {
+    throw UnimplementedError(
+      '${PlatformInAppWebViewControllerMethod.setDefaultTrafficStatsTag.name} is not implemented on the current platform',
+    );
+  }
+
   ///{@template flutter_inappwebview_platform_interface.PlatformInAppWebViewController.disableWebView}
   ///Indicate that the current process does not intend to use WebView,
   ///and that an exception should be thrown if a WebView is created or any other

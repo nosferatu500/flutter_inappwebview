@@ -2128,6 +2128,21 @@ enum PlatformInAppWebViewControllerMethod {
   ///{@endtemplate}
   setContextMenu,
 
+  ///Can be used to check if the [PlatformInAppWebViewController.setDefaultTrafficStatsTag] method is supported at runtime.
+  ///
+  ///{@template flutter_inappwebview_platform_interface.PlatformInAppWebViewController.setDefaultTrafficStatsTag.supported_platforms}
+  ///
+  ///**Officially Supported Platforms/Implementations**:
+  ///- Android WebView ([Official API - WebViewCompat.setDefaultTrafficStatsTag](https://developer.android.com/reference/androidx/webkit/WebViewCompat#setDefaultTrafficStatsTag(int))):
+  ///    - Requires [WebViewFeature.DEFAULT_TRAFFICSTATS_TAGGING]. Returns `false` and does nothing if the feature is not supported.
+  ///
+  ///**Parameters - Officially Supported Platforms/Implementations**:
+  ///- [tag]: all platforms
+  ///
+  ///Use the [PlatformInAppWebViewController.isMethodSupported] method to check if this method is supported at runtime.
+  ///{@endtemplate}
+  setDefaultTrafficStatsTag,
+
   ///Can be used to check if the [PlatformInAppWebViewController.setInputMethodEnabled] method is supported at runtime.
   ///
   ///{@template flutter_inappwebview_platform_interface.PlatformInAppWebViewController.setInputMethodEnabled.supported_platforms}
@@ -3394,6 +3409,11 @@ extension _PlatformInAppWebViewControllerMethodSupported
             [
               TargetPlatform.android,
               TargetPlatform.iOS,
+            ].contains(platform ?? defaultTargetPlatform);
+      case PlatformInAppWebViewControllerMethod.setDefaultTrafficStatsTag:
+        return ((kIsWeb && platform != null) || !kIsWeb) &&
+            [
+              TargetPlatform.android,
             ].contains(platform ?? defaultTargetPlatform);
       case PlatformInAppWebViewControllerMethod.setInputMethodEnabled:
         return ((kIsWeb && platform != null) || !kIsWeb) &&

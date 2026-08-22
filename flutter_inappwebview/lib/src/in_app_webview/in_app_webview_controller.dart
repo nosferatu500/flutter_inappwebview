@@ -862,6 +862,12 @@ class InAppWebViewController {
   static Future<bool> isMultiProcessEnabled() =>
       PlatformInAppWebViewController.static().isMultiProcessEnabled();
 
+  ///{@macro flutter_inappwebview_platform_interface.PlatformInAppWebViewController.setDefaultTrafficStatsTag}
+  ///
+  ///{@macro flutter_inappwebview_platform_interface.PlatformInAppWebViewController.setDefaultTrafficStatsTag.supported_platforms}
+  static Future<bool> setDefaultTrafficStatsTag(int tag) =>
+      PlatformInAppWebViewController.static().setDefaultTrafficStatsTag(tag);
+
   ///{@macro flutter_inappwebview_platform_interface.PlatformInAppWebViewController.disableWebView}
   ///
   ///{@macro flutter_inappwebview_platform_interface.PlatformInAppWebViewController.disableWebView.supported_platforms}

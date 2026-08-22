@@ -1,7 +1,7 @@
 import 'package:flutter_inappwebview_platform_interface/flutter_inappwebview_platform_interface.dart';
 import 'package:flutter_test/flutter_test.dart';
 
-/// Pins the wire values of the [WebViewFeature] constants added in §15–§22.
+/// Pins the wire values of the [WebViewFeature] constants added in §15–§25.
 ///
 /// `WebViewFeatureManager` on the Android side does no mapping at all — it takes the string
 /// straight off the channel and hands it to `androidx.webkit.WebViewFeature.isFeatureSupported`:
@@ -31,6 +31,7 @@ void main() {
             'WEBVIEW_MEDIA_INTEGRITY_API_STATUS',
         'USER_AGENT_METADATA': 'USER_AGENT_METADATA',
         'USER_AGENT_METADATA_FORM_FACTORS': 'USER_AGENT_METADATA_FORM_FACTORS',
+        'DEFAULT_TRAFFICSTATS_TAGGING': 'DEFAULT_TRAFFICSTATS_TAGGING',
       };
 
       final actual = <String, String?>{
@@ -51,6 +52,9 @@ void main() {
         'USER_AGENT_METADATA_FORM_FACTORS': WebViewFeature
             .USER_AGENT_METADATA_FORM_FACTORS
             .toNativeValue(),
+        'DEFAULT_TRAFFICSTATS_TAGGING': WebViewFeature
+            .DEFAULT_TRAFFICSTATS_TAGGING
+            .toNativeValue(),
       };
 
       expect(actual, expected);
@@ -67,6 +71,7 @@ void main() {
         WebViewFeature.WEBVIEW_MEDIA_INTEGRITY_API_STATUS,
         WebViewFeature.USER_AGENT_METADATA,
         WebViewFeature.USER_AGENT_METADATA_FORM_FACTORS,
+        WebViewFeature.DEFAULT_TRAFFICSTATS_TAGGING,
       ]) {
         expect(
           WebViewFeature.fromNativeValue(feature.toNativeValue()),

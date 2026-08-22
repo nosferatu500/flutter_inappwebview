@@ -2665,6 +2665,24 @@ class AndroidInAppWebViewController extends PlatformInAppWebViewController
   }
 
   @override
+  Future<bool> setDefaultTrafficStatsTag(int tag) async {
+    // The native side takes a 32-bit int. Both the signed range and the unsigned form the
+    // androidx javadoc itself uses (0xFFFFFF00 …) are accepted; anything wider would be encoded
+    // as an int64 by the standard codec and fail at the Kotlin cast site.
+    assert(
+      tag >= -0x80000000 && tag <= 0xFFFFFFFF,
+      'tag must fit in a 32-bit integer.',
+    );
+    Map<String, dynamic> args = <String, dynamic>{};
+    args.putIfAbsent('tag', () => tag);
+    return await _staticChannel.invokeMethod<bool>(
+          'setDefaultTrafficStatsTag',
+          args,
+        ) ??
+        false;
+  }
+
+  @override
   Future<void> disableWebView() async {
     Map<String, dynamic> args = <String, dynamic>{};
     await _staticChannel.invokeMethod('disableWebView', args);

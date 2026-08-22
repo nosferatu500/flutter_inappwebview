@@ -403,6 +403,12 @@ class WebViewFeature_ {
     "USER_AGENT_METADATA_FORM_FACTORS",
   );
 
+  ///Feature for [isFeatureSupported]. This feature covers
+  ///[PlatformInAppWebViewController.setDefaultTrafficStatsTag].
+  static const DEFAULT_TRAFFICSTATS_TAGGING = WebViewFeature_._internal(
+    "DEFAULT_TRAFFICSTATS_TAGGING",
+  );
+
   ///Feature for [isFeatureSupported]. This feature covers [InAppWebViewSettings.enterpriseAuthenticationAppLinkPolicyEnabled].
   static const ENTERPRISE_AUTHENTICATION_APP_LINK_POLICY =
       WebViewFeature_._internal("ENTERPRISE_AUTHENTICATION_APP_LINK_POLICY");
