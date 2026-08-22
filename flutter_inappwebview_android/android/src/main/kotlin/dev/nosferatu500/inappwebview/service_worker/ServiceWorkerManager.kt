@@ -3,8 +3,8 @@ package dev.nosferatu500.inappwebview.service_worker
 import android.util.Log
 import android.webkit.WebResourceRequest
 import android.webkit.WebResourceResponse
-import androidx.webkit.ServiceWorkerClientCompat
 import androidx.webkit.ProfileStore
+import androidx.webkit.ServiceWorkerClientCompat
 import androidx.webkit.ServiceWorkerControllerCompat
 import androidx.webkit.WebViewFeature
 import dev.nosferatu500.inappwebview.InAppWebViewFlutterPlugin

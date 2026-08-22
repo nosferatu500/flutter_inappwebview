@@ -70,20 +70,22 @@ class MyWebStorage(plugin: InAppWebViewFlutterPlugin) :
       result.success(ArrayList<Any?>())
       return
     }
-    manager.getOrigins(ValueCallback<Map<*, *>> { value ->
-      val origins = mutableListOf<Map<String, Any?>>()
-      for (key in value.keys) {
-        val originObj = value[key] as WebStorage.Origin
-        origins.add(
-          hashMapOf(
-            "origin" to originObj.origin,
-            "quota" to originObj.quota,
-            "usage" to originObj.usage
+    manager.getOrigins(
+      ValueCallback<Map<*, *>> { value ->
+        val origins = mutableListOf<Map<String, Any?>>()
+        for (key in value.keys) {
+          val originObj = value[key] as WebStorage.Origin
+          origins.add(
+            hashMapOf(
+              "origin" to originObj.origin,
+              "quota" to originObj.quota,
+              "usage" to originObj.usage
+            )
           )
-        )
-      }
-      result.success(origins)
-    } as ValueCallback<Map<Any?, Any?>>)
+        }
+        result.success(origins)
+      } as ValueCallback<Map<Any?, Any?>>
+    )
   }
 
   // Both of these deliberately use the WebStorageCompat overloads that post the done callback to

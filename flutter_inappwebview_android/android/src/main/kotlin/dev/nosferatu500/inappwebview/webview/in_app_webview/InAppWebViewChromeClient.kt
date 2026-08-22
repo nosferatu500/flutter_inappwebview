@@ -171,30 +171,38 @@ class InAppWebViewChromeClient(
     }
   }
 
-  override fun onJsAlert(view: WebView, url: String?, message: String?, jsResult: JsResult): Boolean {
+  override fun onJsAlert(
+    view: WebView,
+    url: String?,
+    message: String?,
+    jsResult: JsResult
+  ): Boolean {
     val channelDelegate = inAppWebView?.channelDelegate ?: return false
 
-    channelDelegate.onJsAlert(url, message, null, object : WebViewChannelDelegate.JsAlertCallback() {
-      override fun nonNullSuccess(result: JsAlertResponse): Boolean {
-        if (result.isHandledByClient) {
-          when (result.action ?: 1) {
-            0 -> jsResult.confirm()
-            else -> jsResult.cancel()
+    channelDelegate.onJsAlert(
+      url, message, null,
+      object : WebViewChannelDelegate.JsAlertCallback() {
+        override fun nonNullSuccess(result: JsAlertResponse): Boolean {
+          if (result.isHandledByClient) {
+            when (result.action ?: 1) {
+              0 -> jsResult.confirm()
+              else -> jsResult.cancel()
+            }
+            return false
           }
-          return false
+          return true
         }
-        return true
-      }
 
-      override fun defaultBehaviour(result: JsAlertResponse?) {
-        createAlertDialog(message, jsResult, result?.message, result?.confirmButtonTitle)
-      }
+        override fun defaultBehaviour(result: JsAlertResponse?) {
+          createAlertDialog(message, jsResult, result?.message, result?.confirmButtonTitle)
+        }
 
-      override fun error(errorCode: String, errorMessage: String?, errorDetails: Any?) {
-        Log.e(LOG_TAG, errorCode + ", " + (errorMessage ?: ""))
-        jsResult.cancel()
+        override fun error(errorCode: String, errorMessage: String?, errorDetails: Any?) {
+          Log.e(LOG_TAG, errorCode + ", " + (errorMessage ?: ""))
+          jsResult.cancel()
+        }
       }
-    })
+    )
 
     return true
   }

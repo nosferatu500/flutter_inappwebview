@@ -107,6 +107,7 @@ class InAppWebViewSettings : ISettings<InAppWebViewInterface> {
   @JvmField var attributionRegistrationBehavior: Int? = null
   @JvmField var webViewMediaIntegrityApiStatus: Map<String, Any?>? = null
   @JvmField var userAgentMetadata: Map<String, Any?>? = null
+
   // Creation-time only, and deliberately absent from two of the four sites a settings field
   // normally has. There is no setSettings branch (androidx refuses to move a used WebView to
   // another profile) and no getRealSettings read-back: WebViewCompat.getProfile() permanently
@@ -493,7 +494,11 @@ class InAppWebViewSettings : ISettings<InAppWebViewInterface> {
           "formFactors" to if (WebViewFeature.isFeatureSupported(
               WebViewFeature.USER_AGENT_METADATA_FORM_FACTORS
             )
-          ) metadata.formFactors else null
+          ) {
+            metadata.formFactors
+          } else {
+            null
+          }
         )
       }
       if (WebViewFeature.isFeatureSupported(

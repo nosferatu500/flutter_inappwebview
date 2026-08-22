@@ -14,6 +14,7 @@ class PrintJobSettings : ISettings<PrintJobController> {
   @JvmField var handledByClient: Boolean = false
   @JvmField var jobName: String? = null
   @JvmField var orientation: Int? = null
+
   // @JvmField var margins: MarginsExt? = null
   @JvmField var mediaSize: MediaSizeExt? = null
   @JvmField var colorMode: Int? = null

@@ -48,12 +48,11 @@ import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.webkit.PrerenderException
 import androidx.webkit.PrerenderOperationCallback
-import androidx.webkit.WebSettingsCompat
 import androidx.webkit.UserAgentMetadata
-import androidx.webkit.WebViewMediaIntegrityApiStatusConfig
+import androidx.webkit.WebSettingsCompat
 import androidx.webkit.WebViewCompat
 import androidx.webkit.WebViewFeature
-import java.util.concurrent.Executor
+import androidx.webkit.WebViewMediaIntegrityApiStatusConfig
 import dev.nosferatu500.inappwebview.InAppWebViewFlutterPlugin
 import dev.nosferatu500.inappwebview.R
 import dev.nosferatu500.inappwebview.Util
@@ -96,6 +95,7 @@ import org.json.JSONObject
 import java.io.ByteArrayOutputStream
 import java.io.IOException
 import java.util.UUID
+import java.util.concurrent.Executor
 
 // The unchecked casts below are the Flutter codec boundary: StandardMessageCodec decodes to
 // Map<String,Object>/List<Object>, so every read of a structured value is an unverifiable
@@ -564,14 +564,17 @@ class InAppWebView : WebView, InAppWebViewInterface, Disposable {
       )
     }
 
-    gestureDetector = GestureDetector(context, object : GestureDetector.SimpleOnGestureListener() {
-      override fun onSingleTapUp(ev: MotionEvent): Boolean {
-        if (floatingContextMenu != null) {
-          hideContextMenu()
+    gestureDetector = GestureDetector(
+      context,
+      object : GestureDetector.SimpleOnGestureListener() {
+        override fun onSingleTapUp(ev: MotionEvent): Boolean {
+          if (floatingContextMenu != null) {
+            hideContextMenu()
+          }
+          return super.onSingleTapUp(ev)
         }
-        return super.onSingleTapUp(ev)
       }
-    })
+    )
 
     checkScrollStoppedTask = object : Runnable {
       override fun run() {
@@ -897,8 +900,6 @@ class InAppWebView : WebView, InAppWebViewInterface, Disposable {
     }
   }
 
-  @SuppressLint("RestrictedApi")
-
   /**
    * Builds an androidx [WebViewMediaIntegrityApiStatusConfig] from the map Dart sends.
    *
@@ -906,6 +907,7 @@ class InAppWebView : WebView, InAppWebViewInterface, Disposable {
    * `Map<String, Integer>`, so that the status stays a typed enum on the Dart side. The list maps
    * one-to-one onto the builder's own per-rule `addOverrideRule`.
    */
+  @SuppressLint("RestrictedApi")
   private fun buildMediaIntegrityConfig(
     map: Map<String, Any?>
   ): WebViewMediaIntegrityApiStatusConfig {
@@ -921,7 +923,6 @@ class InAppWebView : WebView, InAppWebViewInterface, Disposable {
     }
     return builder.build()
   }
-
 
   /**
    * Builds an androidx [UserAgentMetadata] from the map Dart sends.
@@ -1485,15 +1486,17 @@ class InAppWebView : WebView, InAppWebViewInterface, Disposable {
     // call and re-applied the policy. Structural comparison, like every other branch here
     // (TODO.md P0b.1).
     if (newSettingsMap["rendererPriorityPolicy"] != null &&
-      (customSettings.rendererPriorityPolicy == null ||
-        !Util.objEquals(
-          customSettings.rendererPriorityPolicy!!["rendererRequestedPriority"],
-          newCustomSettings.rendererPriorityPolicy!!["rendererRequestedPriority"]
-        ) ||
-        !Util.objEquals(
-          customSettings.rendererPriorityPolicy!!["waivedWhenNotVisible"],
-          newCustomSettings.rendererPriorityPolicy!!["waivedWhenNotVisible"]
-        ))
+      (
+        customSettings.rendererPriorityPolicy == null ||
+          !Util.objEquals(
+            customSettings.rendererPriorityPolicy!!["rendererRequestedPriority"],
+            newCustomSettings.rendererPriorityPolicy!!["rendererRequestedPriority"]
+          ) ||
+          !Util.objEquals(
+            customSettings.rendererPriorityPolicy!!["waivedWhenNotVisible"],
+            newCustomSettings.rendererPriorityPolicy!!["waivedWhenNotVisible"]
+          )
+        )
     ) {
       setRendererPriorityPolicy(
         newCustomSettings.rendererPriorityPolicy!!["rendererRequestedPriority"] as Int,
@@ -2305,8 +2308,10 @@ class InAppWebView : WebView, InAppWebViewInterface, Disposable {
       floatingContextMenu?.let { menu ->
         if (value != null && !value.equals("null", ignoreCase = true)) {
           val x = contextMenuPoint.x
-          val y = ((value.toFloat() * Util.getPixelDensity(context)) +
-            (menu.height / 3.5)).toInt()
+          val y = (
+            (value.toFloat() * Util.getPixelDensity(context)) +
+              (menu.height / 3.5)
+            ).toInt()
           contextMenuPoint.y = y
           onFloatingActionGlobalLayout(x, y)
         } else {

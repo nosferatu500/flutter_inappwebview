@@ -53,8 +53,12 @@ class WebMessageListener(
 
     if (webView is InAppWebView) {
       listener = WebViewCompat.WebMessageListener {
-          _: WebView, message: WebMessageCompat, sourceOrigin: Uri, isMainFrame: Boolean,
-          javaScriptReplyProxy: JavaScriptReplyProxy ->
+          _: WebView,
+          message: WebMessageCompat,
+          sourceOrigin: Uri,
+          isMainFrame: Boolean,
+          javaScriptReplyProxy: JavaScriptReplyProxy
+        ->
         replyProxy = javaScriptReplyProxy
         channelDelegate?.onPostMessage(
           WebMessageCompatExt.fromMapWebMessageCompat(message),
@@ -75,8 +79,11 @@ class WebMessageListener(
       } else {
         val rule = Uri.parse(allowedOriginRule)
         val ruleHost = rule.host
-        val host = if (ruleHost != null) "'" + Util.replaceAll(ruleHost, "'", "\\'") + "'"
-        else "null"
+        val host = if (ruleHost != null) {
+          "'" + Util.replaceAll(ruleHost, "'", "\\'") + "'"
+        } else {
+          "null"
+        }
         allowedOriginRulesStringList.add(
           "{scheme: '" + rule.scheme + "', host: " + host + ", port: " +
             (if (rule.port != -1) rule.port else "null") + "}"
@@ -214,8 +221,10 @@ class WebMessageListener(
       val hostAllowed = ruleHost == null ||
         ruleHost.isEmpty() ||
         ruleHost == host ||
-        (ruleHost.startsWith("*") && host != null &&
-          host.contains(ruleHost.split("\\*".toRegex())[1])) ||
+        (
+          ruleHost.startsWith("*") && host != null &&
+            host.contains(ruleHost.split("\\*".toRegex())[1])
+          ) ||
         (hostIPv6 != null && iPv6 != null && hostIPv6 == iPv6)
 
       val portAllowed = rulePort == currentPort

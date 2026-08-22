@@ -5,11 +5,11 @@ import android.content.Context
 import dev.nosferatu500.inappwebview.chrome_custom_tabs.ChromeSafariBrowserManager
 import dev.nosferatu500.inappwebview.chrome_custom_tabs.NoHistoryCustomTabsActivityCallbacks
 import dev.nosferatu500.inappwebview.credential_database.CredentialDatabaseHandler
+import dev.nosferatu500.inappwebview.geolocation.GeolocationPermissionsManager
 import dev.nosferatu500.inappwebview.headless_in_app_webview.HeadlessInAppWebViewManager
 import dev.nosferatu500.inappwebview.in_app_browser.InAppBrowserManager
 import dev.nosferatu500.inappwebview.print_job.PrintJobManager
 import dev.nosferatu500.inappwebview.process_global_config.ProcessGlobalConfigManager
-import dev.nosferatu500.inappwebview.geolocation.GeolocationPermissionsManager
 import dev.nosferatu500.inappwebview.profile.ProfileStoreManager
 import dev.nosferatu500.inappwebview.proxy.ProxyManager
 import dev.nosferatu500.inappwebview.service_worker.ServiceWorkerManager

@@ -134,8 +134,10 @@ class ContentBlockerHandler(ruleList: MutableList<ContentBlocker>) {
           val cPort = cUrl.port
           val cScheme = cUrl.scheme
 
-          if ((trigger.loadType.contains("first-party") && cHost != null &&
-              !(cScheme == scheme && cHost == host && cPort == port)) ||
+          if ((
+              trigger.loadType.contains("first-party") && cHost != null &&
+                !(cScheme == scheme && cHost == host && cPort == port)
+              ) ||
             (trigger.loadType.contains("third-party") && cHost != null && cHost == host)
           ) {
             return null

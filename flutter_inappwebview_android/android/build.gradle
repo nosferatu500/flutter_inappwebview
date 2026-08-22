@@ -67,6 +67,21 @@ android {
 // provide it. Task names are the same either way.
 tasks.matching { it.name ==~ /compile.*Kotlin/ }.configureEach {
     compilerOptions.jvmTarget = org.jetbrains.kotlin.gradle.dsl.JvmTarget.JVM_17
+
+    // This module's Kotlin warning baseline is zero and is meant to stay there.
+    // `allWarningsAsErrors = true` unconditionally would be the wrong way to hold
+    // it: this module is compiled inside the *consuming app's* build, so a future
+    // Kotlin release that introduces a new warning in our sources would break
+    // THEIR build, over a warning they cannot fix and did not write.
+    //
+    // So it is opt-in, and both example projects opt in via their own
+    // gradle.properties -- which are not published. Every gate in this repo
+    // therefore compiles strict, and no consumer ever does.
+    compilerOptions.allWarningsAsErrors.set(
+            providers.gradleProperty('inappwebview.strictKotlin')
+                    .map { it == 'true' }
+                    .orElse(false)
+    )
 }
 
 dependencies {

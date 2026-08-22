@@ -8,7 +8,14 @@ class PluginScript(
   var isRequiredInAllContentWorlds: Boolean,
   allowedOriginRules: Set<String>?,
   forMainFrameOnly: Boolean
-) : UserScript(groupName, source, injectionTime, contentWorld, allowedOriginRules, forMainFrameOnly) {
+) : UserScript(
+  groupName,
+  source,
+  injectionTime,
+  contentWorld,
+  allowedOriginRules,
+  forMainFrameOnly
+) {
 
   override fun equals(other: Any?): Boolean {
     if (this === other) return true
