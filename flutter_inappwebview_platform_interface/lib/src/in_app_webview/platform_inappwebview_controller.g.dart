@@ -1668,6 +1668,21 @@ enum PlatformInAppWebViewControllerMethod {
   ///{@endtemplate}
   postWebMessage,
 
+  ///Can be used to check if the [PlatformInAppWebViewController.prerenderUrl] method is supported at runtime.
+  ///
+  ///{@template flutter_inappwebview_platform_interface.PlatformInAppWebViewController.prerenderUrl.supported_platforms}
+  ///
+  ///**Officially Supported Platforms/Implementations**:
+  ///- Android WebView ([Official API - WebViewCompat.prerenderUrlAsync](https://developer.android.com/reference/androidx/webkit/WebViewCompat#prerenderUrlAsync(android.webkit.WebView,java.lang.String,android.os.CancellationSignal,java.util.concurrent.Executor,androidx.webkit.PrerenderOperationCallback))):
+  ///    - Requires [WebViewFeature.PRERENDER_WITH_URL]. Returns `false` and prerenders nothing if the feature is not supported.
+  ///
+  ///**Parameters - Officially Supported Platforms/Implementations**:
+  ///- [url]: all platforms
+  ///
+  ///Use the [PlatformInAppWebViewController.isMethodSupported] method to check if this method is supported at runtime.
+  ///{@endtemplate}
+  prerenderUrl,
+
   ///Can be used to check if the [PlatformInAppWebViewController.printCurrentPage] method is supported at runtime.
   ///
   ///{@template flutter_inappwebview_platform_interface.PlatformInAppWebViewController.printCurrentPage.supported_platforms}
@@ -3198,6 +3213,11 @@ extension _PlatformInAppWebViewControllerMethodSupported
               TargetPlatform.macOS,
               TargetPlatform.linux,
               TargetPlatform.windows,
+            ].contains(platform ?? defaultTargetPlatform);
+      case PlatformInAppWebViewControllerMethod.prerenderUrl:
+        return ((kIsWeb && platform != null) || !kIsWeb) &&
+            [
+              TargetPlatform.android,
             ].contains(platform ?? defaultTargetPlatform);
       case PlatformInAppWebViewControllerMethod.printCurrentPage:
         return kIsWeb && platform == null

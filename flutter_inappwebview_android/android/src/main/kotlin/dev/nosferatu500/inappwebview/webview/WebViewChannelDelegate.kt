@@ -623,6 +623,9 @@ class WebViewChannelDelegate(webView: InAppWebView, channel: MethodChannel) :
 
       WebViewChannelDelegateMethods.isAudioMuted -> result.success(webView?.isAudioMuted() ?: false)
 
+      WebViewChannelDelegateMethods.prerenderUrl ->
+        result.success(webView?.prerenderUrl(call.argument<String>("url")!!) == true)
+
       WebViewChannelDelegateMethods.saveState -> result.success(webView?.saveState())
 
       WebViewChannelDelegateMethods.restoreState -> {

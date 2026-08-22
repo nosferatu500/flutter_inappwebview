@@ -150,6 +150,15 @@ class WebViewFeature {
     'POST_WEB_MESSAGE',
   );
 
+  ///Feature for [isFeatureSupported]. This feature covers
+  ///[PlatformInAppWebViewController.prerenderUrl].
+  ///
+  ///Note the native value is `PRERENDER_URL_V2`, not the name of this constant.
+  static const PRERENDER_WITH_URL = WebViewFeature._internal(
+    'PRERENDER_URL_V2',
+    'PRERENDER_URL_V2',
+  );
+
   ///Feature for [isFeatureSupported]. This feature covers [ProxyController.setProxyOverride] and [ProxyController.clearProxyOverride].
   static const PROXY_OVERRIDE = WebViewFeature._internal(
     'PROXY_OVERRIDE',
@@ -401,6 +410,7 @@ class WebViewFeature {
     WebViewFeature.OFF_SCREEN_PRERASTER,
     WebViewFeature.PAYMENT_REQUEST,
     WebViewFeature.POST_WEB_MESSAGE,
+    WebViewFeature.PRERENDER_WITH_URL,
     WebViewFeature.PROXY_OVERRIDE,
     WebViewFeature.PROXY_OVERRIDE_REVERSE_BYPASS,
     WebViewFeature.RECEIVE_HTTP_ERROR,
@@ -559,6 +569,8 @@ class WebViewFeature {
         return 'PAYMENT_REQUEST';
       case 'POST_WEB_MESSAGE':
         return 'POST_WEB_MESSAGE';
+      case 'PRERENDER_URL_V2':
+        return 'PRERENDER_WITH_URL';
       case 'PROXY_OVERRIDE':
         return 'PROXY_OVERRIDE';
       case 'PROXY_OVERRIDE_REVERSE_BYPASS':

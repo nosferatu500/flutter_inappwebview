@@ -143,6 +143,7 @@ interface InAppWebViewInterface {
   fun hideInputMethod()
   fun setAudioMuted(muted: Boolean)
   fun isAudioMuted(): Boolean
+  fun prerenderUrl(url: String): Boolean
   fun saveState(): ByteArray?
   fun restoreState(state: ByteArray): Boolean
 }

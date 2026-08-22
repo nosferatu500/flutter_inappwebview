@@ -2050,6 +2050,47 @@ abstract class PlatformInAppWebViewController extends PlatformInterface
     );
   }
 
+  ///{@template flutter_inappwebview_platform_interface.PlatformInAppWebViewController.prerenderUrl}
+  ///Asks this WebView to prerender [url], so that a later navigation to it is instant.
+  ///
+  ///The page is loaded and rendered in the background, ahead of any navigation. If this WebView
+  ///later navigates to the same url, the prerendered result is activated instead of being fetched
+  ///again; if it never does, the WebView discards it.
+  ///
+  ///This is a hint, not a guarantee, and it costs memory and network for a page the user may never
+  ///visit — so it is worth doing for a destination you have good reason to expect, such as the
+  ///target of a link the user is hovering or the next step of a flow they have started.
+  ///
+  ///Returns `true` if the prerender was **requested**, and `false` when
+  ///[WebViewFeature.PRERENDER_WITH_URL] is not supported. It does not wait for the prerender to
+  ///finish, be used, or fail.
+  ///
+  ///**Outcomes are not reported back.** The platform reports activation and failure through a
+  ///callback, but activation can happen long after this call or never at all, so surfacing it as a
+  ///`Future` would leave one uncompleted for the lifetime of the WebView. Both outcomes are logged
+  ///natively instead. A prerender that fails simply means the eventual navigation loads normally.
+  ///
+  ///It cannot be cancelled.
+  ///{@endtemplate}
+  ///
+  ///{@macro flutter_inappwebview_platform_interface.PlatformInAppWebViewController.prerenderUrl.supported_platforms}
+  @SupportedPlatforms(
+    platforms: [
+      AndroidPlatform(
+        apiName: 'WebViewCompat.prerenderUrlAsync',
+        apiUrl:
+            'https://developer.android.com/reference/androidx/webkit/WebViewCompat#prerenderUrlAsync(android.webkit.WebView,java.lang.String,android.os.CancellationSignal,java.util.concurrent.Executor,androidx.webkit.PrerenderOperationCallback)',
+        note:
+            'Requires [WebViewFeature.PRERENDER_WITH_URL]. Returns `false` and prerenders nothing if the feature is not supported.',
+      ),
+    ],
+  )
+  Future<bool> prerenderUrl(WebUri url) {
+    throw UnimplementedError(
+      '${PlatformInAppWebViewControllerMethod.prerenderUrl.name} is not implemented on the current platform',
+    );
+  }
+
   ///{@template flutter_inappwebview_platform_interface.PlatformInAppWebViewController.hideInputMethod}
   ///Request to hide the soft input view from the context of the view that is currently accepting input.
   ///{@endtemplate}

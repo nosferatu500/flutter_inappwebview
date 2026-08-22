@@ -403,6 +403,14 @@ class WebViewFeature_ {
     "USER_AGENT_METADATA_FORM_FACTORS",
   );
 
+  ///Feature for [isFeatureSupported]. This feature covers
+  ///[PlatformInAppWebViewController.prerenderUrl].
+  ///
+  ///Note the native value is `PRERENDER_URL_V2`, not the name of this constant.
+  static const PRERENDER_WITH_URL = WebViewFeature_._internal(
+    "PRERENDER_URL_V2",
+  );
+
   ///Feature for [isFeatureSupported]. This feature covers [PlatformProfileStore] and
   ///[InAppWebViewSettings.profileName].
   static const MULTI_PROFILE = WebViewFeature_._internal("MULTI_PROFILE");

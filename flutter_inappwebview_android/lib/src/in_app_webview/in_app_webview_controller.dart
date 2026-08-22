@@ -2142,6 +2142,13 @@ class AndroidInAppWebViewController extends PlatformInAppWebViewController
   }
 
   @override
+  Future<bool> prerenderUrl(WebUri url) async {
+    Map<String, dynamic> args = <String, dynamic>{};
+    args.putIfAbsent('url', () => url.toString());
+    return await channel?.invokeMethod<bool>('prerenderUrl', args) ?? false;
+  }
+
+  @override
   Future<void> hideInputMethod() async {
     Map<String, dynamic> args = <String, dynamic>{};
     return await channel?.invokeMethod('hideInputMethod', args);

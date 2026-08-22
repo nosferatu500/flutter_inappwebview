@@ -46,11 +46,14 @@ import android.webkit.WebViewClient
 import android.widget.HorizontalScrollView
 import android.widget.LinearLayout
 import android.widget.TextView
+import androidx.webkit.PrerenderException
+import androidx.webkit.PrerenderOperationCallback
 import androidx.webkit.WebSettingsCompat
 import androidx.webkit.UserAgentMetadata
 import androidx.webkit.WebViewMediaIntegrityApiStatusConfig
 import androidx.webkit.WebViewCompat
 import androidx.webkit.WebViewFeature
+import java.util.concurrent.Executor
 import dev.nosferatu500.inappwebview.InAppWebViewFlutterPlugin
 import dev.nosferatu500.inappwebview.R
 import dev.nosferatu500.inappwebview.Util
@@ -2556,6 +2559,41 @@ class InAppWebView : WebView, InAppWebViewInterface, Disposable {
     } else {
       false
     }
+
+  /**
+   * Starts a prerender of [url] for this WebView. Returns whether the request was issued.
+   *
+   * `PrerenderOperationCallback` reports two later outcomes -- `onPrerenderActivated`, meaning this
+   * WebView eventually navigated to the prerendered url, and `onError`. Neither is surfaced to Dart:
+   * activation may happen much later or never, so completing the channel reply on it would leave a
+   * Dart Future dangling for the lifetime of the WebView. The reply is therefore sent as soon as the
+   * request is issued, and the outcomes are logged. See the Dart doc and TODO.md P0c.
+   *
+   * The CancellationSignal is null on purpose: cancelling would need a handle passed back to Dart
+   * and a cancel method, which is a separate design. A prerender that is never activated is
+   * discarded by the WebView on its own.
+   */
+  override fun prerenderUrl(url: String): Boolean {
+    if (!WebViewFeature.isFeatureSupported(WebViewFeature.PRERENDER_WITH_URL)) {
+      return false
+    }
+    WebViewCompat.prerenderUrlAsync(
+      this,
+      url,
+      null,
+      Executor { command -> command.run() },
+      object : PrerenderOperationCallback {
+        override fun onPrerenderActivated() {
+          Log.d(LOG_TAG, "prerender of $url was activated")
+        }
+
+        override fun onError(e: PrerenderException) {
+          Log.e(LOG_TAG, "prerender of $url failed", e)
+        }
+      }
+    )
+    return true
+  }
 
   override fun hideInputMethod() {
     val activity = plugin?.activity ?: return

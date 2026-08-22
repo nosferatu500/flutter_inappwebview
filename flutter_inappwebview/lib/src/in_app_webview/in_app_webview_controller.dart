@@ -397,6 +397,11 @@ class InAppWebViewController {
   ///{@macro flutter_inappwebview_platform_interface.PlatformInAppWebViewController.isAudioMuted.supported_platforms}
   Future<bool> isAudioMuted() => platform.isAudioMuted();
 
+  ///{@macro flutter_inappwebview_platform_interface.PlatformInAppWebViewController.prerenderUrl}
+  ///
+  ///{@macro flutter_inappwebview_platform_interface.PlatformInAppWebViewController.prerenderUrl.supported_platforms}
+  Future<bool> prerenderUrl(WebUri url) => platform.prerenderUrl(url);
+
   ///{@macro flutter_inappwebview_platform_interface.PlatformInAppWebViewController.hideInputMethod}
   ///
   ///{@macro flutter_inappwebview_platform_interface.PlatformInAppWebViewController.hideInputMethod.supported_platforms}

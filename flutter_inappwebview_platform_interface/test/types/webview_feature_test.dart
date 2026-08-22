@@ -15,7 +15,10 @@ import 'package:flutter_test/flutter_test.dart';
 /// `false` for an unrecognised feature, the guarded code is skipped, and the feature simply appears
 /// unsupported on every device. Nothing throws and nothing logs.
 ///
-/// Each expectation below was read out of `webkit-1.17.0.aar` with `javap -constants`.
+/// Each expectation below was read out of `webkit-1.17.0.aar` with `javap -constants`. Note the map
+/// is keyed by the Dart constant name and valued by the *native* string: those are usually equal,
+/// but §34 found five androidx flags where they are not, so this cannot be shortened to a
+/// name-equals-value check.
 void main() {
   group('WebViewFeature native values', () {
     test('match the androidx.webkit constants exactly', () {
@@ -34,6 +37,10 @@ void main() {
         'DEFAULT_TRAFFICSTATS_TAGGING': 'DEFAULT_TRAFFICSTATS_TAGGING',
         'DELETE_BROWSING_DATA': 'DELETE_BROWSING_DATA',
         'MULTI_PROFILE': 'MULTI_PROFILE',
+        // The only entry so far whose native value is NOT its constant name (§34). Read out of the
+        // AAR: `PRERENDER_WITH_URL = "PRERENDER_URL_V2"`. Mirroring the name here would produce a
+        // string androidx has never heard of, and androidx answers those with a silent `false`.
+        'PRERENDER_WITH_URL': 'PRERENDER_URL_V2',
       };
 
       final actual = <String, String?>{
@@ -60,6 +67,7 @@ void main() {
         'DELETE_BROWSING_DATA': WebViewFeature.DELETE_BROWSING_DATA
             .toNativeValue(),
         'MULTI_PROFILE': WebViewFeature.MULTI_PROFILE.toNativeValue(),
+        'PRERENDER_WITH_URL': WebViewFeature.PRERENDER_WITH_URL.toNativeValue(),
       };
 
       expect(actual, expected);
@@ -79,6 +87,7 @@ void main() {
         WebViewFeature.DEFAULT_TRAFFICSTATS_TAGGING,
         WebViewFeature.DELETE_BROWSING_DATA,
         WebViewFeature.MULTI_PROFILE,
+        WebViewFeature.PRERENDER_WITH_URL,
       ]) {
         expect(
           WebViewFeature.fromNativeValue(feature.toNativeValue()),
