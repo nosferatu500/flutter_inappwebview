@@ -12,6 +12,7 @@ export 'print_job/main.dart';
 export 'find_interaction/main.dart';
 export 'service_worker_controller.dart';
 export 'webview_feature.dart' hide InternalWebViewFeature;
+export 'geolocation_permissions.dart';
 export 'profile_store.dart';
 export 'proxy_controller.dart' hide InternalProxyController;
 export 'webview_asset_loader.dart';

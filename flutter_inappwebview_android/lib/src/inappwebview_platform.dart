@@ -5,6 +5,7 @@ import 'cookie_manager.dart';
 import 'find_interaction/main.dart';
 import 'http_auth_credentials_database.dart';
 import 'in_app_browser/in_app_browser.dart';
+import 'geolocation_permissions.dart';
 import 'in_app_webview/main.dart';
 import 'print_job/main.dart';
 import 'process_global_config.dart';
@@ -352,6 +353,26 @@ class AndroidInAppWebViewPlatform extends InAppWebViewPlatform {
   @override
   AndroidProcessGlobalConfig createPlatformProcessGlobalConfigStatic() {
     return AndroidProcessGlobalConfig.static();
+  }
+
+  /// Creates a new [AndroidGeolocationPermissions].
+  ///
+  /// This function should only be called by the app-facing package.
+  /// Look at using [GeolocationPermissions] in `flutter_inappwebview` instead.
+  @override
+  AndroidGeolocationPermissions createPlatformGeolocationPermissions(
+    PlatformGeolocationPermissionsCreationParams params,
+  ) {
+    return AndroidGeolocationPermissions(params);
+  }
+
+  /// Creates a new empty [AndroidGeolocationPermissions] to access static methods.
+  ///
+  /// This function should only be called by the app-facing package.
+  /// Look at using [GeolocationPermissions] in `flutter_inappwebview` instead.
+  @override
+  AndroidGeolocationPermissions createPlatformGeolocationPermissionsStatic() {
+    return AndroidGeolocationPermissions.static();
   }
 
   /// Creates a new [AndroidProfileStore].

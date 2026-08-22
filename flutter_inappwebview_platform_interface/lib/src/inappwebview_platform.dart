@@ -9,6 +9,7 @@ import 'in_app_webview/platform_headless_in_app_webview.dart';
 import 'in_app_webview/platform_inappwebview_controller.dart';
 import 'in_app_webview/platform_inappwebview_widget.dart';
 import 'platform_cookie_manager.dart';
+import 'platform_geolocation_permissions.dart';
 import 'platform_http_auth_credentials_database.dart';
 import 'platform_in_app_localhost_server.dart';
 import 'platform_process_global_config.dart';
@@ -467,6 +468,28 @@ abstract class InAppWebViewPlatform extends PlatformInterface {
   PlatformProcessGlobalConfig createPlatformProcessGlobalConfigStatic() {
     throw UnimplementedError(
       'createPlatformProcessGlobalConfigStatic is not implemented on the current platform.',
+    );
+  }
+
+  /// Creates a new [PlatformGeolocationPermissions].
+  ///
+  /// This function should only be called by the app-facing package.
+  /// Look at using [GeolocationPermissions] in `flutter_inappwebview` instead.
+  PlatformGeolocationPermissions createPlatformGeolocationPermissions(
+    PlatformGeolocationPermissionsCreationParams params,
+  ) {
+    throw UnimplementedError(
+      'createPlatformGeolocationPermissions is not implemented on the current platform.',
+    );
+  }
+
+  /// Creates a new empty [PlatformGeolocationPermissions] to access static methods.
+  ///
+  /// This function should only be called by the app-facing package.
+  /// Look at using [GeolocationPermissions] in `flutter_inappwebview` instead.
+  PlatformGeolocationPermissions createPlatformGeolocationPermissionsStatic() {
+    throw UnimplementedError(
+      'createPlatformGeolocationPermissionsStatic is not implemented on the current platform.',
     );
   }
 
