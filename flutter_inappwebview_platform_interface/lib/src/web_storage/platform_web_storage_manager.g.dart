@@ -65,6 +65,33 @@ enum PlatformWebStorageManagerMethod {
   ///{@endtemplate}
   deleteAllData,
 
+  ///Can be used to check if the [PlatformWebStorageManager.deleteBrowsingData] method is supported at runtime.
+  ///
+  ///{@template flutter_inappwebview_platform_interface.PlatformWebStorageManager.deleteBrowsingData.supported_platforms}
+  ///
+  ///**Officially Supported Platforms/Implementations**:
+  ///- Android WebView ([Official API - WebStorageCompat.deleteBrowsingData](https://developer.android.com/reference/androidx/webkit/WebStorageCompat#deleteBrowsingData(android.webkit.WebStorage,java.lang.Runnable))):
+  ///    - Requires [WebViewFeature.DELETE_BROWSING_DATA]. Returns `false` and deletes nothing if the feature is not supported.
+  ///
+  ///Use the [PlatformWebStorageManager.isMethodSupported] method to check if this method is supported at runtime.
+  ///{@endtemplate}
+  deleteBrowsingData,
+
+  ///Can be used to check if the [PlatformWebStorageManager.deleteBrowsingDataForSite] method is supported at runtime.
+  ///
+  ///{@template flutter_inappwebview_platform_interface.PlatformWebStorageManager.deleteBrowsingDataForSite.supported_platforms}
+  ///
+  ///**Officially Supported Platforms/Implementations**:
+  ///- Android WebView ([Official API - WebStorageCompat.deleteBrowsingDataForSite](https://developer.android.com/reference/androidx/webkit/WebStorageCompat#deleteBrowsingDataForSite(android.webkit.WebStorage,java.lang.String,java.lang.Runnable))):
+  ///    - Requires [WebViewFeature.DELETE_BROWSING_DATA]. Returns `null` and deletes nothing if the feature is not supported.
+  ///
+  ///**Parameters - Officially Supported Platforms/Implementations**:
+  ///- [site]: all platforms
+  ///
+  ///Use the [PlatformWebStorageManager.isMethodSupported] method to check if this method is supported at runtime.
+  ///{@endtemplate}
+  deleteBrowsingDataForSite,
+
   ///Can be used to check if the [PlatformWebStorageManager.deleteOrigin] method is supported at runtime.
   ///
   ///{@template flutter_inappwebview_platform_interface.PlatformWebStorageManager.deleteOrigin.supported_platforms}
@@ -177,6 +204,16 @@ extension _PlatformWebStorageManagerMethodSupported
   }) {
     switch (method) {
       case PlatformWebStorageManagerMethod.deleteAllData:
+        return ((kIsWeb && platform != null) || !kIsWeb) &&
+            [
+              TargetPlatform.android,
+            ].contains(platform ?? defaultTargetPlatform);
+      case PlatformWebStorageManagerMethod.deleteBrowsingData:
+        return ((kIsWeb && platform != null) || !kIsWeb) &&
+            [
+              TargetPlatform.android,
+            ].contains(platform ?? defaultTargetPlatform);
+      case PlatformWebStorageManagerMethod.deleteBrowsingDataForSite:
         return ((kIsWeb && platform != null) || !kIsWeb) &&
             [
               TargetPlatform.android,

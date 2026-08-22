@@ -178,6 +178,77 @@ abstract class PlatformWebStorageManager extends PlatformInterface {
     );
   }
 
+  ///{@template flutter_inappwebview_platform_interface.PlatformWebStorageManager.deleteBrowsingData}
+  ///Deletes all the data stored by websites.
+  ///
+  ///This is stronger than [deleteAllData]: on top of the JavaScript-readable storage APIs it also
+  ///clears the network cache and the cookies.
+  ///
+  ///Only data stored *before* the call is guaranteed to go. Deletion is not atomic, so data written
+  ///while it runs may or may not survive.
+  ///
+  ///The data cleared is the one belonging to the default WebView profile, which is the only profile
+  ///this plugin uses. An app managing its own profiles has to clear each of them separately.
+  ///
+  ///Returns `true` once the deletion has completed, or `false` immediately when
+  ///[WebViewFeature.DELETE_BROWSING_DATA] is not supported, in which case nothing was deleted.
+  ///{@endtemplate}
+  ///
+  ///{@macro flutter_inappwebview_platform_interface.PlatformWebStorageManager.deleteBrowsingData.supported_platforms}
+  @SupportedPlatforms(
+    platforms: [
+      AndroidPlatform(
+        apiName: 'WebStorageCompat.deleteBrowsingData',
+        apiUrl:
+            'https://developer.android.com/reference/androidx/webkit/WebStorageCompat#deleteBrowsingData(android.webkit.WebStorage,java.lang.Runnable)',
+        note:
+            'Requires [WebViewFeature.DELETE_BROWSING_DATA]. Returns `false` and deletes nothing if the feature is not supported.',
+      ),
+    ],
+  )
+  Future<bool> deleteBrowsingData() {
+    throw UnimplementedError(
+      'deleteBrowsingData is not implemented on the current platform',
+    );
+  }
+
+  ///{@template flutter_inappwebview_platform_interface.PlatformWebStorageManager.deleteBrowsingDataForSite}
+  ///Deletes the data stored by websites for the given [site].
+  ///
+  ///[site] can be a domain name or a full URL. Deletion happens at the
+  ///[site](https://developer.mozilla.org/en-US/docs/Glossary/Site) level rather than for the exact
+  ///host, so a [site] of `www.example.com` deletes everything belonging to `example.com`.
+  ///Partitioned storage owned by the site goes too, including the storage of content the site
+  ///embeds in iframes.
+  ///
+  ///As with [deleteBrowsingData] this covers the network cache and the cookies as well as the
+  ///JavaScript-readable storage APIs, and only data stored before the call is guaranteed to go.
+  ///
+  ///Returns the domain the deletion was actually performed for — the top-level domain part of
+  ///[site], so it can differ from what was passed in — or `null` when
+  ///[WebViewFeature.DELETE_BROWSING_DATA] is not supported, in which case nothing was deleted.
+  ///
+  ///Throws a `PlatformException` if [site] cannot be parsed as a domain name.
+  ///{@endtemplate}
+  ///
+  ///{@macro flutter_inappwebview_platform_interface.PlatformWebStorageManager.deleteBrowsingDataForSite.supported_platforms}
+  @SupportedPlatforms(
+    platforms: [
+      AndroidPlatform(
+        apiName: 'WebStorageCompat.deleteBrowsingDataForSite',
+        apiUrl:
+            'https://developer.android.com/reference/androidx/webkit/WebStorageCompat#deleteBrowsingDataForSite(android.webkit.WebStorage,java.lang.String,java.lang.Runnable)',
+        note:
+            'Requires [WebViewFeature.DELETE_BROWSING_DATA]. Returns `null` and deletes nothing if the feature is not supported.',
+      ),
+    ],
+  )
+  Future<String?> deleteBrowsingDataForSite({required String site}) {
+    throw UnimplementedError(
+      'deleteBrowsingDataForSite is not implemented on the current platform',
+    );
+  }
+
   ///{@template flutter_inappwebview_platform_interface.PlatformWebStorageManager.getQuotaForOrigin}
   ///Gets the storage quota for the Web SQL Database API for the given [origin].
   ///The quota is given in bytes and the origin is specified using its string representation.

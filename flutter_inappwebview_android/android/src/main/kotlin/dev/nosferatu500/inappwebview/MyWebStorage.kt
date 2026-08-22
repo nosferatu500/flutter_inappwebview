@@ -2,6 +2,8 @@ package dev.nosferatu500.inappwebview
 
 import android.webkit.ValueCallback
 import android.webkit.WebStorage
+import androidx.webkit.WebStorageCompat
+import androidx.webkit.WebViewFeature
 import dev.nosferatu500.inappwebview.types.ChannelDelegateImpl
 import io.flutter.plugin.common.MethodCall
 import io.flutter.plugin.common.MethodChannel
@@ -38,6 +40,11 @@ class MyWebStorage(plugin: InAppWebViewFlutterPlugin) :
         }
       }
 
+      "deleteBrowsingData" -> deleteBrowsingData(result)
+
+      "deleteBrowsingDataForSite" ->
+        deleteBrowsingDataForSite(call.argument("site")!!, result)
+
       "getQuotaForOrigin" -> getQuotaForOrigin(call.argument("origin"), result)
 
       "getUsageForOrigin" -> getUsageForOrigin(call.argument("origin"), result)
@@ -70,6 +77,48 @@ class MyWebStorage(plugin: InAppWebViewFlutterPlugin) :
       }
       result.success(origins)
     } as ValueCallback<Map<Any?, Any?>>)
+  }
+
+  // Both of these deliberately use the WebStorageCompat overloads that post the done callback to
+  // the main looper, rather than the Executor ones: onMethodCall already runs there, a
+  // MethodChannel.Result must be replied to on the main thread anyway, and -- for
+  // deleteBrowsingDataForSite -- it is what makes reading the returned domain inside the callback
+  // safe. See deleteBrowsingDataForSite below.
+  fun deleteBrowsingData(result: MethodChannel.Result) {
+    val manager = webStorageManager
+    if (manager == null ||
+      !WebViewFeature.isFeatureSupported(WebViewFeature.DELETE_BROWSING_DATA)
+    ) {
+      // WebStorageCompat.deleteBrowsingData throws UnsupportedOperationException when the feature
+      // is missing, so the gate is required rather than defensive.
+      result.success(false)
+      return
+    }
+    WebStorageCompat.deleteBrowsingData(manager) { result.success(true) }
+  }
+
+  fun deleteBrowsingDataForSite(site: String, result: MethodChannel.Result) {
+    val manager = webStorageManager
+    if (manager == null ||
+      !WebViewFeature.isFeatureSupported(WebViewFeature.DELETE_BROWSING_DATA)
+    ) {
+      result.success(null)
+      return
+    }
+    try {
+      // deleteBrowsingDataForSite returns the domain it actually deleted for -- the site part of
+      // the argument, so "www.example.com" comes back as "example.com" -- and reports completion
+      // through the callback. Assigning the return value before the callback can run is safe only
+      // because the callback is posted to the main looper we are currently on; with the Executor
+      // overload this would be a genuine race.
+      var domain: String? = null
+      domain = WebStorageCompat.deleteBrowsingDataForSite(manager, site) {
+        result.success(domain)
+      }
+    } catch (e: IllegalArgumentException) {
+      // Thrown when the site cannot be parsed as a domain name.
+      result.error(LOG_TAG, e.message, null)
+    }
   }
 
   fun getQuotaForOrigin(origin: String?, result: MethodChannel.Result) {

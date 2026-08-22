@@ -404,6 +404,13 @@ class WebViewFeature_ {
   );
 
   ///Feature for [isFeatureSupported]. This feature covers
+  ///[PlatformWebStorageManager.deleteBrowsingData] and
+  ///[PlatformWebStorageManager.deleteBrowsingDataForSite].
+  static const DELETE_BROWSING_DATA = WebViewFeature_._internal(
+    "DELETE_BROWSING_DATA",
+  );
+
+  ///Feature for [isFeatureSupported]. This feature covers
   ///[PlatformInAppWebViewController.setDefaultTrafficStatsTag].
   static const DEFAULT_TRAFFICSTATS_TAGGING = WebViewFeature_._internal(
     "DEFAULT_TRAFFICSTATS_TAGGING",

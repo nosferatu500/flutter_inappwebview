@@ -63,6 +63,17 @@ class WebStorageManager {
   Future<void> deleteOrigin({required String origin}) =>
       platform.deleteOrigin(origin: origin);
 
+  ///{@macro flutter_inappwebview_platform_interface.PlatformWebStorageManager.deleteBrowsingData}
+  ///
+  ///{@macro flutter_inappwebview_platform_interface.PlatformWebStorageManager.deleteBrowsingData.supported_platforms}
+  Future<bool> deleteBrowsingData() => platform.deleteBrowsingData();
+
+  ///{@macro flutter_inappwebview_platform_interface.PlatformWebStorageManager.deleteBrowsingDataForSite}
+  ///
+  ///{@macro flutter_inappwebview_platform_interface.PlatformWebStorageManager.deleteBrowsingDataForSite.supported_platforms}
+  Future<String?> deleteBrowsingDataForSite({required String site}) =>
+      platform.deleteBrowsingDataForSite(site: site);
+
   ///{@macro flutter_inappwebview_platform_interface.PlatformWebStorageManager.getQuotaForOrigin}
   ///
   ///{@macro flutter_inappwebview_platform_interface.PlatformWebStorageManager.getQuotaForOrigin.supported_platforms}
