@@ -88,6 +88,8 @@ class IOSCookieManager extends PlatformCookieManager with ChannelController {
     bool? isHttpOnly,
     HTTPCookieSameSitePolicy? sameSite,
     PlatformInAppWebViewController? webViewController,
+    // Android-only; accepted so the signature matches PlatformCookieManager.
+    String? profileName,
   }) async {
     assert(url.toString().isNotEmpty);
     assert(name.isNotEmpty);
@@ -186,6 +188,8 @@ class IOSCookieManager extends PlatformCookieManager with ChannelController {
   Future<List<Cookie>> getCookies({
     required WebUri url,
     PlatformInAppWebViewController? webViewController,
+    // Android-only; accepted so the signature matches PlatformCookieManager.
+    String? profileName,
   }) async {
     assert(url.toString().isNotEmpty);
 
@@ -289,6 +293,8 @@ class IOSCookieManager extends PlatformCookieManager with ChannelController {
     required WebUri url,
     required String name,
     PlatformInAppWebViewController? webViewController,
+    // Android-only; accepted so the signature matches PlatformCookieManager.
+    String? profileName,
   }) async {
     assert(url.toString().isNotEmpty);
     assert(name.isNotEmpty);
@@ -337,6 +343,8 @@ class IOSCookieManager extends PlatformCookieManager with ChannelController {
     String path = "/",
     String? domain,
     PlatformInAppWebViewController? webViewController,
+    // Android-only; accepted so the signature matches PlatformCookieManager.
+    String? profileName,
   }) async {
     assert(url.toString().isNotEmpty);
     assert(name.isNotEmpty);
@@ -368,6 +376,8 @@ class IOSCookieManager extends PlatformCookieManager with ChannelController {
     String path = "/",
     String? domain,
     PlatformInAppWebViewController? webViewController,
+    // Android-only; accepted so the signature matches PlatformCookieManager.
+    String? profileName,
   }) async {
     assert(url.toString().isNotEmpty);
 
@@ -398,7 +408,7 @@ class IOSCookieManager extends PlatformCookieManager with ChannelController {
   }
 
   @override
-  Future<bool> deleteAllCookies() async {
+  Future<bool> deleteAllCookies({String? profileName}) async {
     Map<String, dynamic> args = <String, dynamic>{};
     return await channel?.invokeMethod<bool>('deleteAllCookies', args) ?? false;
   }

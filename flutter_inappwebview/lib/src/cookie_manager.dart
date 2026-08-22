@@ -64,6 +64,7 @@ class CookieManager {
     bool? isHttpOnly,
     HTTPCookieSameSitePolicy? sameSite,
     InAppWebViewController? webViewController,
+    String? profileName,
   }) => platform.setCookie(
     url: url,
     name: name,
@@ -76,6 +77,7 @@ class CookieManager {
     isHttpOnly: isHttpOnly,
     sameSite: sameSite,
     webViewController: webViewController?.platform,
+    profileName: profileName,
   );
 
   ///{@macro flutter_inappwebview_platform_interface.PlatformCookieManager.getCookies}
@@ -84,9 +86,11 @@ class CookieManager {
   Future<List<Cookie>> getCookies({
     required WebUri url,
     InAppWebViewController? webViewController,
+    String? profileName,
   }) => platform.getCookies(
     url: url,
     webViewController: webViewController?.platform,
+    profileName: profileName,
   );
 
   ///{@macro flutter_inappwebview_platform_interface.PlatformCookieManager.getCookie}
@@ -96,10 +100,12 @@ class CookieManager {
     required WebUri url,
     required String name,
     InAppWebViewController? webViewController,
+    String? profileName,
   }) => platform.getCookie(
     url: url,
     name: name,
     webViewController: webViewController?.platform,
+    profileName: profileName,
   );
 
   ///{@macro flutter_inappwebview_platform_interface.PlatformCookieManager.deleteCookie}
@@ -111,12 +117,14 @@ class CookieManager {
     String path = "/",
     String? domain,
     InAppWebViewController? webViewController,
+    String? profileName,
   }) => platform.deleteCookie(
     url: url,
     name: name,
     path: path,
     domain: domain,
     webViewController: webViewController?.platform,
+    profileName: profileName,
   );
 
   ///{@macro flutter_inappwebview_platform_interface.PlatformCookieManager.deleteCookies}
@@ -127,17 +135,20 @@ class CookieManager {
     String path = "/",
     String? domain,
     InAppWebViewController? webViewController,
+    String? profileName,
   }) => platform.deleteCookies(
     url: url,
     path: path,
     domain: domain,
     webViewController: webViewController?.platform,
+    profileName: profileName,
   );
 
   ///{@macro flutter_inappwebview_platform_interface.PlatformCookieManager.deleteAllCookies}
   ///
   ///{@macro flutter_inappwebview_platform_interface.PlatformCookieManager.deleteAllCookies.supported_platforms}
-  Future<bool> deleteAllCookies() => platform.deleteAllCookies();
+  Future<bool> deleteAllCookies({String? profileName}) =>
+      platform.deleteAllCookies(profileName: profileName);
 
   ///{@macro flutter_inappwebview_platform_interface.PlatformCookieManager.getAllCookies}
   ///
@@ -147,12 +158,14 @@ class CookieManager {
   ///{@macro flutter_inappwebview_platform_interface.PlatformCookieManager.removeSessionCookies}
   ///
   ///{@macro flutter_inappwebview_platform_interface.PlatformCookieManager.removeSessionCookies.supported_platforms}
-  Future<bool> removeSessionCookies() => platform.removeSessionCookies();
+  Future<bool> removeSessionCookies({String? profileName}) =>
+      platform.removeSessionCookies(profileName: profileName);
 
   ///{@macro flutter_inappwebview_platform_interface.PlatformCookieManager.flush}
   ///
   ///{@macro flutter_inappwebview_platform_interface.PlatformCookieManager.flush.supported_platforms}
-  Future<void> flush() => platform.flush();
+  Future<void> flush({String? profileName}) =>
+      platform.flush(profileName: profileName);
 
   ///{@macro flutter_inappwebview_platform_interface.PlatformCookieManagerCreationParams.isClassSupported}
   static bool isClassSupported({TargetPlatform? platform}) =>

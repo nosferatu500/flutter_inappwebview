@@ -3,6 +3,7 @@ package dev.nosferatu500.inappwebview
 import android.util.Log
 import android.webkit.CookieManager
 import androidx.webkit.CookieManagerCompat
+import androidx.webkit.ProfileStore
 import androidx.webkit.WebViewFeature
 import dev.nosferatu500.inappwebview.types.ChannelDelegateImpl
 import io.flutter.plugin.common.MethodCall
@@ -22,6 +23,10 @@ class MyCookieManager(plugin: InAppWebViewFlutterPlugin) :
   override fun onMethodCall(call: MethodCall, result: MethodChannel.Result) {
     init()
 
+    // Null unless the caller scoped this single call to a profile; see PlatformCookieManager's
+    // class doc for why the scope is per call rather than per manager instance.
+    val profileName = call.argument<String>("profileName")
+
     when (call.method) {
       "setCookie" -> {
         val url = call.argument<String>("url")
@@ -37,26 +42,26 @@ class MyCookieManager(plugin: InAppWebViewFlutterPlugin) :
         val sameSite = call.argument<String>("sameSite")
         setCookie(
           url, name, value, domain, path, expiresDate, maxAge, isSecure, isHttpOnly, sameSite,
-          result
+          profileName, result
         )
       }
 
-      "getCookies" -> result.success(getCookies(call.argument("url")))
+      "getCookies" -> result.success(getCookies(call.argument("url"), profileName))
 
       "deleteCookie" -> deleteCookie(
         call.argument("url"), call.argument("name"), call.argument("domain"),
-        call.argument("path"), result
+        call.argument("path"), profileName, result
       )
 
       "deleteCookies" -> deleteCookies(
-        call.argument("url"), call.argument("domain"), call.argument("path"), result
+        call.argument("url"), call.argument("domain"), call.argument("path"), profileName, result
       )
 
-      "deleteAllCookies" -> deleteAllCookies(result)
+      "deleteAllCookies" -> deleteAllCookies(profileName, result)
 
-      "removeSessionCookies" -> removeSessionCookies(result)
+      "removeSessionCookies" -> removeSessionCookies(profileName, result)
 
-      "flush" -> flush(result)
+      "flush" -> flush(profileName, result)
 
       else -> result.notImplemented()
     }
@@ -73,9 +78,10 @@ class MyCookieManager(plugin: InAppWebViewFlutterPlugin) :
     isSecure: Boolean?,
     isHttpOnly: Boolean?,
     sameSite: String?,
+    profileName: String?,
     result: MethodChannel.Result
   ) {
-    val manager = getCookieManager()
+    val manager = getCookieManager(profileName)
     if (manager == null) {
       result.success(false)
       return
@@ -96,10 +102,10 @@ class MyCookieManager(plugin: InAppWebViewFlutterPlugin) :
     manager.flush()
   }
 
-  fun getCookies(url: String?): List<Map<String, Any?>> {
+  fun getCookies(url: String?, profileName: String?): List<Map<String, Any?>> {
     val cookieListMap = mutableListOf<Map<String, Any?>>()
 
-    val manager = getCookieManager() ?: return cookieListMap
+    val manager = getCookieManager(profileName) ?: return cookieListMap
 
     var cookies: List<String> = emptyList()
     if (WebViewFeature.isFeatureSupported(WebViewFeature.GET_COOKIE_INFO)) {
@@ -185,9 +191,10 @@ class MyCookieManager(plugin: InAppWebViewFlutterPlugin) :
     name: String?,
     domain: String?,
     path: String?,
+    profileName: String?,
     result: MethodChannel.Result
   ) {
-    val manager = getCookieManager()
+    val manager = getCookieManager(profileName)
     if (manager == null) {
       result.success(false)
       return
@@ -201,8 +208,14 @@ class MyCookieManager(plugin: InAppWebViewFlutterPlugin) :
     manager.flush()
   }
 
-  fun deleteCookies(url: String?, domain: String?, path: String?, result: MethodChannel.Result) {
-    val manager = getCookieManager()
+  fun deleteCookies(
+    url: String?,
+    domain: String?,
+    path: String?,
+    profileName: String?,
+    result: MethodChannel.Result
+  ) {
+    val manager = getCookieManager(profileName)
     if (manager == null) {
       result.success(false)
       return
@@ -225,8 +238,8 @@ class MyCookieManager(plugin: InAppWebViewFlutterPlugin) :
     result.success(true)
   }
 
-  fun deleteAllCookies(result: MethodChannel.Result) {
-    val manager = getCookieManager()
+  fun deleteAllCookies(profileName: String?, result: MethodChannel.Result) {
+    val manager = getCookieManager(profileName)
     if (manager == null) {
       result.success(false)
       return
@@ -236,8 +249,8 @@ class MyCookieManager(plugin: InAppWebViewFlutterPlugin) :
     manager.flush()
   }
 
-  fun removeSessionCookies(result: MethodChannel.Result) {
-    val manager = getCookieManager()
+  fun removeSessionCookies(profileName: String?, result: MethodChannel.Result) {
+    val manager = getCookieManager(profileName)
     if (manager == null) {
       result.success(false)
       return
@@ -247,8 +260,8 @@ class MyCookieManager(plugin: InAppWebViewFlutterPlugin) :
     manager.flush()
   }
 
-  fun flush(result: MethodChannel.Result) {
-    val manager = getCookieManager()
+  fun flush(profileName: String?, result: MethodChannel.Result) {
+    val manager = getCookieManager(profileName)
     if (manager == null) {
       result.success(false)
       return
@@ -273,6 +286,35 @@ class MyCookieManager(plugin: InAppWebViewFlutterPlugin) :
       if (cookieManager == null) {
         cookieManager = getCookieManager()
       }
+    }
+
+    /**
+     * Resolves the [CookieManager] a call should act on.
+     *
+     * A null [profileName] means the default cookie store, which is the cached process-wide
+     * singleton below. A non-null one means that profile's own store, and returns null -- so the
+     * caller reports failure -- when `MULTI_PROFILE` is unsupported or no such profile exists.
+     * It never silently falls back to the default store, because writing a session cookie into the
+     * wrong profile is worse than not writing it.
+     *
+     * Uses `getProfile`, not `getOrCreateProfile`: reading a profile's cookies must not bring the
+     * profile into existence, and a profile that does not exist has no cookies. `getProfile` also
+     * returns null for a profile deleted by `deleteProfile`, which is what keeps
+     * `Profile.getCookieManager()` -- which throws for a deleted profile -- out of reach here.
+     *
+     * Deliberately not cached per profile. The cache below exists because the *first*
+     * `CookieManager.getInstance()` loads Chromium; once that has happened, resolving a profile's
+     * manager is a lookup inside androidx. A cache here would also have to be invalidated on
+     * profile deletion.
+     */
+    private fun getCookieManager(profileName: String?): CookieManager? {
+      if (profileName == null) {
+        return getCookieManager()
+      }
+      if (!WebViewFeature.isFeatureSupported(WebViewFeature.MULTI_PROFILE)) {
+        return null
+      }
+      return ProfileStore.getInstance().getProfile(profileName)?.cookieManager
     }
 
     /**

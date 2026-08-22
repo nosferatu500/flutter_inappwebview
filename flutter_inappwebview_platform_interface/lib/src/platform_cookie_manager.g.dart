@@ -112,6 +112,10 @@ enum PlatformCookieManagerMethod {
   ///- Linux WPE WebKit ([Official API - webkit_website_data_manager_clear](https://wpewebkit.org/reference/stable/wpe-webkit-2.0/method.WebsiteDataManager.clear.html)):
   ///    - Uses WebsiteDataManager to clear all cookie data.
   ///
+  ///**Parameters - Officially Supported Platforms/Implementations**:
+  ///- [profileName]:
+  ///    - Android WebView
+  ///
   ///Use the [PlatformCookieManager.isMethodSupported] method to check if this method is supported at runtime.
   ///{@endtemplate}
   deleteAllCookies,
@@ -142,6 +146,8 @@ enum PlatformCookieManagerMethod {
   ///    - iOS WKWebView
   ///    - Web \<iframe\> but requires same origin
   ///    - Windows WebView2
+  ///- [profileName]:
+  ///    - Android WebView
   ///
   ///Use the [PlatformCookieManager.isMethodSupported] method to check if this method is supported at runtime.
   ///{@endtemplate}
@@ -172,6 +178,8 @@ enum PlatformCookieManagerMethod {
   ///    - iOS WKWebView
   ///    - Web \<iframe\> but requires same origin
   ///    - Windows WebView2
+  ///- [profileName]:
+  ///    - Android WebView
   ///
   ///Use the [PlatformCookieManager.isMethodSupported] method to check if this method is supported at runtime.
   ///{@endtemplate}
@@ -183,6 +191,10 @@ enum PlatformCookieManagerMethod {
   ///
   ///**Officially Supported Platforms/Implementations**:
   ///- Android WebView ([Official API - CookieManager.flush](https://developer.android.com/reference/android/webkit/CookieManager#flush()))
+  ///
+  ///**Parameters - Officially Supported Platforms/Implementations**:
+  ///- [profileName]:
+  ///    - Android WebView
   ///
   ///Use the [PlatformCookieManager.isMethodSupported] method to check if this method is supported at runtime.
   ///{@endtemplate}
@@ -225,6 +237,8 @@ enum PlatformCookieManagerMethod {
   ///    - iOS WKWebView
   ///    - Web \<iframe\> but requires same origin
   ///    - Windows WebView2
+  ///- [profileName]:
+  ///    - Android WebView
   ///
   ///Use the [PlatformCookieManager.isMethodSupported] method to check if this method is supported at runtime.
   ///{@endtemplate}
@@ -253,6 +267,8 @@ enum PlatformCookieManagerMethod {
   ///    - iOS WKWebView
   ///    - Web \<iframe\> but requires same origin
   ///    - Windows WebView2
+  ///- [profileName]:
+  ///    - Android WebView
   ///
   ///Use the [PlatformCookieManager.isMethodSupported] method to check if this method is supported at runtime.
   ///{@endtemplate}
@@ -264,6 +280,10 @@ enum PlatformCookieManagerMethod {
   ///
   ///**Officially Supported Platforms/Implementations**:
   ///- Android WebView ([Official API - CookieManager.removeSessionCookies](https://developer.android.com/reference/android/webkit/CookieManager#removeSessionCookies(android.webkit.ValueCallback%3Cjava.lang.Boolean%3E)))
+  ///
+  ///**Parameters - Officially Supported Platforms/Implementations**:
+  ///- [profileName]:
+  ///    - Android WebView
   ///
   ///Use the [PlatformCookieManager.isMethodSupported] method to check if this method is supported at runtime.
   ///{@endtemplate}
@@ -301,6 +321,8 @@ enum PlatformCookieManagerMethod {
   ///    - iOS WKWebView
   ///    - Web \<iframe\> but requires same origin
   ///    - Windows WebView2
+  ///- [profileName]:
+  ///    - Android WebView
   ///
   ///Use the [PlatformCookieManager.isMethodSupported] method to check if this method is supported at runtime.
   ///{@endtemplate}

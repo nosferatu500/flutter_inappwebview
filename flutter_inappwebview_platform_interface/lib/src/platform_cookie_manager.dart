@@ -67,6 +67,20 @@ class PlatformCookieManagerCreationParams {
 
 ///{@template flutter_inappwebview_platform_interface.PlatformCookieManager}
 ///Class that implements a singleton object (shared instance) which manages the cookies used by WebView instances.
+///
+///Every method here operates on the default cookie store unless a `profileName` is given. On
+///Android, passing one scopes that single call to the cookie store of that browsing profile
+///instead — the same profile a WebView is put on with [InAppWebViewSettings.profileName]. Cookies
+///are not shared between profiles, so a WebView running on a non-default profile is *not* affected
+///by calls that omit `profileName`.
+///
+///Scoping is per call rather than per instance, matching how `webViewController` already narrows
+///these methods. The trade-off is that omitting it silently falls back to the default profile
+///rather than failing, so a caller working with profiles has to pass it every time.
+///
+///`profileName` requires [WebViewFeature.MULTI_PROFILE]. Without that feature, or when no profile
+///of that name exists, nothing is read or written and the call reports failure — it never falls
+///back to the default store. Use [PlatformProfileStore] to create profiles.
 ///{@endtemplate}
 ///
 ///{@macro flutter_inappwebview_platform_interface.PlatformCookieManager.supported_platforms}
@@ -226,6 +240,7 @@ In this case, this method will return always `true`.""",
       ],
     )
     PlatformInAppWebViewController? webViewController,
+    @SupportedPlatforms(platforms: [AndroidPlatform()]) String? profileName,
   }) {
     throw UnimplementedError(
       'setCookie is not implemented on the current platform',
@@ -301,6 +316,7 @@ to get the cookies (session-only cookies and cookies with `isHttpOnly` enabled w
       ],
     )
     PlatformInAppWebViewController? webViewController,
+    @SupportedPlatforms(platforms: [AndroidPlatform()]) String? profileName,
   }) {
     throw UnimplementedError(
       'getCookies is not implemented on the current platform',
@@ -377,6 +393,7 @@ to get the cookie (session-only cookie and cookie with `isHttpOnly` enabled won'
       ],
     )
     PlatformInAppWebViewController? webViewController,
+    @SupportedPlatforms(platforms: [AndroidPlatform()]) String? profileName,
   }) {
     throw UnimplementedError(
       'getCookie is not implemented on the current platform',
@@ -460,6 +477,7 @@ In this case, this method will return always `true`.""",
       ],
     )
     PlatformInAppWebViewController? webViewController,
+    @SupportedPlatforms(platforms: [AndroidPlatform()]) String? profileName,
   }) {
     throw UnimplementedError(
       'deleteCookie is not implemented on the current platform',
@@ -542,6 +560,7 @@ In this case, this method will return always `true`.""",
       ],
     )
     PlatformInAppWebViewController? webViewController,
+    @SupportedPlatforms(platforms: [AndroidPlatform()]) String? profileName,
   }) {
     throw UnimplementedError(
       'deleteCookies is not implemented on the current platform',
@@ -585,7 +604,9 @@ In this case, this method will return always `true`.""",
       ),
     ],
   )
-  Future<bool> deleteAllCookies() {
+  Future<bool> deleteAllCookies({
+    @SupportedPlatforms(platforms: [AndroidPlatform()]) String? profileName,
+  }) {
     throw UnimplementedError(
       'deleteAllCookies is not implemented on the current platform',
     );
@@ -639,7 +660,9 @@ In this case, this method will return always `true`.""",
       ),
     ],
   )
-  Future<bool> removeSessionCookies() {
+  Future<bool> removeSessionCookies({
+    @SupportedPlatforms(platforms: [AndroidPlatform()]) String? profileName,
+  }) {
     throw UnimplementedError(
       'removeSessionCookies is not implemented on the current platform',
     );
@@ -660,7 +683,9 @@ In this case, this method will return always `true`.""",
       ),
     ],
   )
-  Future<void> flush() {
+  Future<void> flush({
+    @SupportedPlatforms(platforms: [AndroidPlatform()]) String? profileName,
+  }) {
     throw UnimplementedError(
       'flush is not implemented on the current platform',
     );

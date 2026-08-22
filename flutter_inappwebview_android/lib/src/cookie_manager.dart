@@ -85,12 +85,14 @@ class AndroidCookieManager extends PlatformCookieManager
     bool? isHttpOnly,
     HTTPCookieSameSitePolicy? sameSite,
     PlatformInAppWebViewController? webViewController,
+    String? profileName,
   }) async {
     assert(url.toString().isNotEmpty);
     assert(name.isNotEmpty);
     assert(path.isNotEmpty);
 
     Map<String, dynamic> args = <String, dynamic>{};
+    args.putIfAbsent('profileName', () => profileName);
     args.putIfAbsent('url', () => url.toString());
     args.putIfAbsent('name', () => name);
     args.putIfAbsent('value', () => value);
@@ -109,12 +111,14 @@ class AndroidCookieManager extends PlatformCookieManager
   Future<List<Cookie>> getCookies({
     required WebUri url,
     PlatformInAppWebViewController? webViewController,
+    String? profileName,
   }) async {
     assert(url.toString().isNotEmpty);
 
     List<Cookie> cookies = [];
 
     Map<String, dynamic> args = <String, dynamic>{};
+    args.putIfAbsent('profileName', () => profileName);
     args.putIfAbsent('url', () => url.toString());
     List<dynamic> cookieListMap =
         await channel?.invokeMethod<List>('getCookies', args) ?? [];
@@ -145,11 +149,13 @@ class AndroidCookieManager extends PlatformCookieManager
     required WebUri url,
     required String name,
     PlatformInAppWebViewController? webViewController,
+    String? profileName,
   }) async {
     assert(url.toString().isNotEmpty);
     assert(name.isNotEmpty);
 
     Map<String, dynamic> args = <String, dynamic>{};
+    args.putIfAbsent('profileName', () => profileName);
     args.putIfAbsent('url', () => url.toString());
     List<dynamic> cookies =
         await channel?.invokeMethod<List>('getCookies', args) ?? [];
@@ -182,11 +188,13 @@ class AndroidCookieManager extends PlatformCookieManager
     String path = "/",
     String? domain,
     PlatformInAppWebViewController? webViewController,
+    String? profileName,
   }) async {
     assert(url.toString().isNotEmpty);
     assert(name.isNotEmpty);
 
     Map<String, dynamic> args = <String, dynamic>{};
+    args.putIfAbsent('profileName', () => profileName);
     args.putIfAbsent('url', () => url.toString());
     args.putIfAbsent('name', () => name);
     args.putIfAbsent('domain', () => domain);
@@ -200,10 +208,12 @@ class AndroidCookieManager extends PlatformCookieManager
     String path = "/",
     String? domain,
     PlatformInAppWebViewController? webViewController,
+    String? profileName,
   }) async {
     assert(url.toString().isNotEmpty);
 
     Map<String, dynamic> args = <String, dynamic>{};
+    args.putIfAbsent('profileName', () => profileName);
     args.putIfAbsent('url', () => url.toString());
     args.putIfAbsent('domain', () => domain);
     args.putIfAbsent('path', () => path);
@@ -211,21 +221,24 @@ class AndroidCookieManager extends PlatformCookieManager
   }
 
   @override
-  Future<bool> deleteAllCookies() async {
+  Future<bool> deleteAllCookies({String? profileName}) async {
     Map<String, dynamic> args = <String, dynamic>{};
+    args.putIfAbsent('profileName', () => profileName);
     return await channel?.invokeMethod<bool>('deleteAllCookies', args) ?? false;
   }
 
   @override
-  Future<bool> removeSessionCookies() async {
+  Future<bool> removeSessionCookies({String? profileName}) async {
     Map<String, dynamic> args = <String, dynamic>{};
+    args.putIfAbsent('profileName', () => profileName);
     return await channel?.invokeMethod<bool>('removeSessionCookies', args) ??
         false;
   }
 
   @override
-  Future<void> flush() async {
+  Future<void> flush({String? profileName}) async {
     Map<String, dynamic> args = <String, dynamic>{};
+    args.putIfAbsent('profileName', () => profileName);
     await channel?.invokeMethod('flush', args);
   }
 
