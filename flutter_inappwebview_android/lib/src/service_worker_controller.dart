@@ -101,58 +101,66 @@ class AndroidServiceWorkerController extends PlatformServiceWorkerController
   }
 
   @override
-  Future<bool> getAllowContentAccess() async {
+  Future<bool> getAllowContentAccess({String? profileName}) async {
     Map<String, dynamic> args = <String, dynamic>{};
+    args.putIfAbsent('profileName', () => profileName);
     return await channel?.invokeMethod<bool>('getAllowContentAccess', args) ??
         false;
   }
 
   @override
-  Future<bool> getAllowFileAccess() async {
+  Future<bool> getAllowFileAccess({String? profileName}) async {
     Map<String, dynamic> args = <String, dynamic>{};
+    args.putIfAbsent('profileName', () => profileName);
     return await channel?.invokeMethod<bool>('getAllowFileAccess', args) ??
         false;
   }
 
   @override
-  Future<bool> getBlockNetworkLoads() async {
+  Future<bool> getBlockNetworkLoads({String? profileName}) async {
     Map<String, dynamic> args = <String, dynamic>{};
+    args.putIfAbsent('profileName', () => profileName);
     return await channel?.invokeMethod<bool>('getBlockNetworkLoads', args) ??
         false;
   }
 
   @override
-  Future<CacheMode?> getCacheMode() async {
+  Future<CacheMode?> getCacheMode({String? profileName}) async {
     Map<String, dynamic> args = <String, dynamic>{};
+    args.putIfAbsent('profileName', () => profileName);
     return CacheMode.fromNativeValue(
       await channel?.invokeMethod<int?>('getCacheMode', args),
     );
   }
 
   @override
-  Future<void> setAllowContentAccess(bool allow) async {
+  Future<void> setAllowContentAccess(bool allow, {String? profileName}) async {
     Map<String, dynamic> args = <String, dynamic>{};
+    args.putIfAbsent('profileName', () => profileName);
     args.putIfAbsent("allow", () => allow);
     await channel?.invokeMethod('setAllowContentAccess', args);
   }
 
   @override
-  Future<void> setAllowFileAccess(bool allow) async {
+  Future<void> setAllowFileAccess(bool allow, {String? profileName}) async {
     Map<String, dynamic> args = <String, dynamic>{};
+    args.putIfAbsent('profileName', () => profileName);
     args.putIfAbsent("allow", () => allow);
     await channel?.invokeMethod('setAllowFileAccess', args);
   }
 
   @override
-  Future<void> setBlockNetworkLoads(bool flag) async {
+  Future<void> setBlockNetworkLoads(bool flag, {String? profileName}) async {
     Map<String, dynamic> args = <String, dynamic>{};
+    args.putIfAbsent('profileName', () => profileName);
     args.putIfAbsent("flag", () => flag);
     await channel?.invokeMethod('setBlockNetworkLoads', args);
   }
 
   @override
-  Future<void> setCacheMode(CacheMode mode) async {
+  Future<void> setCacheMode(CacheMode mode, {String? profileName}) async {
     Map<String, dynamic> args = <String, dynamic>{};
+    args.putIfAbsent('profileName', () => profileName);
     args.putIfAbsent("mode", () => mode.toNativeValue());
     await channel?.invokeMethod('setCacheMode', args);
   }

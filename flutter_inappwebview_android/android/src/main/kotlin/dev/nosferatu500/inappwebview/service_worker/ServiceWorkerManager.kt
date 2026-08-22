@@ -4,6 +4,7 @@ import android.util.Log
 import android.webkit.WebResourceRequest
 import android.webkit.WebResourceResponse
 import androidx.webkit.ServiceWorkerClientCompat
+import androidx.webkit.ProfileStore
 import androidx.webkit.ServiceWorkerControllerCompat
 import androidx.webkit.WebViewFeature
 import dev.nosferatu500.inappwebview.InAppWebViewFlutterPlugin
@@ -94,6 +95,36 @@ class ServiceWorkerManager(plugin: InAppWebViewFlutterPlugin) : Disposable {
       ) {
         serviceWorkerController = ServiceWorkerControllerCompat.getInstance()
       }
+    }
+
+    /**
+     * Resolves the service-worker settings a call should act on, over whichever API can reach them.
+     *
+     * A null [profileName] means the default profile and goes through androidx, exactly as before.
+     * A non-null one means that profile's own service-worker settings, and returns null -- so the
+     * caller reports failure -- when `MULTI_PROFILE` is unsupported or no such profile exists.
+     * It never silently falls back to the default profile.
+     *
+     * Uses `getProfile`, not `getOrCreateProfile`, as in MyCookieManager and MyWebStorage: reading
+     * or changing a profile's settings must not bring the profile into existence, and `getProfile`
+     * returns null for a profile already deleted -- which keeps `Profile.getServiceWorkerController()`,
+     * which throws for a deleted profile, out of reach here.
+     */
+    @JvmStatic
+    internal fun getServiceWorkerSettings(
+      profileName: String?
+    ): ServiceWorkerSettings? {
+      if (profileName == null) {
+        return serviceWorkerController?.serviceWorkerWebSettings
+          ?.let { CompatServiceWorkerSettings(it) }
+      }
+      if (!WebViewFeature.isFeatureSupported(WebViewFeature.MULTI_PROFILE)) {
+        return null
+      }
+      return ProfileStore.getInstance().getProfile(profileName)
+        ?.serviceWorkerController
+        ?.serviceWorkerWebSettings
+        ?.let { FrameworkServiceWorkerSettings(it) }
     }
   }
 }

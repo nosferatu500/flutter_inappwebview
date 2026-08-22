@@ -45,6 +45,10 @@ enum PlatformServiceWorkerControllerMethod {
   ///**Officially Supported Platforms/Implementations**:
   ///- Android WebView ([Official API - ServiceWorkerWebSettingsCompat.getAllowContentAccess](https://developer.android.com/reference/androidx/webkit/ServiceWorkerWebSettingsCompat#getAllowContentAccess()))
   ///
+  ///**Parameters - Officially Supported Platforms/Implementations**:
+  ///- [profileName]:
+  ///    - Android WebView
+  ///
   ///Use the [PlatformServiceWorkerController.isMethodSupported] method to check if this method is supported at runtime.
   ///{@endtemplate}
   getAllowContentAccess,
@@ -55,6 +59,10 @@ enum PlatformServiceWorkerControllerMethod {
   ///
   ///**Officially Supported Platforms/Implementations**:
   ///- Android WebView ([Official API - ServiceWorkerWebSettingsCompat.getAllowFileAccess](https://developer.android.com/reference/androidx/webkit/ServiceWorkerWebSettingsCompat#getAllowFileAccess()))
+  ///
+  ///**Parameters - Officially Supported Platforms/Implementations**:
+  ///- [profileName]:
+  ///    - Android WebView
   ///
   ///Use the [PlatformServiceWorkerController.isMethodSupported] method to check if this method is supported at runtime.
   ///{@endtemplate}
@@ -67,6 +75,10 @@ enum PlatformServiceWorkerControllerMethod {
   ///**Officially Supported Platforms/Implementations**:
   ///- Android WebView ([Official API - ServiceWorkerWebSettingsCompat.getBlockNetworkLoads](https://developer.android.com/reference/androidx/webkit/ServiceWorkerWebSettingsCompat#getBlockNetworkLoads()))
   ///
+  ///**Parameters - Officially Supported Platforms/Implementations**:
+  ///- [profileName]:
+  ///    - Android WebView
+  ///
   ///Use the [PlatformServiceWorkerController.isMethodSupported] method to check if this method is supported at runtime.
   ///{@endtemplate}
   getBlockNetworkLoads,
@@ -77,6 +89,10 @@ enum PlatformServiceWorkerControllerMethod {
   ///
   ///**Officially Supported Platforms/Implementations**:
   ///- Android WebView ([Official API - ServiceWorkerWebSettingsCompat.getCacheMode](https://developer.android.com/reference/androidx/webkit/ServiceWorkerWebSettingsCompat#getCacheMode()))
+  ///
+  ///**Parameters - Officially Supported Platforms/Implementations**:
+  ///- [profileName]:
+  ///    - Android WebView
   ///
   ///Use the [PlatformServiceWorkerController.isMethodSupported] method to check if this method is supported at runtime.
   ///{@endtemplate}
@@ -91,6 +107,8 @@ enum PlatformServiceWorkerControllerMethod {
   ///
   ///**Parameters - Officially Supported Platforms/Implementations**:
   ///- [allow]: all platforms
+  ///- [profileName]:
+  ///    - Android WebView
   ///
   ///Use the [PlatformServiceWorkerController.isMethodSupported] method to check if this method is supported at runtime.
   ///{@endtemplate}
@@ -105,6 +123,8 @@ enum PlatformServiceWorkerControllerMethod {
   ///
   ///**Parameters - Officially Supported Platforms/Implementations**:
   ///- [allow]: all platforms
+  ///- [profileName]:
+  ///    - Android WebView
   ///
   ///Use the [PlatformServiceWorkerController.isMethodSupported] method to check if this method is supported at runtime.
   ///{@endtemplate}
@@ -119,6 +139,8 @@ enum PlatformServiceWorkerControllerMethod {
   ///
   ///**Parameters - Officially Supported Platforms/Implementations**:
   ///- [flag]: all platforms
+  ///- [profileName]:
+  ///    - Android WebView
   ///
   ///Use the [PlatformServiceWorkerController.isMethodSupported] method to check if this method is supported at runtime.
   ///{@endtemplate}
@@ -133,6 +155,8 @@ enum PlatformServiceWorkerControllerMethod {
   ///
   ///**Parameters - Officially Supported Platforms/Implementations**:
   ///- [mode]: all platforms
+  ///- [profileName]:
+  ///    - Android WebView
   ///
   ///Use the [PlatformServiceWorkerController.isMethodSupported] method to check if this method is supported at runtime.
   ///{@endtemplate}

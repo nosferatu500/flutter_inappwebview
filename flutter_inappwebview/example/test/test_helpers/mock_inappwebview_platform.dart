@@ -497,28 +497,29 @@ class MockPlatformServiceWorkerController
   }) => true;
 
   @override
-  Future<bool> getAllowContentAccess() async => true;
+  Future<bool> getAllowContentAccess({String? profileName}) async => true;
 
   @override
-  Future<bool> getAllowFileAccess() async => true;
+  Future<bool> getAllowFileAccess({String? profileName}) async => true;
 
   @override
-  Future<bool> getBlockNetworkLoads() async => false;
+  Future<bool> getBlockNetworkLoads({String? profileName}) async => false;
 
   @override
-  Future<CacheMode?> getCacheMode() async => CacheMode.LOAD_DEFAULT;
+  Future<CacheMode?> getCacheMode({String? profileName}) async =>
+      CacheMode.LOAD_DEFAULT;
 
   @override
-  Future<void> setAllowContentAccess(bool value) async {}
+  Future<void> setAllowContentAccess(bool value, {String? profileName}) async {}
 
   @override
-  Future<void> setAllowFileAccess(bool value) async {}
+  Future<void> setAllowFileAccess(bool value, {String? profileName}) async {}
 
   @override
-  Future<void> setBlockNetworkLoads(bool value) async {}
+  Future<void> setBlockNetworkLoads(bool value, {String? profileName}) async {}
 
   @override
-  Future<void> setCacheMode(CacheMode? mode) async {}
+  Future<void> setCacheMode(CacheMode? mode, {String? profileName}) async {}
 
   @override
   ServiceWorkerClient? get serviceWorkerClient => null;

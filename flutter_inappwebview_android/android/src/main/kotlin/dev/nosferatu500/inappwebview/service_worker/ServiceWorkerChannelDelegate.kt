@@ -24,8 +24,15 @@ class ServiceWorkerChannelDelegate(
 
   override fun onMethodCall(call: MethodCall, result: MethodChannel.Result) {
     ServiceWorkerManager.init()
-    val serviceWorkerWebSettings = ServiceWorkerManager.serviceWorkerController
-      ?.serviceWorkerWebSettings
+
+    // Null unless the caller scoped this single call to a profile; see
+    // PlatformServiceWorkerController's class doc for why the scope is per call. Note
+    // setServiceWorkerClient below ignores it -- the intercept event carries no profile identity,
+    // so a per-profile client could not be told apart in Dart.
+    val profileName = call.argument<String>("profileName")
+    // Availability gating lives inside the returned object, because it differs between the androidx
+    // and framework APIs. See ServiceWorkerSettings.
+    val settings = ServiceWorkerManager.getServiceWorkerSettings(profileName)
 
     when (call.method) {
       "setServiceWorkerClient" -> {
@@ -38,79 +45,33 @@ class ServiceWorkerChannelDelegate(
         }
       }
 
-      "getAllowContentAccess" -> {
-        if (serviceWorkerWebSettings != null &&
-          WebViewFeature.isFeatureSupported(WebViewFeature.SERVICE_WORKER_CONTENT_ACCESS)
-        ) {
-          result.success(serviceWorkerWebSettings.allowContentAccess)
-        } else {
-          result.success(false)
-        }
-      }
+      "getAllowContentAccess" ->
+        result.success(settings?.getAllowContentAccess() ?: false)
 
-      "getAllowFileAccess" -> {
-        if (serviceWorkerWebSettings != null &&
-          WebViewFeature.isFeatureSupported(WebViewFeature.SERVICE_WORKER_FILE_ACCESS)
-        ) {
-          result.success(serviceWorkerWebSettings.allowFileAccess)
-        } else {
-          result.success(false)
-        }
-      }
+      "getAllowFileAccess" -> result.success(settings?.getAllowFileAccess() ?: false)
 
-      "getBlockNetworkLoads" -> {
-        if (serviceWorkerWebSettings != null &&
-          WebViewFeature.isFeatureSupported(WebViewFeature.SERVICE_WORKER_BLOCK_NETWORK_LOADS)
-        ) {
-          result.success(serviceWorkerWebSettings.blockNetworkLoads)
-        } else {
-          result.success(false)
-        }
-      }
+      "getBlockNetworkLoads" ->
+        result.success(settings?.getBlockNetworkLoads() ?: false)
 
-      "getCacheMode" -> {
-        if (serviceWorkerWebSettings != null &&
-          WebViewFeature.isFeatureSupported(WebViewFeature.SERVICE_WORKER_CACHE_MODE)
-        ) {
-          result.success(serviceWorkerWebSettings.cacheMode)
-        } else {
-          result.success(null)
-        }
-      }
+      "getCacheMode" -> result.success(settings?.getCacheMode())
 
       "setAllowContentAccess" -> {
-        if (serviceWorkerWebSettings != null &&
-          WebViewFeature.isFeatureSupported(WebViewFeature.SERVICE_WORKER_CONTENT_ACCESS)
-        ) {
-          serviceWorkerWebSettings.allowContentAccess = call.argument<Boolean>("allow")!!
-        }
+        settings?.setAllowContentAccess(call.argument<Boolean>("allow")!!)
         result.success(true)
       }
 
       "setAllowFileAccess" -> {
-        if (serviceWorkerWebSettings != null &&
-          WebViewFeature.isFeatureSupported(WebViewFeature.SERVICE_WORKER_FILE_ACCESS)
-        ) {
-          serviceWorkerWebSettings.allowFileAccess = call.argument<Boolean>("allow")!!
-        }
+        settings?.setAllowFileAccess(call.argument<Boolean>("allow")!!)
         result.success(true)
       }
 
       "setBlockNetworkLoads" -> {
-        if (serviceWorkerWebSettings != null &&
-          WebViewFeature.isFeatureSupported(WebViewFeature.SERVICE_WORKER_BLOCK_NETWORK_LOADS)
-        ) {
-          serviceWorkerWebSettings.blockNetworkLoads = call.argument<Boolean>("flag")!!
-        }
+        settings?.setBlockNetworkLoads(call.argument<Boolean>("flag")!!)
         result.success(true)
       }
 
       "setCacheMode" -> {
-        if (serviceWorkerWebSettings != null &&
-          WebViewFeature.isFeatureSupported(WebViewFeature.SERVICE_WORKER_CACHE_MODE)
-        ) {
-          serviceWorkerWebSettings.cacheMode = call.argument<Int>("mode")!!
-        }
+        settings?.setCacheMode(call.argument<Int>("mode")!!)
         result.success(true)
       }
 

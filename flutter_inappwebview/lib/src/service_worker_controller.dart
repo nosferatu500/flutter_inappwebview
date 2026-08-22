@@ -48,50 +48,72 @@ class ServiceWorkerController {
   ///{@macro flutter_inappwebview_platform_interface.PlatformServiceWorkerController.getAllowContentAccess}
   ///
   ///{@macro flutter_inappwebview_platform_interface.PlatformServiceWorkerController.getAllowContentAccess.supported_platforms}
-  static Future<bool> getAllowContentAccess() =>
-      PlatformServiceWorkerController.static().getAllowContentAccess();
+  static Future<bool> getAllowContentAccess({String? profileName}) =>
+      PlatformServiceWorkerController.static().getAllowContentAccess(
+        profileName: profileName,
+      );
 
   ///{@macro flutter_inappwebview_platform_interface.PlatformServiceWorkerController.getAllowFileAccess}
   ///
   ///{@macro flutter_inappwebview_platform_interface.PlatformServiceWorkerController.getAllowFileAccess.supported_platforms}
-  static Future<bool> getAllowFileAccess() =>
-      PlatformServiceWorkerController.static().getAllowFileAccess();
+  static Future<bool> getAllowFileAccess({String? profileName}) =>
+      PlatformServiceWorkerController.static().getAllowFileAccess(
+        profileName: profileName,
+      );
 
   ///{@macro flutter_inappwebview_platform_interface.PlatformServiceWorkerController.getBlockNetworkLoads}
   ///
   ///{@macro flutter_inappwebview_platform_interface.PlatformServiceWorkerController.getBlockNetworkLoads.supported_platforms}
-  static Future<bool> getBlockNetworkLoads() =>
-      PlatformServiceWorkerController.static().getBlockNetworkLoads();
+  static Future<bool> getBlockNetworkLoads({String? profileName}) =>
+      PlatformServiceWorkerController.static().getBlockNetworkLoads(
+        profileName: profileName,
+      );
 
   ///{@macro flutter_inappwebview_platform_interface.PlatformServiceWorkerController.getCacheMode}
   ///
   ///{@macro flutter_inappwebview_platform_interface.PlatformServiceWorkerController.getCacheMode.supported_platforms}
-  static Future<CacheMode?> getCacheMode() =>
-      PlatformServiceWorkerController.static().getCacheMode();
+  static Future<CacheMode?> getCacheMode({String? profileName}) =>
+      PlatformServiceWorkerController.static().getCacheMode(
+        profileName: profileName,
+      );
 
   ///{@macro flutter_inappwebview_platform_interface.PlatformServiceWorkerController.setAllowContentAccess}
   ///
   ///{@macro flutter_inappwebview_platform_interface.PlatformServiceWorkerController.setAllowContentAccess.supported_platforms}
-  static Future<void> setAllowContentAccess(bool allow) =>
-      PlatformServiceWorkerController.static().setAllowContentAccess(allow);
+  static Future<void> setAllowContentAccess(
+    bool allow, {
+    String? profileName,
+  }) => PlatformServiceWorkerController.static().setAllowContentAccess(
+    allow,
+    profileName: profileName,
+  );
 
   ///{@macro flutter_inappwebview_platform_interface.PlatformServiceWorkerController.setAllowFileAccess}
   ///
   ///{@macro flutter_inappwebview_platform_interface.PlatformServiceWorkerController.setAllowFileAccess.supported_platforms}
-  static Future<void> setAllowFileAccess(bool allow) =>
-      PlatformServiceWorkerController.static().setAllowFileAccess(allow);
+  static Future<void> setAllowFileAccess(bool allow, {String? profileName}) =>
+      PlatformServiceWorkerController.static().setAllowFileAccess(
+        allow,
+        profileName: profileName,
+      );
 
   ///{@macro flutter_inappwebview_platform_interface.PlatformServiceWorkerController.setBlockNetworkLoads}
   ///
   ///{@macro flutter_inappwebview_platform_interface.PlatformServiceWorkerController.setBlockNetworkLoads.supported_platforms}
-  static Future<void> setBlockNetworkLoads(bool flag) =>
-      PlatformServiceWorkerController.static().setBlockNetworkLoads(flag);
+  static Future<void> setBlockNetworkLoads(bool flag, {String? profileName}) =>
+      PlatformServiceWorkerController.static().setBlockNetworkLoads(
+        flag,
+        profileName: profileName,
+      );
 
   ///{@macro flutter_inappwebview_platform_interface.PlatformServiceWorkerController.setCacheMode}
   ///
   ///{@macro flutter_inappwebview_platform_interface.PlatformServiceWorkerController.setCacheMode.supported_platforms}
-  static Future<void> setCacheMode(CacheMode mode) =>
-      PlatformServiceWorkerController.static().setCacheMode(mode);
+  static Future<void> setCacheMode(CacheMode mode, {String? profileName}) =>
+      PlatformServiceWorkerController.static().setCacheMode(
+        mode,
+        profileName: profileName,
+      );
 
   ///{@macro flutter_inappwebview_platform_interface.PlatformServiceWorkerControllerCreationParams.isClassSupported}
   static bool isClassSupported({TargetPlatform? platform}) =>

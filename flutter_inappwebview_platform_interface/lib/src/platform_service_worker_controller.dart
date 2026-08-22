@@ -35,6 +35,21 @@ class PlatformServiceWorkerControllerCreationParams {
 
 ///{@template flutter_inappwebview_platform_interface.PlatformServiceWorkerController}
 ///Class that manages Service Workers used by `WebView`.
+///
+///The settings methods operate on the default profile unless a `profileName` is given. On Android,
+///passing one scopes that single call to the service worker settings of that browsing profile
+///instead — the same profile a WebView is put on with [InAppWebViewSettings.profileName]. Scoping
+///is per call rather than per instance, matching [PlatformCookieManager] and
+///[PlatformWebStorageManager], and omitting it acts on the default profile rather than failing.
+///
+///`profileName` requires [WebViewFeature.MULTI_PROFILE]. Without that feature, or when no profile
+///of that name exists, nothing is read or changed and the call reports failure — it never falls
+///back to the default profile. Use [PlatformProfileStore] to create profiles.
+///
+///**[setServiceWorkerClient] is the exception: it always applies to the default profile** and takes
+///no `profileName`. The client's `shouldInterceptRequest` event carries only the request, with no
+///profile identity, so a client registered per profile could not be told apart in Dart. Giving it a
+///`profileName` would mean changing that event's public signature, which is a separate decision.
 ///{@endtemplate}
 ///
 ///{@macro flutter_inappwebview_platform_interface.PlatformServiceWorkerControllerCreationParams.supported_platforms}
@@ -138,7 +153,9 @@ abstract class PlatformServiceWorkerController extends PlatformInterface {
       ),
     ],
   )
-  Future<bool> getAllowContentAccess() {
+  Future<bool> getAllowContentAccess({
+    @SupportedPlatforms(platforms: [AndroidPlatform()]) String? profileName,
+  }) {
     throw UnimplementedError(
       'getAllowContentAccess is not implemented on the current platform',
     );
@@ -159,7 +176,9 @@ abstract class PlatformServiceWorkerController extends PlatformInterface {
       ),
     ],
   )
-  Future<bool> getAllowFileAccess() {
+  Future<bool> getAllowFileAccess({
+    @SupportedPlatforms(platforms: [AndroidPlatform()]) String? profileName,
+  }) {
     throw UnimplementedError(
       'getAllowFileAccess is not implemented on the current platform',
     );
@@ -180,7 +199,9 @@ abstract class PlatformServiceWorkerController extends PlatformInterface {
       ),
     ],
   )
-  Future<bool> getBlockNetworkLoads() {
+  Future<bool> getBlockNetworkLoads({
+    @SupportedPlatforms(platforms: [AndroidPlatform()]) String? profileName,
+  }) {
     throw UnimplementedError(
       'getBlockNetworkLoads is not implemented on the current platform',
     );
@@ -201,7 +222,9 @@ abstract class PlatformServiceWorkerController extends PlatformInterface {
       ),
     ],
   )
-  Future<CacheMode?> getCacheMode() {
+  Future<CacheMode?> getCacheMode({
+    @SupportedPlatforms(platforms: [AndroidPlatform()]) String? profileName,
+  }) {
     throw UnimplementedError(
       'getCacheMode is not implemented on the current platform',
     );
@@ -222,7 +245,10 @@ abstract class PlatformServiceWorkerController extends PlatformInterface {
       ),
     ],
   )
-  Future<void> setAllowContentAccess(bool allow) {
+  Future<void> setAllowContentAccess(
+    bool allow, {
+    @SupportedPlatforms(platforms: [AndroidPlatform()]) String? profileName,
+  }) {
     throw UnimplementedError(
       'setAllowContentAccess is not implemented on the current platform',
     );
@@ -243,7 +269,10 @@ abstract class PlatformServiceWorkerController extends PlatformInterface {
       ),
     ],
   )
-  Future<void> setAllowFileAccess(bool allow) {
+  Future<void> setAllowFileAccess(
+    bool allow, {
+    @SupportedPlatforms(platforms: [AndroidPlatform()]) String? profileName,
+  }) {
     throw UnimplementedError(
       'setAllowFileAccess is not implemented on the current platform',
     );
@@ -264,7 +293,10 @@ abstract class PlatformServiceWorkerController extends PlatformInterface {
       ),
     ],
   )
-  Future<void> setBlockNetworkLoads(bool flag) {
+  Future<void> setBlockNetworkLoads(
+    bool flag, {
+    @SupportedPlatforms(platforms: [AndroidPlatform()]) String? profileName,
+  }) {
     throw UnimplementedError(
       'setBlockNetworkLoads is not implemented on the current platform',
     );
@@ -285,7 +317,10 @@ abstract class PlatformServiceWorkerController extends PlatformInterface {
       ),
     ],
   )
-  Future<void> setCacheMode(CacheMode mode) {
+  Future<void> setCacheMode(
+    CacheMode mode, {
+    @SupportedPlatforms(platforms: [AndroidPlatform()]) String? profileName,
+  }) {
     throw UnimplementedError(
       'setCacheMode is not implemented on the current platform',
     );
