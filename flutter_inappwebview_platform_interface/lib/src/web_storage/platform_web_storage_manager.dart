@@ -41,6 +41,20 @@ class PlatformWebStorageManagerCreationParams {
 
 ///{@template flutter_inappwebview_platform_interface.PlatformWebStorageManager}
 ///Class that implements a singleton object (shared instance) which manages the web storage used by WebView instances.
+///
+///Every method here operates on the default profile's storage unless a `profileName` is given. On
+///Android, passing one scopes that single call to the web storage of that browsing profile
+///instead — the same profile a WebView is put on with [InAppWebViewSettings.profileName]. Storage
+///is not shared between profiles, so a WebView running on a non-default profile is *not* affected
+///by calls that omit `profileName`.
+///
+///Scoping is per call rather than per instance, matching [PlatformCookieManager]. The trade-off is
+///that omitting it silently falls back to the default profile rather than failing, so a caller
+///working with profiles has to pass it every time.
+///
+///`profileName` requires [WebViewFeature.MULTI_PROFILE]. Without that feature, or when no profile
+///of that name exists, nothing is read or deleted and the call reports failure — it never falls
+///back to the default profile. Use [PlatformProfileStore] to create profiles.
 ///{@endtemplate}
 ///
 ///{@macro flutter_inappwebview_platform_interface.PlatformWebStorageManager.supported_platforms}
@@ -130,7 +144,9 @@ abstract class PlatformWebStorageManager extends PlatformInterface {
       ),
     ],
   )
-  Future<List<WebStorageOrigin>> getOrigins() {
+  Future<List<WebStorageOrigin>> getOrigins({
+    @SupportedPlatforms(platforms: [AndroidPlatform()]) String? profileName,
+  }) {
     throw UnimplementedError(
       'getOrigins is not implemented on the current platform',
     );
@@ -151,7 +167,9 @@ abstract class PlatformWebStorageManager extends PlatformInterface {
       ),
     ],
   )
-  Future<void> deleteAllData() {
+  Future<void> deleteAllData({
+    @SupportedPlatforms(platforms: [AndroidPlatform()]) String? profileName,
+  }) {
     throw UnimplementedError(
       'deleteAllData is not implemented on the current platform',
     );
@@ -172,7 +190,10 @@ abstract class PlatformWebStorageManager extends PlatformInterface {
       ),
     ],
   )
-  Future<void> deleteOrigin({required String origin}) {
+  Future<void> deleteOrigin({
+    required String origin,
+    @SupportedPlatforms(platforms: [AndroidPlatform()]) String? profileName,
+  }) {
     throw UnimplementedError(
       'deleteOrigin is not implemented on the current platform',
     );
@@ -206,7 +227,9 @@ abstract class PlatformWebStorageManager extends PlatformInterface {
       ),
     ],
   )
-  Future<bool> deleteBrowsingData() {
+  Future<bool> deleteBrowsingData({
+    @SupportedPlatforms(platforms: [AndroidPlatform()]) String? profileName,
+  }) {
     throw UnimplementedError(
       'deleteBrowsingData is not implemented on the current platform',
     );
@@ -243,7 +266,10 @@ abstract class PlatformWebStorageManager extends PlatformInterface {
       ),
     ],
   )
-  Future<String?> deleteBrowsingDataForSite({required String site}) {
+  Future<String?> deleteBrowsingDataForSite({
+    required String site,
+    @SupportedPlatforms(platforms: [AndroidPlatform()]) String? profileName,
+  }) {
     throw UnimplementedError(
       'deleteBrowsingDataForSite is not implemented on the current platform',
     );
@@ -265,7 +291,10 @@ abstract class PlatformWebStorageManager extends PlatformInterface {
       ),
     ],
   )
-  Future<int> getQuotaForOrigin({required String origin}) {
+  Future<int> getQuotaForOrigin({
+    required String origin,
+    @SupportedPlatforms(platforms: [AndroidPlatform()]) String? profileName,
+  }) {
     throw UnimplementedError(
       'getQuotaForOrigin is not implemented on the current platform',
     );
@@ -286,7 +315,10 @@ abstract class PlatformWebStorageManager extends PlatformInterface {
       ),
     ],
   )
-  Future<int> getUsageForOrigin({required String origin}) {
+  Future<int> getUsageForOrigin({
+    required String origin,
+    @SupportedPlatforms(platforms: [AndroidPlatform()]) String? profileName,
+  }) {
     throw UnimplementedError(
       'getUsageForOrigin is not implemented on the current platform',
     );

@@ -2,6 +2,7 @@ package dev.nosferatu500.inappwebview
 
 import android.webkit.ValueCallback
 import android.webkit.WebStorage
+import androidx.webkit.ProfileStore
 import androidx.webkit.WebStorageCompat
 import androidx.webkit.WebViewFeature
 import dev.nosferatu500.inappwebview.types.ChannelDelegateImpl
@@ -17,11 +18,15 @@ class MyWebStorage(plugin: InAppWebViewFlutterPlugin) :
   override fun onMethodCall(call: MethodCall, result: MethodChannel.Result) {
     init()
 
+    // Null unless the caller scoped this single call to a profile; see PlatformWebStorageManager's
+    // class doc for why the scope is per call rather than per manager instance.
+    val profileName = call.argument<String>("profileName")
+
     when (call.method) {
-      "getOrigins" -> getOrigins(result)
+      "getOrigins" -> getOrigins(profileName, result)
 
       "deleteAllData" -> {
-        val manager = webStorageManager
+        val manager = getWebStorage(profileName)
         if (manager != null) {
           manager.deleteAllData()
           result.success(true)
@@ -31,7 +36,7 @@ class MyWebStorage(plugin: InAppWebViewFlutterPlugin) :
       }
 
       "deleteOrigin" -> {
-        val manager = webStorageManager
+        val manager = getWebStorage(profileName)
         if (manager != null) {
           manager.deleteOrigin(call.argument("origin"))
           result.success(true)
@@ -40,14 +45,16 @@ class MyWebStorage(plugin: InAppWebViewFlutterPlugin) :
         }
       }
 
-      "deleteBrowsingData" -> deleteBrowsingData(result)
+      "deleteBrowsingData" -> deleteBrowsingData(profileName, result)
 
       "deleteBrowsingDataForSite" ->
-        deleteBrowsingDataForSite(call.argument("site")!!, result)
+        deleteBrowsingDataForSite(call.argument("site")!!, profileName, result)
 
-      "getQuotaForOrigin" -> getQuotaForOrigin(call.argument("origin"), result)
+      "getQuotaForOrigin" ->
+        getQuotaForOrigin(call.argument("origin"), profileName, result)
 
-      "getUsageForOrigin" -> getUsageForOrigin(call.argument("origin"), result)
+      "getUsageForOrigin" ->
+        getUsageForOrigin(call.argument("origin"), profileName, result)
 
       else -> result.notImplemented()
     }
@@ -57,8 +64,8 @@ class MyWebStorage(plugin: InAppWebViewFlutterPlugin) :
   // WebStorage.getOrigins(ValueCallback<Map>) -- verified against android.jar. Parameterizing the
   // callback would no longer match the parameter type, so this cannot be typed away.
   @Suppress("UNCHECKED_CAST")
-  fun getOrigins(result: MethodChannel.Result) {
-    val manager = webStorageManager
+  fun getOrigins(profileName: String?, result: MethodChannel.Result) {
+    val manager = getWebStorage(profileName)
     if (manager == null) {
       result.success(ArrayList<Any?>())
       return
@@ -84,8 +91,8 @@ class MyWebStorage(plugin: InAppWebViewFlutterPlugin) :
   // MethodChannel.Result must be replied to on the main thread anyway, and -- for
   // deleteBrowsingDataForSite -- it is what makes reading the returned domain inside the callback
   // safe. See deleteBrowsingDataForSite below.
-  fun deleteBrowsingData(result: MethodChannel.Result) {
-    val manager = webStorageManager
+  fun deleteBrowsingData(profileName: String?, result: MethodChannel.Result) {
+    val manager = getWebStorage(profileName)
     if (manager == null ||
       !WebViewFeature.isFeatureSupported(WebViewFeature.DELETE_BROWSING_DATA)
     ) {
@@ -97,8 +104,12 @@ class MyWebStorage(plugin: InAppWebViewFlutterPlugin) :
     WebStorageCompat.deleteBrowsingData(manager) { result.success(true) }
   }
 
-  fun deleteBrowsingDataForSite(site: String, result: MethodChannel.Result) {
-    val manager = webStorageManager
+  fun deleteBrowsingDataForSite(
+    site: String,
+    profileName: String?,
+    result: MethodChannel.Result
+  ) {
+    val manager = getWebStorage(profileName)
     if (manager == null ||
       !WebViewFeature.isFeatureSupported(WebViewFeature.DELETE_BROWSING_DATA)
     ) {
@@ -121,8 +132,12 @@ class MyWebStorage(plugin: InAppWebViewFlutterPlugin) :
     }
   }
 
-  fun getQuotaForOrigin(origin: String?, result: MethodChannel.Result) {
-    val manager = webStorageManager
+  fun getQuotaForOrigin(
+    origin: String?,
+    profileName: String?,
+    result: MethodChannel.Result
+  ) {
+    val manager = getWebStorage(profileName)
     if (manager == null) {
       result.success(0)
       return
@@ -130,8 +145,12 @@ class MyWebStorage(plugin: InAppWebViewFlutterPlugin) :
     manager.getQuotaForOrigin(origin) { value -> result.success(value) }
   }
 
-  fun getUsageForOrigin(origin: String?, result: MethodChannel.Result) {
-    val manager = webStorageManager
+  fun getUsageForOrigin(
+    origin: String?,
+    profileName: String?,
+    result: MethodChannel.Result
+  ) {
+    val manager = getWebStorage(profileName)
     if (manager == null) {
       result.success(0)
       return
@@ -156,6 +175,30 @@ class MyWebStorage(plugin: InAppWebViewFlutterPlugin) :
       if (webStorageManager == null) {
         webStorageManager = WebStorage.getInstance()
       }
+    }
+
+    /**
+     * Resolves the [WebStorage] a call should act on.
+     *
+     * A null [profileName] means the default profile's storage, i.e. the [webStorageManager]
+     * singleton `init` populates. A non-null one means that profile's own storage, and returns null
+     * -- so the caller reports failure -- when `MULTI_PROFILE` is unsupported or no such profile
+     * exists. It never silently falls back to the default profile: reporting "deleted" after
+     * clearing the wrong profile's storage is worse than reporting failure.
+     *
+     * Uses `getProfile`, not `getOrCreateProfile`, for the same reasons as MyCookieManager: reading
+     * or clearing a profile's storage must not bring the profile into existence, and `getProfile`
+     * returns null for a profile already deleted -- which keeps `Profile.getWebStorage()`, which
+     * throws for a deleted profile, out of reach here.
+     */
+    private fun getWebStorage(profileName: String?): WebStorage? {
+      if (profileName == null) {
+        return webStorageManager
+      }
+      if (!WebViewFeature.isFeatureSupported(WebViewFeature.MULTI_PROFILE)) {
+        return null
+      }
+      return ProfileStore.getInstance().getProfile(profileName)?.webStorage
     }
   }
 }

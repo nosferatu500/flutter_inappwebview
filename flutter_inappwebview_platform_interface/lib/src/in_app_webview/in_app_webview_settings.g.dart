@@ -1551,11 +1551,12 @@ class InAppWebViewSettings {
   ///[PlatformInAppWebViewController.setSettings] does nothing — it is not applied and no error is
   ///raised. Recreate the WebView to switch profiles.
   ///
-  ///**The plugin's own storage APIs are not profile-aware yet.** [PlatformCookieManager],
-  ///[PlatformWebStorageManager] and [PlatformServiceWorkerController] act on the *default*
-  ///profile's data whatever this is set to, so on a non-default profile they will not read or clear
-  ///the data this WebView is actually using. Use [PlatformProfileStore] to create and delete
-  ///profiles; per-profile data access is not implemented.
+  ///**The plugin's own storage APIs default to the default profile, so pass this name to them
+  ///too.** [PlatformCookieManager] and [PlatformWebStorageManager] take a `profileName` on every
+  ///method; omitting it acts on the default profile's data, which on a non-default profile means
+  ///reading or clearing data this WebView is not using. [PlatformServiceWorkerController] has no
+  ///such parameter yet and is always default-profile. Use [PlatformProfileStore] to create and
+  ///delete profiles.
   ///
   ///Not applied to WebViews opened as a new window by another WebView — those keep the profile of
   ///the WebView that opened them.

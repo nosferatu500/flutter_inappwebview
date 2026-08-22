@@ -77,10 +77,11 @@ class AndroidWebStorageManager extends PlatformWebStorageManager
   Future<dynamic> _handleMethod(MethodCall call) async {}
 
   @override
-  Future<List<WebStorageOrigin>> getOrigins() async {
+  Future<List<WebStorageOrigin>> getOrigins({String? profileName}) async {
     List<WebStorageOrigin> originsList = [];
 
     Map<String, dynamic> args = <String, dynamic>{};
+    args.putIfAbsent('profileName', () => profileName);
     List<Map<dynamic, dynamic>> origins =
         (await channel?.invokeMethod<List>(
           'getOrigins',
@@ -102,28 +103,38 @@ class AndroidWebStorageManager extends PlatformWebStorageManager
   }
 
   @override
-  Future<void> deleteAllData() async {
+  Future<void> deleteAllData({String? profileName}) async {
     Map<String, dynamic> args = <String, dynamic>{};
+    args.putIfAbsent('profileName', () => profileName);
     await channel?.invokeMethod('deleteAllData', args);
   }
 
   @override
-  Future<void> deleteOrigin({required String origin}) async {
+  Future<void> deleteOrigin({
+    required String origin,
+    String? profileName,
+  }) async {
     Map<String, dynamic> args = <String, dynamic>{};
+    args.putIfAbsent('profileName', () => profileName);
     args.putIfAbsent("origin", () => origin);
     await channel?.invokeMethod('deleteOrigin', args);
   }
 
   @override
-  Future<bool> deleteBrowsingData() async {
+  Future<bool> deleteBrowsingData({String? profileName}) async {
     Map<String, dynamic> args = <String, dynamic>{};
+    args.putIfAbsent('profileName', () => profileName);
     return await channel?.invokeMethod<bool>('deleteBrowsingData', args) ??
         false;
   }
 
   @override
-  Future<String?> deleteBrowsingDataForSite({required String site}) async {
+  Future<String?> deleteBrowsingDataForSite({
+    required String site,
+    String? profileName,
+  }) async {
     Map<String, dynamic> args = <String, dynamic>{};
+    args.putIfAbsent('profileName', () => profileName);
     args.putIfAbsent("site", () => site);
     return await channel?.invokeMethod<String>(
       'deleteBrowsingDataForSite',
@@ -132,15 +143,23 @@ class AndroidWebStorageManager extends PlatformWebStorageManager
   }
 
   @override
-  Future<int> getQuotaForOrigin({required String origin}) async {
+  Future<int> getQuotaForOrigin({
+    required String origin,
+    String? profileName,
+  }) async {
     Map<String, dynamic> args = <String, dynamic>{};
+    args.putIfAbsent('profileName', () => profileName);
     args.putIfAbsent("origin", () => origin);
     return await channel?.invokeMethod<int>('getQuotaForOrigin', args) ?? 0;
   }
 
   @override
-  Future<int> getUsageForOrigin({required String origin}) async {
+  Future<int> getUsageForOrigin({
+    required String origin,
+    String? profileName,
+  }) async {
     Map<String, dynamic> args = <String, dynamic>{};
+    args.putIfAbsent('profileName', () => profileName);
     args.putIfAbsent("origin", () => origin);
     return await channel?.invokeMethod<int>('getUsageForOrigin', args) ?? 0;
   }

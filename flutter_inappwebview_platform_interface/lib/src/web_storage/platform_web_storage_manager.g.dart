@@ -61,6 +61,10 @@ enum PlatformWebStorageManagerMethod {
   ///**Officially Supported Platforms/Implementations**:
   ///- Android WebView ([Official API - WebStorage.deleteAllData](https://developer.android.com/reference/android/webkit/WebStorage#deleteAllData()))
   ///
+  ///**Parameters - Officially Supported Platforms/Implementations**:
+  ///- [profileName]:
+  ///    - Android WebView
+  ///
   ///Use the [PlatformWebStorageManager.isMethodSupported] method to check if this method is supported at runtime.
   ///{@endtemplate}
   deleteAllData,
@@ -72,6 +76,10 @@ enum PlatformWebStorageManagerMethod {
   ///**Officially Supported Platforms/Implementations**:
   ///- Android WebView ([Official API - WebStorageCompat.deleteBrowsingData](https://developer.android.com/reference/androidx/webkit/WebStorageCompat#deleteBrowsingData(android.webkit.WebStorage,java.lang.Runnable))):
   ///    - Requires [WebViewFeature.DELETE_BROWSING_DATA]. Returns `false` and deletes nothing if the feature is not supported.
+  ///
+  ///**Parameters - Officially Supported Platforms/Implementations**:
+  ///- [profileName]:
+  ///    - Android WebView
   ///
   ///Use the [PlatformWebStorageManager.isMethodSupported] method to check if this method is supported at runtime.
   ///{@endtemplate}
@@ -87,6 +95,8 @@ enum PlatformWebStorageManagerMethod {
   ///
   ///**Parameters - Officially Supported Platforms/Implementations**:
   ///- [site]: all platforms
+  ///- [profileName]:
+  ///    - Android WebView
   ///
   ///Use the [PlatformWebStorageManager.isMethodSupported] method to check if this method is supported at runtime.
   ///{@endtemplate}
@@ -101,6 +111,8 @@ enum PlatformWebStorageManagerMethod {
   ///
   ///**Parameters - Officially Supported Platforms/Implementations**:
   ///- [origin]: all platforms
+  ///- [profileName]:
+  ///    - Android WebView
   ///
   ///Use the [PlatformWebStorageManager.isMethodSupported] method to check if this method is supported at runtime.
   ///{@endtemplate}
@@ -129,6 +141,10 @@ enum PlatformWebStorageManagerMethod {
   ///**Officially Supported Platforms/Implementations**:
   ///- Android WebView ([Official API - WebStorage.getOrigins](https://developer.android.com/reference/android/webkit/WebStorage#getOrigins(android.webkit.ValueCallback%3Cjava.util.Map%3E)))
   ///
+  ///**Parameters - Officially Supported Platforms/Implementations**:
+  ///- [profileName]:
+  ///    - Android WebView
+  ///
   ///Use the [PlatformWebStorageManager.isMethodSupported] method to check if this method is supported at runtime.
   ///{@endtemplate}
   getOrigins,
@@ -142,6 +158,8 @@ enum PlatformWebStorageManagerMethod {
   ///
   ///**Parameters - Officially Supported Platforms/Implementations**:
   ///- [origin]: all platforms
+  ///- [profileName]:
+  ///    - Android WebView
   ///
   ///Use the [PlatformWebStorageManager.isMethodSupported] method to check if this method is supported at runtime.
   ///{@endtemplate}
@@ -156,6 +174,8 @@ enum PlatformWebStorageManagerMethod {
   ///
   ///**Parameters - Officially Supported Platforms/Implementations**:
   ///- [origin]: all platforms
+  ///- [profileName]:
+  ///    - Android WebView
   ///
   ///Use the [PlatformWebStorageManager.isMethodSupported] method to check if this method is supported at runtime.
   ///{@endtemplate}

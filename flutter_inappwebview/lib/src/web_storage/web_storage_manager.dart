@@ -50,41 +50,51 @@ class WebStorageManager {
   ///{@macro flutter_inappwebview_platform_interface.PlatformWebStorageManager.getOrigins}
   ///
   ///{@macro flutter_inappwebview_platform_interface.PlatformWebStorageManager.getOrigins.supported_platforms}
-  Future<List<WebStorageOrigin>> getOrigins() => platform.getOrigins();
+  Future<List<WebStorageOrigin>> getOrigins({String? profileName}) =>
+      platform.getOrigins(profileName: profileName);
 
   ///{@macro flutter_inappwebview_platform_interface.PlatformWebStorageManager.deleteAllData}
   ///
   ///{@macro flutter_inappwebview_platform_interface.PlatformWebStorageManager.deleteAllData.supported_platforms}
-  Future<void> deleteAllData() => platform.deleteAllData();
+  Future<void> deleteAllData({String? profileName}) =>
+      platform.deleteAllData(profileName: profileName);
 
   ///{@macro flutter_inappwebview_platform_interface.PlatformWebStorageManager.deleteOrigin}
   ///
   ///{@macro flutter_inappwebview_platform_interface.PlatformWebStorageManager.deleteOrigin.supported_platforms}
-  Future<void> deleteOrigin({required String origin}) =>
-      platform.deleteOrigin(origin: origin);
+  Future<void> deleteOrigin({required String origin, String? profileName}) =>
+      platform.deleteOrigin(origin: origin, profileName: profileName);
 
   ///{@macro flutter_inappwebview_platform_interface.PlatformWebStorageManager.deleteBrowsingData}
   ///
   ///{@macro flutter_inappwebview_platform_interface.PlatformWebStorageManager.deleteBrowsingData.supported_platforms}
-  Future<bool> deleteBrowsingData() => platform.deleteBrowsingData();
+  Future<bool> deleteBrowsingData({String? profileName}) =>
+      platform.deleteBrowsingData(profileName: profileName);
 
   ///{@macro flutter_inappwebview_platform_interface.PlatformWebStorageManager.deleteBrowsingDataForSite}
   ///
   ///{@macro flutter_inappwebview_platform_interface.PlatformWebStorageManager.deleteBrowsingDataForSite.supported_platforms}
-  Future<String?> deleteBrowsingDataForSite({required String site}) =>
-      platform.deleteBrowsingDataForSite(site: site);
+  Future<String?> deleteBrowsingDataForSite({
+    required String site,
+    String? profileName,
+  }) =>
+      platform.deleteBrowsingDataForSite(site: site, profileName: profileName);
 
   ///{@macro flutter_inappwebview_platform_interface.PlatformWebStorageManager.getQuotaForOrigin}
   ///
   ///{@macro flutter_inappwebview_platform_interface.PlatformWebStorageManager.getQuotaForOrigin.supported_platforms}
-  Future<int> getQuotaForOrigin({required String origin}) =>
-      platform.getQuotaForOrigin(origin: origin);
+  Future<int> getQuotaForOrigin({
+    required String origin,
+    String? profileName,
+  }) => platform.getQuotaForOrigin(origin: origin, profileName: profileName);
 
   ///{@macro flutter_inappwebview_platform_interface.PlatformWebStorageManager.getUsageForOrigin}
   ///
   ///{@macro flutter_inappwebview_platform_interface.PlatformWebStorageManager.getUsageForOrigin.supported_platforms}
-  Future<int> getUsageForOrigin({required String origin}) =>
-      platform.getUsageForOrigin(origin: origin);
+  Future<int> getUsageForOrigin({
+    required String origin,
+    String? profileName,
+  }) => platform.getUsageForOrigin(origin: origin, profileName: profileName);
 
   ///{@macro flutter_inappwebview_platform_interface.PlatformWebStorageManager.fetchDataRecords}
   ///
