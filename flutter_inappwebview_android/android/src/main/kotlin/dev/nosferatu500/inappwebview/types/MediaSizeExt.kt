@@ -47,13 +47,14 @@ class MediaSizeExt(
       if (mediaSize == null) {
         return null
       }
-      // NOTE: height and width are passed in swapped. Carried over from the Java verbatim --
-      // fixing it here would silently change what is reported to Dart.
+      // The constructor is (id, label, widthMils, heightMils). Upstream passed height into the
+      // width slot and vice versa, so every media size crossed the channel transposed; fixed here
+      // (TODO.md P0b.1).
       return MediaSizeExt(
         mediaSize.id,
         null,
-        mediaSize.heightMils,
-        mediaSize.widthMils
+        mediaSize.widthMils,
+        mediaSize.heightMils
       )
     }
 

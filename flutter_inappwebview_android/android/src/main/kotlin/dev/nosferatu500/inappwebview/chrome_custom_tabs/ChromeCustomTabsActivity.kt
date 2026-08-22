@@ -196,15 +196,13 @@ open class ChromeCustomTabsActivity : Activity(), Disposable {
   fun mayLaunchUrl(url: String?, otherLikelyURLs: List<String>?): Boolean {
     val uri = url?.let { Uri.parse(it) }
 
-    // NOTE: carried over from the Java verbatim -- the bundle built here is never added to the
-    // list, so an empty list is always passed. Changing it would alter what is prefetched.
-    val bundleOtherLikelyURLs = mutableListOf<Bundle>()
-    if (otherLikelyURLs != null) {
-      val bundleOtherLikelyURL = Bundle()
-      for (otherLikelyURL in otherLikelyURLs) {
-        bundleOtherLikelyURL.putString(CustomTabsService.KEY_URL, otherLikelyURL)
-      }
-    }
+    // CustomTabsSession.mayLaunchUrl expects one Bundle per likely URL, each carrying KEY_URL.
+    // Upstream built a single Bundle, overwrote KEY_URL once per iteration, and then never added it
+    // to the list — so otherLikelyURLs was silently dropped and only `uri` was ever prefetched
+    // (TODO.md P0b.1).
+    val bundleOtherLikelyURLs = otherLikelyURLs?.map { otherLikelyURL ->
+      Bundle().apply { putString(CustomTabsService.KEY_URL, otherLikelyURL) }
+    } ?: emptyList()
     return customTabActivityHelper.mayLaunchUrl(uri, null, bundleOtherLikelyURLs)
   }
 

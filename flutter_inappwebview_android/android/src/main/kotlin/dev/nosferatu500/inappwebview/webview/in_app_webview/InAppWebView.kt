@@ -1480,14 +1480,20 @@ class InAppWebView : WebView, InAppWebViewInterface, Disposable {
       setNetworkAvailable(newCustomSettings.networkAvailable!!)
     }
 
-    // NOTE: `!==` is deliberate -- the Java compared the boxed map values with `!=`, i.e. by
-    // reference. Structural equality here would change which updates are applied.
+    // These are boxed Integer/Boolean out of a channel map. Upstream compared them by reference,
+    // so any priority outside the Integer autoboxing cache read as changed on every setSettings
+    // call and re-applied the policy. Structural comparison, like every other branch here
+    // (TODO.md P0b.1).
     if (newSettingsMap["rendererPriorityPolicy"] != null &&
       (customSettings.rendererPriorityPolicy == null ||
-        customSettings.rendererPriorityPolicy!!["rendererRequestedPriority"] !==
-        newCustomSettings.rendererPriorityPolicy!!["rendererRequestedPriority"] ||
-        customSettings.rendererPriorityPolicy!!["waivedWhenNotVisible"] !==
-        newCustomSettings.rendererPriorityPolicy!!["waivedWhenNotVisible"])
+        !Util.objEquals(
+          customSettings.rendererPriorityPolicy!!["rendererRequestedPriority"],
+          newCustomSettings.rendererPriorityPolicy!!["rendererRequestedPriority"]
+        ) ||
+        !Util.objEquals(
+          customSettings.rendererPriorityPolicy!!["waivedWhenNotVisible"],
+          newCustomSettings.rendererPriorityPolicy!!["waivedWhenNotVisible"]
+        ))
     ) {
       setRendererPriorityPolicy(
         newCustomSettings.rendererPriorityPolicy!!["rendererRequestedPriority"] as Int,

@@ -66,10 +66,10 @@ class HeadlessInAppWebView(
     val view = flutterWebView?.getView() ?: return
     val scale = Util.getPixelDensity(view.context)
     val fullscreenSize = Util.getFullscreenSize(view.context)
-    // NOTE: the height branch tests size.width, not size.height. Carried over from the Java
-    // verbatim -- changing it would alter the headless WebView's measured size.
+    // -1.0 means "fullscreen on this axis". Upstream's height branch tested size.width, so
+    // Size2D(-1.0, h) forced fullscreen height and Size2D(w, -1.0) never got it (TODO.md P0b.1).
     val width = (if (size.width == -1.0) fullscreenSize.width else size.width * scale).toInt()
-    val height = (if (size.width == -1.0) fullscreenSize.height else size.height * scale).toInt()
+    val height = (if (size.height == -1.0) fullscreenSize.height else size.height * scale).toInt()
     view.layoutParams = FrameLayout.LayoutParams(width, height)
   }
 

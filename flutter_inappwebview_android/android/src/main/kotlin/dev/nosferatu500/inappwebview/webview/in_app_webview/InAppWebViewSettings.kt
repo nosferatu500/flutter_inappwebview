@@ -408,13 +408,15 @@ class InAppWebViewSettings : ISettings<InAppWebViewInterface> {
       realSettings["defaultFixedFontSize"] = settings.defaultFixedFontSize
       realSettings["defaultFontSize"] = settings.defaultFontSize
       realSettings["defaultTextEncodingName"] = settings.defaultTextEncodingName
+      // Upstream wrote the framework value unconditionally on the line after the feature check,
+      // so the WebSettingsCompat read was always discarded. Now an if/else, matching every other
+      // compat-or-framework pair in this method — see offscreenPreRaster below (TODO.md P0b.1).
       if (WebViewFeature.isFeatureSupported(WebViewFeature.DISABLED_ACTION_MODE_MENU_ITEMS)) {
         realSettings["disabledActionModeMenuItems"] =
           WebSettingsCompat.getDisabledActionModeMenuItems(settings)
+      } else {
+        realSettings["disabledActionModeMenuItems"] = settings.disabledActionModeMenuItems
       }
-      // NOTE: unconditionally overwrites the WebSettingsCompat value read just above. Carried
-      // over from the Java verbatim.
-      realSettings["disabledActionModeMenuItems"] = settings.disabledActionModeMenuItems
 
       realSettings["fantasyFontFamily"] = settings.fantasyFontFamily
       realSettings["fixedFontFamily"] = settings.fixedFontFamily

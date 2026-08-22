@@ -29,9 +29,8 @@ class JsBeforeUnloadResponse(
     return result
   }
 
-  // Says JsConfirmResponse; kept verbatim from the Java to avoid changing logged output.
   override fun toString(): String =
-    "JsConfirmResponse{message='$message', confirmButtonTitle='$confirmButtonTitle', " +
+    "JsBeforeUnloadResponse{message='$message', confirmButtonTitle='$confirmButtonTitle', " +
       "cancelButtonTitle='$cancelButtonTitle', handledByClient=$isHandledByClient, action=$action}"
 
   companion object {

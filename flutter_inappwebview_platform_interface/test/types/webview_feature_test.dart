@@ -11,9 +11,11 @@ import 'package:flutter_test/flutter_test.dart';
 /// result.success(WebViewFeature.isFeatureSupported(feature!!))
 /// ```
 ///
-/// So the string *is* the whole contract, and getting it wrong fails silently: androidx returns
-/// `false` for an unrecognised feature, the guarded code is skipped, and the feature simply appears
-/// unsupported on every device. Nothing throws and nothing logs.
+/// So the string *is* the whole contract. §24 assumed a wrong one fails silently; **§36 read the
+/// bytecode and found it throws** — `WebViewFeatureInternal.isSupported` raises
+/// `RuntimeException("Unknown feature <name>")` when no registered `ApiFeature` carries that public
+/// name, which reaches Dart as a `PlatformException`. Loud rather than silent, but still only on a
+/// device and still invisible to every gate in this repo, so the values stay pinned here.
 ///
 /// Each expectation below was read out of `webkit-1.17.0.aar` with `javap -constants`. Note the map
 /// is keyed by the Dart constant name and valued by the *native* string: those are usually equal,
@@ -39,7 +41,7 @@ void main() {
         'MULTI_PROFILE': 'MULTI_PROFILE',
         // The only entry so far whose native value is NOT its constant name (§34). Read out of the
         // AAR: `PRERENDER_WITH_URL = "PRERENDER_URL_V2"`. Mirroring the name here would produce a
-        // string androidx has never heard of, and androidx answers those with a silent `false`.
+        // string androidx has never heard of, which throws on device (§36).
         'PRERENDER_WITH_URL': 'PRERENDER_URL_V2',
       };
 
@@ -95,6 +97,38 @@ void main() {
           reason: '${feature.toNativeValue()} did not round-trip',
         );
       }
+    });
+
+    // §36. `androidx.webkit.WebViewFeature` *declares* 98 constants but only *registers* 92 of
+    // them with `WebViewFeatureInternal`, and `isFeatureSupported` throws
+    // `RuntimeException("Unknown feature …")` for anything unregistered. The six below are the
+    // whole unregistered set in webkit 1.17.0 — every one of them `@Deprecated` with
+    // "Use NAVIGATION_LISTENER instead", so they read like perfectly good flags to port and are in
+    // fact tombstones. Mirroring one would make `WebViewFeature.isFeatureSupported` throw a
+    // `PlatformException` on every device.
+    test('no constant mirrors a flag androidx declares but never registers', () {
+      const tombstones = <String>{
+        'WEB_VIEW_NAVIGATION_CLIENT_BASIC_USAGE', // NAVIGATION_CALLBACK_BASIC
+        'NAVIGATION_LISTENER_V1',
+        'NAVIGATION_LISTENER_V2',
+        'NAVIGATION_LISTENER_ON_COMPLETED_FIRES_FOR_NON_COMMITTED',
+        'NAVIGATION_LISTENER_NON_NULL_PAGE_FOR_SAME_DOCUMENT_NAVIGATIONS',
+        'PAGE_GET_URL',
+      };
+
+      final offenders = WebViewFeature.values
+          .map((feature) => feature.toNativeValue())
+          .whereType<String>()
+          .where(tombstones.contains)
+          .toSet();
+
+      expect(
+        offenders,
+        isEmpty,
+        reason:
+            'These native values are declared by androidx.webkit but never registered, so '
+            'WebViewFeature.isFeatureSupported throws for them. Use NAVIGATION_LISTENER instead.',
+      );
     });
   });
 }
