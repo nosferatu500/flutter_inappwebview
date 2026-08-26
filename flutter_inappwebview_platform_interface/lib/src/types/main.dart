@@ -31,6 +31,7 @@ export 'custom_tabs_share_state.dart' show CustomTabsShareState;
 export 'data_detector_types.dart' show DataDetectorTypes;
 export 'modifier_flag.dart' show ModifierFlag;
 export 'button_mask.dart' show ButtonMask;
+export 'writing_tools_behavior.dart' show WritingToolsBehavior;
 export 'dismiss_button_style.dart' show DismissButtonStyle;
 export 'download_start_request.dart' show DownloadStartRequest;
 export 'favicon.dart' show Favicon;

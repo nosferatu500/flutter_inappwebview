@@ -18,6 +18,7 @@ import '../types/renderer_priority_policy.dart';
 import '../types/sandbox.dart';
 import '../types/scrollbar_style.dart';
 import '../types/scrollview_content_inset_adjustment_behavior.dart';
+import '../types/writing_tools_behavior.dart';
 import '../types/scrollview_deceleration_rate.dart';
 import '../types/selection_granularity.dart';
 import '../types/user_preferred_content_mode.dart';
@@ -2609,6 +2610,32 @@ as it can cause framerate drops on animations in Android 9 and lower (see [Hybri
   )
   double? alpha;
 
+  ///How much of the Apple Intelligence Writing Tools UI this WebView should offer for editable
+  ///content.
+  ///
+  ///Leaving this `null` keeps WebKit's own behaviour, which its documentation describes as
+  ///equivalent to [WritingToolsBehavior.LIMITED] — the overlay-panel experience. Set
+  ///[WritingToolsBehavior.COMPLETE] for the full inline-editing experience, or
+  ///[WritingToolsBehavior.NONE] to opt a WebView out of Writing Tools entirely.
+  ///
+  ///**NOTE for iOS**: this is a `WKWebViewConfiguration` property, and `WKWebView.configuration` is
+  ///documented as *"a copy of the configuration with which the web view was initialized"*. It is
+  ///therefore applied **only when the WebView is created** and changing it later through
+  ///`setSettings` has no effect.
+  @SupportedPlatforms(
+    platforms: [
+      IOSPlatform(
+        available: "18.0",
+        apiName: "WKWebViewConfiguration.writingToolsBehavior",
+        apiUrl:
+            "https://developer.apple.com/documentation/webkit/wkwebviewconfiguration/writingtoolsbehavior",
+        note:
+            "Applied at WebView creation only; `WKWebView.configuration` is a copy, so later changes are ignored.",
+      ),
+    ],
+  )
+  WritingToolsBehavior_? writingToolsBehavior;
+
   ///Set to `true` to be able to listen at the [PlatformWebViewCreationParams.onShowFileChooser] event.
   ///
   ///If the [PlatformWebViewCreationParams.onShowFileChooser] event is implemented and this value is `null`,
@@ -3541,6 +3568,7 @@ as it can cause framerate drops on animations in Android 9 and lower (see [Hybri
     this.isUserInteractionEnabled = true,
     this.handleAcceleratorKeyPressed = false,
     this.alpha,
+    this.writingToolsBehavior,
     this.useOnShowFileChooser,
     this.iframeAllow,
     this.iframeAllowFullscreen,

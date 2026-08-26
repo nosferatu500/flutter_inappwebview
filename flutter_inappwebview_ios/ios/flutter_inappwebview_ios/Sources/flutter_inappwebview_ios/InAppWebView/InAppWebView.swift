@@ -700,8 +700,19 @@ public class InAppWebView: WKWebView, UIScrollViewDelegate, WKUIDelegate,
             
             configuration.upgradeKnownHostsToHTTPS = settings.upgradeKnownHostsToHTTPS
 
+            // Creation-time only, and deliberately not mirrored in `setSettings`:
+            // `WKWebView.configuration` is documented as "a copy of the configuration with which
+            // the web view was initialized", so assigning to it after init mutates a copy and does
+            // nothing. Applied with `if let` so an unset value leaves WebKit's own default (which
+            // its docs describe as equivalent to `.limited`) untouched.
+            if #available(iOS 18.0, *) {
+                if let writingToolsBehavior = settings.writingToolsBehavior,
+                   let behavior = UIWritingToolsBehavior(rawValue: writingToolsBehavior) {
+                    configuration.writingToolsBehavior = behavior
+                }
+            }
         }
-        
+
         return configuration
     }
     

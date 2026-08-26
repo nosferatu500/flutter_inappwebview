@@ -70,6 +70,45 @@ public class InAppWebViewSettings: ISettings<InAppWebView> {
     var maximumZoomScale = 1.0
     var minimumZoomScale = 1.0
     var contentInsetAdjustmentBehavior = 2 // UIScrollView.ContentInsetAdjustmentBehavior.never
+    /// `UIWritingToolsBehavior` raw value, or `nil` to leave WebKit's own default alone.
+    ///
+    /// Nullable on purpose, following §18's rule: WebKit documents its default as equivalent to
+    /// `.limited` (`2`), but `UIWritingToolsBehaviorDefault` is `0` and means "let the system
+    /// decide". Defaulting this field to either one would silently change behaviour for callers who
+    /// never asked — `0` would hand the choice to the system, `2` would pin it. So it stays `nil`
+    /// and is applied with an `if let`.
+    ///
+    /// **The `_`-prefixed `NSNumber?` is load-bearing, not a style choice.** `ISettings.parse` is
+    /// KVC-based (`responds(to: Selector(key))`, then `Selector("_" + key)`), and Swift **cannot
+    /// expose an optional value type such as `Int?` to Objective-C at all** — measured, not assumed:
+    /// an `@objcMembers` class with `var x: Int?` reports `responds(to: "x") == false` and is absent
+    /// from `class_copyPropertyList`, so a bare `Int?` would compile, lint and pass every gate while
+    /// never once receiving the value Dart sent.
+    ///
+    /// There are two working idioms in this package for that problem, and this uses the better one.
+    /// The `parse` override below handles `alpha` and the two viewport insets by hand — its comment
+    /// says *"nullable values with primitive type must be handled here as super.parse will not
+    /// work"* — which fixes reading but leaves the field out of `toMap()`, since `toMap` enumerates
+    /// ObjC properties. `PrintJobSettings`' `_x: NSNumber?` + computed-`Int?` pair fixes **both**:
+    /// KVC's ivar fallback resolves key `writingToolsBehavior` to the `_writingToolsBehavior` ivar in
+    /// each direction, so `parse` needs no special case and `toMap` reports the requested value for
+    /// free. `getRealSettings` then overwrites it with what WebKit actually resolved.
+    ///
+    /// Verified with a standalone probe rather than assumed: naive `Int?` came back `nil` after
+    /// `parse` and missing from `toMap`; this pattern round-tripped.
+    public var _writingToolsBehavior: NSNumber?
+    public var writingToolsBehavior: Int? {
+        get {
+            return _writingToolsBehavior?.intValue
+        }
+        set {
+            if let newValue = newValue {
+                _writingToolsBehavior = NSNumber.init(value: newValue)
+            } else {
+                _writingToolsBehavior = nil
+            }
+        }
+    }
     var isDirectionalLockEnabled = false
     var mediaType: String? = nil
     var pageZoom = 1.0
@@ -169,6 +208,12 @@ public class InAppWebViewSettings: ISettings<InAppWebView> {
 
             realSettings["isTextInteractionEnabled"] = configuration.preferences.isTextInteractionEnabled
             realSettings["upgradeKnownHostsToHTTPS"] = configuration.upgradeKnownHostsToHTTPS
+            // Reading the configuration copy is sound even though writing to it is not: the copy
+            // faithfully reflects the values the WebView was initialised with. This is the only way
+            // a caller can discover what WebKit actually resolved the behaviour to.
+            if #available(iOS 18.0, *) {
+                realSettings["writingToolsBehavior"] = configuration.writingToolsBehavior.rawValue
+            }
             realSettings["underPageBackgroundColor"] = webView.underPageBackgroundColor.hexString
 
             if #available(iOS 15.4, *) {
