@@ -1848,6 +1848,20 @@ public class InAppWebView: WKWebView, UIScrollViewDelegate, WKUIDelegate,
                  decidePolicyFor navigationAction: WKNavigationAction,
                  preferences: WKWebpagePreferences,
                  decisionHandler: @escaping (WKNavigationActionPolicy, WKWebpagePreferences) -> Void) {
+        // WebKit hands us a *live* `WKWebpagePreferences` per navigation, which is why this setting
+        // can be applied here rather than on `configuration.defaultWebpagePreferences`. Doing it here
+        // means a `setSettings` change takes effect on the very next navigation — the configuration
+        // route could not, because `WKWebView.configuration` is a copy (see TODO.md P4d).
+        //
+        // Applied unconditionally: the default raw value 0 is `.keepAsRequested`, which is exactly
+        // what WebKit does when nothing is set, so this is a no-op for callers who never asked.
+        if #available(iOS 18.2, *) {
+            if let policy = WKWebpagePreferences.UpgradeToHTTPSPolicy(
+                rawValue: settings?.preferredHTTPSNavigationPolicy ?? 0
+            ) {
+                preferences.preferredHTTPSNavigationPolicy = policy
+            }
+        }
         self.webView(webView, decidePolicyFor: navigationAction, decisionHandler: {(navigationActionPolicy) -> Void in
             decisionHandler(navigationActionPolicy, preferences)
         })

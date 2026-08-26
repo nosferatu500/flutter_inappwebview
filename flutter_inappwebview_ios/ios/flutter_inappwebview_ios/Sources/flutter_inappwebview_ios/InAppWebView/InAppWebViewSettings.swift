@@ -96,6 +96,20 @@ public class InAppWebViewSettings: ISettings<InAppWebView> {
     ///
     /// Verified with a standalone probe rather than assumed: naive `Int?` came back `nil` after
     /// `parse` and missing from `toMap`; this pattern round-tripped.
+    /// `WKWebpagePreferencesUpgradeToHTTPSPolicy` raw value.
+    ///
+    /// **Non-optional, unlike `writingToolsBehavior` — and that is a deliberate difference, not an
+    /// inconsistency.** §18's rule is to default a setting only when the platform default is known
+    /// *and* matches. Here it is both: WebKit documents the default as
+    /// `...UpgradeToHTTPSPolicyKeepAsRequested`, whose raw value is `0`, so `0` is simultaneously
+    /// "unset" and "what WebKit would do anyway". Applying it unconditionally therefore cannot change
+    /// behaviour for a caller who never asked.
+    ///
+    /// That also sidesteps the `Int?`/KVC problem §47 documents: a **non**-optional `Int` is
+    /// ObjC-visible, so `ISettings.parse` sets it directly and `toMap` reports it, with no
+    /// `_`-prefixed `NSNumber` shim needed. Reach for that shim only when there is no safe default.
+    var preferredHTTPSNavigationPolicy = 0
+
     public var _writingToolsBehavior: NSNumber?
     public var writingToolsBehavior: Int? {
         get {

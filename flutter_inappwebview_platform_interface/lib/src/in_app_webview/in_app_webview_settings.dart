@@ -19,6 +19,7 @@ import '../types/sandbox.dart';
 import '../types/scrollbar_style.dart';
 import '../types/scrollview_content_inset_adjustment_behavior.dart';
 import '../types/writing_tools_behavior.dart';
+import '../types/upgrade_to_https_policy.dart';
 import '../types/scrollview_deceleration_rate.dart';
 import '../types/selection_granularity.dart';
 import '../types/user_preferred_content_mode.dart';
@@ -2610,6 +2611,35 @@ as it can cause framerate drops on animations in Android 9 and lower (see [Hybri
   )
   double? alpha;
 
+  ///Whether a top-level navigation should be upgraded to HTTPS, and what should happen when the
+  ///upgrade fails.
+  ///
+  ///Leaving this `null` keeps WebKit's documented default,
+  ///[UpgradeToHTTPSPolicy.KEEP_AS_REQUESTED], which does not prefer HTTPS at all.
+  ///[UpgradeToHTTPSPolicy.ERROR_ON_FAILURE] is the HTTPS-Only equivalent.
+  ///
+  ///**NOTE for iOS**: two limitations come from WebKit itself, not from this plugin.
+  ///[InAppWebViewSettings.upgradeKnownHostsToHTTPS] **supersedes** this policy for hosts WebKit
+  ///already knows support HTTPS, and the policy is **ignored for subframe navigations** — it only
+  ///applies to top-level ones. WebKit may also ignore it entirely based on system configuration.
+  ///
+  ///Unlike [InAppWebViewSettings.writingToolsBehavior], this one *does* take effect when changed
+  ///through `setSettings`: it is applied to the per-navigation `WKWebpagePreferences` WebKit hands
+  ///to the navigation policy delegate, not to the immutable configuration copy.
+  @SupportedPlatforms(
+    platforms: [
+      IOSPlatform(
+        available: "18.2",
+        apiName: "WKWebpagePreferences.preferredHTTPSNavigationPolicy",
+        apiUrl:
+            "https://developer.apple.com/documentation/webkit/wkwebpagepreferences/preferredhttpsnavigationpolicy",
+        note:
+            "Applies to top-level navigations only, and `upgradeKnownHostsToHTTPS` supersedes it for known hosts.",
+      ),
+    ],
+  )
+  UpgradeToHTTPSPolicy_? preferredHTTPSNavigationPolicy;
+
   ///How much of the Apple Intelligence Writing Tools UI this WebView should offer for editable
   ///content.
   ///
@@ -3569,6 +3599,7 @@ as it can cause framerate drops on animations in Android 9 and lower (see [Hybri
     this.handleAcceleratorKeyPressed = false,
     this.alpha,
     this.writingToolsBehavior,
+    this.preferredHTTPSNavigationPolicy,
     this.useOnShowFileChooser,
     this.iframeAllow,
     this.iframeAllowFullscreen,
