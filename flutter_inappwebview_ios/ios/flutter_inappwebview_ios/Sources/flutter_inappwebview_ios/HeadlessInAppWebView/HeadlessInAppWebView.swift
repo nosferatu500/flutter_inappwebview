@@ -93,7 +93,7 @@ public class HeadlessInAppWebView: Disposable {
         dispose(disposeWebView: true)
     }
     
-    deinit {
+    isolated deinit {
         debugPrint("HeadlessInAppWebView - dealloc")
         dispose()
     }

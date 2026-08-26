@@ -8,6 +8,9 @@
 import Foundation
 import WebKit
 
+/// `@MainActor` because it stores a `WKNavigationAction` and a `WKWindowFeatures` and its `toMap()`
+/// calls the `toMap()` on each — both main-actor isolated, being extensions on WebKit types.
+@MainActor
 public class CreateWindowAction: NSObject {
     var navigationAction: WKNavigationAction
     var windowId: Int64

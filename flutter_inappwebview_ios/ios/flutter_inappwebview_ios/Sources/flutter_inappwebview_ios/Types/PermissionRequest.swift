@@ -8,6 +8,9 @@
 import Foundation
 import WebKit
 
+/// `@MainActor` because `toMap()` calls `WKFrameInfo.toMap()`, an extension on a main-actor WebKit
+/// type. Same shape as `CreateWindowAction`.
+@MainActor
 public class PermissionRequest: NSObject {
     var origin: String
     var resources: [StringOrInt]

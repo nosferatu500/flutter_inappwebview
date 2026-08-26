@@ -38,7 +38,7 @@ public class WebAuthenticationSessionManager: ChannelDelegate {
 
                 break
             default:
-                result(FlutterMethodNotImplemented)
+                result(flutterMethodNotImplemented)
                 break
         }
     }
@@ -69,7 +69,7 @@ public class WebAuthenticationSessionManager: ChannelDelegate {
         plugin = nil
     }
     
-    deinit {
+    isolated deinit {
         dispose()
     }
 }

@@ -7,6 +7,9 @@
 
 import Foundation
 
+/// `@MainActor`: builds JS source that embeds the runtime-settable bridge name, and is only ever
+/// called while configuring a `WKUserContentController` on the main thread.
+@MainActor
 public class FindElementsAtPointJS {
     public static let FIND_ELEMENTS_AT_POINT_JS_PLUGIN_SCRIPT_GROUP_NAME = "IN_APP_WEBVIEW_FIND_ELEMENTS_AT_POINT_JS_PLUGIN_SCRIPT"
     

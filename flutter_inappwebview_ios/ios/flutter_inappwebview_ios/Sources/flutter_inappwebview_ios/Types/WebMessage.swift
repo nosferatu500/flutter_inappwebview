@@ -59,7 +59,7 @@ public class WebMessage: NSObject, Disposable {
         ports?.removeAll()
     }
     
-    deinit {
+    isolated deinit {
         debugPrint("WebMessage - dealloc")
         dispose()
     }

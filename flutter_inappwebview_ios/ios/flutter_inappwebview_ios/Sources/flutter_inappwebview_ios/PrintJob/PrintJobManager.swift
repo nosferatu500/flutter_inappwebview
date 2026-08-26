@@ -25,7 +25,7 @@ public class PrintJobManager: NSObject, Disposable {
         plugin = nil
     }
     
-    deinit {
+    isolated deinit {
         dispose()
     }
 }

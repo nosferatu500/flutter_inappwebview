@@ -8,9 +8,18 @@
 import Foundation
 import WebKit
 
+/// The **eleventh** piece of mutable global state in this package, and the one the Swift 6 recon in
+/// `NEXT_SESSION_IOS.md` missed: its inventory was built with `grep 'static var'`, and this is a
+/// bare top-level `var`, so it never appeared. Written from `InAppWebView`'s touch handling and read
+/// back when a long press resolves — both main-thread paths.
+@MainActor
 var SharedLastTouchPointTimestamp: [InAppWebView: Int64] = [:]
 
 public class Util {
+    /// `@MainActor` only because it reads `plugin.registrar`; the plugin is main-actor isolated.
+    /// Deliberately annotated per-method rather than on `Util`, which is otherwise a bag of pure
+    /// helpers that have no business being isolated.
+    @MainActor
     public static func getUrlAsset(plugin: InAppWebViewFlutterPlugin, assetFilePath: String) throws -> URL {
         let key = plugin.registrar.lookupKey(forAsset: assetFilePath)
         guard let assetURL = Bundle.main.url(forResource: key, withExtension: nil) else {
@@ -19,6 +28,8 @@ public class Util {
         return assetURL
     }
     
+    /// `@MainActor` for the same reason as `getUrlAsset`.
+    @MainActor
     public static func getAbsPathAsset(plugin: InAppWebViewFlutterPlugin, assetFilePath: String) throws -> String {
         let key = plugin.registrar.lookupKey(forAsset: assetFilePath)
         guard let assetAbsPath = Bundle.main.path(forResource: key, ofType: nil) else {

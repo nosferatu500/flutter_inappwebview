@@ -9,7 +9,13 @@ import Foundation
 import SafariServices
 import Flutter
 
-public class SafariViewController: SFSafariViewController, SFSafariViewControllerDelegate, Disposable {
+/// The `@MainActor` on the `SFSafariViewControllerDelegate` conformance is an **isolated
+/// conformance** (SE-0470, Swift 6.2). `SFSafariViewController` is main-actor isolated, so the
+/// delegate callbacks implemented here are too, while the protocol itself is not — Swift 6 rejects
+/// that as *"conformance ... crosses into main actor-isolated code and can cause data races"*.
+/// Stating the conformance as main-actor isolated is the accurate fix: UIKit only ever invokes
+/// these callbacks on the main thread.
+public class SafariViewController: SFSafariViewController, @MainActor SFSafariViewControllerDelegate, Disposable {
     static let METHOD_CHANNEL_NAME_PREFIX = "dev.nosferatu500.inappwebview/chromesafaribrowser_"
     var channelDelegate: SafariViewControllerChannelDelegate?
     var safariSettings: SafariBrowserSettings
@@ -131,7 +137,7 @@ public class SafariViewController: SFSafariViewController, SFSafariViewControlle
         plugin = nil
     }
     
-    deinit {
+    isolated deinit {
         debugPrint("SafariViewController - dealloc")
         dispose()
     }

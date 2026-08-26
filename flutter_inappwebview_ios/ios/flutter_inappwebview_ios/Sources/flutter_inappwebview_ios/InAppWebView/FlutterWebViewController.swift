@@ -9,7 +9,10 @@ import Foundation
 import WebKit
 import Flutter
 
-public class FlutterWebViewController: NSObject, FlutterPlatformView, Disposable {
+/// The conformance to `FlutterPlatformView` is **isolated** (SE-0470) rather than the protocol being
+/// annotated, because that protocol belongs to Flutter and cannot be changed from here. `view()`
+/// hands back an `InAppWebView`, so the conformance is main-actor in fact either way.
+public class FlutterWebViewController: NSObject, @MainActor FlutterPlatformView, Disposable {
 
     var myView: UIView?
     var keepAliveId: String?
@@ -204,7 +207,7 @@ public class FlutterWebViewController: NSObject, FlutterPlatformView, Disposable
         dispose(removeFromSuperview: false)
     }
     
-    deinit {
+    isolated deinit {
         debugPrint("FlutterWebViewController - dealloc")
         dispose()
     }

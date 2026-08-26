@@ -57,7 +57,7 @@ public class InAppWebViewManager: ChannelDelegate {
                 result(JavaScriptBridgeJS.get_JAVASCRIPT_BRIDGE_NAME())
                 break
             default:
-                result(FlutterMethodNotImplemented)
+                result(flutterMethodNotImplemented)
                 break
         }
     }
@@ -123,7 +123,7 @@ public class InAppWebViewManager: ChannelDelegate {
         plugin = nil
     }
     
-    deinit {
+    isolated deinit {
         dispose()
     }
 }

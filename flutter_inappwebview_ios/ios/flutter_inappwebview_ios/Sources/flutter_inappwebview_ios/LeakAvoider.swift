@@ -8,6 +8,10 @@
 import Foundation
 import Flutter
 
+/// `@MainActor` because it forwards straight to a `FlutterMethodCallDelegate`, which is main-actor
+/// isolated. `LeakAvoider` exists only to break a retain cycle on the method-call handler, so it
+/// inherits the isolation of the thing it forwards to.
+@MainActor
 public class LeakAvoider: NSObject {
     weak var delegate : FlutterMethodCallDelegate?
     

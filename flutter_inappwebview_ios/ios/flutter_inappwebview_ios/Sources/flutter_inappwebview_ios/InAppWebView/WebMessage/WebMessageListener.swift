@@ -10,7 +10,7 @@ import WebKit
 import Flutter
 
 public class WebMessageListener: FlutterMethodCallDelegate {
-    static var METHOD_CHANNEL_NAME_PREFIX = "dev.nosferatu500.inappwebview/inappwebview_web_message_listener_"
+    static let METHOD_CHANNEL_NAME_PREFIX = "dev.nosferatu500.inappwebview/inappwebview_web_message_listener_"
     var id: String
     var jsObjectName: String
     var allowedOriginRules: Set<String>
@@ -271,7 +271,7 @@ public class WebMessageListener: FlutterMethodCallDelegate {
         plugin = nil
     }
     
-    deinit {
+    isolated deinit {
         debugPrint("WebMessageListener - dealloc")
         dispose()
     }

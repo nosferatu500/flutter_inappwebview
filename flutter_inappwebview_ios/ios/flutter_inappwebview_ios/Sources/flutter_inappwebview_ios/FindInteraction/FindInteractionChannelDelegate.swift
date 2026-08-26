@@ -128,7 +128,7 @@ public class FindInteractionChannelDelegate: ChannelDelegate {
                 }
                 break
             default:
-                result(FlutterMethodNotImplemented)
+                result(flutterMethodNotImplemented)
                 break
         }
     }
@@ -153,7 +153,7 @@ public class FindInteractionChannelDelegate: ChannelDelegate {
         findInteractionController = nil
     }
     
-    deinit {
+    isolated deinit {
         dispose()
     }
 }

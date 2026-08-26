@@ -7,7 +7,7 @@
 
 import Flutter
 import Foundation
-@preconcurrency import WebKit
+import WebKit
 
 public class InAppWebView: WKWebView, UIScrollViewDelegate, WKUIDelegate,
                             WKNavigationDelegate, WKScriptMessageHandler, UIGestureRecognizerDelegate,
@@ -742,8 +742,24 @@ public class InAppWebView: WKWebView, UIScrollViewDelegate, WKUIDelegate,
         channelDelegate?.onHideContextMenu()
     }
     
+    /// The body runs inside `MainActor.assumeIsolated` because this method **overrides
+    /// `NSObject.observeValue`, which is nonisolated**, and an override cannot add isolation. Two
+    /// things inside need the main actor: forming `#keyPath` literals for main-actor WebKit and
+    /// UIKit properties (Swift 6: *"cannot form key path to main actor-isolated property"*, 9 of
+    /// them), and calling the channel delegate.
+    ///
+    /// `assumeIsolated` is an assertion, so it is only sound if KVO really does deliver on the main
+    /// thread. It does for every key registered here: all nine are properties of `WKWebView` or its
+    /// `UIScrollView`, mutated by WebKit and UIKit on the main thread, and KVO notifies
+    /// synchronously on the mutating thread. Note the pre-existing `DispatchQueue.main.async` hops
+    /// below for `contentOffset`/`contentSize` — those were already assuming the same thing.
     override public func observeValue(forKeyPath keyPath: String?, of object: Any?,
                                change: [NSKeyValueChangeKey : Any]?, context: UnsafeMutableRawPointer?) {
+      // `assumeIsolated` runs its body synchronously on the calling thread and the closure does not
+      // escape, so `change` cannot actually be accessed concurrently — but the compiler still models
+      // the capture as a send out of the nonisolated override. Rebinding states that.
+      nonisolated(unsafe) let change = change
+      MainActor.assumeIsolated {
         if keyPath == #keyPath(WKWebView.estimatedProgress) {
             initializeWindowIdJS()
             let progress = Int(estimatedProgress * 100)
@@ -811,8 +827,9 @@ public class InAppWebView: WKWebView, UIScrollViewDelegate, WKUIDelegate,
             }
         }
         replaceGestureHandlerIfNeeded()
+      }
     }
-    
+
     public func initializeWindowIdJS() {
         if let windowId = windowId {
             let contentWorlds = configuration.userContentController.getContentWorlds(with: windowId)
@@ -1756,7 +1773,7 @@ public class InAppWebView: WKWebView, UIScrollViewDelegate, WKUIDelegate,
         })
     }
     
-    public func download(_ download: WKDownload, decideDestinationUsing response: URLResponse, suggestedFilename: String, completionHandler: @escaping (URL?) -> Void) {
+    public func download(_ download: WKDownload, decideDestinationUsing response: URLResponse, suggestedFilename: String, completionHandler: @escaping @MainActor @Sendable (URL?) -> Void) {
         if let url = response.url, let useOnDownloadStart = settings?.useOnDownloadStart, useOnDownloadStart {
             let downloadStartRequest = DownloadStartRequest(url: url.absoluteString,
                                                             userAgent: nil,
@@ -2640,7 +2657,7 @@ public class InAppWebView: WKWebView, UIScrollViewDelegate, WKUIDelegate,
 ////            if result is FlutterError {
 ////                print((result as! FlutterError).message ?? "")
 ////            }
-////            else if (result as? NSObject) == FlutterMethodNotImplemented {
+////            else if (result as? NSObject) == flutterMethodNotImplemented {
 ////                completionHandler(nil)
 ////            }
 ////            else {
@@ -2682,7 +2699,7 @@ public class InAppWebView: WKWebView, UIScrollViewDelegate, WKUIDelegate,
 ////            if result is FlutterError {
 ////                print((result as! FlutterError).message ?? "")
 ////            }
-////            else if (result as? NSObject) == FlutterMethodNotImplemented {
+////            else if (result as? NSObject) == flutterMethodNotImplemented {
 ////
 ////            }
 ////            else {

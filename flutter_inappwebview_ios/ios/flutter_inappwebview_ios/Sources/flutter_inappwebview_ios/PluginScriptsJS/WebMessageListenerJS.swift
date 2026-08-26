@@ -7,6 +7,9 @@
 
 import Foundation
 
+/// `@MainActor`: builds JS source that embeds the runtime-settable bridge name, and is only ever
+/// called while configuring a `WKUserContentController` on the main thread.
+@MainActor
 public class WebMessageListenerJS {
     
     public static func WEB_MESSAGE_LISTENER_JS_SOURCE() -> String {

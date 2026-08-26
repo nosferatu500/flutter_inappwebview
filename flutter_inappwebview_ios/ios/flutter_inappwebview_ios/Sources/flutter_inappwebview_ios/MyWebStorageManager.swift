@@ -38,7 +38,7 @@ public class MyWebStorageManager: ChannelDelegate {
                 MyWebStorageManager.removeDataModifiedSince(dataTypes: dataTypes, timestamp: timestamp, result: result)
                 break
             default:
-                result(FlutterMethodNotImplemented)
+                result(flutterMethodNotImplemented)
                 break
         }
     }
@@ -90,7 +90,7 @@ public class MyWebStorageManager: ChannelDelegate {
         plugin = nil
     }
     
-    deinit {
+    isolated deinit {
         dispose()
     }
 }

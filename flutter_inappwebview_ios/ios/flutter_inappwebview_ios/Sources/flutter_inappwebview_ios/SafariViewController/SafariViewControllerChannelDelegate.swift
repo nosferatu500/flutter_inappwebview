@@ -27,7 +27,7 @@ public class SafariViewControllerChannelDelegate: ChannelDelegate {
                 }
                 break
             default:
-                result(FlutterMethodNotImplemented)
+                result(flutterMethodNotImplemented)
                 break
         }
     }
@@ -75,7 +75,7 @@ public class SafariViewControllerChannelDelegate: ChannelDelegate {
         safariViewController = nil
     }
     
-    deinit {
+    isolated deinit {
         dispose()
     }
 }

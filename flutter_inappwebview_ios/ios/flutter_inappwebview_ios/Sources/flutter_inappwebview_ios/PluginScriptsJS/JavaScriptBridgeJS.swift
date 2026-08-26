@@ -7,7 +7,18 @@
 
 import Foundation
 
+/// `@MainActor` on the whole class: it owns the runtime-settable JS bridge name (see §42) and
+/// every member builds JS source around it, on the main thread, during WebView setup.
+@MainActor
 public class JavaScriptBridgeJS {
+    /// One of the seven genuinely-mutable statics `NEXT_SESSION_IOS.md` identified — Dart can rename
+    /// the whole JS bridge global at runtime through `InAppWebViewManager`'s method channel, so this
+    /// is not the constant its `SCREAMING_CASE` name suggests (see §42).
+    ///
+    /// `@MainActor` rather than a lock or an actor: the setter is reached only from a method-channel
+    /// handler, and every reader is building a JS source string on the main thread while configuring
+    /// a `WKUserContentController`. An actor would make all ~50 readers `await` in code paths that
+    /// are synchronous WebKit delegate callbacks and cannot await.
     private static var _JAVASCRIPT_BRIDGE_NAME = "flutter_inappwebview"
     public static func set_JAVASCRIPT_BRIDGE_NAME(bridgeName: String) {
         _JAVASCRIPT_BRIDGE_NAME = bridgeName

@@ -22,7 +22,14 @@ import Foundation
 import AVFoundation
 import SafariServices
 
-public class InAppWebViewFlutterPlugin: NSObject, FlutterPlugin {
+/// `@MainActor`, with an **isolated conformance** to `FlutterPlugin` (SE-0470).
+///
+/// `init(with:)` constructs every manager in the plugin — `PlatformUtil`, `InAppBrowserManager`,
+/// `InAppWebViewManager`, `MyCookieManager` and the rest — all of which are main-actor isolated
+/// because they descend from `FlutterMethodCallDelegate`. Flutter calls `register(with:)` on the
+/// platform thread during engine setup, so this is where the plugin has always run.
+@MainActor
+public class InAppWebViewFlutterPlugin: NSObject, @MainActor FlutterPlugin {
     
     var registrar: FlutterPluginRegistrar
     var platformUtil: PlatformUtil?

@@ -7,6 +7,9 @@
 
 import Foundation
 
+/// `@MainActor`: builds JS source that embeds the runtime-settable bridge name, and is only ever
+/// called while configuring a `WKUserContentController` on the main thread.
+@MainActor
 public class LastTouchedAnchorOrImageJS {
     
     public static let LAST_TOUCHED_ANCHOR_OR_IMAGE_JS_PLUGIN_SCRIPT_GROUP_NAME = "IN_APP_WEBVIEW_LAST_TOUCHED_ANCHOR_OR_IMAGE_JS_PLUGIN_SCRIPT"

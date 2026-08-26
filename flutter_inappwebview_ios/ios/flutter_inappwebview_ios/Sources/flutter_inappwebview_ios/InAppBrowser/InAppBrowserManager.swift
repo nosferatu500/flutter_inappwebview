@@ -38,7 +38,7 @@ public class InAppBrowserManager: ChannelDelegate {
                 openWithSystemBrowser(url: url, result: result)
                 break
             default:
-                result(FlutterMethodNotImplemented)
+                result(flutterMethodNotImplemented)
                 break
         }
     }
@@ -149,7 +149,7 @@ public class InAppBrowserManager: ChannelDelegate {
         plugin = nil
     }
     
-    deinit {
+    isolated deinit {
         dispose()
     }
 }

@@ -76,7 +76,7 @@ public class MyCookieManager: ChannelDelegate {
                 MyCookieManager.deleteAllCookies(result: result)
                 break
             default:
-                result(FlutterMethodNotImplemented)
+                result(flutterMethodNotImplemented)
                 break
         }
     }
@@ -288,7 +288,7 @@ public class MyCookieManager: ChannelDelegate {
         plugin = nil
     }
     
-    deinit {
+    isolated deinit {
         dispose()
     }
 }

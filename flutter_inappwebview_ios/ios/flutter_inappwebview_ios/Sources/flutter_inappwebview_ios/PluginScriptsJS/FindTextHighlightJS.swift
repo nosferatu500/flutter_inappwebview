@@ -7,6 +7,9 @@
 
 import Foundation
 
+/// `@MainActor`: builds JS source that embeds the runtime-settable bridge name, and is only ever
+/// called while configuring a `WKUserContentController` on the main thread.
+@MainActor
 public class FindTextHighlightJS {
     public static let FIND_TEXT_HIGHLIGHT_JS_PLUGIN_SCRIPT_GROUP_NAME = "IN_APP_WEBVIEW_FIND_TEXT_HIGHLIGHT_JS_PLUGIN_SCRIPT"
     public static func FIND_TEXT_HIGHLIGHT_SEARCH_RESULT_COUNT_JS_SOURCE() -> String {

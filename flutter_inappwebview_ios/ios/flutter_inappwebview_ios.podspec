@@ -23,7 +23,10 @@ inline webview, to use an headless webview, and to open an in-app browser window
 
   s.dependency 'swift-collections', '~>1.1.1'
 
-  s.swift_version = '5.9'
+  # Must stay in step with Package.swift's `.swiftLanguageMode(.v6)`. CocoaPods consumers get this
+  # value as SWIFT_VERSION; SPM consumers get the manifest. Updating only one leaves the plugin
+  # compiling under different language modes depending on how it was integrated.
+  s.swift_version = '6.0'
 
   s.platform = :ios, '15.0'
 end

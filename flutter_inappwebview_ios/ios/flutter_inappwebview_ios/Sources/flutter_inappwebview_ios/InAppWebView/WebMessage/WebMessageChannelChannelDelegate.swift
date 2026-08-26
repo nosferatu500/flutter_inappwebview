@@ -79,7 +79,7 @@ public class WebMessageChannelChannelDelegate: ChannelDelegate {
             }
             break
         default:
-            result(FlutterMethodNotImplemented)
+            result(flutterMethodNotImplemented)
             break
         }
     }
@@ -97,7 +97,7 @@ public class WebMessageChannelChannelDelegate: ChannelDelegate {
         webMessageChannel = nil
     }
     
-    deinit {
+    isolated deinit {
         dispose()
     }
 }

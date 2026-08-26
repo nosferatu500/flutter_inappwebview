@@ -7,6 +7,12 @@
 
 import Foundation
 
+/// `@MainActor` is what makes this class's `isolated deinit` free at the iOS 15.0 deployment target.
+/// On a *nonisolated* class `isolated deinit` needs a runtime hop onto the actor's executor, which
+/// is `@available(iOS 18.4)`; on a main-actor class the deinit is statically known to be on the main
+/// actor already, so no hop and no availability floor. Every port operation goes through
+/// `webMessageChannel.webView` anyway, so the isolation is a statement of fact.
+@MainActor
 public class WebMessagePort: NSObject {
     var name: String
     var index: Int64
@@ -140,7 +146,7 @@ public class WebMessagePort: NSObject {
         webMessageChannel = nil
     }
     
-    deinit {
+    isolated deinit {
         debugPrint("WebMessagePort - dealloc")
         dispose()
     }

@@ -8,6 +8,9 @@
 import Foundation
 import UIKit
 
+/// `@MainActor` because `perform()` reaches through the plugin to a `ChromeSafariBrowserManager`
+/// and calls a channel delegate — both main-actor isolated now.
+@MainActor
 class CustomUIActivity: UIActivity {
     var plugin: InAppWebViewFlutterPlugin
     var viewId: String

@@ -7,6 +7,9 @@
 
 import Foundation
 
+/// `@MainActor`: builds JS source that embeds the runtime-settable bridge name, and is only ever
+/// called while configuring a `WKUserContentController` on the main thread.
+@MainActor
 public class EnableViewportScaleJS {
     
     public static let ENABLE_VIEWPORT_SCALE_JS_PLUGIN_SCRIPT_GROUP_NAME = "IN_APP_WEBVIEW_ENABLE_VIEWPORT_SCALE_JS_PLUGIN_SCRIPT"

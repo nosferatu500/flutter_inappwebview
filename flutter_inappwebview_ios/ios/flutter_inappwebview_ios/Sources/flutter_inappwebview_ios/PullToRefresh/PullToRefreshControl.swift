@@ -65,7 +65,7 @@ public class PullToRefreshControl: UIRefreshControl, Disposable {
         plugin = nil
     }
     
-    deinit {
+    isolated deinit {
         debugPrint("PullToRefreshControl - dealloc")
         dispose()
     }

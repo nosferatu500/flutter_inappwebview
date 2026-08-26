@@ -34,7 +34,7 @@ public class HeadlessInAppWebViewManager: ChannelDelegate {
                 result(true)
                 break
             default:
-                result(FlutterMethodNotImplemented)
+                result(flutterMethodNotImplemented)
                 break
         }
     }
@@ -65,7 +65,7 @@ public class HeadlessInAppWebViewManager: ChannelDelegate {
         plugin = nil
     }
     
-    deinit {
+    isolated deinit {
         dispose()
     }
 }

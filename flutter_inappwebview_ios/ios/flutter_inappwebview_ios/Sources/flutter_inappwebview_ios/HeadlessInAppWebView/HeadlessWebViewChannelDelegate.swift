@@ -43,7 +43,7 @@ public class HeadlessWebViewChannelDelegate: ChannelDelegate {
             result(headlessWebView?.getSize()?.toMap())
             break
         default:
-            result(FlutterMethodNotImplemented)
+            result(flutterMethodNotImplemented)
             break
         }
     }
@@ -58,7 +58,7 @@ public class HeadlessWebViewChannelDelegate: ChannelDelegate {
         headlessWebView = nil
     }
     
-    deinit {
+    isolated deinit {
         dispose()
     }
 }

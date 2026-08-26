@@ -21,7 +21,7 @@ public class WebViewChannelDelegate: ChannelDelegate {
         let arguments = call.arguments as? NSDictionary
         
         guard let method = WebViewChannelDelegateMethods.init(rawValue: call.method) else {
-            result(FlutterMethodNotImplemented)
+            result(flutterMethodNotImplemented)
             return
         }
         
@@ -186,7 +186,7 @@ public class WebViewChannelDelegate: ChannelDelegate {
                     result(true)
                 }
             } else {
-                result(FlutterMethodNotImplemented)
+                result(flutterMethodNotImplemented)
             }
             break
         case .show:
@@ -195,7 +195,7 @@ public class WebViewChannelDelegate: ChannelDelegate {
                     result(true)
                 }
             } else {
-                result(FlutterMethodNotImplemented)
+                result(flutterMethodNotImplemented)
             }
             break
         case .hide:
@@ -204,14 +204,14 @@ public class WebViewChannelDelegate: ChannelDelegate {
                     result(true)
                 }
             } else {
-                result(FlutterMethodNotImplemented)
+                result(flutterMethodNotImplemented)
             }
             break
         case .isHidden:
             if let iabController = webView?.inAppBrowserDelegate as? InAppBrowserWebViewController {
                 result(iabController.isHidden)
             } else {
-                result(FlutterMethodNotImplemented)
+                result(flutterMethodNotImplemented)
             }
             break
         case .getCopyBackForwardList:
@@ -933,8 +933,14 @@ public class WebViewChannelDelegate: ChannelDelegate {
         }
         // workaround for ProtectionSpace.toMap() SSL Certificate
         // https://github.com/pichillilorenzo/flutter_inappwebview/issues/1678
+        // The two `nonisolated(unsafe)` rebindings keep this hop legal under Swift 6 without
+        // changing what it does. `callback` is created and consumed on the main actor and merely
+        // passes through the global-queue closure; `arguments` is a fresh dictionary nothing else
+        // holds. Swift 6 models both as sends out of a task-isolated context, which is why the
+        // diagnostic fires -- there is no second accessor for them to race with.
+        nonisolated(unsafe) let callback = callback
         DispatchQueue.global().async {
-            let arguments = challenge.toMap()
+            nonisolated(unsafe) let arguments = challenge.toMap()
             DispatchQueue.main.async { [weak self] in
                 if self?.channel == nil {
                     callback.defaultBehaviour(nil)
@@ -965,8 +971,14 @@ public class WebViewChannelDelegate: ChannelDelegate {
         }
         // workaround for ProtectionSpace.toMap() SSL Certificate
         // https://github.com/pichillilorenzo/flutter_inappwebview/issues/1678
+        // The two `nonisolated(unsafe)` rebindings keep this hop legal under Swift 6 without
+        // changing what it does. `callback` is created and consumed on the main actor and merely
+        // passes through the global-queue closure; `arguments` is a fresh dictionary nothing else
+        // holds. Swift 6 models both as sends out of a task-isolated context, which is why the
+        // diagnostic fires -- there is no second accessor for them to race with.
+        nonisolated(unsafe) let callback = callback
         DispatchQueue.global().async {
-            let arguments = challenge.toMap()
+            nonisolated(unsafe) let arguments = challenge.toMap()
             DispatchQueue.main.async { [weak self] in
                 if self?.channel == nil {
                     callback.defaultBehaviour(nil)
@@ -997,8 +1009,14 @@ public class WebViewChannelDelegate: ChannelDelegate {
         }
         // workaround for ProtectionSpace.toMap() SSL Certificate
         // https://github.com/pichillilorenzo/flutter_inappwebview/issues/1678
+        // The two `nonisolated(unsafe)` rebindings keep this hop legal under Swift 6 without
+        // changing what it does. `callback` is created and consumed on the main actor and merely
+        // passes through the global-queue closure; `arguments` is a fresh dictionary nothing else
+        // holds. Swift 6 models both as sends out of a task-isolated context, which is why the
+        // diagnostic fires -- there is no second accessor for them to race with.
+        nonisolated(unsafe) let callback = callback
         DispatchQueue.global().async {
-            let arguments = challenge.toMap()
+            nonisolated(unsafe) let arguments = challenge.toMap()
             DispatchQueue.main.async { [weak self] in
                 if self?.channel == nil {
                     callback.defaultBehaviour(nil)
@@ -1118,8 +1136,14 @@ public class WebViewChannelDelegate: ChannelDelegate {
         }
         // workaround for ProtectionSpace.toMap() SSL Certificate
         // https://github.com/pichillilorenzo/flutter_inappwebview/issues/1678
+        // The two `nonisolated(unsafe)` rebindings keep this hop legal under Swift 6 without
+        // changing what it does. `callback` is created and consumed on the main actor and merely
+        // passes through the global-queue closure; `arguments` is a fresh dictionary nothing else
+        // holds. Swift 6 models both as sends out of a task-isolated context, which is why the
+        // diagnostic fires -- there is no second accessor for them to race with.
+        nonisolated(unsafe) let callback = callback
         DispatchQueue.global().async {
-            let arguments = challenge.toMap()
+            nonisolated(unsafe) let arguments = challenge.toMap()
             DispatchQueue.main.async { [weak self] in
                 if self?.channel == nil {
                     callback.defaultBehaviour(nil)
@@ -1182,7 +1206,7 @@ public class WebViewChannelDelegate: ChannelDelegate {
         webView = nil
     }
     
-    deinit {
+    isolated deinit {
         debugPrint("WebViewChannelDelegate - dealloc")
         dispose()
     }

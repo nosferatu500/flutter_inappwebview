@@ -89,7 +89,7 @@ public class PullToRefreshChannelDelegate: ChannelDelegate {
             }
             break
         default:
-            result(FlutterMethodNotImplemented)
+            result(flutterMethodNotImplemented)
             break
         }
     }
@@ -104,7 +104,7 @@ public class PullToRefreshChannelDelegate: ChannelDelegate {
         pullToRefreshControl = nil
     }
     
-    deinit {
+    isolated deinit {
         dispose()
     }
 }

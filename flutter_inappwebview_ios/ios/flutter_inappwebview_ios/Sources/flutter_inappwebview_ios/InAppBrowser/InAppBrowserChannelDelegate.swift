@@ -30,7 +30,7 @@ public class InAppBrowserChannelDelegate: ChannelDelegate {
         channel?.invokeMethod("onExit", arguments: arguments)
     }
     
-    deinit {
+    isolated deinit {
         dispose()
     }
 }

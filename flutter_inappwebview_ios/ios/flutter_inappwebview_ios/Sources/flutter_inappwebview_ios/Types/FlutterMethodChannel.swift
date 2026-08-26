@@ -15,7 +15,7 @@ extension FlutterMethodChannel {
                 let error = result as! FlutterError
                 callback.error(error.code, error.message, error.details)
             }
-            else if (result as? NSObject) == FlutterMethodNotImplemented {
+            else if (result as? NSObject) == flutterMethodNotImplemented {
                 callback.notImplemented()
             }
             else {

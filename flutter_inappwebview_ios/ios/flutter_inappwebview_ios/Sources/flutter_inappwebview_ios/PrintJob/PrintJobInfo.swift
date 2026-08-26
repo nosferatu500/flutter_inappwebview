@@ -7,6 +7,9 @@
 
 import Foundation
 
+/// `@MainActor` for the same reason as `PrintAttributes`: it is a snapshot taken off a
+/// `PrintJobController`, reading `state`, `creationTime` and the UIKit print objects.
+@MainActor
 public class PrintJobInfo: NSObject {
     var state: PrintJobState
     var attributes: PrintAttributes

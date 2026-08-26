@@ -35,7 +35,7 @@ public class ProxyManager: ChannelDelegate {
             result(true)
             break
         default:
-            result(FlutterMethodNotImplemented)
+            result(flutterMethodNotImplemented)
             break
         }
     }
@@ -56,7 +56,7 @@ public class ProxyManager: ChannelDelegate {
         plugin = nil
     }
 
-    deinit {
+    isolated deinit {
         debugPrint("ProxyManager - dealloc")
         dispose()
     }

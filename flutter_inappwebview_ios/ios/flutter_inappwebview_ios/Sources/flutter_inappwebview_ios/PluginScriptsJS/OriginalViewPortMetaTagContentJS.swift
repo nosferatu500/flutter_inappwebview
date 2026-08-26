@@ -7,6 +7,9 @@
 
 import Foundation
 
+/// `@MainActor`: builds JS source that embeds the runtime-settable bridge name, and is only ever
+/// called while configuring a `WKUserContentController` on the main thread.
+@MainActor
 public class OriginalViewPortMetaTagContentJS {
     
     public static let ORIGINAL_VIEWPORT_METATAG_CONTENT_JS_PLUGIN_SCRIPT_GROUP_NAME = "IN_APP_WEBVIEW_ORIGINAL_VIEWPORT_METATAG_CONTENT_JS_PLUGIN_SCRIPT"

@@ -9,7 +9,7 @@ import Foundation
 import Flutter
 
 public class WebMessageChannel: FlutterMethodCallDelegate {
-    static var METHOD_CHANNEL_NAME_PREFIX = "dev.nosferatu500.inappwebview/inappwebview_web_message_channel_"
+    static let METHOD_CHANNEL_NAME_PREFIX = "dev.nosferatu500.inappwebview/inappwebview_web_message_channel_"
     var id: String
     var plugin: InAppWebViewFlutterPlugin?
     var channelDelegate: WebMessageChannelChannelDelegate?
@@ -71,7 +71,7 @@ public class WebMessageChannel: FlutterMethodCallDelegate {
         plugin = nil
     }
     
-    deinit {
+    isolated deinit {
         debugPrint("WebMessageChannel - dealloc")
         dispose()
     }

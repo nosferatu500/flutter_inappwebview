@@ -34,7 +34,7 @@ public class PlatformUtil: ChannelDelegate {
                 result(PlatformUtil.formatDate(date: date, format: format, locale: locale, timezone: timezone))
                 break
             default:
-                result(FlutterMethodNotImplemented)
+                result(flutterMethodNotImplemented)
                 break
         }
     }
@@ -63,7 +63,7 @@ public class PlatformUtil: ChannelDelegate {
         plugin = nil
     }
     
-    deinit {
+    isolated deinit {
         dispose()
     }
 }

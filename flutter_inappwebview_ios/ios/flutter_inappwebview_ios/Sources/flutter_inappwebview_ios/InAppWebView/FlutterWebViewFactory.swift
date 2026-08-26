@@ -8,7 +8,12 @@
 import Flutter
 import Foundation
 
-public class FlutterWebViewFactory: NSObject, FlutterPlatformViewFactory {
+/// `@MainActor` with an **isolated conformance** to Flutter's `FlutterPlatformViewFactory`
+/// (SE-0470): `create(withFrame:viewIdentifier:arguments:)` builds a `FlutterWebViewController`,
+/// touches `InAppWebViewManager.keepAliveWebViews` and calls `webView()` — all main-actor. Flutter
+/// creates platform views on the platform thread, so this was already true.
+@MainActor
+public class FlutterWebViewFactory: NSObject, @MainActor FlutterPlatformViewFactory {
     static let VIEW_TYPE_ID = "dev.nosferatu500.inappwebview/inappwebview"
     
     private var plugin: InAppWebViewFlutterPlugin

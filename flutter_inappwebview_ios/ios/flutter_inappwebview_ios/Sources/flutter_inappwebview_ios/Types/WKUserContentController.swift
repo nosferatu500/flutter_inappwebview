@@ -10,7 +10,7 @@ import WebKit
 import Collections
 
 extension WKUserContentController {
-    static var WINDOW_ID_PREFIX = "WINDOW-ID-"
+    static let WINDOW_ID_PREFIX = "WINDOW-ID-"
 
     // Workaround to create stored properties in an extension:
     // https://valv0.medium.com/computed-properties-and-extensions-a-pure-swift-approach-64733768112c

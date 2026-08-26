@@ -8,6 +8,10 @@
 import Foundation
 import UIKit
 
+/// `@MainActor` because its only initialiser reads `UIPrintInteractionController`,
+/// `UIPrintFormatter` and `UIPrintPageRenderer` off a `PrintJobController`, all of which are
+/// main-actor isolated. It is a snapshot of main-actor state, so it is built on the main actor.
+@MainActor
 public class PrintAttributes: NSObject {
     var orientation: UIPrintInfo.Orientation?
     var duplex: UIPrintInfo.Duplex?

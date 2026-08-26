@@ -45,7 +45,7 @@ public class PrintJobChannelDelegate: ChannelDelegate {
                 }
                 break
             default:
-                result(FlutterMethodNotImplemented)
+                result(flutterMethodNotImplemented)
                 break
         }
     }
@@ -63,7 +63,7 @@ public class PrintJobChannelDelegate: ChannelDelegate {
         printJobController = nil
     }
     
-    deinit {
+    isolated deinit {
         debugPrint("PrintJobChannelDelegate - dealloc")
         dispose()
     }

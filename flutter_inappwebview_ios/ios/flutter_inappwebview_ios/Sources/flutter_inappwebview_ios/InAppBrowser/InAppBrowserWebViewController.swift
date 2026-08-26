@@ -629,7 +629,7 @@ public class InAppBrowserWebViewController: UIViewController, InAppBrowserDelega
         plugin = nil
     }
     
-    deinit {
+    isolated deinit {
         debugPrint("InAppBrowserWebViewController - dealloc")
         dispose()
     }

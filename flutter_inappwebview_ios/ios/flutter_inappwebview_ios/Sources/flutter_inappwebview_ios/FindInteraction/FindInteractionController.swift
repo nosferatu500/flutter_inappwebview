@@ -153,7 +153,7 @@ public class FindInteractionController: NSObject, Disposable {
         plugin = nil
     }
     
-    deinit {
+    isolated deinit {
         debugPrint("FindInteractionControl - dealloc")
         dispose()
     }

@@ -94,7 +94,7 @@ public class WebAuthenticationSession: NSObject, ASWebAuthenticationPresentation
         plugin = nil
     }
     
-    deinit {
+    isolated deinit {
         debugPrint("WebAuthenticationSession - dealloc")
         dispose()
     }
