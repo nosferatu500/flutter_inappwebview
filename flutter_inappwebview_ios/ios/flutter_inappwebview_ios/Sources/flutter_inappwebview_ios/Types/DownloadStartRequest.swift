@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import WebKit
 
 public class DownloadStartRequest: NSObject {
     var url: String
@@ -15,7 +16,12 @@ public class DownloadStartRequest: NSObject {
     var contentLength: Int64
     var suggestedFilename: String?
     var textEncodingName: String?
-    
+    /// `nil` below iOS 18.2, where `WKDownload` does not report it — distinct from `false`, which
+    /// means WebKit actively said the download was not user-initiated.
+    var isUserInitiated: Bool?
+    /// `WKFrameInfo.toMap()` of `WKDownload.originatingFrame`, or `nil` below iOS 18.2.
+    var originatingFrame: [String: Any?]?
+
     public init(url: String, userAgent: String?, contentDisposition: String?,
                 mimeType: String?, contentLength: Int64,
                 suggestedFilename: String?, textEncodingName: String?) {
@@ -27,7 +33,20 @@ public class DownloadStartRequest: NSObject {
         self.suggestedFilename = suggestedFilename
         self.textEncodingName = textEncodingName
     }
-    
+
+    /// Fills in the iOS 18.2+ fields from the `WKDownload` that triggered the event.
+    ///
+    /// Deliberately a method on this type rather than inline at the call sites: `DownloadStartRequest`
+    /// is built in **two** places — `download(_:decideDestinationUsing:suggestedFilename:...)` and
+    /// `webView(_:navigationResponse:didBecome:)` — and a field populated in only one of them is a
+    /// silent hole, not a compile error. One implementation means the two cannot drift.
+    @available(iOS 18.2, *)
+    @MainActor
+    public func apply(download: WKDownload) {
+        isUserInitiated = download.isUserInitiated
+        originatingFrame = download.originatingFrame.toMap()
+    }
+
     public func toMap () -> [String:Any?] {
         return [
             "url": url,
@@ -36,7 +55,9 @@ public class DownloadStartRequest: NSObject {
             "mimeType": mimeType,
             "contentLength": contentLength,
             "suggestedFilename": suggestedFilename,
-            "textEncodingName": textEncodingName
+            "textEncodingName": textEncodingName,
+            "isUserInitiated": isUserInitiated,
+            "originatingFrame": originatingFrame
         ]
     }
 }

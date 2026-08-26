@@ -1894,6 +1894,9 @@ public class InAppWebView: WKWebView, UIScrollViewDelegate, WKUIDelegate,
                                                             contentLength: response.expectedContentLength,
                                                             suggestedFilename: suggestedFilename,
                                                             textEncodingName: response.textEncodingName)
+            if #available(iOS 18.2, *) {
+                downloadStartRequest.apply(download: download)
+            }
             channelDelegate?.onDownloadStarting(request: downloadStartRequest)
         }
         download.delegate = nil
@@ -1911,6 +1914,9 @@ public class InAppWebView: WKWebView, UIScrollViewDelegate, WKUIDelegate,
                                                             contentLength: response.expectedContentLength,
                                                             suggestedFilename: response.suggestedFilename,
                                                             textEncodingName: response.textEncodingName)
+            if #available(iOS 18.2, *) {
+                downloadStartRequest.apply(download: download)
+            }
             channelDelegate?.onDownloadStarting(request: downloadStartRequest)
         }
         download.delegate = nil
@@ -1997,6 +2003,12 @@ public class InAppWebView: WKWebView, UIScrollViewDelegate, WKUIDelegate,
                 let mimeType = navigationResponse.response.mimeType
                 if let url = navigationResponse.response.url, navigationResponse.isForMainFrame {
                     if url.scheme != "file", mimeType != nil, !mimeType!.starts(with: "text/") {
+                        // NOTE: `isUserInitiated` / `originatingFrame` are deliberately left nil
+                        // here, and cannot be filled. This is the third producer of
+                        // `onDownloadStarting` and the only one with no `WKDownload`: the plugin
+                        // *synthesises* the event from the navigation response and then cancels,
+                        // before WebKit ever creates a download object. So those two fields are
+                        // nil on this path even on iOS 18.2+ — documented on the Dart fields.
                         let downloadStartRequest = DownloadStartRequest(url: url.absoluteString,
                                                                         userAgent: nil,
                                                                         contentDisposition: nil,
