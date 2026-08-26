@@ -236,6 +236,24 @@ class AndroidCookieManager extends PlatformCookieManager
   }
 
   @override
+  Future<bool> setAcceptCookie(bool accept, {String? profileName}) async {
+    Map<String, dynamic> args = <String, dynamic>{};
+    args.putIfAbsent('profileName', () => profileName);
+    args.putIfAbsent('accept', () => accept);
+    return await channel?.invokeMethod<bool>('setAcceptCookie', args) ?? false;
+  }
+
+  @override
+  Future<bool?> isAcceptCookieEnabled({String? profileName}) async {
+    Map<String, dynamic> args = <String, dynamic>{};
+    args.putIfAbsent('profileName', () => profileName);
+    // No `?? false` here, unlike every other method on this class: the Kotlin side sends null
+    // when it cannot resolve the cookie store, and the platform default is `true`, so defaulting
+    // to false would report the opposite of the truth.
+    return await channel?.invokeMethod<bool>('isAcceptCookieEnabled', args);
+  }
+
+  @override
   Future<void> flush({String? profileName}) async {
     Map<String, dynamic> args = <String, dynamic>{};
     args.putIfAbsent('profileName', () => profileName);

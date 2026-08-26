@@ -691,6 +691,77 @@ In this case, this method will return always `true`.""",
     );
   }
 
+  ///{@template flutter_inappwebview_platform_interface.PlatformCookieManager.setAcceptCookie}
+  ///Sets whether the cookie store accepts cookies at all.
+  ///
+  ///This is the master switch, and it is coarser than everything else on this class: with
+  ///[accept] set to `false` the WebView stops storing *any* cookie, first-party included, and
+  ///stops sending stored ones. It is not a privacy filter — [setAcceptThirdPartyCookies] on the
+  ///WebView is the narrower tool for that.
+  ///
+  ///Turning it off does **not** delete what is already stored. Existing cookies stay in the
+  ///store, are not sent while acceptance is off, and become visible again as soon as it is turned
+  ///back on. Use [deleteAllCookies] to actually remove them.
+  ///
+  ///Cookies the app writes through [setCookie] are subject to this switch too, so a `setCookie`
+  ///that reports success while acceptance is off still stores nothing.
+  ///
+  ///The return value indicates whether the switch was applied, not what it was set to. It is
+  ///`false` only when the cookie store could not be resolved — see the `profileName` contract in
+  ///the class documentation.
+  ///
+  ///Read the current state with [isAcceptCookieEnabled].
+  ///{@endtemplate}
+  ///
+  ///{@macro flutter_inappwebview_platform_interface.PlatformCookieManager.setAcceptCookie.supported_platforms}
+  @SupportedPlatforms(
+    platforms: [
+      AndroidPlatform(
+        apiName: 'CookieManager.setAcceptCookie',
+        apiUrl:
+            'https://developer.android.com/reference/android/webkit/CookieManager#setAcceptCookie(boolean)',
+        note:
+            'The switch is process-wide for the default cookie store, so it affects every WebView in the app, not just one.',
+      ),
+    ],
+  )
+  Future<bool> setAcceptCookie(
+    bool accept, {
+    @SupportedPlatforms(platforms: [AndroidPlatform()]) String? profileName,
+  }) {
+    throw UnimplementedError(
+      '${PlatformCookieManagerMethod.setAcceptCookie.name} is not implemented on the current platform',
+    );
+  }
+
+  ///{@template flutter_inappwebview_platform_interface.PlatformCookieManager.isAcceptCookieEnabled}
+  ///Returns whether the cookie store currently accepts cookies, as last set by
+  ///[setAcceptCookie].
+  ///
+  ///The platform default is `true`, which is why this returns `bool?` rather than `bool`:
+  ///`null` means the cookie store could not be resolved — no WebView provider is installed, or a
+  ///`profileName` was given that does not exist — and reporting `false` there would claim cookies
+  ///are being rejected when in fact nothing was measured, the opposite of the platform default.
+  ///{@endtemplate}
+  ///
+  ///{@macro flutter_inappwebview_platform_interface.PlatformCookieManager.isAcceptCookieEnabled.supported_platforms}
+  @SupportedPlatforms(
+    platforms: [
+      AndroidPlatform(
+        apiName: 'CookieManager.acceptCookie',
+        apiUrl:
+            'https://developer.android.com/reference/android/webkit/CookieManager#acceptCookie()',
+      ),
+    ],
+  )
+  Future<bool?> isAcceptCookieEnabled({
+    @SupportedPlatforms(platforms: [AndroidPlatform()]) String? profileName,
+  }) {
+    throw UnimplementedError(
+      '${PlatformCookieManagerMethod.isAcceptCookieEnabled.name} is not implemented on the current platform',
+    );
+  }
+
   ///{@macro flutter_inappwebview_platform_interface.PlatformCookieManagerCreationParams.isClassSupported}
   bool isClassSupported({TargetPlatform? platform}) =>
       params.isClassSupported(platform: platform);

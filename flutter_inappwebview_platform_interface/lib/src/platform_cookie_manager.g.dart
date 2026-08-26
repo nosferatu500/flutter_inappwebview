@@ -274,6 +274,21 @@ enum PlatformCookieManagerMethod {
   ///{@endtemplate}
   getCookies,
 
+  ///Can be used to check if the [PlatformCookieManager.isAcceptCookieEnabled] method is supported at runtime.
+  ///
+  ///{@template flutter_inappwebview_platform_interface.PlatformCookieManager.isAcceptCookieEnabled.supported_platforms}
+  ///
+  ///**Officially Supported Platforms/Implementations**:
+  ///- Android WebView ([Official API - CookieManager.acceptCookie](https://developer.android.com/reference/android/webkit/CookieManager#acceptCookie()))
+  ///
+  ///**Parameters - Officially Supported Platforms/Implementations**:
+  ///- [profileName]:
+  ///    - Android WebView
+  ///
+  ///Use the [PlatformCookieManager.isMethodSupported] method to check if this method is supported at runtime.
+  ///{@endtemplate}
+  isAcceptCookieEnabled,
+
   ///Can be used to check if the [PlatformCookieManager.removeSessionCookies] method is supported at runtime.
   ///
   ///{@template flutter_inappwebview_platform_interface.PlatformCookieManager.removeSessionCookies.supported_platforms}
@@ -288,6 +303,23 @@ enum PlatformCookieManagerMethod {
   ///Use the [PlatformCookieManager.isMethodSupported] method to check if this method is supported at runtime.
   ///{@endtemplate}
   removeSessionCookies,
+
+  ///Can be used to check if the [PlatformCookieManager.setAcceptCookie] method is supported at runtime.
+  ///
+  ///{@template flutter_inappwebview_platform_interface.PlatformCookieManager.setAcceptCookie.supported_platforms}
+  ///
+  ///**Officially Supported Platforms/Implementations**:
+  ///- Android WebView ([Official API - CookieManager.setAcceptCookie](https://developer.android.com/reference/android/webkit/CookieManager#setAcceptCookie(boolean))):
+  ///    - The switch is process-wide for the default cookie store, so it affects every WebView in the app, not just one.
+  ///
+  ///**Parameters - Officially Supported Platforms/Implementations**:
+  ///- [accept]: all platforms
+  ///- [profileName]:
+  ///    - Android WebView
+  ///
+  ///Use the [PlatformCookieManager.isMethodSupported] method to check if this method is supported at runtime.
+  ///{@endtemplate}
+  setAcceptCookie,
 
   ///Can be used to check if the [PlatformCookieManager.setCookie] method is supported at runtime.
   ///
@@ -400,7 +432,17 @@ extension _PlatformCookieManagerMethodSupported on PlatformCookieManager {
                     TargetPlatform.windows,
                     TargetPlatform.linux,
                   ].contains(platform ?? defaultTargetPlatform);
+      case PlatformCookieManagerMethod.isAcceptCookieEnabled:
+        return ((kIsWeb && platform != null) || !kIsWeb) &&
+            [
+              TargetPlatform.android,
+            ].contains(platform ?? defaultTargetPlatform);
       case PlatformCookieManagerMethod.removeSessionCookies:
+        return ((kIsWeb && platform != null) || !kIsWeb) &&
+            [
+              TargetPlatform.android,
+            ].contains(platform ?? defaultTargetPlatform);
+      case PlatformCookieManagerMethod.setAcceptCookie:
         return ((kIsWeb && platform != null) || !kIsWeb) &&
             [
               TargetPlatform.android,

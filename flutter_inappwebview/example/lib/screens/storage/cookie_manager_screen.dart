@@ -35,6 +35,11 @@ class _CookieManagerScreenState extends State<CookieManagerScreen> {
   // Search state
   String _searchQuery = '';
 
+  // The master switch is a toggle rather than a one-way button on purpose: turning cookie
+  // acceptance off and leaving no way back would break every other method on this screen.
+  // Seeded with the platform default rather than read at startup, which would cost a channel call.
+  bool _acceptCookie = true;
+
   final Map<String, List<MethodResultEntry>> _methodHistory = {};
   final Map<String, int> _selectedHistoryIndex = {};
   static const int _maxHistoryEntries = 3;
@@ -528,6 +533,56 @@ class _CookieManagerScreenState extends State<CookieManagerScreen> {
     }
   }
 
+  Future<void> _toggleAcceptCookie() async {
+    final accept = !_acceptCookie;
+    setState(() => _isLoading = true);
+    try {
+      final result = await _cookieManager.setAcceptCookie(accept);
+      if (result) {
+        _acceptCookie = accept;
+      }
+      _recordMethodResult(
+        PlatformCookieManagerMethod.setAcceptCookie.name,
+        result
+            ? 'Cookie acceptance turned ${accept ? 'on' : 'off'}'
+            : 'Could not apply it -- the cookie store was not resolvable',
+        isError: !result,
+      );
+    } catch (e) {
+      _recordMethodResult(
+        PlatformCookieManagerMethod.setAcceptCookie.name,
+        'Error setting cookie acceptance: $e',
+        isError: true,
+      );
+    } finally {
+      setState(() => _isLoading = false);
+    }
+  }
+
+  Future<void> _isAcceptCookieEnabled() async {
+    setState(() => _isLoading = true);
+    try {
+      final result = await _cookieManager.isAcceptCookieEnabled();
+      _recordMethodResult(
+        PlatformCookieManagerMethod.isAcceptCookieEnabled.name,
+        // null is not "off" -- it means the store could not be read at all.
+        result == null
+            ? 'Unknown -- the cookie store was not resolvable'
+            : 'Cookies are ${result ? 'accepted' : 'rejected'}',
+        isError: result == null,
+        value: result,
+      );
+    } catch (e) {
+      _recordMethodResult(
+        PlatformCookieManagerMethod.isAcceptCookieEnabled.name,
+        'Error reading cookie acceptance: $e',
+        isError: true,
+      );
+    } finally {
+      setState(() => _isLoading = false);
+    }
+  }
+
   void _recordMethodResult(
     String methodName,
     String message, {
@@ -702,6 +757,18 @@ class _CookieManagerScreenState extends State<CookieManagerScreen> {
                   PlatformCookieManagerMethod.flush,
                   'Flush cookies to persistent storage',
                   _flush,
+                ),
+                _buildMethodSection(
+                  PlatformCookieManagerMethod.setAcceptCookie,
+                  _acceptCookie
+                      ? 'Stop accepting cookies (master switch; deletes nothing)'
+                      : 'Start accepting cookies again (master switch)',
+                  _toggleAcceptCookie,
+                ),
+                _buildMethodSection(
+                  PlatformCookieManagerMethod.isAcceptCookieEnabled,
+                  'Read whether cookies are being accepted',
+                  _isAcceptCookieEnabled,
                 ),
                 const SizedBox(height: 16),
                 _buildCookiesList(),

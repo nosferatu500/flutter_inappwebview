@@ -63,6 +63,10 @@ class MyCookieManager(plugin: InAppWebViewFlutterPlugin) :
 
       "flush" -> flush(profileName, result)
 
+      "setAcceptCookie" -> setAcceptCookie(call.argument("accept"), profileName, result)
+
+      "isAcceptCookieEnabled" -> isAcceptCookieEnabled(profileName, result)
+
       else -> result.notImplemented()
     }
   }
@@ -267,6 +271,39 @@ class MyCookieManager(plugin: InAppWebViewFlutterPlugin) :
       return
     }
     manager.flush()
+  }
+
+  /**
+   * The cookie master switch. Unlike every other write here there is nothing to flush: acceptance
+   * is a runtime property of the CookieManager, not stored cookie data, and calling `flush()`
+   * afterwards would only write out unrelated pending cookies.
+   *
+   * Reports false rather than throwing when the store cannot be resolved, matching the other
+   * write paths on this class.
+   */
+  fun setAcceptCookie(accept: Boolean?, profileName: String?, result: MethodChannel.Result) {
+    val manager = getCookieManager(profileName)
+    if (manager == null || accept == null) {
+      result.success(false)
+      return
+    }
+
+    manager.setAcceptCookie(accept)
+    result.success(true)
+  }
+
+  /**
+   * Sends null -- not false -- when the store cannot be resolved. The platform default is `true`,
+   * so false would tell the caller cookies are being rejected when nothing was actually read.
+   */
+  fun isAcceptCookieEnabled(profileName: String?, result: MethodChannel.Result) {
+    val manager = getCookieManager(profileName)
+    if (manager == null) {
+      result.success(null)
+      return
+    }
+
+    result.success(manager.acceptCookie())
   }
 
   override fun dispose() {

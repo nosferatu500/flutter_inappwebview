@@ -167,6 +167,18 @@ class CookieManager {
   Future<void> flush({String? profileName}) =>
       platform.flush(profileName: profileName);
 
+  ///{@macro flutter_inappwebview_platform_interface.PlatformCookieManager.setAcceptCookie}
+  ///
+  ///{@macro flutter_inappwebview_platform_interface.PlatformCookieManager.setAcceptCookie.supported_platforms}
+  Future<bool> setAcceptCookie(bool accept, {String? profileName}) =>
+      platform.setAcceptCookie(accept, profileName: profileName);
+
+  ///{@macro flutter_inappwebview_platform_interface.PlatformCookieManager.isAcceptCookieEnabled}
+  ///
+  ///{@macro flutter_inappwebview_platform_interface.PlatformCookieManager.isAcceptCookieEnabled.supported_platforms}
+  Future<bool?> isAcceptCookieEnabled({String? profileName}) =>
+      platform.isAcceptCookieEnabled(profileName: profileName);
+
   ///{@macro flutter_inappwebview_platform_interface.PlatformCookieManagerCreationParams.isClassSupported}
   static bool isClassSupported({TargetPlatform? platform}) =>
       PlatformCookieManager.static().isClassSupported(platform: platform);
