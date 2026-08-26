@@ -2091,6 +2091,46 @@ abstract class PlatformInAppWebViewController extends PlatformInterface
     );
   }
 
+  ///{@template flutter_inappwebview_platform_interface.PlatformInAppWebViewController.postVisualStateCallback}
+  ///Completes once the DOM **as it exists at the moment of this call** has been drawn to the
+  ///screen.
+  ///
+  ///This is the "do not reveal it until it is actually painted" primitive: load or mutate content
+  ///while the WebView is hidden, `await` this, and only then show it — which avoids the blank or
+  ///half-drawn frame that showing it on [PlatformWebViewCreationParams.onLoadStop] can produce.
+  ///
+  ///It is **not** [PlatformWebViewCreationParams.onPageCommitVisible], which the plugin also
+  ///reports. That event is engine-driven and fires once per navigation, at the first paint after a
+  ///commit. This is caller-driven and answers about *now*, so it can be used after a DOM change
+  ///that involved no navigation at all.
+  ///
+  ///Later DOM changes are not covered — the guarantee is about the state captured when the call was
+  ///made, not about anything drawn afterwards.
+  ///
+  ///**It can fail to complete.** The platform never invokes the callback if the WebView is
+  ///destroyed first, and there is no native timeout, so a caller that must not block forever should
+  ///apply its own with `Future.timeout`. The plugin deliberately does not impose one, because any
+  ///value it picked would be wrong for a page heavy enough to matter.
+  ///{@endtemplate}
+  ///
+  ///{@macro flutter_inappwebview_platform_interface.PlatformInAppWebViewController.postVisualStateCallback.supported_platforms}
+  @SupportedPlatforms(
+    platforms: [
+      AndroidPlatform(
+        apiName: 'WebView.postVisualStateCallback',
+        apiUrl:
+            'https://developer.android.com/reference/android/webkit/WebView#postVisualStateCallback(long,%20android.webkit.WebView.VisualStateCallback)',
+        note:
+            'The platform takes a `requestId` to correlate its callback; this API omits it because the returned `Future` already correlates the reply with the call.',
+      ),
+    ],
+  )
+  Future<void> postVisualStateCallback() {
+    throw UnimplementedError(
+      '${PlatformInAppWebViewControllerMethod.postVisualStateCallback.name} is not implemented on the current platform',
+    );
+  }
+
   ///{@template flutter_inappwebview_platform_interface.PlatformInAppWebViewController.hideInputMethod}
   ///Request to hide the soft input view from the context of the view that is currently accepting input.
   ///{@endtemplate}

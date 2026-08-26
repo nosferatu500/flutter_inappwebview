@@ -26,6 +26,7 @@ part 'content_blocker.dart';
 part 'create_pdf.dart';
 part 'get_certificate.dart';
 part 'get_content_height.dart';
+part 'post_visual_state_callback.dart';
 part 'get_current_web_view_package.dart';
 part 'get_default_user_agent.dart';
 part 'get_favicons.dart';
@@ -175,6 +176,7 @@ void main() {
     pauseResumeTimers();
     printCurrentPage();
     getContentHeight();
+    postVisualStateCallback();
     clearFocus();
     requestFocusNodeHref();
     requestImageRef();

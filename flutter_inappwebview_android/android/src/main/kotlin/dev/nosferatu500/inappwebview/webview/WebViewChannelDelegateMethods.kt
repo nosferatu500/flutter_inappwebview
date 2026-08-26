@@ -78,4 +78,5 @@ enum class WebViewChannelDelegateMethods {
   setAudioMuted,
   isAudioMuted,
   prerenderUrl,
+  postVisualStateCallback,
 }

@@ -1644,6 +1644,18 @@ enum PlatformInAppWebViewControllerMethod {
   ///{@endtemplate}
   postUrl,
 
+  ///Can be used to check if the [PlatformInAppWebViewController.postVisualStateCallback] method is supported at runtime.
+  ///
+  ///{@template flutter_inappwebview_platform_interface.PlatformInAppWebViewController.postVisualStateCallback.supported_platforms}
+  ///
+  ///**Officially Supported Platforms/Implementations**:
+  ///- Android WebView ([Official API - WebView.postVisualStateCallback](https://developer.android.com/reference/android/webkit/WebView#postVisualStateCallback(long,%20android.webkit.WebView.VisualStateCallback))):
+  ///    - The platform takes a `requestId` to correlate its callback; this API omits it because the returned `Future` already correlates the reply with the call.
+  ///
+  ///Use the [PlatformInAppWebViewController.isMethodSupported] method to check if this method is supported at runtime.
+  ///{@endtemplate}
+  postVisualStateCallback,
+
   ///Can be used to check if the [PlatformInAppWebViewController.postWebMessage] method is supported at runtime.
   ///
   ///{@template flutter_inappwebview_platform_interface.PlatformInAppWebViewController.postWebMessage.supported_platforms}
@@ -3205,6 +3217,11 @@ extension _PlatformInAppWebViewControllerMethodSupported
                     TargetPlatform.windows,
                     TargetPlatform.linux,
                   ].contains(platform ?? defaultTargetPlatform);
+      case PlatformInAppWebViewControllerMethod.postVisualStateCallback:
+        return ((kIsWeb && platform != null) || !kIsWeb) &&
+            [
+              TargetPlatform.android,
+            ].contains(platform ?? defaultTargetPlatform);
       case PlatformInAppWebViewControllerMethod.postWebMessage:
         return ((kIsWeb && platform != null) || !kIsWeb) &&
             [

@@ -2539,6 +2539,14 @@ class AndroidInAppWebViewController extends PlatformInAppWebViewController
   }
 
   @override
+  Future<void> postVisualStateCallback() async {
+    Map<String, dynamic> args = <String, dynamic>{};
+    // The native requestId is not exposed: this Future is the correlation, and the Kotlin side
+    // supplies an id of its own purely so a logcat trace can tell requests apart.
+    return await channel?.invokeMethod('postVisualStateCallback', args);
+  }
+
+  @override
   Future<bool> pageDown({required bool bottom}) async {
     Map<String, dynamic> args = <String, dynamic>{};
     args.putIfAbsent("bottom", () => bottom);

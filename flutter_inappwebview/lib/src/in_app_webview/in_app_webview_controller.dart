@@ -573,6 +573,11 @@ class InAppWebViewController {
   ///{@macro flutter_inappwebview_platform_interface.PlatformInAppWebViewController.resume.supported_platforms}
   Future<void> resume() => platform.resume();
 
+  ///{@macro flutter_inappwebview_platform_interface.PlatformInAppWebViewController.postVisualStateCallback}
+  ///
+  ///{@macro flutter_inappwebview_platform_interface.PlatformInAppWebViewController.postVisualStateCallback.supported_platforms}
+  Future<void> postVisualStateCallback() => platform.postVisualStateCallback();
+
   ///{@macro flutter_inappwebview_platform_interface.PlatformInAppWebViewController.pageDown}
   ///
   ///{@macro flutter_inappwebview_platform_interface.PlatformInAppWebViewController.pageDown.supported_platforms}

@@ -62,6 +62,13 @@ class WebViewChannelDelegate(webView: InAppWebView, channel: MethodChannel) :
 
   private var webView: InAppWebView? = webView
 
+  /**
+   * Only ever passed to `WebView.postVisualStateCallback` and echoed back to us unread: the channel
+   * reply correlates the request, so this exists purely to make concurrent requests distinguishable
+   * in a logcat trace. Not thread-safe by design -- every channel call arrives on the main thread.
+   */
+  private var nextVisualStateRequestId = 1L
+
   override fun onMethodCall(call: MethodCall, result: MethodChannel.Result) {
     val method = try {
       WebViewChannelDelegateMethods.valueOf(call.method)
@@ -625,6 +632,29 @@ class WebViewChannelDelegate(webView: InAppWebView, channel: MethodChannel) :
 
       WebViewChannelDelegateMethods.prerenderUrl ->
         result.success(webView?.prerenderUrl(call.argument<String>("url")!!) == true)
+
+      // The reply is deliberately deferred until the frame is on screen -- that IS the feature.
+      // `VisualStateCallback` is an abstract *class*, not an interface, so Kotlin cannot SAM-convert
+      // a lambda here and the object expression is required.
+      //
+      // Every path replies exactly once: the platform invokes onComplete at most once per request,
+      // and the null-webView branch answers immediately. The one case with no reply is a WebView
+      // destroyed before the frame lands, which the platform documents as "callback not invoked" and
+      // which the Dart doc tells callers to guard with Future.timeout.
+      WebViewChannelDelegateMethods.postVisualStateCallback -> {
+        if (webView != null) {
+          webView.postVisualStateCallback(
+            nextVisualStateRequestId++,
+            object : WebView.VisualStateCallback() {
+              override fun onComplete(requestId: Long) {
+                result.success(null)
+              }
+            }
+          )
+        } else {
+          result.success(null)
+        }
+      }
 
       WebViewChannelDelegateMethods.saveState -> result.success(webView?.saveState())
 

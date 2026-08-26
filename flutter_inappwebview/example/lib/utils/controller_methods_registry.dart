@@ -784,6 +784,19 @@ class ControllerMethodsRegistry {
             return await controller.getContentWidth();
           },
         ),
+        ControllerMethodEntry(
+          description: 'Waits until the current DOM has been painted',
+          methodEnum:
+              PlatformInAppWebViewControllerMethod.postVisualStateCallback,
+          execute: (controller, params) async {
+            // The platform never fires the callback if the WebView is destroyed first and offers
+            // no timeout of its own, so the demo bounds it rather than hanging the screen.
+            await controller.postVisualStateCallback().timeout(
+              const Duration(seconds: 15),
+            );
+            return 'the current DOM has been drawn';
+          },
+        ),
       ],
     );
   }
