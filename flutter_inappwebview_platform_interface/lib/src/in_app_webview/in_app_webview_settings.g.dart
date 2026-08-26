@@ -1896,8 +1896,16 @@ class InAppWebViewSettings {
   ///it will be automatically inferred as `true`, otherwise, the default value is `false`.
   ///This logic will not be applied for [PlatformInAppBrowser], where you must set the value manually.
   ///
+  ///**NOTE for iOS**: this setting decides whether the WebView keeps WebKit's own file picker or
+  ///hands selection to Dart, and there is no middle ground. While it is `false` the WebView shows
+  ///the same picker Safari does; while it is `true` the picker is entirely your
+  ///[PlatformWebViewCreationParams.onShowFileChooser] handler's responsibility, and a response with
+  ///`handledByClient: false` cancels the upload rather than falling back.
+  ///
   ///**Officially Supported Platforms/Implementations**:
   ///- Android WebView
+  ///- iOS WKWebView 18.4+:
+  ///    - While `false`, the WebView keeps WebKit's built-in file picker. Setting it `true` replaces that picker entirely with the [PlatformWebViewCreationParams.onShowFileChooser] event.
   bool? useOnShowFileChooser;
 
   ///Set to `true` to be able to listen at the [PlatformWebViewCreationParams.shouldInterceptAjaxRequest] event.
@@ -5290,6 +5298,8 @@ enum InAppWebViewSettingsProperty {
   ///
   ///**Officially Supported Platforms/Implementations**:
   ///- Android WebView
+  ///- iOS WKWebView 18.4+:
+  ///    - While `false`, the WebView keeps WebKit's built-in file picker. Setting it `true` replaces that picker entirely with the [PlatformWebViewCreationParams.onShowFileChooser] event.
   ///
   ///Use the [InAppWebViewSettings.isPropertySupported] method to check if this property is supported at runtime.
   ///{@endtemplate}
@@ -6427,6 +6437,7 @@ extension _InAppWebViewSettingsPropertySupported on InAppWebViewSettings {
         return ((kIsWeb && platform != null) || !kIsWeb) &&
             [
               TargetPlatform.android,
+              TargetPlatform.iOS,
             ].contains(platform ?? defaultTargetPlatform);
       case InAppWebViewSettingsProperty.useShouldInterceptAjaxRequest:
         return ((kIsWeb && platform != null) || !kIsWeb) &&

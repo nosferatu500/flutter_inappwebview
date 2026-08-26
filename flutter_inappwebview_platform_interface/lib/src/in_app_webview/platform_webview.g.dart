@@ -1059,6 +1059,8 @@ enum PlatformWebViewCreationParamsProperty {
   ///
   ///**Officially Supported Platforms/Implementations**:
   ///- Android WebView ([Official API - WebChromeClient.onShowFileChooser](https://developer.android.com/reference/android/webkit/WebChromeClient#onShowFileChooser(android.webkit.WebView,%20android.webkit.ValueCallback%3Candroid.net.Uri[]%3E,%20android.webkit.WebChromeClient.FileChooserParams)))
+  ///- iOS WKWebView 18.4+ ([Official API - WKUIDelegate.webView(_:runOpenPanelWith:initiatedByFrame:completionHandler:)](https://developer.apple.com/documentation/webkit/wkuidelegate/webview(_:runopenpanelwith:initiatedbyframe:completionhandler:))):
+  ///    - Requires [InAppWebViewSettings.useOnShowFileChooser] to be `true`. Returning `handledByClient: false` cancels the request instead of falling back to a default picker.
   ///- Linux WPE WebKit ([Official API - WebKitWebView::run-file-chooser](https://webkitgtk.org/reference/webkit2gtk/stable/signal.WebView.run-file-chooser.html))
   ///
   ///**Parameters - Officially Supported Platforms/Implementations**:
@@ -1784,6 +1786,7 @@ extension _PlatformWebViewCreationParamsPropertySupported
         return ((kIsWeb && platform != null) || !kIsWeb) &&
             [
               TargetPlatform.android,
+              TargetPlatform.iOS,
               TargetPlatform.linux,
             ].contains(platform ?? defaultTargetPlatform);
       case PlatformWebViewCreationParamsProperty.onTitleChanged:

@@ -2144,6 +2144,21 @@ In that case, after the `window.addEventListener("flutterInAppWebViewPlatformRea
   ///In case the file(s) are chosen through an untrusted source such as a third-party app,
   ///it is your own app's responsibility to check what the returned Uris refer
   ///to.
+  ///
+  ///**NOTE for iOS**: available on iOS 18.4+ and it behaves differently from Android in two ways
+  ///that matter.
+  ///
+  ///First, returning a [ShowFileChooserResponse] with [ShowFileChooserResponse.handledByClient]
+  ///set to `false` **cancels** the request. On Android it falls through to the plugin's own file
+  ///picker, but on iOS there is nothing to fall back to: `WKUIDelegate`'s open-panel method is
+  ///all-or-nothing, and by the time this event fires WebKit has already declined to show its own
+  ///picker. If you set [InAppWebViewSettings.useOnShowFileChooser] you are taking over file
+  ///selection completely.
+  ///
+  ///Second, [ShowFileChooserRequest.acceptTypes], [ShowFileChooserRequest.isCaptureEnabled],
+  ///[ShowFileChooserRequest.title] and [ShowFileChooserRequest.filenameHint] are always empty,
+  ///`false` and `null`. `WKOpenPanelParameters` does not expose the `accept` attribute of the
+  ///`<input type="file">` element, so filtering by MIME type is not possible on iOS.
   ///{@endtemplate}
   ///
   ///{@macro flutter_inappwebview_platform_interface.PlatformWebViewCreationParams.onShowFileChooser.supported_platforms}
@@ -2153,6 +2168,15 @@ In that case, after the `window.addEventListener("flutterInAppWebViewPlatformRea
         apiName: 'WebChromeClient.onShowFileChooser',
         apiUrl:
             'https://developer.android.com/reference/android/webkit/WebChromeClient#onShowFileChooser(android.webkit.WebView,%20android.webkit.ValueCallback%3Candroid.net.Uri[]%3E,%20android.webkit.WebChromeClient.FileChooserParams)',
+      ),
+      IOSPlatform(
+        available: "18.4",
+        apiName:
+            'WKUIDelegate.webView(_:runOpenPanelWith:initiatedByFrame:completionHandler:)',
+        apiUrl:
+            'https://developer.apple.com/documentation/webkit/wkuidelegate/webview(_:runopenpanelwith:initiatedbyframe:completionhandler:)',
+        note:
+            'Requires [InAppWebViewSettings.useOnShowFileChooser] to be `true`. Returning `handledByClient: false` cancels the request instead of falling back to a default picker.',
       ),
       LinuxPlatform(
         apiName: 'WebKitWebView::run-file-chooser',

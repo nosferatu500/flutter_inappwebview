@@ -1380,8 +1380,19 @@ public class InAppWebView: WKWebView, UIScrollViewDelegate, WKUIDelegate,
         }
         
         scrollView.isScrollEnabled = !(newSettings.disableVerticalScroll && newSettings.disableHorizontalScroll)
-        
+
+        let fileChooserGateChanged = newSettingsMap["useOnShowFileChooser"] != nil
+            && settings?.useOnShowFileChooser != newSettings.useOnShowFileChooser
+
         self.settings = newSettings
+
+        // `responds(to:)` answers from `settings`, so the answer only changes after the assignment
+        // above. WebKit caches the delegate's selector support when `uiDelegate` is set, so toggling
+        // the setting at runtime needs the delegate re-assigned for the new answer to be seen.
+        if fileChooserGateChanged {
+            uiDelegate = nil
+            uiDelegate = self
+        }
     }
     
     func getSettings() -> [String: Any?]? {
@@ -1720,6 +1731,64 @@ public class InAppWebView: WKWebView, UIScrollViewDelegate, WKUIDelegate,
         }
     }
     
+    /// Hides the open-panel selector unless `useOnShowFileChooser` is set.
+    ///
+    /// This override is the whole mechanism behind the setting, and it exists because
+    /// `runOpenPanelWithParameters` is **all-or-nothing**: WebKit runs its own Safari-style picker
+    /// only while the delegate does not respond to the selector, and once it does there is no way to
+    /// ask for the default. Implementing the method unconditionally would therefore break file
+    /// upload for every app that never asked for the event.
+    ///
+    /// `super.responds(to:)` handles everything else, so this narrows the lie to exactly one
+    /// selector.
+    public override func responds(to aSelector: Selector!) -> Bool {
+        if #available(iOS 18.4, *) {
+            if aSelector == #selector(WKUIDelegate.webView(_:runOpenPanelWith:initiatedByFrame:completionHandler:)) {
+                return settings?.useOnShowFileChooser ?? false
+            }
+        }
+        return super.responds(to: aSelector)
+    }
+
+    @available(iOS 18.4, *)
+    public func webView(_ webView: WKWebView,
+                        runOpenPanelWith parameters: WKOpenPanelParameters,
+                        initiatedByFrame frame: WKFrameInfo,
+                        completionHandler: @escaping @MainActor @Sendable ([URL]?) -> Void) {
+        let request = ShowFileChooserRequest(fromOpenPanelParameters: parameters)
+
+        var completionHandlerCalled = false
+        let callback = WebViewChannelDelegate.ShowFileChooserCallback()
+        callback.nonNullSuccess = { (response: ShowFileChooserResponse) in
+            if response.handledByClient {
+                completionHandlerCalled = true
+                completionHandler(response.toURLs())
+                return false
+            }
+            return true
+        }
+        // Unlike Android -- where not handling the request falls through to the plugin's own picker
+        // intent -- iOS has nothing to fall back to. By the time this delegate method runs, WebKit
+        // has already declined to show its own panel. Cancelling is the only honest option; the
+        // divergence is documented on the Dart `onShowFileChooser` doc.
+        callback.defaultBehaviour = { (response: ShowFileChooserResponse?) in
+            if !completionHandlerCalled {
+                completionHandlerCalled = true
+                completionHandler(nil)
+            }
+        }
+        callback.error = { [weak callback] (code: String, message: String?, details: Any?) in
+            print(code + ", " + (message ?? ""))
+            callback?.defaultBehaviour(nil)
+        }
+
+        if let channelDelegate = channelDelegate {
+            channelDelegate.onShowFileChooser(request: request, callback: callback)
+        } else {
+            callback.defaultBehaviour(nil)
+        }
+    }
+
     public func webView(_ webView: WKWebView,
                         requestDeviceOrientationAndMotionPermissionFor origin: WKSecurityOrigin,
                         initiatedByFrame frame: WKFrameInfo,

@@ -68,6 +68,7 @@ class IOSHeadlessInAppWebViewCreationParams
     super.onJsBeforeUnload,
     super.onReceivedLoginRequest,
     super.onPermissionRequestCanceled,
+    super.onShowFileChooser,
     super.onRequestFocus,
     super.onWebContentProcessDidTerminate,
     super.onDidReceiveServerRedirectForProvisionalNavigation,
@@ -144,6 +145,7 @@ class IOSHeadlessInAppWebViewCreationParams
         onJsBeforeUnload: params.onJsBeforeUnload,
         onReceivedLoginRequest: params.onReceivedLoginRequest,
         onPermissionRequestCanceled: params.onPermissionRequestCanceled,
+        onShowFileChooser: params.onShowFileChooser,
         onRequestFocus: params.onRequestFocus,
         onWebContentProcessDidTerminate: params.onWebContentProcessDidTerminate,
         onDidReceiveServerRedirectForProvisionalNavigation:
@@ -309,6 +311,10 @@ class IOSHeadlessInAppWebView extends PlatformHeadlessInAppWebView
     if (params.shouldInterceptFetchRequest != null &&
         settings.useShouldInterceptFetchRequest == null) {
       settings.useShouldInterceptFetchRequest = true;
+    }
+    if (params.onShowFileChooser != null &&
+        settings.useOnShowFileChooser == null) {
+      settings.useOnShowFileChooser = true;
     }
     if (params.shouldInterceptRequest != null &&
         settings.useShouldInterceptRequest == null) {

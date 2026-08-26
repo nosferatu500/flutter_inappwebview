@@ -2614,7 +2614,22 @@ as it can cause framerate drops on animations in Android 9 and lower (see [Hybri
   ///If the [PlatformWebViewCreationParams.onShowFileChooser] event is implemented and this value is `null`,
   ///it will be automatically inferred as `true`, otherwise, the default value is `false`.
   ///This logic will not be applied for [PlatformInAppBrowser], where you must set the value manually.
-  @SupportedPlatforms(platforms: [AndroidPlatform()])
+  ///
+  ///**NOTE for iOS**: this setting decides whether the WebView keeps WebKit's own file picker or
+  ///hands selection to Dart, and there is no middle ground. While it is `false` the WebView shows
+  ///the same picker Safari does; while it is `true` the picker is entirely your
+  ///[PlatformWebViewCreationParams.onShowFileChooser] handler's responsibility, and a response with
+  ///`handledByClient: false` cancels the upload rather than falling back.
+  @SupportedPlatforms(
+    platforms: [
+      AndroidPlatform(),
+      IOSPlatform(
+        available: "18.4",
+        note:
+            'While `false`, the WebView keeps WebKit\'s built-in file picker. Setting it `true` replaces that picker entirely with the [PlatformWebViewCreationParams.onShowFileChooser] event.',
+      ),
+    ],
+  )
   bool? useOnShowFileChooser;
 
   ///Specifies a feature policy for the `<iframe>`.

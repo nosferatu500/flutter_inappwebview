@@ -71,6 +71,7 @@ class IOSInAppWebViewWidgetCreationParams
     super.onJsBeforeUnload,
     super.onReceivedLoginRequest,
     super.onPermissionRequestCanceled,
+    super.onShowFileChooser,
     super.onRequestFocus,
     super.onWebContentProcessDidTerminate,
     super.onDidReceiveServerRedirectForProvisionalNavigation,
@@ -153,6 +154,7 @@ class IOSInAppWebViewWidgetCreationParams
         onJsBeforeUnload: params.onJsBeforeUnload,
         onReceivedLoginRequest: params.onReceivedLoginRequest,
         onPermissionRequestCanceled: params.onPermissionRequestCanceled,
+        onShowFileChooser: params.onShowFileChooser,
         onRequestFocus: params.onRequestFocus,
         onWebContentProcessDidTerminate: params.onWebContentProcessDidTerminate,
         onDidReceiveServerRedirectForProvisionalNavigation:
@@ -311,6 +313,10 @@ class IOSInAppWebViewWidget extends PlatformInAppWebViewWidget {
     if (params.shouldInterceptFetchRequest != null &&
         settings.useShouldInterceptFetchRequest == null) {
       settings.useShouldInterceptFetchRequest = true;
+    }
+    if (params.onShowFileChooser != null &&
+        settings.useOnShowFileChooser == null) {
+      settings.useOnShowFileChooser = true;
     }
     if (params.shouldInterceptRequest != null &&
         settings.useShouldInterceptRequest == null) {

@@ -854,6 +854,27 @@ public class WebViewChannelDelegate: ChannelDelegate {
         }
         channel?.invokeMethod("onPermissionRequest", arguments: request.toMap(), callback: callback)
     }
+
+    public class ShowFileChooserCallback: BaseCallbackResult<ShowFileChooserResponse> {
+        override init() {
+            super.init()
+            self.decodeResult = { (obj: Any?) in
+                return ShowFileChooserResponse.fromMap(map: obj as? [String:Any?])
+            }
+        }
+
+        deinit {
+            self.defaultBehaviour(nil)
+        }
+    }
+
+    public func onShowFileChooser(request: ShowFileChooserRequest, callback: ShowFileChooserCallback) {
+        if channel == nil {
+            callback.defaultBehaviour(nil)
+            return
+        }
+        channel?.invokeMethod("onShowFileChooser", arguments: request.toMap(), callback: callback)
+    }
     
     public class ShouldOverrideUrlLoadingCallback: BaseCallbackResult<WKNavigationActionPolicy> {
         override init() {

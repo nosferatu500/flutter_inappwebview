@@ -14,6 +14,13 @@ public class InAppWebViewSettings: ISettings<InAppWebView> {
     var useShouldOverrideUrlLoading = false
     var useOnLoadResource = false
     var useOnDownloadStart = false
+    /// Gates the `WKUIDelegate` open-panel method, and it is **load-bearing rather than an
+    /// optimisation**: WebKit runs its own Safari-style file picker only while the delegate does
+    /// *not* respond to `webView(_:runOpenPanelWith:initiatedByFrame:completionHandler:)`. There is
+    /// no "do the default" call once it is implemented, so `InAppWebView.responds(to:)` hides the
+    /// selector unless this is `true`. Leaving it `false` keeps file upload behaving exactly as it
+    /// does today.
+    var useOnShowFileChooser = false
     var userAgent = ""
     var applicationNameForUserAgent = ""
     var javaScriptEnabled = true
