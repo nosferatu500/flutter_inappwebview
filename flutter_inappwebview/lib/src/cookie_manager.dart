@@ -185,6 +185,15 @@ class CookieManager {
   Future<bool?> isAcceptCookieEnabled({String? profileName}) =>
       platform.isAcceptCookieEnabled(profileName: profileName);
 
+  ///{@macro flutter_inappwebview_platform_interface.PlatformCookieManager.isFileSchemeCookiesAllowed}
+  ///
+  ///{@macro flutter_inappwebview_platform_interface.PlatformCookieManager.isFileSchemeCookiesAllowed.supported_platforms}
+  ///
+  ///`static` because the value is process-global — following the same shape as
+  ///[ServiceWorkerController]'s static getters.
+  static Future<bool?> isFileSchemeCookiesAllowed() =>
+      PlatformCookieManager.static().isFileSchemeCookiesAllowed();
+
   ///{@macro flutter_inappwebview_platform_interface.PlatformCookieManagerCreationParams.isClassSupported}
   static bool isClassSupported({TargetPlatform? platform}) =>
       PlatformCookieManager.static().isClassSupported(platform: platform);

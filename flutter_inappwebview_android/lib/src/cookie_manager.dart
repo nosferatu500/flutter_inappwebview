@@ -236,6 +236,15 @@ class AndroidCookieManager extends PlatformCookieManager
   }
 
   @override
+  Future<bool?> isFileSchemeCookiesAllowed() async {
+    // No profileName: the native method is static and process-global.
+    return await channel?.invokeMethod<bool>(
+      'isFileSchemeCookiesAllowed',
+      <String, dynamic>{},
+    );
+  }
+
+  @override
   Future<bool?> hasCookies({String? profileName}) async {
     Map<String, dynamic> args = <String, dynamic>{};
     args.putIfAbsent('profileName', () => profileName);

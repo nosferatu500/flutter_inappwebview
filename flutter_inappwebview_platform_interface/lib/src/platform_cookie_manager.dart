@@ -725,6 +725,41 @@ In this case, this method will return always `true`.""",
     );
   }
 
+  ///{@template flutter_inappwebview_platform_interface.PlatformCookieManager.isFileSchemeCookiesAllowed}
+  ///Returns whether the WebView sends and accepts cookies for `file://` URLs.
+  ///
+  ///**Read-only, deliberately.** The platform's setter, `setAcceptFileSchemeCookies`, is
+  ///`@Deprecated` and is not exposed by this plugin — file-scheme cookies share a single origin
+  ///across every local file, so one local page can read another's cookies. The getter is not
+  ///deprecated, which is why the pair is asymmetric here rather than by oversight.
+  ///
+  ///It is **process-global**, not per-WebView and not per-profile: the platform method is `static`
+  ///and, when it was still settable, had to be called before any WebView existed. That is why this
+  ///takes no `profileName` while everything else on this class does, and why the facade exposes it
+  ///as a `static`.
+  ///
+  ///Returns `bool?` like [hasCookies] and [isAcceptCookieEnabled]: `null` means no WebView provider
+  ///could be resolved, which is not the same as "file-scheme cookies are disallowed".
+  ///{@endtemplate}
+  ///
+  ///{@macro flutter_inappwebview_platform_interface.PlatformCookieManager.isFileSchemeCookiesAllowed.supported_platforms}
+  @SupportedPlatforms(
+    platforms: [
+      AndroidPlatform(
+        apiName: 'CookieManager.allowFileSchemeCookies',
+        apiUrl:
+            'https://developer.android.com/reference/android/webkit/CookieManager#allowFileSchemeCookies()',
+        note:
+            'Read-only: the counterpart `setAcceptFileSchemeCookies` is deprecated and is not exposed.',
+      ),
+    ],
+  )
+  Future<bool?> isFileSchemeCookiesAllowed() {
+    throw UnimplementedError(
+      '${PlatformCookieManagerMethod.isFileSchemeCookiesAllowed.name} is not implemented on the current platform',
+    );
+  }
+
   ///{@template flutter_inappwebview_platform_interface.PlatformCookieManager.setAcceptCookie}
   ///Sets whether the cookie store accepts cookies at all.
   ///

@@ -533,6 +533,31 @@ class _CookieManagerScreenState extends State<CookieManagerScreen> {
     }
   }
 
+  Future<void> _isFileSchemeCookiesAllowed() async {
+    setState(() => _isLoading = true);
+    try {
+      // Static on the facade, not an instance call: the value is process-global.
+      final result = await CookieManager.isFileSchemeCookiesAllowed();
+      _recordMethodResult(
+        PlatformCookieManagerMethod.isFileSchemeCookiesAllowed.name,
+        result == null
+            ? 'Unknown -- no WebView provider could be resolved'
+            : 'file:// cookies are ${result ? 'allowed' : 'not allowed'} '
+                  '(read-only; the platform setter is deprecated)',
+        isError: result == null,
+        value: result,
+      );
+    } catch (e) {
+      _recordMethodResult(
+        PlatformCookieManagerMethod.isFileSchemeCookiesAllowed.name,
+        'Error reading file-scheme cookie policy: $e',
+        isError: true,
+      );
+    } finally {
+      setState(() => _isLoading = false);
+    }
+  }
+
   Future<void> _hasCookies() async {
     setState(() => _isLoading = true);
     try {
@@ -788,6 +813,11 @@ class _CookieManagerScreenState extends State<CookieManagerScreen> {
                   PlatformCookieManagerMethod.hasCookies,
                   'Is there any cookie at all? (store-wide, no URL)',
                   _hasCookies,
+                ),
+                _buildMethodSection(
+                  PlatformCookieManagerMethod.isFileSchemeCookiesAllowed,
+                  'Are file:// cookies allowed? (process-global, read-only)',
+                  _isFileSchemeCookiesAllowed,
                 ),
                 _buildMethodSection(
                   PlatformCookieManagerMethod.setAcceptCookie,

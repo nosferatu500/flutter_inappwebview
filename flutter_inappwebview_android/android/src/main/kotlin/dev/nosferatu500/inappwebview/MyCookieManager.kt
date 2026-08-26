@@ -65,6 +65,8 @@ class MyCookieManager(plugin: InAppWebViewFlutterPlugin) :
 
       "hasCookies" -> hasCookies(profileName, result)
 
+      "isFileSchemeCookiesAllowed" -> isFileSchemeCookiesAllowed(result)
+
       "setAcceptCookie" -> setAcceptCookie(call.argument("accept"), profileName, result)
 
       "isAcceptCookieEnabled" -> isAcceptCookieEnabled(profileName, result)
@@ -279,6 +281,26 @@ class MyCookieManager(plugin: InAppWebViewFlutterPlugin) :
     }
     manager.flush()
     result.success(true)
+  }
+
+  /**
+   * `CookieManager.allowFileSchemeCookies` is a **static** on the framework class, so there is no
+   * manager instance to act on and no profile to scope to.
+   *
+   * It still resolves the manager first, and only as a guard: the static delegates to the WebView
+   * provider internally and throws if none is installed, while `getCookieManager()` already wraps
+   * exactly that case (MissingWebViewPackageException and the Chromium 559720 IllegalArgumentException)
+   * and answers null. Reusing it turns a crash into the same null this class's other getters send.
+   *
+   * The setter, `setAcceptFileSchemeCookies`, is deprecated and deliberately not exposed.
+   */
+  fun isFileSchemeCookiesAllowed(result: MethodChannel.Result) {
+    if (getCookieManager() == null) {
+      result.success(null)
+      return
+    }
+
+    result.success(CookieManager.allowFileSchemeCookies())
   }
 
   /**

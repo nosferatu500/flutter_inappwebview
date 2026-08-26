@@ -10,6 +10,7 @@ part 'set_get_delete.dart';
 part 'flush.dart';
 part 'accept_cookie.dart';
 part 'has_cookies.dart';
+part 'file_scheme_cookies.dart';
 
 void main() {
   final shouldSkip = !CookieManager.isClassSupported();
@@ -19,5 +20,6 @@ void main() {
     flush();
     acceptCookie();
     hasCookies();
+    fileSchemeCookies();
   }, skip: shouldSkip);
 }

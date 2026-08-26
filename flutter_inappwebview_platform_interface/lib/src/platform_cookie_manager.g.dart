@@ -304,6 +304,18 @@ enum PlatformCookieManagerMethod {
   ///{@endtemplate}
   isAcceptCookieEnabled,
 
+  ///Can be used to check if the [PlatformCookieManager.isFileSchemeCookiesAllowed] method is supported at runtime.
+  ///
+  ///{@template flutter_inappwebview_platform_interface.PlatformCookieManager.isFileSchemeCookiesAllowed.supported_platforms}
+  ///
+  ///**Officially Supported Platforms/Implementations**:
+  ///- Android WebView ([Official API - CookieManager.allowFileSchemeCookies](https://developer.android.com/reference/android/webkit/CookieManager#allowFileSchemeCookies())):
+  ///    - Read-only: the counterpart `setAcceptFileSchemeCookies` is deprecated and is not exposed.
+  ///
+  ///Use the [PlatformCookieManager.isMethodSupported] method to check if this method is supported at runtime.
+  ///{@endtemplate}
+  isFileSchemeCookiesAllowed,
+
   ///Can be used to check if the [PlatformCookieManager.removeSessionCookies] method is supported at runtime.
   ///
   ///{@template flutter_inappwebview_platform_interface.PlatformCookieManager.removeSessionCookies.supported_platforms}
@@ -453,6 +465,11 @@ extension _PlatformCookieManagerMethodSupported on PlatformCookieManager {
               TargetPlatform.android,
             ].contains(platform ?? defaultTargetPlatform);
       case PlatformCookieManagerMethod.isAcceptCookieEnabled:
+        return ((kIsWeb && platform != null) || !kIsWeb) &&
+            [
+              TargetPlatform.android,
+            ].contains(platform ?? defaultTargetPlatform);
+      case PlatformCookieManagerMethod.isFileSchemeCookiesAllowed:
         return ((kIsWeb && platform != null) || !kIsWeb) &&
             [
               TargetPlatform.android,
