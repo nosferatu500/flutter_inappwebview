@@ -20,6 +20,7 @@ import '../types/scrollbar_style.dart';
 import '../types/scrollview_content_inset_adjustment_behavior.dart';
 import '../types/writing_tools_behavior.dart';
 import '../types/upgrade_to_https_policy.dart';
+import '../types/security_restriction_mode.dart';
 import '../types/scrollview_deceleration_rate.dart';
 import '../types/selection_granularity.dart';
 import '../types/user_preferred_content_mode.dart';
@@ -2611,6 +2612,43 @@ as it can cause framerate drops on animations in Android 9 and lower (see [Hybri
   )
   double? alpha;
 
+  ///How much additional security hardening the WebView should apply to a navigation.
+  ///
+  ///Leaving this `null` keeps WebKit's documented default, [SecurityRestrictionMode.NONE].
+  ///[SecurityRestrictionMode.MAXIMIZE_COMPATIBILITY] is the one to reach for when loading content
+  ///you do not control: it disables the JavaScript JIT and widens Memory Tagging Extension coverage
+  ///while keeping full web compatibility, so the cost is JavaScript speed rather than broken pages.
+  ///
+  ///**NOTE for iOS**: several WebKit behaviours are worth knowing before using this.
+  ///
+  ///Setting any mode other than [SecurityRestrictionMode.NONE] makes WebKit create **separate,
+  ///isolated WebContent processes** for that protection level, so mixing modes across WebViews
+  ///costs additional processes.
+  ///
+  ///The mode applies to **main frame navigations only** and is ignored for subframes — but when it
+  ///is set for a main frame, all subframe content *and opened windows* inherit the same
+  ///restrictions.
+  ///
+  ///If the system has already chosen [SecurityRestrictionMode.LOCKDOWN] — for example because the
+  ///device is in Lockdown Mode — attempts to set a **less** restrictive mode **fail silently**.
+  ///
+  ///Like [InAppWebViewSettings.preferredHTTPSNavigationPolicy] and unlike
+  ///[InAppWebViewSettings.writingToolsBehavior], this takes effect when changed through
+  ///`setSettings`, because it is applied to the per-navigation `WKWebpagePreferences`.
+  @SupportedPlatforms(
+    platforms: [
+      IOSPlatform(
+        available: "26.5",
+        apiName: "WKWebpagePreferences.securityRestrictionMode",
+        apiUrl:
+            "https://developer.apple.com/documentation/webkit/wkwebpagepreferences/securityrestrictionmode",
+        note:
+            "Main-frame navigations only. Creates isolated WebContent processes. Lowering the mode fails silently while the system enforces Lockdown.",
+      ),
+    ],
+  )
+  SecurityRestrictionMode_? securityRestrictionMode;
+
   ///Whether a top-level navigation should be upgraded to HTTPS, and what should happen when the
   ///upgrade fails.
   ///
@@ -3600,6 +3638,7 @@ as it can cause framerate drops on animations in Android 9 and lower (see [Hybri
     this.alpha,
     this.writingToolsBehavior,
     this.preferredHTTPSNavigationPolicy,
+    this.securityRestrictionMode,
     this.useOnShowFileChooser,
     this.iframeAllow,
     this.iframeAllowFullscreen,

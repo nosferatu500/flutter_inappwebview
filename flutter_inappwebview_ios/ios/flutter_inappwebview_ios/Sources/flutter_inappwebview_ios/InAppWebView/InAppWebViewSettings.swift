@@ -110,6 +110,14 @@ public class InAppWebViewSettings: ISettings<InAppWebView> {
     /// `_`-prefixed `NSNumber` shim needed. Reach for that shim only when there is no safe default.
     var preferredHTTPSNavigationPolicy = 0
 
+    /// `WKSecurityRestrictionMode` raw value.
+    ///
+    /// Non-optional `Int` for the same reason as `preferredHTTPSNavigationPolicy`: WebKit documents
+    /// the default as `WKSecurityRestrictionModeNone`, whose raw value is `0`, so applying it
+    /// unconditionally cannot change behaviour for a caller who never asked. See §47/§48 for why
+    /// that distinction decides between this and the `_`-prefixed `NSNumber` shim.
+    var securityRestrictionMode = 0
+
     public var _writingToolsBehavior: NSNumber?
     public var writingToolsBehavior: Int? {
         get {

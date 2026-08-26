@@ -1862,6 +1862,16 @@ public class InAppWebView: WKWebView, UIScrollViewDelegate, WKUIDelegate,
                 preferences.preferredHTTPSNavigationPolicy = policy
             }
         }
+        // Same live-object reasoning as above. WebKit ignores this for subframes and, while the
+        // system is enforcing Lockdown Mode, silently ignores any attempt to lower it — so the
+        // unconditional assignment is safe in both directions.
+        if #available(iOS 26.5, *) {
+            if let mode = WKSecurityRestrictionMode(
+                rawValue: settings?.securityRestrictionMode ?? 0
+            ) {
+                preferences.securityRestrictionMode = mode
+            }
+        }
         self.webView(webView, decidePolicyFor: navigationAction, decisionHandler: {(navigationActionPolicy) -> Void in
             decisionHandler(navigationActionPolicy, preferences)
         })
