@@ -573,6 +573,11 @@ class InAppWebViewController {
   ///{@macro flutter_inappwebview_platform_interface.PlatformInAppWebViewController.resume.supported_platforms}
   Future<void> resume() => platform.resume();
 
+  ///{@macro flutter_inappwebview_platform_interface.PlatformInAppWebViewController.documentHasImages}
+  ///
+  ///{@macro flutter_inappwebview_platform_interface.PlatformInAppWebViewController.documentHasImages.supported_platforms}
+  Future<bool> documentHasImages() => platform.documentHasImages();
+
   ///{@macro flutter_inappwebview_platform_interface.PlatformInAppWebViewController.postVisualStateCallback}
   ///
   ///{@macro flutter_inappwebview_platform_interface.PlatformInAppWebViewController.postVisualStateCallback.supported_platforms}

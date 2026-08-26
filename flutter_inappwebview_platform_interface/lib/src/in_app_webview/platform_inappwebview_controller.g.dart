@@ -532,6 +532,18 @@ enum PlatformInAppWebViewControllerMethod {
   ///{@endtemplate}
   disposeKeepAlive,
 
+  ///Can be used to check if the [PlatformInAppWebViewController.documentHasImages] method is supported at runtime.
+  ///
+  ///{@template flutter_inappwebview_platform_interface.PlatformInAppWebViewController.documentHasImages.supported_platforms}
+  ///
+  ///**Officially Supported Platforms/Implementations**:
+  ///- Android WebView ([Official API - WebView.documentHasImages](https://developer.android.com/reference/android/webkit/WebView#documentHasImages(android.os.Message))):
+  ///    - The platform answers by dispatching an `android.os.Message` rather than returning a value; this API awaits it.
+  ///
+  ///Use the [PlatformInAppWebViewController.isMethodSupported] method to check if this method is supported at runtime.
+  ///{@endtemplate}
+  documentHasImages,
+
   ///Can be used to check if the [PlatformInAppWebViewController.enableSlowWholeDocumentDraw] method is supported at runtime.
   ///
   ///{@template flutter_inappwebview_platform_interface.PlatformInAppWebViewController.enableSlowWholeDocumentDraw.supported_platforms}
@@ -2651,6 +2663,11 @@ extension _PlatformInAppWebViewControllerMethodSupported
               TargetPlatform.macOS,
               TargetPlatform.windows,
               TargetPlatform.linux,
+            ].contains(platform ?? defaultTargetPlatform);
+      case PlatformInAppWebViewControllerMethod.documentHasImages:
+        return ((kIsWeb && platform != null) || !kIsWeb) &&
+            [
+              TargetPlatform.android,
             ].contains(platform ?? defaultTargetPlatform);
       case PlatformInAppWebViewControllerMethod.enableSlowWholeDocumentDraw:
         return ((kIsWeb && platform != null) || !kIsWeb) &&

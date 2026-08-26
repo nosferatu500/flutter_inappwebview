@@ -2091,6 +2091,36 @@ abstract class PlatformInAppWebViewController extends PlatformInterface
     );
   }
 
+  ///{@template flutter_inappwebview_platform_interface.PlatformInAppWebViewController.documentHasImages}
+  ///Returns whether the currently loaded document references any image at all.
+  ///
+  ///It is a question about the **document**, not about rendering or loading: an `<img>` whose
+  ///source is broken or still downloading still counts as a reference. Nothing is reported about
+  ///how many there are or where they point.
+  ///
+  ///Returns `false` if this controller no longer has a WebView, matching
+  ///[canGoBack] and the other boolean reads on this class — a disposed controller has no document,
+  ///so there is nothing for it to reference.
+  ///{@endtemplate}
+  ///
+  ///{@macro flutter_inappwebview_platform_interface.PlatformInAppWebViewController.documentHasImages.supported_platforms}
+  @SupportedPlatforms(
+    platforms: [
+      AndroidPlatform(
+        apiName: 'WebView.documentHasImages',
+        apiUrl:
+            'https://developer.android.com/reference/android/webkit/WebView#documentHasImages(android.os.Message)',
+        note:
+            'The platform answers by dispatching an `android.os.Message` rather than returning a value; this API awaits it.',
+      ),
+    ],
+  )
+  Future<bool> documentHasImages() {
+    throw UnimplementedError(
+      '${PlatformInAppWebViewControllerMethod.documentHasImages.name} is not implemented on the current platform',
+    );
+  }
+
   ///{@template flutter_inappwebview_platform_interface.PlatformInAppWebViewController.postVisualStateCallback}
   ///Completes once the DOM **as it exists at the moment of this call** has been drawn to the
   ///screen.

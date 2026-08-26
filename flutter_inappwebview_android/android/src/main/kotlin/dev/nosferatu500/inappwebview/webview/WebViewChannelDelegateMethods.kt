@@ -79,4 +79,5 @@ enum class WebViewChannelDelegateMethods {
   isAudioMuted,
   prerenderUrl,
   postVisualStateCallback,
+  documentHasImages,
 }

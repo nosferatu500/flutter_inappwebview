@@ -1,6 +1,9 @@
 package dev.nosferatu500.inappwebview.webview
 
 import android.net.Uri
+import android.os.Handler
+import android.os.Looper
+import android.os.Message
 import android.webkit.ValueCallback
 import android.webkit.WebView
 import androidx.webkit.WebMessageCompat
@@ -653,6 +656,28 @@ class WebViewChannelDelegate(webView: InAppWebView, channel: MethodChannel) :
           )
         } else {
           result.success(null)
+        }
+      }
+
+      // The platform answers by *dispatching a Message* rather than returning a value or taking a
+      // listener, so the reply has to come out of a Handler. Three notes on the shape:
+      //
+      //  - `Handler(Looper, Handler.Callback)` with a lambda, not `object : Handler()`. The no-arg
+      //    Handler constructor is deprecated, and an anonymous Handler subclass is what Android
+      //    lint's HandlerLeak flags. `Handler.Callback` is an interface, so SAM conversion works
+      //    here -- unlike VisualStateCallback in postVisualStateCallback above, which is an
+      //    abstract class.
+      //  - main looper, because every channel call arrives on it and WebView is thread-affine.
+      //  - the documented contract is arg1 == 1 for "references images", 0 for "does not".
+      WebViewChannelDelegateMethods.documentHasImages -> {
+        if (webView != null) {
+          val handler = Handler(Looper.getMainLooper()) { msg ->
+            result.success(msg.arg1 == 1)
+            true
+          }
+          webView.documentHasImages(Message.obtain(handler))
+        } else {
+          result.success(false)
         }
       }
 

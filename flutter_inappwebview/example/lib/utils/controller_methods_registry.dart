@@ -785,6 +785,13 @@ class ControllerMethodsRegistry {
           },
         ),
         ControllerMethodEntry(
+          description: 'Does the document reference any image?',
+          methodEnum: PlatformInAppWebViewControllerMethod.documentHasImages,
+          execute: (controller, params) async {
+            return await controller.documentHasImages();
+          },
+        ),
+        ControllerMethodEntry(
           description: 'Waits until the current DOM has been painted',
           methodEnum:
               PlatformInAppWebViewControllerMethod.postVisualStateCallback,

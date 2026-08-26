@@ -2539,6 +2539,13 @@ class AndroidInAppWebViewController extends PlatformInAppWebViewController
   }
 
   @override
+  Future<bool> documentHasImages() async {
+    Map<String, dynamic> args = <String, dynamic>{};
+    return await channel?.invokeMethod<bool>('documentHasImages', args) ??
+        false;
+  }
+
+  @override
   Future<void> postVisualStateCallback() async {
     Map<String, dynamic> args = <String, dynamic>{};
     // The native requestId is not exposed: this Future is the correlation, and the Kotlin side
