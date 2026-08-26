@@ -80,4 +80,5 @@ enum class WebViewChannelDelegateMethods {
   prerenderUrl,
   postVisualStateCallback,
   documentHasImages,
+  flingScroll,
 }

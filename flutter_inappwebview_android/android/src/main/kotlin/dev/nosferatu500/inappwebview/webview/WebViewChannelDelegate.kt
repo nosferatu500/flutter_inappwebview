@@ -681,6 +681,14 @@ class WebViewChannelDelegate(webView: InAppWebView, channel: MethodChannel) :
         }
       }
 
+      // Fire-and-forget, unlike its two neighbours above: the platform starts a fling and returns
+      // immediately, so there is nothing to await. Where the scroll ends is decided by the
+      // platform's deceleration, which is why this reports no position back.
+      WebViewChannelDelegateMethods.flingScroll -> {
+        webView?.flingScroll(call.argument("velocityX")!!, call.argument("velocityY")!!)
+        result.success(true)
+      }
+
       WebViewChannelDelegateMethods.saveState -> result.success(webView?.saveState())
 
       WebViewChannelDelegateMethods.restoreState -> {

@@ -2539,6 +2539,17 @@ class AndroidInAppWebViewController extends PlatformInAppWebViewController
   }
 
   @override
+  Future<void> flingScroll({
+    required int velocityX,
+    required int velocityY,
+  }) async {
+    Map<String, dynamic> args = <String, dynamic>{};
+    args.putIfAbsent('velocityX', () => velocityX);
+    args.putIfAbsent('velocityY', () => velocityY);
+    return await channel?.invokeMethod('flingScroll', args);
+  }
+
+  @override
   Future<bool> documentHasImages() async {
     Map<String, dynamic> args = <String, dynamic>{};
     return await channel?.invokeMethod<bool>('documentHasImages', args) ??

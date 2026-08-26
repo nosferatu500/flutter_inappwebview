@@ -2091,6 +2091,49 @@ abstract class PlatformInAppWebViewController extends PlatformInterface
     );
   }
 
+  ///{@template flutter_inappwebview_platform_interface.PlatformInAppWebViewController.flingScroll}
+  ///Starts a fling — a scroll that is thrown with an initial velocity and then decelerates on its
+  ///own, the way a flick of the finger does.
+  ///
+  ///[velocityX] and [velocityY] are the initial velocity in **pixels per second**, in the same
+  ///raw device pixels [scrollTo] and [scrollBy] use, with the same sign convention: positive
+  ///values fling the content towards its end (right and down).
+  ///
+  ///This is a third thing, distinct from the two the plugin already has:
+  ///
+  ///- [scrollTo] goes to an absolute position;
+  ///- [scrollBy] moves by a fixed amount — with `animated: true` over a fixed 300ms;
+  ///- this one only sets a *velocity*. Where it stops is decided by the platform's deceleration
+  ///  and by where the content ends, so the distance is not something the caller specifies or can
+  ///  predict.
+  ///
+  ///Use it to reproduce a flick rather than to reach a known position — for a known position,
+  ///[scrollTo] is both simpler and exact.
+  ///
+  ///The fling is clamped to the scrollable range, so an over-large velocity stops at the edge
+  ///rather than overscrolling indefinitely, and a velocity on an unscrollable axis does nothing.
+  ///
+  ///**The platform documents no units.** `WebView.flingScroll` carries no javadoc in AOSP at all;
+  ///pixels per second is what its implementation does, and it is what matches this plugin's other
+  ///scroll methods, which also pass raw pixels straight through without density conversion.
+  ///{@endtemplate}
+  ///
+  ///{@macro flutter_inappwebview_platform_interface.PlatformInAppWebViewController.flingScroll.supported_platforms}
+  @SupportedPlatforms(
+    platforms: [
+      AndroidPlatform(
+        apiName: 'WebView.flingScroll',
+        apiUrl:
+            'https://developer.android.com/reference/android/webkit/WebView#flingScroll(int,%20int)',
+      ),
+    ],
+  )
+  Future<void> flingScroll({required int velocityX, required int velocityY}) {
+    throw UnimplementedError(
+      '${PlatformInAppWebViewControllerMethod.flingScroll.name} is not implemented on the current platform',
+    );
+  }
+
   ///{@template flutter_inappwebview_platform_interface.PlatformInAppWebViewController.documentHasImages}
   ///Returns whether the currently loaded document references any image at all.
   ///

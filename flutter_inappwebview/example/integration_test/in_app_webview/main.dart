@@ -28,6 +28,7 @@ part 'get_certificate.dart';
 part 'get_content_height.dart';
 part 'post_visual_state_callback.dart';
 part 'document_has_images.dart';
+part 'fling_scroll.dart';
 part 'get_current_web_view_package.dart';
 part 'get_default_user_agent.dart';
 part 'get_favicons.dart';
@@ -179,6 +180,7 @@ void main() {
     getContentHeight();
     postVisualStateCallback();
     documentHasImages();
+    flingScroll();
     clearFocus();
     requestFocusNodeHref();
     requestImageRef();

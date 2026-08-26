@@ -580,6 +580,21 @@ enum PlatformInAppWebViewControllerMethod {
   ///{@endtemplate}
   evaluateJavascript,
 
+  ///Can be used to check if the [PlatformInAppWebViewController.flingScroll] method is supported at runtime.
+  ///
+  ///{@template flutter_inappwebview_platform_interface.PlatformInAppWebViewController.flingScroll.supported_platforms}
+  ///
+  ///**Officially Supported Platforms/Implementations**:
+  ///- Android WebView ([Official API - WebView.flingScroll](https://developer.android.com/reference/android/webkit/WebView#flingScroll(int,%20int)))
+  ///
+  ///**Parameters - Officially Supported Platforms/Implementations**:
+  ///- [velocityX]: all platforms
+  ///- [velocityY]: all platforms
+  ///
+  ///Use the [PlatformInAppWebViewController.isMethodSupported] method to check if this method is supported at runtime.
+  ///{@endtemplate}
+  flingScroll,
+
   ///Can be used to check if the [PlatformInAppWebViewController.getCameraCaptureState] method is supported at runtime.
   ///
   ///{@template flutter_inappwebview_platform_interface.PlatformInAppWebViewController.getCameraCaptureState.supported_platforms}
@@ -2685,6 +2700,11 @@ extension _PlatformInAppWebViewControllerMethodSupported
                     TargetPlatform.windows,
                     TargetPlatform.linux,
                   ].contains(platform ?? defaultTargetPlatform);
+      case PlatformInAppWebViewControllerMethod.flingScroll:
+        return ((kIsWeb && platform != null) || !kIsWeb) &&
+            [
+              TargetPlatform.android,
+            ].contains(platform ?? defaultTargetPlatform);
       case PlatformInAppWebViewControllerMethod.getCameraCaptureState:
         return ((kIsWeb && platform != null) || !kIsWeb) &&
             [

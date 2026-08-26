@@ -785,6 +785,16 @@ class ControllerMethodsRegistry {
           },
         ),
         ControllerMethodEntry(
+          description: 'Flings the scroll downwards at 4000 px/s',
+          methodEnum: PlatformInAppWebViewControllerMethod.flingScroll,
+          execute: (controller, params) async {
+            // A fixed velocity rather than a parameter dialog: the useful demo is "does it coast
+            // and decelerate", and where it lands is up to the platform, not the caller.
+            await controller.flingScroll(velocityX: 0, velocityY: 4000);
+            return 'flung downwards at 4000 px/s';
+          },
+        ),
+        ControllerMethodEntry(
           description: 'Does the document reference any image?',
           methodEnum: PlatformInAppWebViewControllerMethod.documentHasImages,
           execute: (controller, params) async {
