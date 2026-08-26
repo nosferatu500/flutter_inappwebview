@@ -8,6 +8,17 @@ part of 'navigation_action.dart';
 
 ///An object that contains information about an action that causes navigation to occur.
 class NavigationAction {
+  ///The pointing-device buttons that were pressed when the navigation was triggered.
+  ///
+  ///Despite the name, which is inherited from the WebKit property, this is **not** a button
+  ///index — the native `UIEventButtonMask` is a bit mask defined as `1 << (buttonNumber - 1)`.
+  ///It is exposed as a set of named buttons so the distinction cannot be got wrong.
+  ///`null` means the platform did not report the value at all, which is the case below iOS 18.4.
+  ///
+  ///**Officially Supported Platforms/Implementations**:
+  ///- iOS WKWebView 18.4+ ([Official API - WKNavigationAction.buttonNumber](https://developer.apple.com/documentation/webkit/wknavigationaction/buttonnumber))
+  List<ButtonMask>? buttonNumber;
+
   ///Gets whether a gesture (such as a click) was associated with the request.
   ///For security reasons in certain situations this method may return `false` even though
   ///the sequence of events which caused the request to be created was initiated by a user
@@ -35,6 +46,20 @@ class NavigationAction {
   ///- Android WebView 21+ ([Official API - WebResourceRequest.isRedirect](https://developer.android.com/reference/android/webkit/WebResourceRequest#isRedirect()))
   ///- Windows WebView2
   bool? isRedirect;
+
+  ///The modifier keys that were held down when the navigation was triggered,
+  ///for example `[ModifierFlag.COMMAND]` for a command-click.
+  ///
+  ///This is a set because the underlying `UIKeyModifierFlags` is a bit mask and more than one
+  ///modifier can be held at once. An empty list means no modifier was held; `null` means the
+  ///platform did not report the value at all, which is the case below iOS 18.4.
+  ///
+  ///A common use is distinguishing an ordinary link activation from a command-click, which on
+  ///Apple platforms conventionally means "open in a new tab".
+  ///
+  ///**Officially Supported Platforms/Implementations**:
+  ///- iOS WKWebView 18.4+ ([Official API - WKNavigationAction.modifierFlags](https://developer.apple.com/documentation/webkit/wknavigationaction/modifierflags))
+  List<ModifierFlag>? modifierFlags;
 
   ///The type of action triggering the navigation.
   ///
@@ -73,9 +98,11 @@ class NavigationAction {
   ///- macOS WKWebView ([Official API - WKNavigationAction.targetFrame](https://developer.apple.com/documentation/webkit/wknavigationaction/1401918-targetframe))
   FrameInfo? targetFrame;
   NavigationAction({
+    this.buttonNumber,
     this.hasGesture,
     required this.isForMainFrame,
     this.isRedirect,
+    this.modifierFlags,
     this.navigationType,
     required this.request,
     this.shouldPerformDownload,
@@ -92,9 +119,31 @@ class NavigationAction {
       return null;
     }
     final instance = NavigationAction(
+      buttonNumber: map['buttonNumber'] != null
+          ? List<ButtonMask>.from(
+              map['buttonNumber'].map(
+                (e) => switch (enumMethod ?? EnumMethod.nativeValue) {
+                  EnumMethod.nativeValue => ButtonMask.fromNativeValue(e),
+                  EnumMethod.value => ButtonMask.fromValue(e),
+                  EnumMethod.name => ButtonMask.byName(e),
+                }!,
+              ),
+            )
+          : null,
       hasGesture: map['hasGesture'],
       isForMainFrame: map['isForMainFrame'],
       isRedirect: map['isRedirect'],
+      modifierFlags: map['modifierFlags'] != null
+          ? List<ModifierFlag>.from(
+              map['modifierFlags'].map(
+                (e) => switch (enumMethod ?? EnumMethod.nativeValue) {
+                  EnumMethod.nativeValue => ModifierFlag.fromNativeValue(e),
+                  EnumMethod.value => ModifierFlag.fromValue(e),
+                  EnumMethod.name => ModifierFlag.byName(e),
+                }!,
+              ),
+            )
+          : null,
       navigationType: switch (enumMethod ?? EnumMethod.nativeValue) {
         EnumMethod.nativeValue => NavigationType.fromNativeValue(
           map['navigationType'],
@@ -122,9 +171,27 @@ class NavigationAction {
   ///Converts instance to a map.
   Map<String, dynamic> toMap({EnumMethod? enumMethod}) {
     return {
+      "buttonNumber": buttonNumber
+          ?.map(
+            (e) => switch (enumMethod ?? EnumMethod.nativeValue) {
+              EnumMethod.nativeValue => e.toNativeValue(),
+              EnumMethod.value => e.toValue(),
+              EnumMethod.name => e.name(),
+            },
+          )
+          .toList(),
       "hasGesture": hasGesture,
       "isForMainFrame": isForMainFrame,
       "isRedirect": isRedirect,
+      "modifierFlags": modifierFlags
+          ?.map(
+            (e) => switch (enumMethod ?? EnumMethod.nativeValue) {
+              EnumMethod.nativeValue => e.toNativeValue(),
+              EnumMethod.value => e.toValue(),
+              EnumMethod.name => e.name(),
+            },
+          )
+          .toList(),
       "navigationType": switch (enumMethod ?? EnumMethod.nativeValue) {
         EnumMethod.nativeValue => navigationType?.toNativeValue(),
         EnumMethod.value => navigationType?.toValue(),
@@ -144,6 +211,6 @@ class NavigationAction {
 
   @override
   String toString() {
-    return 'NavigationAction{hasGesture: $hasGesture, isForMainFrame: $isForMainFrame, isRedirect: $isRedirect, navigationType: $navigationType, request: $request, shouldPerformDownload: $shouldPerformDownload, sourceFrame: $sourceFrame, targetFrame: $targetFrame}';
+    return 'NavigationAction{buttonNumber: $buttonNumber, hasGesture: $hasGesture, isForMainFrame: $isForMainFrame, isRedirect: $isRedirect, modifierFlags: $modifierFlags, navigationType: $navigationType, request: $request, shouldPerformDownload: $shouldPerformDownload, sourceFrame: $sourceFrame, targetFrame: $targetFrame}';
   }
 }

@@ -36,6 +36,8 @@ class CreateWindowAction extends NavigationAction {
     super.sourceFrame,
     super.targetFrame,
     super.shouldPerformDownload,
+    super.modifierFlags,
+    super.buttonNumber,
   });
 
   ///Gets a possible [CreateWindowAction] instance from a [Map] value.
@@ -77,6 +79,28 @@ class CreateWindowAction extends NavigationAction {
       windowId: map['windowId'],
     );
     instance.shouldPerformDownload = map['shouldPerformDownload'];
+    instance.modifierFlags = map['modifierFlags'] != null
+        ? List<ModifierFlag>.from(
+            map['modifierFlags'].map(
+              (e) => switch (enumMethod ?? EnumMethod.nativeValue) {
+                EnumMethod.nativeValue => ModifierFlag.fromNativeValue(e),
+                EnumMethod.value => ModifierFlag.fromValue(e),
+                EnumMethod.name => ModifierFlag.byName(e),
+              }!,
+            ),
+          )
+        : null;
+    instance.buttonNumber = map['buttonNumber'] != null
+        ? List<ButtonMask>.from(
+            map['buttonNumber'].map(
+              (e) => switch (enumMethod ?? EnumMethod.nativeValue) {
+                EnumMethod.nativeValue => ButtonMask.fromNativeValue(e),
+                EnumMethod.value => ButtonMask.fromValue(e),
+                EnumMethod.name => ButtonMask.byName(e),
+              }!,
+            ),
+          )
+        : null;
     return instance;
   }
 
@@ -96,6 +120,24 @@ class CreateWindowAction extends NavigationAction {
       "sourceFrame": sourceFrame?.toMap(enumMethod: enumMethod),
       "targetFrame": targetFrame?.toMap(enumMethod: enumMethod),
       "shouldPerformDownload": shouldPerformDownload,
+      "modifierFlags": modifierFlags
+          ?.map(
+            (e) => switch (enumMethod ?? EnumMethod.nativeValue) {
+              EnumMethod.nativeValue => e.toNativeValue(),
+              EnumMethod.value => e.toValue(),
+              EnumMethod.name => e.name(),
+            },
+          )
+          .toList(),
+      "buttonNumber": buttonNumber
+          ?.map(
+            (e) => switch (enumMethod ?? EnumMethod.nativeValue) {
+              EnumMethod.nativeValue => e.toNativeValue(),
+              EnumMethod.value => e.toValue(),
+              EnumMethod.name => e.name(),
+            },
+          )
+          .toList(),
       "isDialog": isDialog,
       "windowFeatures": windowFeatures?.toMap(enumMethod: enumMethod),
       "windowId": windowId,
@@ -110,6 +152,6 @@ class CreateWindowAction extends NavigationAction {
 
   @override
   String toString() {
-    return 'CreateWindowAction{request: $request, isForMainFrame: $isForMainFrame, hasGesture: $hasGesture, isRedirect: $isRedirect, navigationType: $navigationType, sourceFrame: $sourceFrame, targetFrame: $targetFrame, shouldPerformDownload: $shouldPerformDownload, isDialog: $isDialog, windowFeatures: $windowFeatures, windowId: $windowId}';
+    return 'CreateWindowAction{request: $request, isForMainFrame: $isForMainFrame, hasGesture: $hasGesture, isRedirect: $isRedirect, navigationType: $navigationType, sourceFrame: $sourceFrame, targetFrame: $targetFrame, shouldPerformDownload: $shouldPerformDownload, modifierFlags: $modifierFlags, buttonNumber: $buttonNumber, isDialog: $isDialog, windowFeatures: $windowFeatures, windowId: $windowId}';
   }
 }

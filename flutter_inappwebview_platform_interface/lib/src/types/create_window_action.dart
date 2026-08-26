@@ -5,6 +5,10 @@ import 'window_features.dart';
 import 'url_request.dart';
 import 'frame_info.dart';
 import 'navigation_type.dart';
+// Inherited from NavigationAction_: the generated part references these types, and a part cannot
+// carry its own imports, so every type used by a *superclass* field has to be imported here too.
+import 'modifier_flag.dart';
+import 'button_mask.dart';
 import '../in_app_webview/platform_webview.dart';
 import 'enum_method.dart';
 

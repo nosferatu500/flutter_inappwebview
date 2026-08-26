@@ -13,6 +13,16 @@ extension WKNavigationAction {
         var shouldPerformDownload: Bool? = nil
         shouldPerformDownload = self.shouldPerformDownload
 
+        // Both stay `nil` below iOS 18.4, which the Dart side reads as "not reported by this
+        // platform". That is deliberately distinct from an empty array, which means "reported, and
+        // no modifier / no button was involved".
+        var modifierFlags: [String]? = nil
+        var buttonNumber: [String]? = nil
+        if #available(iOS 18.4, *) {
+            modifierFlags = Util.getModifierFlagsString(flags: self.modifierFlags)
+            buttonNumber = Util.getButtonMaskString(mask: self.buttonNumber)
+        }
+
         return [
             "request": request.toMap(),
             "isForMainFrame": targetFrame?.isMainFrame ?? false,
@@ -21,7 +31,9 @@ extension WKNavigationAction {
             "navigationType": navigationType.rawValue,
             "sourceFrame": sourceFrame.toMap(),
             "targetFrame": targetFrame?.toMap(),
-            "shouldPerformDownload": shouldPerformDownload
+            "shouldPerformDownload": shouldPerformDownload,
+            "modifierFlags": modifierFlags,
+            "buttonNumber": buttonNumber
         ]
     }
 }

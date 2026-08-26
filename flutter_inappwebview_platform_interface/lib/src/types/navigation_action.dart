@@ -3,6 +3,8 @@ import 'package:flutter_inappwebview_internal_annotations/flutter_inappwebview_i
 import 'url_request.dart';
 import 'navigation_type.dart';
 import 'frame_info.dart';
+import 'modifier_flag.dart';
+import 'button_mask.dart';
 import 'enum_method.dart';
 
 part 'navigation_action.g.dart';
@@ -133,6 +135,45 @@ class NavigationAction_ {
   )
   bool? shouldPerformDownload;
 
+  ///The modifier keys that were held down when the navigation was triggered,
+  ///for example `[ModifierFlag.COMMAND]` for a command-click.
+  ///
+  ///This is a set because the underlying `UIKeyModifierFlags` is a bit mask and more than one
+  ///modifier can be held at once. An empty list means no modifier was held; `null` means the
+  ///platform did not report the value at all, which is the case below iOS 18.4.
+  ///
+  ///A common use is distinguishing an ordinary link activation from a command-click, which on
+  ///Apple platforms conventionally means "open in a new tab".
+  @SupportedPlatforms(
+    platforms: [
+      IOSPlatform(
+        available: "18.4",
+        apiName: "WKNavigationAction.modifierFlags",
+        apiUrl:
+            "https://developer.apple.com/documentation/webkit/wknavigationaction/modifierflags",
+      ),
+    ],
+  )
+  List<ModifierFlag_>? modifierFlags;
+
+  ///The pointing-device buttons that were pressed when the navigation was triggered.
+  ///
+  ///Despite the name, which is inherited from the WebKit property, this is **not** a button
+  ///index — the native `UIEventButtonMask` is a bit mask defined as `1 << (buttonNumber - 1)`.
+  ///It is exposed as a set of named buttons so the distinction cannot be got wrong.
+  ///`null` means the platform did not report the value at all, which is the case below iOS 18.4.
+  @SupportedPlatforms(
+    platforms: [
+      IOSPlatform(
+        available: "18.4",
+        apiName: "WKNavigationAction.buttonNumber",
+        apiUrl:
+            "https://developer.apple.com/documentation/webkit/wknavigationaction/buttonnumber",
+      ),
+    ],
+  )
+  List<ButtonMask_>? buttonNumber;
+
   NavigationAction_({
     required this.request,
     required this.isForMainFrame,
@@ -142,5 +183,7 @@ class NavigationAction_ {
     this.sourceFrame,
     this.targetFrame,
     this.shouldPerformDownload,
+    this.modifierFlags,
+    this.buttonNumber,
   });
 }

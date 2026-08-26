@@ -135,7 +135,38 @@ public class Util {
         }
         return dataDetectorTypeString
     }
-    
+
+    /// Decomposes a `UIKeyModifierFlags` bit mask into the Dart `ModifierFlag` names.
+    ///
+    /// An empty array is a meaningful result — "no modifier was held" — and is distinct from the
+    /// `nil` the caller sends below iOS 18.4, which means "this platform did not report it". Unlike
+    /// `getDataDetectorTypeString` there is deliberately **no `"NONE"` sentinel**: `NONE` exists in
+    /// `DataDetectorTypes` because it is a real settable value there, whereas an empty modifier set
+    /// is just an empty set.
+    public static func getModifierFlagsString(flags: UIKeyModifierFlags) -> [String] {
+        var result: [String] = []
+        if flags.contains(.alphaShift) { result.append("ALPHA_SHIFT") }
+        if flags.contains(.shift) { result.append("SHIFT") }
+        if flags.contains(.control) { result.append("CONTROL") }
+        if flags.contains(.alternate) { result.append("ALTERNATE") }
+        if flags.contains(.command) { result.append("COMMAND") }
+        if flags.contains(.numericPad) { result.append("NUMERIC_PAD") }
+        return result
+    }
+
+    /// Decomposes a `UIEvent.ButtonMask` bit mask into the Dart `ButtonMask` names.
+    ///
+    /// The mask is `1 << (buttonNumber - 1)`, so `.primary` is bit 0 and `.secondary` is bit 1 —
+    /// it is **not** a button index, despite the WebKit property being named `buttonNumber`.
+    /// Buttons beyond the secondary have no `UIEvent.ButtonMask` constant and are not reported.
+    public static func getButtonMaskString(mask: UIEvent.ButtonMask) -> [String] {
+        var result: [String] = []
+        if mask.contains(.primary) { result.append("PRIMARY") }
+        if mask.contains(.secondary) { result.append("SECONDARY") }
+        return result
+    }
+
+
     public static func getDecelerationRate(type: String) -> UIScrollView.DecelerationRate {
         switch type {
             case "NORMAL":
