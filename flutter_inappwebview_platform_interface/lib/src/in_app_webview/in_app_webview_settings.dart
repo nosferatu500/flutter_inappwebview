@@ -2612,6 +2612,35 @@ as it can cause framerate drops on animations in Android 9 and lower (see [Hybri
   )
   double? alpha;
 
+  ///Whether Lockdown Mode is enabled for this WebView's navigations.
+  ///
+  ///Lockdown Mode trades performance and web compatibility for security, disabling web features
+  ///outright. Setting it `true` opts a single WebView into those restrictions even when the device
+  ///is not in Lockdown Mode.
+  ///
+  ///**Leave this `null` unless you specifically mean to override the user.** WebKit documents the
+  ///default as *depending on the system setting*, so `null` means "respect whatever the device is
+  ///configured to do". Passing `false` explicitly **disables Lockdown Mode for this WebView even on
+  ///a device where the user turned it on**, which is virtually never what an app should do.
+  ///
+  ///For hardening untrusted content without breaking it, prefer
+  ///[InAppWebViewSettings.securityRestrictionMode] with
+  ///[SecurityRestrictionMode.MAXIMIZE_COMPATIBILITY], which keeps full web compatibility and only
+  ///costs JavaScript performance.
+  @SupportedPlatforms(
+    platforms: [
+      IOSPlatform(
+        available: "16.0",
+        apiName: "WKWebpagePreferences.lockdownModeEnabled",
+        apiUrl:
+            "https://developer.apple.com/documentation/webkit/wkwebpagepreferences/islockdownmodeenabled",
+        note:
+            "Defaults to the device's system setting. Passing `false` overrides a user who enabled Lockdown Mode.",
+      ),
+    ],
+  )
+  bool? lockdownModeEnabled;
+
   ///How much additional security hardening the WebView should apply to a navigation.
   ///
   ///Leaving this `null` keeps WebKit's documented default, [SecurityRestrictionMode.NONE].
@@ -3639,6 +3668,7 @@ as it can cause framerate drops on animations in Android 9 and lower (see [Hybri
     this.writingToolsBehavior,
     this.preferredHTTPSNavigationPolicy,
     this.securityRestrictionMode,
+    this.lockdownModeEnabled,
     this.useOnShowFileChooser,
     this.iframeAllow,
     this.iframeAllowFullscreen,

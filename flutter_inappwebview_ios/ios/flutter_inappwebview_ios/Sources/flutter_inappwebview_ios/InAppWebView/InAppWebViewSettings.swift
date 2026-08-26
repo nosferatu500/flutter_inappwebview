@@ -110,6 +110,33 @@ public class InAppWebViewSettings: ISettings<InAppWebView> {
     /// `_`-prefixed `NSNumber` shim needed. Reach for that shim only when there is no safe default.
     var preferredHTTPSNavigationPolicy = 0
 
+    /// Whether Lockdown Mode is forced on (or off) for this WebView, or `nil` to respect the device.
+    ///
+    /// **This is the case where §48/§49's non-optional pattern would be a security bug**, and the
+    /// discriminator is §18's question — "is the platform default known?" For
+    /// `preferredHTTPSNavigationPolicy` and `securityRestrictionMode` it is, and it is the type's
+    /// zero, so applying unconditionally is free. Here WebKit says the default *"depends on the
+    /// system setting"*: there is no constant to match. A non-optional `Bool = false` applied
+    /// unconditionally would **turn Lockdown Mode off for every user who had turned it on**, which
+    /// is a silent security regression that no gate in this repo could see.
+    ///
+    /// So it stays optional and is applied with `if let` — which then forces the `_`-prefixed
+    /// `NSNumber` shim from §47, because `Bool?` is no more representable in Objective-C than `Int?`
+    /// is (measured: `responds(to: "optBool") == false`, and the shimmed pair round-trips).
+    public var _lockdownModeEnabled: NSNumber?
+    public var lockdownModeEnabled: Bool? {
+        get {
+            return _lockdownModeEnabled?.boolValue
+        }
+        set {
+            if let newValue = newValue {
+                _lockdownModeEnabled = NSNumber.init(value: newValue)
+            } else {
+                _lockdownModeEnabled = nil
+            }
+        }
+    }
+
     /// `WKSecurityRestrictionMode` raw value.
     ///
     /// Non-optional `Int` for the same reason as `preferredHTTPSNavigationPolicy`: WebKit documents

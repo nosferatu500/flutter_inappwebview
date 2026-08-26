@@ -1862,6 +1862,14 @@ public class InAppWebView: WKWebView, UIScrollViewDelegate, WKUIDelegate,
                 preferences.preferredHTTPSNavigationPolicy = policy
             }
         }
+        // `if let`, NOT an unconditional assignment like the two below: WebKit's default here
+        // "depends on the system setting", so writing `false` when the caller said nothing would
+        // disable Lockdown Mode for a user who had switched it on.
+        if #available(iOS 16.0, *) {
+            if let lockdownModeEnabled = settings?.lockdownModeEnabled {
+                preferences.isLockdownModeEnabled = lockdownModeEnabled
+            }
+        }
         // Same live-object reasoning as above. WebKit ignores this for subframes and, while the
         // system is enforcing Lockdown Mode, silently ignores any attempt to lower it — so the
         // unconditional assignment is safe in both directions.
