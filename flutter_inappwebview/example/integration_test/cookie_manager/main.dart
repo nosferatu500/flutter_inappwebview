@@ -7,11 +7,13 @@ import '../constants.dart';
 import '../util.dart';
 
 part 'set_get_delete.dart';
+part 'flush.dart';
 
 void main() {
   final shouldSkip = !CookieManager.isClassSupported();
 
   skippableGroup('Cookie Manager', () {
     setGetDelete();
+    flush();
   }, skip: shouldSkip);
 }

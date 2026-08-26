@@ -264,6 +264,11 @@ class MyCookieManager(plugin: InAppWebViewFlutterPlugin) :
     manager.flush()
   }
 
+  /**
+   * Note the reply on the success path: without it the channel never answers and the Dart
+   * `await flush()` never completes -- a hang rather than an error, since a MethodChannel has no
+   * timeout and nothing supplies a missing reply.
+   */
   fun flush(profileName: String?, result: MethodChannel.Result) {
     val manager = getCookieManager(profileName)
     if (manager == null) {
@@ -271,6 +276,7 @@ class MyCookieManager(plugin: InAppWebViewFlutterPlugin) :
       return
     }
     manager.flush()
+    result.success(true)
   }
 
   /**
