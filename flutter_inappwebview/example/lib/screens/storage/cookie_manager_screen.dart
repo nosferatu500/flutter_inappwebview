@@ -533,6 +533,32 @@ class _CookieManagerScreenState extends State<CookieManagerScreen> {
     }
   }
 
+  Future<void> _hasCookies() async {
+    setState(() => _isLoading = true);
+    try {
+      final result = await _cookieManager.hasCookies();
+      _recordMethodResult(
+        PlatformCookieManagerMethod.hasCookies.name,
+        // null is not "empty" -- it means the store could not be read at all.
+        result == null
+            ? 'Unknown -- the cookie store was not resolvable'
+            : result
+            ? 'The store holds at least one cookie'
+            : 'The store is empty',
+        isError: result == null,
+        value: result,
+      );
+    } catch (e) {
+      _recordMethodResult(
+        PlatformCookieManagerMethod.hasCookies.name,
+        'Error checking for cookies: $e',
+        isError: true,
+      );
+    } finally {
+      setState(() => _isLoading = false);
+    }
+  }
+
   Future<void> _toggleAcceptCookie() async {
     final accept = !_acceptCookie;
     setState(() => _isLoading = true);
@@ -757,6 +783,11 @@ class _CookieManagerScreenState extends State<CookieManagerScreen> {
                   PlatformCookieManagerMethod.flush,
                   'Flush cookies to persistent storage',
                   _flush,
+                ),
+                _buildMethodSection(
+                  PlatformCookieManagerMethod.hasCookies,
+                  'Is there any cookie at all? (store-wide, no URL)',
+                  _hasCookies,
                 ),
                 _buildMethodSection(
                   PlatformCookieManagerMethod.setAcceptCookie,

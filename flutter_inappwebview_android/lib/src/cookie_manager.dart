@@ -236,6 +236,15 @@ class AndroidCookieManager extends PlatformCookieManager
   }
 
   @override
+  Future<bool?> hasCookies({String? profileName}) async {
+    Map<String, dynamic> args = <String, dynamic>{};
+    args.putIfAbsent('profileName', () => profileName);
+    // Nullable on purpose -- see isAcceptCookieEnabled: null is "could not read the store", which
+    // is not the same answer as "the store is empty".
+    return await channel?.invokeMethod<bool>('hasCookies', args);
+  }
+
+  @override
   Future<bool> setAcceptCookie(bool accept, {String? profileName}) async {
     Map<String, dynamic> args = <String, dynamic>{};
     args.putIfAbsent('profileName', () => profileName);

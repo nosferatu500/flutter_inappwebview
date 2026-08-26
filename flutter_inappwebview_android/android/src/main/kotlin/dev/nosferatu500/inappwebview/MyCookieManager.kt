@@ -63,6 +63,8 @@ class MyCookieManager(plugin: InAppWebViewFlutterPlugin) :
 
       "flush" -> flush(profileName, result)
 
+      "hasCookies" -> hasCookies(profileName, result)
+
       "setAcceptCookie" -> setAcceptCookie(call.argument("accept"), profileName, result)
 
       "isAcceptCookieEnabled" -> isAcceptCookieEnabled(profileName, result)
@@ -277,6 +279,23 @@ class MyCookieManager(plugin: InAppWebViewFlutterPlugin) :
     }
     manager.flush()
     result.success(true)
+  }
+
+  /**
+   * Store-wide, so it takes no url -- unlike [getCookies], which is per-origin.
+   *
+   * Sends null rather than false when the store cannot be resolved: "there are no cookies" and
+   * "nothing was read" are different answers, and a caller skipping a logout-time clear on the
+   * strength of a false would skip it for a store that does hold cookies.
+   */
+  fun hasCookies(profileName: String?, result: MethodChannel.Result) {
+    val manager = getCookieManager(profileName)
+    if (manager == null) {
+      result.success(null)
+      return
+    }
+
+    result.success(manager.hasCookies())
   }
 
   /**

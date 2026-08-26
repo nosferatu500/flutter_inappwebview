@@ -691,6 +691,40 @@ In this case, this method will return always `true`.""",
     );
   }
 
+  ///{@template flutter_inappwebview_platform_interface.PlatformCookieManager.hasCookies}
+  ///Returns whether the cookie store holds any cookie at all.
+  ///
+  ///Unlike [getCookies] this takes **no url**: it is a question about the whole store, not about
+  ///one origin, and it answers without enumerating or parsing anything. Use it for the cheap
+  ///"is there anything to clear?" check that would otherwise be
+  ///`(await getCookies(url: …)).isNotEmpty` — which is both more expensive and a different
+  ///question, since it only ever sees one origin.
+  ///
+  ///Returns `bool?`, not `bool`, for the same reason as [isAcceptCookieEnabled]: `null` means the
+  ///cookie store could not be resolved — no WebView provider is installed, or a `profileName` was
+  ///given that does not exist — and reporting `false` there would say "there are no cookies" about
+  ///a store that was never read. A caller clearing cookies on logout must be able to tell those
+  ///apart before deciding to skip the work.
+  ///{@endtemplate}
+  ///
+  ///{@macro flutter_inappwebview_platform_interface.PlatformCookieManager.hasCookies.supported_platforms}
+  @SupportedPlatforms(
+    platforms: [
+      AndroidPlatform(
+        apiName: 'CookieManager.hasCookies',
+        apiUrl:
+            'https://developer.android.com/reference/android/webkit/CookieManager#hasCookies()',
+      ),
+    ],
+  )
+  Future<bool?> hasCookies({
+    @SupportedPlatforms(platforms: [AndroidPlatform()]) String? profileName,
+  }) {
+    throw UnimplementedError(
+      '${PlatformCookieManagerMethod.hasCookies.name} is not implemented on the current platform',
+    );
+  }
+
   ///{@template flutter_inappwebview_platform_interface.PlatformCookieManager.setAcceptCookie}
   ///Sets whether the cookie store accepts cookies at all.
   ///

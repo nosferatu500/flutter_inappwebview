@@ -274,6 +274,21 @@ enum PlatformCookieManagerMethod {
   ///{@endtemplate}
   getCookies,
 
+  ///Can be used to check if the [PlatformCookieManager.hasCookies] method is supported at runtime.
+  ///
+  ///{@template flutter_inappwebview_platform_interface.PlatformCookieManager.hasCookies.supported_platforms}
+  ///
+  ///**Officially Supported Platforms/Implementations**:
+  ///- Android WebView ([Official API - CookieManager.hasCookies](https://developer.android.com/reference/android/webkit/CookieManager#hasCookies()))
+  ///
+  ///**Parameters - Officially Supported Platforms/Implementations**:
+  ///- [profileName]:
+  ///    - Android WebView
+  ///
+  ///Use the [PlatformCookieManager.isMethodSupported] method to check if this method is supported at runtime.
+  ///{@endtemplate}
+  hasCookies,
+
   ///Can be used to check if the [PlatformCookieManager.isAcceptCookieEnabled] method is supported at runtime.
   ///
   ///{@template flutter_inappwebview_platform_interface.PlatformCookieManager.isAcceptCookieEnabled.supported_platforms}
@@ -432,6 +447,11 @@ extension _PlatformCookieManagerMethodSupported on PlatformCookieManager {
                     TargetPlatform.windows,
                     TargetPlatform.linux,
                   ].contains(platform ?? defaultTargetPlatform);
+      case PlatformCookieManagerMethod.hasCookies:
+        return ((kIsWeb && platform != null) || !kIsWeb) &&
+            [
+              TargetPlatform.android,
+            ].contains(platform ?? defaultTargetPlatform);
       case PlatformCookieManagerMethod.isAcceptCookieEnabled:
         return ((kIsWeb && platform != null) || !kIsWeb) &&
             [
