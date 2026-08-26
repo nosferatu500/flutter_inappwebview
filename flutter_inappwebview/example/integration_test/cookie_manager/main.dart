@@ -8,6 +8,7 @@ import '../util.dart';
 
 part 'set_get_delete.dart';
 part 'flush.dart';
+part 'accept_cookie.dart';
 
 void main() {
   final shouldSkip = !CookieManager.isClassSupported();
@@ -15,5 +16,6 @@ void main() {
   skippableGroup('Cookie Manager', () {
     setGetDelete();
     flush();
+    acceptCookie();
   }, skip: shouldSkip);
 }

@@ -694,17 +694,20 @@ In this case, this method will return always `true`.""",
   ///{@template flutter_inappwebview_platform_interface.PlatformCookieManager.setAcceptCookie}
   ///Sets whether the cookie store accepts cookies at all.
   ///
-  ///This is the master switch, and it is coarser than everything else on this class: with
-  ///[accept] set to `false` the WebView stops storing *any* cookie, first-party included, and
-  ///stops sending stored ones. It is not a privacy filter — [setAcceptThirdPartyCookies] on the
-  ///WebView is the narrower tool for that.
+  ///This is the master switch for cookies flowing through the WebView's **own network traffic**:
+  ///with [accept] set to `false` the WebView stops accepting cookies from responses and stops
+  ///sending stored ones, first-party included. It is coarser than
+  ///[setAcceptThirdPartyCookies] on the WebView, which is the narrower tool if the goal is a
+  ///privacy setting rather than an off switch.
   ///
-  ///Turning it off does **not** delete what is already stored. Existing cookies stay in the
-  ///store, are not sent while acceptance is off, and become visible again as soon as it is turned
-  ///back on. Use [deleteAllCookies] to actually remove them.
+  ///**It does not disable this class.** Measured on Android 13 / WebView 109: while acceptance is
+  ///off, [setCookie] still succeeds *and the cookie is still stored*, and [getCookies] keeps
+  ///returning everything already in the store. So the switch governs the engine, not the app's own
+  ///reads and writes — which is not what the platform's "should send and accept cookies" wording
+  ///suggests. An integration test pins this.
   ///
-  ///Cookies the app writes through [setCookie] are subject to this switch too, so a `setCookie`
-  ///that reports success while acceptance is off still stores nothing.
+  ///Turning it off therefore deletes nothing and hides nothing. Use [deleteAllCookies] to actually
+  ///remove cookies.
   ///
   ///The return value indicates whether the switch was applied, not what it was set to. It is
   ///`false` only when the cookie store could not be resolved — see the `profileName` contract in
