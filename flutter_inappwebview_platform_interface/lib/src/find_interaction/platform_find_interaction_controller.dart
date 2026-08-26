@@ -54,7 +54,8 @@ class PlatformFindInteractionControllerCreationParams {
       ),
       IOSPlatform(
         note:
-            'If [InAppWebViewSettings.isFindInteractionEnabled] is `true`, this event will not be called.',
+            """Not called while the native find interaction is driving the search, which is when [InAppWebViewSettings.isFindInteractionEnabled] is `true` **and** the device is on iOS 16.0 or later. Use [PlatformFindInteractionController.getActiveFindSession] for the counts in that case.
+Below iOS 16.0 that setting cannot take effect, so the search falls back to the JavaScript implementation and this event **is** called even with the setting `true`.""",
       ),
       MacOSPlatform(),
       LinuxPlatform(

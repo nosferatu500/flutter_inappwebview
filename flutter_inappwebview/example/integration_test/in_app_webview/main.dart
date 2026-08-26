@@ -50,6 +50,7 @@ part 'is_secure_context.dart';
 part 'javascript_code_evaluation.dart';
 part 'javascript_dialogs.dart';
 part 'javascript_handler.dart';
+part 'javascript_handler_error.dart';
 part 'load_data.dart';
 part 'load_file.dart';
 part 'load_file_url.dart';
@@ -124,6 +125,7 @@ void main() {
     loadUrl();
     loadFileUrl();
     javascriptHandler();
+    javascriptHandlerError();
     resizeWebView();
     setCustomUserAgent();
     videoPlaybackPolicy();

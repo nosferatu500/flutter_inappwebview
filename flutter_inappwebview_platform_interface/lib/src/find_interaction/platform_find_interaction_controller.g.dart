@@ -40,7 +40,7 @@ enum PlatformFindInteractionControllerCreationParamsProperty {
   ///**Officially Supported Platforms/Implementations**:
   ///- Android WebView ([Official API - WebView.FindListener.onFindResultReceived](https://developer.android.com/reference/android/webkit/WebView.FindListener#onFindResultReceived(int,%20int,%20boolean)))
   ///- iOS WKWebView:
-  ///    - If [InAppWebViewSettings.isFindInteractionEnabled] is `true`, this event will not be called.
+  ///    - Not called while the native find interaction is driving the search, which is when [InAppWebViewSettings.isFindInteractionEnabled] is `true` **and** the device is on iOS 16.0 or later. Use [PlatformFindInteractionController.getActiveFindSession] for the counts in that case. Below iOS 16.0 that setting cannot take effect, so the search falls back to the JavaScript implementation and this event **is** called even with the setting `true`.
   ///- macOS WKWebView
   ///- Linux WPE WebKit ([Official API - WebKitFindController::counted-matches](https://wpewebkit.org/reference/stable/wpe-webkit-2.0/signal.FindController.counted-matches.html))
   ///- Windows WebView2 ([Official API - ICoreWebView2Find.ActiveMatchIndexChanged/MatchCountChanged](https://learn.microsoft.com/en-us/microsoft-edge/webview2/reference/win32/icorewebview2find))

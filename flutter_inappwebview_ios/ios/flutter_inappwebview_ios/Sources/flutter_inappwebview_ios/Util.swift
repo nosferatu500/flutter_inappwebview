@@ -49,6 +49,34 @@ public class Util {
         return nil
     }
 
+    /// Renders `string` as a JavaScript string literal, **including its surrounding quotes**, for
+    /// safe interpolation into a script built as text.
+    ///
+    /// Escaping is delegated to `JSONSerialization` rather than hand-rolled: a JSON string literal
+    /// is also a valid JavaScript string literal, and it handles every case the widespread
+    /// `replacingOccurrences(of: "'", with: "\\'")` idiom in this package misses. **Newlines are the
+    /// one that mattered**: a `\n` in an interpolated value produces a syntactically invalid script,
+    /// the whole `evaluateJavaScript` fails silently, and anything the script was supposed to do
+    /// never happens. §65 measured that as a JS handler's rejection never firing, so
+    /// `await callHandler(...)` hung for the lifetime of the page.
+    ///
+    /// U+2028 / U+2029 are legal inside JSON strings and, since ES2019, inside JavaScript string
+    /// literals too — so escaping them is not strictly required here. It costs nothing and keeps the
+    /// result valid if it is ever embedded somewhere stricter, which is the kind of assumption this
+    /// helper exists to stop relying on.
+    public static func jsStringLiteral(_ string: String) -> String {
+        guard let data = try? JSONSerialization.data(withJSONObject: string,
+                                                    options: [.fragmentsAllowed]),
+              let literal = String(data: data, encoding: .utf8) else {
+            // Unreachable for any String, but an empty literal keeps the surrounding script valid,
+            // which is the whole point of this function.
+            return "\"\""
+        }
+        return literal
+            .replacingOccurrences(of: "\u{2028}", with: "\\u2028")
+            .replacingOccurrences(of: "\u{2029}", with: "\\u2029")
+    }
+
     public static func JSONStringify(value: Any, prettyPrinted: Bool = false) -> String {
         let options: JSONSerialization.WritingOptions = prettyPrinted ? .prettyPrinted : .init(rawValue: 0)
         if JSONSerialization.isValidJSONObject(value) {
