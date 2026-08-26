@@ -2707,6 +2707,32 @@ as it can cause framerate drops on animations in Android 9 and lower (see [Hybri
   )
   UpgradeToHTTPSPolicy_? preferredHTTPSNavigationPolicy;
 
+  ///Whether the WebView allows insertion of **adaptive image glyphs** — the inline, text-sized
+  ///images Apple Intelligence produces, most visibly Genmoji — into editable content.
+  ///
+  ///The default is `false`, which does not reject them: WebKit inserts them as **regular images**
+  ///instead. Setting `true` inserts them with full adaptive sizing, so they scale with surrounding
+  ///text like an emoji rather than sitting in the line as a fixed-size picture.
+  ///
+  ///**NOTE for iOS**: this is a `WKWebViewConfiguration` property, and `WKWebView.configuration` is
+  ///documented as *"a copy of the configuration with which the web view was initialized"*. It is
+  ///therefore applied **only when the WebView is created**, and changing it later through
+  ///`setSettings` has no effect — the same limitation as
+  ///[InAppWebViewSettings.writingToolsBehavior].
+  @SupportedPlatforms(
+    platforms: [
+      IOSPlatform(
+        available: "18.0",
+        apiName: "WKWebViewConfiguration.supportsAdaptiveImageGlyph",
+        apiUrl:
+            "https://developer.apple.com/documentation/webkit/wkwebviewconfiguration/supportsadaptiveimageglyph",
+        note:
+            "Applied at WebView creation only; `WKWebView.configuration` is a copy, so later changes are ignored.",
+      ),
+    ],
+  )
+  bool? supportsAdaptiveImageGlyph;
+
   ///How much of the Apple Intelligence Writing Tools UI this WebView should offer for editable
   ///content.
   ///
@@ -3665,6 +3691,7 @@ as it can cause framerate drops on animations in Android 9 and lower (see [Hybri
     this.isUserInteractionEnabled = true,
     this.handleAcceleratorKeyPressed = false,
     this.alpha,
+    this.supportsAdaptiveImageGlyph,
     this.writingToolsBehavior,
     this.preferredHTTPSNavigationPolicy,
     this.securityRestrictionMode,

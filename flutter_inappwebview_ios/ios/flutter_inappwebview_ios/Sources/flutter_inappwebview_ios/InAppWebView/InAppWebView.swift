@@ -710,6 +710,8 @@ public class InAppWebView: WKWebView, UIScrollViewDelegate, WKUIDelegate,
                    let behavior = UIWritingToolsBehavior(rawValue: writingToolsBehavior) {
                     configuration.writingToolsBehavior = behavior
                 }
+                // Unconditional: the documented default is `NO`, which is this field's default too.
+                configuration.supportsAdaptiveImageGlyph = settings.supportsAdaptiveImageGlyph
             }
         }
 

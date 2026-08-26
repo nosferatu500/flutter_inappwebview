@@ -110,6 +110,13 @@ public class InAppWebViewSettings: ISettings<InAppWebView> {
     /// `_`-prefixed `NSNumber` shim needed. Reach for that shim only when there is no safe default.
     var preferredHTTPSNavigationPolicy = 0
 
+    /// Whether adaptive image glyphs (Genmoji) may be inserted with full adaptive sizing.
+    ///
+    /// Non-optional per §50's rule table: WebKit documents the default as `NO`, which is the type's
+    /// zero, so applying it unconditionally cannot change behaviour for a caller who never asked —
+    /// and no `NSNumber` shim is needed because a non-optional `Bool` is ObjC-visible.
+    var supportsAdaptiveImageGlyph = false
+
     /// Whether Lockdown Mode is forced on (or off) for this WebView, or `nil` to respect the device.
     ///
     /// **This is the case where §48/§49's non-optional pattern would be a security bug**, and the
@@ -262,6 +269,7 @@ public class InAppWebViewSettings: ISettings<InAppWebView> {
             // a caller can discover what WebKit actually resolved the behaviour to.
             if #available(iOS 18.0, *) {
                 realSettings["writingToolsBehavior"] = configuration.writingToolsBehavior.rawValue
+                realSettings["supportsAdaptiveImageGlyph"] = configuration.supportsAdaptiveImageGlyph
             }
             realSettings["underPageBackgroundColor"] = webView.underPageBackgroundColor.hexString
 
