@@ -36,6 +36,7 @@ class CreateWindowAction extends NavigationAction {
     super.sourceFrame,
     super.targetFrame,
     super.shouldPerformDownload,
+    super.isContentRuleListRedirect,
     super.modifierFlags,
     super.buttonNumber,
   });
@@ -79,6 +80,7 @@ class CreateWindowAction extends NavigationAction {
       windowId: map['windowId'],
     );
     instance.shouldPerformDownload = map['shouldPerformDownload'];
+    instance.isContentRuleListRedirect = map['isContentRuleListRedirect'];
     instance.modifierFlags = map['modifierFlags'] != null
         ? List<ModifierFlag>.from(
             map['modifierFlags'].map(
@@ -120,6 +122,7 @@ class CreateWindowAction extends NavigationAction {
       "sourceFrame": sourceFrame?.toMap(enumMethod: enumMethod),
       "targetFrame": targetFrame?.toMap(enumMethod: enumMethod),
       "shouldPerformDownload": shouldPerformDownload,
+      "isContentRuleListRedirect": isContentRuleListRedirect,
       "modifierFlags": modifierFlags
           ?.map(
             (e) => switch (enumMethod ?? EnumMethod.nativeValue) {
@@ -152,6 +155,6 @@ class CreateWindowAction extends NavigationAction {
 
   @override
   String toString() {
-    return 'CreateWindowAction{request: $request, isForMainFrame: $isForMainFrame, hasGesture: $hasGesture, isRedirect: $isRedirect, navigationType: $navigationType, sourceFrame: $sourceFrame, targetFrame: $targetFrame, shouldPerformDownload: $shouldPerformDownload, modifierFlags: $modifierFlags, buttonNumber: $buttonNumber, isDialog: $isDialog, windowFeatures: $windowFeatures, windowId: $windowId}';
+    return 'CreateWindowAction{request: $request, isForMainFrame: $isForMainFrame, hasGesture: $hasGesture, isRedirect: $isRedirect, navigationType: $navigationType, sourceFrame: $sourceFrame, targetFrame: $targetFrame, shouldPerformDownload: $shouldPerformDownload, isContentRuleListRedirect: $isContentRuleListRedirect, modifierFlags: $modifierFlags, buttonNumber: $buttonNumber, isDialog: $isDialog, windowFeatures: $windowFeatures, windowId: $windowId}';
   }
 }

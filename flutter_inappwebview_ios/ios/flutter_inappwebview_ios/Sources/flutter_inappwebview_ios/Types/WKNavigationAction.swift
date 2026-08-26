@@ -23,6 +23,13 @@ extension WKNavigationAction {
             buttonNumber = Util.getButtonMaskString(mask: self.buttonNumber)
         }
 
+        // `nil` below iOS 26.0 means "not reported by this platform", which the Dart side keeps
+        // distinct from `false` ("reported, and this navigation was not rule-list driven").
+        var isContentRuleListRedirect: Bool? = nil
+        if #available(iOS 26.0, *) {
+            isContentRuleListRedirect = self.isContentRuleListRedirect
+        }
+
         return [
             "request": request.toMap(),
             "isForMainFrame": targetFrame?.isMainFrame ?? false,
@@ -32,6 +39,7 @@ extension WKNavigationAction {
             "sourceFrame": sourceFrame.toMap(),
             "targetFrame": targetFrame?.toMap(),
             "shouldPerformDownload": shouldPerformDownload,
+            "isContentRuleListRedirect": isContentRuleListRedirect,
             "modifierFlags": modifierFlags,
             "buttonNumber": buttonNumber
         ]

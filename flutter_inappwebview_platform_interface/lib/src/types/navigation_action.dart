@@ -135,6 +135,39 @@ class NavigationAction_ {
   )
   bool? shouldPerformDownload;
 
+  ///Whether the navigation is a redirect produced by a content rule list rather than by the
+  ///page or the server.
+  ///
+  ///The only rule-list action this plugin can express today is
+  ///[ContentBlockerActionType.MAKE_HTTPS] in [InAppWebViewSettings.contentBlockers], so on iOS
+  ///this is effectively "the `http` → `https` upgrade one of my own rules performed".
+  ///
+  ///This is **not** [isRedirect], which reports a *server-side* redirect and is Android/Windows
+  ///only. A content rule list redirect never reaches the network at the original URL, so no
+  ///server was involved.
+  ///
+  ///`false` means the platform reported the value and the navigation was not rule-list driven;
+  ///`null` means it did not report the value at all, which is the case below iOS 26.0. The
+  ///distinction matters for a caller that vetoes or logs unexpected navigations: a rule-list
+  ///redirect was caused by the app's own configuration, not by the content.
+  @SupportedPlatforms(
+    platforms: [
+      IOSPlatform(
+        available: "26.0",
+        apiName: "WKNavigationAction.isContentRuleListRedirect",
+        apiUrl:
+            "https://developer.apple.com/documentation/webkit/wknavigationaction/iscontentrulelistredirect",
+      ),
+      MacOSPlatform(
+        available: "26.0",
+        apiName: "WKNavigationAction.isContentRuleListRedirect",
+        apiUrl:
+            "https://developer.apple.com/documentation/webkit/wknavigationaction/iscontentrulelistredirect",
+      ),
+    ],
+  )
+  bool? isContentRuleListRedirect;
+
   ///The modifier keys that were held down when the navigation was triggered,
   ///for example `[ModifierFlag.COMMAND]` for a command-click.
   ///
@@ -183,6 +216,7 @@ class NavigationAction_ {
     this.sourceFrame,
     this.targetFrame,
     this.shouldPerformDownload,
+    this.isContentRuleListRedirect,
     this.modifierFlags,
     this.buttonNumber,
   });

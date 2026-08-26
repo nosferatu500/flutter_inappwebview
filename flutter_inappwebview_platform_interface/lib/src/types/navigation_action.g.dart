@@ -31,6 +31,27 @@ class NavigationAction {
   ///    - Available only if the request is associated to the [PlatformWebViewCreationParams.onCreateWindow] event
   bool? hasGesture;
 
+  ///Whether the navigation is a redirect produced by a content rule list rather than by the
+  ///page or the server.
+  ///
+  ///The only rule-list action this plugin can express today is
+  ///[ContentBlockerActionType.MAKE_HTTPS] in [InAppWebViewSettings.contentBlockers], so on iOS
+  ///this is effectively "the `http` → `https` upgrade one of my own rules performed".
+  ///
+  ///This is **not** [isRedirect], which reports a *server-side* redirect and is Android/Windows
+  ///only. A content rule list redirect never reaches the network at the original URL, so no
+  ///server was involved.
+  ///
+  ///`false` means the platform reported the value and the navigation was not rule-list driven;
+  ///`null` means it did not report the value at all, which is the case below iOS 26.0. The
+  ///distinction matters for a caller that vetoes or logs unexpected navigations: a rule-list
+  ///redirect was caused by the app's own configuration, not by the content.
+  ///
+  ///**Officially Supported Platforms/Implementations**:
+  ///- iOS WKWebView 26.0+ ([Official API - WKNavigationAction.isContentRuleListRedirect](https://developer.apple.com/documentation/webkit/wknavigationaction/iscontentrulelistredirect))
+  ///- macOS WKWebView 26.0+ ([Official API - WKNavigationAction.isContentRuleListRedirect](https://developer.apple.com/documentation/webkit/wknavigationaction/iscontentrulelistredirect))
+  bool? isContentRuleListRedirect;
+
   ///Indicates whether the request was made for the main frame.
   ///
   ///**NOTE for Android and Windows**: If the request is associated to the [PlatformWebViewCreationParams.onCreateWindow] event, this is always `true`.
@@ -100,6 +121,7 @@ class NavigationAction {
   NavigationAction({
     this.buttonNumber,
     this.hasGesture,
+    this.isContentRuleListRedirect,
     required this.isForMainFrame,
     this.isRedirect,
     this.modifierFlags,
@@ -131,6 +153,7 @@ class NavigationAction {
             )
           : null,
       hasGesture: map['hasGesture'],
+      isContentRuleListRedirect: map['isContentRuleListRedirect'],
       isForMainFrame: map['isForMainFrame'],
       isRedirect: map['isRedirect'],
       modifierFlags: map['modifierFlags'] != null
@@ -181,6 +204,7 @@ class NavigationAction {
           )
           .toList(),
       "hasGesture": hasGesture,
+      "isContentRuleListRedirect": isContentRuleListRedirect,
       "isForMainFrame": isForMainFrame,
       "isRedirect": isRedirect,
       "modifierFlags": modifierFlags
@@ -211,6 +235,6 @@ class NavigationAction {
 
   @override
   String toString() {
-    return 'NavigationAction{buttonNumber: $buttonNumber, hasGesture: $hasGesture, isForMainFrame: $isForMainFrame, isRedirect: $isRedirect, modifierFlags: $modifierFlags, navigationType: $navigationType, request: $request, shouldPerformDownload: $shouldPerformDownload, sourceFrame: $sourceFrame, targetFrame: $targetFrame}';
+    return 'NavigationAction{buttonNumber: $buttonNumber, hasGesture: $hasGesture, isContentRuleListRedirect: $isContentRuleListRedirect, isForMainFrame: $isForMainFrame, isRedirect: $isRedirect, modifierFlags: $modifierFlags, navigationType: $navigationType, request: $request, shouldPerformDownload: $shouldPerformDownload, sourceFrame: $sourceFrame, targetFrame: $targetFrame}';
   }
 }
