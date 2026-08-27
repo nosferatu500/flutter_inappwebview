@@ -10,12 +10,28 @@ part of 'custom_tabs_share_state.dart';
 class CustomTabsShareState {
   final int _value;
   final int? _nativeValue;
-  const CustomTabsShareState._internal(this._value, this._nativeValue);
+
+  /// Native values accepted *in addition* to [_nativeValue] when resolving from a
+  /// native value. Inbound only -- [toNativeValue] still returns [_nativeValue].
+  // ignore: unused_field
+  final List<int?> _alsoAcceptsNativeValues;
+  const CustomTabsShareState._internal(
+    this._value,
+    this._nativeValue, [
+    this._alsoAcceptsNativeValues = const [],
+  ]);
   // ignore: unused_element
   factory CustomTabsShareState._internalMultiPlatform(
     int value,
-    Function nativeValue,
-  ) => CustomTabsShareState._internal(value, nativeValue());
+    Function nativeValue, [
+    Function? alsoAcceptsNativeValues,
+  ]) => CustomTabsShareState._internal(
+    value,
+    nativeValue(),
+    alsoAcceptsNativeValues != null
+        ? alsoAcceptsNativeValues() as List<int?>
+        : const [],
+  );
 
   ///Applies the default share settings depending on the browser.
   static const SHARE_STATE_DEFAULT = CustomTabsShareState._internal(0, 0);
@@ -48,6 +64,10 @@ class CustomTabsShareState {
   }
 
   ///Gets a possible [CustomTabsShareState] instance from a native value.
+  ///
+  ///Falls back to constants that declare [value] among their additionally accepted
+  ///native values, so a platform reporting more than one code for the same condition
+  ///still resolves instead of returning `null`.
   static CustomTabsShareState? fromNativeValue(int? value) {
     if (value != null) {
       try {
@@ -55,7 +75,13 @@ class CustomTabsShareState {
           (element) => element.toNativeValue() == value,
         );
       } catch (e) {
-        return null;
+        try {
+          return CustomTabsShareState.values.firstWhere(
+            (element) => element._alsoAcceptsNativeValues.contains(value),
+          );
+        } catch (e) {
+          return null;
+        }
       }
     }
     return null;

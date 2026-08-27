@@ -10,12 +10,28 @@ part of 'in_app_webview_hit_test_result_type.dart';
 class InAppWebViewHitTestResultType {
   final int _value;
   final int? _nativeValue;
-  const InAppWebViewHitTestResultType._internal(this._value, this._nativeValue);
+
+  /// Native values accepted *in addition* to [_nativeValue] when resolving from a
+  /// native value. Inbound only -- [toNativeValue] still returns [_nativeValue].
+  // ignore: unused_field
+  final List<int?> _alsoAcceptsNativeValues;
+  const InAppWebViewHitTestResultType._internal(
+    this._value,
+    this._nativeValue, [
+    this._alsoAcceptsNativeValues = const [],
+  ]);
   // ignore: unused_element
   factory InAppWebViewHitTestResultType._internalMultiPlatform(
     int value,
-    Function nativeValue,
-  ) => InAppWebViewHitTestResultType._internal(value, nativeValue());
+    Function nativeValue, [
+    Function? alsoAcceptsNativeValues,
+  ]) => InAppWebViewHitTestResultType._internal(
+    value,
+    nativeValue(),
+    alsoAcceptsNativeValues != null
+        ? alsoAcceptsNativeValues() as List<int?>
+        : const [],
+  );
 
   ///[InAppWebViewHitTestResult] for hitting an edit text area.
   static const EDIT_TEXT_TYPE = InAppWebViewHitTestResultType._internal(9, 9);
@@ -71,6 +87,10 @@ class InAppWebViewHitTestResultType {
   }
 
   ///Gets a possible [InAppWebViewHitTestResultType] instance from a native value.
+  ///
+  ///Falls back to constants that declare [value] among their additionally accepted
+  ///native values, so a platform reporting more than one code for the same condition
+  ///still resolves instead of returning `null`.
   static InAppWebViewHitTestResultType? fromNativeValue(int? value) {
     if (value != null) {
       try {
@@ -78,7 +98,13 @@ class InAppWebViewHitTestResultType {
           (element) => element.toNativeValue() == value,
         );
       } catch (e) {
-        return null;
+        try {
+          return InAppWebViewHitTestResultType.values.firstWhere(
+            (element) => element._alsoAcceptsNativeValues.contains(value),
+          );
+        } catch (e) {
+          return null;
+        }
       }
     }
     return null;

@@ -10,12 +10,28 @@ part of 'process_failed_kind.dart';
 class ProcessFailedKind {
   final String _value;
   final int? _nativeValue;
-  const ProcessFailedKind._internal(this._value, this._nativeValue);
+
+  /// Native values accepted *in addition* to [_nativeValue] when resolving from a
+  /// native value. Inbound only -- [toNativeValue] still returns [_nativeValue].
+  // ignore: unused_field
+  final List<int?> _alsoAcceptsNativeValues;
+  const ProcessFailedKind._internal(
+    this._value,
+    this._nativeValue, [
+    this._alsoAcceptsNativeValues = const [],
+  ]);
   // ignore: unused_element
   factory ProcessFailedKind._internalMultiPlatform(
     String value,
-    Function nativeValue,
-  ) => ProcessFailedKind._internal(value, nativeValue());
+    Function nativeValue, [
+    Function? alsoAcceptsNativeValues,
+  ]) => ProcessFailedKind._internal(
+    value,
+    nativeValue(),
+    alsoAcceptsNativeValues != null
+        ? alsoAcceptsNativeValues() as List<int?>
+        : const [],
+  );
 
   ///Indicates that the browser process ended unexpectedly. The WebView automatically moves to the Closed state.
   ///The app has to recreate a new WebView to recover from this failure.
@@ -242,6 +258,10 @@ class ProcessFailedKind {
   }
 
   ///Gets a possible [ProcessFailedKind] instance from a native value.
+  ///
+  ///Falls back to constants that declare [value] among their additionally accepted
+  ///native values, so a platform reporting more than one code for the same condition
+  ///still resolves instead of returning `null`.
   static ProcessFailedKind? fromNativeValue(int? value) {
     if (value != null) {
       try {
@@ -249,7 +269,13 @@ class ProcessFailedKind {
           (element) => element.toNativeValue() == value,
         );
       } catch (e) {
-        return null;
+        try {
+          return ProcessFailedKind.values.firstWhere(
+            (element) => element._alsoAcceptsNativeValues.contains(value),
+          );
+        } catch (e) {
+          return null;
+        }
       }
     }
     return null;

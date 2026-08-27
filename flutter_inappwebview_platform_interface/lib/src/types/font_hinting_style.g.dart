@@ -10,12 +10,28 @@ part of 'font_hinting_style.dart';
 class FontHintingStyle {
   final int _value;
   final int? _nativeValue;
-  const FontHintingStyle._internal(this._value, this._nativeValue);
+
+  /// Native values accepted *in addition* to [_nativeValue] when resolving from a
+  /// native value. Inbound only -- [toNativeValue] still returns [_nativeValue].
+  // ignore: unused_field
+  final List<int?> _alsoAcceptsNativeValues;
+  const FontHintingStyle._internal(
+    this._value,
+    this._nativeValue, [
+    this._alsoAcceptsNativeValues = const [],
+  ]);
   // ignore: unused_element
   factory FontHintingStyle._internalMultiPlatform(
     int value,
-    Function nativeValue,
-  ) => FontHintingStyle._internal(value, nativeValue());
+    Function nativeValue, [
+    Function? alsoAcceptsNativeValues,
+  ]) => FontHintingStyle._internal(
+    value,
+    nativeValue(),
+    alsoAcceptsNativeValues != null
+        ? alsoAcceptsNativeValues() as List<int?>
+        : const [],
+  );
 
   ///Full hinting. Maximum hinting is applied for crispest text.
   static const FULL = FontHintingStyle._internal(3, 3);
@@ -52,6 +68,10 @@ class FontHintingStyle {
   }
 
   ///Gets a possible [FontHintingStyle] instance from a native value.
+  ///
+  ///Falls back to constants that declare [value] among their additionally accepted
+  ///native values, so a platform reporting more than one code for the same condition
+  ///still resolves instead of returning `null`.
   static FontHintingStyle? fromNativeValue(int? value) {
     if (value != null) {
       try {
@@ -59,7 +79,13 @@ class FontHintingStyle {
           (element) => element.toNativeValue() == value,
         );
       } catch (e) {
-        return null;
+        try {
+          return FontHintingStyle.values.firstWhere(
+            (element) => element._alsoAcceptsNativeValues.contains(value),
+          );
+        } catch (e) {
+          return null;
+        }
       }
     }
     return null;

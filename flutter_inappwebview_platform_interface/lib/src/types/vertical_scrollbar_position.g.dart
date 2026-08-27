@@ -10,12 +10,28 @@ part of 'vertical_scrollbar_position.dart';
 class VerticalScrollbarPosition {
   final int _value;
   final int? _nativeValue;
-  const VerticalScrollbarPosition._internal(this._value, this._nativeValue);
+
+  /// Native values accepted *in addition* to [_nativeValue] when resolving from a
+  /// native value. Inbound only -- [toNativeValue] still returns [_nativeValue].
+  // ignore: unused_field
+  final List<int?> _alsoAcceptsNativeValues;
+  const VerticalScrollbarPosition._internal(
+    this._value,
+    this._nativeValue, [
+    this._alsoAcceptsNativeValues = const [],
+  ]);
   // ignore: unused_element
   factory VerticalScrollbarPosition._internalMultiPlatform(
     int value,
-    Function nativeValue,
-  ) => VerticalScrollbarPosition._internal(value, nativeValue());
+    Function nativeValue, [
+    Function? alsoAcceptsNativeValues,
+  ]) => VerticalScrollbarPosition._internal(
+    value,
+    nativeValue(),
+    alsoAcceptsNativeValues != null
+        ? alsoAcceptsNativeValues() as List<int?>
+        : const [],
+  );
 
   ///Position the scroll bar at the default position as determined by the system.
   static const SCROLLBAR_POSITION_DEFAULT = VerticalScrollbarPosition._internal(
@@ -57,6 +73,10 @@ class VerticalScrollbarPosition {
   }
 
   ///Gets a possible [VerticalScrollbarPosition] instance from a native value.
+  ///
+  ///Falls back to constants that declare [value] among their additionally accepted
+  ///native values, so a platform reporting more than one code for the same condition
+  ///still resolves instead of returning `null`.
   static VerticalScrollbarPosition? fromNativeValue(int? value) {
     if (value != null) {
       try {
@@ -64,7 +84,13 @@ class VerticalScrollbarPosition {
           (element) => element.toNativeValue() == value,
         );
       } catch (e) {
-        return null;
+        try {
+          return VerticalScrollbarPosition.values.firstWhere(
+            (element) => element._alsoAcceptsNativeValues.contains(value),
+          );
+        } catch (e) {
+          return null;
+        }
       }
     }
     return null;

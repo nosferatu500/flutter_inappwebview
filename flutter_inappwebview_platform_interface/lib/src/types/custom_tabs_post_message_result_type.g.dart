@@ -10,15 +10,28 @@ part of 'custom_tabs_post_message_result_type.dart';
 class CustomTabsPostMessageResultType {
   final int _value;
   final int? _nativeValue;
+
+  /// Native values accepted *in addition* to [_nativeValue] when resolving from a
+  /// native value. Inbound only -- [toNativeValue] still returns [_nativeValue].
+  // ignore: unused_field
+  final List<int?> _alsoAcceptsNativeValues;
   const CustomTabsPostMessageResultType._internal(
     this._value,
-    this._nativeValue,
-  );
+    this._nativeValue, [
+    this._alsoAcceptsNativeValues = const [],
+  ]);
   // ignore: unused_element
   factory CustomTabsPostMessageResultType._internalMultiPlatform(
     int value,
-    Function nativeValue,
-  ) => CustomTabsPostMessageResultType._internal(value, nativeValue());
+    Function nativeValue, [
+    Function? alsoAcceptsNativeValues,
+  ]) => CustomTabsPostMessageResultType._internal(
+    value,
+    nativeValue(),
+    alsoAcceptsNativeValues != null
+        ? alsoAcceptsNativeValues() as List<int?>
+        : const [],
+  );
 
   ///Indicates that the postMessage request was not allowed due to a bad argument
   ///or requesting at a disallowed time like when in background.
@@ -106,6 +119,10 @@ class CustomTabsPostMessageResultType {
   }
 
   ///Gets a possible [CustomTabsPostMessageResultType] instance from a native value.
+  ///
+  ///Falls back to constants that declare [value] among their additionally accepted
+  ///native values, so a platform reporting more than one code for the same condition
+  ///still resolves instead of returning `null`.
   static CustomTabsPostMessageResultType? fromNativeValue(int? value) {
     if (value != null) {
       try {
@@ -113,7 +130,13 @@ class CustomTabsPostMessageResultType {
           (element) => element.toNativeValue() == value,
         );
       } catch (e) {
-        return null;
+        try {
+          return CustomTabsPostMessageResultType.values.firstWhere(
+            (element) => element._alsoAcceptsNativeValues.contains(value),
+          );
+        } catch (e) {
+          return null;
+        }
       }
     }
     return null;

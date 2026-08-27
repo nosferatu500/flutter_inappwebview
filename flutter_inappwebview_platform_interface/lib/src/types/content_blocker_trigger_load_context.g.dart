@@ -10,15 +10,28 @@ part of 'content_blocker_trigger_load_context.dart';
 class ContentBlockerTriggerLoadContext {
   final String _value;
   final String? _nativeValue;
+
+  /// Native values accepted *in addition* to [_nativeValue] when resolving from a
+  /// native value. Inbound only -- [toNativeValue] still returns [_nativeValue].
+  // ignore: unused_field
+  final List<String?> _alsoAcceptsNativeValues;
   const ContentBlockerTriggerLoadContext._internal(
     this._value,
-    this._nativeValue,
-  );
+    this._nativeValue, [
+    this._alsoAcceptsNativeValues = const [],
+  ]);
   // ignore: unused_element
   factory ContentBlockerTriggerLoadContext._internalMultiPlatform(
     String value,
-    Function nativeValue,
-  ) => ContentBlockerTriggerLoadContext._internal(value, nativeValue());
+    Function nativeValue, [
+    Function? alsoAcceptsNativeValues,
+  ]) => ContentBlockerTriggerLoadContext._internal(
+    value,
+    nativeValue(),
+    alsoAcceptsNativeValues != null
+        ? alsoAcceptsNativeValues() as List<String?>
+        : const [],
+  );
 
   ///Child frame load context
   static const CHILD_FRAME = ContentBlockerTriggerLoadContext._internal(
@@ -53,6 +66,10 @@ class ContentBlockerTriggerLoadContext {
   }
 
   ///Gets a possible [ContentBlockerTriggerLoadContext] instance from a native value.
+  ///
+  ///Falls back to constants that declare [value] among their additionally accepted
+  ///native values, so a platform reporting more than one code for the same condition
+  ///still resolves instead of returning `null`.
   static ContentBlockerTriggerLoadContext? fromNativeValue(String? value) {
     if (value != null) {
       try {
@@ -60,7 +77,13 @@ class ContentBlockerTriggerLoadContext {
           (element) => element.toNativeValue() == value,
         );
       } catch (e) {
-        return null;
+        try {
+          return ContentBlockerTriggerLoadContext.values.firstWhere(
+            (element) => element._alsoAcceptsNativeValues.contains(value),
+          );
+        } catch (e) {
+          return null;
+        }
       }
     }
     return null;

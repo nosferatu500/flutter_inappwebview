@@ -11,15 +11,28 @@ part of 'trusted_web_activity_screen_orientation.dart';
 class TrustedWebActivityScreenOrientation {
   final int _value;
   final int? _nativeValue;
+
+  /// Native values accepted *in addition* to [_nativeValue] when resolving from a
+  /// native value. Inbound only -- [toNativeValue] still returns [_nativeValue].
+  // ignore: unused_field
+  final List<int?> _alsoAcceptsNativeValues;
   const TrustedWebActivityScreenOrientation._internal(
     this._value,
-    this._nativeValue,
-  );
+    this._nativeValue, [
+    this._alsoAcceptsNativeValues = const [],
+  ]);
   // ignore: unused_element
   factory TrustedWebActivityScreenOrientation._internalMultiPlatform(
     int value,
-    Function nativeValue,
-  ) => TrustedWebActivityScreenOrientation._internal(value, nativeValue());
+    Function nativeValue, [
+    Function? alsoAcceptsNativeValues,
+  ]) => TrustedWebActivityScreenOrientation._internal(
+    value,
+    nativeValue(),
+    alsoAcceptsNativeValues != null
+        ? alsoAcceptsNativeValues() as List<int?>
+        : const [],
+  );
 
   /// Any is an orientation that means the screen can be locked to any one of portrait-primary,
   /// portrait-secondary, landscape-primary and landscape-secondary.
@@ -98,6 +111,10 @@ class TrustedWebActivityScreenOrientation {
   }
 
   ///Gets a possible [TrustedWebActivityScreenOrientation] instance from a native value.
+  ///
+  ///Falls back to constants that declare [value] among their additionally accepted
+  ///native values, so a platform reporting more than one code for the same condition
+  ///still resolves instead of returning `null`.
   static TrustedWebActivityScreenOrientation? fromNativeValue(int? value) {
     if (value != null) {
       try {
@@ -105,7 +122,13 @@ class TrustedWebActivityScreenOrientation {
           (element) => element.toNativeValue() == value,
         );
       } catch (e) {
-        return null;
+        try {
+          return TrustedWebActivityScreenOrientation.values.firstWhere(
+            (element) => element._alsoAcceptsNativeValues.contains(value),
+          );
+        } catch (e) {
+          return null;
+        }
       }
     }
     return null;

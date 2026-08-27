@@ -10,12 +10,28 @@ part of 'user_script_injection_time.dart';
 class UserScriptInjectionTime {
   final int _value;
   final int? _nativeValue;
-  const UserScriptInjectionTime._internal(this._value, this._nativeValue);
+
+  /// Native values accepted *in addition* to [_nativeValue] when resolving from a
+  /// native value. Inbound only -- [toNativeValue] still returns [_nativeValue].
+  // ignore: unused_field
+  final List<int?> _alsoAcceptsNativeValues;
+  const UserScriptInjectionTime._internal(
+    this._value,
+    this._nativeValue, [
+    this._alsoAcceptsNativeValues = const [],
+  ]);
   // ignore: unused_element
   factory UserScriptInjectionTime._internalMultiPlatform(
     int value,
-    Function nativeValue,
-  ) => UserScriptInjectionTime._internal(value, nativeValue());
+    Function nativeValue, [
+    Function? alsoAcceptsNativeValues,
+  ]) => UserScriptInjectionTime._internal(
+    value,
+    nativeValue(),
+    alsoAcceptsNativeValues != null
+        ? alsoAcceptsNativeValues() as List<int?>
+        : const [],
+  );
 
   ///**NOTE for iOS**: A constant to inject the script after the document finishes loading, but before loading any other subresources.
   ///
@@ -48,6 +64,10 @@ class UserScriptInjectionTime {
   }
 
   ///Gets a possible [UserScriptInjectionTime] instance from a native value.
+  ///
+  ///Falls back to constants that declare [value] among their additionally accepted
+  ///native values, so a platform reporting more than one code for the same condition
+  ///still resolves instead of returning `null`.
   static UserScriptInjectionTime? fromNativeValue(int? value) {
     if (value != null) {
       try {
@@ -55,7 +75,13 @@ class UserScriptInjectionTime {
           (element) => element.toNativeValue() == value,
         );
       } catch (e) {
-        return null;
+        try {
+          return UserScriptInjectionTime.values.firstWhere(
+            (element) => element._alsoAcceptsNativeValues.contains(value),
+          );
+        } catch (e) {
+          return null;
+        }
       }
     }
     return null;

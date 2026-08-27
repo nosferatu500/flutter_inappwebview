@@ -10,12 +10,28 @@ part of 'show_file_chooser_request_mode.dart';
 class ShowFileChooserRequestMode {
   final int _value;
   final int? _nativeValue;
-  const ShowFileChooserRequestMode._internal(this._value, this._nativeValue);
+
+  /// Native values accepted *in addition* to [_nativeValue] when resolving from a
+  /// native value. Inbound only -- [toNativeValue] still returns [_nativeValue].
+  // ignore: unused_field
+  final List<int?> _alsoAcceptsNativeValues;
+  const ShowFileChooserRequestMode._internal(
+    this._value,
+    this._nativeValue, [
+    this._alsoAcceptsNativeValues = const [],
+  ]);
   // ignore: unused_element
   factory ShowFileChooserRequestMode._internalMultiPlatform(
     int value,
-    Function nativeValue,
-  ) => ShowFileChooserRequestMode._internal(value, nativeValue());
+    Function nativeValue, [
+    Function? alsoAcceptsNativeValues,
+  ]) => ShowFileChooserRequestMode._internal(
+    value,
+    nativeValue(),
+    alsoAcceptsNativeValues != null
+        ? alsoAcceptsNativeValues() as List<int?>
+        : const [],
+  );
 
   ///Open single file. Requires that the file exists before allowing the user to pick it.
   ///
@@ -102,6 +118,10 @@ class ShowFileChooserRequestMode {
   }
 
   ///Gets a possible [ShowFileChooserRequestMode] instance from a native value.
+  ///
+  ///Falls back to constants that declare [value] among their additionally accepted
+  ///native values, so a platform reporting more than one code for the same condition
+  ///still resolves instead of returning `null`.
   static ShowFileChooserRequestMode? fromNativeValue(int? value) {
     if (value != null) {
       try {
@@ -109,7 +129,13 @@ class ShowFileChooserRequestMode {
           (element) => element.toNativeValue() == value,
         );
       } catch (e) {
-        return null;
+        try {
+          return ShowFileChooserRequestMode.values.firstWhere(
+            (element) => element._alsoAcceptsNativeValues.contains(value),
+          );
+        } catch (e) {
+          return null;
+        }
       }
     }
     return null;

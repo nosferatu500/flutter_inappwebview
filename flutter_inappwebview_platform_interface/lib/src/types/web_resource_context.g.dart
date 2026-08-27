@@ -10,12 +10,28 @@ part of 'web_resource_context.dart';
 class WebResourceContext {
   final int _value;
   final int? _nativeValue;
-  const WebResourceContext._internal(this._value, this._nativeValue);
+
+  /// Native values accepted *in addition* to [_nativeValue] when resolving from a
+  /// native value. Inbound only -- [toNativeValue] still returns [_nativeValue].
+  // ignore: unused_field
+  final List<int?> _alsoAcceptsNativeValues;
+  const WebResourceContext._internal(
+    this._value,
+    this._nativeValue, [
+    this._alsoAcceptsNativeValues = const [],
+  ]);
   // ignore: unused_element
   factory WebResourceContext._internalMultiPlatform(
     int value,
-    Function nativeValue,
-  ) => WebResourceContext._internal(value, nativeValue());
+    Function nativeValue, [
+    Function? alsoAcceptsNativeValues,
+  ]) => WebResourceContext._internal(
+    value,
+    nativeValue(),
+    alsoAcceptsNativeValues != null
+        ? alsoAcceptsNativeValues() as List<int?>
+        : const [],
+  );
 
   ///All resources.
   static const ALL = WebResourceContext._internal(0, 0);
@@ -104,6 +120,10 @@ class WebResourceContext {
   }
 
   ///Gets a possible [WebResourceContext] instance from a native value.
+  ///
+  ///Falls back to constants that declare [value] among their additionally accepted
+  ///native values, so a platform reporting more than one code for the same condition
+  ///still resolves instead of returning `null`.
   static WebResourceContext? fromNativeValue(int? value) {
     if (value != null) {
       try {
@@ -111,7 +131,13 @@ class WebResourceContext {
           (element) => element.toNativeValue() == value,
         );
       } catch (e) {
-        return null;
+        try {
+          return WebResourceContext.values.firstWhere(
+            (element) => element._alsoAcceptsNativeValues.contains(value),
+          );
+        } catch (e) {
+          return null;
+        }
       }
     }
     return null;

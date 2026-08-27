@@ -10,12 +10,28 @@ part of 'modal_presentation_style.dart';
 class ModalPresentationStyle {
   final int _value;
   final int? _nativeValue;
-  const ModalPresentationStyle._internal(this._value, this._nativeValue);
+
+  /// Native values accepted *in addition* to [_nativeValue] when resolving from a
+  /// native value. Inbound only -- [toNativeValue] still returns [_nativeValue].
+  // ignore: unused_field
+  final List<int?> _alsoAcceptsNativeValues;
+  const ModalPresentationStyle._internal(
+    this._value,
+    this._nativeValue, [
+    this._alsoAcceptsNativeValues = const [],
+  ]);
   // ignore: unused_element
   factory ModalPresentationStyle._internalMultiPlatform(
     int value,
-    Function nativeValue,
-  ) => ModalPresentationStyle._internal(value, nativeValue());
+    Function nativeValue, [
+    Function? alsoAcceptsNativeValues,
+  ]) => ModalPresentationStyle._internal(
+    value,
+    nativeValue(),
+    alsoAcceptsNativeValues != null
+        ? alsoAcceptsNativeValues() as List<int?>
+        : const [],
+  );
 
   ///The default presentation style chosen by the system.
   ///
@@ -78,6 +94,10 @@ class ModalPresentationStyle {
   }
 
   ///Gets a possible [ModalPresentationStyle] instance from a native value.
+  ///
+  ///Falls back to constants that declare [value] among their additionally accepted
+  ///native values, so a platform reporting more than one code for the same condition
+  ///still resolves instead of returning `null`.
   static ModalPresentationStyle? fromNativeValue(int? value) {
     if (value != null) {
       try {
@@ -85,7 +105,13 @@ class ModalPresentationStyle {
           (element) => element.toNativeValue() == value,
         );
       } catch (e) {
-        return null;
+        try {
+          return ModalPresentationStyle.values.firstWhere(
+            (element) => element._alsoAcceptsNativeValues.contains(value),
+          );
+        } catch (e) {
+          return null;
+        }
       }
     }
     return null;

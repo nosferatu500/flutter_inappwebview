@@ -10,12 +10,28 @@ part of 'platform_webview_feature.dart';
 class WebViewFeature {
   final String _value;
   final String? _nativeValue;
-  const WebViewFeature._internal(this._value, this._nativeValue);
+
+  /// Native values accepted *in addition* to [_nativeValue] when resolving from a
+  /// native value. Inbound only -- [toNativeValue] still returns [_nativeValue].
+  // ignore: unused_field
+  final List<String?> _alsoAcceptsNativeValues;
+  const WebViewFeature._internal(
+    this._value,
+    this._nativeValue, [
+    this._alsoAcceptsNativeValues = const [],
+  ]);
   // ignore: unused_element
   factory WebViewFeature._internalMultiPlatform(
     String value,
-    Function nativeValue,
-  ) => WebViewFeature._internal(value, nativeValue());
+    Function nativeValue, [
+    Function? alsoAcceptsNativeValues,
+  ]) => WebViewFeature._internal(
+    value,
+    nativeValue(),
+    alsoAcceptsNativeValues != null
+        ? alsoAcceptsNativeValues() as List<String?>
+        : const [],
+  );
 
   ///Feature for [isFeatureSupported]. This feature covers [InAppWebViewSettings.algorithmicDarkeningAllowed].
   static const ALGORITHMIC_DARKENING = WebViewFeature._internal(
@@ -465,6 +481,10 @@ class WebViewFeature {
   }
 
   ///Gets a possible [WebViewFeature] instance from a native value.
+  ///
+  ///Falls back to constants that declare [value] among their additionally accepted
+  ///native values, so a platform reporting more than one code for the same condition
+  ///still resolves instead of returning `null`.
   static WebViewFeature? fromNativeValue(String? value) {
     if (value != null) {
       try {
@@ -472,7 +492,13 @@ class WebViewFeature {
           (element) => element.toNativeValue() == value,
         );
       } catch (e) {
-        return null;
+        try {
+          return WebViewFeature.values.firstWhere(
+            (element) => element._alsoAcceptsNativeValues.contains(value),
+          );
+        } catch (e) {
+          return null;
+        }
       }
     }
     return null;

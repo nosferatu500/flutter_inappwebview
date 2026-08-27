@@ -10,12 +10,28 @@ part of 'selection_granularity.dart';
 class SelectionGranularity {
   final int _value;
   final int? _nativeValue;
-  const SelectionGranularity._internal(this._value, this._nativeValue);
+
+  /// Native values accepted *in addition* to [_nativeValue] when resolving from a
+  /// native value. Inbound only -- [toNativeValue] still returns [_nativeValue].
+  // ignore: unused_field
+  final List<int?> _alsoAcceptsNativeValues;
+  const SelectionGranularity._internal(
+    this._value,
+    this._nativeValue, [
+    this._alsoAcceptsNativeValues = const [],
+  ]);
   // ignore: unused_element
   factory SelectionGranularity._internalMultiPlatform(
     int value,
-    Function nativeValue,
-  ) => SelectionGranularity._internal(value, nativeValue());
+    Function nativeValue, [
+    Function? alsoAcceptsNativeValues,
+  ]) => SelectionGranularity._internal(
+    value,
+    nativeValue(),
+    alsoAcceptsNativeValues != null
+        ? alsoAcceptsNativeValues() as List<int?>
+        : const [],
+  );
 
   ///Selection endpoints can be placed at any character boundary.
   static const CHARACTER = SelectionGranularity._internal(1, 1);
@@ -44,6 +60,10 @@ class SelectionGranularity {
   }
 
   ///Gets a possible [SelectionGranularity] instance from a native value.
+  ///
+  ///Falls back to constants that declare [value] among their additionally accepted
+  ///native values, so a platform reporting more than one code for the same condition
+  ///still resolves instead of returning `null`.
   static SelectionGranularity? fromNativeValue(int? value) {
     if (value != null) {
       try {
@@ -51,7 +71,13 @@ class SelectionGranularity {
           (element) => element.toNativeValue() == value,
         );
       } catch (e) {
-        return null;
+        try {
+          return SelectionGranularity.values.firstWhere(
+            (element) => element._alsoAcceptsNativeValues.contains(value),
+          );
+        } catch (e) {
+          return null;
+        }
       }
     }
     return null;

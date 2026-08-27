@@ -11,12 +11,28 @@ part of 'navigation_action_policy.dart';
 class NavigationActionPolicy {
   final int _value;
   final int? _nativeValue;
-  const NavigationActionPolicy._internal(this._value, this._nativeValue);
+
+  /// Native values accepted *in addition* to [_nativeValue] when resolving from a
+  /// native value. Inbound only -- [toNativeValue] still returns [_nativeValue].
+  // ignore: unused_field
+  final List<int?> _alsoAcceptsNativeValues;
+  const NavigationActionPolicy._internal(
+    this._value,
+    this._nativeValue, [
+    this._alsoAcceptsNativeValues = const [],
+  ]);
   // ignore: unused_element
   factory NavigationActionPolicy._internalMultiPlatform(
     int value,
-    Function nativeValue,
-  ) => NavigationActionPolicy._internal(value, nativeValue());
+    Function nativeValue, [
+    Function? alsoAcceptsNativeValues,
+  ]) => NavigationActionPolicy._internal(
+    value,
+    nativeValue(),
+    alsoAcceptsNativeValues != null
+        ? alsoAcceptsNativeValues() as List<int?>
+        : const [],
+  );
 
   ///Allow the navigation to continue.
   static const ALLOW = NavigationActionPolicy._internal(1, 1);
@@ -51,6 +67,10 @@ class NavigationActionPolicy {
   }
 
   ///Gets a possible [NavigationActionPolicy] instance from a native value.
+  ///
+  ///Falls back to constants that declare [value] among their additionally accepted
+  ///native values, so a platform reporting more than one code for the same condition
+  ///still resolves instead of returning `null`.
   static NavigationActionPolicy? fromNativeValue(int? value) {
     if (value != null) {
       try {
@@ -58,7 +78,13 @@ class NavigationActionPolicy {
           (element) => element.toNativeValue() == value,
         );
       } catch (e) {
-        return null;
+        try {
+          return NavigationActionPolicy.values.firstWhere(
+            (element) => element._alsoAcceptsNativeValues.contains(value),
+          );
+        } catch (e) {
+          return null;
+        }
       }
     }
     return null;

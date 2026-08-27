@@ -10,12 +10,28 @@ part of 'webview_interface.dart';
 class WebViewInterface {
   final String _value;
   final String? _nativeValue;
-  const WebViewInterface._internal(this._value, this._nativeValue);
+
+  /// Native values accepted *in addition* to [_nativeValue] when resolving from a
+  /// native value. Inbound only -- [toNativeValue] still returns [_nativeValue].
+  // ignore: unused_field
+  final List<String?> _alsoAcceptsNativeValues;
+  const WebViewInterface._internal(
+    this._value,
+    this._nativeValue, [
+    this._alsoAcceptsNativeValues = const [],
+  ]);
   // ignore: unused_element
   factory WebViewInterface._internalMultiPlatform(
     String value,
-    Function nativeValue,
-  ) => WebViewInterface._internal(value, nativeValue());
+    Function nativeValue, [
+    Function? alsoAcceptsNativeValues,
+  ]) => WebViewInterface._internal(
+    value,
+    nativeValue(),
+    alsoAcceptsNativeValues != null
+        ? alsoAcceptsNativeValues() as List<String?>
+        : const [],
+  );
   static const ICoreWebView2 = WebViewInterface._internal(
     'ICoreWebView2',
     'ICoreWebView2',
@@ -336,6 +352,10 @@ class WebViewInterface {
   }
 
   ///Gets a possible [WebViewInterface] instance from a native value.
+  ///
+  ///Falls back to constants that declare [value] among their additionally accepted
+  ///native values, so a platform reporting more than one code for the same condition
+  ///still resolves instead of returning `null`.
   static WebViewInterface? fromNativeValue(String? value) {
     if (value != null) {
       try {
@@ -343,7 +363,13 @@ class WebViewInterface {
           (element) => element.toNativeValue() == value,
         );
       } catch (e) {
-        return null;
+        try {
+          return WebViewInterface.values.firstWhere(
+            (element) => element._alsoAcceptsNativeValues.contains(value),
+          );
+        } catch (e) {
+          return null;
+        }
       }
     }
     return null;

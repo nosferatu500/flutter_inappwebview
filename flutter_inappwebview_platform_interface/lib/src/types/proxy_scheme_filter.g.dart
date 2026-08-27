@@ -10,12 +10,28 @@ part of 'proxy_scheme_filter.dart';
 class ProxySchemeFilter {
   final String _value;
   final String? _nativeValue;
-  const ProxySchemeFilter._internal(this._value, this._nativeValue);
+
+  /// Native values accepted *in addition* to [_nativeValue] when resolving from a
+  /// native value. Inbound only -- [toNativeValue] still returns [_nativeValue].
+  // ignore: unused_field
+  final List<String?> _alsoAcceptsNativeValues;
+  const ProxySchemeFilter._internal(
+    this._value,
+    this._nativeValue, [
+    this._alsoAcceptsNativeValues = const [],
+  ]);
   // ignore: unused_element
   factory ProxySchemeFilter._internalMultiPlatform(
     String value,
-    Function nativeValue,
-  ) => ProxySchemeFilter._internal(value, nativeValue());
+    Function nativeValue, [
+    Function? alsoAcceptsNativeValues,
+  ]) => ProxySchemeFilter._internal(
+    value,
+    nativeValue(),
+    alsoAcceptsNativeValues != null
+        ? alsoAcceptsNativeValues() as List<String?>
+        : const [],
+  );
 
   ///Matches all schemes.
   static const MATCH_ALL_SCHEMES = ProxySchemeFilter._internal('*', '*');
@@ -48,6 +64,10 @@ class ProxySchemeFilter {
   }
 
   ///Gets a possible [ProxySchemeFilter] instance from a native value.
+  ///
+  ///Falls back to constants that declare [value] among their additionally accepted
+  ///native values, so a platform reporting more than one code for the same condition
+  ///still resolves instead of returning `null`.
   static ProxySchemeFilter? fromNativeValue(String? value) {
     if (value != null) {
       try {
@@ -55,7 +75,13 @@ class ProxySchemeFilter {
           (element) => element.toNativeValue() == value,
         );
       } catch (e) {
-        return null;
+        try {
+          return ProxySchemeFilter.values.firstWhere(
+            (element) => element._alsoAcceptsNativeValues.contains(value),
+          );
+        } catch (e) {
+          return null;
+        }
       }
     }
     return null;

@@ -10,10 +10,28 @@ part of 'cache_mode.dart';
 class CacheMode {
   final int _value;
   final int? _nativeValue;
-  const CacheMode._internal(this._value, this._nativeValue);
+
+  /// Native values accepted *in addition* to [_nativeValue] when resolving from a
+  /// native value. Inbound only -- [toNativeValue] still returns [_nativeValue].
+  // ignore: unused_field
+  final List<int?> _alsoAcceptsNativeValues;
+  const CacheMode._internal(
+    this._value,
+    this._nativeValue, [
+    this._alsoAcceptsNativeValues = const [],
+  ]);
   // ignore: unused_element
-  factory CacheMode._internalMultiPlatform(int value, Function nativeValue) =>
-      CacheMode._internal(value, nativeValue());
+  factory CacheMode._internalMultiPlatform(
+    int value,
+    Function nativeValue, [
+    Function? alsoAcceptsNativeValues,
+  ]) => CacheMode._internal(
+    value,
+    nativeValue(),
+    alsoAcceptsNativeValues != null
+        ? alsoAcceptsNativeValues() as List<int?>
+        : const [],
+  );
 
   ///Use cached resources when they are available, even if they have expired. Otherwise load resources from the network.
   static const LOAD_CACHE_ELSE_NETWORK = CacheMode._internal(1, 1);
@@ -51,6 +69,10 @@ class CacheMode {
   }
 
   ///Gets a possible [CacheMode] instance from a native value.
+  ///
+  ///Falls back to constants that declare [value] among their additionally accepted
+  ///native values, so a platform reporting more than one code for the same condition
+  ///still resolves instead of returning `null`.
   static CacheMode? fromNativeValue(int? value) {
     if (value != null) {
       try {
@@ -58,7 +80,13 @@ class CacheMode {
           (element) => element.toNativeValue() == value,
         );
       } catch (e) {
-        return null;
+        try {
+          return CacheMode.values.firstWhere(
+            (element) => element._alsoAcceptsNativeValues.contains(value),
+          );
+        } catch (e) {
+          return null;
+        }
       }
     }
     return null;

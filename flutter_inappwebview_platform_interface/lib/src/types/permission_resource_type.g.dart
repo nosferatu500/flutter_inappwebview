@@ -10,12 +10,28 @@ part of 'permission_resource_type.dart';
 class PermissionResourceType {
   final String _value;
   final dynamic _nativeValue;
-  const PermissionResourceType._internal(this._value, this._nativeValue);
+
+  /// Native values accepted *in addition* to [_nativeValue] when resolving from a
+  /// native value. Inbound only -- [toNativeValue] still returns [_nativeValue].
+  // ignore: unused_field
+  final List<dynamic> _alsoAcceptsNativeValues;
+  const PermissionResourceType._internal(
+    this._value,
+    this._nativeValue, [
+    this._alsoAcceptsNativeValues = const [],
+  ]);
   // ignore: unused_element
   factory PermissionResourceType._internalMultiPlatform(
     String value,
-    Function nativeValue,
-  ) => PermissionResourceType._internal(value, nativeValue());
+    Function nativeValue, [
+    Function? alsoAcceptsNativeValues,
+  ]) => PermissionResourceType._internal(
+    value,
+    nativeValue(),
+    alsoAcceptsNativeValues != null
+        ? alsoAcceptsNativeValues() as List<dynamic>
+        : const [],
+  );
 
   ///Indicates permission to play audio and video automatically on sites.
   ///This permission affects the autoplay attribute and play method of the audio
@@ -367,6 +383,10 @@ class PermissionResourceType {
   }
 
   ///Gets a possible [PermissionResourceType] instance from a native value.
+  ///
+  ///Falls back to constants that declare [value] among their additionally accepted
+  ///native values, so a platform reporting more than one code for the same condition
+  ///still resolves instead of returning `null`.
   static PermissionResourceType? fromNativeValue(dynamic value) {
     if (value != null) {
       try {
@@ -374,7 +394,13 @@ class PermissionResourceType {
           (element) => element.toNativeValue() == value,
         );
       } catch (e) {
-        return null;
+        try {
+          return PermissionResourceType.values.firstWhere(
+            (element) => element._alsoAcceptsNativeValues.contains(value),
+          );
+        } catch (e) {
+          return null;
+        }
       }
     }
     return null;

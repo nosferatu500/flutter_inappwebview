@@ -10,12 +10,28 @@ part of 'modal_transition_style.dart';
 class ModalTransitionStyle {
   final int _value;
   final int? _nativeValue;
-  const ModalTransitionStyle._internal(this._value, this._nativeValue);
+
+  /// Native values accepted *in addition* to [_nativeValue] when resolving from a
+  /// native value. Inbound only -- [toNativeValue] still returns [_nativeValue].
+  // ignore: unused_field
+  final List<int?> _alsoAcceptsNativeValues;
+  const ModalTransitionStyle._internal(
+    this._value,
+    this._nativeValue, [
+    this._alsoAcceptsNativeValues = const [],
+  ]);
   // ignore: unused_element
   factory ModalTransitionStyle._internalMultiPlatform(
     int value,
-    Function nativeValue,
-  ) => ModalTransitionStyle._internal(value, nativeValue());
+    Function nativeValue, [
+    Function? alsoAcceptsNativeValues,
+  ]) => ModalTransitionStyle._internal(
+    value,
+    nativeValue(),
+    alsoAcceptsNativeValues != null
+        ? alsoAcceptsNativeValues() as List<int?>
+        : const [],
+  );
 
   ///When the view controller is presented, its view slides up from the bottom of the screen.
   ///On dismissal, the view slides back down. This is the default transition style.
@@ -58,6 +74,10 @@ class ModalTransitionStyle {
   }
 
   ///Gets a possible [ModalTransitionStyle] instance from a native value.
+  ///
+  ///Falls back to constants that declare [value] among their additionally accepted
+  ///native values, so a platform reporting more than one code for the same condition
+  ///still resolves instead of returning `null`.
   static ModalTransitionStyle? fromNativeValue(int? value) {
     if (value != null) {
       try {
@@ -65,7 +85,13 @@ class ModalTransitionStyle {
           (element) => element.toNativeValue() == value,
         );
       } catch (e) {
-        return null;
+        try {
+          return ModalTransitionStyle.values.firstWhere(
+            (element) => element._alsoAcceptsNativeValues.contains(value),
+          );
+        } catch (e) {
+          return null;
+        }
       }
     }
     return null;

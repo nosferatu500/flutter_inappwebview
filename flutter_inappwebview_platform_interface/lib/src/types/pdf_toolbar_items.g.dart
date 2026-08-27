@@ -10,12 +10,28 @@ part of 'pdf_toolbar_items.dart';
 class PdfToolbarItems {
   final int _value;
   final int? _nativeValue;
-  const PdfToolbarItems._internal(this._value, this._nativeValue);
+
+  /// Native values accepted *in addition* to [_nativeValue] when resolving from a
+  /// native value. Inbound only -- [toNativeValue] still returns [_nativeValue].
+  // ignore: unused_field
+  final List<int?> _alsoAcceptsNativeValues;
+  const PdfToolbarItems._internal(
+    this._value,
+    this._nativeValue, [
+    this._alsoAcceptsNativeValues = const [],
+  ]);
   // ignore: unused_element
   factory PdfToolbarItems._internalMultiPlatform(
     int value,
-    Function nativeValue,
-  ) => PdfToolbarItems._internal(value, nativeValue());
+    Function nativeValue, [
+    Function? alsoAcceptsNativeValues,
+  ]) => PdfToolbarItems._internal(
+    value,
+    nativeValue(),
+    alsoAcceptsNativeValues != null
+        ? alsoAcceptsNativeValues() as List<int?>
+        : const [],
+  );
 
   ///The bookmarks button.
   static const BOOKMARKS = PdfToolbarItems._internal(256, 256);
@@ -92,6 +108,10 @@ class PdfToolbarItems {
   }
 
   ///Gets a possible [PdfToolbarItems] instance from a native value.
+  ///
+  ///Falls back to constants that declare [value] among their additionally accepted
+  ///native values, so a platform reporting more than one code for the same condition
+  ///still resolves instead of returning `null`.
   static PdfToolbarItems? fromNativeValue(int? value) {
     if (value != null) {
       try {
@@ -99,7 +119,13 @@ class PdfToolbarItems {
           (element) => element.toNativeValue() == value,
         );
       } catch (e) {
-        return null;
+        try {
+          return PdfToolbarItems.values.firstWhere(
+            (element) => element._alsoAcceptsNativeValues.contains(value),
+          );
+        } catch (e) {
+          return null;
+        }
       }
     }
     return null;

@@ -10,12 +10,28 @@ part of 'safe_browsing_response_action.dart';
 class SafeBrowsingResponseAction {
   final int _value;
   final int? _nativeValue;
-  const SafeBrowsingResponseAction._internal(this._value, this._nativeValue);
+
+  /// Native values accepted *in addition* to [_nativeValue] when resolving from a
+  /// native value. Inbound only -- [toNativeValue] still returns [_nativeValue].
+  // ignore: unused_field
+  final List<int?> _alsoAcceptsNativeValues;
+  const SafeBrowsingResponseAction._internal(
+    this._value,
+    this._nativeValue, [
+    this._alsoAcceptsNativeValues = const [],
+  ]);
   // ignore: unused_element
   factory SafeBrowsingResponseAction._internalMultiPlatform(
     int value,
-    Function nativeValue,
-  ) => SafeBrowsingResponseAction._internal(value, nativeValue());
+    Function nativeValue, [
+    Function? alsoAcceptsNativeValues,
+  ]) => SafeBrowsingResponseAction._internal(
+    value,
+    nativeValue(),
+    alsoAcceptsNativeValues != null
+        ? alsoAcceptsNativeValues() as List<int?>
+        : const [],
+  );
 
   ///Act as if the user clicked the "back to safety" button.
   static const BACK_TO_SAFETY = SafeBrowsingResponseAction._internal(0, 0);
@@ -48,6 +64,10 @@ class SafeBrowsingResponseAction {
   }
 
   ///Gets a possible [SafeBrowsingResponseAction] instance from a native value.
+  ///
+  ///Falls back to constants that declare [value] among their additionally accepted
+  ///native values, so a platform reporting more than one code for the same condition
+  ///still resolves instead of returning `null`.
   static SafeBrowsingResponseAction? fromNativeValue(int? value) {
     if (value != null) {
       try {
@@ -55,7 +75,13 @@ class SafeBrowsingResponseAction {
           (element) => element.toNativeValue() == value,
         );
       } catch (e) {
-        return null;
+        try {
+          return SafeBrowsingResponseAction.values.firstWhere(
+            (element) => element._alsoAcceptsNativeValues.contains(value),
+          );
+        } catch (e) {
+          return null;
+        }
       }
     }
     return null;

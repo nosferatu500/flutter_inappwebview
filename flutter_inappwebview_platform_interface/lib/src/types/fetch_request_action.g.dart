@@ -10,12 +10,28 @@ part of 'fetch_request_action.dart';
 class FetchRequestAction {
   final int _value;
   final int? _nativeValue;
-  const FetchRequestAction._internal(this._value, this._nativeValue);
+
+  /// Native values accepted *in addition* to [_nativeValue] when resolving from a
+  /// native value. Inbound only -- [toNativeValue] still returns [_nativeValue].
+  // ignore: unused_field
+  final List<int?> _alsoAcceptsNativeValues;
+  const FetchRequestAction._internal(
+    this._value,
+    this._nativeValue, [
+    this._alsoAcceptsNativeValues = const [],
+  ]);
   // ignore: unused_element
   factory FetchRequestAction._internalMultiPlatform(
     int value,
-    Function nativeValue,
-  ) => FetchRequestAction._internal(value, nativeValue());
+    Function nativeValue, [
+    Function? alsoAcceptsNativeValues,
+  ]) => FetchRequestAction._internal(
+    value,
+    nativeValue(),
+    alsoAcceptsNativeValues != null
+        ? alsoAcceptsNativeValues() as List<int?>
+        : const [],
+  );
 
   ///Aborts the fetch request.
   static const ABORT = FetchRequestAction._internal(0, 0);
@@ -44,6 +60,10 @@ class FetchRequestAction {
   }
 
   ///Gets a possible [FetchRequestAction] instance from a native value.
+  ///
+  ///Falls back to constants that declare [value] among their additionally accepted
+  ///native values, so a platform reporting more than one code for the same condition
+  ///still resolves instead of returning `null`.
   static FetchRequestAction? fromNativeValue(int? value) {
     if (value != null) {
       try {
@@ -51,7 +71,13 @@ class FetchRequestAction {
           (element) => element.toNativeValue() == value,
         );
       } catch (e) {
-        return null;
+        try {
+          return FetchRequestAction.values.firstWhere(
+            (element) => element._alsoAcceptsNativeValues.contains(value),
+          );
+        } catch (e) {
+          return null;
+        }
       }
     }
     return null;

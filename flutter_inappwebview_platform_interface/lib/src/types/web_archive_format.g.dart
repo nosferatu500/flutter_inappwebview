@@ -10,12 +10,28 @@ part of 'web_archive_format.dart';
 class WebArchiveFormat {
   final String _value;
   final String? _nativeValue;
-  const WebArchiveFormat._internal(this._value, this._nativeValue);
+
+  /// Native values accepted *in addition* to [_nativeValue] when resolving from a
+  /// native value. Inbound only -- [toNativeValue] still returns [_nativeValue].
+  // ignore: unused_field
+  final List<String?> _alsoAcceptsNativeValues;
+  const WebArchiveFormat._internal(
+    this._value,
+    this._nativeValue, [
+    this._alsoAcceptsNativeValues = const [],
+  ]);
   // ignore: unused_element
   factory WebArchiveFormat._internalMultiPlatform(
     String value,
-    Function nativeValue,
-  ) => WebArchiveFormat._internal(value, nativeValue());
+    Function nativeValue, [
+    Function? alsoAcceptsNativeValues,
+  ]) => WebArchiveFormat._internal(
+    value,
+    nativeValue(),
+    alsoAcceptsNativeValues != null
+        ? alsoAcceptsNativeValues() as List<String?>
+        : const [],
+  );
 
   ///MHT (MIME HTML) is a web Archive format that saves a web page's HTML code, images, CSS, and scripts into one document, allowing for offline viewing.
   ///
@@ -75,6 +91,10 @@ class WebArchiveFormat {
   }
 
   ///Gets a possible [WebArchiveFormat] instance from a native value.
+  ///
+  ///Falls back to constants that declare [value] among their additionally accepted
+  ///native values, so a platform reporting more than one code for the same condition
+  ///still resolves instead of returning `null`.
   static WebArchiveFormat? fromNativeValue(String? value) {
     if (value != null) {
       try {
@@ -82,7 +102,13 @@ class WebArchiveFormat {
           (element) => element.toNativeValue() == value,
         );
       } catch (e) {
-        return null;
+        try {
+          return WebArchiveFormat.values.firstWhere(
+            (element) => element._alsoAcceptsNativeValues.contains(value),
+          );
+        } catch (e) {
+          return null;
+        }
       }
     }
     return null;

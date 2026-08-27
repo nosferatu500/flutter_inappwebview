@@ -10,12 +10,28 @@ part of 'writing_tools_behavior.dart';
 class WritingToolsBehavior {
   final int _value;
   final int? _nativeValue;
-  const WritingToolsBehavior._internal(this._value, this._nativeValue);
+
+  /// Native values accepted *in addition* to [_nativeValue] when resolving from a
+  /// native value. Inbound only -- [toNativeValue] still returns [_nativeValue].
+  // ignore: unused_field
+  final List<int?> _alsoAcceptsNativeValues;
+  const WritingToolsBehavior._internal(
+    this._value,
+    this._nativeValue, [
+    this._alsoAcceptsNativeValues = const [],
+  ]);
   // ignore: unused_element
   factory WritingToolsBehavior._internalMultiPlatform(
     int value,
-    Function nativeValue,
-  ) => WritingToolsBehavior._internal(value, nativeValue());
+    Function nativeValue, [
+    Function? alsoAcceptsNativeValues,
+  ]) => WritingToolsBehavior._internal(
+    value,
+    nativeValue(),
+    alsoAcceptsNativeValues != null
+        ? alsoAcceptsNativeValues() as List<int?>
+        : const [],
+  );
 
   ///The complete inline-editing experience will be provided if possible.
   static const COMPLETE = WritingToolsBehavior._internal(1, 1);
@@ -60,6 +76,10 @@ class WritingToolsBehavior {
   }
 
   ///Gets a possible [WritingToolsBehavior] instance from a native value.
+  ///
+  ///Falls back to constants that declare [value] among their additionally accepted
+  ///native values, so a platform reporting more than one code for the same condition
+  ///still resolves instead of returning `null`.
   static WritingToolsBehavior? fromNativeValue(int? value) {
     if (value != null) {
       try {
@@ -67,7 +87,13 @@ class WritingToolsBehavior {
           (element) => element.toNativeValue() == value,
         );
       } catch (e) {
-        return null;
+        try {
+          return WritingToolsBehavior.values.firstWhere(
+            (element) => element._alsoAcceptsNativeValues.contains(value),
+          );
+        } catch (e) {
+          return null;
+        }
       }
     }
     return null;

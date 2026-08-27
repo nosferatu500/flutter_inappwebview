@@ -10,12 +10,28 @@ part of 'js_prompt_response_action.dart';
 class JsPromptResponseAction {
   final int _value;
   final int? _nativeValue;
-  const JsPromptResponseAction._internal(this._value, this._nativeValue);
+
+  /// Native values accepted *in addition* to [_nativeValue] when resolving from a
+  /// native value. Inbound only -- [toNativeValue] still returns [_nativeValue].
+  // ignore: unused_field
+  final List<int?> _alsoAcceptsNativeValues;
+  const JsPromptResponseAction._internal(
+    this._value,
+    this._nativeValue, [
+    this._alsoAcceptsNativeValues = const [],
+  ]);
   // ignore: unused_element
   factory JsPromptResponseAction._internalMultiPlatform(
     int value,
-    Function nativeValue,
-  ) => JsPromptResponseAction._internal(value, nativeValue());
+    Function nativeValue, [
+    Function? alsoAcceptsNativeValues,
+  ]) => JsPromptResponseAction._internal(
+    value,
+    nativeValue(),
+    alsoAcceptsNativeValues != null
+        ? alsoAcceptsNativeValues() as List<int?>
+        : const [],
+  );
 
   ///Confirm that the user hit cancel button.
   static const CANCEL = JsPromptResponseAction._internal(1, 1);
@@ -44,6 +60,10 @@ class JsPromptResponseAction {
   }
 
   ///Gets a possible [JsPromptResponseAction] instance from a native value.
+  ///
+  ///Falls back to constants that declare [value] among their additionally accepted
+  ///native values, so a platform reporting more than one code for the same condition
+  ///still resolves instead of returning `null`.
   static JsPromptResponseAction? fromNativeValue(int? value) {
     if (value != null) {
       try {
@@ -51,7 +71,13 @@ class JsPromptResponseAction {
           (element) => element.toNativeValue() == value,
         );
       } catch (e) {
-        return null;
+        try {
+          return JsPromptResponseAction.values.firstWhere(
+            (element) => element._alsoAcceptsNativeValues.contains(value),
+          );
+        } catch (e) {
+          return null;
+        }
       }
     }
     return null;

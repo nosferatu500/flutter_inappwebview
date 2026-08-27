@@ -10,12 +10,28 @@ part of 'layout_algorithm.dart';
 class LayoutAlgorithm {
   final String _value;
   final String? _nativeValue;
-  const LayoutAlgorithm._internal(this._value, this._nativeValue);
+
+  /// Native values accepted *in addition* to [_nativeValue] when resolving from a
+  /// native value. Inbound only -- [toNativeValue] still returns [_nativeValue].
+  // ignore: unused_field
+  final List<String?> _alsoAcceptsNativeValues;
+  const LayoutAlgorithm._internal(
+    this._value,
+    this._nativeValue, [
+    this._alsoAcceptsNativeValues = const [],
+  ]);
   // ignore: unused_element
   factory LayoutAlgorithm._internalMultiPlatform(
     String value,
-    Function nativeValue,
-  ) => LayoutAlgorithm._internal(value, nativeValue());
+    Function nativeValue, [
+    Function? alsoAcceptsNativeValues,
+  ]) => LayoutAlgorithm._internal(
+    value,
+    nativeValue(),
+    alsoAcceptsNativeValues != null
+        ? alsoAcceptsNativeValues() as List<String?>
+        : const [],
+  );
 
   ///NORMAL means no rendering changes. This is the recommended choice for maximum compatibility across different platforms and Android versions.
   static const NORMAL = LayoutAlgorithm._internal('NORMAL', 'NORMAL');
@@ -50,6 +66,10 @@ class LayoutAlgorithm {
   }
 
   ///Gets a possible [LayoutAlgorithm] instance from a native value.
+  ///
+  ///Falls back to constants that declare [value] among their additionally accepted
+  ///native values, so a platform reporting more than one code for the same condition
+  ///still resolves instead of returning `null`.
   static LayoutAlgorithm? fromNativeValue(String? value) {
     if (value != null) {
       try {
@@ -57,7 +77,13 @@ class LayoutAlgorithm {
           (element) => element.toNativeValue() == value,
         );
       } catch (e) {
-        return null;
+        try {
+          return LayoutAlgorithm.values.firstWhere(
+            (element) => element._alsoAcceptsNativeValues.contains(value),
+          );
+        } catch (e) {
+          return null;
+        }
       }
     }
     return null;

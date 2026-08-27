@@ -10,12 +10,28 @@ part of 'window_titlebar_separator_style.dart';
 class WindowTitlebarSeparatorStyle {
   final int _value;
   final int? _nativeValue;
-  const WindowTitlebarSeparatorStyle._internal(this._value, this._nativeValue);
+
+  /// Native values accepted *in addition* to [_nativeValue] when resolving from a
+  /// native value. Inbound only -- [toNativeValue] still returns [_nativeValue].
+  // ignore: unused_field
+  final List<int?> _alsoAcceptsNativeValues;
+  const WindowTitlebarSeparatorStyle._internal(
+    this._value,
+    this._nativeValue, [
+    this._alsoAcceptsNativeValues = const [],
+  ]);
   // ignore: unused_element
   factory WindowTitlebarSeparatorStyle._internalMultiPlatform(
     int value,
-    Function nativeValue,
-  ) => WindowTitlebarSeparatorStyle._internal(value, nativeValue());
+    Function nativeValue, [
+    Function? alsoAcceptsNativeValues,
+  ]) => WindowTitlebarSeparatorStyle._internal(
+    value,
+    nativeValue(),
+    alsoAcceptsNativeValues != null
+        ? alsoAcceptsNativeValues() as List<int?>
+        : const [],
+  );
 
   ///A style indicating that the system determines the type of separator.
   ///
@@ -108,6 +124,10 @@ class WindowTitlebarSeparatorStyle {
   }
 
   ///Gets a possible [WindowTitlebarSeparatorStyle] instance from a native value.
+  ///
+  ///Falls back to constants that declare [value] among their additionally accepted
+  ///native values, so a platform reporting more than one code for the same condition
+  ///still resolves instead of returning `null`.
   static WindowTitlebarSeparatorStyle? fromNativeValue(int? value) {
     if (value != null) {
       try {
@@ -115,7 +135,13 @@ class WindowTitlebarSeparatorStyle {
           (element) => element.toNativeValue() == value,
         );
       } catch (e) {
-        return null;
+        try {
+          return WindowTitlebarSeparatorStyle.values.firstWhere(
+            (element) => element._alsoAcceptsNativeValues.contains(value),
+          );
+        } catch (e) {
+          return null;
+        }
       }
     }
     return null;

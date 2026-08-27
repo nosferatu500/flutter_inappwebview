@@ -10,12 +10,28 @@ part of 'print_job_orientation.dart';
 class PrintJobOrientation {
   final int _value;
   final int? _nativeValue;
-  const PrintJobOrientation._internal(this._value, this._nativeValue);
+
+  /// Native values accepted *in addition* to [_nativeValue] when resolving from a
+  /// native value. Inbound only -- [toNativeValue] still returns [_nativeValue].
+  // ignore: unused_field
+  final List<int?> _alsoAcceptsNativeValues;
+  const PrintJobOrientation._internal(
+    this._value,
+    this._nativeValue, [
+    this._alsoAcceptsNativeValues = const [],
+  ]);
   // ignore: unused_element
   factory PrintJobOrientation._internalMultiPlatform(
     int value,
-    Function nativeValue,
-  ) => PrintJobOrientation._internal(value, nativeValue());
+    Function nativeValue, [
+    Function? alsoAcceptsNativeValues,
+  ]) => PrintJobOrientation._internal(
+    value,
+    nativeValue(),
+    alsoAcceptsNativeValues != null
+        ? alsoAcceptsNativeValues() as List<int?>
+        : const [],
+  );
 
   ///Pages are printed in landscape orientation.
   ///
@@ -84,6 +100,10 @@ class PrintJobOrientation {
   }
 
   ///Gets a possible [PrintJobOrientation] instance from a native value.
+  ///
+  ///Falls back to constants that declare [value] among their additionally accepted
+  ///native values, so a platform reporting more than one code for the same condition
+  ///still resolves instead of returning `null`.
   static PrintJobOrientation? fromNativeValue(int? value) {
     if (value != null) {
       try {
@@ -91,7 +111,13 @@ class PrintJobOrientation {
           (element) => element.toNativeValue() == value,
         );
       } catch (e) {
-        return null;
+        try {
+          return PrintJobOrientation.values.firstWhere(
+            (element) => element._alsoAcceptsNativeValues.contains(value),
+          );
+        } catch (e) {
+          return null;
+        }
       }
     }
     return null;

@@ -10,12 +10,28 @@ part of 'content_blocker_action_type.dart';
 class ContentBlockerActionType {
   final String _value;
   final String? _nativeValue;
-  const ContentBlockerActionType._internal(this._value, this._nativeValue);
+
+  /// Native values accepted *in addition* to [_nativeValue] when resolving from a
+  /// native value. Inbound only -- [toNativeValue] still returns [_nativeValue].
+  // ignore: unused_field
+  final List<String?> _alsoAcceptsNativeValues;
+  const ContentBlockerActionType._internal(
+    this._value,
+    this._nativeValue, [
+    this._alsoAcceptsNativeValues = const [],
+  ]);
   // ignore: unused_element
   factory ContentBlockerActionType._internalMultiPlatform(
     String value,
-    Function nativeValue,
-  ) => ContentBlockerActionType._internal(value, nativeValue());
+    Function nativeValue, [
+    Function? alsoAcceptsNativeValues,
+  ]) => ContentBlockerActionType._internal(
+    value,
+    nativeValue(),
+    alsoAcceptsNativeValues != null
+        ? alsoAcceptsNativeValues() as List<String?>
+        : const [],
+  );
 
   ///Stops loading of the resource. If the resource was cached, the cache is ignored.
   ///
@@ -171,6 +187,10 @@ class ContentBlockerActionType {
   }
 
   ///Gets a possible [ContentBlockerActionType] instance from a native value.
+  ///
+  ///Falls back to constants that declare [value] among their additionally accepted
+  ///native values, so a platform reporting more than one code for the same condition
+  ///still resolves instead of returning `null`.
   static ContentBlockerActionType? fromNativeValue(String? value) {
     if (value != null) {
       try {
@@ -178,7 +198,13 @@ class ContentBlockerActionType {
           (element) => element.toNativeValue() == value,
         );
       } catch (e) {
-        return null;
+        try {
+          return ContentBlockerActionType.values.firstWhere(
+            (element) => element._alsoAcceptsNativeValues.contains(value),
+          );
+        } catch (e) {
+          return null;
+        }
       }
     }
     return null;

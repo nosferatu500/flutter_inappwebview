@@ -12,12 +12,28 @@ part of 'font_subpixel_layout.dart';
 class FontSubpixelLayout {
   final int _value;
   final int? _nativeValue;
-  const FontSubpixelLayout._internal(this._value, this._nativeValue);
+
+  /// Native values accepted *in addition* to [_nativeValue] when resolving from a
+  /// native value. Inbound only -- [toNativeValue] still returns [_nativeValue].
+  // ignore: unused_field
+  final List<int?> _alsoAcceptsNativeValues;
+  const FontSubpixelLayout._internal(
+    this._value,
+    this._nativeValue, [
+    this._alsoAcceptsNativeValues = const [],
+  ]);
   // ignore: unused_element
   factory FontSubpixelLayout._internalMultiPlatform(
     int value,
-    Function nativeValue,
-  ) => FontSubpixelLayout._internal(value, nativeValue());
+    Function nativeValue, [
+    Function? alsoAcceptsNativeValues,
+  ]) => FontSubpixelLayout._internal(
+    value,
+    nativeValue(),
+    alsoAcceptsNativeValues != null
+        ? alsoAcceptsNativeValues() as List<int?>
+        : const [],
+  );
 
   ///BGR subpixel layout (horizontal BGR order).
   ///Used for LCD displays with horizontal BGR subpixel arrangement.
@@ -58,6 +74,10 @@ class FontSubpixelLayout {
   }
 
   ///Gets a possible [FontSubpixelLayout] instance from a native value.
+  ///
+  ///Falls back to constants that declare [value] among their additionally accepted
+  ///native values, so a platform reporting more than one code for the same condition
+  ///still resolves instead of returning `null`.
   static FontSubpixelLayout? fromNativeValue(int? value) {
     if (value != null) {
       try {
@@ -65,7 +85,13 @@ class FontSubpixelLayout {
           (element) => element.toNativeValue() == value,
         );
       } catch (e) {
-        return null;
+        try {
+          return FontSubpixelLayout.values.firstWhere(
+            (element) => element._alsoAcceptsNativeValues.contains(value),
+          );
+        } catch (e) {
+          return null;
+        }
       }
     }
     return null;

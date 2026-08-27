@@ -12,12 +12,28 @@ part of 'referrer_policy.dart';
 class ReferrerPolicy {
   final String _value;
   final String? _nativeValue;
-  const ReferrerPolicy._internal(this._value, this._nativeValue);
+
+  /// Native values accepted *in addition* to [_nativeValue] when resolving from a
+  /// native value. Inbound only -- [toNativeValue] still returns [_nativeValue].
+  // ignore: unused_field
+  final List<String?> _alsoAcceptsNativeValues;
+  const ReferrerPolicy._internal(
+    this._value,
+    this._nativeValue, [
+    this._alsoAcceptsNativeValues = const [],
+  ]);
   // ignore: unused_element
   factory ReferrerPolicy._internalMultiPlatform(
     String value,
-    Function nativeValue,
-  ) => ReferrerPolicy._internal(value, nativeValue());
+    Function nativeValue, [
+    Function? alsoAcceptsNativeValues,
+  ]) => ReferrerPolicy._internal(
+    value,
+    nativeValue(),
+    alsoAcceptsNativeValues != null
+        ? alsoAcceptsNativeValues() as List<String?>
+        : const [],
+  );
 
   ///The Referer header will not be sent.
   static const NO_REFERRER = ReferrerPolicy._internal(
@@ -95,6 +111,10 @@ class ReferrerPolicy {
   }
 
   ///Gets a possible [ReferrerPolicy] instance from a native value.
+  ///
+  ///Falls back to constants that declare [value] among their additionally accepted
+  ///native values, so a platform reporting more than one code for the same condition
+  ///still resolves instead of returning `null`.
   static ReferrerPolicy? fromNativeValue(String? value) {
     if (value != null) {
       try {
@@ -102,7 +122,13 @@ class ReferrerPolicy {
           (element) => element.toNativeValue() == value,
         );
       } catch (e) {
-        return null;
+        try {
+          return ReferrerPolicy.values.firstWhere(
+            (element) => element._alsoAcceptsNativeValues.contains(value),
+          );
+        } catch (e) {
+          return null;
+        }
       }
     }
     return null;

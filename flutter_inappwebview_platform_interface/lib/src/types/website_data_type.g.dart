@@ -10,12 +10,28 @@ part of 'website_data_type.dart';
 class WebsiteDataType {
   final String _value;
   final String? _nativeValue;
-  const WebsiteDataType._internal(this._value, this._nativeValue);
+
+  /// Native values accepted *in addition* to [_nativeValue] when resolving from a
+  /// native value. Inbound only -- [toNativeValue] still returns [_nativeValue].
+  // ignore: unused_field
+  final List<String?> _alsoAcceptsNativeValues;
+  const WebsiteDataType._internal(
+    this._value,
+    this._nativeValue, [
+    this._alsoAcceptsNativeValues = const [],
+  ]);
   // ignore: unused_element
   factory WebsiteDataType._internalMultiPlatform(
     String value,
-    Function nativeValue,
-  ) => WebsiteDataType._internal(value, nativeValue());
+    Function nativeValue, [
+    Function? alsoAcceptsNativeValues,
+  ]) => WebsiteDataType._internal(
+    value,
+    nativeValue(),
+    alsoAcceptsNativeValues != null
+        ? alsoAcceptsNativeValues() as List<String?>
+        : const [],
+  );
 
   ///Returns a set of all available website data types.
   static final ALL = {
@@ -126,6 +142,10 @@ class WebsiteDataType {
   }
 
   ///Gets a possible [WebsiteDataType] instance from a native value.
+  ///
+  ///Falls back to constants that declare [value] among their additionally accepted
+  ///native values, so a platform reporting more than one code for the same condition
+  ///still resolves instead of returning `null`.
   static WebsiteDataType? fromNativeValue(String? value) {
     if (value != null) {
       try {
@@ -133,7 +153,13 @@ class WebsiteDataType {
           (element) => element.toNativeValue() == value,
         );
       } catch (e) {
-        return null;
+        try {
+          return WebsiteDataType.values.firstWhere(
+            (element) => element._alsoAcceptsNativeValues.contains(value),
+          );
+        } catch (e) {
+          return null;
+        }
       }
     }
     return null;

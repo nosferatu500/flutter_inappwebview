@@ -10,12 +10,28 @@ part of 'safe_browsing_threat.dart';
 class SafeBrowsingThreat {
   final int _value;
   final int? _nativeValue;
-  const SafeBrowsingThreat._internal(this._value, this._nativeValue);
+
+  /// Native values accepted *in addition* to [_nativeValue] when resolving from a
+  /// native value. Inbound only -- [toNativeValue] still returns [_nativeValue].
+  // ignore: unused_field
+  final List<int?> _alsoAcceptsNativeValues;
+  const SafeBrowsingThreat._internal(
+    this._value,
+    this._nativeValue, [
+    this._alsoAcceptsNativeValues = const [],
+  ]);
   // ignore: unused_element
   factory SafeBrowsingThreat._internalMultiPlatform(
     int value,
-    Function nativeValue,
-  ) => SafeBrowsingThreat._internal(value, nativeValue());
+    Function nativeValue, [
+    Function? alsoAcceptsNativeValues,
+  ]) => SafeBrowsingThreat._internal(
+    value,
+    nativeValue(),
+    alsoAcceptsNativeValues != null
+        ? alsoAcceptsNativeValues() as List<int?>
+        : const [],
+  );
 
   ///The resource was blocked because it may trick the user into a billing agreement.
   ///
@@ -72,6 +88,10 @@ class SafeBrowsingThreat {
   }
 
   ///Gets a possible [SafeBrowsingThreat] instance from a native value.
+  ///
+  ///Falls back to constants that declare [value] among their additionally accepted
+  ///native values, so a platform reporting more than one code for the same condition
+  ///still resolves instead of returning `null`.
   static SafeBrowsingThreat? fromNativeValue(int? value) {
     if (value != null) {
       try {
@@ -79,7 +99,13 @@ class SafeBrowsingThreat {
           (element) => element.toNativeValue() == value,
         );
       } catch (e) {
-        return null;
+        try {
+          return SafeBrowsingThreat.values.firstWhere(
+            (element) => element._alsoAcceptsNativeValues.contains(value),
+          );
+        } catch (e) {
+          return null;
+        }
       }
     }
     return null;

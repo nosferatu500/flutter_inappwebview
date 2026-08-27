@@ -12,12 +12,28 @@ part of 'security_restriction_mode.dart';
 class SecurityRestrictionMode {
   final int _value;
   final int? _nativeValue;
-  const SecurityRestrictionMode._internal(this._value, this._nativeValue);
+
+  /// Native values accepted *in addition* to [_nativeValue] when resolving from a
+  /// native value. Inbound only -- [toNativeValue] still returns [_nativeValue].
+  // ignore: unused_field
+  final List<int?> _alsoAcceptsNativeValues;
+  const SecurityRestrictionMode._internal(
+    this._value,
+    this._nativeValue, [
+    this._alsoAcceptsNativeValues = const [],
+  ]);
   // ignore: unused_element
   factory SecurityRestrictionMode._internalMultiPlatform(
     int value,
-    Function nativeValue,
-  ) => SecurityRestrictionMode._internal(value, nativeValue());
+    Function nativeValue, [
+    Function? alsoAcceptsNativeValues,
+  ]) => SecurityRestrictionMode._internal(
+    value,
+    nativeValue(),
+    alsoAcceptsNativeValues != null
+        ? alsoAcceptsNativeValues() as List<int?>
+        : const [],
+  );
 
   ///Maximum security restrictions, including feature disablement.
   ///
@@ -60,6 +76,10 @@ class SecurityRestrictionMode {
   }
 
   ///Gets a possible [SecurityRestrictionMode] instance from a native value.
+  ///
+  ///Falls back to constants that declare [value] among their additionally accepted
+  ///native values, so a platform reporting more than one code for the same condition
+  ///still resolves instead of returning `null`.
   static SecurityRestrictionMode? fromNativeValue(int? value) {
     if (value != null) {
       try {
@@ -67,7 +87,13 @@ class SecurityRestrictionMode {
           (element) => element.toNativeValue() == value,
         );
       } catch (e) {
-        return null;
+        try {
+          return SecurityRestrictionMode.values.firstWhere(
+            (element) => element._alsoAcceptsNativeValues.contains(value),
+          );
+        } catch (e) {
+          return null;
+        }
       }
     }
     return null;

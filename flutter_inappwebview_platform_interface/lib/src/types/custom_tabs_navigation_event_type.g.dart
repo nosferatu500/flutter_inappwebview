@@ -10,12 +10,28 @@ part of 'custom_tabs_navigation_event_type.dart';
 class CustomTabsNavigationEventType {
   final int _value;
   final int? _nativeValue;
-  const CustomTabsNavigationEventType._internal(this._value, this._nativeValue);
+
+  /// Native values accepted *in addition* to [_nativeValue] when resolving from a
+  /// native value. Inbound only -- [toNativeValue] still returns [_nativeValue].
+  // ignore: unused_field
+  final List<int?> _alsoAcceptsNativeValues;
+  const CustomTabsNavigationEventType._internal(
+    this._value,
+    this._nativeValue, [
+    this._alsoAcceptsNativeValues = const [],
+  ]);
   // ignore: unused_element
   factory CustomTabsNavigationEventType._internalMultiPlatform(
     int value,
-    Function nativeValue,
-  ) => CustomTabsNavigationEventType._internal(value, nativeValue());
+    Function nativeValue, [
+    Function? alsoAcceptsNativeValues,
+  ]) => CustomTabsNavigationEventType._internal(
+    value,
+    nativeValue(),
+    alsoAcceptsNativeValues != null
+        ? alsoAcceptsNativeValues() as List<int?>
+        : const [],
+  );
 
   ///Sent when loading was aborted by a user action before it finishes like clicking on a link or refreshing the page.
   ///
@@ -142,6 +158,10 @@ class CustomTabsNavigationEventType {
   }
 
   ///Gets a possible [CustomTabsNavigationEventType] instance from a native value.
+  ///
+  ///Falls back to constants that declare [value] among their additionally accepted
+  ///native values, so a platform reporting more than one code for the same condition
+  ///still resolves instead of returning `null`.
   static CustomTabsNavigationEventType? fromNativeValue(int? value) {
     if (value != null) {
       try {
@@ -149,7 +169,13 @@ class CustomTabsNavigationEventType {
           (element) => element.toNativeValue() == value,
         );
       } catch (e) {
-        return null;
+        try {
+          return CustomTabsNavigationEventType.values.firstWhere(
+            (element) => element._alsoAcceptsNativeValues.contains(value),
+          );
+        } catch (e) {
+          return null;
+        }
       }
     }
     return null;

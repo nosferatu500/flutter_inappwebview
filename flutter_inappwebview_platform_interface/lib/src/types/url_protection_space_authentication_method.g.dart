@@ -10,15 +10,28 @@ part of 'url_protection_space_authentication_method.dart';
 class URLProtectionSpaceAuthenticationMethod {
   final String _value;
   final String? _nativeValue;
+
+  /// Native values accepted *in addition* to [_nativeValue] when resolving from a
+  /// native value. Inbound only -- [toNativeValue] still returns [_nativeValue].
+  // ignore: unused_field
+  final List<String?> _alsoAcceptsNativeValues;
   const URLProtectionSpaceAuthenticationMethod._internal(
     this._value,
-    this._nativeValue,
-  );
+    this._nativeValue, [
+    this._alsoAcceptsNativeValues = const [],
+  ]);
   // ignore: unused_element
   factory URLProtectionSpaceAuthenticationMethod._internalMultiPlatform(
     String value,
-    Function nativeValue,
-  ) => URLProtectionSpaceAuthenticationMethod._internal(value, nativeValue());
+    Function nativeValue, [
+    Function? alsoAcceptsNativeValues,
+  ]) => URLProtectionSpaceAuthenticationMethod._internal(
+    value,
+    nativeValue(),
+    alsoAcceptsNativeValues != null
+        ? alsoAcceptsNativeValues() as List<String?>
+        : const [],
+  );
 
   ///Use client certificate authentication for this protection space.
   static const NSURL_AUTHENTICATION_METHOD_CLIENT_CERTIFICATE =
@@ -109,6 +122,10 @@ class URLProtectionSpaceAuthenticationMethod {
   }
 
   ///Gets a possible [URLProtectionSpaceAuthenticationMethod] instance from a native value.
+  ///
+  ///Falls back to constants that declare [value] among their additionally accepted
+  ///native values, so a platform reporting more than one code for the same condition
+  ///still resolves instead of returning `null`.
   static URLProtectionSpaceAuthenticationMethod? fromNativeValue(
     String? value,
   ) {
@@ -118,7 +135,13 @@ class URLProtectionSpaceAuthenticationMethod {
           (element) => element.toNativeValue() == value,
         );
       } catch (e) {
-        return null;
+        try {
+          return URLProtectionSpaceAuthenticationMethod.values.firstWhere(
+            (element) => element._alsoAcceptsNativeValues.contains(value),
+          );
+        } catch (e) {
+          return null;
+        }
       }
     }
     return null;

@@ -895,7 +895,16 @@ class ExchangeableObjectGenerator
           }
         }
         if (!isNullable) {
-          value += '!';
+          // A non-nullable enum field used to emit a bare `!`, so any native value the Dart
+          // enum did not map threw `Null check operator used on a null value` inside the
+          // channel handler -- the callback then never reached app code at all. Platforms
+          // add codes over time (iOS 26 started returning NSError -1006 for a DNS failure),
+          // so degrade to the enum's own UNKNOWN constant where it has one, and only fall
+          // back to `!` for enums with no such catch-all.
+          final unknownConstant = _findCatchAllConstant(fieldTypeElement);
+          value += unknownConstant != null
+              ? ' ?? $classNameReference.$unknownConstant'
+              : '!';
         }
         return value;
       }
@@ -1102,6 +1111,29 @@ class ExchangeableObjectGenerator
     }
 
     return false;
+  }
+
+  /// Name of a constant on [element] that can stand in for an unmapped native value,
+  /// or `null` if the enum has no catch-all.
+  ///
+  /// Exists so a non-nullable enum field degrades instead of throwing when a platform
+  /// reports a value this enum does not know -- see the call site in [getFromMapValue].
+  /// Matched by name because that is what the source enums declare; the annotations carry
+  /// no "this is the fallback" marker.
+  String? _findCatchAllConstant(Element? element) {
+    if (element is! ClassElement) {
+      return null;
+    }
+    const candidates = ['UNKNOWN', 'UNSPECIFIED', 'NOT_SPECIFIED'];
+    for (final candidate in candidates) {
+      final matched = element.fields.any(
+        (f) => f.isStatic && f.name == candidate,
+      );
+      if (matched) {
+        return candidate;
+      }
+    }
+    return null;
   }
 
   bool hasFromNativeValueMethod(Element element) {

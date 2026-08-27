@@ -10,10 +10,28 @@ part of 'tracing_mode.dart';
 class TracingMode {
   final int _value;
   final int? _nativeValue;
-  const TracingMode._internal(this._value, this._nativeValue);
+
+  /// Native values accepted *in addition* to [_nativeValue] when resolving from a
+  /// native value. Inbound only -- [toNativeValue] still returns [_nativeValue].
+  // ignore: unused_field
+  final List<int?> _alsoAcceptsNativeValues;
+  const TracingMode._internal(
+    this._value,
+    this._nativeValue, [
+    this._alsoAcceptsNativeValues = const [],
+  ]);
   // ignore: unused_element
-  factory TracingMode._internalMultiPlatform(int value, Function nativeValue) =>
-      TracingMode._internal(value, nativeValue());
+  factory TracingMode._internalMultiPlatform(
+    int value,
+    Function nativeValue, [
+    Function? alsoAcceptsNativeValues,
+  ]) => TracingMode._internal(
+    value,
+    nativeValue(),
+    alsoAcceptsNativeValues != null
+        ? alsoAcceptsNativeValues() as List<int?>
+        : const [],
+  );
 
   ///Record trace events continuously using an internal ring buffer.
   ///Default tracing mode.
@@ -48,6 +66,10 @@ class TracingMode {
   }
 
   ///Gets a possible [TracingMode] instance from a native value.
+  ///
+  ///Falls back to constants that declare [value] among their additionally accepted
+  ///native values, so a platform reporting more than one code for the same condition
+  ///still resolves instead of returning `null`.
   static TracingMode? fromNativeValue(int? value) {
     if (value != null) {
       try {
@@ -55,7 +77,13 @@ class TracingMode {
           (element) => element.toNativeValue() == value,
         );
       } catch (e) {
-        return null;
+        try {
+          return TracingMode.values.firstWhere(
+            (element) => element._alsoAcceptsNativeValues.contains(value),
+          );
+        } catch (e) {
+          return null;
+        }
       }
     }
     return null;

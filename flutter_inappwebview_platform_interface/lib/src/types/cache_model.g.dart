@@ -12,10 +12,28 @@ part of 'cache_model.dart';
 class CacheModel {
   final int _value;
   final int? _nativeValue;
-  const CacheModel._internal(this._value, this._nativeValue);
+
+  /// Native values accepted *in addition* to [_nativeValue] when resolving from a
+  /// native value. Inbound only -- [toNativeValue] still returns [_nativeValue].
+  // ignore: unused_field
+  final List<int?> _alsoAcceptsNativeValues;
+  const CacheModel._internal(
+    this._value,
+    this._nativeValue, [
+    this._alsoAcceptsNativeValues = const [],
+  ]);
   // ignore: unused_element
-  factory CacheModel._internalMultiPlatform(int value, Function nativeValue) =>
-      CacheModel._internal(value, nativeValue());
+  factory CacheModel._internalMultiPlatform(
+    int value,
+    Function nativeValue, [
+    Function? alsoAcceptsNativeValues,
+  ]) => CacheModel._internal(
+    value,
+    nativeValue(),
+    alsoAcceptsNativeValues != null
+        ? alsoAcceptsNativeValues() as List<int?>
+        : const [],
+  );
 
   ///A cache model optimized for viewing a series of local files, such as ebooks,
   ///without browsing a variety of online content.
@@ -86,6 +104,10 @@ class CacheModel {
   }
 
   ///Gets a possible [CacheModel] instance from a native value.
+  ///
+  ///Falls back to constants that declare [value] among their additionally accepted
+  ///native values, so a platform reporting more than one code for the same condition
+  ///still resolves instead of returning `null`.
   static CacheModel? fromNativeValue(int? value) {
     if (value != null) {
       try {
@@ -93,7 +115,13 @@ class CacheModel {
           (element) => element.toNativeValue() == value,
         );
       } catch (e) {
-        return null;
+        try {
+          return CacheModel.values.firstWhere(
+            (element) => element._alsoAcceptsNativeValues.contains(value),
+          );
+        } catch (e) {
+          return null;
+        }
       }
     }
     return null;

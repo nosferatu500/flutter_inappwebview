@@ -10,12 +10,28 @@ part of 'search_result_display_style.dart';
 class SearchResultDisplayStyle {
   final int _value;
   final int? _nativeValue;
-  const SearchResultDisplayStyle._internal(this._value, this._nativeValue);
+
+  /// Native values accepted *in addition* to [_nativeValue] when resolving from a
+  /// native value. Inbound only -- [toNativeValue] still returns [_nativeValue].
+  // ignore: unused_field
+  final List<int?> _alsoAcceptsNativeValues;
+  const SearchResultDisplayStyle._internal(
+    this._value,
+    this._nativeValue, [
+    this._alsoAcceptsNativeValues = const [],
+  ]);
   // ignore: unused_element
   factory SearchResultDisplayStyle._internalMultiPlatform(
     int value,
-    Function nativeValue,
-  ) => SearchResultDisplayStyle._internal(value, nativeValue());
+    Function nativeValue, [
+    Function? alsoAcceptsNativeValues,
+  ]) => SearchResultDisplayStyle._internal(
+    value,
+    nativeValue(),
+    alsoAcceptsNativeValues != null
+        ? alsoAcceptsNativeValues() as List<int?>
+        : const [],
+  );
 
   ///The find panel includes the total number of results the session reports and the index of the target result.
   static const CURRENT_AND_TOTAL = SearchResultDisplayStyle._internal(0, 0);
@@ -48,6 +64,10 @@ class SearchResultDisplayStyle {
   }
 
   ///Gets a possible [SearchResultDisplayStyle] instance from a native value.
+  ///
+  ///Falls back to constants that declare [value] among their additionally accepted
+  ///native values, so a platform reporting more than one code for the same condition
+  ///still resolves instead of returning `null`.
   static SearchResultDisplayStyle? fromNativeValue(int? value) {
     if (value != null) {
       try {
@@ -55,7 +75,13 @@ class SearchResultDisplayStyle {
           (element) => element.toNativeValue() == value,
         );
       } catch (e) {
-        return null;
+        try {
+          return SearchResultDisplayStyle.values.firstWhere(
+            (element) => element._alsoAcceptsNativeValues.contains(value),
+          );
+        } catch (e) {
+          return null;
+        }
       }
     }
     return null;

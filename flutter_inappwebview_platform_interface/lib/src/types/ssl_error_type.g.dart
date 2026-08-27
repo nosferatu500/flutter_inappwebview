@@ -11,12 +11,28 @@ part of 'ssl_error_type.dart';
 class SslErrorType {
   final String _value;
   final int? _nativeValue;
-  const SslErrorType._internal(this._value, this._nativeValue);
+
+  /// Native values accepted *in addition* to [_nativeValue] when resolving from a
+  /// native value. Inbound only -- [toNativeValue] still returns [_nativeValue].
+  // ignore: unused_field
+  final List<int?> _alsoAcceptsNativeValues;
+  const SslErrorType._internal(
+    this._value,
+    this._nativeValue, [
+    this._alsoAcceptsNativeValues = const [],
+  ]);
   // ignore: unused_element
   factory SslErrorType._internalMultiPlatform(
     String value,
-    Function nativeValue,
-  ) => SslErrorType._internal(value, nativeValue());
+    Function nativeValue, [
+    Function? alsoAcceptsNativeValues,
+  ]) => SslErrorType._internal(
+    value,
+    nativeValue(),
+    alsoAcceptsNativeValues != null
+        ? alsoAcceptsNativeValues() as List<int?>
+        : const [],
+  );
 
   ///Indicates that the SSL certificate common name does not match the web address.
   ///
@@ -316,6 +332,10 @@ class SslErrorType {
   }
 
   ///Gets a possible [SslErrorType] instance from a native value.
+  ///
+  ///Falls back to constants that declare [value] among their additionally accepted
+  ///native values, so a platform reporting more than one code for the same condition
+  ///still resolves instead of returning `null`.
   static SslErrorType? fromNativeValue(int? value) {
     if (value != null) {
       try {
@@ -323,7 +343,13 @@ class SslErrorType {
           (element) => element.toNativeValue() == value,
         );
       } catch (e) {
-        return null;
+        try {
+          return SslErrorType.values.firstWhere(
+            (element) => element._alsoAcceptsNativeValues.contains(value),
+          );
+        } catch (e) {
+          return null;
+        }
       }
     }
     return null;

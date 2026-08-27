@@ -10,12 +10,28 @@ part of 'print_job_dialog_kind.dart';
 class PrintJobDialogKind {
   final int _value;
   final int? _nativeValue;
-  const PrintJobDialogKind._internal(this._value, this._nativeValue);
+
+  /// Native values accepted *in addition* to [_nativeValue] when resolving from a
+  /// native value. Inbound only -- [toNativeValue] still returns [_nativeValue].
+  // ignore: unused_field
+  final List<int?> _alsoAcceptsNativeValues;
+  const PrintJobDialogKind._internal(
+    this._value,
+    this._nativeValue, [
+    this._alsoAcceptsNativeValues = const [],
+  ]);
   // ignore: unused_element
   factory PrintJobDialogKind._internalMultiPlatform(
     int value,
-    Function nativeValue,
-  ) => PrintJobDialogKind._internal(value, nativeValue());
+    Function nativeValue, [
+    Function? alsoAcceptsNativeValues,
+  ]) => PrintJobDialogKind._internal(
+    value,
+    nativeValue(),
+    alsoAcceptsNativeValues != null
+        ? alsoAcceptsNativeValues() as List<int?>
+        : const [],
+  );
 
   ///Use the browser print dialog UI.
   static const BROWSER = PrintJobDialogKind._internal(0, 0);
@@ -44,6 +60,10 @@ class PrintJobDialogKind {
   }
 
   ///Gets a possible [PrintJobDialogKind] instance from a native value.
+  ///
+  ///Falls back to constants that declare [value] among their additionally accepted
+  ///native values, so a platform reporting more than one code for the same condition
+  ///still resolves instead of returning `null`.
   static PrintJobDialogKind? fromNativeValue(int? value) {
     if (value != null) {
       try {
@@ -51,7 +71,13 @@ class PrintJobDialogKind {
           (element) => element.toNativeValue() == value,
         );
       } catch (e) {
-        return null;
+        try {
+          return PrintJobDialogKind.values.firstWhere(
+            (element) => element._alsoAcceptsNativeValues.contains(value),
+          );
+        } catch (e) {
+          return null;
+        }
       }
     }
     return null;

@@ -10,12 +10,28 @@ part of 'download_start_response_action.dart';
 class DownloadStartResponseAction {
   final int _value;
   final int? _nativeValue;
-  const DownloadStartResponseAction._internal(this._value, this._nativeValue);
+
+  /// Native values accepted *in addition* to [_nativeValue] when resolving from a
+  /// native value. Inbound only -- [toNativeValue] still returns [_nativeValue].
+  // ignore: unused_field
+  final List<int?> _alsoAcceptsNativeValues;
+  const DownloadStartResponseAction._internal(
+    this._value,
+    this._nativeValue, [
+    this._alsoAcceptsNativeValues = const [],
+  ]);
   // ignore: unused_element
   factory DownloadStartResponseAction._internalMultiPlatform(
     int value,
-    Function nativeValue,
-  ) => DownloadStartResponseAction._internal(value, nativeValue());
+    Function nativeValue, [
+    Function? alsoAcceptsNativeValues,
+  ]) => DownloadStartResponseAction._internal(
+    value,
+    nativeValue(),
+    alsoAcceptsNativeValues != null
+        ? alsoAcceptsNativeValues() as List<int?>
+        : const [],
+  );
 
   ///Cancel the download.
   ///
@@ -57,6 +73,10 @@ class DownloadStartResponseAction {
   }
 
   ///Gets a possible [DownloadStartResponseAction] instance from a native value.
+  ///
+  ///Falls back to constants that declare [value] among their additionally accepted
+  ///native values, so a platform reporting more than one code for the same condition
+  ///still resolves instead of returning `null`.
   static DownloadStartResponseAction? fromNativeValue(int? value) {
     if (value != null) {
       try {
@@ -64,7 +84,13 @@ class DownloadStartResponseAction {
           (element) => element.toNativeValue() == value,
         );
       } catch (e) {
-        return null;
+        try {
+          return DownloadStartResponseAction.values.firstWhere(
+            (element) => element._alsoAcceptsNativeValues.contains(value),
+          );
+        } catch (e) {
+          return null;
+        }
       }
     }
     return null;

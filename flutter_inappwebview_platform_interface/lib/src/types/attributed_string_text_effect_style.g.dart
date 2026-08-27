@@ -10,15 +10,28 @@ part of 'attributed_string_text_effect_style.dart';
 class AttributedStringTextEffectStyle {
   final String _value;
   final String? _nativeValue;
+
+  /// Native values accepted *in addition* to [_nativeValue] when resolving from a
+  /// native value. Inbound only -- [toNativeValue] still returns [_nativeValue].
+  // ignore: unused_field
+  final List<String?> _alsoAcceptsNativeValues;
   const AttributedStringTextEffectStyle._internal(
     this._value,
-    this._nativeValue,
-  );
+    this._nativeValue, [
+    this._alsoAcceptsNativeValues = const [],
+  ]);
   // ignore: unused_element
   factory AttributedStringTextEffectStyle._internalMultiPlatform(
     String value,
-    Function nativeValue,
-  ) => AttributedStringTextEffectStyle._internal(value, nativeValue());
+    Function nativeValue, [
+    Function? alsoAcceptsNativeValues,
+  ]) => AttributedStringTextEffectStyle._internal(
+    value,
+    nativeValue(),
+    alsoAcceptsNativeValues != null
+        ? alsoAcceptsNativeValues() as List<String?>
+        : const [],
+  );
 
   ///A graphical text effect that gives glyphs the appearance of letterpress printing, which involves pressing the type into the paper.
   static const LETTERPRESS_STYLE = AttributedStringTextEffectStyle._internal(
@@ -46,6 +59,10 @@ class AttributedStringTextEffectStyle {
   }
 
   ///Gets a possible [AttributedStringTextEffectStyle] instance from a native value.
+  ///
+  ///Falls back to constants that declare [value] among their additionally accepted
+  ///native values, so a platform reporting more than one code for the same condition
+  ///still resolves instead of returning `null`.
   static AttributedStringTextEffectStyle? fromNativeValue(String? value) {
     if (value != null) {
       try {
@@ -53,7 +70,13 @@ class AttributedStringTextEffectStyle {
           (element) => element.toNativeValue() == value,
         );
       } catch (e) {
-        return null;
+        try {
+          return AttributedStringTextEffectStyle.values.firstWhere(
+            (element) => element._alsoAcceptsNativeValues.contains(value),
+          );
+        } catch (e) {
+          return null;
+        }
       }
     }
     return null;

@@ -10,12 +10,28 @@ part of 'media_capture_state.dart';
 class MediaCaptureState {
   final int _value;
   final int? _nativeValue;
-  const MediaCaptureState._internal(this._value, this._nativeValue);
+
+  /// Native values accepted *in addition* to [_nativeValue] when resolving from a
+  /// native value. Inbound only -- [toNativeValue] still returns [_nativeValue].
+  // ignore: unused_field
+  final List<int?> _alsoAcceptsNativeValues;
+  const MediaCaptureState._internal(
+    this._value,
+    this._nativeValue, [
+    this._alsoAcceptsNativeValues = const [],
+  ]);
   // ignore: unused_element
   factory MediaCaptureState._internalMultiPlatform(
     int value,
-    Function nativeValue,
-  ) => MediaCaptureState._internal(value, nativeValue());
+    Function nativeValue, [
+    Function? alsoAcceptsNativeValues,
+  ]) => MediaCaptureState._internal(
+    value,
+    nativeValue(),
+    alsoAcceptsNativeValues != null
+        ? alsoAcceptsNativeValues() as List<int?>
+        : const [],
+  );
 
   ///The media device is actively capturing audio or video.
   static const ACTIVE = MediaCaptureState._internal(1, 1);
@@ -48,6 +64,10 @@ class MediaCaptureState {
   }
 
   ///Gets a possible [MediaCaptureState] instance from a native value.
+  ///
+  ///Falls back to constants that declare [value] among their additionally accepted
+  ///native values, so a platform reporting more than one code for the same condition
+  ///still resolves instead of returning `null`.
   static MediaCaptureState? fromNativeValue(int? value) {
     if (value != null) {
       try {
@@ -55,7 +75,13 @@ class MediaCaptureState {
           (element) => element.toNativeValue() == value,
         );
       } catch (e) {
-        return null;
+        try {
+          return MediaCaptureState.values.firstWhere(
+            (element) => element._alsoAcceptsNativeValues.contains(value),
+          );
+        } catch (e) {
+          return null;
+        }
       }
     }
     return null;

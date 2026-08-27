@@ -10,12 +10,28 @@ part of 'scrollview_deceleration_rate.dart';
 class ScrollViewDecelerationRate {
   final String _value;
   final String? _nativeValue;
-  const ScrollViewDecelerationRate._internal(this._value, this._nativeValue);
+
+  /// Native values accepted *in addition* to [_nativeValue] when resolving from a
+  /// native value. Inbound only -- [toNativeValue] still returns [_nativeValue].
+  // ignore: unused_field
+  final List<String?> _alsoAcceptsNativeValues;
+  const ScrollViewDecelerationRate._internal(
+    this._value,
+    this._nativeValue, [
+    this._alsoAcceptsNativeValues = const [],
+  ]);
   // ignore: unused_element
   factory ScrollViewDecelerationRate._internalMultiPlatform(
     String value,
-    Function nativeValue,
-  ) => ScrollViewDecelerationRate._internal(value, nativeValue());
+    Function nativeValue, [
+    Function? alsoAcceptsNativeValues,
+  ]) => ScrollViewDecelerationRate._internal(
+    value,
+    nativeValue(),
+    alsoAcceptsNativeValues != null
+        ? alsoAcceptsNativeValues() as List<String?>
+        : const [],
+  );
 
   ///A fast deceleration rate for a scroll view: `0.99`.
   static const FAST = ScrollViewDecelerationRate._internal('FAST', 'FAST');
@@ -47,6 +63,10 @@ class ScrollViewDecelerationRate {
   }
 
   ///Gets a possible [ScrollViewDecelerationRate] instance from a native value.
+  ///
+  ///Falls back to constants that declare [value] among their additionally accepted
+  ///native values, so a platform reporting more than one code for the same condition
+  ///still resolves instead of returning `null`.
   static ScrollViewDecelerationRate? fromNativeValue(String? value) {
     if (value != null) {
       try {
@@ -54,7 +74,13 @@ class ScrollViewDecelerationRate {
           (element) => element.toNativeValue() == value,
         );
       } catch (e) {
-        return null;
+        try {
+          return ScrollViewDecelerationRate.values.firstWhere(
+            (element) => element._alsoAcceptsNativeValues.contains(value),
+          );
+        } catch (e) {
+          return null;
+        }
       }
     }
     return null;

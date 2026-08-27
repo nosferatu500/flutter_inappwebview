@@ -10,12 +10,28 @@ part of 'window_style_mask.dart';
 class WindowStyleMask {
   final int _value;
   final int? _nativeValue;
-  const WindowStyleMask._internal(this._value, this._nativeValue);
+
+  /// Native values accepted *in addition* to [_nativeValue] when resolving from a
+  /// native value. Inbound only -- [toNativeValue] still returns [_nativeValue].
+  // ignore: unused_field
+  final List<int?> _alsoAcceptsNativeValues;
+  const WindowStyleMask._internal(
+    this._value,
+    this._nativeValue, [
+    this._alsoAcceptsNativeValues = const [],
+  ]);
   // ignore: unused_element
   factory WindowStyleMask._internalMultiPlatform(
     int value,
-    Function nativeValue,
-  ) => WindowStyleMask._internal(value, nativeValue());
+    Function nativeValue, [
+    Function? alsoAcceptsNativeValues,
+  ]) => WindowStyleMask._internal(
+    value,
+    nativeValue(),
+    alsoAcceptsNativeValues != null
+        ? alsoAcceptsNativeValues() as List<int?>
+        : const [],
+  );
 
   ///The window displays none of the usual peripheral elements. Useful only for display or caching purposes.
   ///
@@ -212,6 +228,10 @@ class WindowStyleMask {
   }
 
   ///Gets a possible [WindowStyleMask] instance from a native value.
+  ///
+  ///Falls back to constants that declare [value] among their additionally accepted
+  ///native values, so a platform reporting more than one code for the same condition
+  ///still resolves instead of returning `null`.
   static WindowStyleMask? fromNativeValue(int? value) {
     if (value != null) {
       try {
@@ -219,7 +239,13 @@ class WindowStyleMask {
           (element) => element.toNativeValue() == value,
         );
       } catch (e) {
-        return null;
+        try {
+          return WindowStyleMask.values.firstWhere(
+            (element) => element._alsoAcceptsNativeValues.contains(value),
+          );
+        } catch (e) {
+          return null;
+        }
       }
     }
     return null;

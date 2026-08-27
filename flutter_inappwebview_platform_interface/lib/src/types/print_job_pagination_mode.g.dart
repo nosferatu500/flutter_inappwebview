@@ -10,12 +10,28 @@ part of 'print_job_pagination_mode.dart';
 class PrintJobPaginationMode {
   final String _value;
   final int? _nativeValue;
-  const PrintJobPaginationMode._internal(this._value, this._nativeValue);
+
+  /// Native values accepted *in addition* to [_nativeValue] when resolving from a
+  /// native value. Inbound only -- [toNativeValue] still returns [_nativeValue].
+  // ignore: unused_field
+  final List<int?> _alsoAcceptsNativeValues;
+  const PrintJobPaginationMode._internal(
+    this._value,
+    this._nativeValue, [
+    this._alsoAcceptsNativeValues = const [],
+  ]);
   // ignore: unused_element
   factory PrintJobPaginationMode._internalMultiPlatform(
     String value,
-    Function nativeValue,
-  ) => PrintJobPaginationMode._internal(value, nativeValue());
+    Function nativeValue, [
+    Function? alsoAcceptsNativeValues,
+  ]) => PrintJobPaginationMode._internal(
+    value,
+    nativeValue(),
+    alsoAcceptsNativeValues != null
+        ? alsoAcceptsNativeValues() as List<int?>
+        : const [],
+  );
 
   ///
   ///
@@ -84,6 +100,10 @@ class PrintJobPaginationMode {
   }
 
   ///Gets a possible [PrintJobPaginationMode] instance from a native value.
+  ///
+  ///Falls back to constants that declare [value] among their additionally accepted
+  ///native values, so a platform reporting more than one code for the same condition
+  ///still resolves instead of returning `null`.
   static PrintJobPaginationMode? fromNativeValue(int? value) {
     if (value != null) {
       try {
@@ -91,7 +111,13 @@ class PrintJobPaginationMode {
           (element) => element.toNativeValue() == value,
         );
       } catch (e) {
-        return null;
+        try {
+          return PrintJobPaginationMode.values.firstWhere(
+            (element) => element._alsoAcceptsNativeValues.contains(value),
+          );
+        } catch (e) {
+          return null;
+        }
       }
     }
     return null;

@@ -10,10 +10,28 @@ part of 'save_as_kind.dart';
 class SaveAsKind {
   final int _value;
   final int? _nativeValue;
-  const SaveAsKind._internal(this._value, this._nativeValue);
+
+  /// Native values accepted *in addition* to [_nativeValue] when resolving from a
+  /// native value. Inbound only -- [toNativeValue] still returns [_nativeValue].
+  // ignore: unused_field
+  final List<int?> _alsoAcceptsNativeValues;
+  const SaveAsKind._internal(
+    this._value,
+    this._nativeValue, [
+    this._alsoAcceptsNativeValues = const [],
+  ]);
   // ignore: unused_element
-  factory SaveAsKind._internalMultiPlatform(int value, Function nativeValue) =>
-      SaveAsKind._internal(value, nativeValue());
+  factory SaveAsKind._internalMultiPlatform(
+    int value,
+    Function nativeValue, [
+    Function? alsoAcceptsNativeValues,
+  ]) => SaveAsKind._internal(
+    value,
+    nativeValue(),
+    alsoAcceptsNativeValues != null
+        ? alsoAcceptsNativeValues() as List<int?>
+        : const [],
+  );
 
   ///Save the page with a resources directory.
   static const COMPLETE = SaveAsKind._internal(3, 3);
@@ -50,6 +68,10 @@ class SaveAsKind {
   }
 
   ///Gets a possible [SaveAsKind] instance from a native value.
+  ///
+  ///Falls back to constants that declare [value] among their additionally accepted
+  ///native values, so a platform reporting more than one code for the same condition
+  ///still resolves instead of returning `null`.
   static SaveAsKind? fromNativeValue(int? value) {
     if (value != null) {
       try {
@@ -57,7 +79,13 @@ class SaveAsKind {
           (element) => element.toNativeValue() == value,
         );
       } catch (e) {
-        return null;
+        try {
+          return SaveAsKind.values.firstWhere(
+            (element) => element._alsoAcceptsNativeValues.contains(value),
+          );
+        } catch (e) {
+          return null;
+        }
       }
     }
     return null;

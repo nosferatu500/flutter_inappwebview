@@ -98,13 +98,25 @@ class ExchangeableEnumGenerator
 
     classBuffer.writeln("final ${enumValue.type} _value;");
     classBuffer.writeln("final $nativeValueNullableType _nativeValue;");
+    classBuffer.writeln(
+      "/// Native values accepted *in addition* to [_nativeValue] when resolving from a",
+    );
+    classBuffer.writeln(
+      "/// native value. Inbound only -- [toNativeValue] still returns [_nativeValue].",
+    );
+    // Enums without a generated `fromNativeValue` never read this, and the repo already
+    // uses the same escape hatch for `_internalMultiPlatform`.
+    classBuffer.writeln("// ignore: unused_field");
+    classBuffer.writeln(
+      "final List<$nativeValueNullableType> _alsoAcceptsNativeValues;",
+    );
 
     classBuffer.writeln(
-      "const $extClassName._internal(this._value, this._nativeValue);",
+      "const $extClassName._internal(this._value, this._nativeValue, [this._alsoAcceptsNativeValues = const []]);",
     );
     classBuffer.writeln("// ignore: unused_element");
     classBuffer.writeln(
-      "factory $extClassName._internalMultiPlatform(${enumValue.type} value, Function nativeValue) => $extClassName._internal(value, nativeValue());",
+      "factory $extClassName._internalMultiPlatform(${enumValue.type} value, Function nativeValue, [Function? alsoAcceptsNativeValues]) => $extClassName._internal(value, nativeValue(), alsoAcceptsNativeValues != null ? alsoAcceptsNativeValues() as List<$nativeValueNullableType> : const []);",
     );
 
     for (final entry in fieldEntriesSorted) {
@@ -180,6 +192,9 @@ class ExchangeableEnumGenerator
 
           var nativeValueBody = "() {";
           nativeValueBody += "switch (defaultTargetPlatform) {";
+          var alsoAcceptsBody = "() {";
+          alsoAcceptsBody += "switch (defaultTargetPlatform) {";
+          var hasAlsoAccepts = false;
           final platforms =
               fieldAnnotation.getField('platforms')?.toListValue() ??
               <DartObject>[];
@@ -191,11 +206,23 @@ class ExchangeableEnumGenerator
                   .getField("targetPlatformName")!
                   .toStringValue();
               final platformValueField = platform.getField('value');
-              final platformValue =
-                  platformValueField != null && !platformValueField.isNull
-                  ? platformValueField.toIntValue() ??
-                        "'${platformValueField.toStringValue()}'"
-                  : constantValue;
+              // `value` is `dynamic`, so a platform may supply a *list* when it reports more
+              // than one native code for what this enum treats as one condition. The first
+              // entry stays canonical -- it is what `toNativeValue()` returns -- and the rest
+              // are accepted inbound only, by `fromNativeValue`. Expressed through the shipped
+              // annotation API on purpose: a new named parameter would not compile against the
+              // published `flutter_inappwebview_internal_annotations` that consumers resolve.
+              final platformValueList = platformValueField?.toListValue();
+              final hasValueList =
+                  platformValueList != null && platformValueList.isNotEmpty;
+              String renderValue(DartObject o) =>
+                  o.toIntValue()?.toString() ?? "'${o.toStringValue()}'";
+              final platformValue = hasValueList
+                  ? renderValue(platformValueList.first)
+                  : (platformValueField != null && !platformValueField.isNull
+                        ? platformValueField.toIntValue() ??
+                              "'${platformValueField.toStringValue()}'"
+                        : constantValue);
               if (targetPlatformName == "web") {
                 hasWebSupport = true;
                 webSupportValue = platformValue;
@@ -203,6 +230,16 @@ class ExchangeableEnumGenerator
               }
               nativeValueBody += "case TargetPlatform.$targetPlatformName:";
               nativeValueBody += "return $platformValue;";
+
+              if (hasValueList && platformValueList.length > 1) {
+                final rendered = platformValueList
+                    .skip(1)
+                    .map(renderValue)
+                    .join(", ");
+                alsoAcceptsBody += "case TargetPlatform.$targetPlatformName:";
+                alsoAcceptsBody += "return [$rendered];";
+                hasAlsoAccepts = true;
+              }
             }
             nativeValueBody += "default:";
             nativeValueBody += "break;";
@@ -216,8 +253,15 @@ class ExchangeableEnumGenerator
           nativeValueBody += "return $defaultValue;";
           nativeValueBody += "}";
 
+          alsoAcceptsBody += "default: break;";
+          alsoAcceptsBody += "}";
+          alsoAcceptsBody += "return const [];";
+          alsoAcceptsBody += "}";
+
           classBuffer.writeln(
-            "static final $fieldName = $extClassName._internalMultiPlatform($constantValue, $nativeValueBody);",
+            hasAlsoAccepts
+                ? "static final $fieldName = $extClassName._internalMultiPlatform($constantValue, $nativeValueBody, $alsoAcceptsBody);"
+                : "static final $fieldName = $extClassName._internalMultiPlatform($constantValue, $nativeValueBody);",
           );
         } else {
           classBuffer.writeln(
@@ -271,13 +315,22 @@ class ExchangeableEnumGenerator
             Util.methodHasIgnore(visitor.methods['fromNativeValue']!))) {
       classBuffer.writeln("""
       ///Gets a possible [$extClassName] instance from a native value.
+      ///
+      ///Falls back to constants that declare [value] among their additionally accepted
+      ///native values, so a platform reporting more than one code for the same condition
+      ///still resolves instead of returning `null`.
       static $extClassName? fromNativeValue($nativeValueNullableType value) {
         if (value != null) {
           try {
             return $extClassName.values
                 .firstWhere((element) => element.toNativeValue() == value);
           } catch (e) {
-            return null;
+            try {
+              return $extClassName.values.firstWhere(
+                  (element) => element._alsoAcceptsNativeValues.contains(value));
+            } catch (e) {
+              return null;
+            }
           }
         }
         return null;

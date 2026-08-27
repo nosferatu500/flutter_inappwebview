@@ -14,12 +14,28 @@ part of 'user_agent_form_factor.dart';
 class UserAgentFormFactor {
   final String _value;
   final String? _nativeValue;
-  const UserAgentFormFactor._internal(this._value, this._nativeValue);
+
+  /// Native values accepted *in addition* to [_nativeValue] when resolving from a
+  /// native value. Inbound only -- [toNativeValue] still returns [_nativeValue].
+  // ignore: unused_field
+  final List<String?> _alsoAcceptsNativeValues;
+  const UserAgentFormFactor._internal(
+    this._value,
+    this._nativeValue, [
+    this._alsoAcceptsNativeValues = const [],
+  ]);
   // ignore: unused_element
   factory UserAgentFormFactor._internalMultiPlatform(
     String value,
-    Function nativeValue,
-  ) => UserAgentFormFactor._internal(value, nativeValue());
+    Function nativeValue, [
+    Function? alsoAcceptsNativeValues,
+  ]) => UserAgentFormFactor._internal(
+    value,
+    nativeValue(),
+    alsoAcceptsNativeValues != null
+        ? alsoAcceptsNativeValues() as List<String?>
+        : const [],
+  );
 
   ///A device built into a vehicle.
   static const AUTOMOTIVE = UserAgentFormFactor._internal(
@@ -71,6 +87,10 @@ class UserAgentFormFactor {
   }
 
   ///Gets a possible [UserAgentFormFactor] instance from a native value.
+  ///
+  ///Falls back to constants that declare [value] among their additionally accepted
+  ///native values, so a platform reporting more than one code for the same condition
+  ///still resolves instead of returning `null`.
   static UserAgentFormFactor? fromNativeValue(String? value) {
     if (value != null) {
       try {
@@ -78,7 +98,13 @@ class UserAgentFormFactor {
           (element) => element.toNativeValue() == value,
         );
       } catch (e) {
-        return null;
+        try {
+          return UserAgentFormFactor.values.firstWhere(
+            (element) => element._alsoAcceptsNativeValues.contains(value),
+          );
+        } catch (e) {
+          return null;
+        }
       }
     }
     return null;

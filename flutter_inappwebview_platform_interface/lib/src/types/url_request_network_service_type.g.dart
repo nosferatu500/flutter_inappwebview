@@ -10,12 +10,28 @@ part of 'url_request_network_service_type.dart';
 class URLRequestNetworkServiceType {
   final int _value;
   final int? _nativeValue;
-  const URLRequestNetworkServiceType._internal(this._value, this._nativeValue);
+
+  /// Native values accepted *in addition* to [_nativeValue] when resolving from a
+  /// native value. Inbound only -- [toNativeValue] still returns [_nativeValue].
+  // ignore: unused_field
+  final List<int?> _alsoAcceptsNativeValues;
+  const URLRequestNetworkServiceType._internal(
+    this._value,
+    this._nativeValue, [
+    this._alsoAcceptsNativeValues = const [],
+  ]);
   // ignore: unused_element
   factory URLRequestNetworkServiceType._internalMultiPlatform(
     int value,
-    Function nativeValue,
-  ) => URLRequestNetworkServiceType._internal(value, nativeValue());
+    Function nativeValue, [
+    Function? alsoAcceptsNativeValues,
+  ]) => URLRequestNetworkServiceType._internal(
+    value,
+    nativeValue(),
+    alsoAcceptsNativeValues != null
+        ? alsoAcceptsNativeValues() as List<int?>
+        : const [],
+  );
 
   ///A service type for streaming audio/video data.
   static const AV_STREAMING = URLRequestNetworkServiceType._internal(8, 8);
@@ -75,6 +91,10 @@ class URLRequestNetworkServiceType {
   }
 
   ///Gets a possible [URLRequestNetworkServiceType] instance from a native value.
+  ///
+  ///Falls back to constants that declare [value] among their additionally accepted
+  ///native values, so a platform reporting more than one code for the same condition
+  ///still resolves instead of returning `null`.
   static URLRequestNetworkServiceType? fromNativeValue(int? value) {
     if (value != null) {
       try {
@@ -82,7 +102,13 @@ class URLRequestNetworkServiceType {
           (element) => element.toNativeValue() == value,
         );
       } catch (e) {
-        return null;
+        try {
+          return URLRequestNetworkServiceType.values.firstWhere(
+            (element) => element._alsoAcceptsNativeValues.contains(value),
+          );
+        } catch (e) {
+          return null;
+        }
       }
     }
     return null;
