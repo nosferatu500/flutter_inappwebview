@@ -126,6 +126,11 @@ rename; this entry is the API-owner's view.
 - `PlatformInAppWebViewWidgetCreationParams.preventGestureDelay` is documented under its own dartdoc
   template id again. It had inherited the deleted `webViewEnvironment` block's id, and its
   `{@macro …supported_platforms}` pointed at a template the generator no longer emits
+- `onLoadStop` now documents that it is **not** guaranteed after every navigation: a page that
+  cancels its own load — single-page apps intercepting history changes, typically after `goBack` /
+  `goForward` — ends in `onReceivedError` with `WebResourceErrorType.CANCELLED` and no `onLoadStop`
+  at all, while the back-forward list still moves correctly. `onUpdateVisitedHistory` fires in both
+  cases and is the signal to await
 
 ### Internal
 

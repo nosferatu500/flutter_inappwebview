@@ -73,6 +73,19 @@ class PlatformWebViewCreationParams<T> {
 
   ///{@template flutter_inappwebview_platform_interface.PlatformWebViewCreationParams.onLoadStop}
   ///Event fired when the `WebView` finishes loading an [url].
+  ///
+  ///**Do not treat this as guaranteed after every navigation.** A page can cancel its own
+  ///navigation — single-page apps that intercept history changes are the common case — and the
+  ///load then ends in [PlatformWebViewCreationParams.onReceivedError] with
+  ///[WebResourceErrorType.CANCELLED] instead. On iOS that is `NSURLErrorCancelled` (-999) and
+  ///WebKit never calls `didFinishNavigation`, so **no `onLoadStop` arrives at all**.
+  ///
+  ///This is most visible after [PlatformInAppWebViewController.goBack] /
+  ///[PlatformInAppWebViewController.goForward]: the back-forward list still moves correctly
+  ///(`currentIndex`, `canGoBack`, `canGoForward` and [PlatformInAppWebViewController.getUrl] are
+  ///all right), but awaiting `onLoadStop` to know the navigation landed will wait forever on such
+  ///a page. Await [PlatformWebViewCreationParams.onUpdateVisitedHistory] instead, which fires in
+  ///both cases, or handle `CANCELLED` in `onReceivedError`.
   ///{@endtemplate}
   ///
   ///{@macro flutter_inappwebview_platform_interface.PlatformWebViewCreationParams.onLoadStop.supported_platforms}
