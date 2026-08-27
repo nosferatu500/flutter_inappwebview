@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter_inappwebview_platform_interface/flutter_inappwebview_platform_interface.dart';
 import 'package:flutter_test/flutter_test.dart';
 
@@ -99,6 +100,44 @@ void main() {
       // On iOS the Swift `defaultBehaviour` calls completionHandler(nil).
       final map = ShowFileChooserResponse(handledByClient: false).toMap();
       expect(map['handledByClient'], false);
+    });
+  });
+
+  group('useOnShowFileChooser, the gate that makes the event fire', () {
+    test('is claimed on iOS as well as Android', () {
+      // §46's whole delta is that iOS now honours this setting. The Swift side only installs
+      // `runOpenPanelWith` when it is true, so an annotation regression here would present as
+      // "the event never fires on iOS" — the same silent shape as §68, with no compile error.
+      expect(
+        InAppWebViewSettings.isPropertySupported(
+          InAppWebViewSettingsProperty.useOnShowFileChooser,
+          platform: TargetPlatform.iOS,
+        ),
+        isTrue,
+      );
+      expect(
+        InAppWebViewSettings.isPropertySupported(
+          InAppWebViewSettingsProperty.useOnShowFileChooser,
+          platform: TargetPlatform.android,
+        ),
+        isTrue,
+      );
+    });
+
+    test('serialises under the key the Swift side reads', () {
+      expect(
+        InAppWebViewSettings(useOnShowFileChooser: true).toMap()['useOnShowFileChooser'],
+        true,
+      );
+    });
+
+    test('unset means absent, and the Swift side reads absent as off', () {
+      // Measured, not assumed: the Dart field is `bool?` with no default, so an app that never
+      // asked sends null — and `InAppWebViewSettings.swift` declares `var useOnShowFileChooser =
+      // false` while the selector gate reads `settings?.useOnShowFileChooser ?? false`. Both halves
+      // have to keep agreeing that "absent" is "off", or the plugin starts intercepting uploads for
+      // apps that never opted in.
+      expect(InAppWebViewSettings().toMap()['useOnShowFileChooser'], isNull);
     });
   });
 }
