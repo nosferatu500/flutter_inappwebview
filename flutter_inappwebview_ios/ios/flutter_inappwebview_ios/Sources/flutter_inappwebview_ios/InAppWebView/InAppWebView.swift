@@ -1703,7 +1703,7 @@ public class InAppWebView: WKWebView, UIScrollViewDelegate, WKUIDelegate,
                         requestMediaCapturePermissionFor origin: WKSecurityOrigin,
                         initiatedByFrame frame: WKFrameInfo,
                         type: WKMediaCaptureType,
-                        decisionHandler: @escaping (WKPermissionDecision) -> Void) {
+                        decisionHandler: @escaping @MainActor @Sendable (WKPermissionDecision) -> Void) {
         let origin = "\(origin.protocol)://\(origin.host)\(origin.port != 0 ? ":" + String(origin.port) : "")"
         let permissionRequest = PermissionRequest(origin: origin, resources: [type.rawValue], frame: frame)
         
@@ -1805,7 +1805,7 @@ public class InAppWebView: WKWebView, UIScrollViewDelegate, WKUIDelegate,
     public func webView(_ webView: WKWebView,
                         requestDeviceOrientationAndMotionPermissionFor origin: WKSecurityOrigin,
                         initiatedByFrame frame: WKFrameInfo,
-                        decisionHandler: @escaping (WKPermissionDecision) -> Void) {
+                        decisionHandler: @escaping @MainActor @Sendable (WKPermissionDecision) -> Void) {
         let origin = "\(origin.protocol)://\(origin.host)\(origin.port != 0 ? ":" + String(origin.port) : "")"
         let permissionRequest = PermissionRequest(origin: origin, resources: ["deviceOrientationAndMotion"], frame: frame)
         
@@ -1849,7 +1849,7 @@ public class InAppWebView: WKWebView, UIScrollViewDelegate, WKUIDelegate,
     public func webView(_ webView: WKWebView,
                  decidePolicyFor navigationAction: WKNavigationAction,
                  preferences: WKWebpagePreferences,
-                 decisionHandler: @escaping (WKNavigationActionPolicy, WKWebpagePreferences) -> Void) {
+                 decisionHandler: @escaping @MainActor @Sendable (WKNavigationActionPolicy, WKWebpagePreferences) -> Void) {
         // WebKit hands us a *live* `WKWebpagePreferences` per navigation, which is why this setting
         // can be applied here rather than on `configuration.defaultWebpagePreferences`. Doing it here
         // means a `setSettings` change takes effect on the very next navigation — the configuration
@@ -1926,7 +1926,7 @@ public class InAppWebView: WKWebView, UIScrollViewDelegate, WKUIDelegate,
     
     public func webView(_ webView: WKWebView,
                  decidePolicyFor navigationAction: WKNavigationAction,
-                 decisionHandler: @escaping (WKNavigationActionPolicy) -> Void) {
+                 decisionHandler: @escaping @MainActor @Sendable (WKNavigationActionPolicy) -> Void) {
         var decisionHandlerCalled = false
         let callback = WebViewChannelDelegate.ShouldOverrideUrlLoadingCallback()
         callback.nonNullSuccess = { (response: WKNavigationActionPolicy) in
@@ -1962,7 +1962,7 @@ public class InAppWebView: WKWebView, UIScrollViewDelegate, WKUIDelegate,
     
     public func webView(_ webView: WKWebView,
                  decidePolicyFor navigationResponse: WKNavigationResponse,
-                 decisionHandler: @escaping (WKNavigationResponsePolicy) -> Void) {
+                 decisionHandler: @escaping @MainActor @Sendable (WKNavigationResponsePolicy) -> Void) {
         if let response = navigationResponse.response as? HTTPURLResponse, response.statusCode >= 400 {
             let request = WebResourceRequest.init(fromWKNavigationResponse: navigationResponse)
             let errorResponse = WebResourceResponse.init(fromWKNavigationResponse: navigationResponse)
@@ -2105,7 +2105,7 @@ public class InAppWebView: WKWebView, UIScrollViewDelegate, WKUIDelegate,
         inAppBrowserDelegate?.didFailNavigation(url: url, error: error)
     }
     
-    public func webView(_ webView: WKWebView, didReceive challenge: URLAuthenticationChallenge, completionHandler: @escaping (URLSession.AuthChallengeDisposition, URLCredential?) -> Void) {
+    public func webView(_ webView: WKWebView, didReceive challenge: URLAuthenticationChallenge, completionHandler: @escaping @MainActor @Sendable (URLSession.AuthChallengeDisposition, URLCredential?) -> Void) {
         var completionHandlerCalled = false
         if challenge.protectionSpace.authenticationMethod == NSURLAuthenticationMethodHTTPBasic ||
             challenge.protectionSpace.authenticationMethod == NSURLAuthenticationMethodDefault ||
@@ -2392,7 +2392,7 @@ public class InAppWebView: WKWebView, UIScrollViewDelegate, WKUIDelegate,
     }
     
     public func webView(_ webView: WKWebView, runJavaScriptAlertPanelWithMessage message: String,
-                 initiatedByFrame frame: WKFrameInfo, completionHandler: @escaping () -> Void) {
+                 initiatedByFrame frame: WKFrameInfo, completionHandler: @escaping @MainActor @Sendable () -> Void) {
         
         if (isPausedTimers) {
             isPausedTimersCompletionHandler = completionHandler
@@ -2464,7 +2464,7 @@ public class InAppWebView: WKWebView, UIScrollViewDelegate, WKUIDelegate,
     }
     
     public func webView(_ webView: WKWebView, runJavaScriptConfirmPanelWithMessage message: String, initiatedByFrame frame: WKFrameInfo,
-                 completionHandler: @escaping (Bool) -> Void) {
+                 completionHandler: @escaping @MainActor @Sendable (Bool) -> Void) {
         var completionHandlerCalled = false
         
         let callback = WebViewChannelDelegate.JsConfirmCallback()
@@ -2544,7 +2544,7 @@ public class InAppWebView: WKWebView, UIScrollViewDelegate, WKUIDelegate,
     }
     
     public func webView(_ webView: WKWebView, runJavaScriptTextInputPanelWithPrompt message: String, defaultText defaultValue: String?, initiatedByFrame frame: WKFrameInfo,
-                 completionHandler: @escaping (String?) -> Void) {
+                 completionHandler: @escaping @MainActor @Sendable (String?) -> Void) {
         
         var completionHandlerCalled = false
         
@@ -2703,7 +2703,7 @@ public class InAppWebView: WKWebView, UIScrollViewDelegate, WKUIDelegate,
     
     public func webView(_ webView: WKWebView,
                         authenticationChallenge challenge: URLAuthenticationChallenge,
-                        shouldAllowDeprecatedTLS decisionHandler: @escaping (Bool) -> Void) {
+                        shouldAllowDeprecatedTLS decisionHandler: @escaping @MainActor @Sendable (Bool) -> Void) {
         var decisionHandlerCalled = false
         let callback = WebViewChannelDelegate.ShouldAllowDeprecatedTLSCallback()
         callback.nonNullSuccess = { (action: Bool) in
