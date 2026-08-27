@@ -59,8 +59,10 @@ void interceptFetchRequest() {
 
               controller.addJavaScriptHandler(
                 handlerName: "fetchPost",
-                callback: (args) {
-                  fetchPostCompleter.complete(args[0] as Map<String, dynamic>);
+                callback: (data) {
+                  fetchPostCompleter.complete(
+                    data.args[0] as Map<String, dynamic>,
+                  );
                 },
               );
             },
@@ -144,8 +146,10 @@ void interceptFetchRequest() {
 
               controller.addJavaScriptHandler(
                 handlerName: "fetchPost",
-                callback: (args) {
-                  fetchPostCompleter.complete(args[0] as Map<String, dynamic>);
+                callback: (data) {
+                  fetchPostCompleter.complete(
+                    data.args[0] as Map<String, dynamic>,
+                  );
                 },
               );
             },
@@ -233,8 +237,10 @@ void interceptFetchRequest() {
 
               controller.addJavaScriptHandler(
                 handlerName: "fetchPost",
-                callback: (args) {
-                  fetchPostCompleter.complete(args[0] as Map<String, dynamic>);
+                callback: (data) {
+                  fetchPostCompleter.complete(
+                    data.args[0] as Map<String, dynamic>,
+                  );
                 },
               );
             },
@@ -314,8 +320,10 @@ void interceptFetchRequest() {
 
               controller.addJavaScriptHandler(
                 handlerName: "fetchPost",
-                callback: (args) {
-                  fetchPostCompleter.complete(args[0] as Map<String, dynamic>);
+                callback: (data) {
+                  fetchPostCompleter.complete(
+                    data.args[0] as Map<String, dynamic>,
+                  );
                 },
               );
             },

@@ -26,15 +26,15 @@ void javascriptDialogs() {
 
             controller.addJavaScriptHandler(
               handlerName: 'confirm',
-              callback: (args) {
-                confirmCompleter.complete(args[0] as bool);
+              callback: (data) {
+                confirmCompleter.complete(data.args[0] as bool);
               },
             );
 
             controller.addJavaScriptHandler(
               handlerName: 'prompt',
-              callback: (args) {
-                promptCompleter.complete(args[0] as String);
+              callback: (data) {
+                promptCompleter.complete(data.args[0] as String);
               },
             );
           },

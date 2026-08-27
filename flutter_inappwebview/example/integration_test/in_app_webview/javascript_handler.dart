@@ -25,7 +25,7 @@ void javascriptHandler() {
 
             controller.addJavaScriptHandler(
               handlerName: 'handlerFoo',
-              callback: (args) {
+              callback: (data) {
                 handlerFoo.complete();
                 return Foo(bar: 'bar_value', baz: 'baz_value');
               },
@@ -33,15 +33,15 @@ void javascriptHandler() {
 
             controller.addJavaScriptHandler(
               handlerName: 'handlerFooWithArgs',
-              callback: (args) {
-                messagesReceived.add(args[0] as int);
-                messagesReceived.add(args[1] as bool);
-                messagesReceived.add(args[2] as List<dynamic>?);
+              callback: (data) {
+                messagesReceived.add(data.args[0] as int);
+                messagesReceived.add(data.args[1] as bool);
+                messagesReceived.add(data.args[2] as List<dynamic>?);
                 messagesReceived.add(
-                  args[3]?.cast<String, String>() as Map<String, String>?,
+                  data.args[3]?.cast<String, String>() as Map<String, String>?,
                 );
                 messagesReceived.add(
-                  args[4]?.cast<String, String>() as Map<String, String>?,
+                  data.args[4]?.cast<String, String>() as Map<String, String>?,
                 );
                 handlerFooWithArgs.complete();
               },

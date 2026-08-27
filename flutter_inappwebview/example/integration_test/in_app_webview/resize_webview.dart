@@ -44,7 +44,7 @@ void resizeWebView() {
 
         controller.addJavaScriptHandler(
           handlerName: 'resize',
-          callback: (args) {
+          callback: (data) {
             resizeCompleter.complete(true);
           },
         );

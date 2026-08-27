@@ -29,7 +29,7 @@ void onLoadResourceWithCustomScheme() {
 
             controller.addJavaScriptHandler(
               handlerName: "imageLoaded",
-              callback: (args) {
+              callback: (data) {
                 imageLoaded.complete();
               },
             );
