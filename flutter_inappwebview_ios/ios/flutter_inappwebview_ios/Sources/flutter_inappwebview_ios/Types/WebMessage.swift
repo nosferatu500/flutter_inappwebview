@@ -19,7 +19,8 @@ public class WebMessage: NSObject, Disposable {
             if type == .arrayBuffer, let messageDataArrayBuffer = messageData as? FlutterStandardTypedData {
                 jsData = "new Uint8Array(\(Array(messageDataArrayBuffer.data))).buffer"
             } else if let messageDataString = messageData as? String {
-                jsData = "'\(messageDataString.replacingOccurrences(of: "\'", with: "\\'"))'"
+                // Interpolated into JS source as an expression, so the quotes are part of the value.
+                jsData = Util.jsStringLiteral(messageDataString)
             }
         }
         return jsData

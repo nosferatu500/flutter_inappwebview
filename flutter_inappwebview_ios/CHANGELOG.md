@@ -64,6 +64,22 @@ unit test could see. All four are fixed and proved both ways on a simulator.
 - **A DNS failure threw inside the plugin on iOS 26, so `onReceivedError` never reached app code.**
   iOS 26 returns `NSError -1006` where 17.x returned -1003, and -1006 was unmapped
 - **A leaked `WKURLSchemeTask`** in the custom-scheme handler
+- **`findAll` found nothing when the search text contained an apostrophe or a backslash.** Below the
+  `UIFindInteraction` path — i.e. whenever `InAppWebViewSettings.isFindInteractionEnabled` is
+  `false` — the search term was interpolated into JavaScript source **with no escaping at all**, so
+  `it's` closed the string literal early, the script was invalid and `evaluateJavaScript` failed
+  silently. From Dart that is indistinguishable from a page with no matches. Now escaped; three
+  integration tests cover `it's`, `"hello"` and `C:\path`
+- **Every remaining hand-escaped JS interpolation now goes through `Util.jsStringLiteral`** — 18
+  sites that escaped only `'` (the `script.*` / `link.*` attributes of `injectJavascriptFileFromUrl`
+  and `injectCSSFileFromUrl`, `UserScript`'s allowed-origin rules, `WebMessage` data, the
+  `WebMessageListener` object name and origin rules) plus three that escaped nothing
+  (`postWebMessage`'s target origin, an origin rule's scheme, and the find text above). Only the
+  find one had a plausible user-facing trigger; **the rest are hygiene, not measured defects** — but
+  they all carry app-developer values, and the same idiom is what caused the JS-handler hang above.
+  One of them changes behaviour: `UserScript.allowedOriginRules` are compiled with `new RegExp`, and
+  the old escaping ate backslashes, so a rule like `https://.*\.example\.com` was silently compiled
+  as `https://.*.example.com` — a *wider* match than written
 - 48 dead availability checks removed — all at or below the new 15.0 floor — along with the
   below-iOS-14 `callAsyncJavaScript` path and the dead `SFAuthenticationSession` branches
 

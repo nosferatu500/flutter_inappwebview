@@ -58,7 +58,9 @@ public class UserScript: WKUserScript {
                 if jsRegExpArray.count > 1 {
                     jsRegExpArray += ","
                 }
-                jsRegExpArray += "new RegExp('\(allowedOriginRule.replacingOccurrences(of: "\'", with: "\\'"))')"
+                // A JS string literal, not a regex literal: backslashes in the rule (`\.`, `\d`)
+                // are string escapes here, and only JSON escaping preserves them for `new RegExp`.
+                jsRegExpArray += "new RegExp(\(Util.jsStringLiteral(allowedOriginRule)))"
             }
             if jsRegExpArray.count > 1 {
                 jsRegExpArray += "]"

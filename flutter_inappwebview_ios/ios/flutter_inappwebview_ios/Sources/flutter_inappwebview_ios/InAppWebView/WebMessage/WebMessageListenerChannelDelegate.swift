@@ -22,12 +22,12 @@ public class WebMessageListenerChannelDelegate: ChannelDelegate {
         switch call.method {
         case "postMessage":
             if let webView = webMessageListener?.webView, let jsObjectName = webMessageListener?.jsObjectName {
-                let jsObjectNameEscaped = jsObjectName.replacingOccurrences(of: "\'", with: "\\'")
+                let jsObjectNameLiteral = Util.jsStringLiteral(jsObjectName)
                 let message = WebMessage.fromMap(map: arguments!["message"] as! [String: Any?])
-                
+
                 let source = """
                 (function() {
-                    var webMessageListener = window['\(jsObjectNameEscaped)'];
+                    var webMessageListener = window[\(jsObjectNameLiteral)];
                     if (webMessageListener != null) {
                         var event = {data: \(message.jsData)};
                         if (webMessageListener.onmessage != null) {

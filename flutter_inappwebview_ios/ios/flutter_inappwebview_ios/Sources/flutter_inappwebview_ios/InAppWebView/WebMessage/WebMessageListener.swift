@@ -82,15 +82,16 @@ public class WebMessageListener: FlutterMethodCallDelegate {
     public func initJsInstance(webView: InAppWebView) {
         self.webView = webView
         if let webView = self.webView {
-            let jsObjectNameEscaped = jsObjectName.replacingOccurrences(of: "\'", with: "\\'")
+            let jsObjectNameLiteral = Util.jsStringLiteral(jsObjectName)
             let allowedOriginRulesString = allowedOriginRules.map { (allowedOriginRule) -> String in
                 if allowedOriginRule == "*" {
                     return "'*'"
                 }
                 let rule = URL(string: allowedOriginRule)!
-                let host = rule.host != nil ? "'" + rule.host!.replacingOccurrences(of: "\'", with: "\\'") + "'" : "null"
+                // `host` sits in an expression position, so its quotes are part of the value.
+                let host = rule.host != nil ? Util.jsStringLiteral(rule.host!) : "null"
                 return """
-                {scheme: '\(rule.scheme!)', host: \(host), port: \(rule.port != nil ? String(rule.port!) : "null")}
+                {scheme: \(Util.jsStringLiteral(rule.scheme!)), host: \(host), port: \(rule.port != nil ? String(rule.port!) : "null")}
                 """
             }.joined(separator: ", ")
             let source = """
@@ -103,7 +104,7 @@ public class WebMessageListener: FlutterMethodCallDelegate {
                 var host = !isPageBlank ? window.location.hostname : null;
                 var port = !isPageBlank ? window.location.port : null;
                 if (_isOriginAllowed(allowedOriginRules, scheme, host, port)) {
-                    window['\(jsObjectNameEscaped)'] = new FlutterInAppWebViewWebMessageListener('\(jsObjectNameEscaped)');
+                    window[\(jsObjectNameLiteral)] = new FlutterInAppWebViewWebMessageListener(\(jsObjectNameLiteral));
                 }
             })();
             """

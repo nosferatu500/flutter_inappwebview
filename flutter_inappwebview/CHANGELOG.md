@@ -363,6 +363,14 @@ simulator for the first time:**
   (matching Android's single `ERROR_HOST_LOOKUP`), and the code generator now falls back to an
   enum's own catch-all constant instead of emitting a bare `!`
 - **A leaked `WKURLSchemeTask`** in the custom-scheme handler
+- **`findAll` found nothing when the search text contained an apostrophe or a backslash**, wherever
+  `InAppWebViewSettings.isFindInteractionEnabled` is `false`. The term was interpolated into
+  JavaScript source unescaped, so `it's` made the script invalid and it failed silently — from Dart,
+  indistinguishable from a page with no matches. The remaining 20 hand-escaped interpolation sites
+  went through the same helper in the same pass; **none of those was a measured defect**, but one
+  changes behaviour: `UserScript.allowedOriginRules` are compiled with `new RegExp` and the old
+  escaping ate backslashes, so `https://.*\.example\.com` was silently compiled as
+  `https://.*.example.com` — a wider match than written
 
 **Android:**
 

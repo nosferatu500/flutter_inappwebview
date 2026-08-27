@@ -124,4 +124,59 @@ void findInteractions() {
     final session = await findInteractionController.getActiveFindSession();
     expect(session!.resultCount, 2);
   }, skip: shouldSkip);
+
+  // Regression: the iOS JS find path interpolated the search text straight into JavaScript
+  // source with no escaping, so any apostrophe closed the string literal early and produced an
+  // invalid script. `evaluateJavaScript` then failed silently and the search found nothing —
+  // indistinguishable, from Dart, from a page with no matches.
+  //
+  // `isFindInteractionEnabled: false` is what forces that path on iOS 16+; with it `true` the
+  // native UIFindInteraction handles the text and this test would pass either way.
+  for (final searchText in const ["it's", '"hello"', r'C:\path']) {
+    skippableTestWidgets('findAll with $searchText in the search text', (
+      WidgetTester tester,
+    ) async {
+      final Completer<void> pageLoaded = Completer<void>();
+      final Completer<int> numberOfMatchesCompleter = Completer<int>();
+      final findInteractionController = FindInteractionController(
+        onFindResultReceived:
+            (
+              controller,
+              int activeMatchOrdinal,
+              int numberOfMatches,
+              bool isDoneCounting,
+            ) async {
+              if (isDoneCounting && !numberOfMatchesCompleter.isCompleted) {
+                numberOfMatchesCompleter.complete(numberOfMatches);
+              }
+            },
+      );
+
+      await InAppWebViewController.clearAllCache();
+
+      await tester.pumpWidget(
+        Directionality(
+          textDirection: TextDirection.ltr,
+          child: InAppWebView(
+            key: GlobalKey(),
+            initialFile: "test_assets/find_apostrophe_test.html",
+            initialSettings: InAppWebViewSettings(
+              isFindInteractionEnabled: false,
+            ),
+            findInteractionController: findInteractionController,
+            onLoadStop: (controller, url) {
+              pageLoaded.complete();
+            },
+          ),
+        ),
+      );
+
+      await pageLoaded.future;
+      await tester.pump();
+      await Future.delayed(Duration(seconds: 1));
+
+      await findInteractionController.findAll(find: searchText);
+      expect(await numberOfMatchesCompleter.future, 2);
+    }, skip: shouldSkip);
+  }
 }

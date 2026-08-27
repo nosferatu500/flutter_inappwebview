@@ -97,7 +97,9 @@ public class FindInteractionController: NSObject, Disposable {
                 completionHandler(nil, nil)
             }
         } else if find != "" {
-            let startSearch = "window.\(JavaScriptBridgeJS.get_JAVASCRIPT_BRIDGE_NAME())._findAllAsync('\(find)');"
+            // `find` is end-user text: an apostrophe used to make this script invalid, so the
+            // search silently did nothing instead of failing.
+            let startSearch = "window.\(JavaScriptBridgeJS.get_JAVASCRIPT_BRIDGE_NAME())._findAllAsync(\(Util.jsStringLiteral(find)));"
             webView.evaluateJavaScript(startSearch, completionHandler: completionHandler)
         }
     }

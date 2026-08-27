@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>FindApostropheTest</title>
+    </head>
+    <body>
+        <!--
+            Fixture for the "search text containing a quote" regression test.
+
+            On iOS below the find-interaction path, findAll builds a script by interpolating the
+            search text into JavaScript source. It used to do so with no escaping at all, so an
+            apostrophe closed the string literal early, the script was invalid, and the search
+            silently found nothing. Two occurrences of each term, so a result count of 2 proves
+            the term reached the page rather than the script simply not running.
+        -->
+        <p>The plugin says it's fine.</p>
+        <p>And here it's said a second time.</p>
+        <p>A double quote term: he said "hello" once.</p>
+        <p>He said "hello" twice.</p>
+        <p>A backslash term: C:\path and C:\path again.</p>
+    </body>
+</html>

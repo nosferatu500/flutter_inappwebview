@@ -1448,10 +1448,10 @@ public class InAppWebView: WKWebView, UIScrollViewDelegate, WKUIDelegate,
     public func injectDeferredObject(source: String, withWrapper jsWrapper: String?, completionHandler: ((Any?) -> Void)? = nil) {
         var jsToInject = source
         if let wrapper = jsWrapper {
-            let jsonData: Data? = try? JSONSerialization.data(withJSONObject: [source], options: [])
-            let sourceArrayString = String(data: jsonData!, encoding: .utf8)
-            let sourceString: String? = (sourceArrayString! as NSString).substring(with: NSRange(location: 1, length: (sourceArrayString?.count ?? 0) - 2))
-            jsToInject = String(format: wrapper, sourceString!)
+            // The wrapper's `%@` is a JS string-literal position, so `source` has to arrive quoted
+            // and escaped. This used to JSON-encode a one-element array and slice the brackets off
+            // by hand, through three force-unwraps; `Util.jsStringLiteral` is that trick, named.
+            jsToInject = String(format: wrapper, Util.jsStringLiteral(source))
         }
         
         evaluateJavaScript(jsToInject) { (value, error) in
@@ -1479,10 +1479,10 @@ public class InAppWebView: WKWebView, UIScrollViewDelegate, WKUIDelegate,
     public func injectDeferredObject(source: String, contentWorld: WKContentWorld, withWrapper jsWrapper: String?, completionHandler: ((Any?) -> Void)? = nil) {
         var jsToInject = source
         if let wrapper = jsWrapper {
-            let jsonData: Data? = try? JSONSerialization.data(withJSONObject: [source], options: [])
-            let sourceArrayString = String(data: jsonData!, encoding: .utf8)
-            let sourceString: String? = (sourceArrayString! as NSString).substring(with: NSRange(location: 1, length: (sourceArrayString?.count ?? 0) - 2))
-            jsToInject = String(format: wrapper, sourceString!)
+            // The wrapper's `%@` is a JS string-literal position, so `source` has to arrive quoted
+            // and escaped. This used to JSON-encode a one-element array and slice the brackets off
+            // by hand, through three force-unwraps; `Util.jsStringLiteral` is that trick, named.
+            jsToInject = String(format: wrapper, Util.jsStringLiteral(source))
         }
         
         jsToInject = configuration.userContentController.generateCodeForScriptEvaluation(scriptMessageHandler: self, source: jsToInject, contentWorld: contentWorld)
@@ -1587,22 +1587,22 @@ public class InAppWebView: WKWebView, UIScrollViewDelegate, WKUIDelegate,
         var scriptAttributes = ""
         if let scriptHtmlTagAttributes = scriptHtmlTagAttributes {
             if let typeAttr = scriptHtmlTagAttributes["type"] as? String {
-                scriptAttributes += " script.type = '\(typeAttr.replacingOccurrences(of: "\'", with: "\\'"))'; "
+                scriptAttributes += " script.type = \(Util.jsStringLiteral(typeAttr)); "
             }
             if let idAttr = scriptHtmlTagAttributes["id"] as? String {
-                let scriptIdEscaped = idAttr.replacingOccurrences(of: "\'", with: "\\'")
-                scriptAttributes += " script.id = '\(scriptIdEscaped)'; "
+                let scriptIdLiteral = Util.jsStringLiteral(idAttr)
+                scriptAttributes += " script.id = \(scriptIdLiteral); "
                 scriptAttributes += """
                 script.onload = function() {
                     if (window.\(JavaScriptBridgeJS.get_JAVASCRIPT_BRIDGE_NAME()) != null) {
-                        window.\(JavaScriptBridgeJS.get_JAVASCRIPT_BRIDGE_NAME()).callHandler('onInjectedScriptLoaded', '\(scriptIdEscaped)');
+                        window.\(JavaScriptBridgeJS.get_JAVASCRIPT_BRIDGE_NAME()).callHandler('onInjectedScriptLoaded', \(scriptIdLiteral));
                     }
                 };
                 """
                 scriptAttributes += """
                 script.onerror = function() {
                     if (window.\(JavaScriptBridgeJS.get_JAVASCRIPT_BRIDGE_NAME()) != null) {
-                        window.\(JavaScriptBridgeJS.get_JAVASCRIPT_BRIDGE_NAME()).callHandler('onInjectedScriptError', '\(scriptIdEscaped)');
+                        window.\(JavaScriptBridgeJS.get_JAVASCRIPT_BRIDGE_NAME()).callHandler('onInjectedScriptError', \(scriptIdLiteral));
                     }
                 };
                 """
@@ -1614,19 +1614,19 @@ public class InAppWebView: WKWebView, UIScrollViewDelegate, WKUIDelegate,
                 scriptAttributes += " script.defer = true; "
             }
             if let crossOriginAttr = scriptHtmlTagAttributes["crossOrigin"] as? String {
-                scriptAttributes += " script.crossOrigin = '\(crossOriginAttr.replacingOccurrences(of: "\'", with: "\\'"))'; "
+                scriptAttributes += " script.crossOrigin = \(Util.jsStringLiteral(crossOriginAttr)); "
             }
             if let integrityAttr = scriptHtmlTagAttributes["integrity"] as? String {
-                scriptAttributes += " script.integrity = '\(integrityAttr.replacingOccurrences(of: "\'", with: "\\'"))'; "
+                scriptAttributes += " script.integrity = \(Util.jsStringLiteral(integrityAttr)); "
             }
             if let noModuleAttr = scriptHtmlTagAttributes["noModule"] as? Bool, noModuleAttr {
                 scriptAttributes += " script.noModule = true; "
             }
             if let nonceAttr = scriptHtmlTagAttributes["nonce"] as? String {
-                scriptAttributes += " script.nonce = '\(nonceAttr.replacingOccurrences(of: "\'", with: "\\'"))'; "
+                scriptAttributes += " script.nonce = \(Util.jsStringLiteral(nonceAttr)); "
             }
             if let referrerPolicyAttr = scriptHtmlTagAttributes["referrerPolicy"] as? String {
-                scriptAttributes += " script.referrerPolicy = '\(referrerPolicyAttr.replacingOccurrences(of: "\'", with: "\\'"))'; "
+                scriptAttributes += " script.referrerPolicy = \(Util.jsStringLiteral(referrerPolicyAttr)); "
             }
         }
         let jsWrapper = "(function(d) { var script = d.createElement('script'); \(scriptAttributes) script.src = %@; d.body.appendChild(script); })(document);"
@@ -1643,19 +1643,19 @@ public class InAppWebView: WKWebView, UIScrollViewDelegate, WKUIDelegate,
         var alternateStylesheet = ""
         if let cssLinkHtmlTagAttributes = cssLinkHtmlTagAttributes {
             if let idAttr = cssLinkHtmlTagAttributes["id"] as? String {
-                cssLinkAttributes += " link.id = '\(idAttr.replacingOccurrences(of: "\'", with: "\\'"))'; "
+                cssLinkAttributes += " link.id = \(Util.jsStringLiteral(idAttr)); "
             }
             if let mediaAttr = cssLinkHtmlTagAttributes["media"] as? String {
-                cssLinkAttributes += " link.media = '\(mediaAttr.replacingOccurrences(of: "\'", with: "\\'"))'; "
+                cssLinkAttributes += " link.media = \(Util.jsStringLiteral(mediaAttr)); "
             }
             if let crossOriginAttr = cssLinkHtmlTagAttributes["crossOrigin"] as? String {
-                cssLinkAttributes += " link.crossOrigin = '\(crossOriginAttr.replacingOccurrences(of: "\'", with: "\\'"))'; "
+                cssLinkAttributes += " link.crossOrigin = \(Util.jsStringLiteral(crossOriginAttr)); "
             }
             if let integrityAttr = cssLinkHtmlTagAttributes["integrity"] as? String {
-                cssLinkAttributes += " link.integrity = '\(integrityAttr.replacingOccurrences(of: "\'", with: "\\'"))'; "
+                cssLinkAttributes += " link.integrity = \(Util.jsStringLiteral(integrityAttr)); "
             }
             if let referrerPolicyAttr = cssLinkHtmlTagAttributes["referrerPolicy"] as? String {
-                cssLinkAttributes += " link.referrerPolicy = '\(referrerPolicyAttr.replacingOccurrences(of: "\'", with: "\\'"))'; "
+                cssLinkAttributes += " link.referrerPolicy = \(Util.jsStringLiteral(referrerPolicyAttr)); "
             }
             if let disabledAttr = cssLinkHtmlTagAttributes["disabled"] as? Bool, disabledAttr {
                 cssLinkAttributes += " link.disabled = true; "
@@ -1664,7 +1664,7 @@ public class InAppWebView: WKWebView, UIScrollViewDelegate, WKUIDelegate,
                 alternateStylesheet = "alternate "
             }
             if let titleAttr = cssLinkHtmlTagAttributes["title"] as? String {
-                cssLinkAttributes += " link.title = '\(titleAttr.replacingOccurrences(of: "\'", with: "\\'"))'; "
+                cssLinkAttributes += " link.title = \(Util.jsStringLiteral(titleAttr)); "
             }
         }
         let jsWrapper = "(function(d) { var link = d.createElement('link'); link.rel='\(alternateStylesheet)stylesheet', link.type='text/css'; \(cssLinkAttributes) link.href = %@; d.head.appendChild(link); })(document);"
@@ -3455,7 +3455,7 @@ if(window.\(JavaScriptBridgeJS.get_JAVASCRIPT_BRIDGE_NAME())[\(_callHandlerID)] 
         let url = URL(string: targetOrigin)?.absoluteString ?? "*"
         let source = """
         (function() {
-            window.postMessage(\(message.jsData), '\(url)', \(portsString));
+            window.postMessage(\(message.jsData), \(Util.jsStringLiteral(url)), \(portsString));
         })();
         """
         evaluateJavascript(source: source, completionHandler: completionHandler)
