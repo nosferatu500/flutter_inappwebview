@@ -1,3 +1,403 @@
+## 7.0.0
+
+**A hard fork of `flutter_inappwebview` 6.2.0-beta.3, for Android and iOS only.** Everything below is
+relative to 6.2.0-beta.3: 131 commits that dropped four platforms, rewrote the Android module in
+Kotlin under a new namespace, moved the iOS module to Swift 6 language mode, removed **every**
+deprecated API upstream carried (840 `@Deprecated` annotations in these packages — 1111 counting the
+four platform packages that are also gone; **0 remain**), added 29 platform APIs, and fixed a list of
+bugs that includes four on iOS which were silently swallowing events.
+
+### Requirements — all breaking
+
+| | 6.2.0-beta.3 | 7.0.0 |
+|---|---|---|
+| Flutter | `>=3.32.0` | **`>=3.44.0`** |
+| Dart | `^3.8.0` | **`^3.12.0`** |
+| Supported platforms | 6 | **2 — Android, iOS** |
+| Android `minSdk` | 19 | **30** (Android 11) |
+| Android Gradle Plugin | 8 | **9** |
+| Android implementation language | Java | **Kotlin** |
+| iOS deployment target | 12.0 | **15.0** |
+| iOS Swift language mode | 5.0 | **6.0** |
+| **Xcode needed to build the iOS module** | 15 | **26** (Swift 6.2+) |
+
+- **The Xcode 26 floor is the most disruptive item after `minSdk 30`, and it is not obvious from the
+  version numbers.** It comes from `isolated deinit` (SE-0371), used at 32 sites so that
+  `deinit { dispose() }` is legal under Swift 6. That language feature needs a Swift 6.2+ compiler.
+  Flutter 3.44 itself only requires Xcode 15, so this plugin demands a newer toolchain than Flutter
+  does: **a consumer on Xcode 16 cannot build it at all.** The iOS *deployment target* is unaffected
+  and stays at 15.0.
+- **`minSdk 30` is well above Flutter's own floor of 24** and forces every consuming app to raise its
+  own `minSdk`. AGP rejects an app below its library's floor.
+- **macOS, Windows, Linux and Web are gone.** The `flutter_inappwebview_macos`, `_windows`, `_linux`
+  and `_web` packages no longer exist and are no longer resolved.
+- **Swift Package Manager support** for the iOS module (it still builds under CocoaPods).
+
+### BREAKING: the Android namespace and every method/event channel name changed
+
+- Android namespace / Gradle `group`: `com.pichillilorenzo.flutter_inappwebview_android` →
+  **`dev.nosferatu500.inappwebview`**
+- Every method/event channel name: `com.pichillilorenzo/…` →
+  **`dev.nosferatu500.inappwebview/…`**
+
+This is invisible to anyone using the public Dart API, and it is what allows this fork to be
+installed **alongside** upstream. It **breaks any app that talks to the plugin's platform channels
+directly**.
+
+- The Android FileProvider now ships `@xml/inappwebview_provider_paths`; apps that followed the
+  documented setup referencing `@xml/provider_paths` must switch. The provider also no longer grants
+  the entire external-storage root — see *Fixed*. Its authority suffix
+  (`flutter_inappwebview_android.fileprovider`) is deliberately unchanged.
+
+### Removed — the deprecated API, all of it
+
+Upstream shipped 1111 `@Deprecated` annotations; none is left. Nothing below has a runtime
+replacement that did not already exist in 6.x, so every migration is a rename.
+
+**The whole `*Options` API** — use the matching `*Settings` class and `initialSettings` /
+`getSettings` / `setSettings`:
+
+`InAppWebViewOptions`, `InAppWebViewGroupOptions`, `AndroidInAppWebViewOptions`,
+`IOSInAppWebViewOptions` → `InAppWebViewSettings` · `InAppBrowserOptions`,
+`InAppBrowserClassOptions`, `AndroidInAppBrowserOptions`, `IOSInAppBrowserOptions` →
+`InAppBrowserClassSettings` / `InAppBrowserSettings` · `ChromeSafariBrowserOptions`,
+`ChromeSafariBrowserClassOptions`, `AndroidChromeCustomTabsOptions`, `IOSSafariOptions` →
+`ChromeSafariBrowserSettings` · `ContextMenuOptions` → `ContextMenuSettings` ·
+`PullToRefreshOptions` → `PullToRefreshSettings` · and the `WebViewOptions`, `BrowserOptions`,
+`AndroidOptions`, `IosOptions` marker interfaces. Also removed: the `initialOptions` parameter,
+`getOptions()` / `setOptions()` on `InAppWebViewController` and `InAppBrowser`,
+`ContextMenu.options` and `PullToRefreshController.options`.
+
+**The `Android*` / `IOS*` duplicate types** — use the unprefixed type:
+
+`AndroidActionModeMenuItem` → `ActionModeMenuItem` · `AndroidCacheMode` → `CacheMode` ·
+`AndroidLayoutAlgorithm` → `LayoutAlgorithm` · `AndroidLayoutInDisplayCutoutMode` →
+`LayoutInDisplayCutoutMode` · `AndroidMixedContentMode` → `MixedContentMode` ·
+`AndroidOverScrollMode` → `OverScrollMode` · `AndroidPullToRefreshSize` → `PullToRefreshSize` ·
+`AndroidScrollBarStyle` → `ScrollBarStyle` · `AndroidVerticalScrollbarPosition` →
+`VerticalScrollbarPosition` · `AndroidWebStorageOrigin` → `WebStorageOrigin` ·
+`AndroidWebViewPackageInfo` → `WebViewPackageInfo` · `AndroidServiceWorkerClient` →
+`ServiceWorkerClient` · `AndroidWebViewFeature` → `WebViewFeature` · `AndroidSslError` /
+`IOSSslError` → `SslErrorType` · `IOSNSAttributedString` → `AttributedString` ·
+`IOSNSAttributedStringTextEffectStyle` → `AttributedStringTextEffectStyle` · `IOSNSUnderlineStyle` →
+`UnderlineStyle` · `IOSNSURLProtectionSpaceAuthenticationMethod` →
+`URLProtectionSpaceAuthenticationMethod` · `IOSNSURLProtectionSpaceProxyType` →
+`URLProtectionSpaceProxyType` · `IOSNavigationResponseAction` → `NavigationResponseAction` ·
+`IOSSafariDismissButtonStyle` → `DismissButtonStyle` · `IOSShouldAllowDeprecatedTLSAction` →
+`ShouldAllowDeprecatedTLSAction` · `IOSUIModalPresentationStyle` → `ModalPresentationStyle` ·
+`IOSUIModalTransitionStyle` → `ModalTransitionStyle` ·
+`IOSUIScrollViewContentInsetAdjustmentBehavior` → `ScrollViewContentInsetAdjustmentBehavior` ·
+`IOSUIScrollViewDecelerationRate` → `ScrollViewDecelerationRate` · `IOSURLCredentialPersistence` →
+`URLCredentialPersistence` · `IOSURLRequestCachePolicy` → `URLRequestCachePolicy` ·
+`IOSURLRequestNetworkServiceType` → `URLRequestNetworkServiceType` · `IOSURLResponse` →
+`URLResponse` · `IOSWKDataDetectorTypes` → `DataDetectorTypes` · `IOSWKFrameInfo` → `FrameInfo` ·
+`IOSWKNavigationResponse` → `NavigationResponse` · `IOSWKNavigationType` → `NavigationType` ·
+`IOSWKPDFConfiguration` → `PDFConfiguration` · `IOSWKSecurityOrigin` → `SecurityOrigin` ·
+`IOSWKSelectionGranularity` → `SelectionGranularity` · `IOSWKWebsiteDataRecord` →
+`WebsiteDataRecord` · `IOSWKWebsiteDataType` → `WebsiteDataType` · `IOSWKWindowFeatures` →
+`WindowFeatures` · `PermissionRequestResponse` → `PermissionResponse` ·
+`PermissionRequestResponseAction` → `PermissionResponseAction` · `JavaScriptHandlerCallback` →
+`JavaScriptHandlerFunction`
+
+Together with the deprecated `.android` / `.ios` accessors and the shim classes behind them:
+`InAppWebViewController.android` / `.ios`, `CookieManager.ios`, `WebStorageManager.android` /
+`.ios`, and `AndroidServiceWorkerController` / `AndroidServiceWorkerClient`.
+
+**Event aliases** — use the unprefixed event:
+
+`androidOnFormResubmission`, `androidOnGeolocationPermissionsHidePrompt`,
+`androidOnGeolocationPermissionsShowPrompt`, `androidOnJsBeforeUnload`,
+`androidOnPermissionRequest`, `androidOnReceivedIcon`, `androidOnReceivedLoginRequest`,
+`androidOnReceivedTouchIconUrl`, `androidOnRenderProcessGone`, `androidOnRenderProcessResponsive`,
+`androidOnRenderProcessUnresponsive`, `androidOnSafeBrowsingHit`, `androidShouldInterceptRequest`,
+`iosOnDidReceiveServerRedirectForProvisionalNavigation`, `iosOnNavigationResponse`,
+`iosOnWebContentProcessDidTerminate`, `iosShouldAllowDeprecatedTLS`. Plus the renamed events:
+`androidOnScaleChanged` → `onZoomScaleChanged` · `onLoadError` → `onReceivedError` ·
+`onLoadHttpError` → `onReceivedHttpError` · `onDownloadStart` / `onDownloadStartRequest` →
+`onDownloadStarting` · `onLoadResourceCustomScheme` → `onLoadResourceWithCustomScheme` · `onPrint` →
+`onPrintRequest` · `onReceivedIcon` → `onFaviconChanged` · `onFindResultReceived` →
+`FindInteractionController.onFindResultReceived`
+
+**Field / parameter aliases** — use the unprefixed field:
+
+`URLRequest.iosAllowsCellularAccess`, `.iosAllowsConstrainedNetworkAccess`,
+`.iosAllowsExpensiveNetworkAccess`, `.iosCachePolicy`, `.iosHttpShouldHandleCookies`,
+`.iosHttpShouldUsePipelining`, `.iosMainDocumentURL`, `.iosNetworkServiceType`,
+`.iosTimeoutInterval` · `NavigationAction.androidHasGesture`, `.androidIsRedirect`,
+`.iosSourceFrame`, `.iosTargetFrame`, `.iosWKNavigationType` ·
+`CreateWindowAction.androidIsDialog`, `.iosWindowFeatures` ·
+`URLProtectionSpace.iosAuthenticationMethod`, `.iosDistinguishedNames`, `.iosProxyType`,
+`.iosReceivesCredentialSecurely` · `URLCredential.iosCertificates`, `.iosPersistence` ·
+`ClientCertChallenge.androidKeyTypes`, `.androidPrincipals` · `ClientCertResponse.androidKeyStoreType` ·
+`HttpAuthenticationChallenge.iosError`, `.iosFailureResponse` ·
+`JsAlertRequest.iosIsMainFrame`, `JsConfirmRequest.iosIsMainFrame`, `JsPromptRequest.iosIsMainFrame` ·
+`ScreenshotConfiguration.iosAfterScreenUpdates` · `UserScript.iosForMainFrameOnly` ·
+`InAppWebViewInitialData.androidHistoryUrl` · `ContextMenuItem.androidId` / `.iosId` ·
+`SslError.androidError` / `.iosError` ·
+`TrustedWebActivityImmersiveDisplayMode.layoutInDisplayCutoutMode` · and on the controller methods
+themselves, the `iosWKPdfConfiguration` → `pdfConfiguration`, `iosAnimated` → `animated` and
+`iosAllowingReadAccessTo` → `allowingReadAccessTo` parameters
+
+**Methods** — use the replacement:
+
+`InAppWebViewController.findAllAsync` / `.findNext` / `.clearMatches` →
+`FindInteractionController.findAll` / `.findNext` / `.clearMatches` · `.clearCache()` →
+`.clearAllCache()` · `.getScale()` → `.getZoomScale()` · `.setSafeBrowsingWhitelist()` →
+`.setSafeBrowsingAllowlist()` · `.getTRexRunnerHtml()` / `.getTRexRunnerCss()` → the `tRexRunnerHtml`
+/ `tRexRunnerCss` getters · `PullToRefreshController.setSize()` → `.setIndicatorSize()` ·
+`.setAttributedTitle()` → `.setStyledTitle()`
+
+**Settings fields and feature flags, removed outright** — these were no-ops or dead capabilities on
+every supported platform, not renames:
+
+- `InAppWebViewSettings.saveFormData` — provably a no-op at `minSdk 30`
+- `InAppWebViewSettings.forceDark` / `.forceDarkStrategy` (+ the `ForceDark`, `AndroidForceDark`
+  and `ForceDarkStrategy` enums and `WebViewFeature.FORCE_DARK` / `.FORCE_DARK_STRATEGY`) — use
+  `algorithmicDarkeningAllowed`; a no-op at `targetSdk >= 33`
+- `InAppWebViewSettings.requestedWithHeaderOriginAllowList` (+
+  `WebViewFeature.REQUESTED_WITH_HEADER_ALLOW_LIST`) — androidx **cancelled** the header removal the
+  allow-list existed for, so it does nothing
+- `InAppWebViewSettings.clearCache` / `.clearSessionCache` — use
+  `InAppWebViewController.clearAllCache()`
+- `LayoutAlgorithm.NARROW_COLUMNS` — surveying found it was **never settable** (a `switch` with no
+  `break`s); the fall-through was fixed at the same time
+- `WebViewFeature.SAFE_BROWSING_WHITELIST` → `SAFE_BROWSING_ALLOWLIST`;
+  `WebViewFeature.START_SAFE_BROWSING` and `InAppWebViewController.startSafeBrowsing()` — a real
+  capability drop: androidx deprecated it and the fallback branch went with it
+
+### Removed — the macOS / Windows / Linux / Web API
+
+Everything in this section existed *solely* to serve a dropped platform: on Android and iOS it threw
+`UnimplementedError`, was ignored, or could never be produced. **No behaviour changed on Android or
+iOS.**
+
+**Types** — WebView2 / WPE environment (Windows, Linux): `WebViewEnvironment`,
+`PlatformWebViewEnvironment`, `WebViewEnvironmentSettings`, `EnvironmentChannelSearchKind`,
+`EnvironmentReleaseChannels`, `EnvironmentScrollbarStyle`, `CustomSchemeRegistration`,
+`BrowserProcessExitedDetail`, `BrowserProcessInfo`, `BrowserProcessInfosChangedDetail`,
+`ProcessFailedDetail`, `ProcessFailedKind`, `ProcessFailedReason`, `FrameKind`, `CacheModel` ·
+WebView2 notifications (Windows): `WebNotificationController`,
+`PlatformWebNotificationController`, `WebNotification`, `NotificationReceivedRequest`,
+`NotificationReceivedResponse`, `WebNotificationCloseHandler` · download policy (Windows, Linux):
+`DownloadStartResponse`, `DownloadStartResponseAction` · printing (macOS): `PrintJobDisposition`,
+`PrintJobPageOrder`, `PrintJobPaginationMode` · browser window (macOS, Windows): `WindowType`,
+`WindowStyleMask`, `WindowTitlebarSeparatorStyle`
+
+**Events** (Windows-only): `onAcceleratorKeyPressed`, `onContentLoading`, `onDOMContentLoaded`,
+`onLaunchingExternalUriScheme`, `onNotificationReceived`, `onProcessFailed`, `onSaveAsUIShowing`,
+`onSaveFileSecurityCheckStarting`, `onScreenCaptureStarting`; and `InAppBrowser.onMainWindowWillClose`
+(macOS)
+
+**`InAppWebViewController` methods** (25): `addDevToolsProtocolEventListener`,
+`callDevToolsProtocolMethod`, `getFavicon`, `getFrameId`, `getIFrameId`,
+`getMemoryUsageTargetLevel`, `getScreenScale`, `getTargetRefreshRate`, `isInterfaceSupported`,
+`isMuted`, `isPlayingAudio`, `isVisible`, `openDevTools`, `removeDevToolsProtocolEventListener`,
+`requestEnterFullscreen`, `requestExitFullscreen`, `requestPointerLock`, `requestPointerUnlock`,
+`setMemoryUsageTargetLevel`, `setMuted`, `setScreenScale`, `setTargetRefreshRate`, `setVisible`,
+`showSaveAsUI`, `terminateWebProcess`. **`getFavicons` is not affected**
+
+**`InAppWebViewSettings` properties** (54): `allowModalDialogs`, `allowTopNavigationToDataUrls`,
+`browserAcceleratorKeysEnabled`, `corsAllowlist`, `cursorBlinkTime`, `darkMode`,
+`disableAnimations`, `disableWebSecurity`, `doubleClickDistance`, `doubleClickTime`,
+`dragThreshold`, `drawCompositingIndicators`, `enable2DCanvasAcceleration`, `enableCaretBrowsing`,
+`enableEncryptedMedia`, `enableJavaScriptMarkup`, `enableMedia`, `enableMediaCapabilities`,
+`enableMockCaptureDevices`, `enablePageCache`, `enableResizableTextAreas`, `enableSmoothScrolling`,
+`enableSpatialNavigation`, `enableTabsToLinks`, `enableWebRTC`,
+`enableWriteConsoleMessagesToStdout`, `fontAntialias`, `fontDPI`, `fontHintingStyle`,
+`fontSubpixelLayout`, `generalAutofillEnabled`, `handleAcceleratorKeyPressed`,
+`hiddenPdfToolbarItems`, `iframeAllow`, `iframeAllowFullscreen`, `iframeAriaHidden`, `iframeCsp`,
+`iframeName`, `iframeReferrerPolicy`, `iframeRole`, `iframeSandbox`, `itpEnabled`,
+`javaScriptCanAccessClipboard`, `keyRepeatDelay`, `keyRepeatInterval`,
+`mediaContentTypesRequiringHardwareSupport`, `nonClientRegionSupportEnabled`,
+`passwordAutosaveEnabled`, `pictographFontFamily`, `pinchZoomEnabled`, `reputationCheckingRequired`,
+`scrollMultiplier`, `statusBarEnabled`, `webRTCUdpPortsRange`
+
+**`InAppBrowserSettings` properties** (macOS, 5): `windowAlphaValue`, `windowFrame`,
+`windowStyleMask`, `windowTitlebarSeparatorStyle`, `windowType`
+
+**`PrintJobSettings` properties** (macOS, 41): `canSpawnSeparateThread`, `collate`, `copies`,
+`detailedErrorReporting`, `faxNumber`, `firstPage`, `footerUri`, `headerAndFooter`, `headerTitle`,
+`horizontalPagination`, `isHorizontallyCentered`, `isVerticallyCentered`, `jobDisposition`,
+`jobSavingURL`, `lastPage`, `mustCollate`, `pageHeight`, `pageOrder`, `pageRanges`, `pageWidth`,
+`pagesAcross`, `pagesDown`, `pagesPerSide`, `paperName`, `printDialogKind`, `printerName`,
+`scalingFactor`, `shouldPrintBackgrounds`, `shouldPrintHeaderAndFooter`, `shouldPrintSelectionOnly`,
+`showUI`, `showsPageRange`, `showsPageSetupAccessory`, `showsPaperSize`, `showsPreview`,
+`showsPrintPanel`, `showsPrintSelection`, `showsProgressPanel`, `showsScaling`, `time`,
+`verticalPagination`
+
+**`PrintJobAttributes` properties** (macOS, 17): `detailedErrorReporting`, `faxNumber`,
+`headerAndFooter`, `horizontalPagination`, `isHorizontallyCentered`, `isSelectionOnly`,
+`isVerticallyCentered`, `jobDisposition`, `jobSavingURL`, `localizedPaperName`, `mustCollate`,
+`pagesAcross`, `pagesDown`, `paperName`, `scalingFactor`, `time`, `verticalPagination`
+
+**Single fields** — `PrintJobInfo.pageOrder`, `Printer.name` / `.type` / `.languageLevel`,
+`PDFConfiguration.settings`
+
+**Enum constants** — `PermissionResourceType` (Windows, 10): `AUTOPLAY`, `CLIPBOARD_READ`,
+`FILE_READ_WRITE`, `GEOLOCATION`, `LOCAL_FONTS`, `MULTIPLE_AUTOMATIC_DOWNLOADS`, `NOTIFICATIONS`,
+`OTHER_SENSORS`, `UNKNOWN`, `WINDOW_MANAGEMENT` · `WebResourceErrorType` (Windows 6, Linux 11):
+`CANNOT_SHOW_MIME_TYPE`, `CANNOT_SHOW_URI`, `CANNOT_USE_RESTRICTED_PORT`, `CONNECTION_ABORTED`,
+`DOWNLOAD_CANCELLED_BY_USER`, `DOWNLOAD_DESTINATION_FAILED`, `DOWNLOAD_NETWORK_FAILED`,
+`FRAME_LOAD_INTERRUPTED_BY_POLICY_CHANGE`, `POLICY_FAILED`, `REDIRECT_FAILED`, `RESET`,
+`SERVER_CERTIFICATE_BAD_IDENTITY`, `SERVER_CERTIFICATE_REVOKED`, `SERVER_UNREACHABLE`,
+`TLS_CERTIFICATE_GENERIC_ERROR`, `UNEXPECTED_ERROR`, `VALID_PROXY_AUTHENTICATION_REQUIRED` ·
+`SslErrorType` (Windows, 2): `COMMON_NAME_IS_INCORRECT`, `REVOKED`
+
+**Other members** — the `webViewEnvironment` parameter of `InAppWebView`, `HeadlessInAppWebView`,
+`InAppBrowser` and `CookieManager.instance()` · `CookieManager.isPropertySupported` ·
+`FindInteractionController.setFindOptions` (Windows) · `WebHistoryItem.entryId` (Windows) ·
+`FrameInfo.frameId` / `.kind` / `.name` (Windows) ·
+`ClientCertChallenge.allowedCertificateAuthorities` / `.isProxy` / `.mutuallyTrustedCertificates`,
+`ClientCertResponse.selectedCertificate`
+
+**Changed signature** — `onDownloadStarting` now returns `FutureOr<void>` instead of
+`FutureOr<DownloadStartResponse?>`. The event is Android + iOS and still fires; only its
+Windows-only response type is gone, and neither native implementation ever read the returned value.
+Existing handlers keep compiling.
+
+### Added — Android
+
+Twelve `androidx.webkit` features, each behind its own `WebViewFeature` flag, plus eight
+`android.webkit` APIs the plugin had never exposed. Every one is Android-only and reports "not
+implemented on the current platform" on iOS.
+
+- **`WebViewFeature.MUTE_AUDIO`** — `InAppWebViewController.setAudioMuted()` / `.isAudioMuted()`
+- **`WebViewFeature.PAYMENT_REQUEST`** — `InAppWebViewSettings.paymentRequestEnabled`
+  (closes upstream #2660, supersedes #2722)
+- **`WebViewFeature.WEB_AUTHENTICATION`** — passkeys, via
+  `InAppWebViewSettings.webAuthenticationSupport` + the `WebAuthenticationSupport` enum
+  (what upstream #2743 wanted)
+- **`WebViewFeature.DOWNLOAD_FAVICONS_ENABLED`** — `InAppWebViewSettings.downloadFaviconsEnabled`,
+  which also gates the existing `onReceivedIcon`
+- **`WebViewFeature.BACK_FORWARD_CACHE`** — `InAppWebViewSettings.backForwardCacheEnabled`
+- **`WebViewFeature.ATTRIBUTION_REGISTRATION_BEHAVIOR`** —
+  `InAppWebViewSettings.attributionRegistrationBehavior` + the `AttributionRegistrationBehavior` enum
+- **`WebViewFeature.WEBVIEW_MEDIA_INTEGRITY_API_STATUS`** —
+  `InAppWebViewSettings.webViewMediaIntegrityApiStatus` with per-origin overrides
+  (`WebViewMediaIntegrityApiStatusConfig`, `…OverrideRule`, `WebViewMediaIntegrityApiStatus`)
+- **`WebViewFeature.USER_AGENT_METADATA`** (+ `…_FORM_FACTORS`) — User-Agent Client Hints, via
+  `InAppWebViewSettings.userAgentMetadata`, `UserAgentMetadata`, `UserAgentBrandVersion`,
+  `UserAgentFormFactor`
+- **`WebViewFeature.DEFAULT_TRAFFICSTATS_TAGGING`** —
+  `InAppWebViewController.setDefaultTrafficStatsTag()`
+- **`WebViewFeature.DELETE_BROWSING_DATA`** — `WebStorageManager.deleteBrowsingData()` /
+  `.deleteBrowsingDataForSite()`
+- **`WebViewFeature.MULTI_PROFILE`** — a whole new `ProfileStore` controller surface plus
+  `InAppWebViewSettings.profileName`, and the plugin's own storage APIs are now profile-aware:
+  cookies, web storage, service-worker settings and geolocation all act on the profile the WebView
+  is actually using. `setServiceWorkerClient` remains default-profile only
+- **`WebViewFeature.PRERENDER_WITH_URL`** — `InAppWebViewController.prerenderUrl(WebUri)`
+- **`GeolocationPermissions`** — a new controller surface (`allow`, `clear`, `clearAll`,
+  `getAllowed`, `getOrigins`), profile-aware from the start
+- **`CookieManager`** — `setAcceptCookie()`, `isAcceptCookieEnabled()`, `hasCookies()`,
+  `isFileSchemeCookiesAllowed()`
+- **`InAppWebViewController`** — `postVisualStateCallback()`, `documentHasImages()`,
+  `flingScroll()`
+
+### Added — iOS
+
+Nine WebKit APIs read out of the iOS 26.5 SDK.
+
+- **`NavigationAction.modifierFlags` / `.buttonNumber`** (+ the `ModifierFlag` and `ButtonMask`
+  enums) — which keys and mouse button triggered a navigation
+- **`NavigationAction.isContentRuleListRedirect`** — whether a content rule list redirected it
+- **`onShowFileChooser` now fires on iOS** (18.4+), gated on
+  `InAppWebViewSettings.useOnShowFileChooser` — the iOS half of upstream #2146
+- **`InAppWebViewSettings.writingToolsBehavior`** (+ `WritingToolsBehavior`)
+- **`InAppWebViewSettings.preferredHTTPSNavigationPolicy`** (+ `UpgradeToHTTPSPolicy`) — applied to
+  the *live* per-navigation preferences, so it responds to `setSettings`
+- **`InAppWebViewSettings.securityRestrictionMode`** (+ `SecurityRestrictionMode`)
+- **`InAppWebViewSettings.lockdownModeEnabled`**
+- **`InAppWebViewSettings.supportsAdaptiveImageGlyph`**
+- **`DownloadStartRequest.isUserInitiated` / `.originatingFrame`** — from `WKDownload`
+
+### Fixed
+
+**iOS — four bugs that silently swallowed events, all found by running the integration suite on a
+simulator for the first time:**
+
+- **Ten `WKUIDelegate` / `WKNavigationDelegate` methods were never called at all.** The Swift 6
+  migration left them declaring plain `@escaping (…) -> Void` handlers where the SDK declares
+  `WK_SWIFT_UI_ACTOR` (`@MainActor @Sendable`), so Swift never inferred `@objc`, no selector was
+  exported, and WebKit fell through to its built-in defaults — **with zero compiler diagnostics.**
+  The consequences were user-visible: `onJsAlert` / `onJsConfirm` / `onJsPrompt` never fired (so
+  JavaScript `confirm()` always returned `false` and `prompt()` always `null`),
+  **`shouldOverrideUrlLoading` could not block a navigation** (`NavigationActionPolicy.CANCEL` was
+  ignored), `onNavigationResponse`, `onPermissionRequest`, `shouldAllowDeprecatedTLS`,
+  `onReceivedServerTrustAuthRequest` / `onReceivedHttpAuthRequest` /
+  `onReceivedClientCertRequest` and the device orientation/motion permission request were all dead.
+  **11 integration tests went green on this one fix.**
+- **A throwing JavaScript handler hung the caller forever.** The error path built the rejection by
+  interpolating the message into a single-quoted JS string literal escaping only `'`, so any message
+  containing a newline — routine for `Exception` — produced invalid JavaScript, the
+  `evaluateJavaScript` failed, and the promise stayed **pending for the lifetime of the page**:
+  `await window.flutter_inappwebview.callHandler(...)` never settled
+- **`onPrintRequest` killed the app on iOS 26.** `UIPrintInteractionControllerDelegate` is declared
+  `NS_SWIFT_UI_ACTOR`, but UIKit calls it from a background thread, so Swift 6's executor check
+  trapped and took the process down
+- **A DNS failure threw inside the plugin on iOS 26, so `onReceivedError` never reached app code.**
+  iOS 26 returns `NSError -1006` where 17.x returned -1003; `-1006` was unmapped and the generated
+  `fromMap` force-unwrapped the lookup. Both codes now resolve to `WebResourceErrorType.HOST_LOOKUP`
+  (matching Android's single `ERROR_HOST_LOOKUP`), and the code generator now falls back to an
+  enum's own catch-all constant instead of emitting a bare `!`
+- **A leaked `WKURLSchemeTask`** in the custom-scheme handler
+
+**Android:**
+
+- **`CookieManager.flush()` never returned.** The native side never replied, so the `Future` hung
+  forever
+- **A blocking callback could hang the WebView forever.** The four synchronous callbacks
+  (`shouldInterceptRequest`, `shouldOverrideUrlLoading`, `onJsBeforeUnload`,
+  `ServiceWorkerClient.shouldInterceptRequest`) waited on a latch that was not always released; the
+  wait is now always released and bounded (10s)
+- **The bundled `FileProvider` granted access to the entire external-storage root.** It is now
+  scoped, and ships its own `@xml/inappwebview_provider_paths` (upstream #2874 / #2873)
+- **Six bugs carried through the Java → Kotlin translation**, fixed once the diff was readable:
+  `MediaSizeExt` unit conversion, `HeadlessInAppWebView.setSize`, `mayLaunchUrl`, `getRealSettings`,
+  a boxed-value comparison in `setSettings`, and `JsBeforeUnloadResponse.toString()`
+- **AGP 9 / ProGuard** compatibility (upstream #2852, #2765, #2761)
+
+**Both platforms / tooling:**
+
+- The code generator emitted broken code for `Map<String, SomeEnum>` fields (both directions), and
+  emitted a bare `!` on every non-nullable enum lookup — both fixed, with regression tests
+- Every mirrored `WebViewFeature` constant is now pinned against the real `androidx.webkit` AAR by a
+  test: six of the declared flags are `@Deprecated` tombstones that `isFeatureSupported` **throws**
+  for, and five others have a *value* that differs from their name
+- `analysis_options.yaml` (upstream #2758), 16 KB page size (#2703 — determined not applicable: the
+  plugin ships no native code of its own)
+- 48 dead availability checks removed on iOS — all of them at or below the new 15.0 floor — along
+  with the below-iOS-14 `callAsyncJavaScript` path and the dead `SFAuthenticationSession` branches;
+  and the dead ~300-line `InputAwareWebView` path deleted on Android
+
+### Internal
+
+- **The Android module is 100% Kotlin** (158 files translated) with ktlint 1.8 formatting and an
+  opt-in `allWarningsAsErrors`; Android lint is at **0 findings**
+- **The iOS module builds in Swift 6 language mode** with complete concurrency checking, 0 errors and
+  0 warnings
+- **Pigeon** is wired up and the `find_interaction` channel is migrated end to end as a proof; the
+  other ~409 messages still use `MethodChannel`
+- **369 unit tests** (from 276) — including the Android module's first native tests, which found two
+  bugs on their first run — and the integration suite now runs on iOS as well as Android
+
+### Migration
+
+1. Rename every `*Options` type and parameter to its `*Settings` equivalent, and
+   `getOptions`/`setOptions` to `getSettings`/`setSettings`.
+2. Drop the `Android` / `IOS` prefix from the duplicate types, events, fields and methods listed
+   above. Every replacement already existed in 6.x.
+3. Raise `minSdk` to 30 and your iOS deployment target to 15.0; build the iOS module with
+   **Xcode 26 or newer**.
+4. Delete any macOS / Windows / Linux / Web-only API — there is nothing to migrate to. `switch`
+   chains over `WebResourceErrorType`, `SslErrorType` and `PermissionResourceType` may name
+   constants that no longer exist; these are constant classes rather than Dart `enum`s, so the
+   analyzer reports the missing name but never an exhaustiveness error.
+5. If you declared the plugin's FileProvider, switch `@xml/provider_paths` to
+   `@xml/inappwebview_provider_paths`.
+6. If anything in your app talks to the plugin's platform channels directly, update the channel
+   names to the `dev.nosferatu500.inappwebview/…` prefix.
+
 ## 6.2.0-beta.3
 
 - Added Linux support

@@ -1,3 +1,118 @@
+## 7.0.0
+
+The platform-interface half of a hard fork of 6.2.0-beta.3 / `1.4.0-beta.3`, **Android and iOS
+only**. The `flutter_inappwebview` 7.0.0 entry carries the full user-facing list with every old → new
+rename; this entry is the API-owner's view.
+
+- Minimum Dart `^3.12.0`, minimum Flutter `>=3.44.0`
+- **Every method/event channel name changed**: `com.pichillilorenzo/…` →
+  **`dev.nosferatu500.inappwebview/…`**. Invisible through the public API, breaking for anything
+  talking to the channels directly, and what lets this fork coexist with upstream
+- **All 840 `@Deprecated` annotations are gone; 0 remain.** Every deprecated class, event, field,
+  parameter and method upstream carried has been removed, including the whole `*Options` surface
+  (18 classes, `initialOptions`, `getOptions`/`setOptions`), the 42 `Android*` / `IOS*` duplicate
+  types, the 27 `androidOn*` / `iosOn*` event aliases, the `ios*` / `android*` field aliases, and
+  `JavaScriptHandlerCallback`
+- **All macOS / Windows / Linux / Web-only API is gone** — ~1950 annotation entries across 62 files,
+  231 dropped-platform-only members, 81 files deleted
+
+### Removed — Platform API
+
+- `PlatformWebViewEnvironment` (+ `…CreationParams`) and `PlatformWebNotificationController`
+  (+ `…CreationParams`, `WebNotificationCloseHandler`), and the
+  `InAppWebViewPlatform.createPlatformWebViewEnvironment` /
+  `createPlatformWebViewEnvironmentStatic` / `createPlatformWebNotificationController` factories
+- `PlatformInAppWebViewController` (36 methods): the 25 dropped-platform ones
+  (`addDevToolsProtocolEventListener`, `callDevToolsProtocolMethod`, `getFavicon`, `getFrameId`,
+  `getIFrameId`, `getMemoryUsageTargetLevel`, `getScreenScale`, `getTargetRefreshRate`,
+  `isInterfaceSupported`, `isMuted`, `isPlayingAudio`, `isVisible`, `openDevTools`,
+  `removeDevToolsProtocolEventListener`, `requestEnterFullscreen`, `requestExitFullscreen`,
+  `requestPointerLock`, `requestPointerUnlock`, `setMemoryUsageTargetLevel`, `setMuted`,
+  `setScreenScale`, `setTargetRefreshRate`, `setVisible`, `showSaveAsUI`, `terminateWebProcess`)
+  plus the 11 deprecated ones (`clearCache`, `clearMatches`, `findAllAsync`, `findNext`,
+  `getOptions`, `getScale`, `getTRexRunnerCss`, `getTRexRunnerHtml`, `setOptions`,
+  `setSafeBrowsingWhitelist`, `startSafeBrowsing`)
+- `PlatformWebViewCreationParams`: 9 Windows-only events (`onAcceleratorKeyPressed`,
+  `onContentLoading`, `onDOMContentLoaded`, `onLaunchingExternalUriScheme`,
+  `onNotificationReceived`, `onProcessFailed`, `onSaveAsUIShowing`,
+  `onSaveFileSecurityCheckStarting`, `onScreenCaptureStarting`) and `initialOptions`
+- `PlatformInAppBrowserEvents`: the same 9, `onMainWindowWillClose` (macOS) and the 17 deprecated
+  aliases
+- `webViewEnvironment` on `PlatformInAppWebViewWidgetCreationParams`,
+  `PlatformHeadlessInAppWebViewCreationParams`, `PlatformInAppBrowserCreationParams` and
+  `PlatformCookieManagerCreationParams`; `PlatformCookieManager.isPropertySupported` (its
+  creation-params class has no properties left, so the generated property enum is gone too)
+- `PlatformFindInteractionController.setFindOptions` (Windows) ·
+  `PlatformPullToRefreshController.options` / `.setSize` / `.setAttributedTitle` ·
+  `PlatformInAppBrowser.getOptions` / `.setOptions` / `.webViewEnvironment`
+- `InAppWebViewSettings`: **60 properties** — the 54 dropped-platform ones plus `clearCache`,
+  `clearSessionCache`, `forceDark`, `forceDarkStrategy`, `requestedWithHeaderOriginAllowList` and
+  `saveFormData`
+- `InAppBrowserSettings` (5, macOS), `PrintJobSettings` (41, macOS), `PrintJobAttributes`
+  (17, macOS), and single fields on `PrintJobInfo`, `Printer`, `PDFConfiguration`, `WebHistoryItem`,
+  `FrameInfo`, `ClientCertChallenge`, `ClientCertResponse`
+- Enum constants: `PermissionResourceType` (10), `WebResourceErrorType` (17), `SslErrorType` (2),
+  `LayoutAlgorithm.NARROW_COLUMNS`, and `WebViewFeature.FORCE_DARK` / `.FORCE_DARK_STRATEGY` /
+  `.REQUESTED_WITH_HEADER_ALLOW_LIST` / `.SAFE_BROWSING_WHITELIST` / `.START_SAFE_BROWSING`
+- Types removed with their features: `WebViewEnvironmentSettings`, `EnvironmentChannelSearchKind`,
+  `EnvironmentReleaseChannels`, `EnvironmentScrollbarStyle`, `CustomSchemeRegistration`,
+  `BrowserProcessExitedDetail`, `BrowserProcessInfo`, `BrowserProcessInfosChangedDetail`,
+  `ProcessFailedDetail`, `ProcessFailedKind`, `ProcessFailedReason`, `FrameKind`, `CacheModel`,
+  `WebNotification`, `NotificationReceivedRequest`, `NotificationReceivedResponse`,
+  `DownloadStartResponse`, `DownloadStartResponseAction`, `PrintJobDisposition`,
+  `PrintJobPageOrder`, `PrintJobPaginationMode`, `WindowType`, `WindowStyleMask`,
+  `WindowTitlebarSeparatorStyle`
+- **Changed signature**: `onDownloadStarting` returns `FutureOr<void>` instead of
+  `FutureOr<DownloadStartResponse?>`. The event is Android + iOS and unaffected; neither native
+  implementation ever read the return value
+
+### Added
+
+- `PlatformProfileStore` (+ `…CreationParams`) and `PlatformGeolocationPermissions`
+  (+ `…CreationParams`), with `createPlatformProfileStore` / `…Static` and
+  `createPlatformGeolocationPermissions` / `…Static` on `InAppWebViewPlatform`
+- `PlatformInAppWebViewController`: `setAudioMuted`, `isAudioMuted`, `setDefaultTrafficStatsTag`,
+  `prerenderUrl`, `postVisualStateCallback`, `documentHasImages`, `flingScroll`
+- `PlatformCookieManager`: `setAcceptCookie`, `isAcceptCookieEnabled`, `hasCookies`,
+  `isFileSchemeCookiesAllowed`
+- `PlatformWebStorageManager`: `deleteBrowsingData`, `deleteBrowsingDataForSite`
+- `InAppWebViewSettings` (13): `attributionRegistrationBehavior`, `backForwardCacheEnabled`,
+  `downloadFaviconsEnabled`, `lockdownModeEnabled`, `paymentRequestEnabled`,
+  `preferredHTTPSNavigationPolicy`, `profileName`, `securityRestrictionMode`,
+  `supportsAdaptiveImageGlyph`, `userAgentMetadata`, `webAuthenticationSupport`,
+  `webViewMediaIntegrityApiStatus`, `writingToolsBehavior`
+- `NavigationAction`: `modifierFlags`, `buttonNumber`, `isContentRuleListRedirect` ·
+  `DownloadStartRequest`: `isUserInitiated`, `originatingFrame`
+- `WebViewFeature` (13): `ATTRIBUTION_REGISTRATION_BEHAVIOR`, `BACK_FORWARD_CACHE`,
+  `DEFAULT_TRAFFICSTATS_TAGGING`, `DELETE_BROWSING_DATA`, `DOWNLOAD_FAVICONS_ENABLED`,
+  `MULTI_PROFILE`, `MUTE_AUDIO`, `PAYMENT_REQUEST`, `PRERENDER_WITH_URL`, `USER_AGENT_METADATA`,
+  `USER_AGENT_METADATA_FORM_FACTORS`, `WEBVIEW_MEDIA_INTEGRITY_API_STATUS`, `WEB_AUTHENTICATION`
+- New types: `AttributionRegistrationBehavior`, `ButtonMask`, `ModifierFlag`,
+  `SecurityRestrictionMode`, `UpgradeToHTTPSPolicy`, `UserAgentMetadata`, `UserAgentBrandVersion`,
+  `UserAgentFormFactor`, `WebAuthenticationSupport`, `WebViewMediaIntegrityApiStatus`,
+  `WebViewMediaIntegrityApiStatusConfig`, `WebViewMediaIntegrityApiStatusOverrideRule`,
+  `WritingToolsBehavior`, `JavaScriptHandlerFunction`
+
+### Fixed
+
+- **A DNS failure on iOS 26 threw inside the plugin.** `WebResourceErrorType` mapped only NSError
+  -1003, iOS 26 reports -1006, and the generated `fromMap` force-unwrapped the lookup — so
+  `onReceivedError` never reached app code. Both codes now resolve to `HOST_LOOKUP`, matching
+  Android's single `ERROR_HOST_LOOKUP`
+- **The code generator no longer emits a bare `!` on a non-nullable enum lookup** where the enum has
+  a catch-all constant; it degrades to that constant instead. It also emitted code broken in both
+  directions for `Map<String, SomeEnum>` fields. Both have regression tests
+- Every mirrored `WebViewFeature` constant is pinned against the real `androidx.webkit` AAR by a
+  test: six declared flags are `@Deprecated` tombstones that `isFeatureSupported` **throws** for,
+  and five more have a native *value* that differs from their name
+
+### Internal
+
+- Pigeon is wired up and the `find_interaction` channel is migrated end to end as a proof
+  (`FindInteractionHostApi` / `FindInteractionFlutterApi`, `FindSessionData`); the other ~409
+  messages still use `MethodChannel`
+- 21 unit tests — this package shipped none before
+
 ## 1.4.0-beta.3
 
 - Updated `flutter_inappwebview_internal_annotations` dependency from `^1.2.0` to `^1.3.0`

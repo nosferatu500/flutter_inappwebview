@@ -1,3 +1,113 @@
+## 7.0.0
+
+The Android half of a hard fork of 6.2.0-beta.3 / `1.2.0-beta.3`. The `flutter_inappwebview` 7.0.0
+entry carries the full user-facing list; this entry is what changed in this package.
+
+### Requirements and packaging — all breaking
+
+- **`minSdk` 19 → 30** (Android 11). Well above Flutter's own floor of 24; AGP rejects an app below
+  its library's floor, so every consuming app must raise its `minSdk`
+- **Android Gradle Plugin 9 required.** The module declares no AGP classpath of its own and uses the
+  AGP 9-only `enableKotlin` DSL; AGP 8 is no longer supported
+- **The module is 100% Kotlin** — all 157 sources translated from Java, 0 `.java` files left
+- **Namespace / Gradle `group`: `com.pichillilorenzo.flutter_inappwebview_android` →
+  `dev.nosferatu500.inappwebview`**, and `pluginClass` with it
+- **Every method/event channel name: `com.pichillilorenzo/…` →
+  `dev.nosferatu500.inappwebview/…`.** Invisible through the public Dart API, breaking for anything
+  talking to the channels directly, and what lets this fork be installed alongside upstream
+- **The bundled `FileProvider` now ships `@xml/inappwebview_provider_paths`.** Apps that followed the
+  documented setup and referenced `@xml/provider_paths` must switch — that resource no longer exists
+  here. The authority suffix (`flutter_inappwebview_android.fileprovider`) is deliberately unchanged
+- Native dependencies: `androidx.webkit` 1.14.0 → **1.17.0**, `androidx.browser` 1.9.0 → **1.10.0**,
+  `androidx.appcompat` 1.7.1 → **1.8.0**
+
+### Added
+
+Twelve `androidx.webkit` features, each behind its own `WebViewFeature` flag, and eight
+`android.webkit` APIs the plugin had never exposed:
+
+- **`MUTE_AUDIO`** — `InAppWebViewController.setAudioMuted()` / `.isAudioMuted()`
+- **`PAYMENT_REQUEST`** — `InAppWebViewSettings.paymentRequestEnabled` (upstream #2660, #2722)
+- **`WEB_AUTHENTICATION`** — passkeys, via `InAppWebViewSettings.webAuthenticationSupport`
+  (upstream #2743)
+- **`DOWNLOAD_FAVICONS_ENABLED`** — `InAppWebViewSettings.downloadFaviconsEnabled`, which also gates
+  the existing `onReceivedIcon`
+- **`BACK_FORWARD_CACHE`** — `InAppWebViewSettings.backForwardCacheEnabled`
+- **`ATTRIBUTION_REGISTRATION_BEHAVIOR`** — `InAppWebViewSettings.attributionRegistrationBehavior`
+- **`WEBVIEW_MEDIA_INTEGRITY_API_STATUS`** — `InAppWebViewSettings.webViewMediaIntegrityApiStatus`,
+  with per-origin overrides
+- **`USER_AGENT_METADATA`** (+ `…_FORM_FACTORS`) — User-Agent Client Hints, via
+  `InAppWebViewSettings.userAgentMetadata`
+- **`DEFAULT_TRAFFICSTATS_TAGGING`** — `InAppWebViewController.setDefaultTrafficStatsTag()`
+- **`DELETE_BROWSING_DATA`** — `WebStorageManager.deleteBrowsingData()` /
+  `.deleteBrowsingDataForSite()`
+- **`MULTI_PROFILE`** — a `ProfileStore` controller (`AndroidProfileStore`) plus
+  `InAppWebViewSettings.profileName`, and the
+  plugin's own storage APIs are now profile-aware: cookies, web storage, service-worker settings and
+  geolocation all act on the profile the WebView is actually using, instead of silently acting on
+  the default profile. `setServiceWorkerClient` remains default-profile only
+- **`PRERENDER_WITH_URL`** — `InAppWebViewController.prerenderUrl(WebUri)`
+- **`GeolocationPermissions`** — a new controller surface (`AndroidGeolocationPermissions`: `allow`,
+  `clear`, `clearAll`, `getAllowed`, `getOrigins`), profile-aware from the start
+- **`CookieManager`** — `setAcceptCookie()`, `isAcceptCookieEnabled()`, `hasCookies()`,
+  `isFileSchemeCookiesAllowed()`
+- **`InAppWebViewController`** — `postVisualStateCallback()`, `documentHasImages()`, `flingScroll()`
+
+Every mirrored `WebViewFeature` constant is now pinned against the real AAR by a test: six of the
+flags `WebViewFeature` declares are `@Deprecated` tombstones that `isFeatureSupported` **throws**
+for, and five others have a native *value* that differs from their name.
+
+### Fixed
+
+- **`CookieManager.flush()` never returned.** The native side never replied on the channel, so the
+  `Future` hung forever. Fixed and verified on a device
+- **A blocking callback could hang the WebView forever.** The four synchronous callbacks
+  (`shouldInterceptRequest`, `shouldOverrideUrlLoading`, `onJsBeforeUnload`,
+  `ServiceWorkerClient.shouldInterceptRequest`) waited on a latch that was not always released. The
+  wait is now always released and bounded at 10s; a handler that legitimately takes longer will stop
+  intercepting and log a warning
+- **The bundled `FileProvider` granted read access to the entire external-storage root** (upstream
+  #2874 / #2873). It is now scoped to the plugin's own directories
+- **Six bugs carried through the Java → Kotlin translation**, fixed once the diff was small enough to
+  review: `MediaSizeExt` unit conversion, `HeadlessInAppWebView.setSize`, `mayLaunchUrl`,
+  `getRealSettings`, a boxed-value comparison in `setSettings` that made settings updates no-ops, and
+  `JsBeforeUnloadResponse.toString()`
+- **AGP 9 / ProGuard** compatibility (upstream #2852, #2765, #2761)
+- Deleted the dead ~300-line `InputAwareWebView` path
+
+### Removed
+
+- All deprecated API: `AndroidWebViewFeature` → `WebViewFeature`, `AndroidInAppWebViewOptions` /
+  `AndroidInAppBrowserOptions` / `AndroidChromeCustomTabsOptions` → the `*Settings` classes, the
+  `androidOn*` event aliases, the `android*` field aliases, `getOptions`/`setOptions`,
+  `InAppWebViewController.setSafeBrowsingWhitelist()` (→ `setSafeBrowsingAllowlist`),
+  `.startSafeBrowsing()`, `.clearCache()` (→ `clearAllCache`), `.getScale()` (→ `getZoomScale`),
+  `PullToRefreshController.setSize()` (→ `setIndicatorSize`)
+- Settings that were provably no-ops at `minSdk 30` / `targetSdk 33+`:
+  `InAppWebViewSettings.saveFormData`, `.forceDark`, `.forceDarkStrategy` (use
+  `algorithmicDarkeningAllowed`), `.requestedWithHeaderOriginAllowList` (androidx cancelled the
+  header removal it existed for), and `LayoutAlgorithm.NARROW_COLUMNS`, which surveying found was
+  **never settable** — a `switch` with no `break`s, fixed at the same time
+- `WebViewFeature.FORCE_DARK`, `.FORCE_DARK_STRATEGY`, `.REQUESTED_WITH_HEADER_ALLOW_LIST`,
+  `.SAFE_BROWSING_WHITELIST` (→ `SAFE_BROWSING_ALLOWLIST`) and `.START_SAFE_BROWSING`
+- The `createPlatformWebViewEnvironment` / `createPlatformWebViewEnvironmentStatic` overrides —
+  `PlatformWebViewEnvironment` was Windows/Linux-only and no longer exists
+- `onDownloadStarting` no longer serializes a response back to the native side: the event returns
+  `FutureOr<void>`, and `WebViewChannelDelegate.kt` never read the returned value
+
+### Internal
+
+- **ktlint 1.8** formatting (`npm run format:kotlin`) plus `allWarningsAsErrors` behind an opt-in
+  `inappwebview.strictKotlin` flag — opt-in on purpose, since the module compiles inside the
+  consumer's build and an unconditional `-Werror` would break their app over a future Kotlin warning.
+  Five ktlint naming rules are disabled with the reason inline: `enum-entry-name-case` wanted to
+  rename the 77 `WebViewChannelDelegateMethods` entries that **are** the channel wire strings
+- **Android lint: 0 findings** (from 27), with three documented suppressions
+- **The module's first native unit tests** — 23 across 4 test classes, no device or Robolectric
+  needed (~4s). They found two real bugs on their first run
+- 33 Dart-side unit tests, covering the channel argument maps — the package previously shipped a
+  single empty placeholder test file
+
 ## 1.2.0-beta.3
 
 - Updated flutter_inappwebview_platform_interface version to ^1.4.0-beta.3

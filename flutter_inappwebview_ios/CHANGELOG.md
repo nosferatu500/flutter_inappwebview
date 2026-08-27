@@ -1,3 +1,100 @@
+## 7.0.0
+
+The iOS half of a hard fork of 6.2.0-beta.3 / `1.2.0-beta.3`. The `flutter_inappwebview` 7.0.0 entry
+carries the full user-facing list; this entry is what changed in this package.
+
+### Requirements — all breaking
+
+- **Deployment target 12.0 → 15.0**, in the podspec, `Package.swift` and the example's Podfile
+- **The module builds in Swift 6 language mode** (`swift_version` 5.0 → 6.0 in both the podspec and
+  the SPM manifest) with complete concurrency checking, 0 errors and 0 warnings
+- **Xcode 26 / Swift 6.2+ is now required to build the module.** This is the most disruptive change
+  here and it is not visible in the version numbers: `isolated deinit` (SE-0371) is used at 32 sites
+  so that `deinit { dispose() }` is legal under Swift 6, and that feature needs a Swift 6.2+
+  compiler. Flutter 3.44 itself only requires Xcode 15, so this plugin demands a newer toolchain
+  than Flutter does — **a consumer on Xcode 16 cannot build it.** The alternatives were a runtime
+  trap or dropping the teardown safety net
+- **Swift Package Manager support**; CocoaPods still works
+- Every method/event channel name changed to the `dev.nosferatu500.inappwebview/…` prefix
+
+### Added
+
+Nine WebKit APIs read out of the iOS 26.5 SDK:
+
+- **`NavigationAction.modifierFlags` / `.buttonNumber`** (+ `ModifierFlag`, `ButtonMask`) — which
+  keys and mouse button triggered a navigation
+- **`NavigationAction.isContentRuleListRedirect`** — whether a content rule list redirected it
+- **`onShowFileChooser` now fires on iOS** (18.4+), gated on
+  `InAppWebViewSettings.useOnShowFileChooser` — the iOS half of upstream #2146
+- **`InAppWebViewSettings.writingToolsBehavior`** (+ `WritingToolsBehavior`)
+- **`InAppWebViewSettings.preferredHTTPSNavigationPolicy`** (+ `UpgradeToHTTPSPolicy`), applied to
+  the *live* per-navigation `WKWebpagePreferences`, so unlike the other creation-time settings it
+  genuinely responds to `setSettings`
+- **`InAppWebViewSettings.securityRestrictionMode`** (+ `SecurityRestrictionMode`)
+- **`InAppWebViewSettings.lockdownModeEnabled`**
+- **`InAppWebViewSettings.supportsAdaptiveImageGlyph`**
+- **`DownloadStartRequest.isUserInitiated` / `.originatingFrame`**, from `WKDownload`
+
+### Fixed
+
+The first iOS integration runs in this fork's history found four defects that no compiler, linter or
+unit test could see. All four are fixed and proved both ways on a simulator.
+
+- **Ten `WKUIDelegate` / `WKNavigationDelegate` methods were never called at all.** The Swift 6
+  migration left them declaring plain `@escaping (…) -> Void` handlers where the SDK declares
+  `WK_SWIFT_UI_ACTOR` (`@MainActor @Sendable`); Swift only infers `@objc` for an optional protocol
+  requirement when the signature matches exactly, so no selector was exported and WebKit fell
+  through to its built-in defaults — **with zero compiler diagnostics, `flutter analyze` at 0 and
+  every unit test passing.** What was dead: `onJsAlert` / `onJsConfirm` / `onJsPrompt` (so JavaScript
+  `confirm()` always returned `false` and `prompt()` always `null`), **`shouldOverrideUrlLoading`
+  could not block a navigation** — `NavigationActionPolicy.CANCEL` was ignored and every navigation
+  was allowed — `onNavigationResponse`, `onPermissionRequest`, `shouldAllowDeprecatedTLS`,
+  `onReceivedServerTrustAuthRequest` / `onReceivedHttpAuthRequest` / `onReceivedClientCertRequest`,
+  and the device orientation/motion permission request. **11 integration tests went green on this
+  one fix.**
+- **A throwing JavaScript handler hung the caller forever.** The rejection was built by interpolating
+  the error message into a single-quoted JS string literal escaping only `'`, so any message
+  containing a newline — routine for `Exception` — produced invalid JavaScript, the
+  `evaluateJavaScript` failed, and the promise stayed **pending for the lifetime of the page**:
+  `await window.flutter_inappwebview.callHandler(...)` never settled
+- **`onPrintRequest` killed the app on iOS 26.** `UIPrintInteractionControllerDelegate` is declared
+  `NS_SWIFT_UI_ACTOR`, so the witness inherited `@MainActor` and Swift 6 emitted an executor
+  assertion — but UIKit calls it from a background `NSThread`, so the assertion trapped and took the
+  whole process down
+- **A DNS failure threw inside the plugin on iOS 26, so `onReceivedError` never reached app code.**
+  iOS 26 returns `NSError -1006` where 17.x returned -1003, and -1006 was unmapped
+- **A leaked `WKURLSchemeTask`** in the custom-scheme handler
+- 48 dead availability checks removed — all at or below the new 15.0 floor — along with the
+  below-iOS-14 `callAsyncJavaScript` path and the dead `SFAuthenticationSession` branches
+
+Known platform limitation, worth recording rather than working around: on **iOS 17.x**,
+`SecPKCS12Import` cannot read a PKCS#12 container using modern encryption (`PBES2` / `AES-256-CBC`,
+OpenSSL 3's default) and reports `errSecAuthFailed` — *"the passphrase is not correct"* — which is a
+lie. `onReceivedClientCertRequest` then silently presents no certificate. The same file works on iOS
+26.5. Check container algorithms with `openssl pkcs12 -info -nokeys -noout` before believing that
+error.
+
+### Removed
+
+- All deprecated API: `IOSInAppWebViewOptions` / `IOSInAppBrowserOptions` / `IOSSafariOptions` → the
+  `*Settings` classes, the 30 `IOS*` duplicate types, the `iosOn*` event aliases, the `ios*` field
+  aliases, `getOptions`/`setOptions`, `findAllAsync` / `findNext` / `clearMatches` (→
+  `FindInteractionController`), `clearCache()` (→ `clearAllCache`), `getScale()` (→ `getZoomScale`),
+  `getTRexRunnerHtml()` / `getTRexRunnerCss()` (→ the getters),
+  `PullToRefreshController.setAttributedTitle()` (→ `setStyledTitle`)
+- The `createPlatformWebViewEnvironment` / `createPlatformWebViewEnvironmentStatic` overrides —
+  `PlatformWebViewEnvironment` was Windows/Linux-only and no longer exists
+- `onDownloadStarting` no longer serializes a response back to the native side: the event returns
+  `FutureOr<void>`, and `WebViewChannelDelegate.swift` never read the returned value
+
+### Internal
+
+- 46 Dart-side unit tests, covering the channel argument maps and the settings surface — the package
+  previously shipped a single empty placeholder test file
+- The integration suite now runs on iOS: **106 pass / 6 fail / 1 skip** on iOS 17.5 and
+  **107 / 5 / 1** on iOS 26.5, with the fixture server up. Both remaining failure sets are
+  characterised and none is claimed as a plugin defect yet
+
 ## 1.2.0-beta.3
 
 - Updated flutter_inappwebview_platform_interface version to ^1.4.0-beta.3
