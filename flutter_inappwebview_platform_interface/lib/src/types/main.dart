@@ -38,7 +38,6 @@ export 'dismiss_button_style.dart' show DismissButtonStyle;
 export 'download_start_request.dart' show DownloadStartRequest;
 export 'favicon.dart' show Favicon;
 export 'favicon_changed_request.dart' show FaviconChangedRequest;
-export 'favicon_image_format.dart' show FaviconImageFormat;
 export 'fetch_request.dart' show FetchRequest;
 export 'fetch_request_action.dart' show FetchRequestAction;
 export 'fetch_request_credential.dart' show FetchRequestCredential;
@@ -101,7 +100,6 @@ export 'permission_response.dart' show PermissionResponse;
 export 'permission_response_action.dart' show PermissionResponseAction;
 export 'print_job_attributes.dart' show PrintJobAttributes;
 export 'print_job_color_mode.dart' show PrintJobColorMode;
-export 'print_job_dialog_kind.dart' show PrintJobDialogKind;
 export 'print_job_duplex_mode.dart' show PrintJobDuplexMode;
 export 'print_job_info.dart' show PrintJobInfo;
 export 'print_job_media_size.dart' show PrintJobMediaSize;
@@ -186,7 +184,6 @@ export 'website_data_type.dart' show WebsiteDataType;
 export 'webview_package_info.dart' show WebViewPackageInfo;
 export 'webview_render_process_action.dart' show WebViewRenderProcessAction;
 export 'window_features.dart' show WindowFeatures;
-export 'find_options.dart' show FindOptions;
 export 'find_session.dart' show FindSession;
 export 'search_result_display_style.dart' show SearchResultDisplayStyle;
 export 'content_blocker_trigger_load_context.dart'
@@ -204,41 +201,13 @@ export 'tracing_mode.dart' show TracingMode;
 export 'tracing_category.dart' show TracingCategory;
 export 'custom_tabs_post_message_result_type.dart'
     show CustomTabsPostMessageResultType;
-export 'launching_external_uri_scheme_request.dart'
-    show LaunchingExternalUriSchemeRequest;
-export 'launching_external_uri_scheme_response.dart'
-    show LaunchingExternalUriSchemeResponse;
-export 'memory_usage_target_level.dart' show MemoryUsageTargetLevel;
-export 'text_direction_kind.dart' show TextDirectionKind;
-export 'save_as_kind.dart' show SaveAsKind;
-export 'save_as_ui_result.dart' show SaveAsUIResult;
-export 'save_as_ui_showing_request.dart' show SaveAsUIShowingRequest;
-export 'save_as_ui_showing_response.dart' show SaveAsUIShowingResponse;
-export 'save_file_security_check_starting_request.dart'
-    show SaveFileSecurityCheckStartingRequest;
-export 'save_file_security_check_starting_response.dart'
-    show SaveFileSecurityCheckStartingResponse;
-export 'screen_capture_starting_request.dart' show ScreenCaptureStartingRequest;
-export 'screen_capture_starting_response.dart'
-    show ScreenCaptureStartingResponse;
-export 'web_resource_context.dart' show WebResourceContext;
-export 'web_resource_request_source_kind.dart'
-    show WebResourceRequestSourceKind;
 export 'disposable.dart';
 export 'focus_direction.dart' show FocusDirection;
 export 'enum_method.dart';
-export 'pdf_toolbar_items.dart' show PdfToolbarItems;
-export 'webview_interface.dart' show WebViewInterface;
-export 'browser_process_exit_kind.dart' show BrowserProcessExitKind;
-export 'browser_process_kind.dart' show BrowserProcessKind;
-export 'physical_key_status.dart' show PhysicalKeyStatus;
-export 'accelerator_key_pressed_detail.dart' show AcceleratorKeyPressedDetail;
 export 'proxy_relay_hop.dart' show ProxyRelayHop;
 export 'show_file_chooser_request_mode.dart' show ShowFileChooserRequestMode;
 export 'show_file_chooser_request.dart' show ShowFileChooserRequest;
 export 'show_file_chooser_response.dart' show ShowFileChooserResponse;
-export 'font_hinting_style.dart' show FontHintingStyle;
-export 'font_subpixel_layout.dart' show FontSubpixelLayout;
 export 'web_authentication_support.dart' show WebAuthenticationSupport;
 export 'attribution_registration_behavior.dart'
     show AttributionRegistrationBehavior;

@@ -255,6 +255,27 @@ WebView2 notifications (Windows): `WebNotificationController`,
 Windows-only response type is gone, and neither native implementation ever read the returned value.
 Existing handlers keep compiling.
 
+**Also removed — seven event parameters that outlived their events.** The nine Windows events above
+left `PlatformWebViewCreationParams`, but seven of them stayed on as constructor parameters of
+`InAppWebView` and `HeadlessInAppWebView`, with nowhere left to forward them to: a caller passing
+`onSaveAsUIShowing:` compiled and was **silently ignored**. They are gone from both widgets —
+`onAcceleratorKeyPressed`, `onContentLoading`, `onDOMContentLoaded`, `onLaunchingExternalUriScheme`,
+`onSaveAsUIShowing`, `onSaveFileSecurityCheckStarting`, `onScreenCaptureStarting` — so passing one is
+now a compile error instead of a no-op.
+
+**Also removed — 25 types with no remaining user.** Their payload types
+(`AcceleratorKeyPressedDetail`, `LaunchingExternalUriSchemeRequest` / `…Response`,
+`SaveAsUIShowingRequest` / `…Response`, `SaveFileSecurityCheckStartingRequest` / `…Response`,
+`ScreenCaptureStartingRequest` / `…Response`) and, with those, `PhysicalKeyStatus` (a Win32 LPARAM)
+and `SaveAsKind` · plus 14 whose last user left with the dropped-platform members:
+`BrowserProcessExitKind`, `BrowserProcessKind`, `FaviconImageFormat`, `FindOptions`,
+`FontHintingStyle`, `FontSubpixelLayout`, `MemoryUsageTargetLevel`, `PdfToolbarItems`,
+`PrintJobDialogKind`, `SaveAsUIResult`, `TextDirectionKind`, `WebResourceContext`,
+`WebResourceRequestSourceKind`, `WebViewInterface`. `BrowserProcessExitKind` and
+`BrowserProcessKind` had already lost every constant and were empty shells. **`ProxyRelayHop` was
+in the same "zero references" list and is deliberately kept** — it is iOS API that the Swift side
+reads, and it is unreachable only because `ProxyRule` has never carried `relayHop1` / `relayHop2`.
+
 ### Added — Android
 
 Twelve `androidx.webkit` features, each behind its own `WebViewFeature` flag, plus eight

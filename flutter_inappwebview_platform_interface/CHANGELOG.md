@@ -65,6 +65,17 @@ rename; this entry is the API-owner's view.
 - **Changed signature**: `onDownloadStarting` returns `FutureOr<void>` instead of
   `FutureOr<DownloadStartResponse?>`. The event is Android + iOS and unaffected; neither native
   implementation ever read the return value
+- **25 further types, removed with their last user** — the payload types of the nine removed
+  Windows events (`AcceleratorKeyPressedDetail`, `LaunchingExternalUriSchemeRequest` / `…Response`,
+  `SaveAsUIShowingRequest` / `…Response`, `SaveFileSecurityCheckStartingRequest` / `…Response`,
+  `ScreenCaptureStartingRequest` / `…Response`) and the two types only they used
+  (`PhysicalKeyStatus`, `SaveAsKind`); plus `BrowserProcessExitKind`, `BrowserProcessKind`,
+  `FaviconImageFormat`, `FindOptions`, `FontHintingStyle`, `FontSubpixelLayout`,
+  `MemoryUsageTargetLevel`, `PdfToolbarItems`, `PrintJobDialogKind`, `SaveAsUIResult`,
+  `TextDirectionKind`, `WebResourceContext`, `WebResourceRequestSourceKind`, `WebViewInterface`.
+  All 25 exports are gone from `src/types/main.dart`. **`ProxyRelayHop` was equally unreferenced and
+  is kept**: it is `@SupportedPlatforms([IOSPlatform()])` and `ProxyManager.swift` reads it — the
+  gap is that `ProxyRule` has no `relayHop1` / `relayHop2` field to carry it, and never has
 
 ### Added
 
@@ -105,6 +116,9 @@ rename; this entry is the API-owner's view.
 - Every mirrored `WebViewFeature` constant is pinned against the real `androidx.webkit` AAR by a
   test: six declared flags are `@Deprecated` tombstones that `isFeatureSupported` **throws** for,
   and five more have a native *value* that differs from their name
+- `PlatformInAppWebViewWidgetCreationParams.preventGestureDelay` is documented under its own dartdoc
+  template id again. It had inherited the deleted `webViewEnvironment` block's id, and its
+  `{@macro …supported_platforms}` pointed at a template the generator no longer emits
 
 ### Internal
 
