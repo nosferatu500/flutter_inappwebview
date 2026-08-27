@@ -19,7 +19,7 @@ class JsPromptRequest_ {
   String? defaultValue;
 
   ///Indicates whether the request was made for the main frame.
-  @SupportedPlatforms(platforms: [IOSPlatform(), MacOSPlatform()])
+  @SupportedPlatforms(platforms: [IOSPlatform()])
   bool? isMainFrame;
 
   JsPromptRequest_({

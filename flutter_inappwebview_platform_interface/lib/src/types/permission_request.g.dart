@@ -43,14 +43,11 @@ class PermissionRequest {
     if (map['resources'] != null) {
       instance.resources = List<PermissionResourceType>.from(
         map['resources'].map(
-          (e) =>
-              switch (enumMethod ?? EnumMethod.nativeValue) {
-                EnumMethod.nativeValue =>
-                  PermissionResourceType.fromNativeValue(e),
-                EnumMethod.value => PermissionResourceType.fromValue(e),
-                EnumMethod.name => PermissionResourceType.byName(e),
-              } ??
-              PermissionResourceType.UNKNOWN,
+          (e) => switch (enumMethod ?? EnumMethod.nativeValue) {
+            EnumMethod.nativeValue => PermissionResourceType.fromNativeValue(e),
+            EnumMethod.value => PermissionResourceType.fromValue(e),
+            EnumMethod.name => PermissionResourceType.byName(e),
+          }!,
         ),
       );
     }

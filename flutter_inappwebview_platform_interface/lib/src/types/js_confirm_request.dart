@@ -16,7 +16,7 @@ class JsConfirmRequest_ {
   String? message;
 
   ///Indicates whether the request was made for the main frame.
-  @SupportedPlatforms(platforms: [IOSPlatform(), MacOSPlatform()])
+  @SupportedPlatforms(platforms: [IOSPlatform()])
   bool? isMainFrame;
 
   JsConfirmRequest_({this.url, this.message, this.isMainFrame});

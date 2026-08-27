@@ -387,7 +387,6 @@ class SupportChecker {
     classNameOf(TracingController): TracingController.isClassSupported,
     classNameOf(HttpAuthCredentialDatabase):
         HttpAuthCredentialDatabase.isClassSupported,
-    classNameOf(WebViewEnvironment): WebViewEnvironment.isClassSupported,
     classNameOf(ProcessGlobalConfig): ProcessGlobalConfig.isClassSupported,
     classNameOf(WebMessageChannel): WebMessageChannel.isClassSupported,
   };
@@ -449,10 +448,6 @@ class SupportChecker {
       values: PlatformHttpAuthCredentialDatabaseMethod.values,
       checker: HttpAuthCredentialDatabase.isMethodSupported,
     ),
-    classNameOf(WebViewEnvironment): _buildMethodResolver(
-      values: PlatformWebViewEnvironmentMethod.values,
-      checker: WebViewEnvironment.isMethodSupported,
-    ),
     classNameOf(ProcessGlobalConfig): _buildMethodResolver(
       values: PlatformProcessGlobalConfigMethod.values,
       checker: ProcessGlobalConfig.isMethodSupported,
@@ -496,7 +491,6 @@ class SupportChecker {
       _getProxyControllerDefinition(),
       _getTracingControllerDefinition(),
       _getHttpAuthCredentialDatabaseDefinition(),
-      _getWebViewEnvironmentDefinition(),
       _getProcessGlobalConfigDefinition(),
       _getWebMessageChannelDefinition(),
     ];
@@ -1346,27 +1340,6 @@ class SupportChecker {
           className: className,
           category: 'Media',
         ),
-        ApiMethodDefinition(
-          name: PlatformInAppWebViewControllerMethod.isPlayingAudio.name,
-          signature: 'Future<bool?> isPlayingAudio()',
-          description: 'Checks if audio is currently playing.',
-          className: className,
-          category: 'Media',
-        ),
-        ApiMethodDefinition(
-          name: PlatformInAppWebViewControllerMethod.isMuted.name,
-          signature: 'Future<bool?> isMuted()',
-          description: 'Checks if audio is muted.',
-          className: className,
-          category: 'Media',
-        ),
-        ApiMethodDefinition(
-          name: PlatformInAppWebViewControllerMethod.setMuted.name,
-          signature: 'Future<void> setMuted({required bool muted})',
-          description: 'Sets the muted state.',
-          className: className,
-          category: 'Media',
-        ),
 
         // Camera/Mic methods
         ApiMethodDefinition(
@@ -1467,61 +1440,10 @@ class SupportChecker {
           className: className,
           category: 'iOS/macOS',
         ),
-        ApiMethodDefinition(
-          name: PlatformInAppWebViewControllerMethod.terminateWebProcess.name,
-          signature: 'Future<void> terminateWebProcess()',
-          description: 'Terminates the web content process.',
-          className: className,
-          category: 'iOS/macOS',
-        ),
 
         // Windows-specific methods
-        ApiMethodDefinition(
-          name: PlatformInAppWebViewControllerMethod.openDevTools.name,
-          signature: 'Future<void> openDevTools()',
-          description: 'Opens the browser DevTools.',
-          className: className,
-          category: 'Windows',
-        ),
-        ApiMethodDefinition(
-          name: PlatformInAppWebViewControllerMethod
-              .callDevToolsProtocolMethod
-              .name,
-          signature:
-              'Future<dynamic> callDevToolsProtocolMethod({required String methodName, ...})',
-          description: 'Calls a DevTools Protocol method.',
-          className: className,
-          category: 'Windows',
-        ),
-        ApiMethodDefinition(
-          name: PlatformInAppWebViewControllerMethod
-              .addDevToolsProtocolEventListener
-              .name,
-          signature:
-              'Future<void> addDevToolsProtocolEventListener({required String eventName, ...})',
-          description: 'Adds a DevTools Protocol event listener.',
-          className: className,
-          category: 'Windows',
-        ),
-        ApiMethodDefinition(
-          name: PlatformInAppWebViewControllerMethod
-              .removeDevToolsProtocolEventListener
-              .name,
-          signature:
-              'Future<void> removeDevToolsProtocolEventListener({required String eventName})',
-          description: 'Removes a DevTools Protocol event listener.',
-          className: className,
-          category: 'Windows',
-        ),
 
         // Web-specific methods
-        ApiMethodDefinition(
-          name: PlatformInAppWebViewControllerMethod.getIFrameId.name,
-          signature: 'Future<String?> getIFrameId()',
-          description: 'Gets the iframe ID on web platform.',
-          className: className,
-          category: 'Web',
-        ),
 
         // Other methods
         ApiMethodDefinition(
@@ -2056,12 +1978,6 @@ class SupportChecker {
         ),
 
         // Windows events
-        ApiEventDefinition(
-          name: PlatformWebViewCreationParamsProperty.onProcessFailed.name,
-          description: 'Called when a process failure occurs.',
-          className: className,
-          category: 'Windows',
-        ),
 
         // Other events
         ApiEventDefinition(
@@ -2239,11 +2155,6 @@ class SupportChecker {
         ApiEventDefinition(
           name: PlatformInAppBrowserEventsMethod.onExit.name,
           description: 'Called when the browser exits.',
-          className: className,
-        ),
-        ApiEventDefinition(
-          name: PlatformInAppBrowserEventsMethod.onMainWindowWillClose.name,
-          description: 'Called when the main window will close.',
           className: className,
         ),
       ],
@@ -3054,71 +2965,6 @@ class SupportChecker {
               .name,
           signature: 'Future<void> clearAllAuthCredentials()',
           description: 'Clears all credentials.',
-          className: className,
-        ),
-      ],
-    );
-  }
-
-  static ApiClassDefinition _getWebViewEnvironmentDefinition() {
-    final className = classNameOf(WebViewEnvironment);
-    return ApiClassDefinition(
-      className: className,
-      description: 'WebView2 environment for Windows.',
-      isClassSupported: () => WebViewEnvironment.isClassSupported(),
-      methods: [
-        ApiMethodDefinition(
-          name: PlatformWebViewEnvironmentMethod.create.name,
-          signature:
-              'static Future<${WebViewEnvironment}> ${PlatformWebViewEnvironmentMethod.create.name}({...})',
-          description: 'Creates a WebView environment.',
-          className: className,
-          isStatic: true,
-        ),
-        ApiMethodDefinition(
-          name: PlatformWebViewEnvironmentMethod.getAvailableVersion.name,
-          signature:
-              'static Future<String?> getAvailableVersion({String? browserExecutableFolder})',
-          description: 'Gets the available WebView2 version.',
-          className: className,
-          isStatic: true,
-        ),
-        ApiMethodDefinition(
-          name: PlatformWebViewEnvironmentMethod.getProcessInfos.name,
-          signature: 'Future<List<BrowserProcessInfo>> getProcessInfos()',
-          description: 'Gets running process information.',
-          className: className,
-        ),
-        ApiMethodDefinition(
-          name: PlatformWebViewEnvironmentMethod.compareBrowserVersions.name,
-          signature: 'static Future<int> compareBrowserVersions({...})',
-          description: 'Compares browser versions.',
-          className: className,
-          isStatic: true,
-        ),
-        ApiMethodDefinition(
-          name: PlatformWebViewEnvironmentMethod.dispose.name,
-          signature: 'Future<void> dispose()',
-          description: 'Disposes the environment.',
-          className: className,
-        ),
-      ],
-      events: [
-        ApiEventDefinition(
-          name: PlatformWebViewEnvironmentProperty.onBrowserProcessExited.name,
-          description: 'Called when the browser process exits.',
-          className: className,
-        ),
-        ApiEventDefinition(
-          name: PlatformWebViewEnvironmentProperty.onProcessInfosChanged.name,
-          description: 'Called when process info changes.',
-          className: className,
-        ),
-        ApiEventDefinition(
-          name: PlatformWebViewEnvironmentProperty
-              .onNewBrowserVersionAvailable
-              .name,
-          description: 'Called when a new browser version is available.',
           className: className,
         ),
       ],

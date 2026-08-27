@@ -3,7 +3,6 @@ import 'package:flutter_inappwebview_internal_annotations/flutter_inappwebview_i
 import 'url_authentication_challenge.dart';
 import 'url_protection_space.dart';
 import '../in_app_webview/platform_webview.dart';
-import '../types/ssl_certificate.dart';
 import 'enum_method.dart';
 
 part 'client_cert_challenge.g.dart';
@@ -38,25 +37,9 @@ class ClientCertChallenge_ extends URLAuthenticationChallenge_ {
   )
   List<String>? keyTypes;
 
-  ///The collection contains Base64 encoding of DER encoded distinguished names
-  ///of certificate authorities allowed by the server.
-  @SupportedPlatforms(platforms: [WindowsPlatform()])
-  List<String>? allowedCertificateAuthorities;
-
-  ///If the server that issued this request is an http proxy.
-  @SupportedPlatforms(platforms: [WindowsPlatform()])
-  bool? isProxy;
-
-  ///The collection contains mutually trusted CA certificates.
-  @SupportedPlatforms(platforms: [WindowsPlatform()])
-  List<SslCertificate_>? mutuallyTrustedCertificates;
-
   ClientCertChallenge_({
     required super.protectionSpace,
     this.principals,
     this.keyTypes,
-    this.allowedCertificateAuthorities,
-    this.isProxy,
-    this.mutuallyTrustedCertificates,
   });
 }

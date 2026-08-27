@@ -7,15 +7,10 @@ import '../types/action_mode_menu_item.dart';
 import '../types/attribution_registration_behavior.dart';
 import '../types/cache_mode.dart';
 import '../types/data_detector_types.dart';
-import '../types/font_hinting_style.dart';
-import '../types/font_subpixel_layout.dart';
 import '../types/layout_algorithm.dart';
 import '../types/mixed_content_mode.dart';
 import '../types/over_scroll_mode.dart';
-import '../types/pdf_toolbar_items.dart';
-import '../types/referrer_policy.dart';
 import '../types/renderer_priority_policy.dart';
-import '../types/sandbox.dart';
 import '../types/scrollbar_style.dart';
 import '../types/scrollview_content_inset_adjustment_behavior.dart';
 import '../types/writing_tools_behavior.dart';
@@ -55,29 +50,14 @@ List<ContentBlocker> _deserializeContentBlockers(
 ///This class represents all the WebView settings available.
 ///{@endtemplate}
 @ExchangeableObject(copyMethod: true)
-@SupportedPlatforms(
-  platforms: [
-    AndroidPlatform(),
-    IOSPlatform(),
-    MacOSPlatform(),
-    WebPlatform(requiresSameOrigin: false),
-    WindowsPlatform(),
-  ],
-)
+@SupportedPlatforms(platforms: [AndroidPlatform(), IOSPlatform()])
 class InAppWebViewSettings_ {
   ///Set to `true` to be able to listen at the [PlatformWebViewCreationParams.shouldOverrideUrlLoading] event.
   ///
   ///If the [PlatformWebViewCreationParams.shouldOverrideUrlLoading] event is implemented and this value is `null`,
   ///it will be automatically inferred as `true`, otherwise, the default value is `false`.
   ///This logic will not be applied for [PlatformInAppBrowser], where you must set the value manually.
-  @SupportedPlatforms(
-    platforms: [
-      AndroidPlatform(),
-      IOSPlatform(),
-      MacOSPlatform(),
-      WindowsPlatform(),
-    ],
-  )
+  @SupportedPlatforms(platforms: [AndroidPlatform(), IOSPlatform()])
   bool? useShouldOverrideUrlLoading;
 
   ///Set to `true` to be able to listen at the [PlatformWebViewCreationParams.onLoadResource] event.
@@ -85,14 +65,7 @@ class InAppWebViewSettings_ {
   ///If the [PlatformWebViewCreationParams.onLoadResource] event is implemented and this value is `null`,
   ///it will be automatically inferred as `true`, otherwise, the default value is `false`.
   ///This logic will not be applied for [PlatformInAppBrowser], where you must set the value manually.
-  @SupportedPlatforms(
-    platforms: [
-      AndroidPlatform(),
-      IOSPlatform(),
-      MacOSPlatform(),
-      LinuxPlatform(),
-    ],
-  )
+  @SupportedPlatforms(platforms: [AndroidPlatform(), IOSPlatform()])
   bool? useOnLoadResource;
 
   ///Set to `true` to be able to listen at the [PlatformWebViewCreationParams.onDownloadStarting] event.
@@ -100,9 +73,7 @@ class InAppWebViewSettings_ {
   ///If the [PlatformWebViewCreationParams.onDownloadStarting] event is implemented and this value is `null`,
   ///it will be automatically inferred as `true`, otherwise, the default value is `false`.
   ///This logic will not be applied for [PlatformInAppBrowser], where you must set the value manually.
-  @SupportedPlatforms(
-    platforms: [AndroidPlatform(), IOSPlatform(), MacOSPlatform()],
-  )
+  @SupportedPlatforms(platforms: [AndroidPlatform(), IOSPlatform()])
   bool? useOnDownloadStart;
 
   ///Sets the user-agent for the WebView.
@@ -118,16 +89,6 @@ class InAppWebViewSettings_ {
         apiUrl:
             "https://developer.apple.com/documentation/webkit/wkwebview/1414950-customuseragent",
       ),
-      MacOSPlatform(
-        apiName: "WKWebView.customUserAgent",
-        apiUrl:
-            "https://developer.apple.com/documentation/webkit/wkwebview/1414950-customuseragent",
-      ),
-      WindowsPlatform(
-        apiName: 'ICoreWebView2Settings2.put_UserAgent',
-        apiUrl:
-            'https://learn.microsoft.com/en-us/microsoft-edge/webview2/reference/win32/icorewebview2settings2?view=webview2-1.0.2210.55#put_useragent',
-      ),
     ],
   )
   String? userAgent;
@@ -137,11 +98,6 @@ class InAppWebViewSettings_ {
     platforms: [
       AndroidPlatform(),
       IOSPlatform(
-        apiName: "WKWebViewConfiguration.applicationNameForUserAgent",
-        apiUrl:
-            "https://developer.apple.com/documentation/webkit/wkwebviewconfiguration/1395665-applicationnameforuseragent",
-      ),
-      MacOSPlatform(
         apiName: "WKWebViewConfiguration.applicationNameForUserAgent",
         apiUrl:
             "https://developer.apple.com/documentation/webkit/wkwebviewconfiguration/1395665-applicationnameforuseragent",
@@ -163,17 +119,6 @@ class InAppWebViewSettings_ {
         apiUrl:
             "https://developer.apple.com/documentation/webkit/wkwebpagepreferences/3552422-allowscontentjavascript/",
       ),
-      MacOSPlatform(
-        apiName: "WKWebpagePreferences.allowsContentJavaScript",
-        apiUrl:
-            "https://developer.apple.com/documentation/webkit/wkwebpagepreferences/3552422-allowscontentjavascript/",
-      ),
-      WebPlatform(requiresSameOrigin: false),
-      WindowsPlatform(
-        apiName: "ICoreWebView2Settings.put_IsScriptEnabled",
-        apiUrl:
-            "https://learn.microsoft.com/en-us/microsoft-edge/webview2/reference/win32/icorewebview2settings?view=webview2-1.0.2210.55#put_isscriptenabled",
-      ),
     ],
   )
   bool? javaScriptEnabled;
@@ -191,12 +136,6 @@ class InAppWebViewSettings_ {
         apiUrl:
             "https://developer.apple.com/documentation/webkit/wkpreferences/1536573-javascriptcanopenwindowsautomati/",
       ),
-      MacOSPlatform(
-        apiName: "WKPreferences.javaScriptCanOpenWindowsAutomatically",
-        apiUrl:
-            "https://developer.apple.com/documentation/webkit/wkpreferences/1536573-javascriptcanopenwindowsautomati/",
-      ),
-      WebPlatform(),
     ],
   )
   bool? javaScriptCanOpenWindowsAutomatically;
@@ -210,13 +149,6 @@ class InAppWebViewSettings_ {
             "https://developer.android.com/reference/android/webkit/WebSettings?hl=en#setMediaPlaybackRequiresUserGesture(boolean)",
       ),
       IOSPlatform(
-        apiName:
-            "WKWebViewConfiguration.mediaTypesRequiringUserActionForPlayback",
-        apiUrl:
-            "https://developer.apple.com/documentation/webkit/wkwebviewconfiguration/1851524-mediatypesrequiringuseractionfor",
-      ),
-      MacOSPlatform(
-        available: "10.12",
         apiName:
             "WKWebViewConfiguration.mediaTypesRequiringUserActionForPlayback",
         apiUrl:
@@ -239,11 +171,6 @@ class InAppWebViewSettings_ {
         apiUrl:
             "https://developer.apple.com/documentation/webkit/wkpreferences/1537155-minimumfontsize/",
       ),
-      MacOSPlatform(
-        apiName: "WKPreferences.minimumFontSize",
-        apiUrl:
-            "https://developer.apple.com/documentation/webkit/wkpreferences/1537155-minimumfontsize/",
-      ),
     ],
   )
   int? minimumFontSize;
@@ -260,10 +187,6 @@ class InAppWebViewSettings_ {
         apiName: "UIScrollView.showsVerticalScrollIndicator",
         apiUrl:
             "https://developer.apple.com/documentation/uikit/uiscrollview/1619405-showsverticalscrollindicator/",
-      ),
-      WebPlatform(
-        note:
-            "It must have the same value of [horizontalScrollBarEnabled] to take effect.",
       ),
     ],
   )
@@ -282,10 +205,6 @@ class InAppWebViewSettings_ {
         apiUrl:
             "https://developer.apple.com/documentation/uikit/uiscrollview/1619380-showshorizontalscrollindicator",
       ),
-      WebPlatform(
-        note:
-            "It must have the same value of [verticalScrollBarEnabled] to take effect.",
-      ),
     ],
   )
   bool? horizontalScrollBarEnabled;
@@ -295,7 +214,6 @@ class InAppWebViewSettings_ {
     platforms: [
       AndroidPlatform(),
       IOSPlatform(available: "11.0"),
-      MacOSPlatform(available: "10.13"),
     ],
   )
   List<String>? resourceCustomSchemes;
@@ -305,12 +223,6 @@ class InAppWebViewSettings_ {
     platforms: [
       AndroidPlatform(),
       IOSPlatform(available: "11.0"),
-      MacOSPlatform(available: "10.13"),
-      LinuxPlatform(
-        apiName: "WebKitUserContentFilter",
-        apiUrl:
-            "https://wpewebkit.org/reference/stable/wpe-webkit-2.0/class.UserContentFilter.html",
-      ),
     ],
   )
   @ExchangeableObjectProperty(deserializer: _deserializeContentBlockers)
@@ -322,12 +234,6 @@ class InAppWebViewSettings_ {
       AndroidPlatform(),
       IOSPlatform(
         available: "13.0",
-        apiName: "WKWebpagePreferences.preferredContentMode",
-        apiUrl:
-            "https://developer.apple.com/documentation/webkit/wkwebpagepreferences/3194426-preferredcontentmode/",
-      ),
-      MacOSPlatform(
-        available: "10.15",
         apiName: "WKWebpagePreferences.preferredContentMode",
         apiUrl:
             "https://developer.apple.com/documentation/webkit/wkwebpagepreferences/3194426-preferredcontentmode/",
@@ -347,9 +253,7 @@ class InAppWebViewSettings_ {
   ///If the [PlatformWebViewCreationParams.shouldInterceptAjaxRequest] event is implemented and this value is `null`,
   ///it will be automatically inferred as `true`, otherwise, the default value is `false`.
   ///This logic will not be applied for [PlatformInAppBrowser], where you must set the value manually.
-  @SupportedPlatforms(
-    platforms: [AndroidPlatform(), IOSPlatform(), MacOSPlatform()],
-  )
+  @SupportedPlatforms(platforms: [AndroidPlatform(), IOSPlatform()])
   bool? useShouldInterceptAjaxRequest;
 
   ///Set to `true` to be able to listen at the [PlatformWebViewCreationParams.onAjaxReadyStateChange] event.
@@ -363,9 +267,7 @@ class InAppWebViewSettings_ {
   ///If the [PlatformWebViewCreationParams.onAjaxReadyStateChange] event is implemented and this value is `null`,
   ///it will be automatically inferred as `true`, otherwise, the default value is `false`.
   ///This logic will not be applied for [PlatformInAppBrowser], where you must set the value manually.
-  @SupportedPlatforms(
-    platforms: [AndroidPlatform(), IOSPlatform(), MacOSPlatform()],
-  )
+  @SupportedPlatforms(platforms: [AndroidPlatform(), IOSPlatform()])
   bool? useOnAjaxReadyStateChange;
 
   ///Set to `true` to be able to listen at the [PlatformWebViewCreationParams.onAjaxProgress] event.
@@ -379,9 +281,7 @@ class InAppWebViewSettings_ {
   ///If the [PlatformWebViewCreationParams.onAjaxProgress] event is implemented and this value is `null`,
   ///it will be automatically inferred as `true`, otherwise, the default value is `false`.
   ///This logic will not be applied for [PlatformInAppBrowser], where you must set the value manually.
-  @SupportedPlatforms(
-    platforms: [AndroidPlatform(), IOSPlatform(), MacOSPlatform()],
-  )
+  @SupportedPlatforms(platforms: [AndroidPlatform(), IOSPlatform()])
   bool? useOnAjaxProgress;
 
   ///Set to `false` to be able to listen to also sync `XMLHttpRequest`s at the
@@ -390,9 +290,7 @@ class InAppWebViewSettings_ {
   ///**NOTE**: Using `false` will cause the `XMLHttpRequest.send()` method for sync
   ///requests to not wait on the JavaScript code the response synchronously,
   ///as if it was an async `XMLHttpRequest`.
-  @SupportedPlatforms(
-    platforms: [AndroidPlatform(), IOSPlatform(), MacOSPlatform()],
-  )
+  @SupportedPlatforms(platforms: [AndroidPlatform(), IOSPlatform()])
   bool? interceptOnlyAsyncAjaxRequests;
 
   ///Set to `true` to be able to listen at the [PlatformWebViewCreationParams.shouldInterceptFetchRequest] event.
@@ -400,9 +298,7 @@ class InAppWebViewSettings_ {
   ///If the [PlatformWebViewCreationParams.shouldInterceptFetchRequest] event is implemented and this value is `null`,
   ///it will be automatically inferred as `true`, otherwise, the default value is `false`.
   ///This logic will not be applied for [PlatformInAppBrowser], where you must set the value manually.
-  @SupportedPlatforms(
-    platforms: [AndroidPlatform(), IOSPlatform(), MacOSPlatform()],
-  )
+  @SupportedPlatforms(platforms: [AndroidPlatform(), IOSPlatform()])
   bool? useShouldInterceptFetchRequest;
 
   ///Set to `true` to open a browser window with incognito mode. The default value is `false`.
@@ -414,68 +310,28 @@ class InAppWebViewSettings_ {
 because there isn't any way to make the website data store non-persistent for the specific WebView instance such as on iOS.""",
       ),
       IOSPlatform(),
-      MacOSPlatform(),
-      WindowsPlatform(
-        apiName: "ICoreWebView2ControllerOptions.put_IsInPrivateModeEnabled",
-        apiUrl:
-            "https://learn.microsoft.com/en-us/microsoft-edge/webview2/reference/win32/icorewebview2controlleroptions?view=webview2-1.0.2792.45#put_isinprivatemodeenabled",
-      ),
-      LinuxPlatform(
-        apiName: "webkit_network_session_new_ephemeral",
-        apiUrl:
-            "https://wpewebkit.org/reference/stable/wpe-webkit-2.0/ctor.NetworkSession.new_ephemeral.html",
-      ),
     ],
   )
   bool? incognito;
 
   ///Sets whether WebView should use browser caching. The default value is `true`.
-  @SupportedPlatforms(
-    platforms: [AndroidPlatform(), IOSPlatform(), MacOSPlatform()],
-  )
+  @SupportedPlatforms(platforms: [AndroidPlatform(), IOSPlatform()])
   bool? cacheEnabled;
 
   ///Set to `true` to make the background of the WebView transparent. If your app has a dark theme, this can prevent a white flash on initialization. The default value is `false`.
-  @SupportedPlatforms(
-    platforms: [
-      AndroidPlatform(),
-      IOSPlatform(),
-      MacOSPlatform(available: "12.0"),
-      WindowsPlatform(
-        available: '1.0.774.44',
-        apiName: 'ICoreWebView2Controller2.put_DefaultBackgroundColor',
-        apiUrl:
-            'https://learn.microsoft.com/en-us/microsoft-edge/webview2/reference/win32/icorewebview2controller2?view=webview2-1.0.2210.55#put_defaultbackgroundcolor',
-      ),
-    ],
-  )
+  @SupportedPlatforms(platforms: [AndroidPlatform(), IOSPlatform()])
   bool? transparentBackground;
 
   ///Set to `true` to disable vertical scroll. The default value is `false`.
-  @SupportedPlatforms(
-    platforms: [AndroidPlatform(), IOSPlatform(), WebPlatform()],
-  )
+  @SupportedPlatforms(platforms: [AndroidPlatform(), IOSPlatform()])
   bool? disableVerticalScroll;
 
   ///Set to `true` to disable horizontal scroll. The default value is `false`.
-  @SupportedPlatforms(
-    platforms: [AndroidPlatform(), IOSPlatform(), WebPlatform()],
-  )
+  @SupportedPlatforms(platforms: [AndroidPlatform(), IOSPlatform()])
   bool? disableHorizontalScroll;
 
   ///Set to `true` to disable context menu. The default value is `false`.
-  @SupportedPlatforms(
-    platforms: [
-      AndroidPlatform(),
-      IOSPlatform(),
-      WebPlatform(),
-      WindowsPlatform(
-        apiName: "ICoreWebView2Settings.put_AreDefaultContextMenusEnabled",
-        apiUrl:
-            "https://learn.microsoft.com/en-us/microsoft-edge/webview2/reference/win32/icorewebview2settings?view=webview2-1.0.2210.55#put_aredefaultcontextmenusenabled",
-      ),
-    ],
-  )
+  @SupportedPlatforms(platforms: [AndroidPlatform(), IOSPlatform()])
   bool? disableContextMenu;
 
   ///Set to `false` if the WebView should not support zooming using its on-screen zoom controls and gestures. The default value is `true`.
@@ -487,12 +343,6 @@ because there isn't any way to make the website data store non-persistent for th
             "https://developer.android.com/reference/android/webkit/WebSettings?hl=en#setSupportZoom(boolean)",
       ),
       IOSPlatform(),
-      MacOSPlatform(),
-      WindowsPlatform(
-        apiName: "ICoreWebView2Settings.put_IsZoomControlEnabled",
-        apiUrl:
-            "https://learn.microsoft.com/en-us/microsoft-edge/webview2/reference/win32/icorewebview2settings?view=webview2-1.0.2210.55#put_iszoomcontrolenabled",
-      ),
     ],
   )
   bool? supportZoom;
@@ -514,13 +364,6 @@ because there isn't any way to make the website data store non-persistent for th
             "https://developer.android.com/reference/android/webkit/WebSettings?hl=en#setAllowFileAccessFromFileURLs(boolean)",
       ),
       IOSPlatform(),
-      MacOSPlatform(),
-      LinuxPlatform(
-        available: "2.10",
-        apiName: "WebKitSettings.allow-file-access-from-file-urls",
-        apiUrl:
-            "https://wpewebkit.org/reference/stable/wpe-webkit-2.0/property.Settings.allow-file-access-from-file-urls.html",
-      ),
     ],
   )
   bool? allowFileAccessFromFileURLs;
@@ -542,13 +385,6 @@ because there isn't any way to make the website data store non-persistent for th
             "https://developer.android.com/reference/android/webkit/WebSettings?hl=en#setAllowUniversalAccessFromFileURLs(boolean)",
       ),
       IOSPlatform(),
-      MacOSPlatform(),
-      LinuxPlatform(
-        available: "2.14",
-        apiName: "WebKitSettings.allow-universal-access-from-file-urls",
-        apiUrl:
-            "https://wpewebkit.org/reference/stable/wpe-webkit-2.0/property.Settings.allow-universal-access-from-file-urls.html",
-      ),
     ],
   )
   bool? allowUniversalAccessFromFileURLs;
@@ -612,11 +448,6 @@ because there isn't any way to make the website data store non-persistent for th
         apiUrl:
             "https://developer.android.com/reference/android/webkit/WebSettings?hl=en#setDatabaseEnabled(boolean)",
       ),
-      LinuxPlatform(
-        apiName: "WebKitSettings.enable-html5-database",
-        apiUrl:
-            "https://wpewebkit.org/reference/stable/wpe-webkit-2.0/property.Settings.enable-html5-database.html",
-      ),
     ],
   )
   bool? databaseEnabled;
@@ -628,11 +459,6 @@ because there isn't any way to make the website data store non-persistent for th
         apiName: "WebSettings.setDomStorageEnabled",
         apiUrl:
             "https://developer.android.com/reference/android/webkit/WebSettings?hl=en#setDomStorageEnabled(boolean)",
-      ),
-      LinuxPlatform(
-        apiName: "WebKitSettings.enable-html5-local-storage",
-        apiUrl:
-            "https://wpewebkit.org/reference/stable/wpe-webkit-2.0/property.Settings.enable-html5-local-storage.html",
       ),
     ],
   )
@@ -757,11 +583,6 @@ because there isn't any way to make the website data store non-persistent for th
         apiUrl:
             "https://developer.android.com/reference/android/webkit/WebSettings#setCursiveFontFamily(java.lang.String)",
       ),
-      LinuxPlatform(
-        apiName: "WebKitSettings.cursive-font-family",
-        apiUrl:
-            "https://wpewebkit.org/reference/stable/wpe-webkit-2.0/property.Settings.cursive-font-family.html",
-      ),
     ],
   )
   String? cursiveFontFamily;
@@ -773,11 +594,6 @@ because there isn't any way to make the website data store non-persistent for th
         apiName: "WebSettings.setDefaultFixedFontSize",
         apiUrl:
             "https://developer.android.com/reference/android/webkit/WebSettings#setDefaultFixedFontSize(int)",
-      ),
-      LinuxPlatform(
-        apiName: "WebKitSettings.default-monospace-font-size",
-        apiUrl:
-            "https://wpewebkit.org/reference/stable/wpe-webkit-2.0/property.Settings.default-monospace-font-size.html",
       ),
     ],
   )
@@ -791,11 +607,6 @@ because there isn't any way to make the website data store non-persistent for th
         apiUrl:
             "https://developer.android.com/reference/android/webkit/WebSettings#setDefaultFontSize(int)",
       ),
-      LinuxPlatform(
-        apiName: "WebKitSettings.default-font-size",
-        apiUrl:
-            "https://wpewebkit.org/reference/stable/wpe-webkit-2.0/property.Settings.default-font-size.html",
-      ),
     ],
   )
   int? defaultFontSize;
@@ -807,11 +618,6 @@ because there isn't any way to make the website data store non-persistent for th
         apiName: "WebSettings.setDefaultTextEncodingName",
         apiUrl:
             "https://developer.android.com/reference/android/webkit/WebSettings#setDefaultTextEncodingName(java.lang.String)",
-      ),
-      LinuxPlatform(
-        apiName: "WebKitSettings.default-charset",
-        apiUrl:
-            "https://wpewebkit.org/reference/stable/wpe-webkit-2.0/property.Settings.default-charset.html",
       ),
     ],
   )
@@ -838,11 +644,6 @@ because there isn't any way to make the website data store non-persistent for th
         apiUrl:
             "https://developer.android.com/reference/android/webkit/WebSettings#setFantasyFontFamily(java.lang.String)",
       ),
-      LinuxPlatform(
-        apiName: "WebKitSettings.fantasy-font-family",
-        apiUrl:
-            "https://wpewebkit.org/reference/stable/wpe-webkit-2.0/property.Settings.fantasy-font-family.html",
-      ),
     ],
   )
   String? fantasyFontFamily;
@@ -854,11 +655,6 @@ because there isn't any way to make the website data store non-persistent for th
         apiName: "WebSettings.setFixedFontFamily",
         apiUrl:
             "https://developer.android.com/reference/android/webkit/WebSettings#setFixedFontFamily(java.lang.String)",
-      ),
-      LinuxPlatform(
-        apiName: "WebKitSettings.monospace-font-family",
-        apiUrl:
-            "https://wpewebkit.org/reference/stable/wpe-webkit-2.0/property.Settings.monospace-font-family.html",
       ),
     ],
   )
@@ -915,11 +711,6 @@ because there isn't any way to make the website data store non-persistent for th
         apiName: "WebSettings.setLoadsImagesAutomatically",
         apiUrl:
             "https://developer.android.com/reference/android/webkit/WebSettings?hl=en#setLoadsImagesAutomatically(boolean)",
-      ),
-      LinuxPlatform(
-        apiName: "WebKitSettings.auto-load-images",
-        apiUrl:
-            "https://wpewebkit.org/reference/stable/wpe-webkit-2.0/property.Settings.auto-load-images.html",
       ),
     ],
   )
@@ -989,11 +780,6 @@ because there isn't any way to make the website data store non-persistent for th
         apiUrl:
             "https://developer.android.com/reference/android/webkit/WebSettings?hl=en#setSansSerifFontFamily(java.lang.String)",
       ),
-      LinuxPlatform(
-        apiName: "WebKitSettings.sans-serif-font-family",
-        apiUrl:
-            "https://wpewebkit.org/reference/stable/wpe-webkit-2.0/property.Settings.sans-serif-font-family.html",
-      ),
     ],
   )
   String? sansSerifFontFamily;
@@ -1006,11 +792,6 @@ because there isn't any way to make the website data store non-persistent for th
         apiUrl:
             "https://developer.android.com/reference/android/webkit/WebSettings?hl=en#setSerifFontFamily(java.lang.String)",
       ),
-      LinuxPlatform(
-        apiName: "WebKitSettings.serif-font-family",
-        apiUrl:
-            "https://wpewebkit.org/reference/stable/wpe-webkit-2.0/property.Settings.serif-font-family.html",
-      ),
     ],
   )
   String? serifFontFamily;
@@ -1022,11 +803,6 @@ because there isn't any way to make the website data store non-persistent for th
         apiName: "WebSettings.setStandardFontFamily",
         apiUrl:
             "https://developer.android.com/reference/android/webkit/WebSettings?hl=en#setStandardFontFamily(java.lang.String)",
-      ),
-      LinuxPlatform(
-        apiName: "WebKitSettings.default-font-family",
-        apiUrl:
-            "https://wpewebkit.org/reference/stable/wpe-webkit-2.0/property.Settings.default-font-family.html",
       ),
     ],
   )
@@ -1223,16 +999,7 @@ as it can cause framerate drops on animations in Android 9 and lower (see [Hybri
 
   ///Sets whether the default Android WebView’s internal error page should be suppressed or displayed for bad navigations.
   ///`true` means suppressed (not shown), `false` means it will be displayed. The default value is `false`.
-  @SupportedPlatforms(
-    platforms: [
-      AndroidPlatform(),
-      WindowsPlatform(
-        apiName: "ICoreWebView2Settings.put_IsBuiltInErrorPageEnabled",
-        apiUrl:
-            'https://learn.microsoft.com/en-us/microsoft-edge/webview2/reference/win32/icorewebview2settings?view=webview2-1.0.2849.39#put_isbuiltinerrorpageenabled',
-      ),
-    ],
-  )
+  @SupportedPlatforms(platforms: [AndroidPlatform()])
   bool? disableDefaultErrorPage;
 
   ///Sets the vertical scrollbar thumb color.
@@ -1533,18 +1300,13 @@ as it can cause framerate drops on animations in Android 9 and lower (see [Hybri
   bool? disallowOverScroll;
 
   ///Set to `true` to allow a viewport meta tag to either disable or restrict the range of user scaling. The default value is `false`.
-  @SupportedPlatforms(platforms: [IOSPlatform(), MacOSPlatform()])
+  @SupportedPlatforms(platforms: [IOSPlatform()])
   bool? enableViewportScale;
 
   ///Set to `true` if you want the WebView suppresses content rendering until it is fully loaded into memory. The default value is `false`.
   @SupportedPlatforms(
     platforms: [
       IOSPlatform(
-        apiName: "WKWebViewConfiguration.suppressesIncrementalRendering",
-        apiUrl:
-            "https://developer.apple.com/documentation/webkit/wkwebviewconfiguration/1395663-suppressesincrementalrendering",
-      ),
-      MacOSPlatform(
         apiName: "WKWebViewConfiguration.suppressesIncrementalRendering",
         apiUrl:
             "https://developer.apple.com/documentation/webkit/wkwebviewconfiguration/1395663-suppressesincrementalrendering",
@@ -1557,11 +1319,6 @@ as it can cause framerate drops on animations in Android 9 and lower (see [Hybri
   @SupportedPlatforms(
     platforms: [
       IOSPlatform(
-        apiName: "WKWebViewConfiguration.allowsAirPlayForMediaPlayback",
-        apiUrl:
-            "https://developer.apple.com/documentation/webkit/wkwebviewconfiguration/1395673-allowsairplayformediaplayback",
-      ),
-      MacOSPlatform(
         apiName: "WKWebViewConfiguration.allowsAirPlayForMediaPlayback",
         apiUrl:
             "https://developer.apple.com/documentation/webkit/wkwebviewconfiguration/1395673-allowsairplayformediaplayback",
@@ -1589,17 +1346,6 @@ as it can cause framerate drops on animations in Android 9 and lower (see [Hybri
         apiUrl:
             "https://developer.apple.com/documentation/webkit/wkwebview/1414995-allowsbackforwardnavigationgestu",
       ),
-      MacOSPlatform(
-        apiName: "WKWebView.allowsBackForwardNavigationGestures",
-        apiUrl:
-            "https://developer.apple.com/documentation/webkit/wkwebview/1414995-allowsbackforwardnavigationgestu",
-      ),
-      WindowsPlatform(
-        available: "1.0.992.28",
-        apiName: "ICoreWebView2Settings6.put_IsSwipeNavigationEnabled",
-        apiUrl:
-            "https://learn.microsoft.com/en-us/microsoft-edge/webview2/reference/win32/icorewebview2settings6?view=webview2-1.0.2849.39#put_isswipenavigationenabled",
-      ),
     ],
   )
   bool? allowsBackForwardNavigationGestures;
@@ -1608,11 +1354,6 @@ as it can cause framerate drops on animations in Android 9 and lower (see [Hybri
   @SupportedPlatforms(
     platforms: [
       IOSPlatform(
-        apiName: "WKWebView.allowsLinkPreview",
-        apiUrl:
-            "https://developer.apple.com/documentation/webkit/wkwebview/1415000-allowslinkpreview",
-      ),
-      MacOSPlatform(
         apiName: "WKWebView.allowsLinkPreview",
         apiUrl:
             "https://developer.apple.com/documentation/webkit/wkwebview/1415000-allowslinkpreview",
@@ -1643,11 +1384,6 @@ as it can cause framerate drops on animations in Android 9 and lower (see [Hybri
         apiUrl:
             "https://developer.apple.com/documentation/webkit/wkwebviewconfiguration/1614793-allowsinlinemediaplayback",
       ),
-      LinuxPlatform(
-        apiName: "WebKitSettings.media-playback-allows-inline",
-        apiUrl:
-            "https://wpewebkit.org/reference/stable/wpe-webkit-2.0/property.Settings.media-playback-allows-inline.html",
-      ),
     ],
   )
   bool? allowsInlineMediaPlayback;
@@ -1671,12 +1407,6 @@ as it can cause framerate drops on animations in Android 9 and lower (see [Hybri
     platforms: [
       IOSPlatform(
         available: "13.0",
-        apiName: "WKPreferences.isFraudulentWebsiteWarningEnabled",
-        apiUrl:
-            "https://developer.apple.com/documentation/webkit/wkpreferences/3335219-isfraudulentwebsitewarningenable",
-      ),
-      MacOSPlatform(
-        available: "10.15",
         apiName: "WKPreferences.isFraudulentWebsiteWarningEnabled",
         apiUrl:
             "https://developer.apple.com/documentation/webkit/wkpreferences/3335219-isfraudulentwebsitewarningenable",
@@ -1715,12 +1445,7 @@ as it can cause framerate drops on animations in Android 9 and lower (see [Hybri
 
   ///Set `true` if shared cookies from `HTTPCookieStorage.shared` should used for every load request in the WebView.
   ///The default value is `false`.
-  @SupportedPlatforms(
-    platforms: [
-      IOSPlatform(available: "11.0"),
-      MacOSPlatform(available: "10.13"),
-    ],
-  )
+  @SupportedPlatforms(platforms: [IOSPlatform(available: "11.0")])
   bool? sharedCookiesEnabled;
 
   ///Configures whether the scroll indicator insets are automatically adjusted by the system.
@@ -1895,12 +1620,6 @@ as it can cause framerate drops on animations in Android 9 and lower (see [Hybri
         apiUrl:
             "https://developer.apple.com/documentation/webkit/wkwebview/3516410-mediatype",
       ),
-      MacOSPlatform(
-        available: "11.0",
-        apiName: "WKWebView.mediaType",
-        apiUrl:
-            "https://developer.apple.com/documentation/webkit/wkwebview/3516410-mediatype",
-      ),
     ],
   )
   String? mediaType;
@@ -1912,12 +1631,6 @@ as it can cause framerate drops on animations in Android 9 and lower (see [Hybri
     platforms: [
       IOSPlatform(
         available: "14.0",
-        apiName: "WKWebView.pageZoom",
-        apiUrl:
-            "https://developer.apple.com/documentation/webkit/wkwebview/3516411-pagezoom",
-      ),
-      MacOSPlatform(
-        available: "11.0",
         apiName: "WKWebView.pageZoom",
         apiUrl:
             "https://developer.apple.com/documentation/webkit/wkwebview/3516411-pagezoom",
@@ -1937,12 +1650,6 @@ as it can cause framerate drops on animations in Android 9 and lower (see [Hybri
         apiUrl:
             "https://developer.apple.com/documentation/webkit/wkwebviewconfiguration/3585117-limitsnavigationstoappbounddomai",
       ),
-      MacOSPlatform(
-        available: "11.0",
-        apiName: "WKWebViewConfiguration.limitsNavigationsToAppBoundDomains",
-        apiUrl:
-            "https://developer.apple.com/documentation/webkit/wkwebviewconfiguration/3585117-limitsnavigationstoappbounddomai",
-      ),
     ],
   )
   bool? limitsNavigationsToAppBoundDomains;
@@ -1952,7 +1659,7 @@ as it can cause framerate drops on animations in Android 9 and lower (see [Hybri
   ///If the [PlatformWebViewCreationParams.onNavigationResponse] event is implemented and this value is `null`,
   ///it will be automatically inferred as `true`, otherwise, the default value is `false`.
   ///This logic will not be applied for [PlatformInAppBrowser], where you must set the value manually.
-  @SupportedPlatforms(platforms: [IOSPlatform(), MacOSPlatform()])
+  @SupportedPlatforms(platforms: [IOSPlatform()])
   bool? useOnNavigationResponse;
 
   ///Set to `true` to enable Apple Pay API for the `WebView` at its first page load or on the next page load (using [PlatformInAppWebViewController.setOptions]). The default value is `false`.
@@ -2015,7 +1722,7 @@ as it can cause framerate drops on animations in Android 9 and lower (see [Hybri
   ///Specify the same value as the [URLRequest.url] if you are using it with the [PlatformWebViewCreationParams.initialUrlRequest] parameter or
   ///the [InAppWebViewInitialData.baseUrl] if you are using it with the [PlatformWebViewCreationParams.initialData] parameter to prevent WebView from reading any other content.
   ///Specify a directory to give WebView permission to read additional files in the specified directory.
-  @SupportedPlatforms(platforms: [IOSPlatform(), MacOSPlatform()])
+  @SupportedPlatforms(platforms: [IOSPlatform()])
   WebUri? allowingReadAccessTo;
 
   ///Set to `true` to disable the context menu (copy, select, etc.) that is shown when the user emits a long press event on a HTML link.
@@ -2042,12 +1749,6 @@ as it can cause framerate drops on animations in Android 9 and lower (see [Hybri
         apiUrl:
             "https://developer.apple.com/documentation/webkit/wkwebview/3850574-underpagebackgroundcolor",
       ),
-      MacOSPlatform(
-        available: "12.0",
-        apiName: "WKWebView.underPageBackgroundColor",
-        apiUrl:
-            "https://developer.apple.com/documentation/webkit/wkwebview/3850574-underpagebackgroundcolor",
-      ),
     ],
   )
   Color_? underPageBackgroundColor;
@@ -2058,12 +1759,6 @@ as it can cause framerate drops on animations in Android 9 and lower (see [Hybri
     platforms: [
       IOSPlatform(
         available: "15.0",
-        apiName: "WKPreferences.isTextInteractionEnabled",
-        apiUrl:
-            "https://developer.apple.com/documentation/webkit/wkpreferences/3727362-istextinteractionenabled",
-      ),
-      MacOSPlatform(
-        available: "11.3",
         apiName: "WKPreferences.isTextInteractionEnabled",
         apiUrl:
             "https://developer.apple.com/documentation/webkit/wkpreferences/3727362-istextinteractionenabled",
@@ -2083,12 +1778,6 @@ as it can cause framerate drops on animations in Android 9 and lower (see [Hybri
         apiUrl:
             "https://developer.apple.com/documentation/webkit/wkpreferences/3916069-issitespecificquirksmodeenabled",
       ),
-      MacOSPlatform(
-        available: "12.3",
-        apiName: "WKPreferences.isSiteSpecificQuirksModeEnabled",
-        apiUrl:
-            "https://developer.apple.com/documentation/webkit/wkpreferences/3916069-issitespecificquirksmodeenabled",
-      ),
     ],
   )
   bool? isSiteSpecificQuirksModeEnabled;
@@ -2099,12 +1788,6 @@ as it can cause framerate drops on animations in Android 9 and lower (see [Hybri
     platforms: [
       IOSPlatform(
         available: "15.0",
-        apiName: "WKWebViewConfiguration.upgradeKnownHostsToHTTPS",
-        apiUrl:
-            "https://developer.apple.com/documentation/webkit/wkwebviewconfiguration/3752243-upgradeknownhoststohttps",
-      ),
-      MacOSPlatform(
-        available: "11.3",
         apiName: "WKWebViewConfiguration.upgradeKnownHostsToHTTPS",
         apiUrl:
             "https://developer.apple.com/documentation/webkit/wkwebviewconfiguration/3752243-upgradeknownhoststohttps",
@@ -2123,17 +1806,6 @@ as it can cause framerate drops on animations in Android 9 and lower (see [Hybri
         apiName: "WKPreferences.isElementFullscreenEnabled",
         apiUrl:
             "https://developer.apple.com/documentation/webkit/wkpreferences/3917769-iselementfullscreenenabled",
-      ),
-      MacOSPlatform(
-        available: "12.3",
-        apiName: "WKPreferences.isElementFullscreenEnabled",
-        apiUrl:
-            "https://developer.apple.com/documentation/webkit/wkpreferences/3917769-iselementfullscreenenabled",
-      ),
-      LinuxPlatform(
-        apiName: "WebKitSettings.enable-fullscreen",
-        apiUrl:
-            "https://wpewebkit.org/reference/stable/wpe-webkit-2.0/property.Settings.enable-fullscreen.html",
       ),
     ],
   )
@@ -2193,17 +1865,6 @@ as it can cause framerate drops on animations in Android 9 and lower (see [Hybri
         apiUrl:
             "https://developer.apple.com/documentation/webkit/wkwebview/4111163-isinspectable",
       ),
-      MacOSPlatform(
-        available: "13.3",
-        apiName: "WKWebView.isInspectable",
-        apiUrl:
-            "https://developer.apple.com/documentation/webkit/wkwebview/4111163-isinspectable",
-      ),
-      WindowsPlatform(
-        apiName: "ICoreWebView2Settings.put_AreDevToolsEnabled",
-        apiUrl:
-            "https://learn.microsoft.com/en-us/microsoft-edge/webview2/reference/win32/icorewebview2settings?view=webview2-1.0.2210.55#put_aredevtoolsenabled",
-      ),
     ],
   )
   bool? isInspectable;
@@ -2219,12 +1880,6 @@ as it can cause framerate drops on animations in Android 9 and lower (see [Hybri
         apiUrl:
             "https://developer.apple.com/documentation/webkit/wkpreferences/4104043-shouldprintbackgrounds",
       ),
-      MacOSPlatform(
-        available: "13.3",
-        apiName: "WKWebView.shouldPrintBackgrounds",
-        apiUrl:
-            "https://developer.apple.com/documentation/webkit/wkpreferences/4104043-shouldprintbackgrounds",
-      ),
     ],
   )
   bool? shouldPrintBackgrounds;
@@ -2236,28 +1891,13 @@ as it can cause framerate drops on animations in Android 9 and lower (see [Hybri
   ///An empty [Set] will block every origin.
   ///
   ///The default value is `null` and will allow every origin.
-  @SupportedPlatforms(
-    platforms: [
-      AndroidPlatform(),
-      IOSPlatform(),
-      MacOSPlatform(),
-      WindowsPlatform(),
-      WebPlatform(),
-    ],
-  )
+  @SupportedPlatforms(platforms: [AndroidPlatform(), IOSPlatform()])
   Set<String>? javaScriptHandlersOriginAllowList;
 
   ///Set to `true` to allow to execute the JavaScript Handlers only on the main frame.
   ///This will affect also the internal JavaScript Handlers used by the plugin itself.
   ///The default value is `false`.
-  @SupportedPlatforms(
-    platforms: [
-      AndroidPlatform(),
-      IOSPlatform(),
-      MacOSPlatform(),
-      WindowsPlatform(),
-    ],
-  )
+  @SupportedPlatforms(platforms: [AndroidPlatform(), IOSPlatform()])
   bool? javaScriptHandlersForMainFrameOnly;
 
   ///Set to `false` to disable the JavaScript Bridge completely.
@@ -2268,15 +1908,7 @@ as it can cause framerate drops on animations in Android 9 and lower (see [Hybri
   ///It should be set when initializing the WebView through [PlatformWebViewCreationParams.initialSettings] parameter.
   ///
   ///The default value is `true`.
-  @SupportedPlatforms(
-    platforms: [
-      AndroidPlatform(),
-      IOSPlatform(),
-      MacOSPlatform(),
-      WindowsPlatform(),
-      WebPlatform(),
-    ],
-  )
+  @SupportedPlatforms(platforms: [AndroidPlatform(), IOSPlatform()])
   bool? javaScriptBridgeEnabled;
 
   ///A [Set] of patterns that will be used to match the allowed origins where
@@ -2297,15 +1929,7 @@ as it can cause framerate drops on animations in Android 9 and lower (see [Hybri
   ///Regular Expression Pattern that will be used on JavaScript side using [RegExp](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/RegExp).
   ///
   ///The default value is `null` and will allow every origin.
-  @SupportedPlatforms(
-    platforms: [
-      AndroidPlatform(),
-      IOSPlatform(),
-      MacOSPlatform(),
-      WindowsPlatform(),
-      WebPlatform(),
-    ],
-  )
+  @SupportedPlatforms(platforms: [AndroidPlatform(), IOSPlatform()])
   Set<String>? javaScriptBridgeOriginAllowList;
 
   ///Set to `true` to allow the JavaScript Bridge only on the main frame.
@@ -2316,14 +1940,7 @@ as it can cause framerate drops on animations in Android 9 and lower (see [Hybri
   ///It should be set when initializing the WebView through [PlatformWebViewCreationParams.initialSettings] parameter.
   ///
   ///The default value is `false`.
-  @SupportedPlatforms(
-    platforms: [
-      AndroidPlatform(),
-      IOSPlatform(),
-      MacOSPlatform(),
-      WindowsPlatform(),
-    ],
-  )
+  @SupportedPlatforms(platforms: [AndroidPlatform(), IOSPlatform()])
   bool? javaScriptBridgeForMainFrameOnly;
 
   ///A [Set] of patterns that will be used to match the allowed origins
@@ -2341,14 +1958,7 @@ as it can cause framerate drops on animations in Android 9 and lower (see [Hybri
   ///Regular Expression Pattern that will be used on JavaScript side using [RegExp](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/RegExp).
   ///
   ///The default value is `null` and will allow every origin.
-  @SupportedPlatforms(
-    platforms: [
-      AndroidPlatform(),
-      IOSPlatform(),
-      MacOSPlatform(),
-      WindowsPlatform(),
-    ],
-  )
+  @SupportedPlatforms(platforms: [AndroidPlatform(), IOSPlatform()])
   Set<String>? pluginScriptsOriginAllowList;
 
   ///Set to `true` to allow internal plugin [UserScript]s only on the main frame.
@@ -2358,214 +1968,8 @@ as it can cause framerate drops on animations in Android 9 and lower (see [Hybri
   ///It should be set when initializing the WebView through [PlatformWebViewCreationParams.initialSettings] parameter.
   ///
   ///The default value is `false`.
-  @SupportedPlatforms(
-    platforms: [
-      AndroidPlatform(),
-      IOSPlatform(),
-      MacOSPlatform(),
-      WindowsPlatform(),
-    ],
-  )
+  @SupportedPlatforms(platforms: [AndroidPlatform(), IOSPlatform()])
   bool? pluginScriptsForMainFrameOnly;
-
-  ///The multiplier applied to the scroll amount for the WebView.
-  ///
-  ///This value determines how much the content will scroll in response to user input.
-  ///A higher value means faster scrolling, while a lower value means slower scrolling.
-  ///
-  ///The default value is `1`.
-  @SupportedPlatforms(platforms: [WindowsPlatform()])
-  int? scrollMultiplier;
-
-  ///Specifies whether the status bar is displayed.
-  ///
-  ///The status bar is usually displayed in the lower left of the WebView and
-  ///shows things such as the URI of a link when the user hovers over it and other information.
-  ///The status bar UI can be altered by web content and should not be considered secure.
-  ///
-  ///The default value is `true`.
-  @SupportedPlatforms(
-    platforms: [
-      WindowsPlatform(
-        apiName: "ICoreWebView2Settings.put_IsStatusBarEnabled",
-        apiUrl:
-            'https://learn.microsoft.com/en-us/microsoft-edge/webview2/reference/win32/icorewebview2settings?view=webview2-1.0.2849.39#put_isstatusbarenabled',
-      ),
-    ],
-  )
-  bool? statusBarEnabled;
-
-  ///When this setting is set to `false`, it disables all accelerator keys
-  ///that access features specific to a web browser, including but not limited to:
-  ///- Ctrl-F and F3 for Find on Page
-  ///- Ctrl-P for Print
-  ///- Ctrl-R and F5 for Reload
-  ///- Ctrl-Plus and Ctrl-Minus for zooming
-  ///- Ctrl-Shift-C and F12 for DevTools
-  ///Special keys for browser functions, such as Back, Forward, and Search
-  ///It does not disable accelerator keys related to movement and text editing, such as:
-  ///- Home, End, Page Up, and Page Down
-  ///- Ctrl-X, Ctrl-C, Ctrl-V
-  ///- Ctrl-A for Select All
-  ///- Ctrl-Z for Undo
-  ///
-  ///The default value is `true`.
-  @SupportedPlatforms(
-    platforms: [
-      WindowsPlatform(
-        available: '1.0.864.35',
-        apiName: "ICoreWebView2Settings3.put_IsBuiltInErrorPageEnabled",
-        apiUrl:
-            'https://learn.microsoft.com/en-us/microsoft-edge/webview2/reference/win32/icorewebview2settings3?view=webview2-1.0.2849.39#put_arebrowseracceleratorkeysenabled',
-      ),
-    ],
-  )
-  bool? browserAcceleratorKeysEnabled;
-
-  ///Specifies whether autofill for information like names, street and email addresses, phone numbers, and arbitrary input is enabled.
-  ///
-  ///This excludes password and credit card information.
-  ///When [generalAutofillEnabled] is `false`, no suggestions appear, and no new information is saved.
-  ///When [generalAutofillEnabled] is `true`, information is saved, suggestions appear
-  ///and clicking on one will populate the form fields.
-  ///It will take effect immediately after setting.
-  ///
-  ///The default value is `true`.
-  @SupportedPlatforms(
-    platforms: [
-      WindowsPlatform(
-        available: '1.0.902.49',
-        apiName: "ICoreWebView2Settings4.put_IsGeneralAutofillEnabled",
-        apiUrl:
-            'https://learn.microsoft.com/en-us/microsoft-edge/webview2/reference/win32/icorewebview2settings4?view=webview2-1.0.2849.39#put_isgeneralautofillenabled',
-      ),
-    ],
-  )
-  bool? generalAutofillEnabled;
-
-  ///Specifies whether autosave for password information is enabled.
-  ///
-  ///The [passwordAutosaveEnabled] property behaves independently of the IsGeneralAutofillEnabled property.
-  ///When [passwordAutosaveEnabled] is `false`, no new password data is saved and no Save/Update Password prompts are displayed.
-  ///However, if there was password data already saved before disabling this setting, then that password
-  ///information is auto-populated, suggestions are shown and clicking on one will populate the fields.
-  ///When [passwordAutosaveEnabled] is `true`, password information is auto-populated,
-  ///suggestions are shown and clicking on one will populate the fields,
-  ///new data is saved, and a Save/Update Password prompt is displayed.
-  ///It will take effect immediately after setting.
-  ///
-  ///The default value is `false`.
-  @SupportedPlatforms(
-    platforms: [
-      WindowsPlatform(
-        available: '1.0.902.49',
-        apiName: "ICoreWebView2Settings4.put_IsPasswordAutosaveEnabled",
-        apiUrl:
-            'https://learn.microsoft.com/en-us/microsoft-edge/webview2/reference/win32/icorewebview2settings4?view=webview2-1.0.2849.39#put_ispasswordautosaveenabled',
-      ),
-    ],
-  )
-  bool? passwordAutosaveEnabled;
-
-  ///Pinch-zoom, referred to as "Page Scale" zoom, is performed as a post-rendering step,
-  ///it changes the page scale factor property and scales the surface the web page
-  ///is rendered onto when user performs a pinch zooming action.
-  ///
-  ///It does not change the layout but rather changes the viewport and clips the
-  ///web content, the content outside of the viewport isn't visible onscreen and users can't reach this content using mouse.
-  ///
-  ///The [pinchZoomEnabled] property enables or disables the ability of the end user
-  ///to use a pinching motion on touch input enabled devices to scale the web content in the WebView2.
-  ///When set to `false`, the end user cannot pinch zoom after the next navigation.
-  ///Disabling/Enabling [pinchZoomEnabled] only affects the end user's ability to
-  ///use pinch motions and does not change the page scale factor.
-  ///This API only affects the Page Scale zoom and has no effect on the existing
-  ///browser zoom properties or other end user mechanisms for zooming.
-  ///
-  ///The default value is `true`.
-  @SupportedPlatforms(
-    platforms: [
-      WindowsPlatform(
-        available: '1.0.902.49',
-        apiName: "ICoreWebView2Settings5.put_IsPinchZoomEnabled",
-        apiUrl:
-            'https://learn.microsoft.com/en-us/microsoft-edge/webview2/reference/win32/icorewebview2settings5?view=webview2-1.0.2849.39#put_ispinchzoomenabled',
-      ),
-    ],
-  )
-  bool? pinchZoomEnabled;
-
-  ///This property is used to customize the PDF toolbar items.
-  ///
-  ///By default, it is [PdfToolbarItems.NONE] and so it displays all of the items.
-  ///Changes to this property apply to all CoreWebView2s in the same environment and using the same profile.
-  ///Changes to this setting apply only after the next navigation.
-  @SupportedPlatforms(
-    platforms: [
-      WindowsPlatform(
-        available: '1.0.1185.39',
-        apiName: "ICoreWebView2Settings7.put_HiddenPdfToolbarItems",
-        apiUrl:
-            'https://learn.microsoft.com/en-us/microsoft-edge/webview2/reference/win32/icorewebview2settings7?view=webview2-1.0.2849.39#put_hiddenpdftoolbaritems',
-      ),
-    ],
-  )
-  PdfToolbarItems_? hiddenPdfToolbarItems;
-
-  ///[reputationCheckingRequired] is used to control whether SmartScreen enabled or not.
-  ///
-  ///SmartScreen helps webviews identify reported phishing and malware websites and also helps users make informed decisions about downloads.
-  ///SmartScreen is enabled or disabled for all CoreWebView2s using the same user data folder.
-  ///If [reputationCheckingRequired] is true for any CoreWebView2 using the same user data folder, then SmartScreen is enabled.
-  ///If [reputationCheckingRequired] is false for all CoreWebView2 using the same user data folder, then SmartScreen is disabled.
-  ///When it is changed, the change will be applied to all WebViews using the same user data folder on the next navigation or download.
-  ///If the newly created CoreWebview2 does not set SmartScreen to `false`,
-  ///when navigating(Such as Navigate(), LoadDataUrl(), ExecuteScript(), etc.), the default value will be applied to all CoreWebview2 using the same user data folder.
-  ///SmartScreen of WebView2 apps can be controlled by Windows system setting "SmartScreen for Microsoft Edge", specially,
-  ///for WebView2 in Windows Store apps, SmartScreen is controlled by another Windows system setting "SmartScreen for Microsoft Store apps".
-  ///When the Windows setting is enabled, the SmartScreen operates under the control of the [reputationCheckingRequired].
-  ///When the Windows setting is disabled, the SmartScreen will be disabled regardless of the [reputationCheckingRequired] value set in WebView2 apps.
-  ///In other words, under this circumstance the value of [reputationCheckingRequired] will be saved but overridden by system setting.
-  ///Upon re-enabling the Windows setting, the CoreWebview2 will reference the [reputationCheckingRequired] to determine the SmartScreen status.
-  ///
-  ///The default value is `true`.
-  @SupportedPlatforms(
-    platforms: [
-      WindowsPlatform(
-        available: '1.0.1722.45',
-        apiName: "ICoreWebView2Settings8.put_IsReputationCheckingRequired",
-        apiUrl:
-            'https://learn.microsoft.com/en-us/microsoft-edge/webview2/reference/win32/icorewebview2settings8?view=webview2-1.0.2849.39#put_isreputationcheckingrequired',
-      ),
-    ],
-  )
-  bool? reputationCheckingRequired;
-
-  ///Enables web pages to use the `app-region` CSS style.
-  ///
-  ///Disabling/Enabling the [nonClientRegionSupportEnabled] takes effect after the next navigation.
-  ///
-  ///When this property is `true`, then all the non-client region features will be enabled:
-  ///Draggable Regions will be enabled, they are regions on a webpage that are marked with the CSS attribute `app-region: drag/no-drag`.
-  ///When set to drag, these regions will be treated like the window's title bar,
-  ///supporting dragging of the entire WebView and its host app window;
-  ///the system menu shows upon right click, and a double click will trigger maximizing/restoration of the window size.
-  ///
-  ///When set to `false`, all non-client region support will be disabled.
-  ///The `app-region` CSS style will be ignored on web pages.
-  ///
-  ///The default value is `false`.
-  @SupportedPlatforms(
-    platforms: [
-      WindowsPlatform(
-        available: '1.0.2420.47',
-        apiName: "ICoreWebView2Settings9.put_IsNonClientRegionSupportEnabled",
-        apiUrl:
-            'https://learn.microsoft.com/en-us/microsoft-edge/webview2/reference/win32/icorewebview2settings9?view=webview2-1.0.2849.39#put_isnonclientregionsupportenabled',
-      ),
-    ],
-  )
-  bool? nonClientRegionSupportEnabled;
 
   ///A Boolean value that determines whether user events are ignored and removed from the event queue.
   ///
@@ -2582,13 +1986,6 @@ as it can cause framerate drops on animations in Android 9 and lower (see [Hybri
   )
   bool? isUserInteractionEnabled;
 
-  ///A Boolean value that determines whether to listen and handle the
-  ///[PlatformWebViewCreationParams.onAcceleratorKeyPressed] event.
-  ///
-  ///The default value is `false`.
-  @SupportedPlatforms(platforms: [WindowsPlatform()])
-  bool? handleAcceleratorKeyPressed;
-
   ///The view’s alpha value. The value of this property is a floating-point number
   ///in the range 0.0 to 1.0, where 0.0 represents totally transparent and 1.0 represents totally opaque.
   @SupportedPlatforms(
@@ -2602,11 +1999,6 @@ as it can cause framerate drops on animations in Android 9 and lower (see [Hybri
         apiName: "UIView.alpha",
         apiUrl:
             'https://developer.apple.com/documentation/uikit/uiview/1622417-alpha',
-      ),
-      MacOSPlatform(
-        apiName: "NSView.alphaValue",
-        apiUrl:
-            'https://developer.apple.com/documentation/appkit/nsview/1483560-alphavalue',
       ),
     ],
   )
@@ -2782,756 +2174,6 @@ as it can cause framerate drops on animations in Android 9 and lower (see [Hybri
   )
   bool? useOnShowFileChooser;
 
-  ///Specifies a feature policy for the `<iframe>`.
-  ///The policy defines what features are available to the `<iframe>` based on the origin of the request
-  ///(e.g. access to the microphone, camera, battery, web-share API, etc.).
-  @SupportedPlatforms(
-    platforms: [
-      WebPlatform(
-        requiresSameOrigin: false,
-        apiName: "iframe.allow",
-        apiUrl:
-            "https://developer.mozilla.org/en-US/docs/Web/HTML/Element/iframe#attr-allow",
-      ),
-    ],
-  )
-  String? iframeAllow;
-
-  ///Set to true if the `<iframe>` can activate fullscreen mode by calling the `requestFullscreen()` method.
-  @SupportedPlatforms(
-    platforms: [
-      WebPlatform(
-        requiresSameOrigin: false,
-        apiName: "iframe.allowfullscreen",
-        apiUrl:
-            "https://developer.mozilla.org/en-US/docs/Web/HTML/Element/iframe#attr-allowfullscreen",
-      ),
-    ],
-  )
-  bool? iframeAllowFullscreen;
-
-  ///Applies extra restrictions to the content in the frame.
-  @SupportedPlatforms(
-    platforms: [
-      WebPlatform(
-        requiresSameOrigin: false,
-        apiName: "iframe.sandbox",
-        apiUrl:
-            "https://developer.mozilla.org/en-US/docs/Web/HTML/Element/iframe#attr-sandbox",
-      ),
-    ],
-  )
-  Set<Sandbox_>? iframeSandbox;
-
-  ///A string that reflects the `referrerpolicy` HTML attribute indicating which referrer to use when fetching the linked resource.
-  @SupportedPlatforms(
-    platforms: [
-      WebPlatform(
-        requiresSameOrigin: false,
-        apiName: "iframe.referrerpolicy",
-        apiUrl:
-            "https://developer.mozilla.org/en-US/docs/Web/HTML/Element/iframe#attr-referrerpolicy",
-      ),
-    ],
-  )
-  ReferrerPolicy_? iframeReferrerPolicy;
-
-  ///A string that reflects the `name` HTML attribute, containing a name by which to refer to the frame.
-  @SupportedPlatforms(
-    platforms: [
-      WebPlatform(
-        requiresSameOrigin: false,
-        apiName: "iframe.name",
-        apiUrl:
-            "https://developer.mozilla.org/en-US/docs/Web/HTML/Element/iframe#attr-name",
-      ),
-    ],
-  )
-  String? iframeName;
-
-  ///A Content Security Policy enforced for the embedded resource.
-  @SupportedPlatforms(
-    platforms: [
-      WebPlatform(
-        requiresSameOrigin: false,
-        apiName: "iframe.csp",
-        apiUrl:
-            "https://developer.mozilla.org/en-US/docs/Web/HTML/Element/iframe#attr-csp",
-      ),
-    ],
-  )
-  String? iframeCsp;
-
-  ///A string that reflects the `role` HTML attribute, containing a WAI-ARIA role for the element.
-  @SupportedPlatforms(
-    platforms: [
-      WebPlatform(
-        requiresSameOrigin: false,
-        apiName: "iframe.role",
-        apiUrl:
-            "https://developer.mozilla.org/en-US/docs/Web/Accessibility/ARIA/Roles",
-      ),
-    ],
-  )
-  String? iframeRole;
-
-  ///A string that reflects the `aria-hidden` HTML attribute, indicating whether the element is exposed to an accessibility API.
-  @SupportedPlatforms(
-    platforms: [
-      WebPlatform(
-        requiresSameOrigin: false,
-        apiName: "iframe.ariaHidden",
-        apiUrl:
-            "https://developer.mozilla.org/en-US/docs/Web/Accessibility/ARIA/Attributes/aria-hidden",
-      ),
-    ],
-  )
-  String? iframeAriaHidden;
-
-  ///Sets whether console messages are written to stdout.
-  ///When enabled, console messages from the web page will be written to the standard output.
-  ///This is useful for debugging purposes.
-  ///
-  ///The default value is `false`.
-  @SupportedPlatforms(
-    platforms: [
-      LinuxPlatform(
-        apiName: "WebKitSettings.enable-write-console-messages-to-stdout",
-        apiUrl:
-            "https://wpewebkit.org/reference/stable/wpe-webkit-2.0/property.Settings.enable-write-console-messages-to-stdout.html",
-      ),
-    ],
-  )
-  bool? enableWriteConsoleMessagesToStdout;
-
-  ///Sets whether smooth scrolling is enabled.
-  ///When enabled, scrolling animations are smooth instead of jumping instantly.
-  ///
-  ///The default value is `true`.
-  @SupportedPlatforms(
-    platforms: [
-      LinuxPlatform(
-        apiName: "WebKitSettings.enable-smooth-scrolling",
-        apiUrl:
-            "https://wpewebkit.org/reference/stable/wpe-webkit-2.0/property.Settings.enable-smooth-scrolling.html",
-      ),
-    ],
-  )
-  bool? enableSmoothScrolling;
-
-  ///Sets whether caret browsing mode is enabled.
-  ///Caret browsing mode allows users to navigate through web pages using the keyboard,
-  ///with a visible caret (text cursor) that can be moved through the content.
-  ///
-  ///The default value is `false`.
-  @SupportedPlatforms(
-    platforms: [
-      LinuxPlatform(
-        apiName: "WebKitSettings.enable-caret-browsing",
-        apiUrl:
-            "https://wpewebkit.org/reference/stable/wpe-webkit-2.0/property.Settings.enable-caret-browsing.html",
-      ),
-    ],
-  )
-  bool? enableCaretBrowsing;
-
-  ///Sets whether the page cache is enabled.
-  ///The page cache allows for faster back/forward navigation by keeping pages in memory.
-  ///
-  ///The default value is `true`.
-  @SupportedPlatforms(
-    platforms: [
-      LinuxPlatform(
-        apiName: "WebKitSettings.enable-page-cache",
-        apiUrl:
-            "https://wpewebkit.org/reference/stable/wpe-webkit-2.0/property.Settings.enable-page-cache.html",
-      ),
-    ],
-  )
-  bool? enablePageCache;
-
-  ///Sets whether compositing indicators are drawn.
-  ///When enabled, visual indicators are shown for compositing layers.
-  ///This is primarily useful for debugging rendering performance.
-  ///
-  ///The default value is `false`.
-  @SupportedPlatforms(
-    platforms: [
-      LinuxPlatform(
-        apiName: "WebKitSettings.draw-compositing-indicators",
-        apiUrl:
-            "https://wpewebkit.org/reference/stable/wpe-webkit-2.0/property.Settings.draw-compositing-indicators.html",
-      ),
-    ],
-  )
-  bool? drawCompositingIndicators;
-
-  ///Sets whether text areas are resizable.
-  ///When enabled, text areas can be resized by the user.
-  ///
-  ///The default value is `true`.
-  @SupportedPlatforms(
-    platforms: [
-      LinuxPlatform(
-        apiName: "WebKitSettings.enable-resizable-text-areas",
-        apiUrl:
-            "https://wpewebkit.org/reference/stable/wpe-webkit-2.0/property.Settings.enable-resizable-text-areas.html",
-      ),
-    ],
-  )
-  bool? enableResizableTextAreas;
-
-  ///Sets whether tab key can be used to navigate to links.
-  ///When enabled, pressing Tab will focus on links in the page.
-  ///
-  ///The default value is `true`.
-  @SupportedPlatforms(
-    platforms: [
-      LinuxPlatform(
-        apiName: "WebKitSettings.enable-tabs-to-links",
-        apiUrl:
-            "https://wpewebkit.org/reference/stable/wpe-webkit-2.0/property.Settings.enable-tabs-to-links.html",
-      ),
-    ],
-  )
-  bool? enableTabsToLinks;
-
-  ///Sets whether spatial navigation is enabled.
-  ///Spatial navigation allows users to navigate between focusable elements
-  ///using arrow keys instead of Tab.
-  ///
-  ///The default value is `false`.
-  @SupportedPlatforms(
-    platforms: [
-      LinuxPlatform(
-        apiName: "WebKitSettings.enable-spatial-navigation",
-        apiUrl:
-            "https://wpewebkit.org/reference/stable/wpe-webkit-2.0/property.Settings.enable-spatial-navigation.html",
-      ),
-    ],
-  )
-  bool? enableSpatialNavigation;
-
-  ///Sets the pictograph font family name.
-  ///The pictograph font family is used for rendering pictograph characters (emoji).
-  @SupportedPlatforms(
-    platforms: [
-      LinuxPlatform(
-        apiName: "WebKitSettings.pictograph-font-family",
-        apiUrl:
-            "https://wpewebkit.org/reference/stable/wpe-webkit-2.0/property.Settings.pictograph-font-family.html",
-      ),
-    ],
-  )
-  String? pictographFontFamily;
-
-  ///Sets the CORS allowlist for this WebView.
-  ///
-  ///URI patterns must be of the form `[protocol]://[host]:[port]`, where each
-  ///component may contain the wildcard character (`*`) to match zero or more
-  ///characters. All three components are required.
-  ///
-  ///Disabling CORS checks permits resources from other origins to load
-  ///allowlisted resources. It does NOT permit the allowlisted resources
-  ///to load resources from other origins.
-  ///
-  ///Setting to `null` or an empty list clears the allowlist.
-  ///
-  ///Example patterns:
-  ///- `https://example.com:*` - All ports on example.com over HTTPS
-  ///- `*://api.myservice.com:*` - Any protocol on api.myservice.com
-  ///- `https://*.example.com:443` - HTTPS port 443 on any subdomain
-  @SupportedPlatforms(
-    platforms: [
-      LinuxPlatform(
-        available: "2.34",
-        apiName: "webkit_web_view_set_cors_allowlist",
-        apiUrl:
-            "https://wpewebkit.org/reference/stable/wpe-webkit-2.0/method.WebView.set_cors_allowlist.html",
-        note:
-            "Pattern format: [protocol]://[host]:[port]. All three components are required.",
-      ),
-    ],
-  )
-  List<String>? corsAllowlist;
-
-  ///Sets whether Intelligent Tracking Prevention (ITP) is enabled.
-  ///
-  ///When ITP is enabled, resource load statistics are collected and used to decide
-  ///whether to allow or block third-party cookies and prevent user tracking.
-  ///This is similar to Safari's tracking prevention feature.
-  ///
-  ///**IMPORTANT NOTE**: When ITP is enabled, the cookie accept policy
-  ///`WEBKIT_COOKIE_POLICY_ACCEPT_NO_THIRD_PARTY` is ignored and
-  ///`WEBKIT_COOKIE_POLICY_ACCEPT_ALWAYS` is used instead.
-  ///
-  ///This is a session-level setting that should be set during WebView initialization.
-  ///
-  ///The default value is `false`.
-  @SupportedPlatforms(
-    platforms: [
-      LinuxPlatform(
-        available: "2.40",
-        apiName: "webkit_network_session_set_itp_enabled",
-        apiUrl:
-            "https://wpewebkit.org/reference/stable/wpe-webkit-2.0/method.NetworkSession.set_itp_enabled.html",
-        note:
-            "This is a session-level setting. When enabled, ACCEPT_NO_THIRD_PARTY cookie policy is overridden to ACCEPT_ALWAYS.",
-      ),
-    ],
-  )
-  bool? itpEnabled;
-
-  ///Sets whether dark mode is enabled for web content.
-  ///When enabled, websites that support the `prefers-color-scheme: dark` CSS media query
-  ///will render in dark mode.
-  ///
-  ///This is a WPE Platform setting that affects the entire display.
-  ///
-  ///The default value is `null` (follows system default).
-  @SupportedPlatforms(
-    platforms: [
-      LinuxPlatform(
-        apiName: "WPESettings.dark-mode",
-        apiUrl:
-            "https://wpewebkit.org/reference/stable/wpe-platform-2.0/class.Settings.html",
-        note:
-            "This is a WPE Platform display-level setting that affects all WebViews.",
-      ),
-    ],
-  )
-  bool? darkMode;
-
-  ///Sets whether animations are disabled for accessibility.
-  ///When enabled, CSS animations and transitions may be reduced or disabled
-  ///for users with motion sensitivity.
-  ///
-  ///This is a WPE Platform setting that affects the entire display.
-  ///
-  ///The default value is `null` (follows system default).
-  @SupportedPlatforms(
-    platforms: [
-      LinuxPlatform(
-        apiName: "WPESettings.disable-animations",
-        apiUrl:
-            "https://wpewebkit.org/reference/stable/wpe-platform-2.0/class.Settings.html",
-        note: "This is a WPE Platform display-level setting for accessibility.",
-      ),
-    ],
-  )
-  bool? disableAnimations;
-
-  ///Sets whether font antialiasing is enabled.
-  ///When enabled, fonts are rendered with antialiasing for smoother edges.
-  ///
-  ///This is a WPE Platform setting that affects the entire display.
-  ///
-  ///The default value is `null` (follows system default).
-  @SupportedPlatforms(
-    platforms: [
-      LinuxPlatform(
-        apiName: "WPESettings.font-antialias",
-        apiUrl:
-            "https://wpewebkit.org/reference/stable/wpe-platform-2.0/class.Settings.html",
-        note:
-            "This is a WPE Platform display-level setting for font rendering.",
-      ),
-    ],
-  )
-  bool? fontAntialias;
-
-  ///Sets the font hinting style.
-  ///Hinting adjusts font outlines to improve rendering at small sizes.
-  ///
-  ///This is a WPE Platform setting that affects the entire display.
-  ///
-  ///The default value is `null` (follows system default).
-  @SupportedPlatforms(
-    platforms: [
-      LinuxPlatform(
-        apiName: "WPESettings.font-hinting-style",
-        apiUrl:
-            "https://wpewebkit.org/reference/stable/wpe-platform-2.0/class.Settings.html",
-        note:
-            "This is a WPE Platform display-level setting for font rendering.",
-      ),
-    ],
-  )
-  FontHintingStyle_? fontHintingStyle;
-
-  ///Sets the font subpixel layout for LCD rendering.
-  ///This determines how subpixel rendering is performed based on the
-  ///physical arrangement of the display's RGB subpixels.
-  ///
-  ///This is a WPE Platform setting that affects the entire display.
-  ///
-  ///The default value is `null` (follows system default).
-  @SupportedPlatforms(
-    platforms: [
-      LinuxPlatform(
-        apiName: "WPESettings.font-subpixel-layout",
-        apiUrl:
-            "https://wpewebkit.org/reference/stable/wpe-platform-2.0/class.Settings.html",
-        note:
-            "This is a WPE Platform display-level setting for font rendering.",
-      ),
-    ],
-  )
-  FontSubpixelLayout_? fontSubpixelLayout;
-
-  ///Sets the font DPI (dots per inch) for text rendering.
-  ///This affects the size at which fonts are rendered.
-  ///
-  ///This is a WPE Platform setting that affects the entire display.
-  ///
-  ///The default value is `null` (uses system default, typically 96.0).
-  @SupportedPlatforms(
-    platforms: [
-      LinuxPlatform(
-        apiName: "WPESettings.font-dpi",
-        apiUrl:
-            "https://wpewebkit.org/reference/stable/wpe-platform-2.0/class.Settings.html",
-        note:
-            "This is a WPE Platform display-level setting. Default is typically 96.0 DPI.",
-      ),
-    ],
-  )
-  double? fontDPI;
-
-  ///Sets the cursor blink time in milliseconds.
-  ///This controls how frequently the text cursor blinks in input fields.
-  ///
-  ///This is a WPE Platform setting that affects the entire display.
-  ///
-  ///The default value is `null` (uses system default, typically 1200ms).
-  @SupportedPlatforms(
-    platforms: [
-      LinuxPlatform(
-        apiName: "WPESettings.cursor-blink-time",
-        apiUrl:
-            "https://wpewebkit.org/reference/stable/wpe-platform-2.0/class.Settings.html",
-        note:
-            "This is a WPE Platform display-level setting. Value is in milliseconds.",
-      ),
-    ],
-  )
-  int? cursorBlinkTime;
-
-  ///Sets the double-click distance threshold in pixels.
-  ///Two clicks within this distance are considered a double-click.
-  ///
-  ///This is a WPE Platform setting that affects the entire display.
-  ///
-  ///The default value is `null` (uses system default, typically 5 pixels).
-  @SupportedPlatforms(
-    platforms: [
-      LinuxPlatform(
-        apiName: "WPESettings.double-click-distance",
-        apiUrl:
-            "https://wpewebkit.org/reference/stable/wpe-platform-2.0/class.Settings.html",
-        note:
-            "This is a WPE Platform display-level setting. Value is in pixels.",
-      ),
-    ],
-  )
-  int? doubleClickDistance;
-
-  ///Sets the double-click time threshold in milliseconds.
-  ///Two clicks within this time are considered a double-click.
-  ///
-  ///This is a WPE Platform setting that affects the entire display.
-  ///
-  ///The default value is `null` (uses system default, typically 400ms).
-  @SupportedPlatforms(
-    platforms: [
-      LinuxPlatform(
-        apiName: "WPESettings.double-click-time",
-        apiUrl:
-            "https://wpewebkit.org/reference/stable/wpe-platform-2.0/class.Settings.html",
-        note:
-            "This is a WPE Platform display-level setting. Value is in milliseconds.",
-      ),
-    ],
-  )
-  int? doubleClickTime;
-
-  ///Sets the drag threshold in pixels.
-  ///The pointer must move at least this many pixels to start a drag operation.
-  ///
-  ///This is a WPE Platform setting that affects the entire display.
-  ///
-  ///The default value is `null` (uses system default, typically 8 pixels).
-  @SupportedPlatforms(
-    platforms: [
-      LinuxPlatform(
-        apiName: "WPESettings.drag-threshold",
-        apiUrl:
-            "https://wpewebkit.org/reference/stable/wpe-platform-2.0/class.Settings.html",
-        note:
-            "This is a WPE Platform display-level setting. Value is in pixels.",
-      ),
-    ],
-  )
-  int? dragThreshold;
-
-  ///Sets the key repeat delay in milliseconds.
-  ///This is the time a key must be held before it starts repeating.
-  ///
-  ///This is a WPE Platform setting that affects the entire display.
-  ///
-  ///The default value is `null` (uses system default, typically 400ms).
-  @SupportedPlatforms(
-    platforms: [
-      LinuxPlatform(
-        apiName: "WPESettings.key-repeat-delay",
-        apiUrl:
-            "https://wpewebkit.org/reference/stable/wpe-platform-2.0/class.Settings.html",
-        note:
-            "This is a WPE Platform display-level setting. Value is in milliseconds.",
-      ),
-    ],
-  )
-  int? keyRepeatDelay;
-
-  ///Sets the key repeat interval in milliseconds.
-  ///This is the time between repeated key events when a key is held down.
-  ///
-  ///This is a WPE Platform setting that affects the entire display.
-  ///
-  ///The default value is `null` (uses system default, typically 80ms).
-  @SupportedPlatforms(
-    platforms: [
-      LinuxPlatform(
-        apiName: "WPESettings.key-repeat-interval",
-        apiUrl:
-            "https://wpewebkit.org/reference/stable/wpe-platform-2.0/class.Settings.html",
-        note:
-            "This is a WPE Platform display-level setting. Value is in milliseconds.",
-      ),
-    ],
-  )
-  int? keyRepeatInterval;
-
-  ///Sets whether JavaScript can access the clipboard.
-  ///When enabled, JavaScript can read from and write to the system clipboard.
-  ///
-  ///The default value is `false`.
-  @SupportedPlatforms(
-    platforms: [
-      LinuxPlatform(
-        apiName: "WebKitSettings.javascript-can-access-clipboard",
-        apiUrl:
-            "https://wpewebkit.org/reference/stable/wpe-webkit-2.0/property.Settings.javascript-can-access-clipboard.html",
-      ),
-    ],
-  )
-  bool? javaScriptCanAccessClipboard;
-
-  ///Sets whether modal dialogs are allowed.
-  ///When enabled, modal dialogs (such as `window.showModalDialog()`) are allowed.
-  ///
-  ///The default value is `false`.
-  @SupportedPlatforms(
-    platforms: [
-      LinuxPlatform(
-        apiName: "WebKitSettings.allow-modal-dialogs",
-        apiUrl:
-            "https://wpewebkit.org/reference/stable/wpe-webkit-2.0/property.Settings.allow-modal-dialogs.html",
-      ),
-    ],
-  )
-  bool? allowModalDialogs;
-
-  ///Disables web security. When disabled, same-origin policy is not enforced.
-  ///
-  ///**NOTE**: Setting this to `true` is extremely dangerous and should only be used for testing.
-  ///
-  ///The default value is `false`.
-  @SupportedPlatforms(
-    platforms: [
-      LinuxPlatform(
-        available: "2.40",
-        apiName: "WebKitSettings.disable-web-security",
-        apiUrl:
-            "https://wpewebkit.org/reference/stable/wpe-webkit-2.0/property.Settings.disable-web-security.html",
-        note: "Requires WPE WebKit 2.40 or later",
-      ),
-    ],
-  )
-  bool? disableWebSecurity;
-
-  ///Enables WebRTC support for real-time communication features.
-  ///
-  ///The default value is `true`.
-  @SupportedPlatforms(
-    platforms: [
-      LinuxPlatform(
-        available: "2.38",
-        apiName: "WebKitSettings.enable-webrtc",
-        apiUrl:
-            "https://wpewebkit.org/reference/stable/wpe-webkit-2.0/property.Settings.enable-webrtc.html",
-        note: "Requires WPE WebKit 2.38 or later",
-      ),
-    ],
-  )
-  bool? enableWebRTC;
-
-  ///Sets the range of UDP ports for WebRTC connections.
-  ///
-  ///The format is "minPort:maxPort", for example "10000:10100".
-  ///
-  ///The default value is `null` (uses system default).
-  @SupportedPlatforms(
-    platforms: [
-      LinuxPlatform(
-        available: "2.48",
-        apiName: "WebKitSettings.webrtc-udp-ports-range",
-        apiUrl:
-            "https://wpewebkit.org/reference/stable/wpe-webkit-2.0/property.Settings.webrtc-udp-ports-range.html",
-        note: "Requires WPE WebKit 2.48 or later. Format: 'minPort:maxPort'",
-      ),
-    ],
-  )
-  String? webRTCUdpPortsRange;
-
-  ///Sets whether media (audio/video) is enabled.
-  ///When disabled, media elements will not be able to play.
-  ///
-  ///The default value is `true`.
-  @SupportedPlatforms(
-    platforms: [
-      LinuxPlatform(
-        available: "2.26",
-        apiName: "WebKitSettings.enable-media",
-        apiUrl:
-            "https://wpewebkit.org/reference/stable/wpe-webkit-2.0/property.Settings.enable-media.html",
-        note: "Requires WPE WebKit 2.26 or later",
-      ),
-    ],
-  )
-  bool? enableMedia;
-
-  ///Sets whether Encrypted Media Extensions (EME) are enabled.
-  ///EME provides APIs for playing protected (DRM) content.
-  ///
-  ///The default value is `true` (since WPE WebKit 2.38).
-  @SupportedPlatforms(
-    platforms: [
-      LinuxPlatform(
-        available: "2.20",
-        apiName: "WebKitSettings.enable-encrypted-media",
-        apiUrl:
-            "https://wpewebkit.org/reference/stable/wpe-webkit-2.0/property.Settings.enable-encrypted-media.html",
-        note: "Requires WPE WebKit 2.20 or later",
-      ),
-    ],
-  )
-  bool? enableEncryptedMedia;
-
-  ///Sets whether the Media Capabilities API is enabled.
-  ///The Media Capabilities API provides information about the decoding abilities of the device.
-  ///
-  ///The default value is `true`.
-  @SupportedPlatforms(
-    platforms: [
-      LinuxPlatform(
-        available: "2.22",
-        apiName: "WebKitSettings.enable-media-capabilities",
-        apiUrl:
-            "https://wpewebkit.org/reference/stable/wpe-webkit-2.0/property.Settings.enable-media-capabilities.html",
-        note: "Requires WPE WebKit 2.22 or later",
-      ),
-    ],
-  )
-  bool? enableMediaCapabilities;
-
-  ///Sets whether mock capture devices are enabled.
-  ///When enabled, the browser will use mock devices for getUserMedia() instead of real hardware.
-  ///This is useful for testing.
-  ///
-  ///The default value is `false`.
-  @SupportedPlatforms(
-    platforms: [
-      LinuxPlatform(
-        available: "2.24",
-        apiName: "WebKitSettings.enable-mock-capture-devices",
-        apiUrl:
-            "https://wpewebkit.org/reference/stable/wpe-webkit-2.0/property.Settings.enable-mock-capture-devices.html",
-        note: "Requires WPE WebKit 2.24 or later",
-      ),
-    ],
-  )
-  bool? enableMockCaptureDevices;
-
-  ///Sets the media content types that require hardware support.
-  ///This is a comma-separated list of media content types.
-  ///
-  ///The default value is `null` (uses system default).
-  @SupportedPlatforms(
-    platforms: [
-      LinuxPlatform(
-        available: "2.30",
-        apiName:
-            "WebKitSettings.media-content-types-requiring-hardware-support",
-        apiUrl:
-            "https://wpewebkit.org/reference/stable/wpe-webkit-2.0/property.Settings.media-content-types-requiring-hardware-support.html",
-        note: "Requires WPE WebKit 2.30 or later",
-      ),
-    ],
-  )
-  String? mediaContentTypesRequiringHardwareSupport;
-
-  ///Sets whether JavaScript markup (<script> tags) is enabled.
-  ///When disabled, scripts embedded in HTML will not be executed.
-  ///
-  ///The default value is `true`.
-  @SupportedPlatforms(
-    platforms: [
-      LinuxPlatform(
-        available: "2.24",
-        apiName: "WebKitSettings.enable-javascript-markup",
-        apiUrl:
-            "https://wpewebkit.org/reference/stable/wpe-webkit-2.0/property.Settings.enable-javascript-markup.html",
-        note: "Requires WPE WebKit 2.24 or later",
-      ),
-    ],
-  )
-  bool? enableJavaScriptMarkup;
-
-  ///Sets whether 2D canvas hardware acceleration is enabled.
-  ///When enabled, 2D canvas operations are accelerated using the GPU.
-  ///
-  ///The default value is `false`.
-  @SupportedPlatforms(
-    platforms: [
-      LinuxPlatform(
-        available: "2.46",
-        apiName: "WebKitSettings.enable-2d-canvas-acceleration",
-        apiUrl:
-            "https://wpewebkit.org/reference/stable/wpe-webkit-2.0/property.Settings.enable-2d-canvas-acceleration.html",
-        note: "Requires WPE WebKit 2.46 or later",
-      ),
-    ],
-  )
-  bool? enable2DCanvasAcceleration;
-
-  ///Sets whether top-level navigation to data: URLs is allowed.
-  ///When disabled, navigating to data: URLs in the top frame is blocked.
-  ///
-  ///The default value is `false`.
-  @SupportedPlatforms(
-    platforms: [
-      LinuxPlatform(
-        available: "2.28",
-        apiName: "WebKitSettings.allow-top-navigation-to-data-urls",
-        apiUrl:
-            "https://wpewebkit.org/reference/stable/wpe-webkit-2.0/property.Settings.allow-top-navigation-to-data-urls.html",
-        note: "Requires WPE WebKit 2.28 or later",
-      ),
-    ],
-  )
-  bool? allowTopNavigationToDataUrls;
-
   @ExchangeableObjectConstructor()
   InAppWebViewSettings_({
     this.useShouldOverrideUrlLoading,
@@ -3679,17 +2321,7 @@ as it can cause framerate drops on animations in Android 9 and lower (see [Hybri
     this.javaScriptBridgeForMainFrameOnly,
     this.pluginScriptsOriginAllowList,
     this.pluginScriptsForMainFrameOnly = false,
-    this.scrollMultiplier = 1,
-    this.statusBarEnabled = true,
-    this.browserAcceleratorKeysEnabled = true,
-    this.generalAutofillEnabled = true,
-    this.passwordAutosaveEnabled = false,
-    this.pinchZoomEnabled = true,
-    this.hiddenPdfToolbarItems = PdfToolbarItems_.NONE,
-    this.reputationCheckingRequired = true,
-    this.nonClientRegionSupportEnabled = false,
     this.isUserInteractionEnabled = true,
-    this.handleAcceleratorKeyPressed = false,
     this.alpha,
     this.supportsAdaptiveImageGlyph,
     this.writingToolsBehavior,
@@ -3697,50 +2329,6 @@ as it can cause framerate drops on animations in Android 9 and lower (see [Hybri
     this.securityRestrictionMode,
     this.lockdownModeEnabled,
     this.useOnShowFileChooser,
-    this.iframeAllow,
-    this.iframeAllowFullscreen,
-    this.iframeSandbox,
-    this.iframeReferrerPolicy,
-    this.iframeName,
-    this.iframeCsp,
-    this.iframeRole,
-    this.iframeAriaHidden,
-    this.enableWriteConsoleMessagesToStdout = false,
-    this.enableSmoothScrolling = true,
-    this.enableCaretBrowsing = false,
-    this.enablePageCache = true,
-    this.drawCompositingIndicators = false,
-    this.enableResizableTextAreas = true,
-    this.enableTabsToLinks = true,
-    this.enableSpatialNavigation = false,
-    this.pictographFontFamily,
-    this.corsAllowlist,
-    this.itpEnabled = false,
-    this.darkMode,
-    this.disableAnimations,
-    this.fontAntialias,
-    this.fontHintingStyle,
-    this.fontSubpixelLayout,
-    this.fontDPI,
-    this.cursorBlinkTime,
-    this.doubleClickDistance,
-    this.doubleClickTime,
-    this.dragThreshold,
-    this.keyRepeatDelay,
-    this.keyRepeatInterval,
-    this.javaScriptCanAccessClipboard = false,
-    this.allowModalDialogs = false,
-    this.disableWebSecurity = false,
-    this.enableWebRTC = true,
-    this.webRTCUdpPortsRange,
-    this.enableMedia = true,
-    this.enableEncryptedMedia = true,
-    this.enableMediaCapabilities = true,
-    this.enableMockCaptureDevices = false,
-    this.mediaContentTypesRequiringHardwareSupport,
-    this.enableJavaScriptMarkup = true,
-    this.enable2DCanvasAcceleration = false,
-    this.allowTopNavigationToDataUrls = false,
   }) {
     minimumFontSize ??= Util.isAndroid ? 8 : 0;
     assert(

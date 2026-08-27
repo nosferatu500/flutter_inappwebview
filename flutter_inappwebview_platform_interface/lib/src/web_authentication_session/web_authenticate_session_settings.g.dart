@@ -10,7 +10,6 @@ part of 'web_authenticate_session_settings.dart';
 ///
 ///**Officially Supported Platforms/Implementations**:
 ///- iOS WKWebView 13.0+
-///- macOS WKWebView 10.15+
 class WebAuthenticationSessionSettings {
   ///A Boolean value that indicates whether the session should ask the browser for a private authentication session.
   ///
@@ -25,13 +24,11 @@ class WebAuthenticationSessionSettings {
   ///
   ///**Officially Supported Platforms/Implementations**:
   ///- iOS WKWebView 13.0+
-  ///- macOS WKWebView 10.15+
   bool? prefersEphemeralWebBrowserSession;
 
   ///
   ///**Officially Supported Platforms/Implementations**:
   ///- iOS WKWebView 13.0+
-  ///- macOS WKWebView 10.15+
   WebAuthenticationSessionSettings({
     this.prefersEphemeralWebBrowserSession = false,
   });
@@ -95,7 +92,6 @@ enum WebAuthenticationSessionSettingsProperty {
   ///
   ///**Officially Supported Platforms/Implementations**:
   ///- iOS WKWebView 13.0+
-  ///- macOS WKWebView 10.15+
   ///
   ///Use the [WebAuthenticationSessionSettings.isPropertySupported] method to check if this property is supported at runtime.
   ///{@endtemplate}
@@ -112,10 +108,7 @@ extension _WebAuthenticationSessionSettingsPropertySupported
       case WebAuthenticationSessionSettingsProperty
           .prefersEphemeralWebBrowserSession:
         return ((kIsWeb && platform != null) || !kIsWeb) &&
-            [
-              TargetPlatform.iOS,
-              TargetPlatform.macOS,
-            ].contains(platform ?? defaultTargetPlatform);
+            [TargetPlatform.iOS].contains(platform ?? defaultTargetPlatform);
     }
   }
 }

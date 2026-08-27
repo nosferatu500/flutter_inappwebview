@@ -8,19 +8,9 @@ import 'package:flutter_inappwebview_example/providers/settings_manager.dart';
 import 'mock_inappwebview_platform.dart';
 
 /// Creates a mock SettingsManager for testing.
-/// This bypasses the SharedPreferences and WebViewEnvironment dependencies.
+/// This bypasses the SharedPreferences dependency.
 class MockSettingsManager extends SettingsManager {
-  MockSettingsManager()
-    : super(
-        environmentFactory: (_) async => null,
-        environmentSupportChecker: () => false,
-      );
-
-  @override
-  WebViewEnvironmentSettings buildEnvironmentSettings() =>
-      WebViewEnvironmentSettings(
-        releaseChannels: EnvironmentReleaseChannels.STABLE,
-      );
+  MockSettingsManager() : super();
 
   @override
   InAppWebViewSettings buildSettings() => InAppWebViewSettings();

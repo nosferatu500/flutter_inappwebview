@@ -21,8 +21,6 @@ part 'platform_web_storage_manager.g.dart';
   platforms: [
     AndroidPlatform(),
     IOSPlatform(available: '9.0'),
-    LinuxPlatform(),
-    MacOSPlatform(),
   ],
 )
 @immutable
@@ -70,16 +68,6 @@ class PlatformWebStorageManagerCreationParams {
       apiUrl:
           'https://developer.apple.com/documentation/webkit/wkwebsitedatastore',
       available: '9.0',
-    ),
-    LinuxPlatform(
-      apiName: 'WebKitWebsiteDataManager',
-      apiUrl:
-          'https://wpewebkit.org/reference/stable/wpe-webkit-2.0/class.WebsiteDataManager.html',
-    ),
-    MacOSPlatform(
-      apiName: 'WKWebsiteDataStore',
-      apiUrl:
-          'https://developer.apple.com/documentation/webkit/wkwebsitedatastore',
     ),
   ],
 )
@@ -339,16 +327,6 @@ abstract class PlatformWebStorageManager extends PlatformInterface {
         apiUrl:
             'https://developer.apple.com/documentation/webkit/wkwebsitedatastore/1532932-fetchdatarecords',
       ),
-      LinuxPlatform(
-        apiName: 'webkit_website_data_manager_fetch',
-        apiUrl:
-            'https://wpewebkit.org/reference/stable/wpe-webkit-2.0/method.WebsiteDataManager.fetch.html',
-      ),
-      MacOSPlatform(
-        apiName: 'WKWebsiteDataStore.fetchDataRecords',
-        apiUrl:
-            'https://developer.apple.com/documentation/webkit/wkwebsitedatastore/1532932-fetchdatarecords',
-      ),
     ],
   )
   Future<List<WebsiteDataRecord>> fetchDataRecords({
@@ -372,16 +350,6 @@ abstract class PlatformWebStorageManager extends PlatformInterface {
     platforms: [
       IOSPlatform(
         available: '9.0',
-        apiName: 'WKWebsiteDataStore.removeData',
-        apiUrl:
-            'https://developer.apple.com/documentation/webkit/wkwebsitedatastore/1532936-removedata',
-      ),
-      LinuxPlatform(
-        apiName: 'webkit_website_data_manager_remove',
-        apiUrl:
-            'https://wpewebkit.org/reference/stable/wpe-webkit-2.0/method.WebsiteDataManager.remove.html',
-      ),
-      MacOSPlatform(
         apiName: 'WKWebsiteDataStore.removeData',
         apiUrl:
             'https://developer.apple.com/documentation/webkit/wkwebsitedatastore/1532936-removedata',
@@ -410,16 +378,6 @@ abstract class PlatformWebStorageManager extends PlatformInterface {
     platforms: [
       IOSPlatform(
         available: '9.0',
-        apiName: 'WKWebsiteDataStore.removeData',
-        apiUrl:
-            'https://developer.apple.com/documentation/webkit/wkwebsitedatastore/1532938-removedata',
-      ),
-      LinuxPlatform(
-        apiName: 'webkit_website_data_manager_clear',
-        apiUrl:
-            'https://wpewebkit.org/reference/stable/wpe-webkit-2.0/method.WebsiteDataManager.clear.html',
-      ),
-      MacOSPlatform(
         apiName: 'WKWebsiteDataStore.removeData',
         apiUrl:
             'https://developer.apple.com/documentation/webkit/wkwebsitedatastore/1532938-removedata',

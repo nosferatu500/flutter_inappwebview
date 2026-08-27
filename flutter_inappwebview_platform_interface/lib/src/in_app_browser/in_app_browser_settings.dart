@@ -3,12 +3,8 @@ import 'dart:ui';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_inappwebview_internal_annotations/flutter_inappwebview_internal_annotations.dart';
 
-import '../types/in_app_webview_rect.dart';
 import '../types/modal_presentation_style.dart';
 import '../types/modal_transition_style.dart';
-import '../types/window_style_mask.dart';
-import '../types/window_titlebar_separator_style.dart';
-import '../types/window_type.dart';
 import '../util.dart';
 
 import '../in_app_webview/in_app_webview_settings.dart';
@@ -75,85 +71,31 @@ class InAppBrowserClassSettings {
 ///This class represents all [InAppBrowser] settings available.
 ///{@endtemplate}
 @ExchangeableObject(copyMethod: true)
-@SupportedPlatforms(
-  platforms: [
-    AndroidPlatform(),
-    IOSPlatform(),
-    MacOSPlatform(),
-    WindowsPlatform(),
-    LinuxPlatform(
-      apiName: 'GtkWindow',
-      apiUrl: 'https://docs.gtk.org/gtk3/class.Window.html',
-    ),
-  ],
-)
+@SupportedPlatforms(platforms: [AndroidPlatform(), IOSPlatform()])
 class InAppBrowserSettings_ {
   ///Set to `true` to create the browser and load the page, but not show it. Omit or set to `false` to have the browser open and load normally.
   ///The default value is `false`.
-  @SupportedPlatforms(
-    platforms: [
-      AndroidPlatform(),
-      IOSPlatform(),
-      MacOSPlatform(),
-      WindowsPlatform(),
-      LinuxPlatform(),
-    ],
-  )
+  @SupportedPlatforms(platforms: [AndroidPlatform(), IOSPlatform()])
   bool? hidden;
 
   ///Set to `true` to hide the toolbar at the top of the WebView. The default value is `false`.
-  @SupportedPlatforms(
-    platforms: [
-      AndroidPlatform(),
-      IOSPlatform(),
-      MacOSPlatform(),
-      LinuxPlatform(),
-    ],
-  )
+  @SupportedPlatforms(platforms: [AndroidPlatform(), IOSPlatform()])
   bool? hideToolbarTop;
 
   ///Set the custom background color of the toolbar at the top.
-  @SupportedPlatforms(
-    platforms: [
-      AndroidPlatform(),
-      IOSPlatform(),
-      MacOSPlatform(),
-      LinuxPlatform(),
-    ],
-  )
+  @SupportedPlatforms(platforms: [AndroidPlatform(), IOSPlatform()])
   Color_? toolbarTopBackgroundColor;
 
   ///Set to `true` to hide the url bar on the toolbar at the top. The default value is `false`.
-  @SupportedPlatforms(
-    platforms: [
-      AndroidPlatform(),
-      IOSPlatform(),
-      MacOSPlatform(),
-      LinuxPlatform(),
-    ],
-  )
+  @SupportedPlatforms(platforms: [AndroidPlatform(), IOSPlatform()])
   bool? hideUrlBar;
 
   ///Set to `true` to hide the progress bar when the WebView is loading a page. The default value is `false`.
-  @SupportedPlatforms(
-    platforms: [
-      AndroidPlatform(),
-      IOSPlatform(),
-      MacOSPlatform(),
-      LinuxPlatform(),
-    ],
-  )
+  @SupportedPlatforms(platforms: [AndroidPlatform(), IOSPlatform()])
   bool? hideProgressBar;
 
   ///Set to `true` to hide the default menu items. The default value is `false`.
-  @SupportedPlatforms(
-    platforms: [
-      AndroidPlatform(),
-      IOSPlatform(),
-      MacOSPlatform(),
-      LinuxPlatform(),
-    ],
-  )
+  @SupportedPlatforms(platforms: [AndroidPlatform(), IOSPlatform()])
   bool? hideDefaultMenuItems;
 
   ///Set to `true` if you want the title should be displayed. The default value is `false`.
@@ -161,14 +103,7 @@ class InAppBrowserSettings_ {
   bool? hideTitleBar;
 
   ///Set the action bar's title.
-  @SupportedPlatforms(
-    platforms: [
-      AndroidPlatform(),
-      MacOSPlatform(),
-      WindowsPlatform(),
-      LinuxPlatform(),
-    ],
-  )
+  @SupportedPlatforms(platforms: [AndroidPlatform()])
   String? toolbarTopFixedTitle;
 
   ///Set to `false` to not close the InAppBrowser when the user click on the Android back button and the WebView cannot go back to the history. The default value is `true`.
@@ -235,35 +170,6 @@ class InAppBrowserSettings_ {
   @SupportedPlatforms(platforms: [IOSPlatform()])
   ModalTransitionStyle_? transitionStyle;
 
-  ///How the browser window should be added to the main window.
-  ///The default value is [WindowType.WINDOW].
-  @SupportedPlatforms(
-    platforms: [MacOSPlatform(), WindowsPlatform(), LinuxPlatform()],
-  )
-  WindowType_? windowType;
-
-  ///The window’s alpha value.
-  ///The default value is `1.0`.
-  @SupportedPlatforms(
-    platforms: [MacOSPlatform(), WindowsPlatform(), LinuxPlatform()],
-  )
-  double? windowAlphaValue;
-
-  ///Flags that describe the window’s current style, such as if it’s resizable or in full-screen mode.
-  @SupportedPlatforms(platforms: [MacOSPlatform()])
-  WindowStyleMask_? windowStyleMask;
-
-  ///The type of separator that the app displays between the title bar and content of a window.
-  @SupportedPlatforms(platforms: [MacOSPlatform(available: '11.0')])
-  WindowTitlebarSeparatorStyle_? windowTitlebarSeparatorStyle;
-
-  ///Sets the origin and size of the window’s frame rectangle according to a given frame rectangle,
-  ///thereby setting its position and size onscreen.
-  @SupportedPlatforms(
-    platforms: [MacOSPlatform(), WindowsPlatform(), LinuxPlatform()],
-  )
-  InAppWebViewRect_? windowFrame;
-
   InAppBrowserSettings_({
     this.hidden = false,
     this.hideToolbarTop = false,
@@ -288,11 +194,6 @@ class InAppBrowserSettings_ {
     this.closeOnCannotGoBack = true,
     this.allowGoBackWithBackButton = true,
     this.shouldCloseOnBackButtonPressed = false,
-    this.windowType,
-    this.windowAlphaValue = 1.0,
-    this.windowStyleMask,
-    this.windowTitlebarSeparatorStyle,
-    this.windowFrame,
   });
 
   ///Check if the given [property] is supported by the [defaultTargetPlatform] or a specific [platform].

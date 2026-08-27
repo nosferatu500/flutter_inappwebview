@@ -22,16 +22,7 @@ part 'platform_web_storage.g.dart';
 ///{@endtemplate}
 ///
 ///{@macro flutter_inappwebview_platform_interface.PlatformWebStorageCreationParams.supported_platforms}
-@SupportedPlatforms(
-  platforms: [
-    AndroidPlatform(),
-    IOSPlatform(),
-    MacOSPlatform(),
-    WebPlatform(),
-    WindowsPlatform(),
-    LinuxPlatform(),
-  ],
-)
+@SupportedPlatforms(platforms: [AndroidPlatform(), IOSPlatform()])
 @immutable
 class PlatformWebStorageCreationParams {
   /// Used by the platform implementation to create a new [PlatformWebStorage].
@@ -43,31 +34,13 @@ class PlatformWebStorageCreationParams {
   ///{@macro flutter_inappwebview_platform_interface.PlatformWebStorage.localStorage}
   ///
   ///{@macro flutter_inappwebview_platform_interface.PlatformWebStorage.localStorage.supported_platforms}
-  @SupportedPlatforms(
-    platforms: [
-      AndroidPlatform(),
-      IOSPlatform(),
-      MacOSPlatform(),
-      WebPlatform(),
-      WindowsPlatform(),
-      LinuxPlatform(),
-    ],
-  )
+  @SupportedPlatforms(platforms: [AndroidPlatform(), IOSPlatform()])
   final PlatformLocalStorage localStorage;
 
   ///{@macro flutter_inappwebview_platform_interface.PlatformWebStorage.sessionStorage}
   ///
   ///{@macro flutter_inappwebview_platform_interface.PlatformWebStorage.sessionStorage.supported_platforms}
-  @SupportedPlatforms(
-    platforms: [
-      AndroidPlatform(),
-      IOSPlatform(),
-      MacOSPlatform(),
-      WebPlatform(),
-      WindowsPlatform(),
-      LinuxPlatform(),
-    ],
-  )
+  @SupportedPlatforms(platforms: [AndroidPlatform(), IOSPlatform()])
   final PlatformSessionStorage sessionStorage;
 
   ///{@template flutter_inappwebview_platform_interface.PlatformWebStorageCreationParams.isClassSupported}
@@ -95,16 +68,7 @@ class PlatformWebStorageCreationParams {
 ///It used by [PlatformInAppWebViewController.webStorage].
 ///{@endtemplate}
 ///{@macro flutter_inappwebview_platform_interface.PlatformWebStorage.supported_platforms}
-@SupportedPlatforms(
-  platforms: [
-    AndroidPlatform(),
-    IOSPlatform(),
-    MacOSPlatform(),
-    WebPlatform(),
-    WindowsPlatform(),
-    LinuxPlatform(),
-  ],
-)
+@SupportedPlatforms(platforms: [AndroidPlatform(), IOSPlatform()])
 abstract class PlatformWebStorage extends PlatformInterface
     implements Disposable {
   /// Creates a new [PlatformWebStorage]
@@ -154,16 +118,7 @@ abstract class PlatformWebStorage extends PlatformInterface
   ///{@endtemplate}
   ///
   ///{@macro flutter_inappwebview_platform_interface.PlatformWebStorage.localStorage.supported_platforms}
-  @SupportedPlatforms(
-    platforms: [
-      AndroidPlatform(),
-      IOSPlatform(),
-      MacOSPlatform(),
-      WebPlatform(),
-      WindowsPlatform(),
-      LinuxPlatform(),
-    ],
-  )
+  @SupportedPlatforms(platforms: [AndroidPlatform(), IOSPlatform()])
   PlatformLocalStorage get localStorage => params.localStorage;
 
   ///{@template flutter_inappwebview_platform_interface.PlatformWebStorage.sessionStorage}
@@ -171,16 +126,7 @@ abstract class PlatformWebStorage extends PlatformInterface
   ///{@endtemplate}
   ///
   ///{@macro flutter_inappwebview_platform_interface.PlatformWebStorage.sessionStorage.supported_platforms}
-  @SupportedPlatforms(
-    platforms: [
-      AndroidPlatform(),
-      IOSPlatform(),
-      MacOSPlatform(),
-      WebPlatform(),
-      WindowsPlatform(),
-      LinuxPlatform(),
-    ],
-  )
+  @SupportedPlatforms(platforms: [AndroidPlatform(), IOSPlatform()])
   PlatformSessionStorage get sessionStorage => params.sessionStorage;
 
   ///{@template flutter_inappwebview_platform_interface.PlatformWebStorage.dispose}
@@ -189,16 +135,7 @@ abstract class PlatformWebStorage extends PlatformInterface
   ///
   ///{@macro flutter_inappwebview_platform_interface.PlatformWebStorage.dispose.supported_platforms}
   @override
-  @SupportedPlatforms(
-    platforms: [
-      AndroidPlatform(),
-      IOSPlatform(),
-      MacOSPlatform(),
-      WebPlatform(),
-      WindowsPlatform(),
-      LinuxPlatform(),
-    ],
-  )
+  @SupportedPlatforms(platforms: [AndroidPlatform(), IOSPlatform()])
   void dispose() {
     throw UnimplementedError(
       'dispose is not implemented on the current platform',
@@ -244,16 +181,7 @@ abstract class PlatformWebStorage extends PlatformInterface
 ///{@endtemplate}
 ///
 ///{@macro flutter_inappwebview_platform_interface.PlatformStorageCreationParams.supported_platforms}
-@SupportedPlatforms(
-  platforms: [
-    AndroidPlatform(),
-    IOSPlatform(),
-    MacOSPlatform(),
-    WebPlatform(),
-    WindowsPlatform(),
-    LinuxPlatform(),
-  ],
-)
+@SupportedPlatforms(platforms: [AndroidPlatform(), IOSPlatform()])
 @immutable
 class PlatformStorageCreationParams {
   /// Used by the platform implementation to create a new [PlatformStorage].
@@ -265,31 +193,13 @@ class PlatformStorageCreationParams {
   ///{@macro flutter_inappwebview_platform_interface.PlatformStorage.controller}
   ///
   ///{@macro flutter_inappwebview_platform_interface.PlatformStorage.controller.supported_platforms}
-  @SupportedPlatforms(
-    platforms: [
-      AndroidPlatform(),
-      IOSPlatform(),
-      MacOSPlatform(),
-      WebPlatform(),
-      WindowsPlatform(),
-      LinuxPlatform(),
-    ],
-  )
+  @SupportedPlatforms(platforms: [AndroidPlatform(), IOSPlatform()])
   final PlatformInAppWebViewController? controller;
 
   ///{@macro flutter_inappwebview_platform_interface.PlatformStorage.webStorageType}
   ///
   ///{@macro flutter_inappwebview_platform_interface.PlatformStorage.webStorageType.supported_platforms}
-  @SupportedPlatforms(
-    platforms: [
-      AndroidPlatform(),
-      IOSPlatform(),
-      MacOSPlatform(),
-      WebPlatform(),
-      WindowsPlatform(),
-      LinuxPlatform(),
-    ],
-  )
+  @SupportedPlatforms(platforms: [AndroidPlatform(), IOSPlatform()])
   final WebStorageType webStorageType;
 
   ///{@template flutter_inappwebview_platform_interface.PlatformStorageCreationParams.isClassSupported}
@@ -317,45 +227,18 @@ class PlatformStorageCreationParams {
 ///It is used by [PlatformLocalStorage] and [PlatformSessionStorage].
 ///{@endtemplate}
 ///{@macro flutter_inappwebview_platform_interface.PlatformStorage.supported_platforms}
-@SupportedPlatforms(
-  platforms: [
-    AndroidPlatform(),
-    IOSPlatform(),
-    MacOSPlatform(),
-    WebPlatform(),
-    WindowsPlatform(),
-    LinuxPlatform(),
-  ],
-)
+@SupportedPlatforms(platforms: [AndroidPlatform(), IOSPlatform()])
 abstract mixin class PlatformStorage implements Disposable {
   ///{@template flutter_inappwebview_platform_interface.PlatformStorage.controller}
   ///Controller used to interact with storage.
   ///{@endtemplate}
-  @SupportedPlatforms(
-    platforms: [
-      AndroidPlatform(),
-      IOSPlatform(),
-      MacOSPlatform(),
-      WebPlatform(),
-      WindowsPlatform(),
-      LinuxPlatform(),
-    ],
-  )
+  @SupportedPlatforms(platforms: [AndroidPlatform(), IOSPlatform()])
   PlatformInAppWebViewController? get controller;
 
   ///{@template flutter_inappwebview_platform_interface.PlatformStorage.webStorageType}
   ///The web storage type: `window.sessionStorage` or `window.localStorage`.
   ///{@endtemplate}
-  @SupportedPlatforms(
-    platforms: [
-      AndroidPlatform(),
-      IOSPlatform(),
-      MacOSPlatform(),
-      WebPlatform(),
-      WindowsPlatform(),
-      LinuxPlatform(),
-    ],
-  )
+  @SupportedPlatforms(platforms: [AndroidPlatform(), IOSPlatform()])
   WebStorageType get webStorageType {
     throw UnimplementedError(
       'webStorageType is not implemented on the current platform',
@@ -365,19 +248,7 @@ abstract mixin class PlatformStorage implements Disposable {
   ///{@template flutter_inappwebview_platform_interface.PlatformStorage.length}
   ///Returns an integer representing the number of data items stored in the Storage object.
   ///{@endtemplate}
-  @SupportedPlatforms(
-    platforms: [
-      AndroidPlatform(),
-      IOSPlatform(),
-      MacOSPlatform(),
-      WebPlatform(
-        note:
-            'This method has an effect only if the iframe has the same origin.',
-      ),
-      WindowsPlatform(),
-      LinuxPlatform(),
-    ],
-  )
+  @SupportedPlatforms(platforms: [AndroidPlatform(), IOSPlatform()])
   Future<int?> length() {
     throw UnimplementedError(
       'length is not implemented on the current platform',
@@ -387,19 +258,7 @@ abstract mixin class PlatformStorage implements Disposable {
   ///{@template flutter_inappwebview_platform_interface.PlatformStorage.setItem}
   ///When passed a [key] name and [value], will add that key to the storage, or update that key's value if it already exists.
   ///{@endtemplate}
-  @SupportedPlatforms(
-    platforms: [
-      AndroidPlatform(),
-      IOSPlatform(),
-      MacOSPlatform(),
-      WebPlatform(
-        note:
-            'This method has an effect only if the iframe has the same origin.',
-      ),
-      WindowsPlatform(),
-      LinuxPlatform(),
-    ],
-  )
+  @SupportedPlatforms(platforms: [AndroidPlatform(), IOSPlatform()])
   Future<void> setItem({required String key, required dynamic value}) {
     throw UnimplementedError(
       'setItem is not implemented on the current platform',
@@ -409,19 +268,7 @@ abstract mixin class PlatformStorage implements Disposable {
   ///{@template flutter_inappwebview_platform_interface.PlatformStorage.getItem}
   ///When passed a [key] name, will return that key's value, or `null` if the key does not exist, in the given Storage object.
   ///{@endtemplate}
-  @SupportedPlatforms(
-    platforms: [
-      AndroidPlatform(),
-      IOSPlatform(),
-      MacOSPlatform(),
-      WebPlatform(
-        note:
-            'This method has an effect only if the iframe has the same origin.',
-      ),
-      WindowsPlatform(),
-      LinuxPlatform(),
-    ],
-  )
+  @SupportedPlatforms(platforms: [AndroidPlatform(), IOSPlatform()])
   Future<dynamic> getItem({required String key}) {
     throw UnimplementedError(
       'getItem is not implemented on the current platform',
@@ -431,19 +278,7 @@ abstract mixin class PlatformStorage implements Disposable {
   ///{@template flutter_inappwebview_platform_interface.PlatformStorage.removeItem}
   ///When passed a [key] name, will remove that key from the given Storage object if it exists.
   ///{@endtemplate}
-  @SupportedPlatforms(
-    platforms: [
-      AndroidPlatform(),
-      IOSPlatform(),
-      MacOSPlatform(),
-      WebPlatform(
-        note:
-            'This method has an effect only if the iframe has the same origin.',
-      ),
-      WindowsPlatform(),
-      LinuxPlatform(),
-    ],
-  )
+  @SupportedPlatforms(platforms: [AndroidPlatform(), IOSPlatform()])
   Future<void> removeItem({required String key}) {
     throw UnimplementedError(
       'removeItem is not implemented on the current platform',
@@ -453,19 +288,7 @@ abstract mixin class PlatformStorage implements Disposable {
   ///{@template flutter_inappwebview_platform_interface.PlatformStorage.getItems}
   ///Returns the list of all items from the given Storage object.
   ///{@endtemplate}
-  @SupportedPlatforms(
-    platforms: [
-      AndroidPlatform(),
-      IOSPlatform(),
-      MacOSPlatform(),
-      WebPlatform(
-        note:
-            'This method has an effect only if the iframe has the same origin.',
-      ),
-      WindowsPlatform(),
-      LinuxPlatform(),
-    ],
-  )
+  @SupportedPlatforms(platforms: [AndroidPlatform(), IOSPlatform()])
   Future<List<WebStorageItem>> getItems() {
     throw UnimplementedError(
       'getItems is not implemented on the current platform',
@@ -475,19 +298,7 @@ abstract mixin class PlatformStorage implements Disposable {
   ///{@template flutter_inappwebview_platform_interface.PlatformStorage.clear}
   ///Clears all keys stored in a given Storage object.
   ///{@endtemplate}
-  @SupportedPlatforms(
-    platforms: [
-      AndroidPlatform(),
-      IOSPlatform(),
-      MacOSPlatform(),
-      WebPlatform(
-        note:
-            'This method has an effect only if the iframe has the same origin.',
-      ),
-      WindowsPlatform(),
-      LinuxPlatform(),
-    ],
-  )
+  @SupportedPlatforms(platforms: [AndroidPlatform(), IOSPlatform()])
   Future<void> clear() {
     throw UnimplementedError(
       'clear is not implemented on the current platform',
@@ -498,34 +309,13 @@ abstract mixin class PlatformStorage implements Disposable {
   ///When passed a number [index], returns the name of the nth key in a given Storage object.
   ///The order of keys is user-agent defined, so you should not rely on it.
   ///{@endtemplate}
-  @SupportedPlatforms(
-    platforms: [
-      AndroidPlatform(),
-      IOSPlatform(),
-      MacOSPlatform(),
-      WebPlatform(
-        note:
-            'This method has an effect only if the iframe has the same origin.',
-      ),
-      WindowsPlatform(),
-      LinuxPlatform(),
-    ],
-  )
+  @SupportedPlatforms(platforms: [AndroidPlatform(), IOSPlatform()])
   Future<String> key({required int index}) {
     throw UnimplementedError('key is not implemented on the current platform');
   }
 
   @override
-  @SupportedPlatforms(
-    platforms: [
-      AndroidPlatform(),
-      IOSPlatform(),
-      MacOSPlatform(),
-      WebPlatform(),
-      WindowsPlatform(),
-      LinuxPlatform(),
-    ],
-  )
+  @SupportedPlatforms(platforms: [AndroidPlatform(), IOSPlatform()])
   void dispose() {
     throw UnimplementedError(
       'dispose is not implemented on the current platform',
@@ -538,16 +328,7 @@ abstract mixin class PlatformStorage implements Disposable {
 /// Platform specific implementations can add additional fields by extending
 /// this class.
 @immutable
-@SupportedPlatforms(
-  platforms: [
-    AndroidPlatform(),
-    IOSPlatform(),
-    MacOSPlatform(),
-    WebPlatform(),
-    WindowsPlatform(),
-    LinuxPlatform(),
-  ],
-)
+@SupportedPlatforms(platforms: [AndroidPlatform(), IOSPlatform()])
 class PlatformLocalStorageCreationParams extends PlatformStorageCreationParams {
   /// Used by the platform implementation to create a new [PlatformLocalStorage].
   PlatformLocalStorageCreationParams(
@@ -581,16 +362,7 @@ class PlatformLocalStorageCreationParams extends PlatformStorageCreationParams {
 ///It used by [PlatformWebStorage].
 ///{@endtemplate}
 ///{@macro flutter_inappwebview_platform_interface.PlatformLocalStorage.supported_platforms}
-@SupportedPlatforms(
-  platforms: [
-    AndroidPlatform(),
-    IOSPlatform(),
-    MacOSPlatform(),
-    WebPlatform(),
-    WindowsPlatform(),
-    LinuxPlatform(),
-  ],
-)
+@SupportedPlatforms(platforms: [AndroidPlatform(), IOSPlatform()])
 abstract class PlatformLocalStorage extends PlatformInterface
     with PlatformStorage {
   /// Creates a new [PlatformLocalStorage]
@@ -663,108 +435,36 @@ abstract class PlatformLocalStorage extends PlatformInterface
   );
 
   @override
-  @SupportedPlatforms(
-    platforms: [
-      AndroidPlatform(),
-      IOSPlatform(),
-      MacOSPlatform(),
-      WebPlatform(),
-      WindowsPlatform(),
-      LinuxPlatform(),
-    ],
-  )
+  @SupportedPlatforms(platforms: [AndroidPlatform(), IOSPlatform()])
   Future<int?> length() => super.length();
 
   @override
-  @SupportedPlatforms(
-    platforms: [
-      AndroidPlatform(),
-      IOSPlatform(),
-      MacOSPlatform(),
-      WebPlatform(),
-      WindowsPlatform(),
-      LinuxPlatform(),
-    ],
-  )
+  @SupportedPlatforms(platforms: [AndroidPlatform(), IOSPlatform()])
   Future<void> setItem({required String key, required dynamic value}) =>
       super.setItem(key: key, value: value);
 
   @override
-  @SupportedPlatforms(
-    platforms: [
-      AndroidPlatform(),
-      IOSPlatform(),
-      MacOSPlatform(),
-      WebPlatform(),
-      WindowsPlatform(),
-      LinuxPlatform(),
-    ],
-  )
+  @SupportedPlatforms(platforms: [AndroidPlatform(), IOSPlatform()])
   Future<dynamic> getItem({required String key}) => super.getItem(key: key);
 
   @override
-  @SupportedPlatforms(
-    platforms: [
-      AndroidPlatform(),
-      IOSPlatform(),
-      MacOSPlatform(),
-      WebPlatform(),
-      WindowsPlatform(),
-      LinuxPlatform(),
-    ],
-  )
+  @SupportedPlatforms(platforms: [AndroidPlatform(), IOSPlatform()])
   Future<void> removeItem({required String key}) => super.removeItem(key: key);
 
   @override
-  @SupportedPlatforms(
-    platforms: [
-      AndroidPlatform(),
-      IOSPlatform(),
-      MacOSPlatform(),
-      WebPlatform(),
-      WindowsPlatform(),
-      LinuxPlatform(),
-    ],
-  )
+  @SupportedPlatforms(platforms: [AndroidPlatform(), IOSPlatform()])
   Future<List<WebStorageItem>> getItems() => super.getItems();
 
   @override
-  @SupportedPlatforms(
-    platforms: [
-      AndroidPlatform(),
-      IOSPlatform(),
-      MacOSPlatform(),
-      WebPlatform(),
-      WindowsPlatform(),
-      LinuxPlatform(),
-    ],
-  )
+  @SupportedPlatforms(platforms: [AndroidPlatform(), IOSPlatform()])
   Future<void> clear() => super.clear();
 
   @override
-  @SupportedPlatforms(
-    platforms: [
-      AndroidPlatform(),
-      IOSPlatform(),
-      MacOSPlatform(),
-      WebPlatform(),
-      WindowsPlatform(),
-      LinuxPlatform(),
-    ],
-  )
+  @SupportedPlatforms(platforms: [AndroidPlatform(), IOSPlatform()])
   Future<String> key({required int index}) => super.key(index: index);
 
   @override
-  @SupportedPlatforms(
-    platforms: [
-      AndroidPlatform(),
-      IOSPlatform(),
-      MacOSPlatform(),
-      WebPlatform(),
-      WindowsPlatform(),
-      LinuxPlatform(),
-    ],
-  )
+  @SupportedPlatforms(platforms: [AndroidPlatform(), IOSPlatform()])
   void dispose() => super.dispose();
 }
 
@@ -773,16 +473,7 @@ abstract class PlatformLocalStorage extends PlatformInterface
 /// Platform specific implementations can add additional fields by extending
 /// this class.
 @immutable
-@SupportedPlatforms(
-  platforms: [
-    AndroidPlatform(),
-    IOSPlatform(),
-    MacOSPlatform(),
-    WebPlatform(),
-    WindowsPlatform(),
-    LinuxPlatform(),
-  ],
-)
+@SupportedPlatforms(platforms: [AndroidPlatform(), IOSPlatform()])
 class PlatformSessionStorageCreationParams
     extends PlatformStorageCreationParams {
   /// Used by the platform implementation to create a new [PlatformSessionStorage].
@@ -817,16 +508,7 @@ class PlatformSessionStorageCreationParams
 ///It used by [PlatformWebStorage].
 ///{@endtemplate}
 ///{@macro flutter_inappwebview_platform_interface.PlatformSessionStorage.supported_platforms}
-@SupportedPlatforms(
-  platforms: [
-    AndroidPlatform(),
-    IOSPlatform(),
-    MacOSPlatform(),
-    WebPlatform(),
-    WindowsPlatform(),
-    LinuxPlatform(),
-  ],
-)
+@SupportedPlatforms(platforms: [AndroidPlatform(), IOSPlatform()])
 abstract class PlatformSessionStorage extends PlatformInterface
     with PlatformStorage {
   /// Creates a new [PlatformSessionStorage]
@@ -901,107 +583,35 @@ abstract class PlatformSessionStorage extends PlatformInterface
   );
 
   @override
-  @SupportedPlatforms(
-    platforms: [
-      AndroidPlatform(),
-      IOSPlatform(),
-      MacOSPlatform(),
-      WebPlatform(),
-      WindowsPlatform(),
-      LinuxPlatform(),
-    ],
-  )
+  @SupportedPlatforms(platforms: [AndroidPlatform(), IOSPlatform()])
   Future<int?> length() => super.length();
 
   @override
-  @SupportedPlatforms(
-    platforms: [
-      AndroidPlatform(),
-      IOSPlatform(),
-      MacOSPlatform(),
-      WebPlatform(),
-      WindowsPlatform(),
-      LinuxPlatform(),
-    ],
-  )
+  @SupportedPlatforms(platforms: [AndroidPlatform(), IOSPlatform()])
   Future<void> setItem({required String key, required dynamic value}) =>
       super.setItem(key: key, value: value);
 
   @override
-  @SupportedPlatforms(
-    platforms: [
-      AndroidPlatform(),
-      IOSPlatform(),
-      MacOSPlatform(),
-      WebPlatform(),
-      WindowsPlatform(),
-      LinuxPlatform(),
-    ],
-  )
+  @SupportedPlatforms(platforms: [AndroidPlatform(), IOSPlatform()])
   Future<dynamic> getItem({required String key}) => super.getItem(key: key);
 
   @override
-  @SupportedPlatforms(
-    platforms: [
-      AndroidPlatform(),
-      IOSPlatform(),
-      MacOSPlatform(),
-      WebPlatform(),
-      WindowsPlatform(),
-      LinuxPlatform(),
-    ],
-  )
+  @SupportedPlatforms(platforms: [AndroidPlatform(), IOSPlatform()])
   Future<void> removeItem({required String key}) => super.removeItem(key: key);
 
   @override
-  @SupportedPlatforms(
-    platforms: [
-      AndroidPlatform(),
-      IOSPlatform(),
-      MacOSPlatform(),
-      WebPlatform(),
-      WindowsPlatform(),
-      LinuxPlatform(),
-    ],
-  )
+  @SupportedPlatforms(platforms: [AndroidPlatform(), IOSPlatform()])
   Future<List<WebStorageItem>> getItems() => super.getItems();
 
   @override
-  @SupportedPlatforms(
-    platforms: [
-      AndroidPlatform(),
-      IOSPlatform(),
-      MacOSPlatform(),
-      WebPlatform(),
-      WindowsPlatform(),
-      LinuxPlatform(),
-    ],
-  )
+  @SupportedPlatforms(platforms: [AndroidPlatform(), IOSPlatform()])
   Future<void> clear() => super.clear();
 
   @override
-  @SupportedPlatforms(
-    platforms: [
-      AndroidPlatform(),
-      IOSPlatform(),
-      MacOSPlatform(),
-      WebPlatform(),
-      WindowsPlatform(),
-      LinuxPlatform(),
-    ],
-  )
+  @SupportedPlatforms(platforms: [AndroidPlatform(), IOSPlatform()])
   Future<String> key({required int index}) => super.key(index: index);
 
   @override
-  @SupportedPlatforms(
-    platforms: [
-      AndroidPlatform(),
-      IOSPlatform(),
-      MacOSPlatform(),
-      WebPlatform(),
-      WindowsPlatform(),
-      LinuxPlatform(),
-    ],
-  )
+  @SupportedPlatforms(platforms: [AndroidPlatform(), IOSPlatform()])
   void dispose() => super.dispose();
 }

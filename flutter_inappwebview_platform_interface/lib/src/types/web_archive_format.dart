@@ -13,12 +13,10 @@ class WebArchiveFormat_ {
   const WebArchiveFormat_._internal(this._value);
 
   ///MHT (MIME HTML) is a web Archive format that saves a web page's HTML code, images, CSS, and scripts into one document, allowing for offline viewing.
-  @EnumSupportedPlatforms(
-    platforms: [EnumAndroidPlatform(), EnumLinuxPlatform()],
-  )
+  @EnumSupportedPlatforms(platforms: [EnumAndroidPlatform()])
   static const MHT = WebArchiveFormat_._internal("mht");
 
   ///WebArchive is a web Archive format used primarily on iOS and macOS platforms to save web pages, including HTML content, images, stylesheets, and scripts, into a single file for offline access.
-  @EnumSupportedPlatforms(platforms: [EnumIOSPlatform(), EnumMacOSPlatform()])
+  @EnumSupportedPlatforms(platforms: [EnumIOSPlatform()])
   static const WEBARCHIVE = WebArchiveFormat_._internal("webarchive");
 }

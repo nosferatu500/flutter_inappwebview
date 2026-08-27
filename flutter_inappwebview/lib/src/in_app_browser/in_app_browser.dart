@@ -10,7 +10,6 @@ import '../find_interaction/find_interaction_controller.dart';
 import '../pull_to_refresh/main.dart';
 
 import '../in_app_webview/in_app_webview_controller.dart';
-import '../webview_environment/webview_environment.dart';
 
 ///{@macro flutter_inappwebview_platform_interface.PlatformInAppBrowser}
 ///
@@ -27,7 +26,6 @@ class InAppBrowser implements PlatformInAppBrowserEvents {
     FindInteractionController? findInteractionController,
     UnmodifiableListView<UserScript>? initialUserScripts,
     int? windowId,
-    WebViewEnvironment? webViewEnvironment,
   }) : this.fromPlatformCreationParams(
          PlatformInAppBrowserCreationParams(
            contextMenu: contextMenu,
@@ -35,7 +33,6 @@ class InAppBrowser implements PlatformInAppBrowserEvents {
            findInteractionController: findInteractionController?.platform,
            initialUserScripts: initialUserScripts,
            windowId: windowId,
-           webViewEnvironment: webViewEnvironment?.platform,
          ),
        );
 
@@ -281,7 +278,7 @@ class InAppBrowser implements PlatformInAppBrowserEvents {
   void onDidReceiveServerRedirectForProvisionalNavigation() {}
 
   @override
-  FutureOr<DownloadStartResponse?>? onDownloadStarting(
+  FutureOr<void>? onDownloadStarting(
     DownloadStartRequest downloadStartRequest,
   ) {
     return null;
@@ -295,12 +292,6 @@ class InAppBrowser implements PlatformInAppBrowserEvents {
 
   @override
   void onExitFullscreen() {}
-
-  @override
-  void onContentLoading(WebUri? url) {}
-
-  @override
-  void onDOMContentLoaded(WebUri? url) {}
 
   @override
   FutureOr<FormResubmissionAction?>? onFormResubmission(WebUri? url) {
@@ -437,42 +428,6 @@ class InAppBrowser implements PlatformInAppBrowserEvents {
   void onReceivedTouchIconUrl(WebUri url, bool precomposed) {}
 
   @override
-  FutureOr<NotificationReceivedResponse?>? onNotificationReceived(
-    NotificationReceivedRequest request,
-  ) {
-    return null;
-  }
-
-  @override
-  FutureOr<SaveAsUIShowingResponse?>? onSaveAsUIShowing(
-    SaveAsUIShowingRequest request,
-  ) {
-    return null;
-  }
-
-  @override
-  FutureOr<SaveFileSecurityCheckStartingResponse?>?
-  onSaveFileSecurityCheckStarting(
-    SaveFileSecurityCheckStartingRequest request,
-  ) {
-    return null;
-  }
-
-  @override
-  FutureOr<ScreenCaptureStartingResponse?>? onScreenCaptureStarting(
-    ScreenCaptureStartingRequest request,
-  ) {
-    return null;
-  }
-
-  @override
-  FutureOr<LaunchingExternalUriSchemeResponse?>? onLaunchingExternalUriScheme(
-    LaunchingExternalUriSchemeRequest request,
-  ) {
-    return null;
-  }
-
-  @override
   void onRenderProcessGone(RenderProcessGoneDetail detail) {}
 
   @override
@@ -553,15 +508,6 @@ class InAppBrowser implements PlatformInAppBrowserEvents {
   ) {
     return null;
   }
-
-  @override
-  void onMainWindowWillClose() {}
-
-  @override
-  void onProcessFailed(ProcessFailedDetail detail) {}
-
-  @override
-  void onAcceleratorKeyPressed(AcceleratorKeyPressedDetail detail) {}
 
   @override
   FutureOr<ShowFileChooserResponse?> onShowFileChooser(

@@ -13,9 +13,6 @@ part of 'in_app_webview_settings.dart';
 ///**Officially Supported Platforms/Implementations**:
 ///- Android WebView
 ///- iOS WKWebView
-///- macOS WKWebView
-///- Web \<iframe\>
-///- Windows WebView2
 class InAppWebViewSettings {
   ///A Boolean value indicating whether the WebView ignores an accessibility request to invert its colors.
   ///The default value is `false`.
@@ -79,28 +76,7 @@ class InAppWebViewSettings {
   ///**Officially Supported Platforms/Implementations**:
   ///- Android WebView ([Official API - WebSettings.setAllowFileAccessFromFileURLs](https://developer.android.com/reference/android/webkit/WebSettings?hl=en#setAllowFileAccessFromFileURLs(boolean)))
   ///- iOS WKWebView
-  ///- macOS WKWebView
-  ///- Linux WPE WebKit 2.10+ ([Official API - WebKitSettings.allow-file-access-from-file-urls](https://wpewebkit.org/reference/stable/wpe-webkit-2.0/property.Settings.allow-file-access-from-file-urls.html))
   bool? allowFileAccessFromFileURLs;
-
-  ///Sets whether modal dialogs are allowed.
-  ///When enabled, modal dialogs (such as `window.showModalDialog()`) are allowed.
-  ///
-  ///The default value is `false`.
-  ///
-  ///**Officially Supported Platforms/Implementations**:
-  ///- Linux WPE WebKit ([Official API - WebKitSettings.allow-modal-dialogs](https://wpewebkit.org/reference/stable/wpe-webkit-2.0/property.Settings.allow-modal-dialogs.html))
-  bool? allowModalDialogs;
-
-  ///Sets whether top-level navigation to data: URLs is allowed.
-  ///When disabled, navigating to data: URLs in the top frame is blocked.
-  ///
-  ///The default value is `false`.
-  ///
-  ///**Officially Supported Platforms/Implementations**:
-  ///- Linux WPE WebKit 2.28+ ([Official API - WebKitSettings.allow-top-navigation-to-data-urls](https://wpewebkit.org/reference/stable/wpe-webkit-2.0/property.Settings.allow-top-navigation-to-data-urls.html)):
-  ///    - Requires WPE WebKit 2.28 or later
-  bool? allowTopNavigationToDataUrls;
 
   ///Sets whether cross-origin requests in the context of a file scheme URL should be allowed to access content from any origin.
   ///This includes access to content from other file scheme URLs or web contexts.
@@ -115,8 +91,6 @@ class InAppWebViewSettings {
   ///**Officially Supported Platforms/Implementations**:
   ///- Android WebView ([Official API - WebSettings.setAllowUniversalAccessFromFileURLs](https://developer.android.com/reference/android/webkit/WebSettings?hl=en#setAllowUniversalAccessFromFileURLs(boolean)))
   ///- iOS WKWebView
-  ///- macOS WKWebView
-  ///- Linux WPE WebKit 2.14+ ([Official API - WebKitSettings.allow-universal-access-from-file-urls](https://wpewebkit.org/reference/stable/wpe-webkit-2.0/property.Settings.allow-universal-access-from-file-urls.html))
   bool? allowUniversalAccessFromFileURLs;
 
   ///Used in combination with [PlatformWebViewCreationParams.initialUrlRequest] or [PlatformWebViewCreationParams.initialData] (using the `file://` scheme), it represents the URL from which to read the web content.
@@ -127,14 +101,12 @@ class InAppWebViewSettings {
   ///
   ///**Officially Supported Platforms/Implementations**:
   ///- iOS WKWebView
-  ///- macOS WKWebView
   WebUri? allowingReadAccessTo;
 
   ///Set to `true` to allow AirPlay. The default value is `true`.
   ///
   ///**Officially Supported Platforms/Implementations**:
   ///- iOS WKWebView ([Official API - WKWebViewConfiguration.allowsAirPlayForMediaPlayback](https://developer.apple.com/documentation/webkit/wkwebviewconfiguration/1395673-allowsairplayformediaplayback))
-  ///- macOS WKWebView ([Official API - WKWebViewConfiguration.allowsAirPlayForMediaPlayback](https://developer.apple.com/documentation/webkit/wkwebviewconfiguration/1395673-allowsairplayformediaplayback))
   bool? allowsAirPlayForMediaPlayback;
 
   ///Set to `true` to allow the horizontal swipe gestures trigger back-forward list navigations.
@@ -152,8 +124,6 @@ class InAppWebViewSettings {
   ///
   ///**Officially Supported Platforms/Implementations**:
   ///- iOS WKWebView ([Official API - WKWebView.allowsBackForwardNavigationGestures](https://developer.apple.com/documentation/webkit/wkwebview/1414995-allowsbackforwardnavigationgestu))
-  ///- macOS WKWebView ([Official API - WKWebView.allowsBackForwardNavigationGestures](https://developer.apple.com/documentation/webkit/wkwebview/1414995-allowsbackforwardnavigationgestu))
-  ///- Windows WebView2 1.0.992.28+ ([Official API - ICoreWebView2Settings6.put_IsSwipeNavigationEnabled](https://learn.microsoft.com/en-us/microsoft-edge/webview2/reference/win32/icorewebview2settings6?view=webview2-1.0.2849.39#put_isswipenavigationenabled))
   bool? allowsBackForwardNavigationGestures;
 
   ///Set to `true` to allow HTML5 media playback to appear inline within the screen layout, using browser-supplied controls rather than native controls.
@@ -161,14 +131,12 @@ class InAppWebViewSettings {
   ///
   ///**Officially Supported Platforms/Implementations**:
   ///- iOS WKWebView ([Official API - WKWebViewConfiguration.allowsInlineMediaPlayback](https://developer.apple.com/documentation/webkit/wkwebviewconfiguration/1614793-allowsinlinemediaplayback))
-  ///- Linux WPE WebKit ([Official API - WebKitSettings.media-playback-allows-inline](https://wpewebkit.org/reference/stable/wpe-webkit-2.0/property.Settings.media-playback-allows-inline.html))
   bool? allowsInlineMediaPlayback;
 
   ///Set to `true` to allow that pressing on a link displays a preview of the destination for the link. The default value is `true`.
   ///
   ///**Officially Supported Platforms/Implementations**:
   ///- iOS WKWebView ([Official API - WKWebView.allowsLinkPreview](https://developer.apple.com/documentation/webkit/wkwebview/1415000-allowslinkpreview))
-  ///- macOS WKWebView ([Official API - WKWebView.allowsLinkPreview](https://developer.apple.com/documentation/webkit/wkwebview/1415000-allowslinkpreview))
   bool? allowsLinkPreview;
 
   ///Set to `true` to allow HTML5 videos play picture-in-picture. The default value is `true`.
@@ -183,7 +151,6 @@ class InAppWebViewSettings {
   ///**Officially Supported Platforms/Implementations**:
   ///- Android WebView ([Official API - View.setAlpha](https://developer.android.com/reference/android/view/View#setAlpha(float)))
   ///- iOS WKWebView ([Official API - UIView.alpha](https://developer.apple.com/documentation/uikit/uiview/1622417-alpha))
-  ///- macOS WKWebView ([Official API - NSView.alphaValue](https://developer.apple.com/documentation/appkit/nsview/1483560-alphavalue))
   double? alpha;
 
   ///A Boolean value that determines whether bouncing always occurs when horizontal scrolling reaches the end of the content view.
@@ -273,7 +240,6 @@ class InAppWebViewSettings {
   ///**Officially Supported Platforms/Implementations**:
   ///- Android WebView
   ///- iOS WKWebView ([Official API - WKWebViewConfiguration.applicationNameForUserAgent](https://developer.apple.com/documentation/webkit/wkwebviewconfiguration/1395665-applicationnameforuseragent))
-  ///- macOS WKWebView ([Official API - WKWebViewConfiguration.applicationNameForUserAgent](https://developer.apple.com/documentation/webkit/wkwebviewconfiguration/1395665-applicationnameforuseragent))
   String? applicationNameForUserAgent;
 
   ///Sets how this WebView registers sources and triggers for the
@@ -327,26 +293,6 @@ class InAppWebViewSettings {
   ///- Android WebView ([Official API - WebSettings.setBlockNetworkLoads](https://developer.android.com/reference/android/webkit/WebSettings#setBlockNetworkLoads(boolean)))
   bool? blockNetworkLoads;
 
-  ///When this setting is set to `false`, it disables all accelerator keys
-  ///that access features specific to a web browser, including but not limited to:
-  ///- Ctrl-F and F3 for Find on Page
-  ///- Ctrl-P for Print
-  ///- Ctrl-R and F5 for Reload
-  ///- Ctrl-Plus and Ctrl-Minus for zooming
-  ///- Ctrl-Shift-C and F12 for DevTools
-  ///Special keys for browser functions, such as Back, Forward, and Search
-  ///It does not disable accelerator keys related to movement and text editing, such as:
-  ///- Home, End, Page Up, and Page Down
-  ///- Ctrl-X, Ctrl-C, Ctrl-V
-  ///- Ctrl-A for Select All
-  ///- Ctrl-Z for Undo
-  ///
-  ///The default value is `true`.
-  ///
-  ///**Officially Supported Platforms/Implementations**:
-  ///- Windows WebView2 1.0.864.35+ ([Official API - ICoreWebView2Settings3.put_IsBuiltInErrorPageEnabled](https://learn.microsoft.com/en-us/microsoft-edge/webview2/reference/win32/icorewebview2settings3?view=webview2-1.0.2849.39#put_arebrowseracceleratorkeysenabled))
-  bool? browserAcceleratorKeysEnabled;
-
   ///Set to `true` if the WebView should use its built-in zoom mechanisms. The default value is `true`.
   ///
   ///**Officially Supported Platforms/Implementations**:
@@ -358,7 +304,6 @@ class InAppWebViewSettings {
   ///**Officially Supported Platforms/Implementations**:
   ///- Android WebView
   ///- iOS WKWebView
-  ///- macOS WKWebView
   bool? cacheEnabled;
 
   ///Overrides the way the cache is used. The way the cache is used is based on the navigation type. For a normal page load, the cache is checked and content is re-validated as needed.
@@ -373,8 +318,6 @@ class InAppWebViewSettings {
   ///**Officially Supported Platforms/Implementations**:
   ///- Android WebView
   ///- iOS WKWebView 11.0+
-  ///- macOS WKWebView 10.13+
-  ///- Linux WPE WebKit ([Official API - WebKitUserContentFilter](https://wpewebkit.org/reference/stable/wpe-webkit-2.0/class.UserContentFilter.html))
   List<ContentBlocker>? contentBlockers;
 
   ///Configures how safe area insets are added to the adjusted content inset.
@@ -384,59 +327,11 @@ class InAppWebViewSettings {
   ///- iOS WKWebView 11.0+ ([Official API - UIScrollView.contentInsetAdjustmentBehavior](https://developer.apple.com/documentation/uikit/uiscrollview/2902261-contentinsetadjustmentbehavior))
   ScrollViewContentInsetAdjustmentBehavior? contentInsetAdjustmentBehavior;
 
-  ///Sets the CORS allowlist for this WebView.
-  ///
-  ///URI patterns must be of the form `[protocol]://[host]:[port]`, where each
-  ///component may contain the wildcard character (`*`) to match zero or more
-  ///characters. All three components are required.
-  ///
-  ///Disabling CORS checks permits resources from other origins to load
-  ///allowlisted resources. It does NOT permit the allowlisted resources
-  ///to load resources from other origins.
-  ///
-  ///Setting to `null` or an empty list clears the allowlist.
-  ///
-  ///Example patterns:
-  ///- `https://example.com:*` - All ports on example.com over HTTPS
-  ///- `*://api.myservice.com:*` - Any protocol on api.myservice.com
-  ///- `https://*.example.com:443` - HTTPS port 443 on any subdomain
-  ///
-  ///**Officially Supported Platforms/Implementations**:
-  ///- Linux WPE WebKit 2.34+ ([Official API - webkit_web_view_set_cors_allowlist](https://wpewebkit.org/reference/stable/wpe-webkit-2.0/method.WebView.set_cors_allowlist.html)):
-  ///    - Pattern format: [protocol]://[host]:[port]. All three components are required.
-  List<String>? corsAllowlist;
-
   ///Sets the cursive font family name. The default value is `"cursive"`.
   ///
   ///**Officially Supported Platforms/Implementations**:
   ///- Android WebView ([Official API - WebSettings.setCursiveFontFamily](https://developer.android.com/reference/android/webkit/WebSettings#setCursiveFontFamily(java.lang.String)))
-  ///- Linux WPE WebKit ([Official API - WebKitSettings.cursive-font-family](https://wpewebkit.org/reference/stable/wpe-webkit-2.0/property.Settings.cursive-font-family.html))
   String? cursiveFontFamily;
-
-  ///Sets the cursor blink time in milliseconds.
-  ///This controls how frequently the text cursor blinks in input fields.
-  ///
-  ///This is a WPE Platform setting that affects the entire display.
-  ///
-  ///The default value is `null` (uses system default, typically 1200ms).
-  ///
-  ///**Officially Supported Platforms/Implementations**:
-  ///- Linux WPE WebKit ([Official API - WPESettings.cursor-blink-time](https://wpewebkit.org/reference/stable/wpe-platform-2.0/class.Settings.html)):
-  ///    - This is a WPE Platform display-level setting. Value is in milliseconds.
-  int? cursorBlinkTime;
-
-  ///Sets whether dark mode is enabled for web content.
-  ///When enabled, websites that support the `prefers-color-scheme: dark` CSS media query
-  ///will render in dark mode.
-  ///
-  ///This is a WPE Platform setting that affects the entire display.
-  ///
-  ///The default value is `null` (follows system default).
-  ///
-  ///**Officially Supported Platforms/Implementations**:
-  ///- Linux WPE WebKit ([Official API - WPESettings.dark-mode](https://wpewebkit.org/reference/stable/wpe-platform-2.0/class.Settings.html)):
-  ///    - This is a WPE Platform display-level setting that affects all WebViews.
-  bool? darkMode;
 
   ///Specifying a dataDetectoryTypes value adds interactivity to web content that matches the value.
   ///For example, Safari adds a link to “apple.com” in the text “Visit apple.com” if the dataDetectorTypes property is set to [DataDetectorTypes.LINK].
@@ -450,7 +345,6 @@ class InAppWebViewSettings {
   ///
   ///**Officially Supported Platforms/Implementations**:
   ///- Android WebView ([Official API - WebSettings.setDatabaseEnabled](https://developer.android.com/reference/android/webkit/WebSettings?hl=en#setDatabaseEnabled(boolean)))
-  ///- Linux WPE WebKit ([Official API - WebKitSettings.enable-html5-database](https://wpewebkit.org/reference/stable/wpe-webkit-2.0/property.Settings.enable-html5-database.html))
   bool? databaseEnabled;
 
   ///A [ScrollViewDecelerationRate] value that determines the rate of deceleration after the user lifts their finger.
@@ -464,21 +358,18 @@ class InAppWebViewSettings {
   ///
   ///**Officially Supported Platforms/Implementations**:
   ///- Android WebView ([Official API - WebSettings.setDefaultFixedFontSize](https://developer.android.com/reference/android/webkit/WebSettings#setDefaultFixedFontSize(int)))
-  ///- Linux WPE WebKit ([Official API - WebKitSettings.default-monospace-font-size](https://wpewebkit.org/reference/stable/wpe-webkit-2.0/property.Settings.default-monospace-font-size.html))
   int? defaultFixedFontSize;
 
   ///Sets the default font size. The default value is `16`.
   ///
   ///**Officially Supported Platforms/Implementations**:
   ///- Android WebView ([Official API - WebSettings.setDefaultFontSize](https://developer.android.com/reference/android/webkit/WebSettings#setDefaultFontSize(int)))
-  ///- Linux WPE WebKit ([Official API - WebKitSettings.default-font-size](https://wpewebkit.org/reference/stable/wpe-webkit-2.0/property.Settings.default-font-size.html))
   int? defaultFontSize;
 
   ///Sets the default text encoding name to use when decoding html pages. The default value is `"UTF-8"`.
   ///
   ///**Officially Supported Platforms/Implementations**:
   ///- Android WebView ([Official API - WebSettings.setDefaultTextEncodingName](https://developer.android.com/reference/android/webkit/WebSettings#setDefaultTextEncodingName(java.lang.String)))
-  ///- Linux WPE WebKit ([Official API - WebKitSettings.default-charset](https://wpewebkit.org/reference/stable/wpe-webkit-2.0/property.Settings.default-charset.html))
   String? defaultTextEncodingName;
 
   ///When not playing, video elements are represented by a 'poster' image.
@@ -490,26 +381,11 @@ class InAppWebViewSettings {
   ///- Android WebView
   Uint8List? defaultVideoPoster;
 
-  ///Sets whether animations are disabled for accessibility.
-  ///When enabled, CSS animations and transitions may be reduced or disabled
-  ///for users with motion sensitivity.
-  ///
-  ///This is a WPE Platform setting that affects the entire display.
-  ///
-  ///The default value is `null` (follows system default).
-  ///
-  ///**Officially Supported Platforms/Implementations**:
-  ///- Linux WPE WebKit ([Official API - WPESettings.disable-animations](https://wpewebkit.org/reference/stable/wpe-platform-2.0/class.Settings.html)):
-  ///    - This is a WPE Platform display-level setting for accessibility.
-  bool? disableAnimations;
-
   ///Set to `true` to disable context menu. The default value is `false`.
   ///
   ///**Officially Supported Platforms/Implementations**:
   ///- Android WebView
   ///- iOS WKWebView
-  ///- Web \<iframe\> but requires same origin
-  ///- Windows WebView2 ([Official API - ICoreWebView2Settings.put_AreDefaultContextMenusEnabled](https://learn.microsoft.com/en-us/microsoft-edge/webview2/reference/win32/icorewebview2settings?view=webview2-1.0.2210.55#put_aredefaultcontextmenusenabled))
   bool? disableContextMenu;
 
   ///Sets whether the default Android WebView’s internal error page should be suppressed or displayed for bad navigations.
@@ -517,7 +393,6 @@ class InAppWebViewSettings {
   ///
   ///**Officially Supported Platforms/Implementations**:
   ///- Android WebView
-  ///- Windows WebView2 ([Official API - ICoreWebView2Settings.put_IsBuiltInErrorPageEnabled](https://learn.microsoft.com/en-us/microsoft-edge/webview2/reference/win32/icorewebview2settings?view=webview2-1.0.2849.39#put_isbuiltinerrorpageenabled))
   bool? disableDefaultErrorPage;
 
   ///Set to `true` to disable horizontal scroll. The default value is `false`.
@@ -525,7 +400,6 @@ class InAppWebViewSettings {
   ///**Officially Supported Platforms/Implementations**:
   ///- Android WebView
   ///- iOS WKWebView
-  ///- Web \<iframe\> but requires same origin
   bool? disableHorizontalScroll;
 
   ///Set to `true` to disable the [inputAccessoryView](https://developer.apple.com/documentation/uikit/uiresponder/1621119-inputaccessoryview) above system keyboard.
@@ -548,19 +422,7 @@ class InAppWebViewSettings {
   ///**Officially Supported Platforms/Implementations**:
   ///- Android WebView
   ///- iOS WKWebView
-  ///- Web \<iframe\> but requires same origin
   bool? disableVerticalScroll;
-
-  ///Disables web security. When disabled, same-origin policy is not enforced.
-  ///
-  ///**NOTE**: Setting this to `true` is extremely dangerous and should only be used for testing.
-  ///
-  ///The default value is `false`.
-  ///
-  ///**Officially Supported Platforms/Implementations**:
-  ///- Linux WPE WebKit 2.40+ ([Official API - WebKitSettings.disable-web-security](https://wpewebkit.org/reference/stable/wpe-webkit-2.0/property.Settings.disable-web-security.html)):
-  ///    - Requires WPE WebKit 2.40 or later
-  bool? disableWebSecurity;
 
   ///Disables the action mode menu items according to menuItems flag.
   ///
@@ -584,32 +446,7 @@ class InAppWebViewSettings {
   ///
   ///**Officially Supported Platforms/Implementations**:
   ///- Android WebView ([Official API - WebSettings.setDomStorageEnabled](https://developer.android.com/reference/android/webkit/WebSettings?hl=en#setDomStorageEnabled(boolean)))
-  ///- Linux WPE WebKit ([Official API - WebKitSettings.enable-html5-local-storage](https://wpewebkit.org/reference/stable/wpe-webkit-2.0/property.Settings.enable-html5-local-storage.html))
   bool? domStorageEnabled;
-
-  ///Sets the double-click distance threshold in pixels.
-  ///Two clicks within this distance are considered a double-click.
-  ///
-  ///This is a WPE Platform setting that affects the entire display.
-  ///
-  ///The default value is `null` (uses system default, typically 5 pixels).
-  ///
-  ///**Officially Supported Platforms/Implementations**:
-  ///- Linux WPE WebKit ([Official API - WPESettings.double-click-distance](https://wpewebkit.org/reference/stable/wpe-platform-2.0/class.Settings.html)):
-  ///    - This is a WPE Platform display-level setting. Value is in pixels.
-  int? doubleClickDistance;
-
-  ///Sets the double-click time threshold in milliseconds.
-  ///Two clicks within this time are considered a double-click.
-  ///
-  ///This is a WPE Platform setting that affects the entire display.
-  ///
-  ///The default value is `null` (uses system default, typically 400ms).
-  ///
-  ///**Officially Supported Platforms/Implementations**:
-  ///- Linux WPE WebKit ([Official API - WPESettings.double-click-time](https://wpewebkit.org/reference/stable/wpe-platform-2.0/class.Settings.html)):
-  ///    - This is a WPE Platform display-level setting. Value is in milliseconds.
-  int? doubleClickTime;
 
   ///Sets whether this WebView downloads the favicons declared by the pages it loads.
   ///
@@ -626,170 +463,11 @@ class InAppWebViewSettings {
   ///    - available on Android only if [WebViewFeature.DOWNLOAD_FAVICONS_ENABLED] feature is supported.
   bool? downloadFaviconsEnabled;
 
-  ///Sets the drag threshold in pixels.
-  ///The pointer must move at least this many pixels to start a drag operation.
-  ///
-  ///This is a WPE Platform setting that affects the entire display.
-  ///
-  ///The default value is `null` (uses system default, typically 8 pixels).
-  ///
-  ///**Officially Supported Platforms/Implementations**:
-  ///- Linux WPE WebKit ([Official API - WPESettings.drag-threshold](https://wpewebkit.org/reference/stable/wpe-platform-2.0/class.Settings.html)):
-  ///    - This is a WPE Platform display-level setting. Value is in pixels.
-  int? dragThreshold;
-
-  ///Sets whether compositing indicators are drawn.
-  ///When enabled, visual indicators are shown for compositing layers.
-  ///This is primarily useful for debugging rendering performance.
-  ///
-  ///The default value is `false`.
-  ///
-  ///**Officially Supported Platforms/Implementations**:
-  ///- Linux WPE WebKit ([Official API - WebKitSettings.draw-compositing-indicators](https://wpewebkit.org/reference/stable/wpe-webkit-2.0/property.Settings.draw-compositing-indicators.html))
-  bool? drawCompositingIndicators;
-
-  ///Sets whether 2D canvas hardware acceleration is enabled.
-  ///When enabled, 2D canvas operations are accelerated using the GPU.
-  ///
-  ///The default value is `false`.
-  ///
-  ///**Officially Supported Platforms/Implementations**:
-  ///- Linux WPE WebKit 2.46+ ([Official API - WebKitSettings.enable-2d-canvas-acceleration](https://wpewebkit.org/reference/stable/wpe-webkit-2.0/property.Settings.enable-2d-canvas-acceleration.html)):
-  ///    - Requires WPE WebKit 2.46 or later
-  bool? enable2DCanvasAcceleration;
-
-  ///Sets whether caret browsing mode is enabled.
-  ///Caret browsing mode allows users to navigate through web pages using the keyboard,
-  ///with a visible caret (text cursor) that can be moved through the content.
-  ///
-  ///The default value is `false`.
-  ///
-  ///**Officially Supported Platforms/Implementations**:
-  ///- Linux WPE WebKit ([Official API - WebKitSettings.enable-caret-browsing](https://wpewebkit.org/reference/stable/wpe-webkit-2.0/property.Settings.enable-caret-browsing.html))
-  bool? enableCaretBrowsing;
-
-  ///Sets whether Encrypted Media Extensions (EME) are enabled.
-  ///EME provides APIs for playing protected (DRM) content.
-  ///
-  ///The default value is `true` (since WPE WebKit 2.38).
-  ///
-  ///**Officially Supported Platforms/Implementations**:
-  ///- Linux WPE WebKit 2.20+ ([Official API - WebKitSettings.enable-encrypted-media](https://wpewebkit.org/reference/stable/wpe-webkit-2.0/property.Settings.enable-encrypted-media.html)):
-  ///    - Requires WPE WebKit 2.20 or later
-  bool? enableEncryptedMedia;
-
-  ///Sets whether JavaScript markup (<script> tags) is enabled.
-  ///When disabled, scripts embedded in HTML will not be executed.
-  ///
-  ///The default value is `true`.
-  ///
-  ///**Officially Supported Platforms/Implementations**:
-  ///- Linux WPE WebKit 2.24+ ([Official API - WebKitSettings.enable-javascript-markup](https://wpewebkit.org/reference/stable/wpe-webkit-2.0/property.Settings.enable-javascript-markup.html)):
-  ///    - Requires WPE WebKit 2.24 or later
-  bool? enableJavaScriptMarkup;
-
-  ///Sets whether media (audio/video) is enabled.
-  ///When disabled, media elements will not be able to play.
-  ///
-  ///The default value is `true`.
-  ///
-  ///**Officially Supported Platforms/Implementations**:
-  ///- Linux WPE WebKit 2.26+ ([Official API - WebKitSettings.enable-media](https://wpewebkit.org/reference/stable/wpe-webkit-2.0/property.Settings.enable-media.html)):
-  ///    - Requires WPE WebKit 2.26 or later
-  bool? enableMedia;
-
-  ///Sets whether the Media Capabilities API is enabled.
-  ///The Media Capabilities API provides information about the decoding abilities of the device.
-  ///
-  ///The default value is `true`.
-  ///
-  ///**Officially Supported Platforms/Implementations**:
-  ///- Linux WPE WebKit 2.22+ ([Official API - WebKitSettings.enable-media-capabilities](https://wpewebkit.org/reference/stable/wpe-webkit-2.0/property.Settings.enable-media-capabilities.html)):
-  ///    - Requires WPE WebKit 2.22 or later
-  bool? enableMediaCapabilities;
-
-  ///Sets whether mock capture devices are enabled.
-  ///When enabled, the browser will use mock devices for getUserMedia() instead of real hardware.
-  ///This is useful for testing.
-  ///
-  ///The default value is `false`.
-  ///
-  ///**Officially Supported Platforms/Implementations**:
-  ///- Linux WPE WebKit 2.24+ ([Official API - WebKitSettings.enable-mock-capture-devices](https://wpewebkit.org/reference/stable/wpe-webkit-2.0/property.Settings.enable-mock-capture-devices.html)):
-  ///    - Requires WPE WebKit 2.24 or later
-  bool? enableMockCaptureDevices;
-
-  ///Sets whether the page cache is enabled.
-  ///The page cache allows for faster back/forward navigation by keeping pages in memory.
-  ///
-  ///The default value is `true`.
-  ///
-  ///**Officially Supported Platforms/Implementations**:
-  ///- Linux WPE WebKit ([Official API - WebKitSettings.enable-page-cache](https://wpewebkit.org/reference/stable/wpe-webkit-2.0/property.Settings.enable-page-cache.html))
-  bool? enablePageCache;
-
-  ///Sets whether text areas are resizable.
-  ///When enabled, text areas can be resized by the user.
-  ///
-  ///The default value is `true`.
-  ///
-  ///**Officially Supported Platforms/Implementations**:
-  ///- Linux WPE WebKit ([Official API - WebKitSettings.enable-resizable-text-areas](https://wpewebkit.org/reference/stable/wpe-webkit-2.0/property.Settings.enable-resizable-text-areas.html))
-  bool? enableResizableTextAreas;
-
-  ///Sets whether smooth scrolling is enabled.
-  ///When enabled, scrolling animations are smooth instead of jumping instantly.
-  ///
-  ///The default value is `true`.
-  ///
-  ///**Officially Supported Platforms/Implementations**:
-  ///- Linux WPE WebKit ([Official API - WebKitSettings.enable-smooth-scrolling](https://wpewebkit.org/reference/stable/wpe-webkit-2.0/property.Settings.enable-smooth-scrolling.html))
-  bool? enableSmoothScrolling;
-
-  ///Sets whether spatial navigation is enabled.
-  ///Spatial navigation allows users to navigate between focusable elements
-  ///using arrow keys instead of Tab.
-  ///
-  ///The default value is `false`.
-  ///
-  ///**Officially Supported Platforms/Implementations**:
-  ///- Linux WPE WebKit ([Official API - WebKitSettings.enable-spatial-navigation](https://wpewebkit.org/reference/stable/wpe-webkit-2.0/property.Settings.enable-spatial-navigation.html))
-  bool? enableSpatialNavigation;
-
-  ///Sets whether tab key can be used to navigate to links.
-  ///When enabled, pressing Tab will focus on links in the page.
-  ///
-  ///The default value is `true`.
-  ///
-  ///**Officially Supported Platforms/Implementations**:
-  ///- Linux WPE WebKit ([Official API - WebKitSettings.enable-tabs-to-links](https://wpewebkit.org/reference/stable/wpe-webkit-2.0/property.Settings.enable-tabs-to-links.html))
-  bool? enableTabsToLinks;
-
   ///Set to `true` to allow a viewport meta tag to either disable or restrict the range of user scaling. The default value is `false`.
   ///
   ///**Officially Supported Platforms/Implementations**:
   ///- iOS WKWebView
-  ///- macOS WKWebView
   bool? enableViewportScale;
-
-  ///Enables WebRTC support for real-time communication features.
-  ///
-  ///The default value is `true`.
-  ///
-  ///**Officially Supported Platforms/Implementations**:
-  ///- Linux WPE WebKit 2.38+ ([Official API - WebKitSettings.enable-webrtc](https://wpewebkit.org/reference/stable/wpe-webkit-2.0/property.Settings.enable-webrtc.html)):
-  ///    - Requires WPE WebKit 2.38 or later
-  bool? enableWebRTC;
-
-  ///Sets whether console messages are written to stdout.
-  ///When enabled, console messages from the web page will be written to the standard output.
-  ///This is useful for debugging purposes.
-  ///
-  ///The default value is `false`.
-  ///
-  ///**Officially Supported Platforms/Implementations**:
-  ///- Linux WPE WebKit ([Official API - WebKitSettings.enable-write-console-messages-to-stdout](https://wpewebkit.org/reference/stable/wpe-webkit-2.0/property.Settings.enable-write-console-messages-to-stdout.html))
-  bool? enableWriteConsoleMessagesToStdout;
 
   ///Sets whether EnterpriseAuthenticationAppLinkPolicy if set by admin is allowed to have any
   ///effect on WebView.
@@ -809,78 +487,13 @@ class InAppWebViewSettings {
   ///
   ///**Officially Supported Platforms/Implementations**:
   ///- Android WebView ([Official API - WebSettings.setFantasyFontFamily](https://developer.android.com/reference/android/webkit/WebSettings#setFantasyFontFamily(java.lang.String)))
-  ///- Linux WPE WebKit ([Official API - WebKitSettings.fantasy-font-family](https://wpewebkit.org/reference/stable/wpe-webkit-2.0/property.Settings.fantasy-font-family.html))
   String? fantasyFontFamily;
 
   ///Sets the fixed font family name. The default value is `"monospace"`.
   ///
   ///**Officially Supported Platforms/Implementations**:
   ///- Android WebView ([Official API - WebSettings.setFixedFontFamily](https://developer.android.com/reference/android/webkit/WebSettings#setFixedFontFamily(java.lang.String)))
-  ///- Linux WPE WebKit ([Official API - WebKitSettings.monospace-font-family](https://wpewebkit.org/reference/stable/wpe-webkit-2.0/property.Settings.monospace-font-family.html))
   String? fixedFontFamily;
-
-  ///Sets whether font antialiasing is enabled.
-  ///When enabled, fonts are rendered with antialiasing for smoother edges.
-  ///
-  ///This is a WPE Platform setting that affects the entire display.
-  ///
-  ///The default value is `null` (follows system default).
-  ///
-  ///**Officially Supported Platforms/Implementations**:
-  ///- Linux WPE WebKit ([Official API - WPESettings.font-antialias](https://wpewebkit.org/reference/stable/wpe-platform-2.0/class.Settings.html)):
-  ///    - This is a WPE Platform display-level setting for font rendering.
-  bool? fontAntialias;
-
-  ///Sets the font DPI (dots per inch) for text rendering.
-  ///This affects the size at which fonts are rendered.
-  ///
-  ///This is a WPE Platform setting that affects the entire display.
-  ///
-  ///The default value is `null` (uses system default, typically 96.0).
-  ///
-  ///**Officially Supported Platforms/Implementations**:
-  ///- Linux WPE WebKit ([Official API - WPESettings.font-dpi](https://wpewebkit.org/reference/stable/wpe-platform-2.0/class.Settings.html)):
-  ///    - This is a WPE Platform display-level setting. Default is typically 96.0 DPI.
-  double? fontDPI;
-
-  ///Sets the font hinting style.
-  ///Hinting adjusts font outlines to improve rendering at small sizes.
-  ///
-  ///This is a WPE Platform setting that affects the entire display.
-  ///
-  ///The default value is `null` (follows system default).
-  ///
-  ///**Officially Supported Platforms/Implementations**:
-  ///- Linux WPE WebKit ([Official API - WPESettings.font-hinting-style](https://wpewebkit.org/reference/stable/wpe-platform-2.0/class.Settings.html)):
-  ///    - This is a WPE Platform display-level setting for font rendering.
-  FontHintingStyle? fontHintingStyle;
-
-  ///Sets the font subpixel layout for LCD rendering.
-  ///This determines how subpixel rendering is performed based on the
-  ///physical arrangement of the display's RGB subpixels.
-  ///
-  ///This is a WPE Platform setting that affects the entire display.
-  ///
-  ///The default value is `null` (follows system default).
-  ///
-  ///**Officially Supported Platforms/Implementations**:
-  ///- Linux WPE WebKit ([Official API - WPESettings.font-subpixel-layout](https://wpewebkit.org/reference/stable/wpe-platform-2.0/class.Settings.html)):
-  ///    - This is a WPE Platform display-level setting for font rendering.
-  FontSubpixelLayout? fontSubpixelLayout;
-
-  ///Specifies whether autofill for information like names, street and email addresses, phone numbers, and arbitrary input is enabled.
-  ///
-  ///This excludes password and credit card information.
-  ///When [generalAutofillEnabled] is `false`, no suggestions appear, and no new information is saved.
-  ///When [generalAutofillEnabled] is `true`, information is saved, suggestions appear
-  ///and clicking on one will populate the form fields.
-  ///It will take effect immediately after setting.
-  ///
-  ///The default value is `true`.
-  ///
-  ///**Officially Supported Platforms/Implementations**:
-  ///- Windows WebView2 1.0.902.49+ ([Official API - ICoreWebView2Settings4.put_IsGeneralAutofillEnabled](https://learn.microsoft.com/en-us/microsoft-edge/webview2/reference/win32/icorewebview2settings4?view=webview2-1.0.2849.39#put_isgeneralautofillenabled))
-  bool? generalAutofillEnabled;
 
   ///Sets whether Geolocation is enabled. The default is `true`.
   ///
@@ -889,15 +502,6 @@ class InAppWebViewSettings {
   ///    - Please note that in order for the Geolocation API to be usable by a page in the WebView, the following requirements must be met: - an application must have permission to access the device location, see [Manifest.permission.ACCESS_COARSE_LOCATION](https://developer.android.com/reference/android/Manifest.permission#ACCESS_COARSE_LOCATION), [Manifest.permission.ACCESS_FINE_LOCATION](https://developer.android.com/reference/android/Manifest.permission#ACCESS_FINE_LOCATION); - an application must provide an implementation of the [PlatformWebViewCreationParams.onGeolocationPermissionsShowPrompt] callback to receive notifications that a page is requesting access to location via the JavaScript Geolocation API.
   bool? geolocationEnabled;
 
-  ///A Boolean value that determines whether to listen and handle the
-  ///[PlatformWebViewCreationParams.onAcceleratorKeyPressed] event.
-  ///
-  ///The default value is `false`.
-  ///
-  ///**Officially Supported Platforms/Implementations**:
-  ///- Windows WebView2
-  bool? handleAcceleratorKeyPressed;
-
   ///Boolean value to enable Hardware Acceleration in the WebView.
   ///The default value is `true`.
   ///
@@ -905,23 +509,11 @@ class InAppWebViewSettings {
   ///- Android WebView ([Official API - WebView.setLayerType](https://developer.android.com/reference/android/webkit/WebView#setLayerType(int,%20android.graphics.Paint)))
   bool? hardwareAcceleration;
 
-  ///This property is used to customize the PDF toolbar items.
-  ///
-  ///By default, it is [PdfToolbarItems.NONE] and so it displays all of the items.
-  ///Changes to this property apply to all CoreWebView2s in the same environment and using the same profile.
-  ///Changes to this setting apply only after the next navigation.
-  ///
-  ///**Officially Supported Platforms/Implementations**:
-  ///- Windows WebView2 1.0.1185.39+ ([Official API - ICoreWebView2Settings7.put_HiddenPdfToolbarItems](https://learn.microsoft.com/en-us/microsoft-edge/webview2/reference/win32/icorewebview2settings7?view=webview2-1.0.2849.39#put_hiddenpdftoolbaritems))
-  PdfToolbarItems? hiddenPdfToolbarItems;
-
   ///Define whether the horizontal scrollbar should be drawn or not. The default value is `true`.
   ///
   ///**Officially Supported Platforms/Implementations**:
   ///- Android WebView ([Official API - View.setHorizontalScrollBarEnabled](https://developer.android.com/reference/android/view/View#setHorizontalScrollBarEnabled(boolean)))
   ///- iOS WKWebView ([Official API - UIScrollView.showsHorizontalScrollIndicator](https://developer.apple.com/documentation/uikit/uiscrollview/1619380-showshorizontalscrollindicator))
-  ///- Web \<iframe\> but requires same origin:
-  ///    - It must have the same value of [verticalScrollBarEnabled] to take effect.
   bool? horizontalScrollBarEnabled;
 
   ///Sets the horizontal scrollbar thumb color.
@@ -936,56 +528,6 @@ class InAppWebViewSettings {
   ///- Android WebView 29+ ([Official API - View.setHorizontalScrollbarTrackDrawable](https://developer.android.com/reference/android/view/View#setHorizontalScrollbarTrackDrawable(android.graphics.drawable.Drawable)))
   Color? horizontalScrollbarTrackColor;
 
-  ///Specifies a feature policy for the `<iframe>`.
-  ///The policy defines what features are available to the `<iframe>` based on the origin of the request
-  ///(e.g. access to the microphone, camera, battery, web-share API, etc.).
-  ///
-  ///**Officially Supported Platforms/Implementations**:
-  ///- Web \<iframe\> ([Official API - iframe.allow](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/iframe#attr-allow))
-  String? iframeAllow;
-
-  ///Set to true if the `<iframe>` can activate fullscreen mode by calling the `requestFullscreen()` method.
-  ///
-  ///**Officially Supported Platforms/Implementations**:
-  ///- Web \<iframe\> ([Official API - iframe.allowfullscreen](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/iframe#attr-allowfullscreen))
-  bool? iframeAllowFullscreen;
-
-  ///A string that reflects the `aria-hidden` HTML attribute, indicating whether the element is exposed to an accessibility API.
-  ///
-  ///**Officially Supported Platforms/Implementations**:
-  ///- Web \<iframe\> ([Official API - iframe.ariaHidden](https://developer.mozilla.org/en-US/docs/Web/Accessibility/ARIA/Attributes/aria-hidden))
-  String? iframeAriaHidden;
-
-  ///A Content Security Policy enforced for the embedded resource.
-  ///
-  ///**Officially Supported Platforms/Implementations**:
-  ///- Web \<iframe\> ([Official API - iframe.csp](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/iframe#attr-csp))
-  String? iframeCsp;
-
-  ///A string that reflects the `name` HTML attribute, containing a name by which to refer to the frame.
-  ///
-  ///**Officially Supported Platforms/Implementations**:
-  ///- Web \<iframe\> ([Official API - iframe.name](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/iframe#attr-name))
-  String? iframeName;
-
-  ///A string that reflects the `referrerpolicy` HTML attribute indicating which referrer to use when fetching the linked resource.
-  ///
-  ///**Officially Supported Platforms/Implementations**:
-  ///- Web \<iframe\> ([Official API - iframe.referrerpolicy](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/iframe#attr-referrerpolicy))
-  ReferrerPolicy? iframeReferrerPolicy;
-
-  ///A string that reflects the `role` HTML attribute, containing a WAI-ARIA role for the element.
-  ///
-  ///**Officially Supported Platforms/Implementations**:
-  ///- Web \<iframe\> ([Official API - iframe.role](https://developer.mozilla.org/en-US/docs/Web/Accessibility/ARIA/Roles))
-  String? iframeRole;
-
-  ///Applies extra restrictions to the content in the frame.
-  ///
-  ///**Officially Supported Platforms/Implementations**:
-  ///- Web \<iframe\> ([Official API - iframe.sandbox](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/iframe#attr-sandbox))
-  Set<Sandbox>? iframeSandbox;
-
   ///Set to `true` if you want that the WebView should always allow scaling of the webpage, regardless of the author's intent.
   ///The ignoresViewportScaleLimits property overrides the `user-scalable` HTML property in a webpage. The default value is `false`.
   ///
@@ -999,9 +541,6 @@ class InAppWebViewSettings {
   ///- Android WebView:
   ///    - setting this to `true`, it will clear all the cookies of all WebView instances, because there isn't any way to make the website data store non-persistent for the specific WebView instance such as on iOS.
   ///- iOS WKWebView
-  ///- macOS WKWebView
-  ///- Windows WebView2 ([Official API - ICoreWebView2ControllerOptions.put_IsInPrivateModeEnabled](https://learn.microsoft.com/en-us/microsoft-edge/webview2/reference/win32/icorewebview2controlleroptions?view=webview2-1.0.2792.45#put_isinprivatemodeenabled))
-  ///- Linux WPE WebKit ([Official API - webkit_network_session_new_ephemeral](https://wpewebkit.org/reference/stable/wpe-webkit-2.0/ctor.NetworkSession.new_ephemeral.html))
   bool? incognito;
 
   ///Sets the initial scale for this WebView. 0 means default. The behavior for the default scale depends on the state of [useWideViewPort] and [loadWithOverviewMode].
@@ -1025,7 +564,6 @@ class InAppWebViewSettings {
   ///**Officially Supported Platforms/Implementations**:
   ///- Android WebView
   ///- iOS WKWebView
-  ///- macOS WKWebView
   bool? interceptOnlyAsyncAjaxRequests;
 
   ///A Boolean value that determines whether scrolling is disabled in a particular direction.
@@ -1045,8 +583,6 @@ class InAppWebViewSettings {
   ///
   ///**Officially Supported Platforms/Implementations**:
   ///- iOS WKWebView 15.4+ ([Official API - WKPreferences.isElementFullscreenEnabled](https://developer.apple.com/documentation/webkit/wkpreferences/3917769-iselementfullscreenenabled))
-  ///- macOS WKWebView 12.3+ ([Official API - WKPreferences.isElementFullscreenEnabled](https://developer.apple.com/documentation/webkit/wkpreferences/3917769-iselementfullscreenenabled))
-  ///- Linux WPE WebKit ([Official API - WebKitSettings.enable-fullscreen](https://wpewebkit.org/reference/stable/wpe-webkit-2.0/property.Settings.enable-fullscreen.html))
   bool? isElementFullscreenEnabled;
 
   ///Sets whether the web view's built-in find interaction native UI is enabled or not.
@@ -1063,7 +599,6 @@ class InAppWebViewSettings {
   ///
   ///**Officially Supported Platforms/Implementations**:
   ///- iOS WKWebView 13.0+ ([Official API - WKPreferences.isFraudulentWebsiteWarningEnabled](https://developer.apple.com/documentation/webkit/wkpreferences/3335219-isfraudulentwebsitewarningenable))
-  ///- macOS WKWebView 10.15+ ([Official API - WKPreferences.isFraudulentWebsiteWarningEnabled](https://developer.apple.com/documentation/webkit/wkpreferences/3335219-isfraudulentwebsitewarningenable))
   bool? isFraudulentWebsiteWarningEnabled;
 
   ///Controls whether this WebView is inspectable in Web Inspector.
@@ -1072,8 +607,6 @@ class InAppWebViewSettings {
   ///
   ///**Officially Supported Platforms/Implementations**:
   ///- iOS WKWebView 16.4+ ([Official API - WKWebView.isInspectable](https://developer.apple.com/documentation/webkit/wkwebview/4111163-isinspectable))
-  ///- macOS WKWebView 13.3+ ([Official API - WKWebView.isInspectable](https://developer.apple.com/documentation/webkit/wkwebview/4111163-isinspectable))
-  ///- Windows WebView2 ([Official API - ICoreWebView2Settings.put_AreDevToolsEnabled](https://learn.microsoft.com/en-us/microsoft-edge/webview2/reference/win32/icorewebview2settings?view=webview2-1.0.2210.55#put_aredevtoolsenabled))
   bool? isInspectable;
 
   ///A Boolean value that determines whether paging is enabled for the scroll view.
@@ -1090,7 +623,6 @@ class InAppWebViewSettings {
   ///
   ///**Officially Supported Platforms/Implementations**:
   ///- iOS WKWebView 15.4+ ([Official API - WKPreferences.isSiteSpecificQuirksModeEnabled](https://developer.apple.com/documentation/webkit/wkpreferences/3916069-issitespecificquirksmodeenabled))
-  ///- macOS WKWebView 12.3+ ([Official API - WKPreferences.isSiteSpecificQuirksModeEnabled](https://developer.apple.com/documentation/webkit/wkpreferences/3916069-issitespecificquirksmodeenabled))
   bool? isSiteSpecificQuirksModeEnabled;
 
   ///A Boolean value indicating whether text interaction is enabled or not.
@@ -1098,7 +630,6 @@ class InAppWebViewSettings {
   ///
   ///**Officially Supported Platforms/Implementations**:
   ///- iOS WKWebView 15.0+ ([Official API - WKPreferences.isTextInteractionEnabled](https://developer.apple.com/documentation/webkit/wkpreferences/3727362-istextinteractionenabled))
-  ///- macOS WKWebView 11.3+ ([Official API - WKPreferences.isTextInteractionEnabled](https://developer.apple.com/documentation/webkit/wkpreferences/3727362-istextinteractionenabled))
   bool? isTextInteractionEnabled;
 
   ///A Boolean value that determines whether user events are ignored and removed from the event queue.
@@ -1109,25 +640,6 @@ class InAppWebViewSettings {
   ///- Android WebView
   ///- iOS WKWebView ([Official API - UIView.isUserInteractionEnabled](https://developer.apple.com/documentation/uikit/uiview/1622577-isuserinteractionenabled))
   bool? isUserInteractionEnabled;
-
-  ///Sets whether Intelligent Tracking Prevention (ITP) is enabled.
-  ///
-  ///When ITP is enabled, resource load statistics are collected and used to decide
-  ///whether to allow or block third-party cookies and prevent user tracking.
-  ///This is similar to Safari's tracking prevention feature.
-  ///
-  ///**IMPORTANT NOTE**: When ITP is enabled, the cookie accept policy
-  ///`WEBKIT_COOKIE_POLICY_ACCEPT_NO_THIRD_PARTY` is ignored and
-  ///`WEBKIT_COOKIE_POLICY_ACCEPT_ALWAYS` is used instead.
-  ///
-  ///This is a session-level setting that should be set during WebView initialization.
-  ///
-  ///The default value is `false`.
-  ///
-  ///**Officially Supported Platforms/Implementations**:
-  ///- Linux WPE WebKit 2.40+ ([Official API - webkit_network_session_set_itp_enabled](https://wpewebkit.org/reference/stable/wpe-webkit-2.0/method.NetworkSession.set_itp_enabled.html)):
-  ///    - This is a session-level setting. When enabled, ACCEPT_NO_THIRD_PARTY cookie policy is overridden to ACCEPT_ALWAYS.
-  bool? itpEnabled;
 
   ///Set to `false` to disable the JavaScript Bridge completely.
   ///This will affect also all the internal plugin [UserScript]s
@@ -1141,9 +653,6 @@ class InAppWebViewSettings {
   ///**Officially Supported Platforms/Implementations**:
   ///- Android WebView
   ///- iOS WKWebView
-  ///- macOS WKWebView
-  ///- Windows WebView2
-  ///- Web \<iframe\> but requires same origin
   bool? javaScriptBridgeEnabled;
 
   ///Set to `true` to allow the JavaScript Bridge only on the main frame.
@@ -1158,8 +667,6 @@ class InAppWebViewSettings {
   ///**Officially Supported Platforms/Implementations**:
   ///- Android WebView
   ///- iOS WKWebView
-  ///- macOS WKWebView
-  ///- Windows WebView2
   bool? javaScriptBridgeForMainFrameOnly;
 
   ///A [Set] of patterns that will be used to match the allowed origins where
@@ -1184,27 +691,13 @@ class InAppWebViewSettings {
   ///**Officially Supported Platforms/Implementations**:
   ///- Android WebView
   ///- iOS WKWebView
-  ///- macOS WKWebView
-  ///- Windows WebView2
-  ///- Web \<iframe\> but requires same origin
   Set<String>? javaScriptBridgeOriginAllowList;
-
-  ///Sets whether JavaScript can access the clipboard.
-  ///When enabled, JavaScript can read from and write to the system clipboard.
-  ///
-  ///The default value is `false`.
-  ///
-  ///**Officially Supported Platforms/Implementations**:
-  ///- Linux WPE WebKit ([Official API - WebKitSettings.javascript-can-access-clipboard](https://wpewebkit.org/reference/stable/wpe-webkit-2.0/property.Settings.javascript-can-access-clipboard.html))
-  bool? javaScriptCanAccessClipboard;
 
   ///Set to `true` to allow JavaScript open windows without user interaction. The default value is `false`.
   ///
   ///**Officially Supported Platforms/Implementations**:
   ///- Android WebView ([Official API - WebSettings.setJavaScriptCanOpenWindowsAutomatically](https://developer.android.com/reference/android/webkit/WebSettings?hl=en#setJavaScriptCanOpenWindowsAutomatically(boolean)))
   ///- iOS WKWebView ([Official API - WKPreferences.javaScriptCanOpenWindowsAutomatically](https://developer.apple.com/documentation/webkit/wkpreferences/1536573-javascriptcanopenwindowsautomati/))
-  ///- macOS WKWebView ([Official API - WKPreferences.javaScriptCanOpenWindowsAutomatically](https://developer.apple.com/documentation/webkit/wkpreferences/1536573-javascriptcanopenwindowsautomati/))
-  ///- Web \<iframe\> but requires same origin
   bool? javaScriptCanOpenWindowsAutomatically;
 
   ///Set to `true` to enable JavaScript. The default value is `true`.
@@ -1212,9 +705,6 @@ class InAppWebViewSettings {
   ///**Officially Supported Platforms/Implementations**:
   ///- Android WebView ([Official API - WebSettings.setJavaScriptEnabled](https://developer.android.com/reference/android/webkit/WebSettings?hl=en#setJavaScriptEnabled(boolean)))
   ///- iOS WKWebView ([Official API - WKWebpagePreferences.allowsContentJavaScript](https://developer.apple.com/documentation/webkit/wkwebpagepreferences/3552422-allowscontentjavascript/))
-  ///- macOS WKWebView ([Official API - WKWebpagePreferences.allowsContentJavaScript](https://developer.apple.com/documentation/webkit/wkwebpagepreferences/3552422-allowscontentjavascript/))
-  ///- Web \<iframe\>
-  ///- Windows WebView2 ([Official API - ICoreWebView2Settings.put_IsScriptEnabled](https://learn.microsoft.com/en-us/microsoft-edge/webview2/reference/win32/icorewebview2settings?view=webview2-1.0.2210.55#put_isscriptenabled))
   bool? javaScriptEnabled;
 
   ///Set to `true` to allow to execute the JavaScript Handlers only on the main frame.
@@ -1224,8 +714,6 @@ class InAppWebViewSettings {
   ///**Officially Supported Platforms/Implementations**:
   ///- Android WebView
   ///- iOS WKWebView
-  ///- macOS WKWebView
-  ///- Windows WebView2
   bool? javaScriptHandlersForMainFrameOnly;
 
   ///A [Set] of Regular Expression Patterns that will be used on native side to match the allowed origins
@@ -1239,34 +727,7 @@ class InAppWebViewSettings {
   ///**Officially Supported Platforms/Implementations**:
   ///- Android WebView
   ///- iOS WKWebView
-  ///- macOS WKWebView
-  ///- Windows WebView2
-  ///- Web \<iframe\> but requires same origin
   Set<String>? javaScriptHandlersOriginAllowList;
-
-  ///Sets the key repeat delay in milliseconds.
-  ///This is the time a key must be held before it starts repeating.
-  ///
-  ///This is a WPE Platform setting that affects the entire display.
-  ///
-  ///The default value is `null` (uses system default, typically 400ms).
-  ///
-  ///**Officially Supported Platforms/Implementations**:
-  ///- Linux WPE WebKit ([Official API - WPESettings.key-repeat-delay](https://wpewebkit.org/reference/stable/wpe-platform-2.0/class.Settings.html)):
-  ///    - This is a WPE Platform display-level setting. Value is in milliseconds.
-  int? keyRepeatDelay;
-
-  ///Sets the key repeat interval in milliseconds.
-  ///This is the time between repeated key events when a key is held down.
-  ///
-  ///This is a WPE Platform setting that affects the entire display.
-  ///
-  ///The default value is `null` (uses system default, typically 80ms).
-  ///
-  ///**Officially Supported Platforms/Implementations**:
-  ///- Linux WPE WebKit ([Official API - WPESettings.key-repeat-interval](https://wpewebkit.org/reference/stable/wpe-platform-2.0/class.Settings.html)):
-  ///    - This is a WPE Platform display-level setting. Value is in milliseconds.
-  int? keyRepeatInterval;
 
   ///Sets the underlying layout algorithm. This will cause a re-layout of the WebView.
   ///
@@ -1280,7 +741,6 @@ class InAppWebViewSettings {
   ///
   ///**Officially Supported Platforms/Implementations**:
   ///- iOS WKWebView 14.0+ ([Official API - WKWebViewConfiguration.limitsNavigationsToAppBoundDomains](https://developer.apple.com/documentation/webkit/wkwebviewconfiguration/3585117-limitsnavigationstoappbounddomai))
-  ///- macOS WKWebView 11.0+ ([Official API - WKWebViewConfiguration.limitsNavigationsToAppBoundDomains](https://developer.apple.com/documentation/webkit/wkwebviewconfiguration/3585117-limitsnavigationstoappbounddomai))
   bool? limitsNavigationsToAppBoundDomains;
 
   ///Sets whether the WebView loads pages in overview mode, that is, zooms out the content to fit on screen by width.
@@ -1297,7 +757,6 @@ class InAppWebViewSettings {
   ///
   ///**Officially Supported Platforms/Implementations**:
   ///- Android WebView ([Official API - WebSettings.setLoadsImagesAutomatically](https://developer.android.com/reference/android/webkit/WebSettings?hl=en#setLoadsImagesAutomatically(boolean)))
-  ///- Linux WPE WebKit ([Official API - WebKitSettings.auto-load-images](https://wpewebkit.org/reference/stable/wpe-webkit-2.0/property.Settings.auto-load-images.html))
   bool? loadsImagesAutomatically;
 
   ///Whether Lockdown Mode is enabled for this WebView's navigations.
@@ -1337,22 +796,11 @@ class InAppWebViewSettings {
   ///- iOS WKWebView ([Official API - UIScrollView.maximumZoomScale](https://developer.apple.com/documentation/uikit/uiscrollview/1619408-maximumzoomscale))
   double? maximumZoomScale;
 
-  ///Sets the media content types that require hardware support.
-  ///This is a comma-separated list of media content types.
-  ///
-  ///The default value is `null` (uses system default).
-  ///
-  ///**Officially Supported Platforms/Implementations**:
-  ///- Linux WPE WebKit 2.30+ ([Official API - WebKitSettings.media-content-types-requiring-hardware-support](https://wpewebkit.org/reference/stable/wpe-webkit-2.0/property.Settings.media-content-types-requiring-hardware-support.html)):
-  ///    - Requires WPE WebKit 2.30 or later
-  String? mediaContentTypesRequiringHardwareSupport;
-
   ///Set to `true` to prevent HTML5 audio or video from autoplaying. The default value is `true`.
   ///
   ///**Officially Supported Platforms/Implementations**:
   ///- Android WebView ([Official API - WebSettings.setMediaPlaybackRequiresUserGesture](https://developer.android.com/reference/android/webkit/WebSettings?hl=en#setMediaPlaybackRequiresUserGesture(boolean)))
   ///- iOS WKWebView ([Official API - WKWebViewConfiguration.mediaTypesRequiringUserActionForPlayback](https://developer.apple.com/documentation/webkit/wkwebviewconfiguration/1851524-mediatypesrequiringuseractionfor))
-  ///- macOS WKWebView 10.12+ ([Official API - WKWebViewConfiguration.mediaTypesRequiringUserActionForPlayback](https://developer.apple.com/documentation/webkit/wkwebviewconfiguration/1851524-mediatypesrequiringuseractionfor))
   bool? mediaPlaybackRequiresUserGesture;
 
   ///The media type for the contents of the web view.
@@ -1362,7 +810,6 @@ class InAppWebViewSettings {
   ///
   ///**Officially Supported Platforms/Implementations**:
   ///- iOS WKWebView 14.0+ ([Official API - WKWebView.mediaType](https://developer.apple.com/documentation/webkit/wkwebview/3516410-mediatype))
-  ///- macOS WKWebView 11.0+ ([Official API - WKWebView.mediaType](https://developer.apple.com/documentation/webkit/wkwebview/3516410-mediatype))
   String? mediaType;
 
   ///Sets the minimum font size. The default value is `8` for Android, `0` for iOS.
@@ -1370,7 +817,6 @@ class InAppWebViewSettings {
   ///**Officially Supported Platforms/Implementations**:
   ///- Android WebView ([Official API - WebSettings.setMinimumFontSize](https://developer.android.com/reference/android/webkit/WebSettings?hl=en#setMinimumFontSize(int)))
   ///- iOS WKWebView ([Official API - WKPreferences.minimumFontSize](https://developer.apple.com/documentation/webkit/wkpreferences/1537155-minimumfontsize/))
-  ///- macOS WKWebView ([Official API - WKPreferences.minimumFontSize](https://developer.apple.com/documentation/webkit/wkpreferences/1537155-minimumfontsize/))
   int? minimumFontSize;
 
   ///Sets the minimum logical font size. The default is `8`.
@@ -1413,25 +859,6 @@ class InAppWebViewSettings {
   ///- Android WebView ([Official API - WebView.setNetworkAvailable](https://developer.android.com/reference/android/webkit/WebView#setNetworkAvailable(boolean)))
   bool? networkAvailable;
 
-  ///Enables web pages to use the `app-region` CSS style.
-  ///
-  ///Disabling/Enabling the [nonClientRegionSupportEnabled] takes effect after the next navigation.
-  ///
-  ///When this property is `true`, then all the non-client region features will be enabled:
-  ///Draggable Regions will be enabled, they are regions on a webpage that are marked with the CSS attribute `app-region: drag/no-drag`.
-  ///When set to drag, these regions will be treated like the window's title bar,
-  ///supporting dragging of the entire WebView and its host app window;
-  ///the system menu shows upon right click, and a double click will trigger maximizing/restoration of the window size.
-  ///
-  ///When set to `false`, all non-client region support will be disabled.
-  ///The `app-region` CSS style will be ignored on web pages.
-  ///
-  ///The default value is `false`.
-  ///
-  ///**Officially Supported Platforms/Implementations**:
-  ///- Windows WebView2 1.0.2420.47+ ([Official API - ICoreWebView2Settings9.put_IsNonClientRegionSupportEnabled](https://learn.microsoft.com/en-us/microsoft-edge/webview2/reference/win32/icorewebview2settings9?view=webview2-1.0.2849.39#put_isnonclientregionsupportenabled))
-  bool? nonClientRegionSupportEnabled;
-
   ///Sets whether this WebView should raster tiles when it is offscreen but attached to a window.
   ///Turning this on can avoid rendering artifacts when animating an offscreen WebView on-screen.
   ///Offscreen WebViews in this mode use more memory. The default value is `false`.
@@ -1454,25 +881,7 @@ class InAppWebViewSettings {
   ///
   ///**Officially Supported Platforms/Implementations**:
   ///- iOS WKWebView 14.0+ ([Official API - WKWebView.pageZoom](https://developer.apple.com/documentation/webkit/wkwebview/3516411-pagezoom))
-  ///- macOS WKWebView 11.0+ ([Official API - WKWebView.pageZoom](https://developer.apple.com/documentation/webkit/wkwebview/3516411-pagezoom))
   double? pageZoom;
-
-  ///Specifies whether autosave for password information is enabled.
-  ///
-  ///The [passwordAutosaveEnabled] property behaves independently of the IsGeneralAutofillEnabled property.
-  ///When [passwordAutosaveEnabled] is `false`, no new password data is saved and no Save/Update Password prompts are displayed.
-  ///However, if there was password data already saved before disabling this setting, then that password
-  ///information is auto-populated, suggestions are shown and clicking on one will populate the fields.
-  ///When [passwordAutosaveEnabled] is `true`, password information is auto-populated,
-  ///suggestions are shown and clicking on one will populate the fields,
-  ///new data is saved, and a Save/Update Password prompt is displayed.
-  ///It will take effect immediately after setting.
-  ///
-  ///The default value is `false`.
-  ///
-  ///**Officially Supported Platforms/Implementations**:
-  ///- Windows WebView2 1.0.902.49+ ([Official API - ICoreWebView2Settings4.put_IsPasswordAutosaveEnabled](https://learn.microsoft.com/en-us/microsoft-edge/webview2/reference/win32/icorewebview2settings4?view=webview2-1.0.2849.39#put_ispasswordautosaveenabled))
-  bool? passwordAutosaveEnabled;
 
   ///Sets whether the [Payment Request API](https://developer.mozilla.org/en-US/docs/Web/API/Payment_Request_API)
   ///is enabled in this WebView.
@@ -1487,34 +896,6 @@ class InAppWebViewSettings {
   ///    - available on Android only if [WebViewFeature.PAYMENT_REQUEST] feature is supported.
   bool? paymentRequestEnabled;
 
-  ///Sets the pictograph font family name.
-  ///The pictograph font family is used for rendering pictograph characters (emoji).
-  ///
-  ///**Officially Supported Platforms/Implementations**:
-  ///- Linux WPE WebKit ([Official API - WebKitSettings.pictograph-font-family](https://wpewebkit.org/reference/stable/wpe-webkit-2.0/property.Settings.pictograph-font-family.html))
-  String? pictographFontFamily;
-
-  ///Pinch-zoom, referred to as "Page Scale" zoom, is performed as a post-rendering step,
-  ///it changes the page scale factor property and scales the surface the web page
-  ///is rendered onto when user performs a pinch zooming action.
-  ///
-  ///It does not change the layout but rather changes the viewport and clips the
-  ///web content, the content outside of the viewport isn't visible onscreen and users can't reach this content using mouse.
-  ///
-  ///The [pinchZoomEnabled] property enables or disables the ability of the end user
-  ///to use a pinching motion on touch input enabled devices to scale the web content in the WebView2.
-  ///When set to `false`, the end user cannot pinch zoom after the next navigation.
-  ///Disabling/Enabling [pinchZoomEnabled] only affects the end user's ability to
-  ///use pinch motions and does not change the page scale factor.
-  ///This API only affects the Page Scale zoom and has no effect on the existing
-  ///browser zoom properties or other end user mechanisms for zooming.
-  ///
-  ///The default value is `true`.
-  ///
-  ///**Officially Supported Platforms/Implementations**:
-  ///- Windows WebView2 1.0.902.49+ ([Official API - ICoreWebView2Settings5.put_IsPinchZoomEnabled](https://learn.microsoft.com/en-us/microsoft-edge/webview2/reference/win32/icorewebview2settings5?view=webview2-1.0.2849.39#put_ispinchzoomenabled))
-  bool? pinchZoomEnabled;
-
   ///Set to `true` to allow internal plugin [UserScript]s only on the main frame.
   ///
   ///**NOTE**: If [javaScriptBridgeForMainFrameOnly] is not present, this value will affect also the JavaScript Bridge internal plugin.
@@ -1526,8 +907,6 @@ class InAppWebViewSettings {
   ///**Officially Supported Platforms/Implementations**:
   ///- Android WebView
   ///- iOS WKWebView
-  ///- macOS WKWebView
-  ///- Windows WebView2
   bool? pluginScriptsForMainFrameOnly;
 
   ///A [Set] of patterns that will be used to match the allowed origins
@@ -1549,8 +928,6 @@ class InAppWebViewSettings {
   ///**Officially Supported Platforms/Implementations**:
   ///- Android WebView
   ///- iOS WKWebView
-  ///- macOS WKWebView
-  ///- Windows WebView2
   Set<String>? pluginScriptsOriginAllowList;
 
   ///Sets the content mode that the WebView needs to use when loading and rendering a webpage. The default value is [UserPreferredContentMode.RECOMMENDED].
@@ -1558,7 +935,6 @@ class InAppWebViewSettings {
   ///**Officially Supported Platforms/Implementations**:
   ///- Android WebView
   ///- iOS WKWebView 13.0+ ([Official API - WKWebpagePreferences.preferredContentMode](https://developer.apple.com/documentation/webkit/wkwebpagepreferences/3194426-preferredcontentmode/))
-  ///- macOS WKWebView 10.15+ ([Official API - WKWebpagePreferences.preferredContentMode](https://developer.apple.com/documentation/webkit/wkwebpagepreferences/3194426-preferredcontentmode/))
   UserPreferredContentMode? preferredContentMode;
 
   ///Whether a top-level navigation should be upgraded to HTTPS, and what should happen when the
@@ -1633,34 +1009,11 @@ class InAppWebViewSettings {
   ///- Android WebView ([Official API - WebView.setRendererPriorityPolicy](https://developer.android.com/reference/android/webkit/WebView#setRendererPriorityPolicy(int,%20boolean)))
   RendererPriorityPolicy? rendererPriorityPolicy;
 
-  ///[reputationCheckingRequired] is used to control whether SmartScreen enabled or not.
-  ///
-  ///SmartScreen helps webviews identify reported phishing and malware websites and also helps users make informed decisions about downloads.
-  ///SmartScreen is enabled or disabled for all CoreWebView2s using the same user data folder.
-  ///If [reputationCheckingRequired] is true for any CoreWebView2 using the same user data folder, then SmartScreen is enabled.
-  ///If [reputationCheckingRequired] is false for all CoreWebView2 using the same user data folder, then SmartScreen is disabled.
-  ///When it is changed, the change will be applied to all WebViews using the same user data folder on the next navigation or download.
-  ///If the newly created CoreWebview2 does not set SmartScreen to `false`,
-  ///when navigating(Such as Navigate(), LoadDataUrl(), ExecuteScript(), etc.), the default value will be applied to all CoreWebview2 using the same user data folder.
-  ///SmartScreen of WebView2 apps can be controlled by Windows system setting "SmartScreen for Microsoft Edge", specially,
-  ///for WebView2 in Windows Store apps, SmartScreen is controlled by another Windows system setting "SmartScreen for Microsoft Store apps".
-  ///When the Windows setting is enabled, the SmartScreen operates under the control of the [reputationCheckingRequired].
-  ///When the Windows setting is disabled, the SmartScreen will be disabled regardless of the [reputationCheckingRequired] value set in WebView2 apps.
-  ///In other words, under this circumstance the value of [reputationCheckingRequired] will be saved but overridden by system setting.
-  ///Upon re-enabling the Windows setting, the CoreWebview2 will reference the [reputationCheckingRequired] to determine the SmartScreen status.
-  ///
-  ///The default value is `true`.
-  ///
-  ///**Officially Supported Platforms/Implementations**:
-  ///- Windows WebView2 1.0.1722.45+ ([Official API - ICoreWebView2Settings8.put_IsReputationCheckingRequired](https://learn.microsoft.com/en-us/microsoft-edge/webview2/reference/win32/icorewebview2settings8?view=webview2-1.0.2849.39#put_isreputationcheckingrequired))
-  bool? reputationCheckingRequired;
-
   ///List of custom schemes that the WebView must handle. Use the [PlatformWebViewCreationParams.onLoadResourceWithCustomScheme] event to intercept resource requests with custom scheme.
   ///
   ///**Officially Supported Platforms/Implementations**:
   ///- Android WebView
   ///- iOS WKWebView 11.0+
-  ///- macOS WKWebView 10.13+
   List<String>? resourceCustomSchemes;
 
   ///Sets whether Safe Browsing is enabled. Safe Browsing allows WebView to protect against malware and phishing attacks by verifying the links.
@@ -1674,7 +1027,6 @@ class InAppWebViewSettings {
   ///
   ///**Officially Supported Platforms/Implementations**:
   ///- Android WebView ([Official API - WebSettings.setSansSerifFontFamily](https://developer.android.com/reference/android/webkit/WebSettings?hl=en#setSansSerifFontFamily(java.lang.String)))
-  ///- Linux WPE WebKit ([Official API - WebKitSettings.sans-serif-font-family](https://wpewebkit.org/reference/stable/wpe-webkit-2.0/property.Settings.sans-serif-font-family.html))
   String? sansSerifFontFamily;
 
   ///Defines the delay in milliseconds that a scrollbar waits before fade out.
@@ -1699,17 +1051,6 @@ class InAppWebViewSettings {
   ///**Officially Supported Platforms/Implementations**:
   ///- Android WebView ([Official API - WebView.setScrollBarStyle](https://developer.android.com/reference/android/webkit/WebView#setScrollBarStyle(int)))
   ScrollBarStyle? scrollBarStyle;
-
-  ///The multiplier applied to the scroll amount for the WebView.
-  ///
-  ///This value determines how much the content will scroll in response to user input.
-  ///A higher value means faster scrolling, while a lower value means slower scrolling.
-  ///
-  ///The default value is `1`.
-  ///
-  ///**Officially Supported Platforms/Implementations**:
-  ///- Windows WebView2
-  int? scrollMultiplier;
 
   ///Defines whether scrollbars will fade when the view is not scrolling.
   ///The default value is `true`.
@@ -1767,7 +1108,6 @@ class InAppWebViewSettings {
   ///
   ///**Officially Supported Platforms/Implementations**:
   ///- Android WebView ([Official API - WebSettings.setSerifFontFamily](https://developer.android.com/reference/android/webkit/WebSettings?hl=en#setSerifFontFamily(java.lang.String)))
-  ///- Linux WPE WebKit ([Official API - WebKitSettings.serif-font-family](https://wpewebkit.org/reference/stable/wpe-webkit-2.0/property.Settings.serif-font-family.html))
   String? serifFontFamily;
 
   ///Set `true` if shared cookies from `HTTPCookieStorage.shared` should used for every load request in the WebView.
@@ -1775,7 +1115,6 @@ class InAppWebViewSettings {
   ///
   ///**Officially Supported Platforms/Implementations**:
   ///- iOS WKWebView 11.0+
-  ///- macOS WKWebView 10.13+
   bool? sharedCookiesEnabled;
 
   ///A Boolean value that indicates whether to include any background color or graphics when printing content.
@@ -1784,27 +1123,13 @@ class InAppWebViewSettings {
   ///
   ///**Officially Supported Platforms/Implementations**:
   ///- iOS WKWebView 16.4+ ([Official API - WKWebView.shouldPrintBackgrounds](https://developer.apple.com/documentation/webkit/wkpreferences/4104043-shouldprintbackgrounds))
-  ///- macOS WKWebView 13.3+ ([Official API - WKWebView.shouldPrintBackgrounds](https://developer.apple.com/documentation/webkit/wkpreferences/4104043-shouldprintbackgrounds))
   bool? shouldPrintBackgrounds;
 
   ///Sets the standard font family name. The default value is `"sans-serif"`.
   ///
   ///**Officially Supported Platforms/Implementations**:
   ///- Android WebView ([Official API - WebSettings.setStandardFontFamily](https://developer.android.com/reference/android/webkit/WebSettings?hl=en#setStandardFontFamily(java.lang.String)))
-  ///- Linux WPE WebKit ([Official API - WebKitSettings.default-font-family](https://wpewebkit.org/reference/stable/wpe-webkit-2.0/property.Settings.default-font-family.html))
   String? standardFontFamily;
-
-  ///Specifies whether the status bar is displayed.
-  ///
-  ///The status bar is usually displayed in the lower left of the WebView and
-  ///shows things such as the URI of a link when the user hovers over it and other information.
-  ///The status bar UI can be altered by web content and should not be considered secure.
-  ///
-  ///The default value is `true`.
-  ///
-  ///**Officially Supported Platforms/Implementations**:
-  ///- Windows WebView2 ([Official API - ICoreWebView2Settings.put_IsStatusBarEnabled](https://learn.microsoft.com/en-us/microsoft-edge/webview2/reference/win32/icorewebview2settings?view=webview2-1.0.2849.39#put_isstatusbarenabled))
-  bool? statusBarEnabled;
 
   ///Sets whether the WebView supports multiple windows.
   ///If set to `true`, [PlatformWebViewCreationParams.onCreateWindow] event must be implemented by the host application. The default value is `false`.
@@ -1818,8 +1143,6 @@ class InAppWebViewSettings {
   ///**Officially Supported Platforms/Implementations**:
   ///- Android WebView ([Official API - WebSettings.setSupportZoom](https://developer.android.com/reference/android/webkit/WebSettings?hl=en#setSupportZoom(boolean)))
   ///- iOS WKWebView
-  ///- macOS WKWebView
-  ///- Windows WebView2 ([Official API - ICoreWebView2Settings.put_IsZoomControlEnabled](https://learn.microsoft.com/en-us/microsoft-edge/webview2/reference/win32/icorewebview2settings?view=webview2-1.0.2210.55#put_iszoomcontrolenabled))
   bool? supportZoom;
 
   ///Whether the WebView allows insertion of **adaptive image glyphs** — the inline, text-sized
@@ -1844,7 +1167,6 @@ class InAppWebViewSettings {
   ///
   ///**Officially Supported Platforms/Implementations**:
   ///- iOS WKWebView ([Official API - WKWebViewConfiguration.suppressesIncrementalRendering](https://developer.apple.com/documentation/webkit/wkwebviewconfiguration/1395663-suppressesincrementalrendering))
-  ///- macOS WKWebView ([Official API - WKWebViewConfiguration.suppressesIncrementalRendering](https://developer.apple.com/documentation/webkit/wkwebviewconfiguration/1395663-suppressesincrementalrendering))
   bool? suppressesIncrementalRendering;
 
   ///Sets the text zoom of the page in percent. The default value is `100`.
@@ -1866,8 +1188,6 @@ class InAppWebViewSettings {
   ///**Officially Supported Platforms/Implementations**:
   ///- Android WebView
   ///- iOS WKWebView
-  ///- macOS WKWebView 12.0+
-  ///- Windows WebView2 1.0.774.44+ ([Official API - ICoreWebView2Controller2.put_DefaultBackgroundColor](https://learn.microsoft.com/en-us/microsoft-edge/webview2/reference/win32/icorewebview2controller2?view=webview2-1.0.2210.55#put_defaultbackgroundcolor))
   bool? transparentBackground;
 
   ///The color the web view displays behind the active page, visible when the user scrolls beyond the bounds of the page.
@@ -1878,7 +1198,6 @@ class InAppWebViewSettings {
   ///
   ///**Officially Supported Platforms/Implementations**:
   ///- iOS WKWebView 15.0+ ([Official API - WKWebView.underPageBackgroundColor](https://developer.apple.com/documentation/webkit/wkwebview/3850574-underpagebackgroundcolor))
-  ///- macOS WKWebView 12.0+ ([Official API - WKWebView.underPageBackgroundColor](https://developer.apple.com/documentation/webkit/wkwebview/3850574-underpagebackgroundcolor))
   Color? underPageBackgroundColor;
 
   ///A Boolean value indicating whether HTTP requests to servers known to support HTTPS should be automatically upgraded to HTTPS requests.
@@ -1886,7 +1205,6 @@ class InAppWebViewSettings {
   ///
   ///**Officially Supported Platforms/Implementations**:
   ///- iOS WKWebView 15.0+ ([Official API - WKWebViewConfiguration.upgradeKnownHostsToHTTPS](https://developer.apple.com/documentation/webkit/wkwebviewconfiguration/3752243-upgradeknownhoststohttps))
-  ///- macOS WKWebView 11.3+ ([Official API - WKWebViewConfiguration.upgradeKnownHostsToHTTPS](https://developer.apple.com/documentation/webkit/wkwebviewconfiguration/3752243-upgradeknownhoststohttps))
   bool? upgradeKnownHostsToHTTPS;
 
   ///Set to `false` to disable Flutter Hybrid Composition. The default value is `true`.
@@ -1912,7 +1230,6 @@ class InAppWebViewSettings {
   ///**Officially Supported Platforms/Implementations**:
   ///- Android WebView
   ///- iOS WKWebView
-  ///- macOS WKWebView
   bool? useOnAjaxProgress;
 
   ///Set to `true` to be able to listen at the [PlatformWebViewCreationParams.onAjaxReadyStateChange] event.
@@ -1930,7 +1247,6 @@ class InAppWebViewSettings {
   ///**Officially Supported Platforms/Implementations**:
   ///- Android WebView
   ///- iOS WKWebView
-  ///- macOS WKWebView
   bool? useOnAjaxReadyStateChange;
 
   ///Set to `true` to be able to listen at the [PlatformWebViewCreationParams.onDownloadStarting] event.
@@ -1942,7 +1258,6 @@ class InAppWebViewSettings {
   ///**Officially Supported Platforms/Implementations**:
   ///- Android WebView
   ///- iOS WKWebView
-  ///- macOS WKWebView
   bool? useOnDownloadStart;
 
   ///Set to `true` to be able to listen at the [PlatformWebViewCreationParams.onLoadResource] event.
@@ -1954,8 +1269,6 @@ class InAppWebViewSettings {
   ///**Officially Supported Platforms/Implementations**:
   ///- Android WebView
   ///- iOS WKWebView
-  ///- macOS WKWebView
-  ///- Linux WPE WebKit
   bool? useOnLoadResource;
 
   ///Set to `true` to be able to listen to the [PlatformWebViewCreationParams.onNavigationResponse] event.
@@ -1966,7 +1279,6 @@ class InAppWebViewSettings {
   ///
   ///**Officially Supported Platforms/Implementations**:
   ///- iOS WKWebView
-  ///- macOS WKWebView
   bool? useOnNavigationResponse;
 
   ///Set to `true` to be able to listen at the [PlatformWebViewCreationParams.onRenderProcessGone] event.
@@ -2012,7 +1324,6 @@ class InAppWebViewSettings {
   ///**Officially Supported Platforms/Implementations**:
   ///- Android WebView
   ///- iOS WKWebView
-  ///- macOS WKWebView
   bool? useShouldInterceptAjaxRequest;
 
   ///Set to `true` to be able to listen at the [PlatformWebViewCreationParams.shouldInterceptFetchRequest] event.
@@ -2024,7 +1335,6 @@ class InAppWebViewSettings {
   ///**Officially Supported Platforms/Implementations**:
   ///- Android WebView
   ///- iOS WKWebView
-  ///- macOS WKWebView
   bool? useShouldInterceptFetchRequest;
 
   ///Set to `true` to be able to listen at the [PlatformWebViewCreationParams.shouldInterceptRequest] event.
@@ -2046,8 +1356,6 @@ class InAppWebViewSettings {
   ///**Officially Supported Platforms/Implementations**:
   ///- Android WebView
   ///- iOS WKWebView
-  ///- macOS WKWebView
-  ///- Windows WebView2
   bool? useShouldOverrideUrlLoading;
 
   ///Set to `true` if the WebView should enable support for the "viewport" HTML meta tag or should use a wide viewport.
@@ -2064,8 +1372,6 @@ class InAppWebViewSettings {
   ///**Officially Supported Platforms/Implementations**:
   ///- Android WebView ([Official API - WebSettings.setUserAgentString](https://developer.android.com/reference/android/webkit/WebSettings?hl=en#setUserAgentString(java.lang.String)))
   ///- iOS WKWebView ([Official API - WKWebView.customUserAgent](https://developer.apple.com/documentation/webkit/wkwebview/1414950-customuseragent))
-  ///- macOS WKWebView ([Official API - WKWebView.customUserAgent](https://developer.apple.com/documentation/webkit/wkwebview/1414950-customuseragent))
-  ///- Windows WebView2 ([Official API - ICoreWebView2Settings2.put_UserAgent](https://learn.microsoft.com/en-us/microsoft-edge/webview2/reference/win32/icorewebview2settings2?view=webview2-1.0.2210.55#put_useragent))
   String? userAgent;
 
   ///Overrides the [User-Agent Client Hints](https://developer.mozilla.org/en-US/docs/Web/HTTP/Client_hints#user-agent_client_hints)
@@ -2091,8 +1397,6 @@ class InAppWebViewSettings {
   ///**Officially Supported Platforms/Implementations**:
   ///- Android WebView ([Official API - View.setVerticalScrollBarEnabled](https://developer.android.com/reference/android/view/View#setVerticalScrollBarEnabled(boolean)))
   ///- iOS WKWebView ([Official API - UIScrollView.showsVerticalScrollIndicator](https://developer.apple.com/documentation/uikit/uiscrollview/1619405-showsverticalscrollindicator/))
-  ///- Web \<iframe\> but requires same origin:
-  ///    - It must have the same value of [horizontalScrollBarEnabled] to take effect.
   bool? verticalScrollBarEnabled;
 
   ///Sets the position of the vertical scroll bar.
@@ -2127,17 +1431,6 @@ class InAppWebViewSettings {
   ///- Android WebView ([Official API - WebSettingsCompat.setWebAuthenticationSupport](https://developer.android.com/reference/androidx/webkit/WebSettingsCompat#setWebAuthenticationSupport(android.webkit.WebSettings,int))):
   ///    - available on Android only if [WebViewFeature.WEB_AUTHENTICATION] feature is supported.
   WebAuthenticationSupport? webAuthenticationSupport;
-
-  ///Sets the range of UDP ports for WebRTC connections.
-  ///
-  ///The format is "minPort:maxPort", for example "10000:10100".
-  ///
-  ///The default value is `null` (uses system default).
-  ///
-  ///**Officially Supported Platforms/Implementations**:
-  ///- Linux WPE WebKit 2.48+ ([Official API - WebKitSettings.webrtc-udp-ports-range](https://wpewebkit.org/reference/stable/wpe-webkit-2.0/property.Settings.webrtc-udp-ports-range.html)):
-  ///    - Requires WPE WebKit 2.48 or later. Format: 'minPort:maxPort'
-  String? webRTCUdpPortsRange;
 
   ///Use a [WebViewAssetLoader] instance to load local files including application's static assets and resources using http(s):// URLs.
   ///Loading local files using web-like URLs instead of `file://` is desirable as it is compatible with the Same-Origin policy.
@@ -2183,9 +1476,6 @@ class InAppWebViewSettings {
   ///**Officially Supported Platforms/Implementations**:
   ///- Android WebView
   ///- iOS WKWebView
-  ///- macOS WKWebView
-  ///- Web \<iframe\>
-  ///- Windows WebView2
   InAppWebViewSettings({
     this.useShouldOverrideUrlLoading,
     this.useOnLoadResource,
@@ -2332,17 +1622,7 @@ class InAppWebViewSettings {
     this.javaScriptBridgeForMainFrameOnly,
     this.pluginScriptsOriginAllowList,
     this.pluginScriptsForMainFrameOnly = false,
-    this.scrollMultiplier = 1,
-    this.statusBarEnabled = true,
-    this.browserAcceleratorKeysEnabled = true,
-    this.generalAutofillEnabled = true,
-    this.passwordAutosaveEnabled = false,
-    this.pinchZoomEnabled = true,
-    this.hiddenPdfToolbarItems = PdfToolbarItems.NONE,
-    this.reputationCheckingRequired = true,
-    this.nonClientRegionSupportEnabled = false,
     this.isUserInteractionEnabled = true,
-    this.handleAcceleratorKeyPressed = false,
     this.alpha,
     this.supportsAdaptiveImageGlyph,
     this.writingToolsBehavior,
@@ -2350,50 +1630,6 @@ class InAppWebViewSettings {
     this.securityRestrictionMode,
     this.lockdownModeEnabled,
     this.useOnShowFileChooser,
-    this.iframeAllow,
-    this.iframeAllowFullscreen,
-    this.iframeSandbox,
-    this.iframeReferrerPolicy,
-    this.iframeName,
-    this.iframeCsp,
-    this.iframeRole,
-    this.iframeAriaHidden,
-    this.enableWriteConsoleMessagesToStdout = false,
-    this.enableSmoothScrolling = true,
-    this.enableCaretBrowsing = false,
-    this.enablePageCache = true,
-    this.drawCompositingIndicators = false,
-    this.enableResizableTextAreas = true,
-    this.enableTabsToLinks = true,
-    this.enableSpatialNavigation = false,
-    this.pictographFontFamily,
-    this.corsAllowlist,
-    this.itpEnabled = false,
-    this.darkMode,
-    this.disableAnimations,
-    this.fontAntialias,
-    this.fontHintingStyle,
-    this.fontSubpixelLayout,
-    this.fontDPI,
-    this.cursorBlinkTime,
-    this.doubleClickDistance,
-    this.doubleClickTime,
-    this.dragThreshold,
-    this.keyRepeatDelay,
-    this.keyRepeatInterval,
-    this.javaScriptCanAccessClipboard = false,
-    this.allowModalDialogs = false,
-    this.disableWebSecurity = false,
-    this.enableWebRTC = true,
-    this.webRTCUdpPortsRange,
-    this.enableMedia = true,
-    this.enableEncryptedMedia = true,
-    this.enableMediaCapabilities = true,
-    this.enableMockCaptureDevices = false,
-    this.mediaContentTypesRequiringHardwareSupport,
-    this.enableJavaScriptMarkup = true,
-    this.enable2DCanvasAcceleration = false,
-    this.allowTopNavigationToDataUrls = false,
   }) {
     minimumFontSize ??= Util.isAndroid ? 8 : 0;
     assert(
@@ -2447,15 +1683,9 @@ class InAppWebViewSettings {
         ),
       },
       backForwardCacheEnabled: map['backForwardCacheEnabled'],
-      corsAllowlist: map['corsAllowlist'] != null
-          ? List<String>.from(map['corsAllowlist']!.cast<String>())
-          : null,
-      cursorBlinkTime: map['cursorBlinkTime'],
-      darkMode: map['darkMode'],
       defaultVideoPoster: map['defaultVideoPoster'] != null
           ? Uint8List.fromList(map['defaultVideoPoster'].cast<int>())
           : null,
-      disableAnimations: map['disableAnimations'],
       disabledActionModeMenuItems: switch (enumMethod ??
           EnumMethod.nativeValue) {
         EnumMethod.nativeValue => ActionModeMenuItem.fromNativeValue(
@@ -2468,28 +1698,7 @@ class InAppWebViewSettings {
           map['disabledActionModeMenuItems'],
         ),
       },
-      doubleClickDistance: map['doubleClickDistance'],
-      doubleClickTime: map['doubleClickTime'],
       downloadFaviconsEnabled: map['downloadFaviconsEnabled'],
-      dragThreshold: map['dragThreshold'],
-      fontAntialias: map['fontAntialias'],
-      fontDPI: map['fontDPI'],
-      fontHintingStyle: switch (enumMethod ?? EnumMethod.nativeValue) {
-        EnumMethod.nativeValue => FontHintingStyle.fromNativeValue(
-          map['fontHintingStyle'],
-        ),
-        EnumMethod.value => FontHintingStyle.fromValue(map['fontHintingStyle']),
-        EnumMethod.name => FontHintingStyle.byName(map['fontHintingStyle']),
-      },
-      fontSubpixelLayout: switch (enumMethod ?? EnumMethod.nativeValue) {
-        EnumMethod.nativeValue => FontSubpixelLayout.fromNativeValue(
-          map['fontSubpixelLayout'],
-        ),
-        EnumMethod.value => FontSubpixelLayout.fromValue(
-          map['fontSubpixelLayout'],
-        ),
-        EnumMethod.name => FontSubpixelLayout.byName(map['fontSubpixelLayout']),
-      },
       horizontalScrollbarThumbColor:
           map['horizontalScrollbarThumbColor'] != null
           ? UtilColor.fromStringRepresentation(
@@ -2500,32 +1709,6 @@ class InAppWebViewSettings {
           map['horizontalScrollbarTrackColor'] != null
           ? UtilColor.fromStringRepresentation(
               map['horizontalScrollbarTrackColor'],
-            )
-          : null,
-      iframeAllow: map['iframeAllow'],
-      iframeAllowFullscreen: map['iframeAllowFullscreen'],
-      iframeAriaHidden: map['iframeAriaHidden'],
-      iframeCsp: map['iframeCsp'],
-      iframeName: map['iframeName'],
-      iframeReferrerPolicy: switch (enumMethod ?? EnumMethod.nativeValue) {
-        EnumMethod.nativeValue => ReferrerPolicy.fromNativeValue(
-          map['iframeReferrerPolicy'],
-        ),
-        EnumMethod.value => ReferrerPolicy.fromValue(
-          map['iframeReferrerPolicy'],
-        ),
-        EnumMethod.name => ReferrerPolicy.byName(map['iframeReferrerPolicy']),
-      },
-      iframeRole: map['iframeRole'],
-      iframeSandbox: map['iframeSandbox'] != null
-          ? Set<Sandbox>.from(
-              map['iframeSandbox'].map(
-                (e) => switch (enumMethod ?? EnumMethod.nativeValue) {
-                  EnumMethod.nativeValue => Sandbox.fromNativeValue(e),
-                  EnumMethod.value => Sandbox.fromValue(e),
-                  EnumMethod.name => Sandbox.byName(e),
-                }!,
-              ),
             )
           : null,
       javaScriptBridgeForMainFrameOnly: map['javaScriptBridgeForMainFrameOnly'],
@@ -2543,8 +1726,6 @@ class InAppWebViewSettings {
               map['javaScriptHandlersOriginAllowList']!.cast<String>(),
             )
           : null,
-      keyRepeatDelay: map['keyRepeatDelay'],
-      keyRepeatInterval: map['keyRepeatInterval'],
       layoutAlgorithm: switch (enumMethod ?? EnumMethod.nativeValue) {
         EnumMethod.nativeValue => LayoutAlgorithm.fromNativeValue(
           map['layoutAlgorithm'],
@@ -2556,8 +1737,6 @@ class InAppWebViewSettings {
       maximumViewportInset: MapEdgeInsets.fromMap(
         map['maximumViewportInset']?.cast<String, dynamic>(),
       ),
-      mediaContentTypesRequiringHardwareSupport:
-          map['mediaContentTypesRequiringHardwareSupport'],
       mediaType: map['mediaType'],
       minimumFontSize: map['minimumFontSize'],
       minimumViewportInset: MapEdgeInsets.fromMap(
@@ -2571,7 +1750,6 @@ class InAppWebViewSettings {
         EnumMethod.name => MixedContentMode.byName(map['mixedContentMode']),
       },
       networkAvailable: map['networkAvailable'],
-      pictographFontFamily: map['pictographFontFamily'],
       pluginScriptsOriginAllowList: map['pluginScriptsOriginAllowList'] != null
           ? Set<String>.from(
               map['pluginScriptsOriginAllowList']!.cast<String>(),
@@ -2650,7 +1828,6 @@ class InAppWebViewSettings {
           map['webAuthenticationSupport'],
         ),
       },
-      webRTCUdpPortsRange: map['webRTCUdpPortsRange'],
       webViewAssetLoader: WebViewAssetLoader.fromMap(
         map['webViewAssetLoader']?.cast<String, dynamic>(),
         enumMethod: enumMethod,
@@ -2679,8 +1856,6 @@ class InAppWebViewSettings {
     instance.allowContentAccess = map['allowContentAccess'];
     instance.allowFileAccess = map['allowFileAccess'];
     instance.allowFileAccessFromFileURLs = map['allowFileAccessFromFileURLs'];
-    instance.allowModalDialogs = map['allowModalDialogs'];
-    instance.allowTopNavigationToDataUrls = map['allowTopNavigationToDataUrls'];
     instance.allowUniversalAccessFromFileURLs =
         map['allowUniversalAccessFromFileURLs'];
     instance.allowsAirPlayForMediaPlayback =
@@ -2699,8 +1874,6 @@ class InAppWebViewSettings {
         map['automaticallyAdjustsScrollIndicatorInsets'];
     instance.blockNetworkImage = map['blockNetworkImage'];
     instance.blockNetworkLoads = map['blockNetworkLoads'];
-    instance.browserAcceleratorKeysEnabled =
-        map['browserAcceleratorKeysEnabled'];
     instance.builtInZoomControls = map['builtInZoomControls'];
     instance.cacheEnabled = map['cacheEnabled'];
     instance.cacheMode = switch (enumMethod ?? EnumMethod.nativeValue) {
@@ -2759,45 +1932,16 @@ class InAppWebViewSettings {
     instance.disableLongPressContextMenuOnLinks =
         map['disableLongPressContextMenuOnLinks'];
     instance.disableVerticalScroll = map['disableVerticalScroll'];
-    instance.disableWebSecurity = map['disableWebSecurity'];
     instance.disallowOverScroll = map['disallowOverScroll'];
     instance.displayZoomControls = map['displayZoomControls'];
     instance.domStorageEnabled = map['domStorageEnabled'];
-    instance.drawCompositingIndicators = map['drawCompositingIndicators'];
-    instance.enable2DCanvasAcceleration = map['enable2DCanvasAcceleration'];
-    instance.enableCaretBrowsing = map['enableCaretBrowsing'];
-    instance.enableEncryptedMedia = map['enableEncryptedMedia'];
-    instance.enableJavaScriptMarkup = map['enableJavaScriptMarkup'];
-    instance.enableMedia = map['enableMedia'];
-    instance.enableMediaCapabilities = map['enableMediaCapabilities'];
-    instance.enableMockCaptureDevices = map['enableMockCaptureDevices'];
-    instance.enablePageCache = map['enablePageCache'];
-    instance.enableResizableTextAreas = map['enableResizableTextAreas'];
-    instance.enableSmoothScrolling = map['enableSmoothScrolling'];
-    instance.enableSpatialNavigation = map['enableSpatialNavigation'];
-    instance.enableTabsToLinks = map['enableTabsToLinks'];
     instance.enableViewportScale = map['enableViewportScale'];
-    instance.enableWebRTC = map['enableWebRTC'];
-    instance.enableWriteConsoleMessagesToStdout =
-        map['enableWriteConsoleMessagesToStdout'];
     instance.enterpriseAuthenticationAppLinkPolicyEnabled =
         map['enterpriseAuthenticationAppLinkPolicyEnabled'];
     instance.fantasyFontFamily = map['fantasyFontFamily'];
     instance.fixedFontFamily = map['fixedFontFamily'];
-    instance.generalAutofillEnabled = map['generalAutofillEnabled'];
     instance.geolocationEnabled = map['geolocationEnabled'];
-    instance.handleAcceleratorKeyPressed = map['handleAcceleratorKeyPressed'];
     instance.hardwareAcceleration = map['hardwareAcceleration'];
-    instance.hiddenPdfToolbarItems = switch (enumMethod ??
-        EnumMethod.nativeValue) {
-      EnumMethod.nativeValue => PdfToolbarItems.fromNativeValue(
-        map['hiddenPdfToolbarItems'],
-      ),
-      EnumMethod.value => PdfToolbarItems.fromValue(
-        map['hiddenPdfToolbarItems'],
-      ),
-      EnumMethod.name => PdfToolbarItems.byName(map['hiddenPdfToolbarItems']),
-    };
     instance.horizontalScrollBarEnabled = map['horizontalScrollBarEnabled'];
     instance.ignoresViewportScaleLimits = map['ignoresViewportScaleLimits'];
     instance.incognito = map['incognito'];
@@ -2815,9 +1959,7 @@ class InAppWebViewSettings {
         map['isSiteSpecificQuirksModeEnabled'];
     instance.isTextInteractionEnabled = map['isTextInteractionEnabled'];
     instance.isUserInteractionEnabled = map['isUserInteractionEnabled'];
-    instance.itpEnabled = map['itpEnabled'];
     instance.javaScriptBridgeEnabled = map['javaScriptBridgeEnabled'];
-    instance.javaScriptCanAccessClipboard = map['javaScriptCanAccessClipboard'];
     instance.javaScriptCanOpenWindowsAutomatically =
         map['javaScriptCanOpenWindowsAutomatically'];
     instance.javaScriptEnabled = map['javaScriptEnabled'];
@@ -2831,8 +1973,6 @@ class InAppWebViewSettings {
     instance.minimumLogicalFontSize = map['minimumLogicalFontSize'];
     instance.minimumZoomScale = map['minimumZoomScale'];
     instance.needInitialFocus = map['needInitialFocus'];
-    instance.nonClientRegionSupportEnabled =
-        map['nonClientRegionSupportEnabled'];
     instance.offscreenPreRaster = map['offscreenPreRaster'];
     instance.overScrollMode = switch (enumMethod ?? EnumMethod.nativeValue) {
       EnumMethod.nativeValue => OverScrollMode.fromNativeValue(
@@ -2842,9 +1982,7 @@ class InAppWebViewSettings {
       EnumMethod.name => OverScrollMode.byName(map['overScrollMode']),
     };
     instance.pageZoom = map['pageZoom'];
-    instance.passwordAutosaveEnabled = map['passwordAutosaveEnabled'];
     instance.paymentRequestEnabled = map['paymentRequestEnabled'];
-    instance.pinchZoomEnabled = map['pinchZoomEnabled'];
     instance.pluginScriptsForMainFrameOnly =
         map['pluginScriptsForMainFrameOnly'];
     instance.preferredContentMode = switch (enumMethod ??
@@ -2859,7 +1997,6 @@ class InAppWebViewSettings {
         map['preferredContentMode'],
       ),
     };
-    instance.reputationCheckingRequired = map['reputationCheckingRequired'];
     instance.resourceCustomSchemes = map['resourceCustomSchemes'] != null
         ? List<String>.from(map['resourceCustomSchemes']!.cast<String>())
         : null;
@@ -2872,7 +2009,6 @@ class InAppWebViewSettings {
       EnumMethod.value => ScrollBarStyle.fromValue(map['scrollBarStyle']),
       EnumMethod.name => ScrollBarStyle.byName(map['scrollBarStyle']),
     };
-    instance.scrollMultiplier = map['scrollMultiplier'];
     instance.scrollbarFadingEnabled = map['scrollbarFadingEnabled'];
     instance.scrollsToTop = map['scrollsToTop'];
     instance.selectionGranularity = switch (enumMethod ??
@@ -2891,7 +2027,6 @@ class InAppWebViewSettings {
     instance.sharedCookiesEnabled = map['sharedCookiesEnabled'];
     instance.shouldPrintBackgrounds = map['shouldPrintBackgrounds'];
     instance.standardFontFamily = map['standardFontFamily'];
-    instance.statusBarEnabled = map['statusBarEnabled'];
     instance.supportMultipleWindows = map['supportMultipleWindows'];
     instance.supportZoom = map['supportZoom'];
     instance.suppressesIncrementalRendering =
@@ -2936,8 +2071,6 @@ class InAppWebViewSettings {
       "allowContentAccess": allowContentAccess,
       "allowFileAccess": allowFileAccess,
       "allowFileAccessFromFileURLs": allowFileAccessFromFileURLs,
-      "allowModalDialogs": allowModalDialogs,
-      "allowTopNavigationToDataUrls": allowTopNavigationToDataUrls,
       "allowUniversalAccessFromFileURLs": allowUniversalAccessFromFileURLs,
       "allowingReadAccessTo": allowingReadAccessTo?.toString(),
       "allowsAirPlayForMediaPlayback": allowsAirPlayForMediaPlayback,
@@ -2965,7 +2098,6 @@ class InAppWebViewSettings {
       "backForwardCacheEnabled": backForwardCacheEnabled,
       "blockNetworkImage": blockNetworkImage,
       "blockNetworkLoads": blockNetworkLoads,
-      "browserAcceleratorKeysEnabled": browserAcceleratorKeysEnabled,
       "builtInZoomControls": builtInZoomControls,
       "cacheEnabled": cacheEnabled,
       "cacheMode": switch (enumMethod ?? EnumMethod.nativeValue) {
@@ -2983,10 +2115,7 @@ class InAppWebViewSettings {
         EnumMethod.value => contentInsetAdjustmentBehavior?.toValue(),
         EnumMethod.name => contentInsetAdjustmentBehavior?.name(),
       },
-      "corsAllowlist": corsAllowlist,
       "cursiveFontFamily": cursiveFontFamily,
-      "cursorBlinkTime": cursorBlinkTime,
-      "darkMode": darkMode,
       "dataDetectorTypes": dataDetectorTypes
           ?.map(
             (e) => switch (enumMethod ?? EnumMethod.nativeValue) {
@@ -3006,14 +2135,12 @@ class InAppWebViewSettings {
       "defaultFontSize": defaultFontSize,
       "defaultTextEncodingName": defaultTextEncodingName,
       "defaultVideoPoster": defaultVideoPoster,
-      "disableAnimations": disableAnimations,
       "disableContextMenu": disableContextMenu,
       "disableDefaultErrorPage": disableDefaultErrorPage,
       "disableHorizontalScroll": disableHorizontalScroll,
       "disableInputAccessoryView": disableInputAccessoryView,
       "disableLongPressContextMenuOnLinks": disableLongPressContextMenuOnLinks,
       "disableVerticalScroll": disableVerticalScroll,
-      "disableWebSecurity": disableWebSecurity,
       "disabledActionModeMenuItems": switch (enumMethod ??
           EnumMethod.nativeValue) {
         EnumMethod.nativeValue => disabledActionModeMenuItems?.toNativeValue(),
@@ -3023,74 +2150,17 @@ class InAppWebViewSettings {
       "disallowOverScroll": disallowOverScroll,
       "displayZoomControls": displayZoomControls,
       "domStorageEnabled": domStorageEnabled,
-      "doubleClickDistance": doubleClickDistance,
-      "doubleClickTime": doubleClickTime,
       "downloadFaviconsEnabled": downloadFaviconsEnabled,
-      "dragThreshold": dragThreshold,
-      "drawCompositingIndicators": drawCompositingIndicators,
-      "enable2DCanvasAcceleration": enable2DCanvasAcceleration,
-      "enableCaretBrowsing": enableCaretBrowsing,
-      "enableEncryptedMedia": enableEncryptedMedia,
-      "enableJavaScriptMarkup": enableJavaScriptMarkup,
-      "enableMedia": enableMedia,
-      "enableMediaCapabilities": enableMediaCapabilities,
-      "enableMockCaptureDevices": enableMockCaptureDevices,
-      "enablePageCache": enablePageCache,
-      "enableResizableTextAreas": enableResizableTextAreas,
-      "enableSmoothScrolling": enableSmoothScrolling,
-      "enableSpatialNavigation": enableSpatialNavigation,
-      "enableTabsToLinks": enableTabsToLinks,
       "enableViewportScale": enableViewportScale,
-      "enableWebRTC": enableWebRTC,
-      "enableWriteConsoleMessagesToStdout": enableWriteConsoleMessagesToStdout,
       "enterpriseAuthenticationAppLinkPolicyEnabled":
           enterpriseAuthenticationAppLinkPolicyEnabled,
       "fantasyFontFamily": fantasyFontFamily,
       "fixedFontFamily": fixedFontFamily,
-      "fontAntialias": fontAntialias,
-      "fontDPI": fontDPI,
-      "fontHintingStyle": switch (enumMethod ?? EnumMethod.nativeValue) {
-        EnumMethod.nativeValue => fontHintingStyle?.toNativeValue(),
-        EnumMethod.value => fontHintingStyle?.toValue(),
-        EnumMethod.name => fontHintingStyle?.name(),
-      },
-      "fontSubpixelLayout": switch (enumMethod ?? EnumMethod.nativeValue) {
-        EnumMethod.nativeValue => fontSubpixelLayout?.toNativeValue(),
-        EnumMethod.value => fontSubpixelLayout?.toValue(),
-        EnumMethod.name => fontSubpixelLayout?.name(),
-      },
-      "generalAutofillEnabled": generalAutofillEnabled,
       "geolocationEnabled": geolocationEnabled,
-      "handleAcceleratorKeyPressed": handleAcceleratorKeyPressed,
       "hardwareAcceleration": hardwareAcceleration,
-      "hiddenPdfToolbarItems": switch (enumMethod ?? EnumMethod.nativeValue) {
-        EnumMethod.nativeValue => hiddenPdfToolbarItems?.toNativeValue(),
-        EnumMethod.value => hiddenPdfToolbarItems?.toValue(),
-        EnumMethod.name => hiddenPdfToolbarItems?.name(),
-      },
       "horizontalScrollBarEnabled": horizontalScrollBarEnabled,
       "horizontalScrollbarThumbColor": horizontalScrollbarThumbColor?.toHex(),
       "horizontalScrollbarTrackColor": horizontalScrollbarTrackColor?.toHex(),
-      "iframeAllow": iframeAllow,
-      "iframeAllowFullscreen": iframeAllowFullscreen,
-      "iframeAriaHidden": iframeAriaHidden,
-      "iframeCsp": iframeCsp,
-      "iframeName": iframeName,
-      "iframeReferrerPolicy": switch (enumMethod ?? EnumMethod.nativeValue) {
-        EnumMethod.nativeValue => iframeReferrerPolicy?.toNativeValue(),
-        EnumMethod.value => iframeReferrerPolicy?.toValue(),
-        EnumMethod.name => iframeReferrerPolicy?.name(),
-      },
-      "iframeRole": iframeRole,
-      "iframeSandbox": iframeSandbox
-          ?.map(
-            (e) => switch (enumMethod ?? EnumMethod.nativeValue) {
-              EnumMethod.nativeValue => e.toNativeValue(),
-              EnumMethod.value => e.toValue(),
-              EnumMethod.name => e.name(),
-            },
-          )
-          .toList(),
       "ignoresViewportScaleLimits": ignoresViewportScaleLimits,
       "incognito": incognito,
       "initialScale": initialScale,
@@ -3104,20 +2174,16 @@ class InAppWebViewSettings {
       "isSiteSpecificQuirksModeEnabled": isSiteSpecificQuirksModeEnabled,
       "isTextInteractionEnabled": isTextInteractionEnabled,
       "isUserInteractionEnabled": isUserInteractionEnabled,
-      "itpEnabled": itpEnabled,
       "javaScriptBridgeEnabled": javaScriptBridgeEnabled,
       "javaScriptBridgeForMainFrameOnly": javaScriptBridgeForMainFrameOnly,
       "javaScriptBridgeOriginAllowList": javaScriptBridgeOriginAllowList
           ?.toList(),
-      "javaScriptCanAccessClipboard": javaScriptCanAccessClipboard,
       "javaScriptCanOpenWindowsAutomatically":
           javaScriptCanOpenWindowsAutomatically,
       "javaScriptEnabled": javaScriptEnabled,
       "javaScriptHandlersForMainFrameOnly": javaScriptHandlersForMainFrameOnly,
       "javaScriptHandlersOriginAllowList": javaScriptHandlersOriginAllowList
           ?.toList(),
-      "keyRepeatDelay": keyRepeatDelay,
-      "keyRepeatInterval": keyRepeatInterval,
       "layoutAlgorithm": switch (enumMethod ?? EnumMethod.nativeValue) {
         EnumMethod.nativeValue => layoutAlgorithm?.toNativeValue(),
         EnumMethod.value => layoutAlgorithm?.toValue(),
@@ -3129,8 +2195,6 @@ class InAppWebViewSettings {
       "lockdownModeEnabled": lockdownModeEnabled,
       "maximumViewportInset": maximumViewportInset?.toMap(),
       "maximumZoomScale": maximumZoomScale,
-      "mediaContentTypesRequiringHardwareSupport":
-          mediaContentTypesRequiringHardwareSupport,
       "mediaPlaybackRequiresUserGesture": mediaPlaybackRequiresUserGesture,
       "mediaType": mediaType,
       "minimumFontSize": minimumFontSize,
@@ -3144,7 +2208,6 @@ class InAppWebViewSettings {
       },
       "needInitialFocus": needInitialFocus,
       "networkAvailable": networkAvailable,
-      "nonClientRegionSupportEnabled": nonClientRegionSupportEnabled,
       "offscreenPreRaster": offscreenPreRaster,
       "overScrollMode": switch (enumMethod ?? EnumMethod.nativeValue) {
         EnumMethod.nativeValue => overScrollMode?.toNativeValue(),
@@ -3152,10 +2215,7 @@ class InAppWebViewSettings {
         EnumMethod.name => overScrollMode?.name(),
       },
       "pageZoom": pageZoom,
-      "passwordAutosaveEnabled": passwordAutosaveEnabled,
       "paymentRequestEnabled": paymentRequestEnabled,
-      "pictographFontFamily": pictographFontFamily,
-      "pinchZoomEnabled": pinchZoomEnabled,
       "pluginScriptsForMainFrameOnly": pluginScriptsForMainFrameOnly,
       "pluginScriptsOriginAllowList": pluginScriptsOriginAllowList?.toList(),
       "preferredContentMode": switch (enumMethod ?? EnumMethod.nativeValue) {
@@ -3176,7 +2236,6 @@ class InAppWebViewSettings {
       "rendererPriorityPolicy": rendererPriorityPolicy?.toMap(
         enumMethod: enumMethod,
       ),
-      "reputationCheckingRequired": reputationCheckingRequired,
       "resourceCustomSchemes": resourceCustomSchemes,
       "safeBrowsingEnabled": safeBrowsingEnabled,
       "sansSerifFontFamily": sansSerifFontFamily,
@@ -3187,7 +2246,6 @@ class InAppWebViewSettings {
         EnumMethod.value => scrollBarStyle?.toValue(),
         EnumMethod.name => scrollBarStyle?.name(),
       },
-      "scrollMultiplier": scrollMultiplier,
       "scrollbarFadingEnabled": scrollbarFadingEnabled,
       "scrollsToTop": scrollsToTop,
       "securityRestrictionMode": switch (enumMethod ?? EnumMethod.nativeValue) {
@@ -3204,7 +2262,6 @@ class InAppWebViewSettings {
       "sharedCookiesEnabled": sharedCookiesEnabled,
       "shouldPrintBackgrounds": shouldPrintBackgrounds,
       "standardFontFamily": standardFontFamily,
-      "statusBarEnabled": statusBarEnabled,
       "supportMultipleWindows": supportMultipleWindows,
       "supportZoom": supportZoom,
       "supportsAdaptiveImageGlyph": supportsAdaptiveImageGlyph,
@@ -3244,7 +2301,6 @@ class InAppWebViewSettings {
         EnumMethod.value => webAuthenticationSupport?.toValue(),
         EnumMethod.name => webAuthenticationSupport?.name(),
       },
-      "webRTCUdpPortsRange": webRTCUdpPortsRange,
       "webViewAssetLoader": webViewAssetLoader?.toMap(enumMethod: enumMethod),
       "webViewMediaIntegrityApiStatus": webViewMediaIntegrityApiStatus?.toMap(
         enumMethod: enumMethod,
@@ -3269,7 +2325,7 @@ class InAppWebViewSettings {
 
   @override
   String toString() {
-    return 'InAppWebViewSettings{accessibilityIgnoresInvertColors: $accessibilityIgnoresInvertColors, algorithmicDarkeningAllowed: $algorithmicDarkeningAllowed, allowBackgroundAudioPlaying: $allowBackgroundAudioPlaying, allowContentAccess: $allowContentAccess, allowFileAccess: $allowFileAccess, allowFileAccessFromFileURLs: $allowFileAccessFromFileURLs, allowModalDialogs: $allowModalDialogs, allowTopNavigationToDataUrls: $allowTopNavigationToDataUrls, allowUniversalAccessFromFileURLs: $allowUniversalAccessFromFileURLs, allowingReadAccessTo: $allowingReadAccessTo, allowsAirPlayForMediaPlayback: $allowsAirPlayForMediaPlayback, allowsBackForwardNavigationGestures: $allowsBackForwardNavigationGestures, allowsInlineMediaPlayback: $allowsInlineMediaPlayback, allowsLinkPreview: $allowsLinkPreview, allowsPictureInPictureMediaPlayback: $allowsPictureInPictureMediaPlayback, alpha: $alpha, alwaysBounceHorizontal: $alwaysBounceHorizontal, alwaysBounceVertical: $alwaysBounceVertical, appCachePath: $appCachePath, applePayAPIEnabled: $applePayAPIEnabled, applicationNameForUserAgent: $applicationNameForUserAgent, attributionRegistrationBehavior: $attributionRegistrationBehavior, automaticallyAdjustsScrollIndicatorInsets: $automaticallyAdjustsScrollIndicatorInsets, backForwardCacheEnabled: $backForwardCacheEnabled, blockNetworkImage: $blockNetworkImage, blockNetworkLoads: $blockNetworkLoads, browserAcceleratorKeysEnabled: $browserAcceleratorKeysEnabled, builtInZoomControls: $builtInZoomControls, cacheEnabled: $cacheEnabled, cacheMode: $cacheMode, contentBlockers: $contentBlockers, contentInsetAdjustmentBehavior: $contentInsetAdjustmentBehavior, corsAllowlist: $corsAllowlist, cursiveFontFamily: $cursiveFontFamily, cursorBlinkTime: $cursorBlinkTime, darkMode: $darkMode, dataDetectorTypes: $dataDetectorTypes, databaseEnabled: $databaseEnabled, decelerationRate: $decelerationRate, defaultFixedFontSize: $defaultFixedFontSize, defaultFontSize: $defaultFontSize, defaultTextEncodingName: $defaultTextEncodingName, defaultVideoPoster: $defaultVideoPoster, disableAnimations: $disableAnimations, disableContextMenu: $disableContextMenu, disableDefaultErrorPage: $disableDefaultErrorPage, disableHorizontalScroll: $disableHorizontalScroll, disableInputAccessoryView: $disableInputAccessoryView, disableLongPressContextMenuOnLinks: $disableLongPressContextMenuOnLinks, disableVerticalScroll: $disableVerticalScroll, disableWebSecurity: $disableWebSecurity, disabledActionModeMenuItems: $disabledActionModeMenuItems, disallowOverScroll: $disallowOverScroll, displayZoomControls: $displayZoomControls, domStorageEnabled: $domStorageEnabled, doubleClickDistance: $doubleClickDistance, doubleClickTime: $doubleClickTime, downloadFaviconsEnabled: $downloadFaviconsEnabled, dragThreshold: $dragThreshold, drawCompositingIndicators: $drawCompositingIndicators, enable2DCanvasAcceleration: $enable2DCanvasAcceleration, enableCaretBrowsing: $enableCaretBrowsing, enableEncryptedMedia: $enableEncryptedMedia, enableJavaScriptMarkup: $enableJavaScriptMarkup, enableMedia: $enableMedia, enableMediaCapabilities: $enableMediaCapabilities, enableMockCaptureDevices: $enableMockCaptureDevices, enablePageCache: $enablePageCache, enableResizableTextAreas: $enableResizableTextAreas, enableSmoothScrolling: $enableSmoothScrolling, enableSpatialNavigation: $enableSpatialNavigation, enableTabsToLinks: $enableTabsToLinks, enableViewportScale: $enableViewportScale, enableWebRTC: $enableWebRTC, enableWriteConsoleMessagesToStdout: $enableWriteConsoleMessagesToStdout, enterpriseAuthenticationAppLinkPolicyEnabled: $enterpriseAuthenticationAppLinkPolicyEnabled, fantasyFontFamily: $fantasyFontFamily, fixedFontFamily: $fixedFontFamily, fontAntialias: $fontAntialias, fontDPI: $fontDPI, fontHintingStyle: $fontHintingStyle, fontSubpixelLayout: $fontSubpixelLayout, generalAutofillEnabled: $generalAutofillEnabled, geolocationEnabled: $geolocationEnabled, handleAcceleratorKeyPressed: $handleAcceleratorKeyPressed, hardwareAcceleration: $hardwareAcceleration, hiddenPdfToolbarItems: $hiddenPdfToolbarItems, horizontalScrollBarEnabled: $horizontalScrollBarEnabled, horizontalScrollbarThumbColor: $horizontalScrollbarThumbColor, horizontalScrollbarTrackColor: $horizontalScrollbarTrackColor, iframeAllow: $iframeAllow, iframeAllowFullscreen: $iframeAllowFullscreen, iframeAriaHidden: $iframeAriaHidden, iframeCsp: $iframeCsp, iframeName: $iframeName, iframeReferrerPolicy: $iframeReferrerPolicy, iframeRole: $iframeRole, iframeSandbox: $iframeSandbox, ignoresViewportScaleLimits: $ignoresViewportScaleLimits, incognito: $incognito, initialScale: $initialScale, interceptOnlyAsyncAjaxRequests: $interceptOnlyAsyncAjaxRequests, isDirectionalLockEnabled: $isDirectionalLockEnabled, isElementFullscreenEnabled: $isElementFullscreenEnabled, isFindInteractionEnabled: $isFindInteractionEnabled, isFraudulentWebsiteWarningEnabled: $isFraudulentWebsiteWarningEnabled, isInspectable: $isInspectable, isPagingEnabled: $isPagingEnabled, isSiteSpecificQuirksModeEnabled: $isSiteSpecificQuirksModeEnabled, isTextInteractionEnabled: $isTextInteractionEnabled, isUserInteractionEnabled: $isUserInteractionEnabled, itpEnabled: $itpEnabled, javaScriptBridgeEnabled: $javaScriptBridgeEnabled, javaScriptBridgeForMainFrameOnly: $javaScriptBridgeForMainFrameOnly, javaScriptBridgeOriginAllowList: $javaScriptBridgeOriginAllowList, javaScriptCanAccessClipboard: $javaScriptCanAccessClipboard, javaScriptCanOpenWindowsAutomatically: $javaScriptCanOpenWindowsAutomatically, javaScriptEnabled: $javaScriptEnabled, javaScriptHandlersForMainFrameOnly: $javaScriptHandlersForMainFrameOnly, javaScriptHandlersOriginAllowList: $javaScriptHandlersOriginAllowList, keyRepeatDelay: $keyRepeatDelay, keyRepeatInterval: $keyRepeatInterval, layoutAlgorithm: $layoutAlgorithm, limitsNavigationsToAppBoundDomains: $limitsNavigationsToAppBoundDomains, loadWithOverviewMode: $loadWithOverviewMode, loadsImagesAutomatically: $loadsImagesAutomatically, lockdownModeEnabled: $lockdownModeEnabled, maximumViewportInset: $maximumViewportInset, maximumZoomScale: $maximumZoomScale, mediaContentTypesRequiringHardwareSupport: $mediaContentTypesRequiringHardwareSupport, mediaPlaybackRequiresUserGesture: $mediaPlaybackRequiresUserGesture, mediaType: $mediaType, minimumFontSize: $minimumFontSize, minimumLogicalFontSize: $minimumLogicalFontSize, minimumViewportInset: $minimumViewportInset, minimumZoomScale: $minimumZoomScale, mixedContentMode: $mixedContentMode, needInitialFocus: $needInitialFocus, networkAvailable: $networkAvailable, nonClientRegionSupportEnabled: $nonClientRegionSupportEnabled, offscreenPreRaster: $offscreenPreRaster, overScrollMode: $overScrollMode, pageZoom: $pageZoom, passwordAutosaveEnabled: $passwordAutosaveEnabled, paymentRequestEnabled: $paymentRequestEnabled, pictographFontFamily: $pictographFontFamily, pinchZoomEnabled: $pinchZoomEnabled, pluginScriptsForMainFrameOnly: $pluginScriptsForMainFrameOnly, pluginScriptsOriginAllowList: $pluginScriptsOriginAllowList, preferredContentMode: $preferredContentMode, preferredHTTPSNavigationPolicy: $preferredHTTPSNavigationPolicy, profileName: $profileName, regexToAllowSyncUrlLoading: $regexToAllowSyncUrlLoading, regexToCancelSubFramesLoading: $regexToCancelSubFramesLoading, rendererPriorityPolicy: $rendererPriorityPolicy, reputationCheckingRequired: $reputationCheckingRequired, resourceCustomSchemes: $resourceCustomSchemes, safeBrowsingEnabled: $safeBrowsingEnabled, sansSerifFontFamily: $sansSerifFontFamily, scrollBarDefaultDelayBeforeFade: $scrollBarDefaultDelayBeforeFade, scrollBarFadeDuration: $scrollBarFadeDuration, scrollBarStyle: $scrollBarStyle, scrollMultiplier: $scrollMultiplier, scrollbarFadingEnabled: $scrollbarFadingEnabled, scrollsToTop: $scrollsToTop, securityRestrictionMode: $securityRestrictionMode, selectionGranularity: $selectionGranularity, serifFontFamily: $serifFontFamily, sharedCookiesEnabled: $sharedCookiesEnabled, shouldPrintBackgrounds: $shouldPrintBackgrounds, standardFontFamily: $standardFontFamily, statusBarEnabled: $statusBarEnabled, supportMultipleWindows: $supportMultipleWindows, supportZoom: $supportZoom, supportsAdaptiveImageGlyph: $supportsAdaptiveImageGlyph, suppressesIncrementalRendering: $suppressesIncrementalRendering, textZoom: $textZoom, thirdPartyCookiesEnabled: $thirdPartyCookiesEnabled, transparentBackground: $transparentBackground, underPageBackgroundColor: $underPageBackgroundColor, upgradeKnownHostsToHTTPS: $upgradeKnownHostsToHTTPS, useHybridComposition: $useHybridComposition, useOnAjaxProgress: $useOnAjaxProgress, useOnAjaxReadyStateChange: $useOnAjaxReadyStateChange, useOnDownloadStart: $useOnDownloadStart, useOnLoadResource: $useOnLoadResource, useOnNavigationResponse: $useOnNavigationResponse, useOnRenderProcessGone: $useOnRenderProcessGone, useOnShowFileChooser: $useOnShowFileChooser, useShouldInterceptAjaxRequest: $useShouldInterceptAjaxRequest, useShouldInterceptFetchRequest: $useShouldInterceptFetchRequest, useShouldInterceptRequest: $useShouldInterceptRequest, useShouldOverrideUrlLoading: $useShouldOverrideUrlLoading, useWideViewPort: $useWideViewPort, userAgent: $userAgent, userAgentMetadata: $userAgentMetadata, verticalScrollBarEnabled: $verticalScrollBarEnabled, verticalScrollbarPosition: $verticalScrollbarPosition, verticalScrollbarThumbColor: $verticalScrollbarThumbColor, verticalScrollbarTrackColor: $verticalScrollbarTrackColor, webAuthenticationSupport: $webAuthenticationSupport, webRTCUdpPortsRange: $webRTCUdpPortsRange, webViewAssetLoader: $webViewAssetLoader, webViewMediaIntegrityApiStatus: $webViewMediaIntegrityApiStatus, writingToolsBehavior: $writingToolsBehavior}';
+    return 'InAppWebViewSettings{accessibilityIgnoresInvertColors: $accessibilityIgnoresInvertColors, algorithmicDarkeningAllowed: $algorithmicDarkeningAllowed, allowBackgroundAudioPlaying: $allowBackgroundAudioPlaying, allowContentAccess: $allowContentAccess, allowFileAccess: $allowFileAccess, allowFileAccessFromFileURLs: $allowFileAccessFromFileURLs, allowUniversalAccessFromFileURLs: $allowUniversalAccessFromFileURLs, allowingReadAccessTo: $allowingReadAccessTo, allowsAirPlayForMediaPlayback: $allowsAirPlayForMediaPlayback, allowsBackForwardNavigationGestures: $allowsBackForwardNavigationGestures, allowsInlineMediaPlayback: $allowsInlineMediaPlayback, allowsLinkPreview: $allowsLinkPreview, allowsPictureInPictureMediaPlayback: $allowsPictureInPictureMediaPlayback, alpha: $alpha, alwaysBounceHorizontal: $alwaysBounceHorizontal, alwaysBounceVertical: $alwaysBounceVertical, appCachePath: $appCachePath, applePayAPIEnabled: $applePayAPIEnabled, applicationNameForUserAgent: $applicationNameForUserAgent, attributionRegistrationBehavior: $attributionRegistrationBehavior, automaticallyAdjustsScrollIndicatorInsets: $automaticallyAdjustsScrollIndicatorInsets, backForwardCacheEnabled: $backForwardCacheEnabled, blockNetworkImage: $blockNetworkImage, blockNetworkLoads: $blockNetworkLoads, builtInZoomControls: $builtInZoomControls, cacheEnabled: $cacheEnabled, cacheMode: $cacheMode, contentBlockers: $contentBlockers, contentInsetAdjustmentBehavior: $contentInsetAdjustmentBehavior, cursiveFontFamily: $cursiveFontFamily, dataDetectorTypes: $dataDetectorTypes, databaseEnabled: $databaseEnabled, decelerationRate: $decelerationRate, defaultFixedFontSize: $defaultFixedFontSize, defaultFontSize: $defaultFontSize, defaultTextEncodingName: $defaultTextEncodingName, defaultVideoPoster: $defaultVideoPoster, disableContextMenu: $disableContextMenu, disableDefaultErrorPage: $disableDefaultErrorPage, disableHorizontalScroll: $disableHorizontalScroll, disableInputAccessoryView: $disableInputAccessoryView, disableLongPressContextMenuOnLinks: $disableLongPressContextMenuOnLinks, disableVerticalScroll: $disableVerticalScroll, disabledActionModeMenuItems: $disabledActionModeMenuItems, disallowOverScroll: $disallowOverScroll, displayZoomControls: $displayZoomControls, domStorageEnabled: $domStorageEnabled, downloadFaviconsEnabled: $downloadFaviconsEnabled, enableViewportScale: $enableViewportScale, enterpriseAuthenticationAppLinkPolicyEnabled: $enterpriseAuthenticationAppLinkPolicyEnabled, fantasyFontFamily: $fantasyFontFamily, fixedFontFamily: $fixedFontFamily, geolocationEnabled: $geolocationEnabled, hardwareAcceleration: $hardwareAcceleration, horizontalScrollBarEnabled: $horizontalScrollBarEnabled, horizontalScrollbarThumbColor: $horizontalScrollbarThumbColor, horizontalScrollbarTrackColor: $horizontalScrollbarTrackColor, ignoresViewportScaleLimits: $ignoresViewportScaleLimits, incognito: $incognito, initialScale: $initialScale, interceptOnlyAsyncAjaxRequests: $interceptOnlyAsyncAjaxRequests, isDirectionalLockEnabled: $isDirectionalLockEnabled, isElementFullscreenEnabled: $isElementFullscreenEnabled, isFindInteractionEnabled: $isFindInteractionEnabled, isFraudulentWebsiteWarningEnabled: $isFraudulentWebsiteWarningEnabled, isInspectable: $isInspectable, isPagingEnabled: $isPagingEnabled, isSiteSpecificQuirksModeEnabled: $isSiteSpecificQuirksModeEnabled, isTextInteractionEnabled: $isTextInteractionEnabled, isUserInteractionEnabled: $isUserInteractionEnabled, javaScriptBridgeEnabled: $javaScriptBridgeEnabled, javaScriptBridgeForMainFrameOnly: $javaScriptBridgeForMainFrameOnly, javaScriptBridgeOriginAllowList: $javaScriptBridgeOriginAllowList, javaScriptCanOpenWindowsAutomatically: $javaScriptCanOpenWindowsAutomatically, javaScriptEnabled: $javaScriptEnabled, javaScriptHandlersForMainFrameOnly: $javaScriptHandlersForMainFrameOnly, javaScriptHandlersOriginAllowList: $javaScriptHandlersOriginAllowList, layoutAlgorithm: $layoutAlgorithm, limitsNavigationsToAppBoundDomains: $limitsNavigationsToAppBoundDomains, loadWithOverviewMode: $loadWithOverviewMode, loadsImagesAutomatically: $loadsImagesAutomatically, lockdownModeEnabled: $lockdownModeEnabled, maximumViewportInset: $maximumViewportInset, maximumZoomScale: $maximumZoomScale, mediaPlaybackRequiresUserGesture: $mediaPlaybackRequiresUserGesture, mediaType: $mediaType, minimumFontSize: $minimumFontSize, minimumLogicalFontSize: $minimumLogicalFontSize, minimumViewportInset: $minimumViewportInset, minimumZoomScale: $minimumZoomScale, mixedContentMode: $mixedContentMode, needInitialFocus: $needInitialFocus, networkAvailable: $networkAvailable, offscreenPreRaster: $offscreenPreRaster, overScrollMode: $overScrollMode, pageZoom: $pageZoom, paymentRequestEnabled: $paymentRequestEnabled, pluginScriptsForMainFrameOnly: $pluginScriptsForMainFrameOnly, pluginScriptsOriginAllowList: $pluginScriptsOriginAllowList, preferredContentMode: $preferredContentMode, preferredHTTPSNavigationPolicy: $preferredHTTPSNavigationPolicy, profileName: $profileName, regexToAllowSyncUrlLoading: $regexToAllowSyncUrlLoading, regexToCancelSubFramesLoading: $regexToCancelSubFramesLoading, rendererPriorityPolicy: $rendererPriorityPolicy, resourceCustomSchemes: $resourceCustomSchemes, safeBrowsingEnabled: $safeBrowsingEnabled, sansSerifFontFamily: $sansSerifFontFamily, scrollBarDefaultDelayBeforeFade: $scrollBarDefaultDelayBeforeFade, scrollBarFadeDuration: $scrollBarFadeDuration, scrollBarStyle: $scrollBarStyle, scrollbarFadingEnabled: $scrollbarFadingEnabled, scrollsToTop: $scrollsToTop, securityRestrictionMode: $securityRestrictionMode, selectionGranularity: $selectionGranularity, serifFontFamily: $serifFontFamily, sharedCookiesEnabled: $sharedCookiesEnabled, shouldPrintBackgrounds: $shouldPrintBackgrounds, standardFontFamily: $standardFontFamily, supportMultipleWindows: $supportMultipleWindows, supportZoom: $supportZoom, supportsAdaptiveImageGlyph: $supportsAdaptiveImageGlyph, suppressesIncrementalRendering: $suppressesIncrementalRendering, textZoom: $textZoom, thirdPartyCookiesEnabled: $thirdPartyCookiesEnabled, transparentBackground: $transparentBackground, underPageBackgroundColor: $underPageBackgroundColor, upgradeKnownHostsToHTTPS: $upgradeKnownHostsToHTTPS, useHybridComposition: $useHybridComposition, useOnAjaxProgress: $useOnAjaxProgress, useOnAjaxReadyStateChange: $useOnAjaxReadyStateChange, useOnDownloadStart: $useOnDownloadStart, useOnLoadResource: $useOnLoadResource, useOnNavigationResponse: $useOnNavigationResponse, useOnRenderProcessGone: $useOnRenderProcessGone, useOnShowFileChooser: $useOnShowFileChooser, useShouldInterceptAjaxRequest: $useShouldInterceptAjaxRequest, useShouldInterceptFetchRequest: $useShouldInterceptFetchRequest, useShouldInterceptRequest: $useShouldInterceptRequest, useShouldOverrideUrlLoading: $useShouldOverrideUrlLoading, useWideViewPort: $useWideViewPort, userAgent: $userAgent, userAgentMetadata: $userAgentMetadata, verticalScrollBarEnabled: $verticalScrollBarEnabled, verticalScrollbarPosition: $verticalScrollbarPosition, verticalScrollbarThumbColor: $verticalScrollbarThumbColor, verticalScrollbarTrackColor: $verticalScrollbarTrackColor, webAuthenticationSupport: $webAuthenticationSupport, webViewAssetLoader: $webViewAssetLoader, webViewMediaIntegrityApiStatus: $webViewMediaIntegrityApiStatus, writingToolsBehavior: $writingToolsBehavior}';
   }
 }
 
@@ -3342,35 +2398,10 @@ enum InAppWebViewSettingsProperty {
   ///**Officially Supported Platforms/Implementations**:
   ///- Android WebView ([Official API - WebSettings.setAllowFileAccessFromFileURLs](https://developer.android.com/reference/android/webkit/WebSettings?hl=en#setAllowFileAccessFromFileURLs(boolean)))
   ///- iOS WKWebView
-  ///- macOS WKWebView
-  ///- Linux WPE WebKit 2.10+ ([Official API - WebKitSettings.allow-file-access-from-file-urls](https://wpewebkit.org/reference/stable/wpe-webkit-2.0/property.Settings.allow-file-access-from-file-urls.html))
   ///
   ///Use the [InAppWebViewSettings.isPropertySupported] method to check if this property is supported at runtime.
   ///{@endtemplate}
   allowFileAccessFromFileURLs,
-
-  ///Can be used to check if the [InAppWebViewSettings.allowModalDialogs] property is supported at runtime.
-  ///
-  ///{@template flutter_inappwebview_platform_interface.InAppWebViewSettings.allowModalDialogs.supported_platforms}
-  ///
-  ///**Officially Supported Platforms/Implementations**:
-  ///- Linux WPE WebKit ([Official API - WebKitSettings.allow-modal-dialogs](https://wpewebkit.org/reference/stable/wpe-webkit-2.0/property.Settings.allow-modal-dialogs.html))
-  ///
-  ///Use the [InAppWebViewSettings.isPropertySupported] method to check if this property is supported at runtime.
-  ///{@endtemplate}
-  allowModalDialogs,
-
-  ///Can be used to check if the [InAppWebViewSettings.allowTopNavigationToDataUrls] property is supported at runtime.
-  ///
-  ///{@template flutter_inappwebview_platform_interface.InAppWebViewSettings.allowTopNavigationToDataUrls.supported_platforms}
-  ///
-  ///**Officially Supported Platforms/Implementations**:
-  ///- Linux WPE WebKit 2.28+ ([Official API - WebKitSettings.allow-top-navigation-to-data-urls](https://wpewebkit.org/reference/stable/wpe-webkit-2.0/property.Settings.allow-top-navigation-to-data-urls.html)):
-  ///    - Requires WPE WebKit 2.28 or later
-  ///
-  ///Use the [InAppWebViewSettings.isPropertySupported] method to check if this property is supported at runtime.
-  ///{@endtemplate}
-  allowTopNavigationToDataUrls,
 
   ///Can be used to check if the [InAppWebViewSettings.allowUniversalAccessFromFileURLs] property is supported at runtime.
   ///
@@ -3379,8 +2410,6 @@ enum InAppWebViewSettingsProperty {
   ///**Officially Supported Platforms/Implementations**:
   ///- Android WebView ([Official API - WebSettings.setAllowUniversalAccessFromFileURLs](https://developer.android.com/reference/android/webkit/WebSettings?hl=en#setAllowUniversalAccessFromFileURLs(boolean)))
   ///- iOS WKWebView
-  ///- macOS WKWebView
-  ///- Linux WPE WebKit 2.14+ ([Official API - WebKitSettings.allow-universal-access-from-file-urls](https://wpewebkit.org/reference/stable/wpe-webkit-2.0/property.Settings.allow-universal-access-from-file-urls.html))
   ///
   ///Use the [InAppWebViewSettings.isPropertySupported] method to check if this property is supported at runtime.
   ///{@endtemplate}
@@ -3392,7 +2421,6 @@ enum InAppWebViewSettingsProperty {
   ///
   ///**Officially Supported Platforms/Implementations**:
   ///- iOS WKWebView
-  ///- macOS WKWebView
   ///
   ///Use the [InAppWebViewSettings.isPropertySupported] method to check if this property is supported at runtime.
   ///{@endtemplate}
@@ -3404,7 +2432,6 @@ enum InAppWebViewSettingsProperty {
   ///
   ///**Officially Supported Platforms/Implementations**:
   ///- iOS WKWebView ([Official API - WKWebViewConfiguration.allowsAirPlayForMediaPlayback](https://developer.apple.com/documentation/webkit/wkwebviewconfiguration/1395673-allowsairplayformediaplayback))
-  ///- macOS WKWebView ([Official API - WKWebViewConfiguration.allowsAirPlayForMediaPlayback](https://developer.apple.com/documentation/webkit/wkwebviewconfiguration/1395673-allowsairplayformediaplayback))
   ///
   ///Use the [InAppWebViewSettings.isPropertySupported] method to check if this property is supported at runtime.
   ///{@endtemplate}
@@ -3416,8 +2443,6 @@ enum InAppWebViewSettingsProperty {
   ///
   ///**Officially Supported Platforms/Implementations**:
   ///- iOS WKWebView ([Official API - WKWebView.allowsBackForwardNavigationGestures](https://developer.apple.com/documentation/webkit/wkwebview/1414995-allowsbackforwardnavigationgestu))
-  ///- macOS WKWebView ([Official API - WKWebView.allowsBackForwardNavigationGestures](https://developer.apple.com/documentation/webkit/wkwebview/1414995-allowsbackforwardnavigationgestu))
-  ///- Windows WebView2 1.0.992.28+ ([Official API - ICoreWebView2Settings6.put_IsSwipeNavigationEnabled](https://learn.microsoft.com/en-us/microsoft-edge/webview2/reference/win32/icorewebview2settings6?view=webview2-1.0.2849.39#put_isswipenavigationenabled))
   ///
   ///Use the [InAppWebViewSettings.isPropertySupported] method to check if this property is supported at runtime.
   ///{@endtemplate}
@@ -3429,7 +2454,6 @@ enum InAppWebViewSettingsProperty {
   ///
   ///**Officially Supported Platforms/Implementations**:
   ///- iOS WKWebView ([Official API - WKWebViewConfiguration.allowsInlineMediaPlayback](https://developer.apple.com/documentation/webkit/wkwebviewconfiguration/1614793-allowsinlinemediaplayback))
-  ///- Linux WPE WebKit ([Official API - WebKitSettings.media-playback-allows-inline](https://wpewebkit.org/reference/stable/wpe-webkit-2.0/property.Settings.media-playback-allows-inline.html))
   ///
   ///Use the [InAppWebViewSettings.isPropertySupported] method to check if this property is supported at runtime.
   ///{@endtemplate}
@@ -3441,7 +2465,6 @@ enum InAppWebViewSettingsProperty {
   ///
   ///**Officially Supported Platforms/Implementations**:
   ///- iOS WKWebView ([Official API - WKWebView.allowsLinkPreview](https://developer.apple.com/documentation/webkit/wkwebview/1415000-allowslinkpreview))
-  ///- macOS WKWebView ([Official API - WKWebView.allowsLinkPreview](https://developer.apple.com/documentation/webkit/wkwebview/1415000-allowslinkpreview))
   ///
   ///Use the [InAppWebViewSettings.isPropertySupported] method to check if this property is supported at runtime.
   ///{@endtemplate}
@@ -3465,7 +2488,6 @@ enum InAppWebViewSettingsProperty {
   ///**Officially Supported Platforms/Implementations**:
   ///- Android WebView ([Official API - View.setAlpha](https://developer.android.com/reference/android/view/View#setAlpha(float)))
   ///- iOS WKWebView ([Official API - UIView.alpha](https://developer.apple.com/documentation/uikit/uiview/1622417-alpha))
-  ///- macOS WKWebView ([Official API - NSView.alphaValue](https://developer.apple.com/documentation/appkit/nsview/1483560-alphavalue))
   ///
   ///Use the [InAppWebViewSettings.isPropertySupported] method to check if this property is supported at runtime.
   ///{@endtemplate}
@@ -3522,7 +2544,6 @@ enum InAppWebViewSettingsProperty {
   ///**Officially Supported Platforms/Implementations**:
   ///- Android WebView
   ///- iOS WKWebView ([Official API - WKWebViewConfiguration.applicationNameForUserAgent](https://developer.apple.com/documentation/webkit/wkwebviewconfiguration/1395665-applicationnameforuseragent))
-  ///- macOS WKWebView ([Official API - WKWebViewConfiguration.applicationNameForUserAgent](https://developer.apple.com/documentation/webkit/wkwebviewconfiguration/1395665-applicationnameforuseragent))
   ///
   ///Use the [InAppWebViewSettings.isPropertySupported] method to check if this property is supported at runtime.
   ///{@endtemplate}
@@ -3585,17 +2606,6 @@ enum InAppWebViewSettingsProperty {
   ///{@endtemplate}
   blockNetworkLoads,
 
-  ///Can be used to check if the [InAppWebViewSettings.browserAcceleratorKeysEnabled] property is supported at runtime.
-  ///
-  ///{@template flutter_inappwebview_platform_interface.InAppWebViewSettings.browserAcceleratorKeysEnabled.supported_platforms}
-  ///
-  ///**Officially Supported Platforms/Implementations**:
-  ///- Windows WebView2 1.0.864.35+ ([Official API - ICoreWebView2Settings3.put_IsBuiltInErrorPageEnabled](https://learn.microsoft.com/en-us/microsoft-edge/webview2/reference/win32/icorewebview2settings3?view=webview2-1.0.2849.39#put_arebrowseracceleratorkeysenabled))
-  ///
-  ///Use the [InAppWebViewSettings.isPropertySupported] method to check if this property is supported at runtime.
-  ///{@endtemplate}
-  browserAcceleratorKeysEnabled,
-
   ///Can be used to check if the [InAppWebViewSettings.builtInZoomControls] property is supported at runtime.
   ///
   ///{@template flutter_inappwebview_platform_interface.InAppWebViewSettings.builtInZoomControls.supported_platforms}
@@ -3614,7 +2624,6 @@ enum InAppWebViewSettingsProperty {
   ///**Officially Supported Platforms/Implementations**:
   ///- Android WebView
   ///- iOS WKWebView
-  ///- macOS WKWebView
   ///
   ///Use the [InAppWebViewSettings.isPropertySupported] method to check if this property is supported at runtime.
   ///{@endtemplate}
@@ -3638,8 +2647,6 @@ enum InAppWebViewSettingsProperty {
   ///**Officially Supported Platforms/Implementations**:
   ///- Android WebView
   ///- iOS WKWebView 11.0+
-  ///- macOS WKWebView 10.13+
-  ///- Linux WPE WebKit ([Official API - WebKitUserContentFilter](https://wpewebkit.org/reference/stable/wpe-webkit-2.0/class.UserContentFilter.html))
   ///
   ///Use the [InAppWebViewSettings.isPropertySupported] method to check if this property is supported at runtime.
   ///{@endtemplate}
@@ -3656,53 +2663,16 @@ enum InAppWebViewSettingsProperty {
   ///{@endtemplate}
   contentInsetAdjustmentBehavior,
 
-  ///Can be used to check if the [InAppWebViewSettings.corsAllowlist] property is supported at runtime.
-  ///
-  ///{@template flutter_inappwebview_platform_interface.InAppWebViewSettings.corsAllowlist.supported_platforms}
-  ///
-  ///**Officially Supported Platforms/Implementations**:
-  ///- Linux WPE WebKit 2.34+ ([Official API - webkit_web_view_set_cors_allowlist](https://wpewebkit.org/reference/stable/wpe-webkit-2.0/method.WebView.set_cors_allowlist.html)):
-  ///    - Pattern format: [protocol]://[host]:[port]. All three components are required.
-  ///
-  ///Use the [InAppWebViewSettings.isPropertySupported] method to check if this property is supported at runtime.
-  ///{@endtemplate}
-  corsAllowlist,
-
   ///Can be used to check if the [InAppWebViewSettings.cursiveFontFamily] property is supported at runtime.
   ///
   ///{@template flutter_inappwebview_platform_interface.InAppWebViewSettings.cursiveFontFamily.supported_platforms}
   ///
   ///**Officially Supported Platforms/Implementations**:
   ///- Android WebView ([Official API - WebSettings.setCursiveFontFamily](https://developer.android.com/reference/android/webkit/WebSettings#setCursiveFontFamily(java.lang.String)))
-  ///- Linux WPE WebKit ([Official API - WebKitSettings.cursive-font-family](https://wpewebkit.org/reference/stable/wpe-webkit-2.0/property.Settings.cursive-font-family.html))
   ///
   ///Use the [InAppWebViewSettings.isPropertySupported] method to check if this property is supported at runtime.
   ///{@endtemplate}
   cursiveFontFamily,
-
-  ///Can be used to check if the [InAppWebViewSettings.cursorBlinkTime] property is supported at runtime.
-  ///
-  ///{@template flutter_inappwebview_platform_interface.InAppWebViewSettings.cursorBlinkTime.supported_platforms}
-  ///
-  ///**Officially Supported Platforms/Implementations**:
-  ///- Linux WPE WebKit ([Official API - WPESettings.cursor-blink-time](https://wpewebkit.org/reference/stable/wpe-platform-2.0/class.Settings.html)):
-  ///    - This is a WPE Platform display-level setting. Value is in milliseconds.
-  ///
-  ///Use the [InAppWebViewSettings.isPropertySupported] method to check if this property is supported at runtime.
-  ///{@endtemplate}
-  cursorBlinkTime,
-
-  ///Can be used to check if the [InAppWebViewSettings.darkMode] property is supported at runtime.
-  ///
-  ///{@template flutter_inappwebview_platform_interface.InAppWebViewSettings.darkMode.supported_platforms}
-  ///
-  ///**Officially Supported Platforms/Implementations**:
-  ///- Linux WPE WebKit ([Official API - WPESettings.dark-mode](https://wpewebkit.org/reference/stable/wpe-platform-2.0/class.Settings.html)):
-  ///    - This is a WPE Platform display-level setting that affects all WebViews.
-  ///
-  ///Use the [InAppWebViewSettings.isPropertySupported] method to check if this property is supported at runtime.
-  ///{@endtemplate}
-  darkMode,
 
   ///Can be used to check if the [InAppWebViewSettings.dataDetectorTypes] property is supported at runtime.
   ///
@@ -3721,7 +2691,6 @@ enum InAppWebViewSettingsProperty {
   ///
   ///**Officially Supported Platforms/Implementations**:
   ///- Android WebView ([Official API - WebSettings.setDatabaseEnabled](https://developer.android.com/reference/android/webkit/WebSettings?hl=en#setDatabaseEnabled(boolean)))
-  ///- Linux WPE WebKit ([Official API - WebKitSettings.enable-html5-database](https://wpewebkit.org/reference/stable/wpe-webkit-2.0/property.Settings.enable-html5-database.html))
   ///
   ///Use the [InAppWebViewSettings.isPropertySupported] method to check if this property is supported at runtime.
   ///{@endtemplate}
@@ -3744,7 +2713,6 @@ enum InAppWebViewSettingsProperty {
   ///
   ///**Officially Supported Platforms/Implementations**:
   ///- Android WebView ([Official API - WebSettings.setDefaultFixedFontSize](https://developer.android.com/reference/android/webkit/WebSettings#setDefaultFixedFontSize(int)))
-  ///- Linux WPE WebKit ([Official API - WebKitSettings.default-monospace-font-size](https://wpewebkit.org/reference/stable/wpe-webkit-2.0/property.Settings.default-monospace-font-size.html))
   ///
   ///Use the [InAppWebViewSettings.isPropertySupported] method to check if this property is supported at runtime.
   ///{@endtemplate}
@@ -3756,7 +2724,6 @@ enum InAppWebViewSettingsProperty {
   ///
   ///**Officially Supported Platforms/Implementations**:
   ///- Android WebView ([Official API - WebSettings.setDefaultFontSize](https://developer.android.com/reference/android/webkit/WebSettings#setDefaultFontSize(int)))
-  ///- Linux WPE WebKit ([Official API - WebKitSettings.default-font-size](https://wpewebkit.org/reference/stable/wpe-webkit-2.0/property.Settings.default-font-size.html))
   ///
   ///Use the [InAppWebViewSettings.isPropertySupported] method to check if this property is supported at runtime.
   ///{@endtemplate}
@@ -3768,7 +2735,6 @@ enum InAppWebViewSettingsProperty {
   ///
   ///**Officially Supported Platforms/Implementations**:
   ///- Android WebView ([Official API - WebSettings.setDefaultTextEncodingName](https://developer.android.com/reference/android/webkit/WebSettings#setDefaultTextEncodingName(java.lang.String)))
-  ///- Linux WPE WebKit ([Official API - WebKitSettings.default-charset](https://wpewebkit.org/reference/stable/wpe-webkit-2.0/property.Settings.default-charset.html))
   ///
   ///Use the [InAppWebViewSettings.isPropertySupported] method to check if this property is supported at runtime.
   ///{@endtemplate}
@@ -3785,18 +2751,6 @@ enum InAppWebViewSettingsProperty {
   ///{@endtemplate}
   defaultVideoPoster,
 
-  ///Can be used to check if the [InAppWebViewSettings.disableAnimations] property is supported at runtime.
-  ///
-  ///{@template flutter_inappwebview_platform_interface.InAppWebViewSettings.disableAnimations.supported_platforms}
-  ///
-  ///**Officially Supported Platforms/Implementations**:
-  ///- Linux WPE WebKit ([Official API - WPESettings.disable-animations](https://wpewebkit.org/reference/stable/wpe-platform-2.0/class.Settings.html)):
-  ///    - This is a WPE Platform display-level setting for accessibility.
-  ///
-  ///Use the [InAppWebViewSettings.isPropertySupported] method to check if this property is supported at runtime.
-  ///{@endtemplate}
-  disableAnimations,
-
   ///Can be used to check if the [InAppWebViewSettings.disableContextMenu] property is supported at runtime.
   ///
   ///{@template flutter_inappwebview_platform_interface.InAppWebViewSettings.disableContextMenu.supported_platforms}
@@ -3804,8 +2758,6 @@ enum InAppWebViewSettingsProperty {
   ///**Officially Supported Platforms/Implementations**:
   ///- Android WebView
   ///- iOS WKWebView
-  ///- Web \<iframe\> but requires same origin
-  ///- Windows WebView2 ([Official API - ICoreWebView2Settings.put_AreDefaultContextMenusEnabled](https://learn.microsoft.com/en-us/microsoft-edge/webview2/reference/win32/icorewebview2settings?view=webview2-1.0.2210.55#put_aredefaultcontextmenusenabled))
   ///
   ///Use the [InAppWebViewSettings.isPropertySupported] method to check if this property is supported at runtime.
   ///{@endtemplate}
@@ -3817,7 +2769,6 @@ enum InAppWebViewSettingsProperty {
   ///
   ///**Officially Supported Platforms/Implementations**:
   ///- Android WebView
-  ///- Windows WebView2 ([Official API - ICoreWebView2Settings.put_IsBuiltInErrorPageEnabled](https://learn.microsoft.com/en-us/microsoft-edge/webview2/reference/win32/icorewebview2settings?view=webview2-1.0.2849.39#put_isbuiltinerrorpageenabled))
   ///
   ///Use the [InAppWebViewSettings.isPropertySupported] method to check if this property is supported at runtime.
   ///{@endtemplate}
@@ -3830,7 +2781,6 @@ enum InAppWebViewSettingsProperty {
   ///**Officially Supported Platforms/Implementations**:
   ///- Android WebView
   ///- iOS WKWebView
-  ///- Web \<iframe\> but requires same origin
   ///
   ///Use the [InAppWebViewSettings.isPropertySupported] method to check if this property is supported at runtime.
   ///{@endtemplate}
@@ -3865,23 +2815,10 @@ enum InAppWebViewSettingsProperty {
   ///**Officially Supported Platforms/Implementations**:
   ///- Android WebView
   ///- iOS WKWebView
-  ///- Web \<iframe\> but requires same origin
   ///
   ///Use the [InAppWebViewSettings.isPropertySupported] method to check if this property is supported at runtime.
   ///{@endtemplate}
   disableVerticalScroll,
-
-  ///Can be used to check if the [InAppWebViewSettings.disableWebSecurity] property is supported at runtime.
-  ///
-  ///{@template flutter_inappwebview_platform_interface.InAppWebViewSettings.disableWebSecurity.supported_platforms}
-  ///
-  ///**Officially Supported Platforms/Implementations**:
-  ///- Linux WPE WebKit 2.40+ ([Official API - WebKitSettings.disable-web-security](https://wpewebkit.org/reference/stable/wpe-webkit-2.0/property.Settings.disable-web-security.html)):
-  ///    - Requires WPE WebKit 2.40 or later
-  ///
-  ///Use the [InAppWebViewSettings.isPropertySupported] method to check if this property is supported at runtime.
-  ///{@endtemplate}
-  disableWebSecurity,
 
   ///Can be used to check if the [InAppWebViewSettings.disabledActionModeMenuItems] property is supported at runtime.
   ///
@@ -3922,35 +2859,10 @@ enum InAppWebViewSettingsProperty {
   ///
   ///**Officially Supported Platforms/Implementations**:
   ///- Android WebView ([Official API - WebSettings.setDomStorageEnabled](https://developer.android.com/reference/android/webkit/WebSettings?hl=en#setDomStorageEnabled(boolean)))
-  ///- Linux WPE WebKit ([Official API - WebKitSettings.enable-html5-local-storage](https://wpewebkit.org/reference/stable/wpe-webkit-2.0/property.Settings.enable-html5-local-storage.html))
   ///
   ///Use the [InAppWebViewSettings.isPropertySupported] method to check if this property is supported at runtime.
   ///{@endtemplate}
   domStorageEnabled,
-
-  ///Can be used to check if the [InAppWebViewSettings.doubleClickDistance] property is supported at runtime.
-  ///
-  ///{@template flutter_inappwebview_platform_interface.InAppWebViewSettings.doubleClickDistance.supported_platforms}
-  ///
-  ///**Officially Supported Platforms/Implementations**:
-  ///- Linux WPE WebKit ([Official API - WPESettings.double-click-distance](https://wpewebkit.org/reference/stable/wpe-platform-2.0/class.Settings.html)):
-  ///    - This is a WPE Platform display-level setting. Value is in pixels.
-  ///
-  ///Use the [InAppWebViewSettings.isPropertySupported] method to check if this property is supported at runtime.
-  ///{@endtemplate}
-  doubleClickDistance,
-
-  ///Can be used to check if the [InAppWebViewSettings.doubleClickTime] property is supported at runtime.
-  ///
-  ///{@template flutter_inappwebview_platform_interface.InAppWebViewSettings.doubleClickTime.supported_platforms}
-  ///
-  ///**Officially Supported Platforms/Implementations**:
-  ///- Linux WPE WebKit ([Official API - WPESettings.double-click-time](https://wpewebkit.org/reference/stable/wpe-platform-2.0/class.Settings.html)):
-  ///    - This is a WPE Platform display-level setting. Value is in milliseconds.
-  ///
-  ///Use the [InAppWebViewSettings.isPropertySupported] method to check if this property is supported at runtime.
-  ///{@endtemplate}
-  doubleClickTime,
 
   ///Can be used to check if the [InAppWebViewSettings.downloadFaviconsEnabled] property is supported at runtime.
   ///
@@ -3964,201 +2876,16 @@ enum InAppWebViewSettingsProperty {
   ///{@endtemplate}
   downloadFaviconsEnabled,
 
-  ///Can be used to check if the [InAppWebViewSettings.dragThreshold] property is supported at runtime.
-  ///
-  ///{@template flutter_inappwebview_platform_interface.InAppWebViewSettings.dragThreshold.supported_platforms}
-  ///
-  ///**Officially Supported Platforms/Implementations**:
-  ///- Linux WPE WebKit ([Official API - WPESettings.drag-threshold](https://wpewebkit.org/reference/stable/wpe-platform-2.0/class.Settings.html)):
-  ///    - This is a WPE Platform display-level setting. Value is in pixels.
-  ///
-  ///Use the [InAppWebViewSettings.isPropertySupported] method to check if this property is supported at runtime.
-  ///{@endtemplate}
-  dragThreshold,
-
-  ///Can be used to check if the [InAppWebViewSettings.drawCompositingIndicators] property is supported at runtime.
-  ///
-  ///{@template flutter_inappwebview_platform_interface.InAppWebViewSettings.drawCompositingIndicators.supported_platforms}
-  ///
-  ///**Officially Supported Platforms/Implementations**:
-  ///- Linux WPE WebKit ([Official API - WebKitSettings.draw-compositing-indicators](https://wpewebkit.org/reference/stable/wpe-webkit-2.0/property.Settings.draw-compositing-indicators.html))
-  ///
-  ///Use the [InAppWebViewSettings.isPropertySupported] method to check if this property is supported at runtime.
-  ///{@endtemplate}
-  drawCompositingIndicators,
-
-  ///Can be used to check if the [InAppWebViewSettings.enable2DCanvasAcceleration] property is supported at runtime.
-  ///
-  ///{@template flutter_inappwebview_platform_interface.InAppWebViewSettings.enable2DCanvasAcceleration.supported_platforms}
-  ///
-  ///**Officially Supported Platforms/Implementations**:
-  ///- Linux WPE WebKit 2.46+ ([Official API - WebKitSettings.enable-2d-canvas-acceleration](https://wpewebkit.org/reference/stable/wpe-webkit-2.0/property.Settings.enable-2d-canvas-acceleration.html)):
-  ///    - Requires WPE WebKit 2.46 or later
-  ///
-  ///Use the [InAppWebViewSettings.isPropertySupported] method to check if this property is supported at runtime.
-  ///{@endtemplate}
-  enable2DCanvasAcceleration,
-
-  ///Can be used to check if the [InAppWebViewSettings.enableCaretBrowsing] property is supported at runtime.
-  ///
-  ///{@template flutter_inappwebview_platform_interface.InAppWebViewSettings.enableCaretBrowsing.supported_platforms}
-  ///
-  ///**Officially Supported Platforms/Implementations**:
-  ///- Linux WPE WebKit ([Official API - WebKitSettings.enable-caret-browsing](https://wpewebkit.org/reference/stable/wpe-webkit-2.0/property.Settings.enable-caret-browsing.html))
-  ///
-  ///Use the [InAppWebViewSettings.isPropertySupported] method to check if this property is supported at runtime.
-  ///{@endtemplate}
-  enableCaretBrowsing,
-
-  ///Can be used to check if the [InAppWebViewSettings.enableEncryptedMedia] property is supported at runtime.
-  ///
-  ///{@template flutter_inappwebview_platform_interface.InAppWebViewSettings.enableEncryptedMedia.supported_platforms}
-  ///
-  ///**Officially Supported Platforms/Implementations**:
-  ///- Linux WPE WebKit 2.20+ ([Official API - WebKitSettings.enable-encrypted-media](https://wpewebkit.org/reference/stable/wpe-webkit-2.0/property.Settings.enable-encrypted-media.html)):
-  ///    - Requires WPE WebKit 2.20 or later
-  ///
-  ///Use the [InAppWebViewSettings.isPropertySupported] method to check if this property is supported at runtime.
-  ///{@endtemplate}
-  enableEncryptedMedia,
-
-  ///Can be used to check if the [InAppWebViewSettings.enableJavaScriptMarkup] property is supported at runtime.
-  ///
-  ///{@template flutter_inappwebview_platform_interface.InAppWebViewSettings.enableJavaScriptMarkup.supported_platforms}
-  ///
-  ///**Officially Supported Platforms/Implementations**:
-  ///- Linux WPE WebKit 2.24+ ([Official API - WebKitSettings.enable-javascript-markup](https://wpewebkit.org/reference/stable/wpe-webkit-2.0/property.Settings.enable-javascript-markup.html)):
-  ///    - Requires WPE WebKit 2.24 or later
-  ///
-  ///Use the [InAppWebViewSettings.isPropertySupported] method to check if this property is supported at runtime.
-  ///{@endtemplate}
-  enableJavaScriptMarkup,
-
-  ///Can be used to check if the [InAppWebViewSettings.enableMedia] property is supported at runtime.
-  ///
-  ///{@template flutter_inappwebview_platform_interface.InAppWebViewSettings.enableMedia.supported_platforms}
-  ///
-  ///**Officially Supported Platforms/Implementations**:
-  ///- Linux WPE WebKit 2.26+ ([Official API - WebKitSettings.enable-media](https://wpewebkit.org/reference/stable/wpe-webkit-2.0/property.Settings.enable-media.html)):
-  ///    - Requires WPE WebKit 2.26 or later
-  ///
-  ///Use the [InAppWebViewSettings.isPropertySupported] method to check if this property is supported at runtime.
-  ///{@endtemplate}
-  enableMedia,
-
-  ///Can be used to check if the [InAppWebViewSettings.enableMediaCapabilities] property is supported at runtime.
-  ///
-  ///{@template flutter_inappwebview_platform_interface.InAppWebViewSettings.enableMediaCapabilities.supported_platforms}
-  ///
-  ///**Officially Supported Platforms/Implementations**:
-  ///- Linux WPE WebKit 2.22+ ([Official API - WebKitSettings.enable-media-capabilities](https://wpewebkit.org/reference/stable/wpe-webkit-2.0/property.Settings.enable-media-capabilities.html)):
-  ///    - Requires WPE WebKit 2.22 or later
-  ///
-  ///Use the [InAppWebViewSettings.isPropertySupported] method to check if this property is supported at runtime.
-  ///{@endtemplate}
-  enableMediaCapabilities,
-
-  ///Can be used to check if the [InAppWebViewSettings.enableMockCaptureDevices] property is supported at runtime.
-  ///
-  ///{@template flutter_inappwebview_platform_interface.InAppWebViewSettings.enableMockCaptureDevices.supported_platforms}
-  ///
-  ///**Officially Supported Platforms/Implementations**:
-  ///- Linux WPE WebKit 2.24+ ([Official API - WebKitSettings.enable-mock-capture-devices](https://wpewebkit.org/reference/stable/wpe-webkit-2.0/property.Settings.enable-mock-capture-devices.html)):
-  ///    - Requires WPE WebKit 2.24 or later
-  ///
-  ///Use the [InAppWebViewSettings.isPropertySupported] method to check if this property is supported at runtime.
-  ///{@endtemplate}
-  enableMockCaptureDevices,
-
-  ///Can be used to check if the [InAppWebViewSettings.enablePageCache] property is supported at runtime.
-  ///
-  ///{@template flutter_inappwebview_platform_interface.InAppWebViewSettings.enablePageCache.supported_platforms}
-  ///
-  ///**Officially Supported Platforms/Implementations**:
-  ///- Linux WPE WebKit ([Official API - WebKitSettings.enable-page-cache](https://wpewebkit.org/reference/stable/wpe-webkit-2.0/property.Settings.enable-page-cache.html))
-  ///
-  ///Use the [InAppWebViewSettings.isPropertySupported] method to check if this property is supported at runtime.
-  ///{@endtemplate}
-  enablePageCache,
-
-  ///Can be used to check if the [InAppWebViewSettings.enableResizableTextAreas] property is supported at runtime.
-  ///
-  ///{@template flutter_inappwebview_platform_interface.InAppWebViewSettings.enableResizableTextAreas.supported_platforms}
-  ///
-  ///**Officially Supported Platforms/Implementations**:
-  ///- Linux WPE WebKit ([Official API - WebKitSettings.enable-resizable-text-areas](https://wpewebkit.org/reference/stable/wpe-webkit-2.0/property.Settings.enable-resizable-text-areas.html))
-  ///
-  ///Use the [InAppWebViewSettings.isPropertySupported] method to check if this property is supported at runtime.
-  ///{@endtemplate}
-  enableResizableTextAreas,
-
-  ///Can be used to check if the [InAppWebViewSettings.enableSmoothScrolling] property is supported at runtime.
-  ///
-  ///{@template flutter_inappwebview_platform_interface.InAppWebViewSettings.enableSmoothScrolling.supported_platforms}
-  ///
-  ///**Officially Supported Platforms/Implementations**:
-  ///- Linux WPE WebKit ([Official API - WebKitSettings.enable-smooth-scrolling](https://wpewebkit.org/reference/stable/wpe-webkit-2.0/property.Settings.enable-smooth-scrolling.html))
-  ///
-  ///Use the [InAppWebViewSettings.isPropertySupported] method to check if this property is supported at runtime.
-  ///{@endtemplate}
-  enableSmoothScrolling,
-
-  ///Can be used to check if the [InAppWebViewSettings.enableSpatialNavigation] property is supported at runtime.
-  ///
-  ///{@template flutter_inappwebview_platform_interface.InAppWebViewSettings.enableSpatialNavigation.supported_platforms}
-  ///
-  ///**Officially Supported Platforms/Implementations**:
-  ///- Linux WPE WebKit ([Official API - WebKitSettings.enable-spatial-navigation](https://wpewebkit.org/reference/stable/wpe-webkit-2.0/property.Settings.enable-spatial-navigation.html))
-  ///
-  ///Use the [InAppWebViewSettings.isPropertySupported] method to check if this property is supported at runtime.
-  ///{@endtemplate}
-  enableSpatialNavigation,
-
-  ///Can be used to check if the [InAppWebViewSettings.enableTabsToLinks] property is supported at runtime.
-  ///
-  ///{@template flutter_inappwebview_platform_interface.InAppWebViewSettings.enableTabsToLinks.supported_platforms}
-  ///
-  ///**Officially Supported Platforms/Implementations**:
-  ///- Linux WPE WebKit ([Official API - WebKitSettings.enable-tabs-to-links](https://wpewebkit.org/reference/stable/wpe-webkit-2.0/property.Settings.enable-tabs-to-links.html))
-  ///
-  ///Use the [InAppWebViewSettings.isPropertySupported] method to check if this property is supported at runtime.
-  ///{@endtemplate}
-  enableTabsToLinks,
-
   ///Can be used to check if the [InAppWebViewSettings.enableViewportScale] property is supported at runtime.
   ///
   ///{@template flutter_inappwebview_platform_interface.InAppWebViewSettings.enableViewportScale.supported_platforms}
   ///
   ///**Officially Supported Platforms/Implementations**:
   ///- iOS WKWebView
-  ///- macOS WKWebView
   ///
   ///Use the [InAppWebViewSettings.isPropertySupported] method to check if this property is supported at runtime.
   ///{@endtemplate}
   enableViewportScale,
-
-  ///Can be used to check if the [InAppWebViewSettings.enableWebRTC] property is supported at runtime.
-  ///
-  ///{@template flutter_inappwebview_platform_interface.InAppWebViewSettings.enableWebRTC.supported_platforms}
-  ///
-  ///**Officially Supported Platforms/Implementations**:
-  ///- Linux WPE WebKit 2.38+ ([Official API - WebKitSettings.enable-webrtc](https://wpewebkit.org/reference/stable/wpe-webkit-2.0/property.Settings.enable-webrtc.html)):
-  ///    - Requires WPE WebKit 2.38 or later
-  ///
-  ///Use the [InAppWebViewSettings.isPropertySupported] method to check if this property is supported at runtime.
-  ///{@endtemplate}
-  enableWebRTC,
-
-  ///Can be used to check if the [InAppWebViewSettings.enableWriteConsoleMessagesToStdout] property is supported at runtime.
-  ///
-  ///{@template flutter_inappwebview_platform_interface.InAppWebViewSettings.enableWriteConsoleMessagesToStdout.supported_platforms}
-  ///
-  ///**Officially Supported Platforms/Implementations**:
-  ///- Linux WPE WebKit ([Official API - WebKitSettings.enable-write-console-messages-to-stdout](https://wpewebkit.org/reference/stable/wpe-webkit-2.0/property.Settings.enable-write-console-messages-to-stdout.html))
-  ///
-  ///Use the [InAppWebViewSettings.isPropertySupported] method to check if this property is supported at runtime.
-  ///{@endtemplate}
-  enableWriteConsoleMessagesToStdout,
 
   ///Can be used to check if the [InAppWebViewSettings.enterpriseAuthenticationAppLinkPolicyEnabled] property is supported at runtime.
   ///
@@ -4178,7 +2905,6 @@ enum InAppWebViewSettingsProperty {
   ///
   ///**Officially Supported Platforms/Implementations**:
   ///- Android WebView ([Official API - WebSettings.setFantasyFontFamily](https://developer.android.com/reference/android/webkit/WebSettings#setFantasyFontFamily(java.lang.String)))
-  ///- Linux WPE WebKit ([Official API - WebKitSettings.fantasy-font-family](https://wpewebkit.org/reference/stable/wpe-webkit-2.0/property.Settings.fantasy-font-family.html))
   ///
   ///Use the [InAppWebViewSettings.isPropertySupported] method to check if this property is supported at runtime.
   ///{@endtemplate}
@@ -4190,70 +2916,10 @@ enum InAppWebViewSettingsProperty {
   ///
   ///**Officially Supported Platforms/Implementations**:
   ///- Android WebView ([Official API - WebSettings.setFixedFontFamily](https://developer.android.com/reference/android/webkit/WebSettings#setFixedFontFamily(java.lang.String)))
-  ///- Linux WPE WebKit ([Official API - WebKitSettings.monospace-font-family](https://wpewebkit.org/reference/stable/wpe-webkit-2.0/property.Settings.monospace-font-family.html))
   ///
   ///Use the [InAppWebViewSettings.isPropertySupported] method to check if this property is supported at runtime.
   ///{@endtemplate}
   fixedFontFamily,
-
-  ///Can be used to check if the [InAppWebViewSettings.fontAntialias] property is supported at runtime.
-  ///
-  ///{@template flutter_inappwebview_platform_interface.InAppWebViewSettings.fontAntialias.supported_platforms}
-  ///
-  ///**Officially Supported Platforms/Implementations**:
-  ///- Linux WPE WebKit ([Official API - WPESettings.font-antialias](https://wpewebkit.org/reference/stable/wpe-platform-2.0/class.Settings.html)):
-  ///    - This is a WPE Platform display-level setting for font rendering.
-  ///
-  ///Use the [InAppWebViewSettings.isPropertySupported] method to check if this property is supported at runtime.
-  ///{@endtemplate}
-  fontAntialias,
-
-  ///Can be used to check if the [InAppWebViewSettings.fontDPI] property is supported at runtime.
-  ///
-  ///{@template flutter_inappwebview_platform_interface.InAppWebViewSettings.fontDPI.supported_platforms}
-  ///
-  ///**Officially Supported Platforms/Implementations**:
-  ///- Linux WPE WebKit ([Official API - WPESettings.font-dpi](https://wpewebkit.org/reference/stable/wpe-platform-2.0/class.Settings.html)):
-  ///    - This is a WPE Platform display-level setting. Default is typically 96.0 DPI.
-  ///
-  ///Use the [InAppWebViewSettings.isPropertySupported] method to check if this property is supported at runtime.
-  ///{@endtemplate}
-  fontDPI,
-
-  ///Can be used to check if the [InAppWebViewSettings.fontHintingStyle] property is supported at runtime.
-  ///
-  ///{@template flutter_inappwebview_platform_interface.InAppWebViewSettings.fontHintingStyle.supported_platforms}
-  ///
-  ///**Officially Supported Platforms/Implementations**:
-  ///- Linux WPE WebKit ([Official API - WPESettings.font-hinting-style](https://wpewebkit.org/reference/stable/wpe-platform-2.0/class.Settings.html)):
-  ///    - This is a WPE Platform display-level setting for font rendering.
-  ///
-  ///Use the [InAppWebViewSettings.isPropertySupported] method to check if this property is supported at runtime.
-  ///{@endtemplate}
-  fontHintingStyle,
-
-  ///Can be used to check if the [InAppWebViewSettings.fontSubpixelLayout] property is supported at runtime.
-  ///
-  ///{@template flutter_inappwebview_platform_interface.InAppWebViewSettings.fontSubpixelLayout.supported_platforms}
-  ///
-  ///**Officially Supported Platforms/Implementations**:
-  ///- Linux WPE WebKit ([Official API - WPESettings.font-subpixel-layout](https://wpewebkit.org/reference/stable/wpe-platform-2.0/class.Settings.html)):
-  ///    - This is a WPE Platform display-level setting for font rendering.
-  ///
-  ///Use the [InAppWebViewSettings.isPropertySupported] method to check if this property is supported at runtime.
-  ///{@endtemplate}
-  fontSubpixelLayout,
-
-  ///Can be used to check if the [InAppWebViewSettings.generalAutofillEnabled] property is supported at runtime.
-  ///
-  ///{@template flutter_inappwebview_platform_interface.InAppWebViewSettings.generalAutofillEnabled.supported_platforms}
-  ///
-  ///**Officially Supported Platforms/Implementations**:
-  ///- Windows WebView2 1.0.902.49+ ([Official API - ICoreWebView2Settings4.put_IsGeneralAutofillEnabled](https://learn.microsoft.com/en-us/microsoft-edge/webview2/reference/win32/icorewebview2settings4?view=webview2-1.0.2849.39#put_isgeneralautofillenabled))
-  ///
-  ///Use the [InAppWebViewSettings.isPropertySupported] method to check if this property is supported at runtime.
-  ///{@endtemplate}
-  generalAutofillEnabled,
 
   ///Can be used to check if the [InAppWebViewSettings.geolocationEnabled] property is supported at runtime.
   ///
@@ -4267,17 +2933,6 @@ enum InAppWebViewSettingsProperty {
   ///{@endtemplate}
   geolocationEnabled,
 
-  ///Can be used to check if the [InAppWebViewSettings.handleAcceleratorKeyPressed] property is supported at runtime.
-  ///
-  ///{@template flutter_inappwebview_platform_interface.InAppWebViewSettings.handleAcceleratorKeyPressed.supported_platforms}
-  ///
-  ///**Officially Supported Platforms/Implementations**:
-  ///- Windows WebView2
-  ///
-  ///Use the [InAppWebViewSettings.isPropertySupported] method to check if this property is supported at runtime.
-  ///{@endtemplate}
-  handleAcceleratorKeyPressed,
-
   ///Can be used to check if the [InAppWebViewSettings.hardwareAcceleration] property is supported at runtime.
   ///
   ///{@template flutter_inappwebview_platform_interface.InAppWebViewSettings.hardwareAcceleration.supported_platforms}
@@ -4289,17 +2944,6 @@ enum InAppWebViewSettingsProperty {
   ///{@endtemplate}
   hardwareAcceleration,
 
-  ///Can be used to check if the [InAppWebViewSettings.hiddenPdfToolbarItems] property is supported at runtime.
-  ///
-  ///{@template flutter_inappwebview_platform_interface.InAppWebViewSettings.hiddenPdfToolbarItems.supported_platforms}
-  ///
-  ///**Officially Supported Platforms/Implementations**:
-  ///- Windows WebView2 1.0.1185.39+ ([Official API - ICoreWebView2Settings7.put_HiddenPdfToolbarItems](https://learn.microsoft.com/en-us/microsoft-edge/webview2/reference/win32/icorewebview2settings7?view=webview2-1.0.2849.39#put_hiddenpdftoolbaritems))
-  ///
-  ///Use the [InAppWebViewSettings.isPropertySupported] method to check if this property is supported at runtime.
-  ///{@endtemplate}
-  hiddenPdfToolbarItems,
-
   ///Can be used to check if the [InAppWebViewSettings.horizontalScrollBarEnabled] property is supported at runtime.
   ///
   ///{@template flutter_inappwebview_platform_interface.InAppWebViewSettings.horizontalScrollBarEnabled.supported_platforms}
@@ -4307,8 +2951,6 @@ enum InAppWebViewSettingsProperty {
   ///**Officially Supported Platforms/Implementations**:
   ///- Android WebView ([Official API - View.setHorizontalScrollBarEnabled](https://developer.android.com/reference/android/view/View#setHorizontalScrollBarEnabled(boolean)))
   ///- iOS WKWebView ([Official API - UIScrollView.showsHorizontalScrollIndicator](https://developer.apple.com/documentation/uikit/uiscrollview/1619380-showshorizontalscrollindicator))
-  ///- Web \<iframe\> but requires same origin:
-  ///    - It must have the same value of [verticalScrollBarEnabled] to take effect.
   ///
   ///Use the [InAppWebViewSettings.isPropertySupported] method to check if this property is supported at runtime.
   ///{@endtemplate}
@@ -4336,94 +2978,6 @@ enum InAppWebViewSettingsProperty {
   ///{@endtemplate}
   horizontalScrollbarTrackColor,
 
-  ///Can be used to check if the [InAppWebViewSettings.iframeAllow] property is supported at runtime.
-  ///
-  ///{@template flutter_inappwebview_platform_interface.InAppWebViewSettings.iframeAllow.supported_platforms}
-  ///
-  ///**Officially Supported Platforms/Implementations**:
-  ///- Web \<iframe\> ([Official API - iframe.allow](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/iframe#attr-allow))
-  ///
-  ///Use the [InAppWebViewSettings.isPropertySupported] method to check if this property is supported at runtime.
-  ///{@endtemplate}
-  iframeAllow,
-
-  ///Can be used to check if the [InAppWebViewSettings.iframeAllowFullscreen] property is supported at runtime.
-  ///
-  ///{@template flutter_inappwebview_platform_interface.InAppWebViewSettings.iframeAllowFullscreen.supported_platforms}
-  ///
-  ///**Officially Supported Platforms/Implementations**:
-  ///- Web \<iframe\> ([Official API - iframe.allowfullscreen](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/iframe#attr-allowfullscreen))
-  ///
-  ///Use the [InAppWebViewSettings.isPropertySupported] method to check if this property is supported at runtime.
-  ///{@endtemplate}
-  iframeAllowFullscreen,
-
-  ///Can be used to check if the [InAppWebViewSettings.iframeAriaHidden] property is supported at runtime.
-  ///
-  ///{@template flutter_inappwebview_platform_interface.InAppWebViewSettings.iframeAriaHidden.supported_platforms}
-  ///
-  ///**Officially Supported Platforms/Implementations**:
-  ///- Web \<iframe\> ([Official API - iframe.ariaHidden](https://developer.mozilla.org/en-US/docs/Web/Accessibility/ARIA/Attributes/aria-hidden))
-  ///
-  ///Use the [InAppWebViewSettings.isPropertySupported] method to check if this property is supported at runtime.
-  ///{@endtemplate}
-  iframeAriaHidden,
-
-  ///Can be used to check if the [InAppWebViewSettings.iframeCsp] property is supported at runtime.
-  ///
-  ///{@template flutter_inappwebview_platform_interface.InAppWebViewSettings.iframeCsp.supported_platforms}
-  ///
-  ///**Officially Supported Platforms/Implementations**:
-  ///- Web \<iframe\> ([Official API - iframe.csp](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/iframe#attr-csp))
-  ///
-  ///Use the [InAppWebViewSettings.isPropertySupported] method to check if this property is supported at runtime.
-  ///{@endtemplate}
-  iframeCsp,
-
-  ///Can be used to check if the [InAppWebViewSettings.iframeName] property is supported at runtime.
-  ///
-  ///{@template flutter_inappwebview_platform_interface.InAppWebViewSettings.iframeName.supported_platforms}
-  ///
-  ///**Officially Supported Platforms/Implementations**:
-  ///- Web \<iframe\> ([Official API - iframe.name](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/iframe#attr-name))
-  ///
-  ///Use the [InAppWebViewSettings.isPropertySupported] method to check if this property is supported at runtime.
-  ///{@endtemplate}
-  iframeName,
-
-  ///Can be used to check if the [InAppWebViewSettings.iframeReferrerPolicy] property is supported at runtime.
-  ///
-  ///{@template flutter_inappwebview_platform_interface.InAppWebViewSettings.iframeReferrerPolicy.supported_platforms}
-  ///
-  ///**Officially Supported Platforms/Implementations**:
-  ///- Web \<iframe\> ([Official API - iframe.referrerpolicy](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/iframe#attr-referrerpolicy))
-  ///
-  ///Use the [InAppWebViewSettings.isPropertySupported] method to check if this property is supported at runtime.
-  ///{@endtemplate}
-  iframeReferrerPolicy,
-
-  ///Can be used to check if the [InAppWebViewSettings.iframeRole] property is supported at runtime.
-  ///
-  ///{@template flutter_inappwebview_platform_interface.InAppWebViewSettings.iframeRole.supported_platforms}
-  ///
-  ///**Officially Supported Platforms/Implementations**:
-  ///- Web \<iframe\> ([Official API - iframe.role](https://developer.mozilla.org/en-US/docs/Web/Accessibility/ARIA/Roles))
-  ///
-  ///Use the [InAppWebViewSettings.isPropertySupported] method to check if this property is supported at runtime.
-  ///{@endtemplate}
-  iframeRole,
-
-  ///Can be used to check if the [InAppWebViewSettings.iframeSandbox] property is supported at runtime.
-  ///
-  ///{@template flutter_inappwebview_platform_interface.InAppWebViewSettings.iframeSandbox.supported_platforms}
-  ///
-  ///**Officially Supported Platforms/Implementations**:
-  ///- Web \<iframe\> ([Official API - iframe.sandbox](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/iframe#attr-sandbox))
-  ///
-  ///Use the [InAppWebViewSettings.isPropertySupported] method to check if this property is supported at runtime.
-  ///{@endtemplate}
-  iframeSandbox,
-
   ///Can be used to check if the [InAppWebViewSettings.ignoresViewportScaleLimits] property is supported at runtime.
   ///
   ///{@template flutter_inappwebview_platform_interface.InAppWebViewSettings.ignoresViewportScaleLimits.supported_platforms}
@@ -4443,9 +2997,6 @@ enum InAppWebViewSettingsProperty {
   ///- Android WebView:
   ///    - setting this to `true`, it will clear all the cookies of all WebView instances, because there isn't any way to make the website data store non-persistent for the specific WebView instance such as on iOS.
   ///- iOS WKWebView
-  ///- macOS WKWebView
-  ///- Windows WebView2 ([Official API - ICoreWebView2ControllerOptions.put_IsInPrivateModeEnabled](https://learn.microsoft.com/en-us/microsoft-edge/webview2/reference/win32/icorewebview2controlleroptions?view=webview2-1.0.2792.45#put_isinprivatemodeenabled))
-  ///- Linux WPE WebKit ([Official API - webkit_network_session_new_ephemeral](https://wpewebkit.org/reference/stable/wpe-webkit-2.0/ctor.NetworkSession.new_ephemeral.html))
   ///
   ///Use the [InAppWebViewSettings.isPropertySupported] method to check if this property is supported at runtime.
   ///{@endtemplate}
@@ -4469,7 +3020,6 @@ enum InAppWebViewSettingsProperty {
   ///**Officially Supported Platforms/Implementations**:
   ///- Android WebView
   ///- iOS WKWebView
-  ///- macOS WKWebView
   ///
   ///Use the [InAppWebViewSettings.isPropertySupported] method to check if this property is supported at runtime.
   ///{@endtemplate}
@@ -4492,8 +3042,6 @@ enum InAppWebViewSettingsProperty {
   ///
   ///**Officially Supported Platforms/Implementations**:
   ///- iOS WKWebView 15.4+ ([Official API - WKPreferences.isElementFullscreenEnabled](https://developer.apple.com/documentation/webkit/wkpreferences/3917769-iselementfullscreenenabled))
-  ///- macOS WKWebView 12.3+ ([Official API - WKPreferences.isElementFullscreenEnabled](https://developer.apple.com/documentation/webkit/wkpreferences/3917769-iselementfullscreenenabled))
-  ///- Linux WPE WebKit ([Official API - WebKitSettings.enable-fullscreen](https://wpewebkit.org/reference/stable/wpe-webkit-2.0/property.Settings.enable-fullscreen.html))
   ///
   ///Use the [InAppWebViewSettings.isPropertySupported] method to check if this property is supported at runtime.
   ///{@endtemplate}
@@ -4516,7 +3064,6 @@ enum InAppWebViewSettingsProperty {
   ///
   ///**Officially Supported Platforms/Implementations**:
   ///- iOS WKWebView 13.0+ ([Official API - WKPreferences.isFraudulentWebsiteWarningEnabled](https://developer.apple.com/documentation/webkit/wkpreferences/3335219-isfraudulentwebsitewarningenable))
-  ///- macOS WKWebView 10.15+ ([Official API - WKPreferences.isFraudulentWebsiteWarningEnabled](https://developer.apple.com/documentation/webkit/wkpreferences/3335219-isfraudulentwebsitewarningenable))
   ///
   ///Use the [InAppWebViewSettings.isPropertySupported] method to check if this property is supported at runtime.
   ///{@endtemplate}
@@ -4528,8 +3075,6 @@ enum InAppWebViewSettingsProperty {
   ///
   ///**Officially Supported Platforms/Implementations**:
   ///- iOS WKWebView 16.4+ ([Official API - WKWebView.isInspectable](https://developer.apple.com/documentation/webkit/wkwebview/4111163-isinspectable))
-  ///- macOS WKWebView 13.3+ ([Official API - WKWebView.isInspectable](https://developer.apple.com/documentation/webkit/wkwebview/4111163-isinspectable))
-  ///- Windows WebView2 ([Official API - ICoreWebView2Settings.put_AreDevToolsEnabled](https://learn.microsoft.com/en-us/microsoft-edge/webview2/reference/win32/icorewebview2settings?view=webview2-1.0.2210.55#put_aredevtoolsenabled))
   ///
   ///Use the [InAppWebViewSettings.isPropertySupported] method to check if this property is supported at runtime.
   ///{@endtemplate}
@@ -4552,7 +3097,6 @@ enum InAppWebViewSettingsProperty {
   ///
   ///**Officially Supported Platforms/Implementations**:
   ///- iOS WKWebView 15.4+ ([Official API - WKPreferences.isSiteSpecificQuirksModeEnabled](https://developer.apple.com/documentation/webkit/wkpreferences/3916069-issitespecificquirksmodeenabled))
-  ///- macOS WKWebView 12.3+ ([Official API - WKPreferences.isSiteSpecificQuirksModeEnabled](https://developer.apple.com/documentation/webkit/wkpreferences/3916069-issitespecificquirksmodeenabled))
   ///
   ///Use the [InAppWebViewSettings.isPropertySupported] method to check if this property is supported at runtime.
   ///{@endtemplate}
@@ -4564,7 +3108,6 @@ enum InAppWebViewSettingsProperty {
   ///
   ///**Officially Supported Platforms/Implementations**:
   ///- iOS WKWebView 15.0+ ([Official API - WKPreferences.isTextInteractionEnabled](https://developer.apple.com/documentation/webkit/wkpreferences/3727362-istextinteractionenabled))
-  ///- macOS WKWebView 11.3+ ([Official API - WKPreferences.isTextInteractionEnabled](https://developer.apple.com/documentation/webkit/wkpreferences/3727362-istextinteractionenabled))
   ///
   ///Use the [InAppWebViewSettings.isPropertySupported] method to check if this property is supported at runtime.
   ///{@endtemplate}
@@ -4582,18 +3125,6 @@ enum InAppWebViewSettingsProperty {
   ///{@endtemplate}
   isUserInteractionEnabled,
 
-  ///Can be used to check if the [InAppWebViewSettings.itpEnabled] property is supported at runtime.
-  ///
-  ///{@template flutter_inappwebview_platform_interface.InAppWebViewSettings.itpEnabled.supported_platforms}
-  ///
-  ///**Officially Supported Platforms/Implementations**:
-  ///- Linux WPE WebKit 2.40+ ([Official API - webkit_network_session_set_itp_enabled](https://wpewebkit.org/reference/stable/wpe-webkit-2.0/method.NetworkSession.set_itp_enabled.html)):
-  ///    - This is a session-level setting. When enabled, ACCEPT_NO_THIRD_PARTY cookie policy is overridden to ACCEPT_ALWAYS.
-  ///
-  ///Use the [InAppWebViewSettings.isPropertySupported] method to check if this property is supported at runtime.
-  ///{@endtemplate}
-  itpEnabled,
-
   ///Can be used to check if the [InAppWebViewSettings.javaScriptBridgeEnabled] property is supported at runtime.
   ///
   ///{@template flutter_inappwebview_platform_interface.InAppWebViewSettings.javaScriptBridgeEnabled.supported_platforms}
@@ -4601,9 +3132,6 @@ enum InAppWebViewSettingsProperty {
   ///**Officially Supported Platforms/Implementations**:
   ///- Android WebView
   ///- iOS WKWebView
-  ///- macOS WKWebView
-  ///- Windows WebView2
-  ///- Web \<iframe\> but requires same origin
   ///
   ///Use the [InAppWebViewSettings.isPropertySupported] method to check if this property is supported at runtime.
   ///{@endtemplate}
@@ -4616,8 +3144,6 @@ enum InAppWebViewSettingsProperty {
   ///**Officially Supported Platforms/Implementations**:
   ///- Android WebView
   ///- iOS WKWebView
-  ///- macOS WKWebView
-  ///- Windows WebView2
   ///
   ///Use the [InAppWebViewSettings.isPropertySupported] method to check if this property is supported at runtime.
   ///{@endtemplate}
@@ -4630,24 +3156,10 @@ enum InAppWebViewSettingsProperty {
   ///**Officially Supported Platforms/Implementations**:
   ///- Android WebView
   ///- iOS WKWebView
-  ///- macOS WKWebView
-  ///- Windows WebView2
-  ///- Web \<iframe\> but requires same origin
   ///
   ///Use the [InAppWebViewSettings.isPropertySupported] method to check if this property is supported at runtime.
   ///{@endtemplate}
   javaScriptBridgeOriginAllowList,
-
-  ///Can be used to check if the [InAppWebViewSettings.javaScriptCanAccessClipboard] property is supported at runtime.
-  ///
-  ///{@template flutter_inappwebview_platform_interface.InAppWebViewSettings.javaScriptCanAccessClipboard.supported_platforms}
-  ///
-  ///**Officially Supported Platforms/Implementations**:
-  ///- Linux WPE WebKit ([Official API - WebKitSettings.javascript-can-access-clipboard](https://wpewebkit.org/reference/stable/wpe-webkit-2.0/property.Settings.javascript-can-access-clipboard.html))
-  ///
-  ///Use the [InAppWebViewSettings.isPropertySupported] method to check if this property is supported at runtime.
-  ///{@endtemplate}
-  javaScriptCanAccessClipboard,
 
   ///Can be used to check if the [InAppWebViewSettings.javaScriptCanOpenWindowsAutomatically] property is supported at runtime.
   ///
@@ -4656,8 +3168,6 @@ enum InAppWebViewSettingsProperty {
   ///**Officially Supported Platforms/Implementations**:
   ///- Android WebView ([Official API - WebSettings.setJavaScriptCanOpenWindowsAutomatically](https://developer.android.com/reference/android/webkit/WebSettings?hl=en#setJavaScriptCanOpenWindowsAutomatically(boolean)))
   ///- iOS WKWebView ([Official API - WKPreferences.javaScriptCanOpenWindowsAutomatically](https://developer.apple.com/documentation/webkit/wkpreferences/1536573-javascriptcanopenwindowsautomati/))
-  ///- macOS WKWebView ([Official API - WKPreferences.javaScriptCanOpenWindowsAutomatically](https://developer.apple.com/documentation/webkit/wkpreferences/1536573-javascriptcanopenwindowsautomati/))
-  ///- Web \<iframe\> but requires same origin
   ///
   ///Use the [InAppWebViewSettings.isPropertySupported] method to check if this property is supported at runtime.
   ///{@endtemplate}
@@ -4670,9 +3180,6 @@ enum InAppWebViewSettingsProperty {
   ///**Officially Supported Platforms/Implementations**:
   ///- Android WebView ([Official API - WebSettings.setJavaScriptEnabled](https://developer.android.com/reference/android/webkit/WebSettings?hl=en#setJavaScriptEnabled(boolean)))
   ///- iOS WKWebView ([Official API - WKWebpagePreferences.allowsContentJavaScript](https://developer.apple.com/documentation/webkit/wkwebpagepreferences/3552422-allowscontentjavascript/))
-  ///- macOS WKWebView ([Official API - WKWebpagePreferences.allowsContentJavaScript](https://developer.apple.com/documentation/webkit/wkwebpagepreferences/3552422-allowscontentjavascript/))
-  ///- Web \<iframe\>
-  ///- Windows WebView2 ([Official API - ICoreWebView2Settings.put_IsScriptEnabled](https://learn.microsoft.com/en-us/microsoft-edge/webview2/reference/win32/icorewebview2settings?view=webview2-1.0.2210.55#put_isscriptenabled))
   ///
   ///Use the [InAppWebViewSettings.isPropertySupported] method to check if this property is supported at runtime.
   ///{@endtemplate}
@@ -4685,8 +3192,6 @@ enum InAppWebViewSettingsProperty {
   ///**Officially Supported Platforms/Implementations**:
   ///- Android WebView
   ///- iOS WKWebView
-  ///- macOS WKWebView
-  ///- Windows WebView2
   ///
   ///Use the [InAppWebViewSettings.isPropertySupported] method to check if this property is supported at runtime.
   ///{@endtemplate}
@@ -4699,37 +3204,10 @@ enum InAppWebViewSettingsProperty {
   ///**Officially Supported Platforms/Implementations**:
   ///- Android WebView
   ///- iOS WKWebView
-  ///- macOS WKWebView
-  ///- Windows WebView2
-  ///- Web \<iframe\> but requires same origin
   ///
   ///Use the [InAppWebViewSettings.isPropertySupported] method to check if this property is supported at runtime.
   ///{@endtemplate}
   javaScriptHandlersOriginAllowList,
-
-  ///Can be used to check if the [InAppWebViewSettings.keyRepeatDelay] property is supported at runtime.
-  ///
-  ///{@template flutter_inappwebview_platform_interface.InAppWebViewSettings.keyRepeatDelay.supported_platforms}
-  ///
-  ///**Officially Supported Platforms/Implementations**:
-  ///- Linux WPE WebKit ([Official API - WPESettings.key-repeat-delay](https://wpewebkit.org/reference/stable/wpe-platform-2.0/class.Settings.html)):
-  ///    - This is a WPE Platform display-level setting. Value is in milliseconds.
-  ///
-  ///Use the [InAppWebViewSettings.isPropertySupported] method to check if this property is supported at runtime.
-  ///{@endtemplate}
-  keyRepeatDelay,
-
-  ///Can be used to check if the [InAppWebViewSettings.keyRepeatInterval] property is supported at runtime.
-  ///
-  ///{@template flutter_inappwebview_platform_interface.InAppWebViewSettings.keyRepeatInterval.supported_platforms}
-  ///
-  ///**Officially Supported Platforms/Implementations**:
-  ///- Linux WPE WebKit ([Official API - WPESettings.key-repeat-interval](https://wpewebkit.org/reference/stable/wpe-platform-2.0/class.Settings.html)):
-  ///    - This is a WPE Platform display-level setting. Value is in milliseconds.
-  ///
-  ///Use the [InAppWebViewSettings.isPropertySupported] method to check if this property is supported at runtime.
-  ///{@endtemplate}
-  keyRepeatInterval,
 
   ///Can be used to check if the [InAppWebViewSettings.layoutAlgorithm] property is supported at runtime.
   ///
@@ -4748,7 +3226,6 @@ enum InAppWebViewSettingsProperty {
   ///
   ///**Officially Supported Platforms/Implementations**:
   ///- iOS WKWebView 14.0+ ([Official API - WKWebViewConfiguration.limitsNavigationsToAppBoundDomains](https://developer.apple.com/documentation/webkit/wkwebviewconfiguration/3585117-limitsnavigationstoappbounddomai))
-  ///- macOS WKWebView 11.0+ ([Official API - WKWebViewConfiguration.limitsNavigationsToAppBoundDomains](https://developer.apple.com/documentation/webkit/wkwebviewconfiguration/3585117-limitsnavigationstoappbounddomai))
   ///
   ///Use the [InAppWebViewSettings.isPropertySupported] method to check if this property is supported at runtime.
   ///{@endtemplate}
@@ -4771,7 +3248,6 @@ enum InAppWebViewSettingsProperty {
   ///
   ///**Officially Supported Platforms/Implementations**:
   ///- Android WebView ([Official API - WebSettings.setLoadsImagesAutomatically](https://developer.android.com/reference/android/webkit/WebSettings?hl=en#setLoadsImagesAutomatically(boolean)))
-  ///- Linux WPE WebKit ([Official API - WebKitSettings.auto-load-images](https://wpewebkit.org/reference/stable/wpe-webkit-2.0/property.Settings.auto-load-images.html))
   ///
   ///Use the [InAppWebViewSettings.isPropertySupported] method to check if this property is supported at runtime.
   ///{@endtemplate}
@@ -4811,18 +3287,6 @@ enum InAppWebViewSettingsProperty {
   ///{@endtemplate}
   maximumZoomScale,
 
-  ///Can be used to check if the [InAppWebViewSettings.mediaContentTypesRequiringHardwareSupport] property is supported at runtime.
-  ///
-  ///{@template flutter_inappwebview_platform_interface.InAppWebViewSettings.mediaContentTypesRequiringHardwareSupport.supported_platforms}
-  ///
-  ///**Officially Supported Platforms/Implementations**:
-  ///- Linux WPE WebKit 2.30+ ([Official API - WebKitSettings.media-content-types-requiring-hardware-support](https://wpewebkit.org/reference/stable/wpe-webkit-2.0/property.Settings.media-content-types-requiring-hardware-support.html)):
-  ///    - Requires WPE WebKit 2.30 or later
-  ///
-  ///Use the [InAppWebViewSettings.isPropertySupported] method to check if this property is supported at runtime.
-  ///{@endtemplate}
-  mediaContentTypesRequiringHardwareSupport,
-
   ///Can be used to check if the [InAppWebViewSettings.mediaPlaybackRequiresUserGesture] property is supported at runtime.
   ///
   ///{@template flutter_inappwebview_platform_interface.InAppWebViewSettings.mediaPlaybackRequiresUserGesture.supported_platforms}
@@ -4830,7 +3294,6 @@ enum InAppWebViewSettingsProperty {
   ///**Officially Supported Platforms/Implementations**:
   ///- Android WebView ([Official API - WebSettings.setMediaPlaybackRequiresUserGesture](https://developer.android.com/reference/android/webkit/WebSettings?hl=en#setMediaPlaybackRequiresUserGesture(boolean)))
   ///- iOS WKWebView ([Official API - WKWebViewConfiguration.mediaTypesRequiringUserActionForPlayback](https://developer.apple.com/documentation/webkit/wkwebviewconfiguration/1851524-mediatypesrequiringuseractionfor))
-  ///- macOS WKWebView 10.12+ ([Official API - WKWebViewConfiguration.mediaTypesRequiringUserActionForPlayback](https://developer.apple.com/documentation/webkit/wkwebviewconfiguration/1851524-mediatypesrequiringuseractionfor))
   ///
   ///Use the [InAppWebViewSettings.isPropertySupported] method to check if this property is supported at runtime.
   ///{@endtemplate}
@@ -4842,7 +3305,6 @@ enum InAppWebViewSettingsProperty {
   ///
   ///**Officially Supported Platforms/Implementations**:
   ///- iOS WKWebView 14.0+ ([Official API - WKWebView.mediaType](https://developer.apple.com/documentation/webkit/wkwebview/3516410-mediatype))
-  ///- macOS WKWebView 11.0+ ([Official API - WKWebView.mediaType](https://developer.apple.com/documentation/webkit/wkwebview/3516410-mediatype))
   ///
   ///Use the [InAppWebViewSettings.isPropertySupported] method to check if this property is supported at runtime.
   ///{@endtemplate}
@@ -4855,7 +3317,6 @@ enum InAppWebViewSettingsProperty {
   ///**Officially Supported Platforms/Implementations**:
   ///- Android WebView ([Official API - WebSettings.setMinimumFontSize](https://developer.android.com/reference/android/webkit/WebSettings?hl=en#setMinimumFontSize(int)))
   ///- iOS WKWebView ([Official API - WKPreferences.minimumFontSize](https://developer.apple.com/documentation/webkit/wkpreferences/1537155-minimumfontsize/))
-  ///- macOS WKWebView ([Official API - WKPreferences.minimumFontSize](https://developer.apple.com/documentation/webkit/wkpreferences/1537155-minimumfontsize/))
   ///
   ///Use the [InAppWebViewSettings.isPropertySupported] method to check if this property is supported at runtime.
   ///{@endtemplate}
@@ -4927,17 +3388,6 @@ enum InAppWebViewSettingsProperty {
   ///{@endtemplate}
   networkAvailable,
 
-  ///Can be used to check if the [InAppWebViewSettings.nonClientRegionSupportEnabled] property is supported at runtime.
-  ///
-  ///{@template flutter_inappwebview_platform_interface.InAppWebViewSettings.nonClientRegionSupportEnabled.supported_platforms}
-  ///
-  ///**Officially Supported Platforms/Implementations**:
-  ///- Windows WebView2 1.0.2420.47+ ([Official API - ICoreWebView2Settings9.put_IsNonClientRegionSupportEnabled](https://learn.microsoft.com/en-us/microsoft-edge/webview2/reference/win32/icorewebview2settings9?view=webview2-1.0.2849.39#put_isnonclientregionsupportenabled))
-  ///
-  ///Use the [InAppWebViewSettings.isPropertySupported] method to check if this property is supported at runtime.
-  ///{@endtemplate}
-  nonClientRegionSupportEnabled,
-
   ///Can be used to check if the [InAppWebViewSettings.offscreenPreRaster] property is supported at runtime.
   ///
   ///{@template flutter_inappwebview_platform_interface.InAppWebViewSettings.offscreenPreRaster.supported_platforms}
@@ -4966,22 +3416,10 @@ enum InAppWebViewSettingsProperty {
   ///
   ///**Officially Supported Platforms/Implementations**:
   ///- iOS WKWebView 14.0+ ([Official API - WKWebView.pageZoom](https://developer.apple.com/documentation/webkit/wkwebview/3516411-pagezoom))
-  ///- macOS WKWebView 11.0+ ([Official API - WKWebView.pageZoom](https://developer.apple.com/documentation/webkit/wkwebview/3516411-pagezoom))
   ///
   ///Use the [InAppWebViewSettings.isPropertySupported] method to check if this property is supported at runtime.
   ///{@endtemplate}
   pageZoom,
-
-  ///Can be used to check if the [InAppWebViewSettings.passwordAutosaveEnabled] property is supported at runtime.
-  ///
-  ///{@template flutter_inappwebview_platform_interface.InAppWebViewSettings.passwordAutosaveEnabled.supported_platforms}
-  ///
-  ///**Officially Supported Platforms/Implementations**:
-  ///- Windows WebView2 1.0.902.49+ ([Official API - ICoreWebView2Settings4.put_IsPasswordAutosaveEnabled](https://learn.microsoft.com/en-us/microsoft-edge/webview2/reference/win32/icorewebview2settings4?view=webview2-1.0.2849.39#put_ispasswordautosaveenabled))
-  ///
-  ///Use the [InAppWebViewSettings.isPropertySupported] method to check if this property is supported at runtime.
-  ///{@endtemplate}
-  passwordAutosaveEnabled,
 
   ///Can be used to check if the [InAppWebViewSettings.paymentRequestEnabled] property is supported at runtime.
   ///
@@ -4995,28 +3433,6 @@ enum InAppWebViewSettingsProperty {
   ///{@endtemplate}
   paymentRequestEnabled,
 
-  ///Can be used to check if the [InAppWebViewSettings.pictographFontFamily] property is supported at runtime.
-  ///
-  ///{@template flutter_inappwebview_platform_interface.InAppWebViewSettings.pictographFontFamily.supported_platforms}
-  ///
-  ///**Officially Supported Platforms/Implementations**:
-  ///- Linux WPE WebKit ([Official API - WebKitSettings.pictograph-font-family](https://wpewebkit.org/reference/stable/wpe-webkit-2.0/property.Settings.pictograph-font-family.html))
-  ///
-  ///Use the [InAppWebViewSettings.isPropertySupported] method to check if this property is supported at runtime.
-  ///{@endtemplate}
-  pictographFontFamily,
-
-  ///Can be used to check if the [InAppWebViewSettings.pinchZoomEnabled] property is supported at runtime.
-  ///
-  ///{@template flutter_inappwebview_platform_interface.InAppWebViewSettings.pinchZoomEnabled.supported_platforms}
-  ///
-  ///**Officially Supported Platforms/Implementations**:
-  ///- Windows WebView2 1.0.902.49+ ([Official API - ICoreWebView2Settings5.put_IsPinchZoomEnabled](https://learn.microsoft.com/en-us/microsoft-edge/webview2/reference/win32/icorewebview2settings5?view=webview2-1.0.2849.39#put_ispinchzoomenabled))
-  ///
-  ///Use the [InAppWebViewSettings.isPropertySupported] method to check if this property is supported at runtime.
-  ///{@endtemplate}
-  pinchZoomEnabled,
-
   ///Can be used to check if the [InAppWebViewSettings.pluginScriptsForMainFrameOnly] property is supported at runtime.
   ///
   ///{@template flutter_inappwebview_platform_interface.InAppWebViewSettings.pluginScriptsForMainFrameOnly.supported_platforms}
@@ -5024,8 +3440,6 @@ enum InAppWebViewSettingsProperty {
   ///**Officially Supported Platforms/Implementations**:
   ///- Android WebView
   ///- iOS WKWebView
-  ///- macOS WKWebView
-  ///- Windows WebView2
   ///
   ///Use the [InAppWebViewSettings.isPropertySupported] method to check if this property is supported at runtime.
   ///{@endtemplate}
@@ -5038,8 +3452,6 @@ enum InAppWebViewSettingsProperty {
   ///**Officially Supported Platforms/Implementations**:
   ///- Android WebView
   ///- iOS WKWebView
-  ///- macOS WKWebView
-  ///- Windows WebView2
   ///
   ///Use the [InAppWebViewSettings.isPropertySupported] method to check if this property is supported at runtime.
   ///{@endtemplate}
@@ -5052,7 +3464,6 @@ enum InAppWebViewSettingsProperty {
   ///**Officially Supported Platforms/Implementations**:
   ///- Android WebView
   ///- iOS WKWebView 13.0+ ([Official API - WKWebpagePreferences.preferredContentMode](https://developer.apple.com/documentation/webkit/wkwebpagepreferences/3194426-preferredcontentmode/))
-  ///- macOS WKWebView 10.15+ ([Official API - WKWebpagePreferences.preferredContentMode](https://developer.apple.com/documentation/webkit/wkwebpagepreferences/3194426-preferredcontentmode/))
   ///
   ///Use the [InAppWebViewSettings.isPropertySupported] method to check if this property is supported at runtime.
   ///{@endtemplate}
@@ -5115,17 +3526,6 @@ enum InAppWebViewSettingsProperty {
   ///{@endtemplate}
   rendererPriorityPolicy,
 
-  ///Can be used to check if the [InAppWebViewSettings.reputationCheckingRequired] property is supported at runtime.
-  ///
-  ///{@template flutter_inappwebview_platform_interface.InAppWebViewSettings.reputationCheckingRequired.supported_platforms}
-  ///
-  ///**Officially Supported Platforms/Implementations**:
-  ///- Windows WebView2 1.0.1722.45+ ([Official API - ICoreWebView2Settings8.put_IsReputationCheckingRequired](https://learn.microsoft.com/en-us/microsoft-edge/webview2/reference/win32/icorewebview2settings8?view=webview2-1.0.2849.39#put_isreputationcheckingrequired))
-  ///
-  ///Use the [InAppWebViewSettings.isPropertySupported] method to check if this property is supported at runtime.
-  ///{@endtemplate}
-  reputationCheckingRequired,
-
   ///Can be used to check if the [InAppWebViewSettings.resourceCustomSchemes] property is supported at runtime.
   ///
   ///{@template flutter_inappwebview_platform_interface.InAppWebViewSettings.resourceCustomSchemes.supported_platforms}
@@ -5133,7 +3533,6 @@ enum InAppWebViewSettingsProperty {
   ///**Officially Supported Platforms/Implementations**:
   ///- Android WebView
   ///- iOS WKWebView 11.0+
-  ///- macOS WKWebView 10.13+
   ///
   ///Use the [InAppWebViewSettings.isPropertySupported] method to check if this property is supported at runtime.
   ///{@endtemplate}
@@ -5156,7 +3555,6 @@ enum InAppWebViewSettingsProperty {
   ///
   ///**Officially Supported Platforms/Implementations**:
   ///- Android WebView ([Official API - WebSettings.setSansSerifFontFamily](https://developer.android.com/reference/android/webkit/WebSettings?hl=en#setSansSerifFontFamily(java.lang.String)))
-  ///- Linux WPE WebKit ([Official API - WebKitSettings.sans-serif-font-family](https://wpewebkit.org/reference/stable/wpe-webkit-2.0/property.Settings.sans-serif-font-family.html))
   ///
   ///Use the [InAppWebViewSettings.isPropertySupported] method to check if this property is supported at runtime.
   ///{@endtemplate}
@@ -5194,17 +3592,6 @@ enum InAppWebViewSettingsProperty {
   ///Use the [InAppWebViewSettings.isPropertySupported] method to check if this property is supported at runtime.
   ///{@endtemplate}
   scrollBarStyle,
-
-  ///Can be used to check if the [InAppWebViewSettings.scrollMultiplier] property is supported at runtime.
-  ///
-  ///{@template flutter_inappwebview_platform_interface.InAppWebViewSettings.scrollMultiplier.supported_platforms}
-  ///
-  ///**Officially Supported Platforms/Implementations**:
-  ///- Windows WebView2
-  ///
-  ///Use the [InAppWebViewSettings.isPropertySupported] method to check if this property is supported at runtime.
-  ///{@endtemplate}
-  scrollMultiplier,
 
   ///Can be used to check if the [InAppWebViewSettings.scrollbarFadingEnabled] property is supported at runtime.
   ///
@@ -5257,7 +3644,6 @@ enum InAppWebViewSettingsProperty {
   ///
   ///**Officially Supported Platforms/Implementations**:
   ///- Android WebView ([Official API - WebSettings.setSerifFontFamily](https://developer.android.com/reference/android/webkit/WebSettings?hl=en#setSerifFontFamily(java.lang.String)))
-  ///- Linux WPE WebKit ([Official API - WebKitSettings.serif-font-family](https://wpewebkit.org/reference/stable/wpe-webkit-2.0/property.Settings.serif-font-family.html))
   ///
   ///Use the [InAppWebViewSettings.isPropertySupported] method to check if this property is supported at runtime.
   ///{@endtemplate}
@@ -5269,7 +3655,6 @@ enum InAppWebViewSettingsProperty {
   ///
   ///**Officially Supported Platforms/Implementations**:
   ///- iOS WKWebView 11.0+
-  ///- macOS WKWebView 10.13+
   ///
   ///Use the [InAppWebViewSettings.isPropertySupported] method to check if this property is supported at runtime.
   ///{@endtemplate}
@@ -5281,7 +3666,6 @@ enum InAppWebViewSettingsProperty {
   ///
   ///**Officially Supported Platforms/Implementations**:
   ///- iOS WKWebView 16.4+ ([Official API - WKWebView.shouldPrintBackgrounds](https://developer.apple.com/documentation/webkit/wkpreferences/4104043-shouldprintbackgrounds))
-  ///- macOS WKWebView 13.3+ ([Official API - WKWebView.shouldPrintBackgrounds](https://developer.apple.com/documentation/webkit/wkpreferences/4104043-shouldprintbackgrounds))
   ///
   ///Use the [InAppWebViewSettings.isPropertySupported] method to check if this property is supported at runtime.
   ///{@endtemplate}
@@ -5293,22 +3677,10 @@ enum InAppWebViewSettingsProperty {
   ///
   ///**Officially Supported Platforms/Implementations**:
   ///- Android WebView ([Official API - WebSettings.setStandardFontFamily](https://developer.android.com/reference/android/webkit/WebSettings?hl=en#setStandardFontFamily(java.lang.String)))
-  ///- Linux WPE WebKit ([Official API - WebKitSettings.default-font-family](https://wpewebkit.org/reference/stable/wpe-webkit-2.0/property.Settings.default-font-family.html))
   ///
   ///Use the [InAppWebViewSettings.isPropertySupported] method to check if this property is supported at runtime.
   ///{@endtemplate}
   standardFontFamily,
-
-  ///Can be used to check if the [InAppWebViewSettings.statusBarEnabled] property is supported at runtime.
-  ///
-  ///{@template flutter_inappwebview_platform_interface.InAppWebViewSettings.statusBarEnabled.supported_platforms}
-  ///
-  ///**Officially Supported Platforms/Implementations**:
-  ///- Windows WebView2 ([Official API - ICoreWebView2Settings.put_IsStatusBarEnabled](https://learn.microsoft.com/en-us/microsoft-edge/webview2/reference/win32/icorewebview2settings?view=webview2-1.0.2849.39#put_isstatusbarenabled))
-  ///
-  ///Use the [InAppWebViewSettings.isPropertySupported] method to check if this property is supported at runtime.
-  ///{@endtemplate}
-  statusBarEnabled,
 
   ///Can be used to check if the [InAppWebViewSettings.supportMultipleWindows] property is supported at runtime.
   ///
@@ -5328,8 +3700,6 @@ enum InAppWebViewSettingsProperty {
   ///**Officially Supported Platforms/Implementations**:
   ///- Android WebView ([Official API - WebSettings.setSupportZoom](https://developer.android.com/reference/android/webkit/WebSettings?hl=en#setSupportZoom(boolean)))
   ///- iOS WKWebView
-  ///- macOS WKWebView
-  ///- Windows WebView2 ([Official API - ICoreWebView2Settings.put_IsZoomControlEnabled](https://learn.microsoft.com/en-us/microsoft-edge/webview2/reference/win32/icorewebview2settings?view=webview2-1.0.2210.55#put_iszoomcontrolenabled))
   ///
   ///Use the [InAppWebViewSettings.isPropertySupported] method to check if this property is supported at runtime.
   ///{@endtemplate}
@@ -5353,7 +3723,6 @@ enum InAppWebViewSettingsProperty {
   ///
   ///**Officially Supported Platforms/Implementations**:
   ///- iOS WKWebView ([Official API - WKWebViewConfiguration.suppressesIncrementalRendering](https://developer.apple.com/documentation/webkit/wkwebviewconfiguration/1395663-suppressesincrementalrendering))
-  ///- macOS WKWebView ([Official API - WKWebViewConfiguration.suppressesIncrementalRendering](https://developer.apple.com/documentation/webkit/wkwebviewconfiguration/1395663-suppressesincrementalrendering))
   ///
   ///Use the [InAppWebViewSettings.isPropertySupported] method to check if this property is supported at runtime.
   ///{@endtemplate}
@@ -5388,8 +3757,6 @@ enum InAppWebViewSettingsProperty {
   ///**Officially Supported Platforms/Implementations**:
   ///- Android WebView
   ///- iOS WKWebView
-  ///- macOS WKWebView 12.0+
-  ///- Windows WebView2 1.0.774.44+ ([Official API - ICoreWebView2Controller2.put_DefaultBackgroundColor](https://learn.microsoft.com/en-us/microsoft-edge/webview2/reference/win32/icorewebview2controller2?view=webview2-1.0.2210.55#put_defaultbackgroundcolor))
   ///
   ///Use the [InAppWebViewSettings.isPropertySupported] method to check if this property is supported at runtime.
   ///{@endtemplate}
@@ -5401,7 +3768,6 @@ enum InAppWebViewSettingsProperty {
   ///
   ///**Officially Supported Platforms/Implementations**:
   ///- iOS WKWebView 15.0+ ([Official API - WKWebView.underPageBackgroundColor](https://developer.apple.com/documentation/webkit/wkwebview/3850574-underpagebackgroundcolor))
-  ///- macOS WKWebView 12.0+ ([Official API - WKWebView.underPageBackgroundColor](https://developer.apple.com/documentation/webkit/wkwebview/3850574-underpagebackgroundcolor))
   ///
   ///Use the [InAppWebViewSettings.isPropertySupported] method to check if this property is supported at runtime.
   ///{@endtemplate}
@@ -5413,7 +3779,6 @@ enum InAppWebViewSettingsProperty {
   ///
   ///**Officially Supported Platforms/Implementations**:
   ///- iOS WKWebView 15.0+ ([Official API - WKWebViewConfiguration.upgradeKnownHostsToHTTPS](https://developer.apple.com/documentation/webkit/wkwebviewconfiguration/3752243-upgradeknownhoststohttps))
-  ///- macOS WKWebView 11.3+ ([Official API - WKWebViewConfiguration.upgradeKnownHostsToHTTPS](https://developer.apple.com/documentation/webkit/wkwebviewconfiguration/3752243-upgradeknownhoststohttps))
   ///
   ///Use the [InAppWebViewSettings.isPropertySupported] method to check if this property is supported at runtime.
   ///{@endtemplate}
@@ -5438,7 +3803,6 @@ enum InAppWebViewSettingsProperty {
   ///**Officially Supported Platforms/Implementations**:
   ///- Android WebView
   ///- iOS WKWebView
-  ///- macOS WKWebView
   ///
   ///Use the [InAppWebViewSettings.isPropertySupported] method to check if this property is supported at runtime.
   ///{@endtemplate}
@@ -5451,7 +3815,6 @@ enum InAppWebViewSettingsProperty {
   ///**Officially Supported Platforms/Implementations**:
   ///- Android WebView
   ///- iOS WKWebView
-  ///- macOS WKWebView
   ///
   ///Use the [InAppWebViewSettings.isPropertySupported] method to check if this property is supported at runtime.
   ///{@endtemplate}
@@ -5464,7 +3827,6 @@ enum InAppWebViewSettingsProperty {
   ///**Officially Supported Platforms/Implementations**:
   ///- Android WebView
   ///- iOS WKWebView
-  ///- macOS WKWebView
   ///
   ///Use the [InAppWebViewSettings.isPropertySupported] method to check if this property is supported at runtime.
   ///{@endtemplate}
@@ -5477,8 +3839,6 @@ enum InAppWebViewSettingsProperty {
   ///**Officially Supported Platforms/Implementations**:
   ///- Android WebView
   ///- iOS WKWebView
-  ///- macOS WKWebView
-  ///- Linux WPE WebKit
   ///
   ///Use the [InAppWebViewSettings.isPropertySupported] method to check if this property is supported at runtime.
   ///{@endtemplate}
@@ -5490,7 +3850,6 @@ enum InAppWebViewSettingsProperty {
   ///
   ///**Officially Supported Platforms/Implementations**:
   ///- iOS WKWebView
-  ///- macOS WKWebView
   ///
   ///Use the [InAppWebViewSettings.isPropertySupported] method to check if this property is supported at runtime.
   ///{@endtemplate}
@@ -5527,7 +3886,6 @@ enum InAppWebViewSettingsProperty {
   ///**Officially Supported Platforms/Implementations**:
   ///- Android WebView
   ///- iOS WKWebView
-  ///- macOS WKWebView
   ///
   ///Use the [InAppWebViewSettings.isPropertySupported] method to check if this property is supported at runtime.
   ///{@endtemplate}
@@ -5540,7 +3898,6 @@ enum InAppWebViewSettingsProperty {
   ///**Officially Supported Platforms/Implementations**:
   ///- Android WebView
   ///- iOS WKWebView
-  ///- macOS WKWebView
   ///
   ///Use the [InAppWebViewSettings.isPropertySupported] method to check if this property is supported at runtime.
   ///{@endtemplate}
@@ -5564,8 +3921,6 @@ enum InAppWebViewSettingsProperty {
   ///**Officially Supported Platforms/Implementations**:
   ///- Android WebView
   ///- iOS WKWebView
-  ///- macOS WKWebView
-  ///- Windows WebView2
   ///
   ///Use the [InAppWebViewSettings.isPropertySupported] method to check if this property is supported at runtime.
   ///{@endtemplate}
@@ -5589,8 +3944,6 @@ enum InAppWebViewSettingsProperty {
   ///**Officially Supported Platforms/Implementations**:
   ///- Android WebView ([Official API - WebSettings.setUserAgentString](https://developer.android.com/reference/android/webkit/WebSettings?hl=en#setUserAgentString(java.lang.String)))
   ///- iOS WKWebView ([Official API - WKWebView.customUserAgent](https://developer.apple.com/documentation/webkit/wkwebview/1414950-customuseragent))
-  ///- macOS WKWebView ([Official API - WKWebView.customUserAgent](https://developer.apple.com/documentation/webkit/wkwebview/1414950-customuseragent))
-  ///- Windows WebView2 ([Official API - ICoreWebView2Settings2.put_UserAgent](https://learn.microsoft.com/en-us/microsoft-edge/webview2/reference/win32/icorewebview2settings2?view=webview2-1.0.2210.55#put_useragent))
   ///
   ///Use the [InAppWebViewSettings.isPropertySupported] method to check if this property is supported at runtime.
   ///{@endtemplate}
@@ -5615,8 +3968,6 @@ enum InAppWebViewSettingsProperty {
   ///**Officially Supported Platforms/Implementations**:
   ///- Android WebView ([Official API - View.setVerticalScrollBarEnabled](https://developer.android.com/reference/android/view/View#setVerticalScrollBarEnabled(boolean)))
   ///- iOS WKWebView ([Official API - UIScrollView.showsVerticalScrollIndicator](https://developer.apple.com/documentation/uikit/uiscrollview/1619405-showsverticalscrollindicator/))
-  ///- Web \<iframe\> but requires same origin:
-  ///    - It must have the same value of [horizontalScrollBarEnabled] to take effect.
   ///
   ///Use the [InAppWebViewSettings.isPropertySupported] method to check if this property is supported at runtime.
   ///{@endtemplate}
@@ -5666,18 +4017,6 @@ enum InAppWebViewSettingsProperty {
   ///Use the [InAppWebViewSettings.isPropertySupported] method to check if this property is supported at runtime.
   ///{@endtemplate}
   webAuthenticationSupport,
-
-  ///Can be used to check if the [InAppWebViewSettings.webRTCUdpPortsRange] property is supported at runtime.
-  ///
-  ///{@template flutter_inappwebview_platform_interface.InAppWebViewSettings.webRTCUdpPortsRange.supported_platforms}
-  ///
-  ///**Officially Supported Platforms/Implementations**:
-  ///- Linux WPE WebKit 2.48+ ([Official API - WebKitSettings.webrtc-udp-ports-range](https://wpewebkit.org/reference/stable/wpe-webkit-2.0/property.Settings.webrtc-udp-ports-range.html)):
-  ///    - Requires WPE WebKit 2.48 or later. Format: 'minPort:maxPort'
-  ///
-  ///Use the [InAppWebViewSettings.isPropertySupported] method to check if this property is supported at runtime.
-  ///{@endtemplate}
-  webRTCUdpPortsRange,
 
   ///Can be used to check if the [InAppWebViewSettings.webViewAssetLoader] property is supported at runtime.
   ///
@@ -5749,54 +4088,28 @@ extension _InAppWebViewSettingsPropertySupported on InAppWebViewSettings {
             [
               TargetPlatform.android,
               TargetPlatform.iOS,
-              TargetPlatform.macOS,
-              TargetPlatform.linux,
             ].contains(platform ?? defaultTargetPlatform);
-      case InAppWebViewSettingsProperty.allowModalDialogs:
-        return ((kIsWeb && platform != null) || !kIsWeb) &&
-            [TargetPlatform.linux].contains(platform ?? defaultTargetPlatform);
-      case InAppWebViewSettingsProperty.allowTopNavigationToDataUrls:
-        return ((kIsWeb && platform != null) || !kIsWeb) &&
-            [TargetPlatform.linux].contains(platform ?? defaultTargetPlatform);
       case InAppWebViewSettingsProperty.allowUniversalAccessFromFileURLs:
         return ((kIsWeb && platform != null) || !kIsWeb) &&
             [
               TargetPlatform.android,
               TargetPlatform.iOS,
-              TargetPlatform.macOS,
-              TargetPlatform.linux,
             ].contains(platform ?? defaultTargetPlatform);
       case InAppWebViewSettingsProperty.allowingReadAccessTo:
         return ((kIsWeb && platform != null) || !kIsWeb) &&
-            [
-              TargetPlatform.iOS,
-              TargetPlatform.macOS,
-            ].contains(platform ?? defaultTargetPlatform);
+            [TargetPlatform.iOS].contains(platform ?? defaultTargetPlatform);
       case InAppWebViewSettingsProperty.allowsAirPlayForMediaPlayback:
         return ((kIsWeb && platform != null) || !kIsWeb) &&
-            [
-              TargetPlatform.iOS,
-              TargetPlatform.macOS,
-            ].contains(platform ?? defaultTargetPlatform);
+            [TargetPlatform.iOS].contains(platform ?? defaultTargetPlatform);
       case InAppWebViewSettingsProperty.allowsBackForwardNavigationGestures:
         return ((kIsWeb && platform != null) || !kIsWeb) &&
-            [
-              TargetPlatform.iOS,
-              TargetPlatform.macOS,
-              TargetPlatform.windows,
-            ].contains(platform ?? defaultTargetPlatform);
+            [TargetPlatform.iOS].contains(platform ?? defaultTargetPlatform);
       case InAppWebViewSettingsProperty.allowsInlineMediaPlayback:
         return ((kIsWeb && platform != null) || !kIsWeb) &&
-            [
-              TargetPlatform.iOS,
-              TargetPlatform.linux,
-            ].contains(platform ?? defaultTargetPlatform);
+            [TargetPlatform.iOS].contains(platform ?? defaultTargetPlatform);
       case InAppWebViewSettingsProperty.allowsLinkPreview:
         return ((kIsWeb && platform != null) || !kIsWeb) &&
-            [
-              TargetPlatform.iOS,
-              TargetPlatform.macOS,
-            ].contains(platform ?? defaultTargetPlatform);
+            [TargetPlatform.iOS].contains(platform ?? defaultTargetPlatform);
       case InAppWebViewSettingsProperty.allowsPictureInPictureMediaPlayback:
         return ((kIsWeb && platform != null) || !kIsWeb) &&
             [TargetPlatform.iOS].contains(platform ?? defaultTargetPlatform);
@@ -5805,7 +4118,6 @@ extension _InAppWebViewSettingsPropertySupported on InAppWebViewSettings {
             [
               TargetPlatform.android,
               TargetPlatform.iOS,
-              TargetPlatform.macOS,
             ].contains(platform ?? defaultTargetPlatform);
       case InAppWebViewSettingsProperty.alwaysBounceHorizontal:
         return ((kIsWeb && platform != null) || !kIsWeb) &&
@@ -5826,7 +4138,6 @@ extension _InAppWebViewSettingsPropertySupported on InAppWebViewSettings {
             [
               TargetPlatform.android,
               TargetPlatform.iOS,
-              TargetPlatform.macOS,
             ].contains(platform ?? defaultTargetPlatform);
       case InAppWebViewSettingsProperty.attributionRegistrationBehavior:
         return ((kIsWeb && platform != null) || !kIsWeb) &&
@@ -5852,11 +4163,6 @@ extension _InAppWebViewSettingsPropertySupported on InAppWebViewSettings {
             [
               TargetPlatform.android,
             ].contains(platform ?? defaultTargetPlatform);
-      case InAppWebViewSettingsProperty.browserAcceleratorKeysEnabled:
-        return ((kIsWeb && platform != null) || !kIsWeb) &&
-            [
-              TargetPlatform.windows,
-            ].contains(platform ?? defaultTargetPlatform);
       case InAppWebViewSettingsProperty.builtInZoomControls:
         return ((kIsWeb && platform != null) || !kIsWeb) &&
             [
@@ -5867,7 +4173,6 @@ extension _InAppWebViewSettingsPropertySupported on InAppWebViewSettings {
             [
               TargetPlatform.android,
               TargetPlatform.iOS,
-              TargetPlatform.macOS,
             ].contains(platform ?? defaultTargetPlatform);
       case InAppWebViewSettingsProperty.cacheMode:
         return ((kIsWeb && platform != null) || !kIsWeb) &&
@@ -5879,27 +4184,15 @@ extension _InAppWebViewSettingsPropertySupported on InAppWebViewSettings {
             [
               TargetPlatform.android,
               TargetPlatform.iOS,
-              TargetPlatform.macOS,
-              TargetPlatform.linux,
             ].contains(platform ?? defaultTargetPlatform);
       case InAppWebViewSettingsProperty.contentInsetAdjustmentBehavior:
         return ((kIsWeb && platform != null) || !kIsWeb) &&
             [TargetPlatform.iOS].contains(platform ?? defaultTargetPlatform);
-      case InAppWebViewSettingsProperty.corsAllowlist:
-        return ((kIsWeb && platform != null) || !kIsWeb) &&
-            [TargetPlatform.linux].contains(platform ?? defaultTargetPlatform);
       case InAppWebViewSettingsProperty.cursiveFontFamily:
         return ((kIsWeb && platform != null) || !kIsWeb) &&
             [
               TargetPlatform.android,
-              TargetPlatform.linux,
             ].contains(platform ?? defaultTargetPlatform);
-      case InAppWebViewSettingsProperty.cursorBlinkTime:
-        return ((kIsWeb && platform != null) || !kIsWeb) &&
-            [TargetPlatform.linux].contains(platform ?? defaultTargetPlatform);
-      case InAppWebViewSettingsProperty.darkMode:
-        return ((kIsWeb && platform != null) || !kIsWeb) &&
-            [TargetPlatform.linux].contains(platform ?? defaultTargetPlatform);
       case InAppWebViewSettingsProperty.dataDetectorTypes:
         return ((kIsWeb && platform != null) || !kIsWeb) &&
             [TargetPlatform.iOS].contains(platform ?? defaultTargetPlatform);
@@ -5907,7 +4200,6 @@ extension _InAppWebViewSettingsPropertySupported on InAppWebViewSettings {
         return ((kIsWeb && platform != null) || !kIsWeb) &&
             [
               TargetPlatform.android,
-              TargetPlatform.linux,
             ].contains(platform ?? defaultTargetPlatform);
       case InAppWebViewSettingsProperty.decelerationRate:
         return ((kIsWeb && platform != null) || !kIsWeb) &&
@@ -5916,51 +4208,39 @@ extension _InAppWebViewSettingsPropertySupported on InAppWebViewSettings {
         return ((kIsWeb && platform != null) || !kIsWeb) &&
             [
               TargetPlatform.android,
-              TargetPlatform.linux,
             ].contains(platform ?? defaultTargetPlatform);
       case InAppWebViewSettingsProperty.defaultFontSize:
         return ((kIsWeb && platform != null) || !kIsWeb) &&
             [
               TargetPlatform.android,
-              TargetPlatform.linux,
             ].contains(platform ?? defaultTargetPlatform);
       case InAppWebViewSettingsProperty.defaultTextEncodingName:
         return ((kIsWeb && platform != null) || !kIsWeb) &&
             [
               TargetPlatform.android,
-              TargetPlatform.linux,
             ].contains(platform ?? defaultTargetPlatform);
       case InAppWebViewSettingsProperty.defaultVideoPoster:
         return ((kIsWeb && platform != null) || !kIsWeb) &&
             [
               TargetPlatform.android,
             ].contains(platform ?? defaultTargetPlatform);
-      case InAppWebViewSettingsProperty.disableAnimations:
-        return ((kIsWeb && platform != null) || !kIsWeb) &&
-            [TargetPlatform.linux].contains(platform ?? defaultTargetPlatform);
       case InAppWebViewSettingsProperty.disableContextMenu:
-        return kIsWeb && platform == null
-            ? true
-            : ((kIsWeb && platform != null) || !kIsWeb) &&
-                  [
-                    TargetPlatform.android,
-                    TargetPlatform.iOS,
-                    TargetPlatform.windows,
-                  ].contains(platform ?? defaultTargetPlatform);
+        return ((kIsWeb && platform != null) || !kIsWeb) &&
+            [
+              TargetPlatform.android,
+              TargetPlatform.iOS,
+            ].contains(platform ?? defaultTargetPlatform);
       case InAppWebViewSettingsProperty.disableDefaultErrorPage:
         return ((kIsWeb && platform != null) || !kIsWeb) &&
             [
               TargetPlatform.android,
-              TargetPlatform.windows,
             ].contains(platform ?? defaultTargetPlatform);
       case InAppWebViewSettingsProperty.disableHorizontalScroll:
-        return kIsWeb && platform == null
-            ? true
-            : ((kIsWeb && platform != null) || !kIsWeb) &&
-                  [
-                    TargetPlatform.android,
-                    TargetPlatform.iOS,
-                  ].contains(platform ?? defaultTargetPlatform);
+        return ((kIsWeb && platform != null) || !kIsWeb) &&
+            [
+              TargetPlatform.android,
+              TargetPlatform.iOS,
+            ].contains(platform ?? defaultTargetPlatform);
       case InAppWebViewSettingsProperty.disableInputAccessoryView:
         return ((kIsWeb && platform != null) || !kIsWeb) &&
             [TargetPlatform.iOS].contains(platform ?? defaultTargetPlatform);
@@ -5968,16 +4248,11 @@ extension _InAppWebViewSettingsPropertySupported on InAppWebViewSettings {
         return ((kIsWeb && platform != null) || !kIsWeb) &&
             [TargetPlatform.iOS].contains(platform ?? defaultTargetPlatform);
       case InAppWebViewSettingsProperty.disableVerticalScroll:
-        return kIsWeb && platform == null
-            ? true
-            : ((kIsWeb && platform != null) || !kIsWeb) &&
-                  [
-                    TargetPlatform.android,
-                    TargetPlatform.iOS,
-                  ].contains(platform ?? defaultTargetPlatform);
-      case InAppWebViewSettingsProperty.disableWebSecurity:
         return ((kIsWeb && platform != null) || !kIsWeb) &&
-            [TargetPlatform.linux].contains(platform ?? defaultTargetPlatform);
+            [
+              TargetPlatform.android,
+              TargetPlatform.iOS,
+            ].contains(platform ?? defaultTargetPlatform);
       case InAppWebViewSettingsProperty.disabledActionModeMenuItems:
         return ((kIsWeb && platform != null) || !kIsWeb) &&
             [
@@ -5995,73 +4270,15 @@ extension _InAppWebViewSettingsPropertySupported on InAppWebViewSettings {
         return ((kIsWeb && platform != null) || !kIsWeb) &&
             [
               TargetPlatform.android,
-              TargetPlatform.linux,
             ].contains(platform ?? defaultTargetPlatform);
-      case InAppWebViewSettingsProperty.doubleClickDistance:
-        return ((kIsWeb && platform != null) || !kIsWeb) &&
-            [TargetPlatform.linux].contains(platform ?? defaultTargetPlatform);
-      case InAppWebViewSettingsProperty.doubleClickTime:
-        return ((kIsWeb && platform != null) || !kIsWeb) &&
-            [TargetPlatform.linux].contains(platform ?? defaultTargetPlatform);
       case InAppWebViewSettingsProperty.downloadFaviconsEnabled:
         return ((kIsWeb && platform != null) || !kIsWeb) &&
             [
               TargetPlatform.android,
             ].contains(platform ?? defaultTargetPlatform);
-      case InAppWebViewSettingsProperty.dragThreshold:
-        return ((kIsWeb && platform != null) || !kIsWeb) &&
-            [TargetPlatform.linux].contains(platform ?? defaultTargetPlatform);
-      case InAppWebViewSettingsProperty.drawCompositingIndicators:
-        return ((kIsWeb && platform != null) || !kIsWeb) &&
-            [TargetPlatform.linux].contains(platform ?? defaultTargetPlatform);
-      case InAppWebViewSettingsProperty.enable2DCanvasAcceleration:
-        return ((kIsWeb && platform != null) || !kIsWeb) &&
-            [TargetPlatform.linux].contains(platform ?? defaultTargetPlatform);
-      case InAppWebViewSettingsProperty.enableCaretBrowsing:
-        return ((kIsWeb && platform != null) || !kIsWeb) &&
-            [TargetPlatform.linux].contains(platform ?? defaultTargetPlatform);
-      case InAppWebViewSettingsProperty.enableEncryptedMedia:
-        return ((kIsWeb && platform != null) || !kIsWeb) &&
-            [TargetPlatform.linux].contains(platform ?? defaultTargetPlatform);
-      case InAppWebViewSettingsProperty.enableJavaScriptMarkup:
-        return ((kIsWeb && platform != null) || !kIsWeb) &&
-            [TargetPlatform.linux].contains(platform ?? defaultTargetPlatform);
-      case InAppWebViewSettingsProperty.enableMedia:
-        return ((kIsWeb && platform != null) || !kIsWeb) &&
-            [TargetPlatform.linux].contains(platform ?? defaultTargetPlatform);
-      case InAppWebViewSettingsProperty.enableMediaCapabilities:
-        return ((kIsWeb && platform != null) || !kIsWeb) &&
-            [TargetPlatform.linux].contains(platform ?? defaultTargetPlatform);
-      case InAppWebViewSettingsProperty.enableMockCaptureDevices:
-        return ((kIsWeb && platform != null) || !kIsWeb) &&
-            [TargetPlatform.linux].contains(platform ?? defaultTargetPlatform);
-      case InAppWebViewSettingsProperty.enablePageCache:
-        return ((kIsWeb && platform != null) || !kIsWeb) &&
-            [TargetPlatform.linux].contains(platform ?? defaultTargetPlatform);
-      case InAppWebViewSettingsProperty.enableResizableTextAreas:
-        return ((kIsWeb && platform != null) || !kIsWeb) &&
-            [TargetPlatform.linux].contains(platform ?? defaultTargetPlatform);
-      case InAppWebViewSettingsProperty.enableSmoothScrolling:
-        return ((kIsWeb && platform != null) || !kIsWeb) &&
-            [TargetPlatform.linux].contains(platform ?? defaultTargetPlatform);
-      case InAppWebViewSettingsProperty.enableSpatialNavigation:
-        return ((kIsWeb && platform != null) || !kIsWeb) &&
-            [TargetPlatform.linux].contains(platform ?? defaultTargetPlatform);
-      case InAppWebViewSettingsProperty.enableTabsToLinks:
-        return ((kIsWeb && platform != null) || !kIsWeb) &&
-            [TargetPlatform.linux].contains(platform ?? defaultTargetPlatform);
       case InAppWebViewSettingsProperty.enableViewportScale:
         return ((kIsWeb && platform != null) || !kIsWeb) &&
-            [
-              TargetPlatform.iOS,
-              TargetPlatform.macOS,
-            ].contains(platform ?? defaultTargetPlatform);
-      case InAppWebViewSettingsProperty.enableWebRTC:
-        return ((kIsWeb && platform != null) || !kIsWeb) &&
-            [TargetPlatform.linux].contains(platform ?? defaultTargetPlatform);
-      case InAppWebViewSettingsProperty.enableWriteConsoleMessagesToStdout:
-        return ((kIsWeb && platform != null) || !kIsWeb) &&
-            [TargetPlatform.linux].contains(platform ?? defaultTargetPlatform);
+            [TargetPlatform.iOS].contains(platform ?? defaultTargetPlatform);
       case InAppWebViewSettingsProperty
           .enterpriseAuthenticationAppLinkPolicyEnabled:
         return ((kIsWeb && platform != null) || !kIsWeb) &&
@@ -6072,59 +4289,28 @@ extension _InAppWebViewSettingsPropertySupported on InAppWebViewSettings {
         return ((kIsWeb && platform != null) || !kIsWeb) &&
             [
               TargetPlatform.android,
-              TargetPlatform.linux,
             ].contains(platform ?? defaultTargetPlatform);
       case InAppWebViewSettingsProperty.fixedFontFamily:
         return ((kIsWeb && platform != null) || !kIsWeb) &&
             [
               TargetPlatform.android,
-              TargetPlatform.linux,
-            ].contains(platform ?? defaultTargetPlatform);
-      case InAppWebViewSettingsProperty.fontAntialias:
-        return ((kIsWeb && platform != null) || !kIsWeb) &&
-            [TargetPlatform.linux].contains(platform ?? defaultTargetPlatform);
-      case InAppWebViewSettingsProperty.fontDPI:
-        return ((kIsWeb && platform != null) || !kIsWeb) &&
-            [TargetPlatform.linux].contains(platform ?? defaultTargetPlatform);
-      case InAppWebViewSettingsProperty.fontHintingStyle:
-        return ((kIsWeb && platform != null) || !kIsWeb) &&
-            [TargetPlatform.linux].contains(platform ?? defaultTargetPlatform);
-      case InAppWebViewSettingsProperty.fontSubpixelLayout:
-        return ((kIsWeb && platform != null) || !kIsWeb) &&
-            [TargetPlatform.linux].contains(platform ?? defaultTargetPlatform);
-      case InAppWebViewSettingsProperty.generalAutofillEnabled:
-        return ((kIsWeb && platform != null) || !kIsWeb) &&
-            [
-              TargetPlatform.windows,
             ].contains(platform ?? defaultTargetPlatform);
       case InAppWebViewSettingsProperty.geolocationEnabled:
         return ((kIsWeb && platform != null) || !kIsWeb) &&
             [
               TargetPlatform.android,
             ].contains(platform ?? defaultTargetPlatform);
-      case InAppWebViewSettingsProperty.handleAcceleratorKeyPressed:
-        return ((kIsWeb && platform != null) || !kIsWeb) &&
-            [
-              TargetPlatform.windows,
-            ].contains(platform ?? defaultTargetPlatform);
       case InAppWebViewSettingsProperty.hardwareAcceleration:
         return ((kIsWeb && platform != null) || !kIsWeb) &&
             [
               TargetPlatform.android,
             ].contains(platform ?? defaultTargetPlatform);
-      case InAppWebViewSettingsProperty.hiddenPdfToolbarItems:
+      case InAppWebViewSettingsProperty.horizontalScrollBarEnabled:
         return ((kIsWeb && platform != null) || !kIsWeb) &&
             [
-              TargetPlatform.windows,
+              TargetPlatform.android,
+              TargetPlatform.iOS,
             ].contains(platform ?? defaultTargetPlatform);
-      case InAppWebViewSettingsProperty.horizontalScrollBarEnabled:
-        return kIsWeb && platform == null
-            ? true
-            : ((kIsWeb && platform != null) || !kIsWeb) &&
-                  [
-                    TargetPlatform.android,
-                    TargetPlatform.iOS,
-                  ].contains(platform ?? defaultTargetPlatform);
       case InAppWebViewSettingsProperty.horizontalScrollbarThumbColor:
         return ((kIsWeb && platform != null) || !kIsWeb) &&
             [
@@ -6135,46 +4321,6 @@ extension _InAppWebViewSettingsPropertySupported on InAppWebViewSettings {
             [
               TargetPlatform.android,
             ].contains(platform ?? defaultTargetPlatform);
-      case InAppWebViewSettingsProperty.iframeAllow:
-        return kIsWeb && platform == null
-            ? true
-            : ((kIsWeb && platform != null) || !kIsWeb) &&
-                  [].contains(platform ?? defaultTargetPlatform);
-      case InAppWebViewSettingsProperty.iframeAllowFullscreen:
-        return kIsWeb && platform == null
-            ? true
-            : ((kIsWeb && platform != null) || !kIsWeb) &&
-                  [].contains(platform ?? defaultTargetPlatform);
-      case InAppWebViewSettingsProperty.iframeAriaHidden:
-        return kIsWeb && platform == null
-            ? true
-            : ((kIsWeb && platform != null) || !kIsWeb) &&
-                  [].contains(platform ?? defaultTargetPlatform);
-      case InAppWebViewSettingsProperty.iframeCsp:
-        return kIsWeb && platform == null
-            ? true
-            : ((kIsWeb && platform != null) || !kIsWeb) &&
-                  [].contains(platform ?? defaultTargetPlatform);
-      case InAppWebViewSettingsProperty.iframeName:
-        return kIsWeb && platform == null
-            ? true
-            : ((kIsWeb && platform != null) || !kIsWeb) &&
-                  [].contains(platform ?? defaultTargetPlatform);
-      case InAppWebViewSettingsProperty.iframeReferrerPolicy:
-        return kIsWeb && platform == null
-            ? true
-            : ((kIsWeb && platform != null) || !kIsWeb) &&
-                  [].contains(platform ?? defaultTargetPlatform);
-      case InAppWebViewSettingsProperty.iframeRole:
-        return kIsWeb && platform == null
-            ? true
-            : ((kIsWeb && platform != null) || !kIsWeb) &&
-                  [].contains(platform ?? defaultTargetPlatform);
-      case InAppWebViewSettingsProperty.iframeSandbox:
-        return kIsWeb && platform == null
-            ? true
-            : ((kIsWeb && platform != null) || !kIsWeb) &&
-                  [].contains(platform ?? defaultTargetPlatform);
       case InAppWebViewSettingsProperty.ignoresViewportScaleLimits:
         return ((kIsWeb && platform != null) || !kIsWeb) &&
             [TargetPlatform.iOS].contains(platform ?? defaultTargetPlatform);
@@ -6183,9 +4329,6 @@ extension _InAppWebViewSettingsPropertySupported on InAppWebViewSettings {
             [
               TargetPlatform.android,
               TargetPlatform.iOS,
-              TargetPlatform.macOS,
-              TargetPlatform.windows,
-              TargetPlatform.linux,
             ].contains(platform ?? defaultTargetPlatform);
       case InAppWebViewSettingsProperty.initialScale:
         return ((kIsWeb && platform != null) || !kIsWeb) &&
@@ -6197,132 +4340,79 @@ extension _InAppWebViewSettingsPropertySupported on InAppWebViewSettings {
             [
               TargetPlatform.android,
               TargetPlatform.iOS,
-              TargetPlatform.macOS,
             ].contains(platform ?? defaultTargetPlatform);
       case InAppWebViewSettingsProperty.isDirectionalLockEnabled:
         return ((kIsWeb && platform != null) || !kIsWeb) &&
             [TargetPlatform.iOS].contains(platform ?? defaultTargetPlatform);
       case InAppWebViewSettingsProperty.isElementFullscreenEnabled:
         return ((kIsWeb && platform != null) || !kIsWeb) &&
-            [
-              TargetPlatform.iOS,
-              TargetPlatform.macOS,
-              TargetPlatform.linux,
-            ].contains(platform ?? defaultTargetPlatform);
+            [TargetPlatform.iOS].contains(platform ?? defaultTargetPlatform);
       case InAppWebViewSettingsProperty.isFindInteractionEnabled:
         return ((kIsWeb && platform != null) || !kIsWeb) &&
             [TargetPlatform.iOS].contains(platform ?? defaultTargetPlatform);
       case InAppWebViewSettingsProperty.isFraudulentWebsiteWarningEnabled:
         return ((kIsWeb && platform != null) || !kIsWeb) &&
-            [
-              TargetPlatform.iOS,
-              TargetPlatform.macOS,
-            ].contains(platform ?? defaultTargetPlatform);
+            [TargetPlatform.iOS].contains(platform ?? defaultTargetPlatform);
       case InAppWebViewSettingsProperty.isInspectable:
         return ((kIsWeb && platform != null) || !kIsWeb) &&
-            [
-              TargetPlatform.iOS,
-              TargetPlatform.macOS,
-              TargetPlatform.windows,
-            ].contains(platform ?? defaultTargetPlatform);
+            [TargetPlatform.iOS].contains(platform ?? defaultTargetPlatform);
       case InAppWebViewSettingsProperty.isPagingEnabled:
         return ((kIsWeb && platform != null) || !kIsWeb) &&
             [TargetPlatform.iOS].contains(platform ?? defaultTargetPlatform);
       case InAppWebViewSettingsProperty.isSiteSpecificQuirksModeEnabled:
         return ((kIsWeb && platform != null) || !kIsWeb) &&
-            [
-              TargetPlatform.iOS,
-              TargetPlatform.macOS,
-            ].contains(platform ?? defaultTargetPlatform);
+            [TargetPlatform.iOS].contains(platform ?? defaultTargetPlatform);
       case InAppWebViewSettingsProperty.isTextInteractionEnabled:
         return ((kIsWeb && platform != null) || !kIsWeb) &&
-            [
-              TargetPlatform.iOS,
-              TargetPlatform.macOS,
-            ].contains(platform ?? defaultTargetPlatform);
+            [TargetPlatform.iOS].contains(platform ?? defaultTargetPlatform);
       case InAppWebViewSettingsProperty.isUserInteractionEnabled:
         return ((kIsWeb && platform != null) || !kIsWeb) &&
             [
               TargetPlatform.android,
               TargetPlatform.iOS,
             ].contains(platform ?? defaultTargetPlatform);
-      case InAppWebViewSettingsProperty.itpEnabled:
-        return ((kIsWeb && platform != null) || !kIsWeb) &&
-            [TargetPlatform.linux].contains(platform ?? defaultTargetPlatform);
       case InAppWebViewSettingsProperty.javaScriptBridgeEnabled:
-        return kIsWeb && platform == null
-            ? true
-            : ((kIsWeb && platform != null) || !kIsWeb) &&
-                  [
-                    TargetPlatform.android,
-                    TargetPlatform.iOS,
-                    TargetPlatform.macOS,
-                    TargetPlatform.windows,
-                  ].contains(platform ?? defaultTargetPlatform);
+        return ((kIsWeb && platform != null) || !kIsWeb) &&
+            [
+              TargetPlatform.android,
+              TargetPlatform.iOS,
+            ].contains(platform ?? defaultTargetPlatform);
       case InAppWebViewSettingsProperty.javaScriptBridgeForMainFrameOnly:
         return ((kIsWeb && platform != null) || !kIsWeb) &&
             [
               TargetPlatform.android,
               TargetPlatform.iOS,
-              TargetPlatform.macOS,
-              TargetPlatform.windows,
             ].contains(platform ?? defaultTargetPlatform);
       case InAppWebViewSettingsProperty.javaScriptBridgeOriginAllowList:
-        return kIsWeb && platform == null
-            ? true
-            : ((kIsWeb && platform != null) || !kIsWeb) &&
-                  [
-                    TargetPlatform.android,
-                    TargetPlatform.iOS,
-                    TargetPlatform.macOS,
-                    TargetPlatform.windows,
-                  ].contains(platform ?? defaultTargetPlatform);
-      case InAppWebViewSettingsProperty.javaScriptCanAccessClipboard:
         return ((kIsWeb && platform != null) || !kIsWeb) &&
-            [TargetPlatform.linux].contains(platform ?? defaultTargetPlatform);
+            [
+              TargetPlatform.android,
+              TargetPlatform.iOS,
+            ].contains(platform ?? defaultTargetPlatform);
       case InAppWebViewSettingsProperty.javaScriptCanOpenWindowsAutomatically:
-        return kIsWeb && platform == null
-            ? true
-            : ((kIsWeb && platform != null) || !kIsWeb) &&
-                  [
-                    TargetPlatform.android,
-                    TargetPlatform.iOS,
-                    TargetPlatform.macOS,
-                  ].contains(platform ?? defaultTargetPlatform);
+        return ((kIsWeb && platform != null) || !kIsWeb) &&
+            [
+              TargetPlatform.android,
+              TargetPlatform.iOS,
+            ].contains(platform ?? defaultTargetPlatform);
       case InAppWebViewSettingsProperty.javaScriptEnabled:
-        return kIsWeb && platform == null
-            ? true
-            : ((kIsWeb && platform != null) || !kIsWeb) &&
-                  [
-                    TargetPlatform.android,
-                    TargetPlatform.iOS,
-                    TargetPlatform.macOS,
-                    TargetPlatform.windows,
-                  ].contains(platform ?? defaultTargetPlatform);
+        return ((kIsWeb && platform != null) || !kIsWeb) &&
+            [
+              TargetPlatform.android,
+              TargetPlatform.iOS,
+            ].contains(platform ?? defaultTargetPlatform);
       case InAppWebViewSettingsProperty.javaScriptHandlersForMainFrameOnly:
         return ((kIsWeb && platform != null) || !kIsWeb) &&
             [
               TargetPlatform.android,
               TargetPlatform.iOS,
-              TargetPlatform.macOS,
-              TargetPlatform.windows,
             ].contains(platform ?? defaultTargetPlatform);
       case InAppWebViewSettingsProperty.javaScriptHandlersOriginAllowList:
-        return kIsWeb && platform == null
-            ? true
-            : ((kIsWeb && platform != null) || !kIsWeb) &&
-                  [
-                    TargetPlatform.android,
-                    TargetPlatform.iOS,
-                    TargetPlatform.macOS,
-                    TargetPlatform.windows,
-                  ].contains(platform ?? defaultTargetPlatform);
-      case InAppWebViewSettingsProperty.keyRepeatDelay:
         return ((kIsWeb && platform != null) || !kIsWeb) &&
-            [TargetPlatform.linux].contains(platform ?? defaultTargetPlatform);
-      case InAppWebViewSettingsProperty.keyRepeatInterval:
-        return ((kIsWeb && platform != null) || !kIsWeb) &&
-            [TargetPlatform.linux].contains(platform ?? defaultTargetPlatform);
+            [
+              TargetPlatform.android,
+              TargetPlatform.iOS,
+            ].contains(platform ?? defaultTargetPlatform);
       case InAppWebViewSettingsProperty.layoutAlgorithm:
         return ((kIsWeb && platform != null) || !kIsWeb) &&
             [
@@ -6330,10 +4420,7 @@ extension _InAppWebViewSettingsPropertySupported on InAppWebViewSettings {
             ].contains(platform ?? defaultTargetPlatform);
       case InAppWebViewSettingsProperty.limitsNavigationsToAppBoundDomains:
         return ((kIsWeb && platform != null) || !kIsWeb) &&
-            [
-              TargetPlatform.iOS,
-              TargetPlatform.macOS,
-            ].contains(platform ?? defaultTargetPlatform);
+            [TargetPlatform.iOS].contains(platform ?? defaultTargetPlatform);
       case InAppWebViewSettingsProperty.loadWithOverviewMode:
         return ((kIsWeb && platform != null) || !kIsWeb) &&
             [
@@ -6343,7 +4430,6 @@ extension _InAppWebViewSettingsPropertySupported on InAppWebViewSettings {
         return ((kIsWeb && platform != null) || !kIsWeb) &&
             [
               TargetPlatform.android,
-              TargetPlatform.linux,
             ].contains(platform ?? defaultTargetPlatform);
       case InAppWebViewSettingsProperty.lockdownModeEnabled:
         return ((kIsWeb && platform != null) || !kIsWeb) &&
@@ -6354,29 +4440,20 @@ extension _InAppWebViewSettingsPropertySupported on InAppWebViewSettings {
       case InAppWebViewSettingsProperty.maximumZoomScale:
         return ((kIsWeb && platform != null) || !kIsWeb) &&
             [TargetPlatform.iOS].contains(platform ?? defaultTargetPlatform);
-      case InAppWebViewSettingsProperty
-          .mediaContentTypesRequiringHardwareSupport:
-        return ((kIsWeb && platform != null) || !kIsWeb) &&
-            [TargetPlatform.linux].contains(platform ?? defaultTargetPlatform);
       case InAppWebViewSettingsProperty.mediaPlaybackRequiresUserGesture:
         return ((kIsWeb && platform != null) || !kIsWeb) &&
             [
               TargetPlatform.android,
               TargetPlatform.iOS,
-              TargetPlatform.macOS,
             ].contains(platform ?? defaultTargetPlatform);
       case InAppWebViewSettingsProperty.mediaType:
         return ((kIsWeb && platform != null) || !kIsWeb) &&
-            [
-              TargetPlatform.iOS,
-              TargetPlatform.macOS,
-            ].contains(platform ?? defaultTargetPlatform);
+            [TargetPlatform.iOS].contains(platform ?? defaultTargetPlatform);
       case InAppWebViewSettingsProperty.minimumFontSize:
         return ((kIsWeb && platform != null) || !kIsWeb) &&
             [
               TargetPlatform.android,
               TargetPlatform.iOS,
-              TargetPlatform.macOS,
             ].contains(platform ?? defaultTargetPlatform);
       case InAppWebViewSettingsProperty.minimumLogicalFontSize:
         return ((kIsWeb && platform != null) || !kIsWeb) &&
@@ -6404,11 +4481,6 @@ extension _InAppWebViewSettingsPropertySupported on InAppWebViewSettings {
             [
               TargetPlatform.android,
             ].contains(platform ?? defaultTargetPlatform);
-      case InAppWebViewSettingsProperty.nonClientRegionSupportEnabled:
-        return ((kIsWeb && platform != null) || !kIsWeb) &&
-            [
-              TargetPlatform.windows,
-            ].contains(platform ?? defaultTargetPlatform);
       case InAppWebViewSettingsProperty.offscreenPreRaster:
         return ((kIsWeb && platform != null) || !kIsWeb) &&
             [
@@ -6421,50 +4493,29 @@ extension _InAppWebViewSettingsPropertySupported on InAppWebViewSettings {
             ].contains(platform ?? defaultTargetPlatform);
       case InAppWebViewSettingsProperty.pageZoom:
         return ((kIsWeb && platform != null) || !kIsWeb) &&
-            [
-              TargetPlatform.iOS,
-              TargetPlatform.macOS,
-            ].contains(platform ?? defaultTargetPlatform);
-      case InAppWebViewSettingsProperty.passwordAutosaveEnabled:
-        return ((kIsWeb && platform != null) || !kIsWeb) &&
-            [
-              TargetPlatform.windows,
-            ].contains(platform ?? defaultTargetPlatform);
+            [TargetPlatform.iOS].contains(platform ?? defaultTargetPlatform);
       case InAppWebViewSettingsProperty.paymentRequestEnabled:
         return ((kIsWeb && platform != null) || !kIsWeb) &&
             [
               TargetPlatform.android,
-            ].contains(platform ?? defaultTargetPlatform);
-      case InAppWebViewSettingsProperty.pictographFontFamily:
-        return ((kIsWeb && platform != null) || !kIsWeb) &&
-            [TargetPlatform.linux].contains(platform ?? defaultTargetPlatform);
-      case InAppWebViewSettingsProperty.pinchZoomEnabled:
-        return ((kIsWeb && platform != null) || !kIsWeb) &&
-            [
-              TargetPlatform.windows,
             ].contains(platform ?? defaultTargetPlatform);
       case InAppWebViewSettingsProperty.pluginScriptsForMainFrameOnly:
         return ((kIsWeb && platform != null) || !kIsWeb) &&
             [
               TargetPlatform.android,
               TargetPlatform.iOS,
-              TargetPlatform.macOS,
-              TargetPlatform.windows,
             ].contains(platform ?? defaultTargetPlatform);
       case InAppWebViewSettingsProperty.pluginScriptsOriginAllowList:
         return ((kIsWeb && platform != null) || !kIsWeb) &&
             [
               TargetPlatform.android,
               TargetPlatform.iOS,
-              TargetPlatform.macOS,
-              TargetPlatform.windows,
             ].contains(platform ?? defaultTargetPlatform);
       case InAppWebViewSettingsProperty.preferredContentMode:
         return ((kIsWeb && platform != null) || !kIsWeb) &&
             [
               TargetPlatform.android,
               TargetPlatform.iOS,
-              TargetPlatform.macOS,
             ].contains(platform ?? defaultTargetPlatform);
       case InAppWebViewSettingsProperty.preferredHTTPSNavigationPolicy:
         return ((kIsWeb && platform != null) || !kIsWeb) &&
@@ -6489,17 +4540,11 @@ extension _InAppWebViewSettingsPropertySupported on InAppWebViewSettings {
             [
               TargetPlatform.android,
             ].contains(platform ?? defaultTargetPlatform);
-      case InAppWebViewSettingsProperty.reputationCheckingRequired:
-        return ((kIsWeb && platform != null) || !kIsWeb) &&
-            [
-              TargetPlatform.windows,
-            ].contains(platform ?? defaultTargetPlatform);
       case InAppWebViewSettingsProperty.resourceCustomSchemes:
         return ((kIsWeb && platform != null) || !kIsWeb) &&
             [
               TargetPlatform.android,
               TargetPlatform.iOS,
-              TargetPlatform.macOS,
             ].contains(platform ?? defaultTargetPlatform);
       case InAppWebViewSettingsProperty.safeBrowsingEnabled:
         return ((kIsWeb && platform != null) || !kIsWeb) &&
@@ -6510,7 +4555,6 @@ extension _InAppWebViewSettingsPropertySupported on InAppWebViewSettings {
         return ((kIsWeb && platform != null) || !kIsWeb) &&
             [
               TargetPlatform.android,
-              TargetPlatform.linux,
             ].contains(platform ?? defaultTargetPlatform);
       case InAppWebViewSettingsProperty.scrollBarDefaultDelayBeforeFade:
         return ((kIsWeb && platform != null) || !kIsWeb) &&
@@ -6526,11 +4570,6 @@ extension _InAppWebViewSettingsPropertySupported on InAppWebViewSettings {
         return ((kIsWeb && platform != null) || !kIsWeb) &&
             [
               TargetPlatform.android,
-            ].contains(platform ?? defaultTargetPlatform);
-      case InAppWebViewSettingsProperty.scrollMultiplier:
-        return ((kIsWeb && platform != null) || !kIsWeb) &&
-            [
-              TargetPlatform.windows,
             ].contains(platform ?? defaultTargetPlatform);
       case InAppWebViewSettingsProperty.scrollbarFadingEnabled:
         return ((kIsWeb && platform != null) || !kIsWeb) &&
@@ -6550,30 +4589,17 @@ extension _InAppWebViewSettingsPropertySupported on InAppWebViewSettings {
         return ((kIsWeb && platform != null) || !kIsWeb) &&
             [
               TargetPlatform.android,
-              TargetPlatform.linux,
             ].contains(platform ?? defaultTargetPlatform);
       case InAppWebViewSettingsProperty.sharedCookiesEnabled:
         return ((kIsWeb && platform != null) || !kIsWeb) &&
-            [
-              TargetPlatform.iOS,
-              TargetPlatform.macOS,
-            ].contains(platform ?? defaultTargetPlatform);
+            [TargetPlatform.iOS].contains(platform ?? defaultTargetPlatform);
       case InAppWebViewSettingsProperty.shouldPrintBackgrounds:
         return ((kIsWeb && platform != null) || !kIsWeb) &&
-            [
-              TargetPlatform.iOS,
-              TargetPlatform.macOS,
-            ].contains(platform ?? defaultTargetPlatform);
+            [TargetPlatform.iOS].contains(platform ?? defaultTargetPlatform);
       case InAppWebViewSettingsProperty.standardFontFamily:
         return ((kIsWeb && platform != null) || !kIsWeb) &&
             [
               TargetPlatform.android,
-              TargetPlatform.linux,
-            ].contains(platform ?? defaultTargetPlatform);
-      case InAppWebViewSettingsProperty.statusBarEnabled:
-        return ((kIsWeb && platform != null) || !kIsWeb) &&
-            [
-              TargetPlatform.windows,
             ].contains(platform ?? defaultTargetPlatform);
       case InAppWebViewSettingsProperty.supportMultipleWindows:
         return ((kIsWeb && platform != null) || !kIsWeb) &&
@@ -6585,18 +4611,13 @@ extension _InAppWebViewSettingsPropertySupported on InAppWebViewSettings {
             [
               TargetPlatform.android,
               TargetPlatform.iOS,
-              TargetPlatform.macOS,
-              TargetPlatform.windows,
             ].contains(platform ?? defaultTargetPlatform);
       case InAppWebViewSettingsProperty.supportsAdaptiveImageGlyph:
         return ((kIsWeb && platform != null) || !kIsWeb) &&
             [TargetPlatform.iOS].contains(platform ?? defaultTargetPlatform);
       case InAppWebViewSettingsProperty.suppressesIncrementalRendering:
         return ((kIsWeb && platform != null) || !kIsWeb) &&
-            [
-              TargetPlatform.iOS,
-              TargetPlatform.macOS,
-            ].contains(platform ?? defaultTargetPlatform);
+            [TargetPlatform.iOS].contains(platform ?? defaultTargetPlatform);
       case InAppWebViewSettingsProperty.textZoom:
         return ((kIsWeb && platform != null) || !kIsWeb) &&
             [
@@ -6612,21 +4633,13 @@ extension _InAppWebViewSettingsPropertySupported on InAppWebViewSettings {
             [
               TargetPlatform.android,
               TargetPlatform.iOS,
-              TargetPlatform.macOS,
-              TargetPlatform.windows,
             ].contains(platform ?? defaultTargetPlatform);
       case InAppWebViewSettingsProperty.underPageBackgroundColor:
         return ((kIsWeb && platform != null) || !kIsWeb) &&
-            [
-              TargetPlatform.iOS,
-              TargetPlatform.macOS,
-            ].contains(platform ?? defaultTargetPlatform);
+            [TargetPlatform.iOS].contains(platform ?? defaultTargetPlatform);
       case InAppWebViewSettingsProperty.upgradeKnownHostsToHTTPS:
         return ((kIsWeb && platform != null) || !kIsWeb) &&
-            [
-              TargetPlatform.iOS,
-              TargetPlatform.macOS,
-            ].contains(platform ?? defaultTargetPlatform);
+            [TargetPlatform.iOS].contains(platform ?? defaultTargetPlatform);
       case InAppWebViewSettingsProperty.useHybridComposition:
         return ((kIsWeb && platform != null) || !kIsWeb) &&
             [
@@ -6637,36 +4650,28 @@ extension _InAppWebViewSettingsPropertySupported on InAppWebViewSettings {
             [
               TargetPlatform.android,
               TargetPlatform.iOS,
-              TargetPlatform.macOS,
             ].contains(platform ?? defaultTargetPlatform);
       case InAppWebViewSettingsProperty.useOnAjaxReadyStateChange:
         return ((kIsWeb && platform != null) || !kIsWeb) &&
             [
               TargetPlatform.android,
               TargetPlatform.iOS,
-              TargetPlatform.macOS,
             ].contains(platform ?? defaultTargetPlatform);
       case InAppWebViewSettingsProperty.useOnDownloadStart:
         return ((kIsWeb && platform != null) || !kIsWeb) &&
             [
               TargetPlatform.android,
               TargetPlatform.iOS,
-              TargetPlatform.macOS,
             ].contains(platform ?? defaultTargetPlatform);
       case InAppWebViewSettingsProperty.useOnLoadResource:
         return ((kIsWeb && platform != null) || !kIsWeb) &&
             [
               TargetPlatform.android,
               TargetPlatform.iOS,
-              TargetPlatform.macOS,
-              TargetPlatform.linux,
             ].contains(platform ?? defaultTargetPlatform);
       case InAppWebViewSettingsProperty.useOnNavigationResponse:
         return ((kIsWeb && platform != null) || !kIsWeb) &&
-            [
-              TargetPlatform.iOS,
-              TargetPlatform.macOS,
-            ].contains(platform ?? defaultTargetPlatform);
+            [TargetPlatform.iOS].contains(platform ?? defaultTargetPlatform);
       case InAppWebViewSettingsProperty.useOnRenderProcessGone:
         return ((kIsWeb && platform != null) || !kIsWeb) &&
             [
@@ -6683,14 +4688,12 @@ extension _InAppWebViewSettingsPropertySupported on InAppWebViewSettings {
             [
               TargetPlatform.android,
               TargetPlatform.iOS,
-              TargetPlatform.macOS,
             ].contains(platform ?? defaultTargetPlatform);
       case InAppWebViewSettingsProperty.useShouldInterceptFetchRequest:
         return ((kIsWeb && platform != null) || !kIsWeb) &&
             [
               TargetPlatform.android,
               TargetPlatform.iOS,
-              TargetPlatform.macOS,
             ].contains(platform ?? defaultTargetPlatform);
       case InAppWebViewSettingsProperty.useShouldInterceptRequest:
         return ((kIsWeb && platform != null) || !kIsWeb) &&
@@ -6702,8 +4705,6 @@ extension _InAppWebViewSettingsPropertySupported on InAppWebViewSettings {
             [
               TargetPlatform.android,
               TargetPlatform.iOS,
-              TargetPlatform.macOS,
-              TargetPlatform.windows,
             ].contains(platform ?? defaultTargetPlatform);
       case InAppWebViewSettingsProperty.useWideViewPort:
         return ((kIsWeb && platform != null) || !kIsWeb) &&
@@ -6715,8 +4716,6 @@ extension _InAppWebViewSettingsPropertySupported on InAppWebViewSettings {
             [
               TargetPlatform.android,
               TargetPlatform.iOS,
-              TargetPlatform.macOS,
-              TargetPlatform.windows,
             ].contains(platform ?? defaultTargetPlatform);
       case InAppWebViewSettingsProperty.userAgentMetadata:
         return ((kIsWeb && platform != null) || !kIsWeb) &&
@@ -6724,13 +4723,11 @@ extension _InAppWebViewSettingsPropertySupported on InAppWebViewSettings {
               TargetPlatform.android,
             ].contains(platform ?? defaultTargetPlatform);
       case InAppWebViewSettingsProperty.verticalScrollBarEnabled:
-        return kIsWeb && platform == null
-            ? true
-            : ((kIsWeb && platform != null) || !kIsWeb) &&
-                  [
-                    TargetPlatform.android,
-                    TargetPlatform.iOS,
-                  ].contains(platform ?? defaultTargetPlatform);
+        return ((kIsWeb && platform != null) || !kIsWeb) &&
+            [
+              TargetPlatform.android,
+              TargetPlatform.iOS,
+            ].contains(platform ?? defaultTargetPlatform);
       case InAppWebViewSettingsProperty.verticalScrollbarPosition:
         return ((kIsWeb && platform != null) || !kIsWeb) &&
             [
@@ -6751,9 +4748,6 @@ extension _InAppWebViewSettingsPropertySupported on InAppWebViewSettings {
             [
               TargetPlatform.android,
             ].contains(platform ?? defaultTargetPlatform);
-      case InAppWebViewSettingsProperty.webRTCUdpPortsRange:
-        return ((kIsWeb && platform != null) || !kIsWeb) &&
-            [TargetPlatform.linux].contains(platform ?? defaultTargetPlatform);
       case InAppWebViewSettingsProperty.webViewAssetLoader:
         return ((kIsWeb && platform != null) || !kIsWeb) &&
             [

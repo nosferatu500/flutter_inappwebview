@@ -11,7 +11,6 @@ part of 'in_app_browser_menu_item.dart';
 ///**Officially Supported Platforms/Implementations**:
 ///- Android WebView
 ///- iOS WKWebView
-///- macOS WKWebView
 class InAppBrowserMenuItem {
   ///Item icon.
   dynamic icon;
@@ -21,7 +20,6 @@ class InAppBrowserMenuItem {
   ///**Officially Supported Platforms/Implementations**:
   ///- Android WebView
   ///- iOS WKWebView 13.0+
-  ///- macOS WKWebView
   Color? iconColor;
 
   ///The menu item id.
@@ -43,7 +41,6 @@ class InAppBrowserMenuItem {
   ///**Officially Supported Platforms/Implementations**:
   ///- Android WebView
   ///- iOS WKWebView
-  ///- macOS WKWebView
   InAppBrowserMenuItem({
     this.icon,
     this.iconColor,

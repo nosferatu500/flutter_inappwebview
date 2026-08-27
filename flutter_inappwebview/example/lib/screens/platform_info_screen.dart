@@ -228,10 +228,7 @@ class PlatformInfoScreen extends StatelessWidget {
   /// Advanced features
   Map<String, bool> _getAdvancedFeatures() {
     try {
-      return {
-        '${WebViewEnvironment}': WebViewEnvironment.isClassSupported(),
-        '${ProcessGlobalConfig}': ProcessGlobalConfig.isClassSupported(),
-      };
+      return {'${ProcessGlobalConfig}': ProcessGlobalConfig.isClassSupported()};
     } catch (e) {
       return {};
     }

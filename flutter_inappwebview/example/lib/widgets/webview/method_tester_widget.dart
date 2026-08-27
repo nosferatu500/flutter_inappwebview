@@ -1187,31 +1187,6 @@ class _MethodTesterWidgetState extends State<MethodTesterWidget> {
               return state?.toString() ?? 'Unknown state';
             },
           ),
-          MethodEntry(
-            description: 'Checks if playing audio',
-            methodEnum: PlatformInAppWebViewControllerMethod.isPlayingAudio,
-            execute: (controller, params) async {
-              return await controller.isPlayingAudio();
-            },
-          ),
-          MethodEntry(
-            description: 'Checks if muted',
-            methodEnum: PlatformInAppWebViewControllerMethod.isMuted,
-            execute: (controller, params) async {
-              return await controller.isMuted();
-            },
-          ),
-          MethodEntry(
-            description: 'Sets mute state',
-            methodEnum: PlatformInAppWebViewControllerMethod.setMuted,
-            parameters: {'muted': true},
-            execute: (controller, params) async {
-              await controller.setMuted(
-                muted: params['muted'] as bool? ?? true,
-              );
-              return 'Muted';
-            },
-          ),
         ],
       ),
 
@@ -1367,14 +1342,6 @@ class _MethodTesterWidgetState extends State<MethodTesterWidget> {
             },
           ),
           MethodEntry(
-            description: 'Opens DevTools',
-            methodEnum: PlatformInAppWebViewControllerMethod.openDevTools,
-            execute: (controller, params) async {
-              await controller.openDevTools();
-              return 'DevTools opened';
-            },
-          ),
-          MethodEntry(
             description: 'Gets focused node href',
             methodEnum:
                 PlatformInAppWebViewControllerMethod.requestFocusNodeHref,
@@ -1389,18 +1356,6 @@ class _MethodTesterWidgetState extends State<MethodTesterWidget> {
             execute: (controller, params) async {
               final result = await controller.requestImageRef();
               return result?.url ?? 'No image focused';
-            },
-          ),
-          MethodEntry(
-            description: 'Checks interface support',
-            methodEnum:
-                PlatformInAppWebViewControllerMethod.isInterfaceSupported,
-            parameters: {'interface': WebViewInterface.ICoreWebView2.name()},
-            requiredParameters: ['interface'],
-            execute: (controller, params) async {
-              return await controller.isInterfaceSupported(
-                _parseWebViewInterface(params['interface']?.toString()),
-              );
             },
           ),
         ],
@@ -1718,16 +1673,6 @@ class _MethodTesterWidgetState extends State<MethodTesterWidget> {
     return MediaCaptureState.values.firstWhere(
       (entry) => entry.name().toLowerCase() == value.toLowerCase(),
       orElse: () => MediaCaptureState.ACTIVE,
-    );
-  }
-
-  WebViewInterface _parseWebViewInterface(String? value) {
-    if (value == null || value.isEmpty) {
-      return WebViewInterface.ICoreWebView2;
-    }
-    return WebViewInterface.values.firstWhere(
-      (entry) => entry.name().toLowerCase() == value.toLowerCase(),
-      orElse: () => WebViewInterface.ICoreWebView2,
     );
   }
 

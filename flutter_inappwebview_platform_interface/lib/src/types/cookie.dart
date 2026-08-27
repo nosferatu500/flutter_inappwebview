@@ -11,59 +11,37 @@ part 'cookie.g.dart';
 @ExchangeableObject()
 class Cookie_ {
   ///The cookie name.
-  @SupportedPlatforms(
-    platforms: [
-      IOSPlatform(),
-      MacOSPlatform(),
-      AndroidPlatform(),
-      WebPlatform(),
-      WindowsPlatform(),
-    ],
-  )
+  @SupportedPlatforms(platforms: [IOSPlatform(), AndroidPlatform()])
   String name;
 
   ///The cookie value.
-  @SupportedPlatforms(
-    platforms: [
-      IOSPlatform(),
-      MacOSPlatform(),
-      AndroidPlatform(),
-      WebPlatform(),
-      WindowsPlatform(),
-    ],
-  )
+  @SupportedPlatforms(platforms: [IOSPlatform(), AndroidPlatform()])
   dynamic value;
 
   ///The cookie expiration date in milliseconds.
   @SupportedPlatforms(
     platforms: [
       IOSPlatform(),
-      MacOSPlatform(),
       AndroidPlatform(
         note:
             "available on Android only if [WebViewFeature.GET_COOKIE_INFO] feature is supported.",
       ),
-      WindowsPlatform(),
     ],
   )
   int? expiresDate;
 
   ///Indicates if the cookie is a session only cookie.
-  @SupportedPlatforms(
-    platforms: [IOSPlatform(), MacOSPlatform(), WindowsPlatform()],
-  )
+  @SupportedPlatforms(platforms: [IOSPlatform()])
   bool? isSessionOnly;
 
   ///The cookie domain.
   @SupportedPlatforms(
     platforms: [
       IOSPlatform(),
-      MacOSPlatform(),
       AndroidPlatform(
         note:
             "available on Android only if [WebViewFeature.GET_COOKIE_INFO] feature is supported.",
       ),
-      WindowsPlatform(),
     ],
   )
   String? domain;
@@ -72,12 +50,10 @@ class Cookie_ {
   @SupportedPlatforms(
     platforms: [
       IOSPlatform(),
-      MacOSPlatform(),
       AndroidPlatform(
         note:
             "available on Android only if [WebViewFeature.GET_COOKIE_INFO] feature is supported.",
       ),
-      WindowsPlatform(),
     ],
   )
   HTTPCookieSameSitePolicy_? sameSite;
@@ -86,12 +62,10 @@ class Cookie_ {
   @SupportedPlatforms(
     platforms: [
       IOSPlatform(),
-      MacOSPlatform(),
       AndroidPlatform(
         note:
             "available on Android only if [WebViewFeature.GET_COOKIE_INFO] feature is supported.",
       ),
-      WindowsPlatform(),
     ],
   )
   bool? isSecure;
@@ -100,12 +74,10 @@ class Cookie_ {
   @SupportedPlatforms(
     platforms: [
       IOSPlatform(),
-      MacOSPlatform(),
       AndroidPlatform(
         note:
             "available on Android only if [WebViewFeature.GET_COOKIE_INFO] feature is supported.",
       ),
-      WindowsPlatform(),
     ],
   )
   bool? isHttpOnly;
@@ -114,12 +86,10 @@ class Cookie_ {
   @SupportedPlatforms(
     platforms: [
       IOSPlatform(),
-      MacOSPlatform(),
       AndroidPlatform(
         note:
             "available on Android only if [WebViewFeature.GET_COOKIE_INFO] feature is supported.",
       ),
-      WindowsPlatform(),
     ],
   )
   String? path;

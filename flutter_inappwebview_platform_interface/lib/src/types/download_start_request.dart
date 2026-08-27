@@ -11,14 +11,7 @@ part 'download_start_request.g.dart';
 @ExchangeableObject()
 class DownloadStartRequest_ {
   ///The full url to the content that should be downloaded.
-  @SupportedPlatforms(
-    platforms: [
-      AndroidPlatform(),
-      IOSPlatform(),
-      MacOSPlatform(),
-      WindowsPlatform(),
-    ],
-  )
+  @SupportedPlatforms(platforms: [AndroidPlatform(), IOSPlatform()])
   WebUri url;
 
   ///the user agent to be used for the download.
@@ -26,46 +19,23 @@ class DownloadStartRequest_ {
   String? userAgent;
 
   ///Content-disposition http header, if present.
-  @SupportedPlatforms(platforms: [AndroidPlatform(), WindowsPlatform()])
+  @SupportedPlatforms(platforms: [AndroidPlatform()])
   String? contentDisposition;
 
   ///The mimetype of the content reported by the server.
-  @SupportedPlatforms(
-    platforms: [
-      AndroidPlatform(),
-      IOSPlatform(),
-      MacOSPlatform(),
-      WindowsPlatform(),
-    ],
-  )
+  @SupportedPlatforms(platforms: [AndroidPlatform(), IOSPlatform()])
   String? mimeType;
 
   ///The file size reported by the server.
-  @SupportedPlatforms(
-    platforms: [
-      AndroidPlatform(),
-      IOSPlatform(),
-      MacOSPlatform(),
-      WindowsPlatform(),
-    ],
-  )
+  @SupportedPlatforms(platforms: [AndroidPlatform(), IOSPlatform()])
   int contentLength;
 
   ///A suggested filename to use if saving the resource to disk.
-  @SupportedPlatforms(
-    platforms: [
-      AndroidPlatform(),
-      IOSPlatform(),
-      MacOSPlatform(),
-      WindowsPlatform(),
-    ],
-  )
+  @SupportedPlatforms(platforms: [AndroidPlatform(), IOSPlatform()])
   String? suggestedFilename;
 
   ///The name of the text encoding of the receiver, or `null` if no text encoding was specified.
-  @SupportedPlatforms(
-    platforms: [AndroidPlatform(), IOSPlatform(), MacOSPlatform()],
-  )
+  @SupportedPlatforms(platforms: [AndroidPlatform(), IOSPlatform()])
   String? textEncodingName;
 
   ///Whether this download was initiated by the user, rather than started by the page on its own.

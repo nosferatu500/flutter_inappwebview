@@ -37,11 +37,6 @@ void setGetSettings() {
     expect(settings, isNotNull);
     expect(settings!.javaScriptEnabled, false);
 
-    if (kIsWeb) {
-      expect(settings.iframeSandbox, isNotNull);
-      expect(settings.iframeSandbox!.contains(Sandbox.ALLOW_SCRIPTS), false);
-    }
-
     await controller.setSettings(
       settings: InAppWebViewSettings(javaScriptEnabled: true),
     );
@@ -49,10 +44,5 @@ void setGetSettings() {
     settings = await controller.getSettings();
     expect(settings, isNotNull);
     expect(settings!.javaScriptEnabled, true);
-
-    if (kIsWeb) {
-      expect(settings.iframeSandbox, isNotNull);
-      expect(settings.iframeSandbox!.contains(Sandbox.ALLOW_SCRIPTS), true);
-    }
   }, skip: shouldSkip);
 }

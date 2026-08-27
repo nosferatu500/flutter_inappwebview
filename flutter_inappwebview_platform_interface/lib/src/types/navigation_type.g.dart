@@ -37,18 +37,12 @@ class NavigationType {
   ///
   ///**Officially Supported Platforms/Implementations**:
   ///- iOS WKWebView ([Official API - WKNavigationType.formSubmitted](https://developer.apple.com/documentation/webkit/wknavigationtype/formsubmitted))
-  ///- macOS WKWebView ([Official API - WKNavigationType.formSubmitted](https://developer.apple.com/documentation/webkit/wknavigationtype/formsubmitted))
-  ///- Windows WebView2 ([Official API - COREWEBVIEW2_NAVIGATION_KIND_BACK_OR_FORWARD](https://learn.microsoft.com/en-us/microsoft-edge/webview2/reference/win32/webview2-idl?view=webview2-1.0.2210.55#corewebview2_navigation_kind))
   static final BACK_FORWARD = NavigationType._internalMultiPlatform(
     'BACK_FORWARD',
     () {
       switch (defaultTargetPlatform) {
         case TargetPlatform.iOS:
           return 2;
-        case TargetPlatform.macOS:
-          return 2;
-        case TargetPlatform.windows:
-          return 1;
         default:
           break;
       }
@@ -60,14 +54,11 @@ class NavigationType {
   ///
   ///**Officially Supported Platforms/Implementations**:
   ///- iOS WKWebView ([Official API - WKNavigationType.formSubmitted](https://developer.apple.com/documentation/webkit/wknavigationtype/formresubmitted))
-  ///- macOS WKWebView ([Official API - WKNavigationType.formSubmitted](https://developer.apple.com/documentation/webkit/wknavigationtype/formresubmitted))
   static final FORM_RESUBMITTED = NavigationType._internalMultiPlatform(
     'FORM_RESUBMITTED',
     () {
       switch (defaultTargetPlatform) {
         case TargetPlatform.iOS:
-          return 4;
-        case TargetPlatform.macOS:
           return 4;
         default:
           break;
@@ -80,14 +71,11 @@ class NavigationType {
   ///
   ///**Officially Supported Platforms/Implementations**:
   ///- iOS WKWebView ([Official API - WKNavigationType.formSubmitted](https://developer.apple.com/documentation/webkit/wknavigationtype/formsubmitted))
-  ///- macOS WKWebView ([Official API - WKNavigationType.formSubmitted](https://developer.apple.com/documentation/webkit/wknavigationtype/formsubmitted))
   static final FORM_SUBMITTED = NavigationType._internalMultiPlatform(
     'FORM_SUBMITTED',
     () {
       switch (defaultTargetPlatform) {
         case TargetPlatform.iOS:
-          return 1;
-        case TargetPlatform.macOS:
           return 1;
         default:
           break;
@@ -100,17 +88,11 @@ class NavigationType {
   ///
   ///**Officially Supported Platforms/Implementations**:
   ///- iOS WKWebView ([Official API - WKNavigationType.linkActivated](https://developer.apple.com/documentation/webkit/wknavigationtype/linkactivated))
-  ///- macOS WKWebView ([Official API - WKNavigationType.linkActivated](https://developer.apple.com/documentation/webkit/wknavigationtype/linkactivated))
-  ///- Windows WebView2
   static final LINK_ACTIVATED = NavigationType._internalMultiPlatform(
     'LINK_ACTIVATED',
     () {
       switch (defaultTargetPlatform) {
         case TargetPlatform.iOS:
-          return 0;
-        case TargetPlatform.macOS:
-          return 0;
-        case TargetPlatform.windows:
           return 0;
         default:
           break;
@@ -123,16 +105,10 @@ class NavigationType {
   ///
   ///**Officially Supported Platforms/Implementations**:
   ///- iOS WKWebView ([Official API - WKNavigationType.other](https://developer.apple.com/documentation/webkit/wknavigationtype/other))
-  ///- macOS WKWebView ([Official API - WKNavigationType.other](https://developer.apple.com/documentation/webkit/wknavigationtype/other))
-  ///- Windows WebView2
   static final OTHER = NavigationType._internalMultiPlatform('OTHER', () {
     switch (defaultTargetPlatform) {
       case TargetPlatform.iOS:
         return -1;
-      case TargetPlatform.macOS:
-        return -1;
-      case TargetPlatform.windows:
-        return 3;
       default:
         break;
     }
@@ -143,16 +119,10 @@ class NavigationType {
   ///
   ///**Officially Supported Platforms/Implementations**:
   ///- iOS WKWebView ([Official API - WKNavigationType.reload](https://developer.apple.com/documentation/webkit/wknavigationtype/reload))
-  ///- macOS WKWebView ([Official API - WKNavigationType.reload](https://developer.apple.com/documentation/webkit/wknavigationtype/reload))
-  ///- Windows WebView2 ([Official API - COREWEBVIEW2_NAVIGATION_KIND_RELOAD](https://learn.microsoft.com/en-us/microsoft-edge/webview2/reference/win32/webview2-idl?view=webview2-1.0.2210.55#corewebview2_navigation_kind))
   static final RELOAD = NavigationType._internalMultiPlatform('RELOAD', () {
     switch (defaultTargetPlatform) {
       case TargetPlatform.iOS:
         return 3;
-      case TargetPlatform.macOS:
-        return 3;
-      case TargetPlatform.windows:
-        return 2;
       default:
         break;
     }

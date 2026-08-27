@@ -4,7 +4,6 @@ import '../print_job/main.dart';
 import 'print_job_attributes.dart';
 import 'print_job_rendering_quality.dart';
 import 'print_job_state.dart';
-import 'print_job_page_order.dart';
 import 'printer.dart';
 import 'enum_method.dart';
 
@@ -60,14 +59,6 @@ class PrintJobInfo_ {
   ///- iOS
   ///- MacOS
   Printer_? printer;
-
-  ///The page order that will be used to generate the pages in this job.
-  ///This is the physical page order of the pages.
-  ///It depends on the stacking order of the printer, the capability of the app to reverse page order, etc.
-  ///
-  ///**Officially Supported Platforms/Implementations**:
-  ///- MacOS
-  PrintJobPageOrder_? pageOrder;
 
   ///The printing quality.
   ///
@@ -133,7 +124,6 @@ class PrintJobInfo_ {
     this.creationTime,
     this.label,
     this.printer,
-    this.pageOrder,
     this.preferredRenderingQuality,
     this.showsProgressPanel,
     this.showsPrintPanel,

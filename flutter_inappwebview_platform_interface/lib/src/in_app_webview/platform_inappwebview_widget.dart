@@ -6,7 +6,6 @@ import 'package:plugin_platform_interface/plugin_platform_interface.dart';
 
 import '../inappwebview_platform.dart';
 import '../types/disposable.dart';
-import '../webview_environment/platform_webview_environment.dart';
 import 'in_app_webview_keep_alive.dart';
 import 'platform_headless_in_app_webview.dart';
 import 'platform_inappwebview_controller.dart';
@@ -22,16 +21,7 @@ part 'platform_inappwebview_widget.g.dart';
 ///{@endtemplate}
 ///
 ///{@macro flutter_inappwebview_platform_interface.PlatformInAppWebViewWidgetCreationParams.supported_platforms}
-@SupportedPlatforms(
-  platforms: [
-    AndroidPlatform(),
-    IOSPlatform(),
-    MacOSPlatform(),
-    WebPlatform(requiresSameOrigin: false),
-    WindowsPlatform(),
-    LinuxPlatform(),
-  ],
-)
+@SupportedPlatforms(platforms: [AndroidPlatform(), IOSPlatform()])
 class PlatformInAppWebViewWidgetCreationParams
     extends PlatformWebViewCreationParams {
   ///{@macro flutter_inappwebview_platform_interface.PlatformInAppWebViewWidgetCreationParams}
@@ -44,20 +34,16 @@ class PlatformInAppWebViewWidgetCreationParams
     this.headlessWebView,
     this.keepAlive,
     this.preventGestureDelay,
-    this.webViewEnvironment,
     super.controllerFromPlatform,
     super.windowId,
     super.onWebViewCreated,
     super.onLoadStart,
     super.onLoadStop,
-    super.onContentLoading,
-    super.onDOMContentLoaded,
     super.onReceivedError,
     super.onReceivedHttpError,
     super.onProgressChanged,
     super.onConsoleMessage,
     super.shouldOverrideUrlLoading,
-    super.onLaunchingExternalUriScheme,
     super.onLoadResource,
     super.onFaviconChanged,
     super.onScrollChanged,
@@ -107,12 +93,6 @@ class PlatformInAppWebViewWidgetCreationParams
     super.onCameraCaptureStateChanged,
     super.onMicrophoneCaptureStateChanged,
     super.onContentSizeChanged,
-    super.onNotificationReceived,
-    super.onSaveAsUIShowing,
-    super.onSaveFileSecurityCheckStarting,
-    super.onScreenCaptureStarting,
-    super.onProcessFailed,
-    super.onAcceleratorKeyPressed,
     super.onShowFileChooser,
     super.initialUrlRequest,
     super.initialFile,
@@ -152,15 +132,7 @@ class PlatformInAppWebViewWidgetCreationParams
   ///{@endtemplate}
   ///
   ///{@macro flutter_inappwebview_platform_interface.PlatformInAppWebViewWidgetCreationParams.keepAlive.supported_platforms}
-  @SupportedPlatforms(
-    platforms: [
-      AndroidPlatform(),
-      IOSPlatform(),
-      MacOSPlatform(),
-      WebPlatform(requiresSameOrigin: false),
-      WindowsPlatform(),
-    ],
-  )
+  @SupportedPlatforms(platforms: [AndroidPlatform(), IOSPlatform()])
   final PlatformHeadlessInAppWebView? headlessWebView;
 
   ///{@template flutter_inappwebview_platform_interface.PlatformInAppWebViewWidgetCreationParams.keepAlive}
@@ -170,14 +142,7 @@ class PlatformInAppWebViewWidgetCreationParams
   ///{@endtemplate}
   ///
   ///{@macro flutter_inappwebview_platform_interface.PlatformInAppWebViewWidgetCreationParams.keepAlive.supported_platforms}
-  @SupportedPlatforms(
-    platforms: [
-      AndroidPlatform(),
-      IOSPlatform(),
-      MacOSPlatform(),
-      WindowsPlatform(),
-    ],
-  )
+  @SupportedPlatforms(platforms: [AndroidPlatform(), IOSPlatform()])
   final InAppWebViewKeepAlive? keepAlive;
 
   ///{@template flutter_inappwebview_platform_interface.PlatformInAppWebViewWidgetCreationParams.webViewEnvironment}
@@ -188,23 +153,6 @@ class PlatformInAppWebViewWidgetCreationParams
   ///{@macro flutter_inappwebview_platform_interface.PlatformInAppWebViewWidgetCreationParams.webViewEnvironment.supported_platforms}
   @SupportedPlatforms(platforms: [IOSPlatform()])
   final bool? preventGestureDelay;
-
-  ///{@template flutter_inappwebview_platform_interface.PlatformInAppWebViewWidgetCreationParams.webViewEnvironment}
-  ///Used to create the [PlatformInAppWebViewWidget] using the specified environment.
-  ///{@endtemplate}
-  ///
-  ///{@macro flutter_inappwebview_platform_interface.PlatformInAppWebViewWidgetCreationParams.webViewEnvironment.supported_platforms}
-  @SupportedPlatforms(
-    platforms: [
-      WindowsPlatform(),
-      LinuxPlatform(
-        apiName: 'WebKitWebContext',
-        apiUrl:
-            'https://wpewebkit.org/reference/stable/wpe-webkit-2.0/class.WebContext.html',
-      ),
-    ],
-  )
-  final PlatformWebViewEnvironment? webViewEnvironment;
 
   ///{@template flutter_inappwebview_platform_interface.PlatformInAppWebViewWidgetCreationParams.isClassSupported}
   ///Check if the current class is supported by the [defaultTargetPlatform] or a specific [platform].

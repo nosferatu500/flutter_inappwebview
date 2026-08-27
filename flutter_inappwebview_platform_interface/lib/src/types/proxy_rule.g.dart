@@ -13,7 +13,6 @@ class ProxyRule {
   ///
   ///**Officially Supported Platforms/Implementations**:
   ///- iOS WKWebView
-  ///- macOS WKWebView
   bool? allowFailover;
 
   ///Define an array of domains to determine which hosts should not use the proxy.
@@ -21,7 +20,6 @@ class ProxyRule {
   ///
   ///**Officially Supported Platforms/Implementations**:
   ///- iOS WKWebView
-  ///- macOS WKWebView
   List<String>? excludedDomains;
 
   ///Define an array of domains to determine which hosts should use the proxy. If the array is empty,
@@ -29,22 +27,18 @@ class ProxyRule {
   ///
   ///**Officially Supported Platforms/Implementations**:
   ///- iOS WKWebView
-  ///- macOS WKWebView
   List<String>? matchDomains;
 
   ///Sets a password to use as authentication for a proxy configuration.
   ///
   ///**Officially Supported Platforms/Implementations**:
   ///- iOS WKWebView
-  ///- macOS WKWebView
   String? password;
 
   ///Represents the scheme filter.
   ///
   ///**Officially Supported Platforms/Implementations**:
   ///- Android WebView
-  ///- Linux WPE WebKit ([Official API - webkit_network_proxy_settings_add_proxy_for_scheme](https://wpewebkit.org/reference/stable/wpe-webkit-2.0/method.NetworkProxySettings.add_proxy_for_scheme.html)):
-  ///    - Linux accepts scheme filters: '*', 'http', 'https', 'socks', 'socks4', 'socks5' (case-insensitive). '*' is treated as the default proxy.
   ProxySchemeFilter? schemeFilter;
 
   ///Represents the proxy URL.
@@ -52,15 +46,12 @@ class ProxyRule {
   ///**Officially Supported Platforms/Implementations**:
   ///- Android WebView
   ///- iOS WKWebView
-  ///- macOS WKWebView
-  ///- Linux WPE WebKit
   String url;
 
   ///Sets a username to use as authentication for a proxy configuration.
   ///
   ///**Officially Supported Platforms/Implementations**:
   ///- iOS WKWebView
-  ///- macOS WKWebView
   String? username;
   ProxyRule({
     this.allowFailover,

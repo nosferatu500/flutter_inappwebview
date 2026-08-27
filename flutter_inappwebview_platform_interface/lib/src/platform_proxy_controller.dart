@@ -19,14 +19,7 @@ part 'platform_proxy_controller.g.dart';
 ///{@endtemplate}
 ///
 ///{@macro flutter_inappwebview_platform_interface.PlatformProxyControllerCreationParams.supported_platforms}
-@SupportedPlatforms(
-  platforms: [
-    AndroidPlatform(),
-    IOSPlatform(),
-    MacOSPlatform(),
-    LinuxPlatform(),
-  ],
-)
+@SupportedPlatforms(platforms: [AndroidPlatform(), IOSPlatform()])
 @immutable
 class PlatformProxyControllerCreationParams {
   /// Used by the platform implementation to create a new [PlatformProxyController].
@@ -64,17 +57,6 @@ class PlatformProxyControllerCreationParams {
       apiUrl:
           'https://developer.apple.com/documentation/webkit/wkwebsitedatastore/4264546-proxyconfigurations',
       available: '17.0',
-    ),
-    MacOSPlatform(
-      apiName: 'WKWebsiteDataStore.proxyConfigurations',
-      apiUrl:
-          'https://developer.apple.com/documentation/webkit/wkwebsitedatastore/4264546-proxyconfigurations',
-      available: '14.0',
-    ),
-    LinuxPlatform(
-      apiName: 'WebKitNetworkProxySettings',
-      apiUrl:
-          'https://wpewebkit.org/reference/stable/wpe-webkit-2.0/struct.NetworkProxySettings.html',
     ),
   ],
 )
@@ -147,17 +129,6 @@ abstract class PlatformProxyController extends PlatformInterface {
             'https://developer.apple.com/documentation/webkit/wkwebsitedatastore/4264546-proxyconfigurations',
         available: '17.0',
       ),
-      MacOSPlatform(
-        apiName: 'WKWebsiteDataStore.proxyConfigurations',
-        apiUrl:
-            'https://developer.apple.com/documentation/webkit/wkwebsitedatastore/4264546-proxyconfigurations',
-        available: '14.0',
-      ),
-      LinuxPlatform(
-        apiName: 'webkit_network_session_set_proxy_settings',
-        apiUrl:
-            'https://wpewebkit.org/reference/stable/wpe-webkit-2.0/method.NetworkSession.set_proxy_settings.html',
-      ),
     ],
   )
   Future<void> setProxyOverride({required ProxySettings settings}) {
@@ -185,17 +156,6 @@ abstract class PlatformProxyController extends PlatformInterface {
         apiUrl:
             'https://developer.apple.com/documentation/webkit/wkwebsitedatastore/4264546-proxyconfigurations',
         available: '17.0',
-      ),
-      MacOSPlatform(
-        apiName: 'WKWebsiteDataStore.proxyConfigurations',
-        apiUrl:
-            'https://developer.apple.com/documentation/webkit/wkwebsitedatastore/4264546-proxyconfigurations',
-        available: '14.0',
-      ),
-      LinuxPlatform(
-        apiName: 'webkit_network_session_set_proxy_settings',
-        apiUrl:
-            'https://wpewebkit.org/reference/stable/wpe-webkit-2.0/method.NetworkSession.set_proxy_settings.html',
       ),
     ],
   )
@@ -239,17 +199,6 @@ abstract class PlatformProxyController extends PlatformInterface {
           'https://developer.apple.com/documentation/network/proxyconfiguration',
       available: '17.0',
     ),
-    MacOSPlatform(
-      apiName: 'ProxyConfiguration',
-      apiUrl:
-          'https://developer.apple.com/documentation/network/proxyconfiguration',
-      available: '14.0',
-    ),
-    LinuxPlatform(
-      apiName: 'WebKitNetworkProxySettings',
-      apiUrl:
-          'https://wpewebkit.org/reference/stable/wpe-webkit-2.0/struct.NetworkProxySettings.html',
-    ),
   ],
 )
 @ExchangeableObject(copyMethod: true)
@@ -259,18 +208,7 @@ class ProxySettings_ {
   ///A bypass rule describes URLs that should skip proxy override settings and make a direct connection instead. These can be URLs or IP addresses. Wildcards are accepted.
   ///For instance, the rule "*example.com" would mean that requests to "http://example.com" and "www.example.com" would not be directed to any proxy,
   ///instead, would be made directly to the origin specified by the URL.
-  @SupportedPlatforms(
-    platforms: [
-      AndroidPlatform(),
-      LinuxPlatform(
-        apiName: 'webkit_network_proxy_settings_new (ignore_hosts)',
-        apiUrl:
-            'https://wpewebkit.org/reference/stable/wpe-webkit-2.0/ctor.NetworkProxySettings.new.html',
-        note:
-            'Mapped to ignore_hosts; bypass rules are passed as host patterns to WebKitNetworkProxySettings.',
-      ),
-    ],
-  )
+  @SupportedPlatforms(platforms: [AndroidPlatform()])
   List<String> bypassRules;
 
   ///List of scheme filters.
@@ -287,14 +225,7 @@ class ProxySettings_ {
   ///Port number is optional and defaults to `80` for `HTTP`, `443` for `HTTPS` and `1080` for `SOCKS`.
   ///
   ///The correct syntax for hosts is defined by [RFC 3986](https://tools.ietf.org/html/rfc3986#section-3.2.2).
-  @SupportedPlatforms(
-    platforms: [
-      AndroidPlatform(),
-      IOSPlatform(),
-      MacOSPlatform(),
-      LinuxPlatform(),
-    ],
-  )
+  @SupportedPlatforms(platforms: [AndroidPlatform(), IOSPlatform()])
   List<ProxyRule_> proxyRules;
 
   ///Hostnames without a period in them (and that are not IP literals) will skip proxy settings and be connected to directly instead. Examples: `"abc"`, `"local"`, `"some-domain"`.

@@ -623,15 +623,6 @@ class AndroidInAppWebViewPlatform extends InAppWebViewPlatform {
   // exception.                                                               //
   // ************************************************************************ //
 
-  /// Creates a new empty [PlatformWebViewEnvironment] to access static methods.
-  ///
-  /// This function should only be called by the app-facing package.
-  /// Look at using [WebViewEnvironment] in `flutter_inappwebview` instead.
-  @override
-  PlatformWebViewEnvironment createPlatformWebViewEnvironmentStatic() {
-    return _PlatformWebViewEnvironment.static();
-  }
-
   /// Creates a new empty [PlatformWebAuthenticationSession] to access static methods.
   ///
   /// This function should only be called by the app-facing package.
@@ -640,16 +631,6 @@ class AndroidInAppWebViewPlatform extends InAppWebViewPlatform {
   PlatformWebAuthenticationSession
   createPlatformWebAuthenticationSessionStatic() {
     return _PlatformWebAuthenticationSession.static();
-  }
-
-  /// Creates a new empty [PlatformWebNotificationController] to access static methods.
-  ///
-  /// This function should only be called by the app-facing package.
-  /// Look at using [WebNotificationController] in `flutter_inappwebview` instead.
-  @override
-  PlatformWebNotificationController
-  createPlatformWebNotificationControllerStatic() {
-    return _PlatformWebNotificationController.static();
   }
 }
 
@@ -663,29 +644,4 @@ class _PlatformWebAuthenticationSession
       );
 
   factory _PlatformWebAuthenticationSession.static() => _staticValue;
-}
-
-class _PlatformWebViewEnvironment extends PlatformWebViewEnvironment {
-  _PlatformWebViewEnvironment(super.params) : super.implementation();
-  static final _PlatformWebViewEnvironment _staticValue =
-      _PlatformWebViewEnvironment(
-        const PlatformWebViewEnvironmentCreationParams(),
-      );
-
-  factory _PlatformWebViewEnvironment.static() => _staticValue;
-}
-
-class _PlatformWebNotificationController
-    extends PlatformWebNotificationController {
-  _PlatformWebNotificationController(super.params) : super.implementation();
-
-  static final _PlatformWebNotificationController _staticValue =
-      _PlatformWebNotificationController(
-        PlatformWebNotificationControllerCreationParams(
-          id: '',
-          notification: WebNotification(),
-        ),
-      );
-
-  factory _PlatformWebNotificationController.static() => _staticValue;
 }

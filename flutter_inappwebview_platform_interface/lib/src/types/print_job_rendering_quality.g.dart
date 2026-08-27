@@ -37,12 +37,9 @@ class PrintJobRenderingQuality {
   ///
   ///**Officially Supported Platforms/Implementations**:
   ///- iOS WKWebView
-  ///- macOS WKWebView
   static final BEST = PrintJobRenderingQuality._internalMultiPlatform(0, () {
     switch (defaultTargetPlatform) {
       case TargetPlatform.iOS:
-        return 0;
-      case TargetPlatform.macOS:
         return 0;
       default:
         break;
@@ -55,14 +52,11 @@ class PrintJobRenderingQuality {
   ///
   ///**Officially Supported Platforms/Implementations**:
   ///- iOS WKWebView
-  ///- macOS WKWebView
   static final RESPONSIVE = PrintJobRenderingQuality._internalMultiPlatform(
     1,
     () {
       switch (defaultTargetPlatform) {
         case TargetPlatform.iOS:
-          return 1;
-        case TargetPlatform.macOS:
           return 1;
         default:
           break;

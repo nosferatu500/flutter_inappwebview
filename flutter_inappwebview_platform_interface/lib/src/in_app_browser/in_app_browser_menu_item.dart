@@ -32,9 +32,7 @@ dynamic _deserializeIcon(dynamic icon, {EnumMethod? enumMethod}) {
 }
 
 ///Class that represents a custom menu item for a [PlatformInAppBrowser] instance.
-@SupportedPlatforms(
-  platforms: [AndroidPlatform(), IOSPlatform(), MacOSPlatform()],
-)
+@SupportedPlatforms(platforms: [AndroidPlatform(), IOSPlatform()])
 @ExchangeableObject()
 class InAppBrowserMenuItem_ {
   ///The menu item id.
@@ -55,7 +53,6 @@ class InAppBrowserMenuItem_ {
     platforms: [
       AndroidPlatform(),
       IOSPlatform(available: "13.0"),
-      MacOSPlatform(),
     ],
   )
   Color_? iconColor;

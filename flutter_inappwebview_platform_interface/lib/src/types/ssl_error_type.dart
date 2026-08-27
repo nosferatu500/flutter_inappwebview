@@ -38,12 +38,6 @@ class SslErrorType_ {
             'https://developer.android.com/reference/android/net/http/SslError#SSL_EXPIRED',
         value: 1,
       ),
-      EnumWindowsPlatform(
-        apiName: 'COREWEBVIEW2_WEB_ERROR_STATUS_CERTIFICATE_EXPIRED',
-        apiUrl:
-            'https://learn.microsoft.com/en-us/microsoft-edge/webview2/reference/win32/webview2-idl?view=webview2-1.0.2849.39#corewebview2_web_error_status',
-        value: 2,
-      ),
     ],
   )
   static const EXPIRED = SslErrorType_._internal('EXPIRED');
@@ -102,18 +96,6 @@ class SslErrorType_ {
             'https://developer.apple.com/documentation/security/sectrustresulttype/invalid',
         value: 0,
       ),
-      EnumMacOSPlatform(
-        apiName: 'SecTrustResultType.invalid',
-        apiUrl:
-            'https://developer.apple.com/documentation/security/sectrustresulttype/invalid',
-        value: 0,
-      ),
-      EnumWindowsPlatform(
-        apiName: 'COREWEBVIEW2_WEB_ERROR_STATUS_CERTIFICATE_IS_INVALID',
-        apiUrl:
-            'https://learn.microsoft.com/en-us/microsoft-edge/webview2/reference/win32/webview2-idl?view=webview2-1.0.2849.39#corewebview2_web_error_status',
-        value: 5,
-      ),
     ],
   )
   static const INVALID = SslErrorType_._internal('INVALID');
@@ -127,12 +109,6 @@ class SslErrorType_ {
   @EnumSupportedPlatforms(
     platforms: [
       EnumIOSPlatform(
-        apiName: 'SecTrustResultType.deny',
-        apiUrl:
-            'https://developer.apple.com/documentation/security/sectrustresulttype/deny',
-        value: 3,
-      ),
-      EnumMacOSPlatform(
         apiName: 'SecTrustResultType.deny',
         apiUrl:
             'https://developer.apple.com/documentation/security/sectrustresulttype/deny',
@@ -153,12 +129,6 @@ class SslErrorType_ {
   @EnumSupportedPlatforms(
     platforms: [
       EnumIOSPlatform(
-        apiName: 'SecTrustResultType.unspecified',
-        apiUrl:
-            'https://developer.apple.com/documentation/security/sectrustresulttype/unspecified',
-        value: 4,
-      ),
-      EnumMacOSPlatform(
         apiName: 'SecTrustResultType.unspecified',
         apiUrl:
             'https://developer.apple.com/documentation/security/sectrustresulttype/unspecified',
@@ -185,12 +155,6 @@ class SslErrorType_ {
             'https://developer.apple.com/documentation/security/sectrustresulttype/recoverabletrustfailure',
         value: 5,
       ),
-      EnumMacOSPlatform(
-        apiName: 'SecTrustResultType.recoverableTrustFailure',
-        apiUrl:
-            'https://developer.apple.com/documentation/security/sectrustresulttype/recoverabletrustfailure',
-        value: 5,
-      ),
     ],
   )
   static const RECOVERABLE_TRUST_FAILURE = SslErrorType_._internal(
@@ -206,12 +170,6 @@ class SslErrorType_ {
   @EnumSupportedPlatforms(
     platforms: [
       EnumIOSPlatform(
-        apiName: 'SecTrustResultType.fatalTrustFailure',
-        apiUrl:
-            'https://developer.apple.com/documentation/security/sectrustresulttype/fataltrustfailure',
-        value: 6,
-      ),
-      EnumMacOSPlatform(
         apiName: 'SecTrustResultType.fatalTrustFailure',
         apiUrl:
             'https://developer.apple.com/documentation/security/sectrustresulttype/fataltrustfailure',
@@ -237,49 +195,7 @@ class SslErrorType_ {
             'https://developer.apple.com/documentation/security/sectrustresulttype/othererror',
         value: 7,
       ),
-      EnumMacOSPlatform(
-        apiName: 'SecTrustResultType.otherError',
-        apiUrl:
-            'https://developer.apple.com/documentation/security/sectrustresulttype/othererror',
-        value: 7,
-      ),
-      EnumWindowsPlatform(
-        apiName:
-            'COREWEBVIEW2_WEB_ERROR_STATUS_CLIENT_CERTIFICATE_CONTAINS_ERRORS',
-        apiUrl:
-            'https://learn.microsoft.com/en-us/microsoft-edge/webview2/reference/win32/webview2-idl?view=webview2-1.0.2849.39#corewebview2_web_error_status',
-        value: 3,
-      ),
     ],
   )
   static const OTHER_ERROR = SslErrorType_._internal('OTHER_ERROR');
-
-  ///Indicates that the SSL certificate common name does not match the web address.
-  @EnumSupportedPlatforms(
-    platforms: [
-      EnumWindowsPlatform(
-        apiName:
-            'COREWEBVIEW2_WEB_ERROR_STATUS_CERTIFICATE_COMMON_NAME_IS_INCORRECT',
-        apiUrl:
-            'https://learn.microsoft.com/en-us/microsoft-edge/webview2/reference/win32/webview2-idl?view=webview2-1.0.2849.39#corewebview2_web_error_status',
-        value: 1,
-      ),
-    ],
-  )
-  static const COMMON_NAME_IS_INCORRECT = SslErrorType_._internal(
-    'COMMON_NAME_IS_INCORRECT',
-  );
-
-  ///Indicates that the SSL certificate has been revoked.
-  @EnumSupportedPlatforms(
-    platforms: [
-      EnumWindowsPlatform(
-        apiName: 'COREWEBVIEW2_WEB_ERROR_STATUS_CERTIFICATE_REVOKED',
-        apiUrl:
-            'https://learn.microsoft.com/en-us/microsoft-edge/webview2/reference/win32/webview2-idl?view=webview2-1.0.2849.39#corewebview2_web_error_status',
-        value: 4,
-      ),
-    ],
-  )
-  static const REVOKED = SslErrorType_._internal('REVOKED');
 }

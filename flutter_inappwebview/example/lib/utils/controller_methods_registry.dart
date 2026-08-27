@@ -1106,29 +1106,6 @@ class ControllerMethodsRegistry {
             return 'Media paused';
           },
         ),
-        ControllerMethodEntry(
-          description: 'Checks if playing audio',
-          methodEnum: PlatformInAppWebViewControllerMethod.isPlayingAudio,
-          execute: (controller, params) async {
-            return await controller.isPlayingAudio();
-          },
-        ),
-        ControllerMethodEntry(
-          description: 'Checks if muted',
-          methodEnum: PlatformInAppWebViewControllerMethod.isMuted,
-          execute: (controller, params) async {
-            return await controller.isMuted();
-          },
-        ),
-        ControllerMethodEntry(
-          description: 'Sets mute state',
-          methodEnum: PlatformInAppWebViewControllerMethod.setMuted,
-          parameters: {'muted': true},
-          execute: (controller, params) async {
-            await controller.setMuted(muted: params['muted'] as bool? ?? true);
-            return 'Muted';
-          },
-        ),
       ],
     );
   }
@@ -1228,14 +1205,6 @@ class ControllerMethodsRegistry {
           methodEnum: PlatformInAppWebViewControllerMethod.getViewId,
           execute: (controller, params) async {
             return controller.getViewId();
-          },
-        ),
-        ControllerMethodEntry(
-          description: 'Opens DevTools',
-          methodEnum: PlatformInAppWebViewControllerMethod.openDevTools,
-          execute: (controller, params) async {
-            await controller.openDevTools();
-            return 'DevTools opened';
           },
         ),
       ],

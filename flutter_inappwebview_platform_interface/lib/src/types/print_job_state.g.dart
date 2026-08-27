@@ -56,14 +56,11 @@ class PrintJobState {
   ///**Officially Supported Platforms/Implementations**:
   ///- Android WebView ([Official API - PrintJobInfo.STATE_CANCELED](https://developer.android.com/reference/android/print/PrintJobInfo#STATE_CANCELED))
   ///- iOS WKWebView
-  ///- macOS WKWebView
   static final CANCELED = PrintJobState._internalMultiPlatform(7, () {
     switch (defaultTargetPlatform) {
       case TargetPlatform.android:
         return 7;
       case TargetPlatform.iOS:
-        return 7;
-      case TargetPlatform.macOS:
         return 7;
       default:
         break;
@@ -78,14 +75,11 @@ class PrintJobState {
   ///**Officially Supported Platforms/Implementations**:
   ///- Android WebView ([Official API - PrintJobInfo.STATE_COMPLETED](https://developer.android.com/reference/android/print/PrintJobInfo#STATE_COMPLETED))
   ///- iOS WKWebView
-  ///- macOS WKWebView
   static final COMPLETED = PrintJobState._internalMultiPlatform(5, () {
     switch (defaultTargetPlatform) {
       case TargetPlatform.android:
         return 5;
       case TargetPlatform.iOS:
-        return 5;
-      case TargetPlatform.macOS:
         return 5;
       default:
         break;
@@ -100,14 +94,11 @@ class PrintJobState {
   ///**Officially Supported Platforms/Implementations**:
   ///- Android WebView ([Official API - PrintJobInfo.STATE_CREATED](https://developer.android.com/reference/android/print/PrintJobInfo#STATE_CREATED))
   ///- iOS WKWebView
-  ///- macOS WKWebView
   static final CREATED = PrintJobState._internalMultiPlatform(1, () {
     switch (defaultTargetPlatform) {
       case TargetPlatform.android:
         return 1;
       case TargetPlatform.iOS:
-        return 1;
-      case TargetPlatform.macOS:
         return 1;
       default:
         break;
@@ -157,14 +148,11 @@ class PrintJobState {
   ///**Officially Supported Platforms/Implementations**:
   ///- Android WebView ([Official API - PrintJobInfo.STATE_STARTED](https://developer.android.com/reference/android/print/PrintJobInfo#STATE_STARTED))
   ///- iOS WKWebView
-  ///- macOS WKWebView
   static final STARTED = PrintJobState._internalMultiPlatform(3, () {
     switch (defaultTargetPlatform) {
       case TargetPlatform.android:
         return 3;
       case TargetPlatform.iOS:
-        return 3;
-      case TargetPlatform.macOS:
         return 3;
       default:
         break;

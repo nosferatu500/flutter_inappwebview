@@ -16,15 +16,7 @@ part 'platform_web_message_channel.g.dart';
 ///{@endtemplate}
 ///
 ///{@macro flutter_inappwebview_platform_interface.PlatformWebMessageChannelCreationParams.supported_platforms}
-@SupportedPlatforms(
-  platforms: [
-    AndroidPlatform(),
-    IOSPlatform(),
-    MacOSPlatform(),
-    LinuxPlatform(note: 'Implemented via JavaScript MessageChannel API.'),
-    WindowsPlatform(note: 'Implemented via JavaScript MessageChannel API.'),
-  ],
-)
+@SupportedPlatforms(platforms: [AndroidPlatform(), IOSPlatform()])
 @immutable
 class PlatformWebMessageChannelCreationParams {
   /// Used by the platform implementation to create a new [PlatformWebMessageChannel].
@@ -39,15 +31,7 @@ class PlatformWebMessageChannelCreationParams {
   ///{@endtemplate}
   ///
   ///{@macro flutter_inappwebview_platform_interface.PlatformWebMessageChannelCreationParams.id.supported_platforms}
-  @SupportedPlatforms(
-    platforms: [
-      AndroidPlatform(),
-      IOSPlatform(),
-      MacOSPlatform(),
-      LinuxPlatform(note: 'Implemented via JavaScript MessageChannel API.'),
-      WindowsPlatform(note: 'Implemented via JavaScript MessageChannel API.'),
-    ],
-  )
+  @SupportedPlatforms(platforms: [AndroidPlatform(), IOSPlatform()])
   final String id;
 
   ///{@template flutter_inappwebview_platform_interface.PlatformWebMessageChannelCreationParams.port1}
@@ -55,15 +39,7 @@ class PlatformWebMessageChannelCreationParams {
   ///{@endtemplate}
   ///
   ///{@macro flutter_inappwebview_platform_interface.PlatformWebMessageChannelCreationParams.port1.supported_platforms}
-  @SupportedPlatforms(
-    platforms: [
-      AndroidPlatform(),
-      IOSPlatform(),
-      MacOSPlatform(),
-      LinuxPlatform(note: 'Implemented via JavaScript MessageChannel API.'),
-      WindowsPlatform(note: 'Implemented via JavaScript MessageChannel API.'),
-    ],
-  )
+  @SupportedPlatforms(platforms: [AndroidPlatform(), IOSPlatform()])
   final PlatformWebMessagePort port1;
 
   ///{@template flutter_inappwebview_platform_interface.PlatformWebMessageChannelCreationParams.port2}
@@ -71,15 +47,7 @@ class PlatformWebMessageChannelCreationParams {
   ///{@endtemplate}
   ///
   ///{@macro flutter_inappwebview_platform_interface.PlatformWebMessageChannelCreationParams.port2.supported_platforms}
-  @SupportedPlatforms(
-    platforms: [
-      AndroidPlatform(),
-      IOSPlatform(),
-      MacOSPlatform(),
-      LinuxPlatform(note: 'Implemented via JavaScript MessageChannel API.'),
-      WindowsPlatform(note: 'Implemented via JavaScript MessageChannel API.'),
-    ],
-  )
+  @SupportedPlatforms(platforms: [AndroidPlatform(), IOSPlatform()])
   final PlatformWebMessagePort port2;
 
   ///{@template flutter_inappwebview_platform_interface.PlatformWebMessageChannelCreationParams.isClassSupported}
@@ -113,15 +81,7 @@ class PlatformWebMessageChannelCreationParams {
 ///{@endtemplate}
 ///
 ///{@macro flutter_inappwebview_platform_interface.PlatformWebMessageChannel.supported_platforms}
-@SupportedPlatforms(
-  platforms: [
-    AndroidPlatform(),
-    IOSPlatform(),
-    MacOSPlatform(),
-    LinuxPlatform(note: 'Implemented via JavaScript MessageChannel API.'),
-    WindowsPlatform(note: 'Implemented via JavaScript MessageChannel API.'),
-  ],
-)
+@SupportedPlatforms(platforms: [AndroidPlatform(), IOSPlatform()])
 abstract class PlatformWebMessageChannel extends PlatformInterface
     implements Disposable {
   /// Creates a new [PlatformWebMessageChannel]
@@ -195,15 +155,7 @@ abstract class PlatformWebMessageChannel extends PlatformInterface
   ///{@endtemplate}
   ///
   ///{@macro flutter_inappwebview_platform_interface.PlatformWebMessageChannel.dispose.supported_platforms}
-  @SupportedPlatforms(
-    platforms: [
-      AndroidPlatform(),
-      IOSPlatform(),
-      MacOSPlatform(),
-      LinuxPlatform(note: 'Implemented via JavaScript MessageChannel API.'),
-      WindowsPlatform(note: 'Implemented via JavaScript MessageChannel API.'),
-    ],
-  )
+  @SupportedPlatforms(platforms: [AndroidPlatform(), IOSPlatform()])
   @override
   void dispose() {
     throw UnimplementedError(

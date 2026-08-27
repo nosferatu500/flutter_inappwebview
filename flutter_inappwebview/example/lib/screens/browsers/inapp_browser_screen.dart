@@ -13,14 +13,12 @@ import 'package:provider/provider.dart';
 import 'package:flutter_inappwebview_example/providers/event_log_provider.dart';
 import 'package:flutter_inappwebview_example/models/event_log_entry.dart';
 import 'package:flutter_inappwebview_example/providers/settings_manager.dart';
-import 'package:flutter_inappwebview_example/widgets/common/profile_selector_card.dart';
 
 /// Custom InAppBrowser implementation for testing
 class TestInAppBrowser extends InAppBrowser {
   final void Function(String event, Map<String, dynamic>? data)? onEvent;
 
-  TestInAppBrowser({this.onEvent, WebViewEnvironment? webViewEnvironment})
-    : super(webViewEnvironment: webViewEnvironment);
+  TestInAppBrowser({this.onEvent});
 
   @override
   void onBrowserCreated() {
@@ -65,14 +63,6 @@ class TestInAppBrowser extends InAppBrowser {
   }
 
   @override
-  void onMainWindowWillClose() {
-    onEvent?.call(
-      PlatformInAppBrowserEventsMethod.onMainWindowWillClose.name,
-      null,
-    );
-  }
-
-  @override
   void onConsoleMessage(ConsoleMessage consoleMessage) {
     onEvent?.call(PlatformInAppBrowserEventsMethod.onConsoleMessage.name, {
       'message': consoleMessage.message,
@@ -100,7 +90,6 @@ class _InAppBrowserScreenState extends State<InAppBrowserScreen> {
   bool _browserOpened = false;
   final List<InAppBrowserMenuItem> _menuItems = [];
   bool _isInitialized = false;
-  int _lastEnvironmentRevision = -1;
 
   final Map<String, List<MethodResultEntry>> _methodHistory = {};
   final Map<String, int> _selectedHistoryIndex = {};
@@ -108,10 +97,9 @@ class _InAppBrowserScreenState extends State<InAppBrowserScreen> {
 
   String get _initStatusKey => PlatformInAppBrowserMethod.openUrlRequest.name;
 
-  void _initBrowser(WebViewEnvironment? webViewEnvironment) {
+  void _initBrowser() {
     try {
       _browser = TestInAppBrowser(
-        webViewEnvironment: webViewEnvironment,
         onEvent: (event, data) {
           _logEvent(EventType.ui, event, data: data);
           if (event == PlatformInAppBrowserEventsMethod.onExit.name) {
@@ -136,18 +124,10 @@ class _InAppBrowserScreenState extends State<InAppBrowserScreen> {
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
-    final settingsManager = context.watch<SettingsManager>();
 
     if (!_isInitialized) {
       _isInitialized = true;
-      _lastEnvironmentRevision = settingsManager.environmentRevision;
-      _initBrowser(settingsManager.webViewEnvironment);
-      return;
-    }
-
-    if (_lastEnvironmentRevision != settingsManager.environmentRevision) {
-      _lastEnvironmentRevision = settingsManager.environmentRevision;
-      _handleEnvironmentChange(settingsManager.webViewEnvironment);
+      _initBrowser();
     }
   }
 
@@ -654,15 +634,6 @@ class _InAppBrowserScreenState extends State<InAppBrowserScreen> {
     _recordMethodResult(_initStatusKey, message, isError: true);
   }
 
-  void _handleEnvironmentChange(WebViewEnvironment? environment) {
-    if (_browserOpened) {
-      _browser?.close();
-    }
-    _browser?.dispose();
-    _initBrowser(environment);
-    setState(() => _browserOpened = false);
-  }
-
   Widget _buildInitStatusSection() {
     final entries = _methodHistory[_initStatusKey] ?? const [];
     if (entries.isEmpty) {
@@ -707,10 +678,6 @@ class _InAppBrowserScreenState extends State<InAppBrowserScreen> {
         key: const Key('inapp_browser_main_list'),
         padding: const EdgeInsets.all(16),
         children: [
-          ProfileSelectorCard(
-            onEditSettingsProfile: () =>
-                Navigator.pushNamed(context, '/settings'),
-          ),
           const SizedBox(height: 16),
           _buildStatusCard(),
           const SizedBox(height: 16),

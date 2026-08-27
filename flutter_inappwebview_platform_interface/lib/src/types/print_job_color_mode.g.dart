@@ -37,16 +37,10 @@ class PrintJobColorMode {
   ///
   ///**Officially Supported Platforms/Implementations**:
   ///- Android WebView
-  ///- macOS WKWebView
-  ///- Windows WebView2
   static final COLOR = PrintJobColorMode._internalMultiPlatform(2, () {
     switch (defaultTargetPlatform) {
       case TargetPlatform.android:
         return 2;
-      case TargetPlatform.macOS:
-        return 'RGB';
-      case TargetPlatform.windows:
-        return 1;
       default:
         break;
     }
@@ -57,13 +51,10 @@ class PrintJobColorMode {
   ///
   ///**Officially Supported Platforms/Implementations**:
   ///- Android WebView
-  ///- Windows WebView2
   static final DEFAULT = PrintJobColorMode._internalMultiPlatform(0, () {
     switch (defaultTargetPlatform) {
       case TargetPlatform.android:
         return 0;
-      case TargetPlatform.windows:
-        return 0;
       default:
         break;
     }
@@ -74,16 +65,10 @@ class PrintJobColorMode {
   ///
   ///**Officially Supported Platforms/Implementations**:
   ///- Android WebView
-  ///- macOS WKWebView
-  ///- Windows WebView2
   static final MONOCHROME = PrintJobColorMode._internalMultiPlatform(1, () {
     switch (defaultTargetPlatform) {
       case TargetPlatform.android:
         return 1;
-      case TargetPlatform.macOS:
-        return 'Gray';
-      case TargetPlatform.windows:
-        return 2;
       default:
         break;
     }

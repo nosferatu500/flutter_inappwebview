@@ -358,14 +358,16 @@ class IOSInAppWebViewController extends PlatformInAppWebViewController
               DownloadStartRequest.fromMap(arguments)!;
 
           if (webviewParams != null) {
-            return (await webviewParams!.onDownloadStarting!(
+            await webviewParams!.onDownloadStarting!(
               _controllerFromPlatform,
               downloadStartRequest,
-            ))?.toMap();
+            );
+            return null;
           } else {
-            return (await _inAppBrowserEventHandler!.onDownloadStarting(
+            await _inAppBrowserEventHandler!.onDownloadStarting(
               downloadStartRequest,
-            ))?.toMap();
+            );
+            return null;
           }
         }
         break;

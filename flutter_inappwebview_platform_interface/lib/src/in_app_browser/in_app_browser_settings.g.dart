@@ -13,9 +13,6 @@ part of 'in_app_browser_settings.dart';
 ///**Officially Supported Platforms/Implementations**:
 ///- Android WebView
 ///- iOS WKWebView
-///- macOS WKWebView
-///- Windows WebView2
-///- Linux WPE WebKit ([Official API - GtkWindow](https://docs.gtk.org/gtk3/class.Window.html))
 class InAppBrowserSettings {
   ///Set to `false` to block the InAppBrowser WebView going back when the user click on the Android back button. The default value is `true`.
   ///
@@ -47,9 +44,6 @@ class InAppBrowserSettings {
   ///**Officially Supported Platforms/Implementations**:
   ///- Android WebView
   ///- iOS WKWebView
-  ///- macOS WKWebView
-  ///- Windows WebView2
-  ///- Linux WPE WebKit
   bool? hidden;
 
   ///Set to `true` to hide the close button. The default value is `false`.
@@ -63,8 +57,6 @@ class InAppBrowserSettings {
   ///**Officially Supported Platforms/Implementations**:
   ///- Android WebView
   ///- iOS WKWebView
-  ///- macOS WKWebView
-  ///- Linux WPE WebKit
   bool? hideDefaultMenuItems;
 
   ///Set to `true` to hide the progress bar when the WebView is loading a page. The default value is `false`.
@@ -72,8 +64,6 @@ class InAppBrowserSettings {
   ///**Officially Supported Platforms/Implementations**:
   ///- Android WebView
   ///- iOS WKWebView
-  ///- macOS WKWebView
-  ///- Linux WPE WebKit
   bool? hideProgressBar;
 
   ///Set to `true` if you want the title should be displayed. The default value is `false`.
@@ -93,8 +83,6 @@ class InAppBrowserSettings {
   ///**Officially Supported Platforms/Implementations**:
   ///- Android WebView
   ///- iOS WKWebView
-  ///- macOS WKWebView
-  ///- Linux WPE WebKit
   bool? hideToolbarTop;
 
   ///Set to `true` to hide the url bar on the toolbar at the top. The default value is `false`.
@@ -102,8 +90,6 @@ class InAppBrowserSettings {
   ///**Officially Supported Platforms/Implementations**:
   ///- Android WebView
   ///- iOS WKWebView
-  ///- macOS WKWebView
-  ///- Linux WPE WebKit
   bool? hideUrlBar;
 
   ///Set the custom color for the menu button.
@@ -147,8 +133,6 @@ class InAppBrowserSettings {
   ///**Officially Supported Platforms/Implementations**:
   ///- Android WebView
   ///- iOS WKWebView
-  ///- macOS WKWebView
-  ///- Linux WPE WebKit
   Color? toolbarTopBackgroundColor;
 
   ///Set the tint color to apply to the navigation bar background.
@@ -161,9 +145,6 @@ class InAppBrowserSettings {
   ///
   ///**Officially Supported Platforms/Implementations**:
   ///- Android WebView
-  ///- macOS WKWebView
-  ///- Windows WebView2
-  ///- Linux WPE WebKit
   String? toolbarTopFixedTitle;
 
   ///Set the tint color to apply to the navigation items and bar button items.
@@ -184,52 +165,10 @@ class InAppBrowserSettings {
   ///- iOS WKWebView
   ModalTransitionStyle? transitionStyle;
 
-  ///The window’s alpha value.
-  ///The default value is `1.0`.
-  ///
-  ///**Officially Supported Platforms/Implementations**:
-  ///- macOS WKWebView
-  ///- Windows WebView2
-  ///- Linux WPE WebKit
-  double? windowAlphaValue;
-
-  ///Sets the origin and size of the window’s frame rectangle according to a given frame rectangle,
-  ///thereby setting its position and size onscreen.
-  ///
-  ///**Officially Supported Platforms/Implementations**:
-  ///- macOS WKWebView
-  ///- Windows WebView2
-  ///- Linux WPE WebKit
-  InAppWebViewRect? windowFrame;
-
-  ///Flags that describe the window’s current style, such as if it’s resizable or in full-screen mode.
-  ///
-  ///**Officially Supported Platforms/Implementations**:
-  ///- macOS WKWebView
-  WindowStyleMask? windowStyleMask;
-
-  ///The type of separator that the app displays between the title bar and content of a window.
-  ///
-  ///**Officially Supported Platforms/Implementations**:
-  ///- macOS WKWebView 11.0+
-  WindowTitlebarSeparatorStyle? windowTitlebarSeparatorStyle;
-
-  ///How the browser window should be added to the main window.
-  ///The default value is [WindowType.WINDOW].
-  ///
-  ///**Officially Supported Platforms/Implementations**:
-  ///- macOS WKWebView
-  ///- Windows WebView2
-  ///- Linux WPE WebKit
-  WindowType? windowType;
-
   ///
   ///**Officially Supported Platforms/Implementations**:
   ///- Android WebView
   ///- iOS WKWebView
-  ///- macOS WKWebView
-  ///- Windows WebView2
-  ///- Linux WPE WebKit ([Official API - GtkWindow](https://docs.gtk.org/gtk3/class.Window.html))
   InAppBrowserSettings({
     this.allowGoBackWithBackButton = true,
     this.closeButtonCaption,
@@ -254,11 +193,6 @@ class InAppBrowserSettings {
     this.toolbarTopTintColor,
     this.toolbarTopTranslucent = true,
     ModalTransitionStyle? transitionStyle,
-    this.windowAlphaValue = 1.0,
-    this.windowFrame,
-    this.windowStyleMask,
-    this.windowTitlebarSeparatorStyle,
-    this.windowType,
   }) : presentationStyle =
            presentationStyle ?? ModalPresentationStyle.FULL_SCREEN,
        transitionStyle = transitionStyle ?? ModalTransitionStyle.COVER_VERTICAL;
@@ -294,34 +228,6 @@ class InAppBrowserSettings {
       toolbarTopTintColor: map['toolbarTopTintColor'] != null
           ? UtilColor.fromStringRepresentation(map['toolbarTopTintColor'])
           : null,
-      windowFrame: InAppWebViewRect.fromMap(
-        map['windowFrame']?.cast<String, dynamic>(),
-        enumMethod: enumMethod,
-      ),
-      windowStyleMask: switch (enumMethod ?? EnumMethod.nativeValue) {
-        EnumMethod.nativeValue => WindowStyleMask.fromNativeValue(
-          map['windowStyleMask'],
-        ),
-        EnumMethod.value => WindowStyleMask.fromValue(map['windowStyleMask']),
-        EnumMethod.name => WindowStyleMask.byName(map['windowStyleMask']),
-      },
-      windowTitlebarSeparatorStyle: switch (enumMethod ??
-          EnumMethod.nativeValue) {
-        EnumMethod.nativeValue => WindowTitlebarSeparatorStyle.fromNativeValue(
-          map['windowTitlebarSeparatorStyle'],
-        ),
-        EnumMethod.value => WindowTitlebarSeparatorStyle.fromValue(
-          map['windowTitlebarSeparatorStyle'],
-        ),
-        EnumMethod.name => WindowTitlebarSeparatorStyle.byName(
-          map['windowTitlebarSeparatorStyle'],
-        ),
-      },
-      windowType: switch (enumMethod ?? EnumMethod.nativeValue) {
-        EnumMethod.nativeValue => WindowType.fromNativeValue(map['windowType']),
-        EnumMethod.value => WindowType.fromValue(map['windowType']),
-        EnumMethod.name => WindowType.byName(map['windowType']),
-      },
     );
     instance.allowGoBackWithBackButton = map['allowGoBackWithBackButton'];
     instance.closeOnCannotGoBack = map['closeOnCannotGoBack'];
@@ -360,7 +266,6 @@ class InAppBrowserSettings {
       ),
       EnumMethod.name => ModalTransitionStyle.byName(map['transitionStyle']),
     };
-    instance.windowAlphaValue = map['windowAlphaValue'];
     return instance;
   }
 
@@ -408,24 +313,6 @@ class InAppBrowserSettings {
         EnumMethod.value => transitionStyle?.toValue(),
         EnumMethod.name => transitionStyle?.name(),
       },
-      "windowAlphaValue": windowAlphaValue,
-      "windowFrame": windowFrame?.toMap(enumMethod: enumMethod),
-      "windowStyleMask": switch (enumMethod ?? EnumMethod.nativeValue) {
-        EnumMethod.nativeValue => windowStyleMask?.toNativeValue(),
-        EnumMethod.value => windowStyleMask?.toValue(),
-        EnumMethod.name => windowStyleMask?.name(),
-      },
-      "windowTitlebarSeparatorStyle": switch (enumMethod ??
-          EnumMethod.nativeValue) {
-        EnumMethod.nativeValue => windowTitlebarSeparatorStyle?.toNativeValue(),
-        EnumMethod.value => windowTitlebarSeparatorStyle?.toValue(),
-        EnumMethod.name => windowTitlebarSeparatorStyle?.name(),
-      },
-      "windowType": switch (enumMethod ?? EnumMethod.nativeValue) {
-        EnumMethod.nativeValue => windowType?.toNativeValue(),
-        EnumMethod.value => windowType?.toValue(),
-        EnumMethod.name => windowType?.name(),
-      },
     };
   }
 
@@ -441,7 +328,7 @@ class InAppBrowserSettings {
 
   @override
   String toString() {
-    return 'InAppBrowserSettings{allowGoBackWithBackButton: $allowGoBackWithBackButton, closeButtonCaption: $closeButtonCaption, closeButtonColor: $closeButtonColor, closeOnCannotGoBack: $closeOnCannotGoBack, hidden: $hidden, hideCloseButton: $hideCloseButton, hideDefaultMenuItems: $hideDefaultMenuItems, hideProgressBar: $hideProgressBar, hideTitleBar: $hideTitleBar, hideToolbarBottom: $hideToolbarBottom, hideToolbarTop: $hideToolbarTop, hideUrlBar: $hideUrlBar, menuButtonColor: $menuButtonColor, presentationStyle: $presentationStyle, shouldCloseOnBackButtonPressed: $shouldCloseOnBackButtonPressed, toolbarBottomBackgroundColor: $toolbarBottomBackgroundColor, toolbarBottomTintColor: $toolbarBottomTintColor, toolbarBottomTranslucent: $toolbarBottomTranslucent, toolbarTopBackgroundColor: $toolbarTopBackgroundColor, toolbarTopBarTintColor: $toolbarTopBarTintColor, toolbarTopFixedTitle: $toolbarTopFixedTitle, toolbarTopTintColor: $toolbarTopTintColor, toolbarTopTranslucent: $toolbarTopTranslucent, transitionStyle: $transitionStyle, windowAlphaValue: $windowAlphaValue, windowFrame: $windowFrame, windowStyleMask: $windowStyleMask, windowTitlebarSeparatorStyle: $windowTitlebarSeparatorStyle, windowType: $windowType}';
+    return 'InAppBrowserSettings{allowGoBackWithBackButton: $allowGoBackWithBackButton, closeButtonCaption: $closeButtonCaption, closeButtonColor: $closeButtonColor, closeOnCannotGoBack: $closeOnCannotGoBack, hidden: $hidden, hideCloseButton: $hideCloseButton, hideDefaultMenuItems: $hideDefaultMenuItems, hideProgressBar: $hideProgressBar, hideTitleBar: $hideTitleBar, hideToolbarBottom: $hideToolbarBottom, hideToolbarTop: $hideToolbarTop, hideUrlBar: $hideUrlBar, menuButtonColor: $menuButtonColor, presentationStyle: $presentationStyle, shouldCloseOnBackButtonPressed: $shouldCloseOnBackButtonPressed, toolbarBottomBackgroundColor: $toolbarBottomBackgroundColor, toolbarBottomTintColor: $toolbarBottomTintColor, toolbarBottomTranslucent: $toolbarBottomTranslucent, toolbarTopBackgroundColor: $toolbarTopBackgroundColor, toolbarTopBarTintColor: $toolbarTopBarTintColor, toolbarTopFixedTitle: $toolbarTopFixedTitle, toolbarTopTintColor: $toolbarTopTintColor, toolbarTopTranslucent: $toolbarTopTranslucent, transitionStyle: $transitionStyle}';
   }
 }
 
@@ -502,9 +389,6 @@ enum InAppBrowserSettingsProperty {
   ///**Officially Supported Platforms/Implementations**:
   ///- Android WebView
   ///- iOS WKWebView
-  ///- macOS WKWebView
-  ///- Windows WebView2
-  ///- Linux WPE WebKit
   ///
   ///Use the [InAppBrowserSettings.isPropertySupported] method to check if this property is supported at runtime.
   ///{@endtemplate}
@@ -528,8 +412,6 @@ enum InAppBrowserSettingsProperty {
   ///**Officially Supported Platforms/Implementations**:
   ///- Android WebView
   ///- iOS WKWebView
-  ///- macOS WKWebView
-  ///- Linux WPE WebKit
   ///
   ///Use the [InAppBrowserSettings.isPropertySupported] method to check if this property is supported at runtime.
   ///{@endtemplate}
@@ -542,8 +424,6 @@ enum InAppBrowserSettingsProperty {
   ///**Officially Supported Platforms/Implementations**:
   ///- Android WebView
   ///- iOS WKWebView
-  ///- macOS WKWebView
-  ///- Linux WPE WebKit
   ///
   ///Use the [InAppBrowserSettings.isPropertySupported] method to check if this property is supported at runtime.
   ///{@endtemplate}
@@ -578,8 +458,6 @@ enum InAppBrowserSettingsProperty {
   ///**Officially Supported Platforms/Implementations**:
   ///- Android WebView
   ///- iOS WKWebView
-  ///- macOS WKWebView
-  ///- Linux WPE WebKit
   ///
   ///Use the [InAppBrowserSettings.isPropertySupported] method to check if this property is supported at runtime.
   ///{@endtemplate}
@@ -592,8 +470,6 @@ enum InAppBrowserSettingsProperty {
   ///**Officially Supported Platforms/Implementations**:
   ///- Android WebView
   ///- iOS WKWebView
-  ///- macOS WKWebView
-  ///- Linux WPE WebKit
   ///
   ///Use the [InAppBrowserSettings.isPropertySupported] method to check if this property is supported at runtime.
   ///{@endtemplate}
@@ -672,8 +548,6 @@ enum InAppBrowserSettingsProperty {
   ///**Officially Supported Platforms/Implementations**:
   ///- Android WebView
   ///- iOS WKWebView
-  ///- macOS WKWebView
-  ///- Linux WPE WebKit
   ///
   ///Use the [InAppBrowserSettings.isPropertySupported] method to check if this property is supported at runtime.
   ///{@endtemplate}
@@ -696,9 +570,6 @@ enum InAppBrowserSettingsProperty {
   ///
   ///**Officially Supported Platforms/Implementations**:
   ///- Android WebView
-  ///- macOS WKWebView
-  ///- Windows WebView2
-  ///- Linux WPE WebKit
   ///
   ///Use the [InAppBrowserSettings.isPropertySupported] method to check if this property is supported at runtime.
   ///{@endtemplate}
@@ -736,67 +607,6 @@ enum InAppBrowserSettingsProperty {
   ///Use the [InAppBrowserSettings.isPropertySupported] method to check if this property is supported at runtime.
   ///{@endtemplate}
   transitionStyle,
-
-  ///Can be used to check if the [InAppBrowserSettings.windowAlphaValue] property is supported at runtime.
-  ///
-  ///{@template flutter_inappwebview_platform_interface.InAppBrowserSettings.windowAlphaValue.supported_platforms}
-  ///
-  ///**Officially Supported Platforms/Implementations**:
-  ///- macOS WKWebView
-  ///- Windows WebView2
-  ///- Linux WPE WebKit
-  ///
-  ///Use the [InAppBrowserSettings.isPropertySupported] method to check if this property is supported at runtime.
-  ///{@endtemplate}
-  windowAlphaValue,
-
-  ///Can be used to check if the [InAppBrowserSettings.windowFrame] property is supported at runtime.
-  ///
-  ///{@template flutter_inappwebview_platform_interface.InAppBrowserSettings.windowFrame.supported_platforms}
-  ///
-  ///**Officially Supported Platforms/Implementations**:
-  ///- macOS WKWebView
-  ///- Windows WebView2
-  ///- Linux WPE WebKit
-  ///
-  ///Use the [InAppBrowserSettings.isPropertySupported] method to check if this property is supported at runtime.
-  ///{@endtemplate}
-  windowFrame,
-
-  ///Can be used to check if the [InAppBrowserSettings.windowStyleMask] property is supported at runtime.
-  ///
-  ///{@template flutter_inappwebview_platform_interface.InAppBrowserSettings.windowStyleMask.supported_platforms}
-  ///
-  ///**Officially Supported Platforms/Implementations**:
-  ///- macOS WKWebView
-  ///
-  ///Use the [InAppBrowserSettings.isPropertySupported] method to check if this property is supported at runtime.
-  ///{@endtemplate}
-  windowStyleMask,
-
-  ///Can be used to check if the [InAppBrowserSettings.windowTitlebarSeparatorStyle] property is supported at runtime.
-  ///
-  ///{@template flutter_inappwebview_platform_interface.InAppBrowserSettings.windowTitlebarSeparatorStyle.supported_platforms}
-  ///
-  ///**Officially Supported Platforms/Implementations**:
-  ///- macOS WKWebView 11.0+
-  ///
-  ///Use the [InAppBrowserSettings.isPropertySupported] method to check if this property is supported at runtime.
-  ///{@endtemplate}
-  windowTitlebarSeparatorStyle,
-
-  ///Can be used to check if the [InAppBrowserSettings.windowType] property is supported at runtime.
-  ///
-  ///{@template flutter_inappwebview_platform_interface.InAppBrowserSettings.windowType.supported_platforms}
-  ///
-  ///**Officially Supported Platforms/Implementations**:
-  ///- macOS WKWebView
-  ///- Windows WebView2
-  ///- Linux WPE WebKit
-  ///
-  ///Use the [InAppBrowserSettings.isPropertySupported] method to check if this property is supported at runtime.
-  ///{@endtemplate}
-  windowType,
 }
 
 extension _InAppBrowserSettingsPropertySupported on InAppBrowserSettings {
@@ -826,9 +636,6 @@ extension _InAppBrowserSettingsPropertySupported on InAppBrowserSettings {
             [
               TargetPlatform.android,
               TargetPlatform.iOS,
-              TargetPlatform.macOS,
-              TargetPlatform.windows,
-              TargetPlatform.linux,
             ].contains(platform ?? defaultTargetPlatform);
       case InAppBrowserSettingsProperty.hideCloseButton:
         return ((kIsWeb && platform != null) || !kIsWeb) &&
@@ -838,16 +645,12 @@ extension _InAppBrowserSettingsPropertySupported on InAppBrowserSettings {
             [
               TargetPlatform.android,
               TargetPlatform.iOS,
-              TargetPlatform.macOS,
-              TargetPlatform.linux,
             ].contains(platform ?? defaultTargetPlatform);
       case InAppBrowserSettingsProperty.hideProgressBar:
         return ((kIsWeb && platform != null) || !kIsWeb) &&
             [
               TargetPlatform.android,
               TargetPlatform.iOS,
-              TargetPlatform.macOS,
-              TargetPlatform.linux,
             ].contains(platform ?? defaultTargetPlatform);
       case InAppBrowserSettingsProperty.hideTitleBar:
         return ((kIsWeb && platform != null) || !kIsWeb) &&
@@ -862,16 +665,12 @@ extension _InAppBrowserSettingsPropertySupported on InAppBrowserSettings {
             [
               TargetPlatform.android,
               TargetPlatform.iOS,
-              TargetPlatform.macOS,
-              TargetPlatform.linux,
             ].contains(platform ?? defaultTargetPlatform);
       case InAppBrowserSettingsProperty.hideUrlBar:
         return ((kIsWeb && platform != null) || !kIsWeb) &&
             [
               TargetPlatform.android,
               TargetPlatform.iOS,
-              TargetPlatform.macOS,
-              TargetPlatform.linux,
             ].contains(platform ?? defaultTargetPlatform);
       case InAppBrowserSettingsProperty.menuButtonColor:
         return ((kIsWeb && platform != null) || !kIsWeb) &&
@@ -898,8 +697,6 @@ extension _InAppBrowserSettingsPropertySupported on InAppBrowserSettings {
             [
               TargetPlatform.android,
               TargetPlatform.iOS,
-              TargetPlatform.macOS,
-              TargetPlatform.linux,
             ].contains(platform ?? defaultTargetPlatform);
       case InAppBrowserSettingsProperty.toolbarTopBarTintColor:
         return ((kIsWeb && platform != null) || !kIsWeb) &&
@@ -908,9 +705,6 @@ extension _InAppBrowserSettingsPropertySupported on InAppBrowserSettings {
         return ((kIsWeb && platform != null) || !kIsWeb) &&
             [
               TargetPlatform.android,
-              TargetPlatform.macOS,
-              TargetPlatform.windows,
-              TargetPlatform.linux,
             ].contains(platform ?? defaultTargetPlatform);
       case InAppBrowserSettingsProperty.toolbarTopTintColor:
         return ((kIsWeb && platform != null) || !kIsWeb) &&
@@ -921,33 +715,6 @@ extension _InAppBrowserSettingsPropertySupported on InAppBrowserSettings {
       case InAppBrowserSettingsProperty.transitionStyle:
         return ((kIsWeb && platform != null) || !kIsWeb) &&
             [TargetPlatform.iOS].contains(platform ?? defaultTargetPlatform);
-      case InAppBrowserSettingsProperty.windowAlphaValue:
-        return ((kIsWeb && platform != null) || !kIsWeb) &&
-            [
-              TargetPlatform.macOS,
-              TargetPlatform.windows,
-              TargetPlatform.linux,
-            ].contains(platform ?? defaultTargetPlatform);
-      case InAppBrowserSettingsProperty.windowFrame:
-        return ((kIsWeb && platform != null) || !kIsWeb) &&
-            [
-              TargetPlatform.macOS,
-              TargetPlatform.windows,
-              TargetPlatform.linux,
-            ].contains(platform ?? defaultTargetPlatform);
-      case InAppBrowserSettingsProperty.windowStyleMask:
-        return ((kIsWeb && platform != null) || !kIsWeb) &&
-            [TargetPlatform.macOS].contains(platform ?? defaultTargetPlatform);
-      case InAppBrowserSettingsProperty.windowTitlebarSeparatorStyle:
-        return ((kIsWeb && platform != null) || !kIsWeb) &&
-            [TargetPlatform.macOS].contains(platform ?? defaultTargetPlatform);
-      case InAppBrowserSettingsProperty.windowType:
-        return ((kIsWeb && platform != null) || !kIsWeb) &&
-            [
-              TargetPlatform.macOS,
-              TargetPlatform.windows,
-              TargetPlatform.linux,
-            ].contains(platform ?? defaultTargetPlatform);
     }
   }
 }

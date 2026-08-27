@@ -12,35 +12,19 @@ class CompressFormat_ {
 
   ///Compress to the `PNG` format.
   ///PNG is lossless, so `quality` is ignored.
-  @EnumSupportedPlatforms(
-    platforms: [
-      EnumAndroidPlatform(),
-      EnumIOSPlatform(),
-      EnumMacOSPlatform(),
-      EnumWindowsPlatform(),
-    ],
-  )
+  @EnumSupportedPlatforms(platforms: [EnumAndroidPlatform(), EnumIOSPlatform()])
   static const PNG = CompressFormat_._internal("PNG");
 
   ///Compress to the `JPEG` format.
   ///Quality of `0` means compress for the smallest size.
   ///`100` means compress for max visual quality.
-  @EnumSupportedPlatforms(
-    platforms: [
-      EnumAndroidPlatform(),
-      EnumIOSPlatform(),
-      EnumMacOSPlatform(),
-      EnumWindowsPlatform(),
-    ],
-  )
+  @EnumSupportedPlatforms(platforms: [EnumAndroidPlatform(), EnumIOSPlatform()])
   static const JPEG = CompressFormat_._internal("JPEG");
 
   ///Compress to the `WEBP` lossy format.
   ///Quality of `0` means compress for the smallest size.
   ///`100` means compress for max visual quality.
-  @EnumSupportedPlatforms(
-    platforms: [EnumAndroidPlatform(), EnumWindowsPlatform()],
-  )
+  @EnumSupportedPlatforms(platforms: [EnumAndroidPlatform()])
   static const WEBP = CompressFormat_._internal("WEBP");
 
   ///Compress to the `WEBP` lossy format.

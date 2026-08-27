@@ -13,9 +13,6 @@ extension _PlatformInAppLocalhostServerCreationParamsClassSupported
   ///**Officially Supported Platforms/Implementations**:
   ///- Android WebView
   ///- iOS WKWebView
-  ///- macOS WKWebView
-  ///- Windows WebView2
-  ///- Linux WPE WebKit
   ///
   ///Use the [PlatformInAppLocalhostServerCreationParams.isClassSupported] method to check if this class is supported at runtime.
   ///{@endtemplate}
@@ -24,9 +21,6 @@ extension _PlatformInAppLocalhostServerCreationParamsClassSupported
         [
           TargetPlatform.android,
           TargetPlatform.iOS,
-          TargetPlatform.macOS,
-          TargetPlatform.windows,
-          TargetPlatform.linux,
         ].contains(platform ?? defaultTargetPlatform);
   }
 }
@@ -38,9 +32,6 @@ extension _PlatformInAppLocalhostServerClassSupported
   ///**Officially Supported Platforms/Implementations**:
   ///- Android WebView
   ///- iOS WKWebView
-  ///- macOS WKWebView
-  ///- Windows WebView2
-  ///- Linux WPE WebKit
   ///
   ///Use the [PlatformInAppLocalhostServer.isClassSupported] method to check if this class is supported at runtime.
   ///{@endtemplate}
@@ -49,9 +40,6 @@ extension _PlatformInAppLocalhostServerClassSupported
         [
           TargetPlatform.android,
           TargetPlatform.iOS,
-          TargetPlatform.macOS,
-          TargetPlatform.windows,
-          TargetPlatform.linux,
         ].contains(platform ?? defaultTargetPlatform);
   }
 }
@@ -65,9 +53,6 @@ enum PlatformInAppLocalhostServerMethod {
   ///**Officially Supported Platforms/Implementations**:
   ///- Android WebView
   ///- iOS WKWebView
-  ///- macOS WKWebView
-  ///- Windows WebView2
-  ///- Linux WPE WebKit
   ///
   ///Use the [PlatformInAppLocalhostServer.isMethodSupported] method to check if this method is supported at runtime.
   ///{@endtemplate}
@@ -80,9 +65,6 @@ enum PlatformInAppLocalhostServerMethod {
   ///**Officially Supported Platforms/Implementations**:
   ///- Android WebView
   ///- iOS WKWebView
-  ///- macOS WKWebView
-  ///- Windows WebView2
-  ///- Linux WPE WebKit
   ///
   ///Use the [PlatformInAppLocalhostServer.isMethodSupported] method to check if this method is supported at runtime.
   ///{@endtemplate}
@@ -95,9 +77,6 @@ enum PlatformInAppLocalhostServerMethod {
   ///**Officially Supported Platforms/Implementations**:
   ///- Android WebView
   ///- iOS WKWebView
-  ///- macOS WKWebView
-  ///- Windows WebView2
-  ///- Linux WPE WebKit
   ///
   ///Use the [PlatformInAppLocalhostServer.isMethodSupported] method to check if this method is supported at runtime.
   ///{@endtemplate}
@@ -116,27 +95,18 @@ extension _PlatformInAppLocalhostServerMethodSupported
             [
               TargetPlatform.android,
               TargetPlatform.iOS,
-              TargetPlatform.macOS,
-              TargetPlatform.windows,
-              TargetPlatform.linux,
             ].contains(platform ?? defaultTargetPlatform);
       case PlatformInAppLocalhostServerMethod.isRunning:
         return ((kIsWeb && platform != null) || !kIsWeb) &&
             [
               TargetPlatform.android,
               TargetPlatform.iOS,
-              TargetPlatform.macOS,
-              TargetPlatform.windows,
-              TargetPlatform.linux,
             ].contains(platform ?? defaultTargetPlatform);
       case PlatformInAppLocalhostServerMethod.start:
         return ((kIsWeb && platform != null) || !kIsWeb) &&
             [
               TargetPlatform.android,
               TargetPlatform.iOS,
-              TargetPlatform.macOS,
-              TargetPlatform.windows,
-              TargetPlatform.linux,
             ].contains(platform ?? defaultTargetPlatform);
     }
   }

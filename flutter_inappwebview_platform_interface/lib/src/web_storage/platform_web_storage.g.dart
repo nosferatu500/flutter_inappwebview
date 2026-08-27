@@ -13,24 +13,15 @@ extension _PlatformWebStorageCreationParamsClassSupported
   ///**Officially Supported Platforms/Implementations**:
   ///- Android WebView
   ///- iOS WKWebView
-  ///- macOS WKWebView
-  ///- Web \<iframe\> but requires same origin
-  ///- Windows WebView2
-  ///- Linux WPE WebKit
   ///
   ///Use the [PlatformWebStorageCreationParams.isClassSupported] method to check if this class is supported at runtime.
   ///{@endtemplate}
   static bool isClassSupported({TargetPlatform? platform}) {
-    return kIsWeb && platform == null
-        ? true
-        : ((kIsWeb && platform != null) || !kIsWeb) &&
-              [
-                TargetPlatform.android,
-                TargetPlatform.iOS,
-                TargetPlatform.macOS,
-                TargetPlatform.windows,
-                TargetPlatform.linux,
-              ].contains(platform ?? defaultTargetPlatform);
+    return ((kIsWeb && platform != null) || !kIsWeb) &&
+        [
+          TargetPlatform.android,
+          TargetPlatform.iOS,
+        ].contains(platform ?? defaultTargetPlatform);
   }
 }
 
@@ -43,10 +34,6 @@ enum PlatformWebStorageCreationParamsProperty {
   ///**Officially Supported Platforms/Implementations**:
   ///- Android WebView
   ///- iOS WKWebView
-  ///- macOS WKWebView
-  ///- Web \<iframe\> but requires same origin
-  ///- Windows WebView2
-  ///- Linux WPE WebKit
   ///
   ///Use the [PlatformWebStorageCreationParams.isPropertySupported] method to check if this property is supported at runtime.
   ///{@endtemplate}
@@ -59,10 +46,6 @@ enum PlatformWebStorageCreationParamsProperty {
   ///**Officially Supported Platforms/Implementations**:
   ///- Android WebView
   ///- iOS WKWebView
-  ///- macOS WKWebView
-  ///- Web \<iframe\> but requires same origin
-  ///- Windows WebView2
-  ///- Linux WPE WebKit
   ///
   ///Use the [PlatformWebStorageCreationParams.isPropertySupported] method to check if this property is supported at runtime.
   ///{@endtemplate}
@@ -77,27 +60,17 @@ extension _PlatformWebStorageCreationParamsPropertySupported
   }) {
     switch (property) {
       case PlatformWebStorageCreationParamsProperty.localStorage:
-        return kIsWeb && platform == null
-            ? true
-            : ((kIsWeb && platform != null) || !kIsWeb) &&
-                  [
-                    TargetPlatform.android,
-                    TargetPlatform.iOS,
-                    TargetPlatform.macOS,
-                    TargetPlatform.windows,
-                    TargetPlatform.linux,
-                  ].contains(platform ?? defaultTargetPlatform);
+        return ((kIsWeb && platform != null) || !kIsWeb) &&
+            [
+              TargetPlatform.android,
+              TargetPlatform.iOS,
+            ].contains(platform ?? defaultTargetPlatform);
       case PlatformWebStorageCreationParamsProperty.sessionStorage:
-        return kIsWeb && platform == null
-            ? true
-            : ((kIsWeb && platform != null) || !kIsWeb) &&
-                  [
-                    TargetPlatform.android,
-                    TargetPlatform.iOS,
-                    TargetPlatform.macOS,
-                    TargetPlatform.windows,
-                    TargetPlatform.linux,
-                  ].contains(platform ?? defaultTargetPlatform);
+        return ((kIsWeb && platform != null) || !kIsWeb) &&
+            [
+              TargetPlatform.android,
+              TargetPlatform.iOS,
+            ].contains(platform ?? defaultTargetPlatform);
     }
   }
 }
@@ -108,24 +81,15 @@ extension _PlatformWebStorageClassSupported on PlatformWebStorage {
   ///**Officially Supported Platforms/Implementations**:
   ///- Android WebView
   ///- iOS WKWebView
-  ///- macOS WKWebView
-  ///- Web \<iframe\> but requires same origin
-  ///- Windows WebView2
-  ///- Linux WPE WebKit
   ///
   ///Use the [PlatformWebStorage.isClassSupported] method to check if this class is supported at runtime.
   ///{@endtemplate}
   static bool isClassSupported({TargetPlatform? platform}) {
-    return kIsWeb && platform == null
-        ? true
-        : ((kIsWeb && platform != null) || !kIsWeb) &&
-              [
-                TargetPlatform.android,
-                TargetPlatform.iOS,
-                TargetPlatform.macOS,
-                TargetPlatform.windows,
-                TargetPlatform.linux,
-              ].contains(platform ?? defaultTargetPlatform);
+    return ((kIsWeb && platform != null) || !kIsWeb) &&
+        [
+          TargetPlatform.android,
+          TargetPlatform.iOS,
+        ].contains(platform ?? defaultTargetPlatform);
   }
 }
 
@@ -138,10 +102,6 @@ enum PlatformWebStorageProperty {
   ///**Officially Supported Platforms/Implementations**:
   ///- Android WebView
   ///- iOS WKWebView
-  ///- macOS WKWebView
-  ///- Web \<iframe\> but requires same origin
-  ///- Windows WebView2
-  ///- Linux WPE WebKit
   ///
   ///Use the [PlatformWebStorage.isPropertySupported] method to check if this property is supported at runtime.
   ///{@endtemplate}
@@ -154,10 +114,6 @@ enum PlatformWebStorageProperty {
   ///**Officially Supported Platforms/Implementations**:
   ///- Android WebView
   ///- iOS WKWebView
-  ///- macOS WKWebView
-  ///- Web \<iframe\> but requires same origin
-  ///- Windows WebView2
-  ///- Linux WPE WebKit
   ///
   ///Use the [PlatformWebStorage.isPropertySupported] method to check if this property is supported at runtime.
   ///{@endtemplate}
@@ -171,27 +127,17 @@ extension _PlatformWebStoragePropertySupported on PlatformWebStorage {
   }) {
     switch (property) {
       case PlatformWebStorageProperty.localStorage:
-        return kIsWeb && platform == null
-            ? true
-            : ((kIsWeb && platform != null) || !kIsWeb) &&
-                  [
-                    TargetPlatform.android,
-                    TargetPlatform.iOS,
-                    TargetPlatform.macOS,
-                    TargetPlatform.windows,
-                    TargetPlatform.linux,
-                  ].contains(platform ?? defaultTargetPlatform);
+        return ((kIsWeb && platform != null) || !kIsWeb) &&
+            [
+              TargetPlatform.android,
+              TargetPlatform.iOS,
+            ].contains(platform ?? defaultTargetPlatform);
       case PlatformWebStorageProperty.sessionStorage:
-        return kIsWeb && platform == null
-            ? true
-            : ((kIsWeb && platform != null) || !kIsWeb) &&
-                  [
-                    TargetPlatform.android,
-                    TargetPlatform.iOS,
-                    TargetPlatform.macOS,
-                    TargetPlatform.windows,
-                    TargetPlatform.linux,
-                  ].contains(platform ?? defaultTargetPlatform);
+        return ((kIsWeb && platform != null) || !kIsWeb) &&
+            [
+              TargetPlatform.android,
+              TargetPlatform.iOS,
+            ].contains(platform ?? defaultTargetPlatform);
     }
   }
 }
@@ -205,10 +151,6 @@ enum PlatformWebStorageMethod {
   ///**Officially Supported Platforms/Implementations**:
   ///- Android WebView
   ///- iOS WKWebView
-  ///- macOS WKWebView
-  ///- Web \<iframe\> but requires same origin
-  ///- Windows WebView2
-  ///- Linux WPE WebKit
   ///
   ///Use the [PlatformWebStorage.isMethodSupported] method to check if this method is supported at runtime.
   ///{@endtemplate}
@@ -222,16 +164,11 @@ extension _PlatformWebStorageMethodSupported on PlatformWebStorage {
   }) {
     switch (method) {
       case PlatformWebStorageMethod.dispose:
-        return kIsWeb && platform == null
-            ? true
-            : ((kIsWeb && platform != null) || !kIsWeb) &&
-                  [
-                    TargetPlatform.android,
-                    TargetPlatform.iOS,
-                    TargetPlatform.macOS,
-                    TargetPlatform.windows,
-                    TargetPlatform.linux,
-                  ].contains(platform ?? defaultTargetPlatform);
+        return ((kIsWeb && platform != null) || !kIsWeb) &&
+            [
+              TargetPlatform.android,
+              TargetPlatform.iOS,
+            ].contains(platform ?? defaultTargetPlatform);
     }
   }
 }
@@ -243,24 +180,15 @@ extension _PlatformStorageCreationParamsClassSupported
   ///**Officially Supported Platforms/Implementations**:
   ///- Android WebView
   ///- iOS WKWebView
-  ///- macOS WKWebView
-  ///- Web \<iframe\> but requires same origin
-  ///- Windows WebView2
-  ///- Linux WPE WebKit
   ///
   ///Use the [PlatformStorageCreationParams.isClassSupported] method to check if this class is supported at runtime.
   ///{@endtemplate}
   static bool isClassSupported({TargetPlatform? platform}) {
-    return kIsWeb && platform == null
-        ? true
-        : ((kIsWeb && platform != null) || !kIsWeb) &&
-              [
-                TargetPlatform.android,
-                TargetPlatform.iOS,
-                TargetPlatform.macOS,
-                TargetPlatform.windows,
-                TargetPlatform.linux,
-              ].contains(platform ?? defaultTargetPlatform);
+    return ((kIsWeb && platform != null) || !kIsWeb) &&
+        [
+          TargetPlatform.android,
+          TargetPlatform.iOS,
+        ].contains(platform ?? defaultTargetPlatform);
   }
 }
 
@@ -273,10 +201,6 @@ enum PlatformStorageCreationParamsProperty {
   ///**Officially Supported Platforms/Implementations**:
   ///- Android WebView
   ///- iOS WKWebView
-  ///- macOS WKWebView
-  ///- Web \<iframe\> but requires same origin
-  ///- Windows WebView2
-  ///- Linux WPE WebKit
   ///
   ///Use the [PlatformStorageCreationParams.isPropertySupported] method to check if this property is supported at runtime.
   ///{@endtemplate}
@@ -289,10 +213,6 @@ enum PlatformStorageCreationParamsProperty {
   ///**Officially Supported Platforms/Implementations**:
   ///- Android WebView
   ///- iOS WKWebView
-  ///- macOS WKWebView
-  ///- Web \<iframe\> but requires same origin
-  ///- Windows WebView2
-  ///- Linux WPE WebKit
   ///
   ///Use the [PlatformStorageCreationParams.isPropertySupported] method to check if this property is supported at runtime.
   ///{@endtemplate}
@@ -307,27 +227,17 @@ extension _PlatformStorageCreationParamsPropertySupported
   }) {
     switch (property) {
       case PlatformStorageCreationParamsProperty.controller:
-        return kIsWeb && platform == null
-            ? true
-            : ((kIsWeb && platform != null) || !kIsWeb) &&
-                  [
-                    TargetPlatform.android,
-                    TargetPlatform.iOS,
-                    TargetPlatform.macOS,
-                    TargetPlatform.windows,
-                    TargetPlatform.linux,
-                  ].contains(platform ?? defaultTargetPlatform);
+        return ((kIsWeb && platform != null) || !kIsWeb) &&
+            [
+              TargetPlatform.android,
+              TargetPlatform.iOS,
+            ].contains(platform ?? defaultTargetPlatform);
       case PlatformStorageCreationParamsProperty.webStorageType:
-        return kIsWeb && platform == null
-            ? true
-            : ((kIsWeb && platform != null) || !kIsWeb) &&
-                  [
-                    TargetPlatform.android,
-                    TargetPlatform.iOS,
-                    TargetPlatform.macOS,
-                    TargetPlatform.windows,
-                    TargetPlatform.linux,
-                  ].contains(platform ?? defaultTargetPlatform);
+        return ((kIsWeb && platform != null) || !kIsWeb) &&
+            [
+              TargetPlatform.android,
+              TargetPlatform.iOS,
+            ].contains(platform ?? defaultTargetPlatform);
     }
   }
 }
@@ -339,24 +249,15 @@ extension _PlatformLocalStorageCreationParamsClassSupported
   ///**Officially Supported Platforms/Implementations**:
   ///- Android WebView
   ///- iOS WKWebView
-  ///- macOS WKWebView
-  ///- Web \<iframe\> but requires same origin
-  ///- Windows WebView2
-  ///- Linux WPE WebKit
   ///
   ///Use the [PlatformLocalStorageCreationParams.isClassSupported] method to check if this class is supported at runtime.
   ///{@endtemplate}
   static bool isClassSupported({TargetPlatform? platform}) {
-    return kIsWeb && platform == null
-        ? true
-        : ((kIsWeb && platform != null) || !kIsWeb) &&
-              [
-                TargetPlatform.android,
-                TargetPlatform.iOS,
-                TargetPlatform.macOS,
-                TargetPlatform.windows,
-                TargetPlatform.linux,
-              ].contains(platform ?? defaultTargetPlatform);
+    return ((kIsWeb && platform != null) || !kIsWeb) &&
+        [
+          TargetPlatform.android,
+          TargetPlatform.iOS,
+        ].contains(platform ?? defaultTargetPlatform);
   }
 }
 
@@ -366,24 +267,15 @@ extension _PlatformLocalStorageClassSupported on PlatformLocalStorage {
   ///**Officially Supported Platforms/Implementations**:
   ///- Android WebView
   ///- iOS WKWebView
-  ///- macOS WKWebView
-  ///- Web \<iframe\> but requires same origin
-  ///- Windows WebView2
-  ///- Linux WPE WebKit
   ///
   ///Use the [PlatformLocalStorage.isClassSupported] method to check if this class is supported at runtime.
   ///{@endtemplate}
   static bool isClassSupported({TargetPlatform? platform}) {
-    return kIsWeb && platform == null
-        ? true
-        : ((kIsWeb && platform != null) || !kIsWeb) &&
-              [
-                TargetPlatform.android,
-                TargetPlatform.iOS,
-                TargetPlatform.macOS,
-                TargetPlatform.windows,
-                TargetPlatform.linux,
-              ].contains(platform ?? defaultTargetPlatform);
+    return ((kIsWeb && platform != null) || !kIsWeb) &&
+        [
+          TargetPlatform.android,
+          TargetPlatform.iOS,
+        ].contains(platform ?? defaultTargetPlatform);
   }
 }
 
@@ -396,10 +288,6 @@ enum PlatformLocalStorageMethod {
   ///**Officially Supported Platforms/Implementations**:
   ///- Android WebView
   ///- iOS WKWebView
-  ///- macOS WKWebView
-  ///- Web \<iframe\> but requires same origin
-  ///- Windows WebView2
-  ///- Linux WPE WebKit
   ///
   ///Use the [PlatformLocalStorage.isMethodSupported] method to check if this method is supported at runtime.
   ///{@endtemplate}
@@ -412,10 +300,6 @@ enum PlatformLocalStorageMethod {
   ///**Officially Supported Platforms/Implementations**:
   ///- Android WebView
   ///- iOS WKWebView
-  ///- macOS WKWebView
-  ///- Web \<iframe\> but requires same origin
-  ///- Windows WebView2
-  ///- Linux WPE WebKit
   ///
   ///Use the [PlatformLocalStorage.isMethodSupported] method to check if this method is supported at runtime.
   ///{@endtemplate}
@@ -428,10 +312,6 @@ enum PlatformLocalStorageMethod {
   ///**Officially Supported Platforms/Implementations**:
   ///- Android WebView
   ///- iOS WKWebView
-  ///- macOS WKWebView
-  ///- Web \<iframe\> but requires same origin
-  ///- Windows WebView2
-  ///- Linux WPE WebKit
   ///
   ///**Parameters - Officially Supported Platforms/Implementations**:
   ///- [key]: all platforms
@@ -447,10 +327,6 @@ enum PlatformLocalStorageMethod {
   ///**Officially Supported Platforms/Implementations**:
   ///- Android WebView
   ///- iOS WKWebView
-  ///- macOS WKWebView
-  ///- Web \<iframe\> but requires same origin
-  ///- Windows WebView2
-  ///- Linux WPE WebKit
   ///
   ///Use the [PlatformLocalStorage.isMethodSupported] method to check if this method is supported at runtime.
   ///{@endtemplate}
@@ -463,10 +339,6 @@ enum PlatformLocalStorageMethod {
   ///**Officially Supported Platforms/Implementations**:
   ///- Android WebView
   ///- iOS WKWebView
-  ///- macOS WKWebView
-  ///- Web \<iframe\> but requires same origin
-  ///- Windows WebView2
-  ///- Linux WPE WebKit
   ///
   ///**Parameters - Officially Supported Platforms/Implementations**:
   ///- [index]: all platforms
@@ -482,10 +354,6 @@ enum PlatformLocalStorageMethod {
   ///**Officially Supported Platforms/Implementations**:
   ///- Android WebView
   ///- iOS WKWebView
-  ///- macOS WKWebView
-  ///- Web \<iframe\> but requires same origin
-  ///- Windows WebView2
-  ///- Linux WPE WebKit
   ///
   ///Use the [PlatformLocalStorage.isMethodSupported] method to check if this method is supported at runtime.
   ///{@endtemplate}
@@ -498,10 +366,6 @@ enum PlatformLocalStorageMethod {
   ///**Officially Supported Platforms/Implementations**:
   ///- Android WebView
   ///- iOS WKWebView
-  ///- macOS WKWebView
-  ///- Web \<iframe\> but requires same origin
-  ///- Windows WebView2
-  ///- Linux WPE WebKit
   ///
   ///**Parameters - Officially Supported Platforms/Implementations**:
   ///- [key]: all platforms
@@ -517,10 +381,6 @@ enum PlatformLocalStorageMethod {
   ///**Officially Supported Platforms/Implementations**:
   ///- Android WebView
   ///- iOS WKWebView
-  ///- macOS WKWebView
-  ///- Web \<iframe\> but requires same origin
-  ///- Windows WebView2
-  ///- Linux WPE WebKit
   ///
   ///**Parameters - Officially Supported Platforms/Implementations**:
   ///- [key]: all platforms
@@ -538,93 +398,53 @@ extension _PlatformLocalStorageMethodSupported on PlatformLocalStorage {
   }) {
     switch (method) {
       case PlatformLocalStorageMethod.clear:
-        return kIsWeb && platform == null
-            ? true
-            : ((kIsWeb && platform != null) || !kIsWeb) &&
-                  [
-                    TargetPlatform.android,
-                    TargetPlatform.iOS,
-                    TargetPlatform.macOS,
-                    TargetPlatform.windows,
-                    TargetPlatform.linux,
-                  ].contains(platform ?? defaultTargetPlatform);
+        return ((kIsWeb && platform != null) || !kIsWeb) &&
+            [
+              TargetPlatform.android,
+              TargetPlatform.iOS,
+            ].contains(platform ?? defaultTargetPlatform);
       case PlatformLocalStorageMethod.dispose:
-        return kIsWeb && platform == null
-            ? true
-            : ((kIsWeb && platform != null) || !kIsWeb) &&
-                  [
-                    TargetPlatform.android,
-                    TargetPlatform.iOS,
-                    TargetPlatform.macOS,
-                    TargetPlatform.windows,
-                    TargetPlatform.linux,
-                  ].contains(platform ?? defaultTargetPlatform);
+        return ((kIsWeb && platform != null) || !kIsWeb) &&
+            [
+              TargetPlatform.android,
+              TargetPlatform.iOS,
+            ].contains(platform ?? defaultTargetPlatform);
       case PlatformLocalStorageMethod.getItem:
-        return kIsWeb && platform == null
-            ? true
-            : ((kIsWeb && platform != null) || !kIsWeb) &&
-                  [
-                    TargetPlatform.android,
-                    TargetPlatform.iOS,
-                    TargetPlatform.macOS,
-                    TargetPlatform.windows,
-                    TargetPlatform.linux,
-                  ].contains(platform ?? defaultTargetPlatform);
+        return ((kIsWeb && platform != null) || !kIsWeb) &&
+            [
+              TargetPlatform.android,
+              TargetPlatform.iOS,
+            ].contains(platform ?? defaultTargetPlatform);
       case PlatformLocalStorageMethod.getItems:
-        return kIsWeb && platform == null
-            ? true
-            : ((kIsWeb && platform != null) || !kIsWeb) &&
-                  [
-                    TargetPlatform.android,
-                    TargetPlatform.iOS,
-                    TargetPlatform.macOS,
-                    TargetPlatform.windows,
-                    TargetPlatform.linux,
-                  ].contains(platform ?? defaultTargetPlatform);
+        return ((kIsWeb && platform != null) || !kIsWeb) &&
+            [
+              TargetPlatform.android,
+              TargetPlatform.iOS,
+            ].contains(platform ?? defaultTargetPlatform);
       case PlatformLocalStorageMethod.key:
-        return kIsWeb && platform == null
-            ? true
-            : ((kIsWeb && platform != null) || !kIsWeb) &&
-                  [
-                    TargetPlatform.android,
-                    TargetPlatform.iOS,
-                    TargetPlatform.macOS,
-                    TargetPlatform.windows,
-                    TargetPlatform.linux,
-                  ].contains(platform ?? defaultTargetPlatform);
+        return ((kIsWeb && platform != null) || !kIsWeb) &&
+            [
+              TargetPlatform.android,
+              TargetPlatform.iOS,
+            ].contains(platform ?? defaultTargetPlatform);
       case PlatformLocalStorageMethod.length:
-        return kIsWeb && platform == null
-            ? true
-            : ((kIsWeb && platform != null) || !kIsWeb) &&
-                  [
-                    TargetPlatform.android,
-                    TargetPlatform.iOS,
-                    TargetPlatform.macOS,
-                    TargetPlatform.windows,
-                    TargetPlatform.linux,
-                  ].contains(platform ?? defaultTargetPlatform);
+        return ((kIsWeb && platform != null) || !kIsWeb) &&
+            [
+              TargetPlatform.android,
+              TargetPlatform.iOS,
+            ].contains(platform ?? defaultTargetPlatform);
       case PlatformLocalStorageMethod.removeItem:
-        return kIsWeb && platform == null
-            ? true
-            : ((kIsWeb && platform != null) || !kIsWeb) &&
-                  [
-                    TargetPlatform.android,
-                    TargetPlatform.iOS,
-                    TargetPlatform.macOS,
-                    TargetPlatform.windows,
-                    TargetPlatform.linux,
-                  ].contains(platform ?? defaultTargetPlatform);
+        return ((kIsWeb && platform != null) || !kIsWeb) &&
+            [
+              TargetPlatform.android,
+              TargetPlatform.iOS,
+            ].contains(platform ?? defaultTargetPlatform);
       case PlatformLocalStorageMethod.setItem:
-        return kIsWeb && platform == null
-            ? true
-            : ((kIsWeb && platform != null) || !kIsWeb) &&
-                  [
-                    TargetPlatform.android,
-                    TargetPlatform.iOS,
-                    TargetPlatform.macOS,
-                    TargetPlatform.windows,
-                    TargetPlatform.linux,
-                  ].contains(platform ?? defaultTargetPlatform);
+        return ((kIsWeb && platform != null) || !kIsWeb) &&
+            [
+              TargetPlatform.android,
+              TargetPlatform.iOS,
+            ].contains(platform ?? defaultTargetPlatform);
     }
   }
 }
@@ -636,24 +456,15 @@ extension _PlatformSessionStorageCreationParamsClassSupported
   ///**Officially Supported Platforms/Implementations**:
   ///- Android WebView
   ///- iOS WKWebView
-  ///- macOS WKWebView
-  ///- Web \<iframe\> but requires same origin
-  ///- Windows WebView2
-  ///- Linux WPE WebKit
   ///
   ///Use the [PlatformSessionStorageCreationParams.isClassSupported] method to check if this class is supported at runtime.
   ///{@endtemplate}
   static bool isClassSupported({TargetPlatform? platform}) {
-    return kIsWeb && platform == null
-        ? true
-        : ((kIsWeb && platform != null) || !kIsWeb) &&
-              [
-                TargetPlatform.android,
-                TargetPlatform.iOS,
-                TargetPlatform.macOS,
-                TargetPlatform.windows,
-                TargetPlatform.linux,
-              ].contains(platform ?? defaultTargetPlatform);
+    return ((kIsWeb && platform != null) || !kIsWeb) &&
+        [
+          TargetPlatform.android,
+          TargetPlatform.iOS,
+        ].contains(platform ?? defaultTargetPlatform);
   }
 }
 
@@ -663,24 +474,15 @@ extension _PlatformSessionStorageClassSupported on PlatformSessionStorage {
   ///**Officially Supported Platforms/Implementations**:
   ///- Android WebView
   ///- iOS WKWebView
-  ///- macOS WKWebView
-  ///- Web \<iframe\> but requires same origin
-  ///- Windows WebView2
-  ///- Linux WPE WebKit
   ///
   ///Use the [PlatformSessionStorage.isClassSupported] method to check if this class is supported at runtime.
   ///{@endtemplate}
   static bool isClassSupported({TargetPlatform? platform}) {
-    return kIsWeb && platform == null
-        ? true
-        : ((kIsWeb && platform != null) || !kIsWeb) &&
-              [
-                TargetPlatform.android,
-                TargetPlatform.iOS,
-                TargetPlatform.macOS,
-                TargetPlatform.windows,
-                TargetPlatform.linux,
-              ].contains(platform ?? defaultTargetPlatform);
+    return ((kIsWeb && platform != null) || !kIsWeb) &&
+        [
+          TargetPlatform.android,
+          TargetPlatform.iOS,
+        ].contains(platform ?? defaultTargetPlatform);
   }
 }
 
@@ -693,10 +495,6 @@ enum PlatformSessionStorageMethod {
   ///**Officially Supported Platforms/Implementations**:
   ///- Android WebView
   ///- iOS WKWebView
-  ///- macOS WKWebView
-  ///- Web \<iframe\> but requires same origin
-  ///- Windows WebView2
-  ///- Linux WPE WebKit
   ///
   ///Use the [PlatformSessionStorage.isMethodSupported] method to check if this method is supported at runtime.
   ///{@endtemplate}
@@ -709,10 +507,6 @@ enum PlatformSessionStorageMethod {
   ///**Officially Supported Platforms/Implementations**:
   ///- Android WebView
   ///- iOS WKWebView
-  ///- macOS WKWebView
-  ///- Web \<iframe\> but requires same origin
-  ///- Windows WebView2
-  ///- Linux WPE WebKit
   ///
   ///Use the [PlatformSessionStorage.isMethodSupported] method to check if this method is supported at runtime.
   ///{@endtemplate}
@@ -725,10 +519,6 @@ enum PlatformSessionStorageMethod {
   ///**Officially Supported Platforms/Implementations**:
   ///- Android WebView
   ///- iOS WKWebView
-  ///- macOS WKWebView
-  ///- Web \<iframe\> but requires same origin
-  ///- Windows WebView2
-  ///- Linux WPE WebKit
   ///
   ///**Parameters - Officially Supported Platforms/Implementations**:
   ///- [key]: all platforms
@@ -744,10 +534,6 @@ enum PlatformSessionStorageMethod {
   ///**Officially Supported Platforms/Implementations**:
   ///- Android WebView
   ///- iOS WKWebView
-  ///- macOS WKWebView
-  ///- Web \<iframe\> but requires same origin
-  ///- Windows WebView2
-  ///- Linux WPE WebKit
   ///
   ///Use the [PlatformSessionStorage.isMethodSupported] method to check if this method is supported at runtime.
   ///{@endtemplate}
@@ -760,10 +546,6 @@ enum PlatformSessionStorageMethod {
   ///**Officially Supported Platforms/Implementations**:
   ///- Android WebView
   ///- iOS WKWebView
-  ///- macOS WKWebView
-  ///- Web \<iframe\> but requires same origin
-  ///- Windows WebView2
-  ///- Linux WPE WebKit
   ///
   ///**Parameters - Officially Supported Platforms/Implementations**:
   ///- [index]: all platforms
@@ -779,10 +561,6 @@ enum PlatformSessionStorageMethod {
   ///**Officially Supported Platforms/Implementations**:
   ///- Android WebView
   ///- iOS WKWebView
-  ///- macOS WKWebView
-  ///- Web \<iframe\> but requires same origin
-  ///- Windows WebView2
-  ///- Linux WPE WebKit
   ///
   ///Use the [PlatformSessionStorage.isMethodSupported] method to check if this method is supported at runtime.
   ///{@endtemplate}
@@ -795,10 +573,6 @@ enum PlatformSessionStorageMethod {
   ///**Officially Supported Platforms/Implementations**:
   ///- Android WebView
   ///- iOS WKWebView
-  ///- macOS WKWebView
-  ///- Web \<iframe\> but requires same origin
-  ///- Windows WebView2
-  ///- Linux WPE WebKit
   ///
   ///**Parameters - Officially Supported Platforms/Implementations**:
   ///- [key]: all platforms
@@ -814,10 +588,6 @@ enum PlatformSessionStorageMethod {
   ///**Officially Supported Platforms/Implementations**:
   ///- Android WebView
   ///- iOS WKWebView
-  ///- macOS WKWebView
-  ///- Web \<iframe\> but requires same origin
-  ///- Windows WebView2
-  ///- Linux WPE WebKit
   ///
   ///**Parameters - Officially Supported Platforms/Implementations**:
   ///- [key]: all platforms
@@ -835,93 +605,53 @@ extension _PlatformSessionStorageMethodSupported on PlatformSessionStorage {
   }) {
     switch (method) {
       case PlatformSessionStorageMethod.clear:
-        return kIsWeb && platform == null
-            ? true
-            : ((kIsWeb && platform != null) || !kIsWeb) &&
-                  [
-                    TargetPlatform.android,
-                    TargetPlatform.iOS,
-                    TargetPlatform.macOS,
-                    TargetPlatform.windows,
-                    TargetPlatform.linux,
-                  ].contains(platform ?? defaultTargetPlatform);
+        return ((kIsWeb && platform != null) || !kIsWeb) &&
+            [
+              TargetPlatform.android,
+              TargetPlatform.iOS,
+            ].contains(platform ?? defaultTargetPlatform);
       case PlatformSessionStorageMethod.dispose:
-        return kIsWeb && platform == null
-            ? true
-            : ((kIsWeb && platform != null) || !kIsWeb) &&
-                  [
-                    TargetPlatform.android,
-                    TargetPlatform.iOS,
-                    TargetPlatform.macOS,
-                    TargetPlatform.windows,
-                    TargetPlatform.linux,
-                  ].contains(platform ?? defaultTargetPlatform);
+        return ((kIsWeb && platform != null) || !kIsWeb) &&
+            [
+              TargetPlatform.android,
+              TargetPlatform.iOS,
+            ].contains(platform ?? defaultTargetPlatform);
       case PlatformSessionStorageMethod.getItem:
-        return kIsWeb && platform == null
-            ? true
-            : ((kIsWeb && platform != null) || !kIsWeb) &&
-                  [
-                    TargetPlatform.android,
-                    TargetPlatform.iOS,
-                    TargetPlatform.macOS,
-                    TargetPlatform.windows,
-                    TargetPlatform.linux,
-                  ].contains(platform ?? defaultTargetPlatform);
+        return ((kIsWeb && platform != null) || !kIsWeb) &&
+            [
+              TargetPlatform.android,
+              TargetPlatform.iOS,
+            ].contains(platform ?? defaultTargetPlatform);
       case PlatformSessionStorageMethod.getItems:
-        return kIsWeb && platform == null
-            ? true
-            : ((kIsWeb && platform != null) || !kIsWeb) &&
-                  [
-                    TargetPlatform.android,
-                    TargetPlatform.iOS,
-                    TargetPlatform.macOS,
-                    TargetPlatform.windows,
-                    TargetPlatform.linux,
-                  ].contains(platform ?? defaultTargetPlatform);
+        return ((kIsWeb && platform != null) || !kIsWeb) &&
+            [
+              TargetPlatform.android,
+              TargetPlatform.iOS,
+            ].contains(platform ?? defaultTargetPlatform);
       case PlatformSessionStorageMethod.key:
-        return kIsWeb && platform == null
-            ? true
-            : ((kIsWeb && platform != null) || !kIsWeb) &&
-                  [
-                    TargetPlatform.android,
-                    TargetPlatform.iOS,
-                    TargetPlatform.macOS,
-                    TargetPlatform.windows,
-                    TargetPlatform.linux,
-                  ].contains(platform ?? defaultTargetPlatform);
+        return ((kIsWeb && platform != null) || !kIsWeb) &&
+            [
+              TargetPlatform.android,
+              TargetPlatform.iOS,
+            ].contains(platform ?? defaultTargetPlatform);
       case PlatformSessionStorageMethod.length:
-        return kIsWeb && platform == null
-            ? true
-            : ((kIsWeb && platform != null) || !kIsWeb) &&
-                  [
-                    TargetPlatform.android,
-                    TargetPlatform.iOS,
-                    TargetPlatform.macOS,
-                    TargetPlatform.windows,
-                    TargetPlatform.linux,
-                  ].contains(platform ?? defaultTargetPlatform);
+        return ((kIsWeb && platform != null) || !kIsWeb) &&
+            [
+              TargetPlatform.android,
+              TargetPlatform.iOS,
+            ].contains(platform ?? defaultTargetPlatform);
       case PlatformSessionStorageMethod.removeItem:
-        return kIsWeb && platform == null
-            ? true
-            : ((kIsWeb && platform != null) || !kIsWeb) &&
-                  [
-                    TargetPlatform.android,
-                    TargetPlatform.iOS,
-                    TargetPlatform.macOS,
-                    TargetPlatform.windows,
-                    TargetPlatform.linux,
-                  ].contains(platform ?? defaultTargetPlatform);
+        return ((kIsWeb && platform != null) || !kIsWeb) &&
+            [
+              TargetPlatform.android,
+              TargetPlatform.iOS,
+            ].contains(platform ?? defaultTargetPlatform);
       case PlatformSessionStorageMethod.setItem:
-        return kIsWeb && platform == null
-            ? true
-            : ((kIsWeb && platform != null) || !kIsWeb) &&
-                  [
-                    TargetPlatform.android,
-                    TargetPlatform.iOS,
-                    TargetPlatform.macOS,
-                    TargetPlatform.windows,
-                    TargetPlatform.linux,
-                  ].contains(platform ?? defaultTargetPlatform);
+        return ((kIsWeb && platform != null) || !kIsWeb) &&
+            [
+              TargetPlatform.android,
+              TargetPlatform.iOS,
+            ].contains(platform ?? defaultTargetPlatform);
     }
   }
 }

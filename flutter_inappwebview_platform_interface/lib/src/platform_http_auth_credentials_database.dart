@@ -16,14 +16,7 @@ part 'platform_http_auth_credentials_database.g.dart';
 ///{@endtemplate}
 ///
 ///{@macro flutter_inappwebview_platform_interface.PlatformHttpAuthCredentialDatabaseCreationParams.supported_platforms}
-@SupportedPlatforms(
-  platforms: [
-    AndroidPlatform(),
-    IOSPlatform(),
-    MacOSPlatform(),
-    LinuxPlatform(),
-  ],
-)
+@SupportedPlatforms(platforms: [AndroidPlatform(), IOSPlatform()])
 @immutable
 class PlatformHttpAuthCredentialDatabaseCreationParams {
   /// Used by the platform implementation to create a new [PlatformHttpAuthCredentialDatabase].
@@ -52,14 +45,6 @@ class PlatformHttpAuthCredentialDatabaseCreationParams {
     IOSPlatform(
       note:
           'It is implemented using the [URLCredentialStorage](https://developer.apple.com/documentation/foundation/urlcredentialstorage) class.',
-    ),
-    MacOSPlatform(
-      note:
-          'It is implemented using the [URLCredentialStorage](https://developer.apple.com/documentation/foundation/urlcredentialstorage) class.',
-    ),
-    LinuxPlatform(
-      note:
-          'Implemented using libsecret for secure credential storage in the system keyring (gnome-keyring, KDE Wallet, etc.).',
     ),
   ],
 )
@@ -128,12 +113,6 @@ abstract class PlatformHttpAuthCredentialDatabase extends PlatformInterface {
         apiUrl:
             'https://developer.apple.com/documentation/foundation/urlcredentialstorage/1413859-allcredentials',
       ),
-      MacOSPlatform(
-        apiName: 'URLCredentialStorage.allCredentials',
-        apiUrl:
-            'https://developer.apple.com/documentation/foundation/urlcredentialstorage/1413859-allcredentials',
-      ),
-      LinuxPlatform(note: 'Implemented using libsecret for secure storage.'),
     ],
   )
   Future<List<URLProtectionSpaceHttpAuthCredentials>> getAllAuthCredentials() {
@@ -147,14 +126,7 @@ abstract class PlatformHttpAuthCredentialDatabase extends PlatformInterface {
   ///{@endtemplate}
   ///
   ///{@macro flutter_inappwebview_platform_interface.PlatformHttpAuthCredentialDatabase.getHttpAuthCredentials.supported_platforms}
-  @SupportedPlatforms(
-    platforms: [
-      AndroidPlatform(),
-      IOSPlatform(),
-      MacOSPlatform(),
-      LinuxPlatform(),
-    ],
-  )
+  @SupportedPlatforms(platforms: [AndroidPlatform(), IOSPlatform()])
   Future<List<URLCredential>> getHttpAuthCredentials({
     required URLProtectionSpace protectionSpace,
   }) {
@@ -176,12 +148,6 @@ abstract class PlatformHttpAuthCredentialDatabase extends PlatformInterface {
         apiUrl:
             'https://developer.apple.com/documentation/foundation/urlcredentialstorage/1407227-set',
       ),
-      MacOSPlatform(
-        apiName: 'URLCredentialStorage.set',
-        apiUrl:
-            'https://developer.apple.com/documentation/foundation/urlcredentialstorage/1407227-set',
-      ),
-      LinuxPlatform(note: 'Implemented using libsecret for secure storage.'),
     ],
   )
   Future<void> setHttpAuthCredential({
@@ -206,12 +172,6 @@ abstract class PlatformHttpAuthCredentialDatabase extends PlatformInterface {
         apiUrl:
             'https://developer.apple.com/documentation/foundation/urlcredentialstorage/1408664-remove',
       ),
-      MacOSPlatform(
-        apiName: 'URLCredentialStorage.remove',
-        apiUrl:
-            'https://developer.apple.com/documentation/foundation/urlcredentialstorage/1408664-remove',
-      ),
-      LinuxPlatform(note: 'Implemented using libsecret for secure storage.'),
     ],
   )
   Future<void> removeHttpAuthCredential({
@@ -228,14 +188,7 @@ abstract class PlatformHttpAuthCredentialDatabase extends PlatformInterface {
   ///{@endtemplate}
   ///
   ///{@macro flutter_inappwebview_platform_interface.PlatformHttpAuthCredentialDatabase.removeHttpAuthCredentials.supported_platforms}
-  @SupportedPlatforms(
-    platforms: [
-      AndroidPlatform(),
-      IOSPlatform(),
-      MacOSPlatform(),
-      LinuxPlatform(),
-    ],
-  )
+  @SupportedPlatforms(platforms: [AndroidPlatform(), IOSPlatform()])
   Future<void> removeHttpAuthCredentials({
     required URLProtectionSpace protectionSpace,
   }) {
@@ -249,14 +202,7 @@ abstract class PlatformHttpAuthCredentialDatabase extends PlatformInterface {
   ///{@endtemplate}
   ///
   ///{@macro flutter_inappwebview_platform_interface.PlatformHttpAuthCredentialDatabase.clearAllAuthCredentials.supported_platforms}
-  @SupportedPlatforms(
-    platforms: [
-      AndroidPlatform(),
-      IOSPlatform(),
-      MacOSPlatform(),
-      LinuxPlatform(),
-    ],
-  )
+  @SupportedPlatforms(platforms: [AndroidPlatform(), IOSPlatform()])
   Future<void> clearAllAuthCredentials() {
     throw UnimplementedError(
       'clearAllAuthCredentials is not implemented on the current platform',

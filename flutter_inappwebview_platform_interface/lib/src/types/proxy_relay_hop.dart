@@ -14,15 +14,15 @@ part 'proxy_relay_hop.g.dart';
 @ExchangeableObject()
 class ProxyRelayHop_ {
   ///A URL or host endpoint identifying the relay server accessible using HTTP/3.
-  @SupportedPlatforms(platforms: [IOSPlatform(), MacOSPlatform()])
+  @SupportedPlatforms(platforms: [IOSPlatform()])
   String? http3RelayEndpoint;
 
   ///A URL or host endpoint identifying the relay server accessible using HTTP/2.
-  @SupportedPlatforms(platforms: [IOSPlatform(), MacOSPlatform()])
+  @SupportedPlatforms(platforms: [IOSPlatform()])
   String? http2RelayEndpoint;
 
   ///A dictionary of additional HTTP headers to send as part of CONNECT requests to the relay.
-  @SupportedPlatforms(platforms: [IOSPlatform(), MacOSPlatform()])
+  @SupportedPlatforms(platforms: [IOSPlatform()])
   Map<String, String>? additionalHTTPHeaders;
 
   @ExchangeableObjectConstructor()

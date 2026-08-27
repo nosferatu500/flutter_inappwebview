@@ -43,12 +43,6 @@ class WebResourceErrorType_ {
             'https://developer.apple.com/documentation/foundation/urlerror/2293516-badurl',
         value: -1000,
       ),
-      EnumMacOSPlatform(
-        apiName: 'URLError.badURL',
-        apiUrl:
-            'https://developer.apple.com/documentation/foundation/urlerror/2293516-badurl',
-        value: -1000,
-      ),
     ],
   )
   static const BAD_URL = WebResourceErrorType_._internal("BAD_URL");
@@ -67,24 +61,6 @@ class WebResourceErrorType_ {
         apiUrl:
             'https://developer.apple.com/documentation/foundation/urlerror/code/2883001-cannotconnecttohost',
         value: -1004,
-      ),
-      EnumMacOSPlatform(
-        apiName: 'URLError.cannotConnectToHost',
-        apiUrl:
-            'https://developer.apple.com/documentation/foundation/urlerror/code/2883001-cannotconnecttohost',
-        value: -1004,
-      ),
-      EnumWindowsPlatform(
-        apiName: 'COREWEBVIEW2_WEB_ERROR_STATUS_CANNOT_CONNECT',
-        apiUrl:
-            'https://learn.microsoft.com/en-us/microsoft-edge/webview2/reference/win32/webview2-idl?view=webview2-1.0.2210.55#corewebview2_web_error_status',
-        value: 12,
-      ),
-      EnumLinuxPlatform(
-        apiName: 'WEBKIT_NETWORK_ERROR_TRANSPORT',
-        apiUrl:
-            'https://wpewebkit.org/reference/stable/wpe-webkit-2.0/error.NetworkError.html',
-        value: 300,
       ),
     ],
   )
@@ -137,18 +113,6 @@ class WebResourceErrorType_ {
             'https://developer.apple.com/documentation/foundation/urlerror/code/2883074-filedoesnotexist',
         value: -1100,
       ),
-      EnumMacOSPlatform(
-        apiName: 'URLError.fileDoesNotExist',
-        apiUrl:
-            'https://developer.apple.com/documentation/foundation/urlerror/code/2883074-filedoesnotexist',
-        value: -1100,
-      ),
-      EnumLinuxPlatform(
-        apiName: 'WEBKIT_NETWORK_ERROR_FILE_DOES_NOT_EXIST',
-        apiUrl:
-            'https://wpewebkit.org/reference/stable/wpe-webkit-2.0/error.NetworkError.html',
-        value: 303,
-      ),
     ],
   )
   static const FILE_NOT_FOUND = WebResourceErrorType_._internal(
@@ -176,18 +140,6 @@ class WebResourceErrorType_ {
         // First entry is canonical (what `toNativeValue()` returns); the rest are accepted
         // inbound only by `fromNativeValue`.
         value: [-1003, -1006],
-      ),
-      EnumMacOSPlatform(
-        apiName: 'URLError.cannotFindHost',
-        apiUrl:
-            'https://developer.apple.com/documentation/foundation/urlerror/code/2883157-cannotfindhost',
-        value: -1003,
-      ),
-      EnumWindowsPlatform(
-        apiName: 'COREWEBVIEW2_WEB_ERROR_STATUS_HOST_NAME_NOT_RESOLVED',
-        apiUrl:
-            'https://learn.microsoft.com/en-us/microsoft-edge/webview2/reference/win32/webview2-idl?view=webview2-1.0.2210.55#corewebview2_web_error_status',
-        value: 13,
       ),
     ],
   )
@@ -236,12 +188,6 @@ class WebResourceErrorType_ {
             'https://developer.apple.com/documentation/foundation/urlerror/code/2883099-httptoomanyredirects',
         value: -1007,
       ),
-      EnumMacOSPlatform(
-        apiName: 'URLError.httpTooManyRedirects',
-        apiUrl:
-            'https://developer.apple.com/documentation/foundation/urlerror/code/2883099-httptoomanyredirects',
-        value: -1007,
-      ),
     ],
   )
   static const TOO_MANY_REDIRECTS = WebResourceErrorType_._internal(
@@ -262,18 +208,6 @@ class WebResourceErrorType_ {
         apiUrl:
             'https://developer.apple.com/documentation/foundation/urlerror/code/2883027-timedout',
         value: -1001,
-      ),
-      EnumMacOSPlatform(
-        apiName: 'URLError.timedOut',
-        apiUrl:
-            'https://developer.apple.com/documentation/foundation/urlerror/code/2883027-timedout',
-        value: -1001,
-      ),
-      EnumWindowsPlatform(
-        apiName: 'COREWEBVIEW2_WEB_ERROR_STATUS_TIMEOUT',
-        apiUrl:
-            'https://learn.microsoft.com/en-us/microsoft-edge/webview2/reference/win32/webview2-idl?view=webview2-1.0.2210.55#corewebview2_web_error_status',
-        value: 7,
       ),
     ],
   )
@@ -308,24 +242,6 @@ class WebResourceErrorType_ {
         apiUrl:
             'https://developer.apple.com/documentation/foundation/urlerror/2293357-unknown',
         value: -1,
-      ),
-      EnumMacOSPlatform(
-        apiName: 'URLError.unknown',
-        apiUrl:
-            'https://developer.apple.com/documentation/foundation/urlerror/2293357-unknown',
-        value: -1,
-      ),
-      EnumWindowsPlatform(
-        apiName: 'COREWEBVIEW2_WEB_ERROR_STATUS_UNKNOWN',
-        apiUrl:
-            'https://learn.microsoft.com/en-us/microsoft-edge/webview2/reference/win32/webview2-idl?view=webview2-1.0.2210.55#corewebview2_web_error_status',
-        value: 0,
-      ),
-      EnumLinuxPlatform(
-        apiName: 'WEBKIT_NETWORK_ERROR_FAILED',
-        apiUrl:
-            'https://wpewebkit.org/reference/stable/wpe-webkit-2.0/error.NetworkError.html',
-        value: 399,
       ),
     ],
   )
@@ -377,18 +293,6 @@ class WebResourceErrorType_ {
             'https://developer.apple.com/documentation/foundation/urlerror/code/2883043-unsupportedurl',
         value: -1002,
       ),
-      EnumMacOSPlatform(
-        apiName: 'URLError.unsupportedURL',
-        apiUrl:
-            'https://developer.apple.com/documentation/foundation/urlerror/code/2883043-unsupportedurl',
-        value: -1002,
-      ),
-      EnumLinuxPlatform(
-        apiName: 'WEBKIT_NETWORK_ERROR_UNKNOWN_PROTOCOL',
-        apiUrl:
-            'https://wpewebkit.org/reference/stable/wpe-webkit-2.0/error.NetworkError.html',
-        value: 301,
-      ),
     ],
   )
   static const UNSUPPORTED_SCHEME = WebResourceErrorType_._internal(
@@ -404,24 +308,6 @@ class WebResourceErrorType_ {
             'https://developer.apple.com/documentation/foundation/urlerror/code/2883178-cancelled',
         value: -999,
       ),
-      EnumMacOSPlatform(
-        apiName: 'URLError.cancelled',
-        apiUrl:
-            'https://developer.apple.com/documentation/foundation/urlerror/code/2883178-cancelled',
-        value: -999,
-      ),
-      EnumWindowsPlatform(
-        apiName: 'COREWEBVIEW2_WEB_ERROR_STATUS_OPERATION_CANCELED',
-        apiUrl:
-            'https://learn.microsoft.com/en-us/microsoft-edge/webview2/reference/win32/webview2-idl?view=webview2-1.0.2210.55#corewebview2_web_error_status',
-        value: 14,
-      ),
-      EnumLinuxPlatform(
-        apiName: 'WEBKIT_NETWORK_ERROR_CANCELLED',
-        apiUrl:
-            'https://wpewebkit.org/reference/stable/wpe-webkit-2.0/error.NetworkError.html',
-        value: 302,
-      ),
     ],
   )
   static const CANCELLED = WebResourceErrorType_._internal("CANCELLED");
@@ -435,18 +321,6 @@ class WebResourceErrorType_ {
             'https://developer.apple.com/documentation/foundation/urlerror/2293759-networkconnectionlost',
         value: -1005,
       ),
-      EnumMacOSPlatform(
-        apiName: 'URLError.networkConnectionLost',
-        apiUrl:
-            'https://developer.apple.com/documentation/foundation/urlerror/2293759-networkconnectionlost',
-        value: -1005,
-      ),
-      EnumWindowsPlatform(
-        apiName: 'COREWEBVIEW2_WEB_ERROR_STATUS_DISCONNECTED',
-        apiUrl:
-            'https://learn.microsoft.com/en-us/microsoft-edge/webview2/reference/win32/webview2-idl?view=webview2-1.0.2210.55#corewebview2_web_error_status',
-        value: 11,
-      ),
     ],
   )
   static const NETWORK_CONNECTION_LOST = WebResourceErrorType_._internal(
@@ -458,12 +332,6 @@ class WebResourceErrorType_ {
   @EnumSupportedPlatforms(
     platforms: [
       EnumIOSPlatform(
-        apiName: 'URLError.resourceUnavailable',
-        apiUrl:
-            'https://developer.apple.com/documentation/foundation/urlerror/2293555-resourceunavailable',
-        value: -1008,
-      ),
-      EnumMacOSPlatform(
         apiName: 'URLError.resourceUnavailable',
         apiUrl:
             'https://developer.apple.com/documentation/foundation/urlerror/2293555-resourceunavailable',
@@ -484,12 +352,6 @@ class WebResourceErrorType_ {
             'https://developer.apple.com/documentation/foundation/urlerror/2293104-notconnectedtointernet',
         value: -1009,
       ),
-      EnumMacOSPlatform(
-        apiName: 'URLError.notConnectedToInternet',
-        apiUrl:
-            'https://developer.apple.com/documentation/foundation/urlerror/2293104-notconnectedtointernet',
-        value: -1009,
-      ),
     ],
   )
   static const NOT_CONNECTED_TO_INTERNET = WebResourceErrorType_._internal(
@@ -500,12 +362,6 @@ class WebResourceErrorType_ {
   @EnumSupportedPlatforms(
     platforms: [
       EnumIOSPlatform(
-        apiName: 'URLError.redirectToNonExistentLocation',
-        apiUrl:
-            'https://developer.apple.com/documentation/foundation/urlerror/2293066-redirecttononexistentlocation',
-        value: -1010,
-      ),
-      EnumMacOSPlatform(
         apiName: 'URLError.redirectToNonExistentLocation',
         apiUrl:
             'https://developer.apple.com/documentation/foundation/urlerror/2293066-redirecttononexistentlocation',
@@ -525,19 +381,6 @@ class WebResourceErrorType_ {
             'https://developer.apple.com/documentation/foundation/urlerror/2293606-badserverresponse',
         value: -1011,
       ),
-      EnumMacOSPlatform(
-        apiName: 'URLError.badServerResponse',
-        apiUrl:
-            'https://developer.apple.com/documentation/foundation/urlerror/2293606-badserverresponse',
-        value: -1011,
-      ),
-      EnumWindowsPlatform(
-        apiName:
-            'COREWEBVIEW2_WEB_ERROR_STATUS_ERROR_HTTP_INVALID_SERVER_RESPONSE',
-        apiUrl:
-            'https://learn.microsoft.com/en-us/microsoft-edge/webview2/reference/win32/webview2-idl?view=webview2-1.0.2210.55#corewebview2_web_error_status',
-        value: 8,
-      ),
     ],
   )
   static const BAD_SERVER_RESPONSE = WebResourceErrorType_._internal(
@@ -549,12 +392,6 @@ class WebResourceErrorType_ {
   @EnumSupportedPlatforms(
     platforms: [
       EnumIOSPlatform(
-        apiName: 'URLError.userCancelledAuthentication',
-        apiUrl:
-            'https://developer.apple.com/documentation/foundation/urlerror/2293330-usercancelledauthentication',
-        value: -1012,
-      ),
-      EnumMacOSPlatform(
         apiName: 'URLError.userCancelledAuthentication',
         apiUrl:
             'https://developer.apple.com/documentation/foundation/urlerror/2293330-usercancelledauthentication',
@@ -575,19 +412,6 @@ class WebResourceErrorType_ {
             'https://developer.apple.com/documentation/foundation/urlerror/2293560-userauthenticationrequired',
         value: -1013,
       ),
-      EnumMacOSPlatform(
-        apiName: 'URLError.userAuthenticationRequired',
-        apiUrl:
-            'https://developer.apple.com/documentation/foundation/urlerror/2293560-userauthenticationrequired',
-        value: -1013,
-      ),
-      EnumWindowsPlatform(
-        apiName:
-            'COREWEBVIEW2_WEB_ERROR_STATUS_VALID_AUTHENTICATION_CREDENTIALS_REQUIRED',
-        apiUrl:
-            'https://learn.microsoft.com/en-us/microsoft-edge/webview2/reference/win32/webview2-idl?view=webview2-1.0.2210.55#corewebview2_web_error_status',
-        value: 17,
-      ),
     ],
   )
   static const USER_AUTHENTICATION_REQUIRED = WebResourceErrorType_._internal(
@@ -598,12 +422,6 @@ class WebResourceErrorType_ {
   @EnumSupportedPlatforms(
     platforms: [
       EnumIOSPlatform(
-        apiName: 'URLError.zeroByteResource',
-        apiUrl:
-            'https://developer.apple.com/documentation/foundation/urlerror/2293773-zerobyteresource',
-        value: -1014,
-      ),
-      EnumMacOSPlatform(
         apiName: 'URLError.zeroByteResource',
         apiUrl:
             'https://developer.apple.com/documentation/foundation/urlerror/2293773-zerobyteresource',
@@ -624,12 +442,6 @@ class WebResourceErrorType_ {
             'https://developer.apple.com/documentation/foundation/urlerror/2293573-cannotdecoderawdata',
         value: -1015,
       ),
-      EnumMacOSPlatform(
-        apiName: 'URLError.cannotDecodeRawData',
-        apiUrl:
-            'https://developer.apple.com/documentation/foundation/urlerror/2293573-cannotdecoderawdata',
-        value: -1015,
-      ),
     ],
   )
   static const CANNOT_DECODE_RAW_DATA = WebResourceErrorType_._internal(
@@ -640,12 +452,6 @@ class WebResourceErrorType_ {
   @EnumSupportedPlatforms(
     platforms: [
       EnumIOSPlatform(
-        apiName: 'URLError.cannotDecodeContentData',
-        apiUrl:
-            'https://developer.apple.com/documentation/foundation/urlerror/2292983-cannotdecodecontentdata',
-        value: -1016,
-      ),
-      EnumMacOSPlatform(
         apiName: 'URLError.cannotDecodeContentData',
         apiUrl:
             'https://developer.apple.com/documentation/foundation/urlerror/2292983-cannotdecodecontentdata',
@@ -666,12 +472,6 @@ class WebResourceErrorType_ {
             'https://developer.apple.com/documentation/foundation/urlerror/code/2882919-cannotparseresponse',
         value: -1017,
       ),
-      EnumMacOSPlatform(
-        apiName: 'URLError.cannotParseResponse',
-        apiUrl:
-            'https://developer.apple.com/documentation/foundation/urlerror/code/2882919-cannotparseresponse',
-        value: -1017,
-      ),
     ],
   )
   static const CANNOT_PARSE_RESPONSE = WebResourceErrorType_._internal(
@@ -682,12 +482,6 @@ class WebResourceErrorType_ {
   @EnumSupportedPlatforms(
     platforms: [
       EnumIOSPlatform(
-        apiName: 'URLError.appTransportSecurityRequiresSecureConnection',
-        apiUrl:
-            'https://developer.apple.com/documentation/foundation/urlerror/code/2882980-apptransportsecurityrequiressecu',
-        value: -1022,
-      ),
-      EnumMacOSPlatform(
         apiName: 'URLError.appTransportSecurityRequiresSecureConnection',
         apiUrl:
             'https://developer.apple.com/documentation/foundation/urlerror/code/2882980-apptransportsecurityrequiressecu',
@@ -709,12 +503,6 @@ class WebResourceErrorType_ {
             'https://developer.apple.com/documentation/foundation/urlerror/code/2883220-fileisdirectory',
         value: -1101,
       ),
-      EnumMacOSPlatform(
-        apiName: 'URLError.fileIsDirectory',
-        apiUrl:
-            'https://developer.apple.com/documentation/foundation/urlerror/code/2883220-fileisdirectory',
-        value: -1101,
-      ),
     ],
   )
   static const FILE_IS_DIRECTORY = WebResourceErrorType_._internal(
@@ -725,12 +513,6 @@ class WebResourceErrorType_ {
   @EnumSupportedPlatforms(
     platforms: [
       EnumIOSPlatform(
-        apiName: 'URLError.noPermissionsToReadFile',
-        apiUrl:
-            'https://developer.apple.com/documentation/foundation/urlerror/code/2882941-nopermissionstoreadfile',
-        value: -1102,
-      ),
-      EnumMacOSPlatform(
         apiName: 'URLError.noPermissionsToReadFile',
         apiUrl:
             'https://developer.apple.com/documentation/foundation/urlerror/code/2882941-nopermissionstoreadfile',
@@ -751,12 +533,6 @@ class WebResourceErrorType_ {
             'https://developer.apple.com/documentation/foundation/urlerror/code/2882930-datalengthexceedsmaximum',
         value: -1103,
       ),
-      EnumMacOSPlatform(
-        apiName: 'URLError.dataLengthExceedsMaximum',
-        apiUrl:
-            'https://developer.apple.com/documentation/foundation/urlerror/code/2882930-datalengthexceedsmaximum',
-        value: -1103,
-      ),
     ],
   )
   static const DATA_LENGTH_EXCEEDS_MAXIMUM = WebResourceErrorType_._internal(
@@ -771,17 +547,6 @@ class WebResourceErrorType_ {
         apiUrl:
             'https://developer.apple.com/documentation/foundation/urlerror/code/2883122-secureconnectionfailed',
         value: -1200,
-      ),
-      EnumMacOSPlatform(
-        apiName: 'URLError.secureConnectionFailed',
-        apiUrl:
-            'https://developer.apple.com/documentation/foundation/urlerror/code/2883122-secureconnectionfailed',
-        value: -1200,
-      ),
-      EnumLinuxPlatform(
-        apiName: 'G_TLS_CERTIFICATE_INSECURE',
-        apiUrl: 'https://docs.gtk.org/gio/flags.TlsCertificateFlags.html',
-        value: 32,
       ),
     ],
   )
@@ -798,17 +563,6 @@ class WebResourceErrorType_ {
             'https://developer.apple.com/documentation/foundation/urlerror/code/2883088-servercertificatehasbaddate',
         value: -1201,
       ),
-      EnumMacOSPlatform(
-        apiName: 'URLError.serverCertificateHasBadDate',
-        apiUrl:
-            'https://developer.apple.com/documentation/foundation/urlerror/code/2883088-servercertificatehasbaddate',
-        value: -1201,
-      ),
-      EnumLinuxPlatform(
-        apiName: 'G_TLS_CERTIFICATE_EXPIRED',
-        apiUrl: 'https://docs.gtk.org/gio/flags.TlsCertificateFlags.html',
-        value: 8,
-      ),
     ],
   )
   static const SERVER_CERTIFICATE_HAS_BAD_DATE =
@@ -823,17 +577,6 @@ class WebResourceErrorType_ {
             'https://developer.apple.com/documentation/foundation/urlerror/code/2882976-servercertificateuntrusted',
         value: -1202,
       ),
-      EnumMacOSPlatform(
-        apiName: 'URLError.serverCertificateUntrusted',
-        apiUrl:
-            'https://developer.apple.com/documentation/foundation/urlerror/code/2882976-servercertificateuntrusted',
-        value: -1202,
-      ),
-      EnumLinuxPlatform(
-        apiName: 'G_TLS_CERTIFICATE_UNKNOWN_CA',
-        apiUrl: 'https://docs.gtk.org/gio/flags.TlsCertificateFlags.html',
-        value: 1,
-      ),
     ],
   )
   static const SERVER_CERTIFICATE_UNTRUSTED = WebResourceErrorType_._internal(
@@ -844,12 +587,6 @@ class WebResourceErrorType_ {
   @EnumSupportedPlatforms(
     platforms: [
       EnumIOSPlatform(
-        apiName: 'URLError.serverCertificateHasUnknownRoot',
-        apiUrl:
-            'https://developer.apple.com/documentation/foundation/urlerror/code/2883085-servercertificatehasunknownroot',
-        value: -1203,
-      ),
-      EnumMacOSPlatform(
         apiName: 'URLError.serverCertificateHasUnknownRoot',
         apiUrl:
             'https://developer.apple.com/documentation/foundation/urlerror/code/2883085-servercertificatehasunknownroot',
@@ -869,17 +606,6 @@ class WebResourceErrorType_ {
             'https://developer.apple.com/documentation/foundation/urlerror/code/2882991-servercertificatenotyetvalid',
         value: -1204,
       ),
-      EnumMacOSPlatform(
-        apiName: 'URLError.serverCertificateNotYetValid',
-        apiUrl:
-            'https://developer.apple.com/documentation/foundation/urlerror/code/2882991-servercertificatenotyetvalid',
-        value: -1204,
-      ),
-      EnumLinuxPlatform(
-        apiName: 'G_TLS_CERTIFICATE_NOT_ACTIVATED',
-        apiUrl: 'https://docs.gtk.org/gio/flags.TlsCertificateFlags.html',
-        value: 4,
-      ),
     ],
   )
   static const SERVER_CERTIFICATE_NOT_YET_VALID =
@@ -889,12 +615,6 @@ class WebResourceErrorType_ {
   @EnumSupportedPlatforms(
     platforms: [
       EnumIOSPlatform(
-        apiName: 'URLError.clientCertificateRejected',
-        apiUrl:
-            'https://developer.apple.com/documentation/foundation/urlerror/code/2883091-clientcertificaterejected',
-        value: -1205,
-      ),
-      EnumMacOSPlatform(
         apiName: 'URLError.clientCertificateRejected',
         apiUrl:
             'https://developer.apple.com/documentation/foundation/urlerror/code/2883091-clientcertificaterejected',
@@ -915,12 +635,6 @@ class WebResourceErrorType_ {
             'https://developer.apple.com/documentation/foundation/urlerror/code/2883199-clientcertificaterequired',
         value: -1206,
       ),
-      EnumMacOSPlatform(
-        apiName: 'URLError.clientCertificateRequired',
-        apiUrl:
-            'https://developer.apple.com/documentation/foundation/urlerror/code/2883199-clientcertificaterequired',
-        value: -1206,
-      ),
     ],
   )
   static const CLIENT_CERTIFICATE_REQUIRED = WebResourceErrorType_._internal(
@@ -931,12 +645,6 @@ class WebResourceErrorType_ {
   @EnumSupportedPlatforms(
     platforms: [
       EnumIOSPlatform(
-        apiName: 'URLError.cannotLoadFromNetwork',
-        apiUrl:
-            'https://developer.apple.com/documentation/foundation/urlerror/code/2882968-cannotloadfromnetwork',
-        value: -2000,
-      ),
-      EnumMacOSPlatform(
         apiName: 'URLError.cannotLoadFromNetwork',
         apiUrl:
             'https://developer.apple.com/documentation/foundation/urlerror/code/2882968-cannotloadfromnetwork',
@@ -957,12 +665,6 @@ class WebResourceErrorType_ {
             'https://developer.apple.com/documentation/foundation/urlerror/code/2883204-cannotcreatefile',
         value: -3000,
       ),
-      EnumMacOSPlatform(
-        apiName: 'URLError.cannotCreateFile',
-        apiUrl:
-            'https://developer.apple.com/documentation/foundation/urlerror/code/2883204-cannotcreatefile',
-        value: -3000,
-      ),
     ],
   )
   static const CANNOT_CREATE_FILE = WebResourceErrorType_._internal(
@@ -973,12 +675,6 @@ class WebResourceErrorType_ {
   @EnumSupportedPlatforms(
     platforms: [
       EnumIOSPlatform(
-        apiName: 'URLError.cannotOpenFile',
-        apiUrl:
-            'https://developer.apple.com/documentation/foundation/urlerror/code/2883034-cannotopenfile',
-        value: -3001,
-      ),
-      EnumMacOSPlatform(
         apiName: 'URLError.cannotOpenFile',
         apiUrl:
             'https://developer.apple.com/documentation/foundation/urlerror/code/2883034-cannotopenfile',
@@ -999,12 +695,6 @@ class WebResourceErrorType_ {
             'https://developer.apple.com/documentation/foundation/urlerror/code/2883215-cannotclosefile',
         value: -3002,
       ),
-      EnumMacOSPlatform(
-        apiName: 'URLError.cannotCloseFile',
-        apiUrl:
-            'https://developer.apple.com/documentation/foundation/urlerror/code/2883215-cannotclosefile',
-        value: -3002,
-      ),
     ],
   )
   static const CANNOT_CLOSE_FILE = WebResourceErrorType_._internal(
@@ -1015,12 +705,6 @@ class WebResourceErrorType_ {
   @EnumSupportedPlatforms(
     platforms: [
       EnumIOSPlatform(
-        apiName: 'URLError.cannotWriteToFile',
-        apiUrl:
-            'https://developer.apple.com/documentation/foundation/urlerror/code/2883098-cannotwritetofile',
-        value: -3003,
-      ),
-      EnumMacOSPlatform(
         apiName: 'URLError.cannotWriteToFile',
         apiUrl:
             'https://developer.apple.com/documentation/foundation/urlerror/code/2883098-cannotwritetofile',
@@ -1041,12 +725,6 @@ class WebResourceErrorType_ {
             'https://developer.apple.com/documentation/foundation/urlerror/code/2883202-cannotremovefile',
         value: -3004,
       ),
-      EnumMacOSPlatform(
-        apiName: 'URLError.cannotRemoveFile',
-        apiUrl:
-            'https://developer.apple.com/documentation/foundation/urlerror/code/2883202-cannotremovefile',
-        value: -3004,
-      ),
     ],
   )
   static const CANNOT_REMOVE_FILE = WebResourceErrorType_._internal(
@@ -1057,12 +735,6 @@ class WebResourceErrorType_ {
   @EnumSupportedPlatforms(
     platforms: [
       EnumIOSPlatform(
-        apiName: 'URLError.cannotMoveFile',
-        apiUrl:
-            'https://developer.apple.com/documentation/foundation/urlerror/code/2883180-cannotmovefile',
-        value: -3005,
-      ),
-      EnumMacOSPlatform(
         apiName: 'URLError.cannotMoveFile',
         apiUrl:
             'https://developer.apple.com/documentation/foundation/urlerror/code/2883180-cannotmovefile',
@@ -1083,12 +755,6 @@ class WebResourceErrorType_ {
             'https://developer.apple.com/documentation/foundation/urlerror/code/2883224-downloaddecodingfailedmidstream',
         value: -3006,
       ),
-      EnumMacOSPlatform(
-        apiName: 'URLError.downloadDecodingFailedMidStream',
-        apiUrl:
-            'https://developer.apple.com/documentation/foundation/urlerror/code/2883224-downloaddecodingfailedmidstream',
-        value: -3006,
-      ),
     ],
   )
   static const DOWNLOAD_DECODING_FAILED_MID_STREAM =
@@ -1103,12 +769,6 @@ class WebResourceErrorType_ {
             'https://developer.apple.com/documentation/foundation/urlerror/code/2882936-downloaddecodingfailedtocomplete',
         value: -3007,
       ),
-      EnumMacOSPlatform(
-        apiName: 'URLError.downloadDecodingFailedToComplete',
-        apiUrl:
-            'https://developer.apple.com/documentation/foundation/urlerror/code/2882936-downloaddecodingfailedtocomplete',
-        value: -3007,
-      ),
     ],
   )
   static const DOWNLOAD_DECODING_FAILED_TO_COMPLETE =
@@ -1118,12 +778,6 @@ class WebResourceErrorType_ {
   @EnumSupportedPlatforms(
     platforms: [
       EnumIOSPlatform(
-        apiName: 'URLError.internationalRoamingOff',
-        apiUrl:
-            'https://developer.apple.com/documentation/foundation/urlerror/code/2883134-internationalroamingoff',
-        value: -1018,
-      ),
-      EnumMacOSPlatform(
         apiName: 'URLError.internationalRoamingOff',
         apiUrl:
             'https://developer.apple.com/documentation/foundation/urlerror/code/2883134-internationalroamingoff',
@@ -1144,12 +798,6 @@ class WebResourceErrorType_ {
             'https://developer.apple.com/documentation/foundation/urlerror/code/2883170-callisactive',
         value: -1019,
       ),
-      EnumMacOSPlatform(
-        apiName: 'URLError.callIsActive',
-        apiUrl:
-            'https://developer.apple.com/documentation/foundation/urlerror/code/2883170-callisactive',
-        value: -1019,
-      ),
     ],
   )
   static const CALL_IS_ACTIVE = WebResourceErrorType_._internal(
@@ -1160,12 +808,6 @@ class WebResourceErrorType_ {
   @EnumSupportedPlatforms(
     platforms: [
       EnumIOSPlatform(
-        apiName: 'URLError.dataNotAllowed',
-        apiUrl:
-            'https://developer.apple.com/documentation/foundation/urlerror/code/2883217-datanotallowed',
-        value: -1020,
-      ),
-      EnumMacOSPlatform(
         apiName: 'URLError.dataNotAllowed',
         apiUrl:
             'https://developer.apple.com/documentation/foundation/urlerror/code/2883217-datanotallowed',
@@ -1186,12 +828,6 @@ class WebResourceErrorType_ {
             'https://developer.apple.com/documentation/foundation/urlerror/code/2883176-requestbodystreamexhausted',
         value: -1021,
       ),
-      EnumMacOSPlatform(
-        apiName: 'URLError.requestBodyStreamExhausted',
-        apiUrl:
-            'https://developer.apple.com/documentation/foundation/urlerror/code/2883176-requestbodystreamexhausted',
-        value: -1021,
-      ),
     ],
   )
   static const REQUEST_BODY_STREAM_EXHAUSTED = WebResourceErrorType_._internal(
@@ -1202,12 +838,6 @@ class WebResourceErrorType_ {
   @EnumSupportedPlatforms(
     platforms: [
       EnumIOSPlatform(
-        apiName: 'URLError.backgroundSessionRequiresSharedContainer',
-        apiUrl:
-            'https://developer.apple.com/documentation/foundation/urlerror/code/2883169-backgroundsessionrequiressharedc',
-        value: -995,
-      ),
-      EnumMacOSPlatform(
         apiName: 'URLError.backgroundSessionRequiresSharedContainer',
         apiUrl:
             'https://developer.apple.com/documentation/foundation/urlerror/code/2883169-backgroundsessionrequiressharedc',
@@ -1229,12 +859,6 @@ class WebResourceErrorType_ {
             'https://developer.apple.com/documentation/foundation/urlerror/code/2882923-backgroundsessioninusebyanotherp',
         value: -996,
       ),
-      EnumMacOSPlatform(
-        apiName: 'URLError.backgroundSessionInUseByAnotherProcess',
-        apiUrl:
-            'https://developer.apple.com/documentation/foundation/urlerror/code/2882923-backgroundsessioninusebyanotherp',
-        value: -996,
-      ),
     ],
   )
   static const BACKGROUND_SESSION_IN_USE_BY_ANOTHER_PROCESS =
@@ -1251,262 +875,8 @@ class WebResourceErrorType_ {
             'https://developer.apple.com/documentation/foundation/urlerror/code/2883075-backgroundsessionwasdisconnected',
         value: -997,
       ),
-      EnumMacOSPlatform(
-        apiName: 'URLError.backgroundSessionWasDisconnected',
-        apiUrl:
-            'https://developer.apple.com/documentation/foundation/urlerror/code/2883075-backgroundsessionwasdisconnected',
-        value: -997,
-      ),
     ],
   )
   static const BACKGROUND_SESSION_WAS_DISCONNECTED =
       WebResourceErrorType_._internal("BACKGROUND_SESSION_WAS_DISCONNECTED");
-
-  ///Indicates that the host is unreachable.
-  @EnumSupportedPlatforms(
-    platforms: [
-      EnumWindowsPlatform(
-        apiName: 'COREWEBVIEW2_WEB_ERROR_STATUS_SERVER_UNREACHABLE',
-        apiUrl:
-            'https://learn.microsoft.com/en-us/microsoft-edge/webview2/reference/win32/webview2-idl?view=webview2-1.0.2210.55#corewebview2_web_error_status',
-        value: 6,
-      ),
-    ],
-  )
-  static const SERVER_UNREACHABLE = WebResourceErrorType_._internal(
-    "SERVER_UNREACHABLE",
-  );
-
-  ///Indicates that the connection was stopped.
-  @EnumSupportedPlatforms(
-    platforms: [
-      EnumWindowsPlatform(
-        apiName: 'COREWEBVIEW2_WEB_ERROR_STATUS_CONNECTION_ABORTED',
-        apiUrl:
-            'https://learn.microsoft.com/en-us/microsoft-edge/webview2/reference/win32/webview2-idl?view=webview2-1.0.2210.55#corewebview2_web_error_status',
-        value: 9,
-      ),
-    ],
-  )
-  static const CONNECTION_ABORTED = WebResourceErrorType_._internal(
-    "CONNECTION_ABORTED",
-  );
-
-  ///Indicates that the connection was reset.
-  @EnumSupportedPlatforms(
-    platforms: [
-      EnumWindowsPlatform(
-        apiName: 'COREWEBVIEW2_WEB_ERROR_STATUS_CONNECTION_RESET',
-        apiUrl:
-            'https://learn.microsoft.com/en-us/microsoft-edge/webview2/reference/win32/webview2-idl?view=webview2-1.0.2210.55#corewebview2_web_error_status',
-        value: 10,
-      ),
-    ],
-  )
-  static const RESET = WebResourceErrorType_._internal("RESET");
-
-  ///Indicates that the request redirect failed.
-  @EnumSupportedPlatforms(
-    platforms: [
-      EnumWindowsPlatform(
-        apiName: 'COREWEBVIEW2_WEB_ERROR_STATUS_REDIRECT_FAILED',
-        apiUrl:
-            'https://learn.microsoft.com/en-us/microsoft-edge/webview2/reference/win32/webview2-idl?view=webview2-1.0.2210.55#corewebview2_web_error_status',
-        value: 15,
-      ),
-    ],
-  )
-  static const REDIRECT_FAILED = WebResourceErrorType_._internal(
-    "REDIRECT_FAILED",
-  );
-
-  ///Indicates that an unexpected error occurred.
-  @EnumSupportedPlatforms(
-    platforms: [
-      EnumWindowsPlatform(
-        apiName: 'COREWEBVIEW2_WEB_ERROR_STATUS_UNEXPECTED_ERROR',
-        apiUrl:
-            'https://learn.microsoft.com/en-us/microsoft-edge/webview2/reference/win32/webview2-idl?view=webview2-1.0.2210.55#corewebview2_web_error_status',
-        value: 16,
-      ),
-    ],
-  )
-  static const UNEXPECTED_ERROR = WebResourceErrorType_._internal(
-    "UNEXPECTED_ERROR",
-  );
-
-  ///Indicates that user lacks proper authentication credentials for a proxy server.
-  @EnumSupportedPlatforms(
-    platforms: [
-      EnumWindowsPlatform(
-        apiName:
-            'COREWEBVIEW2_WEB_ERROR_STATUS_VALID_PROXY_AUTHENTICATION_REQUIRED',
-        apiUrl:
-            'https://learn.microsoft.com/en-us/microsoft-edge/webview2/reference/win32/webview2-idl?view=webview2-1.0.2210.55#corewebview2_web_error_status',
-        value: 18,
-      ),
-    ],
-  )
-  static const VALID_PROXY_AUTHENTICATION_REQUIRED =
-      WebResourceErrorType_._internal("VALID_PROXY_AUTHENTICATION_REQUIRED");
-
-  ///Generic policy error.
-  @EnumSupportedPlatforms(
-    platforms: [
-      EnumLinuxPlatform(
-        apiName: 'WEBKIT_POLICY_ERROR_FAILED',
-        apiUrl:
-            'https://wpewebkit.org/reference/stable/wpe-webkit-2.0/error.PolicyError.html',
-        value: 199,
-      ),
-    ],
-  )
-  static const POLICY_FAILED = WebResourceErrorType_._internal("POLICY_FAILED");
-
-  ///The MIME type of the resource is not supported.
-  @EnumSupportedPlatforms(
-    platforms: [
-      EnumLinuxPlatform(
-        apiName: 'WEBKIT_POLICY_ERROR_CANNOT_SHOW_MIME_TYPE',
-        apiUrl:
-            'https://wpewebkit.org/reference/stable/wpe-webkit-2.0/error.PolicyError.html',
-        value: 100,
-      ),
-    ],
-  )
-  static const CANNOT_SHOW_MIME_TYPE = WebResourceErrorType_._internal(
-    "CANNOT_SHOW_MIME_TYPE",
-  );
-
-  ///The URI cannot be shown.
-  @EnumSupportedPlatforms(
-    platforms: [
-      EnumLinuxPlatform(
-        apiName: 'WEBKIT_POLICY_ERROR_CANNOT_SHOW_URI',
-        apiUrl:
-            'https://wpewebkit.org/reference/stable/wpe-webkit-2.0/error.PolicyError.html',
-        value: 101,
-      ),
-    ],
-  )
-  static const CANNOT_SHOW_URI = WebResourceErrorType_._internal(
-    "CANNOT_SHOW_URI",
-  );
-
-  ///Frame load was interrupted by a policy change.
-  @EnumSupportedPlatforms(
-    platforms: [
-      EnumLinuxPlatform(
-        apiName: 'WEBKIT_POLICY_ERROR_FRAME_LOAD_INTERRUPTED_BY_POLICY_CHANGE',
-        apiUrl:
-            'https://wpewebkit.org/reference/stable/wpe-webkit-2.0/error.PolicyError.html',
-        value: 102,
-      ),
-    ],
-  )
-  static const FRAME_LOAD_INTERRUPTED_BY_POLICY_CHANGE =
-      WebResourceErrorType_._internal(
-        "FRAME_LOAD_INTERRUPTED_BY_POLICY_CHANGE",
-      );
-
-  ///The port is restricted.
-  @EnumSupportedPlatforms(
-    platforms: [
-      EnumLinuxPlatform(
-        apiName: 'WEBKIT_POLICY_ERROR_CANNOT_USE_RESTRICTED_PORT',
-        apiUrl:
-            'https://wpewebkit.org/reference/stable/wpe-webkit-2.0/error.PolicyError.html',
-        value: 103,
-      ),
-    ],
-  )
-  static const CANNOT_USE_RESTRICTED_PORT = WebResourceErrorType_._internal(
-    "CANNOT_USE_RESTRICTED_PORT",
-  );
-
-  ///Download failure due to network error.
-  @EnumSupportedPlatforms(
-    platforms: [
-      EnumLinuxPlatform(
-        apiName: 'WEBKIT_DOWNLOAD_ERROR_NETWORK',
-        apiUrl:
-            'https://wpewebkit.org/reference/stable/wpe-webkit-2.0/error.DownloadError.html',
-        value: 499,
-      ),
-    ],
-  )
-  static const DOWNLOAD_NETWORK_FAILED = WebResourceErrorType_._internal(
-    "DOWNLOAD_NETWORK_FAILED",
-  );
-
-  ///Download was cancelled by user.
-  @EnumSupportedPlatforms(
-    platforms: [
-      EnumLinuxPlatform(
-        apiName: 'WEBKIT_DOWNLOAD_ERROR_CANCELLED_BY_USER',
-        apiUrl:
-            'https://wpewebkit.org/reference/stable/wpe-webkit-2.0/error.DownloadError.html',
-        value: 400,
-      ),
-    ],
-  )
-  static const DOWNLOAD_CANCELLED_BY_USER = WebResourceErrorType_._internal(
-    "DOWNLOAD_CANCELLED_BY_USER",
-  );
-
-  ///Download failure due to destination error.
-  @EnumSupportedPlatforms(
-    platforms: [
-      EnumLinuxPlatform(
-        apiName: 'WEBKIT_DOWNLOAD_ERROR_DESTINATION',
-        apiUrl:
-            'https://wpewebkit.org/reference/stable/wpe-webkit-2.0/error.DownloadError.html',
-        value: 401,
-      ),
-    ],
-  )
-  static const DOWNLOAD_DESTINATION_FAILED = WebResourceErrorType_._internal(
-    "DOWNLOAD_DESTINATION_FAILED",
-  );
-
-  ///The certificate does not match the expected identity of the site.
-  @EnumSupportedPlatforms(
-    platforms: [
-      EnumLinuxPlatform(
-        apiName: 'G_TLS_CERTIFICATE_BAD_IDENTITY',
-        apiUrl: 'https://docs.gtk.org/gio/flags.TlsCertificateFlags.html',
-        value: 2,
-      ),
-    ],
-  )
-  static const SERVER_CERTIFICATE_BAD_IDENTITY =
-      WebResourceErrorType_._internal("SERVER_CERTIFICATE_BAD_IDENTITY");
-
-  ///The certificate has been revoked.
-  @EnumSupportedPlatforms(
-    platforms: [
-      EnumLinuxPlatform(
-        apiName: 'G_TLS_CERTIFICATE_REVOKED',
-        apiUrl: 'https://docs.gtk.org/gio/flags.TlsCertificateFlags.html',
-        value: 16,
-      ),
-    ],
-  )
-  static const SERVER_CERTIFICATE_REVOKED = WebResourceErrorType_._internal(
-    "SERVER_CERTIFICATE_REVOKED",
-  );
-
-  ///Some other error occurred validating the certificate.
-  @EnumSupportedPlatforms(
-    platforms: [
-      EnumLinuxPlatform(
-        apiName: 'G_TLS_CERTIFICATE_GENERIC_ERROR',
-        apiUrl: 'https://docs.gtk.org/gio/flags.TlsCertificateFlags.html',
-        value: 64,
-      ),
-    ],
-  )
-  static const TLS_CERTIFICATE_GENERIC_ERROR = WebResourceErrorType_._internal(
-    "TLS_CERTIFICATE_GENERIC_ERROR",
-  );
 }

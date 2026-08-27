@@ -12,16 +12,12 @@ extension _PlatformWebAuthenticationSessionCreationParamsClassSupported
   ///
   ///**Officially Supported Platforms/Implementations**:
   ///- iOS WKWebView 11.0+
-  ///- macOS WKWebView 10.15+
   ///
   ///Use the [PlatformWebAuthenticationSessionCreationParams.isClassSupported] method to check if this class is supported at runtime.
   ///{@endtemplate}
   static bool isClassSupported({TargetPlatform? platform}) {
     return ((kIsWeb && platform != null) || !kIsWeb) &&
-        [
-          TargetPlatform.iOS,
-          TargetPlatform.macOS,
-        ].contains(platform ?? defaultTargetPlatform);
+        [TargetPlatform.iOS].contains(platform ?? defaultTargetPlatform);
   }
 }
 
@@ -31,16 +27,12 @@ extension _PlatformWebAuthenticationSessionClassSupported
   ///
   ///**Officially Supported Platforms/Implementations**:
   ///- iOS WKWebView 11.0+
-  ///- macOS WKWebView 10.15+
   ///
   ///Use the [PlatformWebAuthenticationSession.isClassSupported] method to check if this class is supported at runtime.
   ///{@endtemplate}
   static bool isClassSupported({TargetPlatform? platform}) {
     return ((kIsWeb && platform != null) || !kIsWeb) &&
-        [
-          TargetPlatform.iOS,
-          TargetPlatform.macOS,
-        ].contains(platform ?? defaultTargetPlatform);
+        [TargetPlatform.iOS].contains(platform ?? defaultTargetPlatform);
   }
 }
 
@@ -52,7 +44,6 @@ enum PlatformWebAuthenticationSessionProperty {
   ///
   ///**Officially Supported Platforms/Implementations**:
   ///- iOS WKWebView
-  ///- macOS WKWebView
   ///
   ///Use the [PlatformWebAuthenticationSession.isPropertySupported] method to check if this property is supported at runtime.
   ///{@endtemplate}
@@ -64,7 +55,6 @@ enum PlatformWebAuthenticationSessionProperty {
   ///
   ///**Officially Supported Platforms/Implementations**:
   ///- iOS WKWebView
-  ///- macOS WKWebView
   ///
   ///Use the [PlatformWebAuthenticationSession.isPropertySupported] method to check if this property is supported at runtime.
   ///{@endtemplate}
@@ -76,7 +66,6 @@ enum PlatformWebAuthenticationSessionProperty {
   ///
   ///**Officially Supported Platforms/Implementations**:
   ///- iOS WKWebView
-  ///- macOS WKWebView
   ///
   ///Use the [PlatformWebAuthenticationSession.isPropertySupported] method to check if this property is supported at runtime.
   ///{@endtemplate}
@@ -88,7 +77,6 @@ enum PlatformWebAuthenticationSessionProperty {
   ///
   ///**Officially Supported Platforms/Implementations**:
   ///- iOS WKWebView
-  ///- macOS WKWebView
   ///
   ///**Parameters - Officially Supported Platforms/Implementations**:
   ///- [url]: all platforms
@@ -104,7 +92,6 @@ enum PlatformWebAuthenticationSessionProperty {
   ///
   ///**Officially Supported Platforms/Implementations**:
   ///- iOS WKWebView
-  ///- macOS WKWebView
   ///
   ///Use the [PlatformWebAuthenticationSession.isPropertySupported] method to check if this property is supported at runtime.
   ///{@endtemplate}
@@ -120,34 +107,19 @@ extension _PlatformWebAuthenticationSessionPropertySupported
     switch (property) {
       case PlatformWebAuthenticationSessionProperty.callbackURLScheme:
         return ((kIsWeb && platform != null) || !kIsWeb) &&
-            [
-              TargetPlatform.iOS,
-              TargetPlatform.macOS,
-            ].contains(platform ?? defaultTargetPlatform);
+            [TargetPlatform.iOS].contains(platform ?? defaultTargetPlatform);
       case PlatformWebAuthenticationSessionProperty.id:
         return ((kIsWeb && platform != null) || !kIsWeb) &&
-            [
-              TargetPlatform.iOS,
-              TargetPlatform.macOS,
-            ].contains(platform ?? defaultTargetPlatform);
+            [TargetPlatform.iOS].contains(platform ?? defaultTargetPlatform);
       case PlatformWebAuthenticationSessionProperty.initialSettings:
         return ((kIsWeb && platform != null) || !kIsWeb) &&
-            [
-              TargetPlatform.iOS,
-              TargetPlatform.macOS,
-            ].contains(platform ?? defaultTargetPlatform);
+            [TargetPlatform.iOS].contains(platform ?? defaultTargetPlatform);
       case PlatformWebAuthenticationSessionProperty.onComplete:
         return ((kIsWeb && platform != null) || !kIsWeb) &&
-            [
-              TargetPlatform.iOS,
-              TargetPlatform.macOS,
-            ].contains(platform ?? defaultTargetPlatform);
+            [TargetPlatform.iOS].contains(platform ?? defaultTargetPlatform);
       case PlatformWebAuthenticationSessionProperty.url:
         return ((kIsWeb && platform != null) || !kIsWeb) &&
-            [
-              TargetPlatform.iOS,
-              TargetPlatform.macOS,
-            ].contains(platform ?? defaultTargetPlatform);
+            [TargetPlatform.iOS].contains(platform ?? defaultTargetPlatform);
     }
   }
 }
@@ -160,7 +132,6 @@ enum PlatformWebAuthenticationSessionMethod {
   ///
   ///**Officially Supported Platforms/Implementations**:
   ///- iOS WKWebView ([Official API - ASWebAuthenticationSession.canStart](https://developer.apple.com/documentation/authenticationservices/aswebauthenticationsession/3516277-canstart))
-  ///- macOS WKWebView ([Official API - ASWebAuthenticationSession.canStart](https://developer.apple.com/documentation/authenticationservices/aswebauthenticationsession/3516277-canstart))
   ///
   ///Use the [PlatformWebAuthenticationSession.isMethodSupported] method to check if this method is supported at runtime.
   ///{@endtemplate}
@@ -172,7 +143,6 @@ enum PlatformWebAuthenticationSessionMethod {
   ///
   ///**Officially Supported Platforms/Implementations**:
   ///- iOS WKWebView ([Official API - ASWebAuthenticationSession.cancel](https://developer.apple.com/documentation/authenticationservices/aswebauthenticationsession/2990951-cancel))
-  ///- macOS WKWebView ([Official API - ASWebAuthenticationSession.cancel](https://developer.apple.com/documentation/authenticationservices/aswebauthenticationsession/2990951-cancel))
   ///
   ///Use the [PlatformWebAuthenticationSession.isMethodSupported] method to check if this method is supported at runtime.
   ///{@endtemplate}
@@ -184,7 +154,6 @@ enum PlatformWebAuthenticationSessionMethod {
   ///
   ///**Officially Supported Platforms/Implementations**:
   ///- iOS WKWebView
-  ///- macOS WKWebView
   ///
   ///**Parameters - Officially Supported Platforms/Implementations**:
   ///- [url]: all platforms
@@ -202,7 +171,6 @@ enum PlatformWebAuthenticationSessionMethod {
   ///
   ///**Officially Supported Platforms/Implementations**:
   ///- iOS WKWebView
-  ///- macOS WKWebView
   ///
   ///Use the [PlatformWebAuthenticationSession.isMethodSupported] method to check if this method is supported at runtime.
   ///{@endtemplate}
@@ -214,7 +182,6 @@ enum PlatformWebAuthenticationSessionMethod {
   ///
   ///**Officially Supported Platforms/Implementations**:
   ///- iOS WKWebView
-  ///- macOS WKWebView
   ///
   ///Use the [PlatformWebAuthenticationSession.isMethodSupported] method to check if this method is supported at runtime.
   ///{@endtemplate}
@@ -226,7 +193,6 @@ enum PlatformWebAuthenticationSessionMethod {
   ///
   ///**Officially Supported Platforms/Implementations**:
   ///- iOS WKWebView ([Official API - ASWebAuthenticationSession.start](https://developer.apple.com/documentation/authenticationservices/aswebauthenticationsession/2990953-start))
-  ///- macOS WKWebView ([Official API - ASWebAuthenticationSession.start](https://developer.apple.com/documentation/authenticationservices/aswebauthenticationsession/2990953-start))
   ///
   ///Use the [PlatformWebAuthenticationSession.isMethodSupported] method to check if this method is supported at runtime.
   ///{@endtemplate}
@@ -242,40 +208,22 @@ extension _PlatformWebAuthenticationSessionMethodSupported
     switch (method) {
       case PlatformWebAuthenticationSessionMethod.canStart:
         return ((kIsWeb && platform != null) || !kIsWeb) &&
-            [
-              TargetPlatform.iOS,
-              TargetPlatform.macOS,
-            ].contains(platform ?? defaultTargetPlatform);
+            [TargetPlatform.iOS].contains(platform ?? defaultTargetPlatform);
       case PlatformWebAuthenticationSessionMethod.cancel:
         return ((kIsWeb && platform != null) || !kIsWeb) &&
-            [
-              TargetPlatform.iOS,
-              TargetPlatform.macOS,
-            ].contains(platform ?? defaultTargetPlatform);
+            [TargetPlatform.iOS].contains(platform ?? defaultTargetPlatform);
       case PlatformWebAuthenticationSessionMethod.create:
         return ((kIsWeb && platform != null) || !kIsWeb) &&
-            [
-              TargetPlatform.iOS,
-              TargetPlatform.macOS,
-            ].contains(platform ?? defaultTargetPlatform);
+            [TargetPlatform.iOS].contains(platform ?? defaultTargetPlatform);
       case PlatformWebAuthenticationSessionMethod.dispose:
         return ((kIsWeb && platform != null) || !kIsWeb) &&
-            [
-              TargetPlatform.iOS,
-              TargetPlatform.macOS,
-            ].contains(platform ?? defaultTargetPlatform);
+            [TargetPlatform.iOS].contains(platform ?? defaultTargetPlatform);
       case PlatformWebAuthenticationSessionMethod.isAvailable:
         return ((kIsWeb && platform != null) || !kIsWeb) &&
-            [
-              TargetPlatform.iOS,
-              TargetPlatform.macOS,
-            ].contains(platform ?? defaultTargetPlatform);
+            [TargetPlatform.iOS].contains(platform ?? defaultTargetPlatform);
       case PlatformWebAuthenticationSessionMethod.start:
         return ((kIsWeb && platform != null) || !kIsWeb) &&
-            [
-              TargetPlatform.iOS,
-              TargetPlatform.macOS,
-            ].contains(platform ?? defaultTargetPlatform);
+            [TargetPlatform.iOS].contains(platform ?? defaultTargetPlatform);
     }
   }
 }

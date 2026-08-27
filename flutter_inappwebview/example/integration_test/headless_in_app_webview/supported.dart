@@ -11,12 +11,6 @@ void supported() {
         true,
       );
       expect(
-        HeadlessInAppWebView.isPropertySupported(
-          PlatformHeadlessInAppWebViewCreationParamsProperty.webViewEnvironment,
-        ),
-        defaultTargetPlatform == TargetPlatform.windows,
-      );
-      expect(
         HeadlessInAppWebView.isMethodSupported(
           PlatformHeadlessInAppWebViewMethod.run,
         ),

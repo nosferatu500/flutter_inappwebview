@@ -11,7 +11,6 @@ import 'package:flutter_inappwebview_platform_interface/flutter_inappwebview_pla
 import '../find_interaction/find_interaction_controller.dart';
 import '../pull_to_refresh/main.dart';
 import '../pull_to_refresh/pull_to_refresh_controller.dart';
-import '../webview_environment/webview_environment.dart';
 import 'headless_in_app_webview.dart';
 import 'in_app_webview_controller.dart';
 
@@ -48,7 +47,6 @@ class InAppWebView extends StatefulWidget {
     InAppWebViewKeepAlive? keepAlive,
     bool? preventGestureDelay,
     TextDirection? layoutDirection,
-    WebViewEnvironment? webViewEnvironment,
     InAppWebViewInitialData? initialData,
     String? initialFile,
     InAppWebViewSettings? initialSettings,
@@ -88,7 +86,7 @@ class InAppWebView extends StatefulWidget {
     void Function(InAppWebViewController controller)? onCloseWindow,
     void Function(InAppWebViewController controller)? onWindowFocus,
     void Function(InAppWebViewController controller)? onWindowBlur,
-    FutureOr<DownloadStartResponse?> Function(
+    FutureOr<void> Function(
       InAppWebViewController controller,
       DownloadStartRequest downloadStartRequest,
     )?
@@ -296,16 +294,6 @@ class InAppWebView extends StatefulWidget {
       Size newContentSize,
     )?
     onContentSizeChanged,
-    void Function(
-      InAppWebViewController controller,
-      ProcessFailedDetail detail,
-    )?
-    onProcessFailed,
-    FutureOr<NotificationReceivedResponse?> Function(
-      InAppWebViewController controller,
-      NotificationReceivedRequest request,
-    )?
-    onNotificationReceived,
     FutureOr<SaveAsUIShowingResponse?> Function(
       InAppWebViewController controller,
       SaveAsUIShowingRequest request,
@@ -353,7 +341,6 @@ class InAppWebView extends StatefulWidget {
            findInteractionController: findInteractionController?.platform,
            contextMenu: contextMenu,
            layoutDirection: layoutDirection,
-           webViewEnvironment: webViewEnvironment?.platform,
            onWebViewCreated: onWebViewCreated != null
                ? (controller) => onWebViewCreated.call(controller)
                : null,
@@ -464,12 +451,6 @@ class InAppWebView extends StatefulWidget {
                : null,
            onExitFullscreen: onExitFullscreen != null
                ? (controller) => onExitFullscreen.call(controller)
-               : null,
-           onContentLoading: onContentLoading != null
-               ? (controller, url) => onContentLoading.call(controller, url)
-               : null,
-           onDOMContentLoaded: onDOMContentLoaded != null
-               ? (controller, url) => onDOMContentLoaded.call(controller, url)
                : null,
            onPageCommitVisible: onPageCommitVisible != null
                ? (controller, url) => onPageCommitVisible.call(controller, url)
@@ -592,38 +573,9 @@ class InAppWebView extends StatefulWidget {
                        newContentSize,
                      )
                : null,
-           onProcessFailed: onProcessFailed != null
-               ? (controller, detail) =>
-                     onProcessFailed.call(controller, detail)
-               : null,
-           onNotificationReceived: onNotificationReceived != null
-               ? (controller, request) =>
-                     onNotificationReceived.call(controller, request)
-               : null,
-           onSaveAsUIShowing: onSaveAsUIShowing != null
-               ? (controller, request) =>
-                     onSaveAsUIShowing.call(controller, request)
-               : null,
-           onSaveFileSecurityCheckStarting:
-               onSaveFileSecurityCheckStarting != null
-               ? (controller, request) =>
-                     onSaveFileSecurityCheckStarting.call(controller, request)
-               : null,
-           onScreenCaptureStarting: onScreenCaptureStarting != null
-               ? (controller, request) =>
-                     onScreenCaptureStarting.call(controller, request)
-               : null,
-           onAcceleratorKeyPressed: onAcceleratorKeyPressed != null
-               ? (controller, detail) =>
-                     onAcceleratorKeyPressed.call(controller, detail)
-               : null,
            onShowFileChooser: onShowFileChooser != null
                ? (controller, request) =>
                      onShowFileChooser.call(controller, request)
-               : null,
-           onLaunchingExternalUriScheme: onLaunchingExternalUriScheme != null
-               ? (controller, request) =>
-                     onLaunchingExternalUriScheme.call(controller, request)
                : null,
            gestureRecognizers: gestureRecognizers,
            headlessWebView: headlessWebView?.platform,

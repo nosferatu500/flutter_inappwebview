@@ -26,7 +26,6 @@ class PrintJobState_ {
         value: 1,
       ),
       EnumIOSPlatform(value: 1),
-      EnumMacOSPlatform(value: 1),
     ],
   )
   static const CREATED = PrintJobState_._internal(1);
@@ -58,7 +57,6 @@ class PrintJobState_ {
         value: 3,
       ),
       EnumIOSPlatform(value: 3),
-      EnumMacOSPlatform(value: 3),
     ],
   )
   static const STARTED = PrintJobState_._internal(3);
@@ -90,7 +88,6 @@ class PrintJobState_ {
         value: 5,
       ),
       EnumIOSPlatform(value: 5),
-      EnumMacOSPlatform(value: 5),
     ],
   )
   static const COMPLETED = PrintJobState_._internal(5);
@@ -123,7 +120,6 @@ class PrintJobState_ {
         value: 7,
       ),
       EnumIOSPlatform(value: 7),
-      EnumMacOSPlatform(value: 7),
     ],
   )
   static const CANCELED = PrintJobState_._internal(7);

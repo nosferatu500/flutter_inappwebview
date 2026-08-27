@@ -22,13 +22,6 @@ class NavigationType_ {
             'https://developer.apple.com/documentation/webkit/wknavigationtype/linkactivated',
         value: 0,
       ),
-      EnumMacOSPlatform(
-        apiName: 'WKNavigationType.linkActivated',
-        apiUrl:
-            'https://developer.apple.com/documentation/webkit/wknavigationtype/linkactivated',
-        value: 0,
-      ),
-      EnumWindowsPlatform(value: 0),
     ],
   )
   static const LINK_ACTIVATED = NavigationType_._internal('LINK_ACTIVATED');
@@ -37,12 +30,6 @@ class NavigationType_ {
   @EnumSupportedPlatforms(
     platforms: [
       EnumIOSPlatform(
-        apiName: 'WKNavigationType.formSubmitted',
-        apiUrl:
-            'https://developer.apple.com/documentation/webkit/wknavigationtype/formsubmitted',
-        value: 1,
-      ),
-      EnumMacOSPlatform(
         apiName: 'WKNavigationType.formSubmitted',
         apiUrl:
             'https://developer.apple.com/documentation/webkit/wknavigationtype/formsubmitted',
@@ -61,18 +48,6 @@ class NavigationType_ {
             'https://developer.apple.com/documentation/webkit/wknavigationtype/formsubmitted',
         value: 2,
       ),
-      EnumMacOSPlatform(
-        apiName: 'WKNavigationType.formSubmitted',
-        apiUrl:
-            'https://developer.apple.com/documentation/webkit/wknavigationtype/formsubmitted',
-        value: 2,
-      ),
-      EnumWindowsPlatform(
-        apiName: 'COREWEBVIEW2_NAVIGATION_KIND_BACK_OR_FORWARD',
-        apiUrl:
-            'https://learn.microsoft.com/en-us/microsoft-edge/webview2/reference/win32/webview2-idl?view=webview2-1.0.2210.55#corewebview2_navigation_kind',
-        value: 1,
-      ),
     ],
   )
   static const BACK_FORWARD = NavigationType_._internal('BACK_FORWARD');
@@ -86,18 +61,6 @@ class NavigationType_ {
             'https://developer.apple.com/documentation/webkit/wknavigationtype/reload',
         value: 3,
       ),
-      EnumMacOSPlatform(
-        apiName: 'WKNavigationType.reload',
-        apiUrl:
-            'https://developer.apple.com/documentation/webkit/wknavigationtype/reload',
-        value: 3,
-      ),
-      EnumWindowsPlatform(
-        apiName: 'COREWEBVIEW2_NAVIGATION_KIND_RELOAD',
-        apiUrl:
-            'https://learn.microsoft.com/en-us/microsoft-edge/webview2/reference/win32/webview2-idl?view=webview2-1.0.2210.55#corewebview2_navigation_kind',
-        value: 2,
-      ),
     ],
   )
   static const RELOAD = NavigationType_._internal('RELOAD');
@@ -106,12 +69,6 @@ class NavigationType_ {
   @EnumSupportedPlatforms(
     platforms: [
       EnumIOSPlatform(
-        apiName: 'WKNavigationType.formSubmitted',
-        apiUrl:
-            'https://developer.apple.com/documentation/webkit/wknavigationtype/formresubmitted',
-        value: 4,
-      ),
-      EnumMacOSPlatform(
         apiName: 'WKNavigationType.formSubmitted',
         apiUrl:
             'https://developer.apple.com/documentation/webkit/wknavigationtype/formresubmitted',
@@ -130,13 +87,6 @@ class NavigationType_ {
             'https://developer.apple.com/documentation/webkit/wknavigationtype/other',
         value: -1,
       ),
-      EnumMacOSPlatform(
-        apiName: 'WKNavigationType.other',
-        apiUrl:
-            'https://developer.apple.com/documentation/webkit/wknavigationtype/other',
-        value: -1,
-      ),
-      EnumWindowsPlatform(value: 3),
     ],
   )
   static const OTHER = NavigationType_._internal('OTHER');

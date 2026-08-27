@@ -12,7 +12,6 @@ class JsConfirmRequest {
   ///
   ///**Officially Supported Platforms/Implementations**:
   ///- iOS WKWebView
-  ///- macOS WKWebView
   bool? isMainFrame;
 
   ///Message to be displayed in the window.

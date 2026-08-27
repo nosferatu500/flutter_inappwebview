@@ -14,17 +14,8 @@ class PDFConfiguration {
   ///
   ///**Officially Supported Platforms/Implementations**:
   ///- iOS WKWebView
-  ///- macOS WKWebView
   InAppWebViewRect? rect;
-
-  ///The print settings to use when generating the PDF.
-  ///These settings control page size, orientation, margins, and other printing options.
-  ///If not specified, default print settings will be used.
-  ///
-  ///**Officially Supported Platforms/Implementations**:
-  ///- Windows WebView2
-  PrintJobSettings? settings;
-  PDFConfiguration({this.rect, this.settings});
+  PDFConfiguration({this.rect});
 
   ///Gets a possible [PDFConfiguration] instance from a [Map] value.
   static PDFConfiguration? fromMap(
@@ -39,20 +30,13 @@ class PDFConfiguration {
         map['rect']?.cast<String, dynamic>(),
         enumMethod: enumMethod,
       ),
-      settings: PrintJobSettings.fromMap(
-        map['settings']?.cast<String, dynamic>(),
-        enumMethod: enumMethod,
-      ),
     );
     return instance;
   }
 
   ///Converts instance to a map.
   Map<String, dynamic> toMap({EnumMethod? enumMethod}) {
-    return {
-      "rect": rect?.toMap(enumMethod: enumMethod),
-      "settings": settings?.toMap(enumMethod: enumMethod),
-    };
+    return {"rect": rect?.toMap(enumMethod: enumMethod)};
   }
 
   ///Converts instance to a map.
@@ -62,6 +46,6 @@ class PDFConfiguration {
 
   @override
   String toString() {
-    return 'PDFConfiguration{rect: $rect, settings: $settings}';
+    return 'PDFConfiguration{rect: $rect}';
   }
 }

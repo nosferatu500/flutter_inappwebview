@@ -39,8 +39,6 @@ class PrintJobDuplexMode {
   ///**Officially Supported Platforms/Implementations**:
   ///- Android WebView
   ///- iOS WKWebView
-  ///- macOS WKWebView
-  ///- Windows WebView2
   static final LONG_EDGE = PrintJobDuplexMode._internalMultiPlatform(
     'LONG_EDGE',
     () {
@@ -49,10 +47,6 @@ class PrintJobDuplexMode {
           return 2;
         case TargetPlatform.iOS:
           return 1;
-        case TargetPlatform.macOS:
-          return 2;
-        case TargetPlatform.windows:
-          return 2;
         default:
           break;
       }
@@ -65,18 +59,12 @@ class PrintJobDuplexMode {
   ///**Officially Supported Platforms/Implementations**:
   ///- Android WebView
   ///- iOS WKWebView
-  ///- macOS WKWebView
-  ///- Windows WebView2
   static final NONE = PrintJobDuplexMode._internalMultiPlatform('NONE', () {
     switch (defaultTargetPlatform) {
       case TargetPlatform.android:
         return 1;
       case TargetPlatform.iOS:
         return 0;
-      case TargetPlatform.macOS:
-        return 1;
-      case TargetPlatform.windows:
-        return 1;
       default:
         break;
     }
@@ -89,8 +77,6 @@ class PrintJobDuplexMode {
   ///**Officially Supported Platforms/Implementations**:
   ///- Android WebView
   ///- iOS WKWebView
-  ///- macOS WKWebView
-  ///- Windows WebView2
   static final SHORT_EDGE = PrintJobDuplexMode._internalMultiPlatform(
     'SHORT_EDGE',
     () {
@@ -99,10 +85,6 @@ class PrintJobDuplexMode {
           return 4;
         case TargetPlatform.iOS:
           return 2;
-        case TargetPlatform.macOS:
-          return 3;
-        case TargetPlatform.windows:
-          return 3;
         default:
           break;
       }

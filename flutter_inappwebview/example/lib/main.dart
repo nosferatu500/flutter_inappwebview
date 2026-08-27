@@ -12,7 +12,6 @@ import 'package:flutter_inappwebview_example/models/test_configuration.dart';
 import 'package:flutter_inappwebview_example/screens/platform_info_screen.dart';
 import 'package:flutter_inappwebview_example/screens/webview_tester_screen.dart';
 import 'package:flutter_inappwebview_example/screens/settings_editor_screen.dart';
-import 'package:flutter_inappwebview_example/screens/webview_environment_settings_editor_screen.dart';
 import 'package:flutter_inappwebview_example/screens/storage/cookie_manager_screen.dart';
 import 'package:flutter_inappwebview_example/screens/storage/web_storage_screen.dart';
 import 'package:flutter_inappwebview_example/screens/storage/http_auth_screen.dart';
@@ -123,8 +122,6 @@ class _MyAppState extends State<MyApp> {
         '/platform-info': (context) => PlatformInfoScreen(),
         '/webview-tester': (context) => WebViewTesterScreen(),
         '/settings': (context) => SettingsEditorScreen(),
-        '/environment-settings': (context) =>
-            WebViewEnvironmentSettingsEditorScreen(),
         '/storage/cookies': (context) => CookieManagerScreen(),
         '/storage/webstorage': (context) => WebStorageScreen(),
         '/storage/http-auth': (context) => HttpAuthScreen(),

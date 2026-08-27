@@ -5,7 +5,6 @@ import 'package:plugin_platform_interface/plugin_platform_interface.dart';
 
 import '../inappwebview_platform.dart';
 import '../types/disposable.dart';
-import '../webview_environment/platform_webview_environment.dart';
 import 'platform_inappwebview_controller.dart';
 import 'platform_webview.dart';
 
@@ -19,16 +18,7 @@ part 'platform_headless_in_app_webview.g.dart';
 ///{@endtemplate}
 ///
 ///{@macro flutter_inappwebview_platform_interface.PlatformHeadlessInAppWebViewCreationParams.supported_platforms}
-@SupportedPlatforms(
-  platforms: [
-    AndroidPlatform(),
-    IOSPlatform(),
-    MacOSPlatform(),
-    WebPlatform(requiresSameOrigin: false),
-    WindowsPlatform(),
-    LinuxPlatform(),
-  ],
-)
+@SupportedPlatforms(platforms: [AndroidPlatform(), IOSPlatform()])
 class PlatformHeadlessInAppWebViewCreationParams
     extends PlatformWebViewCreationParams {
   ///{@macro flutter_inappwebview_platform_interface.PlatformHeadlessInAppWebViewCreationParams}
@@ -36,20 +26,16 @@ class PlatformHeadlessInAppWebViewCreationParams
   ///{@macro flutter_inappwebview_platform_interface.PlatformHeadlessInAppWebViewCreationParams.supported_platforms}
   const PlatformHeadlessInAppWebViewCreationParams({
     this.initialSize = const Size(-1, -1),
-    this.webViewEnvironment,
     super.controllerFromPlatform,
     super.windowId,
     super.onWebViewCreated,
     super.onLoadStart,
     super.onLoadStop,
-    super.onContentLoading,
-    super.onDOMContentLoaded,
     super.onReceivedError,
     super.onReceivedHttpError,
     super.onProgressChanged,
     super.onConsoleMessage,
     super.shouldOverrideUrlLoading,
-    super.onLaunchingExternalUriScheme,
     super.onLoadResource,
     super.onScrollChanged,
     super.onDownloadStarting,
@@ -99,12 +85,6 @@ class PlatformHeadlessInAppWebViewCreationParams
     super.onCameraCaptureStateChanged,
     super.onMicrophoneCaptureStateChanged,
     super.onContentSizeChanged,
-    super.onProcessFailed,
-    super.onNotificationReceived,
-    super.onSaveAsUIShowing,
-    super.onSaveFileSecurityCheckStarting,
-    super.onScreenCaptureStarting,
-    super.onAcceleratorKeyPressed,
     super.onShowFileChooser,
     super.initialUrlRequest,
     super.initialFile,
@@ -131,30 +111,9 @@ class PlatformHeadlessInAppWebViewCreationParams
             '`Size` width and height values will be converted to `int` values because they cannot have `double` values.',
       ),
       IOSPlatform(),
-      MacOSPlatform(),
-      WebPlatform(requiresSameOrigin: false),
-      WindowsPlatform(),
-      LinuxPlatform(),
     ],
   )
   final Size initialSize;
-
-  ///{@template flutter_inappwebview_platform_interface.PlatformHeadlessInAppWebViewCreationParams.webViewEnvironment}
-  ///Used to create the [PlatformHeadlessInAppWebView] using the specified environment.
-  ///{@endtemplate}
-  ///
-  ///{@macro flutter_inappwebview_platform_interface.PlatformHeadlessInAppWebViewCreationParams.webViewEnvironment.supported_platforms}
-  @SupportedPlatforms(
-    platforms: [
-      WindowsPlatform(),
-      LinuxPlatform(
-        apiName: 'WebKitWebContext',
-        apiUrl:
-            'https://wpewebkit.org/reference/stable/wpe-webkit-2.0/class.WebContext.html',
-      ),
-    ],
-  )
-  final PlatformWebViewEnvironment? webViewEnvironment;
 
   ///{@template flutter_inappwebview_platform_interface.PlatformHeadlessInAppWebViewCreationParams.isClassSupported}
   ///Check if the current class is supported by the [defaultTargetPlatform] or a specific [platform].
@@ -187,16 +146,7 @@ class PlatformHeadlessInAppWebViewCreationParams
 ///{@endtemplate}
 ///
 ///{@macro flutter_inappwebview_platform_interface.PlatformHeadlessInAppWebView.supported_platforms}
-@SupportedPlatforms(
-  platforms: [
-    AndroidPlatform(),
-    IOSPlatform(),
-    MacOSPlatform(),
-    WebPlatform(requiresSameOrigin: false),
-    WindowsPlatform(),
-    LinuxPlatform(),
-  ],
-)
+@SupportedPlatforms(platforms: [AndroidPlatform(), IOSPlatform()])
 abstract class PlatformHeadlessInAppWebView extends PlatformInterface
     implements Disposable {
   /// Creates a new [PlatformHeadlessInAppWebView]
@@ -266,19 +216,7 @@ abstract class PlatformHeadlessInAppWebView extends PlatformInterface
   ///{@endtemplate}
   ///
   ///{@macro flutter_inappwebview_platform_interface.PlatformHeadlessInAppWebView.run.supported_platforms}
-  @SupportedPlatforms(
-    platforms: [
-      AndroidPlatform(),
-      IOSPlatform(),
-      MacOSPlatform(),
-      WebPlatform(
-        requiresSameOrigin: false,
-        note: 'It will append a new `iframe` to the body.',
-      ),
-      WindowsPlatform(),
-      LinuxPlatform(),
-    ],
-  )
+  @SupportedPlatforms(platforms: [AndroidPlatform(), IOSPlatform()])
   Future<void> run() {
     throw UnimplementedError('run is not implemented on the current platform');
   }
@@ -288,16 +226,7 @@ abstract class PlatformHeadlessInAppWebView extends PlatformInterface
   ///{@endtemplate}
   ///
   ///{@macro flutter_inappwebview_platform_interface.PlatformHeadlessInAppWebView.isRunning.supported_platforms}
-  @SupportedPlatforms(
-    platforms: [
-      AndroidPlatform(),
-      IOSPlatform(),
-      MacOSPlatform(),
-      WebPlatform(requiresSameOrigin: false),
-      WindowsPlatform(),
-      LinuxPlatform(),
-    ],
-  )
+  @SupportedPlatforms(platforms: [AndroidPlatform(), IOSPlatform()])
   bool isRunning() {
     throw UnimplementedError(
       'isRunning is not implemented on the current platform',
@@ -321,9 +250,6 @@ abstract class PlatformHeadlessInAppWebView extends PlatformInterface
             '`Size` width and height values will be converted to `int` values because they cannot have `double` values.',
       ),
       IOSPlatform(),
-      MacOSPlatform(),
-      WebPlatform(requiresSameOrigin: false),
-      LinuxPlatform(),
     ],
   )
   Future<void> setSize(Size size) {
@@ -339,15 +265,7 @@ abstract class PlatformHeadlessInAppWebView extends PlatformInterface
   ///{@endtemplate}
   ///
   ///{@macro flutter_inappwebview_platform_interface.PlatformHeadlessInAppWebView.getSize.supported_platforms}
-  @SupportedPlatforms(
-    platforms: [
-      AndroidPlatform(),
-      IOSPlatform(),
-      MacOSPlatform(),
-      WebPlatform(requiresSameOrigin: false),
-      LinuxPlatform(),
-    ],
-  )
+  @SupportedPlatforms(platforms: [AndroidPlatform(), IOSPlatform()])
   Future<Size?> getSize() {
     throw UnimplementedError(
       'getSize is not implemented on the current platform',
@@ -360,16 +278,7 @@ abstract class PlatformHeadlessInAppWebView extends PlatformInterface
   ///
   ///{@macro flutter_inappwebview_platform_interface.PlatformHeadlessInAppWebView.dispose.supported_platforms}
   @override
-  @SupportedPlatforms(
-    platforms: [
-      AndroidPlatform(),
-      IOSPlatform(),
-      MacOSPlatform(),
-      WebPlatform(requiresSameOrigin: false),
-      WindowsPlatform(),
-      LinuxPlatform(),
-    ],
-  )
+  @SupportedPlatforms(platforms: [AndroidPlatform(), IOSPlatform()])
   Future<void> dispose() {
     throw UnimplementedError(
       'dispose is not implemented on the current platform',

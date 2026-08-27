@@ -22,15 +22,4 @@ void main() {
 
     expect(defaults, expected);
   });
-
-  test('default environment settings map matches constructor defaults', () {
-    final defaults = defaultWebViewEnvironmentSettings().toMap(
-      enumMethod: EnumMethod.nativeValue,
-    );
-    final expected = WebViewEnvironmentSettings().toMap(
-      enumMethod: EnumMethod.nativeValue,
-    );
-
-    expect(defaults, expected);
-  });
 }

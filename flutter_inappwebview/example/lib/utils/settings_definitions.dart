@@ -340,36 +340,6 @@ Map<String, List<SettingDefinition>> getSettingDefinitions() {
         property: InAppWebViewSettingsProperty.useHybridComposition,
       ),
     ],
-    'Zoom': [
-      SettingDefinition(
-        name: 'Ignore Viewport Scale Limits',
-        description: 'Override user-scalable viewport setting',
-        type: SettingType.boolean,
-        defaultValue: false,
-        property: InAppWebViewSettingsProperty.ignoresViewportScaleLimits,
-      ),
-      SettingDefinition(
-        name: 'Built-In Zoom Controls',
-        description: 'Use built-in zoom controls',
-        type: SettingType.boolean,
-        defaultValue: true,
-        property: InAppWebViewSettingsProperty.builtInZoomControls,
-      ),
-      SettingDefinition(
-        name: 'Display Zoom Controls',
-        description: 'Show on-screen zoom controls',
-        type: SettingType.boolean,
-        defaultValue: false,
-        property: InAppWebViewSettingsProperty.displayZoomControls,
-      ),
-      SettingDefinition(
-        name: 'Pinch Zoom',
-        description: 'Enable pinch-to-zoom gesture',
-        type: SettingType.boolean,
-        defaultValue: true,
-        property: InAppWebViewSettingsProperty.pinchZoomEnabled,
-      ),
-    ],
     'Interaction': [
       SettingDefinition(
         name: 'Link Preview',
@@ -409,38 +379,6 @@ Map<String, List<SettingDefinition>> getSettingDefinitions() {
         type: SettingType.boolean,
         defaultValue: true,
         property: InAppWebViewSettingsProperty.geolocationEnabled,
-      ),
-    ],
-    'Forms': [
-      SettingDefinition(
-        name: 'General Autofill',
-        description: 'Enable autofill for forms',
-        type: SettingType.boolean,
-        defaultValue: true,
-        property: InAppWebViewSettingsProperty.generalAutofillEnabled,
-      ),
-      SettingDefinition(
-        name: 'Password Autosave',
-        description: 'Enable password autosave',
-        type: SettingType.boolean,
-        defaultValue: false,
-        property: InAppWebViewSettingsProperty.passwordAutosaveEnabled,
-      ),
-    ],
-    'UI': [
-      SettingDefinition(
-        name: 'Status Bar',
-        description: 'Show status bar',
-        type: SettingType.boolean,
-        defaultValue: true,
-        property: InAppWebViewSettingsProperty.statusBarEnabled,
-      ),
-      SettingDefinition(
-        name: 'Browser Accelerator Keys',
-        description: 'Enable browser keyboard shortcuts',
-        type: SettingType.boolean,
-        defaultValue: true,
-        property: InAppWebViewSettingsProperty.browserAcceleratorKeysEnabled,
       ),
     ],
     'Developer': [

@@ -18,8 +18,6 @@ class ContentBlockerActionType_ {
     platforms: [
       EnumAndroidPlatform(value: 'block'),
       EnumIOSPlatform(value: 'block'),
-      EnumMacOSPlatform(value: 'block'),
-      EnumLinuxPlatform(value: 'block'),
     ],
   )
   static const BLOCK = ContentBlockerActionType_._internal('block');
@@ -33,8 +31,6 @@ class ContentBlockerActionType_ {
     platforms: [
       EnumAndroidPlatform(value: 'css-display-none'),
       EnumIOSPlatform(value: 'css-display-none'),
-      EnumMacOSPlatform(value: 'css-display-none'),
-      EnumLinuxPlatform(value: 'css-display-none'),
     ],
   )
   static const CSS_DISPLAY_NONE = ContentBlockerActionType_._internal(
@@ -47,8 +43,6 @@ class ContentBlockerActionType_ {
     platforms: [
       EnumAndroidPlatform(value: 'make-https'),
       EnumIOSPlatform(value: 'make-https'),
-      EnumMacOSPlatform(value: 'make-https'),
-      EnumLinuxPlatform(value: 'make-https'),
     ],
   )
   static const MAKE_HTTPS = ContentBlockerActionType_._internal('make-https');
@@ -56,24 +50,14 @@ class ContentBlockerActionType_ {
   ///Strips cookies from the header before sending it to the server.
   ///This only blocks cookies otherwise acceptable to WebView's privacy policy.
   ///Combining with [IGNORE_PREVIOUS_RULES] doesn't override the browser’s privacy settings.
-  @EnumSupportedPlatforms(
-    platforms: [
-      EnumIOSPlatform(value: 'block-cookies'),
-      EnumMacOSPlatform(value: 'block-cookies'),
-      EnumLinuxPlatform(value: 'block-cookies'),
-    ],
-  )
+  @EnumSupportedPlatforms(platforms: [EnumIOSPlatform(value: 'block-cookies')])
   static const BLOCK_COOKIES = ContentBlockerActionType_._internal(
     'block-cookies',
   );
 
   ///Ignores previously triggered actions.
   @EnumSupportedPlatforms(
-    platforms: [
-      EnumIOSPlatform(value: 'ignore-previous-rules'),
-      EnumMacOSPlatform(value: 'ignore-previous-rules'),
-      EnumLinuxPlatform(value: 'ignore-previous-rules'),
-    ],
+    platforms: [EnumIOSPlatform(value: 'ignore-previous-rules')],
   )
   static const IGNORE_PREVIOUS_RULES = ContentBlockerActionType_._internal(
     'ignore-previous-rules',

@@ -12,7 +12,6 @@ class DownloadStartRequest {
   ///
   ///**Officially Supported Platforms/Implementations**:
   ///- Android WebView
-  ///- Windows WebView2
   String? contentDisposition;
 
   ///The file size reported by the server.
@@ -20,8 +19,6 @@ class DownloadStartRequest {
   ///**Officially Supported Platforms/Implementations**:
   ///- Android WebView
   ///- iOS WKWebView
-  ///- macOS WKWebView
-  ///- Windows WebView2
   int contentLength;
 
   ///Whether this download was initiated by the user, rather than started by the page on its own.
@@ -43,8 +40,6 @@ class DownloadStartRequest {
   ///**Officially Supported Platforms/Implementations**:
   ///- Android WebView
   ///- iOS WKWebView
-  ///- macOS WKWebView
-  ///- Windows WebView2
   String? mimeType;
 
   ///The frame that originated this download.
@@ -65,8 +60,6 @@ class DownloadStartRequest {
   ///**Officially Supported Platforms/Implementations**:
   ///- Android WebView
   ///- iOS WKWebView
-  ///- macOS WKWebView
-  ///- Windows WebView2
   String? suggestedFilename;
 
   ///The name of the text encoding of the receiver, or `null` if no text encoding was specified.
@@ -74,7 +67,6 @@ class DownloadStartRequest {
   ///**Officially Supported Platforms/Implementations**:
   ///- Android WebView
   ///- iOS WKWebView
-  ///- macOS WKWebView
   String? textEncodingName;
 
   ///The full url to the content that should be downloaded.
@@ -82,8 +74,6 @@ class DownloadStartRequest {
   ///**Officially Supported Platforms/Implementations**:
   ///- Android WebView
   ///- iOS WKWebView
-  ///- macOS WKWebView
-  ///- Windows WebView2
   WebUri url;
 
   ///the user agent to be used for the download.

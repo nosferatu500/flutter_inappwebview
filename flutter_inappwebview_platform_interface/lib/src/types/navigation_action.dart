@@ -39,10 +39,6 @@ class NavigationAction_ {
             "https://developer.android.com/reference/android/webkit/WebResourceRequest#hasGesture()",
         note: "On Android < 21, this is always `false`",
       ),
-      WindowsPlatform(
-        note:
-            "Available only if the request is associated to the [PlatformWebViewCreationParams.onCreateWindow] event",
-      ),
     ],
   )
   bool? hasGesture;
@@ -59,7 +55,6 @@ class NavigationAction_ {
         apiUrl:
             "https://developer.android.com/reference/android/webkit/WebResourceRequest#isRedirect()",
       ),
-      WindowsPlatform(),
     ],
   )
   bool? isRedirect;
@@ -72,12 +67,6 @@ class NavigationAction_ {
         apiUrl:
             "https://developer.apple.com/documentation/webkit/wknavigationaction/1401914-navigationtype",
       ),
-      MacOSPlatform(
-        apiName: "WKNavigationAction.navigationType",
-        apiUrl:
-            "https://developer.apple.com/documentation/webkit/wknavigationaction/1401914-navigationtype",
-      ),
-      WindowsPlatform(),
     ],
   )
   NavigationType_? navigationType;
@@ -86,11 +75,6 @@ class NavigationAction_ {
   @SupportedPlatforms(
     platforms: [
       IOSPlatform(
-        apiName: "WKNavigationAction.sourceFrame",
-        apiUrl:
-            "https://developer.apple.com/documentation/webkit/wknavigationaction/1401926-sourceframe",
-      ),
-      MacOSPlatform(
         apiName: "WKNavigationAction.sourceFrame",
         apiUrl:
             "https://developer.apple.com/documentation/webkit/wknavigationaction/1401926-sourceframe",
@@ -107,11 +91,6 @@ class NavigationAction_ {
         apiUrl:
             "https://developer.apple.com/documentation/webkit/wknavigationaction/1401918-targetframe",
       ),
-      MacOSPlatform(
-        apiName: "WKNavigationAction.targetFrame",
-        apiUrl:
-            "https://developer.apple.com/documentation/webkit/wknavigationaction/1401918-targetframe",
-      ),
     ],
   )
   FrameInfo_? targetFrame;
@@ -121,12 +100,6 @@ class NavigationAction_ {
     platforms: [
       IOSPlatform(
         available: "14.5",
-        apiName: "WKNavigationAction.shouldPerformDownload",
-        apiUrl:
-            "https://developer.apple.com/documentation/webkit/wknavigationaction/3727357-shouldperformdownload",
-      ),
-      MacOSPlatform(
-        available: "11.3",
         apiName: "WKNavigationAction.shouldPerformDownload",
         apiUrl:
             "https://developer.apple.com/documentation/webkit/wknavigationaction/3727357-shouldperformdownload",
@@ -153,12 +126,6 @@ class NavigationAction_ {
   @SupportedPlatforms(
     platforms: [
       IOSPlatform(
-        available: "26.0",
-        apiName: "WKNavigationAction.isContentRuleListRedirect",
-        apiUrl:
-            "https://developer.apple.com/documentation/webkit/wknavigationaction/iscontentrulelistredirect",
-      ),
-      MacOSPlatform(
         available: "26.0",
         apiName: "WKNavigationAction.isContentRuleListRedirect",
         apiUrl:

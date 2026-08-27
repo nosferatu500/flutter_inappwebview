@@ -51,29 +51,6 @@ void main() {
       );
     });
 
-    skippableTest('WebViewEnvironment support methods are callable', () {
-      expect(
-        () => WebViewEnvironment.isClassSupported(
-          platform: defaultTargetPlatform,
-        ),
-        returnsNormally,
-      );
-      expect(
-        () => WebViewEnvironment.isMethodSupported(
-          PlatformWebViewEnvironmentMethod.values.first,
-          platform: defaultTargetPlatform,
-        ),
-        returnsNormally,
-      );
-      expect(
-        () => WebViewEnvironment.isPropertySupported(
-          PlatformWebViewEnvironmentCreationParamsProperty.values.first,
-          platform: defaultTargetPlatform,
-        ),
-        returnsNormally,
-      );
-    });
-
     skippableTest('HeadlessInAppWebView support methods are callable', () {
       expect(
         () => HeadlessInAppWebView.isClassSupported(
@@ -320,13 +297,6 @@ void main() {
       expect(
         () => CookieManager.isMethodSupported(
           PlatformCookieManagerMethod.values.first,
-          platform: defaultTargetPlatform,
-        ),
-        returnsNormally,
-      );
-      expect(
-        () => CookieManager.isPropertySupported(
-          PlatformCookieManagerCreationParamsProperty.values.first,
           platform: defaultTargetPlatform,
         ),
         returnsNormally,

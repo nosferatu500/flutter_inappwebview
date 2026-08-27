@@ -111,20 +111,6 @@ class MockInAppWebViewPlatform extends InAppWebViewPlatform
   }
 
   @override
-  PlatformWebViewEnvironment createPlatformWebViewEnvironment(
-    PlatformWebViewEnvironmentCreationParams params,
-  ) {
-    return MockPlatformWebViewEnvironment(params);
-  }
-
-  @override
-  PlatformWebViewEnvironment createPlatformWebViewEnvironmentStatic() {
-    return MockPlatformWebViewEnvironment(
-      const PlatformWebViewEnvironmentCreationParams(),
-    );
-  }
-
-  @override
   PlatformProcessGlobalConfig createPlatformProcessGlobalConfig(
     PlatformProcessGlobalConfigCreationParams params,
   ) {
@@ -557,25 +543,6 @@ class MockPlatformTracingController extends PlatformTracingController
 
   @override
   Future<bool> stop({String? filePath}) async => true;
-}
-
-class MockPlatformWebViewEnvironment extends PlatformWebViewEnvironment
-    with MockPlatformInterfaceMixin {
-  MockPlatformWebViewEnvironment(super.params) : super.implementation();
-
-  @override
-  bool isMethodSupported(
-    PlatformWebViewEnvironmentMethod method, {
-    TargetPlatform? platform,
-  }) => true;
-
-  @override
-  Future<String?> getAvailableVersion({
-    String? browserExecutableFolder,
-  }) async => null;
-
-  // Not declared by PlatformWebViewEnvironment - no @override.
-  Future<List<BrowserProcessInfo>> getBrowserProcessInfo() async => [];
 }
 
 class MockPlatformProcessGlobalConfig extends PlatformProcessGlobalConfig

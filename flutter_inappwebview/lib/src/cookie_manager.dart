@@ -4,7 +4,6 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter_inappwebview_platform_interface/flutter_inappwebview_platform_interface.dart';
 
 import 'in_app_webview/in_app_webview_controller.dart';
-import 'webview_environment/webview_environment.dart';
 
 ///{@macro flutter_inappwebview_platform_interface.PlatformCookieManager}
 ///
@@ -34,19 +33,9 @@ class CookieManager {
   static CookieManager? _instance;
 
   ///Gets the [CookieManager] shared instance.
-  ///
-  ///[webViewEnvironment] (Supported only on Windows) - Used to create the [CookieManager] using the specified environment.
-  static CookieManager instance({WebViewEnvironment? webViewEnvironment}) {
-    if (webViewEnvironment == null) {
-      _instance ??= CookieManager();
-      return _instance!;
-    } else {
-      return CookieManager.fromPlatformCreationParams(
-        PlatformCookieManagerCreationParams(
-          webViewEnvironment: webViewEnvironment.platform,
-        ),
-      );
-    }
+  static CookieManager instance() {
+    _instance ??= CookieManager();
+    return _instance!;
   }
 
   ///{@macro flutter_inappwebview_platform_interface.PlatformCookieManager.setCookie}
@@ -197,15 +186,6 @@ class CookieManager {
   ///{@macro flutter_inappwebview_platform_interface.PlatformCookieManagerCreationParams.isClassSupported}
   static bool isClassSupported({TargetPlatform? platform}) =>
       PlatformCookieManager.static().isClassSupported(platform: platform);
-
-  ///{@macro flutter_inappwebview_platform_interface.PlatformCookieManagerCreationParams.isPropertySupported}
-  static bool isPropertySupported(
-    PlatformCookieManagerCreationParamsProperty property, {
-    TargetPlatform? platform,
-  }) => PlatformCookieManager.static().isPropertySupported(
-    property,
-    platform: platform,
-  );
 
   ///{@macro flutter_inappwebview_platform_interface.PlatformCookieManager.isMethodSupported}
   static bool isMethodSupported(

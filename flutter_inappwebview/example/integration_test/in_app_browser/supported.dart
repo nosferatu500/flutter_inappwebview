@@ -36,12 +36,6 @@ void supported() {
           TargetPlatform.windows,
         ].contains(defaultTargetPlatform),
       );
-      expect(
-        InAppBrowser.isEventMethodSupported(
-          PlatformInAppBrowserEventsMethod.onAcceleratorKeyPressed,
-        ),
-        defaultTargetPlatform == TargetPlatform.windows,
-      );
 
       expect(
         InAppBrowserSettings.isPropertySupported(

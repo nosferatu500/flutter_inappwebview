@@ -12,7 +12,6 @@ import 'package:flutter_inappwebview_example/widgets/webview/javascript_console_
 import 'package:flutter_inappwebview_example/widgets/webview/user_script_tester_widget.dart';
 import 'package:flutter_inappwebview_example/widgets/common/app_drawer.dart';
 import 'package:flutter_inappwebview_example/providers/settings_manager.dart';
-import 'package:flutter_inappwebview_example/widgets/common/profile_selector_card.dart';
 import 'package:flutter_inappwebview_example/utils/responsive_utils.dart';
 
 /// Main screen for testing InAppWebView functionality
@@ -122,14 +121,7 @@ class _WebViewTesterScreenState extends State<WebViewTesterScreen>
           if (isMobile)
             _buildCollapsibleSettings()
           else
-            ProfileSelectorCard(
-              compact: true,
-              onEditSettingsProfile: () =>
-                  Navigator.pushNamed(context, '/settings'),
-              onEditEnvironmentProfile: () =>
-                  Navigator.pushNamed(context, '/environment-settings'),
-            ),
-          Container(height: _dividerHeight, color: Colors.grey.shade300),
+            Container(height: _dividerHeight, color: Colors.grey.shade300),
           SizedBox(height: _minTabsHeight, child: _buildBottomTabs()),
         ],
       ),
@@ -164,22 +156,15 @@ class _WebViewTesterScreenState extends State<WebViewTesterScreen>
             if (isMobile)
               _buildCollapsibleSettings()
             else
-              ProfileSelectorCard(
-                compact: true,
-                onEditSettingsProfile: () =>
-                    Navigator.pushNamed(context, '/settings'),
-                onEditEnvironmentProfile: () =>
-                    Navigator.pushNamed(context, '/environment-settings'),
+              _buildResizeHandle(
+                onDrag: (delta) {
+                  setState(() {
+                    _webViewHeight = (_webViewHeight + delta)
+                        .clamp(_minWebViewHeight, effectiveMax)
+                        .toDouble();
+                  });
+                },
               ),
-            _buildResizeHandle(
-              onDrag: (delta) {
-                setState(() {
-                  _webViewHeight = (_webViewHeight + delta)
-                      .clamp(_minWebViewHeight, effectiveMax)
-                      .toDouble();
-                });
-              },
-            ),
             Expanded(child: _buildBottomTabs()),
           ],
         );
@@ -389,16 +374,7 @@ class _WebViewTesterScreenState extends State<WebViewTesterScreen>
                 ),
               ],
             ),
-            if (_settingsExpanded) ...[
-              const SizedBox(height: 8),
-              ProfileSelectorCard(
-                compact: true,
-                onEditSettingsProfile: () =>
-                    Navigator.pushNamed(context, '/settings'),
-                onEditEnvironmentProfile: () =>
-                    Navigator.pushNamed(context, '/environment-settings'),
-              ),
-            ],
+            if (_settingsExpanded) ...[const SizedBox(height: 8)],
           ],
         ),
       ),
@@ -513,11 +489,8 @@ class _WebViewTesterScreenState extends State<WebViewTesterScreen>
         InAppWebViewSettings();
 
     return InAppWebView(
-      key: ValueKey(
-        'webview-${settingsManager.settingsRevision}-${settingsManager.environmentRevision}',
-      ),
+      key: ValueKey('webview-${settingsManager.settingsRevision}'),
       initialUrlRequest: URLRequest(url: WebUri(_urlController.text)),
-      webViewEnvironment: settingsManager.webViewEnvironment,
       initialSettings: mergedSettings,
 
       // ============================================================
@@ -988,10 +961,6 @@ class _WebViewTesterScreenState extends State<WebViewTesterScreen>
             'suggestedFilename': downloadStartRequest.suggestedFilename,
           },
         );
-        return DownloadStartResponse(
-          handled: true,
-          action: DownloadStartResponseAction.CANCEL,
-        );
       },
 
       // ============================================================
@@ -1315,32 +1284,6 @@ class _WebViewTesterScreenState extends State<WebViewTesterScreen>
       // ============================================================
       // SYSTEM EVENTS (2)
       // ============================================================
-
-      // 57. onProcessFailed
-      onProcessFailed: (controller, detail) {
-        _logEvent(
-          EventType.error,
-          PlatformWebViewCreationParamsProperty.onProcessFailed.name,
-          data: {
-            'kind': detail.kind.name(),
-            'reason': detail.reason?.name(),
-            'exitCode': detail.exitCode,
-          },
-        );
-      },
-
-      // 58. onAcceleratorKeyPressed
-      onAcceleratorKeyPressed: (controller, keyEventInfo) {
-        _logEvent(
-          EventType.ui,
-          PlatformWebViewCreationParamsProperty.onAcceleratorKeyPressed.name,
-          data: {
-            'keyEventKind': keyEventInfo.keyEventKind,
-            'virtualKey': keyEventInfo.virtualKey,
-            'physicalKeyStatus': keyEventInfo.physicalKeyStatus?.toMap(),
-          },
-        );
-      },
 
       // ============================================================
       // OTHER EVENTS (2)

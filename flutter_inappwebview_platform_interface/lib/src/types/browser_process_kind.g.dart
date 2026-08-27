@@ -33,117 +33,8 @@ class BrowserProcessKind {
         : const [],
   );
 
-  ///Indicates the browser process kind.
-  ///
-  ///**Officially Supported Platforms/Implementations**:
-  ///- Windows WebView2
-  static final BROWSER = BrowserProcessKind._internalMultiPlatform(0, () {
-    switch (defaultTargetPlatform) {
-      case TargetPlatform.windows:
-        return 0;
-      default:
-        break;
-    }
-    return null;
-  });
-
-  ///Indicates the GPU process kind.
-  ///
-  ///**Officially Supported Platforms/Implementations**:
-  ///- Windows WebView2
-  static final GPU = BrowserProcessKind._internalMultiPlatform(4, () {
-    switch (defaultTargetPlatform) {
-      case TargetPlatform.windows:
-        return 4;
-      default:
-        break;
-    }
-    return null;
-  });
-
-  ///Indicates the PPAPI plugin broker process kind.
-  ///
-  ///**Officially Supported Platforms/Implementations**:
-  ///- Windows WebView2
-  static final PPAPI_BROKER = BrowserProcessKind._internalMultiPlatform(6, () {
-    switch (defaultTargetPlatform) {
-      case TargetPlatform.windows:
-        return 6;
-      default:
-        break;
-    }
-    return null;
-  });
-
-  ///Indicates the PPAPI plugin process kind.
-  ///
-  ///**Officially Supported Platforms/Implementations**:
-  ///- Windows WebView2
-  static final PPAPI_PLUGIN = BrowserProcessKind._internalMultiPlatform(5, () {
-    switch (defaultTargetPlatform) {
-      case TargetPlatform.windows:
-        return 5;
-      default:
-        break;
-    }
-    return null;
-  });
-
-  ///Indicates the render process kind.
-  ///
-  ///**Officially Supported Platforms/Implementations**:
-  ///- Windows WebView2
-  static final RENDERER = BrowserProcessKind._internalMultiPlatform(1, () {
-    switch (defaultTargetPlatform) {
-      case TargetPlatform.windows:
-        return 1;
-      default:
-        break;
-    }
-    return null;
-  });
-
-  ///Indicates the sandbox helper process kind.
-  ///
-  ///**Officially Supported Platforms/Implementations**:
-  ///- Windows WebView2
-  static final SANDBOX_HELPER = BrowserProcessKind._internalMultiPlatform(
-    3,
-    () {
-      switch (defaultTargetPlatform) {
-        case TargetPlatform.windows:
-          return 3;
-        default:
-          break;
-      }
-      return null;
-    },
-  );
-
-  ///Indicates the utility process kind.
-  ///
-  ///**Officially Supported Platforms/Implementations**:
-  ///- Windows WebView2
-  static final UTILITY = BrowserProcessKind._internalMultiPlatform(2, () {
-    switch (defaultTargetPlatform) {
-      case TargetPlatform.windows:
-        return 2;
-      default:
-        break;
-    }
-    return null;
-  });
-
   ///Set of all values of [BrowserProcessKind].
-  static final Set<BrowserProcessKind> values = {
-    BrowserProcessKind.BROWSER,
-    BrowserProcessKind.GPU,
-    BrowserProcessKind.PPAPI_BROKER,
-    BrowserProcessKind.PPAPI_PLUGIN,
-    BrowserProcessKind.RENDERER,
-    BrowserProcessKind.SANDBOX_HELPER,
-    BrowserProcessKind.UTILITY,
-  };
+  static final Set<BrowserProcessKind> values = {};
 
   ///Gets a possible [BrowserProcessKind] instance from [int] value.
   static BrowserProcessKind? fromValue(int? value) {
@@ -222,22 +113,7 @@ class BrowserProcessKind {
 
   ///Gets the name of the value.
   String name() {
-    switch (_value) {
-      case 0:
-        return 'BROWSER';
-      case 4:
-        return 'GPU';
-      case 6:
-        return 'PPAPI_BROKER';
-      case 5:
-        return 'PPAPI_PLUGIN';
-      case 1:
-        return 'RENDERER';
-      case 3:
-        return 'SANDBOX_HELPER';
-      case 2:
-        return 'UTILITY';
-    }
+    switch (_value) {}
     return _value.toString();
   }
 

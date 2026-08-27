@@ -11,24 +11,16 @@ part 'client_cert_response.g.dart';
 @ExchangeableObject()
 class ClientCertResponse_ {
   ///The file path of the certificate to use.
-  @SupportedPlatforms(
-    platforms: [AndroidPlatform(), IOSPlatform(), MacOSPlatform()],
-  )
+  @SupportedPlatforms(platforms: [AndroidPlatform(), IOSPlatform()])
   String certificatePath;
 
   ///The certificate password.
-  @SupportedPlatforms(
-    platforms: [AndroidPlatform(), IOSPlatform(), MacOSPlatform()],
-  )
+  @SupportedPlatforms(platforms: [AndroidPlatform(), IOSPlatform()])
   String? certificatePassword;
 
   ///An Android-specific property used by Java [KeyStore](https://developer.android.com/reference/java/security/KeyStore) class to get the instance.
   @SupportedPlatforms(platforms: [AndroidPlatform()])
   String? keyStoreType;
-
-  ///The index of the selected certificate.
-  @SupportedPlatforms(platforms: [WindowsPlatform()])
-  int selectedCertificate;
 
   ///Indicate the [ClientCertResponseAction] to take in response of the client certificate challenge.
   ClientCertResponseAction_? action;
@@ -38,7 +30,6 @@ class ClientCertResponse_ {
     this.certificatePath = "",
     this.certificatePassword = "",
     this.keyStoreType = "PKCS12",
-    this.selectedCertificate = -1,
     this.action = ClientCertResponseAction_.CANCEL,
   }) {
     if (action == ClientCertResponseAction_.PROCEED && !Util.isWindows) {

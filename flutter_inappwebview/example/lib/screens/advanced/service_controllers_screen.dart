@@ -8,8 +8,6 @@ import 'package:flutter_inappwebview_example/utils/support_checker.dart';
 import 'package:flutter_inappwebview_example/widgets/common/support_badge.dart';
 import 'package:flutter_inappwebview_example/widgets/common/parameter_dialog.dart';
 import 'package:flutter_inappwebview_example/widgets/common/method_result_history.dart';
-import 'package:flutter_inappwebview_example/providers/settings_manager.dart';
-import 'package:flutter_inappwebview_example/widgets/common/profile_selector_card.dart';
 import 'package:flutter_inappwebview_example/utils/responsive_utils.dart';
 import 'package:flutter_inappwebview_example/widgets/common/responsive_row.dart';
 
@@ -42,11 +40,6 @@ class _ServiceControllersScreenState extends State<ServiceControllersScreen> {
 
   // TracingController state
   bool _isTracing = false;
-
-  // WebViewEnvironment state
-  String? _availableVersion;
-  List<BrowserProcessInfo> _processInfos = [];
-  int _lastEnvironmentRevision = -1;
 
   // ProcessGlobalConfig state
   final TextEditingController _dataDirSuffixController = TextEditingController(
@@ -91,15 +84,6 @@ class _ServiceControllersScreenState extends State<ServiceControllersScreen> {
     );
   }
 
-  Set<SupportedPlatform> _webViewEnvironmentPlatforms(
-    PlatformWebViewEnvironmentMethod method,
-  ) {
-    return SupportCheckHelper.supportedPlatformsForMethod(
-      method: method,
-      checker: WebViewEnvironment.isMethodSupported,
-    );
-  }
-
   Set<SupportedPlatform> _processGlobalConfigPlatforms(
     PlatformProcessGlobalConfigMethod method,
   ) {
@@ -116,19 +100,6 @@ class _ServiceControllersScreenState extends State<ServiceControllersScreen> {
     _bypassListController.dispose();
     _dataDirSuffixController.dispose();
     super.dispose();
-  }
-
-  @override
-  void didChangeDependencies() {
-    super.didChangeDependencies();
-    final settingsManager = context.watch<SettingsManager>();
-    if (_lastEnvironmentRevision != settingsManager.environmentRevision) {
-      _lastEnvironmentRevision = settingsManager.environmentRevision;
-      setState(() {
-        _processInfos = [];
-        _availableVersion = null;
-      });
-    }
   }
 
   void _logEvent(EventType type, String message, {Map<String, dynamic>? data}) {
@@ -551,174 +522,6 @@ class _ServiceControllersScreenState extends State<ServiceControllersScreen> {
     }
   }
 
-  // WebViewEnvironment methods
-  Future<void> _createWebViewEnvironment() async {
-    setState(() => _isLoading = true);
-    try {
-      await context.read<SettingsManager>().recreateEnvironment();
-      _recordMethodResult(
-        PlatformWebViewEnvironmentMethod.create.name,
-        '$WebViewEnvironment created',
-        isError: false,
-      );
-      _logEvent(EventType.ui, '$WebViewEnvironment created');
-    } catch (e) {
-      _recordMethodResult(
-        PlatformWebViewEnvironmentMethod.create.name,
-        'Error: $e',
-        isError: true,
-      );
-    } finally {
-      setState(() => _isLoading = false);
-    }
-  }
-
-  Future<void> _getAvailableVersion() async {
-    setState(() => _isLoading = true);
-    try {
-      final version = await WebViewEnvironment.getAvailableVersion();
-      setState(() => _availableVersion = version);
-      _recordMethodResult(
-        PlatformWebViewEnvironmentMethod.getAvailableVersion.name,
-        'Available version: $version',
-        isError: false,
-      );
-    } catch (e) {
-      _recordMethodResult(
-        PlatformWebViewEnvironmentMethod.getAvailableVersion.name,
-        'Error: $e',
-        isError: true,
-      );
-    } finally {
-      setState(() => _isLoading = false);
-    }
-  }
-
-  Future<void> _compareBrowserVersions() async {
-    final params = await showParameterDialog(
-      context: context,
-      title: 'Compare Browser Versions',
-      parameters: {'version1': '100.0.0.0', 'version2': '99.0.0.0'},
-      requiredPaths: ['version1', 'version2'],
-    );
-
-    if (params == null) return;
-    final version1 = params['version1']?.toString() ?? '';
-    final version2 = params['version2']?.toString() ?? '';
-    if (version1.isEmpty || version2.isEmpty) {
-      _recordMethodResult(
-        PlatformWebViewEnvironmentMethod.compareBrowserVersions.name,
-        'Both versions are required',
-        isError: true,
-      );
-      return;
-    }
-
-    setState(() => _isLoading = true);
-    try {
-      final result = await WebViewEnvironment.compareBrowserVersions(
-        version1: version1,
-        version2: version2,
-      );
-      _recordMethodResult(
-        PlatformWebViewEnvironmentMethod.compareBrowserVersions.name,
-        'Compare versions: $result (positive = v1 > v2, negative = v1 < v2)',
-        isError: false,
-      );
-    } catch (e) {
-      _recordMethodResult(
-        PlatformWebViewEnvironmentMethod.compareBrowserVersions.name,
-        'Error: $e',
-        isError: true,
-      );
-    } finally {
-      setState(() => _isLoading = false);
-    }
-  }
-
-  Future<void> _getProcessInfos() async {
-    final environment = context.read<SettingsManager>().webViewEnvironment;
-    if (environment == null) {
-      _recordMethodResult(
-        PlatformWebViewEnvironmentMethod.getProcessInfos.name,
-        'Create or select $WebViewEnvironment first',
-        isError: true,
-      );
-      return;
-    }
-
-    setState(() => _isLoading = true);
-    try {
-      final infos = await environment.getProcessInfos();
-      setState(() => _processInfos = infos);
-      _recordMethodResult(
-        PlatformWebViewEnvironmentMethod.getProcessInfos.name,
-        'Found ${infos.length} processes',
-        isError: false,
-      );
-    } catch (e) {
-      _recordMethodResult(
-        PlatformWebViewEnvironmentMethod.getProcessInfos.name,
-        'Error: $e',
-        isError: true,
-      );
-    } finally {
-      setState(() => _isLoading = false);
-    }
-  }
-
-  Future<void> _getFailureReportFolderPath() async {
-    final environment = context.read<SettingsManager>().webViewEnvironment;
-    if (environment == null) {
-      _recordMethodResult(
-        PlatformWebViewEnvironmentMethod.getFailureReportFolderPath.name,
-        'Create or select $WebViewEnvironment first',
-        isError: true,
-      );
-      return;
-    }
-
-    setState(() => _isLoading = true);
-    try {
-      final path = await environment.getFailureReportFolderPath();
-      _recordMethodResult(
-        PlatformWebViewEnvironmentMethod.getFailureReportFolderPath.name,
-        'Failure report folder: $path',
-        isError: false,
-      );
-    } catch (e) {
-      _recordMethodResult(
-        PlatformWebViewEnvironmentMethod.getFailureReportFolderPath.name,
-        'Error: $e',
-        isError: true,
-      );
-    } finally {
-      setState(() => _isLoading = false);
-    }
-  }
-
-  Future<void> _disposeWebViewEnvironment() async {
-    setState(() => _isLoading = true);
-    try {
-      await context.read<SettingsManager>().disposeEnvironment();
-      setState(() => _processInfos = []);
-      _recordMethodResult(
-        PlatformWebViewEnvironmentMethod.dispose.name,
-        '$WebViewEnvironment disposed',
-        isError: false,
-      );
-    } catch (e) {
-      _recordMethodResult(
-        PlatformWebViewEnvironmentMethod.dispose.name,
-        'Error: $e',
-        isError: true,
-      );
-    } finally {
-      setState(() => _isLoading = false);
-    }
-  }
-
-  // ProcessGlobalConfig methods
   Future<void> _applyProcessGlobalConfig() async {
     final params = await showParameterDialog(
       context: context,
@@ -796,10 +599,6 @@ class _ServiceControllersScreenState extends State<ServiceControllersScreen> {
       body: ListView(
         padding: const EdgeInsets.all(16),
         children: [
-          ProfileSelectorCard(
-            onEditSettingsProfile: () =>
-                Navigator.pushNamed(context, '/settings'),
-          ),
           const SizedBox(height: 16),
           _buildServiceWorkerSection(),
           const SizedBox(height: 16),
@@ -807,7 +606,6 @@ class _ServiceControllersScreenState extends State<ServiceControllersScreen> {
           const SizedBox(height: 16),
           _buildTracingControllerSection(),
           const SizedBox(height: 16),
-          _buildWebViewEnvironmentSection(),
           const SizedBox(height: 16),
           _buildProcessGlobalConfigSection(),
           const SizedBox(height: 16),
@@ -1253,252 +1051,6 @@ class _ServiceControllersScreenState extends State<ServiceControllersScreen> {
                     );
                   },
                 ),
-              ],
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildWebViewEnvironmentSection() {
-    final settingsManager = context.watch<SettingsManager>();
-    final environment = settingsManager.webViewEnvironment;
-    final supportedPlatforms = SupportChecker.getSupportedPlatformsForClass(
-      '$WebViewEnvironment',
-    );
-
-    return Card(
-      child: ExpansionTile(
-        title: Row(
-          children: [
-            Text(
-              '$WebViewEnvironment',
-              style: const TextStyle(fontWeight: FontWeight.bold),
-            ),
-            const SizedBox(width: 8),
-            Expanded(
-              child: SingleChildScrollView(
-                scrollDirection: Axis.horizontal,
-                child: SupportBadgesRow(
-                  supportedPlatforms: supportedPlatforms,
-                  compact: true,
-                ),
-              ),
-            ),
-          ],
-        ),
-        children: [
-          Padding(
-            padding: const EdgeInsets.all(16),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                // Environment status
-                Container(
-                  padding: const EdgeInsets.all(12),
-                  decoration: BoxDecoration(
-                    color: environment != null
-                        ? Colors.green.shade50
-                        : Colors.grey.shade100,
-                    borderRadius: BorderRadius.circular(8),
-                  ),
-                  child: Row(
-                    children: [
-                      Icon(
-                        environment != null ? Icons.check_circle : Icons.cancel,
-                        color: environment != null ? Colors.green : Colors.grey,
-                        size: 24,
-                      ),
-                      const SizedBox(width: 8),
-                      Expanded(
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                              environment != null
-                                  ? 'Environment Active'
-                                  : 'No Environment',
-                              style: const TextStyle(
-                                fontWeight: FontWeight.bold,
-                              ),
-                            ),
-                            if (environment != null)
-                              Text(
-                                'ID: ${environment.id}',
-                                style: TextStyle(
-                                  fontSize: 12,
-                                  color: Colors.grey.shade600,
-                                ),
-                              ),
-                            if (_availableVersion != null)
-                              Text(
-                                'Version: $_availableVersion',
-                                style: TextStyle(
-                                  fontSize: 12,
-                                  color: Colors.grey.shade600,
-                                ),
-                              ),
-                          ],
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-                const SizedBox(height: 12),
-
-                // Create/Dispose buttons
-                LayoutBuilder(
-                  builder: (context, constraints) {
-                    final isMobile = ResponsiveBreakpoints.isMobileWidth(
-                      constraints.maxWidth,
-                    );
-                    final createButton = _buildMethodButton(
-                      'Create',
-                      environment == null ? _createWebViewEnvironment : null,
-                      supportedPlatforms: _webViewEnvironmentPlatforms(
-                        PlatformWebViewEnvironmentMethod.create,
-                      ),
-                      methodName: PlatformWebViewEnvironmentMethod.create.name,
-                    );
-                    final disposeButton = _buildMethodButton(
-                      'Dispose',
-                      environment != null ? _disposeWebViewEnvironment : null,
-                      supportedPlatforms: _webViewEnvironmentPlatforms(
-                        PlatformWebViewEnvironmentMethod.dispose,
-                      ),
-                      methodName: PlatformWebViewEnvironmentMethod.dispose.name,
-                    );
-
-                    return ResponsiveRow(
-                      spacing: 8,
-                      runSpacing: 8,
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        isMobile ? createButton : Expanded(child: createButton),
-                        isMobile
-                            ? disposeButton
-                            : Expanded(child: disposeButton),
-                      ],
-                    );
-                  },
-                ),
-                const SizedBox(height: 8),
-
-                // Static methods
-                LayoutBuilder(
-                  builder: (context, constraints) {
-                    final isMobile = ResponsiveBreakpoints.isMobileWidth(
-                      constraints.maxWidth,
-                    );
-                    final versionButton = _buildMethodButton(
-                      'Get Version',
-                      _getAvailableVersion,
-                      supportedPlatforms: _webViewEnvironmentPlatforms(
-                        PlatformWebViewEnvironmentMethod.getAvailableVersion,
-                      ),
-                      methodName: PlatformWebViewEnvironmentMethod
-                          .getAvailableVersion
-                          .name,
-                    );
-                    final compareButton = _buildMethodButton(
-                      'Compare Versions',
-                      _compareBrowserVersions,
-                      supportedPlatforms: _webViewEnvironmentPlatforms(
-                        PlatformWebViewEnvironmentMethod.compareBrowserVersions,
-                      ),
-                      methodName: PlatformWebViewEnvironmentMethod
-                          .compareBrowserVersions
-                          .name,
-                    );
-
-                    return ResponsiveRow(
-                      spacing: 8,
-                      runSpacing: 8,
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        isMobile
-                            ? versionButton
-                            : Expanded(child: versionButton),
-                        isMobile
-                            ? compareButton
-                            : Expanded(child: compareButton),
-                      ],
-                    );
-                  },
-                ),
-                const SizedBox(height: 8),
-
-                // Instance methods
-                LayoutBuilder(
-                  builder: (context, constraints) {
-                    final isMobile = ResponsiveBreakpoints.isMobileWidth(
-                      constraints.maxWidth,
-                    );
-                    final processesButton = _buildMethodButton(
-                      'Get Processes',
-                      environment != null ? _getProcessInfos : null,
-                      supportedPlatforms: _webViewEnvironmentPlatforms(
-                        PlatformWebViewEnvironmentMethod.getProcessInfos,
-                      ),
-                      methodName:
-                          PlatformWebViewEnvironmentMethod.getProcessInfos.name,
-                    );
-                    final failureButton = _buildMethodButton(
-                      'Failure Folder',
-                      environment != null ? _getFailureReportFolderPath : null,
-                      supportedPlatforms: _webViewEnvironmentPlatforms(
-                        PlatformWebViewEnvironmentMethod
-                            .getFailureReportFolderPath,
-                      ),
-                      methodName: PlatformWebViewEnvironmentMethod
-                          .getFailureReportFolderPath
-                          .name,
-                    );
-
-                    return ResponsiveRow(
-                      spacing: 8,
-                      runSpacing: 8,
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        isMobile
-                            ? processesButton
-                            : Expanded(child: processesButton),
-                        isMobile
-                            ? failureButton
-                            : Expanded(child: failureButton),
-                      ],
-                    );
-                  },
-                ),
-
-                // Process list
-                if (_processInfos.isNotEmpty) ...[
-                  const SizedBox(height: 12),
-                  const Text(
-                    'Process Infos:',
-                    style: TextStyle(fontWeight: FontWeight.bold),
-                  ),
-                  const SizedBox(height: 8),
-                  Container(
-                    height: 100,
-                    decoration: BoxDecoration(
-                      color: Colors.grey.shade100,
-                      borderRadius: BorderRadius.circular(4),
-                    ),
-                    child: ListView.builder(
-                      itemCount: _processInfos.length,
-                      itemBuilder: (context, index) {
-                        final info = _processInfos[index];
-                        return ListTile(
-                          dense: true,
-                          title: Text('Process ${index + 1}'),
-                          subtitle: Text('Kind: ${info.kind.name()}'),
-                        );
-                      },
-                    ),
-                  ),
-                ],
               ],
             ),
           ),

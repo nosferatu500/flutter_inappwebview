@@ -60,11 +60,6 @@ class URLProtectionSpace_ {
         apiUrl:
             "https://developer.apple.com/documentation/foundation/urlprotectionspace/1415028-authenticationmethod",
       ),
-      MacOSPlatform(
-        apiName: "URLProtectionSpace.authenticationMethod",
-        apiUrl:
-            "https://developer.apple.com/documentation/foundation/urlprotectionspace/1415028-authenticationmethod",
-      ),
     ],
   )
   URLProtectionSpaceAuthenticationMethod_? authenticationMethod;
@@ -76,11 +71,6 @@ class URLProtectionSpace_ {
   @SupportedPlatforms(
     platforms: [
       IOSPlatform(
-        apiName: "URLProtectionSpace.distinguishedNames",
-        apiUrl:
-            "https://developer.apple.com/documentation/foundation/urlprotectionspace/1417061-distinguishednames",
-      ),
-      MacOSPlatform(
         apiName: "URLProtectionSpace.distinguishedNames",
         apiUrl:
             "https://developer.apple.com/documentation/foundation/urlprotectionspace/1417061-distinguishednames",
@@ -98,11 +88,6 @@ class URLProtectionSpace_ {
         apiUrl:
             "https://developer.apple.com/documentation/foundation/urlprotectionspace/1415176-receivescredentialsecurely",
       ),
-      MacOSPlatform(
-        apiName: "URLProtectionSpace.receivesCredentialSecurely",
-        apiUrl:
-            "https://developer.apple.com/documentation/foundation/urlprotectionspace/1415176-receivescredentialsecurely",
-      ),
     ],
   )
   bool? receivesCredentialSecurely;
@@ -113,11 +98,6 @@ class URLProtectionSpace_ {
   @SupportedPlatforms(
     platforms: [
       IOSPlatform(
-        apiName: "URLProtectionSpace.proxyType",
-        apiUrl:
-            "https://developer.apple.com/documentation/foundation/urlprotectionspace/1411924-proxytype",
-      ),
-      MacOSPlatform(
         apiName: "URLProtectionSpace.proxyType",
         apiUrl:
             "https://developer.apple.com/documentation/foundation/urlprotectionspace/1411924-proxytype",

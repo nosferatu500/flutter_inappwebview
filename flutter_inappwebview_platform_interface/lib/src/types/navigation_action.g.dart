@@ -27,8 +27,6 @@ class NavigationAction {
   ///**Officially Supported Platforms/Implementations**:
   ///- Android WebView 21+ ([Official API - WebResourceRequest.hasGesture](https://developer.android.com/reference/android/webkit/WebResourceRequest#hasGesture())):
   ///    - On Android < 21, this is always `false`
-  ///- Windows WebView2:
-  ///    - Available only if the request is associated to the [PlatformWebViewCreationParams.onCreateWindow] event
   bool? hasGesture;
 
   ///Whether the navigation is a redirect produced by a content rule list rather than by the
@@ -49,7 +47,6 @@ class NavigationAction {
   ///
   ///**Officially Supported Platforms/Implementations**:
   ///- iOS WKWebView 26.0+ ([Official API - WKNavigationAction.isContentRuleListRedirect](https://developer.apple.com/documentation/webkit/wknavigationaction/iscontentrulelistredirect))
-  ///- macOS WKWebView 26.0+ ([Official API - WKNavigationAction.isContentRuleListRedirect](https://developer.apple.com/documentation/webkit/wknavigationaction/iscontentrulelistredirect))
   bool? isContentRuleListRedirect;
 
   ///Indicates whether the request was made for the main frame.
@@ -65,7 +62,6 @@ class NavigationAction {
   ///
   ///**Officially Supported Platforms/Implementations**:
   ///- Android WebView 21+ ([Official API - WebResourceRequest.isRedirect](https://developer.android.com/reference/android/webkit/WebResourceRequest#isRedirect()))
-  ///- Windows WebView2
   bool? isRedirect;
 
   ///The modifier keys that were held down when the navigation was triggered,
@@ -86,8 +82,6 @@ class NavigationAction {
   ///
   ///**Officially Supported Platforms/Implementations**:
   ///- iOS WKWebView ([Official API - WKNavigationAction.navigationType](https://developer.apple.com/documentation/webkit/wknavigationaction/1401914-navigationtype))
-  ///- macOS WKWebView ([Official API - WKNavigationAction.navigationType](https://developer.apple.com/documentation/webkit/wknavigationaction/1401914-navigationtype))
-  ///- Windows WebView2
   NavigationType? navigationType;
 
   ///The URL request object associated with the navigation action.
@@ -102,21 +96,18 @@ class NavigationAction {
   ///
   ///**Officially Supported Platforms/Implementations**:
   ///- iOS WKWebView 14.5+ ([Official API - WKNavigationAction.shouldPerformDownload](https://developer.apple.com/documentation/webkit/wknavigationaction/3727357-shouldperformdownload))
-  ///- macOS WKWebView 11.3+ ([Official API - WKNavigationAction.shouldPerformDownload](https://developer.apple.com/documentation/webkit/wknavigationaction/3727357-shouldperformdownload))
   bool? shouldPerformDownload;
 
   ///The frame that requested the navigation.
   ///
   ///**Officially Supported Platforms/Implementations**:
   ///- iOS WKWebView ([Official API - WKNavigationAction.sourceFrame](https://developer.apple.com/documentation/webkit/wknavigationaction/1401926-sourceframe))
-  ///- macOS WKWebView ([Official API - WKNavigationAction.sourceFrame](https://developer.apple.com/documentation/webkit/wknavigationaction/1401926-sourceframe))
   FrameInfo? sourceFrame;
 
   ///The frame in which to display the new content.
   ///
   ///**Officially Supported Platforms/Implementations**:
   ///- iOS WKWebView ([Official API - WKNavigationAction.targetFrame](https://developer.apple.com/documentation/webkit/wknavigationaction/1401918-targetframe))
-  ///- macOS WKWebView ([Official API - WKNavigationAction.targetFrame](https://developer.apple.com/documentation/webkit/wknavigationaction/1401918-targetframe))
   FrameInfo? targetFrame;
   NavigationAction({
     this.buttonNumber,

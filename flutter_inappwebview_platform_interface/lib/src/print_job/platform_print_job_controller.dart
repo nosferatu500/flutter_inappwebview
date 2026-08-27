@@ -18,14 +18,7 @@ part 'platform_print_job_controller.g.dart';
 ///{@endtemplate}
 ///
 ///{@macro flutter_inappwebview_platform_interface.PlatformPrintJobControllerCreationParams.supported_platforms}
-@SupportedPlatforms(
-  platforms: [
-    AndroidPlatform(),
-    IOSPlatform(),
-    MacOSPlatform(),
-    WindowsPlatform(),
-  ],
-)
+@SupportedPlatforms(platforms: [AndroidPlatform(), IOSPlatform()])
 @immutable
 class PlatformPrintJobControllerCreationParams {
   /// Used by the platform implementation to create a new [PlatformPrintJobController].
@@ -36,14 +29,7 @@ class PlatformPrintJobControllerCreationParams {
   ///{@endtemplate}
   ///
   ///{@macro flutter_inappwebview_platform_interface.PlatformPrintJobControllerCreationParams.id.supported_platforms}
-  @SupportedPlatforms(
-    platforms: [
-      AndroidPlatform(),
-      IOSPlatform(),
-      MacOSPlatform(),
-      WindowsPlatform(),
-    ],
-  )
+  @SupportedPlatforms(platforms: [AndroidPlatform(), IOSPlatform()])
   final String id;
 
   ///{@template flutter_inappwebview_platform_interface.PlatformPrintJobControllerCreationParams.isClassSupported}
@@ -76,14 +62,7 @@ typedef PrintJobCompletionHandler =
 ///{@endtemplate}
 ///
 ///{@macro flutter_inappwebview_platform_interface.PlatformPrintJobController.supported_platforms}
-@SupportedPlatforms(
-  platforms: [
-    AndroidPlatform(),
-    IOSPlatform(),
-    MacOSPlatform(),
-    WindowsPlatform(),
-  ],
-)
+@SupportedPlatforms(platforms: [AndroidPlatform(), IOSPlatform()])
 abstract class PlatformPrintJobController extends PlatformInterface
     implements Disposable {
   /// Creates a new [PlatformPrintJobController]
@@ -154,12 +133,6 @@ abstract class PlatformPrintJobController extends PlatformInterface
         apiUrl:
             'https://developer.apple.com/documentation/uikit/uiprintinteractioncontroller/completionhandler',
       ),
-      MacOSPlatform(
-        apiName: 'NSPrintOperation.runModal',
-        apiUrl:
-            'https://developer.apple.com/documentation/appkit/nsprintoperation/1532065-runmodal',
-      ),
-      WindowsPlatform(),
     ],
   )
   PrintJobCompletionHandler? onComplete;
@@ -240,8 +213,6 @@ abstract class PlatformPrintJobController extends PlatformInterface
             'https://developer.android.com/reference/android/print/PrintJob#getInfo()',
       ),
       IOSPlatform(),
-      MacOSPlatform(),
-      WindowsPlatform(),
     ],
   )
   Future<PrintJobInfo?> getInfo() {
@@ -255,14 +226,7 @@ abstract class PlatformPrintJobController extends PlatformInterface
   ///{@endtemplate}
   ///
   ///{@macro flutter_inappwebview_platform_interface.PlatformPrintJobController.dispose.supported_platforms}
-  @SupportedPlatforms(
-    platforms: [
-      AndroidPlatform(),
-      IOSPlatform(),
-      MacOSPlatform(),
-      WindowsPlatform(),
-    ],
-  )
+  @SupportedPlatforms(platforms: [AndroidPlatform(), IOSPlatform()])
   @override
   void dispose() {
     throw UnimplementedError(

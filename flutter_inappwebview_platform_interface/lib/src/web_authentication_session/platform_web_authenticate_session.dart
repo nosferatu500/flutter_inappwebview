@@ -24,12 +24,7 @@ typedef WebAuthenticationSessionCompletionHandler =
 ///{@endtemplate}
 ///
 ///{@macro flutter_inappwebview_platform_interface.PlatformWebAuthenticationSessionCreationParams.supported_platforms}
-@SupportedPlatforms(
-  platforms: [
-    IOSPlatform(available: '11.0'),
-    MacOSPlatform(available: '10.15'),
-  ],
-)
+@SupportedPlatforms(platforms: [IOSPlatform(available: '11.0')])
 @immutable
 class PlatformWebAuthenticationSessionCreationParams {
   /// Used by the platform implementation to create a new [PlatformWebAuthenticationSession].
@@ -63,12 +58,7 @@ class PlatformWebAuthenticationSessionCreationParams {
 ///{@endtemplate}
 ///
 ///{@macro flutter_inappwebview_platform_interface.PlatformWebAuthenticationSession.supported_platforms}
-@SupportedPlatforms(
-  platforms: [
-    IOSPlatform(available: '11.0'),
-    MacOSPlatform(available: '10.15'),
-  ],
-)
+@SupportedPlatforms(platforms: [IOSPlatform(available: '11.0')])
 abstract class PlatformWebAuthenticationSession extends PlatformInterface
     implements Disposable {
   ///Debug settings.
@@ -127,7 +117,7 @@ abstract class PlatformWebAuthenticationSession extends PlatformInterface
   ///{@endtemplate}
   ///
   ///{@macro flutter_inappwebview_platform_interface.PlatformWebAuthenticationSession.id.supported_platforms}
-  @SupportedPlatforms(platforms: [IOSPlatform(), MacOSPlatform()])
+  @SupportedPlatforms(platforms: [IOSPlatform()])
   String get id =>
       throw UnimplementedError('id is not implemented on the current platform');
 
@@ -136,7 +126,7 @@ abstract class PlatformWebAuthenticationSession extends PlatformInterface
   ///{@endtemplate}
   ///
   ///{@macro flutter_inappwebview_platform_interface.PlatformWebAuthenticationSession.url.supported_platforms}
-  @SupportedPlatforms(platforms: [IOSPlatform(), MacOSPlatform()])
+  @SupportedPlatforms(platforms: [IOSPlatform()])
   WebUri get url => throw UnimplementedError(
     'url is not implemented on the current platform',
   );
@@ -146,7 +136,7 @@ abstract class PlatformWebAuthenticationSession extends PlatformInterface
   ///{@endtemplate}
   ///
   ///{@macro flutter_inappwebview_platform_interface.PlatformWebAuthenticationSession.callbackURLScheme.supported_platforms}
-  @SupportedPlatforms(platforms: [IOSPlatform(), MacOSPlatform()])
+  @SupportedPlatforms(platforms: [IOSPlatform()])
   String? get callbackURLScheme => throw UnimplementedError(
     'callbackURLScheme is not implemented on the current platform',
   );
@@ -156,7 +146,7 @@ abstract class PlatformWebAuthenticationSession extends PlatformInterface
   ///{@endtemplate}
   ///
   ///{@macro flutter_inappwebview_platform_interface.PlatformWebAuthenticationSession.initialSettings.supported_platforms}
-  @SupportedPlatforms(platforms: [IOSPlatform(), MacOSPlatform()])
+  @SupportedPlatforms(platforms: [IOSPlatform()])
   WebAuthenticationSessionSettings? get initialSettings =>
       throw UnimplementedError(
         'initialSettings is not implemented on the current platform',
@@ -167,7 +157,7 @@ abstract class PlatformWebAuthenticationSession extends PlatformInterface
   ///{@endtemplate}
   ///
   ///{@macro flutter_inappwebview_platform_interface.PlatformWebAuthenticationSession.onComplete.supported_platforms}
-  @SupportedPlatforms(platforms: [IOSPlatform(), MacOSPlatform()])
+  @SupportedPlatforms(platforms: [IOSPlatform()])
   WebAuthenticationSessionCompletionHandler get onComplete =>
       throw UnimplementedError(
         'onComplete is not implemented on the current platform',
@@ -186,7 +176,7 @@ abstract class PlatformWebAuthenticationSession extends PlatformInterface
   ///{@endtemplate}
   ///
   ///{@macro flutter_inappwebview_platform_interface.PlatformWebAuthenticationSession.create.supported_platforms}
-  @SupportedPlatforms(platforms: [IOSPlatform(), MacOSPlatform()])
+  @SupportedPlatforms(platforms: [IOSPlatform()])
   Future<PlatformWebAuthenticationSession> create({
     required WebUri url,
     String? callbackURLScheme,
@@ -206,11 +196,6 @@ abstract class PlatformWebAuthenticationSession extends PlatformInterface
   @SupportedPlatforms(
     platforms: [
       IOSPlatform(
-        apiName: 'ASWebAuthenticationSession.canStart',
-        apiUrl:
-            'https://developer.apple.com/documentation/authenticationservices/aswebauthenticationsession/3516277-canstart',
-      ),
-      MacOSPlatform(
         apiName: 'ASWebAuthenticationSession.canStart',
         apiUrl:
             'https://developer.apple.com/documentation/authenticationservices/aswebauthenticationsession/3516277-canstart',
@@ -240,11 +225,6 @@ abstract class PlatformWebAuthenticationSession extends PlatformInterface
         apiUrl:
             'https://developer.apple.com/documentation/authenticationservices/aswebauthenticationsession/2990953-start',
       ),
-      MacOSPlatform(
-        apiName: 'ASWebAuthenticationSession.start',
-        apiUrl:
-            'https://developer.apple.com/documentation/authenticationservices/aswebauthenticationsession/2990953-start',
-      ),
     ],
   )
   Future<bool> start() {
@@ -268,11 +248,6 @@ abstract class PlatformWebAuthenticationSession extends PlatformInterface
         apiUrl:
             'https://developer.apple.com/documentation/authenticationservices/aswebauthenticationsession/2990951-cancel',
       ),
-      MacOSPlatform(
-        apiName: 'ASWebAuthenticationSession.cancel',
-        apiUrl:
-            'https://developer.apple.com/documentation/authenticationservices/aswebauthenticationsession/2990951-cancel',
-      ),
     ],
   )
   Future<void> cancel() {
@@ -286,7 +261,7 @@ abstract class PlatformWebAuthenticationSession extends PlatformInterface
   ///{@endtemplate}
   ///
   ///{@macro flutter_inappwebview_platform_interface.PlatformWebAuthenticationSession.dispose.supported_platforms}
-  @SupportedPlatforms(platforms: [IOSPlatform(), MacOSPlatform()])
+  @SupportedPlatforms(platforms: [IOSPlatform()])
   @override
   Future<void> dispose() {
     throw UnimplementedError(
@@ -301,7 +276,7 @@ abstract class PlatformWebAuthenticationSession extends PlatformInterface
   ///{@endtemplate}
   ///
   ///{@macro flutter_inappwebview_platform_interface.PlatformWebAuthenticationSession.isAvailable.supported_platforms}
-  @SupportedPlatforms(platforms: [IOSPlatform(), MacOSPlatform()])
+  @SupportedPlatforms(platforms: [IOSPlatform()])
   Future<bool> isAvailable() {
     throw UnimplementedError(
       'isAvailable is not implemented on the current platform',

@@ -16,7 +16,6 @@ class ClientCertResponse {
   ///**Officially Supported Platforms/Implementations**:
   ///- Android WebView
   ///- iOS WKWebView
-  ///- macOS WKWebView
   String? certificatePassword;
 
   ///The file path of the certificate to use.
@@ -24,7 +23,6 @@ class ClientCertResponse {
   ///**Officially Supported Platforms/Implementations**:
   ///- Android WebView
   ///- iOS WKWebView
-  ///- macOS WKWebView
   String certificatePath;
 
   ///An Android-specific property used by Java [KeyStore](https://developer.android.com/reference/java/security/KeyStore) class to get the instance.
@@ -32,17 +30,10 @@ class ClientCertResponse {
   ///**Officially Supported Platforms/Implementations**:
   ///- Android WebView
   String? keyStoreType;
-
-  ///The index of the selected certificate.
-  ///
-  ///**Officially Supported Platforms/Implementations**:
-  ///- Windows WebView2
-  int selectedCertificate;
   ClientCertResponse({
     this.certificatePath = "",
     this.certificatePassword = "",
     this.keyStoreType = "PKCS12",
-    this.selectedCertificate = -1,
     this.action = ClientCertResponseAction.CANCEL,
   }) {
     if (action == ClientCertResponseAction.PROCEED && !Util.isWindows) {
@@ -72,9 +63,6 @@ class ClientCertResponse {
       instance.certificatePath = map['certificatePath'];
     }
     instance.keyStoreType = map['keyStoreType'];
-    if (map['selectedCertificate'] != null) {
-      instance.selectedCertificate = map['selectedCertificate'];
-    }
     return instance;
   }
 
@@ -89,7 +77,6 @@ class ClientCertResponse {
       "certificatePassword": certificatePassword,
       "certificatePath": certificatePath,
       "keyStoreType": keyStoreType,
-      "selectedCertificate": selectedCertificate,
     };
   }
 
@@ -100,6 +87,6 @@ class ClientCertResponse {
 
   @override
   String toString() {
-    return 'ClientCertResponse{action: $action, certificatePassword: $certificatePassword, certificatePath: $certificatePath, keyStoreType: $keyStoreType, selectedCertificate: $selectedCertificate}';
+    return 'ClientCertResponse{action: $action, certificatePassword: $certificatePassword, certificatePath: $certificatePath, keyStoreType: $keyStoreType}';
   }
 }

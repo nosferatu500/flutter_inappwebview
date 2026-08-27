@@ -47,15 +47,7 @@ class PlatformWebMessagePortCreationParams {
 ///{@endtemplate}
 ///
 ///{@macro flutter_inappwebview_platform_interface.PlatformWebMessagePort.supported_platforms}
-@SupportedPlatforms(
-  platforms: [
-    AndroidPlatform(),
-    IOSPlatform(),
-    MacOSPlatform(),
-    LinuxPlatform(note: 'Implemented via JavaScript MessageChannel API.'),
-    WindowsPlatform(note: 'Implemented via JavaScript MessageChannel API.'),
-  ],
-)
+@SupportedPlatforms(platforms: [AndroidPlatform(), IOSPlatform()])
 abstract class PlatformWebMessagePort extends PlatformInterface
     implements IWebMessagePort {
   /// Creates a new [PlatformWebMessagePort]
@@ -97,15 +89,7 @@ abstract class IWebMessagePort {
   ///{@endtemplate}
   ///
   ///{@macro flutter_inappwebview_platform_interface.PlatformWebMessagePort.setWebMessageCallback.supported_platforms}
-  @SupportedPlatforms(
-    platforms: [
-      AndroidPlatform(),
-      IOSPlatform(),
-      MacOSPlatform(),
-      LinuxPlatform(note: 'Implemented via JavaScript MessageChannel API.'),
-      WindowsPlatform(note: 'Implemented via JavaScript MessageChannel API.'),
-    ],
-  )
+  @SupportedPlatforms(platforms: [AndroidPlatform(), IOSPlatform()])
   Future<void> setWebMessageCallback(WebMessageCallback? onMessage) {
     throw UnimplementedError(
       'setWebMessageCallback is not implemented on the current platform',
@@ -117,15 +101,7 @@ abstract class IWebMessagePort {
   ///{@endtemplate}
   ///
   ///{@macro flutter_inappwebview_platform_interface.PlatformWebMessagePort.postMessage.supported_platforms}
-  @SupportedPlatforms(
-    platforms: [
-      AndroidPlatform(),
-      IOSPlatform(),
-      MacOSPlatform(),
-      LinuxPlatform(note: 'Implemented via JavaScript MessageChannel API.'),
-      WindowsPlatform(note: 'Implemented via JavaScript MessageChannel API.'),
-    ],
-  )
+  @SupportedPlatforms(platforms: [AndroidPlatform(), IOSPlatform()])
   Future<void> postMessage(WebMessage message) {
     throw UnimplementedError(
       'postMessage is not implemented on the current platform',
@@ -137,15 +113,7 @@ abstract class IWebMessagePort {
   ///{@endtemplate}
   ///
   ///{@macro flutter_inappwebview_platform_interface.PlatformWebMessagePort.close.supported_platforms}
-  @SupportedPlatforms(
-    platforms: [
-      AndroidPlatform(),
-      IOSPlatform(),
-      MacOSPlatform(),
-      LinuxPlatform(note: 'Implemented via JavaScript MessageChannel API.'),
-      WindowsPlatform(note: 'Implemented via JavaScript MessageChannel API.'),
-    ],
-  )
+  @SupportedPlatforms(platforms: [AndroidPlatform(), IOSPlatform()])
   Future<void> close() {
     throw UnimplementedError(
       'close is not implemented on the current platform',

@@ -41,11 +41,6 @@ class InAppWebViewController {
   ///{@macro flutter_inappwebview_platform_interface.PlatformInAppWebViewController.getTitle.supported_platforms}
   Future<String?> getTitle() => platform.getTitle();
 
-  ///{@macro flutter_inappwebview_platform_interface.PlatformInAppWebViewController.getFrameId}
-  ///
-  ///{@macro flutter_inappwebview_platform_interface.PlatformInAppWebViewController.getFrameId.supported_platforms}
-  Future<int?> getFrameId() => platform.getFrameId();
-
   ///{@macro flutter_inappwebview_platform_interface.PlatformInAppWebViewController.getProgress}
   ///
   ///{@macro flutter_inappwebview_platform_interface.PlatformInAppWebViewController.getProgress.supported_platforms}
@@ -60,31 +55,6 @@ class InAppWebViewController {
   ///
   ///{@macro flutter_inappwebview_platform_interface.PlatformInAppWebViewController.getFavicons.supported_platforms}
   Future<List<Favicon>> getFavicons() => platform.getFavicons();
-
-  ///{@macro flutter_inappwebview_platform_interface.PlatformInAppWebViewController.getFavicon}
-  ///
-  ///{@macro flutter_inappwebview_platform_interface.PlatformInAppWebViewController.getFavicon.supported_platforms}
-  Future<Uint8List?> getFavicon({
-    required WebUri url,
-    FaviconImageFormat faviconImageFormat = FaviconImageFormat.PNG,
-  }) => platform.getFavicon(url: url, faviconImageFormat: faviconImageFormat);
-
-  ///{@macro flutter_inappwebview_platform_interface.PlatformInAppWebViewController.showSaveAsUI}
-  ///
-  ///{@macro flutter_inappwebview_platform_interface.PlatformInAppWebViewController.showSaveAsUI.supported_platforms}
-  Future<SaveAsUIResult?> showSaveAsUI() => platform.showSaveAsUI();
-
-  ///{@macro flutter_inappwebview_platform_interface.PlatformInAppWebViewController.getMemoryUsageTargetLevel}
-  ///
-  ///{@macro flutter_inappwebview_platform_interface.PlatformInAppWebViewController.getMemoryUsageTargetLevel.supported_platforms}
-  Future<MemoryUsageTargetLevel?> getMemoryUsageTargetLevel() =>
-      platform.getMemoryUsageTargetLevel();
-
-  ///{@macro flutter_inappwebview_platform_interface.PlatformInAppWebViewController.setMemoryUsageTargetLevel}
-  ///
-  ///{@macro flutter_inappwebview_platform_interface.PlatformInAppWebViewController.setMemoryUsageTargetLevel.supported_platforms}
-  Future<void> setMemoryUsageTargetLevel(MemoryUsageTargetLevel level) =>
-      platform.setMemoryUsageTargetLevel(level);
 
   ///{@macro flutter_inappwebview_platform_interface.PlatformInAppWebViewController.loadUrl}
   ///
@@ -664,59 +634,6 @@ class InAppWebViewController {
   ///{@macro flutter_inappwebview_platform_interface.PlatformInAppWebViewController.isInFullscreen.supported_platforms}
   Future<bool> isInFullscreen() => platform.isInFullscreen();
 
-  ///{@macro flutter_inappwebview_platform_interface.PlatformInAppWebViewController.requestEnterFullscreen}
-  ///
-  ///{@macro flutter_inappwebview_platform_interface.PlatformInAppWebViewController.requestEnterFullscreen.supported_platforms}
-  Future<void> requestEnterFullscreen() => platform.requestEnterFullscreen();
-
-  ///{@macro flutter_inappwebview_platform_interface.PlatformInAppWebViewController.requestExitFullscreen}
-  ///
-  ///{@macro flutter_inappwebview_platform_interface.PlatformInAppWebViewController.requestExitFullscreen.supported_platforms}
-  Future<void> requestExitFullscreen() => platform.requestExitFullscreen();
-
-  ///{@macro flutter_inappwebview_platform_interface.PlatformInAppWebViewController.setVisible}
-  ///
-  ///{@macro flutter_inappwebview_platform_interface.PlatformInAppWebViewController.setVisible.supported_platforms}
-  Future<void> setVisible({required bool visible}) =>
-      platform.setVisible(visible: visible);
-
-  ///{@macro flutter_inappwebview_platform_interface.PlatformInAppWebViewController.setTargetRefreshRate}
-  ///
-  ///{@macro flutter_inappwebview_platform_interface.PlatformInAppWebViewController.setTargetRefreshRate.supported_platforms}
-  Future<void> setTargetRefreshRate({required int rate}) =>
-      platform.setTargetRefreshRate(rate: rate);
-
-  ///{@macro flutter_inappwebview_platform_interface.PlatformInAppWebViewController.getTargetRefreshRate}
-  ///
-  ///{@macro flutter_inappwebview_platform_interface.PlatformInAppWebViewController.getTargetRefreshRate.supported_platforms}
-  Future<int> getTargetRefreshRate() => platform.getTargetRefreshRate();
-
-  ///{@macro flutter_inappwebview_platform_interface.PlatformInAppWebViewController.getScreenScale}
-  ///
-  ///{@macro flutter_inappwebview_platform_interface.PlatformInAppWebViewController.getScreenScale.supported_platforms}
-  Future<double> getScreenScale() => platform.getScreenScale();
-
-  ///{@macro flutter_inappwebview_platform_interface.PlatformInAppWebViewController.setScreenScale}
-  ///
-  ///{@macro flutter_inappwebview_platform_interface.PlatformInAppWebViewController.setScreenScale.supported_platforms}
-  Future<void> setScreenScale({required double scale}) =>
-      platform.setScreenScale(scale: scale);
-
-  ///{@macro flutter_inappwebview_platform_interface.PlatformInAppWebViewController.isVisible}
-  ///
-  ///{@macro flutter_inappwebview_platform_interface.PlatformInAppWebViewController.isVisible.supported_platforms}
-  Future<bool> isVisible() => platform.isVisible();
-
-  ///{@macro flutter_inappwebview_platform_interface.PlatformInAppWebViewController.requestPointerLock}
-  ///
-  ///{@macro flutter_inappwebview_platform_interface.PlatformInAppWebViewController.requestPointerLock.supported_platforms}
-  Future<bool> requestPointerLock() => platform.requestPointerLock();
-
-  ///{@macro flutter_inappwebview_platform_interface.PlatformInAppWebViewController.requestPointerUnlock}
-  ///
-  ///{@macro flutter_inappwebview_platform_interface.PlatformInAppWebViewController.requestPointerUnlock.supported_platforms}
-  Future<bool> requestPointerUnlock() => platform.requestPointerUnlock();
-
   ///{@macro flutter_inappwebview_platform_interface.PlatformInAppWebViewController.clearFormData}
   ///
   ///{@macro flutter_inappwebview_platform_interface.PlatformInAppWebViewController.clearFormData.supported_platforms}
@@ -746,27 +663,6 @@ class InAppWebViewController {
   Future<void> setMicrophoneCaptureState({required MediaCaptureState state}) =>
       platform.setMicrophoneCaptureState(state: state);
 
-  ///{@macro flutter_inappwebview_platform_interface.PlatformInAppWebViewController.isPlayingAudio}
-  ///
-  ///{@macro flutter_inappwebview_platform_interface.PlatformInAppWebViewController.isPlayingAudio.supported_platforms}
-  Future<bool> isPlayingAudio() => platform.isPlayingAudio();
-
-  ///{@macro flutter_inappwebview_platform_interface.PlatformInAppWebViewController.isMuted}
-  ///
-  ///{@macro flutter_inappwebview_platform_interface.PlatformInAppWebViewController.isMuted.supported_platforms}
-  Future<bool> isMuted() => platform.isMuted();
-
-  ///{@macro flutter_inappwebview_platform_interface.PlatformInAppWebViewController.setMuted}
-  ///
-  ///{@macro flutter_inappwebview_platform_interface.PlatformInAppWebViewController.setMuted.supported_platforms}
-  Future<void> setMuted({required bool muted}) =>
-      platform.setMuted(muted: muted);
-
-  ///{@macro flutter_inappwebview_platform_interface.PlatformInAppWebViewController.terminateWebProcess}
-  ///
-  ///{@macro flutter_inappwebview_platform_interface.PlatformInAppWebViewController.terminateWebProcess.supported_platforms}
-  Future<void> terminateWebProcess() => platform.terminateWebProcess();
-
   ///{@macro flutter_inappwebview_platform_interface.PlatformInAppWebViewController.loadSimulatedRequest}
   ///
   ///{@macro flutter_inappwebview_platform_interface.PlatformInAppWebViewController.loadSimulatedRequest.supported_platforms}
@@ -775,46 +671,6 @@ class InAppWebViewController {
     required Uint8List data,
     URLResponse? urlResponse,
   }) => platform.loadSimulatedRequest(urlRequest: urlRequest, data: data);
-
-  ///{@macro flutter_inappwebview_platform_interface.PlatformInAppWebViewController.openDevTools}
-  ///
-  ///{@macro flutter_inappwebview_platform_interface.PlatformInAppWebViewController.openDevTools.supported_platforms}
-  Future<void> openDevTools() => platform.openDevTools();
-
-  ///{@macro flutter_inappwebview_platform_interface.PlatformInAppWebViewController.callDevToolsProtocolMethod}
-  ///
-  ///{@macro flutter_inappwebview_platform_interface.PlatformInAppWebViewController.callDevToolsProtocolMethod.supported_platforms}
-  Future<dynamic> callDevToolsProtocolMethod({
-    required String methodName,
-    Map<String, dynamic>? parameters,
-  }) => platform.callDevToolsProtocolMethod(
-    methodName: methodName,
-    parameters: parameters,
-  );
-
-  ///{@macro flutter_inappwebview_platform_interface.PlatformInAppWebViewController.addDevToolsProtocolEventListener}
-  ///
-  ///{@macro flutter_inappwebview_platform_interface.PlatformInAppWebViewController.addDevToolsProtocolEventListener.supported_platforms}
-  Future<void> addDevToolsProtocolEventListener({
-    required String eventName,
-    required Function(dynamic data) callback,
-  }) => platform.addDevToolsProtocolEventListener(
-    eventName: eventName,
-    callback: callback,
-  );
-
-  ///{@macro flutter_inappwebview_platform_interface.PlatformInAppWebViewController.removeDevToolsProtocolEventListener}
-  ///
-  ///{@macro flutter_inappwebview_platform_interface.PlatformInAppWebViewController.removeDevToolsProtocolEventListener.supported_platforms}
-  Future<void> removeDevToolsProtocolEventListener({
-    required String eventName,
-  }) => platform.removeDevToolsProtocolEventListener(eventName: eventName);
-
-  ///{@macro flutter_inappwebview_platform_interface.PlatformInAppWebViewController.isInterfaceSupported}
-  ///
-  ///{@macro flutter_inappwebview_platform_interface.PlatformInAppWebViewController.isInterfaceSupported.supported_platforms}
-  Future<bool> isInterfaceSupported(WebViewInterface interface) =>
-      platform.isInterfaceSupported(interface);
 
   ///{@macro flutter_inappwebview_platform_interface.PlatformInAppWebViewController.saveState}
   ///
@@ -825,11 +681,6 @@ class InAppWebViewController {
   ///
   ///{@macro flutter_inappwebview_platform_interface.PlatformInAppWebViewController.restoreState.supported_platforms}
   Future<bool> restoreState(Uint8List state) => platform.restoreState(state);
-
-  ///{@macro flutter_inappwebview_platform_interface.PlatformInAppWebViewController.getIFrameId}
-  ///
-  ///{@macro flutter_inappwebview_platform_interface.PlatformInAppWebViewController.getIFrameId.supported_platforms}
-  Future<String?> getIFrameId() => platform.getIFrameId();
 
   ///{@macro flutter_inappwebview_platform_interface.PlatformInAppWebViewController.getDefaultUserAgent}
   ///

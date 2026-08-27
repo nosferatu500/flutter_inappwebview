@@ -33,41 +33,8 @@ class BrowserProcessExitKind {
         : const [],
   );
 
-  ///Indicates that the browser process ended unexpectedly.
-  ///A [PlatformWebViewCreationParams.onProcessFailed] event will also be
-  ///raised to listening WebViews from the [PlatformWebViewEnvironment] associated to the failed process.
-  ///
-  ///**Officially Supported Platforms/Implementations**:
-  ///- Windows WebView2
-  static final FAILED = BrowserProcessExitKind._internalMultiPlatform(1, () {
-    switch (defaultTargetPlatform) {
-      case TargetPlatform.windows:
-        return 1;
-      default:
-        break;
-    }
-    return null;
-  });
-
-  ///Indicates that the browser process ended normally.
-  ///
-  ///**Officially Supported Platforms/Implementations**:
-  ///- Windows WebView2
-  static final NORMAL = BrowserProcessExitKind._internalMultiPlatform(0, () {
-    switch (defaultTargetPlatform) {
-      case TargetPlatform.windows:
-        return 0;
-      default:
-        break;
-    }
-    return null;
-  });
-
   ///Set of all values of [BrowserProcessExitKind].
-  static final Set<BrowserProcessExitKind> values = {
-    BrowserProcessExitKind.FAILED,
-    BrowserProcessExitKind.NORMAL,
-  };
+  static final Set<BrowserProcessExitKind> values = {};
 
   ///Gets a possible [BrowserProcessExitKind] instance from [int] value.
   static BrowserProcessExitKind? fromValue(int? value) {
@@ -146,12 +113,7 @@ class BrowserProcessExitKind {
 
   ///Gets the name of the value.
   String name() {
-    switch (_value) {
-      case 1:
-        return 'FAILED';
-      case 0:
-        return 'NORMAL';
-    }
+    switch (_value) {}
     return _value.toString();
   }
 
