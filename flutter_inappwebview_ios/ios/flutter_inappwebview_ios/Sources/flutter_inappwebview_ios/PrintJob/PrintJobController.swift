@@ -43,8 +43,18 @@ public class PrintJobController: NSObject, Disposable, UIPrintInteractionControl
         self.channelDelegate = PrintJobChannelDelegate(printJobController: self, channel: channel)
     }
     
-    public func printInteractionControllerWillStartJob(_ printInteractionController: UIPrintInteractionController) {
-        state = .started
+    /// `UIPrintInteractionControllerDelegate` is `NS_SWIFT_UI_ACTOR`, so this witness would inherit
+    /// `@MainActor` and Swift 6 would emit an executor check on entry. **UIKit does not honour that
+    /// here**: `-[UIPrintPagesController generateWebKitThumbnailsWithCompletionBlock:]` runs on a
+    /// background `NSThread` and calls the delegate from `createWebKitPDFForAllPages`, so the check
+    /// traps and the process dies with `EXC_BREAKPOINT` in `_dispatch_assert_queue_fail`.
+    ///
+    /// Declared `nonisolated` to accept the call on whatever thread UIKit uses, then hopped to the
+    /// main actor to mutate `state`, which every other accessor touches from there.
+    public nonisolated func printInteractionControllerWillStartJob(_ printInteractionController: UIPrintInteractionController) {
+        Task { @MainActor [weak self] in
+            self?.state = .started
+        }
     }
     
     public func present(animated: Bool, completionHandler: UIPrintInteractionController.CompletionHandler? = nil) {
