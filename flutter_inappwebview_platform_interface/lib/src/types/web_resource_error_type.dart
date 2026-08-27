@@ -168,7 +168,14 @@ class WebResourceErrorType_ {
         apiName: 'URLError.cannotFindHost',
         apiUrl:
             'https://developer.apple.com/documentation/foundation/urlerror/code/2883157-cannotfindhost',
-        value: -1003,
+        // iOS 26 reports a DNS failure as -1006 (`URLError.dnsLookupFailed`) where earlier
+        // versions reported -1003. Android calls both `ERROR_HOST_LOOKUP`, so they belong on
+        // the same constant -- otherwise `if (error.type == HOST_LOOKUP)` silently stops
+        // catching DNS failures on iOS 26.
+        //
+        // First entry is canonical (what `toNativeValue()` returns); the rest are accepted
+        // inbound only by `fromNativeValue`.
+        value: [-1003, -1006],
       ),
       EnumMacOSPlatform(
         apiName: 'URLError.cannotFindHost',
