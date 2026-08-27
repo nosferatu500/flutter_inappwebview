@@ -56,10 +56,6 @@ class InAppWebView extends StatefulWidget {
     FindInteractionController? findInteractionController,
     ContextMenu? contextMenu,
     void Function(InAppWebViewController controller, WebUri? url)?
-    onContentLoading,
-    void Function(InAppWebViewController controller, WebUri? url)?
-    onDOMContentLoaded,
-    void Function(InAppWebViewController controller, WebUri? url)?
     onPageCommitVisible,
     void Function(InAppWebViewController controller, String? title)?
     onTitleChanged,
@@ -294,36 +290,11 @@ class InAppWebView extends StatefulWidget {
       Size newContentSize,
     )?
     onContentSizeChanged,
-    FutureOr<SaveAsUIShowingResponse?> Function(
-      InAppWebViewController controller,
-      SaveAsUIShowingRequest request,
-    )?
-    onSaveAsUIShowing,
-    FutureOr<SaveFileSecurityCheckStartingResponse?> Function(
-      InAppWebViewController controller,
-      SaveFileSecurityCheckStartingRequest request,
-    )?
-    onSaveFileSecurityCheckStarting,
-    FutureOr<ScreenCaptureStartingResponse?> Function(
-      InAppWebViewController controller,
-      ScreenCaptureStartingRequest request,
-    )?
-    onScreenCaptureStarting,
-    void Function(
-      InAppWebViewController controller,
-      AcceleratorKeyPressedDetail detail,
-    )?
-    onAcceleratorKeyPressed,
     FutureOr<ShowFileChooserResponse?> Function(
       InAppWebViewController controller,
       ShowFileChooserRequest request,
     )?
     onShowFileChooser,
-    FutureOr<LaunchingExternalUriSchemeResponse?> Function(
-      InAppWebViewController controller,
-      LaunchingExternalUriSchemeRequest request,
-    )?
-    onLaunchingExternalUriScheme,
   }) : this.fromPlatformCreationParams(
          key: key,
          params: PlatformInAppWebViewWidgetCreationParams(

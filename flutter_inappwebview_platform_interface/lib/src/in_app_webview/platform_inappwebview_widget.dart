@@ -145,12 +145,12 @@ class PlatformInAppWebViewWidgetCreationParams
   @SupportedPlatforms(platforms: [AndroidPlatform(), IOSPlatform()])
   final InAppWebViewKeepAlive? keepAlive;
 
-  ///{@template flutter_inappwebview_platform_interface.PlatformInAppWebViewWidgetCreationParams.webViewEnvironment}
+  ///{@template flutter_inappwebview_platform_interface.PlatformInAppWebViewWidgetCreationParams.preventGestureDelay}
   ///Used to prevent gesture delay on iOS caused by Flutter's gestures handling
   ///between native/platform views.
   ///{@endtemplate}
   ///
-  ///{@macro flutter_inappwebview_platform_interface.PlatformInAppWebViewWidgetCreationParams.webViewEnvironment.supported_platforms}
+  ///{@macro flutter_inappwebview_platform_interface.PlatformInAppWebViewWidgetCreationParams.preventGestureDelay.supported_platforms}
   @SupportedPlatforms(platforms: [IOSPlatform()])
   final bool? preventGestureDelay;
 
