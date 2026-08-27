@@ -71,13 +71,16 @@ void main() {
       expect(await profileStore.getAllProfileNames(), isEmpty);
     });
 
-    test('the default profile is always among them on a supporting device', () async {
-      reply = <Object?>['Default'];
-      expect(
-        await profileStore.getAllProfileNames(),
-        contains(PlatformProfileStore.defaultProfileName),
-      );
-    });
+    test(
+      'the default profile is always among them on a supporting device',
+      () async {
+        reply = <Object?>['Default'];
+        expect(
+          await profileStore.getAllProfileNames(),
+          contains(PlatformProfileStore.defaultProfileName),
+        );
+      },
+    );
   });
 
   group('AndroidProfileStore.getOrCreateProfile', () {
@@ -91,13 +94,22 @@ void main() {
 
     test('returns the name the platform actually created', () async {
       reply = 'signed_in';
-      expect(await profileStore.getOrCreateProfile(name: 'signed_in'), 'signed_in');
+      expect(
+        await profileStore.getOrCreateProfile(name: 'signed_in'),
+        'signed_in',
+      );
     });
 
-    test('null means "could not create", not "created with an empty name"', () async {
-      reply = null;
-      expect(await profileStore.getOrCreateProfile(name: 'signed_in'), isNull);
-    });
+    test(
+      'null means "could not create", not "created with an empty name"',
+      () async {
+        reply = null;
+        expect(
+          await profileStore.getOrCreateProfile(name: 'signed_in'),
+          isNull,
+        );
+      },
+    );
   });
 
   group('AndroidProfileStore.deleteProfile', () {

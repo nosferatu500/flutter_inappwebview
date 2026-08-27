@@ -126,7 +126,9 @@ void main() {
 
     test('serialises under the key the Swift side reads', () {
       expect(
-        InAppWebViewSettings(useOnShowFileChooser: true).toMap()['useOnShowFileChooser'],
+        InAppWebViewSettings(
+          useOnShowFileChooser: true,
+        ).toMap()['useOnShowFileChooser'],
         true,
       );
     });

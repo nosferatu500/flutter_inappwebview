@@ -983,6 +983,87 @@ class _WebStorageScreenState extends State<WebStorageScreen>
     await _deleteOrigin(origin);
   }
 
+  Future<void> _deleteBrowsingData() async {
+    final confirmed = await _showConfirmDialog(
+      'Delete Browsing Data',
+      'Delete cookies, storage and cache for every site in this profile?',
+    );
+    if (!confirmed) return;
+
+    setState(() => _isLoading = true);
+    try {
+      // Android only, and gated on WebViewFeature.DELETE_BROWSING_DATA: a device without the
+      // feature returns false and deletes nothing rather than throwing.
+      final deleted = await _webStorageManager.deleteBrowsingData();
+      _recordMethodResult(
+        _managerMethodKey(PlatformWebStorageManagerMethod.deleteBrowsingData),
+        deleted
+            ? 'Browsing data deleted'
+            : 'Nothing deleted — DELETE_BROWSING_DATA is unsupported here',
+        isError: false,
+      );
+    } catch (e) {
+      _recordMethodResult(
+        _managerMethodKey(PlatformWebStorageManagerMethod.deleteBrowsingData),
+        'Error deleting browsing data: $e',
+        isError: true,
+      );
+    } finally {
+      if (mounted) setState(() => _isLoading = false);
+    }
+  }
+
+  Future<void> _promptDeleteBrowsingDataForSite() async {
+    final params = await showParameterDialog(
+      context: context,
+      title: 'Delete Browsing Data for Site',
+      parameters: {'site': 'example.com'},
+      requiredPaths: ['site'],
+    );
+
+    if (params == null) return;
+    final site = params['site']?.toString() ?? '';
+    if (site.isEmpty) {
+      _recordMethodResult(
+        _managerMethodKey(
+          PlatformWebStorageManagerMethod.deleteBrowsingDataForSite,
+        ),
+        'Please enter a site',
+        isError: true,
+      );
+      return;
+    }
+
+    setState(() => _isLoading = true);
+    try {
+      // Takes a *site*, not an origin: androidx resolves it to the registrable domain and clears
+      // every scheme and subdomain under it. The returned string is the domain it actually used,
+      // and null means the feature is unsupported.
+      final domain = await _webStorageManager.deleteBrowsingDataForSite(
+        site: site,
+      );
+      _recordMethodResult(
+        _managerMethodKey(
+          PlatformWebStorageManagerMethod.deleteBrowsingDataForSite,
+        ),
+        domain != null
+            ? 'Browsing data deleted for $domain'
+            : 'Nothing deleted — DELETE_BROWSING_DATA is unsupported here',
+        isError: false,
+      );
+    } catch (e) {
+      _recordMethodResult(
+        _managerMethodKey(
+          PlatformWebStorageManagerMethod.deleteBrowsingDataForSite,
+        ),
+        'Error deleting browsing data for site: $e',
+        isError: true,
+      );
+    } finally {
+      if (mounted) setState(() => _isLoading = false);
+    }
+  }
+
   Future<void> _getQuotaForOrigin() async {
     final params = await showParameterDialog(
       context: context,
@@ -1202,6 +1283,22 @@ class _WebStorageScreenState extends State<WebStorageScreen>
             PlatformWebStorageManagerMethod.deleteOrigin.name,
           ),
           _promptDeleteOrigin,
+        ),
+        _buildManagerMethodSection(
+          PlatformWebStorageManagerMethod.deleteBrowsingData.name,
+          'Clear cookies, storage and cache for every site (androidx)',
+          _getManagerMethodPlatforms(
+            PlatformWebStorageManagerMethod.deleteBrowsingData.name,
+          ),
+          _deleteBrowsingData,
+        ),
+        _buildManagerMethodSection(
+          PlatformWebStorageManagerMethod.deleteBrowsingDataForSite.name,
+          'Clear data for one site — every scheme and subdomain under it',
+          _getManagerMethodPlatforms(
+            PlatformWebStorageManagerMethod.deleteBrowsingDataForSite.name,
+          ),
+          _promptDeleteBrowsingDataForSite,
         ),
         _buildManagerMethodSection(
           PlatformWebStorageManagerMethod.getQuotaForOrigin.name,

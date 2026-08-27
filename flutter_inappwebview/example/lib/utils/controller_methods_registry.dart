@@ -368,6 +368,22 @@ class ControllerMethodsRegistry {
           },
         ),
         ControllerMethodEntry(
+          description:
+              'Prerenders a URL so a later navigation to it is instant',
+          methodEnum: PlatformInAppWebViewControllerMethod.prerenderUrl,
+          parameters: {'url': 'https://flutter.dev/'},
+          requiredParameters: ['url'],
+          execute: (controller, params) async {
+            final url = params['url']?.toString() ?? '';
+            // Best-effort: false means the platform declined (unsupported provider, or the
+            // profile cannot host a prerender) and the navigation will just load normally.
+            final started = await controller.prerenderUrl(WebUri(url));
+            return started
+                ? 'prerendering $url'
+                : 'the platform declined to prerender $url';
+          },
+        ),
+        ControllerMethodEntry(
           description: 'Navigates back in history',
           methodEnum: PlatformInAppWebViewControllerMethod.goBack,
           execute: (controller, params) async {
@@ -893,6 +909,61 @@ class ControllerMethodsRegistry {
             return 'Focus cleared';
           },
         ),
+        // The two object-valued androidx settings cannot be edited from the generic settings
+        // editor (it only knows bools, numbers, strings and enums), so they are demonstrated here
+        // by applying both through setSettings. One entry, because the registry keys a method by
+        // its methodEnum and two entries would collide on `setSettings`.
+        ControllerMethodEntry(
+          description:
+              'Applies the two object-valued androidx settings: User-Agent Client Hints '
+              '(userAgentMetadata) and the Media Integrity API config',
+          methodEnum: PlatformInAppWebViewControllerMethod.setSettings,
+          parameters: {
+            'brand': 'ExampleBrowser',
+            'majorVersion': '1',
+            'trustedOrigin': 'https://*.example.com',
+          },
+          execute: (controller, params) async {
+            final brand = params['brand']?.toString() ?? 'ExampleBrowser';
+            final majorVersion = params['majorVersion']?.toString() ?? '1';
+            final trustedOrigin =
+                params['trustedOrigin']?.toString() ?? 'https://*.example.com';
+
+            await controller.setSettings(
+              settings: InAppWebViewSettings(
+                // Every UserAgentMetadata field is optional: whatever stays null keeps the
+                // WebView's own value, so a caller can override just the brand list without
+                // inventing a platform or a bitness.
+                userAgentMetadata: UserAgentMetadata(
+                  brandVersionList: [
+                    UserAgentBrandVersion(
+                      brand: brand,
+                      majorVersion: majorVersion,
+                      fullVersion: '$majorVersion.0.0.0',
+                    ),
+                  ],
+                  mobile: true,
+                  formFactors: [UserAgentFormFactor.MOBILE],
+                ),
+                // defaultStatus applies to every origin no rule matches — here the app keeps its
+                // identity hidden everywhere except the one media provider it trusts.
+                webViewMediaIntegrityApiStatus:
+                    WebViewMediaIntegrityApiStatusConfig(
+                      defaultStatus: WebViewMediaIntegrityApiStatus
+                          .ENABLED_WITHOUT_APP_IDENTITY,
+                      overrideRules: [
+                        WebViewMediaIntegrityApiStatusOverrideRule(
+                          origin: trustedOrigin,
+                          status: WebViewMediaIntegrityApiStatus.ENABLED,
+                        ),
+                      ],
+                    ),
+              ),
+            );
+            return 'Client Hints announce $brand $majorVersion; '
+                'app identity granted to $trustedOrigin only';
+          },
+        ),
       ],
     );
   }
@@ -1106,6 +1177,26 @@ class ControllerMethodsRegistry {
             return 'Media paused';
           },
         ),
+        ControllerMethodEntry(
+          description: 'Mutes or unmutes every audio stream in this WebView',
+          methodEnum: PlatformInAppWebViewControllerMethod.setAudioMuted,
+          parameters: {'muted': true},
+          requiredParameters: ['muted'],
+          execute: (controller, params) async {
+            final muted = params['muted'] as bool? ?? true;
+            await controller.setAudioMuted(muted);
+            return muted ? 'muted' : 'unmuted';
+          },
+        ),
+        ControllerMethodEntry(
+          description: 'Is this WebView muted?',
+          methodEnum: PlatformInAppWebViewControllerMethod.isAudioMuted,
+          execute: (controller, params) async {
+            // Non-nullable bool: on a WebView provider without MUTE_AUDIO this reads false, so
+            // check WebViewFeature.isFeatureSupported(MUTE_AUDIO) to tell that from "audible".
+            return await controller.isAudioMuted();
+          },
+        ),
       ],
     );
   }
@@ -1205,6 +1296,23 @@ class ControllerMethodsRegistry {
           methodEnum: PlatformInAppWebViewControllerMethod.getViewId,
           execute: (controller, params) async {
             return controller.getViewId();
+          },
+        ),
+        ControllerMethodEntry(
+          description:
+              'Tags every WebView socket for TrafficStats accounting '
+              '(process-global, not per-WebView)',
+          methodEnum:
+              PlatformInAppWebViewControllerMethod.setDefaultTrafficStatsTag,
+          parameters: {'tag': 0x1000},
+          requiredParameters: ['tag'],
+          execute: (controller, params) async {
+            // Must fit in a 32-bit int: TrafficStats takes a Java int, and the standard codec
+            // would promote anything wider to an int64 and fail natively.
+            final tag = (params['tag'] as num?)?.toInt() ?? 0;
+            // A static on the controller, not an instance method — it tags the whole process, so
+            // the WebView this screen is driving is irrelevant to the call.
+            return await InAppWebViewController.setDefaultTrafficStatsTag(tag);
           },
         ),
       ],

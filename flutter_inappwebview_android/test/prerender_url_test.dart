@@ -66,12 +66,18 @@ void main() {
 
     test('reports false when the platform declined', () async {
       reply = false;
-      expect(await controller.prerenderUrl(WebUri('https://example.com/')), isFalse);
+      expect(
+        await controller.prerenderUrl(WebUri('https://example.com/')),
+        isFalse,
+      );
     });
 
     test('a missing reply reads as "not prerendered"', () async {
       reply = null;
-      expect(await controller.prerenderUrl(WebUri('https://example.com/')), isFalse);
+      expect(
+        await controller.prerenderUrl(WebUri('https://example.com/')),
+        isFalse,
+      );
     });
   });
 

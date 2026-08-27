@@ -111,7 +111,7 @@ rename; this entry is the API-owner's view.
 - Pigeon is wired up and the `find_interaction` channel is migrated end to end as a proof
   (`FindInteractionHostApi` / `FindInteractionFlutterApi`, `FindSessionData`); the other ~409
   messages still use `MethodChannel`
-- 21 unit tests — this package shipped none before
+- 29 unit tests — this package shipped none before
 
 ## 1.4.0-beta.3
 

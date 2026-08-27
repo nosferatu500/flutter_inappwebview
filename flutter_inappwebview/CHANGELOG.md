@@ -378,8 +378,9 @@ simulator for the first time:**
   0 warnings
 - **Pigeon** is wired up and the `find_interaction` channel is migrated end to end as a proof; the
   other ~409 messages still use `MethodChannel`
-- **369 unit tests** (from 276) — including the Android module's first native tests, which found two
-  bugs on their first run — and the integration suite now runs on iOS as well as Android
+- **412 unit tests** (from 276) — including the Android module's first native tests, which found two
+  bugs on their first run — and the integration suite now runs on iOS as well as Android. Every API
+  added here is pinned by a test and demonstrated in the example app
 
 ### Migration
 

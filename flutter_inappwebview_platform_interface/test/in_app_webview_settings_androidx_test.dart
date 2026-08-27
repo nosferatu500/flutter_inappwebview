@@ -13,9 +13,7 @@ import 'package:flutter_test/flutter_test.dart';
 ///  * **the enum's native value.** These are `androidx.webkit` `int` constants that the plugin
 ///    *copies* rather than reads over the channel. A wrong number applies a different behaviour
 ///    than the caller asked for, which no compiler can see. The expected values below were read out
-///    of `webkit-1.17.0.aar` with
-///    `javap -constants androidx.webkit.WebSettingsCompat` (and
-///    `androidx.webkit.WebViewMediaIntegrityApiStatusConfig` for the media-integrity trio).
+///    of `webkit-1.17.0.aar` with `javap -constants androidx.webkit.WebSettingsCompat`.
 ///  * **absence vs. explicit null.** Every nullable field here is applied natively with `?.let`, so
 ///    "not in the map" must stay distinguishable from "in the map as null" — otherwise the plugin
 ///    flips a behaviour the caller never asked about (the §18 rule).
@@ -39,17 +37,20 @@ void main() {
       expect(map['attributionRegistrationBehavior'], 3);
     });
 
-    test('the nullable four stay null when unset, and only paymentRequest defaults', () {
-      final map = InAppWebViewSettings().toMap();
+    test(
+      'the nullable four stay null when unset, and only paymentRequest defaults',
+      () {
+        final map = InAppWebViewSettings().toMap();
 
-      // §16 defaults this one because the platform default is documented and matches.
-      expect(map['paymentRequestEnabled'], false);
-      // §17/§18/§19/§20 left theirs nullable precisely so the plugin applies nothing.
-      expect(map['webAuthenticationSupport'], isNull);
-      expect(map['downloadFaviconsEnabled'], isNull);
-      expect(map['backForwardCacheEnabled'], isNull);
-      expect(map['attributionRegistrationBehavior'], isNull);
-    });
+        // §16 defaults this one because the platform default is documented and matches.
+        expect(map['paymentRequestEnabled'], false);
+        // §17/§18/§19/§20 left theirs nullable precisely so the plugin applies nothing.
+        expect(map['webAuthenticationSupport'], isNull);
+        expect(map['downloadFaviconsEnabled'], isNull);
+        expect(map['backForwardCacheEnabled'], isNull);
+        expect(map['attributionRegistrationBehavior'], isNull);
+      },
+    );
 
     test('all five survive a fromMap round-trip', () {
       final original = InAppWebViewSettings(
@@ -158,10 +159,18 @@ void main() {
       // pins is that no constant was added without a native value, which *would* make
       // `isSupported()` false and `toNativeValue()` null on a live platform.
       for (final v in WebAuthenticationSupport.values) {
-        expect(v.isSupported(), isTrue, reason: '${v.name()} has no native value');
+        expect(
+          v.isSupported(),
+          isTrue,
+          reason: '${v.name()} has no native value',
+        );
       }
       for (final v in AttributionRegistrationBehavior.values) {
-        expect(v.isSupported(), isTrue, reason: '${v.name()} has no native value');
+        expect(
+          v.isSupported(),
+          isTrue,
+          reason: '${v.name()} has no native value',
+        );
       }
     });
   });

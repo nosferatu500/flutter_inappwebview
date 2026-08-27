@@ -93,6 +93,24 @@ class _ServiceControllersScreenState extends State<ServiceControllersScreen> {
     );
   }
 
+  Set<SupportedPlatform> _profileStorePlatforms(
+    PlatformProfileStoreMethod method,
+  ) {
+    return SupportCheckHelper.supportedPlatformsForMethod(
+      method: method,
+      checker: ProfileStore.isMethodSupported,
+    );
+  }
+
+  Set<SupportedPlatform> _geolocationPermissionsPlatforms(
+    PlatformGeolocationPermissionsMethod method,
+  ) {
+    return SupportCheckHelper.supportedPlatformsForMethod(
+      method: method,
+      checker: GeolocationPermissions.isMethodSupported,
+    );
+  }
+
   @override
   void dispose() {
     _proxyHostController.dispose();
@@ -609,6 +627,10 @@ class _ServiceControllersScreenState extends State<ServiceControllersScreen> {
           const SizedBox(height: 16),
           _buildProcessGlobalConfigSection(),
           const SizedBox(height: 16),
+          _buildProfileStoreSection(),
+          const SizedBox(height: 16),
+          _buildGeolocationPermissionsSection(),
+          const SizedBox(height: 16),
           _buildEventLog(),
         ],
       ),
@@ -1059,6 +1081,189 @@ class _ServiceControllersScreenState extends State<ServiceControllersScreen> {
     );
   }
 
+  // ProfileStore methods (androidx MULTI_PROFILE)
+  Future<void> _getAllProfileNames() async {
+    setState(() => _isLoading = true);
+    try {
+      final names = await ProfileStore.instance().getAllProfileNames();
+      _recordMethodResult(
+        PlatformProfileStoreMethod.getAllProfileNames.name,
+        names.isEmpty ? 'No profiles' : names.join(', '),
+        isError: false,
+        value: names,
+      );
+    } catch (e) {
+      _recordMethodResult(
+        PlatformProfileStoreMethod.getAllProfileNames.name,
+        'Error: $e',
+        isError: true,
+      );
+    } finally {
+      setState(() => _isLoading = false);
+    }
+  }
+
+  Future<void> _getOrCreateProfile() async {
+    final params = await showParameterDialog(
+      context: context,
+      title: 'Get or Create Profile',
+      parameters: {'name': 'signed_in'},
+      requiredPaths: ['name'],
+    );
+    if (params == null) return;
+    final name = params['name']?.toString() ?? '';
+
+    setState(() => _isLoading = true);
+    try {
+      final created = await ProfileStore.instance().getOrCreateProfile(
+        name: name,
+      );
+      _recordMethodResult(
+        PlatformProfileStoreMethod.getOrCreateProfile.name,
+        // null is "could not create", which is a different answer from an empty name.
+        created ?? 'Could not create a profile named "$name"',
+        isError: false,
+        value: created,
+      );
+      // Set InAppWebViewSettings.profileName to this name to put a WebView on it — cookies, web
+      // storage and geolocation then all act on that profile rather than the default one.
+      _logEvent(EventType.storage, 'Profile "$name" is available');
+    } catch (e) {
+      _recordMethodResult(
+        PlatformProfileStoreMethod.getOrCreateProfile.name,
+        'Error: $e',
+        isError: true,
+      );
+    } finally {
+      setState(() => _isLoading = false);
+    }
+  }
+
+  Future<void> _deleteProfile() async {
+    final params = await showParameterDialog(
+      context: context,
+      title: 'Delete Profile',
+      parameters: {'name': 'signed_in'},
+      requiredPaths: ['name'],
+    );
+    if (params == null) return;
+    final name = params['name']?.toString() ?? '';
+
+    setState(() => _isLoading = true);
+    try {
+      final deleted = await ProfileStore.instance().deleteProfile(name: name);
+      _recordMethodResult(
+        PlatformProfileStoreMethod.deleteProfile.name,
+        deleted
+            ? 'Profile "$name" deleted'
+            // false covers both "no such profile" and "a WebView is still using it".
+            : 'Not deleted — either no such profile, or it is still in use',
+        isError: false,
+        value: deleted,
+      );
+    } catch (e) {
+      _recordMethodResult(
+        PlatformProfileStoreMethod.deleteProfile.name,
+        'Error: $e',
+        isError: true,
+      );
+    } finally {
+      setState(() => _isLoading = false);
+    }
+  }
+
+  // GeolocationPermissions methods
+  Future<void> _getGeolocationOrigins() async {
+    setState(() => _isLoading = true);
+    try {
+      final origins = await GeolocationPermissions.instance().getOrigins();
+      _recordMethodResult(
+        PlatformGeolocationPermissionsMethod.getOrigins.name,
+        origins.isEmpty ? 'No stored origins' : origins.join(', '),
+        isError: false,
+        value: origins,
+      );
+    } catch (e) {
+      _recordMethodResult(
+        PlatformGeolocationPermissionsMethod.getOrigins.name,
+        'Error: $e',
+        isError: true,
+      );
+    } finally {
+      setState(() => _isLoading = false);
+    }
+  }
+
+  Future<void> _geolocationOriginAction(
+    PlatformGeolocationPermissionsMethod method,
+  ) async {
+    final params = await showParameterDialog(
+      context: context,
+      title: method.name,
+      parameters: {'origin': 'https://example.com', 'profileName': ''},
+      requiredPaths: ['origin'],
+    );
+    if (params == null) return;
+    final origin = params['origin']?.toString() ?? '';
+    final profileName = params['profileName']?.toString();
+
+    setState(() => _isLoading = true);
+    try {
+      final permissions = GeolocationPermissions.instance();
+      // Every call is profile-aware: leaving profileName empty means the default profile, which is
+      // what a WebView without InAppWebViewSettings.profileName uses.
+      final scoped = (profileName == null || profileName.isEmpty)
+          ? null
+          : profileName;
+      final Object? result = switch (method) {
+        PlatformGeolocationPermissionsMethod.allow => await permissions.allow(
+          origin: origin,
+          profileName: scoped,
+        ),
+        PlatformGeolocationPermissionsMethod.clear => await permissions.clear(
+          origin: origin,
+          profileName: scoped,
+        ),
+        // getAllowed is `bool?`: null means "nothing stored for this origin", which is neither
+        // allowed nor denied.
+        _ => await permissions.getAllowed(origin: origin, profileName: scoped),
+      };
+      _recordMethodResult(
+        method.name,
+        result == null
+            ? 'No stored decision for $origin'
+            : '$origin -> $result',
+        isError: false,
+        value: result,
+      );
+    } catch (e) {
+      _recordMethodResult(method.name, 'Error: $e', isError: true);
+    } finally {
+      setState(() => _isLoading = false);
+    }
+  }
+
+  Future<void> _clearAllGeolocationPermissions() async {
+    setState(() => _isLoading = true);
+    try {
+      final cleared = await GeolocationPermissions.instance().clearAll();
+      _recordMethodResult(
+        PlatformGeolocationPermissionsMethod.clearAll.name,
+        cleared ? 'All stored decisions cleared' : 'Nothing was cleared',
+        isError: false,
+        value: cleared,
+      );
+    } catch (e) {
+      _recordMethodResult(
+        PlatformGeolocationPermissionsMethod.clearAll.name,
+        'Error: $e',
+        isError: true,
+      );
+    } finally {
+      setState(() => _isLoading = false);
+    }
+  }
+
   Widget _buildProcessGlobalConfigSection() {
     final supportedPlatforms = SupportChecker.getSupportedPlatformsForClass(
       '$ProcessGlobalConfig',
@@ -1142,6 +1347,189 @@ class _ServiceControllersScreenState extends State<ServiceControllersScreen> {
                     ),
                     methodName: PlatformProcessGlobalConfigMethod.apply.name,
                   ),
+                ),
+              ],
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildProfileStoreSection() {
+    final supportedPlatforms = SupportChecker.getSupportedPlatformsForClass(
+      '$ProfileStore',
+    );
+
+    return Card(
+      child: ExpansionTile(
+        title: Row(
+          children: [
+            Text(
+              '$ProfileStore',
+              style: const TextStyle(fontWeight: FontWeight.bold),
+            ),
+            const SizedBox(width: 8),
+            Expanded(
+              child: SingleChildScrollView(
+                scrollDirection: Axis.horizontal,
+                child: SupportBadgesRow(
+                  supportedPlatforms: supportedPlatforms,
+                  compact: true,
+                ),
+              ),
+            ),
+          ],
+        ),
+        children: [
+          Padding(
+            padding: const EdgeInsets.all(16),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                const Text(
+                  'androidx MULTI_PROFILE: each profile has its own cookies, storage, cache and '
+                  'geolocation decisions. Put a WebView on one with '
+                  'InAppWebViewSettings.profileName.',
+                  style: TextStyle(fontSize: 12),
+                ),
+                const SizedBox(height: 12),
+                ResponsiveRow(
+                  spacing: 8,
+                  runSpacing: 8,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    _buildMethodButton(
+                      'Get All Profile Names',
+                      _getAllProfileNames,
+                      supportedPlatforms: _profileStorePlatforms(
+                        PlatformProfileStoreMethod.getAllProfileNames,
+                      ),
+                      methodName:
+                          PlatformProfileStoreMethod.getAllProfileNames.name,
+                    ),
+                    _buildMethodButton(
+                      'Get or Create Profile',
+                      _getOrCreateProfile,
+                      supportedPlatforms: _profileStorePlatforms(
+                        PlatformProfileStoreMethod.getOrCreateProfile,
+                      ),
+                      methodName:
+                          PlatformProfileStoreMethod.getOrCreateProfile.name,
+                    ),
+                    _buildMethodButton(
+                      'Delete Profile',
+                      _deleteProfile,
+                      supportedPlatforms: _profileStorePlatforms(
+                        PlatformProfileStoreMethod.deleteProfile,
+                      ),
+                      methodName: PlatformProfileStoreMethod.deleteProfile.name,
+                    ),
+                  ],
+                ),
+              ],
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildGeolocationPermissionsSection() {
+    final supportedPlatforms = SupportChecker.getSupportedPlatformsForClass(
+      '$GeolocationPermissions',
+    );
+
+    return Card(
+      child: ExpansionTile(
+        title: Row(
+          children: [
+            Text(
+              '$GeolocationPermissions',
+              style: const TextStyle(fontWeight: FontWeight.bold),
+            ),
+            const SizedBox(width: 8),
+            Expanded(
+              child: SingleChildScrollView(
+                scrollDirection: Axis.horizontal,
+                child: SupportBadgesRow(
+                  supportedPlatforms: supportedPlatforms,
+                  compact: true,
+                ),
+              ),
+            ),
+          ],
+        ),
+        children: [
+          Padding(
+            padding: const EdgeInsets.all(16),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                const Text(
+                  'The stored per-origin answers to onGeolocationPermissionsShowPrompt. Every '
+                  'method takes an optional profileName; leaving it empty acts on the default '
+                  'profile.',
+                  style: TextStyle(fontSize: 12),
+                ),
+                const SizedBox(height: 12),
+                ResponsiveRow(
+                  spacing: 8,
+                  runSpacing: 8,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    _buildMethodButton(
+                      'Get Origins',
+                      _getGeolocationOrigins,
+                      supportedPlatforms: _geolocationPermissionsPlatforms(
+                        PlatformGeolocationPermissionsMethod.getOrigins,
+                      ),
+                      methodName:
+                          PlatformGeolocationPermissionsMethod.getOrigins.name,
+                    ),
+                    _buildMethodButton(
+                      'Get Allowed',
+                      () => _geolocationOriginAction(
+                        PlatformGeolocationPermissionsMethod.getAllowed,
+                      ),
+                      supportedPlatforms: _geolocationPermissionsPlatforms(
+                        PlatformGeolocationPermissionsMethod.getAllowed,
+                      ),
+                      methodName:
+                          PlatformGeolocationPermissionsMethod.getAllowed.name,
+                    ),
+                    _buildMethodButton(
+                      'Allow Origin',
+                      () => _geolocationOriginAction(
+                        PlatformGeolocationPermissionsMethod.allow,
+                      ),
+                      supportedPlatforms: _geolocationPermissionsPlatforms(
+                        PlatformGeolocationPermissionsMethod.allow,
+                      ),
+                      methodName:
+                          PlatformGeolocationPermissionsMethod.allow.name,
+                    ),
+                    _buildMethodButton(
+                      'Clear Origin',
+                      () => _geolocationOriginAction(
+                        PlatformGeolocationPermissionsMethod.clear,
+                      ),
+                      supportedPlatforms: _geolocationPermissionsPlatforms(
+                        PlatformGeolocationPermissionsMethod.clear,
+                      ),
+                      methodName:
+                          PlatformGeolocationPermissionsMethod.clear.name,
+                    ),
+                    _buildMethodButton(
+                      'Clear All',
+                      _clearAllGeolocationPermissions,
+                      supportedPlatforms: _geolocationPermissionsPlatforms(
+                        PlatformGeolocationPermissionsMethod.clearAll,
+                      ),
+                      methodName:
+                          PlatformGeolocationPermissionsMethod.clearAll.name,
+                    ),
+                  ],
                 ),
               ],
             ),

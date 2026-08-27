@@ -125,6 +125,32 @@ class MockInAppWebViewPlatform extends InAppWebViewPlatform
   }
 
   @override
+  PlatformProfileStore createPlatformProfileStore(
+    PlatformProfileStoreCreationParams params,
+  ) {
+    return MockPlatformProfileStore(params);
+  }
+
+  @override
+  PlatformProfileStore createPlatformProfileStoreStatic() {
+    return MockPlatformProfileStore(const PlatformProfileStoreCreationParams());
+  }
+
+  @override
+  PlatformGeolocationPermissions createPlatformGeolocationPermissions(
+    PlatformGeolocationPermissionsCreationParams params,
+  ) {
+    return MockPlatformGeolocationPermissions(params);
+  }
+
+  @override
+  PlatformGeolocationPermissions createPlatformGeolocationPermissionsStatic() {
+    return MockPlatformGeolocationPermissions(
+      const PlatformGeolocationPermissionsCreationParams(),
+    );
+  }
+
+  @override
   PlatformFindInteractionController createPlatformFindInteractionController(
     PlatformFindInteractionControllerCreationParams params,
   ) {
@@ -557,6 +583,59 @@ class MockPlatformProcessGlobalConfig extends PlatformProcessGlobalConfig
 
   // Not declared by PlatformProcessGlobalConfig - no @override.
   Future<void> setDataDirectorySuffix({required String suffix}) async {}
+}
+
+class MockPlatformProfileStore extends PlatformProfileStore
+    with MockPlatformInterfaceMixin {
+  MockPlatformProfileStore(super.params) : super.implementation();
+
+  @override
+  bool isMethodSupported(
+    PlatformProfileStoreMethod method, {
+    TargetPlatform? platform,
+  }) => true;
+
+  @override
+  Future<List<String>> getAllProfileNames() async => <String>[
+    PlatformProfileStore.defaultProfileName,
+  ];
+
+  @override
+  Future<String?> getOrCreateProfile({required String name}) async => name;
+
+  @override
+  Future<bool> deleteProfile({required String name}) async => true;
+}
+
+class MockPlatformGeolocationPermissions extends PlatformGeolocationPermissions
+    with MockPlatformInterfaceMixin {
+  MockPlatformGeolocationPermissions(super.params) : super.implementation();
+
+  @override
+  bool isMethodSupported(
+    PlatformGeolocationPermissionsMethod method, {
+    TargetPlatform? platform,
+  }) => true;
+
+  @override
+  Future<bool> allow({required String origin, String? profileName}) async =>
+      true;
+
+  @override
+  Future<bool> clear({required String origin, String? profileName}) async =>
+      true;
+
+  @override
+  Future<bool> clearAll({String? profileName}) async => true;
+
+  @override
+  Future<bool?> getAllowed({
+    required String origin,
+    String? profileName,
+  }) async => true;
+
+  @override
+  Future<List<String>> getOrigins({String? profileName}) async => <String>[];
 }
 
 class MockPlatformFindInteractionController

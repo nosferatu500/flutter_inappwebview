@@ -207,6 +207,8 @@ class PlatformInfoScreen extends StatelessWidget {
             ServiceWorkerController.isClassSupported(),
         '${ProxyController}': ProxyController.isClassSupported(),
         '${TracingController}': TracingController.isClassSupported(),
+        '${ProfileStore}': ProfileStore.isClassSupported(),
+        '${GeolocationPermissions}': GeolocationPermissions.isClassSupported(),
       };
     } catch (e) {
       return {};

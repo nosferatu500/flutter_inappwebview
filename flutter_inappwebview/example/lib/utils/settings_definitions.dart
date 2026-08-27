@@ -95,6 +95,22 @@ Map<String, List<SettingDefinition>> getSettingDefinitions() {
     ],
     'Content': [
       SettingDefinition(
+        name: 'Download Favicons',
+        description:
+            'Fetch page favicons — this also gates the onReceivedIcon event (Android)',
+        type: SettingType.boolean,
+        defaultValue: null,
+        property: InAppWebViewSettingsProperty.downloadFaviconsEnabled,
+      ),
+      SettingDefinition(
+        name: 'Adaptive Image Glyph',
+        description:
+            'Allow Genmoji and other adaptive image glyphs in editable content (iOS)',
+        type: SettingType.boolean,
+        defaultValue: null,
+        property: InAppWebViewSettingsProperty.supportsAdaptiveImageGlyph,
+      ),
+      SettingDefinition(
         name: 'Allow Content Access',
         description: 'Enable content URL access',
         type: SettingType.boolean,
@@ -210,6 +226,15 @@ Map<String, List<SettingDefinition>> getSettingDefinitions() {
         property: InAppWebViewSettingsProperty.mixedContentMode,
       ),
       SettingDefinition(
+        name: 'Use On Show File Chooser',
+        description:
+            'Route file-upload pickers to the onShowFileChooser event — needed on '
+            'iOS 18.4+ as well as Android',
+        type: SettingType.boolean,
+        defaultValue: null,
+        property: InAppWebViewSettingsProperty.useOnShowFileChooser,
+      ),
+      SettingDefinition(
         name: 'Use Should Intercept Request',
         description: 'Enable request interception events',
         type: SettingType.boolean,
@@ -244,6 +269,41 @@ Map<String, List<SettingDefinition>> getSettingDefinitions() {
         type: SettingType.boolean,
         defaultValue: true,
         property: InAppWebViewSettingsProperty.safeBrowsingEnabled,
+      ),
+      SettingDefinition(
+        name: 'Web Authentication Support',
+        description:
+            'How much passkey (WebAuthn) support to give web content (Android)',
+        type: SettingType.enumeration,
+        defaultValue: null,
+        enumValues: _safeEnumValues(() => WebAuthenticationSupport.values),
+        property: InAppWebViewSettingsProperty.webAuthenticationSupport,
+      ),
+      SettingDefinition(
+        name: 'Lockdown Mode',
+        description: 'Apply the system Lockdown Mode restrictions (iOS)',
+        type: SettingType.boolean,
+        defaultValue: null,
+        property: InAppWebViewSettingsProperty.lockdownModeEnabled,
+      ),
+      SettingDefinition(
+        name: 'Security Restriction Mode',
+        description:
+            'Trade JavaScript/rendering features against attack surface (iOS)',
+        type: SettingType.enumeration,
+        defaultValue: null,
+        enumValues: _safeEnumValues(() => SecurityRestrictionMode.values),
+        property: InAppWebViewSettingsProperty.securityRestrictionMode,
+      ),
+      SettingDefinition(
+        name: 'HTTPS Navigation Policy',
+        description:
+            'What to do when an HTTPS upgrade fails — the one iOS setting that '
+            'responds to setSettings on a live WebView',
+        type: SettingType.enumeration,
+        defaultValue: null,
+        enumValues: _safeEnumValues(() => UpgradeToHTTPSPolicy.values),
+        property: InAppWebViewSettingsProperty.preferredHTTPSNavigationPolicy,
       ),
     ],
     'Cache': [
@@ -309,6 +369,15 @@ Map<String, List<SettingDefinition>> getSettingDefinitions() {
     ],
     'Navigation': [
       SettingDefinition(
+        name: 'Back/Forward Cache',
+        description:
+            'Keep pages alive for instant back/forward navigation (Android). '
+            'There is no event for a BFCache eviction yet',
+        type: SettingType.boolean,
+        defaultValue: null,
+        property: InAppWebViewSettingsProperty.backForwardCacheEnabled,
+      ),
+      SettingDefinition(
         name: 'Back/Forward Gestures',
         description: 'Enable swipe gestures for navigation',
         type: SettingType.boolean,
@@ -342,6 +411,14 @@ Map<String, List<SettingDefinition>> getSettingDefinitions() {
     ],
     'Interaction': [
       SettingDefinition(
+        name: 'Writing Tools',
+        description: 'How much of the system Writing Tools UI to offer (iOS)',
+        type: SettingType.enumeration,
+        defaultValue: null,
+        enumValues: _safeEnumValues(() => WritingToolsBehavior.values),
+        property: InAppWebViewSettingsProperty.writingToolsBehavior,
+      ),
+      SettingDefinition(
         name: 'Link Preview',
         description: 'Show link previews on long press',
         type: SettingType.boolean,
@@ -350,6 +427,15 @@ Map<String, List<SettingDefinition>> getSettingDefinitions() {
       ),
     ],
     'Storage': [
+      SettingDefinition(
+        name: 'Profile Name',
+        description:
+            'Which androidx profile this WebView uses — cookies, storage and '
+            'geolocation all follow it (Android)',
+        type: SettingType.string,
+        defaultValue: '',
+        property: InAppWebViewSettingsProperty.profileName,
+      ),
       SettingDefinition(
         name: 'Third-Party Cookies',
         description: 'Allow third-party cookies',
@@ -373,6 +459,25 @@ Map<String, List<SettingDefinition>> getSettingDefinitions() {
       ),
     ],
     'APIs': [
+      SettingDefinition(
+        name: 'Payment Request API',
+        description:
+            'Let web content use the Payment Request API, e.g. Google Pay (Android)',
+        type: SettingType.boolean,
+        defaultValue: false,
+        property: InAppWebViewSettingsProperty.paymentRequestEnabled,
+      ),
+      SettingDefinition(
+        name: 'Attribution Registration',
+        description:
+            'Which side registers Attribution Reporting sources and triggers (Android)',
+        type: SettingType.enumeration,
+        defaultValue: null,
+        enumValues: _safeEnumValues(
+          () => AttributionRegistrationBehavior.values,
+        ),
+        property: InAppWebViewSettingsProperty.attributionRegistrationBehavior,
+      ),
       SettingDefinition(
         name: 'Geolocation',
         description: 'Enable Geolocation API',

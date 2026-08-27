@@ -89,7 +89,7 @@ error.
 
 ### Internal
 
-- 46 Dart-side unit tests, covering the channel argument maps and the settings surface — the package
+- 49 Dart-side unit tests, covering the channel argument maps and the settings surface — the package
   previously shipped a single empty placeholder test file
 - The integration suite now runs on iOS: **106 pass / 6 fail / 1 skip** on iOS 17.5 and
   **107 / 5 / 1** on iOS 26.5, with the fixture server up. Both remaining failure sets are

@@ -619,6 +619,16 @@ class _WebViewTesterScreenState extends State<WebViewTesterScreen>
             'url': url?.toString(),
             'isForMainFrame': navigationAction.isForMainFrame,
             'navigationType': navigationAction.navigationType?.name(),
+            // iOS 13.4+: which modifier keys were held and which mouse button was used, plus
+            // whether a content rule list produced this navigation rather than the page.
+            'modifierFlags': navigationAction.modifierFlags
+                ?.map((flag) => flag.name())
+                .toList(),
+            'buttonNumber': navigationAction.buttonNumber
+                ?.map((mask) => mask.name())
+                .toList(),
+            'isContentRuleListRedirect':
+                navigationAction.isContentRuleListRedirect,
           },
         );
 
@@ -959,6 +969,14 @@ class _WebViewTesterScreenState extends State<WebViewTesterScreen>
             'mimeType': downloadStartRequest.mimeType,
             'contentLength': downloadStartRequest.contentLength,
             'suggestedFilename': downloadStartRequest.suggestedFilename,
+            // iOS only, from WKDownload: whether a user gesture started it, and the frame that
+            // asked. Both are null on Android, which reports neither.
+            'isUserInitiated': downloadStartRequest.isUserInitiated,
+            'originatingFrame': downloadStartRequest
+                .originatingFrame
+                ?.request
+                ?.url
+                ?.toString(),
           },
         );
       },

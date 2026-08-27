@@ -42,10 +42,10 @@ Twelve `androidx.webkit` features, each behind its own `WebViewFeature` flag, an
 - **`DELETE_BROWSING_DATA`** — `WebStorageManager.deleteBrowsingData()` /
   `.deleteBrowsingDataForSite()`
 - **`MULTI_PROFILE`** — a `ProfileStore` controller (`AndroidProfileStore`) plus
-  `InAppWebViewSettings.profileName`, and the
-  plugin's own storage APIs are now profile-aware: cookies, web storage, service-worker settings and
-  geolocation all act on the profile the WebView is actually using, instead of silently acting on
-  the default profile. `setServiceWorkerClient` remains default-profile only
+  `InAppWebViewSettings.profileName`, and the plugin's own storage APIs are now profile-aware:
+  cookies, web storage, service-worker settings and geolocation all act on the profile the WebView is
+  actually using, instead of silently acting on the default profile. `setServiceWorkerClient` remains
+  default-profile only
 - **`PRERENDER_WITH_URL`** — `InAppWebViewController.prerenderUrl(WebUri)`
 - **`GeolocationPermissions`** — a new controller surface (`AndroidGeolocationPermissions`: `allow`,
   `clear`, `clearAll`, `getAllowed`, `getOrigins`), profile-aware from the start
@@ -105,8 +105,8 @@ for, and five others have a native *value* that differs from their name.
 - **Android lint: 0 findings** (from 27), with three documented suppressions
 - **The module's first native unit tests** — 23 across 4 test classes, no device or Robolectric
   needed (~4s). They found two real bugs on their first run
-- 33 Dart-side unit tests, covering the channel argument maps — the package previously shipped a
-  single empty placeholder test file
+- 60 Dart-side unit tests, covering the channel argument maps of every method added here — the
+  package previously shipped a single empty placeholder test file
 
 ## 1.2.0-beta.3
 
