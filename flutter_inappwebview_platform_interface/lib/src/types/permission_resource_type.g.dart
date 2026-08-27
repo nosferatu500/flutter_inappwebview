@@ -143,6 +143,24 @@ class PermissionResourceType {
         return null;
       });
 
+  ///A resource this version of the plugin does not recognise.
+  ///
+  ///This constant exists as the **catch-all**: it is what [PermissionRequest] and
+  ///[PermissionResponse] resolve to when Android reports a `PermissionRequest.RESOURCE_*`
+  ///string, or iOS a `WKMediaCaptureType` raw value, that is not mapped above. Without it
+  ///the generated `fromMap` force-unwraps a `null` and throws inside the channel handler,
+  ///so `onPermissionRequest` never reaches app code at all.
+  ///
+  ///Deliberately carries **no** [EnumSupportedPlatforms]: it describes no platform API, and
+  ///must survive any future sweep that removes constants by their platform annotation.
+  ///It therefore takes its own name as its native value, which neither platform ever sends.
+  ///Passing it back in a [PermissionResponse] grants nothing — Android's
+  ///`PermissionRequest.grant` ignores resources the request did not ask for, and iOS reads
+  ///only the response's action.
+  ///
+  ///Treat it as "deny unless you know better": there is no way to tell what was asked for.
+  static const UNKNOWN = PermissionResourceType._internal('UNKNOWN', 'UNKNOWN');
+
   ///Set of all values of [PermissionResourceType].
   static final Set<PermissionResourceType> values = {
     PermissionResourceType.CAMERA,
@@ -151,6 +169,7 @@ class PermissionResourceType {
     PermissionResourceType.MICROPHONE,
     PermissionResourceType.MIDI_SYSEX,
     PermissionResourceType.PROTECTED_MEDIA_ID,
+    PermissionResourceType.UNKNOWN,
   };
 
   ///Gets a possible [PermissionResourceType] instance from [String] value.
@@ -243,6 +262,8 @@ class PermissionResourceType {
         return 'MIDI_SYSEX';
       case 'PROTECTED_MEDIA_ID':
         return 'PROTECTED_MEDIA_ID';
+      case 'UNKNOWN':
+        return 'UNKNOWN';
     }
     return _value.toString();
   }

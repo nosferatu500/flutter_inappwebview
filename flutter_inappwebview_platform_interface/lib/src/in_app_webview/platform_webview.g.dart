@@ -564,7 +564,6 @@ enum PlatformWebViewCreationParamsProperty {
   ///- [printJobController]:
   ///    - Android WebView
   ///    - iOS WKWebView
-  ///    - macOS WKWebView
   ///
   ///Use the [PlatformWebViewCreationParams.isPropertySupported] method to check if this property is supported at runtime.
   ///{@endtemplate}

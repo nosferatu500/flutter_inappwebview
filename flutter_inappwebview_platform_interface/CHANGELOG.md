@@ -51,7 +51,8 @@ rename; this entry is the API-owner's view.
 - `InAppBrowserSettings` (5, macOS), `PrintJobSettings` (41, macOS), `PrintJobAttributes`
   (17, macOS), and single fields on `PrintJobInfo`, `Printer`, `PDFConfiguration`, `WebHistoryItem`,
   `FrameInfo`, `ClientCertChallenge`, `ClientCertResponse`
-- Enum constants: `PermissionResourceType` (10), `WebResourceErrorType` (17), `SslErrorType` (2),
+- Enum constants: `PermissionResourceType` (9 — its Windows-only `UNKNOWN` went too, and came back
+  as a platform-independent catch-all; see Fixed), `WebResourceErrorType` (17), `SslErrorType` (2),
   `LayoutAlgorithm.NARROW_COLUMNS`, and `WebViewFeature.FORCE_DARK` / `.FORCE_DARK_STRATEGY` /
   `.REQUESTED_WITH_HEADER_ALLOW_LIST` / `.SAFE_BROWSING_WHITELIST` / `.START_SAFE_BROWSING`
 - Types removed with their features: `WebViewEnvironmentSettings`, `EnvironmentChannelSearchKind`,
@@ -113,6 +114,12 @@ rename; this entry is the API-owner's view.
 - **The code generator no longer emits a bare `!` on a non-nullable enum lookup** where the enum has
   a catch-all constant; it degrades to that constant instead. It also emitted code broken in both
   directions for `Map<String, SomeEnum>` fields. Both have regression tests
+- **An unmapped permission resource killed `onPermissionRequest`.** `PermissionResourceType` had no
+  catch-all left, so `PermissionRequest.fromMap` and `PermissionResponse.fromMap` force-unwrapped the
+  lookup: one `PermissionRequest.RESOURCE_*` string (Android) or `WKMediaCaptureType` raw value (iOS)
+  this enum does not know threw inside the channel handler, and the event never reached app code —
+  a permission prompt that silently never appears. `PermissionResourceType.UNKNOWN` is back as the
+  fallback, with a regression test that fails on the `!`
 - Every mirrored `WebViewFeature` constant is pinned against the real `androidx.webkit` AAR by a
   test: six declared flags are `@Deprecated` tombstones that `isFeatureSupported` **throws** for,
   and five more have a native *value* that differs from their name

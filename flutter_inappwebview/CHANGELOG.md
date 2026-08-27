@@ -233,9 +233,10 @@ WebView2 notifications (Windows): `WebNotificationController`,
 **Single fields** — `PrintJobInfo.pageOrder`, `Printer.name` / `.type` / `.languageLevel`,
 `PDFConfiguration.settings`
 
-**Enum constants** — `PermissionResourceType` (Windows, 10): `AUTOPLAY`, `CLIPBOARD_READ`,
+**Enum constants** — `PermissionResourceType` (Windows, 9): `AUTOPLAY`, `CLIPBOARD_READ`,
 `FILE_READ_WRITE`, `GEOLOCATION`, `LOCAL_FONTS`, `MULTIPLE_AUTOMATIC_DOWNLOADS`, `NOTIFICATIONS`,
-`OTHER_SENSORS`, `UNKNOWN`, `WINDOW_MANAGEMENT` · `WebResourceErrorType` (Windows 6, Linux 11):
+`OTHER_SENSORS`, `WINDOW_MANAGEMENT`. Its Windows-only `UNKNOWN` went with them and **came back**
+as a platform-independent catch-all — see Fixed · `WebResourceErrorType` (Windows 6, Linux 11):
 `CANNOT_SHOW_MIME_TYPE`, `CANNOT_SHOW_URI`, `CANNOT_USE_RESTRICTED_PORT`, `CONNECTION_ABORTED`,
 `DOWNLOAD_CANCELLED_BY_USER`, `DOWNLOAD_DESTINATION_FAILED`, `DOWNLOAD_NETWORK_FAILED`,
 `FRAME_LOAD_INTERRUPTED_BY_POLICY_CHANGE`, `POLICY_FAILED`, `REDIRECT_FAILED`, `RESET`,
@@ -380,6 +381,13 @@ simulator for the first time:**
 
 **Both platforms / tooling:**
 
+- **An unmapped permission resource killed `onPermissionRequest` on both platforms.**
+  `PermissionRequest` / `PermissionResponse` force-unwrapped the `PermissionResourceType` lookup, so
+  a single `PermissionRequest.RESOURCE_*` string Android adds, or a `WKMediaCaptureType` raw value
+  Apple adds, threw inside the channel handler and the event never reached app code — the app just
+  never sees the prompt. `PermissionResourceType.UNKNOWN` is the fallback again; unlike the constant
+  of that name this fork removed, it is **not** platform-annotated, describes no platform API, and
+  exists only for this purpose. Treat it as "deny unless you know better" — the example does
 - The code generator emitted broken code for `Map<String, SomeEnum>` fields (both directions), and
   emitted a bare `!` on every non-nullable enum lookup — both fixed, with regression tests
 - Every mirrored `WebViewFeature` constant is now pinned against the real `androidx.webkit` AAR by a

@@ -1056,6 +1056,13 @@ class _WebViewTesterScreenState extends State<WebViewTesterScreen>
 
       // 39. onPermissionRequest
       onPermissionRequest: (controller, permissionRequest) async {
+        // A resource this plugin version does not map arrives as
+        // PermissionResourceType.UNKNOWN rather than throwing inside the channel handler.
+        // There is no way to tell what was asked for, so never grant it: keep only the
+        // resources you recognise, and deny outright if that leaves nothing.
+        final known = permissionRequest.resources
+            .where((r) => r != PermissionResourceType.UNKNOWN)
+            .toList();
         _logEvent(
           EventType.ui,
           PlatformWebViewCreationParamsProperty.onPermissionRequest.name,
@@ -1063,11 +1070,14 @@ class _WebViewTesterScreenState extends State<WebViewTesterScreen>
             'resources': permissionRequest.resources
                 .map((r) => r.name)
                 .toList(),
+            'unknown': permissionRequest.resources.length - known.length,
           },
         );
         return PermissionResponse(
-          resources: permissionRequest.resources,
-          action: PermissionResponseAction.GRANT,
+          resources: known,
+          action: known.isEmpty
+              ? PermissionResponseAction.DENY
+              : PermissionResponseAction.GRANT,
         );
       },
 
