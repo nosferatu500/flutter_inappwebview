@@ -29,6 +29,51 @@ A Flutter plugin that allows you to add an inline webview, to use an headless we
 
 </div>
 
+## Why this fork
+
+This is a fork of [`flutter_inappwebview`](https://pub.dev/packages/flutter_inappwebview) by
+Lorenzo Pichilli, carrying its full git history. It diverges at upstream's newest published
+version, the prerelease **`6.2.0-beta.3` (February 2026)** — upstream's last *stable* release is
+`6.1.5` — and the comparison below is against that. The public Dart API is recognisably the same;
+what changed is the scope, the two native implementations, and what the plugin still carries.
+
+|                        | upstream `6.2.0-beta.3`                      | this fork `7.0.0`                                                    |
+| ---------------------- | -------------------------------------------- | -------------------------------------------------------------------- |
+| Platforms              | 6 — Android, iOS, macOS, Windows, Linux, Web | **2 — Android, iOS**                                                 |
+| Android implementation | Java                                         | **100% Kotlin**, all 157 sources translated                          |
+| iOS implementation     | Swift 5                                      | **Swift 6 language mode**, complete concurrency checking             |
+| Deprecated API         | 1111 `@Deprecated` (all 6 packages)          | **0** — every deprecated class, event, field and method gone         |
+| Android `minSdk` / AGP | 19 / 8                                       | **30 / 9**                                                           |
+| iOS deployment target  | 12.0                                         | **15.0**                                                             |
+| Flutter / Dart floor   | 3.32 / `^3.8.0`                              | **3.44 / `^3.12.0`**                                                 |
+| Unit tests             | 276, all in the example app                  | **412**, incl. the Android module's first native tests               |
+| Android lint           | 27 findings                                  | **0**                                                                |
+| New platform APIs      | —                                            | **29** — 12 `androidx.webkit` features, 8 `android.webkit`, 9 WebKit |
+| Alongside upstream     | —                                            | **yes** — own Android namespace and channel names                    |
+
+What the narrower scope bought, beyond the table: the first iOS device runs in the project's
+history found **four defects that no compiler, linter or unit test could see** — ten
+`WKUIDelegate`/`WKNavigationDelegate` methods the Swift 6 migration had silently unhooked (so
+`onJsAlert`/`onJsConfirm`/`onJsPrompt` never fired and `shouldOverrideUrlLoading` could not block a
+navigation), a throwing JavaScript handler that hung its caller forever, `onPrintRequest` killing
+the app on iOS 26, and a DNS failure throwing inside the plugin so `onReceivedError` never reached
+app code. Android got its blocking-callback hang and its `CookieManager.flush()` hang fixed, and a
+`FileProvider` that had been granting access to the entire external-storage root scoped down.
+
+**What it cost, stated plainly.** macOS, Windows, Linux and Web support is gone, and so is every
+API that only served them. `minSdk 30` is well above Flutter's own floor of 24 and forces every
+consuming app to raise its own. Most disruptive, and invisible in the version numbers: the iOS
+module needs **Xcode 26 / Swift 6.2+** to build, because `isolated deinit` (SE-0371) is used at 32
+sites — a consumer on Xcode 16 cannot build this plugin at all.
+
+**Migrating from upstream?** Every removal is a rename with a replacement that already existed in
+6.x: `*Options` → `*Settings`, `getOptions`/`setOptions` → `getSettings`/`setSettings`, and the
+`Android`/`IOS`-prefixed duplicate types, events and fields → their unprefixed originals. Drop any
+macOS/Windows/Linux/Web-only API — there is nothing to migrate to. If you declared the plugin's
+`FileProvider`, switch `@xml/provider_paths` to `@xml/inappwebview_provider_paths`. The full
+old → new list, name by name, is in
+[`flutter_inappwebview/CHANGELOG.md`](./flutter_inappwebview/CHANGELOG.md).
+
 ## Articles/Resources
 
 - [Official documentation: inappwebview.dev/docs](https://inappwebview.dev/docs/intro)
@@ -49,10 +94,10 @@ Send a submission request to the [Submit App](https://inappwebview.dev/submit-ap
 
 ## Requirements
 
-- Dart sdk: "^3.8.0"
-- Flutter: ">=3.32.0"
+- Dart sdk: "^3.12.0"
+- Flutter: ">=3.44.0"
 - Android: `minSdk >= 30`, [AGP](https://developer.android.com/build/releases/gradle-plugin) version `>= 9.0.0` (AGP 8 and lower are not supported), Gradle `>= 9.1.0`, JDK `>= 17` (use [Android Studio - Android Gradle plugin Upgrade Assistant](https://developer.android.com/build/agp-upgrade-assistant) for help)
-- iOS 15.0+, Xcode version `>= 15.0`
+- iOS 15.0+, **Xcode version `>= 26`** — the iOS module uses `isolated deinit` (SE-0371) and needs a Swift 6.2+ compiler, which is a newer toolchain than Flutter itself requires
 
 ## Installation
 
