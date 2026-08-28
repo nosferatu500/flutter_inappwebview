@@ -63,6 +63,14 @@ unit test could see. All four are fixed and proved both ways on a simulator.
   whole process down
 - **A DNS failure threw inside the plugin on iOS 26, so `onReceivedError` never reached app code.**
   iOS 26 returns `NSError -1006` where 17.x returned -1003, and -1006 was unmapped
+- **`onEnterFullscreen` never fired for fullscreen video on iOS 26.** Fullscreen media detection
+  reads the new window's frame from `UIWindow.didBecomeVisibleNotification`, and on iOS 26 that
+  notification arrives **before the window is laid out** — frame `(0, 0, 0, 0)` — so the
+  "is it fullscreen-sized?" half of the heuristic rejected a window that was about to be exactly
+  that. Every other property (scene, level, class) is already final at that point, so the size check
+  is now re-evaluated on the next main-actor turn when the frame is empty. Unchanged on iOS 17.x,
+  where the frame is already correct. **`onExitFullscreen` was collateral**: it is guarded on
+  `inFullscreen`, which enter never set
 - **A leaked `WKURLSchemeTask`** in the custom-scheme handler
 - **`InAppWebViewSettings.allowingReadAccessTo` documented as not a security boundary.** No code
   change and no defect: instrumenting `InAppWebView.loadUrl` on iOS 17.5 and 26.5 shows the plugin

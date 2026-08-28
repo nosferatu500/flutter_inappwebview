@@ -362,6 +362,11 @@ simulator for the first time:**
   `fromMap` force-unwrapped the lookup. Both codes now resolve to `WebResourceErrorType.HOST_LOOKUP`
   (matching Android's single `ERROR_HOST_LOOKUP`), and the code generator now falls back to an
   enum's own catch-all constant instead of emitting a bare `!`
+- **`onEnterFullscreen` never fired for fullscreen video on iOS 26**, and `onExitFullscreen` with it.
+  The plugin detects fullscreen media from `UIWindow.didBecomeVisibleNotification` and checks the
+  window's size; on iOS 26 that notification arrives **before the window is laid out**, with a zero
+  frame, so a window that was about to be fullscreen was rejected. The size check now re-runs once
+  the window has been laid out. iOS 17.x was unaffected
 - **A leaked `WKURLSchemeTask`** in the custom-scheme handler
 - **`InAppWebViewSettings.allowingReadAccessTo` is documented as *not* a security boundary**, where
   it previously told you to set it "to prevent WebView from reading any other content". Measured on

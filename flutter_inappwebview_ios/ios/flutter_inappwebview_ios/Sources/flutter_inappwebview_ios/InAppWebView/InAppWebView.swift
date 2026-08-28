@@ -2912,9 +2912,27 @@ public class InAppWebView: WKWebView, UIScrollViewDelegate, WKUIDelegate,
         // Check if already in fullscreen to avoid double-firing
         // (both KVO observer and UIWindow notification might trigger this)
         guard !inFullscreen else { return }
-        
-        if isFullscreenMediaWindow(notification.object as AnyObject?) {
-            fullscreenWindow = notification.object as? UIWindow
+
+        // On iOS 26 the fullscreen media window posts didBecomeVisibleNotification *before* it is
+        // laid out: the notification arrives with frame == .zero, so the size half of
+        // isFullscreenMediaWindow rejects a window that is about to be fullscreen and
+        // onEnterFullscreen never fires (measured on 26.5; on 17.5 the frame is already correct).
+        // Re-check once the window has had a chance to lay out. Everything else about the window
+        // -- scene, level, class -- is already final at this point, so only the size needs the hop.
+        if let window = notification.object as? UIWindow, window.frame.isEmpty {
+            Task { @MainActor [weak self] in
+                guard let self = self, !self.inFullscreen else { return }
+                self.enterFullscreenIfMediaWindow(window)
+            }
+            return
+        }
+
+        enterFullscreenIfMediaWindow(notification.object as AnyObject?)
+    }
+
+    private func enterFullscreenIfMediaWindow(_ notificationObject: AnyObject?) {
+        if isFullscreenMediaWindow(notificationObject) {
+            fullscreenWindow = notificationObject as? UIWindow
             channelDelegate?.onEnterFullscreen()
             inFullscreen = true
         }

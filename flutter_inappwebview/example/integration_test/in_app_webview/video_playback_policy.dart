@@ -27,13 +27,22 @@ void videoPlaybackPolicy() {
               var video = document.getElementById("video");
               return video.paused;
             }
+            // `allowsInlineMediaPlayback: false` makes iOS play the video in its own NATIVE
+            // fullscreen player, which is not the DOM Fullscreen API: measured on iOS 17.5 and
+            // 26.5, `document.fullscreenElement` and `document.webkitFullscreenElement` are both
+            // null while `video.webkitDisplayingFullscreen` is true. `document.exitFullscreen()`
+            // therefore has nothing to exit and does nothing at all — which is what this test used
+            // to call. `HTMLVideoElement.webkitExitFullscreen()` is the one that leaves native
+            // video fullscreen, so try it first and keep the DOM calls as the fallback for
+            // platforms that really are in document fullscreen.
             function exitFullscreen() {
-              if (document.exitFullscreen) {
+              var video = document.getElementById("video");
+              if (video && video.webkitExitFullscreen) {
+                video.webkitExitFullscreen();
+              } else if (document.exitFullscreen) {
                 document.exitFullscreen();
               } else if (document.webkitExitFullscreen) {
                 document.webkitExitFullscreen();
-              } else if (document.msExitFullscreen) {
-                document.msExitFullscreen();
               }
             }
           </script>
@@ -222,6 +231,7 @@ void videoPlaybackPolicy() {
       Completer<InAppWebViewController> controllerCompleter =
           Completer<InAppWebViewController>();
       Completer<void> pageLoaded = Completer<void>();
+      Completer<void> onEnterFullscreenCompleter = Completer<void>();
       Completer<void> onExitFullscreenCompleter = Completer<void>();
 
       await tester.pumpWidget(
@@ -245,8 +255,15 @@ void videoPlaybackPolicy() {
             onLoadStop: (controller, url) {
               pageLoaded.complete();
             },
+            onEnterFullscreen: (controller) {
+              if (!onEnterFullscreenCompleter.isCompleted) {
+                onEnterFullscreenCompleter.complete();
+              }
+            },
             onExitFullscreen: (controller) {
-              onExitFullscreenCompleter.complete();
+              if (!onExitFullscreenCompleter.isCompleted) {
+                onExitFullscreenCompleter.complete();
+              }
             },
           ),
         ),
@@ -254,12 +271,29 @@ void videoPlaybackPolicy() {
 
       InAppWebViewController controller = await controllerCompleter.future;
       await pageLoaded.future;
-
-      await Future.delayed(Duration(seconds: 2));
       await tester.pump();
-      await controller.evaluateJavascript(source: "exitFullscreen();");
+
+      // Wait for the video to actually BE fullscreen instead of sleeping a fixed 2s and hoping.
+      await expectLater(onEnterFullscreenCompleter.future, completes);
+
+      // The native player ignores webkitExitFullscreen() while its presentation animation is still
+      // running — measured on iOS 17.5 and 26.5, a single call fires nothing and the element is
+      // still reporting webkitDisplayingFullscreen afterwards, while retrying succeeds after about
+      // one second. So ask repeatedly until the event arrives rather than sleeping a guessed amount.
+      for (var i = 0; i < 40 && !onExitFullscreenCompleter.isCompleted; i++) {
+        await controller.evaluateJavascript(source: "exitFullscreen();");
+        if (onExitFullscreenCompleter.isCompleted) break;
+        await Future.delayed(const Duration(milliseconds: 500));
+      }
 
       await expectLater(onExitFullscreenCompleter.future, completes);
+      expect(
+        await controller.evaluateJavascript(
+          source: 'document.getElementById("video").webkitDisplayingFullscreen',
+        ),
+        false,
+        reason: 'the video should have left native fullscreen',
+      );
     }, skip: shouldSkipTest4);
   }, skip: shouldSkip);
 }
