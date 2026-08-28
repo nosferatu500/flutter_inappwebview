@@ -43,111 +43,97 @@ void loadFileUrl() {
       fileJs.writeAsStringSync(js);
     });
 
+    // Both tests in this group used to assert a *negative* first: that without
+    // `allowingReadAccessTo`, the page's sibling `../js/main.js` must NOT load. That assertion was
+    // wrong, and it is the reason these two were the longest-standing red tests in the suite.
+    //
+    // Measured on iOS 17.5 and 26.5, with the native side instrumented at
+    // `InAppWebView.loadUrl` (§81): the plugin passes exactly the right value to
+    // `WKWebView.loadFileURL(_:allowingReadAccessTo:)` — right scheme, and the URL resolves to a
+    // real directory — and the sibling script loads *anyway*, in every configuration:
+    //
+    //   no scope                  -> load(urlRequest)  -> main.js runs
+    //   scope = Application Support/ -> loadFileURL    -> main.js runs
+    //   scope = .../html/ ONLY       -> loadFileURL    -> main.js runs   <-- outside the scope
+    //
+    // So WebKit does not enforce the read-access scope for this subresource, and the value not
+    // reaching `loadFileURL` — the other explanation §69 left open — is ruled out. There is no
+    // plugin defect here and nothing to fix in Swift.
+    //
+    // What these tests can honestly assert is that a `file://` document loads and its relative
+    // subresource executes, through both entry points. `allowingReadAccessTo` is exercised because
+    // it changes which WebKit API the plugin calls, not because it changes the outcome — see the
+    // warning on `InAppWebViewSettings.allowingReadAccessTo`, which now says so.
+
     skippableTestWidgets(
       'initialUrl with file:// scheme and allowingReadAccessTo',
       (WidgetTester tester) async {
-        final Completer<ConsoleMessage?> consoleMessageShouldNotComplete =
-            Completer<ConsoleMessage?>();
-        await tester.pumpWidget(
-          Directionality(
-            textDirection: TextDirection.ltr,
-            child: InAppWebView(
-              key: GlobalKey(),
-              initialUrlRequest: URLRequest(
-                url: WebUri('file://${fileHtml.path}'),
+        for (final scope in <WebUri?>[
+          null,
+          WebUri('file://${appSupportDir.path}/'),
+        ]) {
+          final completer = Completer<ConsoleMessage>();
+          await tester.pumpWidget(
+            Directionality(
+              textDirection: TextDirection.ltr,
+              child: InAppWebView(
+                key: GlobalKey(),
+                initialUrlRequest: URLRequest(
+                  url: WebUri('file://${fileHtml.path}'),
+                ),
+                initialSettings: InAppWebViewSettings(
+                  allowingReadAccessTo: scope,
+                ),
+                onConsoleMessage: (controller, consoleMessage) {
+                  if (!completer.isCompleted) {
+                    completer.complete(consoleMessage);
+                  }
+                },
               ),
-              onConsoleMessage: (controller, consoleMessage) {
-                consoleMessageShouldNotComplete.complete(consoleMessage);
-              },
             ),
-          ),
-        );
-        var result = await consoleMessageShouldNotComplete.future.timeout(
-          const Duration(seconds: 2),
-          onTimeout: () => null,
-        );
-        expect(result, null);
+          );
 
-        final Completer<ConsoleMessage> consoleMessageCompleter =
-            Completer<ConsoleMessage>();
-        await tester.pumpWidget(
-          Directionality(
-            textDirection: TextDirection.ltr,
-            child: InAppWebView(
-              key: GlobalKey(),
-              initialUrlRequest: URLRequest(
-                url: WebUri('file://${fileHtml.path}'),
-              ),
-              initialSettings: InAppWebViewSettings(
-                allowingReadAccessTo: WebUri('file://${appSupportDir.path}/'),
-              ),
-              onConsoleMessage: (controller, consoleMessage) {
-                consoleMessageCompleter.complete(consoleMessage);
-              },
-            ),
-          ),
-        );
-        final ConsoleMessage consoleMessage =
-            await consoleMessageCompleter.future;
-        expect(consoleMessage.messageLevel, ConsoleMessageLevel.LOG);
-        expect(consoleMessage.message, 'message');
+          final consoleMessage = await completer.future;
+          expect(consoleMessage.messageLevel, ConsoleMessageLevel.LOG);
+          expect(consoleMessage.message, 'message');
+        }
       },
     );
 
     skippableTestWidgets(
       'loadUrl with file:// scheme and allowingReadAccessTo argument',
       (WidgetTester tester) async {
-        final Completer<ConsoleMessage?> consoleMessageShouldNotComplete =
-            Completer<ConsoleMessage?>();
-        await tester.pumpWidget(
-          Directionality(
-            textDirection: TextDirection.ltr,
-            child: InAppWebView(
-              key: GlobalKey(),
-              onWebViewCreated: (controller) {
-                controller.loadUrl(
-                  urlRequest: URLRequest(
-                    url: WebUri('file://${fileHtml.path}'),
-                  ),
-                );
-              },
-              onConsoleMessage: (controller, consoleMessage) {
-                consoleMessageShouldNotComplete.complete(consoleMessage);
-              },
+        for (final scope in <WebUri?>[
+          null,
+          WebUri('file://${appSupportDir.path}/'),
+        ]) {
+          final completer = Completer<ConsoleMessage>();
+          await tester.pumpWidget(
+            Directionality(
+              textDirection: TextDirection.ltr,
+              child: InAppWebView(
+                key: GlobalKey(),
+                onWebViewCreated: (controller) {
+                  controller.loadUrl(
+                    urlRequest: URLRequest(
+                      url: WebUri('file://${fileHtml.path}'),
+                    ),
+                    allowingReadAccessTo: scope,
+                  );
+                },
+                onConsoleMessage: (controller, consoleMessage) {
+                  if (!completer.isCompleted) {
+                    completer.complete(consoleMessage);
+                  }
+                },
+              ),
             ),
-          ),
-        );
-        var result = await consoleMessageShouldNotComplete.future.timeout(
-          const Duration(seconds: 2),
-          onTimeout: () => null,
-        );
-        expect(result, null);
+          );
 
-        final Completer<ConsoleMessage> consoleMessageCompleter =
-            Completer<ConsoleMessage>();
-        await tester.pumpWidget(
-          Directionality(
-            textDirection: TextDirection.ltr,
-            child: InAppWebView(
-              key: GlobalKey(),
-              onWebViewCreated: (controller) {
-                controller.loadUrl(
-                  urlRequest: URLRequest(
-                    url: WebUri('file://${fileHtml.path}'),
-                  ),
-                  allowingReadAccessTo: WebUri('file://${appSupportDir.path}/'),
-                );
-              },
-              onConsoleMessage: (controller, consoleMessage) {
-                consoleMessageCompleter.complete(consoleMessage);
-              },
-            ),
-          ),
-        );
-        final ConsoleMessage consoleMessage =
-            await consoleMessageCompleter.future;
-        expect(consoleMessage.messageLevel, ConsoleMessageLevel.LOG);
-        expect(consoleMessage.message, 'message');
+          final consoleMessage = await completer.future;
+          expect(consoleMessage.messageLevel, ConsoleMessageLevel.LOG);
+          expect(consoleMessage.message, 'message');
+        }
       },
     );
   }, skip: shouldSkip);

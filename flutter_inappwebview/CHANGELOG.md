@@ -363,6 +363,11 @@ simulator for the first time:**
   (matching Android's single `ERROR_HOST_LOOKUP`), and the code generator now falls back to an
   enum's own catch-all constant instead of emitting a bare `!`
 - **A leaked `WKURLSchemeTask`** in the custom-scheme handler
+- **`InAppWebViewSettings.allowingReadAccessTo` is documented as *not* a security boundary**, where
+  it previously told you to set it "to prevent WebView from reading any other content". Measured on
+  iOS 17.5 and 26.5: a `file://` page loads a sibling directory's script even with the scope narrowed
+  to a directory that excludes it, and the plugin was verified to pass the right URL to WebKit. If a
+  local page must not reach a file, do not put that file where the page can name it
 - **`findAll` found nothing when the search text contained an apostrophe or a backslash**, wherever
   `InAppWebViewSettings.isFindInteractionEnabled` is `false`. The term was interpolated into
   JavaScript source unescaped, so `it's` made the script invalid and it failed silently — from Dart,

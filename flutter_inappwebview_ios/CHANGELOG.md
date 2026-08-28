@@ -64,6 +64,11 @@ unit test could see. All four are fixed and proved both ways on a simulator.
 - **A DNS failure threw inside the plugin on iOS 26, so `onReceivedError` never reached app code.**
   iOS 26 returns `NSError -1006` where 17.x returned -1003, and -1006 was unmapped
 - **A leaked `WKURLSchemeTask`** in the custom-scheme handler
+- **`InAppWebViewSettings.allowingReadAccessTo` documented as not a security boundary.** No code
+  change and no defect: instrumenting `InAppWebView.loadUrl` on iOS 17.5 and 26.5 shows the plugin
+  hands `WKWebView.loadFileURL(_:allowingReadAccessTo:)` the correct file URL, and a `file://` page
+  still loads a sibling directory's script when the scope is narrowed to a directory that excludes
+  it. The doc used to promise the opposite
 - **`findAll` found nothing when the search text contained an apostrophe or a backslash.** Below the
   `UIFindInteraction` path — i.e. whenever `InAppWebViewSettings.isFindInteractionEnabled` is
   `false` — the search term was interpolated into JavaScript source **with no escaping at all**, so
