@@ -96,8 +96,21 @@ class InAppWebViewSettings {
   ///Used in combination with [PlatformWebViewCreationParams.initialUrlRequest] or [PlatformWebViewCreationParams.initialData] (using the `file://` scheme), it represents the URL from which to read the web content.
   ///This URL must be a file-based URL (using the `file://` scheme).
   ///Specify the same value as the [URLRequest.url] if you are using it with the [PlatformWebViewCreationParams.initialUrlRequest] parameter or
-  ///the [InAppWebViewInitialData.baseUrl] if you are using it with the [PlatformWebViewCreationParams.initialData] parameter to prevent WebView from reading any other content.
+  ///the [InAppWebViewInitialData.baseUrl] if you are using it with the [PlatformWebViewCreationParams.initialData] parameter.
   ///Specify a directory to give WebView permission to read additional files in the specified directory.
+  ///
+  ///**This is not a security boundary. Do not rely on it to keep a `file://` page away from other
+  ///local files.** Setting it selects which WebKit API the plugin calls
+  ///(`WKWebView.loadFileURL(_:allowingReadAccessTo:)` instead of `WKWebView.load(_:)`), and WebKit
+  ///decides what that scope actually restricts.
+  ///
+  ///Measured on iOS 17.5 and 26.5: a page at `<dir>/html/index.html` with
+  ///`<script src="../js/main.js">` loads and runs that sibling script **in every configuration** —
+  ///with no value set, with `<dir>/` set, and with the scope narrowed to `<dir>/html/` alone, which
+  ///does not contain it. The plugin was verified to pass the correct file URL through to
+  ///`loadFileURL`, so this is WebKit's behaviour, not a value that fails to arrive.
+  ///
+  ///If a local page must not reach a file, do not put that file where the page can name it.
   ///
   ///**Officially Supported Platforms/Implementations**:
   ///- iOS WKWebView

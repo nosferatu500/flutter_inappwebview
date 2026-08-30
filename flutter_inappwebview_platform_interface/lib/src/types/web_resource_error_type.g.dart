@@ -555,11 +555,11 @@ class WebResourceErrorType {
     () {
       switch (defaultTargetPlatform) {
         case TargetPlatform.iOS:
-          return [-1006];
+          return <int?>[-1006];
         default:
           break;
       }
-      return const [];
+      return const <int?>[];
     },
   );
 

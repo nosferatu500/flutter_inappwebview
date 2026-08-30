@@ -150,7 +150,6 @@ void main() {
     safeBrowsing();
     onScrollChanged();
     sslRequest();
-    onPrintRequest();
     onWindowFocus();
     onWindowBlur();
     onPageCommitVisible();
@@ -178,7 +177,6 @@ void main() {
     clearAllCache();
     tRexRunnerGame();
     pauseResumeTimers();
-    printCurrentPage();
     getContentHeight();
     postVisualStateCallback();
     documentHasImages();
@@ -208,5 +206,21 @@ void main() {
     webViewAssetLoader();
     onContentSizeChanged();
     keepAlive();
+
+    // MUST BE LAST, and they must stay last.
+    //
+    // Both raise the platform's modal print UI: `window.print()` and `printCurrentPage()` each
+    // call the native printCurrentPage(), which hands the job to the OS print dialog. Nothing in
+    // the plugin API can dismiss it again — `PrintJobController.dispose()` maps to Android's
+    // `PrintJob.cancel()`, and that is a no-op while the job is still in CREATED state, which is
+    // exactly the state it is in while the dialog is open (verified on API 37).
+    //
+    // On Android 17 / API 37 the dialog then sits on top as
+    // `com.android.printspooler/.ui.PrintActivity` and every test after it times out at 60s
+    // waiting for a UI it can never reach: measured three times, ~60 tests lost and the app
+    // finally ANR-killed. API 33 and both iOS versions do not block, but the ordering is the only
+    // thing that makes the group safe everywhere.
+    onPrintRequest();
+    printCurrentPage();
   }, skip: shouldSkip);
 }

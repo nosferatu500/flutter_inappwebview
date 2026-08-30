@@ -13,7 +13,6 @@ class URLCredential {
   ///
   ///**Officially Supported Platforms/Implementations**:
   ///- iOS WKWebView
-  ///- macOS WKWebView
   List<X509Certificate>? certificates;
 
   ///The credential’s password.
@@ -23,7 +22,6 @@ class URLCredential {
   ///
   ///**Officially Supported Platforms/Implementations**:
   ///- iOS WKWebView
-  ///- macOS WKWebView
   URLCredentialPersistence? persistence;
 
   ///The credential’s user name.

@@ -114,6 +114,17 @@ rename; this entry is the API-owner's view.
 - **The code generator no longer emits a bare `!` on a non-nullable enum lookup** where the enum has
   a catch-all constant; it degrades to that constant instead. It also emitted code broken in both
   directions for `Map<String, SomeEnum>` fields. Both have regression tests
+- **Reading `WebResourceErrorType.HOST_LOOKUP` threw on Android.** The generated
+  `_alsoAcceptsNativeValues` closure — added so one constant can accept several inbound native codes
+  — ended its fall-through branch with a bare `const []`, which infers `List<dynamic>`, while
+  `_internalMultiPlatform` casts the result to `List<int?>`. Every platform taking that branch got
+  `type 'List<dynamic>' is not a subtype of type 'List<int?>' in type cast` **from the constant's own
+  initialiser**, so the crash landed wherever the constant was first touched. The generator now emits
+  the type argument on both list literals. Regression test included, and it fails on the old output
+- **`onFaviconChanged` is documented as not firing on modern Android WebView.** Its source,
+  `WebChromeClient.onReceivedIcon`, was fed by the long-inert `WebIconDatabase`. Measured on API 33
+  and 37 — on API 33 the WebView does fetch `favicon.ico` and the callback still never arrives, while
+  `onReceivedTitle` from the same client works. `getFavicons()` is the working alternative
 - **An unmapped permission resource killed `onPermissionRequest`.** `PermissionResourceType` had no
   catch-all left, so `PermissionRequest.fromMap` and `PermissionResponse.fromMap` force-unwrapped the
   lookup: one `PermissionRequest.RESOURCE_*` string (Android) or `WKMediaCaptureType` raw value (iOS)

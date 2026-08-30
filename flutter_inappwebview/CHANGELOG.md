@@ -399,6 +399,16 @@ simulator for the first time:**
 
 **Both platforms / tooling:**
 
+- **`WebResourceErrorType.HOST_LOOKUP` threw when read on Android.** The constant accepts a second
+  inbound native code on iOS, and the generated closure for that returned an untyped `const []` on
+  every other platform, which failed the cast in its own initialiser:
+  `type 'List<dynamic>' is not a subtype of type 'List<int?>'`. Any Android code touching the
+  constant crashed — including `onReceivedError` handlers comparing against it. Fixed in the
+  generator, with a regression test
+- **`onFaviconChanged` now documents that it does not fire on modern Android WebView**, where
+  `WebChromeClient.onReceivedIcon` is no longer dispatched (`WebIconDatabase` is inert). Measured on
+  API 33 and 37; `InAppWebViewController.getFavicons()` is the working alternative
+
 - **An unmapped permission resource killed `onPermissionRequest` on both platforms.**
   `PermissionRequest` / `PermissionResponse` force-unwrapped the `PermissionResourceType` lookup, so
   a single `PermissionRequest.RESOURCE_*` string Android adds, or a `WKMediaCaptureType` raw value

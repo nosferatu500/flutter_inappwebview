@@ -237,7 +237,8 @@ class ExchangeableEnumGenerator
                     .map(renderValue)
                     .join(", ");
                 alsoAcceptsBody += "case TargetPlatform.$targetPlatformName:";
-                alsoAcceptsBody += "return [$rendered];";
+                alsoAcceptsBody +=
+                    "return <$nativeValueNullableType>[$rendered];";
                 hasAlsoAccepts = true;
               }
             }
@@ -255,7 +256,12 @@ class ExchangeableEnumGenerator
 
           alsoAcceptsBody += "default: break;";
           alsoAcceptsBody += "}";
-          alsoAcceptsBody += "return const [];";
+          // MUST carry its type argument. A bare `const []` infers `List<dynamic>`, and
+          // `_internalMultiPlatform` casts the closure's result with
+          // `as List<$nativeValueNullableType>` -- which throws for every platform that falls
+          // through to this default. That made simply *reading* a constant with extra accepted
+          // values (e.g. `WebResourceErrorType.HOST_LOOKUP`) crash on Android.
+          alsoAcceptsBody += "return const <$nativeValueNullableType>[];";
           alsoAcceptsBody += "}";
 
           classBuffer.writeln(

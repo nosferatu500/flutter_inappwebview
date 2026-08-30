@@ -37,12 +37,9 @@ class WebArchiveFormat {
   ///
   ///**Officially Supported Platforms/Implementations**:
   ///- Android WebView
-  ///- Linux WPE WebKit
   static final MHT = WebArchiveFormat._internalMultiPlatform('mht', () {
     switch (defaultTargetPlatform) {
       case TargetPlatform.android:
-        return 'mht';
-      case TargetPlatform.linux:
         return 'mht';
       default:
         break;
@@ -54,14 +51,11 @@ class WebArchiveFormat {
   ///
   ///**Officially Supported Platforms/Implementations**:
   ///- iOS WKWebView
-  ///- macOS WKWebView
   static final WEBARCHIVE = WebArchiveFormat._internalMultiPlatform(
     'webarchive',
     () {
       switch (defaultTargetPlatform) {
         case TargetPlatform.iOS:
-          return 'webarchive';
-        case TargetPlatform.macOS:
           return 'webarchive';
         default:
           break;

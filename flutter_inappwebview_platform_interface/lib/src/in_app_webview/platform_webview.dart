@@ -1156,6 +1156,18 @@ In that case, after the `window.addEventListener("flutterInAppWebViewPlatformRea
   ///Event fired when the favicon for the current page changes.
   ///
   ///[faviconChangedRequest] contains the favicon URL and/or icon bytes, if available.
+  ///
+  ///**On a modern Android WebView this event does not fire, and there is nothing the plugin can do
+  ///about it.** It is delivered by `WebChromeClient.onReceivedIcon`, which was fed by
+  ///`WebIconDatabase` — deprecated since API 19 and now inert — so the WebView no longer dispatches
+  ///it. Measured on API 33 and API 37: on API 37
+  ///[InAppWebViewSettings.downloadFaviconsEnabled] is not even supported, and on API 33 it is
+  ///supported, reads back `true`, and the WebView really does fetch `favicon.ico` (visible through
+  ///[PlatformWebViewCreationParams.onLoadResource]) — yet `onReceivedIcon` still never arrives.
+  ///`onReceivedTitle` from the same client works, so this is not a wiring problem.
+  ///
+  ///Use [PlatformInAppWebViewController.getFavicons] instead: it reads the document's own
+  ///`<link rel="icon">` tags and works on both platforms.
   ///{@endtemplate}
   ///
   ///{@macro flutter_inappwebview_platform_interface.PlatformWebViewCreationParams.onFaviconChanged.supported_platforms}

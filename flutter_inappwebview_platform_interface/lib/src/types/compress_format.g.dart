@@ -40,17 +40,11 @@ class CompressFormat {
   ///**Officially Supported Platforms/Implementations**:
   ///- Android WebView
   ///- iOS WKWebView
-  ///- macOS WKWebView
-  ///- Windows WebView2
   static final JPEG = CompressFormat._internalMultiPlatform('JPEG', () {
     switch (defaultTargetPlatform) {
       case TargetPlatform.android:
         return 'JPEG';
       case TargetPlatform.iOS:
-        return 'JPEG';
-      case TargetPlatform.macOS:
-        return 'JPEG';
-      case TargetPlatform.windows:
         return 'JPEG';
       default:
         break;
@@ -64,17 +58,11 @@ class CompressFormat {
   ///**Officially Supported Platforms/Implementations**:
   ///- Android WebView
   ///- iOS WKWebView
-  ///- macOS WKWebView
-  ///- Windows WebView2
   static final PNG = CompressFormat._internalMultiPlatform('PNG', () {
     switch (defaultTargetPlatform) {
       case TargetPlatform.android:
         return 'PNG';
       case TargetPlatform.iOS:
-        return 'PNG';
-      case TargetPlatform.macOS:
-        return 'PNG';
-      case TargetPlatform.windows:
         return 'PNG';
       default:
         break;
@@ -88,12 +76,9 @@ class CompressFormat {
   ///
   ///**Officially Supported Platforms/Implementations**:
   ///- Android WebView
-  ///- Windows WebView2
   static final WEBP = CompressFormat._internalMultiPlatform('WEBP', () {
     switch (defaultTargetPlatform) {
       case TargetPlatform.android:
-        return 'WEBP';
-      case TargetPlatform.windows:
         return 'WEBP';
       default:
         break;

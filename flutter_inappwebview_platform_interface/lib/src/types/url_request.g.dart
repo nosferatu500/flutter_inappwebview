@@ -12,21 +12,18 @@ class URLRequest {
   ///
   ///**Officially Supported Platforms/Implementations**:
   ///- iOS WKWebView ([Official API - URLRequest.allowsCellularAccess](https://developer.apple.com/documentation/foundation/urlrequest/2011607-allowscellularaccess/))
-  ///- macOS WKWebView ([Official API - URLRequest.allowsCellularAccess](https://developer.apple.com/documentation/foundation/urlrequest/2011607-allowscellularaccess/))
   bool? allowsCellularAccess;
 
   ///A Boolean value that indicates whether the request may use the network when the user has specified Low Data Mode.
   ///
   ///**Officially Supported Platforms/Implementations**:
   ///- iOS WKWebView 13.0+ ([Official API - URLRequest.allowsConstrainedNetworkAccess](https://developer.apple.com/documentation/foundation/urlrequest/3358304-allowsconstrainednetworkaccess))
-  ///- macOS WKWebView 10.15+ ([Official API - URLRequest.allowsConstrainedNetworkAccess](https://developer.apple.com/documentation/foundation/urlrequest/3358304-allowsconstrainednetworkaccess))
   bool? allowsConstrainedNetworkAccess;
 
   ///A Boolean value that indicates whether connections may use a network interface that the system considers expensive.
   ///
   ///**Officially Supported Platforms/Implementations**:
   ///- iOS WKWebView 13.0+ ([Official API - URLRequest.allowsExpensiveNetworkAccess](https://developer.apple.com/documentation/foundation/urlrequest/3358305-allowsexpensivenetworkaccess))
-  ///- macOS WKWebView 10.15+ ([Official API - URLRequest.allowsExpensiveNetworkAccess](https://developer.apple.com/documentation/foundation/urlrequest/3358305-allowsexpensivenetworkaccess))
   bool? allowsExpensiveNetworkAccess;
 
   ///`true` if server endpoint is known to support HTTP/3. Enables QUIC racing
@@ -35,7 +32,6 @@ class URLRequest {
   ///
   ///**Officially Supported Platforms/Implementations**:
   ///- iOS WKWebView 14.5+ ([Official API - URLRequest.assumesHTTP3Capable](https://developer.apple.com/documentation/foundation/urlrequest/3738175-assumeshttp3capable))
-  ///- macOS WKWebView 11.3+ ([Official API - URLRequest.assumesHTTP3Capable](https://developer.apple.com/documentation/foundation/urlrequest/3738175-assumeshttp3capable))
   bool? assumesHTTP3Capable;
 
   ///The entities that can make a network request.
@@ -44,7 +40,6 @@ class URLRequest {
   ///
   ///**Officially Supported Platforms/Implementations**:
   ///- iOS WKWebView 15.0+ ([Official API - URLRequest.attribution](https://developer.apple.com/documentation/foundation/urlrequest/3767318-attribution))
-  ///- macOS WKWebView 12.0+ ([Official API - URLRequest.attribution](https://developer.apple.com/documentation/foundation/urlrequest/3767318-attribution))
   URLRequestAttribution? attribution;
 
   ///The data sent as the message body of a request, such as for an HTTP POST request.
@@ -54,7 +49,6 @@ class URLRequest {
   ///
   ///**Officially Supported Platforms/Implementations**:
   ///- iOS WKWebView ([Official API - URLRequest.cachePolicy](https://developer.apple.com/documentation/foundation/urlrequest/2011593-cachepolicy))
-  ///- macOS WKWebView ([Official API - URLRequest.cachePolicy](https://developer.apple.com/documentation/foundation/urlrequest/2011593-cachepolicy))
   URLRequestCachePolicy? cachePolicy;
 
   ///A dictionary containing all of the HTTP header fields for a request.
@@ -64,14 +58,12 @@ class URLRequest {
   ///
   ///**Officially Supported Platforms/Implementations**:
   ///- iOS WKWebView ([Official API - URLRequest.httpShouldHandleCookies](https://developer.apple.com/documentation/foundation/urlrequest/2011548-httpshouldhandlecookies))
-  ///- macOS WKWebView ([Official API - URLRequest.httpShouldHandleCookies](https://developer.apple.com/documentation/foundation/urlrequest/2011548-httpshouldhandlecookies))
   bool? httpShouldHandleCookies;
 
   ///A Boolean value indicating whether the request should transmit before the previous response is received.
   ///
   ///**Officially Supported Platforms/Implementations**:
   ///- iOS WKWebView ([Official API - URLRequest.httpShouldUsePipelining](https://developer.apple.com/documentation/foundation/urlrequest/2011508-httpshouldusepipelining))
-  ///- macOS WKWebView ([Official API - URLRequest.httpShouldUsePipelining](https://developer.apple.com/documentation/foundation/urlrequest/2011508-httpshouldusepipelining))
   bool? httpShouldUsePipelining;
 
   ///The main document URL associated with this request.
@@ -79,7 +71,6 @@ class URLRequest {
   ///
   ///**Officially Supported Platforms/Implementations**:
   ///- iOS WKWebView ([Official API - URLRequest.mainDocumentURL](https://developer.apple.com/documentation/foundation/urlrequest/2011552-maindocumenturl))
-  ///- macOS WKWebView ([Official API - URLRequest.mainDocumentURL](https://developer.apple.com/documentation/foundation/urlrequest/2011552-maindocumenturl))
   WebUri? mainDocumentURL;
 
   ///The HTTP request method.
@@ -91,14 +82,12 @@ class URLRequest {
   ///
   ///**Officially Supported Platforms/Implementations**:
   ///- iOS WKWebView ([Official API - URLRequest.networkServiceType](https://developer.apple.com/documentation/foundation/urlrequest/2011409-networkservicetype))
-  ///- macOS WKWebView ([Official API - URLRequest.networkServiceType](https://developer.apple.com/documentation/foundation/urlrequest/2011409-networkservicetype))
   URLRequestNetworkServiceType? networkServiceType;
 
   ///The timeout interval of the request.
   ///
   ///**Officially Supported Platforms/Implementations**:
   ///- iOS WKWebView ([Official API - URLRequest.timeoutInterval](https://developer.apple.com/documentation/foundation/urlrequest/2011509-timeoutinterval))
-  ///- macOS WKWebView ([Official API - URLRequest.timeoutInterval](https://developer.apple.com/documentation/foundation/urlrequest/2011509-timeoutinterval))
   double? timeoutInterval;
 
   ///The URL of the request. Setting this to `null` will load `about:blank`.
