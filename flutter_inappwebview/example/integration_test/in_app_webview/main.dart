@@ -68,7 +68,6 @@ part 'on_page_commit_visible.dart';
 part 'on_permission_request.dart';
 part 'on_print_request.dart';
 part 'on_progress_changed.dart';
-part 'on_favicon_changed.dart';
 part 'on_received_touch_icon_url.dart';
 part 'safe_browsing.dart';
 part 'on_scroll_changed.dart';
@@ -157,7 +156,6 @@ void main() {
     programmaticZoomScale();
     onPermissionRequest();
     shouldInterceptRequest();
-    onFaviconChanged();
     onReceivedTouchIconUrl();
     onJsBeforeUnload();
     onNavigationResponse();

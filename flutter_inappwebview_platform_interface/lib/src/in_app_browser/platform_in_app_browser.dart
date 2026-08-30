@@ -1384,20 +1384,6 @@ In that case, after the `window.addEventListener("flutterInAppWebViewPlatformRea
     return null;
   }
 
-  ///{@macro flutter_inappwebview_platform_interface.PlatformWebViewCreationParams.onFaviconChanged}
-  ///
-  ///{@macro flutter_inappwebview_platform_interface.PlatformInAppBrowserEvents.onFaviconChanged.supported_platforms}
-  @SupportedPlatforms(
-    platforms: [
-      AndroidPlatform(
-        apiName: 'WebChromeClient.onReceivedIcon',
-        apiUrl:
-            'https://developer.android.com/reference/android/webkit/WebChromeClient#onReceivedIcon(android.webkit.WebView,%20android.graphics.Bitmap)',
-      ),
-    ],
-  )
-  void onFaviconChanged(FaviconChangedRequest faviconChangedRequest) {}
-
   ///{@macro flutter_inappwebview_platform_interface.PlatformWebViewCreationParams.onReceivedTouchIconUrl}
   ///
   ///{@macro flutter_inappwebview_platform_interface.PlatformInAppBrowserEvents.onReceivedTouchIconUrl.supported_platforms}

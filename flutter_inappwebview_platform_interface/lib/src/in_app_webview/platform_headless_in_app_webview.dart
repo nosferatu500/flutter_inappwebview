@@ -72,7 +72,6 @@ class PlatformHeadlessInAppWebViewCreationParams
     super.onRenderProcessResponsive,
     super.onRenderProcessUnresponsive,
     super.onFormResubmission,
-    super.onFaviconChanged,
     super.onReceivedTouchIconUrl,
     super.onJsBeforeUnload,
     super.onReceivedLoginRequest,

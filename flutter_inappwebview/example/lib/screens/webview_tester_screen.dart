@@ -1204,22 +1204,10 @@ class _WebViewTesterScreenState extends State<WebViewTesterScreen>
       },
 
       // ============================================================
-      // ICON EVENTS (2)
+      // ICON EVENTS (1)
       // ============================================================
 
-      // 49. onFaviconChanged
-      onFaviconChanged: (controller, request) {
-        _logEvent(
-          EventType.ui,
-          PlatformWebViewCreationParamsProperty.onFaviconChanged.name,
-          data: {
-            'iconSize': request.icon?.length,
-            'url': request.url?.toString(),
-          },
-        );
-      },
-
-      // 50. onReceivedTouchIconUrl
+      // 49. onReceivedTouchIconUrl
       onReceivedTouchIconUrl: (controller, url, precomposed) {
         _logEvent(
           EventType.ui,

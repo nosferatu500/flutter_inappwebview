@@ -220,11 +220,6 @@ class InAppWebView extends StatefulWidget {
       PermissionRequest permissionRequest,
     )?
     onPermissionRequest,
-    void Function(
-      InAppWebViewController controller,
-      FaviconChangedRequest faviconChangedRequest,
-    )?
-    onFaviconChanged,
     void Function(InAppWebViewController controller, LoginRequest loginRequest)?
     onReceivedLoginRequest,
     void Function(
@@ -479,10 +474,6 @@ class InAppWebView extends StatefulWidget {
                : null,
            onFormResubmission: onFormResubmission != null
                ? (controller, url) => onFormResubmission.call(controller, url)
-               : null,
-           onFaviconChanged: onFaviconChanged != null
-               ? (controller, request) =>
-                     onFaviconChanged.call(controller, request)
                : null,
            onReceivedTouchIconUrl: onReceivedTouchIconUrl != null
                ? (controller, url, precomposed) =>

@@ -45,7 +45,6 @@ class PlatformInAppWebViewWidgetCreationParams
     super.onConsoleMessage,
     super.shouldOverrideUrlLoading,
     super.onLoadResource,
-    super.onFaviconChanged,
     super.onScrollChanged,
     super.onDownloadStarting,
     super.onLoadResourceWithCustomScheme,

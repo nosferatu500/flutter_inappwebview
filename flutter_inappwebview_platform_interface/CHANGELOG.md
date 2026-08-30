@@ -77,6 +77,16 @@ rename; this entry is the API-owner's view.
   All 25 exports are gone from `src/types/main.dart`. **`ProxyRelayHop` was equally unreferenced and
   is kept**: it is `@SupportedPlatforms([IOSPlatform()])` and `ProxyManager.swift` reads it — the
   gap is that `ProxyRule` has no `relayHop1` / `relayHop2` field to carry it, and never has
+- **`onFaviconChanged`, an event that can no longer fire on any supported platform.** Gone from
+  `PlatformWebViewCreationParams` and `PlatformInAppBrowserEvents`, along with the
+  `FaviconChangedRequest` type and its export from `src/types/main.dart`. It was
+  `@SupportedPlatforms([AndroidPlatform(apiName: 'WebChromeClient.onReceivedIcon')])`, and that
+  callback is no longer dispatched by a modern Android WebView — `WebIconDatabase`, which fed it, has
+  been inert since API 19. Measured on API 33 and API 37: the icon really is downloaded (visible
+  through `onLoadResource`) and the callback still never arrives, while `onReceivedTitle` from the
+  same client works. Use `PlatformInAppWebViewController.getFavicons()` instead. Removing the event
+  also drops it from `PlatformInAppWebViewController.debugLoggingSettings`' default `excludeFilter`,
+  which now excludes only `onScrollChanged` and `onOverScrolled`
 
 ### Added
 

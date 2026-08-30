@@ -270,20 +270,6 @@ enum PlatformWebViewCreationParamsProperty {
   ///{@endtemplate}
   onExitFullscreen,
 
-  ///Can be used to check if the [PlatformWebViewCreationParams.onFaviconChanged] property is supported at runtime.
-  ///
-  ///{@template flutter_inappwebview_platform_interface.PlatformWebViewCreationParams.onFaviconChanged.supported_platforms}
-  ///
-  ///**Officially Supported Platforms/Implementations**:
-  ///- Android WebView ([Official API - WebChromeClient.onReceivedIcon](https://developer.android.com/reference/android/webkit/WebChromeClient#onReceivedIcon(android.webkit.WebView,%20android.graphics.Bitmap)))
-  ///
-  ///**Parameters - Officially Supported Platforms/Implementations**:
-  ///- [faviconChangedRequest]: all platforms
-  ///
-  ///Use the [PlatformWebViewCreationParams.isPropertySupported] method to check if this property is supported at runtime.
-  ///{@endtemplate}
-  onFaviconChanged,
-
   ///Can be used to check if the [PlatformWebViewCreationParams.onFormResubmission] property is supported at runtime.
   ///
   ///{@template flutter_inappwebview_platform_interface.PlatformWebViewCreationParams.onFormResubmission.supported_platforms}
@@ -1094,11 +1080,6 @@ extension _PlatformWebViewCreationParamsPropertySupported
             [
               TargetPlatform.android,
               TargetPlatform.iOS,
-            ].contains(platform ?? defaultTargetPlatform);
-      case PlatformWebViewCreationParamsProperty.onFaviconChanged:
-        return ((kIsWeb && platform != null) || !kIsWeb) &&
-            [
-              TargetPlatform.android,
             ].contains(platform ?? defaultTargetPlatform);
       case PlatformWebViewCreationParamsProperty.onFormResubmission:
         return ((kIsWeb && platform != null) || !kIsWeb) &&

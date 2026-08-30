@@ -53,7 +53,6 @@ import dev.nosferatu500.inappwebview.types.ShowFileChooserResponse
 import dev.nosferatu500.inappwebview.types.URLRequest
 import dev.nosferatu500.inappwebview.webview.WebViewChannelDelegate
 import io.flutter.plugin.common.PluginRegistry
-import java.io.ByteArrayOutputStream
 import java.io.File
 import java.io.IOException
 import java.util.Locale
@@ -649,22 +648,6 @@ class InAppWebViewChromeClient(
     val webView = view as InAppWebView
 
     webView.channelDelegate?.onTitleChanged(title)
-  }
-
-  override fun onReceivedIcon(view: WebView, icon: Bitmap) {
-    super.onReceivedIcon(view, icon)
-
-    val byteArrayOutputStream = ByteArrayOutputStream()
-    icon.compress(Bitmap.CompressFormat.PNG, 100, byteArrayOutputStream)
-    try {
-      byteArrayOutputStream.close()
-    } catch (e: IOException) {
-      Log.e(LOG_TAG, "", e)
-    }
-    icon.recycle()
-
-    val webView = view as InAppWebView
-    webView.channelDelegate?.onFaviconChanged(byteArrayOutputStream.toByteArray())
   }
 
   override fun onReceivedTouchIconUrl(view: WebView, url: String?, precomposed: Boolean) {

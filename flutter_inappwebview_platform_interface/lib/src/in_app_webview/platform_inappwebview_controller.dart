@@ -75,14 +75,10 @@ class PlatformInAppWebViewControllerCreationParams {
 abstract class PlatformInAppWebViewController extends PlatformInterface
     implements Disposable {
   ///Debug settings used by [PlatformInAppWebViewWidget], [PlatformHeadlessInAppWebView] and [PlatformInAppBrowser].
-  ///The default value excludes the [PlatformWebViewCreationParams.onScrollChanged], [PlatformWebViewCreationParams.onOverScrolled] and [PlatformWebViewCreationParams.onFaviconChanged] events.
+  ///The default value excludes the [PlatformWebViewCreationParams.onScrollChanged] and [PlatformWebViewCreationParams.onOverScrolled] events.
   static DebugLoggingSettings debugLoggingSettings = DebugLoggingSettings(
     maxLogMessageLength: 1000,
-    excludeFilter: [
-      RegExp(r"onScrollChanged"),
-      RegExp(r"onOverScrolled"),
-      RegExp(r"onFaviconChanged"),
-    ],
+    excludeFilter: [RegExp(r"onScrollChanged"), RegExp(r"onOverScrolled")],
   );
 
   /// Creates a new [PlatformInAppWebViewController]

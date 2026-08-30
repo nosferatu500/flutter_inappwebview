@@ -97,7 +97,7 @@ Map<String, List<SettingDefinition>> getSettingDefinitions() {
       SettingDefinition(
         name: 'Download Favicons',
         description:
-            'Fetch page favicons — this also gates the onReceivedIcon event (Android)',
+            'Fetch page favicons (Android). Only controls the request — use getFavicons() to read them',
         type: SettingType.boolean,
         defaultValue: null,
         property: InAppWebViewSettingsProperty.downloadFaviconsEnabled,

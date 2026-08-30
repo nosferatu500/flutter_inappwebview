@@ -94,6 +94,15 @@ for, and five others have a native *value* that differs from their name.
   `PlatformWebViewEnvironment` was Windows/Linux-only and no longer exists
 - `onDownloadStarting` no longer serializes a response back to the native side: the event returns
   `FutureOr<void>`, and `WebViewChannelDelegate.kt` never read the returned value
+- **`onFaviconChanged`**, with its `WebChromeClient.onReceivedIcon` override in
+  `InAppWebViewChromeClient.kt` and the `onFaviconChanged` sender in `WebViewChannelDelegate.kt`. The
+  framework no longer dispatches `onReceivedIcon` — `WebIconDatabase`, its source, has been inert
+  since API 19 — so the event could not fire. Measured on API 33 and API 37: with
+  `downloadFaviconsEnabled: true` reading back `true`, the WebView does fetch `favicon.ico`
+  (confirmed through `onLoadResource`) and `onReceivedIcon` is still never called, while
+  `onReceivedTitle` from the same client is. Use `InAppWebViewController.getFavicons()`.
+  `InAppWebViewSettings.downloadFaviconsEnabled` is kept — it still controls whether the request is
+  issued, which is a real network cost per page
 
 ### Internal
 

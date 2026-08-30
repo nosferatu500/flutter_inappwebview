@@ -1125,8 +1125,12 @@ as it can cause framerate drops on animations in Android 9 and lower (see [Hybri
   ///Favicon downloading costs an extra network request per page, so turning it off is worthwhile
   ///for a WebView whose favicons are never displayed.
   ///
-  ///This is what drives [PlatformWebViewCreationParams.onReceivedIcon]: with downloading disabled
-  ///that event stops firing, because there is no icon to deliver.
+  ///**This setting does not surface an icon to Dart.** It only controls whether the WebView issues
+  ///the request — measured on API 33, the fetch of `favicon.ico` is visible through
+  ///[PlatformWebViewCreationParams.onLoadResource] when this is enabled. The framework callback that
+  ///used to deliver the downloaded bitmap, `WebChromeClient.onReceivedIcon`, is no longer dispatched
+  ///by a modern WebView, so the plugin removed the event it fed in 7.0.0. Use
+  ///[PlatformInAppWebViewController.getFavicons] to read a page's icons.
   ///
   ///Leave `null` to keep the platform default.
   @SupportedPlatforms(

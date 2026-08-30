@@ -703,20 +703,6 @@ enum PlatformInAppBrowserEventsMethod {
   ///{@endtemplate}
   onExitFullscreen,
 
-  ///Can be used to check if the [PlatformInAppBrowserEvents.onFaviconChanged] method is supported at runtime.
-  ///
-  ///{@template flutter_inappwebview_platform_interface.PlatformInAppBrowserEvents.onFaviconChanged.supported_platforms}
-  ///
-  ///**Officially Supported Platforms/Implementations**:
-  ///- Android WebView ([Official API - WebChromeClient.onReceivedIcon](https://developer.android.com/reference/android/webkit/WebChromeClient#onReceivedIcon(android.webkit.WebView,%20android.graphics.Bitmap)))
-  ///
-  ///**Parameters - Officially Supported Platforms/Implementations**:
-  ///- [faviconChangedRequest]: all platforms
-  ///
-  ///Use the [PlatformInAppBrowserEvents.isMethodSupported] method to check if this method is supported at runtime.
-  ///{@endtemplate}
-  onFaviconChanged,
-
   ///Can be used to check if the [PlatformInAppBrowserEvents.onFormResubmission] method is supported at runtime.
   ///
   ///{@template flutter_inappwebview_platform_interface.PlatformInAppBrowserEvents.onFormResubmission.supported_platforms}
@@ -1442,11 +1428,6 @@ extension _PlatformInAppBrowserEventsMethodSupported
             [
               TargetPlatform.android,
               TargetPlatform.iOS,
-            ].contains(platform ?? defaultTargetPlatform);
-      case PlatformInAppBrowserEventsMethod.onFaviconChanged:
-        return ((kIsWeb && platform != null) || !kIsWeb) &&
-            [
-              TargetPlatform.android,
             ].contains(platform ?? defaultTargetPlatform);
       case PlatformInAppBrowserEventsMethod.onFormResubmission:
         return ((kIsWeb && platform != null) || !kIsWeb) &&

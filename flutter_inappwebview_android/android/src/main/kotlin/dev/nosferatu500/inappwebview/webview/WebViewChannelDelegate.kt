@@ -909,11 +909,6 @@ class WebViewChannelDelegate(webView: InAppWebView, channel: MethodChannel) :
     channel.invokeMethod("onTitleChanged", hashMapOf<String, Any?>("title" to title))
   }
 
-  fun onFaviconChanged(icon: ByteArray?) {
-    val channel = this.channel ?: return
-    channel.invokeMethod("onFaviconChanged", hashMapOf<String, Any?>("icon" to icon))
-  }
-
   fun onReceivedTouchIconUrl(url: String?, precomposed: Boolean) {
     val channel = this.channel ?: return
     channel.invokeMethod(

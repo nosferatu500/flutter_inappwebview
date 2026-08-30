@@ -412,9 +412,6 @@ class InAppBrowser implements PlatformInAppBrowserEvents {
   ) {}
 
   @override
-  void onFaviconChanged(FaviconChangedRequest faviconChangedRequest) {}
-
-  @override
   void onReceivedLoginRequest(LoginRequest loginRequest) {}
 
   @override

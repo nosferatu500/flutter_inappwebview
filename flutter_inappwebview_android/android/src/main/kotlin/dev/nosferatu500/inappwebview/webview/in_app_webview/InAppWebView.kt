@@ -500,8 +500,10 @@ class InAppWebView : WebView, InAppWebViewInterface, Disposable {
         WebSettingsCompat.setWebAuthenticationSupport(settings, it)
       }
     }
-    // Null keeps the platform default. Disabling this also stops onReceivedIcon firing, which is
-    // what feeds the onFaviconChanged event, so never apply it unless the caller asked.
+    // Null keeps the platform default, so never apply it unless the caller asked. This only
+    // controls whether the favicon is *requested* -- the framework callback that used to deliver
+    // the downloaded bitmap (WebChromeClient.onReceivedIcon) is no longer dispatched by a modern
+    // WebView, so there is no event behind this setting any more.
     customSettings.downloadFaviconsEnabled?.let {
       if (WebViewFeature.isFeatureSupported(WebViewFeature.DOWNLOAD_FAVICONS_ENABLED)) {
         WebSettingsCompat.setDownloadFaviconsEnabled(settings, it)

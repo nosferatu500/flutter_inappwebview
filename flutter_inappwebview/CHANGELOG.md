@@ -277,6 +277,28 @@ and `SaveAsKind` · plus 14 whose last user left with the dropped-platform membe
 in the same "zero references" list and is deliberately kept** — it is iOS API that the Swift side
 reads, and it is unreachable only because `ProxyRule` has never carried `relayHop1` / `relayHop2`.
 
+### Removed — `onFaviconChanged`, an event that can no longer fire
+
+**BREAKING.** `onFaviconChanged` and its `FaviconChangedRequest` payload are removed from
+`InAppWebView`, `HeadlessInAppWebView` and `InAppBrowser`. It was Android-only, and on a modern
+Android WebView the framework callback behind it — `WebChromeClient.onReceivedIcon` — is no longer
+dispatched, because the `WebIconDatabase` that fed it has been inert since API 19.
+
+Measured on API 33 and API 37, each step ruling out the previous explanation: on API 37
+`WebViewFeature.DOWNLOAD_FAVICONS_ENABLED` is not even supported; on API 33 it *is* supported,
+`downloadFaviconsEnabled: true` reads back `true`, and the WebView genuinely fetches `favicon.ico`
+(visible through `onLoadResource`) — and `onReceivedIcon` still never arrives. `onReceivedTitle` from
+the same `WebChromeClient` works throughout, so the client is installed and this is not a wiring
+problem. The event was already unsupported on iOS, so it fired on no supported platform.
+
+**Migration:** use `InAppWebViewController.getFavicons()`, which parses the document's own
+`<link rel="icon">` tags and works on both platforms. Note that it is a pull, not an event — call it
+from `onLoadStop` rather than waiting to be told.
+
+`InAppWebViewSettings.downloadFaviconsEnabled` is **kept**: it still controls whether the WebView
+issues the favicon request at all, which is a real per-page network cost. Its documentation no longer
+claims to gate an event.
+
 ### Added — Android
 
 Twelve `androidx.webkit` features, each behind its own `WebViewFeature` flag, plus eight

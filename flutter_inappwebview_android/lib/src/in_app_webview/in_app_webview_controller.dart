@@ -572,23 +572,6 @@ class AndroidInAppWebViewController extends PlatformInAppWebViewController
           }
         }
         break;
-      case "onFaviconChanged":
-        if ((webviewParams != null &&
-                webviewParams!.onFaviconChanged != null) ||
-            _inAppBrowserEventHandler != null) {
-          Map<String, dynamic> arguments = call.arguments
-              .cast<String, dynamic>();
-          FaviconChangedRequest request = FaviconChangedRequest.fromMap(
-            arguments,
-          )!;
-
-          if (webviewParams != null) {
-            webviewParams!.onFaviconChanged!(_controllerFromPlatform, request);
-          } else {
-            _inAppBrowserEventHandler!.onFaviconChanged(request);
-          }
-        }
-        break;
       case "onReceivedTouchIconUrl":
         if ((webviewParams != null &&
                 webviewParams!.onReceivedTouchIconUrl != null) ||

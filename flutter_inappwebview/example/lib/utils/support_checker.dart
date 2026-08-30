@@ -1930,12 +1930,6 @@ class SupportChecker {
 
         // Icon events
         ApiEventDefinition(
-          name: PlatformWebViewCreationParamsProperty.onFaviconChanged.name,
-          description: 'Called when the favicon for the current page changes.',
-          className: className,
-          category: 'Icon',
-        ),
-        ApiEventDefinition(
           name:
               PlatformWebViewCreationParamsProperty.onReceivedTouchIconUrl.name,
           description: 'Called when a touch icon URL is received.',
