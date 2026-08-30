@@ -205,19 +205,23 @@ void main() {
     onContentSizeChanged();
     keepAlive();
 
-    // MUST BE LAST, and they must stay last.
+    // `printCurrentPage` MUST BE LAST, and must stay last.
     //
-    // Both raise the platform's modal print UI: `window.print()` and `printCurrentPage()` each
-    // call the native printCurrentPage(), which hands the job to the OS print dialog. Nothing in
-    // the plugin API can dismiss it again — `PrintJobController.dispose()` maps to Android's
-    // `PrintJob.cancel()`, and that is a no-op while the job is still in CREATED state, which is
-    // exactly the state it is in while the dialog is open (verified on API 37).
+    // It raises the platform's modal print UI, and nothing in the plugin API can dismiss it again —
+    // `PrintJobController.dispose()` maps to Android's `PrintJob.cancel()`, and that is a no-op
+    // while the job is still in CREATED state, which is exactly the state it is in while the dialog
+    // is open (verified on API 37). That is correct behaviour: `printCurrentPage()` is an explicit
+    // request to print, so there is nothing to decline.
     //
     // On Android 17 / API 37 the dialog then sits on top as
     // `com.android.printspooler/.ui.PrintActivity` and every test after it times out at 60s
     // waiting for a UI it can never reach: measured three times, ~60 tests lost and the app
     // finally ANR-killed. API 33 and both iOS versions do not block, but the ordering is the only
     // thing that makes the group safe everywhere.
+    //
+    // `onPrintRequest` no longer belongs to that set: since 7.0.0 Dart is asked *before* the job is
+    // created, and the test returns `true`, so no dialog is raised at all. It is kept next to
+    // `printCurrentPage` only because they are the same subject.
     onPrintRequest();
     printCurrentPage();
   }, skip: shouldSkip);

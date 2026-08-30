@@ -128,11 +128,7 @@ class InAppWebView extends StatefulWidget {
       InAppWebViewHitTestResult hitTestResult,
     )?
     onLongPressHitTestResult,
-    FutureOr<bool?> Function(
-      InAppWebViewController controller,
-      WebUri? url,
-      PlatformPrintJobController? printJobController,
-    )?
+    FutureOr<bool?> Function(InAppWebViewController controller, WebUri? url)?
     onPrintRequest,
     void Function(InAppWebViewController controller, int progress)?
     onProgressChanged,
@@ -405,8 +401,7 @@ class InAppWebView extends StatefulWidget {
                      onUpdateVisitedHistory.call(controller, url, isReload)
                : null,
            onPrintRequest: onPrintRequest != null
-               ? (controller, url, printJobController) =>
-                     onPrintRequest.call(controller, url, printJobController)
+               ? (controller, url) => onPrintRequest.call(controller, url)
                : null,
            onLongPressHitTestResult: onLongPressHitTestResult != null
                ? (controller, hitTestResult) =>

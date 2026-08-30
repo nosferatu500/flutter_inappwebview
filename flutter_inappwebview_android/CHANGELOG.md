@@ -57,6 +57,18 @@ Every mirrored `WebViewFeature` constant is now pinned against the real AAR by a
 flags `WebViewFeature` declares are `@Deprecated` tombstones that `isFeatureSupported` **throws**
 for, and five others have a native *value* that differs from their name.
 
+### Changed
+
+- **`onPrintRequest` is asked before the print job starts.** `JavaScriptBridgeInterface`'s
+  `window.print()` handler no longer calls `printCurrentPage()` up front; it invokes the Dart event
+  first and only prints from the callback's `defaultBehaviour`, so returning `true` means
+  `PrintManager.print` is never called and no print dialog appears. Returning `false`, `null`, an
+  error, and having no handler at all all still print. The job is now created with
+  `handledByClient = false`, so no `PrintJobController` is allocated on this path.
+  `WebViewChannelDelegate.onPrintRequest` drops its `printJobId` argument and no longer sends that
+  map key. Measured on API 37 and API 33: `true` leaves no `com.android.printspooler` process,
+  `false` and no-handler both spawn one
+
 ### Fixed
 
 - **`CookieManager.flush()` never returned.** The native side never replied on the channel, so the
@@ -94,6 +106,9 @@ for, and five others have a native *value* that differs from their name.
   `PlatformWebViewEnvironment` was Windows/Linux-only and no longer exists
 - `onDownloadStarting` no longer serializes a response back to the native side: the event returns
   `FutureOr<void>`, and `WebViewChannelDelegate.kt` never read the returned value
+- **`PrintJobController.disposeNoCancel()`**, whose only caller was the old `onPrintRequest`
+  path — it dropped the plugin's tracking while leaving the OS job running, and there is no longer
+  a job the plugin owns but has not handed to Dart
 - **`onFaviconChanged`**, with its `WebChromeClient.onReceivedIcon` override in
   `InAppWebViewChromeClient.kt` and the `onFaviconChanged` sender in `WebViewChannelDelegate.kt`. The
   framework no longer dispatches `onReceivedIcon` — `WebIconDatabase`, its source, has been inert

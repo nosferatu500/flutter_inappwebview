@@ -1072,25 +1072,15 @@ class AndroidInAppWebViewController extends PlatformInAppWebViewController
         if ((webviewParams != null && webviewParams!.onPrintRequest != null) ||
             _inAppBrowserEventHandler != null) {
           String? url = call.arguments["url"];
-          String? printJobId = call.arguments["printJobId"];
           WebUri? uri = url != null ? WebUri(url) : null;
-          AndroidPrintJobController? printJob = printJobId != null
-              ? AndroidPrintJobController(
-                  AndroidPrintJobControllerCreationParams(id: printJobId),
-                )
-              : null;
 
           if (webviewParams != null) {
             return await webviewParams!.onPrintRequest!(
               _controllerFromPlatform,
               uri,
-              printJob,
             );
           } else {
-            return await _inAppBrowserEventHandler!.onPrintRequest(
-              uri,
-              printJob,
-            );
+            return await _inAppBrowserEventHandler!.onPrintRequest(uri);
           }
         }
         break;

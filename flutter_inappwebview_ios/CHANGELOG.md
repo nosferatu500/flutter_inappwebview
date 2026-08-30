@@ -115,6 +115,19 @@ error.
   `PlatformWebViewEnvironment` was Windows/Linux-only and no longer exists
 - `onDownloadStarting` no longer serializes a response back to the native side: the event returns
   `FutureOr<void>`, and `WebViewChannelDelegate.swift` never read the returned value
+- **`PrintJobController.disposeNoDismiss()`**, whose only caller was the old `onPrintRequest`
+  path — it dropped the plugin's tracking while leaving the presented print controller alone, and
+  there is no longer a job the plugin owns but has not handed to Dart
+
+### Changed
+
+- **`onPrintRequest` is asked before the print job starts.** `InAppWebView`'s `window.print()`
+  bridge handler no longer calls `printCurrentPage(settings:)` up front; it invokes the Dart event
+  first and only prints from the callback's `defaultBehaviour`, so returning `true` means the print
+  controller is never presented. Returning `false`, `null`, an error, and having no handler at all
+  all still print. The job is created with `handledByClient = false`, so no `PrintJobController` is
+  allocated on this path. `WebViewChannelDelegate.onPrintRequest` drops its `printJobId` argument
+  and no longer sends that map key. Verified on the iOS 26.5 and 17.5 simulators
 
 ### Internal
 

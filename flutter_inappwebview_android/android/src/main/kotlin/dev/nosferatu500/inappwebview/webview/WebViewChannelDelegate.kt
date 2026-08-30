@@ -1250,17 +1250,13 @@ class WebViewChannelDelegate(webView: InAppWebView, channel: MethodChannel) :
     override fun decodeResult(obj: Any?): Boolean = obj is Boolean && obj
   }
 
-  fun onPrintRequest(url: String?, printJobId: String?, callback: PrintRequestCallback) {
+  fun onPrintRequest(url: String?, callback: PrintRequestCallback) {
     val channel = this.channel
     if (channel == null) {
       callback.defaultBehaviour(null)
       return
     }
-    channel.invokeMethod(
-      "onPrintRequest",
-      hashMapOf<String, Any?>("url" to url, "printJobId" to printJobId),
-      callback
-    )
+    channel.invokeMethod("onPrintRequest", hashMapOf<String, Any?>("url" to url), callback)
   }
 
   fun onRequestFocus() {

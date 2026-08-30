@@ -87,17 +87,6 @@ public class PrintJobController: NSObject, Disposable, UIPrintInteractionControl
         return PrintJobInfo.init(fromPrintJobController: self)
     }
     
-    public func disposeNoDismiss() {
-        channelDelegate?.dispose()
-        channelDelegate = nil
-        printFormatter = nil
-        printPageRenderer = nil
-        job?.delegate = nil
-        job = nil
-        plugin?.printJobManager?.jobs[id] = nil
-        plugin = nil
-    }
-    
     public func dispose() {
         channelDelegate?.dispose()
         channelDelegate = nil

@@ -13,7 +13,6 @@ import '../in_app_webview/in_app_webview_settings.dart';
 import '../in_app_webview/platform_inappwebview_controller.dart';
 import '../inappwebview_platform.dart';
 import '../platform_webview_feature.dart';
-import '../print_job/main.dart';
 import '../pull_to_refresh/main.dart';
 import '../pull_to_refresh/platform_pull_to_refresh_controller.dart';
 import '../types/main.dart';
@@ -1079,21 +1078,18 @@ In that case, after the `window.addEventListener("flutterInAppWebViewPlatformRea
   @SupportedPlatforms(
     platforms: [
       AndroidPlatform(
-        apiName: 'View.scrollBy',
+        apiName: 'PrintManager.print',
         apiUrl:
-            'https://developer.android.com/reference/android/view/View#scrollBy(int,%20int)',
+            'https://developer.android.com/reference/android/print/PrintManager#print(java.lang.String,%20android.print.PrintDocumentAdapter,%20android.print.PrintAttributes)',
       ),
       IOSPlatform(
-        apiName: 'UIScrollView.setContentOffset',
+        apiName: 'UIPrintInteractionController.present',
         apiUrl:
-            'https://developer.apple.com/documentation/uikit/uiscrollview/1619400-setcontentoffset',
+            'https://developer.apple.com/documentation/uikit/uiprintinteractioncontroller/1618149-present',
       ),
     ],
   )
-  FutureOr<bool?>? onPrintRequest(
-    WebUri? url,
-    PlatformPrintJobController? printJobController,
-  ) {
+  FutureOr<bool?>? onPrintRequest(WebUri? url) {
     return null;
   }
 

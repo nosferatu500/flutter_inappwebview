@@ -277,6 +277,53 @@ and `SaveAsKind` · plus 14 whose last user left with the dropped-platform membe
 in the same "zero references" list and is deliberately kept** — it is iOS API that the Swift side
 reads, and it is unreachable only because `ProxyRule` has never carried `relayHop1` / `relayHop2`.
 
+### Changed — `onPrintRequest` is now asked *before* the print job starts, and can suppress it
+
+**BREAKING, on both platforms.** Returning `true` from `onPrintRequest` now means the OS print
+dialog is **never raised**. It previously meant only "I will own the `PrintJobController`" — both
+natives called `printCurrentPage()` *first* and asked Dart afterwards, so the dialog was already up
+whatever you returned, and the return value merely decided who disposed the tracking object.
+
+That made the return value unable to do the one thing its name implies. It is also unrecoverable:
+nothing in this plugin can dismiss a dialog once it is up — on Android `PrintJob.cancel()` is a
+no-op while the job is in `CREATED` state, which is exactly the state it is in while the dialog is
+open. Asking Dart first is the only point at which printing can be declined.
+
+**The third parameter is gone.** The signature is now
+`FutureOr<bool?> Function(InAppWebViewController controller, WebUri? url)` — there is no print job
+when the event fires, so there was no `PrintJobController` left to pass and it would have been
+permanently `null`. `InAppBrowser.onPrintRequest(WebUri? url)` loses it too.
+
+**Migration.** Handlers that ignored the third parameter only need it deleted from their signature:
+
+```dart
+// before
+onPrintRequest: (controller, url, printJobController) async => false,
+// after
+onPrintRequest: (controller, url) async => false,
+```
+
+Handlers that *used* the controller should return `true` and start the job themselves — this also
+gives you a job you actually control, instead of one that was already running:
+
+```dart
+onPrintRequest: (controller, url) async {
+  final printJob = await controller.printCurrentPage(
+    settings: PrintJobSettings(handledByClient: true),
+  );
+  // ... printJob.dispose() when done
+  return true;
+}
+```
+
+Returning `false`, returning `null`, and registering no handler at all are unchanged: the page is
+printed and the platform's print dialog appears. `InAppWebViewController.printCurrentPage()` is also
+unchanged — it is an explicit request to print, so it always raises the dialog.
+
+Verified on device, both directions: on Android 17 / API 37 and Android 13 / API 33, returning `true`
+leaves no `com.android.printspooler` process at all, while returning `false` — and registering no
+handler — spawns it. iOS 26.5 and 17.5 pass the same test.
+
 ### Removed — `onFaviconChanged`, an event that can no longer fire
 
 **BREAKING.** `onFaviconChanged` and its `FaviconChangedRequest` payload are removed from

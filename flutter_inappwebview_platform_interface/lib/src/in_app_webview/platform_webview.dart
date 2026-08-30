@@ -735,27 +735,38 @@ In that case, after the `window.addEventListener("flutterInAppWebViewPlatformRea
 
   ///{@template flutter_inappwebview_platform_interface.PlatformWebViewCreationParams.onPrintRequest}
   ///Event fired when `window.print()` is called from JavaScript side.
-  ///Return `true` if you want to handle the print job.
-  ///Otherwise return `false`, so the [PlatformPrintJobController] will be handled and disposed automatically by the system.
+  ///
+  ///Return `true` to handle printing yourself: **the OS print UI is not shown at all**. Return
+  ///`false` (or `null`, or register no handler) to let the plugin print the page, which raises the
+  ///platform's print dialog.
   ///
   ///[url] represents the url on which is called.
   ///
-  ///[printJobController] represents the controller of the print job created.
+  ///**This event is asked before the print job exists.** That is what makes `true` able to suppress
+  ///the dialog: once the job has been created the OS UI is up and nothing in this plugin can take it
+  ///down again — on Android `PrintJob.cancel()` is a no-op while the job is in `CREATED` state,
+  ///which is exactly the state it is in while the dialog is open.
+  ///
+  ///Because no job exists yet, there is no [PlatformPrintJobController] to hand over. If you want
+  ///one, return `true` here and start the job yourself:
+  ///
+  ///```dart
+  ///onPrintRequest: (controller, url) async {
+  ///  final printJob = await controller.printCurrentPage(
+  ///    settings: PrintJobSettings(handledByClient: true),
+  ///  );
+  ///  // ... use printJob, and call printJob.dispose() when done
+  ///  return true;
+  ///}
+  ///```
+  ///
+  ///Note that [PlatformInAppWebViewController.printCurrentPage] always raises the print dialog — it
+  ///is an explicit request to print. This event is the only place where printing can be declined.
   ///{@endtemplate}
   ///
   ///{@macro flutter_inappwebview_platform_interface.PlatformWebViewCreationParams.onPrintRequest.supported_platforms}
-  @SupportedPlatforms(
-    platforms: [AndroidPlatform(), IOSPlatform()],
-    parameterPlatforms: {
-      'printJobController': [AndroidPlatform(), IOSPlatform()],
-    },
-  )
-  final FutureOr<bool?> Function(
-    T controller,
-    WebUri? url,
-    PlatformPrintJobController? printJobController,
-  )?
-  onPrintRequest;
+  @SupportedPlatforms(platforms: [AndroidPlatform(), IOSPlatform()])
+  final FutureOr<bool?> Function(T controller, WebUri? url)? onPrintRequest;
 
   ///{@template flutter_inappwebview_platform_interface.PlatformWebViewCreationParams.onLongPressHitTestResult}
   ///Event fired when an HTML element of the webview has been clicked and held.

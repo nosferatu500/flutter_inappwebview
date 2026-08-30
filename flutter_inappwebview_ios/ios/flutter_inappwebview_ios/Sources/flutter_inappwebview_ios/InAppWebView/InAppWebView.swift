@@ -3034,24 +3034,27 @@ public class InAppWebView: WKWebView, UIScrollViewDelegate, WKUIDelegate,
             var isInternalHandler = true
             switch (handlerName) {
                 case "onPrintRequest":
-                    let settings = PrintJobSettings()
-                    settings.handledByClient = true
-                    if let printJobId = webView.printCurrentPage(settings: settings) {
-                        let callback = WebViewChannelDelegate.PrintRequestCallback()
-                        callback.nonNullSuccess = { (handledByClient: Bool) in
-                            return !handledByClient
-                        }
-                        callback.defaultBehaviour = { (handledByClient: Bool?) in
-                            if let printJob = webView.plugin?.printJobManager?.jobs[printJobId] {
-                                printJob?.disposeNoDismiss()
-                            }
-                        }
-                        callback.error = { [weak callback] (code: String, message: String?, details: Any?) in
-                            print(code + ", " + (message ?? ""))
-                            callback?.defaultBehaviour(nil)
-                        }
-                        webView.channelDelegate?.onPrintRequest(url: webView.url, printJobId: printJobId, callback: callback)
+                    // Dart is asked BEFORE the job starts. Once the print controller has been
+                    // presented the OS print UI is up and nothing in the plugin API can take it
+                    // down again, so the only point at which `true` can mean "do not print" is
+                    // here, before the call. Mirrors the Android side.
+                    let callback = WebViewChannelDelegate.PrintRequestCallback()
+                    // `true` from Dart means the app handles printing itself: skip defaultBehaviour.
+                    // `false`, `null`, no handler (notImplemented) and an error all fall through.
+                    callback.nonNullSuccess = { (handledByClient: Bool) in
+                        return !handledByClient
                     }
+                    callback.defaultBehaviour = { [weak webView] (handledByClient: Bool?) in
+                        // Print as the page asked. handledByClient stays false, so no
+                        // PrintJobController is created -- the event has already returned, so
+                        // there is nobody left to hand it to.
+                        _ = webView?.printCurrentPage(settings: PrintJobSettings())
+                    }
+                    callback.error = { [weak callback] (code: String, message: String?, details: Any?) in
+                        print(code + ", " + (message ?? ""))
+                        callback?.defaultBehaviour(nil)
+                    }
+                    webView.channelDelegate?.onPrintRequest(url: webView.url, callback: callback)
                     break
                 case "onConsoleMessage":
                     if let args = body["args"] as? String, let data = args.data(using: .utf8) {

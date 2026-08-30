@@ -77,6 +77,14 @@ rename; this entry is the API-owner's view.
   All 25 exports are gone from `src/types/main.dart`. **`ProxyRelayHop` was equally unreferenced and
   is kept**: it is `@SupportedPlatforms([IOSPlatform()])` and `ProxyManager.swift` reads it — the
   gap is that `ProxyRule` has no `relayHop1` / `relayHop2` field to carry it, and never has
+- **`PlatformWebViewCreationParams.onPrintRequest`'s `printJobController` parameter**, and the same
+  parameter on `PlatformInAppBrowserEvents.onPrintRequest`. The event is now asked *before* the
+  print job is created — that is what lets a `true` return suppress the OS print dialog — so there
+  is no `PlatformPrintJobController` in existence when it fires. Signatures become
+  `FutureOr<bool?> Function(T controller, WebUri? url)` and
+  `FutureOr<bool?>? onPrintRequest(WebUri? url)`. To obtain a controller, return `true` and call
+  `PlatformInAppWebViewController.printCurrentPage(settings: PrintJobSettings(handledByClient:
+  true))`. The event's `@SupportedPlatforms` loses its now-empty `parameterPlatforms` entry
 - **`onFaviconChanged`, an event that can no longer fire on any supported platform.** Gone from
   `PlatformWebViewCreationParams` and `PlatformInAppBrowserEvents`, along with the
   `FaviconChangedRequest` type and its export from `src/types/main.dart`. It was
@@ -117,6 +125,13 @@ rename; this entry is the API-owner's view.
 
 ### Fixed
 
+- **`PlatformInAppBrowserEvents.onPrintRequest` documented the wrong platform APIs.** Its
+  `@SupportedPlatforms` named `View.scrollBy` and `UIScrollView.setContentOffset` — copied from
+  `onScrollChanged` — so the generated "Officially Supported Platforms" block in the published
+  dartdoc pointed readers of a *print* event at the scrolling APIs. Now `PrintManager.print` and
+  `UIPrintInteractionController.present`, matching
+  `PlatformInAppWebViewController.printCurrentPage`. An unresolvable or wrong `apiName` is invisible
+  to `flutter analyze`, so nothing flagged it
 - **A DNS failure on iOS 26 threw inside the plugin.** `WebResourceErrorType` mapped only NSError
   -1003, iOS 26 reports -1006, and the generated `fromMap` force-unwrapped the lookup — so
   `onReceivedError` never reached app code. Both codes now resolve to `HOST_LOOKUP`, matching

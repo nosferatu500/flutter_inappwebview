@@ -1210,14 +1210,13 @@ public class WebViewChannelDelegate: ChannelDelegate {
         }
     }
     
-    public func onPrintRequest(url: URL?, printJobId: String?, callback: PrintRequestCallback) {
+    public func onPrintRequest(url: URL?, callback: PrintRequestCallback) {
         if channel == nil {
             callback.defaultBehaviour(nil)
             return
         }
-        let arguments = [
-            "url": url?.absoluteString,
-            "printJobId": printJobId,
+        let arguments: [String: Any?] = [
+            "url": url?.absoluteString
         ]
         channel?.invokeMethod("onPrintRequest", arguments: arguments, callback: callback)
     }

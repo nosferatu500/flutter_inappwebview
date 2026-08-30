@@ -378,10 +378,7 @@ class InAppBrowser implements PlatformInAppBrowserEvents {
   void onPermissionRequestCanceled(PermissionRequest permissionRequest) {}
 
   @override
-  FutureOr<bool?>? onPrintRequest(
-    WebUri? url,
-    PlatformPrintJobController? printJobController,
-  ) {
+  FutureOr<bool?>? onPrintRequest(WebUri? url) {
     return null;
   }
 

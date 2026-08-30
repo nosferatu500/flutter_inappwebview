@@ -1021,13 +1021,15 @@ class _WebViewTesterScreenState extends State<WebViewTesterScreen>
       // ============================================================
 
       // 36. onPrintRequest
-      onPrintRequest: (controller, url, printJobController) async {
+      onPrintRequest: (controller, url) async {
         _logEvent(
           EventType.ui,
           PlatformWebViewCreationParamsProperty.onPrintRequest.name,
           data: {'url': url?.toString()},
         );
-        return false; // Don't handle print
+        // false => the plugin prints the page and the OS print dialog appears.
+        // Returning true here would suppress it entirely.
+        return false;
       },
 
       // ============================================================

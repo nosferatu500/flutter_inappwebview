@@ -40,14 +40,6 @@ class PrintJobController(
 
   fun getInfo(): PrintJobInfoExt? = job?.let { PrintJobInfoExt.fromPrintJobInfo(it.info) }
 
-  fun disposeNoCancel() {
-    channelDelegate?.dispose()
-    channelDelegate = null
-    clearManagerSlot()
-    job = null
-    plugin = null
-  }
-
   override fun dispose() {
     channelDelegate?.dispose()
     channelDelegate = null

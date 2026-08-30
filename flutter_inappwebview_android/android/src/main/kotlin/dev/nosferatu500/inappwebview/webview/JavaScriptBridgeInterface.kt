@@ -87,17 +87,23 @@ class JavaScriptBridgeInterface(
       var isInternalHandler = true
       when (handlerName) {
         "onPrintRequest" -> {
-          val settings = PrintJobSettings()
-          settings.handledByClient = true
-          val printJobId = view.printCurrentPage(settings)
+          // Dart is asked BEFORE the job starts. Once PrintManager.print() has run, the OS print
+          // dialog is up and nothing in the plugin API can take it down again -- PrintJob.cancel()
+          // is a no-op while the job is in CREATED state, which is exactly the state it is in while
+          // the dialog is open. So the only point at which `true` can mean "do not print" is here,
+          // before the call.
           view.channelDelegate?.onPrintRequest(
-            view.getUrl(), printJobId,
+            view.getUrl(),
             object : WebViewChannelDelegate.PrintRequestCallback() {
+              // `true` from Dart means the app handles printing itself: skip defaultBehaviour.
+              // `false`, `null`, no handler (notImplemented) and an error all fall through to it.
               override fun nonNullSuccess(result: Boolean): Boolean = !result
 
               override fun defaultBehaviour(result: Boolean?) {
-                val jobs = inAppWebView?.plugin?.printJobManager?.jobs ?: return
-                jobs[printJobId]?.disposeNoCancel()
+                // Print as the page asked. handledByClient stays false, so no PrintJobController is
+                // created -- there is no longer anyone to hand it to, since the event has already
+                // returned by the time this runs.
+                inAppWebView?.printCurrentPage(PrintJobSettings())
               }
 
               override fun error(
