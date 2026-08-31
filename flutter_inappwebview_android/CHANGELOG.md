@@ -71,6 +71,28 @@ for, and five others have a native *value* that differs from their name.
 
 ### Fixed
 
+- **`WebMessageListener`'s origin allow-list compared reverse-DNS hostnames, and could match an
+  origin it was not written for.** Both helpers behind it were wrong.
+
+  `Util.isIPv6` was `Inet6Address.getByName(address); true`. `Inet6Address` declares no
+  `getByName`, so that resolved to the inherited `InetAddress.getByName` — which parses IPv4
+  literals **and resolves hostnames** — and nothing type-checked the result. It therefore answered
+  *"is this resolvable"*: `127.0.0.1` and `example.com` both returned `true`.
+
+  `Util.normalizeIPv6` returned `canonicalHostName`, a **reverse DNS lookup** producing a hostname
+  rather than a normalized address — `::1` came back as `"localhost"`. Combined with the bug above
+  it ran on **every** origin check rather than only IPv6 ones, so each check could cost a forward
+  and a reverse lookup **on the calling thread** and disclosed the visited host to the resolver.
+
+  The security consequence is that the allow-list's IPv6 comparison was made between canonical
+  *names*: an allowed-origin rule of `[::1]` and a page origin of `127.0.0.1` both canonicalise to
+  `"localhost"` on a typical machine and compared **equal**, so a listener could be reached from an
+  origin the rule did not name. `isIPv6` is now purely syntactic and never touches the network, and
+  `normalizeIPv6` returns `hostAddress`. **This is a tightening**: origins that previously matched
+  only through a shared canonical name no longer match. Both spellings `::1` and `[::1]` are
+  accepted, since `Uri.getHost()` keeps the brackets. Covered by 8 unit tests (23 → 28), each
+  verified to fail against the old implementation
+
 - **`CookieManager.flush()` never returned.** The native side never replied on the channel, so the
   `Future` hung forever. Fixed and verified on a device
 - **A blocking callback could hang the WebView forever.** The four synchronous callbacks

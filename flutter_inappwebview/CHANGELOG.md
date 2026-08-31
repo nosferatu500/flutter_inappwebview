@@ -411,6 +411,15 @@ Nine WebKit APIs read out of the iOS 26.5 SDK, plus one feature that was half-bu
 
 ### Fixed
 
+**Android — `WebMessageListener`'s `allowedOriginRules` could admit an origin it was not written
+for.** The allow-list's IPv6 comparison ran through `InetAddress.canonicalHostName`, a reverse DNS
+lookup, so it compared *hostnames* rather than addresses: a rule of `[::1]` and a page origin of
+`127.0.0.1` both canonicalise to `"localhost"` on a typical machine and matched. A second bug meant
+the IPv6 path ran for **every** origin, not just IPv6 ones, so each check could cost a forward and a
+reverse DNS lookup on the calling thread and told the resolver which host the WebView was visiting.
+Both helpers are now purely syntactic and never touch the network. **This is a tightening** — if you
+relied on two different origins matching because they shared a canonical name, they no longer do.
+
 **Two long-standing iOS behaviours are now written down as permanent decisions rather than left to
 look like unfinished work.**
 

@@ -285,21 +285,66 @@ object Util {
     false
   }
 
+  /**
+   * Strips one layer of `[...]` from an IPv6 literal, if present.
+   *
+   * `Uri.getHost()` keeps the brackets for an IPv6 authority, so callers may pass either form.
+   */
+  private fun stripIPv6Brackets(address: String): String =
+    if (address.length > 2 && address.startsWith("[") && address.endsWith("]")) {
+      address.substring(1, address.length - 1)
+    } else {
+      address
+    }
+
+  /**
+   * Whether [address] is an IPv6 **literal**. Purely syntactic: it never touches the network.
+   *
+   * This used to be `Inet6Address.getByName(address); true`, which answered a different question.
+   * `Inet6Address` declares no `getByName`, so that call resolved to the inherited
+   * `InetAddress.getByName` — which parses IPv4 literals *and resolves hostnames* — and nothing
+   * type-checked the result. So `127.0.0.1` and `example.com` both returned `true`, and every
+   * check could cost a DNS lookup on the calling thread.
+   *
+   * Two guards keep this off the network. A DNS name cannot contain `:`, so requiring one rejects
+   * hostnames before `getByName` can try to resolve one; and passing the **bracketed** form makes
+   * `getByName` parse literal-only and throw for anything else, rather than falling through to a
+   * lookup. The `is Inet6Address` check is what makes the answer mean what the name says.
+   */
   @JvmStatic
-  fun isIPv6(address: String): Boolean = try {
-    Inet6Address.getByName(address)
-    true
-  } catch (e: UnknownHostException) {
-    false
+  fun isIPv6(address: String): Boolean {
+    val literal = stripIPv6Brackets(address)
+    if (!literal.contains(':')) {
+      return false
+    }
+    return try {
+      InetAddress.getByName("[$literal]") is Inet6Address
+    } catch (e: UnknownHostException) {
+      false
+    }
   }
 
+  /**
+   * The canonical textual form of an IPv6 literal, for comparing two spellings of one address.
+   *
+   * This used to return `canonicalHostName`, which is a **reverse DNS lookup**: it produced a
+   * *hostname* rather than a normalized address (`::1` came back as `"localhost"`), ran on the
+   * calling thread, and leaked the host being checked to the resolver. Worse, it made two
+   * unrelated addresses compare equal whenever they happened to share a canonical name — and
+   * because [isIPv6] accepted anything resolvable, it ran for every origin check rather than only
+   * IPv6 ones.
+   *
+   * `hostAddress` is the field that normalizes, and needs no lookup.
+   */
   @JvmStatic
   @Throws(Exception::class)
   fun normalizeIPv6(address: String): String {
-    if (!isIPv6(address)) {
+    val literal = stripIPv6Brackets(address)
+    if (!isIPv6(literal)) {
       throw Exception("Invalid address: $address")
     }
-    return InetAddress.getByName(address).canonicalHostName
+    return InetAddress.getByName("[$literal]").hostAddress
+      ?: throw Exception("Invalid address: $address")
   }
 
   @JvmStatic

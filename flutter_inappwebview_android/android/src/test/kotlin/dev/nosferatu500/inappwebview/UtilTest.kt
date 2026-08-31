@@ -46,37 +46,78 @@ class UtilTest {
   fun `isIPv6 accepts v6 literals`() {
     assertTrue(Util.isIPv6("::1"))
     assertTrue(Util.isIPv6("2001:db8::1"))
+    assertTrue(Util.isIPv6("0:0:0:0:0:0:0:1"))
+  }
+
+  @Test
+  fun `isIPv6 accepts the bracketed form Uri getHost returns`() {
+    // `Uri.getHost()` keeps the brackets for an IPv6 authority, and `isOriginAllowed` passes that
+    // value straight through, so both spellings have to work.
+    assertTrue(Util.isIPv6("[::1]"))
+    assertTrue(Util.isIPv6("[2001:db8::1]"))
   }
 
   /**
-   * **Characterization test for a bug, not a specification.** Invert it when the bug is fixed --
-   * see TODO.md P0b.7.
+   * The inversion of the characterization test P0b.7 left behind.
    *
-   * `Util.isIPv6` is implemented as `Inet6Address.getByName(address)`. `Inet6Address` declares no
-   * `getByName`, so that call resolves to the *inherited* `InetAddress.getByName`, which happily
-   * parses an IPv4 literal and returns an `Inet4Address`. Nothing about the result is checked, so
-   * the function answers "is this resolvable", not "is this IPv6".
-   *
-   * Only the literal cases are pinned here: `isIPv6("example.com")` also returns `true`, but
-   * asserting that would make this suite depend on a DNS resolver.
+   * `isIPv6` was `Inet6Address.getByName(address); true`. `Inet6Address` declares no `getByName`,
+   * so that resolved to the inherited `InetAddress.getByName`, which parses IPv4 literals *and
+   * resolves hostnames*, and nothing type-checked the result — so it answered "is this
+   * resolvable", not "is this IPv6". Both of these returned `true` before the fix.
    */
   @Test
-  fun `isIPv6 wrongly accepts IPv4 literals too`() {
-    assertTrue(Util.isIPv6("127.0.0.1"))
-    assertTrue(Util.isIPv6("192.168.1.1"))
+  fun `isIPv6 rejects IPv4 literals`() {
+    assertFalse(Util.isIPv6("127.0.0.1"))
+    assertFalse(Util.isIPv6("192.168.1.1"))
   }
 
   @Test
-  fun `isIPv6 rejects something that resolves to nothing at all`() {
+  fun `isIPv6 rejects hostnames without consulting a resolver`() {
+    // "localhost" is the case that matters: it resolves on every machine, so the old
+    // implementation returned true for it. A hostname cannot contain ':', which is what lets this
+    // be decided without a lookup -- and is why this assertion is safe in a unit test at all.
+    assertFalse(Util.isIPv6("localhost"))
+    assertFalse(Util.isIPv6("example.com"))
     assertFalse(Util.isIPv6("nope.invalid"))
+    assertFalse(Util.isIPv6(""))
   }
 
-  // `Util.normalizeIPv6` is deliberately not exercised here. It returns
-  // `InetAddress.getByName(address).canonicalHostName`, which performs a *reverse DNS lookup* on
-  // the calling thread and returns a hostname rather than a normalized address -- `::1` comes back
-  // as "localhost", not "0:0:0:0:0:0:0:1". Both the value and the latency depend on the machine's
-  // resolver, so any assertion here would be environment-dependent. The bug is filed in TODO.md
-  // P0b.7; a test can be written once it returns `hostAddress`.
+  @Test
+  fun `isIPv6 rejects a malformed literal rather than resolving it`() {
+    assertFalse(Util.isIPv6("gg::1"))
+    assertFalse(Util.isIPv6(":::"))
+  }
+
+  @Test
+  fun `normalizeIPv6 returns a normalized address, not a hostname`() {
+    // The whole point of P0b.7's second half: this used to return `canonicalHostName`, so `::1`
+    // came back as "localhost" via a reverse DNS lookup. `hostAddress` is the field that
+    // normalizes, and it needs no lookup -- which is what makes this assertion stable.
+    assertEquals("0:0:0:0:0:0:0:1", Util.normalizeIPv6("::1"))
+    assertEquals("0:0:0:0:0:0:0:1", Util.normalizeIPv6("[::1]"))
+  }
+
+  @Test
+  fun `normalizeIPv6 makes two spellings of one address comparable`() {
+    // This is the property `isOriginAllowed` actually depends on when it compares a rule's host
+    // against the page's host.
+    assertEquals(
+      Util.normalizeIPv6("2001:db8::1"),
+      Util.normalizeIPv6("2001:0db8:0000:0000:0000:0000:0000:0001")
+    )
+  }
+
+  @Test
+  fun `normalizeIPv6 rejects anything that is not an IPv6 literal`() {
+    for (bad in listOf("127.0.0.1", "localhost", "example.com", "gg::1", "")) {
+      try {
+        Util.normalizeIPv6(bad)
+        throw AssertionError("normalizeIPv6 should have rejected \"$bad\"")
+      } catch (expected: Exception) {
+        assertTrue(expected.message!!.startsWith("Invalid address:"))
+      }
+    }
+  }
 
   @Test
   fun `JSONStringify quotes strings so the result can be embedded in JavaScript`() {
