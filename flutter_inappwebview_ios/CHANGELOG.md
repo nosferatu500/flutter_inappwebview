@@ -128,6 +128,14 @@ error.
 
 ### Changed
 
+- **`InAppWebView.gestureRecognizer(_:shouldRecognizeSimultaneouslyWith:)` is now `nonisolated`.**
+  Hardening, not a bug fix — no misbehaviour was observed. `UIGestureRecognizerDelegate` is
+  `NS_SWIFT_UI_ACTOR`, so the witness inherited `@MainActor` and Swift 6 emits an executor assertion
+  on entry; that assertion **traps and kills the process** if UIKit ever calls it off the main
+  thread, which is exactly how the printing delegate failed on iOS 26.5. This method's body reads no
+  isolated state (`return true`), so dropping the inherited isolation costs nothing and removes the
+  failure mode. It is also the one delegate witness the integration suite never reaches — measured:
+  0 calls across both simulators — so a trap there would go unnoticed
 - **`onPrintRequest` is asked before the print job starts.** `InAppWebView`'s `window.print()`
   bridge handler no longer calls `printCurrentPage(settings:)` up front; it invokes the Dart event
   first and only prints from the callback's `defaultBehaviour`, so returning `true` means the print

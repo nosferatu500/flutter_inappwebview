@@ -146,7 +146,19 @@ public class InAppWebView: WKWebView, UIScrollViewDelegate, WKUIDelegate,
         super.init(coder: aDecoder)!
     }
 
-    public func gestureRecognizer(_ gestureRecognizer: UIGestureRecognizer, shouldRecognizeSimultaneouslyWith otherGestureRecognizer: UIGestureRecognizer) -> Bool {
+    /// `nonisolated` because the body needs nothing from the main actor, and the inherited isolation
+    /// is a liability rather than a requirement.
+    ///
+    /// `UIGestureRecognizerDelegate` is `NS_SWIFT_UI_ACTOR`, so a witness inherits `@MainActor` and
+    /// Swift 6 emits an executor assertion on entry. That assertion **traps** — it killed the
+    /// process in §71, where `UIPrintInteractionControllerDelegate` carried the same annotation and
+    /// UIKit called the delegate from a background `NSThread` anyway. No such violation is known
+    /// for this method, and none was observed; it is simply the one delegate witness in this module
+    /// whose body accesses no isolated state, so declaring the truth costs nothing and removes the
+    /// failure mode outright. Every touch-driven path here is also invisible to the integration
+    /// suite (measured: 0 calls across both simulators), which is exactly where a trap would go
+    /// unnoticed.
+    public nonisolated func gestureRecognizer(_ gestureRecognizer: UIGestureRecognizer, shouldRecognizeSimultaneouslyWith otherGestureRecognizer: UIGestureRecognizer) -> Bool {
         return true
     }
     
