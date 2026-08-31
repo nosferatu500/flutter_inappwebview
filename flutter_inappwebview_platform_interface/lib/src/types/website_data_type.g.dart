@@ -34,6 +34,12 @@ class WebsiteDataType {
   );
 
   ///Returns a set of all available website data types.
+  ///
+  ///This is the set to pass to [PlatformWebStorageManager.removeDataFor] or
+  ///[PlatformWebStorageManager.removeDataModifiedSince] to clear everything WebKit stores for a
+  ///site. It deliberately includes types that only exist on newer iOS versions: WebKit ignores a
+  ///data type it does not recognise, so passing the whole set is safe on every supported version
+  ///and is what makes a wipe complete as the OS gains storage kinds.
   static final ALL = {
     WebsiteDataType.WKWebsiteDataTypeFetchCache,
     WebsiteDataType.WKWebsiteDataTypeDiskCache,
@@ -45,6 +51,10 @@ class WebsiteDataType {
     WebsiteDataType.WKWebsiteDataTypeWebSQLDatabases,
     WebsiteDataType.WKWebsiteDataTypeIndexedDBDatabases,
     WebsiteDataType.WKWebsiteDataTypeServiceWorkerRegistrations,
+    WebsiteDataType.WKWebsiteDataTypeFileSystem,
+    WebsiteDataType.WKWebsiteDataTypeSearchFieldRecentSearches,
+    WebsiteDataType.WKWebsiteDataTypeMediaKeys,
+    WebsiteDataType.WKWebsiteDataTypeHashSalt,
   };
 
   ///Cookies.
@@ -67,6 +77,22 @@ class WebsiteDataType {
     'WKWebsiteDataTypeFetchCache',
   );
 
+  ///File system storage — the origin-private file system (OPFS).
+  ///
+  ///**NOTE**: available on iOS 16.0+.
+  static const WKWebsiteDataTypeFileSystem = WebsiteDataType._internal(
+    'WKWebsiteDataTypeFileSystem',
+    'WKWebsiteDataTypeFileSystem',
+  );
+
+  ///Hash salt used to derive the `deviceId` exposed to a site.
+  ///
+  ///**NOTE**: available on iOS 17.0+.
+  static const WKWebsiteDataTypeHashSalt = WebsiteDataType._internal(
+    'WKWebsiteDataTypeHashSalt',
+    'WKWebsiteDataTypeHashSalt',
+  );
+
   ///IndexedDB databases.
   static const WKWebsiteDataTypeIndexedDBDatabases = WebsiteDataType._internal(
     'WKWebsiteDataTypeIndexedDBDatabases',
@@ -79,6 +105,14 @@ class WebsiteDataType {
     'WKWebsiteDataTypeLocalStorage',
   );
 
+  ///MediaKeys storage, used by Encrypted Media Extensions (DRM).
+  ///
+  ///**NOTE**: available on iOS 17.0+.
+  static const WKWebsiteDataTypeMediaKeys = WebsiteDataType._internal(
+    'WKWebsiteDataTypeMediaKeys',
+    'WKWebsiteDataTypeMediaKeys',
+  );
+
   ///In-memory caches.
   static const WKWebsiteDataTypeMemoryCache = WebsiteDataType._internal(
     'WKWebsiteDataTypeMemoryCache',
@@ -86,10 +120,31 @@ class WebsiteDataType {
   );
 
   ///HTML offline web application caches.
+  ///
+  ///**NOTE**: WebKit deprecated this in iOS 26.2 — Application Cache is no longer supported, so on
+  ///those versions it matches no data. It is kept because it is still accepted, and removing it
+  ///would break code that passes it explicitly.
   static const WKWebsiteDataTypeOfflineWebApplicationCache =
       WebsiteDataType._internal(
         'WKWebsiteDataTypeOfflineWebApplicationCache',
         'WKWebsiteDataTypeOfflineWebApplicationCache',
+      );
+
+  ///Screen Time information.
+  ///
+  ///**NOTE**: available on iOS 26.0+.
+  static const WKWebsiteDataTypeScreenTime = WebsiteDataType._internal(
+    'WKWebsiteDataTypeScreenTime',
+    'WKWebsiteDataTypeScreenTime',
+  );
+
+  ///Search field history.
+  ///
+  ///**NOTE**: available on iOS 17.0+.
+  static const WKWebsiteDataTypeSearchFieldRecentSearches =
+      WebsiteDataType._internal(
+        'WKWebsiteDataTypeSearchFieldRecentSearches',
+        'WKWebsiteDataTypeSearchFieldRecentSearches',
       );
 
   ///Service worker registrations.
@@ -118,10 +173,15 @@ class WebsiteDataType {
     WebsiteDataType.WKWebsiteDataTypeCookies,
     WebsiteDataType.WKWebsiteDataTypeDiskCache,
     WebsiteDataType.WKWebsiteDataTypeFetchCache,
+    WebsiteDataType.WKWebsiteDataTypeFileSystem,
+    WebsiteDataType.WKWebsiteDataTypeHashSalt,
     WebsiteDataType.WKWebsiteDataTypeIndexedDBDatabases,
     WebsiteDataType.WKWebsiteDataTypeLocalStorage,
+    WebsiteDataType.WKWebsiteDataTypeMediaKeys,
     WebsiteDataType.WKWebsiteDataTypeMemoryCache,
     WebsiteDataType.WKWebsiteDataTypeOfflineWebApplicationCache,
+    WebsiteDataType.WKWebsiteDataTypeScreenTime,
+    WebsiteDataType.WKWebsiteDataTypeSearchFieldRecentSearches,
     WebsiteDataType.WKWebsiteDataTypeServiceWorkerRegistrations,
     WebsiteDataType.WKWebsiteDataTypeSessionStorage,
     WebsiteDataType.WKWebsiteDataTypeWebSQLDatabases,
@@ -210,14 +270,24 @@ class WebsiteDataType {
         return 'WKWebsiteDataTypeDiskCache';
       case 'WKWebsiteDataTypeFetchCache':
         return 'WKWebsiteDataTypeFetchCache';
+      case 'WKWebsiteDataTypeFileSystem':
+        return 'WKWebsiteDataTypeFileSystem';
+      case 'WKWebsiteDataTypeHashSalt':
+        return 'WKWebsiteDataTypeHashSalt';
       case 'WKWebsiteDataTypeIndexedDBDatabases':
         return 'WKWebsiteDataTypeIndexedDBDatabases';
       case 'WKWebsiteDataTypeLocalStorage':
         return 'WKWebsiteDataTypeLocalStorage';
+      case 'WKWebsiteDataTypeMediaKeys':
+        return 'WKWebsiteDataTypeMediaKeys';
       case 'WKWebsiteDataTypeMemoryCache':
         return 'WKWebsiteDataTypeMemoryCache';
       case 'WKWebsiteDataTypeOfflineWebApplicationCache':
         return 'WKWebsiteDataTypeOfflineWebApplicationCache';
+      case 'WKWebsiteDataTypeScreenTime':
+        return 'WKWebsiteDataTypeScreenTime';
+      case 'WKWebsiteDataTypeSearchFieldRecentSearches':
+        return 'WKWebsiteDataTypeSearchFieldRecentSearches';
       case 'WKWebsiteDataTypeServiceWorkerRegistrations':
         return 'WKWebsiteDataTypeServiceWorkerRegistrations';
       case 'WKWebsiteDataTypeSessionStorage':

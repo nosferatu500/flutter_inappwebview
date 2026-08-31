@@ -125,6 +125,22 @@ rename; this entry is the API-owner's view.
 
 ### Fixed
 
+- **`WebsiteDataType.ALL` was missing four data types, so "clear everything" did not.** The set
+  listed only the ten `WKWebsiteDataType*` constants that existed in iOS 9–11.3, while the iOS 26.5
+  SDK declares fifteen. `WKWebsiteDataTypeFileSystem` (iOS 16+, the origin-private file system),
+  `WKWebsiteDataTypeSearchFieldRecentSearches`, `WKWebsiteDataTypeMediaKeys` and
+  `WKWebsiteDataTypeHashSalt` (all iOS 17+) are now constants and are in `ALL`, so
+  `removeDataFor` / `removeDataModifiedSince` with `WebsiteDataType.ALL` really does clear them.
+  Previously an app honouring a "delete my data" request left OPFS contents, DRM key storage,
+  search history and the deviceId hash salt behind, with nothing in the API to indicate it
+- **`WKWebsiteDataTypeScreenTime` (iOS 26+) is a new constant but is deliberately NOT in `ALL`.**
+  Passing it to `removeDataModifiedSince` **terminates the app** on iOS 26.5 with an uncaught
+  `NSGenericException` — *"Start date cannot be later in time than end date!"* — thrown inside
+  WebKit's `ScreenTimeWebsiteDataSupport::removeScreenTimeDataWithInterval` while it builds an
+  `NSDateInterval` from the `modifiedSince` value. No Dart `catch` and no plugin guard can contain
+  an Objective-C exception raised there, so the only defence is to keep it out of the default set.
+  `fetchDataRecords` with it is fine. Measured both ways on iOS 26.5 and pinned by an integration
+  test; the constant's dartdoc carries the stack trace
 - **`PlatformInAppBrowserEvents.onPrintRequest` documented the wrong platform APIs.** Its
   `@SupportedPlatforms` named `View.scrollBy` and `UIScrollView.setContentOffset` — copied from
   `onScrollChanged` — so the generated "Officially Supported Platforms" block in the published

@@ -404,6 +404,22 @@ Nine WebKit APIs read out of the iOS 26.5 SDK.
 
 ### Fixed
 
+**iOS — `WebsiteDataType.ALL` did not mean all, so clearing website data left data behind.**
+The set held only the ten `WKWebsiteDataType*` constants that existed in iOS 9–11.3; the iOS 26.5
+SDK declares fifteen. `WebStorageManager.removeDataFor` / `.removeDataModifiedSince` with
+`WebsiteDataType.ALL` — the documented way to wipe a site's storage — silently left behind the
+origin-private file system (`WKWebsiteDataTypeFileSystem`, iOS 16+), DRM key storage
+(`WKWebsiteDataTypeMediaKeys`), search field history
+(`WKWebsiteDataTypeSearchFieldRecentSearches`) and the deviceId hash salt
+(`WKWebsiteDataTypeHashSalt`, all iOS 17+). All four are now constants and are in `ALL`. Nothing in
+the API reported the gap, which matters because this is the call an app makes to honour a
+"delete my data" request.
+
+`WKWebsiteDataTypeScreenTime` (iOS 26+) is also added as a constant but is **deliberately kept out
+of `ALL`**: passing it to `removeDataModifiedSince` terminates the app on iOS 26.5 from inside
+WebKit, and an uncaught Objective-C exception there cannot be caught in Dart. Its dartdoc carries
+the measurement. If you pass a hand-built set rather than `ALL`, do not add it.
+
 **iOS — four bugs that silently swallowed events, all found by running the integration suite on a
 simulator for the first time:**
 
