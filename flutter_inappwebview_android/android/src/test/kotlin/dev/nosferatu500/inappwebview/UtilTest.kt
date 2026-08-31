@@ -137,4 +137,35 @@ class UtilTest {
     assertEquals("42", Util.JSONStringify(42))
     assertEquals("true", Util.JSONStringify(true))
   }
+
+  @Test
+  fun `resolveSyncCallbackTimeoutMillis honours a positive setting`() {
+    assertEquals(30_000L, Util.resolveSyncCallbackTimeoutMillis(30_000))
+    // Lowering it is legitimate too -- a caller may prefer to give up quickly.
+    assertEquals(500L, Util.resolveSyncCallbackTimeoutMillis(500))
+    assertEquals(1L, Util.resolveSyncCallbackTimeoutMillis(1))
+  }
+
+  @Test
+  fun `resolveSyncCallbackTimeoutMillis falls back when the setting is absent`() {
+    // Null is the ordinary case: the Dart field is nullable and the key is skipped when unset.
+    assertEquals(
+      Util.SYNC_CALLBACK_TIMEOUT_MILLIS,
+      Util.resolveSyncCallbackTimeoutMillis(null)
+    )
+    assertEquals(10_000L, Util.SYNC_CALLBACK_TIMEOUT_MILLIS)
+  }
+
+  @Test
+  fun `resolveSyncCallbackTimeoutMillis refuses a non-positive setting`() {
+    // `latch.await(0)` returns false immediately, so honouring a 0 would make every synchronous
+    // callback a silent no-op -- the resource always loads unintercepted. A mistaken 0 (or a
+    // negative from arithmetic on a duration) must not be able to switch interception off.
+    assertEquals(Util.SYNC_CALLBACK_TIMEOUT_MILLIS, Util.resolveSyncCallbackTimeoutMillis(0))
+    assertEquals(Util.SYNC_CALLBACK_TIMEOUT_MILLIS, Util.resolveSyncCallbackTimeoutMillis(-1))
+    assertEquals(
+      Util.SYNC_CALLBACK_TIMEOUT_MILLIS,
+      Util.resolveSyncCallbackTimeoutMillis(Int.MIN_VALUE)
+    )
+  }
 }

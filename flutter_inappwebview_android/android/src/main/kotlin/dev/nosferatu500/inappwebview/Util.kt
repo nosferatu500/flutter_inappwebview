@@ -82,15 +82,39 @@ object Util {
   }
 
   /**
-   * How long [invokeMethodAndWaitResult] waits for the Dart side before giving up.
+   * How long [invokeMethodAndWaitResult] waits for the Dart side before giving up, unless the
+   * WebView's `InAppWebViewSettings.syncCallbackTimeoutMillis` raises it (see
+   * [resolveSyncCallbackTimeoutMillis]).
    *
    * These calls block a WebView worker thread, so an answer that never arrives used to stall
    * that thread for the rest of the WebView's life. Ten seconds is far longer than a correct
    * handler needs and short enough to recover from: on expiry the caller takes its existing
    * "not handled" path -- the resource just loads normally -- which is what it already did when
    * the wait was interrupted.
+   *
+   * It also remains the fixed bound for the two blocking waits that cannot read a WebView's
+   * settings: a custom `WebViewAssetLoader` `PathHandler` (built from the settings map and holding
+   * no reference back to it) and `ServiceWorkerClient.shouldInterceptRequest` (a process-wide
+   * controller with no WebView at all).
    */
   const val SYNC_CALLBACK_TIMEOUT_MILLIS = 10_000L
+
+  /**
+   * The timeout for a sync callback on a WebView whose settings carry [settingMillis].
+   *
+   * A null value means the setting was not sent. **A non-positive one is ignored rather than
+   * honoured**: `latch.await(0)` returns immediately, so obeying a mistaken `0` would silently turn
+   * every synchronous callback into a no-op -- the resource would always load unintercepted, which
+   * is the one failure this whole path exists to avoid. There is deliberately no upper bound: a
+   * caller that knows its handler is slow is entitled to wait, and the cost is documented.
+   */
+  @JvmStatic
+  fun resolveSyncCallbackTimeoutMillis(settingMillis: Int?): Long =
+    if (settingMillis != null && settingMillis > 0) {
+      settingMillis.toLong()
+    } else {
+      SYNC_CALLBACK_TIMEOUT_MILLIS
+    }
 
   /**
    * Invokes [method] on [channel] from the main thread and blocks the calling thread until Dart

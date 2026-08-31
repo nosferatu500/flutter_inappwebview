@@ -389,6 +389,11 @@ implemented on the current platform" on iOS.
   `isFileSchemeCookiesAllowed()`
 - **`InAppWebViewController`** — `postVisualStateCallback()`, `documentHasImages()`,
   `flingScroll()`
+- **`InAppWebViewSettings.syncCallbackTimeoutMillis`** — how long the WebView waits for your Dart
+  handler to answer `shouldInterceptRequest` or `onLoadResourceWithCustomScheme` before loading the
+  resource anyway. This was a fixed 10 seconds; a handler that proxies the request through Dart HTTP
+  over a slow link can now be given longer, at the cost of a WebView thread parked for that long.
+  `0` or less keeps the 10s default, so a mistaken `0` cannot switch interception off
 
 ### Added — iOS
 

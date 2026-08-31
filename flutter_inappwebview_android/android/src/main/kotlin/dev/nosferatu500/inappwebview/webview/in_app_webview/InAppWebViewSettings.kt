@@ -92,6 +92,13 @@ class InAppWebViewSettings : ISettings<InAppWebViewInterface> {
   @JvmField var scrollBarFadeDuration: Int? = null
   @JvmField var rendererPriorityPolicy: Map<String, Any?>? = null
   @JvmField var useShouldInterceptRequest: Boolean = false
+
+  /**
+   * Milliseconds to wait for a Dart answer on the two synchronous callbacks, or null for
+   * `Util.SYNC_CALLBACK_TIMEOUT_MILLIS`. Read at call time, so `setSettings` takes effect on the
+   * next callback. See `Util.resolveSyncCallbackTimeoutMillis`.
+   */
+  @JvmField var syncCallbackTimeoutMillis: Int? = null
   @JvmField var useOnRenderProcessGone: Boolean = false
   @JvmField var disableDefaultErrorPage: Boolean = false
   @JvmField var useHybridComposition: Boolean = true
@@ -212,6 +219,7 @@ class InAppWebViewSettings : ISettings<InAppWebViewInterface> {
         "scrollBarFadeDuration" -> scrollBarFadeDuration = value as Int
         "rendererPriorityPolicy" -> rendererPriorityPolicy = value as Map<String, Any?>
         "useShouldInterceptRequest" -> useShouldInterceptRequest = value as Boolean
+        "syncCallbackTimeoutMillis" -> syncCallbackTimeoutMillis = value as Int
         "useOnRenderProcessGone" -> useOnRenderProcessGone = value as Boolean
         "disableDefaultErrorPage" -> disableDefaultErrorPage = value as Boolean
         "useHybridComposition" -> useHybridComposition = value as Boolean
@@ -335,6 +343,7 @@ class InAppWebViewSettings : ISettings<InAppWebViewInterface> {
     settings["scrollBarFadeDuration"] = scrollBarFadeDuration
     settings["rendererPriorityPolicy"] = rendererPriorityPolicy
     settings["useShouldInterceptRequest"] = useShouldInterceptRequest
+    settings["syncCallbackTimeoutMillis"] = syncCallbackTimeoutMillis
     settings["useOnRenderProcessGone"] = useOnRenderProcessGone
     settings["disableDefaultErrorPage"] = disableDefaultErrorPage
     settings["useHybridComposition"] = useHybridComposition

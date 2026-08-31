@@ -35,6 +35,9 @@ void main() {
           InAppWebViewSettingsProperty.backForwardCacheEnabled,
           InAppWebViewSettingsProperty.attributionRegistrationBehavior,
           InAppWebViewSettingsProperty.profileName,
+          // Not an androidx feature flag but the same shape of addition: Android-only, and
+          // invisible unless the example lets you change it.
+          InAppWebViewSettingsProperty.syncCallbackTimeoutMillis,
         ]),
       );
     });

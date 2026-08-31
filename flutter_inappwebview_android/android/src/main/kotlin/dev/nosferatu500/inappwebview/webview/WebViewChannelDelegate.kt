@@ -1159,7 +1159,8 @@ class WebViewChannelDelegate(webView: InAppWebView, channel: MethodChannel) :
       channel,
       "onLoadResourceWithCustomScheme",
       hashMapOf<String, Any?>("request" to request.toMap()),
-      callback
+      callback,
+      syncCallbackTimeoutMillis()
     )
   }
 
@@ -1191,9 +1192,17 @@ class WebViewChannelDelegate(webView: InAppWebView, channel: MethodChannel) :
     val channel = this.channel ?: return null
     val callback = SyncShouldInterceptRequestCallback()
     return Util.invokeMethodAndWaitResult(
-      channel, "shouldInterceptRequest", request.toMap(), callback
+      channel, "shouldInterceptRequest", request.toMap(), callback, syncCallbackTimeoutMillis()
     )
   }
+
+  /**
+   * Read live from the WebView's current settings rather than captured once, so a `setSettings`
+   * call takes effect on the very next callback. Falls back to the default when there is no
+   * WebView left -- a delegate can outlive it by the length of one in-flight callback.
+   */
+  private fun syncCallbackTimeoutMillis(): Long =
+    Util.resolveSyncCallbackTimeoutMillis(webView?.customSettings?.syncCallbackTimeoutMillis)
 
   open class RenderProcessUnresponsiveCallback : BaseCallbackResultImpl<Int>() {
     override fun decodeResult(obj: Any?): Int? = if (obj is Int) obj else null

@@ -106,6 +106,15 @@ rename; this entry is the API-owner's view.
   dead before finding the native half complete and waiting. Setting a hop switches the rule to a
   relay chain (RFC 9298) instead of a direct proxy endpoint; `url` remains required and must still
   parse, because the Swift parses it in a guard *before* it looks at the hops
+- **`InAppWebViewSettings.syncCallbackTimeoutMillis`** (Android). The bound on how long a WebView
+  worker thread blocks waiting for a Dart answer to `shouldInterceptRequest` or
+  `onLoadResourceWithCustomScheme`, which was a hardcoded 10s constant. Raise it for a handler that
+  legitimately needs longer — one proxying the request through Dart HTTP over a slow link — knowing
+  that every millisecond is a parked WebView thread. `0` or less is refused natively and the 10s
+  default stands, so a mistaken `0` cannot silently turn interception into a no-op. It does **not**
+  govern the two blocking waits that cannot read a WebView's settings: a custom `WebViewAssetLoader`
+  `PathHandler.handle`, and `ServiceWorkerClient.shouldInterceptRequest` on the process-wide
+  `ServiceWorkerController`
 - `PlatformProfileStore` (+ `…CreationParams`) and `PlatformGeolocationPermissions`
   (+ `…CreationParams`), with `createPlatformProfileStore` / `…Static` and
   `createPlatformGeolocationPermissions` / `…Static` on `InAppWebViewPlatform`

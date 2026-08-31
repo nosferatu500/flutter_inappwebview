@@ -494,6 +494,16 @@ Map<String, List<SettingDefinition>> getSettingDefinitions() {
         defaultValue: false,
         property: InAppWebViewSettingsProperty.isInspectable,
       ),
+      SettingDefinition(
+        name: 'Sync Callback Timeout (ms)',
+        description:
+            'How long a WebView thread waits for a Dart answer to '
+            'shouldInterceptRequest / onLoadResourceWithCustomScheme before loading the '
+            'resource anyway (Android). Empty or 0 keeps the 10000ms default',
+        type: SettingType.integer,
+        defaultValue: null,
+        property: InAppWebViewSettingsProperty.syncCallbackTimeoutMillis,
+      ),
     ],
   };
 }

@@ -883,6 +883,33 @@ as it can cause framerate drops on animations in Android 9 and lower (see [Hybri
   @SupportedPlatforms(platforms: [AndroidPlatform()])
   bool? useShouldInterceptRequest;
 
+  ///How long, **in milliseconds**, the WebView will wait for your Dart handler to answer a
+  ///*synchronous* callback before continuing without it. The default is `10000` (10 seconds).
+  ///
+  ///Two events on Android are synchronous: [PlatformWebViewCreationParams.shouldInterceptRequest]
+  ///and [PlatformWebViewCreationParams.onLoadResourceWithCustomScheme]. The WebView cannot start
+  ///loading the resource until it knows the answer, so the plugin **blocks a WebView worker
+  ///thread** for the duration of the round trip to Dart. This is the bound on that block.
+  ///
+  ///On expiry the plugin logs a warning and behaves as if the handler had returned `null` — the
+  ///resource simply loads normally, and the reply is ignored if it arrives later. Nothing is
+  ///reported to Dart, because there is no longer anything the answer could affect.
+  ///
+  ///Raise it only if your handler legitimately needs longer — one that proxies the request through
+  ///Dart HTTP over a slow link is the usual case. Every millisecond of it is a WebView thread
+  ///parked, so a high value on a handler that has actually hung makes the page unresponsive for
+  ///that much longer. A value of `0` or less is ignored and the default is used, so a mistaken `0`
+  ///cannot silently switch interception off.
+  ///
+  ///Two other Dart callbacks block the same way and are **not** governed by this setting; both keep
+  ///the fixed 10-second default:
+  ///- `PathHandler.handle` for a custom [WebViewAssetLoader] path handler, which the WebView builds
+  ///from [webViewAssetLoader] and which holds no reference to these settings.
+  ///- [PlatformServiceWorkerController]'s `ServiceWorkerClient.shouldInterceptRequest`, which
+  ///belongs to a process-wide controller with no WebView and therefore no settings to read.
+  @SupportedPlatforms(platforms: [AndroidPlatform()])
+  int? syncCallbackTimeoutMillis;
+
   ///Set to `true` to be able to listen at the [PlatformWebViewCreationParams.onRenderProcessGone] event.
   ///
   ///If the [PlatformWebViewCreationParams.onRenderProcessGone] event is implemented and this value is `null`,
@@ -2260,6 +2287,7 @@ as it can cause framerate drops on animations in Android 9 and lower (see [Hybri
     this.regexToAllowSyncUrlLoading,
     this.useHybridComposition = true,
     this.useShouldInterceptRequest,
+    this.syncCallbackTimeoutMillis,
     this.useOnRenderProcessGone,
     this.overScrollMode = OverScrollMode_.IF_CONTENT_SCROLLS,
     this.networkAvailable,

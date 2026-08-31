@@ -64,6 +64,14 @@ Twelve `androidx.webkit` features, each behind its own `WebViewFeature` flag, an
 - **`CookieManager`** — `setAcceptCookie()`, `isAcceptCookieEnabled()`, `hasCookies()`,
   `isFileSchemeCookiesAllowed()`
 - **`InAppWebViewController`** — `postVisualStateCallback()`, `documentHasImages()`, `flingScroll()`
+- **`InAppWebViewSettings.syncCallbackTimeoutMillis`** — the bound on how long a WebView worker
+  thread blocks waiting for Dart to answer `shouldInterceptRequest` or
+  `onLoadResourceWithCustomScheme`, previously the hardcoded `Util.SYNC_CALLBACK_TIMEOUT_MILLIS`
+  (10s). Read live from `customSettings` on each callback, so `setSettings` takes effect
+  immediately; `0` or less falls back to the default rather than being honoured, because
+  `latch.await(0)` would make every synchronous callback a silent no-op. The two blocking waits that
+  have no WebView settings to read — a custom `WebViewAssetLoader` `PathHandler.handle` and
+  `ServiceWorkerClient.shouldInterceptRequest` — keep the fixed 10s
 
 Every mirrored `WebViewFeature` constant is now pinned against the real AAR by a test: six of the
 flags `WebViewFeature` declares are `@Deprecated` tombstones that `isFeatureSupported` **throws**
