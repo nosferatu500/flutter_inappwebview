@@ -34,6 +34,17 @@ class PlatformFindInteractionControllerCreationParams {
   ///[numberOfMatches] represents how many matches have been found.
   ///
   ///[isDoneCounting] whether the find operation has actually completed.
+  ///
+  ///**On iOS the JavaScript fallback that powers this event is permanent, not a gap.** WebKit's
+  ///own `findString:withConfiguration:completionHandler:` (iOS 14+) cannot support it: the
+  ///`WKFindResult` it hands back has exactly one property, `matchFound`, so none of
+  ///[activeMatchOrdinal], [numberOfMatches] or [isDoneCounting] can be derived from it — and it
+  ///*selects* a single match rather than highlighting all of them, which is what
+  ///[PlatformFindInteractionController.findAll] promises. Below iOS 16 there is no counting API at
+  ///all (`UIFindSession.resultCount` is 16.0+), and the plugin already uses the native path where a
+  ///counting one exists, via `UIFindInteraction`. Replacing the JavaScript with `findString:` would
+  ///therefore be a smaller diff that quietly breaks three documented guarantees, so it will not
+  ///happen.
   ///{@endtemplate}
   ///
   ///{@macro flutter_inappwebview_platform_interface.PlatformFindInteractionControllerCreationParams.onFindResultReceived.supported_platforms}
@@ -155,6 +166,10 @@ abstract class PlatformFindInteractionController extends PlatformInterface
   ///Finds all instances of find on the page and highlights them. Notifies [PlatformFindInteractionController.onFindResultReceived] listener.
   ///
   ///[find] represents the string to find.
+  ///
+  ///**The iOS JavaScript implementation is deliberate and permanent** — highlighting *every* match
+  ///and reporting counts is more than WebKit's `findString:` can do. See
+  ///[PlatformFindInteractionController.onFindResultReceived] for the measurement.
   ///{@endtemplate}
   ///
   ///{@macro flutter_inappwebview_platform_interface.PlatformFindInteractionController.findAll.supported_platforms}

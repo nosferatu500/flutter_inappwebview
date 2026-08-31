@@ -411,6 +411,40 @@ Nine WebKit APIs read out of the iOS 26.5 SDK, plus one feature that was half-bu
 
 ### Fixed
 
+**Two long-standing iOS behaviours are now written down as permanent decisions rather than left to
+look like unfinished work.**
+
+`onDownloadStarting` is a notification, not a hook — it cannot start, alter or veto a download, and
+the plugin will never download the file for you. On Android the WebView never downloads it anyway;
+on **iOS the plugin actively cancels** the `WKDownload` by dropping its delegate, and it does so
+**whether or not `InAppWebViewSettings.useOnDownloadStart` is `true`**. With that setting `false`
+— its default unless the event is implemented — a download link therefore appears to do nothing at
+all, with no event and no error. Because the download never proceeds there is no native progress,
+completion or failure to surface, and none is planned. Fetch `downloadStartRequest.url` yourself,
+remembering that your request shares none of the WebView's cookies, `User-Agent` or auth headers.
+
+The **iOS find-in-page JavaScript is deliberate and permanent**, not a missing native port. WebKit's
+`findString:withConfiguration:` hands back a `WKFindResult` with a single property, `matchFound`, so
+it cannot produce `activeMatchOrdinal`, `numberOfMatches` or `isDoneCounting`, and it selects one
+match where `findAll` promises every match highlighted. The plugin already uses the native find
+where a counting API exists — `UIFindInteraction` on iOS 16+, via
+`InAppWebViewSettings.isFindInteractionEnabled`.
+
+**iOS — `onReceivedClientCertRequest` returning `PROCEED` can silently send no certificate, and
+this is now documented.** If the PKCS#12 file cannot be loaded, iOS falls back to
+`performDefaultHandling`: the navigation continues **without** a client certificate and the server
+sees an unauthenticated request. Nothing reaches Dart — no error, no exception — so the only symptom
+is the `401`/`403` that arrives at `onReceivedHttpError`.
+
+The case that catches people out is **iOS 17.x**, where `SecPKCS12Import` cannot read containers
+encrypted with `PBES2 / PBKDF2 / AES-256-CBC` — the *default* for `openssl pkcs12 -export` under
+OpenSSL 3 — and reports the failure as *"The user name or passphrase you entered is not correct"*
+for a file whose passphrase is correct. The same certificate works on iOS 26. Run
+`openssl pkcs12 -info -nokeys -noout -in cert.pfx`; if it says `PBES2, PBKDF2, AES-256-CBC`,
+re-export with `-legacy` to support iOS 17.x, accepting that flag's weaker encryption. No plugin
+code can work around it. (This is why the suite's own `SSL request` test fails on iOS 17.5 and
+passes on 26.5 — it is a platform floor, not a defect.)
+
 **iOS — `WebsiteDataType.ALL` did not mean all, so clearing website data left data behind.**
 The set held only the ten `WKWebsiteDataType*` constants that existed in iOS 9–11.3; the iOS 26.5
 SDK declares fifteen. `WebStorageManager.removeDataFor` / `.removeDataModifiedSince` with

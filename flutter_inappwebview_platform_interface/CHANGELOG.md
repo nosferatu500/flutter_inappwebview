@@ -133,6 +133,29 @@ rename; this entry is the API-owner's view.
 
 ### Fixed
 
+- **Documented two permanent iOS design decisions, so they stop reading as gaps.**
+  `onDownloadStarting` is a **notification and nothing more**: Android never downloads the file
+  (that is what `setDownloadListener` means), and iOS *actively cancels* the `WKDownload` by
+  dropping its delegate — **unconditionally**, whether or not
+  `InAppWebViewSettings.useOnDownloadStart` is set, so with that setting `false` a download is
+  cancelled with no event at all. There is consequently no native progress/completion/failure to
+  expose and none is planned; the app does its own downloading, carrying over cookies, `User-Agent`
+  and auth headers itself. Separately, **the iOS JavaScript find implementation is permanent**:
+  WebKit's `findString:withConfiguration:` returns a `WKFindResult` with exactly one property,
+  `matchFound`, so it cannot supply `activeMatchOrdinal`, `numberOfMatches` or `isDoneCounting`, and
+  it selects one match where `findAll` promises all of them highlighted. The native path is already
+  used where a counting API exists (`UIFindInteraction`, iOS 16+)
+- **Documented that `onReceivedClientCertRequest` can silently send no certificate.** Returning
+  `ClientCertResponseAction.PROCEED` is a request, not a guarantee: if iOS cannot load the PKCS#12
+  file it falls back to `performDefaultHandling` and the navigation continues **unauthenticated**,
+  with no error, no exception and no change to the event's return value — the symptom is a
+  `401`/`403` at `onReceivedHttpError`. A missing file and an unreadable file take the same branch.
+  The note also records the **iOS 17.x limitation**: `SecPKCS12Import` there cannot read a container
+  using `PBES2 / PBKDF2 / AES-256-CBC`, which is OpenSSL 3's *default* export format, and reports it
+  as `errSecAuthFailed` — *"The user name or passphrase you entered is not correct"* — for a
+  container whose passphrase is perfectly correct. The same file works on iOS 26. `ClientCertResponse
+  .certificatePath` and `.certificatePassword` carry the short version, including the
+  `openssl pkcs12 -info` command to tell the two causes apart
 - **`WebsiteDataType.ALL` was missing four data types, so "clear everything" did not.** The set
   listed only the ten `WKWebsiteDataType*` constants that existed in iOS 9–11.3, while the iOS 26.5
   SDK declares fifteen. `WKWebsiteDataTypeFileSystem` (iOS 16+, the origin-private file system),

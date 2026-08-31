@@ -282,6 +282,26 @@ Also, this event is not called for POST requests and is not called on the first 
   ///[downloadStartRequest] represents the request of the file to download.
   ///
   ///**NOTE**: In order to be able to listen this event, check the [InAppWebViewSettings.useOnDownloadStart] setting documentation.
+  ///
+  ///**This event is a notification, not a hook. It cannot start, alter or veto a download, and
+  ///nothing in the plugin will download the file for you** — that is by design on both platforms
+  ///and is not going to change:
+  ///
+  ///- **Android** never downloads it in the first place. `WebView.setDownloadListener` exists
+  ///  precisely because the WebView hands the URL to the app and stops there.
+  ///- **iOS actively cancels it.** When a navigation response becomes a `WKDownload`, the plugin
+  ///  drops the download's delegate, which leaves it with no destination and WebKit tears it down.
+  ///  **The cancellation is unconditional** — it happens whether or not
+  ///  [InAppWebViewSettings.useOnDownloadStart] is `true`. With that setting `false` (its default
+  ///  unless this event is implemented) the download is therefore cancelled *silently*: no event,
+  ///  no error, and a link that simply appears to do nothing.
+  ///
+  ///Because iOS never lets the `WKDownload` proceed, there is **no native progress, completion or
+  ///failure reporting to expose**, and none is planned. Downloading is the app's job: take
+  ///`downloadStartRequest.url` and fetch it yourself, for example with the
+  ///[flutter_downloader](https://pub.dev/packages/flutter_downloader) plugin. Remember to carry
+  ///over whatever the WebView had — cookies (via `CookieManager`), the `User-Agent`, and any auth
+  ///headers — since your download is a separate request that shares none of the WebView's state.
   ///{@endtemplate}
   ///
   ///{@macro flutter_inappwebview_platform_interface.PlatformWebViewCreationParams.onDownloadStarting.supported_platforms}
@@ -563,6 +583,32 @@ See `NSAppTransportSecurity` in the [Information Property List Key Reference](ht
   ///Note that, multiple layers in chromium network stack might be caching the responses.
   ///
   ///[challenge] contains data about host, port, protocol, realm, etc. as specified in the [ClientCertChallenge].
+  ///
+  ///**Returning [ClientCertResponseAction.PROCEED] does not guarantee a certificate is sent.** If
+  ///the plugin cannot load the PKCS#12 file named by [ClientCertResponse.certificatePath], iOS
+  ///falls back to `performDefaultHandling` — the navigation continues **without** a client
+  ///certificate, and the server sees an unauthenticated request. Nothing is reported to Dart: there
+  ///is no error callback, no exception and no change in the event's return value. The usual symptom
+  ///is a `401`/`403` arriving at [onReceivedHttpError] instead of the page you expected.
+  ///
+  ///A missing file and an unreadable file take the same branch, so from Dart the two are
+  ///indistinguishable.
+  ///
+  ///**On iOS 17.x this bites a correct, correctly-passworded certificate.** Apple's
+  ///`SecPKCS12Import` on that release cannot read a container encrypted with
+  ///`PBES2 / PBKDF2 / AES-256-CBC`, which is **OpenSSL 3's default output** — so a `.p12`/`.pfx`
+  ///produced by a modern `openssl pkcs12 -export` is silently rejected. It reports
+  ///`errSecAuthFailed` (`-25293`), whose message is *"The user name or passphrase you entered is
+  ///not correct."* **That message is a lie in this case**; the passphrase is fine and the container
+  ///is simply unparseable. The same file works on iOS 26. Inspect a container with:
+  ///
+  ///```
+  ///openssl pkcs12 -info -nokeys -noout -in cert.pfx
+  ///```
+  ///
+  ///If it reports `PBES2, PBKDF2, AES-256-CBC`, re-export it with `-legacy` (OpenSSL 3) for iOS
+  ///17.x compatibility — at the cost of the weaker RC2/3DES encryption that flag selects. Weigh
+  ///that against dropping iOS 17.x support; the plugin cannot work around it.
   ///{@endtemplate}
   ///
   ///{@macro flutter_inappwebview_platform_interface.PlatformWebViewCreationParams.onReceivedClientCertRequest.supported_platforms}

@@ -13,12 +13,23 @@ class ClientCertResponse {
 
   ///The certificate password.
   ///
+  ///**A "passphrase is not correct" error from iOS does not reliably mean the password is wrong.**
+  ///`SecPKCS12Import` reports `errSecAuthFailed` for a container it cannot parse at all, which on
+  ///iOS 17.x includes any file using OpenSSL 3's default `PBES2 / AES-256-CBC` encryption. Check
+  ///the container's algorithms before changing this value —
+  ///[PlatformWebViewCreationParams.onReceivedClientCertRequest] has the command.
+  ///
   ///**Officially Supported Platforms/Implementations**:
   ///- Android WebView
   ///- iOS WKWebView
   String? certificatePassword;
 
   ///The file path of the certificate to use.
+  ///
+  ///On iOS this is read as a PKCS#12 container via `SecPKCS12Import`. **If it cannot be loaded the
+  ///request silently continues without a client certificate** — see
+  ///[PlatformWebViewCreationParams.onReceivedClientCertRequest] for the failure mode and for the
+  ///iOS 17.x limitation that rejects OpenSSL 3's default encryption.
   ///
   ///**Officially Supported Platforms/Implementations**:
   ///- Android WebView
