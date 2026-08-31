@@ -519,6 +519,13 @@ simulator for the first time:**
 
 **Android:**
 
+- **`HeadlessInAppWebView.setSize` / `getSize` did not round-trip on Android.** The size is in
+  logical pixels; Android layout params are `Int` physical pixels, and the conversion **truncated**
+  in one direction and divided back in the other, so `Size(600, 800)` came back as
+  `Size(599.795, 800)` at density 390 and a non-integer size lost precision at every density. The
+  round-trip is now exact. `getSize` also reported a `-1` ("match the screen") axis as a *physical*
+  pixel count — `Size(1080, 2400)` for a screen 411.4 logical pixels wide — and now answers in
+  logical pixels like every other value in the API. iOS was already correct
 - **`CookieManager.flush()` never returned.** The native side never replied, so the `Future` hung
   forever
 - **A blocking callback could hang the WebView forever.** The four synchronous callbacks

@@ -32,6 +32,12 @@ class HeadlessInAppWebView(
   @JvmField
   var plugin: InAppWebViewFlutterPlugin? = plugin
 
+  /** The size last requested through [setSize], with any -1 axis resolved. See [getSize]. */
+  private var requestedSize: Size2D? = null
+
+  /** The layout params [setSize] applied for [requestedSize], in physical pixels. */
+  private var appliedSizePixels: Pair<Int, Int>? = null
+
   init {
     val channel = MethodChannel(plugin.messenger, METHOD_CHANNEL_NAME_PREFIX + id)
     channelDelegate = HeadlessWebViewChannelDelegate(this, channel)
@@ -64,32 +70,38 @@ class HeadlessInAppWebView(
   fun setSize(size: Size2D) {
     if (flutterWebView?.webView == null) return
     val view = flutterWebView?.getView() ?: return
-    val scale = Util.getPixelDensity(view.context)
+    val scale = Util.getPixelDensity(view.context).toDouble()
     val fullscreenSize = Util.getFullscreenSize(view.context)
-    // -1.0 means "fullscreen on this axis". Upstream's height branch tested size.width, so
-    // Size2D(-1.0, h) forced fullscreen height and Size2D(w, -1.0) never got it (TODO.md P0b.1).
-    val width = (if (size.width == -1.0) fullscreenSize.width else size.width * scale).toInt()
-    val height = (if (size.height == -1.0) fullscreenSize.height else size.height * scale).toInt()
+    // -1.0 means "fullscreen on this axis", per axis: upstream's height branch tested size.width,
+    // so Size2D(-1.0, h) forced fullscreen height and Size2D(w, -1.0) never got it (TODO.md P0b.1).
+    val width =
+      HeadlessWebViewSize.toPhysicalPixels(size.width, scale, fullscreenSize.width)
+    val height =
+      HeadlessWebViewSize.toPhysicalPixels(size.height, scale, fullscreenSize.height)
     view.layoutParams = FrameLayout.LayoutParams(width, height)
+    // Remember both halves of the conversion. A layout param is an Int, so dividing it back by the
+    // density does not recover a requested size whose pixel product was fractional -- 600.0 at
+    // density 390 came back as 599.795 (TODO.md P0b.8). getSize answers from the requested value
+    // for as long as these are still the params on the view.
+    appliedSizePixels = width to height
+    requestedSize = HeadlessWebViewSize.resolveRequested(size, scale, fullscreenSize)
   }
 
   fun getSize(): Size2D? {
     if (flutterWebView?.webView == null) return null
     val view = flutterWebView?.getView() ?: return null
-    val scale = Util.getPixelDensity(view.context)
-    val fullscreenSize = Util.getFullscreenSize(view.context)
     val layoutParams = view.layoutParams
+    val applied = appliedSizePixels
+    val requested = requestedSize
+    if (requested != null && applied == (layoutParams.width to layoutParams.height)) {
+      // Size2D is mutable, so hand out a copy rather than the remembered instance.
+      return Size2D(requested.width, requested.height)
+    }
+    val scale = Util.getPixelDensity(view.context).toDouble()
+    val fullscreenSize = Util.getFullscreenSize(view.context)
     return Size2D(
-      if (fullscreenSize.width == layoutParams.width.toDouble()) {
-        layoutParams.width.toDouble()
-      } else {
-        layoutParams.width / scale.toDouble()
-      },
-      if (fullscreenSize.height == layoutParams.height.toDouble()) {
-        layoutParams.height.toDouble()
-      } else {
-        layoutParams.height / scale.toDouble()
-      }
+      HeadlessWebViewSize.toLogicalPixels(layoutParams.width, scale, fullscreenSize.width),
+      HeadlessWebViewSize.toLogicalPixels(layoutParams.height, scale, fullscreenSize.height)
     )
   }
 

@@ -233,7 +233,8 @@ abstract class PlatformHeadlessInAppWebView extends PlatformInterface
   }
 
   ///{@template flutter_inappwebview_platform_interface.PlatformHeadlessInAppWebView.setSize}
-  ///Set the size of the WebView in pixels.
+  ///Set the size of the WebView in logical pixels — the same unit as Flutter's own [Size],
+  ///not physical device pixels.
   ///
   ///Set `-1` to match the corresponding width or height of the current device screen size.
   ///`Size(-1, -1)` will match both width and height of the current device screen size.
@@ -246,7 +247,7 @@ abstract class PlatformHeadlessInAppWebView extends PlatformInterface
     platforms: [
       AndroidPlatform(
         note:
-            '`Size` width and height values will be converted to `int` values because they cannot have `double` values.',
+            'A `View`\'s layout params are an `int` number of *physical* pixels, so the size is multiplied by the display density and rounded to the nearest pixel. The WebView can therefore end up less than one physical pixel away from the size requested here; `getSize` still reports the requested value.',
       ),
       IOSPlatform(),
     ],
@@ -258,7 +259,12 @@ abstract class PlatformHeadlessInAppWebView extends PlatformInterface
   }
 
   ///{@template flutter_inappwebview_platform_interface.PlatformHeadlessInAppWebView.getSize}
-  ///Gets the current size in pixels of the WebView.
+  ///Gets the current size in logical pixels of the WebView — the same unit [setSize] accepts.
+  ///
+  ///This is the size last requested through [setSize] (or `initialSize`), so
+  ///`setSize(size)` followed by `getSize()` returns `size` unchanged. An axis set to `-1` has no
+  ///requested value to report and resolves to what the screen actually measures, still in logical
+  ///pixels.
   ///
   ///Note that if the [PlatformHeadlessInAppWebView] is not running, this method will return `null`.
   ///{@endtemplate}

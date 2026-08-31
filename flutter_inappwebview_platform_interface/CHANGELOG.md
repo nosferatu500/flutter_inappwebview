@@ -215,6 +215,12 @@ rename; this entry is the API-owner's view.
   that does not contain it. The plugin was verified to pass the right URL through to
   `WKWebView.loadFileURL(_:allowingReadAccessTo:)`, so this is WebKit's behaviour — but the promise
   was ours, and it is now a warning that this is **not a security boundary**
+- **`PlatformHeadlessInAppWebView.setSize` / `getSize` document their unit: logical pixels**, the
+  same unit as Flutter's `Size`, rather than the ambiguous "pixels". `getSize` states that it returns
+  the size last requested — so the round-trip is exact — and that a `-1` axis resolves to the
+  screen's own logical size. The Android note now explains the physical-pixel conversion (multiplied
+  by the display density, rounded to the nearest `int` pixel) instead of saying only that `double`
+  values become `int`
 - `onLoadStop` now documents that it is **not** guaranteed after every navigation: a page that
   cancels its own load — single-page apps intercepting history changes, typically after `goBack` /
   `goForward` — ends in `onReceivedError` with `WebResourceErrorType.CANCELLED` and no `onLoadStop`

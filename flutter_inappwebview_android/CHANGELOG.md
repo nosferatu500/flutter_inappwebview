@@ -93,6 +93,21 @@ for, and five others have a native *value* that differs from their name.
   accepted, since `Uri.getHost()` keeps the brackets. Covered by 8 unit tests (23 → 28), each
   verified to fail against the old implementation
 
+- **`HeadlessInAppWebView.setSize` / `getSize` did not round-trip, and a `-1` axis was reported in
+  the wrong unit.** The Dart API is in logical pixels; a `View`'s layout params are `Int` physical
+  pixels. `setSize` **truncated** the conversion and `getSize` divided the result back, so on any
+  device whose density makes the product fractional you did not get out what you put in —
+  `Size(600, 800)` came back as `Size(599.795, 800)` at density 390, and a non-integer size such as
+  `Size(600.25, 800.75)` lost precision at every density. `setSize` now rounds, and `getSize`
+  answers from the size last requested for as long as those are still the layout params on the view,
+  so the round-trip is exact.
+
+  Separately, `getSize` reported a `-1` ("match the screen") axis as a **physical** pixel count:
+  `Size(-1, -1)` on a density-420 device answered `Size(1080, 2400)` for a screen 411.4 logical
+  pixels wide. It now answers in logical pixels, like every other value the API accepts or returns.
+  iOS was unaffected — UIKit points are logical pixels and no conversion happens there.
+  Covered by 7 new unit tests (28 → 35) and two integration assertions, all verified to fail against
+  the old code
 - **`CookieManager.flush()` never returned.** The native side never replied on the channel, so the
   `Future` hung forever. Fixed and verified on a device
 - **A blocking callback could hang the WebView forever.** The four synchronous callbacks
