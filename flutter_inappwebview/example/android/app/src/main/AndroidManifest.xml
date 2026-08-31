@@ -48,13 +48,15 @@
         </activity>
 
         <provider
-            android:name="androidx.core.content.FileProvider"
-            android:authorities="${applicationId}.flutter_inappwebview_android.fileprovider"
+            android:name="dev.nosferatu500.inappwebview.InAppWebViewFileProvider"
+            android:authorities="${applicationId}.dev.nosferatu500.inappwebview.fileprovider"
             android:exported="false"
             android:grantUriPermissions="true">
             <!--
               Ships with the plugin. Grants only the app's own external files directory, which is
               the only place the plugin writes (camera capture temp files for <input type="file">).
+              This is verbatim the block in the InAppWebViewFileProvider KDoc, which is what the
+              migration note tells apps to copy — the authority suffix changed in 7.0.0.
             -->
             <meta-data
                 android:name="android.support.FILE_PROVIDER_PATHS"

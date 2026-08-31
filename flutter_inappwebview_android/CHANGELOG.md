@@ -15,9 +15,21 @@ entry carries the full user-facing list; this entry is what changed in this pack
 - **Every method/event channel name: `com.pichillilorenzo/…` →
   `dev.nosferatu500.inappwebview/…`.** Invisible through the public Dart API, breaking for anything
   talking to the channels directly, and what lets this fork be installed alongside upstream
-- **The bundled `FileProvider` now ships `@xml/inappwebview_provider_paths`.** Apps that followed the
-  documented setup and referenced `@xml/provider_paths` must switch — that resource no longer exists
-  here. The authority suffix (`flutter_inappwebview_android.fileprovider`) is deliberately unchanged
+- **The bundled `FileProvider`'s `<provider>` block changed in all three of its parts.** Apps declare
+  it themselves, because the authority derives from their own `applicationId`, so all three are
+  breaking:
+  - `android:name`: `com.pichillilorenzo.flutter_inappwebview_android.InAppWebViewFileProvider` →
+    **`dev.nosferatu500.inappwebview.InAppWebViewFileProvider`**
+  - `android:authorities`: `${applicationId}.flutter_inappwebview_android.fileprovider` →
+    **`${applicationId}.dev.nosferatu500.inappwebview.fileprovider`**
+  - the `meta-data` resource: `@xml/provider_paths` → **`@xml/inappwebview_provider_paths`**, which
+    is scoped to the app's own external files directory (see *Fixed*); `@xml/provider_paths` no
+    longer exists here
+
+  **A stale authority is silent.** `FileProvider.getUriForFile` throws `IllegalArgumentException`,
+  `InAppWebViewChromeClient.getOutputUri()` logs it and returns null, and
+  `<input type="file" capture>` then produces nothing — no Dart error and no event. Copy the whole
+  block from the `InAppWebViewFileProvider` KDoc rather than editing one line of the 6.x one
 - Native dependencies: `androidx.webkit` 1.14.0 → **1.17.0**, `androidx.browser` 1.9.0 → **1.10.0**,
   `androidx.appcompat` 1.7.1 → **1.8.0**
 

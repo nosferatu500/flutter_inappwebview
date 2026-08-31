@@ -13,7 +13,7 @@ import androidx.core.content.FileProvider
  * ```xml
  * <provider
  *     android:name="dev.nosferatu500.inappwebview.InAppWebViewFileProvider"
- *     android:authorities="${applicationId}.flutter_inappwebview_android.fileprovider"
+ *     android:authorities="${applicationId}.dev.nosferatu500.inappwebview.fileprovider"
  *     android:exported="false"
  *     android:grantUriPermissions="true">
  *     <meta-data
@@ -26,11 +26,19 @@ import androidx.core.content.FileProvider
  * directory -- see `res/xml/inappwebview_provider_paths.xml` for why. Point the `meta-data` at that
  * resource, not at a file of your own: substituting a wider one re-opens the grant this provider
  * deliberately does not make.
+ *
+ * **Breaking in 7.0.0:** the authority suffix was `flutter_inappwebview_android.fileprovider` in
+ * 6.x. An app that keeps the old string gets no exception it can see: `getUriForFile` throws
+ * `IllegalArgumentException`, `InAppWebViewChromeClient.getOutputUri()` logs it and returns null,
+ * and `<input type="file" capture>` produces nothing at all. The whole `<provider>` block above
+ * changed in this fork -- `android:name` and the `meta-data` resource too -- so copy it wholesale
+ * rather than editing one line of the old one.
  */
 class InAppWebViewFileProvider : FileProvider() {
   companion object {
-    // Not renamed alongside the package: this suffix is part of the FileProvider authority that
-    // consuming apps declare in their own AndroidManifest, so changing it would break them.
-    const val fileProviderAuthorityExtension = "flutter_inappwebview_android.fileprovider"
+    // Part of the FileProvider authority consuming apps declare in their own AndroidManifest:
+    // `${applicationId}.` + this. Changing it is a breaking change for them and needs a migration
+    // note, which is why it stayed on the old spelling through the rest of the package rename.
+    const val fileProviderAuthorityExtension = "dev.nosferatu500.inappwebview.fileprovider"
   }
 }

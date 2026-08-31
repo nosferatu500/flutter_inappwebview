@@ -44,10 +44,15 @@ This is invisible to anyone using the public Dart API, and it is what allows thi
 installed **alongside** upstream. It **breaks any app that talks to the plugin's platform channels
 directly**.
 
-- The Android FileProvider now ships `@xml/inappwebview_provider_paths`; apps that followed the
-  documented setup referencing `@xml/provider_paths` must switch. The provider also no longer grants
-  the entire external-storage root — see *Fixed*. Its authority suffix
-  (`flutter_inappwebview_android.fileprovider`) is deliberately unchanged.
+- The Android FileProvider's `<provider>` block changed in all three of its parts, and apps declare
+  that block themselves: `android:name` is now
+  `dev.nosferatu500.inappwebview.InAppWebViewFileProvider`, the authority is
+  `${applicationId}.dev.nosferatu500.inappwebview.fileprovider` (was
+  `${applicationId}.flutter_inappwebview_android.fileprovider`), and the `meta-data` resource is
+  `@xml/inappwebview_provider_paths` (`@xml/provider_paths` no longer exists here). The provider also
+  no longer grants the entire external-storage root — see *Fixed*. **A stale authority fails
+  silently**: `<input type="file" capture>` produces nothing, with no Dart error, because
+  `getUriForFile`'s exception is caught and logged natively.
 
 ### Removed — the deprecated API, all of it
 
@@ -593,8 +598,12 @@ simulator for the first time:**
    chains over `WebResourceErrorType`, `SslErrorType` and `PermissionResourceType` may name
    constants that no longer exist; these are constant classes rather than Dart `enum`s, so the
    analyzer reports the missing name but never an exhaustiveness error.
-5. If you declared the plugin's FileProvider, switch `@xml/provider_paths` to
-   `@xml/inappwebview_provider_paths`.
+5. If you declared the plugin's FileProvider, replace the whole `<provider>` block with the one in
+   the `InAppWebViewFileProvider` KDoc: `android:name` →
+   `dev.nosferatu500.inappwebview.InAppWebViewFileProvider`, `android:authorities` →
+   `${applicationId}.dev.nosferatu500.inappwebview.fileprovider`, and the `meta-data` resource →
+   `@xml/inappwebview_provider_paths`. Missing the authority is silent — `<input type="file"
+   capture>` simply stops producing a file, with no Dart error.
 6. If anything in your app talks to the plugin's platform channels directly, update the channel
    names to the `dev.nosferatu500.inappwebview/…` prefix.
 

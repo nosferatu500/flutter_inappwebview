@@ -70,7 +70,9 @@ sites — a consumer on Xcode 16 cannot build this plugin at all.
 6.x: `*Options` → `*Settings`, `getOptions`/`setOptions` → `getSettings`/`setSettings`, and the
 `Android`/`IOS`-prefixed duplicate types, events and fields → their unprefixed originals. Drop any
 macOS/Windows/Linux/Web-only API — there is nothing to migrate to. If you declared the plugin's
-`FileProvider`, switch `@xml/provider_paths` to `@xml/inappwebview_provider_paths`. The full
+`FileProvider`, replace that whole `<provider>` block: its class, its authority
+(`${applicationId}.dev.nosferatu500.inappwebview.fileprovider`) and its paths resource
+(`@xml/inappwebview_provider_paths`) all changed, and a stale authority fails silently. The full
 old → new list, name by name, is in
 [`flutter_inappwebview/CHANGELOG.md`](./flutter_inappwebview/CHANGELOG.md).
 
