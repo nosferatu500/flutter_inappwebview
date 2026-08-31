@@ -38,6 +38,10 @@ class _ServiceControllersScreenState extends State<ServiceControllersScreen> {
   );
   final TextEditingController _bypassListController = TextEditingController();
 
+  /// iOS 17+ only. When set, `ProxyRule.relayHop1` makes the rule reach the proxy through an
+  /// HTTP/3 relay (RFC 9298) instead of connecting to the endpoint in `url` directly.
+  final TextEditingController _relayHop1Controller = TextEditingController();
+
   // TracingController state
   bool _isTracing = false;
 
@@ -116,6 +120,7 @@ class _ServiceControllersScreenState extends State<ServiceControllersScreen> {
     _proxyHostController.dispose();
     _proxyPortController.dispose();
     _bypassListController.dispose();
+    _relayHop1Controller.dispose();
     _dataDirSuffixController.dispose();
     super.dispose();
   }
@@ -383,6 +388,7 @@ class _ServiceControllersScreenState extends State<ServiceControllersScreen> {
             .map((e) => e.trim())
             .where((e) => e.isNotEmpty)
             .toList(),
+        'relayHop1Http3Endpoint': _relayHop1Controller.text.trim(),
       },
       requiredPaths: ['host', 'port'],
     );
@@ -397,15 +403,29 @@ class _ServiceControllersScreenState extends State<ServiceControllersScreen> {
             .toList() ??
         [];
 
+    final relayHop1Endpoint =
+        params['relayHop1Http3Endpoint']?.toString().trim() ?? '';
+
     _proxyHostController.text = host;
     _proxyPortController.text = port.toString();
     _bypassListController.text = bypassList.join(', ');
+    _relayHop1Controller.text = relayHop1Endpoint;
 
     setState(() => _isLoading = true);
     try {
       await ProxyController.instance().setProxyOverride(
         settings: ProxySettings(
-          proxyRules: [ProxyRule(url: '$host:$port')],
+          proxyRules: [
+            ProxyRule(
+              url: '$host:$port',
+              // iOS 17+ only, and ignored on Android. With a relay hop set, the configuration is
+              // built from the relay chain rather than from `url` -- but `url` is still required
+              // and must still parse, or the whole rule is dropped before the hops are read.
+              relayHop1: relayHop1Endpoint.isNotEmpty
+                  ? ProxyRelayHop(http3RelayEndpoint: relayHop1Endpoint)
+                  : null,
+            ),
+          ],
           bypassRules: bypassList,
         ),
       );
@@ -922,6 +942,18 @@ class _ServiceControllersScreenState extends State<ServiceControllersScreen> {
                   decoration: const InputDecoration(
                     labelText: 'Bypass List (comma-separated)',
                     hintText: 'localhost, 127.0.0.1',
+                    border: OutlineInputBorder(),
+                    isDense: true,
+                  ),
+                ),
+                const SizedBox(height: 12),
+                TextField(
+                  controller: _relayHop1Controller,
+                  decoration: const InputDecoration(
+                    labelText: 'Relay hop 1 — HTTP/3 endpoint (iOS 17+)',
+                    hintText: 'https://relay.example.com/h3',
+                    helperText:
+                        'ProxyRule.relayHop1. Leave empty for a direct proxy connection.',
                     border: OutlineInputBorder(),
                     isDense: true,
                   ),

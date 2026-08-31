@@ -19,6 +19,13 @@ carries the full user-facing list; this entry is what changed in this package.
 
 ### Added
 
+- **`ProxyRule.relayHop1` / `.relayHop2` are now reachable** (iOS 17.0+). No Swift changed:
+  `ProxyManager.swift` has always parsed `map["relayHop1"]` / `map["relayHop2"]` into
+  `ProxyRelayHop` and built `ProxyConfiguration(relayHops:)` from them, and
+  `ProxyRule.toProxyConfiguration()` has always preferred that branch over the plain endpoint. What
+  was missing was on the Dart side — `ProxyRule_` had no field of that type, so the keys were never
+  sent. A wire test in this package now pins the map shape against what the Swift reads
+
 Nine WebKit APIs read out of the iOS 26.5 SDK:
 
 - **`NavigationAction.modifierFlags` / `.buttonNumber`** (+ `ModifierFlag`, `ButtonMask`) — which

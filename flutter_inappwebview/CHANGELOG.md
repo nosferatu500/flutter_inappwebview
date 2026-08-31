@@ -387,8 +387,15 @@ implemented on the current platform" on iOS.
 
 ### Added — iOS
 
-Nine WebKit APIs read out of the iOS 26.5 SDK.
+Nine WebKit APIs read out of the iOS 26.5 SDK, plus one feature that was half-built upstream.
 
+- **`ProxyRule.relayHop1` / `.relayHop2`** (iOS 17.0+) — route a proxy rule through a chain of
+  secure relays (RFC 9298) instead of connecting to the proxy endpoint directly. `ProxyRelayHop`
+  was already a public, exported type and the Swift already read these two map keys, but no Dart
+  field ever produced them, so the feature was unreachable from the moment it was written. With a
+  hop set, the configuration is built from the chain rather than from `url` — `url` is still
+  required and must still parse, because the native parses it before it reads the hops. Two hops
+  mean the first relay cannot see the destination and the second cannot see the client
 - **`NavigationAction.modifierFlags` / `.buttonNumber`** (+ the `ModifierFlag` and `ButtonMask`
   enums) — which keys and mouse button triggered a navigation
 - **`NavigationAction.isContentRuleListRedirect`** — whether a content rule list redirected it

@@ -35,6 +35,28 @@ class ProxyRule {
   ///- iOS WKWebView
   String? password;
 
+  ///The first relay in the chain used to reach the proxy.
+  ///
+  ///Setting this switches the rule from a plain proxy endpoint to a **relay chain**: the
+  ///configuration is built from [relayHop1] (and [relayHop2] if given) instead of from [url].
+  ///
+  ///[url] is still **required and must still parse**, even though it is not used to reach the
+  ///proxy in this mode — an unparseable [url] makes the whole rule be dropped before the relay
+  ///hops are looked at.
+  ///
+  ///**Officially Supported Platforms/Implementations**:
+  ///- iOS WKWebView 17.0+ ([Official API - ProxyConfiguration.init(relayHops:)](https://developer.apple.com/documentation/network/proxyconfiguration/init(relayhops:)))
+  ProxyRelayHop? relayHop1;
+
+  ///The second relay in the chain, used only when [relayHop1] is also set.
+  ///
+  ///A chain of two hops means the first relay cannot see the destination and the second cannot see
+  ///the client. Setting this without [relayHop1] has no effect.
+  ///
+  ///**Officially Supported Platforms/Implementations**:
+  ///- iOS WKWebView 17.0+ ([Official API - ProxyConfiguration.init(relayHops:)](https://developer.apple.com/documentation/network/proxyconfiguration/init(relayhops:)))
+  ProxyRelayHop? relayHop2;
+
   ///Represents the scheme filter.
   ///
   ///**Officially Supported Platforms/Implementations**:
@@ -58,6 +80,8 @@ class ProxyRule {
     this.excludedDomains,
     this.matchDomains,
     this.password,
+    this.relayHop1,
+    this.relayHop2,
     this.schemeFilter,
     required this.url,
     this.username,
@@ -80,6 +104,14 @@ class ProxyRule {
           ? List<String>.from(map['matchDomains']!.cast<String>())
           : null,
       password: map['password'],
+      relayHop1: ProxyRelayHop.fromMap(
+        map['relayHop1']?.cast<String, dynamic>(),
+        enumMethod: enumMethod,
+      ),
+      relayHop2: ProxyRelayHop.fromMap(
+        map['relayHop2']?.cast<String, dynamic>(),
+        enumMethod: enumMethod,
+      ),
       schemeFilter: switch (enumMethod ?? EnumMethod.nativeValue) {
         EnumMethod.nativeValue => ProxySchemeFilter.fromNativeValue(
           map['schemeFilter'],
@@ -100,6 +132,8 @@ class ProxyRule {
       "excludedDomains": excludedDomains,
       "matchDomains": matchDomains,
       "password": password,
+      "relayHop1": relayHop1?.toMap(enumMethod: enumMethod),
+      "relayHop2": relayHop2?.toMap(enumMethod: enumMethod),
       "schemeFilter": switch (enumMethod ?? EnumMethod.nativeValue) {
         EnumMethod.nativeValue => schemeFilter?.toNativeValue(),
         EnumMethod.value => schemeFilter?.toValue(),
@@ -117,6 +151,6 @@ class ProxyRule {
 
   @override
   String toString() {
-    return 'ProxyRule{allowFailover: $allowFailover, excludedDomains: $excludedDomains, matchDomains: $matchDomains, password: $password, schemeFilter: $schemeFilter, url: $url, username: $username}';
+    return 'ProxyRule{allowFailover: $allowFailover, excludedDomains: $excludedDomains, matchDomains: $matchDomains, password: $password, relayHop1: $relayHop1, relayHop2: $relayHop2, schemeFilter: $schemeFilter, url: $url, username: $username}';
   }
 }

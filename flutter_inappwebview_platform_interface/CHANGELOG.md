@@ -98,6 +98,14 @@ rename; this entry is the API-owner's view.
 
 ### Added
 
+- **`ProxyRule.relayHop1` / `.relayHop2`** (iOS 17.0+), typed `ProxyRelayHop?`. This makes
+  `ProxyRelayHop` reachable for the first time: the type was exported and iOS-annotated, and
+  `ProxyManager.swift` has always read `map["relayHop1"]` / `map["relayHop2"]` and built
+  `ProxyConfiguration(relayHops:)` from them — but `ProxyRule_` had no field of that type, so those
+  keys were never sent and the Swift branch was unreachable. §77 nearly deleted `ProxyRelayHop` as
+  dead before finding the native half complete and waiting. Setting a hop switches the rule to a
+  relay chain (RFC 9298) instead of a direct proxy endpoint; `url` remains required and must still
+  parse, because the Swift parses it in a guard *before* it looks at the hops
 - `PlatformProfileStore` (+ `…CreationParams`) and `PlatformGeolocationPermissions`
   (+ `…CreationParams`), with `createPlatformProfileStore` / `…Static` and
   `createPlatformGeolocationPermissions` / `…Static` on `InAppWebViewPlatform`
