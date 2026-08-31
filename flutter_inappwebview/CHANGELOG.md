@@ -449,6 +449,22 @@ match where `findAll` promises every match highlighted. The plugin already uses 
 where a counting API exists — `UIFindInteraction` on iOS 16+, via
 `InAppWebViewSettings.isFindInteractionEnabled`.
 
+**iOS — 15 settings are applied only when the WebView is created, and now say so.** Changing any
+of them with `setSettings` on a running WebView has never had an effect, and the plugin no longer
+pretends otherwise: `WKWebView.configuration` returns a fresh copy on every access — measured, not
+inferred — so writing to it is discarded. The list is `mediaPlaybackRequiresUserGesture`,
+`allowsInlineMediaPlayback`, `suppressesIncrementalRendering`, `selectionGranularity`,
+`ignoresViewportScaleLimits`, `dataDetectorTypes`, `allowsAirPlayForMediaPlayback`,
+`allowsPictureInPictureMediaPlayback`, `applicationNameForUserAgent`,
+`allowUniversalAccessFromFileURLs`, `limitsNavigationsToAppBoundDomains`,
+`upgradeKnownHostsToHTTPS`, `incognito`, `cacheEnabled` and `sharedCookiesEnabled`. Each one's
+dartdoc says so, and two name the live alternative: use `userAgent` instead of
+`applicationNameForUserAgent`, and `preferredHTTPSNavigationPolicy` instead of
+`upgradeKnownHostsToHTTPS`. **To change one of these, recreate the WebView** — as the example app
+does, by keying the widget on its settings revision. Everything else keeps responding to
+`setSettings` as before, including all of `preferences`-backed settings such as `minimumFontSize`,
+`isTextInteractionEnabled` and `shouldPrintBackgrounds`.
+
 **iOS — `onReceivedClientCertRequest` returning `PROCEED` can silently send no certificate, and
 this is now documented.** If the PKCS#12 file cannot be loaded, iOS falls back to
 `performDefaultHandling`: the navigation continues **without** a client certificate and the server

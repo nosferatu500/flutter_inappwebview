@@ -230,6 +230,19 @@ rename; this entry is the API-owner's view.
   screen's own logical size. The Android note now explains the physical-pixel conversion (multiplied
   by the display density, rounded to the nearest `int` pixel) instead of saying only that `double`
   values become `int`
+- **15 `InAppWebViewSettings` properties now say they are creation-only on iOS.** Their
+  `IOSPlatform` notes state that changing them with `setSettings` on a running WebView has no
+  effect, because `WKWebView.configuration` hands out a fresh copy on every access. Measured on iOS
+  17.5 and 26.5 by setting each one and reading it back through `getSettings`, which re-reads the
+  real configuration: `mediaPlaybackRequiresUserGesture`, `allowsInlineMediaPlayback`,
+  `suppressesIncrementalRendering`, `selectionGranularity`, `ignoresViewportScaleLimits`,
+  `dataDetectorTypes`, `allowsAirPlayForMediaPlayback`, `allowsPictureInPictureMediaPlayback`,
+  `applicationNameForUserAgent`, `allowUniversalAccessFromFileURLs`,
+  `limitsNavigationsToAppBoundDomains`, `upgradeKnownHostsToHTTPS`, `incognito`, `cacheEnabled`,
+  `sharedCookiesEnabled`. Two carry the live alternative: `userAgent` for
+  `applicationNameForUserAgent`, and `preferredHTTPSNavigationPolicy` for `upgradeKnownHostsToHTTPS`.
+  The other iOS settings are unaffected: writes through `WKPreferences` and `WKWebpagePreferences`
+  reach the live WebView, and eight of them were measured doing so in the same run
 - `onLoadStop` now documents that it is **not** guaranteed after every navigation: a page that
   cancels its own load — single-page apps intercepting history changes, typically after `goBack` /
   `goForward` — ends in `onReceivedError` with `WebResourceErrorType.CANCELLED` and no `onLoadStop`

@@ -128,6 +128,24 @@ error.
 
 ### Changed
 
+- **15 dead `configuration` writes removed from `setSettings`, and the settings they belong to now
+  document that they are creation-only.** `WKWebView.configuration` returns a **fresh copy on every
+  access** — measured on iOS 17.5 and 26.5, where `configuration === configuration` is `false` — so
+  a `configuration.x = y` on a running WebView wrote to an object that was discarded immediately.
+  Its four object-valued properties (`preferences`, `defaultWebpagePreferences`,
+  `userContentController`, `websiteDataStore`) *are* shared by reference across those copies, which
+  is why writing *through* one of them has always worked and is untouched here.
+
+  Nothing changes at runtime — the removed lines never had an effect, and every one of these
+  settings is still applied at creation by `preWKWebViewConfiguration`. What changes is that
+  `setSettings` no longer looks as though it applies them: `mediaPlaybackRequiresUserGesture`,
+  `allowsInlineMediaPlayback`, `suppressesIncrementalRendering`, `selectionGranularity`,
+  `ignoresViewportScaleLimits`, `dataDetectorTypes`, `allowsAirPlayForMediaPlayback`,
+  `allowsPictureInPictureMediaPlayback`, `applicationNameForUserAgent`,
+  `allowUniversalAccessFromFileURLs`, `limitsNavigationsToAppBoundDomains`,
+  `upgradeKnownHostsToHTTPS`, and the `WKWebsiteDataStore` replacement behind `incognito`,
+  `cacheEnabled` and `sharedCookiesEnabled`. `sharedCookiesEnabled` keeps the half that does work:
+  it still copies `HTTPCookieStorage.shared` into the WebView's existing data store
 - **`InAppWebView.gestureRecognizer(_:shouldRecognizeSimultaneouslyWith:)` is now `nonisolated`.**
   Hardening, not a bug fix — no misbehaviour was observed. `UIGestureRecognizerDelegate` is
   `NS_SWIFT_UI_ACTOR`, so the witness inherited `@MainActor` and Swift 6 emits an executor assertion

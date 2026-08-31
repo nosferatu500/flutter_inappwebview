@@ -1032,6 +1032,27 @@ public class InAppWebView: WKWebView, UIScrollViewDelegate, WKUIDelegate,
         }
     }
     
+    /// **Creation-only settings cannot be applied here, and this method no longer pretends to.**
+    ///
+    /// `WKWebView.configuration` returns a **fresh copy on every access** -- measured, not inferred:
+    /// `configuration === configuration` is `false` on iOS 17.5 and 26.5. Its four object-valued
+    /// properties (`preferences`, `defaultWebpagePreferences`, `userContentController`,
+    /// `websiteDataStore`) are shared by reference across those copies, so writing *through* one of
+    /// them reaches the live WebView; assigning any other property, or replacing one of those four
+    /// objects, writes to a copy that is discarded immediately.
+    ///
+    /// So these 15 writes were removed rather than kept as no-ops (see `DEPRECATION_CLEANUP.md`
+    /// §95): `mediaPlaybackRequiresUserGesture`, `allowsInlineMediaPlayback`,
+    /// `suppressesIncrementalRendering`, `selectionGranularity`, `ignoresViewportScaleLimits`,
+    /// `dataDetectorTypes`, `allowsAirPlayForMediaPlayback`, `allowsPictureInPictureMediaPlayback`,
+    /// `applicationNameForUserAgent`, `allowUniversalAccessFromFileURLs`,
+    /// `limitsNavigationsToAppBoundDomains`, `upgradeKnownHostsToHTTPS`, and the three
+    /// `websiteDataStore` replacements behind `incognito`, `cacheEnabled` and
+    /// `sharedCookiesEnabled`. Each one's Dart property documents that it applies at creation only.
+    ///
+    /// Before adding a `configuration.x = y` here, check whether WebKit exposes a live object for
+    /// it: `preferredHTTPSNavigationPolicy` writes to the per-navigation `WKWebpagePreferences`,
+    /// which is why it is the one HTTPS-upgrade setting that does respond to `setSettings`.
     func setSettings(newSettings: InAppWebViewSettings, newSettingsMap: [String: Any]) {
         
         // MUST be the first! In this way, all the settings that uses evaluateJavaScript can be applied/blocked!
@@ -1081,17 +1102,7 @@ public class InAppWebView: WKWebView, UIScrollViewDelegate, WKUIDelegate,
             }
         }
         
-        if (newSettingsMap["incognito"] != nil && settings?.incognito != newSettings.incognito && newSettings.incognito) {
-            configuration.websiteDataStore = WKWebsiteDataStore.nonPersistent()
-        } else if (newSettingsMap["cacheEnabled"] != nil && settings?.cacheEnabled != newSettings.cacheEnabled && newSettings.cacheEnabled) {
-            configuration.websiteDataStore = WKWebsiteDataStore.default()
-        }
-
-        
         if (newSettingsMap["sharedCookiesEnabled"] != nil && settings?.sharedCookiesEnabled != newSettings.sharedCookiesEnabled && newSettings.sharedCookiesEnabled) {
-            if(!newSettings.incognito && !newSettings.cacheEnabled) {
-                configuration.websiteDataStore = WKWebsiteDataStore.nonPersistent()
-            }
             for cookie in HTTPCookieStorage.shared.cookies ?? [] {
                 configuration.websiteDataStore.httpCookieStore.setCookie(cookie, completionHandler: nil)
             }
@@ -1205,19 +1216,6 @@ public class InAppWebView: WKWebView, UIScrollViewDelegate, WKUIDelegate,
             }
         }
         
-        if newSettingsMap["mediaPlaybackRequiresUserGesture"] != nil && settings?.mediaPlaybackRequiresUserGesture != newSettings.mediaPlaybackRequiresUserGesture {
-            configuration.mediaTypesRequiringUserActionForPlayback = (newSettings.mediaPlaybackRequiresUserGesture) ? .all : []
-
-        }
-        
-        if newSettingsMap["allowsInlineMediaPlayback"] != nil && settings?.allowsInlineMediaPlayback != newSettings.allowsInlineMediaPlayback {
-            configuration.allowsInlineMediaPlayback = newSettings.allowsInlineMediaPlayback
-        }
-        
-        if newSettingsMap["suppressesIncrementalRendering"] != nil && settings?.suppressesIncrementalRendering != newSettings.suppressesIncrementalRendering {
-            configuration.suppressesIncrementalRendering = newSettings.suppressesIncrementalRendering
-        }
-        
         if newSettingsMap["allowsBackForwardNavigationGestures"] != nil && settings?.allowsBackForwardNavigationGestures != newSettings.allowsBackForwardNavigationGestures {
             allowsBackForwardNavigationGestures = newSettings.allowsBackForwardNavigationGestures
         }
@@ -1230,23 +1228,6 @@ public class InAppWebView: WKWebView, UIScrollViewDelegate, WKUIDelegate,
             configuration.preferences.minimumFontSize = CGFloat(newSettings.minimumFontSize)
         }
         
-        if newSettingsMap["selectionGranularity"] != nil && settings?.selectionGranularity != newSettings.selectionGranularity {
-            configuration.selectionGranularity = WKSelectionGranularity.init(rawValue: newSettings.selectionGranularity)!
-        }
-        
-        if newSettingsMap["ignoresViewportScaleLimits"] != nil && settings?.ignoresViewportScaleLimits != newSettings.ignoresViewportScaleLimits {
-            configuration.ignoresViewportScaleLimits = newSettings.ignoresViewportScaleLimits
-        }
-
-        if newSettingsMap["dataDetectorTypes"] != nil && settings?.dataDetectorTypes != newSettings.dataDetectorTypes {
-            var dataDetectorTypes = WKDataDetectorTypes.init(rawValue: 0)
-            for type in newSettings.dataDetectorTypes {
-                let dataDetectorType = Util.getDataDetectorType(type: type)
-                dataDetectorTypes = WKDataDetectorTypes(rawValue: dataDetectorTypes.rawValue | dataDetectorType.rawValue)
-            }
-            configuration.dataDetectorTypes = dataDetectorTypes
-        }
-
         
         if newSettingsMap["isFraudulentWebsiteWarningEnabled"] != nil && settings?.isFraudulentWebsiteWarningEnabled != newSettings.isFraudulentWebsiteWarningEnabled {
             configuration.preferences.isFraudulentWebsiteWarningEnabled = newSettings.isFraudulentWebsiteWarningEnabled
@@ -1302,23 +1283,10 @@ public class InAppWebView: WKWebView, UIScrollViewDelegate, WKUIDelegate,
         if newSettingsMap["allowsLinkPreview"] != nil && settings?.allowsLinkPreview != newSettings.allowsLinkPreview {
             allowsLinkPreview = newSettings.allowsLinkPreview
         }
-        if newSettingsMap["allowsAirPlayForMediaPlayback"] != nil && settings?.allowsAirPlayForMediaPlayback != newSettings.allowsAirPlayForMediaPlayback {
-            configuration.allowsAirPlayForMediaPlayback = newSettings.allowsAirPlayForMediaPlayback
-        }
-        if newSettingsMap["allowsPictureInPictureMediaPlayback"] != nil && settings?.allowsPictureInPictureMediaPlayback != newSettings.allowsPictureInPictureMediaPlayback {
-            configuration.allowsPictureInPictureMediaPlayback = newSettings.allowsPictureInPictureMediaPlayback
-        }
-        if newSettingsMap["applicationNameForUserAgent"] != nil && settings?.applicationNameForUserAgent != newSettings.applicationNameForUserAgent && newSettings.applicationNameForUserAgent != "" {
-            configuration.applicationNameForUserAgent = newSettings.applicationNameForUserAgent
-        }
         if newSettingsMap["userAgent"] != nil && settings?.userAgent != newSettings.userAgent && newSettings.userAgent != "" {
             customUserAgent = newSettings.userAgent
         }
 
-        
-        if newSettingsMap["allowUniversalAccessFromFileURLs"] != nil && settings?.allowUniversalAccessFromFileURLs != newSettings.allowUniversalAccessFromFileURLs {
-            configuration.setValue(newSettings.allowUniversalAccessFromFileURLs, forKey: "allowUniversalAccessFromFileURLs")
-        }
         
         if newSettingsMap["allowFileAccessFromFileURLs"] != nil && settings?.allowFileAccessFromFileURLs != newSettings.allowFileAccessFromFileURLs {
             configuration.preferences.setValue(newSettings.allowFileAccessFromFileURLs, forKey: "allowFileAccessFromFileURLs")
@@ -1334,10 +1302,6 @@ public class InAppWebView: WKWebView, UIScrollViewDelegate, WKUIDelegate,
 
         if newSettingsMap["pageZoom"] != nil && settings?.pageZoom != newSettings.pageZoom {
             pageZoom = CGFloat(newSettings.pageZoom)
-        }
-
-        if newSettingsMap["limitsNavigationsToAppBoundDomains"] != nil && settings?.limitsNavigationsToAppBoundDomains != newSettings.limitsNavigationsToAppBoundDomains {
-            configuration.limitsNavigationsToAppBoundDomains = newSettings.limitsNavigationsToAppBoundDomains
         }
 
         if newSettingsMap["javaScriptEnabled"] != nil && settings?.javaScriptEnabled != newSettings.javaScriptEnabled {
@@ -1367,9 +1331,6 @@ public class InAppWebView: WKWebView, UIScrollViewDelegate, WKUIDelegate,
             }
         }
         
-        if newSettingsMap["upgradeKnownHostsToHTTPS"] != nil && settings?.upgradeKnownHostsToHTTPS != newSettings.upgradeKnownHostsToHTTPS {
-            configuration.upgradeKnownHostsToHTTPS = newSettings.upgradeKnownHostsToHTTPS
-        }
         if newSettingsMap["isTextInteractionEnabled"] != nil && settings?.isTextInteractionEnabled != newSettings.isTextInteractionEnabled {
             configuration.preferences.isTextInteractionEnabled = newSettings.isTextInteractionEnabled
         }

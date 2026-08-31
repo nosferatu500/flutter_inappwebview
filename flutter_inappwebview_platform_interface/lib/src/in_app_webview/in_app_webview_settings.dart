@@ -101,6 +101,8 @@ class InAppWebViewSettings_ {
         apiName: "WKWebViewConfiguration.applicationNameForUserAgent",
         apiUrl:
             "https://developer.apple.com/documentation/webkit/wkwebviewconfiguration/1395665-applicationnameforuseragent",
+        note:
+            "Applied when the WebView is created. Changing it with `setSettings` on a running WebView has **no** effect: `WKWebView.configuration` returns a fresh copy on every access, so the write is discarded. Recreate the WebView to change it. Use `userAgent` instead, which is applied to the live WebView and does respond to `setSettings`.",
       ),
     ],
   )
@@ -153,6 +155,8 @@ class InAppWebViewSettings_ {
             "WKWebViewConfiguration.mediaTypesRequiringUserActionForPlayback",
         apiUrl:
             "https://developer.apple.com/documentation/webkit/wkwebviewconfiguration/1851524-mediatypesrequiringuseractionfor",
+        note:
+            "Applied when the WebView is created. Changing it with `setSettings` on a running WebView has **no** effect: `WKWebView.configuration` returns a fresh copy on every access, so the write is discarded. Recreate the WebView to change it.",
       ),
     ],
   )
@@ -309,13 +313,24 @@ class InAppWebViewSettings_ {
             """setting this to `true`, it will clear all the cookies of all WebView instances, 
 because there isn't any way to make the website data store non-persistent for the specific WebView instance such as on iOS.""",
       ),
-      IOSPlatform(),
+      IOSPlatform(
+        note:
+            "Applied when the WebView is created. Changing it with `setSettings` on a running WebView has **no** effect: `WKWebView.configuration` returns a fresh copy on every access, so the write is discarded. Recreate the WebView to change it.",
+      ),
     ],
   )
   bool? incognito;
 
   ///Sets whether WebView should use browser caching. The default value is `true`.
-  @SupportedPlatforms(platforms: [AndroidPlatform(), IOSPlatform()])
+  @SupportedPlatforms(
+    platforms: [
+      AndroidPlatform(),
+      IOSPlatform(
+        note:
+            "Applied when the WebView is created. Changing it with `setSettings` on a running WebView has **no** effect: `WKWebView.configuration` returns a fresh copy on every access, so the write is discarded. Recreate the WebView to change it.",
+      ),
+    ],
+  )
   bool? cacheEnabled;
 
   ///Set to `true` to make the background of the WebView transparent. If your app has a dark theme, this can prevent a white flash on initialization. The default value is `false`.
@@ -384,7 +399,10 @@ because there isn't any way to make the website data store non-persistent for th
         apiUrl:
             "https://developer.android.com/reference/android/webkit/WebSettings?hl=en#setAllowUniversalAccessFromFileURLs(boolean)",
       ),
-      IOSPlatform(),
+      IOSPlatform(
+        note:
+            "Applied when the WebView is created. Changing it with `setSettings` on a running WebView has **no** effect: `WKWebView.configuration` returns a fresh copy on every access, so the write is discarded. Recreate the WebView to change it.",
+      ),
     ],
   )
   bool? allowUniversalAccessFromFileURLs;
@@ -1341,6 +1359,8 @@ as it can cause framerate drops on animations in Android 9 and lower (see [Hybri
         apiName: "WKWebViewConfiguration.suppressesIncrementalRendering",
         apiUrl:
             "https://developer.apple.com/documentation/webkit/wkwebviewconfiguration/1395663-suppressesincrementalrendering",
+        note:
+            "Applied when the WebView is created. Changing it with `setSettings` on a running WebView has **no** effect: `WKWebView.configuration` returns a fresh copy on every access, so the write is discarded. Recreate the WebView to change it.",
       ),
     ],
   )
@@ -1353,6 +1373,8 @@ as it can cause framerate drops on animations in Android 9 and lower (see [Hybri
         apiName: "WKWebViewConfiguration.allowsAirPlayForMediaPlayback",
         apiUrl:
             "https://developer.apple.com/documentation/webkit/wkwebviewconfiguration/1395673-allowsairplayformediaplayback",
+        note:
+            "Applied when the WebView is created. Changing it with `setSettings` on a running WebView has **no** effect: `WKWebView.configuration` returns a fresh copy on every access, so the write is discarded. Recreate the WebView to change it.",
       ),
     ],
   )
@@ -1401,6 +1423,8 @@ as it can cause framerate drops on animations in Android 9 and lower (see [Hybri
         apiName: "WKWebViewConfiguration.ignoresViewportScaleLimits",
         apiUrl:
             "https://developer.apple.com/documentation/webkit/wkwebviewconfiguration/2274633-ignoresviewportscalelimits",
+        note:
+            "Applied when the WebView is created. Changing it with `setSettings` on a running WebView has **no** effect: `WKWebView.configuration` returns a fresh copy on every access, so the write is discarded. Recreate the WebView to change it.",
       ),
     ],
   )
@@ -1414,6 +1438,8 @@ as it can cause framerate drops on animations in Android 9 and lower (see [Hybri
         apiName: "WKWebViewConfiguration.allowsInlineMediaPlayback",
         apiUrl:
             "https://developer.apple.com/documentation/webkit/wkwebviewconfiguration/1614793-allowsinlinemediaplayback",
+        note:
+            "Applied when the WebView is created. Changing it with `setSettings` on a running WebView has **no** effect: `WKWebView.configuration` returns a fresh copy on every access, so the write is discarded. Recreate the WebView to change it.",
       ),
     ],
   )
@@ -1426,6 +1452,8 @@ as it can cause framerate drops on animations in Android 9 and lower (see [Hybri
         apiName: "WKWebViewConfiguration.allowsPictureInPictureMediaPlayback",
         apiUrl:
             "https://developer.apple.com/documentation/webkit/wkwebviewconfiguration/1614792-allowspictureinpicturemediaplayb",
+        note:
+            "Applied when the WebView is created. Changing it with `setSettings` on a running WebView has **no** effect: `WKWebView.configuration` returns a fresh copy on every access, so the write is discarded. Recreate the WebView to change it.",
       ),
     ],
   )
@@ -1454,6 +1482,8 @@ as it can cause framerate drops on animations in Android 9 and lower (see [Hybri
         apiName: "WKWebViewConfiguration.selectionGranularity",
         apiUrl:
             "https://developer.apple.com/documentation/webkit/wkwebviewconfiguration/1614756-selectiongranularity",
+        note:
+            "Applied when the WebView is created. Changing it with `setSettings` on a running WebView has **no** effect: `WKWebView.configuration` returns a fresh copy on every access, so the write is discarded. Recreate the WebView to change it.",
       ),
     ],
   )
@@ -1469,6 +1499,8 @@ as it can cause framerate drops on animations in Android 9 and lower (see [Hybri
         apiName: "WKWebViewConfiguration.dataDetectorTypes",
         apiUrl:
             "https://developer.apple.com/documentation/webkit/wkwebviewconfiguration/1641937-datadetectortypes",
+        note:
+            "Applied when the WebView is created. Changing it with `setSettings` on a running WebView has **no** effect: `WKWebView.configuration` returns a fresh copy on every access, so the write is discarded. Recreate the WebView to change it.",
       ),
     ],
   )
@@ -1476,7 +1508,15 @@ as it can cause framerate drops on animations in Android 9 and lower (see [Hybri
 
   ///Set `true` if shared cookies from `HTTPCookieStorage.shared` should used for every load request in the WebView.
   ///The default value is `false`.
-  @SupportedPlatforms(platforms: [IOSPlatform(available: "11.0")])
+  @SupportedPlatforms(
+    platforms: [
+      IOSPlatform(
+        available: "11.0",
+        note:
+            "Applied when the WebView is created. On a running WebView `setSettings` still copies the `HTTPCookieStorage.shared` cookies into the WebView's data store, but it cannot switch the WebView to a non-persistent store: that half of the work is written to a discarded copy of `WKWebView.configuration`. Recreate the WebView to change it.",
+      ),
+    ],
+  )
   bool? sharedCookiesEnabled;
 
   ///Configures whether the scroll indicator insets are automatically adjusted by the system.
@@ -1680,6 +1720,8 @@ as it can cause framerate drops on animations in Android 9 and lower (see [Hybri
         apiName: "WKWebViewConfiguration.limitsNavigationsToAppBoundDomains",
         apiUrl:
             "https://developer.apple.com/documentation/webkit/wkwebviewconfiguration/3585117-limitsnavigationstoappbounddomai",
+        note:
+            "Applied when the WebView is created. Changing it with `setSettings` on a running WebView has **no** effect: `WKWebView.configuration` returns a fresh copy on every access, so the write is discarded. Recreate the WebView to change it.",
       ),
     ],
   )
@@ -1835,6 +1877,8 @@ as it can cause framerate drops on animations in Android 9 and lower (see [Hybri
         apiName: "WKWebViewConfiguration.upgradeKnownHostsToHTTPS",
         apiUrl:
             "https://developer.apple.com/documentation/webkit/wkwebviewconfiguration/3752243-upgradeknownhoststohttps",
+        note:
+            "Applied when the WebView is created. Changing it with `setSettings` on a running WebView has **no** effect: `WKWebView.configuration` returns a fresh copy on every access, so the write is discarded. Recreate the WebView to change it. Use `preferredHTTPSNavigationPolicy` instead, which is applied per navigation and does respond to `setSettings`.",
       ),
     ],
   )
