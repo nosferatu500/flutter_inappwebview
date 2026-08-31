@@ -164,6 +164,16 @@ error.
 
 ### Internal
 
+- **`WKContentWorld.windowId` is stored as an associated object instead of in a static dictionary
+  keyed by the world's pointer address.** No behaviour change — the values, and the JS `windowId`
+  variable they drive, are identical. The old `[String: Int64?]` static grew by one entry per
+  distinct content-world name for the life of the process with no removal anywhere in the package,
+  and its correctness rested on an undocumented WebKit behaviour. Measured on iOS 17.5 and 26.5:
+  `WKContentWorld.world(name:)` interns by name and the world stays alive after the plugin drops
+  every reference to it, so the keys were stable — which means the recorded fear that "the allocator
+  eventually hands that address to a different `WKContentWorld`, which silently inherits the dead
+  one's `windowId`" **could not happen and is retracted**. An associated object removes both the
+  growth and the dependency on that behaviour
 - 49 Dart-side unit tests, covering the channel argument maps and the settings surface — the package
   previously shipped a single empty placeholder test file
 - The integration suite now runs on iOS: **106 pass / 6 fail / 1 skip** on iOS 17.5 and
