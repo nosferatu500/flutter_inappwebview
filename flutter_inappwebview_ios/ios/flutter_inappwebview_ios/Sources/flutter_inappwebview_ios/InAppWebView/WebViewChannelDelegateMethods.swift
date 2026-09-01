@@ -48,6 +48,7 @@ public enum WebViewChannelDelegateMethods: String {
     case getOriginalUrl = "getOriginalUrl"
     case getZoomScale = "getZoomScale"
     case hasOnlySecureContent = "hasOnlySecureContent"
+    case isBlockedByScreenTime = "isBlockedByScreenTime"
     case getSelectedText = "getSelectedText"
     case getHitTestResult = "getHitTestResult"
     case clearFocus = "clearFocus"

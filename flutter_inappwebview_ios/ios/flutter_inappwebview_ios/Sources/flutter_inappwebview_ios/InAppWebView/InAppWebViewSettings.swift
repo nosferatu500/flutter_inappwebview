@@ -192,7 +192,11 @@ public class InAppWebViewSettings: ISettings<InAppWebView> {
     var pluginScriptsForMainFrameOnly = false
     var isUserInteractionEnabled = true
     var alpha: Double? = nil
-    
+    // Plain non-optional Bool rather than the `_x: NSNumber?` shim: WebKit documents the default as
+    // YES and the Dart constructor defaults to `true`, so the two agree and there is no "unset"
+    // state to represent. Same shape as `upgradeKnownHostsToHTTPS`.
+    var showsSystemScreenTimeBlockingView = true
+
     override init(){
         super.init()
     }
@@ -287,6 +291,9 @@ public class InAppWebViewSettings: ISettings<InAppWebView> {
             if #available(iOS 16.4, *) {
                 realSettings["isInspectable"] = webView.isInspectable
                 realSettings["shouldPrintBackgrounds"] = configuration.preferences.shouldPrintBackgrounds
+            }
+            if #available(iOS 26.0, *) {
+                realSettings["showsSystemScreenTimeBlockingView"] = configuration.showsSystemScreenTimeBlockingView
             }
         }
         return realSettings

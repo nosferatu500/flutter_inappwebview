@@ -4,7 +4,7 @@
 relative to 6.2.0-beta.3: 131 commits that dropped four platforms, rewrote the Android module in
 Kotlin under a new namespace, moved the iOS module to Swift 6 language mode, removed **every**
 deprecated API upstream carried (840 `@Deprecated` annotations in these packages — 1111 counting the
-four platform packages that are also gone; **0 remain**), added 29 platform APIs, and fixed a list of
+four platform packages that are also gone; **0 remain**), added 31 platform APIs, and fixed a list of
 bugs that includes four on iOS which were silently swallowing events.
 
 ### Requirements — all breaking
@@ -398,7 +398,7 @@ implemented on the current platform" on iOS.
 
 ### Added — iOS
 
-Nine WebKit APIs read out of the iOS 26.5 SDK, plus one feature that was half-built upstream.
+Eleven WebKit APIs read out of the iOS 26.5 SDK, plus one feature that was half-built upstream.
 
 - **`ProxyRule.relayHop1` / `.relayHop2`** (iOS 17.0+) — route a proxy rule through a chain of
   secure relays (RFC 9298) instead of connecting to the proxy endpoint directly. `ProxyRelayHop`
@@ -418,7 +418,20 @@ Nine WebKit APIs read out of the iOS 26.5 SDK, plus one feature that was half-bu
 - **`InAppWebViewSettings.securityRestrictionMode`** (+ `SecurityRestrictionMode`)
 - **`InAppWebViewSettings.lockdownModeEnabled`**
 - **`InAppWebViewSettings.supportsAdaptiveImageGlyph`**
+- **`InAppWebViewController.isBlockedByScreenTime()`** (iOS 26.0+) — whether Screen Time
+  restrictions are blocking this WebView's current content. Returns `bool?`, and the `null` is load
+  bearing: it means *this OS cannot answer*, which is not the same as `false`. There is **no change
+  notification** — WebKit does not document the property as KVO-compliant and no event is exposed,
+  so read it where it matters (after `onLoadStop`, say). It is per-*content*, not per-WebView
+- **`InAppWebViewSettings.showsSystemScreenTimeBlockingView`** (iOS 26.0+) — whether WebKit draws
+  its own overlay over blocked content. Defaults to `true`, matching WebKit. Setting it `false`
+  does **not** unblock anything; it only stops WebKit explaining why, so pair it with
+  `isBlockedByScreenTime()` or the user sees a blank WebView. Creation-time only, like the other
+  configuration-backed settings
 - **`DownloadStartRequest.isUserInitiated` / `.originatingFrame`** — from `WKDownload`
+
+`WebsiteDataType.WKWebsiteDataTypeScreenTime` is the third member of that family and has shipped
+since the `WebsiteDataType.ALL` fix below. It stays **deliberately out of `ALL`** — see that entry.
 
 ### Fixed
 

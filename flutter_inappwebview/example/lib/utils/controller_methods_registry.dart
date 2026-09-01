@@ -1251,6 +1251,15 @@ class ControllerMethodsRegistry {
             return await controller.hasOnlySecureContent();
           },
         ),
+        ControllerMethodEntry(
+          description:
+              'Checks if Screen Time is blocking the content — null below iOS 26',
+          methodEnum:
+              PlatformInAppWebViewControllerMethod.isBlockedByScreenTime,
+          execute: (controller, params) async {
+            return await controller.isBlockedByScreenTime();
+          },
+        ),
       ],
     );
   }

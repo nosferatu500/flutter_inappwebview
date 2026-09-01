@@ -755,6 +755,13 @@ public class InAppWebView: WKWebView, UIScrollViewDelegate, WKUIDelegate,
                 // Unconditional: the documented default is `NO`, which is this field's default too.
                 configuration.supportsAdaptiveImageGlyph = settings.supportsAdaptiveImageGlyph
             }
+
+            // Creation-time only for the same reason as the block above. Unconditional: WebKit
+            // documents the default as `YES` and this field defaults to `true`, so an app that never
+            // mentions the setting gets exactly WebKit's behaviour.
+            if #available(iOS 26.0, *) {
+                configuration.showsSystemScreenTimeBlockingView = settings.showsSystemScreenTimeBlockingView
+            }
         }
 
         return configuration

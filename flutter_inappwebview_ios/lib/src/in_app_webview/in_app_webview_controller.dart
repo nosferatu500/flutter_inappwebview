@@ -2508,6 +2508,15 @@ class IOSInAppWebViewController extends PlatformInAppWebViewController
   }
 
   @override
+  Future<bool?> isBlockedByScreenTime() async {
+    Map<String, dynamic> args = <String, dynamic>{};
+    // No `?? false` fallback here, unlike `hasOnlySecureContent` above: the Swift side answers
+    // `nil` on iOS < 26.0 on purpose, and collapsing that to `false` would report "not blocked"
+    // for an OS that cannot tell.
+    return await channel?.invokeMethod<bool>('isBlockedByScreenTime', args);
+  }
+
+  @override
   Future<void> pauseAllMediaPlayback() async {
     Map<String, dynamic> args = <String, dynamic>{};
     return await channel?.invokeMethod('pauseAllMediaPlayback', args);

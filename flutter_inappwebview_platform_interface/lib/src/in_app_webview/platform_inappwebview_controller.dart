@@ -2560,6 +2560,44 @@ abstract class PlatformInAppWebViewController extends PlatformInterface
     );
   }
 
+  ///{@template flutter_inappwebview_platform_interface.PlatformInAppWebViewController.isBlockedByScreenTime}
+  ///Returns whether Screen Time restrictions are currently blocking the content of this WebView.
+  ///
+  ///Returns `null` when the platform cannot answer — on any platform other than iOS, and on iOS
+  ///versions below 26.0, where the underlying property does not exist. That is deliberately
+  ///distinct from `false`, which means *the platform was asked and the content is not blocked*.
+  ///
+  ///**NOTE for iOS**: there is **no change notification** for this value. WebKit does not document
+  ///`WKWebView.isBlockedByScreenTime` as KVO-compliant and this plugin exposes no event for it, so
+  ///the value has to be read when it matters — after
+  ///[PlatformWebViewCreationParams.onLoadStop], for example. It is also per-*content*, not
+  ///per-WebView: the same WebView answers `true` for a blocked page and `false` after navigating
+  ///to an allowed one.
+  ///
+  ///**NOTE for iOS**: this reports blocking, it does not cause it. Whether WebKit also draws its
+  ///own explanation over the WebView is controlled by
+  ///[InAppWebViewSettings.showsSystemScreenTimeBlockingView], which is a creation-time setting.
+  ///{@endtemplate}
+  ///
+  ///{@macro flutter_inappwebview_platform_interface.PlatformInAppWebViewController.isBlockedByScreenTime.supported_platforms}
+  @SupportedPlatforms(
+    platforms: [
+      IOSPlatform(
+        apiName: 'WKWebView.isBlockedByScreenTime',
+        apiUrl:
+            'https://developer.apple.com/documentation/webkit/wkwebview/isblockedbyscreentime',
+        available: '26.0',
+        note:
+            'Returns `null` below iOS 26.0. No change notification exists — read it when it matters.',
+      ),
+    ],
+  )
+  Future<bool?> isBlockedByScreenTime() {
+    throw UnimplementedError(
+      '${PlatformInAppWebViewControllerMethod.isBlockedByScreenTime.name} is not implemented on the current platform',
+    );
+  }
+
   ///{@template flutter_inappwebview_platform_interface.PlatformInAppWebViewController.pauseAllMediaPlayback}
   ///Pauses playback of all media in the web view.
   ///{@endtemplate}

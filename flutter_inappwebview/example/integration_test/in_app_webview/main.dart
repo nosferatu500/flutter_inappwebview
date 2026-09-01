@@ -89,6 +89,7 @@ part 'request_image_ref.dart';
 part 'resize_webview.dart';
 part 'web_archive.dart';
 part 'set_custom_useragent.dart';
+part 'screen_time.dart';
 part 'set_get_settings.dart';
 part 'set_web_contents_debugging_enabled.dart';
 part 'should_intercept_request.dart';
@@ -203,6 +204,7 @@ void main() {
     handlesURLScheme();
     webViewAssetLoader();
     onContentSizeChanged();
+    screenTime();
     keepAlive();
 
     // `printCurrentPage` MUST BE LAST, and must stay last.

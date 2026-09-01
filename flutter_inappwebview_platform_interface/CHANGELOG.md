@@ -119,15 +119,28 @@ rename; this entry is the API-owner's view.
   (+ `…CreationParams`), with `createPlatformProfileStore` / `…Static` and
   `createPlatformGeolocationPermissions` / `…Static` on `InAppWebViewPlatform`
 - `PlatformInAppWebViewController`: `setAudioMuted`, `isAudioMuted`, `setDefaultTrafficStatsTag`,
-  `prerenderUrl`, `postVisualStateCallback`, `documentHasImages`, `flingScroll`
+  `prerenderUrl`, `postVisualStateCallback`, `documentHasImages`, `flingScroll`,
+  `isBlockedByScreenTime`
+- **`PlatformInAppWebViewController.isBlockedByScreenTime`** returns `Future<bool?>`, and the
+  nullability is part of the contract rather than defensive: `null` means *the platform cannot
+  answer* — every platform but iOS, and iOS below 26.0, where
+  `WKWebView.isBlockedByScreenTime` does not exist. `false` means *asked, and not blocked*. There is
+  no change event for it: WebKit does not document the property as KVO-compliant, so it is a getter
+  a caller polls, and it describes the current *content* rather than the WebView
 - `PlatformCookieManager`: `setAcceptCookie`, `isAcceptCookieEnabled`, `hasCookies`,
   `isFileSchemeCookiesAllowed`
 - `PlatformWebStorageManager`: `deleteBrowsingData`, `deleteBrowsingDataForSite`
-- `InAppWebViewSettings` (13): `attributionRegistrationBehavior`, `backForwardCacheEnabled`,
+- `InAppWebViewSettings` (14): `attributionRegistrationBehavior`, `backForwardCacheEnabled`,
   `downloadFaviconsEnabled`, `lockdownModeEnabled`, `paymentRequestEnabled`,
   `preferredHTTPSNavigationPolicy`, `profileName`, `securityRestrictionMode`,
-  `supportsAdaptiveImageGlyph`, `userAgentMetadata`, `webAuthenticationSupport`,
-  `webViewMediaIntegrityApiStatus`, `writingToolsBehavior`
+  `showsSystemScreenTimeBlockingView`, `supportsAdaptiveImageGlyph`, `userAgentMetadata`,
+  `webAuthenticationSupport`, `webViewMediaIntegrityApiStatus`, `writingToolsBehavior`
+- **`InAppWebViewSettings.showsSystemScreenTimeBlockingView`** (iOS 26.0+) defaults to `true`, not
+  `null`, unlike most of the settings above it: WebKit documents its own default as `YES`, so the
+  constructor mirrors that and the value always reaches the wire. It is a `WKWebViewConfiguration`
+  property and therefore **creation-only** — `setSettings` cannot change it. Turning it off hides
+  WebKit's blocking overlay without unblocking the content, so it belongs with a
+  `PlatformInAppWebViewController.isBlockedByScreenTime` check
 - `NavigationAction`: `modifierFlags`, `buttonNumber`, `isContentRuleListRedirect` ·
   `DownloadStartRequest`: `isUserInitiated`, `originatingFrame`
 - `WebViewFeature` (13): `ATTRIBUTION_REGISTRATION_BEHAVIOR`, `BACK_FORWARD_CACHE`,

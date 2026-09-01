@@ -305,6 +305,17 @@ Map<String, List<SettingDefinition>> getSettingDefinitions() {
         enumValues: _safeEnumValues(() => UpgradeToHTTPSPolicy.values),
         property: InAppWebViewSettingsProperty.preferredHTTPSNavigationPolicy,
       ),
+      SettingDefinition(
+        name: 'System Screen Time Blocking View',
+        description:
+            'Let WebKit draw its own overlay when Screen Time blocks the content '
+            '(iOS 26+). Turn it off to present your own UI — creation-time only, '
+            'and it does not unblock anything',
+        type: SettingType.boolean,
+        defaultValue: true,
+        property:
+            InAppWebViewSettingsProperty.showsSystemScreenTimeBlockingView,
+      ),
     ],
     'Cache': [
       SettingDefinition(

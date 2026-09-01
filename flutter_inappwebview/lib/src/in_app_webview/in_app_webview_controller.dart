@@ -606,6 +606,11 @@ class InAppWebViewController {
   ///{@macro flutter_inappwebview_platform_interface.PlatformInAppWebViewController.hasOnlySecureContent.supported_platforms}
   Future<bool> hasOnlySecureContent() => platform.hasOnlySecureContent();
 
+  ///{@macro flutter_inappwebview_platform_interface.PlatformInAppWebViewController.isBlockedByScreenTime}
+  ///
+  ///{@macro flutter_inappwebview_platform_interface.PlatformInAppWebViewController.isBlockedByScreenTime.supported_platforms}
+  Future<bool?> isBlockedByScreenTime() => platform.isBlockedByScreenTime();
+
   ///{@macro flutter_inappwebview_platform_interface.PlatformInAppWebViewController.pauseAllMediaPlayback}
   ///
   ///{@macro flutter_inappwebview_platform_interface.PlatformInAppWebViewController.pauseAllMediaPlayback.supported_platforms}

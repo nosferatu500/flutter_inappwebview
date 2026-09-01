@@ -1002,6 +1002,18 @@ enum PlatformInAppWebViewControllerMethod {
   ///{@endtemplate}
   isAudioMuted,
 
+  ///Can be used to check if the [PlatformInAppWebViewController.isBlockedByScreenTime] method is supported at runtime.
+  ///
+  ///{@template flutter_inappwebview_platform_interface.PlatformInAppWebViewController.isBlockedByScreenTime.supported_platforms}
+  ///
+  ///**Officially Supported Platforms/Implementations**:
+  ///- iOS WKWebView 26.0+ ([Official API - WKWebView.isBlockedByScreenTime](https://developer.apple.com/documentation/webkit/wkwebview/isblockedbyscreentime)):
+  ///    - Returns `null` below iOS 26.0. No change notification exists — read it when it matters.
+  ///
+  ///Use the [PlatformInAppWebViewController.isMethodSupported] method to check if this method is supported at runtime.
+  ///{@endtemplate}
+  isBlockedByScreenTime,
+
   ///Can be used to check if the [PlatformInAppWebViewController.isInFullscreen] method is supported at runtime.
   ///
   ///{@template flutter_inappwebview_platform_interface.PlatformInAppWebViewController.isInFullscreen.supported_platforms}
@@ -2157,6 +2169,9 @@ extension _PlatformInAppWebViewControllerMethodSupported
             [
               TargetPlatform.android,
             ].contains(platform ?? defaultTargetPlatform);
+      case PlatformInAppWebViewControllerMethod.isBlockedByScreenTime:
+        return ((kIsWeb && platform != null) || !kIsWeb) &&
+            [TargetPlatform.iOS].contains(platform ?? defaultTargetPlatform);
       case PlatformInAppWebViewControllerMethod.isInFullscreen:
         return ((kIsWeb && platform != null) || !kIsWeb) &&
             [

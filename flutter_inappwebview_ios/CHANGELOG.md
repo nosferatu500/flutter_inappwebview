@@ -26,7 +26,7 @@ carries the full user-facing list; this entry is what changed in this package.
   was missing was on the Dart side — `ProxyRule_` had no field of that type, so the keys were never
   sent. A wire test in this package now pins the map shape against what the Swift reads
 
-Nine WebKit APIs read out of the iOS 26.5 SDK:
+Eleven WebKit APIs read out of the iOS 26.5 SDK:
 
 - **`NavigationAction.modifierFlags` / `.buttonNumber`** (+ `ModifierFlag`, `ButtonMask`) — which
   keys and mouse button triggered a navigation
@@ -40,6 +40,15 @@ Nine WebKit APIs read out of the iOS 26.5 SDK:
 - **`InAppWebViewSettings.securityRestrictionMode`** (+ `SecurityRestrictionMode`)
 - **`InAppWebViewSettings.lockdownModeEnabled`**
 - **`InAppWebViewSettings.supportsAdaptiveImageGlyph`**
+- **`isBlockedByScreenTime` on the controller** (26.0+), from `WKWebView.isBlockedByScreenTime`.
+  The Swift answers `nil` below iOS 26.0 rather than `false` — the `hasOnlySecureContent` handler
+  immediately above it collapses its optional to `false`, and doing the same here would report
+  "not blocked" for an OS that has no such property
+- **`InAppWebViewSettings.showsSystemScreenTimeBlockingView`** (26.0+), from
+  `WKWebViewConfiguration.showsSystemScreenTimeBlockingView`. Applied in
+  `preWKWebViewConfiguration` only, and read back in `getRealSettings` under
+  `#available(iOS 26.0, *)` — so below that floor `getSettings()` reports whatever Dart last sent,
+  the same boundary the 18.0 configuration settings already have
 - **`DownloadStartRequest.isUserInitiated` / `.originatingFrame`**, from `WKDownload`
 
 ### Fixed

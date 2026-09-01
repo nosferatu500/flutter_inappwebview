@@ -51,6 +51,7 @@ void main() {
           InAppWebViewSettingsProperty.preferredHTTPSNavigationPolicy,
           InAppWebViewSettingsProperty.supportsAdaptiveImageGlyph,
           InAppWebViewSettingsProperty.writingToolsBehavior,
+          InAppWebViewSettingsProperty.showsSystemScreenTimeBlockingView,
         ]),
       );
     });
@@ -68,6 +69,7 @@ void main() {
           PlatformInAppWebViewControllerMethod.postVisualStateCallback,
           PlatformInAppWebViewControllerMethod.documentHasImages,
           PlatformInAppWebViewControllerMethod.flingScroll,
+          PlatformInAppWebViewControllerMethod.isBlockedByScreenTime,
         ]),
       );
     });

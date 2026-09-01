@@ -275,6 +275,16 @@ public class WebViewChannelDelegate: ChannelDelegate {
         case .hasOnlySecureContent:
             result(webView?.hasOnlySecureContent ?? false)
             break
+        case .isBlockedByScreenTime:
+            // `nil` rather than `false` on iOS < 26: "the property does not exist here" and "the
+            // content is not blocked" are different answers, and Dart's return type is `bool?` so
+            // that a caller can tell them apart.
+            if #available(iOS 26.0, *), let webView = webView {
+                result(webView.isBlockedByScreenTime)
+            } else {
+                result(nil)
+            }
+            break
         case .getSelectedText:
             if let webView = webView {
                 webView.getSelectedText { (value, error) in

@@ -2239,6 +2239,38 @@ as it can cause framerate drops on animations in Android 9 and lower (see [Hybri
   )
   WritingToolsBehavior_? writingToolsBehavior;
 
+  ///Whether WebKit draws its own Screen Time blocking view over the WebView when Screen Time
+  ///restrictions block the loaded content.
+  ///
+  ///The default value is `true`, which is WebKit's own default: the system blocking view appears
+  ///and the app has nothing to do. Set it to `false` when the app wants to present its own UI
+  ///instead — read [PlatformInAppWebViewController.isBlockedByScreenTime] to find out whether the
+  ///current content is blocked.
+  ///
+  ///**NOTE for iOS**: turning this off does **not** unblock the content. WebKit still refuses to
+  ///show it; all that changes is who draws the explanation. A `false` with no
+  ///[PlatformInAppWebViewController.isBlockedByScreenTime] check leaves the user looking at a blank
+  ///WebView with no indication of why.
+  ///
+  ///**NOTE for iOS**: this is a `WKWebViewConfiguration` property, and `WKWebView.configuration`
+  ///returns *a copy of the configuration with which the web view was initialized*. It is therefore
+  ///applied **only when the WebView is created**, and changing it later through `setSettings` has
+  ///no effect — the same limitation as [InAppWebViewSettings.supportsAdaptiveImageGlyph] and
+  ///[InAppWebViewSettings.writingToolsBehavior]. Recreate the WebView to change it.
+  @SupportedPlatforms(
+    platforms: [
+      IOSPlatform(
+        available: "26.0",
+        apiName: "WKWebViewConfiguration.showsSystemScreenTimeBlockingView",
+        apiUrl:
+            "https://developer.apple.com/documentation/webkit/wkwebviewconfiguration/showssystemscreentimeblockingview",
+        note:
+            "Applied at WebView creation only; `WKWebView.configuration` is a copy, so later changes are ignored. Setting it `false` hides the system blocking view but does not unblock the content.",
+      ),
+    ],
+  )
+  bool? showsSystemScreenTimeBlockingView;
+
   ///Set to `true` to be able to listen at the [PlatformWebViewCreationParams.onShowFileChooser] event.
   ///
   ///If the [PlatformWebViewCreationParams.onShowFileChooser] event is implemented and this value is `null`,
@@ -2417,6 +2449,7 @@ as it can cause framerate drops on animations in Android 9 and lower (see [Hybri
     this.preferredHTTPSNavigationPolicy,
     this.securityRestrictionMode,
     this.lockdownModeEnabled,
+    this.showsSystemScreenTimeBlockingView = true,
     this.useOnShowFileChooser,
   }) {
     minimumFontSize ??= Util.isAndroid ? 8 : 0;
