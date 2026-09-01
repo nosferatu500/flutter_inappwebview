@@ -28,8 +28,13 @@ void main() {
   }
 
   testWidgets('test_all_screens_mobile_no_overflow', (tester) async {
-    final errors = <FlutterErrorDetails>[];
     final previousOnError = FlutterError.onError;
+    // Ignore the two known-spurious semantics errors, and **forward everything else to the
+    // binding** rather than collecting it. Collecting was the bug: the binding decides a test
+    // failed by looking at its own `_pendingExceptionDetails`, so a handler that swallows errors
+    // leaves that null, and the next async error to reach the zone trips
+    // `'_pendingExceptionDetails != null'` inside `_runTest` -- which does not fail the test, it
+    // stops the run making progress. Forwarding keeps the binding's bookkeeping intact.
     FlutterError.onError = (details) {
       final message = details.exceptionAsString();
       final stack = details.stack?.toString() ?? '';
@@ -37,18 +42,19 @@ void main() {
           message.contains('semantics.parentDataDirty')) {
         return;
       }
-      errors.add(details);
+      previousOnError?.call(details);
     };
 
+    // `takeException()` is how a test consumes what the binding recorded. Restoring the handler
+    // *before* failing matters: `fail()` throws, and unwinding with the override still installed
+    // is the other half of the original hang.
     void assertNoErrors(String label) {
-      if (errors.isEmpty) {
+      final error = tester.takeException();
+      if (error == null) {
         return;
       }
-      final messages = errors
-          .map((detail) => detail.exceptionAsString())
-          .join('\n');
-      errors.clear();
-      fail('Unexpected Flutter errors detected in $label:\n$messages');
+      FlutterError.onError = previousOnError;
+      fail('Unexpected Flutter error detected in $label:\n$error');
     }
 
     addTearDown(() async {
@@ -89,12 +95,12 @@ void main() {
     await clearScreen(tester);
 
     FlutterError.onError = previousOnError;
-    assertNoErrors('mobile layout');
+    expect(tester.takeException(), isNull, reason: 'mobile layout');
   });
 
   testWidgets('test_all_screens_tablet_layout', (tester) async {
-    final errors = <FlutterErrorDetails>[];
     final previousOnError = FlutterError.onError;
+    // Same forwarding handler as the test above -- see the note there for why collecting hangs.
     FlutterError.onError = (details) {
       final message = details.exceptionAsString();
       final stack = details.stack?.toString() ?? '';
@@ -102,7 +108,7 @@ void main() {
           message.contains('semantics.parentDataDirty')) {
         return;
       }
-      errors.add(details);
+      previousOnError?.call(details);
     };
 
     addTearDown(() async {
@@ -158,11 +164,6 @@ void main() {
     await clearScreen(tester);
 
     FlutterError.onError = previousOnError;
-    if (errors.isNotEmpty) {
-      final messages = errors
-          .map((detail) => detail.exceptionAsString())
-          .join('\n');
-      fail('Unexpected Flutter errors detected:\n$messages');
-    }
+    expect(tester.takeException(), isNull, reason: 'tablet layout');
   });
 }

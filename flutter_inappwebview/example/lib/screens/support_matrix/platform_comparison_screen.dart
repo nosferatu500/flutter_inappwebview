@@ -387,7 +387,16 @@ class _PlatformComparisonScreenState extends State<PlatformComparisonScreen> {
                     children: [
                       Icon(p.icon, size: 18, color: p.color),
                       const SizedBox(width: 8),
-                      Text(p.displayName),
+                      // The button shows this row inside a narrow, bounded box (~74px at 360dp
+                      // width), so an unflexed Text overflows by up to 65px for the longer platform
+                      // names. Flexible + ellipsis lets it shrink in the button while still laying
+                      // out at natural width in the wider dropdown menu.
+                      Flexible(
+                        child: Text(
+                          p.displayName,
+                          overflow: TextOverflow.ellipsis,
+                        ),
+                      ),
                     ],
                   ),
                 );
@@ -601,11 +610,19 @@ class _PlatformComparisonScreenState extends State<PlatformComparisonScreen> {
               children: [
                 const Icon(Icons.class_, size: 18, color: Colors.blue),
                 const SizedBox(width: 8),
-                Text(
-                  className,
-                  style: const TextStyle(fontWeight: FontWeight.bold),
+                // Class names run to ~30 characters (`PlatformInAppWebViewController`), which
+                // overflowed this row by up to 225px at 360dp. Expanded takes the place of the
+                // `Spacer` that used to sit after it: it absorbs the free space, so the trailing
+                // count still sits at the right edge, and the name ellipsizes instead of
+                // overflowing.
+                Expanded(
+                  child: Text(
+                    className,
+                    style: const TextStyle(fontWeight: FontWeight.bold),
+                    overflow: TextOverflow.ellipsis,
+                  ),
                 ),
-                const Spacer(),
+                const SizedBox(width: 8),
                 Text(
                   '${classItems.length} APIs',
                   style: TextStyle(fontSize: 12, color: Colors.grey.shade600),

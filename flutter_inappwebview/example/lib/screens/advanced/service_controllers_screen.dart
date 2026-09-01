@@ -666,9 +666,17 @@ class _ServiceControllersScreenState extends State<ServiceControllersScreen> {
       child: ExpansionTile(
         title: Row(
           children: [
-            Text(
-              '$ServiceWorkerController',
-              style: const TextStyle(fontWeight: FontWeight.bold),
+            // The controller name was unflexed, so at 360dp the longer ones overflowed this
+            // row by up to 148px. The badges beside it already sit in a horizontal scroll
+            // view, so they tolerate being squeezed; the name ellipsizes instead. Applied to
+            // all six controller cards, including ProfileStore, whose name is merely short
+            // enough not to overflow today.
+            Flexible(
+              child: Text(
+                '$ServiceWorkerController',
+                style: const TextStyle(fontWeight: FontWeight.bold),
+                overflow: TextOverflow.ellipsis,
+              ),
             ),
             const SizedBox(width: 8),
             Expanded(
@@ -877,9 +885,17 @@ class _ServiceControllersScreenState extends State<ServiceControllersScreen> {
       child: ExpansionTile(
         title: Row(
           children: [
-            Text(
-              '$ProxyController',
-              style: const TextStyle(fontWeight: FontWeight.bold),
+            // The controller name was unflexed, so at 360dp the longer ones overflowed this
+            // row by up to 148px. The badges beside it already sit in a horizontal scroll
+            // view, so they tolerate being squeezed; the name ellipsizes instead. Applied to
+            // all six controller cards, including ProfileStore, whose name is merely short
+            // enough not to overflow today.
+            Flexible(
+              child: Text(
+                '$ProxyController',
+                style: const TextStyle(fontWeight: FontWeight.bold),
+                overflow: TextOverflow.ellipsis,
+              ),
             ),
             const SizedBox(width: 8),
             Expanded(
@@ -1011,9 +1027,17 @@ class _ServiceControllersScreenState extends State<ServiceControllersScreen> {
       child: ExpansionTile(
         title: Row(
           children: [
-            Text(
-              '$TracingController',
-              style: const TextStyle(fontWeight: FontWeight.bold),
+            // The controller name was unflexed, so at 360dp the longer ones overflowed this
+            // row by up to 148px. The badges beside it already sit in a horizontal scroll
+            // view, so they tolerate being squeezed; the name ellipsizes instead. Applied to
+            // all six controller cards, including ProfileStore, whose name is merely short
+            // enough not to overflow today.
+            Flexible(
+              child: Text(
+                '$TracingController',
+                style: const TextStyle(fontWeight: FontWeight.bold),
+                overflow: TextOverflow.ellipsis,
+              ),
             ),
             const SizedBox(width: 8),
             Expanded(
@@ -1305,9 +1329,17 @@ class _ServiceControllersScreenState extends State<ServiceControllersScreen> {
       child: ExpansionTile(
         title: Row(
           children: [
-            Text(
-              '$ProcessGlobalConfig',
-              style: const TextStyle(fontWeight: FontWeight.bold),
+            // The controller name was unflexed, so at 360dp the longer ones overflowed this
+            // row by up to 148px. The badges beside it already sit in a horizontal scroll
+            // view, so they tolerate being squeezed; the name ellipsizes instead. Applied to
+            // all six controller cards, including ProfileStore, whose name is merely short
+            // enough not to overflow today.
+            Flexible(
+              child: Text(
+                '$ProcessGlobalConfig',
+                style: const TextStyle(fontWeight: FontWeight.bold),
+                overflow: TextOverflow.ellipsis,
+              ),
             ),
             const SizedBox(width: 8),
             Expanded(
@@ -1397,9 +1429,17 @@ class _ServiceControllersScreenState extends State<ServiceControllersScreen> {
       child: ExpansionTile(
         title: Row(
           children: [
-            Text(
-              '$ProfileStore',
-              style: const TextStyle(fontWeight: FontWeight.bold),
+            // The controller name was unflexed, so at 360dp the longer ones overflowed this
+            // row by up to 148px. The badges beside it already sit in a horizontal scroll
+            // view, so they tolerate being squeezed; the name ellipsizes instead. Applied to
+            // all six controller cards, including ProfileStore, whose name is merely short
+            // enough not to overflow today.
+            Flexible(
+              child: Text(
+                '$ProfileStore',
+                style: const TextStyle(fontWeight: FontWeight.bold),
+                overflow: TextOverflow.ellipsis,
+              ),
             ),
             const SizedBox(width: 8),
             Expanded(
@@ -1476,9 +1516,17 @@ class _ServiceControllersScreenState extends State<ServiceControllersScreen> {
       child: ExpansionTile(
         title: Row(
           children: [
-            Text(
-              '$GeolocationPermissions',
-              style: const TextStyle(fontWeight: FontWeight.bold),
+            // The controller name was unflexed, so at 360dp the longer ones overflowed this
+            // row by up to 148px. The badges beside it already sit in a horizontal scroll
+            // view, so they tolerate being squeezed; the name ellipsizes instead. Applied to
+            // all six controller cards, including ProfileStore, whose name is merely short
+            // enough not to overflow today.
+            Flexible(
+              child: Text(
+                '$GeolocationPermissions',
+                style: const TextStyle(fontWeight: FontWeight.bold),
+                overflow: TextOverflow.ellipsis,
+              ),
             ),
             const SizedBox(width: 8),
             Expanded(
