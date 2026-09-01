@@ -183,6 +183,16 @@ class WebMessageListener(
     result.success(true)
   }
 
+  /**
+   * Whether a page origin may reach this listener, per [allowedOriginRules].
+   *
+   * **Nothing in this module calls this**, and that is not an oversight worth relying on either
+   * way. Android registers listeners through `WebViewCompat.addWebMessageListener`, which does the
+   * origin matching inside the WebView, so this is the Kotlin half of a rule whose live copies are
+   * iOS's `WebMessageListener.isOriginAllowed` and the JavaScript it injects. It is kept in step
+   * with them — a fork that ships two spellings of one security rule has the worse of both — and
+   * the wildcard half is unit-tested through [Util.hostMatchesWildcardRule].
+   */
   fun isOriginAllowed(scheme: String?, host: String?, port: Int): Boolean {
     for (allowedOriginRule in allowedOriginRules) {
       if ("*" == allowedOriginRule) {
@@ -221,10 +231,7 @@ class WebMessageListener(
       val hostAllowed = ruleHost == null ||
         ruleHost.isEmpty() ||
         ruleHost == host ||
-        (
-          ruleHost.startsWith("*") && host != null &&
-            host.contains(ruleHost.split("\\*".toRegex())[1])
-          ) ||
+        Util.hostMatchesWildcardRule(ruleHost, host) ||
         (hostIPv6 != null && iPv6 != null && hostIPv6 == iPv6)
 
       val portAllowed = rulePort == currentPort

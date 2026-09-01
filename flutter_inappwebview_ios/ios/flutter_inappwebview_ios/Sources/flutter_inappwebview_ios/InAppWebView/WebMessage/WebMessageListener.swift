@@ -137,6 +137,18 @@ public class WebMessageListener: FlutterMethodCallDelegate {
         )
     }
     
+    /**
+     Whether a page origin may reach this listener, per `allowedOriginRules`.
+
+     This is one of **two** gates and it is not the outer one. `initJsInstance` injects a JavaScript
+     copy of this rule that decides whether `window[jsObjectName]` is created at all, and that copy
+     is the only check on the Dart → page direction: `WebMessageListenerChannelDelegate.postMessage`
+     evaluates against whatever `window[jsObjectName]` it finds. So the two must agree, and
+     `isOriginAllowedJs` below is kept a line-for-line mirror of the `hostAllowed` expression here.
+
+     The wildcard match is anchored at the end of the host — `*.example.com` matches
+     `foo.example.com`, and neither bare `example.com` nor `foo.example.com.evil.test`.
+     */
     public func isOriginAllowed(scheme: String?, host: String?, port: Int?) -> Bool {
         for allowedOriginRule in allowedOriginRules {
             if allowedOriginRule == "*" {
@@ -185,6 +197,15 @@ public class WebMessageListener: FlutterMethodCallDelegate {
         return false
     }
     
+    /// The page-side copy of `isOriginAllowed`, injected at document start.
+    ///
+    /// Every line of its `hostAllowed` expression mirrors the Swift one above, and the mirroring is
+    /// load-bearing rather than cosmetic — see that method's note. In particular the wildcard arm
+    /// uses `endsWith`, mirroring `hasSuffix`. It was `host.indexOf(suffix) >= 0`, an unanchored
+    /// substring test, which admitted `foo.example.com.evil.test` under a rule of `*.example.com`.
+    ///
+    /// This string is injected into every page the listener is registered for, so it carries no
+    /// commentary of its own.
     private static let isOriginAllowedJs = """
         var _normalizeIPv6 = function(ip_string) {
             // replace ipv4 address if any
@@ -252,7 +273,7 @@ public class WebMessageListener: FlutterMethodCallDelegate {
                 var hostAllowed = rule.host == null ||
                     rule.host === "" ||
                     host === rule.host ||
-                    (rule.host[0] === "*" && host != null && host.indexOf(rule.host.split("*")[1]) >= 0) ||
+                    (rule.host[0] === "*" && host != null && host.endsWith(rule.host.split("*")[1])) ||
                     (hostIPv6 != null && IPv6 != null && hostIPv6 === IPv6);
         
                 var portAllowed = rulePort === currentPort;

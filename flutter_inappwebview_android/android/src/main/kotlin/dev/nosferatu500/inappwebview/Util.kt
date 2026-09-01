@@ -371,6 +371,44 @@ object Util {
       ?: throw Exception("Invalid address: $address")
   }
 
+  /**
+   * Whether a wildcard origin rule's host matches a page host.
+   *
+   * The rule host is a `*` followed by a suffix — `*.example.com` — and the match is **anchored at
+   * the end of the host**. This used to be `host.contains(suffix)`, an unanchored substring test,
+   * so a rule of `*.example.com` also matched `foo.example.com.evil.test`: the suffix occurs in the
+   * middle of a host whose registrable domain belongs to somebody else. The origin allow-list is
+   * the only thing standing between a page and a `WebMessageListener`, so an unanchored match is a
+   * way in.
+   *
+   * Because the suffix of a `*.` rule begins with a dot, anchoring at the end also anchors on a
+   * label boundary, which is what makes this "subdomains only": `*.example.com` matches
+   * `foo.example.com` and **not** bare `example.com`. That last part is not new — `example.com`
+   * does not contain `.example.com` either — and nothing that matched before matches now, because
+   * `endsWith(s)` is a subset of `contains(s)` for the same `s`. This is a pure tightening.
+   *
+   * The dotless spelling `*example.com` is left exactly as it behaved: it still matches
+   * `notexample.com`, because its suffix carries no label boundary to anchor on. Rejecting that
+   * form was considered and not chosen — it is [assertOriginRulesValid]'s business, not this
+   * predicate's, and iOS already refuses it there.
+   *
+   * This lives in [Util] rather than next to its caller so a JVM unit test can reach it: the caller
+   * needs `android.net.Uri`, and this module deliberately leaves `returnDefaultValues` off, so any
+   * `android.*` call from a unit test throws `Stub!`.
+   *
+   * @see dev.nosferatu500.inappwebview.webview.web_message.WebMessageListener.isOriginAllowed
+   */
+  @JvmStatic
+  fun hostMatchesWildcardRule(ruleHost: String, host: String?): Boolean {
+    if (host == null || !ruleHost.startsWith("*")) {
+      return false
+    }
+    // Everything between the leading `*` and the next `*`, if any. Deliberately the same extraction
+    // the substring test used, so anchoring is the only axis this function changed.
+    val suffix = ruleHost.split("\\*".toRegex())[1]
+    return host.endsWith(suffix)
+  }
+
   @JvmStatic
   fun <T> getOrDefault(map: Map<String, Any?>, key: String, defaultValue: T): T =
     if (map.containsKey(key)) map[key] as T else defaultValue

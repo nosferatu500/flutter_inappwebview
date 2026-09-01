@@ -600,6 +600,16 @@ simulator for the first time:**
   for, and five others have a *value* that differs from their name
 - `analysis_options.yaml` (upstream #2758), 16 KB page size (#2703 — determined not applicable: the
   plugin ships no native code of its own)
+- **`WebMessageListener.allowedOriginRules`' wildcard admitted origins it did not name.** The match
+  was an unanchored substring test, so `https://*.example.com` also admitted
+  `foo.example.com.evil.test` — the suffix occurs in the middle of a host whose registrable domain
+  belongs to somebody else. It is now anchored at the end of the host: `*.example.com` matches
+  `foo.example.com` and neither bare `example.com` nor `foo.example.com.evil.test`. **A pure
+  tightening** — nothing that matched before matches now — so the only rules affected are ones that
+  were admitting more than they said. On iOS this is the check that decides whether the listener's
+  JavaScript object exists, and it is the only gate on the Dart → page direction, so an app could
+  `postMessage` into a page its allow-list never named; on Android the WebView does the matching
+  natively and was never affected. The dotless spelling `*example.com` is deliberately unchanged
 - 48 dead availability checks removed on iOS — all of them at or below the new 15.0 floor — along
   with the below-iOS-14 `callAsyncJavaScript` path and the dead `SFAuthenticationSession` branches;
   and the dead ~300-line `InputAwareWebView` path deleted on Android

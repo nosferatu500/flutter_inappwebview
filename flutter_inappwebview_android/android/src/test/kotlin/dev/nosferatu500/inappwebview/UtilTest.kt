@@ -119,6 +119,61 @@ class UtilTest {
     }
   }
 
+  /**
+   * The wildcard half of `WebMessageListener.isOriginAllowed`.
+   *
+   * It was `host.contains(suffix)`. Every assertion below that expects `false` for a host
+   * containing the suffix returned `true` before the fix.
+   */
+  @Test
+  fun `hostMatchesWildcardRule matches subdomains`() {
+    assertTrue(Util.hostMatchesWildcardRule("*.example.com", "foo.example.com"))
+    assertTrue(Util.hostMatchesWildcardRule("*.example.com", "a.b.c.example.com"))
+    assertTrue(Util.hostMatchesWildcardRule("*.example.com", "www.example.com"))
+  }
+
+  @Test
+  fun `hostMatchesWildcardRule does not match a host that merely contains the suffix`() {
+    // The hole. `.example.com` occurs at index 3, but the registrable domain is evil.test, so an
+    // attacker who owns evil.test could reach a listener whose allow-list names example.com.
+    assertFalse(Util.hostMatchesWildcardRule("*.example.com", "foo.example.com.evil.test"))
+    assertFalse(Util.hostMatchesWildcardRule("*.example.com", "example.com.evil.test"))
+    assertFalse(Util.hostMatchesWildcardRule("*.example.com", "a.example.com.b.example.org"))
+  }
+
+  @Test
+  fun `hostMatchesWildcardRule is subdomains only, so bare host does not match`() {
+    // Decided 2026-08-31. Not a change -- "example.com" never contained ".example.com" either --
+    // but it is the property the rule exists for, so it is pinned rather than left implicit.
+    assertFalse(Util.hostMatchesWildcardRule("*.example.com", "example.com"))
+  }
+
+  @Test
+  fun `hostMatchesWildcardRule anchors on a label boundary for the dotted form`() {
+    assertFalse(Util.hostMatchesWildcardRule("*.example.com", "notexample.com"))
+    assertFalse(Util.hostMatchesWildcardRule("*.example.com", "myexample.com"))
+  }
+
+  @Test
+  fun `hostMatchesWildcardRule leaves the dotless spelling behaving as it did`() {
+    // `*example.com` carries no label boundary to anchor on, so it still matches `notexample.com`.
+    // Rejecting the form was considered and not chosen; it belongs to rule validation, not here.
+    // End-anchoring still applies to it, which is the only thing that changed.
+    assertTrue(Util.hostMatchesWildcardRule("*example.com", "notexample.com"))
+    assertTrue(Util.hostMatchesWildcardRule("*example.com", "example.com"))
+    assertTrue(Util.hostMatchesWildcardRule("*example.com", "foo.example.com"))
+    assertFalse(Util.hostMatchesWildcardRule("*example.com", "example.com.evil.test"))
+  }
+
+  @Test
+  fun `hostMatchesWildcardRule declines anything that is not a wildcard rule`() {
+    // A non-wildcard rule host is compared for equality by the caller; this predicate must not
+    // answer for it, or an exact rule would start matching suffixes.
+    assertFalse(Util.hostMatchesWildcardRule("example.com", "example.com"))
+    assertFalse(Util.hostMatchesWildcardRule("example.com", "foo.example.com"))
+    assertFalse(Util.hostMatchesWildcardRule("*.example.com", null))
+  }
+
   @Test
   fun `JSONStringify quotes strings so the result can be embedded in JavaScript`() {
     // The output of this method is concatenated straight into injected JS, so a String must come

@@ -113,6 +113,15 @@ unit test could see. All four are fixed and proved both ways on a simulator.
   One of them changes behaviour: `UserScript.allowedOriginRules` are compiled with `new RegExp`, and
   the old escaping ate backslashes, so a rule like `https://.*\.example\.com` was silently compiled
   as `https://.*.example.com` — a *wider* match than written
+- **`WebMessageListener.allowedOriginRules`' wildcard was an unanchored substring test in the
+  injected JavaScript**, so a rule of `https://*.example.com` also admitted
+  `foo.example.com.evil.test` — a host whose registrable domain belongs to whoever registered
+  `evil.test`. That JavaScript decides whether `window[jsObjectName]` is created, and it is the
+  **only** check on the Dart → page direction: `postMessage` from Dart evaluates against whatever
+  object it finds, so an app could post to a page its allow-list never named. Now anchored at the
+  end of the host, matching the Swift `isOriginAllowed` — which already was, and was the second gate
+  that kept the page → Dart direction sound throughout. `*.example.com` matches `foo.example.com`
+  and neither `example.com` nor `foo.example.com.evil.test`; nothing that matched before matches now
 - 48 dead availability checks removed — all at or below the new 15.0 floor — along with the
   below-iOS-14 `callAsyncJavaScript` path and the dead `SFAuthenticationSession` branches
 

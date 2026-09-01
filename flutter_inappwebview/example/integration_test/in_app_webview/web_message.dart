@@ -318,5 +318,88 @@ void webMessage() {
       final String message = await webMessageCompleter.future;
       expect(message, 'JavaScript To Native and back');
     });
+    skippableTestWidgets('WebMessageListener wildcard rule is end-anchored', (
+      WidgetTester tester,
+    ) async {
+      // The page origin is `foo.example.com.evil.test`: a host that *contains* `.example.com` but
+      // whose registrable domain belongs to somebody else. The rule `https://*.example.com` must
+      // not reach it. Before the fix the check was `host.indexOf(suffix) >= 0`, so it did.
+      //
+      // A `baseUrl` is what makes this fixture-free and DNS-free — the document takes the origin
+      // of the base URL without anything being fetched, so the attacker host does not have to
+      // exist. It is also the exact real-world shape, which a reachable host could not have been.
+      const attackerOrigin = 'https://foo.example.com.evil.test/';
+
+      final Completer<InAppWebViewController> controllerCompleter =
+          Completer<InAppWebViewController>();
+      final Completer<void> pageLoaded = Completer<void>();
+
+      await tester.pumpWidget(
+        Directionality(
+          textDirection: TextDirection.ltr,
+          child: InAppWebView(
+            key: GlobalKey(),
+            onWebViewCreated: (controller) async {
+              await controller.addWebMessageListener(
+                WebMessageListener(
+                  jsObjectName: "myUnanchoredObj",
+                  allowedOriginRules: Set.from(["https://*.example.com"]),
+                  onPostMessage:
+                      (message, sourceOrigin, isMainFrame, replyProxy) {},
+                ),
+              );
+              // The control. Without it a broken injection path — a JS syntax error, a listener
+              // never registered, the page never loading — would satisfy the assertion below for
+              // entirely the wrong reason.
+              await controller.addWebMessageListener(
+                WebMessageListener(
+                  jsObjectName: "myAnchoredObj",
+                  allowedOriginRules: Set.from(["https://*.evil.test"]),
+                  onPostMessage:
+                      (message, sourceOrigin, isMainFrame, replyProxy) {},
+                ),
+              );
+              controllerCompleter.complete(controller);
+            },
+            onLoadStop: (controller, url) async {
+              if (!pageLoaded.isCompleted) {
+                pageLoaded.complete();
+              }
+            },
+          ),
+        ),
+      );
+      final controller = await controllerCompleter.future;
+      await controller.loadData(
+        data: "<html><body>anchored</body></html>",
+        baseUrl: WebUri(attackerOrigin),
+      );
+      await pageLoaded.future;
+
+      final hostname = await controller.evaluateJavascript(
+        source: "window.location.hostname",
+      );
+      final unanchored = await controller.evaluateJavascript(
+        source: "typeof window.myUnanchoredObj",
+      );
+      final anchored = await controller.evaluateJavascript(
+        source: "typeof window.myAnchoredObj",
+      );
+
+      // If the base URL did not carry its origin to the document, every assertion below is
+      // meaningless — say so instead of reporting a pass.
+      expect(hostname, 'foo.example.com.evil.test');
+      expect(
+        anchored,
+        'object',
+        reason: 'the control listener must be installed',
+      );
+      expect(
+        unanchored,
+        'undefined',
+        reason:
+            'https://*.example.com must not match foo.example.com.evil.test',
+      );
+    });
   }, skip: shouldSkip);
 }

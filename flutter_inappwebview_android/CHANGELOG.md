@@ -141,6 +141,12 @@ for, and five others have a native *value* that differs from their name.
   review: `MediaSizeExt` unit conversion, `HeadlessInAppWebView.setSize`, `mayLaunchUrl`,
   `getRealSettings`, a boxed-value comparison in `setSettings` that made settings updates no-ops, and
   `JsBeforeUnloadResponse.toString()`
+- **`WebMessageListener.isOriginAllowed`'s wildcard was an unanchored substring test** —
+  `*.example.com` matched `foo.example.com.evil.test`. Now anchored at the end of the host, so it is
+  subdomains only. **Not user-visible on Android**: listeners are registered through
+  `WebViewCompat.addWebMessageListener`, which matches origins inside the WebView, and nothing in
+  this module calls the Kotlin copy. It is fixed and unit-tested (`Util.hostMatchesWildcardRule`)
+  because the same rule is live on iOS and a fork should not ship two spellings of one security check
 - **AGP 9 / ProGuard** compatibility (upstream #2852, #2765, #2761)
 - Deleted the dead ~300-line `InputAwareWebView` path
 
