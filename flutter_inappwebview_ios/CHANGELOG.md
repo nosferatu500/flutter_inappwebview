@@ -26,7 +26,7 @@ carries the full user-facing list; this entry is what changed in this package.
   was missing was on the Dart side — `ProxyRule_` had no field of that type, so the keys were never
   sent. A wire test in this package now pins the map shape against what the Swift reads
 
-Eleven WebKit APIs read out of the iOS 26.5 SDK:
+Twelve WebKit APIs read out of the iOS 26.5 SDK:
 
 - **`NavigationAction.modifierFlags` / `.buttonNumber`** (+ `ModifierFlag`, `ButtonMask`) — which
   keys and mouse button triggered a navigation
@@ -49,6 +49,12 @@ Eleven WebKit APIs read out of the iOS 26.5 SDK:
   `preWKWebViewConfiguration` only, and read back in `getRealSettings` under
   `#available(iOS 26.0, *)` — so below that floor `getSettings()` reports whatever Dart last sent,
   the same boundary the 18.0 configuration settings already have
+- **`InAppWebViewSettings.obscuredContentInsets`** (26.0+), from
+  `WKWebView.obscuredContentInsets`. An `EdgeInsets` setting, so it needs the explicit pre-pass in
+  `InAppWebViewSettings.parse` that `minimumViewportInset` uses — KVC cannot carry an optional
+  value type — and an explicit `getRealSettings` override under `#available(iOS 26.0, *)`. Applied
+  in **two** places, unlike the rest of the 26.0 additions: at creation *and* in `setSettings`,
+  because it is a `WKWebView` property and therefore not subject to §95's copy-on-access rule
 - **`DownloadStartRequest.isUserInitiated` / `.originatingFrame`**, from `WKDownload`
 
 ### Fixed

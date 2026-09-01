@@ -576,9 +576,17 @@ public class InAppWebView: WKWebView, UIScrollViewDelegate, WKUIDelegate,
             if #available(iOS 16.4, *) {
                 isInspectable = settings.isInspectable
             }
-            
+
+            // Applied with `if let` so an unset value leaves WebKit's default of zero on all sides
+            // rather than writing a zero over an inset the host app may have set itself.
+            if #available(iOS 26.0, *) {
+                if let obscuredContentInsets = settings.obscuredContentInsets {
+                    self.obscuredContentInsets = obscuredContentInsets
+                }
+            }
+
         }
-        
+
         prepareAndAddUserScripts()
         
         if windowId != nil {
@@ -1401,7 +1409,16 @@ public class InAppWebView: WKWebView, UIScrollViewDelegate, WKUIDelegate,
                 configuration.preferences.shouldPrintBackgrounds = newSettings.shouldPrintBackgrounds
             }
         }
-        
+        // Live, unlike every other iOS setting added at 26.0: `obscuredContentInsets` belongs to the
+        // WKWebView, not to its configuration, so it is not subject to the copy-on-access rule above.
+        if #available(iOS 26.0, *) {
+            if newSettingsMap["obscuredContentInsets"] != nil, settings?.obscuredContentInsets != newSettings.obscuredContentInsets,
+               let obscuredContentInsets = newSettings.obscuredContentInsets {
+                self.obscuredContentInsets = obscuredContentInsets
+            }
+        }
+
+
         scrollView.isScrollEnabled = !(newSettings.disableVerticalScroll && newSettings.disableHorizontalScroll)
 
         let fileChooserGateChanged = newSettingsMap["useOnShowFileChooser"] != nil

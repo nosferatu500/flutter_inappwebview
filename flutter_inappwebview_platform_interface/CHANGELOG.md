@@ -130,11 +130,20 @@ rename; this entry is the API-owner's view.
 - `PlatformCookieManager`: `setAcceptCookie`, `isAcceptCookieEnabled`, `hasCookies`,
   `isFileSchemeCookiesAllowed`
 - `PlatformWebStorageManager`: `deleteBrowsingData`, `deleteBrowsingDataForSite`
-- `InAppWebViewSettings` (14): `attributionRegistrationBehavior`, `backForwardCacheEnabled`,
-  `downloadFaviconsEnabled`, `lockdownModeEnabled`, `paymentRequestEnabled`,
-  `preferredHTTPSNavigationPolicy`, `profileName`, `securityRestrictionMode`,
-  `showsSystemScreenTimeBlockingView`, `supportsAdaptiveImageGlyph`, `userAgentMetadata`,
-  `webAuthenticationSupport`, `webViewMediaIntegrityApiStatus`, `writingToolsBehavior`
+- `InAppWebViewSettings` (15): `attributionRegistrationBehavior`, `backForwardCacheEnabled`,
+  `downloadFaviconsEnabled`, `lockdownModeEnabled`, `obscuredContentInsets`,
+  `paymentRequestEnabled`, `preferredHTTPSNavigationPolicy`, `profileName`,
+  `securityRestrictionMode`, `showsSystemScreenTimeBlockingView`, `supportsAdaptiveImageGlyph`,
+  `userAgentMetadata`, `webAuthenticationSupport`, `webViewMediaIntegrityApiStatus`,
+  `writingToolsBehavior`
+- **`InAppWebViewSettings.obscuredContentInsets`** (iOS 26.0+), typed `EdgeInsets?`. Insets that
+  shrink the page's layout viewport where the app draws its own chrome. The constructor **asserts
+  all four sides are non-negative**, which is WebKit's stated requirement; an assert is debug-only,
+  so the dartdoc states the requirement as well. It is the **only** iOS 26.0 setting that responds
+  to `setSettings` — a `WKWebView` property, not a `WKWebViewConfiguration` one. What the page
+  observes is **not** characterised: the integration suite could not measure it consistently, so the
+  dartdoc reports WebKit's own description and explicitly declines to claim a relationship to
+  `env(safe-area-inset-*)`
 - **`InAppWebViewSettings.showsSystemScreenTimeBlockingView`** (iOS 26.0+) defaults to `true`, not
   `null`, unlike most of the settings above it: WebKit documents its own default as `YES`, so the
   constructor mirrors that and the value always reaches the wire. It is a `WKWebViewConfiguration`

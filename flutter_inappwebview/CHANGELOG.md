@@ -4,7 +4,7 @@
 relative to 6.2.0-beta.3: 131 commits that dropped four platforms, rewrote the Android module in
 Kotlin under a new namespace, moved the iOS module to Swift 6 language mode, removed **every**
 deprecated API upstream carried (840 `@Deprecated` annotations in these packages — 1111 counting the
-four platform packages that are also gone; **0 remain**), added 31 platform APIs, and fixed a list of
+four platform packages that are also gone; **0 remain**), added 32 platform APIs, and fixed a list of
 bugs that includes four on iOS which were silently swallowing events.
 
 ### Requirements — all breaking
@@ -398,7 +398,7 @@ implemented on the current platform" on iOS.
 
 ### Added — iOS
 
-Eleven WebKit APIs read out of the iOS 26.5 SDK, plus one feature that was half-built upstream.
+Twelve WebKit APIs read out of the iOS 26.5 SDK, plus one feature that was half-built upstream.
 
 - **`ProxyRule.relayHop1` / `.relayHop2`** (iOS 17.0+) — route a proxy rule through a chain of
   secure relays (RFC 9298) instead of connecting to the proxy endpoint directly. `ProxyRelayHop`
@@ -428,6 +428,19 @@ Eleven WebKit APIs read out of the iOS 26.5 SDK, plus one feature that was half-
   does **not** unblock anything; it only stops WebKit explaining why, so pair it with
   `isBlockedByScreenTime()` or the user sees a blank WebView. Creation-time only, like the other
   configuration-backed settings
+- **`InAppWebViewSettings.obscuredContentInsets`** (iOS 26.0+) — edge insets that shrink the page's
+  **layout viewport** because your app draws chrome over those areas (a translucent nav bar, a
+  floating toolbar). The page still paints edge to edge; per WebKit's documentation what changes is
+  where `position: fixed` and `position: sticky` elements land. **The precise page-visible effect is
+  not characterised by this plugin** — an attempt to measure it gave inconsistent results, so do not
+  assume a relationship to `env(safe-area-inset-*)`; measure it for the layout you ship. All four
+  values must be non-negative. It is a `WKWebView` property rather than a configuration one, so —
+  alone among the iOS 26.0 additions — it **does** respond to `setSettings` on a running WebView.
+
+  **It is not a fix for the keyboard `contentInset` behaviour** and does not replace the plugin's
+  `keyboardWillShow`/`keyboardWillHide` handling: it exists only from iOS 26.0, so every supported
+  version below that (15, 16, 17, 18) is unchanged. Treat it as new capability for app-drawn
+  overlay chrome.
 - **`DownloadStartRequest.isUserInitiated` / `.originatingFrame`** — from `WKDownload`
 
 `WebsiteDataType.WKWebsiteDataTypeScreenTime` is the third member of that family and has shipped

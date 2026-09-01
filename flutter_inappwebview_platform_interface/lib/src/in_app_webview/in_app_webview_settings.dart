@@ -1942,6 +1942,54 @@ as it can cause framerate drops on animations in Android 9 and lower (see [Hybri
   )
   EdgeInsets? maximumViewportInset;
 
+  ///Edge insets, relative to the WebView's own coordinate space, that shrink the **layout
+  ///viewport** because your app draws something over those areas — a translucent navigation bar,
+  ///a floating toolbar, a set of overlay buttons.
+  ///
+  ///This is not a scroll inset and not a margin: the page keeps painting edge to edge underneath
+  ///your UI. WebKit's documentation describes the effect as shrinking the bounds of the **layout
+  ///viewport**, and says it adjusts how `position: fixed` and `position: sticky` elements are
+  ///rendered near an edge with a non-zero inset, so a sticky header lands below your bar rather
+  ///than behind it.
+  ///
+  ///**What the page observes is WebKit's business and this plugin does not characterise it.** An
+  ///attempt to pin it from the integration suite gave inconsistent results on one simulator and one
+  ///binary — `window.innerHeight` shrank by `top + bottom` in some framings and by more in others,
+  ///and `env(safe-area-inset-*)` appeared unaffected in one framing and changed in another. Do not
+  ///assume a particular relationship to the safe-area custom properties; measure it on a real
+  ///device for the layout you actually ship, or pass the values into the page yourself.
+  ///
+  ///All four values must be **non-negative** — this is WebKit's requirement, and it is asserted in
+  ///the constructor. Leaving this `null` keeps WebKit's default of zero on all sides.
+  ///
+  ///**NOTE for iOS**: this is a property of the `WKWebView` itself rather than of its
+  ///configuration, so — unlike [InAppWebViewSettings.showsSystemScreenTimeBlockingView] and the
+  ///rest of the creation-only family — it **does** take effect when changed through `setSettings`
+  ///on a running WebView.
+  ///
+  ///**NOTE for iOS**: this is **not** a replacement for the plugin's keyboard handling and does not
+  ///fix the keyboard `contentInset` behaviour on any OS that can still be affected by it. It
+  ///arrives at iOS 26.0, and the manual `keyboardWillShow`/`keyboardWillHide` compensation remains
+  ///the only mechanism on **iOS 15 through 18** — every version this plugin supports below 26.
+  ///Treat it as a new capability for app-drawn overlay chrome, not as a fix.
+  ///
+  ///**NOTE for iOS**: it is unrelated to [InAppWebViewSettings.minimumViewportInset] /
+  ///[InAppWebViewSettings.maximumViewportInset], which describe the *range* a page should expect as
+  ///your UI collapses and expands. This one is the inset in force right now.
+  @SupportedPlatforms(
+    platforms: [
+      IOSPlatform(
+        available: "26.0",
+        apiName: "WKWebView.obscuredContentInsets",
+        apiUrl:
+            "https://developer.apple.com/documentation/webkit/wkwebview/obscuredcontentinsets",
+        note:
+            "Shrinks the bounds of the layout viewport so fixed/sticky elements avoid app-drawn chrome; the page still paints edge to edge. The exact page-visible effect is WebKit's and is not characterised here — do not assume a relationship to `env(safe-area-inset-*)`. All values must be non-negative. Applied live, so `setSettings` works. **Not** a fix for the keyboard `contentInset` behaviour — that path is unchanged on iOS 15 through 18.",
+      ),
+    ],
+  )
+  EdgeInsets? obscuredContentInsets;
+
   ///Controls whether this WebView is inspectable in Web Inspector.
   ///
   ///The default value is `false`.
@@ -2431,6 +2479,7 @@ as it can cause framerate drops on animations in Android 9 and lower (see [Hybri
     this.isFindInteractionEnabled = false,
     this.minimumViewportInset,
     this.maximumViewportInset,
+    this.obscuredContentInsets,
     this.isInspectable = false,
     this.shouldPrintBackgrounds = false,
     this.allowBackgroundAudioPlaying = false,
@@ -2473,6 +2522,13 @@ as it can cause framerate drops on animations in Android 9 and lower (see [Hybri
               minimumViewportInset!.horizontal <=
                   maximumViewportInset!.horizontal,
       "minimumViewportInset cannot be larger than maximumViewportInset",
+    );
+    // WebKit's header says "All edge insets must be non-negative" for `obscuredContentInsets`. An
+    // assert only fires in debug, so this is a development aid rather than a guarantee -- the
+    // dartdoc says what the native does with a negative value.
+    assert(
+      obscuredContentInsets == null || obscuredContentInsets!.isNonNegative,
+      "obscuredContentInsets must be non-negative on every side",
     );
   }
 

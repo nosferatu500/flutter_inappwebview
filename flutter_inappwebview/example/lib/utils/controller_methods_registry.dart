@@ -909,25 +909,41 @@ class ControllerMethodsRegistry {
             return 'Focus cleared';
           },
         ),
-        // The two object-valued androidx settings cannot be edited from the generic settings
-        // editor (it only knows bools, numbers, strings and enums), so they are demonstrated here
-        // by applying both through setSettings. One entry, because the registry keys a method by
-        // its methodEnum and two entries would collide on `setSettings`.
+        // The object-valued settings cannot be edited from the generic settings editor (it only
+        // knows bools, numbers, strings and enums), so they are demonstrated here by applying them
+        // through setSettings. One entry, because the registry keys a method by its methodEnum and
+        // two entries would collide on `setSettings`.
         ControllerMethodEntry(
           description:
-              'Applies the two object-valued androidx settings: User-Agent Client Hints '
-              '(userAgentMetadata) and the Media Integrity API config',
+              'Applies the object-valued settings: User-Agent Client Hints '
+              '(userAgentMetadata), the Media Integrity API config, and '
+              'obscuredContentInsets',
           methodEnum: PlatformInAppWebViewControllerMethod.setSettings,
           parameters: {
             'brand': 'ExampleBrowser',
             'majorVersion': '1',
             'trustedOrigin': 'https://*.example.com',
+            'obscuredTop': '44',
+            'obscuredBottom': '0',
           },
           execute: (controller, params) async {
             final brand = params['brand']?.toString() ?? 'ExampleBrowser';
             final majorVersion = params['majorVersion']?.toString() ?? '1';
             final trustedOrigin =
                 params['trustedOrigin']?.toString() ?? 'https://*.example.com';
+            // Non-negative on every side is WebKit's requirement and an assert in the
+            // InAppWebViewSettings constructor, so a bad value here would throw rather than
+            // silently misbehave.
+            final obscuredTop =
+                double.tryParse(
+                  params['obscuredTop']?.toString() ?? '',
+                )?.abs() ??
+                44.0;
+            final obscuredBottom =
+                double.tryParse(
+                  params['obscuredBottom']?.toString() ?? '',
+                )?.abs() ??
+                0.0;
 
             await controller.setSettings(
               settings: InAppWebViewSettings(
@@ -958,10 +974,18 @@ class ControllerMethodsRegistry {
                         ),
                       ],
                     ),
+                // iOS 26+ only, and the one setting in this group that is applied live: it is a
+                // WKWebView property, not a configuration one, so setSettings really changes it.
+                // A top inset is the realistic case — an app-drawn translucent nav bar.
+                obscuredContentInsets: EdgeInsets.only(
+                  top: obscuredTop,
+                  bottom: obscuredBottom,
+                ),
               ),
             );
             return 'Client Hints announce $brand $majorVersion; '
-                'app identity granted to $trustedOrigin only';
+                'app identity granted to $trustedOrigin only; '
+                'obscured insets top=$obscuredTop bottom=$obscuredBottom';
           },
         ),
       ],

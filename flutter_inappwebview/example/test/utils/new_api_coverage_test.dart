@@ -9,10 +9,10 @@ import 'package:flutter_test/flutter_test.dart';
 /// new setting or method ships without a demo — the app compiles and runs exactly the same. This
 /// test is the reminder: adding a platform API means adding it here too.
 ///
-/// Two settings are deliberately *not* in the settings editor: `userAgentMetadata` and
-/// `webViewMediaIntegrityApiStatus` are object-valued, and `SettingDefinition` only models bools,
-/// numbers, strings and enums. They are demonstrated through `setSettings` in the controller-methods
-/// registry instead, which is what the second group checks.
+/// Three settings are deliberately *not* in the settings editor: `userAgentMetadata`,
+/// `webViewMediaIntegrityApiStatus` and `obscuredContentInsets` are object-valued, and
+/// `SettingDefinition` only models bools, numbers, strings and enums. They are demonstrated through
+/// `setSettings` in the controller-methods registry instead, which is what the second group checks.
 void main() {
   final settingProperties = getSettingDefinitions().values
       .expand((definitions) => definitions)
@@ -88,9 +88,16 @@ void main() {
       expect(setSettings, hasLength(1));
       expect(setSettings.single.description, contains('userAgentMetadata'));
       expect(setSettings.single.description, contains('Media Integrity'));
+      expect(setSettings.single.description, contains('obscuredContentInsets'));
       expect(
         setSettings.single.parameters.keys,
-        containsAll(<String>['brand', 'majorVersion', 'trustedOrigin']),
+        containsAll(<String>[
+          'brand',
+          'majorVersion',
+          'trustedOrigin',
+          'obscuredTop',
+          'obscuredBottom',
+        ]),
       );
     });
 

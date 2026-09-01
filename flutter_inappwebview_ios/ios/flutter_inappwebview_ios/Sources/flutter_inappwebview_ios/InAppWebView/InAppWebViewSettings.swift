@@ -182,6 +182,7 @@ public class InAppWebViewSettings: ISettings<InAppWebView> {
     var isFindInteractionEnabled = false
     var minimumViewportInset: UIEdgeInsets? = nil
     var maximumViewportInset: UIEdgeInsets? = nil
+    var obscuredContentInsets: UIEdgeInsets? = nil
     var isInspectable = false
     var shouldPrintBackgrounds = false
     var javaScriptHandlersOriginAllowList: [String]? = nil
@@ -210,6 +211,10 @@ public class InAppWebViewSettings: ISettings<InAppWebView> {
         if let maximumViewportInsetMap = settings["maximumViewportInset"] as? [String : Double] {
             maximumViewportInset = UIEdgeInsets.fromMap(map: maximumViewportInsetMap)
             settings.removeValue(forKey: "maximumViewportInset")
+        }
+        if let obscuredContentInsetsMap = settings["obscuredContentInsets"] as? [String : Double] {
+            obscuredContentInsets = UIEdgeInsets.fromMap(map: obscuredContentInsetsMap)
+            settings.removeValue(forKey: "obscuredContentInsets")
         }
         // nullable values with primitive type (Int, Double, etc.)
         // must be handled here as super.parse will not work
@@ -294,6 +299,9 @@ public class InAppWebViewSettings: ISettings<InAppWebView> {
             }
             if #available(iOS 26.0, *) {
                 realSettings["showsSystemScreenTimeBlockingView"] = configuration.showsSystemScreenTimeBlockingView
+                // Read from the WebView, not from `configuration`: this one is a WKWebView property,
+                // which is why it is the rare iOS setting that responds to `setSettings`.
+                realSettings["obscuredContentInsets"] = webView.obscuredContentInsets.toMap()
             }
         }
         return realSettings
