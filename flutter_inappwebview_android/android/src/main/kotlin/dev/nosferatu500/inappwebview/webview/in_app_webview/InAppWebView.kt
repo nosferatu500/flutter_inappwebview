@@ -2084,9 +2084,7 @@ class InAppWebView : WebView, InAppWebViewInterface, Disposable {
         }
 
         if (containerView != null && imm != null && !isAcceptingText) {
-          imm.hideSoftInputFromWindow(
-            containerView?.windowToken, InputMethodManager.HIDE_NOT_ALWAYS
-          )
+          hideSoftInputNotAlways(imm, containerView?.windowToken)
         }
       }, 128)
     }
@@ -2731,6 +2729,21 @@ class InAppWebView : WebView, InAppWebViewInterface, Disposable {
     @Suppress("DEPRECATION")
     private fun applyAllowUniversalAccessFromFileURLs(settings: WebSettings, allow: Boolean) {
       settings.allowUniversalAccessFromFileURLs = allow
+    }
+
+    // `InputMethodManager.HIDE_NOT_ALWAYS` is deprecated as of **API 37**, which this module now
+    // compiles against (androidx.core 1.19.0 requires it). Isolated for the same reason as the
+    // three above: the suppression covers exactly the deprecated constant.
+    //
+    // Kept rather than migrated. The documented replacement is
+    // `WindowInsetsControllerCompat.hide(WindowInsetsCompat.Type.ime())`, which is not equivalent
+    // here: HIDE_NOT_ALWAYS means "hide only if the user did not explicitly request the keyboard",
+    // and the insets API has no such conditional. Swapping it would change behaviour on the
+    // click-outside-to-dismiss path this workaround exists for, on every Android version, to
+    // silence a warning on one. Filed instead.
+    @Suppress("DEPRECATION")
+    private fun hideSoftInputNotAlways(imm: InputMethodManager, windowToken: IBinder?) {
+      imm.hideSoftInputFromWindow(windowToken, InputMethodManager.HIDE_NOT_ALWAYS)
     }
   }
 }

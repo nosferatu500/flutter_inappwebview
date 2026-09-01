@@ -15,6 +15,7 @@ bugs that includes four on iOS which were silently swallowing events.
 | Dart | `^3.8.0` | **`^3.12.0`** |
 | Supported platforms | 6 | **2 — Android, iOS** |
 | Android `minSdk` | 19 | **30** (Android 11) |
+| **Android `compileSdk` your app must use** | (Flutter default) | **37** — `androidx.core` 1.19.0 requires it and AGP *fails* rather than warns |
 | Android Gradle Plugin | 8 | **9** |
 | Android implementation language | Java | **Kotlin** |
 | iOS deployment target | 12.0 | **15.0** |

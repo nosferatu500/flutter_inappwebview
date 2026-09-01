@@ -30,8 +30,16 @@ entry carries the full user-facing list; this entry is what changed in this pack
   `InAppWebViewChromeClient.getOutputUri()` logs it and returns null, and
   `<input type="file" capture>` then produces nothing — no Dart error and no event. Copy the whole
   block from the `InAppWebViewFileProvider` KDoc rather than editing one line of the 6.x one
+- **Consuming apps must now compile against API 37+.** The module declares
+  `androidx.core:core:1.19.0`, whose AAR metadata requires it, and AGP **fails** the build rather
+  than warning when it is unmet. Add `compileSdk = 37` to your app's `android/app/build.gradle`
+  until Flutter's own default reaches 37 (it is 36 on Flutter 3.44). `minSdk` and `targetSdk` are
+  unaffected — this only governs which SDK your app compiles against
 - Native dependencies: `androidx.webkit` 1.14.0 → **1.17.0**, `androidx.browser` 1.9.0 → **1.10.0**,
-  `androidx.appcompat` 1.7.1 → **1.8.0**
+  `androidx.appcompat` 1.7.1 → **1.8.0**, and **`androidx.core` is now declared directly at
+  1.19.0** — it was used directly (`ContextCompat`, `ViewCompat`, `WindowCompat`,
+  `WindowInsetsCompat`, `WindowInsetsControllerCompat`, `BundleCompat`, `FileProvider`) while
+  reaching the classpath only transitively through appcompat
 - **New Dart dependency: `meta` (`^1.15.0`).** Required by the Pigeon-generated
   `lib/src/pigeons/*.g.dart`, which import `package:meta/meta.dart`. It was previously reaching the
   package only transitively, which `flutter pub publish` rejects outright — an undeclared import

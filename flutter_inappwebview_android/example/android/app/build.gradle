@@ -33,7 +33,11 @@ android {
         targetCompatibility = JavaVersion.VERSION_17
     }
 
-    compileSdk = flutter.compileSdkVersion
+    // Not flutter.compileSdkVersion (36 on Flutter 3.44): the plugin module depends on
+    // androidx.core 1.19.0, whose AAR metadata requires consumers to compile against API 37+.
+    // AGP fails the build rather than warning when that is unmet, so every app using this plugin
+    // needs the same line until Flutter's default reaches 37.
+    compileSdk = 37
     ndkVersion = flutter.ndkVersion
 
     defaultConfig {

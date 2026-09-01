@@ -38,16 +38,28 @@
       behaviour. The breakdown is 21x String.toColorInt, 18x Int.toDrawable, 16x String.toUri,
       2x createBitmap, and one each of Bitmap.scale, Menu.size, Menu.get.
 
-      Every one of those extensions lives in androidx.core:core-ktx. That artifact is only on this
-      module's classpath transitively, at 1.2.0 (androidx.core:core itself resolves to 1.13.1), and
-      most of the suggested extensions were added in 1.7+ — so acting on the rule would mean
-      declaring a new runtime dependency on core-ktx for every consumer of this plugin, to gain
-      nothing but call-site syntax. The platform calls the findings flag (Color.parseColor,
-      ColorDrawable, Uri.parse, Bitmap.createBitmap/createScaledBitmap, Menu.size/getItem) are
-      correct and not deprecated.
+      Every one of those extensions lives in androidx.core:core-ktx, which is on this module's
+      classpath transitively at 1.2.0, via appcompat 1.8.0 -> fragment 1.7.1. (androidx.core:core
+      itself resolves to 1.13.1 and is now declared directly, but it does NOT carry these
+      extensions — measured by excluding core-ktx, which makes all seven fail to resolve.)
 
-      Revisit if core-ktx ever becomes a direct dependency for an unrelated reason: at that point
-      the fixes are free and this entry should be deleted.
+      An earlier version of this note claimed "most of the suggested extensions were added in 1.7+",
+      so they were unavailable at 1.2.0. THAT IS WRONG and was never measured. A probe referencing
+      all seven — toUri, toColorInt, toDrawable, createBitmap, scale, Menu.size, Menu.get —
+      compiles against the classpath as it stands, with nothing added. The fixes are already free
+      in the sense of "they compile today".
+
+      They are still not taken, for a different and better reason: core-ktx arrives here by
+      accident. Nothing declares it; it rides in behind appcompat's dependency on fragment, so an
+      appcompat bump that drops or reorganises that edge silently breaks 60 call sites at once.
+      Acting on the rule responsibly means declaring androidx.core:core-ktx directly — a new
+      runtime dependency for every consumer of this plugin — to gain nothing but call-site syntax.
+      The platform calls the findings flag (Color.parseColor, ColorDrawable, Uri.parse,
+      Bitmap.createBitmap/createScaledBitmap, Menu.size/getItem) are correct and not deprecated.
+
+      So the condition for revisiting is not "are the extensions available" (they are) but "is
+      core-ktx worth declaring on its own merits". If it ever is, delete this entry and take the 60
+      fixes with it.
     -->
     <issue id="UseKtx" severity="ignore" />
 
