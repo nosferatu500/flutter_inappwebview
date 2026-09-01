@@ -122,6 +122,15 @@ unit test could see. All four are fixed and proved both ways on a simulator.
   end of the host, matching the Swift `isOriginAllowed` — which already was, and was the second gate
   that kept the page → Dart direction sound throughout. `*.example.com` matches `foo.example.com`
   and neither `example.com` nor `foo.example.com.evil.test`; nothing that matched before matches now
+- **A WebView released off the main thread could crash the app**, in
+  `WebViewChannelDelegate.__deallocating_deinit` — `isolated deinit` does not save it, because the
+  class is released through Objective-C, so the executor check traps instead of hopping. The trigger
+  is a channel callback that captures `self` strongly: the closure is retained by the reply
+  machinery and the Flutter engine can destroy that block on a dispatch worker thread, taking the
+  last reference to the WebView with it. All three `didReceive challenge` branches (HTTP auth,
+  server trust, client certificate) now capture `self` weakly and fall through to their default
+  behaviour if the WebView is gone. Observed twice in this repo's own test runs before the fix, both
+  times as the app dying mid-suite with no Dart error
 - 48 dead availability checks removed — all at or below the new 15.0 floor — along with the
   below-iOS-14 `callAsyncJavaScript` path and the dead `SFAuthenticationSession` branches
 

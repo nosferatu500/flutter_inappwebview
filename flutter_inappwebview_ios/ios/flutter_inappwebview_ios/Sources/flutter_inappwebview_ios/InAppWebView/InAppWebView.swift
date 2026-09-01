@@ -2284,7 +2284,14 @@ public class InAppWebView: WKWebView, UIScrollViewDelegate, WKUIDelegate,
         }
         else if challenge.protectionSpace.authenticationMethod == NSURLAuthenticationMethodClientCertificate {
             let callback = WebViewChannelDelegate.ReceivedClientCertRequestCallback()
-            callback.nonNullSuccess = { (response: ClientCertResponse) in
+            // `[weak self]` for the same reason as the two branches above, and this was the last
+            // strong capture of its kind in this file. §98's first iOS 26.5 baseline died on §73's
+            // crash — `WebViewChannelDelegate.__deallocating_deinit` trapping off the main actor —
+            // during a change that could not have caused it, which is the evidence that the hazard
+            // fires on ordinary runs rather than only under §97's deliberate reproduction.
+            callback.nonNullSuccess = { [weak self] (response: ClientCertResponse) in
+                // No WebView left to present a certificate: fall through to `defaultBehaviour`.
+                guard let self = self else { return true }
                 if let action = response.action {
                     completionHandlerCalled = true
                     switch action {

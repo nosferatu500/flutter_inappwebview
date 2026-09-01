@@ -619,6 +619,11 @@ simulator for the first time:**
   **process-global**, shared by every WebView in the app: one WebView's `onPageFinished` emptied
   another's queue mid-challenge, and one WebView's failures were reported to another's handler as
   `HttpAuthenticationChallenge.previousFailureCount`. Both are now per-WebView
+- **iOS: a WebView released off the main thread could crash the app.** The crash surfaced in
+  `WebViewChannelDelegate`'s deinit and presented as the app dying with no Dart error and no
+  exception. Its trigger was a channel callback holding a strong reference to the WebView, which the
+  Flutter engine could release on a background thread; the three authentication-challenge callbacks
+  now hold it weakly. Nothing in the public API changes
 - 48 dead availability checks removed on iOS — all of them at or below the new 15.0 floor — along
   with the below-iOS-14 `callAsyncJavaScript` path and the dead `SFAuthenticationSession` branches;
   and the dead ~300-line `InputAwareWebView` path deleted on Android
