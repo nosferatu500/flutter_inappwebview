@@ -32,6 +32,10 @@ entry carries the full user-facing list; this entry is what changed in this pack
   block from the `InAppWebViewFileProvider` KDoc rather than editing one line of the 6.x one
 - Native dependencies: `androidx.webkit` 1.14.0 → **1.17.0**, `androidx.browser` 1.9.0 → **1.10.0**,
   `androidx.appcompat` 1.7.1 → **1.8.0**
+- **New Dart dependency: `meta` (`^1.15.0`).** Required by the Pigeon-generated
+  `lib/src/pigeons/*.g.dart`, which import `package:meta/meta.dart`. It was previously reaching the
+  package only transitively, which `flutter pub publish` rejects outright — an undeclared import
+  from `lib/` is a validation **error**, not a warning
 
 ### Added
 

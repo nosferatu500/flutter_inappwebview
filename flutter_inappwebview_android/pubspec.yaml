@@ -22,6 +22,14 @@ dependencies:
     sdk: flutter
   flutter_inappwebview_platform_interface: ^1.4.0-beta.3
     # path: ../flutter_inappwebview_platform_interface
+  # Required by the Pigeon-generated lib/src/pigeons/*.g.dart, which import
+  # `package:meta/meta.dart` for `immutable` / `protected` / `visibleForTesting`. Without it
+  # `flutter pub publish` REFUSES this package (exit 65) — pub treats an undeclared import from
+  # lib/ as an error, and no other gate in this repo can see it. Deliberately a loose lower bound:
+  # those three annotations have been in meta for years, while the Flutter SDK pins meta to an
+  # *exact* version (1.18.0 on 3.44.9), so a tight bound here would risk conflicting with whatever
+  # a given Flutter release happens to pin.
+  meta: ^1.15.0
 
 dev_dependencies:
   flutter_test:
