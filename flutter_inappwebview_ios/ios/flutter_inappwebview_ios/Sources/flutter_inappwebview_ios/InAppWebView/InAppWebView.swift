@@ -134,16 +134,26 @@ public class InAppWebView: WKWebView, UIScrollViewDelegate, WKUIDelegate,
         }
         set {
             super.frame = newValue
-            
-            scrollView.contentInset = .zero
-            // Above iOS 11, adjust contentInset to compensate the adjustedContentInset so the sum will
-            // always be 0.
-            if (scrollView.adjustedContentInset != .zero) {
-                let insetToAdjust = scrollView.adjustedContentInset
-                scrollView.contentInset = UIEdgeInsets(top: -insetToAdjust.top, left: -insetToAdjust.left,
-                                                       bottom: -insetToAdjust.bottom, right: -insetToAdjust.right)
-            }
+            neutralizeAdjustedContentInset()
+        }
+    }
 
+    /// Sets `contentInset` so that the resulting `adjustedContentInset` is zero on every edge.
+    ///
+    /// This is the invariant the `frame` setter has always maintained: above iOS 11 the scroll view
+    /// adds a safe-area contribution of its own, and the plugin cancels it so the page owns the
+    /// whole viewport. `contentInset` is zeroed **first** so that the `adjustedContentInset` being
+    /// negated is the platform's contribution alone and not a previous compensation counted twice.
+    ///
+    /// Extracted because `keyboardWillHide` needs exactly this and had no way to say so -- see the
+    /// comment there. `keyboardWillShow` deliberately does **not** use it; that path computes from
+    /// the current `adjustedContentInset` without zeroing first, and is left alone.
+    private func neutralizeAdjustedContentInset() {
+        scrollView.contentInset = .zero
+        if scrollView.adjustedContentInset != .zero {
+            let insetToAdjust = scrollView.adjustedContentInset
+            scrollView.contentInset = UIEdgeInsets(top: -insetToAdjust.top, left: -insetToAdjust.left,
+                                                   bottom: -insetToAdjust.bottom, right: -insetToAdjust.right)
         }
     }
     
@@ -170,6 +180,34 @@ public class InAppWebView: WKWebView, UIScrollViewDelegate, WKUIDelegate,
     }
     @objc func keyboardWillHide(notification: NSNotification) {
         _scrollViewContentInsetAdjusted = false
+        // Resetting the latch is not enough, and used to be all this method did: the **negative**
+        // `contentInset` that `keyboardWillShow` installed survives the keyboard's dismissal, so the
+        // compensation keeps cancelling a safe-area contribution that has shrunk back. Measured on
+        // iOS 26.5 with `contentInsetAdjustmentBehavior: .always`, focusing then blurring an input:
+        //
+        //   on willShow entry   contentInset (0, 0, 0, 0)      adjusted (62, 0, 68, 0)
+        //   on willShow exit    contentInset (-62, 0, -68, 0)  adjusted (0, 0, 0, 0)    <- correct
+        //   on willHide entry   contentInset (-62, 0, -68, 0)  adjusted (0, 0, -34, 0)  <- stale
+        //   0.5s after willHide contentInset (-62, 0, -68, 0)  adjusted (0, 0, -34, 0)  <- unrestored
+        //
+        // The 34 is the home-indicator safe area, which the keyboard had been adding on top of; with
+        // the block below the last line instead reads
+        // `contentInset (-62, 0, -34, 0)  adjusted (0, 0, 0, 0)`, i.e. the invariant is back.
+        //
+        // A negative `adjustedContentInset.bottom` shortens the scrollable range, which is the
+        // rubber-band-before-the-bottom symptom of issue #1947 -- the very issue the observers above
+        // were added to fix. Only the `frame` setter recomputed it, so the WebView recovered only if
+        // it happened to be resized; with `resizeToAvoidBottomInset: false` on the Flutter side, the
+        // frame does not change when the keyboard appears, so nothing recovered it at all.
+        //
+        // Asynchronous because the invariant has to be recomputed from the *settled* safe area.
+        // `[weak self]` and the latch re-check because focus can move to another input in the
+        // meantime: `keyboardWillShow` then runs before this block and its compensation must not be
+        // undone.
+        DispatchQueue.main.async { [weak self] in
+            guard let self = self, !self._scrollViewContentInsetAdjusted else { return }
+            self.neutralizeAdjustedContentInset()
+        }
     }
     
     required public init(coder aDecoder: NSCoder) {

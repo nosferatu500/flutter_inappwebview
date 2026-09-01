@@ -59,6 +59,22 @@ Twelve WebKit APIs read out of the iOS 26.5 SDK:
 
 ### Fixed
 
+- **`keyboardWillHide` left a stale negative `scrollView.contentInset` behind, so the page could not
+  scroll to the bottom after the keyboard had been dismissed** (upstream issue `#1947`, which the
+  observers in `prepare()` were added to fix in the first place; upstream PR `#2860` fixes the same
+  thing). `keyboardWillShow` installs a negative `contentInset` to cancel the enlarged safe-area
+  contribution; `keyboardWillHide` reset only its `_scrollViewContentInsetAdjusted` latch and left
+  the inset in place, so once the keyboard was gone the compensation over-corrected by the size of
+  the home-indicator safe area. Measured on iOS 26.5 with
+  `contentInsetAdjustmentBehavior: .always`: `adjustedContentInset.bottom` settled at **-34** and
+  stayed there. Only the `frame` setter ever recomputed it, so a WebView recovered only if something
+  resized it — and with `resizeToAvoidBottomInset: false` on the Flutter side the frame does not
+  change when the keyboard appears, which is exactly the configuration the `keyboardWillShow` code
+  is written for. `keyboardWillHide` now restores the invariant asynchronously, from the settled safe
+  area, skipping the restore if focus has already moved to another input. The zero-then-negate
+  computation the `frame` setter has always used is now a single `neutralizeAdjustedContentInset()`
+  rather than a second copy. Affects iOS 17.2+ only, where the observers are registered.
+
 The first iOS integration runs in this fork's history found four defects that no compiler, linter or
 unit test could see. All four are fixed and proved both ways on a simulator.
 

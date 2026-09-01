@@ -448,6 +448,19 @@ since the `WebsiteDataType.ALL` fix below. It stays **deliberately out of `ALL`*
 
 ### Fixed
 
+**iOS — the page could not be scrolled to the bottom after the on-screen keyboard had been
+dismissed** (upstream `#1947`; upstream PR `#2860` fixes the same defect). While the keyboard is up
+the plugin installs a negative `contentInset` to cancel the enlarged safe area; when the keyboard
+went away it reset only its internal latch and left the inset behind, so the compensation
+over-corrected by the height of the home-indicator safe area and the last ~34 points of the page
+became unreachable, rubber-banding instead of scrolling. Nothing recovered it unless the WebView
+happened to be resized — and the code path exists precisely for apps that set
+`resizeToAvoidBottomInset: false`, where it is not. Measured on iOS 26.5:
+`adjustedContentInset.bottom` settled at `-34` and stayed there; it now settles at `0`. **iOS 17.2+
+only** — below that the plugin never installs the keyboard observers, so the behaviour there is
+unchanged. Unrelated to `InAppWebViewSettings.obscuredContentInsets`, which is iOS 26.0+ and does not
+replace this path.
+
 **Android — `WebMessageListener`'s `allowedOriginRules` could admit an origin it was not written
 for.** The allow-list's IPv6 comparison ran through `InetAddress.canonicalHostName`, a reverse DNS
 lookup, so it compared *hostnames* rather than addresses: a rule of `[::1]` and a page origin of
