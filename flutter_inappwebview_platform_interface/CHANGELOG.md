@@ -243,6 +243,12 @@ rename; this entry is the API-owner's view.
   `applicationNameForUserAgent`, and `preferredHTTPSNavigationPolicy` for `upgradeKnownHostsToHTTPS`.
   The other iOS settings are unaffected: writes through `WKPreferences` and `WKWebpagePreferences`
   reach the live WebView, and eight of them were measured doing so in the same run
+- **`getCertificate` documents what it actually reports on iOS.** WebKit has no equivalent API, so
+  the plugin answers from the certificate it recorded during a server-trust challenge — and WebKit
+  issues that challenge **once per host per process**. Measured: of three WebViews loading the same
+  https URL in turn, only the first is challenged. So the value is process-wide, can predate the
+  current page load and even the WebView asking for it, and is `null` until the process has been
+  challenged for that host at least once
 - `onLoadStop` now documents that it is **not** guaranteed after every navigation: a page that
   cancels its own load — single-page apps intercepting history changes, typically after `goBack` /
   `goForward` — ends in `onReceivedError` with `WebResourceErrorType.CANCELLED` and no `onLoadStop`

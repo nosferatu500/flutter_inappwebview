@@ -1755,7 +1755,10 @@ abstract class PlatformInAppWebViewController extends PlatformInterface
         apiUrl:
             'https://developer.android.com/reference/android/webkit/WebView#getCertificate()',
       ),
-      IOSPlatform(),
+      IOSPlatform(
+        note:
+            'WebKit has no equivalent API, so this is the certificate the plugin recorded during a `NSURLAuthenticationMethodServerTrust` challenge for the page\'s host. **WebKit issues that challenge only once per host per process**: a second WebView loading the same host is not challenged at all, so the certificate is process-wide and can predate the current page load, this WebView, and even the WebView that is asking. It is `null` until the process has been challenged for that host at least once — which, for the very first load of a host, may be after `onLoadStop`.',
+      ),
     ],
   )
   Future<SslCertificate?> getCertificate() {

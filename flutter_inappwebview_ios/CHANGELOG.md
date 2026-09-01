@@ -47,6 +47,19 @@ Nine WebKit APIs read out of the iOS 26.5 SDK:
 The first iOS integration runs in this fork's history found four defects that no compiler, linter or
 unit test could see. All four are fixed and proved both ways on a simulator.
 
+- **HTTP auth retry state was shared by every WebView in the process, and could send a saved
+  password to the wrong host.** `InAppWebView.credentialsProposed` — the queue of saved credentials
+  tried one per challenge when `onReceivedHttpAuthRequest` returns
+  `HttpAuthResponseAction.USE_SAVED_HTTP_AUTH_CREDENTIALS` — was a `private static`. Two WebViews
+  authenticating at the same time popped from the same queue, and **any** WebView's `didFinish` or
+  `didFail` emptied it mid-challenge; an SSL challenge on one WebView cleared another's queue too.
+  It is now per WebView.
+
+  Per-WebView alone was not enough: nothing checked that a popped credential belonged to the
+  challenge being answered, so a queue filled for one host could be popped for another — a page with
+  authenticated subresources on a second origin is enough, without any second WebView. The queue now
+  records the protection space (host, protocol, realm, port) it was filled for and is discarded when
+  that changes
 - **Ten `WKUIDelegate` / `WKNavigationDelegate` methods were never called at all.** The Swift 6
   migration left them declaring plain `@escaping (…) -> Void` handlers where the SDK declares
   `WK_SWIFT_UI_ACTOR` (`@MainActor @Sendable`); Swift only infers `@objc` for an optional protocol

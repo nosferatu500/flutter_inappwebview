@@ -33,8 +33,38 @@ public class InAppWebView: WKWebView, UIScrollViewDelegate, WKUIDelegate,
     weak var fullscreenWindow: UIWindow? // Track the window that entered fullscreen
     var preventGestureDelay = false
     
+    /// Certificates seen by server-trust challenges, keyed by host name, and read back by
+    /// `getCertificate()`.
+    ///
+    /// **Process-wide and never evicted on purpose**, though `TODO.md` P4c filed both properties as
+    /// defects. Measured on iOS 26.5 (`DEPRECATION_CLEANUP.md` §97): WebKit issues the server-trust
+    /// challenge **once per host per process**. Three WebViews loading the same https URL in turn —
+    /// the first is challenged, the second and third are not challenged at all. So a per-WebView map
+    /// leaves every WebView after the first with nothing to answer `getCertificate()` with, and
+    /// evicting an entry loses it for the life of the process, because nothing will ever refill it.
+    ///
+    /// The cost is the honest one: `getCertificate()` reports the certificate this *process* saw
+    /// when it first connected to the host, which may have been another WebView, at another time.
+    /// The Dart doc says so.
     private static var sslCertificatesMap: [String: SslCertificate] = [:] // [URL host name : SslCertificate]
-    private static var credentialsProposed: [URLCredential] = []
+
+    /// The saved credentials still to try for [credentialsProposedSpace], most recent popped first.
+    ///
+    /// Was also a `private static`: **one stack shared by every `InAppWebView`**, and any WebView's
+    /// `didFinish` or `didFail` emptied it. Two WebViews authenticating at once consumed each
+    /// other's proposed credentials, and one finishing a load mid-challenge cleared the other's
+    /// queue (`TODO.md` P4c).
+    private var credentialsProposed: [URLCredential] = []
+
+    /// The protection space [credentialsProposed] was filled for, as (host, protocol, realm, port).
+    ///
+    /// Making the stack per-WebView is not enough on its own: nothing checked that a popped
+    /// credential belonged to the *challenge being answered*. One WebView can be challenged by two
+    /// hosts before either navigation completes — a page with authenticated subresources on a second
+    /// origin — and the stack filled for the first host would then be popped for the second, sending
+    /// a password to a host the user never saved it for. The stack is now discarded when the space
+    /// changes.
+    private var credentialsProposedSpace: (host: String, prot: String?, realm: String?, port: Int)?
     
     var lastScrollX: CGFloat = 0
     var lastScrollY: CGFloat = 0
@@ -2024,7 +2054,7 @@ public class InAppWebView: WKWebView, UIScrollViewDelegate, WKUIDelegate,
     public func webView(_ webView: WKWebView, didFinish navigation: WKNavigation!) {
         initializeWindowIdJS()
         
-        InAppWebView.credentialsProposed = []
+        resetCredentialsProposed()
         evaluateJavaScript(JavaScriptBridgeJS.PLATFORM_READY_JS_SOURCE, completionHandler: nil)
         
         // sometimes scrollView.contentSize doesn't fit all the frame.size available
@@ -2047,7 +2077,7 @@ public class InAppWebView: WKWebView, UIScrollViewDelegate, WKUIDelegate,
     }
     
     public func webView(_ webView: WKWebView, didFail navigation: WKNavigation!, withError error: Error) {
-        InAppWebView.credentialsProposed = []
+        resetCredentialsProposed()
         
         var urlError: URL = url ?? URL(string: "about:blank")!
         var errorCode = -1
@@ -2091,12 +2121,19 @@ public class InAppWebView: WKWebView, UIScrollViewDelegate, WKUIDelegate,
             let port = challenge.protectionSpace.port
             
             let callback = WebViewChannelDelegate.ReceivedHttpAuthRequestCallback()
-            callback.nonNullSuccess = { (response: HttpAuthResponse) in
+            // `[weak self]` is not optional here. This closure is retained by the channel reply
+            // machinery, and the engine can release that block on a dispatch worker thread; a strong
+            // capture would then drop the last reference to this WebView off the main actor, and
+            // `WebViewChannelDelegate`'s deinit traps there (`DEPRECATION_CLEANUP.md` §97 — the §73
+            // crash, reproduced by exactly this capture and fixed by removing it).
+            callback.nonNullSuccess = { [weak self] (response: HttpAuthResponse) in
+                // No WebView left to authenticate: fall through to `defaultBehaviour`.
+                guard let self = self else { return true }
                 if let action = response.action {
                     completionHandlerCalled = true
                     switch action {
                         case 0:
-                            InAppWebView.credentialsProposed = []
+                            self.resetCredentialsProposed()
                             // used .performDefaultHandling to maintain consistency with Android
                             // because .cancelAuthenticationChallenge will call webView(_:didFail:withError:)
                             completionHandler(.performDefaultHandling, nil)
@@ -2111,22 +2148,28 @@ public class InAppWebView: WKWebView, UIScrollViewDelegate, WKUIDelegate,
                             completionHandler(.useCredential, credential)
                             break
                         case 2:
-                            if InAppWebView.credentialsProposed.count == 0 {
+                            // A queue filled for another protection space must not be popped here.
+                            let space = (host: host, prot: prot, realm: realm, port: port)
+                            if self.credentialsProposedSpace == nil || self.credentialsProposedSpace! != space {
+                                self.credentialsProposed = []
+                                self.credentialsProposedSpace = space
+                            }
+                            if self.credentialsProposed.count == 0 {
                                 for (protectionSpace, credentials) in CredentialDatabase.credentialStore.allCredentials {
                                     if protectionSpace.host == host && protectionSpace.realm == realm &&
                                     protectionSpace.protocol == prot && protectionSpace.port == port {
                                         for credential in credentials {
-                                            InAppWebView.credentialsProposed.append(credential.value)
+                                            self.credentialsProposed.append(credential.value)
                                         }
                                         break
                                     }
                                 }
                             }
-                            if InAppWebView.credentialsProposed.count == 0, let credential = challenge.proposedCredential {
-                                InAppWebView.credentialsProposed.append(credential)
+                            if self.credentialsProposed.count == 0, let credential = challenge.proposedCredential {
+                                self.credentialsProposed.append(credential)
                             }
                             
-                            if let credential = InAppWebView.credentialsProposed.popLast() {
+                            if let credential = self.credentialsProposed.popLast() {
                                 completionHandler(.useCredential, credential)
                             }
                             else {
@@ -2134,7 +2177,7 @@ public class InAppWebView: WKWebView, UIScrollViewDelegate, WKUIDelegate,
                             }
                             break
                         default:
-                            InAppWebView.credentialsProposed = []
+                            self.resetCredentialsProposed()
                             completionHandler(.performDefaultHandling, nil)
                     }
                     return false
@@ -2175,22 +2218,26 @@ public class InAppWebView: WKWebView, UIScrollViewDelegate, WKUIDelegate,
             if let scheme = challenge.protectionSpace.protocol, scheme == "https" {
                 // workaround for ProtectionSpace SSL Certificate
                 // https://github.com/pichillilorenzo/flutter_inappwebview/issues/1678
+                let protectionSpace = challenge.protectionSpace
                 DispatchQueue.global().async {
-                    if let sslCertificate = challenge.protectionSpace.sslCertificate {
+                    if let sslCertificate = protectionSpace.sslCertificate {
                         DispatchQueue.main.async {
-                            InAppWebView.sslCertificatesMap[challenge.protectionSpace.host] = sslCertificate
+                            InAppWebView.sslCertificatesMap[protectionSpace.host] = sslCertificate
                         }
                     }
                 }
             }
             
             let callback = WebViewChannelDelegate.ReceivedServerTrustAuthRequestCallback()
-            callback.nonNullSuccess = { (response: ServerTrustAuthResponse) in
+            // `[weak self]`, for the reason above -- and this one matters most: a server-trust
+            // challenge fires on nearly every https navigation.
+            callback.nonNullSuccess = { [weak self] (response: ServerTrustAuthResponse) in
+                guard let self = self else { return true }
                 if let action = response.action {
                     completionHandlerCalled = true
                     switch action {
                         case 0:
-                            InAppWebView.credentialsProposed = []
+                            self.resetCredentialsProposed()
                             completionHandler(.cancelAuthenticationChallenge, nil)
                             break
                         case 1:
@@ -2203,7 +2250,7 @@ public class InAppWebView: WKWebView, UIScrollViewDelegate, WKUIDelegate,
                             }
                             break
                         default:
-                            InAppWebView.credentialsProposed = []
+                            self.resetCredentialsProposed()
                             completionHandler(.performDefaultHandling, nil)
                     }
                     return false
@@ -3370,6 +3417,13 @@ if(window.\(JavaScriptBridgeJS.get_JAVASCRIPT_BRIDGE_NAME())[\(_callHandlerID)] 
         return self.scrollView.subviews.first?.becomeFirstResponder() ?? false
     }
     
+    /// Drops the saved-credential queue *and* the protection space it was filled for, so the next
+    /// challenge starts from the credential database again rather than from a stale queue.
+    private func resetCredentialsProposed() {
+        credentialsProposed = []
+        credentialsProposedSpace = nil
+    }
+
     public func getCertificate() -> SslCertificate? {
         guard let scheme = url?.scheme,
               scheme == "https",

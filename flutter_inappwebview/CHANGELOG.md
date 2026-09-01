@@ -449,6 +449,15 @@ match where `findAll` promises every match highlighted. The plugin already uses 
 where a counting API exists — `UIFindInteraction` on iOS 16+, via
 `InAppWebViewSettings.isFindInteractionEnabled`.
 
+**iOS — HTTP auth credentials were shared between WebViews, and could reach the wrong host.** The
+queue of saved credentials that `HttpAuthResponseAction.USE_SAVED_HTTP_AUTH_CREDENTIALS` walks was
+process-global: two WebViews authenticating at once consumed each other's credentials, and any
+WebView finishing or failing a load emptied the queue mid-challenge. It is now per WebView, and a
+queue filled for one protection space is discarded rather than popped for another — so a password
+saved for one host can no longer be offered to a different one. `getCertificate` also documents that
+on iOS it reports a **process-wide** certificate recorded during a server-trust challenge, which
+WebKit issues only once per host per process.
+
 **iOS — 15 settings are applied only when the WebView is created, and now say so.** Changing any
 of them with `setSettings` on a running WebView has never had an effect, and the plugin no longer
 pretends otherwise: `WKWebView.configuration` returns a fresh copy on every access — measured, not
