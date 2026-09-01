@@ -147,6 +147,16 @@ for, and five others have a native *value* that differs from their name.
   `WebViewCompat.addWebMessageListener`, which matches origins inside the WebView, and nothing in
   this module calls the Kotlin copy. It is fixed and unit-tested (`Util.hostMatchesWildcardRule`)
   because the same rule is live on iOS and a fork should not ship two spellings of one security check
+- **The HTTP-auth state was process-global, and one WebView could be given another's password.**
+  `previousAuthRequestFailureCount` and `credentialsProposed` were `companion object` vars on
+  **both** `InAppWebViewClient` and `InAppWebViewClientCompat`, so every WebView in the app shared
+  one credential queue and one failure counter, and any WebView's `onPageFinished` /
+  `onReceivedError` emptied them mid-challenge for the others. Worse, the queue is *fetched* by
+  matching host + protocol + realm + port but nothing re-checked that on the way out, so **a queue
+  filled for one host could be popped for another** — one page with authenticated subresources on a
+  second origin is enough, no second WebView required. Both are now per-WebView instance state in a
+  new `HttpAuthState`, which also discards the queue and the counter when the protection space
+  changes. 9 unit tests
 - **AGP 9 / ProGuard** compatibility (upstream #2852, #2765, #2761)
 - Deleted the dead ~300-line `InputAwareWebView` path
 

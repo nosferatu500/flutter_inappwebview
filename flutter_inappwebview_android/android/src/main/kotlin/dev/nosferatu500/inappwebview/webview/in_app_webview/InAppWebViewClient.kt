@@ -33,7 +33,6 @@ import dev.nosferatu500.inappwebview.types.NavigationAction
 import dev.nosferatu500.inappwebview.types.NavigationActionPolicy
 import dev.nosferatu500.inappwebview.types.ServerTrustAuthResponse
 import dev.nosferatu500.inappwebview.types.ServerTrustChallenge
-import dev.nosferatu500.inappwebview.types.URLCredential
 import dev.nosferatu500.inappwebview.types.URLProtectionSpace
 import dev.nosferatu500.inappwebview.types.URLRequest
 import dev.nosferatu500.inappwebview.types.WebResourceErrorExt
@@ -47,6 +46,14 @@ import java.util.Locale
 
 open class InAppWebViewClient(private var inAppBrowserDelegate: InAppBrowserDelegate?) :
   WebViewClient() {
+
+  /**
+   * The HTTP-auth conversation state for **this** WebView.
+   *
+   * It was two `private var`s in the `companion object` — process-global, shared by every WebView
+   * in the app. See [HttpAuthState] for what that cost.
+   */
+  private val httpAuthState = HttpAuthState()
 
   override fun shouldOverrideUrlLoading(view: WebView, request: WebResourceRequest): Boolean {
     val webView = view as InAppWebView
@@ -194,8 +201,7 @@ open class InAppWebViewClient(private var inAppBrowserDelegate: InAppBrowserDele
     val webView = view as InAppWebView
     webView.isLoading = false
     loadCustomJavaScriptOnPageFinished(webView)
-    previousAuthRequestFailureCount = 0
-    credentialsProposed = null
+    httpAuthState.reset()
 
     super.onPageFinished(view, url)
 
@@ -238,8 +244,7 @@ open class InAppWebViewClient(private var inAppBrowserDelegate: InAppBrowserDele
       }
 
       webView.isLoading = false
-      previousAuthRequestFailureCount = 0
-      credentialsProposed = null
+      httpAuthState.reset()
 
       inAppBrowserDelegate?.didFailNavigation(
         request.url.toString(), error.errorCode, error.description.toString()
@@ -295,20 +300,21 @@ open class InAppWebViewClient(private var inAppBrowserDelegate: InAppBrowserDele
       }
     }
 
-    previousAuthRequestFailureCount++
+    val failureCount = httpAuthState.beginChallenge(host, protocol, realm, port)
 
-    if (credentialsProposed == null) {
-      credentialsProposed = CredentialDatabase.getInstance(view.context)
-        .getHttpAuthCredentials(host, protocol, realm, port)
-        .toMutableList()
+    if (httpAuthState.needsCredentials()) {
+      httpAuthState.setCredentials(
+        CredentialDatabase.getInstance(view.context)
+          .getHttpAuthCredentials(host, protocol, realm, port)
+      )
     }
 
-    val credentialProposed = credentialsProposed?.firstOrNull()
+    val credentialProposed = httpAuthState.peekCredential()
 
     val protectionSpace =
       URLProtectionSpace(host!!, protocol, realm, port, view.certificate, null)
     val challenge = HttpAuthenticationChallenge(
-      protectionSpace, previousAuthRequestFailureCount, credentialProposed
+      protectionSpace, failureCount, credentialProposed
     )
 
     val webView = view as InAppWebView
@@ -331,9 +337,8 @@ open class InAppWebViewClient(private var inAppBrowserDelegate: InAppBrowserDele
             }
 
             2 -> {
-              val proposed = credentialsProposed
-              if (proposed != null && proposed.isNotEmpty()) {
-                val credential = proposed.removeAt(0)
+              val credential = httpAuthState.popCredential()
+              if (credential != null) {
                 handler.proceed(credential.username, credential.password)
               } else {
                 handler.cancel()
@@ -343,8 +348,7 @@ open class InAppWebViewClient(private var inAppBrowserDelegate: InAppBrowserDele
             }
 
             else -> {
-              credentialsProposed = null
-              previousAuthRequestFailureCount = 0
+              httpAuthState.reset()
               handler.cancel()
             }
           }
@@ -744,7 +748,5 @@ open class InAppWebViewClient(private var inAppBrowserDelegate: InAppBrowserDele
 
   companion object {
     protected const val LOG_TAG = "IAWebViewClient"
-    private var previousAuthRequestFailureCount = 0
-    private var credentialsProposed: MutableList<URLCredential>? = null
   }
 }

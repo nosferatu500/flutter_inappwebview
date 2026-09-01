@@ -610,6 +610,14 @@ simulator for the first time:**
   JavaScript object exists, and it is the only gate on the Dart → page direction, so an app could
   `postMessage` into a page its allow-list never named; on Android the WebView does the matching
   natively and was never affected. The dotless spelling `*example.com` is deliberately unchanged
+- **A saved password could be sent to the wrong host, on both platforms.** The `USE_SAVED_HTTP_AUTH_CREDENTIALS`
+  queue is filled by matching host + scheme + realm + port, but nothing re-checked that when handing
+  a credential out, so a queue filled for host A could be popped for host B — reachable from a single
+  page with authenticated subresources on a second origin. Fixed on iOS in 7.0.0's earlier
+  `credentialsProposed` work and now on Android. On Android the same state was additionally
+  **process-global**, shared by every WebView in the app: one WebView's `onPageFinished` emptied
+  another's queue mid-challenge, and one WebView's failures were reported to another's handler as
+  `HttpAuthenticationChallenge.previousFailureCount`. Both are now per-WebView
 - 48 dead availability checks removed on iOS — all of them at or below the new 15.0 floor — along
   with the below-iOS-14 `callAsyncJavaScript` path and the dead `SFAuthenticationSession` branches;
   and the dead ~300-line `InputAwareWebView` path deleted on Android
