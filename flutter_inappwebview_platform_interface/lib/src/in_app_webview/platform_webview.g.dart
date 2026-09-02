@@ -868,6 +868,20 @@ enum PlatformWebViewCreationParamsProperty {
   ///{@endtemplate}
   onWindowFocus,
 
+  ///Can be used to check if the [PlatformWebViewCreationParams.onWritingToolsActiveChanged] property is supported at runtime.
+  ///
+  ///{@template flutter_inappwebview_platform_interface.PlatformWebViewCreationParams.onWritingToolsActiveChanged.supported_platforms}
+  ///
+  ///**Officially Supported Platforms/Implementations**:
+  ///- iOS WKWebView 18.0+ ([Official API - WKWebView.writingToolsActive](https://developer.apple.com/documentation/webkit/wkwebview/4433211-writingtoolsactive))
+  ///
+  ///**Parameters - Officially Supported Platforms/Implementations**:
+  ///- [active]: all platforms
+  ///
+  ///Use the [PlatformWebViewCreationParams.isPropertySupported] method to check if this property is supported at runtime.
+  ///{@endtemplate}
+  onWritingToolsActiveChanged,
+
   ///Can be used to check if the [PlatformWebViewCreationParams.onZoomScaleChanged] property is supported at runtime.
   ///
   ///{@template flutter_inappwebview_platform_interface.PlatformWebViewCreationParams.onZoomScaleChanged.supported_platforms}
@@ -1320,6 +1334,9 @@ extension _PlatformWebViewCreationParamsPropertySupported
               TargetPlatform.android,
               TargetPlatform.iOS,
             ].contains(platform ?? defaultTargetPlatform);
+      case PlatformWebViewCreationParamsProperty.onWritingToolsActiveChanged:
+        return ((kIsWeb && platform != null) || !kIsWeb) &&
+            [TargetPlatform.iOS].contains(platform ?? defaultTargetPlatform);
       case PlatformWebViewCreationParamsProperty.onZoomScaleChanged:
         return ((kIsWeb && platform != null) || !kIsWeb) &&
             [

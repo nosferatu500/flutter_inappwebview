@@ -1529,6 +1529,21 @@ In that case, after the `window.addEventListener("flutterInAppWebViewPlatformRea
     MediaCaptureState? newState,
   ) {}
 
+  ///{@macro flutter_inappwebview_platform_interface.PlatformWebViewCreationParams.onWritingToolsActiveChanged}
+  ///
+  ///{@macro flutter_inappwebview_platform_interface.PlatformInAppBrowserEvents.onWritingToolsActiveChanged.supported_platforms}
+  @SupportedPlatforms(
+    platforms: [
+      IOSPlatform(
+        apiName: 'WKWebView.writingToolsActive',
+        apiUrl:
+            'https://developer.apple.com/documentation/webkit/wkwebview/4433211-writingtoolsactive',
+        available: '18.0',
+      ),
+    ],
+  )
+  void onWritingToolsActiveChanged(bool active) {}
+
   ///{@macro flutter_inappwebview_platform_interface.PlatformWebViewCreationParams.onContentSizeChanged}
   ///
   ///{@macro flutter_inappwebview_platform_interface.PlatformInAppBrowserEvents.onContentSizeChanged.supported_platforms}

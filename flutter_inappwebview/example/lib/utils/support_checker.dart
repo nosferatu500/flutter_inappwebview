@@ -1970,6 +1970,14 @@ class SupportChecker {
           className: className,
           category: 'iOS/macOS',
         ),
+        ApiEventDefinition(
+          name: PlatformWebViewCreationParamsProperty
+              .onWritingToolsActiveChanged
+              .name,
+          description: 'Called when Writing Tools becomes active or inactive.',
+          className: className,
+          category: 'iOS/macOS',
+        ),
 
         // Windows events
 

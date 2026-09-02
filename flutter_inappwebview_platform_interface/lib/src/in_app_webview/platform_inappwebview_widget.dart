@@ -91,6 +91,7 @@ class PlatformInAppWebViewWidgetCreationParams
     super.shouldAllowDeprecatedTLS,
     super.onCameraCaptureStateChanged,
     super.onMicrophoneCaptureStateChanged,
+    super.onWritingToolsActiveChanged,
     super.onContentSizeChanged,
     super.onShowFileChooser,
     super.onInsertInputSuggestion,

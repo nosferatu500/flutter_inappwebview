@@ -1231,7 +1231,18 @@ public class WebViewChannelDelegate: ChannelDelegate {
         ]
         channel?.invokeMethod("onMicrophoneCaptureStateChanged", arguments: arguments)
     }
-    
+
+    /// Carries only the new value: WebKit exposes no reason, no range and no tool identity, and the
+    /// old value is always the negation of the new one because the KVO branch only sends on a real
+    /// change.
+    public func onWritingToolsActiveChanged(active: Bool) {
+        let arguments: [String: Any?] = [
+            "active": active
+        ]
+        channel?.invokeMethod("onWritingToolsActiveChanged", arguments: arguments)
+    }
+
+
     public class PrintRequestCallback: BaseCallbackResult<Bool> {
         override init() {
             super.init()

@@ -176,6 +176,16 @@ rename; this entry is the API-owner's view.
   rather than an event filter — while it is off the native side reports that it does not implement
   the delegate method, leaving WebKit's own behaviour untouched — and it is inferred as `true` when
   the event handler is supplied and the setting is `null`, except on `PlatformInAppBrowser`
+- **`PlatformWebViewCreationParams.onWritingToolsActiveChanged`** and the matching
+  `PlatformInAppBrowserEvents.onWritingToolsActiveChanged` (iOS 18.0+), from
+  `WKWebView.writingToolsActive`. Payload is a bare `bool active` — no new type, because WebKit
+  exposes no reason, no range and no tool identity. **Modelled as an event, not a getter**: the
+  property is read-only and documented KVO-compliant, so the plugin observes it and pushes, rather
+  than offering something a caller would have to poll. The native side sends only on a real change
+  (KVO fires on every set, not only on sets that alter the value), so the old value is always the
+  negation of the new one and is not carried. **No `InAppWebViewSettings` gate**, unlike
+  `useOnInsertInputSuggestion`: a KVO observer is passive and changes nothing about WebKit's own
+  behaviour, so §46's all-or-nothing hazard does not apply here
 - **`PlatformCookieManager.setAcceptCookie` / `.isAcceptCookieEnabled` gained iOS** (17.0+), from
   `WKHTTPCookieStore.setCookiePolicy` / `getCookiePolicy`. No signature change and no new method —
   two `@SupportedPlatforms` entries and an iOS implementation, so the pair stops being Android-only.

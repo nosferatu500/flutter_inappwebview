@@ -497,6 +497,17 @@ Fourteen WebKit APIs read out of the iOS 26.5 SDK, plus one feature that was hal
   has its own. And there is **one observer per app**, not one per `CookieManager`: the store is
   process-wide, so setting a second observer replaces the first rather than adding a listener. Pass
   `null` to stop; the plugin only registers with WebKit while an observer is set
+- **`onWritingToolsActiveChanged`** (iOS 18.0+), from `WKWebView.writingToolsActive` — fired when
+  the system Writing Tools UI starts or stops operating on text in the page (Rewrite, Proofread,
+  Summarize). Use it to get out of the way while it runs: pause your own editing UI, suspend
+  autosave, stop reloading content the user is having rewritten.
+
+  **It is an event rather than a getter because the platform property is read-only and documented
+  KVO-compliant** — the state changes without your app asking, so a getter would have to be polled.
+  The value starts `false` and no event is sent for that, so a handler — which can only be installed
+  when the WebView is created — cannot miss a transition and has nothing to read back first. The
+  event does not say *which* tool ran or what it changed; WebKit exposes neither. What Writing Tools
+  is allowed to do is `InAppWebViewSettings.writingToolsBehavior`, the other half of this API.
 - **`DownloadStartRequest.isUserInitiated` / `.originatingFrame`** — from `WKDownload`
 
 `WebsiteDataType.WKWebsiteDataTypeScreenTime` is the third member of that family and has shipped

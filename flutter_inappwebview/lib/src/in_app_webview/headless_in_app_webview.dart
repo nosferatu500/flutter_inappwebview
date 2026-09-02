@@ -280,6 +280,8 @@ class HeadlessInAppWebView {
       MediaCaptureState? newState,
     )?
     onMicrophoneCaptureStateChanged,
+    void Function(InAppWebViewController controller, bool active)?
+    onWritingToolsActiveChanged,
     void Function(
       InAppWebViewController controller,
       Size oldContentSize,
@@ -525,6 +527,10 @@ class HeadlessInAppWebView {
                        oldState,
                        newState,
                      )
+               : null,
+           onWritingToolsActiveChanged: onWritingToolsActiveChanged != null
+               ? (controller, active) =>
+                     onWritingToolsActiveChanged.call(controller, active)
                : null,
            onContentSizeChanged: onContentSizeChanged != null
                ? (controller, oldContentSize, newContentSize) =>

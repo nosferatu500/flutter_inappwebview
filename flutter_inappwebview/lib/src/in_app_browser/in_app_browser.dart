@@ -513,6 +513,9 @@ class InAppBrowser implements PlatformInAppBrowserEvents {
   @override
   void onInsertInputSuggestion(InputSuggestion inputSuggestion) {}
 
+  @override
+  void onWritingToolsActiveChanged(bool active) {}
+
   ///{@macro flutter_inappwebview_platform_interface.PlatformInAppBrowser.isClassSupported}
   static bool isClassSupported({TargetPlatform? platform}) =>
       PlatformInAppBrowser.static().isClassSupported(platform: platform);

@@ -492,7 +492,18 @@ public class InAppWebView: WKWebView, UIScrollViewDelegate, WKUIDelegate,
             options: [.new, .old],
             context: nil)
 
-        
+        // WebKit documents `writingToolsActive` as KVO-compliant, which is the whole reason this is
+        // an event rather than a getter. Registered without `.initial` deliberately: the property
+        // starts `false` on a fresh WKWebView, so an initial callback would fire a change event on
+        // every WebView creation that reports no change.
+        if #available(iOS 18.0, *) {
+            addObserver(self,
+                forKeyPath: #keyPath(WKWebView.isWritingToolsActive),
+                options: [.new, .old],
+                context: nil)
+        }
+
+
         if #unavailable(iOS 16.0) {
             NotificationCenter.default.addObserver(
                 self,
@@ -915,6 +926,26 @@ public class InAppWebView: WKWebView, UIScrollViewDelegate, WKUIDelegate,
                         channelDelegate?.onCameraCaptureStateChanged(oldState: oldState, newState: newState)
                     } else {
                         channelDelegate?.onMicrophoneCaptureStateChanged(oldState: oldState, newState: newState)
+                    }
+                }
+            }
+
+            if #available(iOS 18.0, *) {
+                if keyPath == #keyPath(WKWebView.isWritingToolsActive) {
+                    // KVO boxes the BOOL as an `NSNumber`, so `as? Bool` is a bridge rather than a
+                    // plain cast. It was measured to succeed here (an instrumented run logged
+                    // `new=Optional(false)` for a change dictionary printing `new: 0`) — worth
+                    // stating, because a failed bridge would leave `newActive` nil and the event
+                    // would silently never fire.
+                    //
+                    // The comparison is what makes this a *change* event: KVO fires on every set,
+                    // not only on sets that alter the value. `oldActive` is nil rather than absurd
+                    // when KVO has no previous value to report, and `nil != false` correctly counts
+                    // as a change.
+                    let oldActive = change?[.oldKey] as? Bool
+                    let newActive = change?[.newKey] as? Bool
+                    if let newActive = newActive, newActive != oldActive {
+                        channelDelegate?.onWritingToolsActiveChanged(active: newActive)
                     }
                 }
             }
@@ -3663,6 +3694,11 @@ if(window.\(JavaScriptBridgeJS.get_JAVASCRIPT_BRIDGE_NAME())[\(_callHandlerID)] 
 
         if #available(iOS 16.0, *) {
             removeObserver(self, forKeyPath: #keyPath(WKWebView.fullscreenState))
+        }
+        // Same `#available` as the registration in `prepare()`: an unbalanced KVO removal throws,
+        // so the two guards have to agree exactly.
+        if #available(iOS 18.0, *) {
+            removeObserver(self, forKeyPath: #keyPath(WKWebView.isWritingToolsActive))
         }
         scrollView.removeObserver(self, forKeyPath: #keyPath(UIScrollView.contentOffset))
         scrollView.removeObserver(self, forKeyPath: #keyPath(UIScrollView.zoomScale))

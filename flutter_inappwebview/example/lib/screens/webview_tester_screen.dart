@@ -1285,6 +1285,18 @@ class _WebViewTesterScreenState extends State<WebViewTesterScreen>
         );
       },
 
+      // 55b. onWritingToolsActiveChanged -- iOS 18.0+, and it needs Apple Intelligence and a real
+      // device to fire, so it will stay silent in the simulator.
+      onWritingToolsActiveChanged: (controller, active) {
+        _logEvent(
+          EventType.ui,
+          PlatformWebViewCreationParamsProperty
+              .onWritingToolsActiveChanged
+              .name,
+          data: {'active': active},
+        );
+      },
+
       // 56. onContentSizeChanged
       onContentSizeChanged: (controller, oldContentSize, newContentSize) {
         _logEvent(

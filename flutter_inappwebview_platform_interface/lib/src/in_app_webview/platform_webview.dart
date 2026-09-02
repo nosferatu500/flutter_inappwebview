@@ -1426,6 +1426,41 @@ In that case, after the `window.addEventListener("flutterInAppWebViewPlatformRea
   )?
   onMicrophoneCaptureStateChanged;
 
+  ///{@template flutter_inappwebview_platform_interface.PlatformWebViewCreationParams.onWritingToolsActiveChanged}
+  ///Event fired when Writing Tools becomes active or inactive for the `WebView`.
+  ///
+  ///[active] is `true` while the system Writing Tools UI is operating on this `WebView` — the user
+  ///has invoked Rewrite, Proofread or Summarize on text in the page — and `false` when it finishes.
+  ///Use it to get out of the way while it runs: pause your own editing UI, suspend autosave, or
+  ///stop reloading content the user is having rewritten.
+  ///
+  ///**This is an event rather than a getter, and that is the platform's own shape.** The underlying
+  ///property is read-only and documented as key-value observing compliant, so the state changes
+  ///without anything in your app asking. A getter would have to be polled to be useful.
+  ///
+  ///**The value starts `false` and no event is delivered for that**, so a handler installed when
+  ///the `WebView` is created — the only place handlers can be installed — cannot miss a transition,
+  ///and there is nothing to read back before the first event.
+  ///
+  ///What Writing Tools may do while active depends on
+  ///[InAppWebViewSettings.writingToolsBehavior], which is the other half of this API and is set at
+  ///creation. This event does not say *which* tool is running, or what it changed — WebKit exposes
+  ///neither.
+  ///{@endtemplate}
+  ///
+  ///{@macro flutter_inappwebview_platform_interface.PlatformWebViewCreationParams.onWritingToolsActiveChanged.supported_platforms}
+  @SupportedPlatforms(
+    platforms: [
+      IOSPlatform(
+        apiName: 'WKWebView.writingToolsActive',
+        apiUrl:
+            'https://developer.apple.com/documentation/webkit/wkwebview/4433211-writingtoolsactive',
+        available: '18.0',
+      ),
+    ],
+  )
+  final void Function(T controller, bool active)? onWritingToolsActiveChanged;
+
   ///{@template flutter_inappwebview_platform_interface.PlatformWebViewCreationParams.onContentSizeChanged}
   ///Event fired when the content size of the `WebView` changes.
   ///
@@ -1683,6 +1718,7 @@ This is a limitation of the native WebKit APIs.""",
     this.shouldAllowDeprecatedTLS,
     this.onCameraCaptureStateChanged,
     this.onMicrophoneCaptureStateChanged,
+    this.onWritingToolsActiveChanged,
     this.onContentSizeChanged,
     this.onShowFileChooser,
     this.onInsertInputSuggestion,

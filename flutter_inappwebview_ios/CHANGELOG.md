@@ -72,6 +72,15 @@ Fourteen WebKit APIs read out of the iOS 26.5 SDK:
   **The `@objc` thunk was verified present** with `nm | swift-demangle` on both architectures rather
   than inferred from a green build — an optional protocol requirement only gets `@objc` when the
   signature matches exactly, which is how §68's ten dead delegate methods happened
+- **`onWritingToolsActiveChanged`** (18.0+), from `WKWebView.writingToolsActive` — the first event
+  this fork adds on the **KVO** path rather than a delegate. Registered in `prepare()` under
+  `#available(iOS 18.0, *)` and removed under the identical guard in `dispose()`: an unbalanced KVO
+  removal throws, so the two `#available`s have to agree exactly. Registered **without** `.initial`,
+  deliberately — the property starts `false`, so an initial callback would report a change on every
+  WebView creation. The `observeValue` branch compares old against new before sending, because KVO
+  fires on every set rather than only on sets that change the value. The Swift spelling is
+  `#keyPath(WKWebView.isWritingToolsActive)` (the header's `getter=isWritingToolsActive`), which is
+  compiler-checked — unlike a delegate method, there is no `nm` question here
 - **`setAcceptCookie` / `isAcceptCookieEnabled` on the cookie manager** (17.0+), from
   `WKHTTPCookieStore.setCookiePolicy` / `getCookiePolicy`. Answers to the wire names the Kotlin
   already uses, so one Dart method reaches both platforms. In Swift the enum is

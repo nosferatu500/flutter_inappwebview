@@ -1153,6 +1153,25 @@ class IOSInAppWebViewController extends PlatformInAppWebViewController
           }
         }
         break;
+      case "onWritingToolsActiveChanged":
+        if ((webviewParams != null &&
+                webviewParams!.onWritingToolsActiveChanged != null) ||
+            _inAppBrowserEventHandler != null) {
+          // Non-null on the wire: the Swift only sends this on a real change and always has a
+          // value to send.
+          bool active = call.arguments["active"];
+
+          if (webviewParams != null &&
+              webviewParams!.onWritingToolsActiveChanged != null) {
+            webviewParams!.onWritingToolsActiveChanged!(
+              _controllerFromPlatform,
+              active,
+            );
+          } else {
+            _inAppBrowserEventHandler!.onWritingToolsActiveChanged(active);
+          }
+        }
+        break;
       case "onContentSizeChanged":
         if ((webviewParams != null &&
                 webviewParams!.onContentSizeChanged != null) ||
