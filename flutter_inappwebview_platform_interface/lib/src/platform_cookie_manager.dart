@@ -572,6 +572,68 @@ In this case, this method will return always `true`.""",
     );
   }
 
+  ///{@template flutter_inappwebview_platform_interface.PlatformCookieManager.cookieStoreObserver}
+  ///The observer currently registered with [setCookieStoreObserver], or `null` if there is none.
+  ///
+  ///Answers `null` on any platform that cannot register one — which is every platform except iOS,
+  ///where [setCookieStoreObserver] throws instead of doing nothing. That is not the same as "the
+  ///observer was lost": there was never anything to lose.
+  ///
+  ///There is **one observer per app, not one per instance**: the cookie store is a single
+  ///process-wide object, so setting an observer on any [PlatformCookieManager] replaces the
+  ///observer every other one reports here.
+  ///{@endtemplate}
+  CookieStoreObserver? get cookieStoreObserver => null;
+
+  ///{@template flutter_inappwebview_platform_interface.PlatformCookieManager.setCookieStoreObserver}
+  ///Registers an [observer] that is notified whenever the cookie store changes, or removes the
+  ///current one when [observer] is `null`.
+  ///
+  ///This is the alternative to polling [getAllCookies] on a timer, which is the only thing a
+  ///caller could do before.
+  ///
+  ///**The notification carries no payload**, deliberately: the platform's own callback carries
+  ///none either — it says *that* the store changed, not what changed. To find out, read the store
+  ///again with [getAllCookies] or [getCookies] from inside the callback. Nothing is diffed for
+  ///you, and nothing is fetched on your behalf, because doing so would put an unasked-for read on
+  ///every cookie write in the app.
+  ///
+  ///**Writes made through this class count as changes.** Measured on iOS 17.5 and 26.5: one
+  ///[setCookie] fires it once, three in a row fire it three times — nothing is coalesced — and
+  ///[deleteAllCookies] fires it once. A pure read such as [getAllCookies] fires it not at all. So
+  ///a callback that re-reads the store will not loop, but a callback that *writes* to it will.
+  ///
+  ///**It observes the default cookie store only** — the same store every other method on this
+  ///class operates on. A `WKWebView` running on a non-persistent (incognito) data store has its
+  ///own cookie store and does not report through here.
+  ///
+  ///The native observer is registered only while an observer is set, so an app that never calls
+  ///this pays nothing, and it is removed when the plugin is disposed.
+  ///
+  ///**There is one observer for the whole app.** Calling this a second time — on this object or on
+  ///any other [PlatformCookieManager] — replaces the first, it does not add a second listener. The
+  ///store is process-wide, so an observer cannot belong to one instance.
+  ///{@endtemplate}
+  ///
+  ///{@macro flutter_inappwebview_platform_interface.PlatformCookieManager.setCookieStoreObserver.supported_platforms}
+  @SupportedPlatforms(
+    platforms: [
+      IOSPlatform(
+        apiName: 'WKHTTPCookieStore.addObserver',
+        apiUrl:
+            'https://developer.apple.com/documentation/webkit/wkhttpcookiestore/2915464-addobserver',
+        available: '11.0',
+        note:
+            'Android has no counterpart: `android.webkit.CookieManager` exposes no change notification.',
+      ),
+    ],
+  )
+  Future<void> setCookieStoreObserver(CookieStoreObserver? observer) {
+    throw UnimplementedError(
+      '${PlatformCookieManagerMethod.setCookieStoreObserver.name} is not implemented on the current platform',
+    );
+  }
+
   ///{@macro flutter_inappwebview_platform_interface.PlatformCookieManagerCreationParams.isClassSupported}
   bool isClassSupported({TargetPlatform? platform}) =>
       params.isClassSupported(platform: platform);
@@ -584,6 +646,67 @@ In this case, this method will return always `true`.""",
     TargetPlatform? platform,
   }) => _PlatformCookieManagerMethodSupported.isMethodSupported(
     method,
+    platform: platform,
+  );
+}
+
+///{@template flutter_inappwebview_platform_interface.CookieStoreObserver}
+///Class used by clients to be notified of cookie store changes.
+///
+///Register one with [PlatformCookieManager.setCookieStoreObserver]. It is modelled as a class
+///rather than a bare callback because the platform models it as a protocol, which may grow — the
+///same reason [ServiceWorkerClient] is a class with one field.
+///{@endtemplate}
+///
+///{@macro flutter_inappwebview_platform_interface.CookieStoreObserver.supported_platforms}
+@SupportedPlatforms(
+  platforms: [
+    IOSPlatform(
+      apiName: 'WKHTTPCookieStoreObserver',
+      apiUrl:
+          'https://developer.apple.com/documentation/webkit/wkhttpcookiestoreobserver',
+      available: '11.0',
+    ),
+  ],
+)
+class CookieStoreObserver {
+  ///{@template flutter_inappwebview_platform_interface.CookieStoreObserver.onCookiesChanged}
+  ///Notifies that the cookies in the store changed.
+  ///
+  ///It takes no arguments and there is nothing missing: the platform callback reports the *fact*
+  ///of a change and nothing else. Read the store from inside this callback if you need the new
+  ///state.
+  ///{@endtemplate}
+  ///
+  ///{@macro flutter_inappwebview_platform_interface.CookieStoreObserver.onCookiesChanged.supported_platforms}
+  @SupportedPlatforms(
+    platforms: [
+      IOSPlatform(
+        apiName: 'WKHTTPCookieStoreObserver.cookiesDidChangeInCookieStore',
+        apiUrl:
+            'https://developer.apple.com/documentation/webkit/wkhttpcookiestoreobserver/2915463-cookiesdidchange',
+        available: '11.0',
+      ),
+    ],
+  )
+  final void Function()? onCookiesChanged;
+
+  CookieStoreObserver({this.onCookiesChanged});
+
+  ///{@template flutter_inappwebview_platform_interface.CookieStoreObserver.isClassSupported}
+  ///Check if the current class is supported by the [defaultTargetPlatform] or a specific [platform].
+  ///{@endtemplate}
+  static bool isClassSupported({TargetPlatform? platform}) =>
+      _CookieStoreObserverClassSupported.isClassSupported(platform: platform);
+
+  ///{@template flutter_inappwebview_platform_interface.CookieStoreObserver.isPropertySupported}
+  ///Check if the given [property] is supported by the [defaultTargetPlatform] or a specific [platform].
+  ///{@endtemplate}
+  static bool isPropertySupported(
+    CookieStoreObserverProperty property, {
+    TargetPlatform? platform,
+  }) => _CookieStoreObserverPropertySupported.isPropertySupported(
+    property,
     platform: platform,
   );
 }

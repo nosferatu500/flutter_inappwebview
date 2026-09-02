@@ -9,17 +9,25 @@ import Foundation
 import WebKit
 import Flutter
 
-public class MyCookieManager: ChannelDelegate {
+public class MyCookieManager: ChannelDelegate, WKHTTPCookieStoreObserver {
     static let METHOD_CHANNEL_NAME = "dev.nosferatu500.inappwebview/inappwebview_cookiemanager"
     static let httpCookieStore = WKWebsiteDataStore.default().httpCookieStore
 
     private var plugin: InAppWebViewFlutterPlugin?
-    
+
+    /// Whether `self` is currently registered with `httpCookieStore` as a `WKHTTPCookieStoreObserver`.
+    ///
+    /// `addObserver:` is documented as **not retaining** the observer and as leaving unregistration
+    /// to the caller, so this flag exists to guarantee exactly one `removeObserver:` for every
+    /// `addObserver:` — a second `addObserver:` would deliver the callback twice, and a missed
+    /// `removeObserver:` would leave WebKit holding an unowned pointer to a deallocated delegate.
+    private var isObservingCookieStore = false
+
     init(plugin: InAppWebViewFlutterPlugin) {
         super.init(channel: FlutterMethodChannel(name: MyCookieManager.METHOD_CHANNEL_NAME, binaryMessenger: plugin.registrar.messenger()))
         self.plugin = plugin
     }
-    
+
     public override func handle(_ call: FlutterMethodCall, result: @escaping FlutterResult) {
         let arguments = call.arguments as? NSDictionary
         switch call.method {
@@ -74,6 +82,11 @@ public class MyCookieManager: ChannelDelegate {
                 break
             case "deleteAllCookies":
                 MyCookieManager.deleteAllCookies(result: result)
+                break
+            case "setCookieStoreObserver":
+                let isNull = arguments!["isNull"] as! Bool
+                setCookieStoreObserverEnabled(!isNull)
+                result(true)
                 break
             default:
                 result(flutterMethodNotImplemented)
@@ -283,7 +296,35 @@ public class MyCookieManager: ChannelDelegate {
         })
     }
     
+    /// Registers or unregisters `self` as the cookie store's observer.
+    ///
+    /// Registration is driven from Dart rather than done once at plugin start-up: an app that never
+    /// sets an observer should not pay a channel message for every cookie the WebView writes.
+    func setCookieStoreObserverEnabled(_ enabled: Bool) {
+        guard enabled != isObservingCookieStore else {
+            return
+        }
+        // `add(_:)` / `remove(_:)` in Swift; the ObjC selectors are `addObserver:` / `removeObserver:`
+        // and using those spellings is a hard error, not a deprecation.
+        if enabled {
+            MyCookieManager.httpCookieStore.add(self)
+        } else {
+            MyCookieManager.httpCookieStore.remove(self)
+        }
+        isObservingCookieStore = enabled
+    }
+
+    /// `WKHTTPCookieStoreObserver`. Carries no payload because the protocol declares none — it
+    /// reports that the store changed, and Dart re-reads it if it cares.
+    @objc public func cookiesDidChange(in cookieStore: WKHTTPCookieStore) {
+        let arguments: [String: Any?] = [:]
+        channel?.invokeMethod("onCookiesChanged", arguments: arguments)
+    }
+
     public override func dispose() {
+        // Before `super.dispose()`, which drops the channel: WebKit does not retain the observer,
+        // so leaving it registered would leave a dangling unowned reference behind this object.
+        setCookieStoreObserverEnabled(false)
         super.dispose()
         plugin = nil
     }

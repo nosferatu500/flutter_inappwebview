@@ -11,6 +11,7 @@ part 'flush.dart';
 part 'accept_cookie.dart';
 part 'has_cookies.dart';
 part 'file_scheme_cookies.dart';
+part 'cookie_store_observer.dart';
 
 void main() {
   final shouldSkip = !CookieManager.isClassSupported();
@@ -21,5 +22,6 @@ void main() {
     acceptCookie();
     hasCookies();
     fileSchemeCookies();
+    cookieStoreObserver();
   }, skip: shouldSkip);
 }

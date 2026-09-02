@@ -183,6 +183,15 @@ class CookieManager {
   static Future<bool?> isFileSchemeCookiesAllowed() =>
       PlatformCookieManager.static().isFileSchemeCookiesAllowed();
 
+  ///{@macro flutter_inappwebview_platform_interface.PlatformCookieManager.cookieStoreObserver}
+  CookieStoreObserver? get cookieStoreObserver => platform.cookieStoreObserver;
+
+  ///{@macro flutter_inappwebview_platform_interface.PlatformCookieManager.setCookieStoreObserver}
+  ///
+  ///{@macro flutter_inappwebview_platform_interface.PlatformCookieManager.setCookieStoreObserver.supported_platforms}
+  Future<void> setCookieStoreObserver(CookieStoreObserver? observer) =>
+      platform.setCookieStoreObserver(observer);
+
   ///{@macro flutter_inappwebview_platform_interface.PlatformCookieManagerCreationParams.isClassSupported}
   static bool isClassSupported({TargetPlatform? platform}) =>
       PlatformCookieManager.static().isClassSupported(platform: platform);

@@ -40,6 +40,12 @@ class _CookieManagerScreenState extends State<CookieManagerScreen> {
   // Seeded with the platform default rather than read at startup, which would cost a channel call.
   bool _acceptCookie = true;
 
+  // The cookie-store observer is a toggle for the same reason: it is registered against the
+  // process-wide store, so leaving it on with no way off would keep notifying after this screen
+  // is gone.
+  bool _observingCookieStore = false;
+  int _cookieChangeCount = 0;
+
   final Map<String, List<MethodResultEntry>> _methodHistory = {};
   final Map<String, int> _selectedHistoryIndex = {};
   static const int _maxHistoryEntries = 3;
@@ -634,6 +640,47 @@ class _CookieManagerScreenState extends State<CookieManagerScreen> {
     }
   }
 
+  Future<void> _toggleCookieStoreObserver() async {
+    final observe = !_observingCookieStore;
+    setState(() => _isLoading = true);
+    try {
+      await _cookieManager.setCookieStoreObserver(
+        observe
+            ? CookieStoreObserver(
+                // No payload: the platform says the store changed, not what changed. Anything
+                // more specific has to be read back, which is what the button below does.
+                onCookiesChanged: () {
+                  _cookieChangeCount++;
+                  _recordMethodResult(
+                    PlatformCookieManagerMethod.setCookieStoreObserver.name,
+                    'onCookiesChanged #$_cookieChangeCount -- run '
+                    '"${PlatformCookieManagerMethod.getAllCookies.name}" to see the new state',
+                    isError: false,
+                    value: _cookieChangeCount,
+                  );
+                },
+              )
+            : null,
+      );
+      setState(() => _observingCookieStore = observe);
+      _recordMethodResult(
+        PlatformCookieManagerMethod.setCookieStoreObserver.name,
+        observe
+            ? 'Observing the cookie store -- set or delete a cookie to see it fire'
+            : 'Stopped observing the cookie store',
+        isError: false,
+      );
+    } catch (e) {
+      _recordMethodResult(
+        PlatformCookieManagerMethod.setCookieStoreObserver.name,
+        'Error setting the cookie store observer: $e',
+        isError: true,
+      );
+    } finally {
+      setState(() => _isLoading = false);
+    }
+  }
+
   void _recordMethodResult(
     String methodName,
     String message, {
@@ -830,6 +877,14 @@ class _CookieManagerScreenState extends State<CookieManagerScreen> {
                   PlatformCookieManagerMethod.isAcceptCookieEnabled,
                   'Read whether cookies are being accepted',
                   _isAcceptCookieEnabled,
+                ),
+                _buildMethodSection(
+                  PlatformCookieManagerMethod.setCookieStoreObserver,
+                  _observingCookieStore
+                      ? 'Stop observing cookie store changes '
+                            '($_cookieChangeCount so far)'
+                      : 'Get notified when the cookie store changes (no payload)',
+                  _toggleCookieStoreObserver,
                 ),
                 const SizedBox(height: 16),
                 _buildCookiesList(),
@@ -1250,6 +1305,11 @@ class _CookieManagerScreenState extends State<CookieManagerScreen> {
 
   @override
   void dispose() {
+    // The observer outlives this screen otherwise: it is registered against the process-wide
+    // cookie store, not against this State.
+    if (_observingCookieStore) {
+      _cookieManager.setCookieStoreObserver(null);
+    }
     _urlController.dispose();
     _searchController.dispose();
     super.dispose();

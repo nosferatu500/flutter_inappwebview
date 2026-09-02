@@ -465,6 +465,20 @@ Fourteen WebKit APIs read out of the iOS 26.5 SDK, plus one feature that was hal
   suggestion should be inserted"*. Rather than guess, the plugin leaves WebKit's own handling in
   place until an app asks for the event. Supplying the handler infers the setting automatically, as
   with `onShowFileChooser`
+- **`CookieManager.setCookieStoreObserver()`** (iOS **11.0+**, so every supported version), with the
+  new `CookieStoreObserver` type — be told when the cookie store changes instead of polling
+  `getAllCookies()` on a timer. Fires for the plugin's own `setCookie` / `deleteCookie` /
+  `deleteAllCookies` as well as for cookies the page writes — measured on iOS 17.5 and 26.5, where
+  one `setCookie` fires it once, **three in a row fire it three times (nothing is coalesced)**, and
+  a pure read such as `getAllCookies()` fires it not at all. A callback that re-reads the store
+  therefore will not loop; a callback that writes to it will.
+
+  **The notification carries no payload**, matching the platform: it says *that* the store changed,
+  not what changed, so read the store from inside the callback if you need the new state. It
+  observes the **default** cookie store only — a WebView on a non-persistent (incognito) data store
+  has its own. And there is **one observer per app**, not one per `CookieManager`: the store is
+  process-wide, so setting a second observer replaces the first rather than adding a listener. Pass
+  `null` to stop; the plugin only registers with WebKit while an observer is set
 - **`DownloadStartRequest.isUserInitiated` / `.originatingFrame`** — from `WKDownload`
 
 `WebsiteDataType.WKWebsiteDataTypeScreenTime` is the third member of that family and has shipped

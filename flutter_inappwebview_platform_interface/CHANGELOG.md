@@ -176,6 +176,21 @@ rename; this entry is the API-owner's view.
   rather than an event filter — while it is off the native side reports that it does not implement
   the delegate method, leaving WebKit's own behaviour untouched — and it is inferred as `true` when
   the event handler is supplied and the setting is `null`, except on `PlatformInAppBrowser`
+- **`PlatformCookieManager.setCookieStoreObserver` / `.cookieStoreObserver`** (iOS 11.0+), with the
+  new **`CookieStoreObserver`** type, from `WKHTTPCookieStore.addObserver`. `CookieStoreObserver`
+  has one field, `onCookiesChanged`, taking **no arguments** — `WKHTTPCookieStoreObserver` declares
+  one method and it carries no payload beyond the store itself, which has no Dart counterpart; a
+  unit test pins the property set. Modelled as a client object rather than a bare callback for the
+  same reason as `ServiceWorkerClient`: the platform models it as a protocol.
+
+  `cookieStoreObserver` is a **concrete** getter returning `null`, not an abstract one, so
+  implementers that cannot register an observer need no override — Android's
+  `android.webkit.CookieManager` has no change notification at all. The state is **shared by every
+  instance**, because the cookie store is: on iOS it is held statically, which is load-bearing
+  rather than a shortcut — `createPlatformCookieManager` returns a new implementation object per
+  call and `.static()` is another, yet all of them attach a handler to the same `const
+  MethodChannel`, so an observer held per instance would stop firing as soon as anything constructed
+  a further one (`CookieManager.isMethodSupported` does)
 - New types: `AttributionRegistrationBehavior`, `ButtonMask`, `ModifierFlag`,
   `SecurityRestrictionMode`, `UpgradeToHTTPSPolicy`, `UserAgentMetadata`, `UserAgentBrandVersion`,
   `UserAgentFormFactor`, `WebAuthenticationSupport`, `WebViewMediaIntegrityApiStatus`,

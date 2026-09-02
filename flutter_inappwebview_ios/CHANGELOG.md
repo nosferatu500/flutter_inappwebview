@@ -72,6 +72,18 @@ Fourteen WebKit APIs read out of the iOS 26.5 SDK:
   **The `@objc` thunk was verified present** with `nm | swift-demangle` on both architectures rather
   than inferred from a green build — an optional protocol requirement only gets `@objc` when the
   signature matches exactly, which is how §68's ten dead delegate methods happened
+- **`setCookieStoreObserver` on the cookie manager** (11.0+, so unconditional at this deployment
+  target), from `WKHTTPCookieStore.addObserver` / `WKHTTPCookieStoreObserver`. `MyCookieManager`
+  conforms to the protocol itself and forwards `cookiesDidChange(in:)` to Dart as
+  `onCookiesChanged` with an empty argument map. Two native details worth knowing: `addObserver:`
+  **does not retain** the observer and documents unregistration as the caller's job, so the
+  registration is tracked by a flag that guarantees one `removeObserver:` per `addObserver:` and
+  `dispose()` unregisters before the channel is dropped; and registration is driven from Dart rather
+  than done at plugin start-up, so an app that never sets an observer pays no channel traffic for
+  the WebView's cookie writes. **The `@objc` thunk was verified present** with `nm | swift-demangle`
+  on both architectures rather than inferred from a green build. One further spelling trap, of the
+  same kind as `UIConversationContext.Entry`: in Swift the methods are **`add(_:)` / `remove(_:)`**,
+  and writing the header's `addObserver:` / `removeObserver:` is a hard error, not a deprecation
 - **`DownloadStartRequest.isUserInitiated` / `.originatingFrame`**, from `WKDownload`
 
 ### Fixed

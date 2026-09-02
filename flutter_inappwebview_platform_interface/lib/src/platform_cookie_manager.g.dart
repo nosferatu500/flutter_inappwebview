@@ -278,6 +278,21 @@ enum PlatformCookieManagerMethod {
   ///Use the [PlatformCookieManager.isMethodSupported] method to check if this method is supported at runtime.
   ///{@endtemplate}
   setCookie,
+
+  ///Can be used to check if the [PlatformCookieManager.setCookieStoreObserver] method is supported at runtime.
+  ///
+  ///{@template flutter_inappwebview_platform_interface.PlatformCookieManager.setCookieStoreObserver.supported_platforms}
+  ///
+  ///**Officially Supported Platforms/Implementations**:
+  ///- iOS WKWebView 11.0+ ([Official API - WKHTTPCookieStore.addObserver](https://developer.apple.com/documentation/webkit/wkhttpcookiestore/2915464-addobserver)):
+  ///    - Android has no counterpart: `android.webkit.CookieManager` exposes no change notification.
+  ///
+  ///**Parameters - Officially Supported Platforms/Implementations**:
+  ///- [observer]: all platforms
+  ///
+  ///Use the [PlatformCookieManager.isMethodSupported] method to check if this method is supported at runtime.
+  ///{@endtemplate}
+  setCookieStoreObserver,
 }
 
 extension _PlatformCookieManagerMethodSupported on PlatformCookieManager {
@@ -355,6 +370,50 @@ extension _PlatformCookieManagerMethodSupported on PlatformCookieManager {
               TargetPlatform.android,
               TargetPlatform.iOS,
             ].contains(platform ?? defaultTargetPlatform);
+      case PlatformCookieManagerMethod.setCookieStoreObserver:
+        return ((kIsWeb && platform != null) || !kIsWeb) &&
+            [TargetPlatform.iOS].contains(platform ?? defaultTargetPlatform);
+    }
+  }
+}
+
+extension _CookieStoreObserverClassSupported on CookieStoreObserver {
+  ///{@template flutter_inappwebview_platform_interface.CookieStoreObserver.supported_platforms}
+  ///
+  ///**Officially Supported Platforms/Implementations**:
+  ///- iOS WKWebView 11.0+ ([Official API - WKHTTPCookieStoreObserver](https://developer.apple.com/documentation/webkit/wkhttpcookiestoreobserver))
+  ///
+  ///Use the [CookieStoreObserver.isClassSupported] method to check if this class is supported at runtime.
+  ///{@endtemplate}
+  static bool isClassSupported({TargetPlatform? platform}) {
+    return ((kIsWeb && platform != null) || !kIsWeb) &&
+        [TargetPlatform.iOS].contains(platform ?? defaultTargetPlatform);
+  }
+}
+
+///List of [CookieStoreObserver]'s properties that can be used to check i they are supported or not by the current platform.
+enum CookieStoreObserverProperty {
+  ///Can be used to check if the [CookieStoreObserver.onCookiesChanged] property is supported at runtime.
+  ///
+  ///{@template flutter_inappwebview_platform_interface.CookieStoreObserver.onCookiesChanged.supported_platforms}
+  ///
+  ///**Officially Supported Platforms/Implementations**:
+  ///- iOS WKWebView 11.0+ ([Official API - WKHTTPCookieStoreObserver.cookiesDidChangeInCookieStore](https://developer.apple.com/documentation/webkit/wkhttpcookiestoreobserver/2915463-cookiesdidchange))
+  ///
+  ///Use the [CookieStoreObserver.isPropertySupported] method to check if this property is supported at runtime.
+  ///{@endtemplate}
+  onCookiesChanged,
+}
+
+extension _CookieStoreObserverPropertySupported on CookieStoreObserver {
+  static bool isPropertySupported(
+    CookieStoreObserverProperty property, {
+    TargetPlatform? platform,
+  }) {
+    switch (property) {
+      case CookieStoreObserverProperty.onCookiesChanged:
+        return ((kIsWeb && platform != null) || !kIsWeb) &&
+            [TargetPlatform.iOS].contains(platform ?? defaultTargetPlatform);
     }
   }
 }

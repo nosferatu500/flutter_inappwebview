@@ -73,7 +73,44 @@ class IOSCookieManager extends PlatformCookieManager with ChannelController {
     return _instance!;
   }
 
-  Future<dynamic> _handleMethod(MethodCall call) async {}
+  /// Deliberately `static`, and it is not a shortcut.
+  ///
+  /// `createPlatformCookieManager` returns a **new** [IOSCookieManager] on every call and
+  /// [IOSCookieManager.static] is a further, separate object — yet all of them attach a method-call
+  /// handler to the same `const MethodChannel`, where the last one to be constructed silently
+  /// replaces the previous handler. An observer held per instance would therefore stop firing the
+  /// moment anything touched `CookieManager.isMethodSupported`, which constructs the static one.
+  ///
+  /// Holding it statically also matches the platform: there is one
+  /// `WKWebsiteDataStore.default().httpCookieStore` in the process and one native observer
+  /// registration for it, so every [CookieManager] necessarily sees the same one.
+  static CookieStoreObserver? _cookieStoreObserver;
+
+  Future<dynamic> _handleMethod(MethodCall call) async {
+    switch (call.method) {
+      case "onCookiesChanged":
+        // No arguments: WKHTTPCookieStoreObserver reports that the store changed and nothing
+        // about what changed.
+        _cookieStoreObserver?.onCookiesChanged?.call();
+        break;
+      default:
+        throw UnimplementedError("Unimplemented ${call.method} method");
+    }
+    return null;
+  }
+
+  @override
+  CookieStoreObserver? get cookieStoreObserver => _cookieStoreObserver;
+
+  @override
+  Future<void> setCookieStoreObserver(CookieStoreObserver? observer) async {
+    Map<String, dynamic> args = <String, dynamic>{};
+    args.putIfAbsent('isNull', () => observer == null);
+    await channel?.invokeMethod('setCookieStoreObserver', args);
+    // Assigned after the native call so a failure to register leaves the Dart side saying there is
+    // no observer, rather than claiming one that would never fire.
+    _cookieStoreObserver = observer;
+  }
 
   @override
   Future<bool> setCookie({
