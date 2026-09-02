@@ -106,6 +106,7 @@ public class InAppBrowserWebViewController: UIViewController, InAppBrowserDelega
         progressBar = UIProgressView(progressViewStyle: .bar)
         
         view = UIView()
+        view.backgroundColor = .systemBackground
         view.addSubview(webView)
         view.insertSubview(progressBar, aboveSubview: webView)
     }
@@ -221,62 +222,55 @@ public class InAppBrowserWebViewController: UIViewController, InAppBrowserDelega
         searchBar.delegate = self
         navigationItem.titleView = searchBar
         
-        let spacer = UIBarButtonItem(barButtonSystemItem: .flexibleSpace, target: nil, action: nil)
         reloadButton = UIBarButtonItem(barButtonSystemItem: .refresh, target: self, action: #selector(reload))
         shareButton = UIBarButtonItem(barButtonSystemItem: .action, target: self, action: #selector(share))
-        forwardButton = UIBarButtonItem(title: "\u{203A}", style: .plain, target: self, action: #selector(goForward))
+        forwardButton = UIBarButtonItem(image: UIImage(systemName: "chevron.forward"), style: .plain, target: self, action: #selector(goForward))
         forwardButton.isEnabled = false
-        backButton = UIBarButtonItem(title: "\u{2039}", style: .plain, target: self, action: #selector(goBack))
+        backButton = UIBarButtonItem(image: UIImage(systemName: "chevron.backward"), style: .plain, target: self, action: #selector(goBack))
         backButton.isEnabled = false
-        
-        toolbarItems = [backButton, spacer, forwardButton, spacer, shareButton, spacer, reloadButton]
-        
-        for state: UIControl.State in [.normal, .disabled, .highlighted, .selected] {
-            forwardButton.setTitleTextAttributes([
-                NSAttributedString.Key.font: UIFont.systemFont(ofSize: 50.0),
-                NSAttributedString.Key.baselineOffset: 2.5
-            ], for: state)
-            backButton.setTitleTextAttributes([
-                NSAttributedString.Key.font: UIFont.systemFont(ofSize: 50.0),
-                NSAttributedString.Key.baselineOffset: 2.5
-            ], for: state)
-        }
-        
+
+        // a UIBarButtonItem instance can appear only once in `toolbarItems`,
+        // so every flexible space needs to be its own item
+        toolbarItems = [
+            backButton,
+            UIBarButtonItem(barButtonSystemItem: .flexibleSpace, target: nil, action: nil),
+            forwardButton,
+            UIBarButtonItem(barButtonSystemItem: .flexibleSpace, target: nil, action: nil),
+            shareButton,
+            UIBarButtonItem(barButtonSystemItem: .flexibleSpace, target: nil, action: nil),
+            reloadButton
+        ]
+
+        // the navigation controller view is what shows up behind the translucent
+        // bars, inside the status bar and home indicator safe areas
+        navigationController?.view.backgroundColor = .systemBackground
+
         if let browserSettings = browserSettings {
             if !browserSettings.hideToolbarTop {
                 navigationController?.navigationBar.isHidden = false
                 if browserSettings.hideUrlBar {
                     searchBar.isHidden = true
                 }
-                if let bgColor = browserSettings.toolbarTopBackgroundColor, !bgColor.isEmpty {
-                    navigationController?.navigationBar.backgroundColor = UIColor(hexString: bgColor)
-                }
-                if let barTintColor = browserSettings.toolbarTopBarTintColor, !barTintColor.isEmpty {
-                    navigationController?.navigationBar.barTintColor = UIColor(hexString: barTintColor)
-                }
                 if let tintColor = browserSettings.toolbarTopTintColor, !tintColor.isEmpty {
                     navigationController?.navigationBar.tintColor = UIColor(hexString: tintColor)
                 }
-                navigationController?.navigationBar.isTranslucent = browserSettings.toolbarTopTranslucent
+                applyToolbarTopAppearance()
             }
             else {
                 navigationController?.navigationBar.isHidden = true
             }
-            
+
             if !browserSettings.hideToolbarBottom {
                 navigationController?.isToolbarHidden = false
-                if let bgColor = browserSettings.toolbarBottomBackgroundColor, !bgColor.isEmpty {
-                    navigationController?.toolbar.barTintColor = UIColor(hexString: bgColor)
-                }
                 if let tintColor = browserSettings.toolbarBottomTintColor, !tintColor.isEmpty {
                     navigationController?.toolbar.tintColor = UIColor(hexString: tintColor)
                 }
-                navigationController?.toolbar.isTranslucent = false
+                applyToolbarBottomAppearance()
             }
             else {
                 navigationController?.isToolbarHidden = true
             }
-            
+
             if let closeButtonCaption = browserSettings.closeButtonCaption, !closeButtonCaption.isEmpty {
                 closeButton = UIBarButtonItem(title: closeButtonCaption, style: .plain, target: self, action: #selector(close))
             } else {
@@ -325,6 +319,60 @@ public class InAppBrowserWebViewController: UIViewController, InAppBrowserDelega
         }
     }
     
+    private func configureBarAppearance<T: UIBarAppearance>(_ appearance: T, translucent: Bool, backgroundColor: UIColor?) -> T {
+        if translucent {
+            appearance.configureWithDefaultBackground()
+        } else {
+            appearance.configureWithOpaqueBackground()
+        }
+        if let backgroundColor = backgroundColor {
+            appearance.backgroundColor = backgroundColor
+        }
+        return appearance
+    }
+
+    /// Since iOS 13, `UINavigationBar.backgroundColor`/`barTintColor`/`isTranslucent` no longer drive
+    /// the bar background: only `UINavigationBarAppearance` does. Setting them leaves the status bar
+    /// area uncolored, which shows up as a black strip above the bar.
+    func applyToolbarTopAppearance() {
+        guard let navigationBar = navigationController?.navigationBar else {
+            return
+        }
+        var backgroundColor: UIColor? = nil
+        if let bgColor = browserSettings?.toolbarTopBackgroundColor, !bgColor.isEmpty {
+            backgroundColor = UIColor(hexString: bgColor)
+        }
+        if let barTintColor = browserSettings?.toolbarTopBarTintColor, !barTintColor.isEmpty {
+            backgroundColor = UIColor(hexString: barTintColor)
+        }
+        let appearance = configureBarAppearance(UINavigationBarAppearance(),
+                                                translucent: browserSettings?.toolbarTopTranslucent ?? true,
+                                                backgroundColor: backgroundColor)
+        navigationBar.standardAppearance = appearance
+        navigationBar.compactAppearance = appearance
+        navigationBar.scrollEdgeAppearance = appearance
+        navigationBar.compactScrollEdgeAppearance = appearance
+    }
+
+    /// Same as `applyToolbarTopAppearance`, for the bottom toolbar: without an explicit
+    /// `UIToolbarAppearance` the home indicator area stays uncolored.
+    func applyToolbarBottomAppearance() {
+        guard let toolbar = navigationController?.toolbar else {
+            return
+        }
+        var backgroundColor: UIColor? = nil
+        if let bgColor = browserSettings?.toolbarBottomBackgroundColor, !bgColor.isEmpty {
+            backgroundColor = UIColor(hexString: bgColor)
+        }
+        let appearance = configureBarAppearance(UIToolbarAppearance(),
+                                                translucent: browserSettings?.toolbarBottomTranslucent ?? true,
+                                                backgroundColor: backgroundColor)
+        toolbar.standardAppearance = appearance
+        toolbar.compactAppearance = appearance
+        toolbar.scrollEdgeAppearance = appearance
+        toolbar.compactScrollEdgeAppearance = appearance
+    }
+
     func setDefaultCloseButton() {
         if closeButton != nil {
             closeButton.target = nil
@@ -493,22 +541,15 @@ public class InAppBrowserWebViewController: UIViewController, InAppBrowserDelega
             navigationController?.navigationBar.isHidden = newSettings.hideToolbarTop
         }
 
-        if newSettingsMap["toolbarTopBackgroundColor"] != nil, browserSettings?.toolbarTopBackgroundColor != newSettings.toolbarTopBackgroundColor {
-            if let bgColor = newSettings.toolbarTopBackgroundColor, !bgColor.isEmpty {
-                navigationController?.navigationBar.backgroundColor = UIColor(hexString: bgColor)
-            } else {
-                navigationController?.navigationBar.backgroundColor = nil
-            }
-        }
-        
-        if newSettingsMap["toolbarTopBarTintColor"] != nil, browserSettings?.toolbarTopBarTintColor != newSettings.toolbarTopBarTintColor {
-            if let barTintColor = newSettings.toolbarTopBarTintColor, !barTintColor.isEmpty {
-                navigationController?.navigationBar.barTintColor = UIColor(hexString: barTintColor)
-            } else {
-                navigationController?.navigationBar.barTintColor = nil
-            }
-        }
-        
+        let topAppearanceChanged =
+            (newSettingsMap["toolbarTopBackgroundColor"] != nil && browserSettings?.toolbarTopBackgroundColor != newSettings.toolbarTopBackgroundColor) ||
+            (newSettingsMap["toolbarTopBarTintColor"] != nil && browserSettings?.toolbarTopBarTintColor != newSettings.toolbarTopBarTintColor) ||
+            (newSettingsMap["toolbarTopTranslucent"] != nil && browserSettings?.toolbarTopTranslucent != newSettings.toolbarTopTranslucent)
+
+        let bottomAppearanceChanged =
+            (newSettingsMap["toolbarBottomBackgroundColor"] != nil && browserSettings?.toolbarBottomBackgroundColor != newSettings.toolbarBottomBackgroundColor) ||
+            (newSettingsMap["toolbarBottomTranslucent"] != nil && browserSettings?.toolbarBottomTranslucent != newSettings.toolbarBottomTranslucent)
+
         if newSettingsMap["toolbarTopTintColor"] != nil, browserSettings?.toolbarTopTintColor != newSettings.toolbarTopTintColor {
             if let tintColor = newSettings.toolbarTopTintColor, !tintColor.isEmpty {
                 navigationController?.navigationBar.tintColor = UIColor(hexString: tintColor)
@@ -521,28 +562,12 @@ public class InAppBrowserWebViewController: UIViewController, InAppBrowserDelega
             navigationController?.isToolbarHidden = !newSettings.hideToolbarBottom
         }
 
-        if newSettingsMap["toolbarBottomBackgroundColor"] != nil, browserSettings?.toolbarBottomBackgroundColor != newSettings.toolbarBottomBackgroundColor {
-            if let bgColor = newSettings.toolbarBottomBackgroundColor, !bgColor.isEmpty {
-                navigationController?.toolbar.barTintColor = UIColor(hexString: bgColor)
-            } else {
-                navigationController?.toolbar.barTintColor = nil
-            }
-        }
-        
         if newSettingsMap["toolbarBottomTintColor"] != nil, browserSettings?.toolbarBottomTintColor != newSettings.toolbarBottomTintColor {
             if let tintColor = newSettings.toolbarBottomTintColor, !tintColor.isEmpty {
                 navigationController?.toolbar.tintColor = UIColor(hexString: tintColor)
             } else {
                 navigationController?.toolbar.tintColor = nil
             }
-        }
-
-        if newSettingsMap["toolbarTopTranslucent"] != nil, browserSettings?.toolbarTopTranslucent != newSettings.toolbarTopTranslucent {
-            navigationController?.navigationBar.isTranslucent = newSettings.toolbarTopTranslucent
-        }
-        
-        if newSettingsMap["toolbarBottomTranslucent"] != nil, browserSettings?.toolbarBottomTranslucent != newSettings.toolbarBottomTranslucent {
-            navigationController?.toolbar.isTranslucent = newSettings.toolbarBottomTranslucent
         }
 
         if newSettingsMap["closeButtonCaption"] != nil, browserSettings?.closeButtonCaption != newSettings.closeButtonCaption {
@@ -597,6 +622,14 @@ public class InAppBrowserWebViewController: UIViewController, InAppBrowserDelega
         
         browserSettings = newSettings
         webViewSettings = newInAppWebViewSettings
+
+        // the appearance helpers read from `browserSettings`, so they run once it is up to date
+        if topAppearanceChanged {
+            applyToolbarTopAppearance()
+        }
+        if bottomAppearanceChanged {
+            applyToolbarBottomAppearance()
+        }
     }
     
     public func getSettings() -> [String: Any?]? {

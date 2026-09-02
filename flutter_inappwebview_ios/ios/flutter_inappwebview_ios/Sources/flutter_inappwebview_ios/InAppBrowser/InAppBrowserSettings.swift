@@ -44,14 +44,18 @@ public class InAppBrowserSettings: ISettings<InAppBrowserWebViewController> {
             realOptions["closeButtonColor"] = inAppBrowserWebViewController.closeButton.tintColor?.hexString
             realOptions["menuButtonColor"] = inAppBrowserWebViewController.menuButton?.tintColor?.hexString
             if let navController = inAppBrowserWebViewController.navigationController {
+                // the bar background is driven by UIBarAppearance, not by the
+                // legacy backgroundColor/barTintColor/isTranslucent properties
+                let navigationBarAppearance = navController.navigationBar.standardAppearance
+                let toolbarAppearance = navController.toolbar.standardAppearance
                 realOptions["hideToolbarTop"] = navController.navigationBar.isHidden
-                realOptions["toolbarTopBackgroundColor"] = navController.navigationBar.backgroundColor?.hexString
-                realOptions["toolbarTopTranslucent"] = navController.navigationBar.isTranslucent
+                realOptions["toolbarTopBackgroundColor"] = navigationBarAppearance.backgroundColor?.hexString
+                realOptions["toolbarTopTranslucent"] = navigationBarAppearance.backgroundEffect != nil
                 realOptions["toolbarTopBarTintColor"] = navController.navigationBar.barTintColor?.hexString
                 realOptions["toolbarTopTintColor"] = navController.navigationBar.tintColor?.hexString
                 realOptions["hideToolbarBottom"] = navController.toolbar.isHidden
-                realOptions["toolbarBottomBackgroundColor"] = navController.toolbar.barTintColor?.hexString
-                realOptions["toolbarBottomTranslucent"] = navController.toolbar.isTranslucent
+                realOptions["toolbarBottomBackgroundColor"] = toolbarAppearance.backgroundColor?.hexString
+                realOptions["toolbarBottomTranslucent"] = toolbarAppearance.backgroundEffect != nil
                 realOptions["toolbarBottomTintColor"] = navController.toolbar.tintColor?.hexString
                 realOptions["presentationStyle"] = navController.modalPresentationStyle.rawValue
                 realOptions["transitionStyle"] = navController.modalTransitionStyle.rawValue
