@@ -49,6 +49,8 @@ public enum WebViewChannelDelegateMethods: String {
     case getZoomScale = "getZoomScale"
     case hasOnlySecureContent = "hasOnlySecureContent"
     case isBlockedByScreenTime = "isBlockedByScreenTime"
+    case setConversationContext = "setConversationContext"
+    case getConversationContext = "getConversationContext"
     case getSelectedText = "getSelectedText"
     case getHitTestResult = "getHitTestResult"
     case clearFocus = "clearFocus"

@@ -120,7 +120,7 @@ rename; this entry is the API-owner's view.
   `createPlatformGeolocationPermissions` / `…Static` on `InAppWebViewPlatform`
 - `PlatformInAppWebViewController`: `setAudioMuted`, `isAudioMuted`, `setDefaultTrafficStatsTag`,
   `prerenderUrl`, `postVisualStateCallback`, `documentHasImages`, `flingScroll`,
-  `isBlockedByScreenTime`
+  `isBlockedByScreenTime`, `setConversationContext`, `getConversationContext`
 - **`PlatformInAppWebViewController.isBlockedByScreenTime`** returns `Future<bool?>`, and the
   nullability is part of the contract rather than defensive: `null` means *the platform cannot
   answer* — every platform but iOS, and iOS below 26.0, where
@@ -156,6 +156,18 @@ rename; this entry is the API-owner's view.
   `DEFAULT_TRAFFICSTATS_TAGGING`, `DELETE_BROWSING_DATA`, `DOWNLOAD_FAVICONS_ENABLED`,
   `MULTI_PROFILE`, `MUTE_AUDIO`, `PAYMENT_REQUEST`, `PRERENDER_WITH_URL`, `USER_AGENT_METADATA`,
   `USER_AGENT_METADATA_FORM_FACTORS`, `WEBVIEW_MEDIA_INTEGRITY_API_STATUS`, `WEB_AUTHENTICATION`
+- **`ConversationContext`, `ConversationEntry` and `PersonNameComponents`** (iOS 26.0+), for
+  `PlatformInAppWebViewController.setConversationContext`. `ConversationEntry` types its four
+  natively-required fields as nullable on purpose — a malformed map must not crash the bridge, and
+  the **native side drops** an incomplete entry rather than sending it half-built.
+  `PersonNameComponents` models the six flat name parts and deliberately omits
+  `NSPersonNameComponents.phoneticRepresentation`, which is recursive and unread on this path
+- **Generator fix, found by the first field to need it:** a `Map<K, V>` whose value is an
+  exchangeable type emitted a `fromMap` that **threw at runtime** — `map['x'].entries.map(...)` is a
+  *dynamic* dispatch, so the closure's return type was discarded and `Map.fromEntries` received a
+  `MappedIterable<..., dynamic>`. The emitter now casts the source and gives `.map` an explicit type
+  argument. The branch had existed since the enum-valued-map fix and had **no production user at
+  all** until `ConversationContext.participantNameByIdentifier`; a generator test now covers it
 - New types: `AttributionRegistrationBehavior`, `ButtonMask`, `ModifierFlag`,
   `SecurityRestrictionMode`, `UpgradeToHTTPSPolicy`, `UserAgentMetadata`, `UserAgentBrandVersion`,
   `UserAgentFormFactor`, `WebAuthenticationSupport`, `WebViewMediaIntegrityApiStatus`,

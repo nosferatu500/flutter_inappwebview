@@ -89,6 +89,7 @@ part 'request_image_ref.dart';
 part 'resize_webview.dart';
 part 'web_archive.dart';
 part 'set_custom_useragent.dart';
+part 'conversation_context.dart';
 part 'obscured_content_insets.dart';
 part 'screen_time.dart';
 part 'set_get_settings.dart';
@@ -207,6 +208,7 @@ void main() {
     onContentSizeChanged();
     screenTime();
     obscuredContentInsets();
+    conversationContext();
     keepAlive();
 
     // `printCurrentPage` MUST BE LAST, and must stay last.

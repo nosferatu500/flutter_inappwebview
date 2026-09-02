@@ -12,9 +12,16 @@ import 'package:test/test.dart';
 /// `StandardMessageCodec`, which cannot encode them. Both directions were broken, and neither the
 /// compiler nor `flutter analyze` could see it; only reading the generated file did.
 ///
-/// No production type currently uses an enum-valued map — the one that would have,
+/// No production type uses an enum-valued map — the one that would have,
 /// `WebViewMediaIntegrityApiStatusConfig.overrideRules`, was modelled as a list to dodge the bug —
-/// so without this test the fix has nothing exercising it and could regress unnoticed.
+/// so without this test that half of the fix has nothing exercising it and could regress unnoticed.
+///
+/// **The object-valued half now does have a production user**, and it arrived carrying a second
+/// defect: `ConversationContext.participantNameByIdentifier` is the repo's first
+/// `Map<String, ExchangeableObject>` field, and the emitted `fromMap` threw the moment it ran. See
+/// the second test. The lesson worth keeping is that this emitter branch was written, reviewed and
+/// left in the tree for several sections with **zero callers** — the enum fix above never exercised
+/// the typing bug because no enum-valued map exists either.
 Future<String> _generate(String model) async {
   final result = await testBuilder(
     SharedPartBuilder([ExchangeableObjectGenerator()], 'exchangeable_object'),
@@ -103,6 +110,41 @@ class Model_ {
       // toMap: per-entry conversion instead of handing enum instances to the codec.
       expect(output, contains('MapEntry(k,'));
       expect(output, contains('toNativeValue()'));
+    });
+
+    test('the entry iterable is statically typed, not dynamic', () async {
+      // The emitter was written for enum values and had **no production user at all** until
+      // `ConversationContext.participantNameByIdentifier` — the first `Map<String, Object>` field
+      // in the repo — which is how this survived. `$value` is `map['key']`, i.e. `dynamic`, so
+      // `$value.entries.map((e) => ...)` is a *dynamic* dispatch: the closure's return type is
+      // discarded and the result is a `MappedIterable<..., dynamic>`. That satisfies
+      // `Map.fromEntries` statically and throws at runtime with
+      // "type 'EfficientLengthMappedIterable<..., dynamic>' is not a subtype of type
+      // 'Iterable<MapEntry<String, T>>'".
+      //
+      // Both halves of the fix are asserted, because either one alone still fails.
+      final output = await _generate('''
+import 'package:flutter_inappwebview_internal_annotations/flutter_inappwebview_internal_annotations.dart';
+import 'status.dart';
+
+@ExchangeableObject()
+class Model_ {
+  Map<String, Status_>? byOrigin;
+  Model_({this.byOrigin});
+}
+''');
+
+      expect(
+        output,
+        contains('as Map).entries'),
+        reason:
+            'the source has to be cast before .entries or the chain stays dynamic',
+      );
+      expect(
+        output,
+        contains('.map<MapEntry<String, Status>>('),
+        reason: 'the element type has to be given explicitly',
+      );
     });
 
     test('a core-valued map still uses the plain cast', () async {

@@ -611,6 +611,20 @@ class InAppWebViewController {
   ///{@macro flutter_inappwebview_platform_interface.PlatformInAppWebViewController.isBlockedByScreenTime.supported_platforms}
   Future<bool?> isBlockedByScreenTime() => platform.isBlockedByScreenTime();
 
+  ///{@macro flutter_inappwebview_platform_interface.PlatformInAppWebViewController.setConversationContext}
+  ///
+  ///{@macro flutter_inappwebview_platform_interface.PlatformInAppWebViewController.setConversationContext.supported_platforms}
+  Future<void> setConversationContext({
+    required ConversationContext conversationContext,
+  }) =>
+      platform.setConversationContext(conversationContext: conversationContext);
+
+  ///{@macro flutter_inappwebview_platform_interface.PlatformInAppWebViewController.getConversationContext}
+  ///
+  ///{@macro flutter_inappwebview_platform_interface.PlatformInAppWebViewController.getConversationContext.supported_platforms}
+  Future<ConversationContext?> getConversationContext() =>
+      platform.getConversationContext();
+
   ///{@macro flutter_inappwebview_platform_interface.PlatformInAppWebViewController.pauseAllMediaPlayback}
   ///
   ///{@macro flutter_inappwebview_platform_interface.PlatformInAppWebViewController.pauseAllMediaPlayback.supported_platforms}

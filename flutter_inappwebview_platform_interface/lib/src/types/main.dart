@@ -219,3 +219,6 @@ export 'webview_media_integrity_api_status_config.dart'
 export 'user_agent_form_factor.dart' show UserAgentFormFactor;
 export 'user_agent_brand_version.dart' show UserAgentBrandVersion;
 export 'user_agent_metadata.dart' show UserAgentMetadata;
+export 'person_name_components.dart' show PersonNameComponents;
+export 'conversation_entry.dart' show ConversationEntry;
+export 'conversation_context.dart' show ConversationContext;

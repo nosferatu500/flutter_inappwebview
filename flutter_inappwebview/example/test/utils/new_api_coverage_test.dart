@@ -70,6 +70,8 @@ void main() {
           PlatformInAppWebViewControllerMethod.documentHasImages,
           PlatformInAppWebViewControllerMethod.flingScroll,
           PlatformInAppWebViewControllerMethod.isBlockedByScreenTime,
+          PlatformInAppWebViewControllerMethod.setConversationContext,
+          PlatformInAppWebViewControllerMethod.getConversationContext,
         ]),
       );
     });

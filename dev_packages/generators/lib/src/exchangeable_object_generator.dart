@@ -831,9 +831,19 @@ class ExchangeableObjectGenerator
         // conversion a List<T> element gets. Without this the emitted code was a bare
         // `.cast<K, V>()`, which for an enum casts the raw native value straight to the enum
         // type and throws at runtime.
+        //
+        // `($value as Map)` and the explicit `.map<MapEntry<K, V>>` type argument are both
+        // load-bearing, and neither is cosmetic. `$value` is `map['key']`, i.e. **dynamic**, so
+        // `.entries.map(...)` is a *dynamic* dispatch: the closure's return type is not used and the
+        // result is a `MappedIterable<..., dynamic>`. `Map.fromEntries` accepts that statically and
+        // then throws at runtime with
+        // `type 'EfficientLengthMappedIterable<MapEntry<String, Map<String, dynamic>>, dynamic>' is
+        // not a subtype of type 'Iterable<MapEntry<String, V>>'`. Casting to `Map` first makes the
+        // whole chain statically typed, and the explicit type argument fixes the element type.
         return (isNullable ? '$value != null ? ' : '') +
             "Map<$keyTypeReplaced, $valueTypeReplaced>.fromEntries(" +
-            "$value.entries.map((e) => MapEntry(e.key as $keyTypeReplaced, " +
+            "($value as Map).entries.map<MapEntry<$keyTypeReplaced, $valueTypeReplaced>>(" +
+            "(e) => MapEntry(e.key as $keyTypeReplaced, " +
             getFromMapValue('e.value', valueType) +
             ")))" +
             (isNullable ? ' : null' : '');

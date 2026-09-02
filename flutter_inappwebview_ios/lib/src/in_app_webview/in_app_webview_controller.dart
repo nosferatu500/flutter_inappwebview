@@ -2508,6 +2508,26 @@ class IOSInAppWebViewController extends PlatformInAppWebViewController
   }
 
   @override
+  Future<void> setConversationContext({
+    required ConversationContext conversationContext,
+  }) async {
+    Map<String, dynamic> args = <String, dynamic>{};
+    args.putIfAbsent('conversationContext', () => conversationContext.toMap());
+    return await channel?.invokeMethod('setConversationContext', args);
+  }
+
+  @override
+  Future<ConversationContext?> getConversationContext() async {
+    Map<String, dynamic> args = <String, dynamic>{};
+    final result = await channel?.invokeMethod('getConversationContext', args);
+    // `nil` below iOS 26.0 on purpose, so "this OS has no such property" stays distinguishable from
+    // "the context is empty" -- the same reasoning as `isBlockedByScreenTime` above.
+    return result != null
+        ? ConversationContext.fromMap(result.cast<String, dynamic>())
+        : null;
+  }
+
+  @override
   Future<bool?> isBlockedByScreenTime() async {
     Map<String, dynamic> args = <String, dynamic>{};
     // No `?? false` fallback here, unlike `hasOnlySecureContent` above: the Swift side answers

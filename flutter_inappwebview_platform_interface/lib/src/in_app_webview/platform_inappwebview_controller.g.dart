@@ -508,6 +508,17 @@ enum PlatformInAppWebViewControllerMethod {
   ///{@endtemplate}
   getContentWidth,
 
+  ///Can be used to check if the [PlatformInAppWebViewController.getConversationContext] method is supported at runtime.
+  ///
+  ///{@template flutter_inappwebview_platform_interface.PlatformInAppWebViewController.getConversationContext.supported_platforms}
+  ///
+  ///**Officially Supported Platforms/Implementations**:
+  ///- iOS WKWebView 26.0+ ([Official API - WKWebView.conversationContext](https://developer.apple.com/documentation/webkit/wkwebview/conversationcontext))
+  ///
+  ///Use the [PlatformInAppWebViewController.isMethodSupported] method to check if this method is supported at runtime.
+  ///{@endtemplate}
+  getConversationContext,
+
   ///Can be used to check if the [PlatformInAppWebViewController.getCopyBackForwardList] method is supported at runtime.
   ///
   ///{@template flutter_inappwebview_platform_interface.PlatformInAppWebViewController.getCopyBackForwardList.supported_platforms}
@@ -1600,6 +1611,21 @@ enum PlatformInAppWebViewControllerMethod {
   ///{@endtemplate}
   setContextMenu,
 
+  ///Can be used to check if the [PlatformInAppWebViewController.setConversationContext] method is supported at runtime.
+  ///
+  ///{@template flutter_inappwebview_platform_interface.PlatformInAppWebViewController.setConversationContext.supported_platforms}
+  ///
+  ///**Officially Supported Platforms/Implementations**:
+  ///- iOS WKWebView 26.0+ ([Official API - WKWebView.conversationContext](https://developer.apple.com/documentation/webkit/wkwebview/conversationcontext)):
+  ///    - Read by the keyboard when it appears, so set it beforehand. Entries missing a required field are dropped.
+  ///
+  ///**Parameters - Officially Supported Platforms/Implementations**:
+  ///- [conversationContext]: all platforms
+  ///
+  ///Use the [PlatformInAppWebViewController.isMethodSupported] method to check if this method is supported at runtime.
+  ///{@endtemplate}
+  setConversationContext,
+
   ///Can be used to check if the [PlatformInAppWebViewController.setDefaultTrafficStatsTag] method is supported at runtime.
   ///
   ///{@template flutter_inappwebview_platform_interface.PlatformInAppWebViewController.setDefaultTrafficStatsTag.supported_platforms}
@@ -1954,6 +1980,9 @@ extension _PlatformInAppWebViewControllerMethodSupported
               TargetPlatform.android,
               TargetPlatform.iOS,
             ].contains(platform ?? defaultTargetPlatform);
+      case PlatformInAppWebViewControllerMethod.getConversationContext:
+        return ((kIsWeb && platform != null) || !kIsWeb) &&
+            [TargetPlatform.iOS].contains(platform ?? defaultTargetPlatform);
       case PlatformInAppWebViewControllerMethod.getCopyBackForwardList:
         return ((kIsWeb && platform != null) || !kIsWeb) &&
             [
@@ -2386,6 +2415,9 @@ extension _PlatformInAppWebViewControllerMethodSupported
               TargetPlatform.android,
               TargetPlatform.iOS,
             ].contains(platform ?? defaultTargetPlatform);
+      case PlatformInAppWebViewControllerMethod.setConversationContext:
+        return ((kIsWeb && platform != null) || !kIsWeb) &&
+            [TargetPlatform.iOS].contains(platform ?? defaultTargetPlatform);
       case PlatformInAppWebViewControllerMethod.setDefaultTrafficStatsTag:
         return ((kIsWeb && platform != null) || !kIsWeb) &&
             [

@@ -26,7 +26,7 @@ carries the full user-facing list; this entry is what changed in this package.
   was missing was on the Dart side — `ProxyRule_` had no field of that type, so the keys were never
   sent. A wire test in this package now pins the map shape against what the Swift reads
 
-Twelve WebKit APIs read out of the iOS 26.5 SDK:
+Thirteen WebKit APIs read out of the iOS 26.5 SDK:
 
 - **`NavigationAction.modifierFlags` / `.buttonNumber`** (+ `ModifierFlag`, `ButtonMask`) — which
   keys and mouse button triggered a navigation
@@ -55,6 +55,15 @@ Twelve WebKit APIs read out of the iOS 26.5 SDK:
   value type — and an explicit `getRealSettings` override under `#available(iOS 26.0, *)`. Applied
   in **two** places, unlike the rest of the 26.0 additions: at creation *and* in `setSettings`,
   because it is a `WKWebView` property and therefore not subject to §95's copy-on-access rule
+- **`setConversationContext` / `getConversationContext` on the controller** (26.0+), from
+  `WKWebView.conversationContext`, with `Types/UIConversationContext.swift` mapping the Dart maps to
+  `UIConversationContext`, its nested `Entry` and `PersonNameComponents`. Three notes for anyone
+  touching that file: the entry type is **`UIConversationContext.Entry` in Swift**, not
+  `UIConversationEntry` — the ObjC header renames it with `NS_SWIFT_NAME` and the ObjC spelling is a
+  hard error; `sentDate` crosses the channel as **milliseconds** while `Date(timeIntervalSince1970:)`
+  takes seconds; and `NSSet` has no wire form, so the sets travel as arrays. The types are iOS 18.4+
+  even though the WebKit property is 26.0+, so the extensions are annotated at 18.4 and the 26.0 gate
+  sits at the call site
 - **`DownloadStartRequest.isUserInitiated` / `.originatingFrame`**, from `WKDownload`
 
 ### Fixed

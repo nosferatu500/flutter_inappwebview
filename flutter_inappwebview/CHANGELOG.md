@@ -398,7 +398,7 @@ implemented on the current platform" on iOS.
 
 ### Added — iOS
 
-Twelve WebKit APIs read out of the iOS 26.5 SDK, plus one feature that was half-built upstream.
+Thirteen WebKit APIs read out of the iOS 26.5 SDK, plus one feature that was half-built upstream.
 
 - **`ProxyRule.relayHop1` / `.relayHop2`** (iOS 17.0+) — route a proxy rule through a chain of
   secure relays (RFC 9298) instead of connecting to the proxy endpoint directly. `ProxyRelayHop`
@@ -441,6 +441,16 @@ Twelve WebKit APIs read out of the iOS 26.5 SDK, plus one feature that was half-
   `keyboardWillShow`/`keyboardWillHide` handling: it exists only from iOS 26.0, so every supported
   version below that (15, 16, 17, 18) is unchanged. Treat it as new capability for app-drawn
   overlay chrome.
+- **`InAppWebViewController.setConversationContext()` / `.getConversationContext()`** (iOS 26.0+),
+  with the new `ConversationContext`, `ConversationEntry` and `PersonNameComponents` types — hand the
+  system keyboard the mail or messaging thread the user is replying to, and it offers **Smart
+  Replies** while they type into a web text field. The conversation is your app's, not the page's:
+  the WebView cannot infer it. **Set it before the keyboard appears** — WebKit reads the context when
+  the keyboard comes up, so a context set while it is already open takes effect on the next
+  appearance. An entry missing any of `text`, `senderIdentifier`, `sentDate` or `entryIdentifier` is
+  **dropped** rather than sent half-built, because the native type declares all four non-null and a
+  message with no sender or date would mis-attribute the thread. `getConversationContext()` returns
+  `null` below iOS 26.0, distinct from an empty context
 - **`DownloadStartRequest.isUserInitiated` / `.originatingFrame`** — from `WKDownload`
 
 `WebsiteDataType.WKWebsiteDataTypeScreenTime` is the third member of that family and has shipped

@@ -275,6 +275,22 @@ public class WebViewChannelDelegate: ChannelDelegate {
         case .hasOnlySecureContent:
             result(webView?.hasOnlySecureContent ?? false)
             break
+        case .setConversationContext:
+            // iOS 26.0 for the WKWebView property, but `UIConversationContext` itself is 18.4 --
+            // the outer check is the one that matters and it covers both.
+            if #available(iOS 26.0, *), let webView = webView,
+               let context = UIConversationContext.fromMap(map: arguments!["conversationContext"] as? [String: Any?]) {
+                webView.conversationContext = context
+            }
+            result(true)
+            break
+        case .getConversationContext:
+            if #available(iOS 26.0, *), let webView = webView {
+                result(webView.conversationContext.toMap())
+            } else {
+                result(nil)
+            }
+            break
         case .isBlockedByScreenTime:
             // `nil` rather than `false` on iOS < 26: "the property does not exist here" and "the
             // content is not blocked" are different answers, and Dart's return type is `bool?` so

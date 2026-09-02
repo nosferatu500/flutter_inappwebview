@@ -2598,6 +2598,73 @@ abstract class PlatformInAppWebViewController extends PlatformInterface
     );
   }
 
+  ///{@template flutter_inappwebview_platform_interface.PlatformInAppWebViewController.setConversationContext}
+  ///Gives the system keyboard the conversation the user is replying to, so it can offer **Smart
+  ///Replies** while they type into a web text field.
+  ///
+  ///[conversationContext] is the thread: its messages, who sent them, and who the participants are.
+  ///Pass an empty [ConversationContext] to stop offering suggestions.
+  ///
+  ///**NOTE for iOS**: set it **before the keyboard appears.** WebKit's documentation is explicit —
+  ///the keyboard reads the context when it comes up — so a context set while the keyboard is
+  ///already open takes effect on its *next* appearance, not immediately. Call this again whenever
+  ///the conversation changes.
+  ///
+  ///**NOTE for iOS**: this is a `WKWebView` property, not a configuration one, so it applies to a
+  ///running WebView and does not need it recreated.
+  ///
+  ///**NOTE for iOS**: an entry missing any of `text`, `senderIdentifier`, `sentDate` or
+  ///`entryIdentifier` is **dropped** rather than sent half-built — the native type declares all four
+  ///non-null, and a message with no sender or date would mis-attribute or reorder the thread the
+  ///keyboard reasons about.
+  ///{@endtemplate}
+  ///
+  ///{@macro flutter_inappwebview_platform_interface.PlatformInAppWebViewController.setConversationContext.supported_platforms}
+  @SupportedPlatforms(
+    platforms: [
+      IOSPlatform(
+        apiName: 'WKWebView.conversationContext',
+        apiUrl:
+            'https://developer.apple.com/documentation/webkit/wkwebview/conversationcontext',
+        available: '26.0',
+        note:
+            'Read by the keyboard when it appears, so set it beforehand. Entries missing a required field are dropped.',
+      ),
+    ],
+  )
+  Future<void> setConversationContext({
+    required ConversationContext conversationContext,
+  }) {
+    throw UnimplementedError(
+      '${PlatformInAppWebViewControllerMethod.setConversationContext.name} is not implemented on the current platform',
+    );
+  }
+
+  ///{@template flutter_inappwebview_platform_interface.PlatformInAppWebViewController.getConversationContext}
+  ///Returns the conversation currently handed to the keyboard, or `null` when the platform cannot
+  ///answer — every platform but iOS, and iOS below 26.0.
+  ///
+  ///This reads back what was last given to
+  ///[PlatformInAppWebViewController.setConversationContext]; the WebView never populates it itself.
+  ///{@endtemplate}
+  ///
+  ///{@macro flutter_inappwebview_platform_interface.PlatformInAppWebViewController.getConversationContext.supported_platforms}
+  @SupportedPlatforms(
+    platforms: [
+      IOSPlatform(
+        apiName: 'WKWebView.conversationContext',
+        apiUrl:
+            'https://developer.apple.com/documentation/webkit/wkwebview/conversationcontext',
+        available: '26.0',
+      ),
+    ],
+  )
+  Future<ConversationContext?> getConversationContext() {
+    throw UnimplementedError(
+      '${PlatformInAppWebViewControllerMethod.getConversationContext.name} is not implemented on the current platform',
+    );
+  }
+
   ///{@template flutter_inappwebview_platform_interface.PlatformInAppWebViewController.pauseAllMediaPlayback}
   ///Pauses playback of all media in the web view.
   ///{@endtemplate}

@@ -1284,6 +1284,59 @@ class ControllerMethodsRegistry {
             return await controller.isBlockedByScreenTime();
           },
         ),
+        // Object-valued, so it cannot go in the settings editor either — but unlike the
+        // `setSettings` group this is a controller method of its own, so it gets its own entry.
+        ControllerMethodEntry(
+          description:
+              'Gives the keyboard a conversation so it can offer Smart Replies '
+              'in web text fields (iOS 26+)',
+          methodEnum:
+              PlatformInAppWebViewControllerMethod.setConversationContext,
+          parameters: {
+            'threadIdentifier': 'demo-thread-1',
+            'lastMessage': 'Are we still on for lunch tomorrow?',
+            'senderName': 'Alex',
+          },
+          execute: (controller, params) async {
+            final threadIdentifier =
+                params['threadIdentifier']?.toString() ?? 'demo-thread-1';
+            final lastMessage =
+                params['lastMessage']?.toString() ??
+                'Are we still on for lunch tomorrow?';
+            final senderName = params['senderName']?.toString() ?? 'Alex';
+
+            await controller.setConversationContext(
+              conversationContext: ConversationContext(
+                threadIdentifier: threadIdentifier,
+                // "me" is in selfIdentifiers, so the keyboard drafts a reply *to* the other
+                // participant rather than treating the last message as our own.
+                selfIdentifiers: {'me'},
+                responsePrimaryRecipientIdentifiers: {'them'},
+                participantNameByIdentifier: {
+                  'them': PersonNameComponents(givenName: senderName),
+                },
+                entries: [
+                  ConversationEntry(
+                    text: lastMessage,
+                    senderIdentifier: 'them',
+                    sentDate: DateTime.now(),
+                    entryIdentifier: '$threadIdentifier-1',
+                    primaryRecipientIdentifiers: {'me'},
+                  ),
+                ],
+              ),
+            );
+            return 'Smart Reply context set for "$lastMessage" from $senderName';
+          },
+        ),
+        ControllerMethodEntry(
+          description: 'Reads back the conversation given to the keyboard',
+          methodEnum:
+              PlatformInAppWebViewControllerMethod.getConversationContext,
+          execute: (controller, params) async {
+            return (await controller.getConversationContext())?.toString();
+          },
+        ),
       ],
     );
   }
