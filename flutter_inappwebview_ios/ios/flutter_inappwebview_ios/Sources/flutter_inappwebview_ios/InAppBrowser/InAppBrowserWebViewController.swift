@@ -50,6 +50,7 @@ public class InAppBrowserWebViewController: UIViewController, InAppBrowserDelega
     var pullToRefreshInitialSettings: [String: Any?] = [:]
     var isHidden = false
     var menuItems: [InAppBrowserMenuItem] = []
+    private var webViewTopConstraint: NSLayoutConstraint?
 
     public override func loadView() {
         guard let plugin = plugin else {
@@ -117,7 +118,7 @@ public class InAppBrowserWebViewController: UIViewController, InAppBrowserDelega
         webView?.translatesAutoresizingMaskIntoConstraints = false
         progressBar.translatesAutoresizingMaskIntoConstraints = false
         
-        webView?.topAnchor.constraint(equalTo: self.view.topAnchor, constant: 0.0).isActive = true
+        updateWebViewTopConstraint()
         webView?.bottomAnchor.constraint(equalTo: self.view.bottomAnchor, constant: 0.0).isActive = true
         webView?.leadingAnchor.constraint(equalTo: self.view.leadingAnchor, constant: 0.0).isActive = true
         webView?.trailingAnchor.constraint(equalTo: self.view.trailingAnchor, constant: 0.0).isActive = true
@@ -322,6 +323,30 @@ public class InAppBrowserWebViewController: UIViewController, InAppBrowserDelega
         }
     }
     
+    /// The web view stays full-bleed at the bottom and the sides so no safe area is left unpainted
+    /// behind the translucent bars, but when the top bar is visible the page has to start below it:
+    /// otherwise the URL bar and the close button sit on top of the page's own header controls.
+    func updateWebViewTopConstraint() {
+        guard let webView = webView else {
+            return
+        }
+        webViewTopConstraint?.isActive = false
+        let hideToolbarTop = browserSettings?.hideToolbarTop ?? true
+        let topAnchor = hideToolbarTop ? view.topAnchor : view.safeAreaLayoutGuide.topAnchor
+        webViewTopConstraint = webView.topAnchor.constraint(equalTo: topAnchor, constant: 0.0)
+        webViewTopConstraint?.isActive = true
+    }
+
+    /// With a transparent top bar, whatever the page does not cover is what shows through it.
+    /// Painting it with the page's own background color keeps that strip from reading as a border.
+    func syncBackgroundColorWithPage() {
+        guard isViewLoaded, let backgroundColor = webView?.underPageBackgroundColor else {
+            return
+        }
+        view.backgroundColor = backgroundColor
+        navigationController?.view.backgroundColor = backgroundColor
+    }
+
     private func configureBarAppearance<T: UIBarAppearance>(_ appearance: T, translucent: Bool, backgroundColor: UIColor?) -> T {
         if let backgroundColor = backgroundColor {
             if translucent {
@@ -422,6 +447,7 @@ public class InAppBrowserWebViewController: UIViewController, InAppBrowserDelega
         forwardButton.isEnabled = webView?.canGoForward ?? false
         backButton.isEnabled = webView?.canGoBack ?? false
         progressBar.setProgress(0.0, animated: false)
+        syncBackgroundColorWithPage()
         guard let url = url else {
             return
         }
@@ -436,6 +462,7 @@ public class InAppBrowserWebViewController: UIViewController, InAppBrowserDelega
     
     public func didChangeProgress(progress: Double) {
         progressBar.setProgress(Float(progress), animated: true)
+        syncBackgroundColorWithPage()
     }
     
     public func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
@@ -546,7 +573,8 @@ public class InAppBrowserWebViewController: UIViewController, InAppBrowserDelega
             searchBar.isHidden = newSettings.hideUrlBar
         }
 
-        if newSettingsMap["hideToolbarTop"] != nil, browserSettings?.hideToolbarTop != newSettings.hideToolbarTop {
+        let hideToolbarTopChanged = newSettingsMap["hideToolbarTop"] != nil && browserSettings?.hideToolbarTop != newSettings.hideToolbarTop
+        if hideToolbarTopChanged {
             navigationController?.navigationBar.isHidden = newSettings.hideToolbarTop
         }
 
@@ -632,7 +660,10 @@ public class InAppBrowserWebViewController: UIViewController, InAppBrowserDelega
         browserSettings = newSettings
         webViewSettings = newInAppWebViewSettings
 
-        // the appearance helpers read from `browserSettings`, so they run once it is up to date
+        // these read from `browserSettings`, so they run once it is up to date
+        if hideToolbarTopChanged {
+            updateWebViewTopConstraint()
+        }
         if topAppearanceChanged {
             applyToolbarTopAppearance()
         }
