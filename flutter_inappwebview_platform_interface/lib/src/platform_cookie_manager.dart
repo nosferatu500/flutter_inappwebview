@@ -507,18 +507,26 @@ In this case, this method will return always `true`.""",
   ///[setAcceptThirdPartyCookies] on the WebView, which is the narrower tool if the goal is a
   ///privacy setting rather than an off switch.
   ///
-  ///**It does not disable this class.** Measured on Android 13 / WebView 109: while acceptance is
-  ///off, [setCookie] still succeeds *and the cookie is still stored*, and [getCookies] keeps
-  ///returning everything already in the store. So the switch governs the engine, not the app's own
-  ///reads and writes — which is not what the platform's "should send and accept cookies" wording
-  ///suggests. An integration test pins this.
+  ///**It does not disable this class.** Measured on Android 13 / WebView 109 **and, separately, on
+  ///iOS 26.5**: while acceptance is off, [setCookie] still succeeds *and the cookie is still
+  ///stored*, [deleteCookie] still deletes, and [getCookies] keeps returning everything already in
+  ///the store. So the switch governs the engine, not the app's own reads and writes — which is not
+  ///what either platform's wording suggests. An integration test pins this on both.
   ///
   ///Turning it off therefore deletes nothing and hides nothing. Use [deleteAllCookies] to actually
   ///remove cookies.
   ///
+  ///**Its scope differs by platform** and neither is per-WebView. On Android it is process-wide for
+  ///the cookie store it applies to; on iOS it belongs to the default data store's cookie store, so
+  ///a WebView on a non-persistent (incognito) store is unaffected.
+  ///
   ///The return value indicates whether the switch was applied, not what it was set to. It is
-  ///`false` only when the cookie store could not be resolved — see the `profileName` contract in
-  ///the class documentation.
+  ///`false` when the switch could not be applied at all: on Android when the cookie store could not
+  ///be resolved (see the `profileName` contract in the class documentation), and on **iOS below
+  ///17.0**, where there is no cookie policy to set. `false` never means "cookies are now rejected".
+  ///
+  ///Setting the policy is **not** a cookie change: it does not notify a
+  ///[CookieStoreObserver] registered with [setCookieStoreObserver] (measured on iOS 26.5).
   ///
   ///Read the current state with [isAcceptCookieEnabled].
   ///{@endtemplate}
@@ -532,6 +540,14 @@ In this case, this method will return always `true`.""",
             'https://developer.android.com/reference/android/webkit/CookieManager#setAcceptCookie(boolean)',
         note:
             'The switch is process-wide for the default cookie store, so it affects every WebView in the app, not just one.',
+      ),
+      IOSPlatform(
+        apiName: 'WKHTTPCookieStore.setCookiePolicy',
+        apiUrl:
+            'https://developer.apple.com/documentation/webkit/wkhttpcookiestore/4133727-setcookiepolicy',
+        available: '17.0',
+        note:
+            'Scoped to the default data store\'s cookie store rather than the process. Returns `false` below iOS 17.0, where the policy cannot be set at all.',
       ),
     ],
   )
@@ -548,10 +564,16 @@ In this case, this method will return always `true`.""",
   ///Returns whether the cookie store currently accepts cookies, as last set by
   ///[setAcceptCookie].
   ///
-  ///The platform default is `true`, which is why this returns `bool?` rather than `bool`:
-  ///`null` means the cookie store could not be resolved — no WebView provider is installed, or a
-  ///`profileName` was given that does not exist — and reporting `false` there would claim cookies
-  ///are being rejected when in fact nothing was measured, the opposite of the platform default.
+  ///The platform default is `true` on both platforms, which is why this returns `bool?` rather than
+  ///`bool`: `null` means *nothing could be read*, and reporting `false` there would claim cookies
+  ///are being rejected when in fact nothing was measured — the opposite of the default.
+  ///
+  ///`null` has two causes, one per platform. On Android the cookie store could not be resolved:
+  ///no WebView provider is installed, or a `profileName` was given that does not exist. On **iOS
+  ///below 17.0** there is no cookie policy to read at all, since
+  ///`WKHTTPCookieStore.getCookiePolicy` does not exist there — an integration test asserts that on
+  ///an iOS 16.4 simulator, because a guard that collapses to `false` is invisible on any simulator
+  ///at or above the floor.
   ///{@endtemplate}
   ///
   ///{@macro flutter_inappwebview_platform_interface.PlatformCookieManager.isAcceptCookieEnabled.supported_platforms}
@@ -561,6 +583,14 @@ In this case, this method will return always `true`.""",
         apiName: 'CookieManager.acceptCookie',
         apiUrl:
             'https://developer.android.com/reference/android/webkit/CookieManager#acceptCookie()',
+      ),
+      IOSPlatform(
+        apiName: 'WKHTTPCookieStore.getCookiePolicy',
+        apiUrl:
+            'https://developer.apple.com/documentation/webkit/wkhttpcookiestore/4133726-getcookiepolicy',
+        available: '17.0',
+        note:
+            'Returns `null` below iOS 17.0, where there is no policy to read.',
       ),
     ],
   )

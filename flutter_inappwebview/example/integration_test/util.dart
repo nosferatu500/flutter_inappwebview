@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'dart:collection';
+import 'dart:io' show Platform;
 
 import 'package:flutter/foundation.dart';
 import 'package:flutter_inappwebview/flutter_inappwebview.dart';
@@ -7,6 +8,27 @@ import 'package:flutter_test/flutter_test.dart';
 
 /// Returns a matcher that matches the isNullOrEmpty property.
 const Matcher isNullOrEmpty = _NullOrEmpty();
+
+/// The iOS major version, from `dart:io`, or `null` on any other platform.
+///
+/// `Platform.operatingSystemVersion` on iOS reads `"Version 26.5 (Build 23F79)"`, so the first
+/// integer in the string is the major.
+///
+/// **`isMethodSupported` is not a substitute for this.** It answers about the *platform* and is
+/// `true` on every iOS version, so a test gated only on it runs on simulators where the API does
+/// not exist — which is the whole point of a version-floored API: below the floor the *correct*
+/// answer is a different one, not an absent one, and a suite that runs on a single simulator cannot
+/// tell a working availability guard from a missing one.
+///
+/// `in_app_webview/screen_time.dart` carries a private copy of this for its own group; it predates
+/// this one and was deliberately left alone rather than folded in from a different feature's commit.
+int? iosMajorVersion() {
+  if (defaultTargetPlatform != TargetPlatform.iOS) {
+    return null;
+  }
+  final match = RegExp(r'\d+').firstMatch(Platform.operatingSystemVersion);
+  return match == null ? null : int.tryParse(match.group(0)!);
+}
 
 class _NullOrEmpty extends Matcher {
   const _NullOrEmpty();

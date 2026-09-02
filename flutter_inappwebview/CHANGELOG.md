@@ -465,6 +465,24 @@ Fourteen WebKit APIs read out of the iOS 26.5 SDK, plus one feature that was hal
   suggestion should be inserted"*. Rather than guess, the plugin leaves WebKit's own handling in
   place until an app asks for the event. Supplying the handler infers the setting automatically, as
   with `onShowFileChooser`
+- **`CookieManager.setAcceptCookie()` / `.isAcceptCookieEnabled()` now work on iOS too** (iOS
+  17.0+), from `WKHTTPCookieStore.setCookiePolicy` / `getCookiePolicy`. They shipped Android-only
+  earlier in this release; the same two methods now answer on both platforms with the same
+  contract, so the cookie master switch is no longer an Android-only concept.
+
+  **The two platforms agree, and that was measured rather than assumed.** On iOS 26.5, exactly as on
+  Android 13: the default is "accepting"; turning it off deletes nothing and hides nothing —
+  `getCookies()` keeps returning what is already stored; and a programmatic `setCookie()` **is still
+  not blocked**, nor is `deleteCookie()`. The switch governs the WebView's own network traffic, not
+  the app's reads and writes. The shared integration test runs unchanged on both.
+
+  Two platform differences that are real: the scope — process-wide on Android, but on iOS it belongs
+  to the **default data store's** cookie store, so an incognito WebView is unaffected — and the
+  floor. **Below iOS 17.0 `setAcceptCookie()` returns `false` and `isAcceptCookieEnabled()` returns
+  `null`**, meaning *not applied* and *could not be read*, never "cookies are rejected". That is
+  asserted on an iOS 16.4 simulator, because a guard that collapses `null` to `false` is invisible
+  on any simulator at or above the floor. Setting the policy is also **not** a cookie change: it does
+  not notify a `CookieStoreObserver`
 - **`CookieManager.setCookieStoreObserver()`** (iOS **11.0+**, so every supported version), with the
   new `CookieStoreObserver` type — be told when the cookie store changes instead of polling
   `getAllCookies()` on a timer. Fires for the plugin's own `setCookie` / `deleteCookie` /

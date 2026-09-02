@@ -100,6 +100,26 @@ class IOSCookieManager extends PlatformCookieManager with ChannelController {
   }
 
   @override
+  Future<bool> setAcceptCookie(
+    bool accept, {
+    // Android-only; accepted so the signature matches PlatformCookieManager.
+    String? profileName,
+  }) async {
+    Map<String, dynamic> args = <String, dynamic>{};
+    args.putIfAbsent('accept', () => accept);
+    return await channel?.invokeMethod<bool>('setAcceptCookie', args) ?? false;
+  }
+
+  @override
+  Future<bool?> isAcceptCookieEnabled({
+    // Android-only; accepted so the signature matches PlatformCookieManager.
+    String? profileName,
+  }) async {
+    Map<String, dynamic> args = <String, dynamic>{};
+    return await channel?.invokeMethod<bool>('isAcceptCookieEnabled', args);
+  }
+
+  @override
   CookieStoreObserver? get cookieStoreObserver => _cookieStoreObserver;
 
   @override

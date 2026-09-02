@@ -197,6 +197,8 @@ enum PlatformCookieManagerMethod {
   ///
   ///**Officially Supported Platforms/Implementations**:
   ///- Android WebView ([Official API - CookieManager.acceptCookie](https://developer.android.com/reference/android/webkit/CookieManager#acceptCookie()))
+  ///- iOS WKWebView 17.0+ ([Official API - WKHTTPCookieStore.getCookiePolicy](https://developer.apple.com/documentation/webkit/wkhttpcookiestore/4133726-getcookiepolicy)):
+  ///    - Returns `null` below iOS 17.0, where there is no policy to read.
   ///
   ///**Parameters - Officially Supported Platforms/Implementations**:
   ///- [profileName]:
@@ -240,6 +242,8 @@ enum PlatformCookieManagerMethod {
   ///**Officially Supported Platforms/Implementations**:
   ///- Android WebView ([Official API - CookieManager.setAcceptCookie](https://developer.android.com/reference/android/webkit/CookieManager#setAcceptCookie(boolean))):
   ///    - The switch is process-wide for the default cookie store, so it affects every WebView in the app, not just one.
+  ///- iOS WKWebView 17.0+ ([Official API - WKHTTPCookieStore.setCookiePolicy](https://developer.apple.com/documentation/webkit/wkhttpcookiestore/4133727-setcookiepolicy)):
+  ///    - Scoped to the default data store's cookie store rather than the process. Returns `false` below iOS 17.0, where the policy cannot be set at all.
   ///
   ///**Parameters - Officially Supported Platforms/Implementations**:
   ///- [accept]: all platforms
@@ -348,6 +352,7 @@ extension _PlatformCookieManagerMethodSupported on PlatformCookieManager {
         return ((kIsWeb && platform != null) || !kIsWeb) &&
             [
               TargetPlatform.android,
+              TargetPlatform.iOS,
             ].contains(platform ?? defaultTargetPlatform);
       case PlatformCookieManagerMethod.isFileSchemeCookiesAllowed:
         return ((kIsWeb && platform != null) || !kIsWeb) &&
@@ -363,6 +368,7 @@ extension _PlatformCookieManagerMethodSupported on PlatformCookieManager {
         return ((kIsWeb && platform != null) || !kIsWeb) &&
             [
               TargetPlatform.android,
+              TargetPlatform.iOS,
             ].contains(platform ?? defaultTargetPlatform);
       case PlatformCookieManagerMethod.setCookie:
         return ((kIsWeb && platform != null) || !kIsWeb) &&

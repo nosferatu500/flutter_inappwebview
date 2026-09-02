@@ -176,6 +176,14 @@ rename; this entry is the API-owner's view.
   rather than an event filter — while it is off the native side reports that it does not implement
   the delegate method, leaving WebKit's own behaviour untouched — and it is inferred as `true` when
   the event handler is supplied and the setting is `null`, except on `PlatformInAppBrowser`
+- **`PlatformCookieManager.setAcceptCookie` / `.isAcceptCookieEnabled` gained iOS** (17.0+), from
+  `WKHTTPCookieStore.setCookiePolicy` / `getCookiePolicy`. No signature change and no new method —
+  two `@SupportedPlatforms` entries and an iOS implementation, so the pair stops being Android-only.
+  The existing `bool` / `bool?` contract already said the right thing and now carries a second
+  cause: `false` from the setter and `null` from the getter mean *not applied* and *could not be
+  read*, which below iOS 17.0 is "there is no cookie policy on this OS" rather than Android's
+  "the cookie store could not be resolved". Neither ever means "cookies are rejected". `profileName`
+  is accepted and dropped on iOS like every other method on this class (§29)
 - **`PlatformCookieManager.setCookieStoreObserver` / `.cookieStoreObserver`** (iOS 11.0+), with the
   new **`CookieStoreObserver`** type, from `WKHTTPCookieStore.addObserver`. `CookieStoreObserver`
   has one field, `onCookiesChanged`, taking **no arguments** — `WKHTTPCookieStoreObserver` declares

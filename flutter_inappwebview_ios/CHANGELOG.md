@@ -72,6 +72,14 @@ Fourteen WebKit APIs read out of the iOS 26.5 SDK:
   **The `@objc` thunk was verified present** with `nm | swift-demangle` on both architectures rather
   than inferred from a green build — an optional protocol requirement only gets `@objc` when the
   signature matches exactly, which is how §68's ten dead delegate methods happened
+- **`setAcceptCookie` / `isAcceptCookieEnabled` on the cookie manager** (17.0+), from
+  `WKHTTPCookieStore.setCookiePolicy` / `getCookiePolicy`. Answers to the wire names the Kotlin
+  already uses, so one Dart method reaches both platforms. In Swift the enum is
+  **`WKHTTPCookieStore.CookiePolicy`** (`NS_SWIFT_NAME`), not the header's `WKCookiePolicy`. Below
+  the 17.0 floor the setter reports **`false`** and the getter **`nil`** rather than the platform
+  default — collapsing that `nil` to `false` would claim cookies are rejected on an OS with no
+  policy at all, and an integration test on an **iOS 16.4** simulator was proved to go red against
+  exactly that mistake
 - **`setCookieStoreObserver` on the cookie manager** (11.0+, so unconditional at this deployment
   target), from `WKHTTPCookieStore.addObserver` / `WKHTTPCookieStoreObserver`. `MyCookieManager`
   conforms to the protocol itself and forwards `cookiesDidChange(in:)` to Dart as

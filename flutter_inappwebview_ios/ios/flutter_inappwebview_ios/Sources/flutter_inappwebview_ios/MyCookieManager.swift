@@ -83,6 +83,13 @@ public class MyCookieManager: ChannelDelegate, WKHTTPCookieStoreObserver {
             case "deleteAllCookies":
                 MyCookieManager.deleteAllCookies(result: result)
                 break
+            case "setAcceptCookie":
+                let accept = arguments!["accept"] as! Bool
+                MyCookieManager.setAcceptCookie(accept: accept, result: result)
+                break
+            case "isAcceptCookieEnabled":
+                MyCookieManager.isAcceptCookieEnabled(result: result)
+                break
             case "setCookieStoreObserver":
                 let isNull = arguments!["isNull"] as! Bool
                 setCookieStoreObserverEnabled(!isNull)
@@ -296,6 +303,34 @@ public class MyCookieManager: ChannelDelegate, WKHTTPCookieStoreObserver {
         })
     }
     
+    /// The iOS half of the cookie master switch, from `WKHTTPCookieStore.setCookiePolicy`.
+    ///
+    /// Reports `false` below iOS 17.0 — the switch could not be applied, which is what the Dart
+    /// contract means by a `false` return. It is **not** "cookies are now rejected".
+    public static func setAcceptCookie(accept: Bool, result: @escaping FlutterResult) {
+        if #available(iOS 17.0, *) {
+            // Swift spells the enum `WKHTTPCookieStore.CookiePolicy` (NS_SWIFT_NAME), not
+            // `WKCookiePolicy` as the header declares it.
+            MyCookieManager.httpCookieStore.setCookiePolicy(accept ? .allow : .disallow) {
+                result(true)
+            }
+        } else {
+            result(false)
+        }
+    }
+
+    /// Reports `nil` below iOS 17.0, matching the Dart contract's "could not be read" rather than
+    /// claiming the platform default — the property does not exist there to be read.
+    public static func isAcceptCookieEnabled(result: @escaping FlutterResult) {
+        if #available(iOS 17.0, *) {
+            MyCookieManager.httpCookieStore.getCookiePolicy { policy in
+                result(policy == .allow)
+            }
+        } else {
+            result(nil)
+        }
+    }
+
     /// Registers or unregisters `self` as the cookie store's observer.
     ///
     /// Registration is driven from Dart rather than done once at plugin start-up: an app that never

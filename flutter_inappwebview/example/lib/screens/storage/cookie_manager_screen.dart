@@ -602,7 +602,9 @@ class _CookieManagerScreenState extends State<CookieManagerScreen> {
         PlatformCookieManagerMethod.setAcceptCookie.name,
         result
             ? 'Cookie acceptance turned ${accept ? 'on' : 'off'}'
-            : 'Could not apply it -- the cookie store was not resolvable',
+            // false is "not applied", never "cookies are now rejected". Two different causes:
+            // an unresolvable cookie store on Android, no cookie policy at all below iOS 17.0.
+            : 'Could not apply it -- no cookie store to switch, or iOS below 17.0',
         isError: !result,
       );
     } catch (e) {
@@ -622,9 +624,10 @@ class _CookieManagerScreenState extends State<CookieManagerScreen> {
       final result = await _cookieManager.isAcceptCookieEnabled();
       _recordMethodResult(
         PlatformCookieManagerMethod.isAcceptCookieEnabled.name,
-        // null is not "off" -- it means the store could not be read at all.
+        // null is not "off" -- it means nothing could be read at all: an unresolvable cookie
+        // store on Android, or an iOS below 17.0 that has no cookie policy.
         result == null
-            ? 'Unknown -- the cookie store was not resolvable'
+            ? 'Unknown -- no cookie store to read, or iOS below 17.0'
             : 'Cookies are ${result ? 'accepted' : 'rejected'}',
         isError: result == null,
         value: result,

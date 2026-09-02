@@ -97,28 +97,27 @@ void main() {
   });
 
   group('PlatformCookieManagerMethod', () {
-    test('reports both methods as Android-only', () {
-      expect(
-        cookieManager.isMethodSupported(
-          PlatformCookieManagerMethod.setAcceptCookie,
-          platform: TargetPlatform.android,
-        ),
-        isTrue,
-      );
-      expect(
-        cookieManager.isMethodSupported(
-          PlatformCookieManagerMethod.isAcceptCookieEnabled,
-          platform: TargetPlatform.android,
-        ),
-        isTrue,
-      );
-      expect(
-        cookieManager.isMethodSupported(
-          PlatformCookieManagerMethod.setAcceptCookie,
-          platform: TargetPlatform.iOS,
-        ),
-        isFalse,
-      );
+    // Was 'reports both methods as Android-only' until B9 gave them an iOS implementation
+    // (`WKHTTPCookieStore.setCookiePolicy` / `getCookiePolicy`, iOS 17.0+). The iOS half of the
+    // assertion is now the opposite; the Android half is unchanged and is what this test is
+    // really for — Android must not lose support while iOS gains it.
+    test('reports both methods on Android and iOS', () {
+      for (final method in <PlatformCookieManagerMethod>[
+        PlatformCookieManagerMethod.setAcceptCookie,
+        PlatformCookieManagerMethod.isAcceptCookieEnabled,
+      ]) {
+        expect(
+          cookieManager.isMethodSupported(
+            method,
+            platform: TargetPlatform.android,
+          ),
+          isTrue,
+        );
+        expect(
+          cookieManager.isMethodSupported(method, platform: TargetPlatform.iOS),
+          isTrue,
+        );
+      }
     });
   });
 }
