@@ -291,6 +291,7 @@ class HeadlessInAppWebView {
       ShowFileChooserRequest request,
     )?
     onShowFileChooser,
+    onInsertInputSuggestion,
   }) : this.fromPlatformCreationParams(
          params: PlatformHeadlessInAppWebViewCreationParams(
            controllerFromPlatform:
@@ -536,6 +537,10 @@ class HeadlessInAppWebView {
            onShowFileChooser: onShowFileChooser != null
                ? (controller, request) =>
                      onShowFileChooser.call(controller, request)
+               : null,
+           onInsertInputSuggestion: onInsertInputSuggestion != null
+               ? (controller, inputSuggestion) =>
+                     onInsertInputSuggestion.call(controller, inputSuggestion)
                : null,
          ),
        );

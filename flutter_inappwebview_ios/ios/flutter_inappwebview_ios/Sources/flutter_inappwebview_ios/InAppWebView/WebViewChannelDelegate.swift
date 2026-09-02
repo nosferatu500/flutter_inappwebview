@@ -701,6 +701,11 @@ public class WebViewChannelDelegate: ChannelDelegate {
         channel?.invokeMethod("onContentSizeChanged", arguments: arguments)
     }
     
+    @available(iOS 18.4, *)
+    public func onInsertInputSuggestion(inputSuggestion: UIInputSuggestion) {
+        channel?.invokeMethod("onInsertInputSuggestion", arguments: inputSuggestion.toMap())
+    }
+
     public func onDownloadStarting(request: DownloadStartRequest) {
         channel?.invokeMethod("onDownloadStarting", arguments: request.toMap())
     }

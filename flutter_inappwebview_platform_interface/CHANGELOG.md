@@ -168,6 +168,14 @@ rename; this entry is the API-owner's view.
   `MappedIterable<..., dynamic>`. The emitter now casts the source and gives `.map` an explicit type
   argument. The branch had existed since the enum-valued-map fix and had **no production user at
   all** until `ConversationContext.participantNameByIdentifier`; a generator test now covers it
+- **`PlatformWebViewCreationParams.onInsertInputSuggestion`** and the matching
+  `PlatformInAppBrowserEvents.onInsertInputSuggestion` (iOS 26.0+), with the **`InputSuggestion`**
+  type and **`InAppWebViewSettings.useOnInsertInputSuggestion`**. `InputSuggestion` has exactly one
+  field, `smartReply`, because `UIInputSuggestion` has none and its single subclass has one; a unit
+  test pins the field set so that growing it is a deliberate act. The setting is a **selector gate**
+  rather than an event filter — while it is off the native side reports that it does not implement
+  the delegate method, leaving WebKit's own behaviour untouched — and it is inferred as `true` when
+  the event handler is supplied and the setting is `null`, except on `PlatformInAppBrowser`
 - New types: `AttributionRegistrationBehavior`, `ButtonMask`, `ModifierFlag`,
   `SecurityRestrictionMode`, `UpgradeToHTTPSPolicy`, `UserAgentMetadata`, `UserAgentBrandVersion`,
   `UserAgentFormFactor`, `WebAuthenticationSupport`, `WebViewMediaIntegrityApiStatus`,

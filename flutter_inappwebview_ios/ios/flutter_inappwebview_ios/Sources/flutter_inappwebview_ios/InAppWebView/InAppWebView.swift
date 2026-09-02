@@ -1461,13 +1461,15 @@ public class InAppWebView: WKWebView, UIScrollViewDelegate, WKUIDelegate,
 
         let fileChooserGateChanged = newSettingsMap["useOnShowFileChooser"] != nil
             && settings?.useOnShowFileChooser != newSettings.useOnShowFileChooser
+        let inputSuggestionGateChanged = newSettingsMap["useOnInsertInputSuggestion"] != nil
+            && settings?.useOnInsertInputSuggestion != newSettings.useOnInsertInputSuggestion
 
         self.settings = newSettings
 
         // `responds(to:)` answers from `settings`, so the answer only changes after the assignment
         // above. WebKit caches the delegate's selector support when `uiDelegate` is set, so toggling
-        // the setting at runtime needs the delegate re-assigned for the new answer to be seen.
-        if fileChooserGateChanged {
+        // either gate at runtime needs the delegate re-assigned for the new answer to be seen.
+        if fileChooserGateChanged || inputSuggestionGateChanged {
             uiDelegate = nil
             uiDelegate = self
         }
@@ -1825,7 +1827,24 @@ public class InAppWebView: WKWebView, UIScrollViewDelegate, WKUIDelegate,
                 return settings?.useOnShowFileChooser ?? false
             }
         }
+        // Same mechanism, different reason. `runOpenPanelWithParameters` documents what WebKit does
+        // when the delegate does not implement it ("match the file upload behavior of Safari");
+        // `insertInputSuggestion` documents **nothing** for that case, while calling the parameter
+        // "the web view where the input suggestion should be inserted". So implementing it
+        // unconditionally could quietly take insertion away from WebKit for every app that never
+        // asked for the event. Hidden behind the setting until an app opts in and accepts that
+        // responsibility.
+        if #available(iOS 26.0, *) {
+            if aSelector == #selector(WKUIDelegate.webView(_:insertInputSuggestion:)) {
+                return settings?.useOnInsertInputSuggestion ?? false
+            }
+        }
         return super.responds(to: aSelector)
+    }
+
+    @available(iOS 26.0, *)
+    public func webView(_ webView: WKWebView, insertInputSuggestion inputSuggestion: UIInputSuggestion) {
+        channelDelegate?.onInsertInputSuggestion(inputSuggestion: inputSuggestion)
     }
 
     @available(iOS 18.4, *)

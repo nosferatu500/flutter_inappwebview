@@ -1328,6 +1328,19 @@ class _WebViewTesterScreenState extends State<WebViewTesterScreen>
         );
         return ShowFileChooserResponse(handledByClient: false);
       },
+
+      // 61. onInsertInputSuggestion
+      onInsertInputSuggestion: (controller, inputSuggestion) {
+        _logEvent(
+          EventType.ui,
+          PlatformWebViewCreationParamsProperty.onInsertInputSuggestion.name,
+          data: {
+            // Null unless the suggestion is a UISmartReplySuggestion — the base
+            // UIInputSuggestion has no properties at all.
+            'smartReply': inputSuggestion.smartReply,
+          },
+        );
+      },
     );
   }
 

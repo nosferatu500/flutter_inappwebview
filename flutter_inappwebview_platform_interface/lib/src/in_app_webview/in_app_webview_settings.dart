@@ -2342,6 +2342,32 @@ as it can cause framerate drops on animations in Android 9 and lower (see [Hybri
   )
   bool? useOnShowFileChooser;
 
+  ///Set to `true` to be able to listen at the
+  ///[PlatformWebViewCreationParams.onInsertInputSuggestion] event.
+  ///
+  ///If the [PlatformWebViewCreationParams.onInsertInputSuggestion] event is implemented and this
+  ///value is `null`, it is automatically inferred as `true`; otherwise the default is `false`. This
+  ///inference is not applied for [PlatformInAppBrowser], where the value must be set manually — the
+  ///same rule as [InAppWebViewSettings.useOnShowFileChooser].
+  ///
+  ///**NOTE for iOS**: this gates the `WKUIDelegate` selector itself, not just the event. While it
+  ///is `false` the plugin reports that it does not implement
+  ///`webView(_:insertInputSuggestion:)` at all, so WebKit's own handling — whatever it is — stays
+  ///in place. Setting it `true` hands you the suggestion and, with it, the responsibility for
+  ///inserting the text into the page: WebKit's header documents no fallback for an implemented
+  ///delegate, unlike the open-panel method it sits beside. Same mechanism as
+  ///[InAppWebViewSettings.useOnShowFileChooser].
+  @SupportedPlatforms(
+    platforms: [
+      IOSPlatform(
+        available: "26.0",
+        note:
+            'Gates the `WKUIDelegate` selector through a `responds(to:)` override, so while it is `false` WebKit does not see the delegate method at all.',
+      ),
+    ],
+  )
+  bool? useOnInsertInputSuggestion;
+
   @ExchangeableObjectConstructor()
   InAppWebViewSettings_({
     this.useShouldOverrideUrlLoading,
@@ -2500,6 +2526,7 @@ as it can cause framerate drops on animations in Android 9 and lower (see [Hybri
     this.lockdownModeEnabled,
     this.showsSystemScreenTimeBlockingView = true,
     this.useOnShowFileChooser,
+    this.useOnInsertInputSuggestion,
   }) {
     minimumFontSize ??= Util.isAndroid ? 8 : 0;
     assert(

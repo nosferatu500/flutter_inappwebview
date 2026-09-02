@@ -1553,6 +1553,23 @@ In that case, after the `window.addEventListener("flutterInAppWebViewPlatformRea
     return null;
   }
 
+  ///{@macro flutter_inappwebview_platform_interface.PlatformWebViewCreationParams.onInsertInputSuggestion}
+  ///
+  ///{@macro flutter_inappwebview_platform_interface.PlatformInAppBrowserEvents.onInsertInputSuggestion.supported_platforms}
+  @SupportedPlatforms(
+    platforms: [
+      IOSPlatform(
+        available: '26.0',
+        apiName: 'WKUIDelegate.webView(_:insertInputSuggestion:)',
+        apiUrl:
+            'https://developer.apple.com/documentation/webkit/wkuidelegate/webview(_:insertinputsuggestion:)',
+        note:
+            'Requires [InAppWebViewSettings.useOnInsertInputSuggestion] to be `true`.',
+      ),
+    ],
+  )
+  void onInsertInputSuggestion(InputSuggestion inputSuggestion) {}
+
   ///{@template flutter_inappwebview_platform_interface.PlatformInAppBrowserEvents.isMethodSupported}
   ///Check if the given [method] is supported by the [defaultTargetPlatform] or a specific [platform].
   ///{@endtemplate}

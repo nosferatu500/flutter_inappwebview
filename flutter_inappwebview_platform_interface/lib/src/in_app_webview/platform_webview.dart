@@ -1492,6 +1492,44 @@ In that case, after the `window.addEventListener("flutterInAppWebViewPlatformRea
   )?
   onShowFileChooser;
 
+  ///{@template flutter_inappwebview_platform_interface.PlatformWebViewCreationParams.onInsertInputSuggestion}
+  ///Event fired when the system keyboard delivers an input suggestion the user selected — in
+  ///practice a **Smart Reply**, offered because the WebView was given a conversation with
+  ///[PlatformInAppWebViewController.setConversationContext].
+  ///
+  ///[inputSuggestion] is what the user picked. Read [InputSuggestion.smartReply] for the text.
+  ///
+  ///**NOTE for iOS**: this event requires [InAppWebViewSettings.useOnInsertInputSuggestion] to be
+  ///`true`, and the reason is the same all-or-nothing hazard as
+  ///[PlatformWebViewCreationParams.onShowFileChooser]. WebKit's header calls the parameter *"the web
+  ///view where the input suggestion **should be inserted**"* and — unlike the open-panel method
+  ///next to it — documents **no** behaviour for the case where the delegate does not implement it.
+  ///So implementing it unconditionally could take insertion away from WebKit for every app that
+  ///never asked for the event. The selector is therefore hidden behind the setting, and an app that
+  ///opts in should assume **it is responsible for putting the text into the page**, e.g. with
+  ///[PlatformInAppWebViewController.evaluateJavascript].
+  ///
+  ///**NOTE for iOS**: nothing fires without a conversation context. The keyboard produces Smart
+  ///Replies from the thread you gave it, so this event and `setConversationContext` are two halves
+  ///of one feature.
+  ///{@endtemplate}
+  ///
+  ///{@macro flutter_inappwebview_platform_interface.PlatformWebViewCreationParams.onInsertInputSuggestion.supported_platforms}
+  @SupportedPlatforms(
+    platforms: [
+      IOSPlatform(
+        available: '26.0',
+        apiName: 'WKUIDelegate.webView(_:insertInputSuggestion:)',
+        apiUrl:
+            'https://developer.apple.com/documentation/webkit/wkuidelegate/webview(_:insertinputsuggestion:)',
+        note:
+            'Requires [InAppWebViewSettings.useOnInsertInputSuggestion] to be `true`. The app is responsible for inserting the text; WebKit documents no fallback.',
+      ),
+    ],
+  )
+  final FutureOr<void> Function(T controller, InputSuggestion inputSuggestion)?
+  onInsertInputSuggestion;
+
   ///{@template flutter_inappwebview_platform_interface.PlatformWebViewCreationParams.initialUrlRequest}
   ///Initial url request that will be loaded.
   ///{@endtemplate}
@@ -1647,6 +1685,7 @@ This is a limitation of the native WebKit APIs.""",
     this.onMicrophoneCaptureStateChanged,
     this.onContentSizeChanged,
     this.onShowFileChooser,
+    this.onInsertInputSuggestion,
     this.initialUrlRequest,
     this.initialFile,
     this.initialData,

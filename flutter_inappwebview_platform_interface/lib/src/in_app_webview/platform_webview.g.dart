@@ -309,6 +309,21 @@ enum PlatformWebViewCreationParamsProperty {
   ///{@endtemplate}
   onGeolocationPermissionsShowPrompt,
 
+  ///Can be used to check if the [PlatformWebViewCreationParams.onInsertInputSuggestion] property is supported at runtime.
+  ///
+  ///{@template flutter_inappwebview_platform_interface.PlatformWebViewCreationParams.onInsertInputSuggestion.supported_platforms}
+  ///
+  ///**Officially Supported Platforms/Implementations**:
+  ///- iOS WKWebView 26.0+ ([Official API - WKUIDelegate.webView(_:insertInputSuggestion:)](https://developer.apple.com/documentation/webkit/wkuidelegate/webview(_:insertinputsuggestion:))):
+  ///    - Requires [InAppWebViewSettings.useOnInsertInputSuggestion] to be `true`. The app is responsible for inserting the text; WebKit documents no fallback.
+  ///
+  ///**Parameters - Officially Supported Platforms/Implementations**:
+  ///- [inputSuggestion]: all platforms
+  ///
+  ///Use the [PlatformWebViewCreationParams.isPropertySupported] method to check if this property is supported at runtime.
+  ///{@endtemplate}
+  onInsertInputSuggestion,
+
   ///Can be used to check if the [PlatformWebViewCreationParams.onJsAlert] property is supported at runtime.
   ///
   ///{@template flutter_inappwebview_platform_interface.PlatformWebViewCreationParams.onJsAlert.supported_platforms}
@@ -1095,6 +1110,9 @@ extension _PlatformWebViewCreationParamsPropertySupported
             [
               TargetPlatform.android,
             ].contains(platform ?? defaultTargetPlatform);
+      case PlatformWebViewCreationParamsProperty.onInsertInputSuggestion:
+        return ((kIsWeb && platform != null) || !kIsWeb) &&
+            [TargetPlatform.iOS].contains(platform ?? defaultTargetPlatform);
       case PlatformWebViewCreationParamsProperty.onJsAlert:
         return ((kIsWeb && platform != null) || !kIsWeb) &&
             [

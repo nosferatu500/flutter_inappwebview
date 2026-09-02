@@ -222,3 +222,4 @@ export 'user_agent_metadata.dart' show UserAgentMetadata;
 export 'person_name_components.dart' show PersonNameComponents;
 export 'conversation_entry.dart' show ConversationEntry;
 export 'conversation_context.dart' show ConversationContext;
+export 'input_suggestion.dart' show InputSuggestion;

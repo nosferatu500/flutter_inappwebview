@@ -286,6 +286,7 @@ class InAppWebView extends StatefulWidget {
       ShowFileChooserRequest request,
     )?
     onShowFileChooser,
+    onInsertInputSuggestion,
   }) : this.fromPlatformCreationParams(
          key: key,
          params: PlatformInAppWebViewWidgetCreationParams(
@@ -533,6 +534,10 @@ class InAppWebView extends StatefulWidget {
            onShowFileChooser: onShowFileChooser != null
                ? (controller, request) =>
                      onShowFileChooser.call(controller, request)
+               : null,
+           onInsertInputSuggestion: onInsertInputSuggestion != null
+               ? (controller, inputSuggestion) =>
+                     onInsertInputSuggestion.call(controller, inputSuggestion)
                : null,
            gestureRecognizers: gestureRecognizers,
            headlessWebView: headlessWebView?.platform,

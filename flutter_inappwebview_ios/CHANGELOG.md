@@ -26,7 +26,7 @@ carries the full user-facing list; this entry is what changed in this package.
   was missing was on the Dart side — `ProxyRule_` had no field of that type, so the keys were never
   sent. A wire test in this package now pins the map shape against what the Swift reads
 
-Thirteen WebKit APIs read out of the iOS 26.5 SDK:
+Fourteen WebKit APIs read out of the iOS 26.5 SDK:
 
 - **`NavigationAction.modifierFlags` / `.buttonNumber`** (+ `ModifierFlag`, `ButtonMask`) — which
   keys and mouse button triggered a navigation
@@ -64,6 +64,14 @@ Thirteen WebKit APIs read out of the iOS 26.5 SDK:
   takes seconds; and `NSSet` has no wire form, so the sets travel as arrays. The types are iOS 18.4+
   even though the WebKit property is 26.0+, so the extensions are annotated at 18.4 and the 26.0 gate
   sits at the call site
+- **`onInsertInputSuggestion`** (26.0+), from `WKUIDelegate.webView(_:insertInputSuggestion:)`,
+  gated by `InAppWebViewSettings.useOnInsertInputSuggestion` through the same `responds(to:)`
+  override that gates the open panel — and re-assigning `uiDelegate` in `setSettings` when either
+  gate flips, because WebKit caches the delegate's selector support. `Types/UIInputSuggestion.swift`
+  builds the payload by downcasting to `UISmartReplySuggestion`; the base class has no properties.
+  **The `@objc` thunk was verified present** with `nm | swift-demangle` on both architectures rather
+  than inferred from a green build — an optional protocol requirement only gets `@objc` when the
+  signature matches exactly, which is how §68's ten dead delegate methods happened
 - **`DownloadStartRequest.isUserInitiated` / `.originatingFrame`**, from `WKDownload`
 
 ### Fixed

@@ -69,6 +69,7 @@ class IOSHeadlessInAppWebViewCreationParams
     super.onReceivedLoginRequest,
     super.onPermissionRequestCanceled,
     super.onShowFileChooser,
+    super.onInsertInputSuggestion,
     super.onRequestFocus,
     super.onWebContentProcessDidTerminate,
     super.onDidReceiveServerRedirectForProvisionalNavigation,
@@ -146,6 +147,7 @@ class IOSHeadlessInAppWebViewCreationParams
         onReceivedLoginRequest: params.onReceivedLoginRequest,
         onPermissionRequestCanceled: params.onPermissionRequestCanceled,
         onShowFileChooser: params.onShowFileChooser,
+        onInsertInputSuggestion: params.onInsertInputSuggestion,
         onRequestFocus: params.onRequestFocus,
         onWebContentProcessDidTerminate: params.onWebContentProcessDidTerminate,
         onDidReceiveServerRedirectForProvisionalNavigation:
@@ -315,6 +317,10 @@ class IOSHeadlessInAppWebView extends PlatformHeadlessInAppWebView
     if (params.onShowFileChooser != null &&
         settings.useOnShowFileChooser == null) {
       settings.useOnShowFileChooser = true;
+    }
+    if (params.onInsertInputSuggestion != null &&
+        settings.useOnInsertInputSuggestion == null) {
+      settings.useOnInsertInputSuggestion = true;
     }
     if (params.shouldInterceptRequest != null &&
         settings.useShouldInterceptRequest == null) {

@@ -742,6 +742,21 @@ enum PlatformInAppBrowserEventsMethod {
   ///{@endtemplate}
   onGeolocationPermissionsShowPrompt,
 
+  ///Can be used to check if the [PlatformInAppBrowserEvents.onInsertInputSuggestion] method is supported at runtime.
+  ///
+  ///{@template flutter_inappwebview_platform_interface.PlatformInAppBrowserEvents.onInsertInputSuggestion.supported_platforms}
+  ///
+  ///**Officially Supported Platforms/Implementations**:
+  ///- iOS WKWebView 26.0+ ([Official API - WKUIDelegate.webView(_:insertInputSuggestion:)](https://developer.apple.com/documentation/webkit/wkuidelegate/webview(_:insertinputsuggestion:))):
+  ///    - Requires [InAppWebViewSettings.useOnInsertInputSuggestion] to be `true`.
+  ///
+  ///**Parameters - Officially Supported Platforms/Implementations**:
+  ///- [inputSuggestion]: all platforms
+  ///
+  ///Use the [PlatformInAppBrowserEvents.isMethodSupported] method to check if this method is supported at runtime.
+  ///{@endtemplate}
+  onInsertInputSuggestion,
+
   ///Can be used to check if the [PlatformInAppBrowserEvents.onJsAlert] method is supported at runtime.
   ///
   ///{@template flutter_inappwebview_platform_interface.PlatformInAppBrowserEvents.onJsAlert.supported_platforms}
@@ -1443,6 +1458,9 @@ extension _PlatformInAppBrowserEventsMethodSupported
             [
               TargetPlatform.android,
             ].contains(platform ?? defaultTargetPlatform);
+      case PlatformInAppBrowserEventsMethod.onInsertInputSuggestion:
+        return ((kIsWeb && platform != null) || !kIsWeb) &&
+            [TargetPlatform.iOS].contains(platform ?? defaultTargetPlatform);
       case PlatformInAppBrowserEventsMethod.onJsAlert:
         return ((kIsWeb && platform != null) || !kIsWeb) &&
             [

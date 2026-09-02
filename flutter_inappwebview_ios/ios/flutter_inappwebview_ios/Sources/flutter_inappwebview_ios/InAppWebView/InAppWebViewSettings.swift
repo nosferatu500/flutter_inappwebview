@@ -21,6 +21,7 @@ public class InAppWebViewSettings: ISettings<InAppWebView> {
     /// selector unless this is `true`. Leaving it `false` keeps file upload behaving exactly as it
     /// does today.
     var useOnShowFileChooser = false
+    var useOnInsertInputSuggestion = false
     var userAgent = ""
     var applicationNameForUserAgent = ""
     var javaScriptEnabled = true

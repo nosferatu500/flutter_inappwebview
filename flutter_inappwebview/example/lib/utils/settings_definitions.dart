@@ -235,6 +235,15 @@ Map<String, List<SettingDefinition>> getSettingDefinitions() {
         property: InAppWebViewSettingsProperty.useOnShowFileChooser,
       ),
       SettingDefinition(
+        name: 'Use On Insert Input Suggestion',
+        description:
+            'Receive keyboard Smart Replies through onInsertInputSuggestion '
+            '(iOS 26+). Opting in makes the app responsible for inserting the text',
+        type: SettingType.boolean,
+        defaultValue: null,
+        property: InAppWebViewSettingsProperty.useOnInsertInputSuggestion,
+      ),
+      SettingDefinition(
         name: 'Use Should Intercept Request',
         description: 'Enable request interception events',
         type: SettingType.boolean,

@@ -1202,6 +1202,25 @@ class IOSInAppWebViewController extends PlatformInAppWebViewController
           }
         }
         break;
+      case "onInsertInputSuggestion":
+        if ((webviewParams != null &&
+                webviewParams!.onInsertInputSuggestion != null) ||
+            _inAppBrowserEventHandler != null) {
+          InputSuggestion inputSuggestion = InputSuggestion.fromMap(
+            call.arguments.cast<String, dynamic>(),
+          )!;
+
+          if (webviewParams != null &&
+              webviewParams!.onInsertInputSuggestion != null) {
+            webviewParams!.onInsertInputSuggestion!(
+              _controllerFromPlatform,
+              inputSuggestion,
+            );
+          } else {
+            _inAppBrowserEventHandler!.onInsertInputSuggestion(inputSuggestion);
+          }
+        }
+        break;
       case "onCallJsHandler":
         String handlerName = call.arguments["handlerName"];
         Map<String, dynamic> handlerDataMap = call.arguments["data"]

@@ -85,6 +85,7 @@ class PlatformHeadlessInAppWebViewCreationParams
     super.onMicrophoneCaptureStateChanged,
     super.onContentSizeChanged,
     super.onShowFileChooser,
+    super.onInsertInputSuggestion,
     super.initialUrlRequest,
     super.initialFile,
     super.initialData,

@@ -398,7 +398,7 @@ implemented on the current platform" on iOS.
 
 ### Added — iOS
 
-Thirteen WebKit APIs read out of the iOS 26.5 SDK, plus one feature that was half-built upstream.
+Fourteen WebKit APIs read out of the iOS 26.5 SDK, plus one feature that was half-built upstream.
 
 - **`ProxyRule.relayHop1` / `.relayHop2`** (iOS 17.0+) — route a proxy rule through a chain of
   secure relays (RFC 9298) instead of connecting to the proxy endpoint directly. `ProxyRelayHop`
@@ -451,6 +451,20 @@ Thirteen WebKit APIs read out of the iOS 26.5 SDK, plus one feature that was hal
   **dropped** rather than sent half-built, because the native type declares all four non-null and a
   message with no sender or date would mis-attribute the thread. `getConversationContext()` returns
   `null` below iOS 26.0, distinct from an empty context
+- **`onInsertInputSuggestion`** (iOS 26.0+), with the new `InputSuggestion` type and the
+  `InAppWebViewSettings.useOnInsertInputSuggestion` gate — the other half of Smart Reply: the
+  keyboard tells you which suggestion the user picked, so you can put it into the page. **The payload
+  is deliberately thin, and that is the API rather than an omission**: `UIInputSuggestion` declares
+  no properties at all, and its only subclass carries a single `smartReply` string, so a suggestion
+  that is not a Smart Reply arrives with every field `null`.
+
+  **Opting in makes your app responsible for inserting the text.** The setting hides the
+  `WKUIDelegate` selector entirely while it is off, the same mechanism as `useOnShowFileChooser` but
+  for a different reason: WebKit documents what it does when the open-panel method is unimplemented
+  and documents **nothing** for this one, while calling the parameter *"the web view where the input
+  suggestion should be inserted"*. Rather than guess, the plugin leaves WebKit's own handling in
+  place until an app asks for the event. Supplying the handler infers the setting automatically, as
+  with `onShowFileChooser`
 - **`DownloadStartRequest.isUserInitiated` / `.originatingFrame`** — from `WKDownload`
 
 `WebsiteDataType.WKWebsiteDataTypeScreenTime` is the third member of that family and has shipped

@@ -72,6 +72,7 @@ class IOSInAppWebViewWidgetCreationParams
     super.onReceivedLoginRequest,
     super.onPermissionRequestCanceled,
     super.onShowFileChooser,
+    super.onInsertInputSuggestion,
     super.onRequestFocus,
     super.onWebContentProcessDidTerminate,
     super.onDidReceiveServerRedirectForProvisionalNavigation,
@@ -155,6 +156,7 @@ class IOSInAppWebViewWidgetCreationParams
         onReceivedLoginRequest: params.onReceivedLoginRequest,
         onPermissionRequestCanceled: params.onPermissionRequestCanceled,
         onShowFileChooser: params.onShowFileChooser,
+        onInsertInputSuggestion: params.onInsertInputSuggestion,
         onRequestFocus: params.onRequestFocus,
         onWebContentProcessDidTerminate: params.onWebContentProcessDidTerminate,
         onDidReceiveServerRedirectForProvisionalNavigation:
@@ -317,6 +319,10 @@ class IOSInAppWebViewWidget extends PlatformInAppWebViewWidget {
     if (params.onShowFileChooser != null &&
         settings.useOnShowFileChooser == null) {
       settings.useOnShowFileChooser = true;
+    }
+    if (params.onInsertInputSuggestion != null &&
+        settings.useOnInsertInputSuggestion == null) {
+      settings.useOnInsertInputSuggestion = true;
     }
     if (params.shouldInterceptRequest != null &&
         settings.useShouldInterceptRequest == null) {

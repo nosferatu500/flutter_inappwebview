@@ -52,6 +52,7 @@ void main() {
           InAppWebViewSettingsProperty.supportsAdaptiveImageGlyph,
           InAppWebViewSettingsProperty.writingToolsBehavior,
           InAppWebViewSettingsProperty.showsSystemScreenTimeBlockingView,
+          InAppWebViewSettingsProperty.useOnInsertInputSuggestion,
         ]),
       );
     });
