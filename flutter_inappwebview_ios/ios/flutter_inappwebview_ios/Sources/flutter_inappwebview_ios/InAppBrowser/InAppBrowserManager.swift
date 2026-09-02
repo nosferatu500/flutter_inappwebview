@@ -100,7 +100,9 @@ public class InAppBrowserManager: ChannelDelegate {
             let storyboard = UIStoryboard(name: InAppBrowserManager.WEBVIEW_STORYBOARD, bundle: Bundle(for: InAppWebViewFlutterPlugin.self))
         #endif
         let navController = storyboard.instantiateViewController(withIdentifier: InAppBrowserManager.NAV_STORYBOARD_CONTROLLER_ID) as! InAppBrowserNavigationController
-        webViewController.edgesForExtendedLayout = []
+        // keep the default `edgesForExtendedLayout = .all`: translucent bars float over the web view
+        // (so no unpainted safe area is left behind them), while `extendedLayoutIncludesOpaqueBars`
+        // still keeps the web view clear of opaque bars, which paint their own safe area
         navController.pushViewController(webViewController, animated: false)
         webViewController.prepareNavigationControllerBeforeViewWillAppear()
         

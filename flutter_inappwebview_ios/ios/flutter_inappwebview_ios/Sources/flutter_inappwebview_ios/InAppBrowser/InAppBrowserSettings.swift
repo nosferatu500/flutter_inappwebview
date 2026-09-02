@@ -50,12 +50,12 @@ public class InAppBrowserSettings: ISettings<InAppBrowserWebViewController> {
                 let toolbarAppearance = navController.toolbar.standardAppearance
                 realOptions["hideToolbarTop"] = navController.navigationBar.isHidden
                 realOptions["toolbarTopBackgroundColor"] = navigationBarAppearance.backgroundColor?.hexString
-                realOptions["toolbarTopTranslucent"] = navigationBarAppearance.backgroundEffect != nil
+                realOptions["toolbarTopTranslucent"] = navController.navigationBar.isTranslucent
                 realOptions["toolbarTopBarTintColor"] = navController.navigationBar.barTintColor?.hexString
                 realOptions["toolbarTopTintColor"] = navController.navigationBar.tintColor?.hexString
                 realOptions["hideToolbarBottom"] = navController.toolbar.isHidden
                 realOptions["toolbarBottomBackgroundColor"] = toolbarAppearance.backgroundColor?.hexString
-                realOptions["toolbarBottomTranslucent"] = toolbarAppearance.backgroundEffect != nil
+                realOptions["toolbarBottomTranslucent"] = navController.toolbar.isTranslucent
                 realOptions["toolbarBottomTintColor"] = navController.toolbar.tintColor?.hexString
                 realOptions["presentationStyle"] = navController.modalPresentationStyle.rawValue
                 realOptions["transitionStyle"] = navController.modalTransitionStyle.rawValue

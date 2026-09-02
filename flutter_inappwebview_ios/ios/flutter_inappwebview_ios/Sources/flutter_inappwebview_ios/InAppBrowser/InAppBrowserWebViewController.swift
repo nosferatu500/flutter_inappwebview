@@ -122,7 +122,8 @@ public class InAppBrowserWebViewController: UIViewController, InAppBrowserDelega
         webView?.leadingAnchor.constraint(equalTo: self.view.leadingAnchor, constant: 0.0).isActive = true
         webView?.trailingAnchor.constraint(equalTo: self.view.trailingAnchor, constant: 0.0).isActive = true
 
-        progressBar.topAnchor.constraint(equalTo: self.view.topAnchor, constant: 0.0).isActive = true
+        // the web view is full-bleed, but the progress bar has to stay clear of the top bar
+        progressBar.topAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.topAnchor, constant: 0.0).isActive = true
         progressBar.leadingAnchor.constraint(equalTo: self.view.leadingAnchor, constant: 0.0).isActive = true
         progressBar.trailingAnchor.constraint(equalTo: self.view.trailingAnchor, constant: 0.0).isActive = true
 
@@ -218,6 +219,8 @@ public class InAppBrowserWebViewController: UIViewController, InAppBrowserDelega
               
         searchBar = UISearchBar()
         searchBar.keyboardType = .URL
+        // drop the search bar's own background so only the field floats over the page
+        searchBar.backgroundImage = UIImage()
         searchBar.sizeToFit()
         searchBar.delegate = self
         navigationItem.titleView = searchBar
@@ -320,13 +323,19 @@ public class InAppBrowserWebViewController: UIViewController, InAppBrowserDelega
     }
     
     private func configureBarAppearance<T: UIBarAppearance>(_ appearance: T, translucent: Bool, backgroundColor: UIColor?) -> T {
-        if translucent {
-            appearance.configureWithDefaultBackground()
+        if let backgroundColor = backgroundColor {
+            if translucent {
+                appearance.configureWithDefaultBackground()
+            } else {
+                appearance.configureWithOpaqueBackground()
+            }
+            appearance.backgroundColor = backgroundColor
+        } else if translucent {
+            // no explicit color: drop the bar background entirely so the page shows through
+            // and the bar items float on top of it, edge-to-edge
+            appearance.configureWithTransparentBackground()
         } else {
             appearance.configureWithOpaqueBackground()
-        }
-        if let backgroundColor = backgroundColor {
-            appearance.backgroundColor = backgroundColor
         }
         return appearance
     }
