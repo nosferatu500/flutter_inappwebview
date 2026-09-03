@@ -111,6 +111,28 @@ Twelve `androidx.webkit` features, each behind its own `WebViewFeature` flag, an
   `Navigation.getWebResourceError()` is the **only** method on `Navigation` that androidx guards with
   a feature check of its own, and `Page` has no gated method at all — `Page.getUrl()` is callable
   even though `WebViewFeature.PAGE_GET_URL` is one of the six tombstones below
+- **The rest of the same listener** — `onPageLoadEvent`, `onPageDomContentLoadedEvent`,
+  `onPageDeleted`, `onFirstContentfulPaintMillis`, `onLargestContentfulPaintMillis` and
+  `onPerformanceMarkMillis`, carrying the new `WebViewPage` type.
+
+  **`onPageDomContentLoadedEvent` is `DOMContentLoaded` with no injected JavaScript**, which this
+  plugin could not report before: the alternative is a user script plus a bridge call on every page,
+  which costs an injection per load and can be defeated by the page's own CSP.
+  **`onPageDeleted` is the only way to observe back/forward-cache eviction** — `backForwardCacheEnabled`
+  shipped in 7.0.0 with no way to see whether a page was still cached or had been thrown away.
+  And the two paint callbacks are Web Vitals **straight from the engine**, with no
+  `PerformanceObserver` to install.
+
+  `onPerformanceMarkMillis` is gated separately by `InAppWebViewSettings.useOnPerformanceMarkMillis`
+  and is the only one that is: a page can call `performance.mark()` hundreds of times during one
+  load, so it is a different cost class from everything else here, all of which is bounded at about
+  one message per page. The Kotlin listener drops the callback before it reaches the channel when
+  the setting is off — the native callback still arrives, it simply stops there — and an integration
+  test proves that by keeping a Dart handler installed while turning the gate off explicitly.
+
+  Page ids come from the same `WeakHashMap` as `WebViewNavigation.pageId`, so the two agree; the
+  eviction that releases them lives in `onPageDeleted`, which is why that override existed before
+  this entry's event did
 
 Every mirrored `WebViewFeature` constant is now pinned against the real AAR by a test: six of the
 flags `WebViewFeature` declares are `@Deprecated` tombstones that `isFeatureSupported` **throws**

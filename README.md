@@ -100,7 +100,8 @@ by its `WebViewFeature` flag.
 | `userAgentMetadata` | Android | User-Agent Client Hints — brands, platform, form factors |
 | `profileName` | Android | Puts this WebView on a named browsing profile with its own cookies and storage |
 | `syncCallbackTimeoutMillis` | Android | How long the WebView waits for your Dart `shouldInterceptRequest` answer before loading the resource anyway (was a fixed 10s) |
-| `useNavigationListener` | Android | Opt in to the three `onNavigation*` events. Inferred from supplying any of their handlers |
+| `useNavigationListener` | Android | Opt in to the nine navigation/page/Web-Vitals events. Inferred from supplying any of their handlers |
+| `useOnPerformanceMarkMillis` | Android | Opt in to `onPerformanceMarkMillis` specifically. Separate because a page can call `performance.mark()` hundreds of times per load — the other eight events never infer it |
 | `writingToolsBehavior` | iOS 18.0+ | How much of Apple's Writing Tools the WebView offers |
 | `preferredHTTPSNavigationPolicy` | iOS 18.0+ | Automatic HTTP→HTTPS upgrading; applied per navigation, so it responds to `setSettings` |
 | `securityRestrictionMode` | iOS 18.4+ | WebKit's built-in security restriction level |
@@ -136,6 +137,12 @@ by its `WebViewFeature` flag.
 | `onNavigationStarted` | Android | Every navigation the WebView begins — including fragment jumps, `history.pushState`, back/forward and reloads, which no other event here reports |
 | `onNavigationRedirected` | Android | Every redirect hop. Unlike `NavigationAction.isRedirect`, not limited to navigations `shouldOverrideUrlLoading` was offered |
 | `onNavigationCompleted` | Android | A navigation finished. **Carries `statusCode` — the only way to see the HTTP status of a navigation that *succeeded*** |
+| `onPageDomContentLoadedEvent` | Android | `DOMContentLoaded` **without injecting any JavaScript** — no user script, nothing for a strict CSP to block |
+| `onPageLoadEvent` | Android | A page's `load` event has run. About a *document*, so it can still arrive for a page that is no longer on screen |
+| `onPageDeleted` | Android | A page was destroyed — **the only way to observe back/forward-cache eviction**, which `backForwardCacheEnabled` had no counterpart for |
+| `onFirstContentfulPaintMillis` | Android | First Contentful Paint straight from the engine, no `PerformanceObserver` needed |
+| `onLargestContentfulPaintMillis` | Android | Largest Contentful Paint. **Can fire repeatedly per page** — LCP is revised as bigger content arrives |
+| `onPerformanceMarkMillis` | Android | Every `performance.mark()` the page makes. Needs its own `useOnPerformanceMarkMillis` opt-in |
 
 ### Managers and controllers
 
@@ -157,6 +164,7 @@ by its `WebViewFeature` flag.
 | `NavigationAction.modifierFlags` / `.buttonNumber` | iOS | Which modifier keys and mouse button triggered a navigation |
 | `NavigationAction.isContentRuleListRedirect` | iOS 26.0+ | Whether a content rule list redirected this navigation |
 | `DownloadStartRequest.isUserInitiated` / `.originatingFrame` | iOS | Whether the user started the download, and which frame it came from |
+| `WebViewPage` (new type) | Android | The payload of the page and Web-Vitals events: a synthesised `id` matching `WebViewNavigation.pageId`, plus the page's `url`. A page is a *document*, not a navigation — several navigations can share one |
 | `WebViewNavigation` (new type) | Android | The payload of the three `onNavigation*` events: `statusCode`, `isBack`/`isForward`/`isReload`/`isRestore`/`isSameDocument`, `didCommit`, and a plugin-synthesised `id` tying the three events together |
 | `WebsiteDataType.WKWebsiteDataTypeScreenTime` | iOS 26.0+ | Screen Time data. Deliberately **not** part of `WebsiteDataType.ALL` — passing it to a bulk delete terminates the app |
 

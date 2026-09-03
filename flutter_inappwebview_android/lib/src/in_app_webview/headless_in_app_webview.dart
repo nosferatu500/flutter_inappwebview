@@ -52,6 +52,12 @@ class AndroidHeadlessInAppWebViewCreationParams
     super.onNavigationStarted,
     super.onNavigationRedirected,
     super.onNavigationCompleted,
+    super.onPageLoadEvent,
+    super.onPageDomContentLoadedEvent,
+    super.onPageDeleted,
+    super.onFirstContentfulPaintMillis,
+    super.onLargestContentfulPaintMillis,
+    super.onPerformanceMarkMillis,
     super.onTitleChanged,
     super.onWindowFocus,
     super.onWindowBlur,
@@ -129,6 +135,12 @@ class AndroidHeadlessInAppWebViewCreationParams
         onNavigationStarted: params.onNavigationStarted,
         onNavigationRedirected: params.onNavigationRedirected,
         onNavigationCompleted: params.onNavigationCompleted,
+        onPageLoadEvent: params.onPageLoadEvent,
+        onPageDomContentLoadedEvent: params.onPageDomContentLoadedEvent,
+        onPageDeleted: params.onPageDeleted,
+        onFirstContentfulPaintMillis: params.onFirstContentfulPaintMillis,
+        onLargestContentfulPaintMillis: params.onLargestContentfulPaintMillis,
+        onPerformanceMarkMillis: params.onPerformanceMarkMillis,
         onTitleChanged: params.onTitleChanged,
         onWindowFocus: params.onWindowFocus,
         onWindowBlur: params.onWindowBlur,
@@ -330,13 +342,27 @@ class AndroidHeadlessInAppWebView extends PlatformHeadlessInAppWebView
         settings.useOnNavigationResponse == null) {
       settings.useOnNavigationResponse = true;
     }
-    // One listener carries all three navigation events, so any one handler infers the
-    // setting. Without this a handler compiles, reads correctly and never fires.
+    // One platform listener carries all nine of these events, so ANY of their handlers infers the
+    // registration. Without this a handler compiles, reads correctly and never fires.
     if ((params.onNavigationStarted != null ||
             params.onNavigationRedirected != null ||
-            params.onNavigationCompleted != null) &&
+            params.onNavigationCompleted != null ||
+            params.onPageLoadEvent != null ||
+            params.onPageDomContentLoadedEvent != null ||
+            params.onPageDeleted != null ||
+            params.onFirstContentfulPaintMillis != null ||
+            params.onLargestContentfulPaintMillis != null ||
+            params.onPerformanceMarkMillis != null) &&
         settings.useNavigationListener == null) {
       settings.useNavigationListener = true;
+    }
+    // `onPerformanceMarkMillis` is inferred ONLY from its own handler, never from the eight
+    // others. It is the one unbounded event in the family -- a page can call `performance.mark()`
+    // hundreds of times per load -- so opting into the cheap events must not silently opt the app
+    // into a channel message per mark.
+    if (params.onPerformanceMarkMillis != null &&
+        settings.useOnPerformanceMarkMillis == null) {
+      settings.useOnPerformanceMarkMillis = true;
     }
     if (params.onShowFileChooser != null &&
         settings.useOnShowFileChooser == null) {

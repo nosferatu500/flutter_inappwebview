@@ -194,6 +194,137 @@ void main() {
     );
   });
 
+  /// Exactly the map `WebViewPageExt.toMap()` builds.
+  Map<String, Object?> pageMap({
+    int id = 4,
+    String? url = 'https://example.com/',
+  }) => <String, Object?>{'id': id, 'url': url};
+
+  group('the page lifecycle events read the map Kotlin builds', () {
+    test('all three page events reach their own handlers', () async {
+      final List<String> order = <String>[];
+      final controller = controllerWith(
+        AndroidHeadlessInAppWebViewCreationParams(
+          onPageLoadEvent: (dynamic _, WebViewPage p) =>
+              order.add('load:${p.id}:${p.url}'),
+          onPageDomContentLoadedEvent: (dynamic _, WebViewPage p) =>
+              order.add('dom:${p.id}'),
+          onPageDeleted: (dynamic _, WebViewPage p) =>
+              order.add('deleted:${p.id}'),
+        ),
+      );
+
+      await controller.handleMethod(
+        MethodCall('onPageDomContentLoadedEvent', {'page': pageMap()}),
+      );
+      await controller.handleMethod(
+        MethodCall('onPageLoadEvent', {'page': pageMap()}),
+      );
+      await controller.handleMethod(
+        MethodCall('onPageDeleted', {'page': pageMap()}),
+      );
+
+      expect(order, <String>[
+        'dom:4',
+        'load:4:https://example.com/',
+        'deleted:4',
+      ]);
+    });
+
+    test('a page id is the link back to a navigation', () async {
+      // `WebViewNavigation.pageId` and `WebViewPage.id` are the same synthesised number; if they
+      // ever stop matching, correlating an event to its document becomes impossible and nothing
+      // else in the suite would notice.
+      final List<int?> navPageIds = <int?>[];
+      final List<int> pageIds = <int>[];
+      final controller = controllerWith(
+        AndroidHeadlessInAppWebViewCreationParams(
+          onNavigationCompleted: (dynamic _, WebViewNavigation n) =>
+              navPageIds.add(n.pageId),
+          onPageLoadEvent: (dynamic _, WebViewPage p) => pageIds.add(p.id),
+        ),
+      );
+
+      await controller.handleMethod(
+        MethodCall('onNavigationCompleted', {
+          'navigation': navigationMap(pageId: 4),
+        }),
+      );
+      await controller.handleMethod(
+        MethodCall('onPageLoadEvent', {'page': pageMap(id: 4)}),
+      );
+
+      expect(navPageIds, <int?>[4]);
+      expect(pageIds, <int>[4]);
+    });
+
+    test('the two paint events carry a duration under the same key', () async {
+      final List<String> seen = <String>[];
+      final controller = controllerWith(
+        AndroidHeadlessInAppWebViewCreationParams(
+          onFirstContentfulPaintMillis: (dynamic _, WebViewPage p, int ms) =>
+              seen.add('fcp:${p.id}:$ms'),
+          onLargestContentfulPaintMillis: (dynamic _, WebViewPage p, int ms) =>
+              seen.add('lcp:${p.id}:$ms'),
+        ),
+      );
+
+      await controller.handleMethod(
+        MethodCall('onFirstContentfulPaintMillis', {
+          'page': pageMap(),
+          'durationMillis': 123,
+        }),
+      );
+      await controller.handleMethod(
+        MethodCall('onLargestContentfulPaintMillis', {
+          'page': pageMap(),
+          'durationMillis': 456,
+        }),
+      );
+
+      expect(seen, <String>['fcp:4:123', 'lcp:4:456']);
+    });
+
+    test('a performance mark carries its name and time separately', () async {
+      // Two scalars of different types beside the page: a transposition here is exactly the kind
+      // of thing a symmetric fixture would hide, so the name and the number are distinct.
+      final List<String> marks = <String>[];
+      final controller = controllerWith(
+        AndroidHeadlessInAppWebViewCreationParams(
+          onPerformanceMarkMillis:
+              (dynamic _, WebViewPage p, String name, int ms) =>
+                  marks.add('${p.id}|$name|$ms'),
+        ),
+      );
+
+      await controller.handleMethod(
+        MethodCall('onPerformanceMarkMillis', {
+          'page': pageMap(),
+          'markName': 'hero-image-decoded',
+          'markTimeMillis': 789,
+        }),
+      );
+
+      expect(marks, <String>['4|hero-image-decoded|789']);
+    });
+
+    test('page events with no handler registered are ignored', () async {
+      final controller = controllerWith(
+        AndroidHeadlessInAppWebViewCreationParams(),
+      );
+      for (final method in <String>[
+        'onPageLoadEvent',
+        'onPageDomContentLoadedEvent',
+        'onPageDeleted',
+      ]) {
+        await expectLater(
+          controller.handleMethod(MethodCall(method, {'page': pageMap()})),
+          completes,
+        );
+      }
+    });
+  });
+
   group('feature constants', () {
     // Values read from `javap -constants` on webkit-1.17.0.aar. Both happen to equal their names,
     // unlike `PRERENDER_WITH_URL` — but that is a fact to pin, not one to assume, and §36 found six
@@ -253,12 +384,37 @@ void main() {
       expect(settings.useNavigationListener, isNull);
     });
 
+    test('useOnPerformanceMarkMillis serialises under its own key', () {
+      final settings = InAppWebViewSettings(useOnPerformanceMarkMillis: true);
+      expect(settings.toMap()['useOnPerformanceMarkMillis'], isTrue);
+      expect(
+        settings.toMap()['useNavigationListener'],
+        isNull,
+        reason:
+            'the two gates are independent on the wire; the perf gate does not imply the '
+            'listener registration, and Kotlin reads them separately',
+      );
+    });
+
+    // The two-tier inference — any of the nine handlers turns on `useNavigationListener`, but only
+    // `onPerformanceMarkMillis`'s own handler turns on `useOnPerformanceMarkMillis` — is asserted
+    // in `integration_test/in_app_webview/navigation_listener.dart` against a live WebView's
+    // `getSettings()`, not here: `_inferInitialSettings` is private to the widget and reaching it
+    // would mean adding a test-only hook to production source for something a device can check
+    // directly.
+
     test('the events and the setting are reported Android-only', () {
       final params = AndroidHeadlessInAppWebViewCreationParams();
       for (final property in <PlatformWebViewCreationParamsProperty>[
         PlatformWebViewCreationParamsProperty.onNavigationStarted,
         PlatformWebViewCreationParamsProperty.onNavigationRedirected,
         PlatformWebViewCreationParamsProperty.onNavigationCompleted,
+        PlatformWebViewCreationParamsProperty.onPageLoadEvent,
+        PlatformWebViewCreationParamsProperty.onPageDomContentLoadedEvent,
+        PlatformWebViewCreationParamsProperty.onPageDeleted,
+        PlatformWebViewCreationParamsProperty.onFirstContentfulPaintMillis,
+        PlatformWebViewCreationParamsProperty.onLargestContentfulPaintMillis,
+        PlatformWebViewCreationParamsProperty.onPerformanceMarkMillis,
       ]) {
         expect(
           params.isPropertySupported(

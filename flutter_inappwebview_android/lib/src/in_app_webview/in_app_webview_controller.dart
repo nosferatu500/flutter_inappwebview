@@ -912,6 +912,96 @@ class AndroidInAppWebViewController extends PlatformInAppWebViewController
           }
         }
         break;
+      case "onPageLoadEvent":
+      case "onPageDomContentLoadedEvent":
+      case "onPageDeleted":
+        // Same payload and same shape for all three; only the destination differs.
+        final pageHandler = switch (call.method) {
+          "onPageLoadEvent" => webviewParams?.onPageLoadEvent,
+          "onPageDomContentLoadedEvent" =>
+            webviewParams?.onPageDomContentLoadedEvent,
+          _ => webviewParams?.onPageDeleted,
+        };
+        if (pageHandler != null || _inAppBrowserEventHandler != null) {
+          final page = WebViewPage.fromMap(
+            call.arguments["page"]?.cast<String, dynamic>(),
+          );
+          if (page != null) {
+            if (pageHandler != null) {
+              pageHandler(_controllerFromPlatform, page);
+            } else {
+              switch (call.method) {
+                case "onPageLoadEvent":
+                  _inAppBrowserEventHandler!.onPageLoadEvent(page);
+                  break;
+                case "onPageDomContentLoadedEvent":
+                  _inAppBrowserEventHandler!.onPageDomContentLoadedEvent(page);
+                  break;
+                default:
+                  _inAppBrowserEventHandler!.onPageDeleted(page);
+                  break;
+              }
+            }
+          }
+        }
+        break;
+      case "onFirstContentfulPaintMillis":
+      case "onLargestContentfulPaintMillis":
+        // Both carry a duration under the same key, so they share a body too.
+        final isFirst = call.method == "onFirstContentfulPaintMillis";
+        final paintHandler = isFirst
+            ? webviewParams?.onFirstContentfulPaintMillis
+            : webviewParams?.onLargestContentfulPaintMillis;
+        if (paintHandler != null || _inAppBrowserEventHandler != null) {
+          final page = WebViewPage.fromMap(
+            call.arguments["page"]?.cast<String, dynamic>(),
+          );
+          final int durationMillis = call.arguments["durationMillis"];
+          if (page != null) {
+            if (paintHandler != null) {
+              paintHandler(_controllerFromPlatform, page, durationMillis);
+            } else if (isFirst) {
+              _inAppBrowserEventHandler!.onFirstContentfulPaintMillis(
+                page,
+                durationMillis,
+              );
+            } else {
+              _inAppBrowserEventHandler!.onLargestContentfulPaintMillis(
+                page,
+                durationMillis,
+              );
+            }
+          }
+        }
+        break;
+      case "onPerformanceMarkMillis":
+        if ((webviewParams != null &&
+                webviewParams!.onPerformanceMarkMillis != null) ||
+            _inAppBrowserEventHandler != null) {
+          final page = WebViewPage.fromMap(
+            call.arguments["page"]?.cast<String, dynamic>(),
+          );
+          final String markName = call.arguments["markName"];
+          final int markTimeMillis = call.arguments["markTimeMillis"];
+          if (page != null) {
+            if (webviewParams != null &&
+                webviewParams!.onPerformanceMarkMillis != null) {
+              webviewParams!.onPerformanceMarkMillis!(
+                _controllerFromPlatform,
+                page,
+                markName,
+                markTimeMillis,
+              );
+            } else {
+              _inAppBrowserEventHandler!.onPerformanceMarkMillis(
+                page,
+                markName,
+                markTimeMillis,
+              );
+            }
+          }
+        }
+        break;
       case "onDidReceiveServerRedirectForProvisionalNavigation":
         if (webviewParams != null &&
             webviewParams!.onDidReceiveServerRedirectForProvisionalNavigation !=

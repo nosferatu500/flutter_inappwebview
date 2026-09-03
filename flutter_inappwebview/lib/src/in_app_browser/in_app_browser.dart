@@ -377,6 +377,28 @@ class InAppBrowser implements PlatformInAppBrowserEvents {
   void onNavigationCompleted(WebViewNavigation navigation) {}
 
   @override
+  void onPageLoadEvent(WebViewPage page) {}
+
+  @override
+  void onPageDomContentLoadedEvent(WebViewPage page) {}
+
+  @override
+  void onPageDeleted(WebViewPage page) {}
+
+  @override
+  void onFirstContentfulPaintMillis(WebViewPage page, int durationMillis) {}
+
+  @override
+  void onLargestContentfulPaintMillis(WebViewPage page, int durationMillis) {}
+
+  @override
+  void onPerformanceMarkMillis(
+    WebViewPage page,
+    String markName,
+    int markTimeMillis,
+  ) {}
+
+  @override
   FutureOr<PermissionResponse?>? onPermissionRequest(
     PermissionRequest permissionRequest,
   ) {

@@ -558,6 +558,35 @@ Fourteen WebKit APIs read out of the iOS 26.5 SDK, plus one feature that was hal
   Requires `WebViewFeature.NAVIGATION_LISTENER`; where that is unsupported the events simply never
   fire. `WebViewNavigation.webResourceError` needs a second, finer check,
   `WebViewFeature.NAVIGATION_GET_WEB_RESOURCE_ERROR` — without it every other field still arrives
+- **`onPageLoadEvent` / `onPageDomContentLoadedEvent` / `onPageDeleted` /
+  `onFirstContentfulPaintMillis` / `onLargestContentfulPaintMillis` / `onPerformanceMarkMillis`**
+  (Android), the rest of the same `androidx.webkit.NavigationListener`, with the new
+  **`WebViewPage`** type and **`InAppWebViewSettings.useOnPerformanceMarkMillis`**.
+
+  Three of these do something the plugin simply could not do before. **`onPageDomContentLoadedEvent`
+  gives you `DOMContentLoaded` without injecting a script into the page** — no user script, no
+  bridge call, and nothing for a strict Content-Security-Policy to block. **`onPageDeleted` is the
+  only way to see back/forward-cache eviction**: `InAppWebViewSettings.backForwardCacheEnabled` lets
+  a page be kept alive after you navigate away, and until now there was no way to know whether a
+  given page was still cached or had been discarded. And **`onFirstContentfulPaintMillis` /
+  `onLargestContentfulPaintMillis` are Web Vitals straight from the engine**, with no
+  `PerformanceObserver` of your own to install.
+
+  A **page is not a navigation**. Several navigations can share one page — a `pushState` does not
+  create a new document — and a cached page outlives the navigation that created it. Match
+  `WebViewPage.id` against `WebViewNavigation.pageId` to tie the two together. Note that
+  `onLargestContentfulPaintMillis` can fire **more than once** for one page, because LCP is defined
+  against the largest element painted so far and the engine revises it as bigger content arrives;
+  take the latest value rather than the first. The two paint events report a *duration*, while
+  `onPerformanceMarkMillis` reports a *time* — the platform's own distinction, kept in the parameter
+  names.
+
+  **`onPerformanceMarkMillis` needs its own opt-in and is the only one that does.** A page calls
+  `performance.mark()` as often as it likes, and an instrumented one makes hundreds of calls while
+  loading; every other event here is bounded at about one per page. So supplying a handler for any
+  of the other eight turns on `useNavigationListener` but deliberately **not**
+  `useOnPerformanceMarkMillis` — listening for `DOMContentLoaded` cannot silently sign you up for a
+  message per mark. Supplying a handler for this event turns on both
 - **`DownloadStartRequest.isUserInitiated` / `.originatingFrame`** — from `WKDownload`
 
 `WebsiteDataType.WKWebsiteDataTypeScreenTime` is the third member of that family and has shipped

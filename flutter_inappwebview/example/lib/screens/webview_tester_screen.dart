@@ -1359,6 +1359,54 @@ class _WebViewTesterScreenState extends State<WebViewTesterScreen>
         );
       },
 
+      // 55d. Page lifecycle + Web Vitals -- Android only, same NAVIGATION_LISTENER registration as
+      // the three onNavigation* events above. `page.id` is what links them to a document;
+      // `onPerformanceMarkMillis` is deliberately NOT demonstrated with a handler here, because
+      // supplying one would infer `useOnPerformanceMarkMillis` and put a channel message on every
+      // `performance.mark()` for anyone opening this screen. It is exercised from the settings
+      // editor and the integration test instead.
+      onPageLoadEvent: (controller, page) {
+        _logEvent(
+          EventType.navigation,
+          PlatformWebViewCreationParamsProperty.onPageLoadEvent.name,
+          data: {'id': page.id, 'url': page.url?.toString()},
+        );
+      },
+      onPageDomContentLoadedEvent: (controller, page) {
+        _logEvent(
+          EventType.navigation,
+          PlatformWebViewCreationParamsProperty
+              .onPageDomContentLoadedEvent
+              .name,
+          data: {'id': page.id, 'url': page.url?.toString()},
+        );
+      },
+      onPageDeleted: (controller, page) {
+        _logEvent(
+          EventType.navigation,
+          PlatformWebViewCreationParamsProperty.onPageDeleted.name,
+          data: {'id': page.id, 'url': page.url?.toString()},
+        );
+      },
+      onFirstContentfulPaintMillis: (controller, page, durationMillis) {
+        _logEvent(
+          EventType.performance,
+          PlatformWebViewCreationParamsProperty
+              .onFirstContentfulPaintMillis
+              .name,
+          data: {'id': page.id, 'durationMillis': durationMillis},
+        );
+      },
+      onLargestContentfulPaintMillis: (controller, page, durationMillis) {
+        _logEvent(
+          EventType.performance,
+          PlatformWebViewCreationParamsProperty
+              .onLargestContentfulPaintMillis
+              .name,
+          data: {'id': page.id, 'durationMillis': durationMillis},
+        );
+      },
+
       // 56. onContentSizeChanged
       onContentSizeChanged: (controller, oldContentSize, newContentSize) {
         _logEvent(

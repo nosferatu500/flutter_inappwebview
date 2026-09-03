@@ -77,6 +77,31 @@ class HeadlessInAppWebView {
       WebViewNavigation navigation,
     )?
     onNavigationCompleted,
+    void Function(InAppWebViewController controller, WebViewPage page)?
+    onPageLoadEvent,
+    void Function(InAppWebViewController controller, WebViewPage page)?
+    onPageDomContentLoadedEvent,
+    void Function(InAppWebViewController controller, WebViewPage page)?
+    onPageDeleted,
+    void Function(
+      InAppWebViewController controller,
+      WebViewPage page,
+      int durationMillis,
+    )?
+    onFirstContentfulPaintMillis,
+    void Function(
+      InAppWebViewController controller,
+      WebViewPage page,
+      int durationMillis,
+    )?
+    onLargestContentfulPaintMillis,
+    void Function(
+      InAppWebViewController controller,
+      WebViewPage page,
+      String markName,
+      int markTimeMillis,
+    )?
+    onPerformanceMarkMillis,
     void Function(InAppWebViewController controller, String? title)?
     onTitleChanged,
     FutureOr<AjaxRequestAction?> Function(
@@ -454,6 +479,42 @@ class HeadlessInAppWebView {
            onNavigationCompleted: onNavigationCompleted != null
                ? (controller, navigation) =>
                      onNavigationCompleted.call(controller, navigation)
+               : null,
+           onPageLoadEvent: onPageLoadEvent != null
+               ? (controller, page) => onPageLoadEvent.call(controller, page)
+               : null,
+           onPageDomContentLoadedEvent: onPageDomContentLoadedEvent != null
+               ? (controller, page) =>
+                     onPageDomContentLoadedEvent.call(controller, page)
+               : null,
+           onPageDeleted: onPageDeleted != null
+               ? (controller, page) => onPageDeleted.call(controller, page)
+               : null,
+           onFirstContentfulPaintMillis: onFirstContentfulPaintMillis != null
+               ? (controller, page, durationMillis) =>
+                     onFirstContentfulPaintMillis.call(
+                       controller,
+                       page,
+                       durationMillis,
+                     )
+               : null,
+           onLargestContentfulPaintMillis:
+               onLargestContentfulPaintMillis != null
+               ? (controller, page, durationMillis) =>
+                     onLargestContentfulPaintMillis.call(
+                       controller,
+                       page,
+                       durationMillis,
+                     )
+               : null,
+           onPerformanceMarkMillis: onPerformanceMarkMillis != null
+               ? (controller, page, markName, markTimeMillis) =>
+                     onPerformanceMarkMillis.call(
+                       controller,
+                       page,
+                       markName,
+                       markTimeMillis,
+                     )
                : null,
            onTitleChanged: onTitleChanged != null
                ? (controller, title) => onTitleChanged.call(controller, title)

@@ -262,6 +262,15 @@ Map<String, List<SettingDefinition>> getSettingDefinitions() {
         property: InAppWebViewSettingsProperty.useNavigationListener,
       ),
       SettingDefinition(
+        name: 'Use On Performance Mark Millis',
+        description:
+            'Enable onPerformanceMarkMillis (Android). Separate from the navigation '
+            'listener gate: a page can call performance.mark() hundreds of times',
+        type: SettingType.boolean,
+        defaultValue: null,
+        property: InAppWebViewSettingsProperty.useOnPerformanceMarkMillis,
+      ),
+      SettingDefinition(
         name: 'Use Should Intercept Request',
         description: 'Enable request interception events',
         type: SettingType.boolean,

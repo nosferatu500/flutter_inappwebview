@@ -2403,6 +2403,25 @@ as it can cause framerate drops on animations in Android 9 and lower (see [Hybri
   @SupportedPlatforms(platforms: [AndroidPlatform()])
   bool? useNavigationListener;
 
+  ///Set to `true` to be able to listen at the
+  ///[PlatformWebViewCreationParams.onPerformanceMarkMillis] event.
+  ///
+  ///If that event is implemented and this value is `null`, it is automatically inferred as `true`;
+  ///otherwise the default is `false`. This inference is not applied for [PlatformInAppBrowser],
+  ///where the value must be set manually.
+  ///
+  ///**This is the one event in the navigation-listener family with a gate of its own, and the
+  ///reason is frequency.** Every other event there is bounded at roughly one per page;
+  ///`performance.mark()` is called by the page as often as it likes, and an instrumented page makes
+  ///hundreds of calls during a single load — each one a message across the platform channel.
+  ///Supplying a handler for any *other* navigation or page event deliberately does **not** turn
+  ///this on, so opting into the cheap events cannot silently opt you into the expensive one.
+  ///
+  ///[InAppWebViewSettings.useNavigationListener] is still required as well: it is what registers
+  ///the platform listener in the first place. Turning this on alone does nothing.
+  @SupportedPlatforms(platforms: [AndroidPlatform()])
+  bool? useOnPerformanceMarkMillis;
+
   @ExchangeableObjectConstructor()
   InAppWebViewSettings_({
     this.useShouldOverrideUrlLoading,
@@ -2564,6 +2583,7 @@ as it can cause framerate drops on animations in Android 9 and lower (see [Hybri
     this.useOnInsertInputSuggestion,
     this.useShouldGoToBackForwardListItem,
     this.useNavigationListener,
+    this.useOnPerformanceMarkMillis,
   }) {
     minimumFontSize ??= Util.isAndroid ? 8 : 0;
     assert(

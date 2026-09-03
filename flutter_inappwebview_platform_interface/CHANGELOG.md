@@ -214,6 +214,32 @@ rename; this entry is the API-owner's view.
   navigation that *succeeded*, since `onReceivedHttpError` fires only for error responses. It is
   `null` until the navigation commits rather than a fabricated `0`. `webResourceError` sits behind
   its own second feature check, finer than the one gating the events themselves
+- **`PlatformWebViewCreationParams.onPageLoadEvent` / `.onPageDomContentLoadedEvent` /
+  `.onPageDeleted` / `.onFirstContentfulPaintMillis` / `.onLargestContentfulPaintMillis` /
+  `.onPerformanceMarkMillis`** and the matching `PlatformInAppBrowserEvents` methods (Android), from
+  the same `androidx.webkit.NavigationListener`, with the new **`WebViewPage`** type and
+  **`InAppWebViewSettings.useOnPerformanceMarkMillis`**.
+
+  `WebViewPage` is a *document*, not a navigation: several navigations can share one page, and a
+  back/forward-cached page outlives the navigation that created it.
+  `WebViewPage.id` is synthesised from the same identity map as
+  `WebViewNavigation.pageId`, and those two numbers are how a page event is correlated with the
+  navigation that produced it. Its lifetime is different too — a navigation id is released at
+  `onNavigationCompleted`, a page id only at `onPageDeleted`, which for a cached page may never
+  arrive.
+
+  **`onPerformanceMarkMillis` is the only event in the family with a gate of its own**, and the
+  reason is frequency rather than safety: every other event here is bounded at roughly one per page,
+  while `performance.mark()` is called by the page as often as it likes. Supplying a handler for any
+  of the other eight infers `useNavigationListener` and **not** this one, so opting into
+  `DOMContentLoaded` cannot silently start charging a channel message per mark. An integration test
+  asserts the suppression with the handler present and the gate explicitly off, which is the only
+  configuration in which the gate is the sole thing standing in the way.
+
+  Two platform details the parameter names carry: `onFirstContentfulPaintMillis` and
+  `onLargestContentfulPaintMillis` report a **duration** (`durationMillis`) while
+  `onPerformanceMarkMillis` reports a **time** (`markTimeMillis`); and LCP can fire **more than
+  once** per page, since it is defined against the largest element painted so far
 - **`PlatformCookieManager.setAcceptCookie` / `.isAcceptCookieEnabled` gained iOS** (17.0+), from
   `WKHTTPCookieStore.setCookiePolicy` / `getCookiePolicy`. No signature change and no new method —
   two `@SupportedPlatforms` entries and an iOS implementation, so the pair stops being Android-only.

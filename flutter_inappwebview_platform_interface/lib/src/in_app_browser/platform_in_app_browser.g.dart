@@ -703,6 +703,22 @@ enum PlatformInAppBrowserEventsMethod {
   ///{@endtemplate}
   onExitFullscreen,
 
+  ///Can be used to check if the [PlatformInAppBrowserEvents.onFirstContentfulPaintMillis] method is supported at runtime.
+  ///
+  ///{@template flutter_inappwebview_platform_interface.PlatformInAppBrowserEvents.onFirstContentfulPaintMillis.supported_platforms}
+  ///
+  ///**Officially Supported Platforms/Implementations**:
+  ///- Android WebView ([Official API - NavigationListener.onFirstContentfulPaintMillis](https://developer.android.com/reference/androidx/webkit/NavigationListener#onFirstContentfulPaintMillis(androidx.webkit.Page,long))):
+  ///    - Requires WebViewFeature.NAVIGATION_LISTENER and InAppWebViewSettings.useNavigationListener, which is never inferred here and must be set manually.
+  ///
+  ///**Parameters - Officially Supported Platforms/Implementations**:
+  ///- [page]: all platforms
+  ///- [durationMillis]: all platforms
+  ///
+  ///Use the [PlatformInAppBrowserEvents.isMethodSupported] method to check if this method is supported at runtime.
+  ///{@endtemplate}
+  onFirstContentfulPaintMillis,
+
   ///Can be used to check if the [PlatformInAppBrowserEvents.onFormResubmission] method is supported at runtime.
   ///
   ///{@template flutter_inappwebview_platform_interface.PlatformInAppBrowserEvents.onFormResubmission.supported_platforms}
@@ -801,6 +817,22 @@ enum PlatformInAppBrowserEventsMethod {
   ///Use the [PlatformInAppBrowserEvents.isMethodSupported] method to check if this method is supported at runtime.
   ///{@endtemplate}
   onJsPrompt,
+
+  ///Can be used to check if the [PlatformInAppBrowserEvents.onLargestContentfulPaintMillis] method is supported at runtime.
+  ///
+  ///{@template flutter_inappwebview_platform_interface.PlatformInAppBrowserEvents.onLargestContentfulPaintMillis.supported_platforms}
+  ///
+  ///**Officially Supported Platforms/Implementations**:
+  ///- Android WebView ([Official API - NavigationListener.onLargestContentfulPaintMillis](https://developer.android.com/reference/androidx/webkit/NavigationListener#onLargestContentfulPaintMillis(androidx.webkit.Page,long))):
+  ///    - Requires WebViewFeature.NAVIGATION_LISTENER and InAppWebViewSettings.useNavigationListener, which is never inferred here and must be set manually.
+  ///
+  ///**Parameters - Officially Supported Platforms/Implementations**:
+  ///- [page]: all platforms
+  ///- [durationMillis]: all platforms
+  ///
+  ///Use the [PlatformInAppBrowserEvents.isMethodSupported] method to check if this method is supported at runtime.
+  ///{@endtemplate}
+  onLargestContentfulPaintMillis,
 
   ///Can be used to check if the [PlatformInAppBrowserEvents.onLoadResource] method is supported at runtime.
   ///
@@ -985,6 +1017,68 @@ enum PlatformInAppBrowserEventsMethod {
   ///Use the [PlatformInAppBrowserEvents.isMethodSupported] method to check if this method is supported at runtime.
   ///{@endtemplate}
   onPageCommitVisible,
+
+  ///Can be used to check if the [PlatformInAppBrowserEvents.onPageDeleted] method is supported at runtime.
+  ///
+  ///{@template flutter_inappwebview_platform_interface.PlatformInAppBrowserEvents.onPageDeleted.supported_platforms}
+  ///
+  ///**Officially Supported Platforms/Implementations**:
+  ///- Android WebView ([Official API - NavigationListener.onPageDeleted](https://developer.android.com/reference/androidx/webkit/NavigationListener#onPageDeleted(androidx.webkit.Page))):
+  ///    - Requires WebViewFeature.NAVIGATION_LISTENER and InAppWebViewSettings.useNavigationListener, which is never inferred here and must be set manually.
+  ///
+  ///**Parameters - Officially Supported Platforms/Implementations**:
+  ///- [page]: all platforms
+  ///
+  ///Use the [PlatformInAppBrowserEvents.isMethodSupported] method to check if this method is supported at runtime.
+  ///{@endtemplate}
+  onPageDeleted,
+
+  ///Can be used to check if the [PlatformInAppBrowserEvents.onPageDomContentLoadedEvent] method is supported at runtime.
+  ///
+  ///{@template flutter_inappwebview_platform_interface.PlatformInAppBrowserEvents.onPageDomContentLoadedEvent.supported_platforms}
+  ///
+  ///**Officially Supported Platforms/Implementations**:
+  ///- Android WebView ([Official API - NavigationListener.onPageDomContentLoadedEvent](https://developer.android.com/reference/androidx/webkit/NavigationListener#onPageDomContentLoadedEvent(androidx.webkit.Page))):
+  ///    - Requires WebViewFeature.NAVIGATION_LISTENER and InAppWebViewSettings.useNavigationListener, which is never inferred here and must be set manually.
+  ///
+  ///**Parameters - Officially Supported Platforms/Implementations**:
+  ///- [page]: all platforms
+  ///
+  ///Use the [PlatformInAppBrowserEvents.isMethodSupported] method to check if this method is supported at runtime.
+  ///{@endtemplate}
+  onPageDomContentLoadedEvent,
+
+  ///Can be used to check if the [PlatformInAppBrowserEvents.onPageLoadEvent] method is supported at runtime.
+  ///
+  ///{@template flutter_inappwebview_platform_interface.PlatformInAppBrowserEvents.onPageLoadEvent.supported_platforms}
+  ///
+  ///**Officially Supported Platforms/Implementations**:
+  ///- Android WebView ([Official API - NavigationListener.onPageLoadEvent](https://developer.android.com/reference/androidx/webkit/NavigationListener#onPageLoadEvent(androidx.webkit.Page))):
+  ///    - Requires WebViewFeature.NAVIGATION_LISTENER and InAppWebViewSettings.useNavigationListener, which is never inferred here and must be set manually.
+  ///
+  ///**Parameters - Officially Supported Platforms/Implementations**:
+  ///- [page]: all platforms
+  ///
+  ///Use the [PlatformInAppBrowserEvents.isMethodSupported] method to check if this method is supported at runtime.
+  ///{@endtemplate}
+  onPageLoadEvent,
+
+  ///Can be used to check if the [PlatformInAppBrowserEvents.onPerformanceMarkMillis] method is supported at runtime.
+  ///
+  ///{@template flutter_inappwebview_platform_interface.PlatformInAppBrowserEvents.onPerformanceMarkMillis.supported_platforms}
+  ///
+  ///**Officially Supported Platforms/Implementations**:
+  ///- Android WebView ([Official API - NavigationListener.onPerformanceMarkMillis](https://developer.android.com/reference/androidx/webkit/NavigationListener#onPerformanceMarkMillis(androidx.webkit.Page,java.lang.String,long))):
+  ///    - Requires WebViewFeature.NAVIGATION_LISTENER plus both InAppWebViewSettings.useNavigationListener and InAppWebViewSettings.useOnPerformanceMarkMillis, neither of which is inferred here.
+  ///
+  ///**Parameters - Officially Supported Platforms/Implementations**:
+  ///- [page]: all platforms
+  ///- [markName]: all platforms
+  ///- [markTimeMillis]: all platforms
+  ///
+  ///Use the [PlatformInAppBrowserEvents.isMethodSupported] method to check if this method is supported at runtime.
+  ///{@endtemplate}
+  onPerformanceMarkMillis,
 
   ///Can be used to check if the [PlatformInAppBrowserEvents.onPermissionRequest] method is supported at runtime.
   ///
@@ -1517,6 +1611,11 @@ extension _PlatformInAppBrowserEventsMethodSupported
               TargetPlatform.android,
               TargetPlatform.iOS,
             ].contains(platform ?? defaultTargetPlatform);
+      case PlatformInAppBrowserEventsMethod.onFirstContentfulPaintMillis:
+        return ((kIsWeb && platform != null) || !kIsWeb) &&
+            [
+              TargetPlatform.android,
+            ].contains(platform ?? defaultTargetPlatform);
       case PlatformInAppBrowserEventsMethod.onFormResubmission:
         return ((kIsWeb && platform != null) || !kIsWeb) &&
             [
@@ -1552,6 +1651,11 @@ extension _PlatformInAppBrowserEventsMethodSupported
             [
               TargetPlatform.android,
               TargetPlatform.iOS,
+            ].contains(platform ?? defaultTargetPlatform);
+      case PlatformInAppBrowserEventsMethod.onLargestContentfulPaintMillis:
+        return ((kIsWeb && platform != null) || !kIsWeb) &&
+            [
+              TargetPlatform.android,
             ].contains(platform ?? defaultTargetPlatform);
       case PlatformInAppBrowserEventsMethod.onLoadResource:
         return ((kIsWeb && platform != null) || !kIsWeb) &&
@@ -1615,6 +1719,26 @@ extension _PlatformInAppBrowserEventsMethodSupported
             [
               TargetPlatform.android,
               TargetPlatform.iOS,
+            ].contains(platform ?? defaultTargetPlatform);
+      case PlatformInAppBrowserEventsMethod.onPageDeleted:
+        return ((kIsWeb && platform != null) || !kIsWeb) &&
+            [
+              TargetPlatform.android,
+            ].contains(platform ?? defaultTargetPlatform);
+      case PlatformInAppBrowserEventsMethod.onPageDomContentLoadedEvent:
+        return ((kIsWeb && platform != null) || !kIsWeb) &&
+            [
+              TargetPlatform.android,
+            ].contains(platform ?? defaultTargetPlatform);
+      case PlatformInAppBrowserEventsMethod.onPageLoadEvent:
+        return ((kIsWeb && platform != null) || !kIsWeb) &&
+            [
+              TargetPlatform.android,
+            ].contains(platform ?? defaultTargetPlatform);
+      case PlatformInAppBrowserEventsMethod.onPerformanceMarkMillis:
+        return ((kIsWeb && platform != null) || !kIsWeb) &&
+            [
+              TargetPlatform.android,
             ].contains(platform ?? defaultTargetPlatform);
       case PlatformInAppBrowserEventsMethod.onPermissionRequest:
         return ((kIsWeb && platform != null) || !kIsWeb) &&

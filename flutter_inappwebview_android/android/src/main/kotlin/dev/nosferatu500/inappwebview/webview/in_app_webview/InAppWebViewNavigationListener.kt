@@ -5,6 +5,7 @@ import androidx.webkit.NavigationListener
 import androidx.webkit.Page
 import dev.nosferatu500.inappwebview.types.Disposable
 import dev.nosferatu500.inappwebview.types.WebViewNavigationExt
+import dev.nosferatu500.inappwebview.types.WebViewPageExt
 import java.util.WeakHashMap
 
 /**
@@ -51,6 +52,9 @@ class InAppWebViewNavigationListener(
   private fun pageId(page: Page?): Long? =
     page?.let { pageIds.getOrPut(it) { nextPageId++ } }
 
+  private fun pageSnapshot(page: Page): WebViewPageExt =
+    WebViewPageExt.fromPage(page, pageIds.getOrPut(page) { nextPageId++ })
+
   private fun snapshot(navigation: Navigation): WebViewNavigationExt =
     WebViewNavigationExt.fromNavigation(
       navigation,
@@ -74,15 +78,52 @@ class InAppWebViewNavigationListener(
     webView?.channelDelegate?.onNavigationCompleted(ext)
   }
 
+  override fun onPageLoadEvent(page: Page) {
+    webView?.channelDelegate?.onPageLoadEvent(pageSnapshot(page))
+  }
+
+  override fun onPageDomContentLoadedEvent(page: Page) {
+    webView?.channelDelegate?.onPageDomContentLoadedEvent(pageSnapshot(page))
+  }
+
   /**
-   * Overridden purely to release the page id.
+   * Reports the page as destroyed **and** releases its id.
    *
-   * There is no Dart `onPageDeleted` event yet — it belongs with the rest of the page lifecycle —
-   * but the eviction has to exist from the moment page ids are handed out, otherwise the map grows
-   * by one entry per page for as long as the `WebView` lives.
+   * The order matters: the snapshot is taken first, so the event Dart receives still carries the id
+   * it has been keying on, and only then is the entry dropped. This is the one place a page id can
+   * be released — a page in the back/forward cache outlives the navigation that created it and may
+   * never arrive here at all.
    */
   override fun onPageDeleted(page: Page) {
+    val ext = pageSnapshot(page)
     pageIds.remove(page)
+    webView?.channelDelegate?.onPageDeleted(ext)
+  }
+
+  override fun onFirstContentfulPaintMillis(page: Page, durationMillis: Long) {
+    webView?.channelDelegate?.onFirstContentfulPaintMillis(pageSnapshot(page), durationMillis)
+  }
+
+  override fun onLargestContentfulPaintMillis(page: Page, durationMillis: Long) {
+    webView?.channelDelegate?.onLargestContentfulPaintMillis(pageSnapshot(page), durationMillis)
+  }
+
+  /**
+   * The only callback in this family gated by a second setting.
+   *
+   * A page calls `performance.mark()` as often as it likes — an instrumented one makes hundreds of
+   * calls during a single load — so forwarding this unconditionally would put a channel message on
+   * the hot path of every page load. The native callback still arrives; what the setting buys is
+   * that it stops here instead of crossing the channel.
+   */
+  override fun onPerformanceMarkMillis(page: Page, markName: String, markTimeMillis: Long) {
+    val webView = this.webView ?: return
+    if (!webView.customSettings.useOnPerformanceMarkMillis) {
+      return
+    }
+    webView.channelDelegate?.onPerformanceMarkMillis(
+      pageSnapshot(page), markName, markTimeMillis
+    )
   }
 
   override fun dispose() {

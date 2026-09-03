@@ -49,6 +49,7 @@ import dev.nosferatu500.inappwebview.types.WebResourceErrorExt
 import dev.nosferatu500.inappwebview.types.WebResourceRequestExt
 import dev.nosferatu500.inappwebview.types.WebResourceResponseExt
 import dev.nosferatu500.inappwebview.types.WebViewNavigationExt
+import dev.nosferatu500.inappwebview.types.WebViewPageExt
 import dev.nosferatu500.inappwebview.webview.in_app_webview.InAppWebView
 import dev.nosferatu500.inappwebview.webview.in_app_webview.InAppWebViewSettings
 import dev.nosferatu500.inappwebview.webview.web_message.WebMessageListener
@@ -1127,6 +1128,52 @@ class WebViewChannelDelegate(webView: InAppWebView, channel: MethodChannel) :
     channel.invokeMethod(
       "onNavigationCompleted",
       hashMapOf<String, Any?>("navigation" to navigation.toMap())
+    )
+  }
+
+  fun onPageLoadEvent(page: WebViewPageExt) {
+    val channel = this.channel ?: return
+    channel.invokeMethod("onPageLoadEvent", hashMapOf<String, Any?>("page" to page.toMap()))
+  }
+
+  fun onPageDomContentLoadedEvent(page: WebViewPageExt) {
+    val channel = this.channel ?: return
+    channel.invokeMethod(
+      "onPageDomContentLoadedEvent",
+      hashMapOf<String, Any?>("page" to page.toMap())
+    )
+  }
+
+  fun onPageDeleted(page: WebViewPageExt) {
+    val channel = this.channel ?: return
+    channel.invokeMethod("onPageDeleted", hashMapOf<String, Any?>("page" to page.toMap()))
+  }
+
+  fun onFirstContentfulPaintMillis(page: WebViewPageExt, durationMillis: Long) {
+    val channel = this.channel ?: return
+    channel.invokeMethod(
+      "onFirstContentfulPaintMillis",
+      hashMapOf<String, Any?>("page" to page.toMap(), "durationMillis" to durationMillis)
+    )
+  }
+
+  fun onLargestContentfulPaintMillis(page: WebViewPageExt, durationMillis: Long) {
+    val channel = this.channel ?: return
+    channel.invokeMethod(
+      "onLargestContentfulPaintMillis",
+      hashMapOf<String, Any?>("page" to page.toMap(), "durationMillis" to durationMillis)
+    )
+  }
+
+  fun onPerformanceMarkMillis(page: WebViewPageExt, markName: String, markTimeMillis: Long) {
+    val channel = this.channel ?: return
+    channel.invokeMethod(
+      "onPerformanceMarkMillis",
+      hashMapOf<String, Any?>(
+        "page" to page.toMap(),
+        "markName" to markName,
+        "markTimeMillis" to markTimeMillis
+      )
     )
   }
 

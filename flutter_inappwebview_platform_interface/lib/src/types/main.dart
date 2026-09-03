@@ -184,6 +184,7 @@ export 'website_data_record.dart' show WebsiteDataRecord;
 export 'website_data_type.dart' show WebsiteDataType;
 export 'webview_navigation.dart' show WebViewNavigation;
 export 'webview_package_info.dart' show WebViewPackageInfo;
+export 'webview_page.dart' show WebViewPage;
 export 'webview_render_process_action.dart' show WebViewRenderProcessAction;
 export 'window_features.dart' show WindowFeatures;
 export 'find_session.dart' show FindSession;

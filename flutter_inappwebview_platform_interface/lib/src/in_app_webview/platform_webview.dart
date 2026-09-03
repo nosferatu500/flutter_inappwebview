@@ -1612,6 +1612,189 @@ In that case, after the `window.addEventListener("flutterInAppWebViewPlatformRea
   final void Function(T controller, WebViewNavigation navigation)?
   onNavigationCompleted;
 
+  ///{@template flutter_inappwebview_platform_interface.PlatformWebViewCreationParams.onPageLoadEvent}
+  ///Event fired when a page's `load` event has run.
+  ///
+  ///This is the platform reporting the DOM `load` event for a specific document, which is a
+  ///different thing from [onLoadStop]: [onLoadStop] is about the `WebView`'s current navigation,
+  ///while this is about a *page*, identified by [WebViewPage.id], and can therefore still arrive for
+  ///a document that is no longer the one on screen.
+  ///
+  ///Requires [InAppWebViewSettings.useNavigationListener] and, on Android,
+  ///[WebViewFeature.NAVIGATION_LISTENER].
+  ///{@endtemplate}
+  ///
+  ///{@macro flutter_inappwebview_platform_interface.PlatformWebViewCreationParams.onPageLoadEvent.supported_platforms}
+  @SupportedPlatforms(
+    platforms: [
+      AndroidPlatform(
+        apiName: 'NavigationListener.onPageLoadEvent',
+        apiUrl:
+            'https://developer.android.com/reference/androidx/webkit/NavigationListener#onPageLoadEvent(androidx.webkit.Page)',
+        note:
+            'Requires WebViewFeature.NAVIGATION_LISTENER and InAppWebViewSettings.useNavigationListener.',
+      ),
+    ],
+  )
+  final void Function(T controller, WebViewPage page)? onPageLoadEvent;
+
+  ///{@template flutter_inappwebview_platform_interface.PlatformWebViewCreationParams.onPageDomContentLoadedEvent}
+  ///Event fired when a page's `DOMContentLoaded` event has run.
+  ///
+  ///**This is `DOMContentLoaded` without injecting any JavaScript**, which the plugin could not
+  ///report before: the alternative is a user script listening for the event and calling back over
+  ///the JavaScript bridge, which costs an injection on every page and can be defeated by the page's
+  ///own CSP.
+  ///
+  ///It fires before [onPageLoadEvent] — `DOMContentLoaded` precedes `load`, which waits for
+  ///subresources.
+  ///
+  ///Requires [InAppWebViewSettings.useNavigationListener] and, on Android,
+  ///[WebViewFeature.NAVIGATION_LISTENER].
+  ///{@endtemplate}
+  ///
+  ///{@macro flutter_inappwebview_platform_interface.PlatformWebViewCreationParams.onPageDomContentLoadedEvent.supported_platforms}
+  @SupportedPlatforms(
+    platforms: [
+      AndroidPlatform(
+        apiName: 'NavigationListener.onPageDomContentLoadedEvent',
+        apiUrl:
+            'https://developer.android.com/reference/androidx/webkit/NavigationListener#onPageDomContentLoadedEvent(androidx.webkit.Page)',
+        note:
+            'Requires WebViewFeature.NAVIGATION_LISTENER and InAppWebViewSettings.useNavigationListener.',
+      ),
+    ],
+  )
+  final void Function(T controller, WebViewPage page)?
+  onPageDomContentLoadedEvent;
+
+  ///{@template flutter_inappwebview_platform_interface.PlatformWebViewCreationParams.onPageDeleted}
+  ///Event fired when a page is destroyed and will never be shown again.
+  ///
+  ///**This is the only way to observe back/forward-cache eviction.**
+  ///[InAppWebViewSettings.backForwardCacheEnabled] lets a page be kept alive after the `WebView`
+  ///navigates away, so that going back restores it instantly — but until this event there was no
+  ///way to see whether a given page was still cached or had been thrown away. A page that is
+  ///evicted arrives here; a page that is restored does not.
+  ///
+  ///After this fires, the page's [WebViewPage.id] is released and may be reused, so drop anything
+  ///you were keying on it.
+  ///
+  ///Requires [InAppWebViewSettings.useNavigationListener] and, on Android,
+  ///[WebViewFeature.NAVIGATION_LISTENER].
+  ///{@endtemplate}
+  ///
+  ///{@macro flutter_inappwebview_platform_interface.PlatformWebViewCreationParams.onPageDeleted.supported_platforms}
+  @SupportedPlatforms(
+    platforms: [
+      AndroidPlatform(
+        apiName: 'NavigationListener.onPageDeleted',
+        apiUrl:
+            'https://developer.android.com/reference/androidx/webkit/NavigationListener#onPageDeleted(androidx.webkit.Page)',
+        note:
+            'Requires WebViewFeature.NAVIGATION_LISTENER and InAppWebViewSettings.useNavigationListener.',
+      ),
+    ],
+  )
+  final void Function(T controller, WebViewPage page)? onPageDeleted;
+
+  ///{@template flutter_inappwebview_platform_interface.PlatformWebViewCreationParams.onFirstContentfulPaintMillis}
+  ///Event fired when the page's First Contentful Paint happens.
+  ///
+  ///[durationMillis] is the platform's own measurement of how long the paint took to happen — a
+  ///**duration**, not a wall-clock timestamp, which is what the platform's parameter name says. The
+  ///plugin passes it through unchanged and does not compute it.
+  ///
+  ///**This is a Web Vital straight from the engine**, with no JavaScript injected and no
+  ///`PerformanceObserver` to install. The plugin had no equivalent at all.
+  ///
+  ///Requires [InAppWebViewSettings.useNavigationListener] and, on Android,
+  ///[WebViewFeature.NAVIGATION_LISTENER].
+  ///{@endtemplate}
+  ///
+  ///{@macro flutter_inappwebview_platform_interface.PlatformWebViewCreationParams.onFirstContentfulPaintMillis.supported_platforms}
+  @SupportedPlatforms(
+    platforms: [
+      AndroidPlatform(
+        apiName: 'NavigationListener.onFirstContentfulPaintMillis',
+        apiUrl:
+            'https://developer.android.com/reference/androidx/webkit/NavigationListener#onFirstContentfulPaintMillis(androidx.webkit.Page,long)',
+        note:
+            'Requires WebViewFeature.NAVIGATION_LISTENER and InAppWebViewSettings.useNavigationListener.',
+      ),
+    ],
+  )
+  final void Function(T controller, WebViewPage page, int durationMillis)?
+  onFirstContentfulPaintMillis;
+
+  ///{@template flutter_inappwebview_platform_interface.PlatformWebViewCreationParams.onLargestContentfulPaintMillis}
+  ///Event fired when the page's Largest Contentful Paint happens.
+  ///
+  ///[durationMillis] is a **duration**, as for [onFirstContentfulPaintMillis].
+  ///
+  ///**Unlike First Contentful Paint, this can fire more than once for one page.** LCP is defined
+  ///against the largest element painted *so far*, so the engine revises it as bigger content
+  ///arrives; each revision is reported. Treat the latest value for a given [WebViewPage.id] as the
+  ///current answer rather than assuming the first one is final.
+  ///
+  ///Requires [InAppWebViewSettings.useNavigationListener] and, on Android,
+  ///[WebViewFeature.NAVIGATION_LISTENER].
+  ///{@endtemplate}
+  ///
+  ///{@macro flutter_inappwebview_platform_interface.PlatformWebViewCreationParams.onLargestContentfulPaintMillis.supported_platforms}
+  @SupportedPlatforms(
+    platforms: [
+      AndroidPlatform(
+        apiName: 'NavigationListener.onLargestContentfulPaintMillis',
+        apiUrl:
+            'https://developer.android.com/reference/androidx/webkit/NavigationListener#onLargestContentfulPaintMillis(androidx.webkit.Page,long)',
+        note:
+            'Requires WebViewFeature.NAVIGATION_LISTENER and InAppWebViewSettings.useNavigationListener.',
+      ),
+    ],
+  )
+  final void Function(T controller, WebViewPage page, int durationMillis)?
+  onLargestContentfulPaintMillis;
+
+  ///{@template flutter_inappwebview_platform_interface.PlatformWebViewCreationParams.onPerformanceMarkMillis}
+  ///Event fired once for every `performance.mark()` the page makes.
+  ///
+  ///[markName] is the name the page passed to `performance.mark()`; [markTimeMillis] is the time of
+  ///the mark, which is what the platform's own parameter name calls it — note that it is a *time*,
+  ///where [onFirstContentfulPaintMillis] and [onLargestContentfulPaintMillis] carry a *duration*.
+  ///
+  ///**This one needs its own opt-in,
+  ///[InAppWebViewSettings.useOnPerformanceMarkMillis], and is the only event in this family that
+  ///does.** A page under instrumentation can call `performance.mark()` hundreds of times while
+  ///loading, and each call becomes a message across the platform channel — a different cost class
+  ///from every other event here, all of which are bounded at roughly one per page. Supplying a
+  ///handler for *this* event turns the setting on; supplying a handler for any other navigation or
+  ///page event deliberately does **not**.
+  ///
+  ///Requires [InAppWebViewSettings.useNavigationListener] as well and, on Android,
+  ///[WebViewFeature.NAVIGATION_LISTENER].
+  ///{@endtemplate}
+  ///
+  ///{@macro flutter_inappwebview_platform_interface.PlatformWebViewCreationParams.onPerformanceMarkMillis.supported_platforms}
+  @SupportedPlatforms(
+    platforms: [
+      AndroidPlatform(
+        apiName: 'NavigationListener.onPerformanceMarkMillis',
+        apiUrl:
+            'https://developer.android.com/reference/androidx/webkit/NavigationListener#onPerformanceMarkMillis(androidx.webkit.Page,java.lang.String,long)',
+        note:
+            'Requires WebViewFeature.NAVIGATION_LISTENER, InAppWebViewSettings.useNavigationListener and the separate InAppWebViewSettings.useOnPerformanceMarkMillis.',
+      ),
+    ],
+  )
+  final void Function(
+    T controller,
+    WebViewPage page,
+    String markName,
+    int markTimeMillis,
+  )?
+  onPerformanceMarkMillis;
+
   ///{@template flutter_inappwebview_platform_interface.PlatformWebViewCreationParams.onContentSizeChanged}
   ///Event fired when the content size of the `WebView` changes.
   ///
@@ -1874,6 +2057,12 @@ This is a limitation of the native WebKit APIs.""",
     this.onNavigationStarted,
     this.onNavigationRedirected,
     this.onNavigationCompleted,
+    this.onPageLoadEvent,
+    this.onPageDomContentLoadedEvent,
+    this.onPageDeleted,
+    this.onFirstContentfulPaintMillis,
+    this.onLargestContentfulPaintMillis,
+    this.onPerformanceMarkMillis,
     this.onContentSizeChanged,
     this.onShowFileChooser,
     this.onInsertInputSuggestion,

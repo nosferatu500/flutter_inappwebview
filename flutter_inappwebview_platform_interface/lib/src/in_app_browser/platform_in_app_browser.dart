@@ -1612,6 +1612,106 @@ In that case, after the `window.addEventListener("flutterInAppWebViewPlatformRea
   )
   void onNavigationCompleted(WebViewNavigation navigation) {}
 
+  ///{@macro flutter_inappwebview_platform_interface.PlatformWebViewCreationParams.onPageLoadEvent}
+  ///
+  ///{@macro flutter_inappwebview_platform_interface.PlatformInAppBrowserEvents.onPageLoadEvent.supported_platforms}
+  @SupportedPlatforms(
+    platforms: [
+      AndroidPlatform(
+        apiName: 'NavigationListener.onPageLoadEvent',
+        apiUrl:
+            'https://developer.android.com/reference/androidx/webkit/NavigationListener#onPageLoadEvent(androidx.webkit.Page)',
+        note:
+            'Requires WebViewFeature.NAVIGATION_LISTENER and InAppWebViewSettings.useNavigationListener, which is never inferred here and must be set manually.',
+      ),
+    ],
+  )
+  void onPageLoadEvent(WebViewPage page) {}
+
+  ///{@macro flutter_inappwebview_platform_interface.PlatformWebViewCreationParams.onPageDomContentLoadedEvent}
+  ///
+  ///{@macro flutter_inappwebview_platform_interface.PlatformInAppBrowserEvents.onPageDomContentLoadedEvent.supported_platforms}
+  @SupportedPlatforms(
+    platforms: [
+      AndroidPlatform(
+        apiName: 'NavigationListener.onPageDomContentLoadedEvent',
+        apiUrl:
+            'https://developer.android.com/reference/androidx/webkit/NavigationListener#onPageDomContentLoadedEvent(androidx.webkit.Page)',
+        note:
+            'Requires WebViewFeature.NAVIGATION_LISTENER and InAppWebViewSettings.useNavigationListener, which is never inferred here and must be set manually.',
+      ),
+    ],
+  )
+  void onPageDomContentLoadedEvent(WebViewPage page) {}
+
+  ///{@macro flutter_inappwebview_platform_interface.PlatformWebViewCreationParams.onPageDeleted}
+  ///
+  ///{@macro flutter_inappwebview_platform_interface.PlatformInAppBrowserEvents.onPageDeleted.supported_platforms}
+  @SupportedPlatforms(
+    platforms: [
+      AndroidPlatform(
+        apiName: 'NavigationListener.onPageDeleted',
+        apiUrl:
+            'https://developer.android.com/reference/androidx/webkit/NavigationListener#onPageDeleted(androidx.webkit.Page)',
+        note:
+            'Requires WebViewFeature.NAVIGATION_LISTENER and InAppWebViewSettings.useNavigationListener, which is never inferred here and must be set manually.',
+      ),
+    ],
+  )
+  void onPageDeleted(WebViewPage page) {}
+
+  ///{@macro flutter_inappwebview_platform_interface.PlatformWebViewCreationParams.onFirstContentfulPaintMillis}
+  ///
+  ///{@macro flutter_inappwebview_platform_interface.PlatformInAppBrowserEvents.onFirstContentfulPaintMillis.supported_platforms}
+  @SupportedPlatforms(
+    platforms: [
+      AndroidPlatform(
+        apiName: 'NavigationListener.onFirstContentfulPaintMillis',
+        apiUrl:
+            'https://developer.android.com/reference/androidx/webkit/NavigationListener#onFirstContentfulPaintMillis(androidx.webkit.Page,long)',
+        note:
+            'Requires WebViewFeature.NAVIGATION_LISTENER and InAppWebViewSettings.useNavigationListener, which is never inferred here and must be set manually.',
+      ),
+    ],
+  )
+  void onFirstContentfulPaintMillis(WebViewPage page, int durationMillis) {}
+
+  ///{@macro flutter_inappwebview_platform_interface.PlatformWebViewCreationParams.onLargestContentfulPaintMillis}
+  ///
+  ///{@macro flutter_inappwebview_platform_interface.PlatformInAppBrowserEvents.onLargestContentfulPaintMillis.supported_platforms}
+  @SupportedPlatforms(
+    platforms: [
+      AndroidPlatform(
+        apiName: 'NavigationListener.onLargestContentfulPaintMillis',
+        apiUrl:
+            'https://developer.android.com/reference/androidx/webkit/NavigationListener#onLargestContentfulPaintMillis(androidx.webkit.Page,long)',
+        note:
+            'Requires WebViewFeature.NAVIGATION_LISTENER and InAppWebViewSettings.useNavigationListener, which is never inferred here and must be set manually.',
+      ),
+    ],
+  )
+  void onLargestContentfulPaintMillis(WebViewPage page, int durationMillis) {}
+
+  ///{@macro flutter_inappwebview_platform_interface.PlatformWebViewCreationParams.onPerformanceMarkMillis}
+  ///
+  ///{@macro flutter_inappwebview_platform_interface.PlatformInAppBrowserEvents.onPerformanceMarkMillis.supported_platforms}
+  @SupportedPlatforms(
+    platforms: [
+      AndroidPlatform(
+        apiName: 'NavigationListener.onPerformanceMarkMillis',
+        apiUrl:
+            'https://developer.android.com/reference/androidx/webkit/NavigationListener#onPerformanceMarkMillis(androidx.webkit.Page,java.lang.String,long)',
+        note:
+            'Requires WebViewFeature.NAVIGATION_LISTENER plus both InAppWebViewSettings.useNavigationListener and InAppWebViewSettings.useOnPerformanceMarkMillis, neither of which is inferred here.',
+      ),
+    ],
+  )
+  void onPerformanceMarkMillis(
+    WebViewPage page,
+    String markName,
+    int markTimeMillis,
+  ) {}
+
   ///{@macro flutter_inappwebview_platform_interface.PlatformWebViewCreationParams.onContentSizeChanged}
   ///
   ///{@macro flutter_inappwebview_platform_interface.PlatformInAppBrowserEvents.onContentSizeChanged.supported_platforms}

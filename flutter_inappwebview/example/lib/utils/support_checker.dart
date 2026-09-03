@@ -1704,6 +1704,60 @@ class SupportChecker {
           className: className,
           category: 'Navigation',
         ),
+        ApiEventDefinition(
+          name: PlatformWebViewCreationParamsProperty.onPageLoadEvent.name,
+          description:
+              "Called when a page's load event has run (Android, NAVIGATION_LISTENER).",
+          className: className,
+          category: 'Navigation',
+        ),
+        ApiEventDefinition(
+          name: PlatformWebViewCreationParamsProperty
+              .onPageDomContentLoadedEvent
+              .name,
+          description:
+              'Called on DOMContentLoaded, without injecting JavaScript '
+              '(Android, NAVIGATION_LISTENER).',
+          className: className,
+          category: 'Navigation',
+        ),
+        ApiEventDefinition(
+          name: PlatformWebViewCreationParamsProperty.onPageDeleted.name,
+          description:
+              'Called when a page is destroyed — the only way to observe back/forward '
+              'cache eviction (Android, NAVIGATION_LISTENER).',
+          className: className,
+          category: 'Navigation',
+        ),
+        ApiEventDefinition(
+          name: PlatformWebViewCreationParamsProperty
+              .onFirstContentfulPaintMillis
+              .name,
+          description:
+              'Reports First Contentful Paint from the engine (Android, NAVIGATION_LISTENER).',
+          className: className,
+          category: 'Navigation',
+        ),
+        ApiEventDefinition(
+          name: PlatformWebViewCreationParamsProperty
+              .onLargestContentfulPaintMillis
+              .name,
+          description:
+              'Reports Largest Contentful Paint; can fire repeatedly per page '
+              '(Android, NAVIGATION_LISTENER).',
+          className: className,
+          category: 'Navigation',
+        ),
+        ApiEventDefinition(
+          name: PlatformWebViewCreationParamsProperty
+              .onPerformanceMarkMillis
+              .name,
+          description:
+              'Reports every performance.mark(); needs its own opt-in setting '
+              '(Android, NAVIGATION_LISTENER).',
+          className: className,
+          category: 'Navigation',
+        ),
 
         // Window events
         ApiEventDefinition(

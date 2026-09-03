@@ -270,6 +270,22 @@ enum PlatformWebViewCreationParamsProperty {
   ///{@endtemplate}
   onExitFullscreen,
 
+  ///Can be used to check if the [PlatformWebViewCreationParams.onFirstContentfulPaintMillis] property is supported at runtime.
+  ///
+  ///{@template flutter_inappwebview_platform_interface.PlatformWebViewCreationParams.onFirstContentfulPaintMillis.supported_platforms}
+  ///
+  ///**Officially Supported Platforms/Implementations**:
+  ///- Android WebView ([Official API - NavigationListener.onFirstContentfulPaintMillis](https://developer.android.com/reference/androidx/webkit/NavigationListener#onFirstContentfulPaintMillis(androidx.webkit.Page,long))):
+  ///    - Requires WebViewFeature.NAVIGATION_LISTENER and InAppWebViewSettings.useNavigationListener.
+  ///
+  ///**Parameters - Officially Supported Platforms/Implementations**:
+  ///- [page]: all platforms
+  ///- [durationMillis]: all platforms
+  ///
+  ///Use the [PlatformWebViewCreationParams.isPropertySupported] method to check if this property is supported at runtime.
+  ///{@endtemplate}
+  onFirstContentfulPaintMillis,
+
   ///Can be used to check if the [PlatformWebViewCreationParams.onFormResubmission] property is supported at runtime.
   ///
   ///{@template flutter_inappwebview_platform_interface.PlatformWebViewCreationParams.onFormResubmission.supported_platforms}
@@ -382,6 +398,22 @@ enum PlatformWebViewCreationParamsProperty {
   ///Use the [PlatformWebViewCreationParams.isPropertySupported] method to check if this property is supported at runtime.
   ///{@endtemplate}
   onJsPrompt,
+
+  ///Can be used to check if the [PlatformWebViewCreationParams.onLargestContentfulPaintMillis] property is supported at runtime.
+  ///
+  ///{@template flutter_inappwebview_platform_interface.PlatformWebViewCreationParams.onLargestContentfulPaintMillis.supported_platforms}
+  ///
+  ///**Officially Supported Platforms/Implementations**:
+  ///- Android WebView ([Official API - NavigationListener.onLargestContentfulPaintMillis](https://developer.android.com/reference/androidx/webkit/NavigationListener#onLargestContentfulPaintMillis(androidx.webkit.Page,long))):
+  ///    - Requires WebViewFeature.NAVIGATION_LISTENER and InAppWebViewSettings.useNavigationListener.
+  ///
+  ///**Parameters - Officially Supported Platforms/Implementations**:
+  ///- [page]: all platforms
+  ///- [durationMillis]: all platforms
+  ///
+  ///Use the [PlatformWebViewCreationParams.isPropertySupported] method to check if this property is supported at runtime.
+  ///{@endtemplate}
+  onLargestContentfulPaintMillis,
 
   ///Can be used to check if the [PlatformWebViewCreationParams.onLoadResource] property is supported at runtime.
   ///
@@ -566,6 +598,68 @@ enum PlatformWebViewCreationParamsProperty {
   ///Use the [PlatformWebViewCreationParams.isPropertySupported] method to check if this property is supported at runtime.
   ///{@endtemplate}
   onPageCommitVisible,
+
+  ///Can be used to check if the [PlatformWebViewCreationParams.onPageDeleted] property is supported at runtime.
+  ///
+  ///{@template flutter_inappwebview_platform_interface.PlatformWebViewCreationParams.onPageDeleted.supported_platforms}
+  ///
+  ///**Officially Supported Platforms/Implementations**:
+  ///- Android WebView ([Official API - NavigationListener.onPageDeleted](https://developer.android.com/reference/androidx/webkit/NavigationListener#onPageDeleted(androidx.webkit.Page))):
+  ///    - Requires WebViewFeature.NAVIGATION_LISTENER and InAppWebViewSettings.useNavigationListener.
+  ///
+  ///**Parameters - Officially Supported Platforms/Implementations**:
+  ///- [page]: all platforms
+  ///
+  ///Use the [PlatformWebViewCreationParams.isPropertySupported] method to check if this property is supported at runtime.
+  ///{@endtemplate}
+  onPageDeleted,
+
+  ///Can be used to check if the [PlatformWebViewCreationParams.onPageDomContentLoadedEvent] property is supported at runtime.
+  ///
+  ///{@template flutter_inappwebview_platform_interface.PlatformWebViewCreationParams.onPageDomContentLoadedEvent.supported_platforms}
+  ///
+  ///**Officially Supported Platforms/Implementations**:
+  ///- Android WebView ([Official API - NavigationListener.onPageDomContentLoadedEvent](https://developer.android.com/reference/androidx/webkit/NavigationListener#onPageDomContentLoadedEvent(androidx.webkit.Page))):
+  ///    - Requires WebViewFeature.NAVIGATION_LISTENER and InAppWebViewSettings.useNavigationListener.
+  ///
+  ///**Parameters - Officially Supported Platforms/Implementations**:
+  ///- [page]: all platforms
+  ///
+  ///Use the [PlatformWebViewCreationParams.isPropertySupported] method to check if this property is supported at runtime.
+  ///{@endtemplate}
+  onPageDomContentLoadedEvent,
+
+  ///Can be used to check if the [PlatformWebViewCreationParams.onPageLoadEvent] property is supported at runtime.
+  ///
+  ///{@template flutter_inappwebview_platform_interface.PlatformWebViewCreationParams.onPageLoadEvent.supported_platforms}
+  ///
+  ///**Officially Supported Platforms/Implementations**:
+  ///- Android WebView ([Official API - NavigationListener.onPageLoadEvent](https://developer.android.com/reference/androidx/webkit/NavigationListener#onPageLoadEvent(androidx.webkit.Page))):
+  ///    - Requires WebViewFeature.NAVIGATION_LISTENER and InAppWebViewSettings.useNavigationListener.
+  ///
+  ///**Parameters - Officially Supported Platforms/Implementations**:
+  ///- [page]: all platforms
+  ///
+  ///Use the [PlatformWebViewCreationParams.isPropertySupported] method to check if this property is supported at runtime.
+  ///{@endtemplate}
+  onPageLoadEvent,
+
+  ///Can be used to check if the [PlatformWebViewCreationParams.onPerformanceMarkMillis] property is supported at runtime.
+  ///
+  ///{@template flutter_inappwebview_platform_interface.PlatformWebViewCreationParams.onPerformanceMarkMillis.supported_platforms}
+  ///
+  ///**Officially Supported Platforms/Implementations**:
+  ///- Android WebView ([Official API - NavigationListener.onPerformanceMarkMillis](https://developer.android.com/reference/androidx/webkit/NavigationListener#onPerformanceMarkMillis(androidx.webkit.Page,java.lang.String,long))):
+  ///    - Requires WebViewFeature.NAVIGATION_LISTENER, InAppWebViewSettings.useNavigationListener and the separate InAppWebViewSettings.useOnPerformanceMarkMillis.
+  ///
+  ///**Parameters - Officially Supported Platforms/Implementations**:
+  ///- [page]: all platforms
+  ///- [markName]: all platforms
+  ///- [markTimeMillis]: all platforms
+  ///
+  ///Use the [PlatformWebViewCreationParams.isPropertySupported] method to check if this property is supported at runtime.
+  ///{@endtemplate}
+  onPerformanceMarkMillis,
 
   ///Can be used to check if the [PlatformWebViewCreationParams.onPermissionRequest] property is supported at runtime.
   ///
@@ -1167,6 +1261,11 @@ extension _PlatformWebViewCreationParamsPropertySupported
               TargetPlatform.android,
               TargetPlatform.iOS,
             ].contains(platform ?? defaultTargetPlatform);
+      case PlatformWebViewCreationParamsProperty.onFirstContentfulPaintMillis:
+        return ((kIsWeb && platform != null) || !kIsWeb) &&
+            [
+              TargetPlatform.android,
+            ].contains(platform ?? defaultTargetPlatform);
       case PlatformWebViewCreationParamsProperty.onFormResubmission:
         return ((kIsWeb && platform != null) || !kIsWeb) &&
             [
@@ -1209,6 +1308,11 @@ extension _PlatformWebViewCreationParamsPropertySupported
             [
               TargetPlatform.android,
               TargetPlatform.iOS,
+            ].contains(platform ?? defaultTargetPlatform);
+      case PlatformWebViewCreationParamsProperty.onLargestContentfulPaintMillis:
+        return ((kIsWeb && platform != null) || !kIsWeb) &&
+            [
+              TargetPlatform.android,
             ].contains(platform ?? defaultTargetPlatform);
       case PlatformWebViewCreationParamsProperty.onLoadResource:
         return ((kIsWeb && platform != null) || !kIsWeb) &&
@@ -1273,6 +1377,26 @@ extension _PlatformWebViewCreationParamsPropertySupported
             [
               TargetPlatform.android,
               TargetPlatform.iOS,
+            ].contains(platform ?? defaultTargetPlatform);
+      case PlatformWebViewCreationParamsProperty.onPageDeleted:
+        return ((kIsWeb && platform != null) || !kIsWeb) &&
+            [
+              TargetPlatform.android,
+            ].contains(platform ?? defaultTargetPlatform);
+      case PlatformWebViewCreationParamsProperty.onPageDomContentLoadedEvent:
+        return ((kIsWeb && platform != null) || !kIsWeb) &&
+            [
+              TargetPlatform.android,
+            ].contains(platform ?? defaultTargetPlatform);
+      case PlatformWebViewCreationParamsProperty.onPageLoadEvent:
+        return ((kIsWeb && platform != null) || !kIsWeb) &&
+            [
+              TargetPlatform.android,
+            ].contains(platform ?? defaultTargetPlatform);
+      case PlatformWebViewCreationParamsProperty.onPerformanceMarkMillis:
+        return ((kIsWeb && platform != null) || !kIsWeb) &&
+            [
+              TargetPlatform.android,
             ].contains(platform ?? defaultTargetPlatform);
       case PlatformWebViewCreationParamsProperty.onPermissionRequest:
         return ((kIsWeb && platform != null) || !kIsWeb) &&
