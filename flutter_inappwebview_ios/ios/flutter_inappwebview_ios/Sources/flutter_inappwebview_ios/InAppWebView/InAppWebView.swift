@@ -1114,6 +1114,16 @@ public class InAppWebView: WKWebView, UIScrollViewDelegate, WKUIDelegate,
         let url = urlRequest.url!
         
         if let allowingReadAccessTo = allowingReadAccessTo, url.scheme == "file", allowingReadAccessTo.scheme == "file" {
+            // `loadFileURL:` takes only a URL, so everything else the caller put in
+            // `urlRequest` is dropped here -- while the `else` branch below, for the same Dart call
+            // without `allowingReadAccessTo`, passes the whole request on. **That asymmetry is real
+            // and is WebKit's, not a shortcut**: iOS 15 added
+            // `loadFileRequest:allowingReadAccessToURL:`, which takes an `NSURLRequest`, and A5
+            // measured it on iOS 26.5 to produce a byte-identical navigation request to this call --
+            // custom header gone, `timeoutInterval` replaced by 2147483647. Swapping to it would be
+            // pure churn. `loadUrl`'s dartdoc documents the asymmetry and an integration test pins
+            // it, so a future WebKit that starts honouring the request fails loudly instead of
+            // silently outdating the doc. See DEPRECATION_CLEANUP.md §123.
             loadFileURL(url, allowingReadAccessTo: allowingReadAccessTo)
         } else {
             load(urlRequest)

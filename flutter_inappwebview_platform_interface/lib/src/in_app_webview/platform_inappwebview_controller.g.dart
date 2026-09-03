@@ -1144,7 +1144,7 @@ enum PlatformInAppWebViewControllerMethod {
   ///- Android WebView ([Official API - WebView.loadUrl](https://developer.android.com/reference/android/webkit/WebView#loadUrl(java.lang.String))):
   ///    - If method is "POST", [Official API - WebView.postUrl](https://developer.android.com/reference/android/webkit/WebView#postUrl(java.lang.String,%20byte[])). Also, when loading an URL Request using "POST" method, headers are ignored.
   ///- iOS WKWebView ([Official API - WKWebView.load](https://developer.apple.com/documentation/webkit/wkwebview/1414954-load)):
-  ///    - If [allowingReadAccessTo] is used, [Official API - WKWebView.loadFileURL](https://developer.apple.com/documentation/webkit/wkwebview/1414973-loadfileurl)
+  ///    - If [allowingReadAccessTo] is used, [Official API - WKWebView.loadFileURL](https://developer.apple.com/documentation/webkit/wkwebview/1414973-loadfileurl), which takes only a URL - so custom headers and `timeoutInterval` are discarded, while the same call without [allowingReadAccessTo] keeps them (measured on iOS 17.5 and 26.5).
   ///
   ///**Parameters - Officially Supported Platforms/Implementations**:
   ///- [urlRequest]: all platforms

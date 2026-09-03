@@ -191,6 +191,14 @@ unit test could see. All four are fixed and proved both ways on a simulator.
   `onReceivedServerTrustAuthRequest` / `onReceivedHttpAuthRequest` / `onReceivedClientCertRequest`,
   and the device orientation/motion permission request. **11 integration tests went green on this
   one fix.**
+- **`loadUrl` with `allowingReadAccessTo` silently discarded the rest of the request — documented,
+  not changed, because it cannot be.** `loadFileURL:allowingReadAccessToURL:` takes only a URL, so
+  the caller's headers and `timeoutInterval` go nowhere; the same call *without*
+  `allowingReadAccessTo` goes through `WKWebView.load(_:)` and keeps them. Measured on iOS 17.5 and
+  26.5 against an `http://` control and pinned by an integration test. iOS 15's
+  `loadFileRequest:allowingReadAccessToURL:` looks like the fix and is not: it takes an
+  `NSURLRequest` and was measured to produce a **byte-identical** navigation, so it was tried and
+  deliberately not adopted rather than shipped as a change that does nothing
 - **`callHandler` from a cross-origin iframe silently returned `undefined`.** The injected bridge
   kept its `{resolve, reject}` table on `window.top`; in a cross-origin frame that property access
   **throws**, and the `catch` called `resolve()` with no argument — so the promise settled

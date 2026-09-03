@@ -286,6 +286,17 @@ rename; this entry is the API-owner's view.
 
 ### Fixed
 
+- **`loadUrl`'s dartdoc now documents that `allowingReadAccessTo` discards the rest of the
+  `URLRequest` on iOS.** No code change — this is WebKit's behaviour and it had never been written
+  down. `loadFileURL:allowingReadAccessToURL:` accepts a URL and nothing else, so a `file://` load
+  scoped for read access loses the request's headers and `timeoutInterval`, while **the same Dart
+  call without `allowingReadAccessTo` keeps them** — one API, two behaviours, selected by an
+  argument that is otherwise only about filesystem scope. Measured on iOS 17.5 and 26.5 against an
+  `http://` control, and pinned by an integration test so a future WebKit change fails loudly
+  instead of outdating the doc. **There is no way to have both**: iOS 15's
+  `loadFileRequest:allowingReadAccessToURL:` takes an `NSURLRequest` and produces a byte-identical
+  navigation, so it was measured and deliberately **not** adopted. Serve local content over
+  `http://` if you need headers on it
 - **Documented two permanent iOS design decisions, so they stop reading as gaps.**
   `onDownloadStarting` is a **notification and nothing more**: Android never downloads the file
   (that is what `setDownloadListener` means), and iOS *actively cancels* the `WKDownload` by

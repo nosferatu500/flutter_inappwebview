@@ -262,6 +262,29 @@ abstract class PlatformInAppWebViewController extends PlatformInterface
   ///This URL must be a file-based URL (using the `file://` scheme).
   ///Specify the same value as the URL parameter to prevent WebView from reading any other content.
   ///Specify a directory to give WebView permission to read additional files in the specified directory.
+  ///
+  ///**On iOS, passing [allowingReadAccessTo] discards the rest of [urlRequest].** Only its
+  ///[URLRequest.url] survives: WebKit loads the page with `loadFileURL:allowingReadAccessToURL:`,
+  ///which accepts a URL and nothing else. Measured on iOS 17.5 and 26.5 with a request carrying a
+  ///custom header and `timeoutInterval: 42`, observed at `shouldOverrideUrlLoading`:
+  ///
+  ///| call | header | `timeoutInterval` |
+  ///|---|---|---|
+  ///| any `http://` url | kept | `42` |
+  ///| `file://` url, no [allowingReadAccessTo] | kept | `42` |
+  ///| `file://` url **with** [allowingReadAccessTo] | **dropped** | **replaced** |
+  ///
+  ///So the same Dart call behaves two different ways depending on an argument that is otherwise
+  ///only about filesystem scope, and a `file://` URL is not itself the reason — the middle row keeps
+  ///everything. **There is no way to have both**: iOS 15's
+  ///`loadFileRequest:allowingReadAccessToURL:` takes an `NSURLRequest` and was measured to produce a
+  ///byte-identical navigation to `loadFileURL:`, so WebKit reads only the URL out of that too. If
+  ///you need headers on a local page, serve it over `http://` (see `InAppLocalhostServer` or
+  ///`WebViewAssetLoader`) rather than scoping a `file://` load.
+  ///
+  ///**Not measured on Android**, where the obvious probe does not transfer:
+  ///`shouldOverrideUrlLoading` is not called there for a `loadUrl` the app itself issued.
+  ///[allowingReadAccessTo] is iOS-only in any case.
   ///{@endtemplate}
   ///
   ///{@macro flutter_inappwebview_platform_interface.PlatformInAppWebViewController.loadUrl.supported_platforms}
@@ -279,7 +302,7 @@ abstract class PlatformInAppWebViewController extends PlatformInterface
         apiUrl:
             'https://developer.apple.com/documentation/webkit/wkwebview/1414954-load',
         note:
-            'If [allowingReadAccessTo] is used, [Official API - WKWebView.loadFileURL](https://developer.apple.com/documentation/webkit/wkwebview/1414973-loadfileurl)',
+            'If [allowingReadAccessTo] is used, [Official API - WKWebView.loadFileURL](https://developer.apple.com/documentation/webkit/wkwebview/1414973-loadfileurl), which takes only a URL - so custom headers and `timeoutInterval` are discarded, while the same call without [allowingReadAccessTo] keeps them (measured on iOS 17.5 and 26.5).',
       ),
     ],
   )
