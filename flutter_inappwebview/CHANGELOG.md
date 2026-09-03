@@ -534,6 +534,17 @@ since the `WebsiteDataType.ALL` fix below. It stays **deliberately out of `ALL`*
 
 ### Fixed
 
+**iOS — `InAppBrowser`'s toolbars were drawn with pre-iOS-13 API and looked broken on iOS 26.** The
+top bar left the status-bar area unpainted (a black strip above it), the three spacers in the bottom
+toolbar collapsed into one, and with the top bar visible the URL field and close button overlapped
+the page's own header. The bars are now configured through `UIBarAppearance`, which is what has
+driven bar backgrounds since iOS 13, and the web view is laid out against the safe area when the top
+bar is shown. `toolbarTopBackgroundColor`, `toolbarTopTranslucent`, `toolbarBottomBackgroundColor`
+and `toolbarBottomTranslucent` all take effect again, and `getSettings()` reports what the bars are
+actually using rather than the legacy properties it used to read. A translucent bar with no explicit
+colour is now genuinely transparent — the page shows through it edge to edge — and the back/forward
+buttons are SF Symbols instead of oversized `‹` / `›` text.
+
 **iOS — the page could not be scrolled to the bottom after the on-screen keyboard had been
 dismissed** (upstream `#1947`; upstream PR `#2860` fixes the same defect). While the keyboard is up
 the plugin installs a negative `contentInset` to cancel the enlarged safe area; when the keyboard

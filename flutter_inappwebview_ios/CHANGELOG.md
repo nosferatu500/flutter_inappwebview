@@ -122,6 +122,31 @@ Fourteen WebKit APIs read out of the iOS 26.5 SDK:
 
 ### Fixed
 
+- **`InAppBrowser`'s bars were drawn with pre-iOS-13 API and were visibly broken on iOS 26.**
+  `UINavigationBar.backgroundColor` / `.barTintColor` / `.isTranslucent` have not driven the bar
+  background since iOS 13 — only `UINavigationBarAppearance` / `UIToolbarAppearance` do — so
+  `toolbarTopBackgroundColor` and friends left the status-bar area unpainted, which showed as a black
+  strip above the bar. Both bars are now configured through a `UIBarAppearance`, and
+  `getSettings()` reads the colours and translucency **back** off the appearance objects instead of
+  the legacy properties, so it no longer reports values the bar is not using.
+
+  Four further problems fixed with it:
+
+  - **the three flexible spaces in the bottom toolbar were one `UIBarButtonItem` instance reused
+    three times.** A bar button item can only appear once in `toolbarItems`, so the spacing
+    collapsed; each spacer is now its own item
+  - **the web view was pinned to `view.topAnchor` unconditionally**, so with the top bar visible the
+    URL field and close button sat on top of the page's own header. It now pins to the safe-area
+    guide when the top bar is shown and stays full-bleed when it is hidden, and the progress bar
+    always stays clear of the top bar
+  - **a translucent bar with no explicit colour now uses `configureWithTransparentBackground()`**, so
+    the page shows through it edge-to-edge instead of being covered by a default material; the
+    controller paints itself and the navigation controller with the page's own
+    `underPageBackgroundColor` so the strip behind the bar does not read as a border
+  - the back/forward buttons were `‹` and `›` glyphs set at 50pt with a baseline offset; they are now
+    the `chevron.backward` / `chevron.forward` SF Symbols, and the search bar's own background image
+    is dropped so only the field floats over the page
+
 - **`keyboardWillHide` left a stale negative `scrollView.contentInset` behind, so the page could not
   scroll to the bottom after the keyboard had been dismissed** (upstream issue `#1947`, which the
   observers in `prepare()` were added to fix in the first place; upstream PR `#2860` fixes the same

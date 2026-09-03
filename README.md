@@ -48,7 +48,7 @@ what changed is the scope, the two native implementations, and what the plugin s
 | Flutter / Dart floor   | 3.32 / `^3.8.0`                              | **3.44 / `^3.12.0`**                                                 |
 | Unit tests             | 276, all in the example app                  | **412**, incl. the Android module's first native tests               |
 | Android lint           | 27 findings                                  | **0**                                                                |
-| New platform APIs      | —                                            | **29** — 12 `androidx.webkit` features, 8 `android.webkit`, 9 WebKit |
+| New platform APIs      | —                                            | **50+** — see the table below                                        |
 | Alongside upstream     | —                                            | **yes** — own Android namespace and channel names                    |
 
 What the narrower scope bought, beyond the table: the first iOS device runs in the project's
@@ -75,6 +75,91 @@ macOS/Windows/Linux/Web-only API — there is nothing to migrate to. If you decl
 (`@xml/inappwebview_provider_paths`) all changed, and a stale authority fails silently. The full
 old → new list, name by name, is in
 [`flutter_inappwebview/CHANGELOG.md`](./flutter_inappwebview/CHANGELOG.md).
+
+## New APIs added by this fork
+
+Everything below is callable from Dart and exists only in this fork. Each entry says which platform
+implements it; on the other platform the call reports "not implemented on the current platform"
+(methods) or is simply ignored (settings), so it is always safe to write cross-platform code and
+guard with `isMethodSupported` / `isPropertySupported` / `WebViewFeature.isFeatureSupported`.
+
+**Version numbers are the OS floor**, not the plugin's. Below the floor an iOS getter returns `null`
+and a setter reports `false` — never a wrong value — and an Android feature is reported unsupported
+by its `WebViewFeature` flag.
+
+### `InAppWebViewSettings`
+
+| Property | Platform | What it does |
+| --- | --- | --- |
+| `paymentRequestEnabled` | Android | Enables the W3C Payment Request API in the WebView |
+| `webAuthenticationSupport` | Android | Enables passkeys / WebAuthn, scoped to the app or to the whole browser |
+| `downloadFaviconsEnabled` | Android | Whether the WebView downloads favicons at all — a real per-page network cost |
+| `backForwardCacheEnabled` | Android | Turns on the back/forward cache so back navigations restore instantly |
+| `attributionRegistrationBehavior` | Android | Chooses between app- and web-source attribution registration |
+| `webViewMediaIntegrityApiStatus` | Android | Media Integrity API status, with per-origin overrides |
+| `userAgentMetadata` | Android | User-Agent Client Hints — brands, platform, form factors |
+| `profileName` | Android | Puts this WebView on a named browsing profile with its own cookies and storage |
+| `syncCallbackTimeoutMillis` | Android | How long the WebView waits for your Dart `shouldInterceptRequest` answer before loading the resource anyway (was a fixed 10s) |
+| `writingToolsBehavior` | iOS 18.0+ | How much of Apple's Writing Tools the WebView offers |
+| `preferredHTTPSNavigationPolicy` | iOS 18.0+ | Automatic HTTP→HTTPS upgrading; applied per navigation, so it responds to `setSettings` |
+| `securityRestrictionMode` | iOS 18.4+ | WebKit's built-in security restriction level |
+| `lockdownModeEnabled` | iOS 17.0+ | Forces Lockdown Mode on or off for this WebView; leave `null` to follow the system setting |
+| `supportsAdaptiveImageGlyph` | iOS 18.0+ | Allows inline Genmoji / adaptive image glyphs in editable content |
+| `showsSystemScreenTimeBlockingView` | iOS 26.0+ | Whether WebKit draws its own overlay over Screen-Time-blocked content. Creation-time only |
+| `obscuredContentInsets` | iOS 26.0+ | Shrinks the page's layout viewport where your app draws chrome over it |
+| `useOnShowFileChooser` | iOS 18.4+ | Opt in to `onShowFileChooser`; while off, WebKit's own file picker is left untouched |
+| `useOnInsertInputSuggestion` | iOS 26.0+ | Opt in to `onInsertInputSuggestion`; opting in makes your app responsible for inserting the text |
+| `useShouldGoToBackForwardListItem` | iOS 26.0+ | Opt in to `shouldGoToBackForwardListItem`. Off by default because every back/forward navigation then waits for your answer |
+
+### `InAppWebViewController`
+
+| Method | Platform | What it does |
+| --- | --- | --- |
+| `setAudioMuted()` / `isAudioMuted()` | Android | Mutes or unmutes all audio playing in the WebView |
+| `setDefaultTrafficStatsTag()` | Android | Tags the WebView's network traffic for `TrafficStats` accounting |
+| `prerenderUrl()` | Android | Pre-renders a URL so a later navigation to it is instant |
+| `postVisualStateCallback()` | Android | Awaits the point at which everything drawn so far is on screen |
+| `documentHasImages()` | Android | Whether the current document contains any images |
+| `flingScroll()` | Android | Starts a fling scroll at a velocity in device pixels per second |
+| `isBlockedByScreenTime()` | iOS 26.0+ | Whether Screen Time is blocking the current content. Returns `null` below iOS 26 — not `false` |
+| `setConversationContext()` / `getConversationContext()` | iOS 26.0+ | Hands the keyboard the mail/message thread being replied to, so it can offer Smart Replies in web text fields |
+
+### Events
+
+| Event | Platform | What it does |
+| --- | --- | --- |
+| `onShowFileChooser` | Android, **iOS 18.4+** | Take over the file picker for `<input type="file">`. Existed for Android; now fires on iOS too |
+| `onInsertInputSuggestion` | iOS 26.0+ | Reports which keyboard Smart Reply the user picked, so you can insert it into the page |
+| `shouldGoToBackForwardListItem` | iOS 26.0+ | Veto a back/forward navigation before it happens, and see WebKit's instant-back flag. **The veto binds navigations the page starts (`history.back()`); it does not stop your own `goBack()`** |
+| `onWritingToolsActiveChanged` | iOS 18.0+ | Fires when the system Writing Tools UI starts or stops operating on the page (see the note below) |
+
+### Managers and controllers
+
+| API | Platform | What it does |
+| --- | --- | --- |
+| `ProfileStore` | Android | A whole new surface for creating, listing and deleting named browsing profiles |
+| `GeolocationPermissions` | Android | Grant, clear and list per-origin geolocation permissions; profile-aware |
+| `WebStorageManager.deleteBrowsingData()` / `.deleteBrowsingDataForSite()` | Android | Delete browsing data wholesale or for one site |
+| `CookieManager.hasCookies()` | Android | Whether the store holds any cookie at all, without enumerating |
+| `CookieManager.isFileSchemeCookiesAllowed()` | Android | Whether `file://` cookies are accepted. Read-only — the platform setter is deprecated |
+| `CookieManager.setAcceptCookie()` / `.isAcceptCookieEnabled()` | Android, **iOS 17.0+** | The cookie master switch. Governs the WebView's own traffic — it does **not** block `setCookie()` on either platform |
+| `CookieManager.setCookieStoreObserver()` | iOS | Be told when the cookie store changes instead of polling. Carries no payload — re-read the store in the callback |
+
+### New fields on existing types
+
+| Field | Platform | What it does |
+| --- | --- | --- |
+| `ProxyRule.relayHop1` / `.relayHop2` | iOS 17.0+ | Route a proxy rule through a chain of secure relays (RFC 9298) instead of a direct proxy endpoint |
+| `NavigationAction.modifierFlags` / `.buttonNumber` | iOS | Which modifier keys and mouse button triggered a navigation |
+| `NavigationAction.isContentRuleListRedirect` | iOS 26.0+ | Whether a content rule list redirected this navigation |
+| `DownloadStartRequest.isUserInitiated` / `.originatingFrame` | iOS | Whether the user started the download, and which frame it came from |
+| `WebsiteDataType.WKWebsiteDataTypeScreenTime` | iOS 26.0+ | Screen Time data. Deliberately **not** part of `WebsiteDataType.ALL` — passing it to a bulk delete terminates the app |
+
+> **One caveat, stated rather than buried.** `onWritingToolsActiveChanged` is implemented and its
+> plumbing is verified, but it has **not yet been observed to fire on a real device**, and the cause
+> is still being investigated — WebKit documents the underlying property as KVO-compliant, and this
+> plugin already carries a note that a neighbouring KVO-compliant WebKit property does not reliably
+> notify on iOS 26. Do not build on it until this line is removed.
 
 ## Articles/Resources
 
