@@ -85,6 +85,33 @@ Twelve `androidx.webkit` features, each behind its own `WebViewFeature` flag, an
   have no WebView settings to read — a custom `WebViewAssetLoader` `PathHandler.handle` and
   `ServiceWorkerClient.shouldInterceptRequest` — keep the fixed 10s
 
+- **`NAVIGATION_LISTENER`** (+ **`NAVIGATION_GET_WEB_RESOURCE_ERROR`**) —
+  `onNavigationStarted` / `onNavigationRedirected` / `onNavigationCompleted`, carrying the new
+  `WebViewNavigation` type, behind `InAppWebViewSettings.useNavigationListener`.
+
+  **`Navigation.getStatusCode()` is the reason to want this**: it reports the HTTP status of a
+  navigation that succeeded, which no existing event could — `onReceivedHttpError` fires only for
+  error responses. It is reported as `null` until the navigation commits rather than as `0`. The
+  events also see navigations nothing else in the plugin does: same-document navigations
+  (`history.pushState`, fragment jumps), back/forward traversals and reloads, each classified by
+  `isBack`/`isForward`/`isReload`/`isRestore`/`isSameDocument`/`wasInitiatedByPage`. And
+  `onNavigationRedirected` is the first redirect event here that is not conditional on the app's own
+  choices — `NavigationAction.isRedirect` only ever reported redirects for navigations
+  `shouldOverrideUrlLoading` was offered.
+
+  Two implementation notes worth knowing. **The id is synthesised by the plugin**, from a
+  `WeakHashMap` keyed on androidx's interned peer: androidx says "same navigation" with object
+  identity, which no method channel can carry. Neither `Navigation` nor `Page` overrides
+  `equals`/`hashCode`, so a `WeakHashMap` gives identity semantics *and* drops entries the platform
+  has released. **The listener is registered only when the setting is on**, and the setting is
+  inferred from any of the three handlers being supplied; it can also be toggled through
+  `setSettings` at runtime, which starts a fresh id sequence. `addNavigationListener` throws
+  `UnsupportedOperationException` rather than degrading, so the feature check is not optional.
+
+  `Navigation.getWebResourceError()` is the **only** method on `Navigation` that androidx guards with
+  a feature check of its own, and `Page` has no gated method at all — `Page.getUrl()` is callable
+  even though `WebViewFeature.PAGE_GET_URL` is one of the six tombstones below
+
 Every mirrored `WebViewFeature` constant is now pinned against the real AAR by a test: six of the
 flags `WebViewFeature` declares are `@Deprecated` tombstones that `isFeatureSupported` **throws**
 for, and five others have a native *value* that differs from their name.

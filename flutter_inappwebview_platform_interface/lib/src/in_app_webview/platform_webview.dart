@@ -1514,6 +1514,104 @@ In that case, after the `window.addEventListener("flutterInAppWebViewPlatformRea
   )
   final void Function(T controller, bool active)? onWritingToolsActiveChanged;
 
+  ///{@template flutter_inappwebview_platform_interface.PlatformWebViewCreationParams.onNavigationStarted}
+  ///Event fired when a navigation starts.
+  ///
+  ///This fires for **every** navigation the `WebView` begins, including ones no other event in this
+  ///plugin reports: same-document navigations such as a fragment jump or `history.pushState`,
+  ///back/forward traversals, and reloads. A navigation that starts here is not promised to commit —
+  ///wait for [onNavigationCompleted] and read [WebViewNavigation.didCommit].
+  ///
+  ///[navigation] is a snapshot; use [WebViewNavigation.id] to match it against the
+  ///[onNavigationRedirected] and [onNavigationCompleted] events for the same navigation.
+  ///
+  ///**This is an observer, not a veto.** Nothing here can stop a navigation — that is
+  ///[shouldOverrideUrlLoading]'s job, and it sees a strictly narrower set of navigations.
+  ///
+  ///Requires [InAppWebViewSettings.useNavigationListener] and, on Android,
+  ///[WebViewFeature.NAVIGATION_LISTENER].
+  ///{@endtemplate}
+  ///
+  ///{@macro flutter_inappwebview_platform_interface.PlatformWebViewCreationParams.onNavigationStarted.supported_platforms}
+  @SupportedPlatforms(
+    platforms: [
+      AndroidPlatform(
+        apiName: 'NavigationListener.onNavigationStarted',
+        apiUrl:
+            'https://developer.android.com/reference/androidx/webkit/NavigationListener#onNavigationStarted(androidx.webkit.Navigation)',
+        note:
+            'Requires WebViewFeature.NAVIGATION_LISTENER and InAppWebViewSettings.useNavigationListener.',
+      ),
+    ],
+  )
+  final void Function(T controller, WebViewNavigation navigation)?
+  onNavigationStarted;
+
+  ///{@template flutter_inappwebview_platform_interface.PlatformWebViewCreationParams.onNavigationRedirected}
+  ///Event fired when a navigation is redirected to another URL.
+  ///
+  ///Fires once per redirect hop, each time with the new [WebViewNavigation.url] and the same
+  ///[WebViewNavigation.id] as the [onNavigationStarted] that began the sequence.
+  ///
+  ///**This is the first redirect event in the plugin that is not conditional on the app's own
+  ///choices.** `NavigationAction.isRedirect`, reached through [shouldOverrideUrlLoading], only
+  ///reports redirects for navigations the app was offered the chance to override in the first
+  ///place; this reports all of them.
+  ///
+  ///Requires [InAppWebViewSettings.useNavigationListener] and, on Android,
+  ///[WebViewFeature.NAVIGATION_LISTENER].
+  ///{@endtemplate}
+  ///
+  ///{@macro flutter_inappwebview_platform_interface.PlatformWebViewCreationParams.onNavigationRedirected.supported_platforms}
+  @SupportedPlatforms(
+    platforms: [
+      AndroidPlatform(
+        apiName: 'NavigationListener.onNavigationRedirected',
+        apiUrl:
+            'https://developer.android.com/reference/androidx/webkit/NavigationListener#onNavigationRedirected(androidx.webkit.Navigation)',
+        note:
+            'Requires WebViewFeature.NAVIGATION_LISTENER and InAppWebViewSettings.useNavigationListener.',
+      ),
+    ],
+  )
+  final void Function(T controller, WebViewNavigation navigation)?
+  onNavigationRedirected;
+
+  ///{@template flutter_inappwebview_platform_interface.PlatformWebViewCreationParams.onNavigationCompleted}
+  ///Event fired when a navigation finishes, whether or not it succeeded.
+  ///
+  ///"Completed" means the platform is done with the navigation, **not** that it loaded anything:
+  ///a cancelled navigation, one superseded by a newer one, and one that turned into a download all
+  ///arrive here. Read [WebViewNavigation.didCommit] to tell those apart from a navigation that
+  ///actually replaced the document, and [WebViewNavigation.didCommitErrorPage] to tell a committed
+  ///error page apart from committed content.
+  ///
+  ///**This is the only place the plugin can report the HTTP status code of a navigation that
+  ///succeeded** — see [WebViewNavigation.statusCode]. [onReceivedHttpError] fires only for error
+  ///responses, so a `200` was previously indistinguishable from no response at all.
+  ///
+  ///This is not a substitute for [onLoadStop]: it fires when the *navigation* is done, which is
+  ///before the document has finished loading its subresources.
+  ///
+  ///Requires [InAppWebViewSettings.useNavigationListener] and, on Android,
+  ///[WebViewFeature.NAVIGATION_LISTENER].
+  ///{@endtemplate}
+  ///
+  ///{@macro flutter_inappwebview_platform_interface.PlatformWebViewCreationParams.onNavigationCompleted.supported_platforms}
+  @SupportedPlatforms(
+    platforms: [
+      AndroidPlatform(
+        apiName: 'NavigationListener.onNavigationCompleted',
+        apiUrl:
+            'https://developer.android.com/reference/androidx/webkit/NavigationListener#onNavigationCompleted(androidx.webkit.Navigation)',
+        note:
+            'Requires WebViewFeature.NAVIGATION_LISTENER and InAppWebViewSettings.useNavigationListener.',
+      ),
+    ],
+  )
+  final void Function(T controller, WebViewNavigation navigation)?
+  onNavigationCompleted;
+
   ///{@template flutter_inappwebview_platform_interface.PlatformWebViewCreationParams.onContentSizeChanged}
   ///Event fired when the content size of the `WebView` changes.
   ///
@@ -1773,6 +1871,9 @@ This is a limitation of the native WebKit APIs.""",
     this.onMicrophoneCaptureStateChanged,
     this.shouldGoToBackForwardListItem,
     this.onWritingToolsActiveChanged,
+    this.onNavigationStarted,
+    this.onNavigationRedirected,
+    this.onNavigationCompleted,
     this.onContentSizeChanged,
     this.onShowFileChooser,
     this.onInsertInputSuggestion,

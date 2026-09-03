@@ -171,6 +171,29 @@ app.get('/test-index', (req, res) => {
     res.sendFile(__dirname + '/public/test-index.html');
 })
 
+// Two hops, so `onNavigationRedirected` has to fire twice for one navigation rather than once.
+// A single hop cannot tell "reports every redirect" apart from "reports the last one".
+app.get("/test-redirect", (req, res) => {
+  res.redirect(302, "/test-redirect-2")
+})
+
+app.get("/test-redirect-2", (req, res) => {
+  res.redirect(302, "/test-redirect-target")
+})
+
+app.get("/test-redirect-target", (req, res) => {
+  res.send(`
+    <html>
+      <head>
+      </head>
+      <body>
+        <p>REDIRECT TARGET</p>
+      </body>
+    </html>
+  `);
+  res.end()
+})
+
 app.post("/test-post", (req, res) => {
   console.log(JSON.stringify(req.headers))
   console.log(JSON.stringify(req.body))

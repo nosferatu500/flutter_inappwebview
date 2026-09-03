@@ -195,6 +195,25 @@ rename; this entry is the API-owner's view.
   negation of the new one and is not carried. **No `InAppWebViewSettings` gate**, unlike
   `useOnInsertInputSuggestion`: a KVO observer is passive and changes nothing about WebKit's own
   behaviour, so §46's all-or-nothing hazard does not apply here
+- **`PlatformWebViewCreationParams.onNavigationStarted` / `.onNavigationRedirected` /
+  `.onNavigationCompleted`** and the matching `PlatformInAppBrowserEvents` methods (Android), from
+  `androidx.webkit.NavigationListener`, with the new **`WebViewNavigation`** type,
+  **`InAppWebViewSettings.useNavigationListener`** and the **`WebViewFeature.NAVIGATION_LISTENER`**
+  and **`WebViewFeature.NAVIGATION_GET_WEB_RESOURCE_ERROR`** constants.
+
+  `WebViewNavigation` is a **snapshot**, and it has to be: androidx hands the same `Navigation`
+  object to all three callbacks — the peers are interned by `getOrCreatePeer`, so object identity is
+  what ties them together — and mutates it in place, so `url`, `didCommit` and `statusCode` answer
+  differently at different points in one navigation. Object identity cannot cross a method channel,
+  so the Kotlin side synthesises **`WebViewNavigation.id`** from an identity map and it is that id,
+  not the object, that connects the three events. `pageId` is synthesised the same way but has a
+  different lifetime: a navigation id is released at `onNavigationCompleted`, a page id only when
+  the page is deleted, which for a back/forward-cached page may never happen.
+
+  `statusCode` is the single biggest addition: it is the **only** way to see the HTTP status of a
+  navigation that *succeeded*, since `onReceivedHttpError` fires only for error responses. It is
+  `null` until the navigation commits rather than a fabricated `0`. `webResourceError` sits behind
+  its own second feature check, finer than the one gating the events themselves
 - **`PlatformCookieManager.setAcceptCookie` / `.isAcceptCookieEnabled` gained iOS** (17.0+), from
   `WKHTTPCookieStore.setCookiePolicy` / `getCookiePolicy`. No signature change and no new method —
   two `@SupportedPlatforms` entries and an iOS implementation, so the pair stops being Android-only.

@@ -100,6 +100,7 @@ by its `WebViewFeature` flag.
 | `userAgentMetadata` | Android | User-Agent Client Hints — brands, platform, form factors |
 | `profileName` | Android | Puts this WebView on a named browsing profile with its own cookies and storage |
 | `syncCallbackTimeoutMillis` | Android | How long the WebView waits for your Dart `shouldInterceptRequest` answer before loading the resource anyway (was a fixed 10s) |
+| `useNavigationListener` | Android | Opt in to the three `onNavigation*` events. Inferred from supplying any of their handlers |
 | `writingToolsBehavior` | iOS 18.0+ | How much of Apple's Writing Tools the WebView offers |
 | `preferredHTTPSNavigationPolicy` | iOS 18.0+ | Automatic HTTP→HTTPS upgrading; applied per navigation, so it responds to `setSettings` |
 | `securityRestrictionMode` | iOS 18.4+ | WebKit's built-in security restriction level |
@@ -132,6 +133,9 @@ by its `WebViewFeature` flag.
 | `onInsertInputSuggestion` | iOS 26.0+ | Reports which keyboard Smart Reply the user picked, so you can insert it into the page |
 | `shouldGoToBackForwardListItem` | iOS 26.0+ | Veto a back/forward navigation before it happens, and see WebKit's instant-back flag. **The veto binds navigations the page starts (`history.back()`); it does not stop your own `goBack()`** |
 | `onWritingToolsActiveChanged` | iOS 18.0+ | Fires when the system Writing Tools UI starts or stops operating on the page (see the note below) |
+| `onNavigationStarted` | Android | Every navigation the WebView begins — including fragment jumps, `history.pushState`, back/forward and reloads, which no other event here reports |
+| `onNavigationRedirected` | Android | Every redirect hop. Unlike `NavigationAction.isRedirect`, not limited to navigations `shouldOverrideUrlLoading` was offered |
+| `onNavigationCompleted` | Android | A navigation finished. **Carries `statusCode` — the only way to see the HTTP status of a navigation that *succeeded*** |
 
 ### Managers and controllers
 
@@ -153,6 +157,7 @@ by its `WebViewFeature` flag.
 | `NavigationAction.modifierFlags` / `.buttonNumber` | iOS | Which modifier keys and mouse button triggered a navigation |
 | `NavigationAction.isContentRuleListRedirect` | iOS 26.0+ | Whether a content rule list redirected this navigation |
 | `DownloadStartRequest.isUserInitiated` / `.originatingFrame` | iOS | Whether the user started the download, and which frame it came from |
+| `WebViewNavigation` (new type) | Android | The payload of the three `onNavigation*` events: `statusCode`, `isBack`/`isForward`/`isReload`/`isRestore`/`isSameDocument`, `didCommit`, and a plugin-synthesised `id` tying the three events together |
 | `WebsiteDataType.WKWebsiteDataTypeScreenTime` | iOS 26.0+ | Screen Time data. Deliberately **not** part of `WebsiteDataType.ALL` — passing it to a bulk delete terminates the app |
 
 > **One caveat, stated rather than buried.** `onWritingToolsActiveChanged` is implemented and its

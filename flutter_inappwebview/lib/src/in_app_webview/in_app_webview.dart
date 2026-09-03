@@ -57,6 +57,21 @@ class InAppWebView extends StatefulWidget {
     ContextMenu? contextMenu,
     void Function(InAppWebViewController controller, WebUri? url)?
     onPageCommitVisible,
+    void Function(
+      InAppWebViewController controller,
+      WebViewNavigation navigation,
+    )?
+    onNavigationStarted,
+    void Function(
+      InAppWebViewController controller,
+      WebViewNavigation navigation,
+    )?
+    onNavigationRedirected,
+    void Function(
+      InAppWebViewController controller,
+      WebViewNavigation navigation,
+    )?
+    onNavigationCompleted,
     void Function(InAppWebViewController controller, String? title)?
     onTitleChanged,
     FutureOr<AjaxRequestAction?> Function(
@@ -424,6 +439,18 @@ class InAppWebView extends StatefulWidget {
                : null,
            onPageCommitVisible: onPageCommitVisible != null
                ? (controller, url) => onPageCommitVisible.call(controller, url)
+               : null,
+           onNavigationStarted: onNavigationStarted != null
+               ? (controller, navigation) =>
+                     onNavigationStarted.call(controller, navigation)
+               : null,
+           onNavigationRedirected: onNavigationRedirected != null
+               ? (controller, navigation) =>
+                     onNavigationRedirected.call(controller, navigation)
+               : null,
+           onNavigationCompleted: onNavigationCompleted != null
+               ? (controller, navigation) =>
+                     onNavigationCompleted.call(controller, navigation)
                : null,
            onTitleChanged: onTitleChanged != null
                ? (controller, title) => onTitleChanged.call(controller, title)

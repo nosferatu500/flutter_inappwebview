@@ -368,6 +368,15 @@ class InAppBrowser implements PlatformInAppBrowserEvents {
   void onPageCommitVisible(WebUri? url) {}
 
   @override
+  void onNavigationStarted(WebViewNavigation navigation) {}
+
+  @override
+  void onNavigationRedirected(WebViewNavigation navigation) {}
+
+  @override
+  void onNavigationCompleted(WebViewNavigation navigation) {}
+
+  @override
   FutureOr<PermissionResponse?>? onPermissionRequest(
     PermissionRequest permissionRequest,
   ) {

@@ -1680,6 +1680,30 @@ class SupportChecker {
           className: className,
           category: 'Navigation',
         ),
+        ApiEventDefinition(
+          name: PlatformWebViewCreationParamsProperty.onNavigationStarted.name,
+          description:
+              'Called when a navigation starts (Android, NAVIGATION_LISTENER).',
+          className: className,
+          category: 'Navigation',
+        ),
+        ApiEventDefinition(
+          name:
+              PlatformWebViewCreationParamsProperty.onNavigationRedirected.name,
+          description:
+              'Called when a navigation is redirected (Android, NAVIGATION_LISTENER).',
+          className: className,
+          category: 'Navigation',
+        ),
+        ApiEventDefinition(
+          name:
+              PlatformWebViewCreationParamsProperty.onNavigationCompleted.name,
+          description:
+              'Called when a navigation finishes, carrying its HTTP status code '
+              '(Android, NAVIGATION_LISTENER).',
+          className: className,
+          category: 'Navigation',
+        ),
 
         // Window events
         ApiEventDefinition(

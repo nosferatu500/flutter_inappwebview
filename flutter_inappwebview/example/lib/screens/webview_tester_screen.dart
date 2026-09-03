@@ -1317,6 +1317,48 @@ class _WebViewTesterScreenState extends State<WebViewTesterScreen>
         );
       },
 
+      // 55c. onNavigationStarted / onNavigationRedirected / onNavigationCompleted -- Android only,
+      // behind WebViewFeature.NAVIGATION_LISTENER. Supplying these handlers infers
+      // `useNavigationListener`, so the settings toggle does not have to be turned on by hand.
+      // `id` is what ties the three together; `statusCode` is only non-null once committed.
+      onNavigationStarted: (controller, navigation) {
+        _logEvent(
+          EventType.navigation,
+          PlatformWebViewCreationParamsProperty.onNavigationStarted.name,
+          data: {
+            'id': navigation.id,
+            'url': navigation.url?.toString(),
+            'wasInitiatedByPage': navigation.wasInitiatedByPage,
+            'isSameDocument': navigation.isSameDocument,
+            'isReload': navigation.isReload,
+            'isBack': navigation.isBack,
+            'isForward': navigation.isForward,
+          },
+        );
+      },
+      onNavigationRedirected: (controller, navigation) {
+        _logEvent(
+          EventType.navigation,
+          PlatformWebViewCreationParamsProperty.onNavigationRedirected.name,
+          data: {'id': navigation.id, 'url': navigation.url?.toString()},
+        );
+      },
+      onNavigationCompleted: (controller, navigation) {
+        _logEvent(
+          EventType.navigation,
+          PlatformWebViewCreationParamsProperty.onNavigationCompleted.name,
+          data: {
+            'id': navigation.id,
+            'pageId': navigation.pageId,
+            'url': navigation.url?.toString(),
+            'didCommit': navigation.didCommit,
+            'didCommitErrorPage': navigation.didCommitErrorPage,
+            'statusCode': navigation.statusCode,
+            'error': navigation.webResourceError?.description,
+          },
+        );
+      },
+
       // 56. onContentSizeChanged
       onContentSizeChanged: (controller, oldContentSize, newContentSize) {
         _logEvent(

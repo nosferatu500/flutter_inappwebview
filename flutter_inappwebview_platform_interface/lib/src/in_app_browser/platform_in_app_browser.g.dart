@@ -894,6 +894,36 @@ enum PlatformInAppBrowserEventsMethod {
   ///{@endtemplate}
   onMicrophoneCaptureStateChanged,
 
+  ///Can be used to check if the [PlatformInAppBrowserEvents.onNavigationCompleted] method is supported at runtime.
+  ///
+  ///{@template flutter_inappwebview_platform_interface.PlatformInAppBrowserEvents.onNavigationCompleted.supported_platforms}
+  ///
+  ///**Officially Supported Platforms/Implementations**:
+  ///- Android WebView ([Official API - NavigationListener.onNavigationCompleted](https://developer.android.com/reference/androidx/webkit/NavigationListener#onNavigationCompleted(androidx.webkit.Navigation))):
+  ///    - Requires WebViewFeature.NAVIGATION_LISTENER and InAppWebViewSettings.useNavigationListener, which is never inferred here and must be set manually.
+  ///
+  ///**Parameters - Officially Supported Platforms/Implementations**:
+  ///- [navigation]: all platforms
+  ///
+  ///Use the [PlatformInAppBrowserEvents.isMethodSupported] method to check if this method is supported at runtime.
+  ///{@endtemplate}
+  onNavigationCompleted,
+
+  ///Can be used to check if the [PlatformInAppBrowserEvents.onNavigationRedirected] method is supported at runtime.
+  ///
+  ///{@template flutter_inappwebview_platform_interface.PlatformInAppBrowserEvents.onNavigationRedirected.supported_platforms}
+  ///
+  ///**Officially Supported Platforms/Implementations**:
+  ///- Android WebView ([Official API - NavigationListener.onNavigationRedirected](https://developer.android.com/reference/androidx/webkit/NavigationListener#onNavigationRedirected(androidx.webkit.Navigation))):
+  ///    - Requires WebViewFeature.NAVIGATION_LISTENER and InAppWebViewSettings.useNavigationListener, which is never inferred here and must be set manually.
+  ///
+  ///**Parameters - Officially Supported Platforms/Implementations**:
+  ///- [navigation]: all platforms
+  ///
+  ///Use the [PlatformInAppBrowserEvents.isMethodSupported] method to check if this method is supported at runtime.
+  ///{@endtemplate}
+  onNavigationRedirected,
+
   ///Can be used to check if the [PlatformInAppBrowserEvents.onNavigationResponse] method is supported at runtime.
   ///
   ///{@template flutter_inappwebview_platform_interface.PlatformInAppBrowserEvents.onNavigationResponse.supported_platforms}
@@ -907,6 +937,21 @@ enum PlatformInAppBrowserEventsMethod {
   ///Use the [PlatformInAppBrowserEvents.isMethodSupported] method to check if this method is supported at runtime.
   ///{@endtemplate}
   onNavigationResponse,
+
+  ///Can be used to check if the [PlatformInAppBrowserEvents.onNavigationStarted] method is supported at runtime.
+  ///
+  ///{@template flutter_inappwebview_platform_interface.PlatformInAppBrowserEvents.onNavigationStarted.supported_platforms}
+  ///
+  ///**Officially Supported Platforms/Implementations**:
+  ///- Android WebView ([Official API - NavigationListener.onNavigationStarted](https://developer.android.com/reference/androidx/webkit/NavigationListener#onNavigationStarted(androidx.webkit.Navigation))):
+  ///    - Requires WebViewFeature.NAVIGATION_LISTENER and InAppWebViewSettings.useNavigationListener, which is never inferred here and must be set manually.
+  ///
+  ///**Parameters - Officially Supported Platforms/Implementations**:
+  ///- [navigation]: all platforms
+  ///
+  ///Use the [PlatformInAppBrowserEvents.isMethodSupported] method to check if this method is supported at runtime.
+  ///{@endtemplate}
+  onNavigationStarted,
 
   ///Can be used to check if the [PlatformInAppBrowserEvents.onOverScrolled] method is supported at runtime.
   ///
@@ -1541,9 +1586,24 @@ extension _PlatformInAppBrowserEventsMethodSupported
       case PlatformInAppBrowserEventsMethod.onMicrophoneCaptureStateChanged:
         return ((kIsWeb && platform != null) || !kIsWeb) &&
             [TargetPlatform.iOS].contains(platform ?? defaultTargetPlatform);
+      case PlatformInAppBrowserEventsMethod.onNavigationCompleted:
+        return ((kIsWeb && platform != null) || !kIsWeb) &&
+            [
+              TargetPlatform.android,
+            ].contains(platform ?? defaultTargetPlatform);
+      case PlatformInAppBrowserEventsMethod.onNavigationRedirected:
+        return ((kIsWeb && platform != null) || !kIsWeb) &&
+            [
+              TargetPlatform.android,
+            ].contains(platform ?? defaultTargetPlatform);
       case PlatformInAppBrowserEventsMethod.onNavigationResponse:
         return ((kIsWeb && platform != null) || !kIsWeb) &&
             [TargetPlatform.iOS].contains(platform ?? defaultTargetPlatform);
+      case PlatformInAppBrowserEventsMethod.onNavigationStarted:
+        return ((kIsWeb && platform != null) || !kIsWeb) &&
+            [
+              TargetPlatform.android,
+            ].contains(platform ?? defaultTargetPlatform);
       case PlatformInAppBrowserEventsMethod.onOverScrolled:
         return ((kIsWeb && platform != null) || !kIsWeb) &&
             [

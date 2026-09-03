@@ -135,6 +135,13 @@ class InAppWebView : WebView, InAppWebViewInterface, Disposable {
   @JvmField var inAppWebViewChromeClient: InAppWebViewChromeClient? = null
   @JvmField var inAppWebViewRenderProcessClient: InAppWebViewRenderProcessClient? = null
   @JvmField var channelDelegate: WebViewChannelDelegate? = null
+
+  /**
+   * Non-null only while a navigation listener is registered, i.e. only when
+   * `useNavigationListener` is on and the feature is supported. Held so that `dispose()` can
+   * unregister it — androidx keys removal on the listener instance.
+   */
+  private var inAppWebViewNavigationListener: InAppWebViewNavigationListener? = null
   @JvmField var javaScriptBridgeInterface: JavaScriptBridgeInterface? = null
   @JvmField var customSettings = InAppWebViewSettings()
   @JvmField var isLoading = false
@@ -331,6 +338,18 @@ class InAppWebView : WebView, InAppWebViewInterface, Disposable {
 
     if (customSettings.useOnDownloadStart) {
       setDownloadListener(DownloadStartListener())
+    }
+
+    // Registered only when asked for: one listener carries every navigation callback, so a WebView
+    // nobody is listening to should not pay a channel message per navigation phase. The feature
+    // check is not optional — `addNavigationListener` throws `UnsupportedOperationException`
+    // rather than degrading when the WebView provider is too old.
+    if (customSettings.useNavigationListener &&
+      WebViewFeature.isFeatureSupported(WebViewFeature.NAVIGATION_LISTENER)
+    ) {
+      val navigationListener = InAppWebViewNavigationListener(this)
+      inAppWebViewNavigationListener = navigationListener
+      WebViewCompat.addNavigationListener(this, navigationListener)
     }
 
     val settings = settings
@@ -1645,6 +1664,27 @@ class InAppWebView : WebView, InAppWebViewInterface, Disposable {
       )
     }
 
+    // Toggleable at runtime rather than creation-only: registering and unregistering a navigation
+    // listener costs nothing and holds no state that a live WebView depends on. Turning it back on
+    // starts fresh ids, because the old listener's identity maps went with it — which is why the
+    // dartdoc says ids are unique within a WebView and must not be persisted.
+    if (newSettingsMap["useNavigationListener"] != null &&
+      customSettings.useNavigationListener != newCustomSettings.useNavigationListener
+    ) {
+      if (WebViewFeature.isFeatureSupported(WebViewFeature.NAVIGATION_LISTENER)) {
+        inAppWebViewNavigationListener?.let {
+          WebViewCompat.removeNavigationListener(this, it)
+          it.dispose()
+        }
+        inAppWebViewNavigationListener = null
+        if (newCustomSettings.useNavigationListener) {
+          val navigationListener = InAppWebViewNavigationListener(this)
+          inAppWebViewNavigationListener = navigationListener
+          WebViewCompat.addNavigationListener(this, navigationListener)
+        }
+      }
+    }
+
     plugin?.let {
       webViewAssetLoaderExt?.dispose()
       webViewAssetLoaderExt =
@@ -2681,6 +2721,14 @@ class InAppWebView : WebView, InAppWebViewInterface, Disposable {
     callAsyncJavaScriptCallbacks.clear()
     evaluateJavaScriptContentWorldCallbacks.clear()
     inAppBrowserDelegate = null
+    // Guarded by the field rather than by the setting: `setSettings` can flip
+    // `useNavigationListener` after `prepare()`, so the setting no longer says whether a listener
+    // was actually registered — only a non-null field does.
+    inAppWebViewNavigationListener?.let {
+      WebViewCompat.removeNavigationListener(this, it)
+      it.dispose()
+    }
+    inAppWebViewNavigationListener = null
     inAppWebViewRenderProcessClient?.dispose()
     inAppWebViewRenderProcessClient = null
     inAppWebViewChromeClient?.dispose()

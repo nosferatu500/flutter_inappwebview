@@ -475,6 +475,36 @@ enum PlatformWebViewCreationParamsProperty {
   ///{@endtemplate}
   onMicrophoneCaptureStateChanged,
 
+  ///Can be used to check if the [PlatformWebViewCreationParams.onNavigationCompleted] property is supported at runtime.
+  ///
+  ///{@template flutter_inappwebview_platform_interface.PlatformWebViewCreationParams.onNavigationCompleted.supported_platforms}
+  ///
+  ///**Officially Supported Platforms/Implementations**:
+  ///- Android WebView ([Official API - NavigationListener.onNavigationCompleted](https://developer.android.com/reference/androidx/webkit/NavigationListener#onNavigationCompleted(androidx.webkit.Navigation))):
+  ///    - Requires WebViewFeature.NAVIGATION_LISTENER and InAppWebViewSettings.useNavigationListener.
+  ///
+  ///**Parameters - Officially Supported Platforms/Implementations**:
+  ///- [navigation]: all platforms
+  ///
+  ///Use the [PlatformWebViewCreationParams.isPropertySupported] method to check if this property is supported at runtime.
+  ///{@endtemplate}
+  onNavigationCompleted,
+
+  ///Can be used to check if the [PlatformWebViewCreationParams.onNavigationRedirected] property is supported at runtime.
+  ///
+  ///{@template flutter_inappwebview_platform_interface.PlatformWebViewCreationParams.onNavigationRedirected.supported_platforms}
+  ///
+  ///**Officially Supported Platforms/Implementations**:
+  ///- Android WebView ([Official API - NavigationListener.onNavigationRedirected](https://developer.android.com/reference/androidx/webkit/NavigationListener#onNavigationRedirected(androidx.webkit.Navigation))):
+  ///    - Requires WebViewFeature.NAVIGATION_LISTENER and InAppWebViewSettings.useNavigationListener.
+  ///
+  ///**Parameters - Officially Supported Platforms/Implementations**:
+  ///- [navigation]: all platforms
+  ///
+  ///Use the [PlatformWebViewCreationParams.isPropertySupported] method to check if this property is supported at runtime.
+  ///{@endtemplate}
+  onNavigationRedirected,
+
   ///Can be used to check if the [PlatformWebViewCreationParams.onNavigationResponse] property is supported at runtime.
   ///
   ///{@template flutter_inappwebview_platform_interface.PlatformWebViewCreationParams.onNavigationResponse.supported_platforms}
@@ -488,6 +518,21 @@ enum PlatformWebViewCreationParamsProperty {
   ///Use the [PlatformWebViewCreationParams.isPropertySupported] method to check if this property is supported at runtime.
   ///{@endtemplate}
   onNavigationResponse,
+
+  ///Can be used to check if the [PlatformWebViewCreationParams.onNavigationStarted] property is supported at runtime.
+  ///
+  ///{@template flutter_inappwebview_platform_interface.PlatformWebViewCreationParams.onNavigationStarted.supported_platforms}
+  ///
+  ///**Officially Supported Platforms/Implementations**:
+  ///- Android WebView ([Official API - NavigationListener.onNavigationStarted](https://developer.android.com/reference/androidx/webkit/NavigationListener#onNavigationStarted(androidx.webkit.Navigation))):
+  ///    - Requires WebViewFeature.NAVIGATION_LISTENER and InAppWebViewSettings.useNavigationListener.
+  ///
+  ///**Parameters - Officially Supported Platforms/Implementations**:
+  ///- [navigation]: all platforms
+  ///
+  ///Use the [PlatformWebViewCreationParams.isPropertySupported] method to check if this property is supported at runtime.
+  ///{@endtemplate}
+  onNavigationStarted,
 
   ///Can be used to check if the [PlatformWebViewCreationParams.onOverScrolled] property is supported at runtime.
   ///
@@ -1199,9 +1244,24 @@ extension _PlatformWebViewCreationParamsPropertySupported
           .onMicrophoneCaptureStateChanged:
         return ((kIsWeb && platform != null) || !kIsWeb) &&
             [TargetPlatform.iOS].contains(platform ?? defaultTargetPlatform);
+      case PlatformWebViewCreationParamsProperty.onNavigationCompleted:
+        return ((kIsWeb && platform != null) || !kIsWeb) &&
+            [
+              TargetPlatform.android,
+            ].contains(platform ?? defaultTargetPlatform);
+      case PlatformWebViewCreationParamsProperty.onNavigationRedirected:
+        return ((kIsWeb && platform != null) || !kIsWeb) &&
+            [
+              TargetPlatform.android,
+            ].contains(platform ?? defaultTargetPlatform);
       case PlatformWebViewCreationParamsProperty.onNavigationResponse:
         return ((kIsWeb && platform != null) || !kIsWeb) &&
             [TargetPlatform.iOS].contains(platform ?? defaultTargetPlatform);
+      case PlatformWebViewCreationParamsProperty.onNavigationStarted:
+        return ((kIsWeb && platform != null) || !kIsWeb) &&
+            [
+              TargetPlatform.android,
+            ].contains(platform ?? defaultTargetPlatform);
       case PlatformWebViewCreationParamsProperty.onOverScrolled:
         return ((kIsWeb && platform != null) || !kIsWeb) &&
             [

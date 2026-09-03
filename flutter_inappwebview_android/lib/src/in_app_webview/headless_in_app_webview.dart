@@ -49,6 +49,9 @@ class AndroidHeadlessInAppWebViewCreationParams
     super.onEnterFullscreen,
     super.onExitFullscreen,
     super.onPageCommitVisible,
+    super.onNavigationStarted,
+    super.onNavigationRedirected,
+    super.onNavigationCompleted,
     super.onTitleChanged,
     super.onWindowFocus,
     super.onWindowBlur,
@@ -123,6 +126,9 @@ class AndroidHeadlessInAppWebViewCreationParams
         onEnterFullscreen: params.onEnterFullscreen,
         onExitFullscreen: params.onExitFullscreen,
         onPageCommitVisible: params.onPageCommitVisible,
+        onNavigationStarted: params.onNavigationStarted,
+        onNavigationRedirected: params.onNavigationRedirected,
+        onNavigationCompleted: params.onNavigationCompleted,
         onTitleChanged: params.onTitleChanged,
         onWindowFocus: params.onWindowFocus,
         onWindowBlur: params.onWindowBlur,
@@ -323,6 +329,14 @@ class AndroidHeadlessInAppWebView extends PlatformHeadlessInAppWebView
     if (params.onNavigationResponse != null &&
         settings.useOnNavigationResponse == null) {
       settings.useOnNavigationResponse = true;
+    }
+    // One listener carries all three navigation events, so any one handler infers the
+    // setting. Without this a handler compiles, reads correctly and never fires.
+    if ((params.onNavigationStarted != null ||
+            params.onNavigationRedirected != null ||
+            params.onNavigationCompleted != null) &&
+        settings.useNavigationListener == null) {
+      settings.useNavigationListener = true;
     }
     if (params.onShowFileChooser != null &&
         settings.useOnShowFileChooser == null) {

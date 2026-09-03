@@ -148,6 +148,32 @@ class WebViewFeature {
     'MUTE_AUDIO',
   );
 
+  ///Feature for [isFeatureSupported]. This feature covers
+  ///[WebViewNavigation.webResourceError] alone.
+  ///
+  ///This is a second, finer gate **inside** [NAVIGATION_LISTENER]: where it is unsupported the
+  ///navigation events still fire and every other field of [WebViewNavigation] is still reported,
+  ///but [WebViewNavigation.webResourceError] is always `null`.
+  static const NAVIGATION_GET_WEB_RESOURCE_ERROR = WebViewFeature._internal(
+    'NAVIGATION_GET_WEB_RESOURCE_ERROR',
+    'NAVIGATION_GET_WEB_RESOURCE_ERROR',
+  );
+
+  ///Feature for [isFeatureSupported]. This feature covers
+  ///[PlatformWebViewCreationParams.onNavigationStarted],
+  ///[PlatformWebViewCreationParams.onNavigationRedirected] and
+  ///[PlatformWebViewCreationParams.onNavigationCompleted], and is what
+  ///[InAppWebViewSettings.useNavigationListener] needs in order to have any effect.
+  ///
+  ///Note that six neighbouring `NAVIGATION_*` constants in `androidx.webkit` are **tombstones** —
+  ///still declared for source compatibility, but `@Deprecated` and no longer registered, so passing
+  ///one to `isFeatureSupported` throws rather than returning `false`. This constant and
+  ///[NAVIGATION_GET_WEB_RESOURCE_ERROR] are the only two of the family that are real.
+  static const NAVIGATION_LISTENER = WebViewFeature._internal(
+    'NAVIGATION_LISTENER',
+    'NAVIGATION_LISTENER',
+  );
+
   ///Feature for [isFeatureSupported]. This feature covers [InAppWebViewSettings.offscreenPreRaster].
   static const OFF_SCREEN_PRERASTER = WebViewFeature._internal(
     'OFF_SCREEN_PRERASTER',
@@ -423,6 +449,8 @@ class WebViewFeature {
     WebViewFeature.MULTI_PROCESS,
     WebViewFeature.MULTI_PROFILE,
     WebViewFeature.MUTE_AUDIO,
+    WebViewFeature.NAVIGATION_GET_WEB_RESOURCE_ERROR,
+    WebViewFeature.NAVIGATION_LISTENER,
     WebViewFeature.OFF_SCREEN_PRERASTER,
     WebViewFeature.PAYMENT_REQUEST,
     WebViewFeature.POST_WEB_MESSAGE,
@@ -589,6 +617,10 @@ class WebViewFeature {
         return 'MULTI_PROFILE';
       case 'MUTE_AUDIO':
         return 'MUTE_AUDIO';
+      case 'NAVIGATION_GET_WEB_RESOURCE_ERROR':
+        return 'NAVIGATION_GET_WEB_RESOURCE_ERROR';
+      case 'NAVIGATION_LISTENER':
+        return 'NAVIGATION_LISTENER';
       case 'OFF_SCREEN_PRERASTER':
         return 'OFF_SCREEN_PRERASTER';
       case 'PAYMENT_REQUEST':

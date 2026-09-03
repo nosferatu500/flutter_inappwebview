@@ -2383,6 +2383,26 @@ as it can cause framerate drops on animations in Android 9 and lower (see [Hybri
   @SupportedPlatforms(platforms: [IOSPlatform(available: "26.0")])
   bool? useShouldGoToBackForwardListItem;
 
+  ///Set to `true` to be able to listen at the
+  ///[PlatformWebViewCreationParams.onNavigationStarted],
+  ///[PlatformWebViewCreationParams.onNavigationRedirected] and
+  ///[PlatformWebViewCreationParams.onNavigationCompleted] events.
+  ///
+  ///If any of those events is implemented and this value is `null`, it is automatically inferred as
+  ///`true`; otherwise the default is `false`. This inference is not applied for
+  ///[PlatformInAppBrowser], where the value must be set manually.
+  ///
+  ///**One setting registers one platform listener that carries all of the navigation events**, so
+  ///this is deliberately not a per-event flag. Turning it on costs a channel message per navigation
+  ///phase, which is the same order as the existing load events; it is off by default because a
+  ///`WebView` that nobody is listening to should not pay for them at all.
+  ///
+  ///On Android this additionally requires [WebViewFeature.NAVIGATION_LISTENER]. Where that is
+  ///unsupported the setting is accepted and no listener is registered, so the events simply never
+  ///fire — check the feature before relying on them.
+  @SupportedPlatforms(platforms: [AndroidPlatform()])
+  bool? useNavigationListener;
+
   @ExchangeableObjectConstructor()
   InAppWebViewSettings_({
     this.useShouldOverrideUrlLoading,
@@ -2543,6 +2563,7 @@ as it can cause framerate drops on animations in Android 9 and lower (see [Hybri
     this.useOnShowFileChooser,
     this.useOnInsertInputSuggestion,
     this.useShouldGoToBackForwardListItem,
+    this.useNavigationListener,
   }) {
     minimumFontSize ??= Util.isAndroid ? 8 : 0;
     assert(

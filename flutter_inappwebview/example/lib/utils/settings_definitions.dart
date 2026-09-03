@@ -253,6 +253,15 @@ Map<String, List<SettingDefinition>> getSettingDefinitions() {
         property: InAppWebViewSettingsProperty.useShouldGoToBackForwardListItem,
       ),
       SettingDefinition(
+        name: 'Use Navigation Listener',
+        description:
+            'Enable onNavigationStarted/Redirected/Completed (Android, needs '
+            'WebViewFeature.NAVIGATION_LISTENER). Carries getStatusCode',
+        type: SettingType.boolean,
+        defaultValue: null,
+        property: InAppWebViewSettingsProperty.useNavigationListener,
+      ),
+      SettingDefinition(
         name: 'Use Should Intercept Request',
         description: 'Enable request interception events',
         type: SettingType.boolean,

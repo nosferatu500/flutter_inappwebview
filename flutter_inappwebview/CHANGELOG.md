@@ -527,6 +527,37 @@ Fourteen WebKit APIs read out of the iOS 26.5 SDK, plus one feature that was hal
   when the WebView is created — cannot miss a transition and has nothing to read back first. The
   event does not say *which* tool ran or what it changed; WebKit exposes neither. What Writing Tools
   is allowed to do is `InAppWebViewSettings.writingToolsBehavior`, the other half of this API.
+- **`onNavigationStarted` / `onNavigationRedirected` / `onNavigationCompleted`** (Android), from
+  `androidx.webkit.NavigationListener`, with the new **`WebViewNavigation`** type and
+  **`InAppWebViewSettings.useNavigationListener`**. Supplying any of the three handlers turns the
+  setting on for you.
+
+  **`WebViewNavigation.statusCode` is the single biggest thing here: it is the only way to see the
+  HTTP status code of a navigation that succeeded.** `onReceivedHttpError` fires only for error
+  responses, so a `200` used to be indistinguishable from no response at all. It is `null` until the
+  navigation commits, rather than a `0` you could mistake for a real answer.
+
+  These events also see navigations no other event in this plugin reports — fragment jumps and
+  `history.pushState`, back/forward traversals, reloads — and classify each one
+  (`isBack`, `isForward`, `isReload`, `isRestore`, `isSameDocument`, `wasInitiatedByPage`,
+  `didCommit`, `didCommitErrorPage`). `onNavigationRedirected` reports **every** redirect, unlike
+  `NavigationAction.isRedirect`, which only ever saw the ones `shouldOverrideUrlLoading` was offered
+  the chance to override.
+
+  **These observe; they cannot veto** — that is still `shouldOverrideUrlLoading`. And
+  `onNavigationCompleted` is not a replacement for `onLoadStop`: it fires when the *navigation* is
+  finished, which is before the document's subresources are. "Completed" includes navigations that
+  were cancelled, superseded or turned into a download, so read `didCommit` before assuming
+  anything loaded.
+
+  Use **`WebViewNavigation.id`** to tie the three events of one navigation together. It is
+  synthesised by the plugin rather than taken from the platform — Android identifies a navigation by
+  object identity, which cannot cross a method channel — so it is unique within one `WebView`,
+  released once that navigation completes, and must not be persisted or compared across `WebView`s.
+
+  Requires `WebViewFeature.NAVIGATION_LISTENER`; where that is unsupported the events simply never
+  fire. `WebViewNavigation.webResourceError` needs a second, finer check,
+  `WebViewFeature.NAVIGATION_GET_WEB_RESOURCE_ERROR` — without it every other field still arrives
 - **`DownloadStartRequest.isUserInitiated` / `.originatingFrame`** — from `WKDownload`
 
 `WebsiteDataType.WKWebsiteDataTypeScreenTime` is the third member of that family and has shipped

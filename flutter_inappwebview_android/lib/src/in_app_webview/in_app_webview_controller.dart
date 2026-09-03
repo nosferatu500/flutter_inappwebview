@@ -879,6 +879,39 @@ class AndroidInAppWebViewController extends PlatformInAppWebViewController
           }
         }
         break;
+      case "onNavigationStarted":
+      case "onNavigationRedirected":
+      case "onNavigationCompleted":
+        // The three share one body: identical payload, identical shape, and the only difference is
+        // which handler receives it.
+        final navigationHandler = switch (call.method) {
+          "onNavigationStarted" => webviewParams?.onNavigationStarted,
+          "onNavigationRedirected" => webviewParams?.onNavigationRedirected,
+          _ => webviewParams?.onNavigationCompleted,
+        };
+        if (navigationHandler != null || _inAppBrowserEventHandler != null) {
+          final navigation = WebViewNavigation.fromMap(
+            call.arguments["navigation"]?.cast<String, dynamic>(),
+          );
+          if (navigation != null) {
+            if (navigationHandler != null) {
+              navigationHandler(_controllerFromPlatform, navigation);
+            } else {
+              switch (call.method) {
+                case "onNavigationStarted":
+                  _inAppBrowserEventHandler!.onNavigationStarted(navigation);
+                  break;
+                case "onNavigationRedirected":
+                  _inAppBrowserEventHandler!.onNavigationRedirected(navigation);
+                  break;
+                default:
+                  _inAppBrowserEventHandler!.onNavigationCompleted(navigation);
+                  break;
+              }
+            }
+          }
+        }
+        break;
       case "onDidReceiveServerRedirectForProvisionalNavigation":
         if (webviewParams != null &&
             webviewParams!.onDidReceiveServerRedirectForProvisionalNavigation !=

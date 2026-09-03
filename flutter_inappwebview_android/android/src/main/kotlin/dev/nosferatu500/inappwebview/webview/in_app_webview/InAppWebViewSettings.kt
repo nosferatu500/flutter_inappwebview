@@ -20,6 +20,7 @@ class InAppWebViewSettings : ISettings<InAppWebViewInterface> {
   @JvmField var useShouldOverrideUrlLoading: Boolean = false
   @JvmField var useOnLoadResource: Boolean = false
   @JvmField var useOnDownloadStart: Boolean = false
+  @JvmField var useNavigationListener: Boolean = false
   @JvmField var userAgent: String = ""
   @JvmField var applicationNameForUserAgent: String = ""
   @JvmField var javaScriptEnabled: Boolean = true
@@ -145,6 +146,7 @@ class InAppWebViewSettings : ISettings<InAppWebViewInterface> {
         "useShouldOverrideUrlLoading" -> useShouldOverrideUrlLoading = value as Boolean
         "useOnLoadResource" -> useOnLoadResource = value as Boolean
         "useOnDownloadStart" -> useOnDownloadStart = value as Boolean
+        "useNavigationListener" -> useNavigationListener = value as Boolean
         "userAgent" -> userAgent = value as String
         "applicationNameForUserAgent" -> applicationNameForUserAgent = value as String
         "javaScriptEnabled" -> javaScriptEnabled = value as Boolean
@@ -272,6 +274,7 @@ class InAppWebViewSettings : ISettings<InAppWebViewInterface> {
     settings["useShouldOverrideUrlLoading"] = useShouldOverrideUrlLoading
     settings["useOnLoadResource"] = useOnLoadResource
     settings["useOnDownloadStart"] = useOnDownloadStart
+    settings["useNavigationListener"] = useNavigationListener
     settings["userAgent"] = userAgent
     settings["applicationNameForUserAgent"] = applicationNameForUserAgent
     settings["javaScriptEnabled"] = javaScriptEnabled

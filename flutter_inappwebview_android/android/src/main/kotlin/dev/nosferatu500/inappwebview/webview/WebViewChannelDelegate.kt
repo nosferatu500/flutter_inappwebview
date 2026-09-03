@@ -48,6 +48,7 @@ import dev.nosferatu500.inappwebview.types.WebMessageCompatExt
 import dev.nosferatu500.inappwebview.types.WebResourceErrorExt
 import dev.nosferatu500.inappwebview.types.WebResourceRequestExt
 import dev.nosferatu500.inappwebview.types.WebResourceResponseExt
+import dev.nosferatu500.inappwebview.types.WebViewNavigationExt
 import dev.nosferatu500.inappwebview.webview.in_app_webview.InAppWebView
 import dev.nosferatu500.inappwebview.webview.in_app_webview.InAppWebViewSettings
 import dev.nosferatu500.inappwebview.webview.web_message.WebMessageListener
@@ -1103,6 +1104,30 @@ class WebViewChannelDelegate(webView: InAppWebView, channel: MethodChannel) :
   fun onPageCommitVisible(url: String?) {
     val channel = this.channel ?: return
     channel.invokeMethod("onPageCommitVisible", hashMapOf<String, Any?>("url" to url))
+  }
+
+  fun onNavigationStarted(navigation: WebViewNavigationExt) {
+    val channel = this.channel ?: return
+    channel.invokeMethod(
+      "onNavigationStarted",
+      hashMapOf<String, Any?>("navigation" to navigation.toMap())
+    )
+  }
+
+  fun onNavigationRedirected(navigation: WebViewNavigationExt) {
+    val channel = this.channel ?: return
+    channel.invokeMethod(
+      "onNavigationRedirected",
+      hashMapOf<String, Any?>("navigation" to navigation.toMap())
+    )
+  }
+
+  fun onNavigationCompleted(navigation: WebViewNavigationExt) {
+    val channel = this.channel ?: return
+    channel.invokeMethod(
+      "onNavigationCompleted",
+      hashMapOf<String, Any?>("navigation" to navigation.toMap())
+    )
   }
 
   fun onRenderProcessGone(didCrash: Boolean, rendererPriorityAtExit: Int) {

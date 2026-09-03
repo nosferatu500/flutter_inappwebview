@@ -411,6 +411,30 @@ class WebViewFeature_ {
     "PRERENDER_URL_V2",
   );
 
+  ///Feature for [isFeatureSupported]. This feature covers
+  ///[PlatformWebViewCreationParams.onNavigationStarted],
+  ///[PlatformWebViewCreationParams.onNavigationRedirected] and
+  ///[PlatformWebViewCreationParams.onNavigationCompleted], and is what
+  ///[InAppWebViewSettings.useNavigationListener] needs in order to have any effect.
+  ///
+  ///Note that six neighbouring `NAVIGATION_*` constants in `androidx.webkit` are **tombstones** —
+  ///still declared for source compatibility, but `@Deprecated` and no longer registered, so passing
+  ///one to `isFeatureSupported` throws rather than returning `false`. This constant and
+  ///[NAVIGATION_GET_WEB_RESOURCE_ERROR] are the only two of the family that are real.
+  static const NAVIGATION_LISTENER = WebViewFeature_._internal(
+    "NAVIGATION_LISTENER",
+  );
+
+  ///Feature for [isFeatureSupported]. This feature covers
+  ///[WebViewNavigation.webResourceError] alone.
+  ///
+  ///This is a second, finer gate **inside** [NAVIGATION_LISTENER]: where it is unsupported the
+  ///navigation events still fire and every other field of [WebViewNavigation] is still reported,
+  ///but [WebViewNavigation.webResourceError] is always `null`.
+  static const NAVIGATION_GET_WEB_RESOURCE_ERROR = WebViewFeature_._internal(
+    "NAVIGATION_GET_WEB_RESOURCE_ERROR",
+  );
+
   ///Feature for [isFeatureSupported]. This feature covers [PlatformProfileStore] and
   ///[InAppWebViewSettings.profileName].
   static const MULTI_PROFILE = WebViewFeature_._internal("MULTI_PROFILE");

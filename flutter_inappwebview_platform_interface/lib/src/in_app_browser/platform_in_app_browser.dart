@@ -1564,6 +1564,54 @@ In that case, after the `window.addEventListener("flutterInAppWebViewPlatformRea
   )
   void onWritingToolsActiveChanged(bool active) {}
 
+  ///{@macro flutter_inappwebview_platform_interface.PlatformWebViewCreationParams.onNavigationStarted}
+  ///
+  ///{@macro flutter_inappwebview_platform_interface.PlatformInAppBrowserEvents.onNavigationStarted.supported_platforms}
+  @SupportedPlatforms(
+    platforms: [
+      AndroidPlatform(
+        apiName: 'NavigationListener.onNavigationStarted',
+        apiUrl:
+            'https://developer.android.com/reference/androidx/webkit/NavigationListener#onNavigationStarted(androidx.webkit.Navigation)',
+        note:
+            'Requires WebViewFeature.NAVIGATION_LISTENER and InAppWebViewSettings.useNavigationListener, which is never inferred here and must be set manually.',
+      ),
+    ],
+  )
+  void onNavigationStarted(WebViewNavigation navigation) {}
+
+  ///{@macro flutter_inappwebview_platform_interface.PlatformWebViewCreationParams.onNavigationRedirected}
+  ///
+  ///{@macro flutter_inappwebview_platform_interface.PlatformInAppBrowserEvents.onNavigationRedirected.supported_platforms}
+  @SupportedPlatforms(
+    platforms: [
+      AndroidPlatform(
+        apiName: 'NavigationListener.onNavigationRedirected',
+        apiUrl:
+            'https://developer.android.com/reference/androidx/webkit/NavigationListener#onNavigationRedirected(androidx.webkit.Navigation)',
+        note:
+            'Requires WebViewFeature.NAVIGATION_LISTENER and InAppWebViewSettings.useNavigationListener, which is never inferred here and must be set manually.',
+      ),
+    ],
+  )
+  void onNavigationRedirected(WebViewNavigation navigation) {}
+
+  ///{@macro flutter_inappwebview_platform_interface.PlatformWebViewCreationParams.onNavigationCompleted}
+  ///
+  ///{@macro flutter_inappwebview_platform_interface.PlatformInAppBrowserEvents.onNavigationCompleted.supported_platforms}
+  @SupportedPlatforms(
+    platforms: [
+      AndroidPlatform(
+        apiName: 'NavigationListener.onNavigationCompleted',
+        apiUrl:
+            'https://developer.android.com/reference/androidx/webkit/NavigationListener#onNavigationCompleted(androidx.webkit.Navigation)',
+        note:
+            'Requires WebViewFeature.NAVIGATION_LISTENER and InAppWebViewSettings.useNavigationListener, which is never inferred here and must be set manually.',
+      ),
+    ],
+  )
+  void onNavigationCompleted(WebViewNavigation navigation) {}
+
   ///{@macro flutter_inappwebview_platform_interface.PlatformWebViewCreationParams.onContentSizeChanged}
   ///
   ///{@macro flutter_inappwebview_platform_interface.PlatformInAppBrowserEvents.onContentSizeChanged.supported_platforms}
