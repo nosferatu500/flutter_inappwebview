@@ -1206,6 +1206,34 @@ public class WebViewChannelDelegate: ChannelDelegate {
         }
     }
     
+    public class ShouldGoToBackForwardListItemCallback: BaseCallbackResult<Bool> {
+        override init() {
+            super.init()
+            self.decodeResult = { (obj: Any?) in
+                if let action = obj as? Int {
+                    return action == 1
+                }
+                // Anything the app did not answer allows the navigation, which is what WebKit does
+                // when the delegate method is not implemented at all.
+                return true
+            }
+        }
+
+        deinit {
+            self.defaultBehaviour(nil)
+        }
+    }
+
+    public func shouldGoToBackForwardListItem(backForwardListItem: [String: Any?],
+                                              willUseInstantBack: Bool,
+                                              callback: ShouldGoToBackForwardListItemCallback) {
+        let arguments: [String: Any?] = [
+            "backForwardListItem": backForwardListItem,
+            "willUseInstantBack": willUseInstantBack
+        ]
+        channel?.invokeMethod("shouldGoToBackForwardListItem", arguments: arguments, callback: callback)
+    }
+
     public func onWebContentProcessDidTerminate() {
         let arguments: [String: Any?] = [:]
         channel?.invokeMethod("onWebContentProcessDidTerminate", arguments: arguments)

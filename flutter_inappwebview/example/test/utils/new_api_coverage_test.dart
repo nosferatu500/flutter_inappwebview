@@ -53,6 +53,7 @@ void main() {
           InAppWebViewSettingsProperty.writingToolsBehavior,
           InAppWebViewSettingsProperty.showsSystemScreenTimeBlockingView,
           InAppWebViewSettingsProperty.useOnInsertInputSuggestion,
+          InAppWebViewSettingsProperty.useShouldGoToBackForwardListItem,
         ]),
       );
     });

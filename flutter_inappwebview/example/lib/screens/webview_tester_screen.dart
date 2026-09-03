@@ -1285,6 +1285,26 @@ class _WebViewTesterScreenState extends State<WebViewTesterScreen>
         );
       },
 
+      // 55a. shouldGoToBackForwardListItem -- iOS 26.0+, gated by
+      // useShouldGoToBackForwardListItem (inferred true because this handler is supplied).
+      // Always allows; it is here to show the payload, not to veto anything.
+      shouldGoToBackForwardListItem:
+          (controller, backForwardListItem, willUseInstantBack) {
+            _logEvent(
+              EventType.navigation,
+              PlatformWebViewCreationParamsProperty
+                  .shouldGoToBackForwardListItem
+                  .name,
+              data: {
+                'url': backForwardListItem.url?.toString(),
+                'title': backForwardListItem.title,
+                'offset': backForwardListItem.offset,
+                'willUseInstantBack': willUseInstantBack,
+              },
+            );
+            return ShouldGoToBackForwardListItemAction.ALLOW;
+          },
+
       // 55b. onWritingToolsActiveChanged -- iOS 18.0+, and it needs Apple Intelligence and a real
       // device to fire, so it will stay silent in the simulator.
       onWritingToolsActiveChanged: (controller, active) {

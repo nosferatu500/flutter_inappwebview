@@ -91,6 +91,7 @@ part 'web_archive.dart';
 part 'set_custom_useragent.dart';
 part 'conversation_context.dart';
 part 'obscured_content_insets.dart';
+part 'should_go_to_back_forward_list_item.dart';
 part 'screen_time.dart';
 part 'set_get_settings.dart';
 part 'set_web_contents_debugging_enabled.dart';
@@ -208,6 +209,7 @@ void main() {
     onContentSizeChanged();
     screenTime();
     obscuredContentInsets();
+    shouldGoToBackForwardListItem();
     conversationContext();
     keepAlive();
 

@@ -2368,6 +2368,21 @@ as it can cause framerate drops on animations in Android 9 and lower (see [Hybri
   )
   bool? useOnInsertInputSuggestion;
 
+  ///Set to `true` to be able to listen at the
+  ///[PlatformWebViewCreationParams.shouldGoToBackForwardListItem] event.
+  ///
+  ///If the [PlatformWebViewCreationParams.shouldGoToBackForwardListItem] event is implemented and
+  ///this value is `null`, it is automatically inferred as `true`; otherwise the default is `false`.
+  ///This inference is not applied for [PlatformInAppBrowser], where the value must be set manually.
+  ///
+  ///**This one is off by default for a cost reason, not a safety one.** Every back and forward
+  ///navigation — including the ones the page itself starts with `history.back()` — waits for the
+  ///answer to come back from Dart before it proceeds. That round trip is small but it is on a
+  ///user-visible path, and it is paid on navigations that WebKit may otherwise have served
+  ///instantly from a suspended page. Leave it off unless you actually intend to veto something.
+  @SupportedPlatforms(platforms: [IOSPlatform(available: "26.0")])
+  bool? useShouldGoToBackForwardListItem;
+
   @ExchangeableObjectConstructor()
   InAppWebViewSettings_({
     this.useShouldOverrideUrlLoading,
@@ -2527,6 +2542,7 @@ as it can cause framerate drops on animations in Android 9 and lower (see [Hybri
     this.showsSystemScreenTimeBlockingView = true,
     this.useOnShowFileChooser,
     this.useOnInsertInputSuggestion,
+    this.useShouldGoToBackForwardListItem,
   }) {
     minimumFontSize ??= Util.isAndroid ? 8 : 0;
     assert(

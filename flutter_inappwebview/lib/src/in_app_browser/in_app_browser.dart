@@ -516,6 +516,14 @@ class InAppBrowser implements PlatformInAppBrowserEvents {
   @override
   void onWritingToolsActiveChanged(bool active) {}
 
+  @override
+  FutureOr<ShouldGoToBackForwardListItemAction?>? shouldGoToBackForwardListItem(
+    WebHistoryItem backForwardListItem,
+    bool willUseInstantBack,
+  ) {
+    return null;
+  }
+
   ///{@macro flutter_inappwebview_platform_interface.PlatformInAppBrowser.isClassSupported}
   static bool isClassSupported({TargetPlatform? platform}) =>
       PlatformInAppBrowser.static().isClassSupported(platform: platform);

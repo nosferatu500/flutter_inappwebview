@@ -22,6 +22,7 @@ public class InAppWebViewSettings: ISettings<InAppWebView> {
     /// does today.
     var useOnShowFileChooser = false
     var useOnInsertInputSuggestion = false
+    var useShouldGoToBackForwardListItem = false
     var userAgent = ""
     var applicationNameForUserAgent = ""
     var javaScriptEnabled = true

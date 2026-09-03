@@ -280,6 +280,12 @@ class HeadlessInAppWebView {
       MediaCaptureState? newState,
     )?
     onMicrophoneCaptureStateChanged,
+    FutureOr<ShouldGoToBackForwardListItemAction?> Function(
+      InAppWebViewController controller,
+      WebHistoryItem backForwardListItem,
+      bool willUseInstantBack,
+    )?
+    shouldGoToBackForwardListItem,
     void Function(InAppWebViewController controller, bool active)?
     onWritingToolsActiveChanged,
     void Function(
@@ -526,6 +532,14 @@ class HeadlessInAppWebView {
                        controller,
                        oldState,
                        newState,
+                     )
+               : null,
+           shouldGoToBackForwardListItem: shouldGoToBackForwardListItem != null
+               ? (controller, backForwardListItem, willUseInstantBack) =>
+                     shouldGoToBackForwardListItem.call(
+                       controller,
+                       backForwardListItem,
+                       willUseInstantBack,
                      )
                : null,
            onWritingToolsActiveChanged: onWritingToolsActiveChanged != null

@@ -1153,6 +1153,32 @@ class IOSInAppWebViewController extends PlatformInAppWebViewController
           }
         }
         break;
+      case "shouldGoToBackForwardListItem":
+        if ((webviewParams != null &&
+                webviewParams!.shouldGoToBackForwardListItem != null) ||
+            _inAppBrowserEventHandler != null) {
+          WebHistoryItem backForwardListItem = WebHistoryItem.fromMap(
+            call.arguments["backForwardListItem"]?.cast<String, dynamic>(),
+          )!;
+          bool willUseInstantBack = call.arguments["willUseInstantBack"];
+
+          if (webviewParams != null &&
+              webviewParams!.shouldGoToBackForwardListItem != null) {
+            return (await webviewParams!.shouldGoToBackForwardListItem!(
+              _controllerFromPlatform,
+              backForwardListItem,
+              willUseInstantBack,
+            ))?.toNativeValue();
+          } else {
+            return (await _inAppBrowserEventHandler!
+                    .shouldGoToBackForwardListItem(
+                      backForwardListItem,
+                      willUseInstantBack,
+                    ))
+                ?.toNativeValue();
+          }
+        }
+        break;
       case "onWritingToolsActiveChanged":
         if ((webviewParams != null &&
                 webviewParams!.onWritingToolsActiveChanged != null) ||

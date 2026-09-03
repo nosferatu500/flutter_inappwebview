@@ -497,6 +497,25 @@ Fourteen WebKit APIs read out of the iOS 26.5 SDK, plus one feature that was hal
   has its own. And there is **one observer per app**, not one per `CookieManager`: the store is
   process-wide, so setting a second observer replaces the first rather than adding a listener. Pass
   `null` to stop; the plugin only registers with WebKit while an observer is set
+- **`shouldGoToBackForwardListItem`** (iOS 26.0+), with the new `ShouldGoToBackForwardListItemAction`
+  type and the `InAppWebViewSettings.useShouldGoToBackForwardListItem` gate — veto a back or forward
+  navigation before it happens. It reports the `WebHistoryItem` being navigated to (with its `offset`
+  from the current entry, so `-1` is one step back) and `willUseInstantBack`, WebKit's new flag for a
+  target page still suspended in memory.
+
+  **The veto only binds navigations the page starts, and that is measured rather than assumed.** On
+  iOS 26.5, `history.back()` answered `CANCEL` does not happen; `InAppWebViewController.goBack()`
+  answered `CANCEL` **happens anyway** — the event still fires and the answer still reaches WebKit,
+  it is simply not honoured. Reasonable once said out loud, since your app asked for that
+  navigation; not stated either way by the platform. Both halves are pinned by an integration test.
+  This is the only way to veto a back/forward navigation a page starts — `shouldOverrideUrlLoading`
+  never sees them.
+
+  **A resumed page produces no page load**, so when `willUseInstantBack` is `true` neither
+  `onLoadStart` nor `onLoadStop` fires and this event may be your only notice; read `getUrl()` rather
+  than waiting for a load event. **Off by default** because every back/forward navigation waits for
+  your answer, which is latency on a user-visible path; supplying the handler turns the setting on
+  automatically
 - **`onWritingToolsActiveChanged`** (iOS 18.0+), from `WKWebView.writingToolsActive` — fired when
   the system Writing Tools UI starts or stops operating on text in the page (Rewrite, Proofread,
   Summarize). Use it to get out of the way while it runs: pause your own editing UI, suspend

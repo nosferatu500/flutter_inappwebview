@@ -244,6 +244,15 @@ Map<String, List<SettingDefinition>> getSettingDefinitions() {
         property: InAppWebViewSettingsProperty.useOnInsertInputSuggestion,
       ),
       SettingDefinition(
+        name: 'Use Should Go To Back Forward List Item',
+        description:
+            'Veto back/forward navigations through shouldGoToBackForwardListItem '
+            '(iOS 26+). Off by default: every back/forward waits for a Dart answer',
+        type: SettingType.boolean,
+        defaultValue: null,
+        property: InAppWebViewSettingsProperty.useShouldGoToBackForwardListItem,
+      ),
+      SettingDefinition(
         name: 'Use Should Intercept Request',
         description: 'Enable request interception events',
         type: SettingType.boolean,

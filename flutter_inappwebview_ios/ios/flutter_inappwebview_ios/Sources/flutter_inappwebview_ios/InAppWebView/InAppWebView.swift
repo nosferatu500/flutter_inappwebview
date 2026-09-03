@@ -1778,16 +1778,12 @@ public class InAppWebView: WKWebView, UIScrollViewDelegate, WKUIDelegate,
         }
         completeList.append(contentsOf: currentList.forwardList)
         
-        var history: [[String: Any]] = []
+        var history: [[String: Any?]] = []
         
         for (i, historyItem) in completeList.enumerated() {
-            var historyItemMap: [String: Any] = [:]
-            historyItemMap["originalUrl"] = historyItem.initialURL.absoluteString
-            historyItemMap["title"] = historyItem.title
-            historyItemMap["url"] = historyItem.url.absoluteString
-            historyItemMap["index"] = i
-            historyItemMap["offset"] = i - currentIndex
-            history.append(historyItemMap)
+            // Same mapper `shouldGoToBackForwardListItem` uses, so the two producers of a
+            // `WebHistoryItem` map cannot drift apart.
+            history.append(historyItem.toMap(index: i, currentIndex: currentIndex))
         }
         
         var result: [String: Any] = [:]
@@ -2840,6 +2836,67 @@ public class InAppWebView: WKWebView, UIScrollViewDelegate, WKUIDelegate,
         return windowWebView
     }
     
+    /// Vetoes back/forward navigations, including the ones the page starts itself.
+    ///
+    /// Off unless `useShouldGoToBackForwardListItem` is set: WebKit waits for this completion
+    /// handler before every back/forward navigation, so an unconditional Dart round trip would put
+    /// channel latency on a user-visible path — and on exactly the navigations `willUseInstantBack`
+    /// says WebKit could otherwise serve instantly. Answering `true` immediately is identical to not
+    /// implementing the method at all, which is what makes the gate safe rather than lossy.
+    @available(iOS 26.0, *)
+    public func webView(_ webView: WKWebView,
+                        shouldGoTo backForwardListItem: WKBackForwardListItem,
+                        willUseInstantBack: Bool,
+                        completionHandler: @escaping (Bool) -> Void) {
+        guard let useShouldGoToBackForwardListItem = settings?.useShouldGoToBackForwardListItem,
+              useShouldGoToBackForwardListItem else {
+            completionHandler(true)
+            return
+        }
+
+        // WebKit hands over the item but not where it sits, so locate it by identity in the list as
+        // it stands now. `firstIndex(of:)` would use `isEqual:`, which WKBackForwardListItem does not
+        // define for value equality; two entries for the same URL are distinct items.
+        let currentList = backForwardList
+        let currentIndex = currentList.backList.count
+        var completeList = currentList.backList
+        if let currentItem = currentList.currentItem {
+            completeList.append(currentItem)
+        }
+        completeList.append(contentsOf: currentList.forwardList)
+        let index = completeList.firstIndex(where: { $0 === backForwardListItem })
+
+        var completionHandlerCalled = false
+        let callback = WebViewChannelDelegate.ShouldGoToBackForwardListItemCallback()
+        callback.nonNullSuccess = { (action: Bool) in
+            completionHandlerCalled = true
+            completionHandler(action)
+            return false
+        }
+        callback.defaultBehaviour = { (action: Bool?) in
+            if !completionHandlerCalled {
+                completionHandlerCalled = true
+                // Allow, unlike `shouldAllowDeprecatedTLS`'s default: a dropped answer here would
+                // silently break the back button, whereas that one fails closed on a security
+                // decision.
+                completionHandler(true)
+            }
+        }
+        callback.error = { [weak callback] (code: String, message: String?, details: Any?) in
+            print(code + ", " + (message ?? ""))
+            callback?.defaultBehaviour(nil)
+        }
+
+        if let channelDelegate = channelDelegate {
+            channelDelegate.shouldGoToBackForwardListItem(
+                backForwardListItem: backForwardListItem.toMap(index: index, currentIndex: index == nil ? nil : currentIndex),
+                willUseInstantBack: willUseInstantBack,
+                callback: callback)
+        } else {
+            callback.defaultBehaviour(nil)
+        }
+    }
+
     public func webView(_ webView: WKWebView,
                         authenticationChallenge challenge: URLAuthenticationChallenge,
                         shouldAllowDeprecatedTLS decisionHandler: @escaping @MainActor @Sendable (Bool) -> Void) {

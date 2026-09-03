@@ -1317,6 +1317,21 @@ enum PlatformInAppBrowserEventsMethod {
   ///{@endtemplate}
   shouldAllowDeprecatedTLS,
 
+  ///Can be used to check if the [PlatformInAppBrowserEvents.shouldGoToBackForwardListItem] method is supported at runtime.
+  ///
+  ///{@template flutter_inappwebview_platform_interface.PlatformInAppBrowserEvents.shouldGoToBackForwardListItem.supported_platforms}
+  ///
+  ///**Officially Supported Platforms/Implementations**:
+  ///- iOS WKWebView 26.0+ ([Official API - WKNavigationDelegate.webView](https://developer.apple.com/documentation/webkit/wknavigationdelegate/4448873-webview))
+  ///
+  ///**Parameters - Officially Supported Platforms/Implementations**:
+  ///- [backForwardListItem]: all platforms
+  ///- [willUseInstantBack]: all platforms
+  ///
+  ///Use the [PlatformInAppBrowserEvents.isMethodSupported] method to check if this method is supported at runtime.
+  ///{@endtemplate}
+  shouldGoToBackForwardListItem,
+
   ///Can be used to check if the [PlatformInAppBrowserEvents.shouldInterceptAjaxRequest] method is supported at runtime.
   ///
   ///{@template flutter_inappwebview_platform_interface.PlatformInAppBrowserEvents.shouldInterceptAjaxRequest.supported_platforms}
@@ -1677,6 +1692,9 @@ extension _PlatformInAppBrowserEventsMethodSupported
               TargetPlatform.iOS,
             ].contains(platform ?? defaultTargetPlatform);
       case PlatformInAppBrowserEventsMethod.shouldAllowDeprecatedTLS:
+        return ((kIsWeb && platform != null) || !kIsWeb) &&
+            [TargetPlatform.iOS].contains(platform ?? defaultTargetPlatform);
+      case PlatformInAppBrowserEventsMethod.shouldGoToBackForwardListItem:
         return ((kIsWeb && platform != null) || !kIsWeb) &&
             [TargetPlatform.iOS].contains(platform ?? defaultTargetPlatform);
       case PlatformInAppBrowserEventsMethod.shouldInterceptAjaxRequest:

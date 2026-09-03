@@ -72,6 +72,23 @@ Fourteen WebKit APIs read out of the iOS 26.5 SDK:
   **The `@objc` thunk was verified present** with `nm | swift-demangle` on both architectures rather
   than inferred from a green build — an optional protocol requirement only gets `@objc` when the
   signature matches exactly, which is how §68's ten dead delegate methods happened
+- **`shouldGoToBackForwardListItem`** (26.0+), from
+  `WKNavigationDelegate.webView(_:shouldGoTo:willUseInstantBack:completionHandler:)`. **Note the
+  Swift selector**: the header spells it `shouldGoToBackForwardListItem:` and Swift renames it to
+  `shouldGoTo:`, so the obvious transcription compiles, analyzes clean and is **never called** —
+  `@objc` is only inferred for an exact signature match. Caught by `nm | swift-demangle` on both
+  architectures, which is the only evidence an optional delegate method is installed.
+
+  A second trap sat on top of it: the header's completion handler is a **plain block**, unlike every
+  other `WKNavigationDelegate` handler, which carry `WK_SWIFT_UI_ACTOR`. Copying the neighbours'
+  `@escaping @MainActor @Sendable (Bool) -> Void` made the signature not match — and *that*
+  suppressed the compiler's "has been renamed to" diagnostic, so one wrong annotation turned a hard
+  error into silence. Dropping it produced the error that named the real selector.
+
+  `Types/WKBackForwardListItem.swift` maps the item, and `getCopyBackForwardList()` now uses the same
+  mapper so the two producers of a `WebHistoryItem` map cannot drift. The item is located in the list
+  by **identity** (`firstIndex(where:{ $0 === item })`), since `WKBackForwardListItem` defines no
+  value equality and two entries for one URL are distinct
 - **`onWritingToolsActiveChanged`** (18.0+), from `WKWebView.writingToolsActive` — the first event
   this fork adds on the **KVO** path rather than a delegate. Registered in `prepare()` under
   `#available(iOS 18.0, *)` and removed under the identical guard in `dispose()`: an unbalanced KVO

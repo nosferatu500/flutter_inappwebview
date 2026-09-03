@@ -134,6 +134,8 @@ export 'server_trust_auth_response_action.dart'
 export 'server_trust_challenge.dart' show ServerTrustChallenge;
 export 'should_allow_deprecated_tls_action.dart'
     show ShouldAllowDeprecatedTLSAction;
+export 'should_go_to_back_forward_list_item_action.dart'
+    show ShouldGoToBackForwardListItemAction;
 export 'ssl_certificate.dart' show SslCertificate;
 export 'ssl_certificate_dname.dart' show SslCertificateDName;
 export 'ssl_error.dart' show SslError;

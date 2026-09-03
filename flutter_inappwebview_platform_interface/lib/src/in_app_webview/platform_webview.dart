@@ -1426,6 +1426,59 @@ In that case, after the `window.addEventListener("flutterInAppWebViewPlatformRea
   )?
   onMicrophoneCaptureStateChanged;
 
+  ///{@template flutter_inappwebview_platform_interface.PlatformWebViewCreationParams.shouldGoToBackForwardListItem}
+  ///Gives the app the chance to veto a back or forward navigation before it happens.
+  ///
+  ///[backForwardListItem] is the entry the `WebView` is about to navigate to. Its `index` and
+  ///`offset` are relative to the back/forward list as it stands *now*, so `offset == -1` is one
+  ///step back; both are `null` if the entry could not be located in the current list.
+  ///
+  ///Returning [ShouldGoToBackForwardListItemAction.CANCEL] stops the navigation and leaves the
+  ///`WebView` where it is. Returning `null` — or not registering this event at all — allows it,
+  ///which is what the platform does when nothing is listening.
+  ///
+  ///**The veto only binds navigations the *page* starts.** Measured on iOS 26.5, and not stated
+  ///either way by the platform: `history.back()` answered `CANCEL` does not happen, while
+  ///[PlatformInAppWebViewController.goBack] answered `CANCEL` **happens anyway**. The event still
+  ///fires for the programmatic case and the answer still reaches the platform — it is simply not
+  ///honoured, which is reasonable once said out loud, since the app asked for that navigation
+  ///itself. So use this to police the page, and just don't call `goBack()` if you don't want to go
+  ///back. An integration test pins both halves.
+  ///
+  ///With that caveat, this is **the only way to veto a back/forward navigation the page starts
+  ///itself** — `shouldOverrideUrlLoading` never sees them.
+  ///
+  ///[willUseInstantBack] is `true` when the target page is still suspended in memory and may be
+  ///resumed without reloading. Three consequences worth knowing: a resumed page produces **no page
+  ///load at all**, so `onLoadStart` / `onLoadStop` never fire for it and this event may be the only
+  ///notice you get — do not wait on a load event to know a back navigation finished, read
+  ///[PlatformInAppWebViewController.getUrl]; it is a latency optimisation, which answering from Dart
+  ///necessarily slows down; and `true` is not a promise — WebKit may still fall back to a normal
+  ///load, in which case the usual navigation events do follow.
+  ///
+  ///Because every back/forward navigation waits for the answer, the event is off unless
+  ///[InAppWebViewSettings.useShouldGoToBackForwardListItem] is `true`; supplying a handler sets it
+  ///automatically.
+  ///{@endtemplate}
+  ///
+  ///{@macro flutter_inappwebview_platform_interface.PlatformWebViewCreationParams.shouldGoToBackForwardListItem.supported_platforms}
+  @SupportedPlatforms(
+    platforms: [
+      IOSPlatform(
+        apiName: 'WKNavigationDelegate.webView',
+        apiUrl:
+            'https://developer.apple.com/documentation/webkit/wknavigationdelegate/4448873-webview',
+        available: '26.0',
+      ),
+    ],
+  )
+  final FutureOr<ShouldGoToBackForwardListItemAction?> Function(
+    T controller,
+    WebHistoryItem backForwardListItem,
+    bool willUseInstantBack,
+  )?
+  shouldGoToBackForwardListItem;
+
   ///{@template flutter_inappwebview_platform_interface.PlatformWebViewCreationParams.onWritingToolsActiveChanged}
   ///Event fired when Writing Tools becomes active or inactive for the `WebView`.
   ///
@@ -1718,6 +1771,7 @@ This is a limitation of the native WebKit APIs.""",
     this.shouldAllowDeprecatedTLS,
     this.onCameraCaptureStateChanged,
     this.onMicrophoneCaptureStateChanged,
+    this.shouldGoToBackForwardListItem,
     this.onWritingToolsActiveChanged,
     this.onContentSizeChanged,
     this.onShowFileChooser,

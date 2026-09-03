@@ -80,6 +80,7 @@ class IOSInAppWebViewWidgetCreationParams
     super.shouldAllowDeprecatedTLS,
     super.onCameraCaptureStateChanged,
     super.onMicrophoneCaptureStateChanged,
+    super.shouldGoToBackForwardListItem,
     super.onWritingToolsActiveChanged,
     super.onContentSizeChanged,
     super.initialUrlRequest,
@@ -166,6 +167,7 @@ class IOSInAppWebViewWidgetCreationParams
         shouldAllowDeprecatedTLS: params.shouldAllowDeprecatedTLS,
         onCameraCaptureStateChanged: params.onCameraCaptureStateChanged,
         onMicrophoneCaptureStateChanged: params.onMicrophoneCaptureStateChanged,
+        shouldGoToBackForwardListItem: params.shouldGoToBackForwardListItem,
         onWritingToolsActiveChanged: params.onWritingToolsActiveChanged,
         onContentSizeChanged: params.onContentSizeChanged,
         initialUrlRequest: params.initialUrlRequest,
@@ -325,6 +327,10 @@ class IOSInAppWebViewWidget extends PlatformInAppWebViewWidget {
     if (params.onInsertInputSuggestion != null &&
         settings.useOnInsertInputSuggestion == null) {
       settings.useOnInsertInputSuggestion = true;
+    }
+    if (params.shouldGoToBackForwardListItem != null &&
+        settings.useShouldGoToBackForwardListItem == null) {
+      settings.useShouldGoToBackForwardListItem = true;
     }
     if (params.shouldInterceptRequest != null &&
         settings.useShouldInterceptRequest == null) {

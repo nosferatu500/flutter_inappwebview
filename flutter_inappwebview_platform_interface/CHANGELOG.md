@@ -176,6 +176,15 @@ rename; this entry is the API-owner's view.
   rather than an event filter — while it is off the native side reports that it does not implement
   the delegate method, leaving WebKit's own behaviour untouched — and it is inferred as `true` when
   the event handler is supplied and the setting is `null`, except on `PlatformInAppBrowser`
+- **`PlatformWebViewCreationParams.shouldGoToBackForwardListItem`** and the matching
+  `PlatformInAppBrowserEvents.shouldGoToBackForwardListItem` (iOS 26.0+), with the new
+  **`ShouldGoToBackForwardListItemAction`** enum (`CANCEL` = 0, `ALLOW` = 1, matching the `BOOL`
+  completion handler) and **`InAppWebViewSettings.useShouldGoToBackForwardListItem`**. The payload
+  reuses the existing `WebHistoryItem` rather than adding a type; its `index`/`offset` are nullable
+  because the native side has to *locate* the item in the current back/forward list and may not find
+  it. The gate follows `useShouldOverrideUrlLoading`, not `useOnInsertInputSuggestion`: it is checked
+  inside the delegate rather than hiding the selector, because answering `true` immediately is
+  already identical to not implementing the method
 - **`PlatformWebViewCreationParams.onWritingToolsActiveChanged`** and the matching
   `PlatformInAppBrowserEvents.onWritingToolsActiveChanged` (iOS 18.0+), from
   `WKWebView.writingToolsActive`. Payload is a bare `bool active` — no new type, because WebKit

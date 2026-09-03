@@ -1529,6 +1529,26 @@ In that case, after the `window.addEventListener("flutterInAppWebViewPlatformRea
     MediaCaptureState? newState,
   ) {}
 
+  ///{@macro flutter_inappwebview_platform_interface.PlatformWebViewCreationParams.shouldGoToBackForwardListItem}
+  ///
+  ///{@macro flutter_inappwebview_platform_interface.PlatformInAppBrowserEvents.shouldGoToBackForwardListItem.supported_platforms}
+  @SupportedPlatforms(
+    platforms: [
+      IOSPlatform(
+        apiName: 'WKNavigationDelegate.webView',
+        apiUrl:
+            'https://developer.apple.com/documentation/webkit/wknavigationdelegate/4448873-webview',
+        available: '26.0',
+      ),
+    ],
+  )
+  FutureOr<ShouldGoToBackForwardListItemAction?>? shouldGoToBackForwardListItem(
+    WebHistoryItem backForwardListItem,
+    bool willUseInstantBack,
+  ) {
+    return null;
+  }
+
   ///{@macro flutter_inappwebview_platform_interface.PlatformWebViewCreationParams.onWritingToolsActiveChanged}
   ///
   ///{@macro flutter_inappwebview_platform_interface.PlatformInAppBrowserEvents.onWritingToolsActiveChanged.supported_platforms}

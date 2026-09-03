@@ -925,6 +925,21 @@ enum PlatformWebViewCreationParamsProperty {
   ///{@endtemplate}
   shouldAllowDeprecatedTLS,
 
+  ///Can be used to check if the [PlatformWebViewCreationParams.shouldGoToBackForwardListItem] property is supported at runtime.
+  ///
+  ///{@template flutter_inappwebview_platform_interface.PlatformWebViewCreationParams.shouldGoToBackForwardListItem.supported_platforms}
+  ///
+  ///**Officially Supported Platforms/Implementations**:
+  ///- iOS WKWebView 26.0+ ([Official API - WKNavigationDelegate.webView](https://developer.apple.com/documentation/webkit/wknavigationdelegate/4448873-webview))
+  ///
+  ///**Parameters - Officially Supported Platforms/Implementations**:
+  ///- [backForwardListItem]: all platforms
+  ///- [willUseInstantBack]: all platforms
+  ///
+  ///Use the [PlatformWebViewCreationParams.isPropertySupported] method to check if this property is supported at runtime.
+  ///{@endtemplate}
+  shouldGoToBackForwardListItem,
+
   ///Can be used to check if the [PlatformWebViewCreationParams.shouldInterceptAjaxRequest] property is supported at runtime.
   ///
   ///{@template flutter_inappwebview_platform_interface.PlatformWebViewCreationParams.shouldInterceptAjaxRequest.supported_platforms}
@@ -1350,6 +1365,9 @@ extension _PlatformWebViewCreationParamsPropertySupported
               TargetPlatform.iOS,
             ].contains(platform ?? defaultTargetPlatform);
       case PlatformWebViewCreationParamsProperty.shouldAllowDeprecatedTLS:
+        return ((kIsWeb && platform != null) || !kIsWeb) &&
+            [TargetPlatform.iOS].contains(platform ?? defaultTargetPlatform);
+      case PlatformWebViewCreationParamsProperty.shouldGoToBackForwardListItem:
         return ((kIsWeb && platform != null) || !kIsWeb) &&
             [TargetPlatform.iOS].contains(platform ?? defaultTargetPlatform);
       case PlatformWebViewCreationParamsProperty.shouldInterceptAjaxRequest:

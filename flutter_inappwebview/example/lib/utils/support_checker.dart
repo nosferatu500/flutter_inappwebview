@@ -1972,6 +1972,14 @@ class SupportChecker {
         ),
         ApiEventDefinition(
           name: PlatformWebViewCreationParamsProperty
+              .shouldGoToBackForwardListItem
+              .name,
+          description: 'Called to allow or cancel a back/forward navigation.',
+          className: className,
+          category: 'iOS/macOS',
+        ),
+        ApiEventDefinition(
+          name: PlatformWebViewCreationParamsProperty
               .onWritingToolsActiveChanged
               .name,
           description: 'Called when Writing Tools becomes active or inactive.',
