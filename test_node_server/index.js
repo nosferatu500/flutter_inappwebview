@@ -192,6 +192,55 @@ app.get("/test-visited-links", (req, res) => {
   res.end()
 })
 
+// A page whose only content is an iframe from a DIFFERENT origin. Same server, same port, but
+// `localhost` is a different host from the LAN address the test loads the parent by, which is all
+// "cross-origin" means -- so the child cannot touch `window.top` and the old callback-id bridge
+// could not deliver a reply to it.
+app.get("/test-cross-origin-iframe-parent", (req, res) => {
+  res.send(`
+    <html>
+      <head>
+      </head>
+      <body>
+        <p>PARENT</p>
+        <iframe id="child" src="http://localhost:8082/test-cross-origin-iframe-child" style="width:300px;height:200px"></iframe>
+      </body>
+    </html>
+  `);
+  res.end()
+})
+
+// The child calls a handler and reports what its promise produced -- through a second handler,
+// because it cannot talk to its parent either. Note it does NOT wait for
+// `flutterInAppWebViewPlatformReady`: on iOS that event is dispatched with `evaluateJavaScript`,
+// which reaches the main frame only, while the bridge script itself is injected at document start
+// into every frame.
+app.get("/test-cross-origin-iframe-child", (req, res) => {
+  res.send(`
+    <html>
+      <head>
+      </head>
+      <body>
+        <p>CHILD</p>
+        <script>
+          (function() {
+            var bridge = window.flutter_inappwebview;
+            if (bridge == null || bridge.callHandler == null) { return; }
+            bridge.callHandler('iframeEcho', 42).then(function(value) {
+              var json = JSON.stringify(value);
+              bridge.callHandler('reportIframeReply', {
+                type: typeof value,
+                json: json === undefined ? '<undefined>' : json
+              });
+            });
+          })();
+        </script>
+      </body>
+    </html>
+  `);
+  res.end()
+})
+
 // Two hops, so `onNavigationRedirected` has to fire twice for one navigation rather than once.
 // A single hop cannot tell "reports every redirect" apart from "reports the last one".
 app.get("/test-redirect", (req, res) => {

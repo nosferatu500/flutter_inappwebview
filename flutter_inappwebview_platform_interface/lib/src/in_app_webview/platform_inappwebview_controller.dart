@@ -834,6 +834,18 @@ abstract class PlatformInAppWebViewController extends PlatformInterface
   ///
   ///There could be forbidden names for JavaScript handlers depending on the implementation platform.
   ///
+  ///**Calling from an iframe.** The bridge is injected into subframes as well as the main frame
+  ///(see [InAppWebViewSettings.pluginScriptsForMainFrameOnly]), but the
+  ///`flutterInAppWebViewPlatformReady` event is **only dispatched in the main frame**, so code
+  ///inside an iframe must not wait for it — the bridge object is already there when the frame's
+  ///scripts run, since it is injected at document start.
+  ///
+  ///On iOS the returned promise belongs to the frame that called `callHandler`, so a
+  ///**cross-origin** iframe receives the handler's result like any other caller. On Android a
+  ///cross-origin iframe's promise resolves immediately with `undefined` instead: the result is
+  ///discarded, although the Dart handler still runs and still receives the arguments. Prefer
+  ///[PlatformWebMessageListener] when a cross-origin frame needs an answer back on both platforms.
+  ///
   ///**NOTE**: This method should be called, for example, in the [PlatformWebViewCreationParams.onWebViewCreated] or [PlatformWebViewCreationParams.onLoadStart] events or, at least,
   ///before you know that your JavaScript code will call the `window.flutter_inappwebview.callHandler` method,
   ///otherwise you won't be able to intercept the JavaScript message.

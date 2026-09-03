@@ -10,7 +10,7 @@ import Foundation
 import WebKit
 
 public class InAppWebView: WKWebView, UIScrollViewDelegate, WKUIDelegate,
-                            WKNavigationDelegate, WKScriptMessageHandler, UIGestureRecognizerDelegate,
+                            WKNavigationDelegate, WKScriptMessageHandlerWithReply, UIGestureRecognizerDelegate,
                             WKDownloadDelegate,
                             PullToRefreshDelegate,
                             Disposable {
@@ -3172,20 +3172,56 @@ public class InAppWebView: WKWebView, UIScrollViewDelegate, WKUIDelegate,
 //        channel?.invokeMethod("onContextMenuWillPresentForElement", arguments: arguments)
 //    }
     
-    public func userContentController(_ userContentController: WKUserContentController, didReceive message: WKScriptMessage) {
+    /// The reply value for a JavaScript handler's result, preserving the exact JS-visible semantics
+    /// of the `resolve(<json>)` interpolation this replaced.
+    ///
+    /// Dart answers `onCallJsHandler` with a **JSON string** (`jsonEncode(result)`), which the old
+    /// code dropped straight into JS source as an *expression* — so `{"a":1}` became an object, not
+    /// a string. A reply handler serialises whatever object it is given, so the JSON has to be
+    /// parsed first or every handler's return type would silently change. That is the compatibility
+    /// trap §65 identified.
+    ///
+    /// **The second trap is `nil` vs `NSNull`, which §65 did not mention.** The old code defaulted
+    /// `json` to the literal `"null"` whenever the response was not a string, producing JS `null`;
+    /// returning Swift `nil` here would produce JS **`undefined`** instead. Every non-decodable
+    /// case therefore maps to `NSNull()`, not to `nil`.
+    ///
+    /// `JSONSerialization` yields exactly the types the reply handler accepts (`NSNumber`,
+    /// `NSNull`, `NSString`, `NSArray`, `NSDictionary`); `.fragmentsAllowed` is what lets a bare
+    /// `7`, `"abc"`, `true` or `null` through, since a handler returning a scalar is the common case.
+    static func jsHandlerReplyValue(_ response: Any?) -> Any {
+        guard let jsonString = response as? String,
+              let data = jsonString.data(using: .utf8),
+              let value = try? JSONSerialization.jsonObject(with: data, options: [.fragmentsAllowed])
+        else {
+            return NSNull()
+        }
+        return value
+    }
+
+    public func userContentController(_ userContentController: WKUserContentController,
+                                      didReceive message: WKScriptMessage,
+                                      replyHandler: @escaping @MainActor @Sendable (Any?, String?) -> Void) {
         guard javaScriptBridgeEnabled else {
+            replyHandler(nil, "The JavaScript bridge is disabled for this WebView.")
             return
         }
-        
+
         guard let body = message.body as? [String: Any?] else {
+            replyHandler(nil, "Malformed JavaScript bridge message.")
             return
         }
-        
+
+        // The two guards below deliberately share one uninformative message. They are the bridge's
+        // security boundary and the caller may be hostile page code, so the reply says only that it
+        // was refused. Before this it said nothing at all and the promise stayed pending for the
+        // lifetime of the page, which is worse for a legitimate caller and no better here.
         guard let bridgeSecret = body["_bridgeSecret"] as? String, bridgeSecret == exceptedBridgeSecret else {
             print("Bridge access attempt with wrong secret token, possibly from malicious code from origin \(message.frameInfo.securityOrigin)")
+            replyHandler(nil, "JavaScript bridge access denied.")
             return
         }
-        
+
         var sourceOrigin: URL? = nil
         let securityOrigin = message.frameInfo.securityOrigin
         let scheme = securityOrigin.protocol
@@ -3213,15 +3249,20 @@ public class InAppWebView: WKWebView, UIScrollViewDelegate, WKUIDelegate,
         
         if !isOriginAllowed {
           print("Bridge access attempt from an origin not allowed: \(message.frameInfo.securityOrigin)")
+          replyHandler(nil, "JavaScript bridge access denied.")
           return
         }
-        
+
+        // `callHandler` is the only name this module ever registers, so the else is unreachable
+        // today — but a reply handler that returns without replying leaves the page's promise to be
+        // settled by deallocation, and a named refusal is easier to diagnose than that.
         if message.name == "callHandler" {
             guard let handlerName = body["handlerName"] as? String else {
                 print("handlerName is null or undefined")
+                replyHandler(nil, "handlerName is null or undefined.")
                 return
             }
-            
+
             let _windowId = body["_windowId"] as? Int64
             var webView = self
             if let wId = _windowId, let webViewTransport = plugin?.inAppWebViewManager?.windowWebViews[wId] {
@@ -3352,50 +3393,35 @@ public class InAppWebView: WKWebView, UIScrollViewDelegate, WKUIDelegate,
                     break
             }
             
-            let _callHandlerID = body["_callHandlerID"] as? Int64 ?? 0
-            
             if isInternalHandler {
-                evaluateJavaScript("""
-if(window.\(JavaScriptBridgeJS.get_JAVASCRIPT_BRIDGE_NAME())[\(_callHandlerID)] != null) {
-    window.\(JavaScriptBridgeJS.get_JAVASCRIPT_BRIDGE_NAME())[\(_callHandlerID)].resolve();
-    delete window.\(JavaScriptBridgeJS.get_JAVASCRIPT_BRIDGE_NAME())[\(_callHandlerID)];
-}
-""", completionHandler: nil)
+                // The old code resolved with no argument, i.e. JS `undefined`. `reply(nil, nil)`
+                // is documented as producing exactly that, so the internal handlers' JS-visible
+                // result is unchanged.
+                replyHandler(nil, nil)
                 return
             }
-            
+
             let args = body["args"] as? String ?? ""
-            
+
+            // WebKit calls the reply block at most once and rejects the promise if it is
+            // deallocated unused, so the two closures below must be mutually exclusive. They are:
+            // `FlutterMethodChannel.invokeMethod` routes each reply to exactly one of
+            // `error` / `notImplemented` / `success`, and `CallJsHandlerCallback` funnels the
+            // latter two into `defaultBehaviour` once.
             let callback = WebViewChannelDelegate.CallJsHandlerCallback()
             callback.defaultBehaviour = { (response: Any?) in
-                var json = "null"
-                if let r = response as? String {
-                    json = r
-                }
-                
-                webView.evaluateJavaScript("""
-if(window.\(JavaScriptBridgeJS.get_JAVASCRIPT_BRIDGE_NAME())[\(_callHandlerID)] != null) {
-    window.\(JavaScriptBridgeJS.get_JAVASCRIPT_BRIDGE_NAME())[\(_callHandlerID)].resolve(\(json));
-    delete window.\(JavaScriptBridgeJS.get_JAVASCRIPT_BRIDGE_NAME())[\(_callHandlerID)];
-}
-""", completionHandler: nil)
+                replyHandler(InAppWebView.jsHandlerReplyValue(response), nil)
             }
             callback.error = { (code: String, message: String?, details: Any?) in
                 let errorMessage = code + (message != nil ? ", " + (message ?? "") : "")
                 print(errorMessage)
-
-                // The message goes through Util.jsStringLiteral rather than being dropped into a
-                // single-quoted literal with only `'` escaped. A Dart `Exception` message routinely
-                // contains a newline, which made this whole script invalid -- so the reject never ran
-                // and the page's `await callHandler(...)` stayed pending forever (§65).
-                webView.evaluateJavaScript("""
-if(window.\(JavaScriptBridgeJS.get_JAVASCRIPT_BRIDGE_NAME())[\(_callHandlerID)] != null) {
-    window.\(JavaScriptBridgeJS.get_JAVASCRIPT_BRIDGE_NAME())[\(_callHandlerID)].reject(new Error(\(Util.jsStringLiteral(errorMessage))));
-    delete window.\(JavaScriptBridgeJS.get_JAVASCRIPT_BRIDGE_NAME())[\(_callHandlerID)];
-}
-""", completionHandler: nil)
+                // No string escaping any more: WebKit builds the JS `Error` from this and sets its
+                // `message` property. §66 had to route this through `Util.jsStringLiteral` because a
+                // newline in a Dart `Exception` made the injected script invalid, which silently
+                // dropped the rejection; there is no injected script left to invalidate.
+                replyHandler(nil, errorMessage)
             }
-            
+
             if let channelDelegate = webView.channelDelegate {
                 let data = JavaScriptHandlerFunctionData(
                     args: args, isMainFrame: message.frameInfo.isMainFrame,
@@ -3403,6 +3429,8 @@ if(window.\(JavaScriptBridgeJS.get_JAVASCRIPT_BRIDGE_NAME())[\(_callHandlerID)] 
                     requestUrl: requestUrl?.absoluteString ?? ""
                 )
                 channelDelegate.onCallJsHandler(handlerName: handlerName, data: data, callback: callback)
+            } else {
+                replyHandler(nil, "The WebView has no method channel to forward this handler call to.")
             }
         }
     }

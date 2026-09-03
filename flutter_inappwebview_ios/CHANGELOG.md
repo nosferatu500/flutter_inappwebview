@@ -191,6 +191,15 @@ unit test could see. All four are fixed and proved both ways on a simulator.
   `onReceivedServerTrustAuthRequest` / `onReceivedHttpAuthRequest` / `onReceivedClientCertRequest`,
   and the device orientation/motion permission request. **11 integration tests went green on this
   one fix.**
+- **`callHandler` from a cross-origin iframe silently returned `undefined`.** The injected bridge
+  kept its `{resolve, reject}` table on `window.top`; in a cross-origin frame that property access
+  **throws**, and the `catch` called `resolve()` with no argument — so the promise settled
+  immediately, with no value, while the Dart handler was still running and its result was discarded.
+  Any page embedding third-party content, or embedded *as* third-party content, got this. With
+  `WKScriptMessageHandlerWithReply` the promise belongs to the frame that called `postMessage`, so
+  there is no table and nothing to throw. **Android still has this defect** — its bridge keys the
+  same table off `(isMainFrame ? window : window.top)` behind the same `catch (e) { resolve(); }`,
+  and there is no equivalent API to port, so the fix there is a different design
 - **A throwing JavaScript handler hung the caller forever.** The rejection was built by interpolating
   the error message into a single-quoted JS string literal escaping only `'`, so any message
   containing a newline — routine for `Exception` — produced invalid JavaScript, the
@@ -278,6 +287,25 @@ error.
 
 ### Changed
 
+- **The JavaScript bridge now uses `WKScriptMessageHandlerWithReply` (iOS 14.0+).**
+  `window.flutter_inappwebview.callHandler(...)` used to return a promise the plugin settled itself:
+  the injected script minted a callback id, stashed `{resolve, reject}` in a table on `window.top`,
+  and the native side later ran a generated `evaluateJavaScript` snippet that looked the entry up
+  and called `resolve(<the handler's JSON>)` or `reject(new Error('<message>'))`. `postMessage` now
+  returns WebKit's own promise and the native side settles it by calling a reply block, so the
+  callback-id table, the generated snippets and the string escaping around them are all gone. **No
+  Dart or JavaScript API changed** — `addJavaScriptHandler` and `callHandler` are called exactly as
+  before, and the JS-visible **type** of a handler's result is unchanged (an object stays an object,
+  `null` stays `null` rather than becoming `undefined`; an integration test pins all seven cases and
+  is proved red against the naive port that replies with the JSON text instead of its parsed value).
+  Three consequences are visible:
+  - `callHandler` from a **cross-origin iframe** now returns the handler's result — see Fixed
+  - a handler call that the plugin cannot forward at all (bridge disabled, wrong bridge secret,
+    origin not on `javaScriptHandlersOriginAllowList`, no method channel) now **rejects the promise**
+    instead of leaving it pending forever. The two security refusals share one deliberately
+    uninformative message
+  - the plugin no longer creates `window.flutter_inappwebview[<number>]` entries. These were never
+    documented or supported, but page code could observe them
 - **15 dead `configuration` writes removed from `setSettings`, and the settings they belong to now
   document that they are creation-only.** `WKWebView.configuration` returns a **fresh copy on every
   access** — measured on iOS 17.5 and 26.5, where `configuration === configuration` is `false` — so

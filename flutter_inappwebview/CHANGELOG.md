@@ -738,6 +738,13 @@ simulator for the first time:**
   `onReceivedServerTrustAuthRequest` / `onReceivedHttpAuthRequest` /
   `onReceivedClientCertRequest` and the device orientation/motion permission request were all dead.
   **11 integration tests went green on this one fix.**
+- **`callHandler` from a cross-origin iframe silently returned `undefined` on iOS.** The injected
+  bridge kept its `{resolve, reject}` table on `window.top`, which **throws** in a cross-origin
+  frame; the `catch` called `resolve()` with no argument, so the promise settled immediately and
+  empty while the Dart handler was still running. iOS now uses `WKScriptMessageHandlerWithReply`,
+  where the promise belongs to the frame that called. **Android still behaves the old way**, and
+  `addJavaScriptHandler`'s documentation now says so — use a `WebMessageListener` when a
+  cross-origin frame needs an answer on both platforms
 - **A throwing JavaScript handler hung the caller forever.** The error path built the rejection by
   interpolating the message into a single-quoted JS string literal escaping only `'`, so any message
   containing a newline — routine for `Exception` — produced invalid JavaScript, the

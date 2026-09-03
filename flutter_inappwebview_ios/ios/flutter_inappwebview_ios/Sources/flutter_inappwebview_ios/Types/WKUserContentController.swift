@@ -84,14 +84,25 @@ extension WKUserContentController {
         }
     }
 
-    public func sync(scriptMessageHandler: WKScriptMessageHandler) {
+    /// Registers the plugin's message handlers as **`WKScriptMessageHandlerWithReply`**, so
+    /// `postMessage` returns a JavaScript `Promise` that WebKit settles from the reply block.
+    ///
+    /// The two protocols are mutually exclusive per name **per content world** — the header is
+    /// explicit that a `WKScriptMessageHandler` and a `WKScriptMessageHandlerWithReply` "will
+    /// conflict with each other if you try to add them to the same `WKContentWorld` with the same
+    /// name" — which is why the removes below are not optional and why nothing in this module
+    /// registers the plain variant any more.
+    ///
+    /// There is no name-only overload for the with-reply API; `WKContentWorld.page` is what the
+    /// name-only `add(_:name:)` documents itself as being equivalent to.
+    public func sync(scriptMessageHandler: WKScriptMessageHandlerWithReply) {
         let pluginScriptsList = pluginScripts.compactMap({ $0.value }).joined()
         for pluginScript in pluginScriptsList {
             if !containsPluginScript(pluginScript: pluginScript) {
                 addUserScript(pluginScript)
                 for messageHandlerName in pluginScript.messageHandlerNames {
                     removeScriptMessageHandler(forName: messageHandlerName)
-                    add(scriptMessageHandler, name: messageHandlerName)
+                    addScriptMessageHandler(scriptMessageHandler, contentWorld: .page, name: messageHandlerName)
                 }
             }
             if pluginScript.requiredInAllContentWorlds {
@@ -101,7 +112,7 @@ extension WKUserContentController {
                         addUserScript(pluginScriptWithContentWorld)
                         for messageHandlerName in pluginScriptWithContentWorld.messageHandlerNames {
                             removeScriptMessageHandler(forName: messageHandlerName, contentWorld: contentWorld)
-                            add(scriptMessageHandler, contentWorld: contentWorld, name: messageHandlerName)
+                            addScriptMessageHandler(scriptMessageHandler, contentWorld: contentWorld, name: messageHandlerName)
                         }
                     }
                 }
@@ -146,7 +157,7 @@ extension WKUserContentController {
             .filter({ $0.injectionTime == .atDocumentStart && $0.requiredInAllContentWorlds })
     }
 
-    public func generateCodeForScriptEvaluation(scriptMessageHandler: WKScriptMessageHandler, source: String, contentWorld: WKContentWorld) -> String {
+    public func generateCodeForScriptEvaluation(scriptMessageHandler: WKScriptMessageHandlerWithReply, source: String, contentWorld: WKContentWorld) -> String {
         let (inserted, _) = contentWorlds.insert(contentWorld)
         if inserted {
             var generatedCode = ""
@@ -155,7 +166,7 @@ extension WKUserContentController {
                 generatedCode += pluginScript.source + "\n"
                 for messageHandlerName in pluginScript.messageHandlerNames {
                     removeScriptMessageHandler(forName: messageHandlerName, contentWorld: contentWorld)
-                    add(scriptMessageHandler, contentWorld: contentWorld, name: messageHandlerName)
+                    addScriptMessageHandler(scriptMessageHandler, contentWorld: contentWorld, name: messageHandlerName)
                 }
             }
             if let windowId = contentWorld.windowId {

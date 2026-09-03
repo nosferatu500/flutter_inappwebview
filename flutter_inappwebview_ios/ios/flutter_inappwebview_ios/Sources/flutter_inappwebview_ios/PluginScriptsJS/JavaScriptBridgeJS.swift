@@ -51,36 +51,29 @@ public class JavaScriptBridgeJS {
                 var bridgeSecret = '\(VAR_JAVASCRIPT_BRIDGE_BRIDGE_SECRET)';
                 var _JSON_stringify;
                 var _Array_slice;
-                var _setTimeout;
-                var _Promise;
                 var _UserMessageHandler;
                 var _postMessage;
                 try {
                   _JSON_stringify = window.JSON.stringify;
                   _Array_slice = window.Array.prototype.slice;
                   _Array_slice.call = window.Function.prototype.call;
-                  _setTimeout = window.setTimeout;
-                  _Promise = window.Promise;
                   _UserMessageHandler = window.webkit.messageHandlers['callHandler'];
                   _postMessage = _UserMessageHandler.postMessage;
                   _postMessage.call = window.Function.prototype.call;
                 } catch (_) { return; }
+                // `callHandler` is registered as a `WKScriptMessageHandlerWithReply`, so
+                // `postMessage` itself returns the Promise and WebKit owns its settlement. There is
+                // no callback-id table any more. The old code stored `{resolve, reject}` on
+                // `window.top`, which **throws in a cross-origin iframe** -- the catch then called
+                // `resolve()` immediately, so `callHandler` from such a frame silently produced
+                // `undefined`. The native promise belongs to whichever frame called.
                 window.\(get_JAVASCRIPT_BRIDGE_NAME()).callHandler = function() {
                     var _windowId = \(WindowIdJS.WINDOW_ID_VARIABLE_JS_SOURCE());
-                    var _callHandlerID = _setTimeout(function(){});
-                    _postMessage.call(_UserMessageHandler, {
+                    return _postMessage.call(_UserMessageHandler, {
                         'handlerName': arguments[0],
-                        '_callHandlerID': _callHandlerID,
                         '_bridgeSecret': bridgeSecret,
                         'args': _JSON_stringify(_Array_slice.call(arguments, 1)),
                         '_windowId': _windowId
-                    });
-                    return new _Promise(function(resolve, reject) {
-                        try {
-                            (window.top === window ? window : window.top).\(get_JAVASCRIPT_BRIDGE_NAME())[_callHandlerID] = {resolve: resolve, reject: reject};
-                        } catch (e) {
-                            resolve();
-                        }
                     });
                 };
             })(window);

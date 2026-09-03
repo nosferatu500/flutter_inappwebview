@@ -51,6 +51,7 @@ part 'javascript_code_evaluation.dart';
 part 'javascript_dialogs.dart';
 part 'javascript_handler.dart';
 part 'javascript_handler_error.dart';
+part 'javascript_handler_reply.dart';
 part 'load_data.dart';
 part 'load_file.dart';
 part 'load_file_url.dart';
@@ -131,6 +132,8 @@ void main() {
     loadFileUrl();
     javascriptHandler();
     javascriptHandlerError();
+    javascriptHandlerReplyTypes();
+    javascriptHandlerCrossOriginIframe();
     resizeWebView();
     setCustomUserAgent();
     videoPlaybackPolicy();
