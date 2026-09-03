@@ -1712,6 +1712,22 @@ In that case, after the `window.addEventListener("flutterInAppWebViewPlatformRea
     int markTimeMillis,
   ) {}
 
+  ///{@macro flutter_inappwebview_platform_interface.PlatformWebViewCreationParams.onRequestVisitedHistory}
+  ///
+  ///{@macro flutter_inappwebview_platform_interface.PlatformInAppBrowserEvents.onRequestVisitedHistory.supported_platforms}
+  @SupportedPlatforms(
+    platforms: [
+      AndroidPlatform(
+        apiName: 'WebChromeClient.getVisitedHistory',
+        apiUrl:
+            'https://developer.android.com/reference/android/webkit/WebChromeClient#getVisitedHistory(android.webkit.ValueCallback%3Cjava.lang.String%5B%5D%3E)',
+      ),
+    ],
+  )
+  FutureOr<List<WebUri>?> onRequestVisitedHistory() {
+    return null;
+  }
+
   ///{@macro flutter_inappwebview_platform_interface.PlatformWebViewCreationParams.onContentSizeChanged}
   ///
   ///{@macro flutter_inappwebview_platform_interface.PlatformInAppBrowserEvents.onContentSizeChanged.supported_platforms}

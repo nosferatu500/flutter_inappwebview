@@ -102,11 +102,27 @@ void navigationListener() {
       }
       throw Exception(
         'no matching onNavigationCompleted; completed so far: '
-        '${completed.map((n) => "id=${n.id} ${n.url} didCommit=${n.didCommit}").toList()}',
+        '${completed.map((n) => "id=${n.id} ${n.url} didCommit=${n.didCommit}").toList()}, '
+        'started so far: ${started.map((n) => "id=${n.id} ${n.url}").toList()}',
       );
     }
 
-    // ---- 1. the initial load: started + completed, one id, a real status code ----
+    // ---- 1. the initial load: what a completion alone can prove ----
+    //
+    // **Nothing about the started/completed pairing is asserted for the initial navigation, and
+    // that is not caution — it is not testable here.** The Kotlin listener is registered inside the
+    // native `prepare()`, while the Dart controller installs its channel handler a moment later, so
+    // an event fired in that window goes to a channel nobody is listening on and is dropped. The
+    // WebView's first navigation starts inside it. Measured in-group, where the machine is loaded
+    // and the window is widest:
+    //
+    //     completed: [id=2 http://…:8082/ didCommit=true]
+    //     started:   [id=1 http://…:8082/]
+    //
+    // — the navigation that committed never delivered its start, and the one that did start was
+    // superseded. So for the initial load there may be *no* navigation with both halves. (Trap 65:
+    // this is §114's `.initial` KVO problem on Android.) The pairing is asserted in phase 1b
+    // instead, on a navigation this test issues itself once Dart is definitely listening.
     final firstCompleted = await waitForCompleted(
       (n) => n.url?.toString() == urlA.toString() && n.didCommit,
     );
@@ -130,32 +146,43 @@ void navigationListener() {
       reason: 'a successful navigation carries no error',
     );
 
-    // Paired by id, not by url — see the note on waitForCompleted.
-    final firstStarted = started
-        .where((n) => n.id == firstCompleted.id)
+    // ---- 1b. the started/completed pairing, on a navigation we issue ourselves ----
+    started.clear();
+    redirected.clear();
+    completed.clear();
+
+    await controller.loadUrl(urlRequest: URLRequest(url: pageUrl));
+    final ownCompleted = await waitForCompleted(
+      (n) => n.url?.toString() == pageUrl.toString() && n.didCommit,
+    );
+
+    final ownStarted = started
+        .where((n) => n.id == ownCompleted.id)
         .firstOrNull;
     expect(
-      firstStarted,
+      ownStarted,
       isNotNull,
       reason:
           'the id is what ties started to completed; androidx identifies a navigation by object '
-          'identity and the plugin turns that into this number. started ids so far: '
-          '${started.map((n) => "${n.id}:${n.url}").toList()}',
+          'identity and the plugin turns that into this number. Unlike the initial load, this '
+          'navigation was issued after Dart was listening, so both halves must arrive. '
+          'started: ${started.map((n) => "${n.id}:${n.url}").toList()}, '
+          'completed id ${ownCompleted.id}',
     );
     expect(
-      firstStarted!.url?.toString(),
-      urlA.toString(),
+      ownStarted!.url?.toString(),
+      pageUrl.toString(),
       reason: 'the started half of this navigation is for the same address',
     );
     expect(
-      firstStarted.statusCode,
+      ownStarted.statusCode,
       isNull,
       reason:
           'an uncommitted navigation reports no status rather than a fabricated 0 — asserted '
           'because that mapping is a plugin choice, not a platform one',
     );
     expect(
-      firstStarted.didCommit,
+      ownStarted.didCommit,
       isFalse,
       reason: 'nothing has committed at the moment a navigation starts',
     );

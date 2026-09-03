@@ -622,6 +622,49 @@ class InAppWebViewChromeClient(
     return super.onConsoleMessage(consoleMessage)
   }
 
+  /**
+   * Asks Dart which URLs the user has visited, so the page can style `:visited` links.
+   *
+   * Measured before this was built, because D6 was rejected for failing the same test: **modern
+   * Chromium really does call this** — it is not a dead AOSP hook — and it fires **once per
+   * `WebView`** (1 call for a single-WebView run, 117 across a ~120-test group). That frequency is
+   * why there is no settings gate: one round trip per WebView is the same cost class as the events
+   * that already have none.
+   *
+   * The three outcomes are deliberately distinct:
+   * - a list from Dart is passed straight through to the engine;
+   * - **`null` falls through to `super`**, which is what a WebView without this plugin does — the
+   *   callback is simply never answered and no `:visited` styling appears. Answering
+   *   `emptyArray()` instead would assert "nothing has been visited", which is a different claim
+   *   and not one a silent app has made;
+   * - an **empty list** from Dart *is* that claim, and is forwarded as `emptyArray()`.
+   */
+  override fun getVisitedHistory(callback: ValueCallback<Array<String>>) {
+    val channelDelegate = inAppWebView?.channelDelegate
+    if (channelDelegate == null) {
+      super.getVisitedHistory(callback)
+      return
+    }
+
+    channelDelegate.onRequestVisitedHistory(
+      object : WebViewChannelDelegate.RequestVisitedHistoryCallback() {
+        override fun nonNullSuccess(result: List<String>): Boolean {
+          callback.onReceiveValue(result.toTypedArray())
+          return false
+        }
+
+        override fun defaultBehaviour(result: List<String>?) {
+          super@InAppWebViewChromeClient.getVisitedHistory(callback)
+        }
+
+        override fun error(errorCode: String, errorMessage: String?, errorDetails: Any?) {
+          Log.e(LOG_TAG, errorCode + ", " + (errorMessage ?: ""))
+          defaultBehaviour(null)
+        }
+      }
+    )
+  }
+
   override fun onProgressChanged(view: WebView, progress: Int) {
     super.onProgressChanged(view, progress)
 

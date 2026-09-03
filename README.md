@@ -143,6 +143,7 @@ by its `WebViewFeature` flag.
 | `onFirstContentfulPaintMillis` | Android | First Contentful Paint straight from the engine, no `PerformanceObserver` needed |
 | `onLargestContentfulPaintMillis` | Android | Largest Contentful Paint. **Can fire repeatedly per page** — LCP is revised as bigger content arrives |
 | `onPerformanceMarkMillis` | Android | Every `performance.mark()` the page makes. Needs its own `useOnPerformanceMarkMillis` opt-in |
+| `onRequestVisitedHistory` | Android | The engine asks **you** which URLs the user has visited, so pages can style `:visited` links. Nothing else in the plugin can answer it — a WebView cannot know what the user visited elsewhere in your app. Fires once per WebView |
 
 ### Managers and controllers
 

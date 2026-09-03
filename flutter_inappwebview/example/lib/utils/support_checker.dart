@@ -1758,6 +1758,16 @@ class SupportChecker {
           className: className,
           category: 'Navigation',
         ),
+        ApiEventDefinition(
+          name: PlatformWebViewCreationParamsProperty
+              .onRequestVisitedHistory
+              .name,
+          description:
+              'The engine asks which URLs to treat as visited, for `:visited` link '
+              'styling. Fires once per WebView (Android).',
+          className: className,
+          category: 'Navigation',
+        ),
 
         // Window events
         ApiEventDefinition(

@@ -134,6 +134,22 @@ Twelve `androidx.webkit` features, each behind its own `WebViewFeature` flag, an
   eviction that releases them lives in `onPageDeleted`, which is why that override existed before
   this entry's event did
 
+- **`WebChromeClient.getVisitedHistory`** — the new `onRequestVisitedHistory` event, which is how
+  the engine asks the app which URLs to treat as visited for `:visited` link styling. Nothing else
+  in the plugin could supply that: a `WebView` cannot know what the user visited elsewhere in the
+  app, so without an answer every link in every page renders unvisited.
+
+  **Measured before it was written, because D6 was rejected on the same question:** this hook is
+  live on modern Chromium — a `logcat` probe caught it — and it fires **once per `WebView`** (1 call
+  for a single-WebView run, 117 across a ~120-test group), not once per page load. That frequency is
+  why there is no settings gate.
+
+  `null` from Dart falls through to `super.getVisitedHistory`, leaving the engine's callback
+  unanswered exactly as a plugin-less `WebView` does; an empty list is instead a real answer. Also
+  measured: the engine does **not** let script read the state back — a reported and an unreported
+  link both return the unvisited colour from `getComputedStyle` — so the feature's effect cannot be
+  verified from Dart, and an integration test pins that mitigation rather than the rendering
+
 Every mirrored `WebViewFeature` constant is now pinned against the real AAR by a test: six of the
 flags `WebViewFeature` declares are `@Deprecated` tombstones that `isFeatureSupported` **throws**
 for, and five others have a native *value* that differs from their name.

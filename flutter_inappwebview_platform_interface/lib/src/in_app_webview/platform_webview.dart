@@ -1528,6 +1528,15 @@ In that case, after the `window.addEventListener("flutterInAppWebViewPlatformRea
   ///**This is an observer, not a veto.** Nothing here can stop a navigation — that is
   ///[shouldOverrideUrlLoading]'s job, and it sees a strictly narrower set of navigations.
   ///
+  ///**You may not get this event for the `WebView`'s very first navigation.** The platform listener
+  ///is registered while the native `WebView` is being created, and this plugin's channel handler is
+  ///installed a moment later; a navigation that starts inside that window is reported to a channel
+  ///nobody is listening on yet and is dropped. It has been observed on a loaded machine, where the
+  ///window is widest. [onNavigationCompleted] for that same navigation still arrives normally, so
+  ///**do not assume every [onNavigationCompleted] was preceded by an [onNavigationStarted] you
+  ///saw** — treat a completion for an unknown [WebViewNavigation.id] as a navigation you joined
+  ///late rather than as an error.
+  ///
   ///Requires [InAppWebViewSettings.useNavigationListener] and, on Android,
   ///[WebViewFeature.NAVIGATION_LISTENER].
   ///{@endtemplate}
@@ -1794,6 +1803,53 @@ In that case, after the `window.addEventListener("flutterInAppWebViewPlatformRea
     int markTimeMillis,
   )?
   onPerformanceMarkMillis;
+
+  ///{@template flutter_inappwebview_platform_interface.PlatformWebViewCreationParams.onRequestVisitedHistory}
+  ///Event fired when the `WebView` asks your app which URLs the user has already visited, so that
+  ///the page can style its `:visited` links.
+  ///
+  ///Return the URLs you consider visited. **Returning `null` keeps the platform default**, which is
+  ///to tell the engine nothing — the same thing that happens when this event is not implemented, so
+  ///`:visited` styling simply does not appear. Returning an **empty list** is different and is a
+  ///real answer: it states that nothing has been visited.
+  ///
+  ///**A `WebView` has no history of its own to draw on here, and that is the point.** The engine
+  ///cannot know what the user visited in the rest of your app — a native screen, a different
+  ///`WebView`, your own bookmark store — so it asks. Nothing else in this plugin can supply that
+  ///information, and without it every link in every page renders as unvisited.
+  ///
+  ///It fires **once per `WebView`**, measured rather than assumed: one call for a single-`WebView`
+  ///test and 117 across a group of about 120. It is not re-asked per page load, so a `WebView` that
+  ///lives a long time will not see your answer refreshed — treat this as "what had been visited
+  ///when this `WebView` started".
+  ///
+  ///**Privacy: bounded, but think before answering.** Whatever you return is handed to the page's
+  ///rendering, and history sniffing through `:visited` is the classic attack on exactly this. The
+  ///engine's mitigation was measured rather than assumed: with one link reported as visited and
+  ///one not, and a stylesheet colouring `a:visited` differently, **`getComputedStyle` reports the
+  ///unvisited colour for both** — script cannot read the state back. So answering does not simply
+  ///hand your user's history to any page that asks.
+  ///
+  ///That mitigation is the engine's, not this plugin's, and it does not make the data harmless:
+  ///only return URLs the page has a legitimate claim to know about — typically ones on its own
+  ///origin — rather than everywhere the user has been.
+  ///
+  ///The same mitigation means **you cannot verify the effect from Dart or from injected
+  ///JavaScript.** There is no way to read back whether a link rendered as visited; the only
+  ///observable part of this feature is that the request arrived and your answer was accepted.
+  ///{@endtemplate}
+  ///
+  ///{@macro flutter_inappwebview_platform_interface.PlatformWebViewCreationParams.onRequestVisitedHistory.supported_platforms}
+  @SupportedPlatforms(
+    platforms: [
+      AndroidPlatform(
+        apiName: 'WebChromeClient.getVisitedHistory',
+        apiUrl:
+            'https://developer.android.com/reference/android/webkit/WebChromeClient#getVisitedHistory(android.webkit.ValueCallback%3Cjava.lang.String%5B%5D%3E)',
+      ),
+    ],
+  )
+  final FutureOr<List<WebUri>?> Function(T controller)? onRequestVisitedHistory;
 
   ///{@template flutter_inappwebview_platform_interface.PlatformWebViewCreationParams.onContentSizeChanged}
   ///Event fired when the content size of the `WebView` changes.
@@ -2063,6 +2119,7 @@ This is a limitation of the native WebKit APIs.""",
     this.onFirstContentfulPaintMillis,
     this.onLargestContentfulPaintMillis,
     this.onPerformanceMarkMillis,
+    this.onRequestVisitedHistory,
     this.onContentSizeChanged,
     this.onShowFileChooser,
     this.onInsertInputSuggestion,

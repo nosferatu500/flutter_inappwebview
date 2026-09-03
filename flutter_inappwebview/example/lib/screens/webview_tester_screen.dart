@@ -1407,6 +1407,20 @@ class _WebViewTesterScreenState extends State<WebViewTesterScreen>
         );
       },
 
+      // 55e. onRequestVisitedHistory -- Android only. Fires once per WebView, when the engine asks
+      // which URLs to treat as visited for `:visited` styling. Answering with the current address
+      // is the smallest honest demo; a real app would answer from its own history store, and only
+      // with URLs the page has a claim to know about (see the dartdoc's privacy note).
+      onRequestVisitedHistory: (controller) async {
+        final current = await controller.getUrl();
+        _logEvent(
+          EventType.navigation,
+          PlatformWebViewCreationParamsProperty.onRequestVisitedHistory.name,
+          data: {'answered': current?.toString()},
+        );
+        return current != null ? <WebUri>[current] : <WebUri>[];
+      },
+
       // 56. onContentSizeChanged
       onContentSizeChanged: (controller, oldContentSize, newContentSize) {
         _logEvent(

@@ -171,6 +171,27 @@ app.get('/test-index', (req, res) => {
     res.sendFile(__dirname + '/public/test-index.html');
 })
 
+// Two links with an explicit `:visited` colour, so a test can ask the page what colour each one
+// renders as. Used to check whether the answer given to `WebChromeClient.getVisitedHistory` has any
+// effect a page can observe.
+app.get("/test-visited-links", (req, res) => {
+  res.send(`
+    <html>
+      <head>
+        <style>
+          a { color: rgb(0, 0, 255); }
+          a:visited { color: rgb(255, 0, 0); }
+        </style>
+      </head>
+      <body>
+        <a id="reported" href="/test-visited-target">reported as visited</a>
+        <a id="unreported" href="/test-never-visited">not reported</a>
+      </body>
+    </html>
+  `);
+  res.end()
+})
+
 // Two hops, so `onNavigationRedirected` has to fire twice for one navigation rather than once.
 // A single hop cannot tell "reports every redirect" apart from "reports the last one".
 app.get("/test-redirect", (req, res) => {

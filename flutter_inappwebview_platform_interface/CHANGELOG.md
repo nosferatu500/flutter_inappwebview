@@ -240,6 +240,21 @@ rename; this entry is the API-owner's view.
   `onLargestContentfulPaintMillis` report a **duration** (`durationMillis`) while
   `onPerformanceMarkMillis` reports a **time** (`markTimeMillis`); and LCP can fire **more than
   once** per page, since it is defined against the largest element painted so far
+- **`PlatformWebViewCreationParams.onRequestVisitedHistory`** and the matching
+  `PlatformInAppBrowserEvents.onRequestVisitedHistory` (Android), from
+  `WebChromeClient.getVisitedHistory`. A reply-shaped event: return
+  `FutureOr<List<WebUri>?>` and the engine uses it for `:visited` link styling.
+
+  **The three return states are distinct and the platform acts on each differently.** A list is
+  forwarded as a `String[]`; **`null` keeps the platform default**, where the engine's callback is
+  left unanswered exactly as it is for a `WebView` without this plugin; an **empty list** is a real
+  answer meaning "nothing has been visited". Collapsing `null` into `[]` anywhere would erase that
+  difference invisibly — both render identically — so unit tests pin it on the Dart side and on the
+  Kotlin decode.
+
+  Named `onRequestVisitedHistory` rather than mirroring the platform's `getVisitedHistory`: this is
+  a callback the app implements, and a `getX` name sitting among a controller full of real `getX()`
+  methods would read as something the app calls
 - **`PlatformCookieManager.setAcceptCookie` / `.isAcceptCookieEnabled` gained iOS** (17.0+), from
   `WKHTTPCookieStore.setCookiePolicy` / `getCookiePolicy`. No signature change and no new method —
   two `@SupportedPlatforms` entries and an iOS implementation, so the pair stops being Android-only.

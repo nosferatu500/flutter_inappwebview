@@ -102,6 +102,7 @@ class PlatformInAppWebViewWidgetCreationParams
     super.onFirstContentfulPaintMillis,
     super.onLargestContentfulPaintMillis,
     super.onPerformanceMarkMillis,
+    super.onRequestVisitedHistory,
     super.onContentSizeChanged,
     super.onShowFileChooser,
     super.onInsertInputSuggestion,

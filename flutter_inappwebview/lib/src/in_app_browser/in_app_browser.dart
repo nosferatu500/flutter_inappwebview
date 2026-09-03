@@ -399,6 +399,11 @@ class InAppBrowser implements PlatformInAppBrowserEvents {
   ) {}
 
   @override
+  FutureOr<List<WebUri>?> onRequestVisitedHistory() {
+    return null;
+  }
+
+  @override
   FutureOr<PermissionResponse?>? onPermissionRequest(
     PermissionRequest permissionRequest,
   ) {

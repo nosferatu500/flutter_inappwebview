@@ -587,6 +587,28 @@ Fourteen WebKit APIs read out of the iOS 26.5 SDK, plus one feature that was hal
   of the other eight turns on `useNavigationListener` but deliberately **not**
   `useOnPerformanceMarkMillis` — listening for `DOMContentLoaded` cannot silently sign you up for a
   message per mark. Supplying a handler for this event turns on both
+- **`onRequestVisitedHistory`** (Android), from `WebChromeClient.getVisitedHistory` — the `WebView`
+  asking your app which URLs the user has already visited, so the page can style its `:visited`
+  links. Return `FutureOr<List<WebUri>?>`.
+
+  **Nothing else in this plugin can answer this**, and that is why it matters: the engine has no way
+  to know what the user visited elsewhere in your app — another screen, another `WebView`, your own
+  bookmark store — so without an answer every link in every page renders as unvisited.
+
+  Three return values, three different meanings. A **list** is what you consider visited. **`null`
+  keeps the platform default**, which is to tell the engine nothing at all — identical to not
+  implementing the event. An **empty list** is a real answer: nothing has been visited.
+
+  It fires **once per `WebView`** and is *not* re-asked as you navigate, so treat it as "what had
+  been visited when this `WebView` started". Both facts are measured, not assumed.
+
+  **On privacy:** history sniffing through `:visited` is the classic attack on exactly this API, and
+  the engine's mitigation was measured here — a link you report as visited and a link you do not
+  **both** read back as unvisited through `getComputedStyle`, so answering does not hand your user's
+  history to any page that asks. The mitigation is the engine's rather than this plugin's, so still
+  answer with URLs the page has a legitimate claim to know about, typically its own origin. The same
+  mitigation means you cannot verify the effect from Dart: the only observable part is that the
+  request arrived
 - **`DownloadStartRequest.isUserInitiated` / `.originatingFrame`** — from `WKDownload`
 
 `WebsiteDataType.WKWebsiteDataTypeScreenTime` is the third member of that family and has shipped

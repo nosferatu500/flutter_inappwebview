@@ -1345,6 +1345,23 @@ class WebViewChannelDelegate(webView: InAppWebView, channel: MethodChannel) :
     channel.invokeMethod("onRequestFocus", hashMapOf<String, Any?>())
   }
 
+  open class RequestVisitedHistoryCallback : BaseCallbackResultImpl<List<String>>() {
+    // The codec decodes a Dart `List<String>` to `List<*>`. Filtering by type rather than casting
+    // the elements keeps a stray non-string from throwing on the platform thread; the wire shape is
+    // pinned by a unit test.
+    override fun decodeResult(obj: Any?): List<String>? =
+      (obj as? List<*>)?.filterIsInstance<String>()
+  }
+
+  fun onRequestVisitedHistory(callback: RequestVisitedHistoryCallback) {
+    val channel = this.channel
+    if (channel == null) {
+      callback.defaultBehaviour(null)
+      return
+    }
+    channel.invokeMethod("onRequestVisitedHistory", hashMapOf<String, Any?>(), callback)
+  }
+
   open class ShowFileChooserCallback : BaseCallbackResultImpl<ShowFileChooserResponse>() {
     override fun decodeResult(obj: Any?): ShowFileChooserResponse? =
       ShowFileChooserResponse.fromMap(obj as Map<String, Any?>?)

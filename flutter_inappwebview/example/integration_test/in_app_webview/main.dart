@@ -93,6 +93,7 @@ part 'conversation_context.dart';
 part 'obscured_content_insets.dart';
 part 'should_go_to_back_forward_list_item.dart';
 part 'navigation_listener.dart';
+part 'visited_history.dart';
 part 'screen_time.dart';
 part 'set_get_settings.dart';
 part 'set_web_contents_debugging_enabled.dart';
@@ -212,6 +213,7 @@ void main() {
     obscuredContentInsets();
     shouldGoToBackForwardListItem();
     navigationListener();
+    visitedHistory();
     conversationContext();
     keepAlive();
 

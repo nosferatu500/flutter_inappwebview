@@ -1301,6 +1301,23 @@ class AndroidInAppWebViewController extends PlatformInAppWebViewController
           }
         }
         break;
+      case "onRequestVisitedHistory":
+        if ((webviewParams != null &&
+                webviewParams!.onRequestVisitedHistory != null) ||
+            _inAppBrowserEventHandler != null) {
+          // `WebUri` cannot cross the channel, and the platform wants a `String[]`. A null result
+          // stays null rather than becoming `[]`: Kotlin treats the two differently, null meaning
+          // "keep the platform default" and `[]` meaning "nothing has been visited".
+          final List<WebUri>? urls =
+              webviewParams != null &&
+                  webviewParams!.onRequestVisitedHistory != null
+              ? await webviewParams!.onRequestVisitedHistory!(
+                  _controllerFromPlatform,
+                )
+              : await _inAppBrowserEventHandler!.onRequestVisitedHistory();
+          return urls?.map((url) => url.toString()).toList();
+        }
+        break;
       case "onShowFileChooser":
         if ((webviewParams != null &&
                 webviewParams!.onShowFileChooser != null) ||

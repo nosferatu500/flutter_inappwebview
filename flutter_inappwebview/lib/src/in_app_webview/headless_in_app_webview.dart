@@ -102,6 +102,8 @@ class HeadlessInAppWebView {
       int markTimeMillis,
     )?
     onPerformanceMarkMillis,
+    FutureOr<List<WebUri>?> Function(InAppWebViewController controller)?
+    onRequestVisitedHistory,
     void Function(InAppWebViewController controller, String? title)?
     onTitleChanged,
     FutureOr<AjaxRequestAction?> Function(
@@ -515,6 +517,9 @@ class HeadlessInAppWebView {
                        markName,
                        markTimeMillis,
                      )
+               : null,
+           onRequestVisitedHistory: onRequestVisitedHistory != null
+               ? (controller) => onRequestVisitedHistory.call(controller)
                : null,
            onTitleChanged: onTitleChanged != null
                ? (controller, title) => onTitleChanged.call(controller, title)

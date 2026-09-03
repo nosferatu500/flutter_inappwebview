@@ -881,6 +881,17 @@ enum PlatformWebViewCreationParamsProperty {
   ///{@endtemplate}
   onRequestFocus,
 
+  ///Can be used to check if the [PlatformWebViewCreationParams.onRequestVisitedHistory] property is supported at runtime.
+  ///
+  ///{@template flutter_inappwebview_platform_interface.PlatformWebViewCreationParams.onRequestVisitedHistory.supported_platforms}
+  ///
+  ///**Officially Supported Platforms/Implementations**:
+  ///- Android WebView ([Official API - WebChromeClient.getVisitedHistory](https://developer.android.com/reference/android/webkit/WebChromeClient#getVisitedHistory(android.webkit.ValueCallback%3Cjava.lang.String%5B%5D%3E)))
+  ///
+  ///Use the [PlatformWebViewCreationParams.isPropertySupported] method to check if this property is supported at runtime.
+  ///{@endtemplate}
+  onRequestVisitedHistory,
+
   ///Can be used to check if the [PlatformWebViewCreationParams.onSafeBrowsingHit] property is supported at runtime.
   ///
   ///{@template flutter_inappwebview_platform_interface.PlatformWebViewCreationParams.onSafeBrowsingHit.supported_platforms}
@@ -1478,6 +1489,11 @@ extension _PlatformWebViewCreationParamsPropertySupported
               TargetPlatform.android,
             ].contains(platform ?? defaultTargetPlatform);
       case PlatformWebViewCreationParamsProperty.onRequestFocus:
+        return ((kIsWeb && platform != null) || !kIsWeb) &&
+            [
+              TargetPlatform.android,
+            ].contains(platform ?? defaultTargetPlatform);
+      case PlatformWebViewCreationParamsProperty.onRequestVisitedHistory:
         return ((kIsWeb && platform != null) || !kIsWeb) &&
             [
               TargetPlatform.android,
