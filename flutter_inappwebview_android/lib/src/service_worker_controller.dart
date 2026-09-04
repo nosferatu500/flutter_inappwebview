@@ -134,6 +134,35 @@ class AndroidServiceWorkerController extends PlatformServiceWorkerController
   }
 
   @override
+  Future<bool?> getIncludeCookiesOnShouldInterceptRequestEnabled({
+    String? profileName,
+  }) async {
+    Map<String, dynamic> args = <String, dynamic>{};
+    args.putIfAbsent('profileName', () => profileName);
+    // Deliberately NOT `?? false`, unlike the neighbouring getters: null is a real answer here
+    // (feature unsupported, or a named profile) and collapsing it would claim the switch is off
+    // when it is actually unreachable.
+    return await channel?.invokeMethod<bool?>(
+      'getIncludeCookiesOnShouldInterceptRequestEnabled',
+      args,
+    );
+  }
+
+  @override
+  Future<void> setIncludeCookiesOnShouldInterceptRequestEnabled(
+    bool enabled, {
+    String? profileName,
+  }) async {
+    Map<String, dynamic> args = <String, dynamic>{};
+    args.putIfAbsent('profileName', () => profileName);
+    args.putIfAbsent("enabled", () => enabled);
+    await channel?.invokeMethod(
+      'setIncludeCookiesOnShouldInterceptRequestEnabled',
+      args,
+    );
+  }
+
+  @override
   Future<void> setAllowContentAccess(bool allow, {String? profileName}) async {
     Map<String, dynamic> args = <String, dynamic>{};
     args.putIfAbsent('profileName', () => profileName);

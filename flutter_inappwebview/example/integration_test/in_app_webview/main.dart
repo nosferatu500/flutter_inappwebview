@@ -57,6 +57,7 @@ part 'load_file.dart';
 part 'load_file_url.dart';
 part 'load_file_url_request.dart';
 part 'save_state.dart';
+part 'cookie_intercept.dart';
 part 'load_url.dart';
 part 'on_console_message.dart';
 part 'on_content_size_changed.dart';
@@ -222,6 +223,7 @@ void main() {
     visitedHistory();
     conversationContext();
     saveStateBounds();
+    cookieIntercept();
     keepAlive();
 
     // `printCurrentPage` MUST BE LAST, and must stay last.

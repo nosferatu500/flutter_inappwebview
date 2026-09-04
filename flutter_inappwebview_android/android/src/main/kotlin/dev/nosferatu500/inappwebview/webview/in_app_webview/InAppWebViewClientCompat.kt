@@ -646,19 +646,9 @@ open class InAppWebViewClientCompat(private var inAppBrowserDelegate: InAppBrows
       }
 
       if (response != null) {
-        val data = response.data
-        val inputStream = if (data != null) ByteArrayInputStream(data) else null
-
-        val statusCode = response.statusCode
-        val reasonPhrase = response.reasonPhrase
-        return if (statusCode != null && reasonPhrase != null) {
-          WebResourceResponse(
-            response.contentType, response.contentEncoding, statusCode, reasonPhrase,
-            response.headers, inputStream
-          )
-        } else {
-          WebResourceResponse(response.contentType, response.contentEncoding, inputStream)
-        }
+        // Built on the type, not here: this block used to be duplicated byte-for-byte in the two
+        // client classes and near-identically in the service-worker client (trap 32).
+        return response.toWebResourceResponse()
       }
 
       return null

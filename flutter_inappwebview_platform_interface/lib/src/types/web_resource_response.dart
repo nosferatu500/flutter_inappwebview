@@ -34,6 +34,34 @@ class WebResourceResponse_ {
   ///**NOTE**: available on Android 21+. For Android < 21 it won't be used.
   String? reasonPhrase;
 
+  ///A list of `Set-Cookie` header values to apply as if the intercepted response had carried them,
+  ///for example `["id=abc; Path=/; HttpOnly", "theme=dark; Max-Age=3600"]`.
+  ///
+  ///Each entry is one complete `Set-Cookie` **value** — the `Set-Cookie:` name itself is not part
+  ///of it. Supplying them here rather than in [headers] is what lets you set more than one cookie,
+  ///since [headers] is a `Map` and cannot hold a repeated header name.
+  ///
+  ///**These values are silently ignored unless cookie interception is enabled** — nothing throws
+  ///and nothing is logged. Enable it with
+  ///[InAppWebViewSettings.includeCookiesOnShouldInterceptRequest] for a `WebView`, or with
+  ///[PlatformServiceWorkerController.setIncludeCookiesOnShouldInterceptRequestEnabled] for a
+  ///service worker, and check [WebViewFeature.COOKIE_INTERCEPT] first.
+  ///
+  ///A `Set-Cookie` entry left in [headers] is also applied when interception is enabled, but
+  ///prefer this field: it is the only one that can carry several cookies.
+  @SupportedPlatforms(
+    platforms: [
+      AndroidPlatform(
+        apiName: 'WebResourceResponseCompat.setCookies',
+        apiUrl:
+            'https://developer.android.com/reference/androidx/webkit/WebResourceResponseCompat#setCookies(java.util.List%3Cjava.lang.String%3E)',
+        note:
+            'available on Android only if [WebViewFeature.COOKIE_INTERCEPT] feature is supported.',
+      ),
+    ],
+  )
+  List<String>? cookies;
+
   WebResourceResponse_({
     this.contentType = "",
     this.contentEncoding = "utf-8",
@@ -41,5 +69,6 @@ class WebResourceResponse_ {
     this.headers,
     this.statusCode,
     this.reasonPhrase,
+    this.cookies,
   });
 }

@@ -515,6 +515,18 @@ Map<String, List<SettingDefinition>> getSettingDefinitions() {
         property: InAppWebViewSettingsProperty.paymentRequestEnabled,
       ),
       SettingDefinition(
+        name: 'Cookies in shouldInterceptRequest',
+        description:
+            'Put the Cookie header on intercepted requests, and honour '
+            'WebResourceResponse.cookies on the response (Android)',
+        type: SettingType.boolean,
+        // The plugin's own default is null ("leave the WebView alone"); false is what the platform
+        // was measured to have, so the editor starts where the WebView actually is.
+        defaultValue: false,
+        property:
+            InAppWebViewSettingsProperty.includeCookiesOnShouldInterceptRequest,
+      ),
+      SettingDefinition(
         name: 'Attribution Registration',
         description:
             'Which side registers Attribution Reporting sources and triggers (Android)',

@@ -77,6 +77,28 @@ class ServiceWorkerController {
         profileName: profileName,
       );
 
+  ///{@macro flutter_inappwebview_platform_interface.PlatformServiceWorkerController.getIncludeCookiesOnShouldInterceptRequestEnabled}
+  ///
+  ///{@macro flutter_inappwebview_platform_interface.PlatformServiceWorkerController.getIncludeCookiesOnShouldInterceptRequestEnabled.supported_platforms}
+  static Future<bool?> getIncludeCookiesOnShouldInterceptRequestEnabled({
+    String? profileName,
+  }) => PlatformServiceWorkerController.static()
+      .getIncludeCookiesOnShouldInterceptRequestEnabled(
+        profileName: profileName,
+      );
+
+  ///{@macro flutter_inappwebview_platform_interface.PlatformServiceWorkerController.setIncludeCookiesOnShouldInterceptRequestEnabled}
+  ///
+  ///{@macro flutter_inappwebview_platform_interface.PlatformServiceWorkerController.setIncludeCookiesOnShouldInterceptRequestEnabled.supported_platforms}
+  static Future<void> setIncludeCookiesOnShouldInterceptRequestEnabled(
+    bool enabled, {
+    String? profileName,
+  }) => PlatformServiceWorkerController.static()
+      .setIncludeCookiesOnShouldInterceptRequestEnabled(
+        enabled,
+        profileName: profileName,
+      );
+
   ///{@macro flutter_inappwebview_platform_interface.PlatformServiceWorkerController.setAllowContentAccess}
   ///
   ///{@macro flutter_inappwebview_platform_interface.PlatformServiceWorkerController.setAllowContentAccess.supported_platforms}

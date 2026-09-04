@@ -230,6 +230,90 @@ abstract class PlatformServiceWorkerController extends PlatformInterface {
     );
   }
 
+  ///{@template flutter_inappwebview_platform_interface.PlatformServiceWorkerController.getIncludeCookiesOnShouldInterceptRequestEnabled}
+  ///Gets whether requests intercepted for a Service Worker carry the `Cookie` header, and whether
+  ///[WebResourceResponse.cookies] on the response is honoured.
+  ///
+  ///This is the Service Worker twin of
+  ///[InAppWebViewSettings.includeCookiesOnShouldInterceptRequest] and is a **separate switch**:
+  ///enabling it for a `WebView` does nothing for Service Workers, and vice versa.
+  ///
+  ///Returns `null` when the answer is unavailable, which has **two distinct causes**:
+  ///
+  ///- [WebViewFeature.COOKIE_INTERCEPT] is unsupported by the installed WebView, or
+  ///- a [profileName] was given. The whole cookie-intercept API is `androidx`-only, and a named
+  ///  profile's Service Worker settings are reachable **only** through the framework's
+  ///  `android.webkit.ServiceWorkerWebSettings`, which has no such method. So this setting exists
+  ///  for the default profile alone — verified against `android.jar`, whose
+  ///  `ServiceWorkerWebSettings` declares exactly the four settings this class already exposes.
+  ///
+  ///Unlike [getAllowContentAccess] and its neighbours, which collapse "unavailable" into `false`,
+  ///this one keeps the `null`: with two causes and a real `false`, three states would otherwise
+  ///become two.
+  ///{@endtemplate}
+  ///
+  ///{@macro flutter_inappwebview_platform_interface.PlatformServiceWorkerController.getIncludeCookiesOnShouldInterceptRequestEnabled.supported_platforms}
+  @SupportedPlatforms(
+    platforms: [
+      AndroidPlatform(
+        apiName:
+            'ServiceWorkerWebSettingsCompat.isIncludeCookiesOnShouldInterceptRequestEnabled',
+        apiUrl:
+            'https://developer.android.com/reference/androidx/webkit/ServiceWorkerWebSettingsCompat#isIncludeCookiesOnShouldInterceptRequestEnabled()',
+        note:
+            'available on Android only if [WebViewFeature.COOKIE_INTERCEPT] feature is supported, '
+            'and only for the default profile.',
+      ),
+    ],
+  )
+  Future<bool?> getIncludeCookiesOnShouldInterceptRequestEnabled({
+    @SupportedPlatforms(platforms: [AndroidPlatform()]) String? profileName,
+  }) {
+    throw UnimplementedError(
+      'getIncludeCookiesOnShouldInterceptRequestEnabled is not implemented on the current platform',
+    );
+  }
+
+  ///{@template flutter_inappwebview_platform_interface.PlatformServiceWorkerController.setIncludeCookiesOnShouldInterceptRequestEnabled}
+  ///Enables or disables cookie access for requests intercepted on behalf of a Service Worker.
+  ///
+  ///Turning this on does two things at once, exactly as
+  ///[InAppWebViewSettings.includeCookiesOnShouldInterceptRequest] does for a `WebView`: the
+  ///`Cookie` header appears on the intercepted [WebResourceRequest], and
+  ///[WebResourceResponse.cookies] on the response you return is applied. **With it off, those
+  ///cookie values are silently ignored** — nothing throws and nothing is logged.
+  ///
+  ///Prefer this over reading [PlatformCookieManager] during an intercept: `CookieManager` answers
+  ///about a *url* and cannot know the request's own context, so it can return the wrong set.
+  ///
+  ///A no-op when [WebViewFeature.COOKIE_INTERCEPT] is unsupported, and a no-op when [profileName]
+  ///is given — see [getIncludeCookiesOnShouldInterceptRequestEnabled] for why the setting exists
+  ///for the default profile only.
+  ///{@endtemplate}
+  ///
+  ///{@macro flutter_inappwebview_platform_interface.PlatformServiceWorkerController.setIncludeCookiesOnShouldInterceptRequestEnabled.supported_platforms}
+  @SupportedPlatforms(
+    platforms: [
+      AndroidPlatform(
+        apiName:
+            'ServiceWorkerWebSettingsCompat.setIncludeCookiesOnShouldInterceptRequestEnabled',
+        apiUrl:
+            'https://developer.android.com/reference/androidx/webkit/ServiceWorkerWebSettingsCompat#setIncludeCookiesOnShouldInterceptRequestEnabled(boolean)',
+        note:
+            'available on Android only if [WebViewFeature.COOKIE_INTERCEPT] feature is supported, '
+            'and only for the default profile.',
+      ),
+    ],
+  )
+  Future<void> setIncludeCookiesOnShouldInterceptRequestEnabled(
+    bool enabled, {
+    @SupportedPlatforms(platforms: [AndroidPlatform()]) String? profileName,
+  }) {
+    throw UnimplementedError(
+      'setIncludeCookiesOnShouldInterceptRequestEnabled is not implemented on the current platform',
+    );
+  }
+
   ///{@template flutter_inappwebview_platform_interface.PlatformServiceWorkerController.setAllowContentAccess}
   ///Enables or disables content URL access from Service Workers.
   ///This method should only be called if [WebViewFeature.isFeatureSupported] returns `true` for [WebViewFeature.SERVICE_WORKER_CONTENT_ACCESS].

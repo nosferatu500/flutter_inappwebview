@@ -25,6 +25,9 @@ class _ServiceControllersScreenState extends State<ServiceControllersScreen> {
 
   // ServiceWorkerController state
   bool _allowContentAccess = true;
+  // Starts false because the platform default was measured off; the getter can also answer null
+  // (feature unsupported, or a named profile), which the row below reports as its own state.
+  bool _includeCookiesOnShouldInterceptRequest = false;
   bool _allowFileAccess = true;
   bool _blockNetworkLoads = false;
   CacheMode? _cacheMode = CacheMode.LOAD_DEFAULT;
@@ -207,6 +210,61 @@ class _ServiceControllersScreenState extends State<ServiceControllersScreen> {
   }
 
   // ServiceWorkerController methods
+  Future<void> _getIncludeCookiesOnShouldInterceptRequest() async {
+    setState(() => _isLoading = true);
+    try {
+      final value =
+          await ServiceWorkerController.getIncludeCookiesOnShouldInterceptRequestEnabled();
+      setState(() => _includeCookiesOnShouldInterceptRequest = value ?? false);
+      _recordMethodResult(
+        PlatformServiceWorkerControllerMethod
+            .getIncludeCookiesOnShouldInterceptRequestEnabled
+            .name,
+        value == null
+            ? 'Unavailable (null): COOKIE_INTERCEPT unsupported, or a named profile'
+            : 'Cookies on intercepted requests: $value',
+        isError: false,
+      );
+    } catch (e) {
+      _recordMethodResult(
+        PlatformServiceWorkerControllerMethod
+            .getIncludeCookiesOnShouldInterceptRequestEnabled
+            .name,
+        'Error: $e',
+        isError: true,
+      );
+    } finally {
+      setState(() => _isLoading = false);
+    }
+  }
+
+  Future<void> _setIncludeCookiesOnShouldInterceptRequest(bool value) async {
+    setState(() => _isLoading = true);
+    try {
+      await ServiceWorkerController.setIncludeCookiesOnShouldInterceptRequestEnabled(
+        value,
+      );
+      setState(() => _includeCookiesOnShouldInterceptRequest = value);
+      _recordMethodResult(
+        PlatformServiceWorkerControllerMethod
+            .setIncludeCookiesOnShouldInterceptRequestEnabled
+            .name,
+        'Cookies on intercepted requests set to: $value',
+        isError: false,
+      );
+    } catch (e) {
+      _recordMethodResult(
+        PlatformServiceWorkerControllerMethod
+            .setIncludeCookiesOnShouldInterceptRequestEnabled
+            .name,
+        'Error: $e',
+        isError: true,
+      );
+    } finally {
+      setState(() => _isLoading = false);
+    }
+  }
+
   Future<void> _getAllowContentAccess() async {
     setState(() => _isLoading = true);
     try {
@@ -696,6 +754,28 @@ class _ServiceControllersScreenState extends State<ServiceControllersScreen> {
             child: Column(
               children: [
                 // Boolean settings
+                _buildSwitchRow(
+                  'Cookies on intercepted requests',
+                  _includeCookiesOnShouldInterceptRequest,
+                  (value) => _setIncludeCookiesOnShouldInterceptRequest(value),
+                  _getIncludeCookiesOnShouldInterceptRequest,
+                  _mergePlatforms(
+                    _serviceWorkerPlatforms(
+                      PlatformServiceWorkerControllerMethod
+                          .getIncludeCookiesOnShouldInterceptRequestEnabled,
+                    ),
+                    _serviceWorkerPlatforms(
+                      PlatformServiceWorkerControllerMethod
+                          .setIncludeCookiesOnShouldInterceptRequestEnabled,
+                    ),
+                  ),
+                  getMethodName: PlatformServiceWorkerControllerMethod
+                      .getIncludeCookiesOnShouldInterceptRequestEnabled
+                      .name,
+                  setMethodName: PlatformServiceWorkerControllerMethod
+                      .setIncludeCookiesOnShouldInterceptRequestEnabled
+                      .name,
+                ),
                 _buildSwitchRow(
                   'Allow Content Access',
                   _allowContentAccess,

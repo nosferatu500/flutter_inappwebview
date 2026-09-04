@@ -102,6 +102,7 @@ by its `WebViewFeature` flag.
 | `syncCallbackTimeoutMillis` | Android | How long the WebView waits for your Dart `shouldInterceptRequest` answer before loading the resource anyway (was a fixed 10s) |
 | `useNavigationListener` | Android | Opt in to the nine navigation/page/Web-Vitals events. Inferred from supplying any of their handlers |
 | `useOnPerformanceMarkMillis` | Android | Opt in to `onPerformanceMarkMillis` specifically. Separate because a page can call `performance.mark()` hundreds of times per load — the other eight events never infer it |
+| `includeCookiesOnShouldInterceptRequest` | Android | Puts the `Cookie` header on the request handed to `shouldInterceptRequest`, and makes `WebResourceResponse.cookies` on your reply take effect. Both directions, one switch. `CookieManager` cannot substitute — it answers about a *url*, not about a request, so it can return the wrong set |
 | `writingToolsBehavior` | iOS 18.0+ | How much of Apple's Writing Tools the WebView offers |
 | `preferredHTTPSNavigationPolicy` | iOS 18.0+ | Automatic HTTP→HTTPS upgrading; applied per navigation, so it responds to `setSettings` |
 | `securityRestrictionMode` | iOS 18.4+ | WebKit's built-in security restriction level |
@@ -123,6 +124,7 @@ by its `WebViewFeature` flag.
 | `postVisualStateCallback()` | Android | Awaits the point at which everything drawn so far is on screen |
 | `documentHasImages()` | Android | Whether the current document contains any images |
 | `flingScroll()` | Android | Starts a fling scroll at a velocity in device pixels per second |
+| `saveState()` — the `maxSize` / `includeForwardState` arguments | Android | Bounds the saved state. `saveState()` has always been **unbounded** (measured at 2.0 MB for a 9-entry history), which matters if you persist it somewhere with a limit of its own. `includeForwardState: false` drops entries only reachable by going forward. Returns `null` — not a smaller state — if `maxSize` is too small for even the current page |
 | `isBlockedByScreenTime()` | iOS 26.0+ | Whether Screen Time is blocking the current content. Returns `null` below iOS 26 — not `false` |
 | `setConversationContext()` / `getConversationContext()` | iOS 26.0+ | Hands the keyboard the mail/message thread being replied to, so it can offer Smart Replies in web text fields |
 
@@ -156,6 +158,7 @@ by its `WebViewFeature` flag.
 | `CookieManager.isFileSchemeCookiesAllowed()` | Android | Whether `file://` cookies are accepted. Read-only — the platform setter is deprecated |
 | `CookieManager.setAcceptCookie()` / `.isAcceptCookieEnabled()` | Android, **iOS 17.0+** | The cookie master switch. Governs the WebView's own traffic — it does **not** block `setCookie()` on either platform |
 | `CookieManager.setCookieStoreObserver()` | iOS | Be told when the cookie store changes instead of polling. Carries no payload — re-read the store in the callback |
+| `ServiceWorkerController.setIncludeCookiesOnShouldInterceptRequestEnabled()` / getter | Android | The Service Worker twin of `includeCookiesOnShouldInterceptRequest`, and a **separate switch** — turning on the WebView one does nothing here. The getter returns `bool?`: `null` means the feature is missing **or** you passed a `profileName`, for which this setting does not exist at all |
 
 ### New fields on existing types
 
@@ -168,6 +171,7 @@ by its `WebViewFeature` flag.
 | `WebViewPage` (new type) | Android | The payload of the page and Web-Vitals events: a synthesised `id` matching `WebViewNavigation.pageId`, plus the page's `url`. A page is a *document*, not a navigation — several navigations can share one |
 | `WebViewNavigation` (new type) | Android | The payload of the three `onNavigation*` events: `statusCode`, `isBack`/`isForward`/`isReload`/`isRestore`/`isSameDocument`, `didCommit`, and a plugin-synthesised `id` tying the three events together |
 | `WebsiteDataType.WKWebsiteDataTypeScreenTime` | iOS 26.0+ | Screen Time data. Deliberately **not** part of `WebsiteDataType.ALL` — passing it to a bulk delete terminates the app |
+| `WebResourceResponse.cookies` | Android | A list of `Set-Cookie` values applied as if the intercepted response had carried them. A **list**, because `headers` is a `Map` and cannot hold a repeated header name. **Silently ignored** unless cookie interception is enabled — nothing throws and nothing is logged |
 
 > **One caveat, stated rather than buried.** `onWritingToolsActiveChanged` is implemented and its
 > plumbing is verified, but it has **not yet been observed to fire on a real device**, and the cause

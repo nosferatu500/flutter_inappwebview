@@ -55,6 +55,11 @@ class ServiceWorkerChannelDelegate(
 
       "getCacheMode" -> result.success(settings?.getCacheMode())
 
+      // No `?: false` here, unlike the three getters above: null is a real answer (feature
+      // unsupported, or a named profile) and Dart keeps the three states apart.
+      "getIncludeCookiesOnShouldInterceptRequestEnabled" ->
+        result.success(settings?.getIncludeCookiesOnShouldInterceptRequestEnabled())
+
       "setAllowContentAccess" -> {
         settings?.setAllowContentAccess(call.argument<Boolean>("allow")!!)
         result.success(true)
@@ -72,6 +77,13 @@ class ServiceWorkerChannelDelegate(
 
       "setCacheMode" -> {
         settings?.setCacheMode(call.argument<Int>("mode")!!)
+        result.success(true)
+      }
+
+      "setIncludeCookiesOnShouldInterceptRequestEnabled" -> {
+        settings?.setIncludeCookiesOnShouldInterceptRequestEnabled(
+          call.argument<Boolean>("enabled")!!
+        )
         result.success(true)
       }
 

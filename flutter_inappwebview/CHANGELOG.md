@@ -624,7 +624,49 @@ Fourteen WebKit APIs read out of the iOS 26.5 SDK, plus one feature that was hal
   `SAVE_STATE` also returns `null` rather than quietly handing back an unbounded state. `maxSize` is
   a bound on the WebView's own state and not a hard cap on the array you get, which can run a few
   dozen bytes over it.
-- **`DownloadStartRequest.isUserInitiated` / `.originatingFrame`** — from `WKDownload`
+
+- **Cookies during request interception** (Android), from `androidx.webkit`'s `COOKIE_INTERCEPT`:
+  `InAppWebViewSettings.includeCookiesOnShouldInterceptRequest` turns it on, and it does two things
+  at once.
+
+  Your `shouldInterceptRequest` handler now receives the **`Cookie` header** the WebView would have
+  sent, in `request.headers` — which you could not get any other way, since `CookieManager` answers
+  about a url rather than about a request and can hand you the wrong set. And the response you
+  return may carry **`WebResourceResponse.cookies`**, a list of `Set-Cookie` values applied as
+  though the real server had sent them. It is a list rather than a header because `headers` is a
+  `Map`, so it can only hold one `Set-Cookie`.
+
+  ```dart
+  InAppWebViewSettings(
+    useShouldInterceptRequest: true,
+    includeCookiesOnShouldInterceptRequest: true,
+  )
+  // ...
+  shouldInterceptRequest: (controller, request) async => WebResourceResponse(
+    contentType: 'text/html',
+    data: bytes,
+    cookies: ['session=abc; Path=/; HttpOnly', 'theme=dark; Max-Age=3600'],
+  ),
+  ```
+
+  **The trap is that `cookies` is silently ignored when the setting is off** — no exception, no log
+  line. Check `WebViewFeature.COOKIE_INTERCEPT` and set the flag. Leaving the setting `null` keeps
+  whatever the WebView has, which was measured to be off.
+
+- **`ServiceWorkerController.setIncludeCookiesOnShouldInterceptRequestEnabled`** and its getter
+  (Android) — the Service Worker half of the same `COOKIE_INTERCEPT` flag described above. It is a
+  **separate switch** from the `WebView` setting: turning one on does nothing for the other.
+
+  ```dart
+  if (await WebViewFeature.isFeatureSupported(WebViewFeature.COOKIE_INTERCEPT)) {
+    await ServiceWorkerController.setIncludeCookiesOnShouldInterceptRequestEnabled(true);
+  }
+  ```
+
+  The getter returns `bool?` rather than `bool`. `null` means the switch could not be read at all —
+  either the installed WebView lacks the feature, or you passed a `profileName`, for which this
+  setting **does not exist** and never will: it is an `androidx`-only API and named profiles are
+  reachable only through the older framework class.- **`DownloadStartRequest.isUserInitiated` / `.originatingFrame`** — from `WKDownload`
 
 `WebsiteDataType.WKWebsiteDataTypeScreenTime` is the third member of that family and has shipped
 since the `WebsiteDataType.ALL` fix below. It stays **deliberately out of `ALL`** — see that entry.

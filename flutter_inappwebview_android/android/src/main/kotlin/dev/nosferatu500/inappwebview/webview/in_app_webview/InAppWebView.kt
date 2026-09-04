@@ -512,6 +512,13 @@ class InAppWebView : WebView, InAppWebViewInterface, Disposable {
         settings, customSettings.paymentRequestEnabled
       )
     }
+    // Null means "leave the platform default" -- androidx documents none for this one, so the
+    // plugin must not pick one on the caller's behalf.
+    customSettings.includeCookiesOnShouldInterceptRequest?.let {
+      if (Util.isCookieInterceptSupported()) {
+        WebSettingsCompat.setCookiesIncludedInShouldInterceptRequest(settings, it)
+      }
+    }
     // Null means "leave the platform default" (WEB_AUTHENTICATION_SUPPORT_NONE), so only apply an
     // explicit choice -- same convention as mixedContentMode and the other nullable enum settings.
     customSettings.webAuthenticationSupport?.let {
@@ -1586,6 +1593,17 @@ class InAppWebView : WebView, InAppWebViewInterface, Disposable {
       WebSettingsCompat.setPaymentRequestEnabled(
         settings, newCustomSettings.paymentRequestEnabled
       )
+    }
+    if (newSettingsMap["includeCookiesOnShouldInterceptRequest"] != null &&
+      !Util.objEquals(
+        customSettings.includeCookiesOnShouldInterceptRequest,
+        newCustomSettings.includeCookiesOnShouldInterceptRequest
+      ) &&
+      Util.isCookieInterceptSupported()
+    ) {
+      newCustomSettings.includeCookiesOnShouldInterceptRequest?.let {
+        WebSettingsCompat.setCookiesIncludedInShouldInterceptRequest(settings, it)
+      }
     }
     if (newSettingsMap["webAuthenticationSupport"] != null &&
       customSettings.webAuthenticationSupport !=

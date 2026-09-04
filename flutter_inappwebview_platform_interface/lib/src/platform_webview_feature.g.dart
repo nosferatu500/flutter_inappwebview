@@ -51,6 +51,18 @@ class WebViewFeature {
     'BACK_FORWARD_CACHE',
   );
 
+  ///Feature for [isFeatureSupported]. This feature covers
+  ///[InAppWebViewSettings.includeCookiesOnShouldInterceptRequest],
+  ///[WebResourceResponse.cookies], and the service-worker switch
+  ///[PlatformServiceWorkerController.setIncludeCookiesOnShouldInterceptRequestEnabled].
+  ///
+  ///One flag covers both directions of the intercept — the `Cookie` header on the way in and
+  ///`Set-Cookie` values on the way out — and both the WebView and the service-worker switches.
+  static const COOKIE_INTERCEPT = WebViewFeature._internal(
+    'COOKIE_INTERCEPT',
+    'COOKIE_INTERCEPT',
+  );
+
   ///Feature for [isFeatureSupported]. This feature covers [InAppWebViewController.createWebMessageChannel].
   static const CREATE_WEB_MESSAGE_CHANNEL = WebViewFeature._internal(
     'CREATE_WEB_MESSAGE_CHANNEL',
@@ -446,6 +458,7 @@ class WebViewFeature {
     WebViewFeature.ALGORITHMIC_DARKENING,
     WebViewFeature.ATTRIBUTION_REGISTRATION_BEHAVIOR,
     WebViewFeature.BACK_FORWARD_CACHE,
+    WebViewFeature.COOKIE_INTERCEPT,
     WebViewFeature.CREATE_WEB_MESSAGE_CHANNEL,
     WebViewFeature.DEFAULT_TRAFFICSTATS_TAGGING,
     WebViewFeature.DELETE_BROWSING_DATA,
@@ -600,6 +613,8 @@ class WebViewFeature {
         return 'ATTRIBUTION_REGISTRATION_BEHAVIOR';
       case 'BACK_FORWARD_CACHE':
         return 'BACK_FORWARD_CACHE';
+      case 'COOKIE_INTERCEPT':
+        return 'COOKIE_INTERCEPT';
       case 'CREATE_WEB_MESSAGE_CHANNEL':
         return 'CREATE_WEB_MESSAGE_CHANNEL';
       case 'DEFAULT_TRAFFICSTATS_TAGGING':

@@ -98,6 +98,22 @@ enum PlatformServiceWorkerControllerMethod {
   ///{@endtemplate}
   getCacheMode,
 
+  ///Can be used to check if the [PlatformServiceWorkerController.getIncludeCookiesOnShouldInterceptRequestEnabled] method is supported at runtime.
+  ///
+  ///{@template flutter_inappwebview_platform_interface.PlatformServiceWorkerController.getIncludeCookiesOnShouldInterceptRequestEnabled.supported_platforms}
+  ///
+  ///**Officially Supported Platforms/Implementations**:
+  ///- Android WebView ([Official API - ServiceWorkerWebSettingsCompat.isIncludeCookiesOnShouldInterceptRequestEnabled](https://developer.android.com/reference/androidx/webkit/ServiceWorkerWebSettingsCompat#isIncludeCookiesOnShouldInterceptRequestEnabled())):
+  ///    - available on Android only if [WebViewFeature.COOKIE_INTERCEPT] feature is supported, and only for the default profile.
+  ///
+  ///**Parameters - Officially Supported Platforms/Implementations**:
+  ///- [profileName]:
+  ///    - Android WebView
+  ///
+  ///Use the [PlatformServiceWorkerController.isMethodSupported] method to check if this method is supported at runtime.
+  ///{@endtemplate}
+  getIncludeCookiesOnShouldInterceptRequestEnabled,
+
   ///Can be used to check if the [PlatformServiceWorkerController.setAllowContentAccess] method is supported at runtime.
   ///
   ///{@template flutter_inappwebview_platform_interface.PlatformServiceWorkerController.setAllowContentAccess.supported_platforms}
@@ -162,6 +178,23 @@ enum PlatformServiceWorkerControllerMethod {
   ///{@endtemplate}
   setCacheMode,
 
+  ///Can be used to check if the [PlatformServiceWorkerController.setIncludeCookiesOnShouldInterceptRequestEnabled] method is supported at runtime.
+  ///
+  ///{@template flutter_inappwebview_platform_interface.PlatformServiceWorkerController.setIncludeCookiesOnShouldInterceptRequestEnabled.supported_platforms}
+  ///
+  ///**Officially Supported Platforms/Implementations**:
+  ///- Android WebView ([Official API - ServiceWorkerWebSettingsCompat.setIncludeCookiesOnShouldInterceptRequestEnabled](https://developer.android.com/reference/androidx/webkit/ServiceWorkerWebSettingsCompat#setIncludeCookiesOnShouldInterceptRequestEnabled(boolean))):
+  ///    - available on Android only if [WebViewFeature.COOKIE_INTERCEPT] feature is supported, and only for the default profile.
+  ///
+  ///**Parameters - Officially Supported Platforms/Implementations**:
+  ///- [enabled]: all platforms
+  ///- [profileName]:
+  ///    - Android WebView
+  ///
+  ///Use the [PlatformServiceWorkerController.isMethodSupported] method to check if this method is supported at runtime.
+  ///{@endtemplate}
+  setIncludeCookiesOnShouldInterceptRequestEnabled,
+
   ///Can be used to check if the [PlatformServiceWorkerController.setServiceWorkerClient] method is supported at runtime.
   ///
   ///{@template flutter_inappwebview_platform_interface.PlatformServiceWorkerController.setServiceWorkerClient.supported_platforms}
@@ -204,6 +237,12 @@ extension _PlatformServiceWorkerControllerMethodSupported
             [
               TargetPlatform.android,
             ].contains(platform ?? defaultTargetPlatform);
+      case PlatformServiceWorkerControllerMethod
+          .getIncludeCookiesOnShouldInterceptRequestEnabled:
+        return ((kIsWeb && platform != null) || !kIsWeb) &&
+            [
+              TargetPlatform.android,
+            ].contains(platform ?? defaultTargetPlatform);
       case PlatformServiceWorkerControllerMethod.setAllowContentAccess:
         return ((kIsWeb && platform != null) || !kIsWeb) &&
             [
@@ -220,6 +259,12 @@ extension _PlatformServiceWorkerControllerMethodSupported
               TargetPlatform.android,
             ].contains(platform ?? defaultTargetPlatform);
       case PlatformServiceWorkerControllerMethod.setCacheMode:
+        return ((kIsWeb && platform != null) || !kIsWeb) &&
+            [
+              TargetPlatform.android,
+            ].contains(platform ?? defaultTargetPlatform);
+      case PlatformServiceWorkerControllerMethod
+          .setIncludeCookiesOnShouldInterceptRequestEnabled:
         return ((kIsWeb && platform != null) || !kIsWeb) &&
             [
               TargetPlatform.android,

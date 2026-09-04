@@ -1144,6 +1144,37 @@ as it can cause framerate drops on animations in Android 9 and lower (see [Hybri
   )
   bool? paymentRequestEnabled;
 
+  ///Whether the request passed to [PlatformWebViewCreationParams.shouldInterceptRequest] carries
+  ///the `Cookie` header that the WebView would have sent, and whether
+  ///[WebResourceResponse.cookies] on the response you return is honoured.
+  ///
+  ///Both directions are covered by this one flag, and **both are off by default**:
+  ///
+  ///- **incoming** — with this enabled, [WebResourceRequest.headers] includes a `Cookie` entry for
+  ///  the cookies applicable to that request. Without it the header is absent, and the only way to
+  ///  see cookies during an intercept is [PlatformCookieManager.getCookies], which answers about
+  ///  the *url* rather than about the request — it cannot know the request's own context, so it can
+  ///  return the wrong set. Prefer this flag over `CookieManager` when intercepting.
+  ///- **outgoing** — [WebResourceResponse.cookies] is a list of `Set-Cookie` values applied as if
+  ///  the intercepted response had carried them. **Without this flag they are silently ignored**,
+  ///  which is the failure mode worth knowing about: nothing throws and nothing is logged.
+  ///
+  ///Leave `null` to keep the platform default. See
+  ///[PlatformServiceWorkerController] for the service-worker equivalent, which is a separate
+  ///switch — turning this on does not affect requests intercepted for a service worker.
+  @SupportedPlatforms(
+    platforms: [
+      AndroidPlatform(
+        apiName: "WebSettingsCompat.setCookiesIncludedInShouldInterceptRequest",
+        apiUrl:
+            "https://developer.android.com/reference/androidx/webkit/WebSettingsCompat#setCookiesIncludedInShouldInterceptRequest(android.webkit.WebSettings,boolean)",
+        note:
+            "available on Android only if [WebViewFeature.COOKIE_INTERCEPT] feature is supported.",
+      ),
+    ],
+  )
+  bool? includeCookiesOnShouldInterceptRequest;
+
   ///Sets the level of [Web Authentication API](https://developer.mozilla.org/en-US/docs/Web/API/Web_Authentication_API)
   ///support this WebView provides, i.e. whether web content may create and use passkeys.
   ///
@@ -2509,6 +2540,9 @@ as it can cause framerate drops on animations in Android 9 and lower (see [Hybri
     this.horizontalScrollbarTrackColor,
     this.algorithmicDarkeningAllowed = false,
     this.paymentRequestEnabled = false,
+    // No default: the platform default is measured rather than assumed (§18), and `null` is what
+    // lets `getSettings()` report what the WebView actually has.
+    this.includeCookiesOnShouldInterceptRequest,
     this.webAuthenticationSupport,
     this.downloadFaviconsEnabled,
     this.backForwardCacheEnabled,

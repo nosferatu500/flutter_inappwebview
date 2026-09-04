@@ -11,7 +11,6 @@ import dev.nosferatu500.inappwebview.InAppWebViewFlutterPlugin
 import dev.nosferatu500.inappwebview.types.Disposable
 import dev.nosferatu500.inappwebview.types.WebResourceRequestExt
 import io.flutter.plugin.common.MethodChannel
-import java.io.ByteArrayInputStream
 
 // See ChannelDelegateImpl: `this` is published to a platform-thread-only dispatcher.
 class ServiceWorkerManager(plugin: InAppWebViewFlutterPlugin) : Disposable {
@@ -47,19 +46,10 @@ class ServiceWorkerManager(plugin: InAppWebViewFlutterPlugin) : Disposable {
               return null
             } ?: return null
 
-            val data = response.data
-            val inputStream = if (data != null) ByteArrayInputStream(data) else null
-
-            val statusCode = response.statusCode
-            val reasonPhrase = response.reasonPhrase
-            return if (statusCode != null && reasonPhrase != null) {
-              WebResourceResponse(
-                response.contentType, response.contentEncoding, statusCode, reasonPhrase,
-                response.headers, inputStream
-              )
-            } else {
-              WebResourceResponse(response.contentType, response.contentEncoding, inputStream)
-            }
+            // Third copy of this block, now shared -- see WebResourceResponseExt (trap 32).
+            // WebResourceResponse.cookies therefore reaches service-worker intercepts too, though
+            // it stays inert until the service-worker cookie-intercept switch is turned on.
+            return response.toWebResourceResponse()
           }
         }
       }

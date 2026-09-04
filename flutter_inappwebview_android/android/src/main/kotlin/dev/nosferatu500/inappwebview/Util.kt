@@ -1,5 +1,6 @@
 package dev.nosferatu500.inappwebview
 
+import android.annotation.SuppressLint
 import android.content.Context
 import android.graphics.BitmapFactory
 import android.graphics.drawable.BitmapDrawable
@@ -11,6 +12,7 @@ import android.text.TextUtils
 import android.util.Log
 import android.view.WindowInsets
 import android.view.WindowManager
+import androidx.webkit.WebViewFeature
 import dev.nosferatu500.inappwebview.types.Size2D
 import dev.nosferatu500.inappwebview.types.SyncBaseCallbackResultImpl
 import io.flutter.plugin.common.MethodChannel
@@ -46,6 +48,25 @@ object Util {
 
   const val LOG_TAG = "Util"
   const val ANDROID_ASSET_URL = "file:///android_asset/"
+
+  /**
+   * `WebViewFeature.isFeatureSupported(COOKIE_INTERCEPT)`, wrapped solely to hold one suppression.
+   *
+   * **This is an androidx defect, not a wrong constant.** `COOKIE_INTERCEPT` is declared public in
+   * `WebViewFeature`, is registered in `WebViewFeatureInternal`, and returns `true` on both test
+   * AVDs -- but androidx left it out of the `@StringDef` that `isFeatureSupported` is annotated
+   * with, so lint's `WrongConstant` rejects a correct call. Verified against three controls in the
+   * same 1.17.0 sources: `SAVE_STATE`, `CUSTOM_REQUEST_HEADERS` and `JS_INJECTION_IN_FRAME_AND_WORLD`
+   * are all present in that `@StringDef`; `COOKIE_INTERCEPT` alone is missing.
+   *
+   * Wrapped rather than annotating each call site, so the suppression is stated once with its
+   * reason and cannot spread. **Delete this and inline the call** once androidx adds the constant
+   * to the `@StringDef` -- if the lint stops firing, the workaround has outlived its cause.
+   */
+  @JvmStatic
+  @SuppressLint("WrongConstant")
+  fun isCookieInterceptSupported(): Boolean =
+    WebViewFeature.isFeatureSupported(WebViewFeature.COOKIE_INTERCEPT)
 
   @JvmStatic
   @Throws(IOException::class)

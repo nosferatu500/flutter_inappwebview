@@ -435,6 +435,15 @@ class WebViewFeature_ {
     "NAVIGATION_GET_WEB_RESOURCE_ERROR",
   );
 
+  ///Feature for [isFeatureSupported]. This feature covers
+  ///[InAppWebViewSettings.includeCookiesOnShouldInterceptRequest],
+  ///[WebResourceResponse.cookies], and the service-worker switch
+  ///[PlatformServiceWorkerController.setIncludeCookiesOnShouldInterceptRequestEnabled].
+  ///
+  ///One flag covers both directions of the intercept — the `Cookie` header on the way in and
+  ///`Set-Cookie` values on the way out — and both the WebView and the service-worker switches.
+  static const COOKIE_INTERCEPT = WebViewFeature_._internal("COOKIE_INTERCEPT");
+
   ///Feature for [isFeatureSupported]. This feature covers the `maxSize` and `includeForwardState`
   ///arguments of [PlatformInAppWebViewController.saveState], and **only** those arguments.
   ///

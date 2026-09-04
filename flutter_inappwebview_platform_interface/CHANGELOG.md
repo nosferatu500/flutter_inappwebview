@@ -278,7 +278,43 @@ rename; this entry is the API-owner's view.
   one. `WebViewCompat.saveState` with no effective limits was verified byte-for-byte identical to
   the framework call, which is why the unconstrained path was left alone rather than routed through
   the compat API.
-- **`PlatformCookieManager.setAcceptCookie` / `.isAcceptCookieEnabled` gained iOS** (17.0+), from
+
+- **`InAppWebViewSettings.includeCookiesOnShouldInterceptRequest` and
+  `WebResourceResponse.cookies`** (Android), from `androidx.webkit`'s `COOKIE_INTERCEPT` — plus the
+  `WebViewFeature.COOKIE_INTERCEPT` mirror. One switch covers **both directions** of an intercept:
+
+  - **in** — `WebResourceRequest.headers` gains the `Cookie` entry the WebView would have sent.
+    Nothing else can supply this: `CookieManager.getCookies` answers about a *url*, not about a
+    request, so it cannot know the request's own context and can return the wrong set.
+  - **out** — `WebResourceResponse.cookies` is a list of `Set-Cookie` values applied as if the
+    intercepted response had carried them. It is a **list** because `headers` is a `Map` and cannot
+    hold a repeated header name, so a single `Set-Cookie` entry there can only ever set one cookie.
+
+  **With the switch off, `cookies` is silently ignored** — nothing throws and nothing is logged, so
+  both halves are pinned by paired integration tests that differ by one argument.
+
+  The setting is nullable and defaults to `null` ("leave the WebView's own value"), because androidx
+  documents no default. The default was **measured** as `false` on WebView 149 and 151, and
+  `getSettings()` reports what the WebView actually has rather than what was requested.
+
+  This covers the `WebView` only. The service-worker half of the same androidx feature is a separate
+  switch and is not in this entry.
+
+- **`PlatformServiceWorkerController.setIncludeCookiesOnShouldInterceptRequestEnabled` /
+  `.getIncludeCookiesOnShouldInterceptRequestEnabled`** (Android), completing `COOKIE_INTERCEPT`.
+  The Service Worker twin of `InAppWebViewSettings.includeCookiesOnShouldInterceptRequest`, and a
+  **separate switch** — enabling one does nothing for the other.
+
+  The getter returns `bool?`, deliberately unlike its neighbours `getAllowContentAccess` /
+  `getAllowFileAccess` / `getBlockNetworkLoads`, which collapse "unavailable" into `false`. Here
+  `null` has **two** causes and there is also a real `false`, so flattening them would lose a state:
+  the feature may be unsupported by the installed WebView, **or** a `profileName` was given.
+
+  **The switch does not exist for a named profile, structurally rather than by version.** The whole
+  cookie-intercept API is `androidx`-only, and a named profile's Service Worker settings are
+  reachable only through the framework's `android.webkit.ServiceWorkerWebSettings`, which declares
+  exactly the four older settings and nothing else. No future WebView opens this — there is nothing
+  to call — so the getter answers `null` and the setter is a no-op there.- **`PlatformCookieManager.setAcceptCookie` / `.isAcceptCookieEnabled` gained iOS** (17.0+), from
   `WKHTTPCookieStore.setCookiePolicy` / `getCookiePolicy`. No signature change and no new method —
   two `@SupportedPlatforms` entries and an iOS implementation, so the pair stops being Android-only.
   The existing `bool` / `bool?` contract already said the right thing and now carries a second

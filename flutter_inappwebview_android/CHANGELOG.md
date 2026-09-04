@@ -164,6 +164,37 @@ Twelve `androidx.webkit` features, each behind its own `WebViewFeature` flag, an
   `Bundle`: `WebView.saveState` returns a `WebBackForwardList?` and signals failure with `null`,
   while `WebViewCompat.saveState` returns `void` and signals it by leaving the bundle empty — which
   is what a `maxSize` below one entry's size actually does.
+
+- **`COOKIE_INTERCEPT`** — `WebSettingsCompat.setCookiesIncludedInShouldInterceptRequest` behind
+  `InAppWebViewSettings.includeCookiesOnShouldInterceptRequest`, and
+  `WebResourceResponseCompat.setCookies` behind `WebResourceResponse.cookies`. Supported on both
+  test AVDs (WebView 149 on API 37, 151 on API 33); the platform default was measured **off**.
+
+  `WebResourceResponseCompat` does **not** change what `shouldInterceptRequest` returns: its
+  `toWebResourceResponse()` folds the cookie values into a private multi-cookie header that the
+  WebView unpacks, so the return type and every caller are unaffected.
+
+  **The response-building block was duplicated three times and is now one method on
+  `WebResourceResponseExt`.** `InAppWebViewClient` and `InAppWebViewClientCompat` held
+  byte-identical copies and `ServiceWorkerManager` a near-identical one — and it is
+  `InAppWebViewClientCompat` that actually runs on Chromium >= 73, i.e. on every realistic device,
+  so a change made to the obvious copy alone would have reached almost nobody. `cookies` therefore
+  works on the service-worker intercept path too, though it stays inert there until that switch is
+  added.
+
+- **`ServiceWorkerWebSettingsCompat.setIncludeCookiesOnShouldInterceptRequestEnabled` /
+  `isIncludeCookiesOnShouldInterceptRequestEnabled`**, completing `COOKIE_INTERCEPT`. Measured on
+  both AVDs: the default-profile switch reads `false` before anything writes it, and round-trips in
+  both directions.
+
+  `ServiceWorkerSettings` has **two** implementations and only one can carry this. The
+  androidx-backed one (default profile) implements it behind the feature check; the framework-backed
+  one (named profiles) answers `null` and no-ops, because `android.webkit.ServiceWorkerWebSettings`
+  has no such method — verified with `javap` against `android.jar`, which declares exactly the four
+  older settings. Measured on device with the control that makes it mean something: for the *same*
+  created profile `getAllowContentAccess` answers non-null while this one answers `null`, so the
+  `null` is about the API rather than about the profile being unreachable.
+
 Every mirrored `WebViewFeature` constant is now pinned against the real AAR by a test: six of the
 flags `WebViewFeature` declares are `@Deprecated` tombstones that `isFeatureSupported` **throws**
 for, and five others have a native *value* that differs from their name.

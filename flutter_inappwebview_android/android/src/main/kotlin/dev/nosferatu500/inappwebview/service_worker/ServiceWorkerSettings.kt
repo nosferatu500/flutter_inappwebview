@@ -2,9 +2,17 @@ package dev.nosferatu500.inappwebview.service_worker
 
 import androidx.webkit.ServiceWorkerWebSettingsCompat
 import androidx.webkit.WebViewFeature
+import dev.nosferatu500.inappwebview.Util
 
 /**
- * The four service-worker settings the plugin exposes, over whichever API can reach them.
+ * The service-worker settings the plugin exposes, over whichever API can reach them.
+ *
+ * Four of them exist on both APIs. The fifth,
+ * `includeCookiesOnShouldInterceptRequestEnabled`, is **androidx-only**: `android.jar`'s
+ * `android.webkit.ServiceWorkerWebSettings` declares exactly the other four and nothing else
+ * (checked with `javap`, which is what a stub jar *is* authoritative about -- trap 68). So it is
+ * unavailable for a named profile, structurally rather than by version, and
+ * [FrameworkServiceWorkerSettings] answers null / no-ops for it.
  *
  * Two APIs provide the same four settings and share no supertype, and which one applies is not a
  * choice:
@@ -41,6 +49,11 @@ internal interface ServiceWorkerSettings {
   fun getCacheMode(): Int?
 
   fun setCacheMode(value: Int)
+
+  /** Null when unreachable: feature unsupported, or a named profile (see the class doc). */
+  fun getIncludeCookiesOnShouldInterceptRequestEnabled(): Boolean?
+
+  fun setIncludeCookiesOnShouldInterceptRequestEnabled(value: Boolean)
 }
 
 /** Backed by androidx, for the default profile. Preserves the pre-existing feature gating. */
@@ -96,6 +109,22 @@ internal class CompatServiceWorkerSettings(
     }
   }
 
+  override fun getIncludeCookiesOnShouldInterceptRequestEnabled(): Boolean? =
+    if (Util.isCookieInterceptSupported()) {
+      settings.isIncludeCookiesOnShouldInterceptRequestEnabled
+    } else {
+      null
+    }
+
+  override fun setIncludeCookiesOnShouldInterceptRequestEnabled(value: Boolean) {
+    if (Util.isCookieInterceptSupported()) {
+      settings.setIncludeCookiesOnShouldInterceptRequestEnabled(value)
+    }
+  }
+
+  // COOKIE_INTERCEPT is NOT routed through this helper: androidx omits it from the @StringDef on
+  // isFeatureSupported, so lint rejects the call. Util.isCookieInterceptSupported() holds that
+  // suppression for the whole module.
   private fun supported(feature: String) = WebViewFeature.isFeatureSupported(feature)
 }
 
@@ -126,5 +155,16 @@ internal class FrameworkServiceWorkerSettings(
 
   override fun setCacheMode(value: Int) {
     settings.cacheMode = value
+  }
+
+  /**
+   * Always null: the framework `ServiceWorkerWebSettings` has no cookie-intercept method at all.
+   * This is not a version gate that a newer device would open -- there is nothing to call.
+   */
+  override fun getIncludeCookiesOnShouldInterceptRequestEnabled(): Boolean? = null
+
+  /** No-op, per the class doc's "a null getter means the matching setter is a no-op". */
+  override fun setIncludeCookiesOnShouldInterceptRequestEnabled(value: Boolean) {
+    // Intentionally empty; see getIncludeCookiesOnShouldInterceptRequestEnabled.
   }
 }

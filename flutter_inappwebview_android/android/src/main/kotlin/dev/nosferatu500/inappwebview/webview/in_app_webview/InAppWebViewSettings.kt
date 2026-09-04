@@ -6,6 +6,7 @@ import android.webkit.WebSettings
 import androidx.webkit.WebSettingsCompat
 import androidx.webkit.WebViewFeature
 import dev.nosferatu500.inappwebview.ISettings
+import dev.nosferatu500.inappwebview.Util
 import dev.nosferatu500.inappwebview.types.PreferredContentModeOptionType
 import dev.nosferatu500.inappwebview.webview.InAppWebViewInterface
 import java.util.regex.Pattern
@@ -110,6 +111,13 @@ class InAppWebViewSettings : ISettings<InAppWebViewInterface> {
   @JvmField var horizontalScrollbarTrackColor: String? = null
   @JvmField var algorithmicDarkeningAllowed: Boolean = false
   @JvmField var paymentRequestEnabled: Boolean = false
+
+  /**
+   * Nullable, unlike [paymentRequestEnabled]: androidx documents no default for
+   * `setCookiesIncludedInShouldInterceptRequest`, so null means "leave whatever the WebView has"
+   * and [getRealSettings] reports the measured value rather than this one (§18).
+   */
+  @JvmField var includeCookiesOnShouldInterceptRequest: Boolean? = null
   @JvmField var webAuthenticationSupport: Int? = null
   @JvmField var downloadFaviconsEnabled: Boolean? = null
   @JvmField var backForwardCacheEnabled: Boolean? = null
@@ -233,6 +241,8 @@ class InAppWebViewSettings : ISettings<InAppWebViewInterface> {
         "horizontalScrollbarTrackColor" -> horizontalScrollbarTrackColor = value as String
         "algorithmicDarkeningAllowed" -> algorithmicDarkeningAllowed = value as Boolean
         "paymentRequestEnabled" -> paymentRequestEnabled = value as Boolean
+        "includeCookiesOnShouldInterceptRequest" ->
+          includeCookiesOnShouldInterceptRequest = value as Boolean
         "webAuthenticationSupport" -> webAuthenticationSupport = value as Int
         "downloadFaviconsEnabled" -> downloadFaviconsEnabled = value as Boolean
         "backForwardCacheEnabled" -> backForwardCacheEnabled = value as Boolean
@@ -359,6 +369,7 @@ class InAppWebViewSettings : ISettings<InAppWebViewInterface> {
     settings["horizontalScrollbarTrackColor"] = horizontalScrollbarTrackColor
     settings["algorithmicDarkeningAllowed"] = algorithmicDarkeningAllowed
     settings["paymentRequestEnabled"] = paymentRequestEnabled
+    settings["includeCookiesOnShouldInterceptRequest"] = includeCookiesOnShouldInterceptRequest
     settings["webAuthenticationSupport"] = webAuthenticationSupport
     settings["downloadFaviconsEnabled"] = downloadFaviconsEnabled
     settings["backForwardCacheEnabled"] = backForwardCacheEnabled
@@ -467,6 +478,10 @@ class InAppWebViewSettings : ISettings<InAppWebViewInterface> {
       if (WebViewFeature.isFeatureSupported(WebViewFeature.PAYMENT_REQUEST)) {
         realSettings["paymentRequestEnabled"] =
           WebSettingsCompat.getPaymentRequestEnabled(settings)
+      }
+      if (Util.isCookieInterceptSupported()) {
+        realSettings["includeCookiesOnShouldInterceptRequest"] =
+          WebSettingsCompat.areCookiesIncludedInShouldInterceptRequest(settings)
       }
       if (WebViewFeature.isFeatureSupported(WebViewFeature.WEB_AUTHENTICATION)) {
         realSettings["webAuthenticationSupport"] =

@@ -8,6 +8,7 @@ import '../util.dart';
 
 part 'set_service_worker_client.dart';
 part 'should_intercept_request.dart';
+part 'include_cookies_on_should_intercept_request.dart';
 
 void main() {
   final shouldSkip = !ServiceWorkerController.isClassSupported();
@@ -15,5 +16,6 @@ void main() {
   skippableGroup('Service Worker Controller', () {
     shouldInterceptRequest();
     setServiceWorkerClient();
+    serviceWorkerIncludeCookies();
   }, skip: shouldSkip);
 }
