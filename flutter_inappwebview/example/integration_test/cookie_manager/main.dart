@@ -7,6 +7,7 @@ import '../constants.dart';
 import '../util.dart';
 
 part 'set_get_delete.dart';
+part 'set_cookies.dart';
 part 'flush.dart';
 part 'accept_cookie.dart';
 part 'has_cookies.dart';
@@ -18,6 +19,7 @@ void main() {
 
   skippableGroup('Cookie Manager', () {
     setGetDelete();
+    setCookies();
     flush();
     acceptCookie();
     hasCookies();

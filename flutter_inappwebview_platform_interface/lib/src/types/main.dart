@@ -23,6 +23,7 @@ export 'content_blocker_trigger_resource_type.dart'
     show ContentBlockerTriggerResourceType;
 export 'content_world.dart' show ContentWorld;
 export 'cookie.dart' show Cookie;
+export 'cookie_to_set.dart' show CookieToSet;
 export 'create_window_action.dart' show CreateWindowAction;
 export 'cross_origin.dart' show CrossOrigin;
 export 'css_link_html_tag_attributes.dart' show CSSLinkHtmlTagAttributes;

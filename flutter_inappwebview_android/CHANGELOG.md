@@ -50,6 +50,14 @@ entry carries the full user-facing list; this entry is what changed in this pack
 Twelve `androidx.webkit` features, each behind its own `WebViewFeature` flag, and eight
 `android.webkit` APIs the plugin had never exposed:
 
+- **`setCookies`** — the plural cookie write. The framework has no batch API, so `MyCookieManager`
+  loops; the saving is the **single channel round trip**, which was measured to be ~94% of the cost
+  of doing this from Dart one call at a time. `CookieManager.setCookie`'s callback is asynchronous,
+  so the results are written into a fixed-size array **by index** and the reply is sent only once
+  the last one lands — collecting them in completion order would scramble the ordering the Dart
+  side promises. `flush()` is called **once at the end** rather than once per cookie, which the
+  singular path cannot do. Cookie-string building was extracted into a shared `buildCookieValue` so
+  the two calls cannot build a cookie differently
 - **`MUTE_AUDIO`** — `InAppWebViewController.setAudioMuted()` / `.isAudioMuted()`
 - **`PAYMENT_REQUEST`** — `InAppWebViewSettings.paymentRequestEnabled` (upstream #2660, #2722)
 - **`WEB_AUTHENTICATION`** — passkeys, via `InAppWebViewSettings.webAuthenticationSupport`

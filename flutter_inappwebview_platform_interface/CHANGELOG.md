@@ -340,6 +340,25 @@ rename; this entry is the API-owner's view.
   the platform — its name matching is case-insensitive and its value matching is not, so a Dart-side
   `where` would not be equivalent.
 
+- **`PlatformCookieManager.setCookies`** (Android and iOS) and the new **`CookieToSet`** type —
+  `Future<List<bool>> setCookies({required List<CookieToSet> cookies, webViewController,
+  profileName})`, one answer per input cookie in input order.
+
+  **`CookieToSet` is deliberately not `Cookie`.** `Cookie` is the return type of `getCookies` and
+  does not fit as an input: it has no `url` and no `maxAge`, both of which `setCookie` takes, and
+  it reports `isSessionOnly`, which is not something a caller sets. Reusing it would have meant two
+  fields that are silently ignored in one direction each. Every field on `CookieToSet` mirrors a
+  parameter of `setCookie` exactly, so the singular and plural calls cannot drift.
+
+  The saving is the **channel round trip**, measured rather than assumed: on iOS 26.5, 100 cookies
+  cost 84 ms one `setCookie` at a time and ~12–16 ms in one call, and ~94% of that is per-call
+  overhead rather than the cookie store. Hence both platforms, not just the one with a native batch
+  API.
+
+  The `List<bool>` carries the same platform asymmetry `setCookie` already documents: a real
+  per-cookie result on Android, and on iOS only whether the cookie could be **constructed**, since
+  WebKit's completion handlers are `void` and never report storage success.
+
 - **`PlatformWebMessageListenerCreationParams.contentWorld`** (iOS), a `ContentWorld?` defaulting to
   `null` — the page world, so nothing existing changes. It places the injected JavaScript object in
   an isolated content world: page scripts cannot see it, and only code naming the same world can.

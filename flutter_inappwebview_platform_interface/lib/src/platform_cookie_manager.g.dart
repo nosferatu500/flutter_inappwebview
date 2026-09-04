@@ -297,6 +297,27 @@ enum PlatformCookieManagerMethod {
   ///Use the [PlatformCookieManager.isMethodSupported] method to check if this method is supported at runtime.
   ///{@endtemplate}
   setCookieStoreObserver,
+
+  ///Can be used to check if the [PlatformCookieManager.setCookies] method is supported at runtime.
+  ///
+  ///{@template flutter_inappwebview_platform_interface.PlatformCookieManager.setCookies.supported_platforms}
+  ///
+  ///**Officially Supported Platforms/Implementations**:
+  ///- Android WebView ([Official API - CookieManager.setCookie](https://developer.android.com/reference/android/webkit/CookieManager#setCookie(java.lang.String,%20java.lang.String,%20android.webkit.ValueCallback%3Cjava.lang.Boolean%3E))):
+  ///    - There is no batch API in the framework, so the native side loops. The saving is the single channel round trip, which is where almost all of the cost was.
+  ///- iOS WKWebView ([Official API - WKHTTPCookieStore.setCookies](https://developer.apple.com/documentation/webkit/wkhttpcookiestore/setcookies(_:completionhandler:))):
+  ///    - Uses `setCookies:` on iOS 26.0+ and falls back to a native loop of `setCookie:` below it. The two were measured to be within a few milliseconds of each other for 100 cookies, so nothing is lost below the floor.
+  ///
+  ///**Parameters - Officially Supported Platforms/Implementations**:
+  ///- [cookies]: all platforms
+  ///- [webViewController]:
+  ///    - iOS WKWebView
+  ///- [profileName]:
+  ///    - Android WebView
+  ///
+  ///Use the [PlatformCookieManager.isMethodSupported] method to check if this method is supported at runtime.
+  ///{@endtemplate}
+  setCookies,
 }
 
 extension _PlatformCookieManagerMethodSupported on PlatformCookieManager {
@@ -379,6 +400,12 @@ extension _PlatformCookieManagerMethodSupported on PlatformCookieManager {
       case PlatformCookieManagerMethod.setCookieStoreObserver:
         return ((kIsWeb && platform != null) || !kIsWeb) &&
             [TargetPlatform.iOS].contains(platform ?? defaultTargetPlatform);
+      case PlatformCookieManagerMethod.setCookies:
+        return ((kIsWeb && platform != null) || !kIsWeb) &&
+            [
+              TargetPlatform.android,
+              TargetPlatform.iOS,
+            ].contains(platform ?? defaultTargetPlatform);
     }
   }
 }

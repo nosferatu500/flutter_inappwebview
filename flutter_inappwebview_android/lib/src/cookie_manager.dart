@@ -108,6 +108,39 @@ class AndroidCookieManager extends PlatformCookieManager
   }
 
   @override
+  Future<List<bool>> setCookies({
+    required List<CookieToSet> cookies,
+    PlatformInAppWebViewController? webViewController,
+    String? profileName,
+  }) async {
+    if (cookies.isEmpty) {
+      return const <bool>[];
+    }
+    for (final cookie in cookies) {
+      assert(cookie.url.toString().isNotEmpty);
+      assert(cookie.name.isNotEmpty);
+      assert(cookie.path.isNotEmpty);
+    }
+
+    Map<String, dynamic> args = <String, dynamic>{};
+    args.putIfAbsent('profileName', () => profileName);
+    args.putIfAbsent(
+      'cookies',
+      () => cookies.map(_cookieToSetChannelArgs).toList(),
+    );
+
+    final results = await channel?.invokeMethod<List<Object?>>(
+      'setCookies',
+      args,
+    );
+    // The `??` covers a null channel (a disposed manager), which is the only case that yields a
+    // null here -- a *missing native handler* throws MissingPluginException instead, on this call
+    // and on the singular `setCookie` alike. Pinned by a unit test rather than assumed.
+    return results?.map((e) => e == true).toList() ??
+        List<bool>.filled(cookies.length, false);
+  }
+
+  @override
   Future<List<Cookie>> getCookies({
     required WebUri url,
     PlatformInAppWebViewController? webViewController,
@@ -287,3 +320,24 @@ class AndroidCookieManager extends PlatformCookieManager
 extension InternalCookieManager on AndroidCookieManager {
   Future<dynamic> Function(MethodCall call) get handleMethod => _handleMethod;
 }
+
+/// The channel arguments for one cookie, spelled **exactly** as the singular `setCookie` spells
+/// them, so the native side runs one per-cookie code path for both calls.
+///
+/// This is deliberately not `CookieToSet.toMap()`. The generated map sends `expiresDate` as an
+/// `int`, and the singular call has always sent it as a `String` (both natives read it as one).
+/// Two spellings of one value on one channel is how a field ends up silently null on the platform
+/// side, so the plural conforms to the singular rather than the other way round.
+Map<String, dynamic> _cookieToSetChannelArgs(CookieToSet cookie) =>
+    <String, dynamic>{
+      "url": cookie.url.toString(),
+      "name": cookie.name,
+      "value": cookie.value,
+      "domain": cookie.domain,
+      "path": cookie.path,
+      "expiresDate": cookie.expiresDate?.toString(),
+      "maxAge": cookie.maxAge,
+      "isSecure": cookie.isSecure,
+      "isHttpOnly": cookie.isHttpOnly,
+      "sameSite": cookie.sameSite?.toNativeValue(),
+    };

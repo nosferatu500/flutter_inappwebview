@@ -164,6 +164,62 @@ In this case, this method will return always `true`.""",
     );
   }
 
+  ///{@template flutter_inappwebview_platform_interface.PlatformCookieManager.setCookies}
+  ///Sets several cookies in one call. Each [CookieToSet] carries its own `url`, so one call may
+  ///write cookies for different origins.
+  ///
+  ///Equivalent to calling [setCookie] once per entry, but in a **single** platform round trip.
+  ///That is where the saving is: measured on iOS 26.5, 100 cookies cost **84 ms** through 100
+  ///[setCookie] calls and **~12–16 ms** through one [setCookies] call, and roughly 94% of the
+  ///difference is the per-call channel overhead rather than anything the cookie store does.
+  ///
+  ///Returns one entry per input cookie, **in the order given**.
+  ///
+  ///**The meaning of `false` is not the same on both platforms**, and this is the same asymmetry
+  ///[setCookie] already has:
+  ///- On Android it is the platform's own per-cookie result — the cookie was rejected, or the
+  ///  cookie store could not be resolved for the given `profileName`.
+  ///- On iOS it means only that the cookie could not be **constructed** from the values given.
+  ///  WebKit's `setCookie:` and `setCookies:` both have a `void` completion handler and never
+  ///  report whether a cookie was stored, so a `true` on iOS means "handed to WebKit", not
+  ///  "accepted by WebKit".
+  ///
+  ///An empty list is a no-op and returns an empty list.
+  ///{@endtemplate}
+  ///
+  ///{@macro flutter_inappwebview_platform_interface.PlatformCookieManager.setCookies.supported_platforms}
+  @SupportedPlatforms(
+    platforms: [
+      AndroidPlatform(
+        apiName: 'CookieManager.setCookie',
+        apiUrl:
+            'https://developer.android.com/reference/android/webkit/CookieManager#setCookie(java.lang.String,%20java.lang.String,%20android.webkit.ValueCallback%3Cjava.lang.Boolean%3E)',
+        note:
+            'There is no batch API in the framework, so the native side loops. The saving is the '
+            'single channel round trip, which is where almost all of the cost was.',
+      ),
+      IOSPlatform(
+        apiName: 'WKHTTPCookieStore.setCookies',
+        apiUrl:
+            'https://developer.apple.com/documentation/webkit/wkhttpcookiestore/setcookies(_:completionhandler:)',
+        note:
+            'Uses `setCookies:` on iOS 26.0+ and falls back to a native loop of `setCookie:` below '
+            'it. The two were measured to be within a few milliseconds of each other for 100 '
+            'cookies, so nothing is lost below the floor.',
+      ),
+    ],
+  )
+  Future<List<bool>> setCookies({
+    required List<CookieToSet> cookies,
+    @SupportedPlatforms(platforms: [IOSPlatform()])
+    PlatformInAppWebViewController? webViewController,
+    @SupportedPlatforms(platforms: [AndroidPlatform()]) String? profileName,
+  }) {
+    throw UnimplementedError(
+      'setCookies is not implemented on the current platform',
+    );
+  }
+
   ///{@template flutter_inappwebview_platform_interface.PlatformCookieManager.getCookies}
   ///Gets all the cookies for the given [url].
   ///{@endtemplate}

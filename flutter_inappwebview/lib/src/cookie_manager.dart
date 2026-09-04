@@ -69,6 +69,19 @@ class CookieManager {
     profileName: profileName,
   );
 
+  ///{@macro flutter_inappwebview_platform_interface.PlatformCookieManager.setCookies}
+  ///
+  ///{@macro flutter_inappwebview_platform_interface.PlatformCookieManager.setCookies.supported_platforms}
+  Future<List<bool>> setCookies({
+    required List<CookieToSet> cookies,
+    InAppWebViewController? webViewController,
+    String? profileName,
+  }) => platform.setCookies(
+    cookies: cookies,
+    webViewController: webViewController?.platform,
+    profileName: profileName,
+  );
+
   ///{@macro flutter_inappwebview_platform_interface.PlatformCookieManager.getCookies}
   ///
   ///{@macro flutter_inappwebview_platform_interface.PlatformCookieManager.getCookies.supported_platforms}

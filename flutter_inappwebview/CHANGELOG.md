@@ -695,6 +695,36 @@ Fourteen WebKit APIs read out of the iOS 26.5 SDK, plus one feature that was hal
   Needs both `WebViewFeature.CUSTOM_REQUEST_HEADERS` and `WebViewFeature.MULTI_PROFILE` — the
   latter is what makes any profile reachable at all.
 
+- **`CookieManager.setCookies`** (Android and iOS) — write many cookies in **one** platform round
+  trip, with the new `CookieToSet` type:
+
+  ```dart
+  final results = await CookieManager.instance().setCookies(
+    cookies: [
+      CookieToSet(url: WebUri('https://a.example'), name: 'session', value: 'abc'),
+      CookieToSet(url: WebUri('https://b.example'), name: 'theme', value: 'dark'),
+    ],
+  );
+  ```
+
+  Every entry carries its own `url`, so one call can span several origins. The result has one
+  entry per input cookie, **in the order given**.
+
+  **This is a speed change, and the numbers say where the speed comes from.** Measured on
+  iOS 26.5, 100 cookies cost **84 ms** through 100 `setCookie` calls and **~12–16 ms** through one
+  `setCookies` call — roughly **94% of the difference is per-call channel overhead**, not the
+  cookie store. That is why this is implemented on both platforms rather than only where a native
+  batch API exists: on iOS 26.0+ it uses `WKHTTPCookieStore.setCookies:`, and everywhere else the
+  native side loops, which measured within a few milliseconds of the batch call.
+
+  **`false` does not mean the same thing on both platforms**, and this is the asymmetry `setCookie`
+  already had. On Android it is the platform's own per-cookie answer. On iOS it means only that the
+  cookie could not be *constructed*: WebKit's `setCookie:` and `setCookies:` both have a `void`
+  completion handler and never report whether the store accepted anything.
+
+  `CookieToSet` is a separate type from `Cookie` on purpose — a cookie being written has a `url`
+  and a `maxAge`, a cookie being read has neither and reports `isSessionOnly` instead.
+
 - **`WebMessageListener.contentWorld`** (iOS) — put the injected JavaScript object in an isolated
   content world, where page scripts cannot see it or tamper with it:
 

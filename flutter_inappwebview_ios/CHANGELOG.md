@@ -119,6 +119,14 @@ Fourteen WebKit APIs read out of the iOS 26.5 SDK:
   same kind as `UIConversationContext.Entry`: in Swift the methods are **`add(_:)` / `remove(_:)`**,
   and writing the header's `addObserver:` / `removeObserver:` is a hard error, not a deprecation
 - **`DownloadStartRequest.isUserInitiated` / `.originatingFrame`**, from `WKDownload`
+- **`setCookies`, using `WKHTTPCookieStore.setCookies:` on iOS 26.0+** and a sequential loop of
+  `setCookie:` below it. The two were measured against each other on iOS 26.5 — **12.0 ms vs
+  15.6 ms for 100 cookies** — so the availability floor costs almost nothing; what the method
+  actually buys is the single channel round trip, which 100 singular calls pay 84 ms for.
+  `HTTPCookie` construction was extracted into a shared `makeCookie` so the singular and plural
+  calls build a cookie identically, and **that construction is the only failure signal either has**:
+  both WebKit entry points take a `void` completion handler and never report whether the store
+  accepted a cookie
 - **`WebMessageListener.contentWorld`** (14.0+, so unconditional at this deployment target) — the
   `WKContentWorld` the injected JavaScript object is created in, defaulting to `.page`, which is what
   every earlier release did. `WebMessageListener.fromMap` now decodes a `contentWorld` map and

@@ -220,6 +220,62 @@ class _CookieManagerScreenState extends State<CookieManagerScreen> {
     }
   }
 
+  /// Writes several cookies in one platform round trip.
+  ///
+  /// The names are generated rather than prompted for because the point being demonstrated is the
+  /// batch, not the individual values: one call replaces N, and the per-cookie answers come back
+  /// in the order they were given.
+  Future<void> _setCookies() async {
+    final params = await showParameterDialog(
+      context: context,
+      title: PlatformCookieManagerMethod.setCookies.name,
+      parameters: {'url': _urlController.text.trim(), 'count': 5},
+      requiredPaths: ['url'],
+    );
+
+    if (params == null) return;
+
+    final url = params['url']?.toString() ?? '';
+    if (url.isEmpty) {
+      _recordMethodResult(
+        PlatformCookieManagerMethod.setCookies.name,
+        'Please enter a URL',
+        isError: true,
+      );
+      return;
+    }
+    final count = (params['count'] as num?)?.toInt() ?? 5;
+
+    setState(() => _isLoading = true);
+    try {
+      final results = await _cookieManager.setCookies(
+        cookies: [
+          for (var i = 0; i < count; i++)
+            CookieToSet(
+              url: WebUri(url),
+              name: 'batchCookie$i',
+              value: 'value$i',
+            ),
+        ],
+      );
+      final succeeded = results.where((ok) => ok).length;
+      _recordMethodResult(
+        PlatformCookieManagerMethod.setCookies.name,
+        '$succeeded of ${results.length} cookies set in one call',
+        isError: succeeded != results.length,
+      );
+      await _getCookies();
+    } catch (e) {
+      _recordMethodResult(
+        PlatformCookieManagerMethod.setCookies.name,
+        'Error setting cookies: $e',
+        isError: true,
+      );
+    } finally {
+      setState(() => _isLoading = false);
+    }
+  }
+
   Future<void> _deleteCookie(Cookie cookie, {String? urlOverride}) async {
     final url = urlOverride ?? _urlController.text.trim();
     if (url.isEmpty) {
@@ -818,6 +874,11 @@ class _CookieManagerScreenState extends State<CookieManagerScreen> {
                   PlatformCookieManagerMethod.setCookie,
                   'Set a cookie for the given URL',
                   _setCookie,
+                ),
+                _buildMethodSection(
+                  PlatformCookieManagerMethod.setCookies,
+                  'Set several cookies in one platform round trip',
+                  _setCookies,
                 ),
                 _buildMethodSection(
                   PlatformCookieManagerMethod.getCookies,
