@@ -25,6 +25,7 @@ class PlatformWebMessageListenerCreationParams {
   const PlatformWebMessageListenerCreationParams({
     required this.jsObjectName,
     this.allowedOriginRules,
+    this.contentWorld,
     this.onPostMessage,
   });
 
@@ -43,6 +44,42 @@ class PlatformWebMessageListenerCreationParams {
   ///{@macro flutter_inappwebview_platform_interface.PlatformWebMessageListenerCreationParams.allowedOriginRules.supported_platforms}
   @SupportedPlatforms(platforms: [AndroidPlatform(), IOSPlatform()])
   final Set<String>? allowedOriginRules;
+
+  ///{@template flutter_inappwebview_platform_interface.PlatformWebMessageListenerCreationParams.contentWorld}
+  ///The scope of execution the injected JavaScript object is created in.
+  ///
+  ///Listeners are keyed on **both** [jsObjectName] and the content world, so the same
+  ///[jsObjectName] may be registered once per world and each registration receives only the
+  ///messages posted from its own world.
+  ///
+  ///Defaults to `null`, which means [ContentWorld.PAGE] — the webpage's own scope, and the
+  ///behaviour of every release before this one.
+  ///
+  ///Use it to keep the injected object out of the page's reach: a listener in a world other than
+  ///[ContentWorld.PAGE] is invisible to page scripts, and the code that talks to it — whether
+  ///from [PlatformInAppWebViewController.evaluateJavascript] or a [UserScript] — must name the
+  ///same [ContentWorld] to see it. The DOM is shared as normal; only the JavaScript scope
+  ///differs.
+  ///
+  ///**NOTE for Android**: this is **iOS-only**, and it is not an oversight. Android's
+  ///[ContentWorld] is an `<iframe>` emulation shared by
+  ///[PlatformInAppWebViewController.evaluateJavascript] and [UserScript], while `androidx`'s own
+  ///isolated worlds (behind [WebViewFeature.JS_INJECTION_IN_FRAME_AND_WORLD]) are a separate
+  ///mechanism with no "evaluate in world" entry point. Honouring this field on Android would
+  ///register a listener in a scope no Dart code could reach. On Android the value is ignored.
+  ///{@endtemplate}
+  ///
+  ///{@macro flutter_inappwebview_platform_interface.PlatformWebMessageListenerCreationParams.contentWorld.supported_platforms}
+  @SupportedPlatforms(
+    platforms: [
+      IOSPlatform(
+        apiName: 'WKUserContentController.addScriptMessageHandler',
+        apiUrl:
+            'https://developer.apple.com/documentation/webkit/wkusercontentcontroller/3585113-addscriptmessagehandler',
+      ),
+    ],
+  )
+  final ContentWorld? contentWorld;
 
   ///{@template flutter_inappwebview_platform_interface.PlatformWebMessageListenerCreationParams.onPostMessage}
   ///Event that receives a message sent by a `postMessage()` on the injected JavaScript object.
@@ -90,7 +127,7 @@ class PlatformWebMessageListenerCreationParams {
 
   @override
   String toString() {
-    return 'PlatformWebMessageListenerCreationParams{jsObjectName: $jsObjectName, allowedOriginRules: $allowedOriginRules, onPostMessage: $onPostMessage}';
+    return 'PlatformWebMessageListenerCreationParams{jsObjectName: $jsObjectName, allowedOriginRules: $allowedOriginRules, contentWorld: $contentWorld, onPostMessage: $onPostMessage}';
   }
 }
 
@@ -156,6 +193,11 @@ abstract class PlatformWebMessageListener extends PlatformInterface
   ///
   ///{@macro flutter_inappwebview_platform_interface.PlatformWebMessageListenerCreationParams.allowedOriginRules.supported_platforms}
   Set<String>? get allowedOriginRules => params.allowedOriginRules;
+
+  ///{@macro flutter_inappwebview_platform_interface.PlatformWebMessageListenerCreationParams.contentWorld}
+  ///
+  ///{@macro flutter_inappwebview_platform_interface.PlatformWebMessageListenerCreationParams.contentWorld.supported_platforms}
+  ContentWorld? get contentWorld => params.contentWorld;
 
   ///{@macro flutter_inappwebview_platform_interface.PlatformWebMessageListenerCreationParams.onPostMessage}
   ///

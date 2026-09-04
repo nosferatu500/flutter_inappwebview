@@ -340,6 +340,27 @@ rename; this entry is the API-owner's view.
   the platform — its name matching is case-insensitive and its value matching is not, so a Dart-side
   `where` would not be equivalent.
 
+- **`PlatformWebMessageListenerCreationParams.contentWorld`** (iOS), a `ContentWorld?` defaulting to
+  `null` — the page world, so nothing existing changes. It places the injected JavaScript object in
+  an isolated content world: page scripts cannot see it, and only code naming the same world can.
+  The DOM is shared; only the JavaScript scope differs. The Swift side passes it to the
+  `PluginScript` it already builds, and `JavaScriptBridgeJS`'s script is `requiredInAllContentWorlds`,
+  so `callHandler` reaches the new world with no further wiring. `windowId` namespaces a
+  `window.open` child's worlds from its opener's, exactly as `UserScript.fromMap` does it.
+
+  **Annotated iOS-only on purpose.** `ContentWorld` means two different things on the two platforms:
+  a real `WKContentWorld` on iOS, and on Android an `<iframe>` emulation shared by
+  `evaluateJavascript` and `UserScript`. `androidx`'s real worlds are a third mechanism, and it
+  offers no "evaluate in world" entry point — only injection-time scripts and
+  `JavaScriptReplyProxy.executeJavaScript`, which runs in the frame and world that sent a message.
+  Honouring the field on Android would register a listener in a scope no Dart code could reach.
+  Android ignores it.
+
+- **`WebViewFeature.JS_INJECTION_IN_FRAME_AND_WORLD`** (Android), the mirror for `androidx.webkit`'s
+  `JS_INJECTION_IN_FRAME_AND_WORLD`. **Nothing in this package consumes it** — it is exposed for
+  feature detection and to make the gap above visible. Verified `true` on API 33 / WebView 151 and
+  API 37 / WebView 149, and present in androidx's own `@StringDef`, so it needs no lint suppression.
+
 - **`PlatformCookieManager.setAcceptCookie` / `.isAcceptCookieEnabled` gained iOS** (17.0+), from
   `WKHTTPCookieStore.setCookiePolicy` / `getCookiePolicy`. No signature change and no new method —
   two `@SupportedPlatforms` entries and an iOS implementation, so the pair stops being Android-only.

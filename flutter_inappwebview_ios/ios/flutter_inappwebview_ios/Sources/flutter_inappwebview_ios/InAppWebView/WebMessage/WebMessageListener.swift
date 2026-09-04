@@ -14,15 +14,20 @@ public class WebMessageListener: FlutterMethodCallDelegate {
     var id: String
     var jsObjectName: String
     var allowedOriginRules: Set<String>
+    /// The scope of execution the injected JavaScript object is created in, or `nil` for the
+    /// webpage's own scope. Unlike Android this needs no feature check: `WKContentWorld` is
+    /// iOS 14.0+ and this module's deployment target is 15.0.
+    var contentWorld: WKContentWorld?
     var channelDelegate: WebMessageListenerChannelDelegate?
     weak var webView: InAppWebView?
     var plugin: InAppWebViewFlutterPlugin?
-    
-    public init(plugin: InAppWebViewFlutterPlugin, id: String, jsObjectName: String, allowedOriginRules: Set<String>) {
+
+    public init(plugin: InAppWebViewFlutterPlugin, id: String, jsObjectName: String, allowedOriginRules: Set<String>, contentWorld: WKContentWorld? = nil) {
         self.id = id
         self.plugin = plugin
         self.jsObjectName = jsObjectName
         self.allowedOriginRules = allowedOriginRules
+        self.contentWorld = contentWorld
         super.init()
         let channel = FlutterMethodChannel(name: WebMessageListener.METHOD_CHANNEL_NAME_PREFIX + self.id + "_" + self.jsObjectName,
                                            binaryMessenger: plugin.registrar.messenger())
@@ -112,11 +117,16 @@ public class WebMessageListener: FlutterMethodCallDelegate {
             let allowedOriginRules = webView.settings?.pluginScriptsOriginAllowList
             let forMainFrameOnly = webView.settings?.pluginScriptsForMainFrameOnly ?? true
             
+            // The world is where the injected object is created. `addPluginScript` registers it on
+            // the controller, and `JavaScriptBridgeJS`'s script is `requiredInAllContentWorlds`, so
+            // `FlutterInAppWebViewWebMessageListener` and the `callHandler` message handler both
+            // reach the new world without anything further here.
             webView.configuration.userContentController.addPluginScript(PluginScript(
                 groupName: "WebMessageListener-" + id + "-" + jsObjectName,
                 source: source,
                 injectionTime: .atDocumentStart,
                 forMainFrameOnly: forMainFrameOnly,
+                in: contentWorld ?? .page,
                 allowedOriginRules: allowedOriginRules,
                 requiredInAllContentWorlds: false,
                 messageHandlerNames: []
@@ -125,7 +135,7 @@ public class WebMessageListener: FlutterMethodCallDelegate {
         }
     }
     
-    public static func fromMap(plugin: InAppWebViewFlutterPlugin, map: [String:Any?]?) -> WebMessageListener? {
+    public static func fromMap(plugin: InAppWebViewFlutterPlugin, map: [String:Any?]?, windowId: Int64? = nil) -> WebMessageListener? {
         guard let map = map else {
             return nil
         }
@@ -133,7 +143,11 @@ public class WebMessageListener: FlutterMethodCallDelegate {
             plugin: plugin,
             id: map["id"] as! String,
             jsObjectName: map["jsObjectName"] as! String,
-            allowedOriginRules: Set(map["allowedOriginRules"] as! [String])
+            allowedOriginRules: Set(map["allowedOriginRules"] as! [String]),
+            // `windowId` is what namespaces a `window.open` child's worlds from its opener's, the
+            // same way `UserScript.fromMap` does it -- without it two windows asking for the world
+            // "a" would share one scope.
+            contentWorld: WKContentWorld.fromMap(map: map["contentWorld"] as? [String:Any?], windowId: windowId)
         )
     }
     

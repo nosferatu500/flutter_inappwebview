@@ -119,6 +119,17 @@ Fourteen WebKit APIs read out of the iOS 26.5 SDK:
   same kind as `UIConversationContext.Entry`: in Swift the methods are **`add(_:)` / `remove(_:)`**,
   and writing the header's `addObserver:` / `removeObserver:` is a hard error, not a deprecation
 - **`DownloadStartRequest.isUserInitiated` / `.originatingFrame`**, from `WKDownload`
+- **`WebMessageListener.contentWorld`** (14.0+, so unconditional at this deployment target) — the
+  `WKContentWorld` the injected JavaScript object is created in, defaulting to `.page`, which is what
+  every earlier release did. `WebMessageListener.fromMap` now decodes a `contentWorld` map and
+  `initJsInstance` builds its `PluginScript` with `in:` that world. **Nothing else was needed**: the
+  world is registered on the controller by `addPluginScript`, and `JavaScriptBridgeJS`'s script is
+  already `requiredInAllContentWorlds`, so `FlutterInAppWebViewWebMessageListener` and the
+  `callHandler` message handler both reach the new world through the existing `sync` path.
+  `fromMap` gained a `windowId` parameter, passed from the channel delegate, because
+  `WKContentWorld.fromMap` uses it to namespace a `window.open` child's worlds from its opener's —
+  without it two windows asking for the world `"a"` would share one scope. This is the same
+  treatment `UserScript.fromMap` has always had
 
 ### Fixed
 

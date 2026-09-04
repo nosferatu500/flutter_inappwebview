@@ -1120,6 +1120,37 @@ class _MethodTesterWidgetState extends State<MethodTesterWidget> {
             },
           ),
           MethodEntry(
+            description:
+                'Adds a web message listener in an isolated content world '
+                '(iOS only), where page scripts cannot see it',
+            methodEnum:
+                PlatformInAppWebViewControllerMethod.addWebMessageListener,
+            parameters: {
+              'jsObjectName': 'isolatedListener',
+              'contentWorld': 'myWorld',
+            },
+            requiredParameters: ['jsObjectName', 'contentWorld'],
+            execute: (controller, params) async {
+              final worldName = params['contentWorld']?.toString() ?? 'myWorld';
+              await controller.addWebMessageListener(
+                WebMessageListener(
+                  jsObjectName: params['jsObjectName']?.toString() ?? '',
+                  contentWorld: ContentWorld.world(name: worldName),
+                  onPostMessage:
+                      (message, sourceOrigin, isMainFrame, replyProxy) {
+                        // Handle message
+                      },
+                ),
+              );
+              // Only code naming the same world can reach the object; the page
+              // world sees `undefined`.
+              return await controller.evaluateJavascript(
+                source: "typeof ${params['jsObjectName']}",
+                contentWorld: ContentWorld.world(name: worldName),
+              );
+            },
+          ),
+          MethodEntry(
             description: 'Checks if listener exists',
             methodEnum:
                 PlatformInAppWebViewControllerMethod.hasWebMessageListener,

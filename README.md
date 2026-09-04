@@ -174,6 +174,7 @@ by its `WebViewFeature` flag.
 | `WebsiteDataType.WKWebsiteDataTypeScreenTime` | iOS 26.0+ | Screen Time data. Deliberately **not** part of `WebsiteDataType.ALL` — passing it to a bulk delete terminates the app |
 | `CustomHeader` (new type) | Android | The name/value/`originRules` triple `ProfileStore.addCustomHeader()` takes. `originRules` uses the same format as `addWebMessageListener`; a header whose rules match nothing is silently never sent |
 | `WebResourceResponse.cookies` | Android | A list of `Set-Cookie` values applied as if the intercepted response had carried them. A **list**, because `headers` is a `Map` and cannot hold a repeated header name. **Silently ignored** unless cookie interception is enabled — nothing throws and nothing is logged |
+| `WebMessageListener.contentWorld` | iOS | Creates the injected JavaScript object in an isolated `ContentWorld` instead of the page world, so page scripts cannot see or tamper with it. Defaults to the page world. Android **ignores** it: there `ContentWorld` is an `<iframe>` emulation, and `androidx`'s real isolated worlds have no "evaluate in world" entry point, so a listener placed in one would be unreachable from Dart |
 
 > **One caveat, stated rather than buried.** `onWritingToolsActiveChanged` is implemented and its
 > plumbing is verified, but it has **not yet been observed to fire on a real device**, and the cause

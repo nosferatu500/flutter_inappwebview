@@ -150,6 +150,26 @@ class WebViewFeature {
     'GET_WEB_VIEW_RENDERER',
   );
 
+  ///Feature for [isFeatureSupported]. `androidx.webkit`'s real isolated JavaScript worlds:
+  ///`WebViewCompat.addJavaScriptOnEvent`, the world-taking overloads of
+  ///`addWebMessageListener` / `removeWebMessageListener`, `getExecutionWorld` and
+  ///`JavaScriptReplyProxy.executeJavaScript`.
+  ///
+  ///**No API in this plugin uses it yet, and this constant is exposed so you can see that
+  ///coming.** Android's [ContentWorld] is a `<iframe>` emulation shared by
+  ///[PlatformInAppWebViewController.evaluateJavascript] and [UserScript]; `androidx`'s worlds are
+  ///a different mechanism, and `androidx` offers no way to evaluate arbitrary code in one on
+  ///demand — only injection-time scripts and `JavaScriptReplyProxy.executeJavaScript`, which runs
+  ///in the frame and world that sent a message. Moving one of the three onto real worlds without
+  ///the others would make them silently disagree about what a world is, so the migration is all
+  ///or nothing and has not been done.
+  ///
+  ///Measured `true` on API 33 / WebView 151 and API 37 / WebView 149.
+  static const JS_INJECTION_IN_FRAME_AND_WORLD = WebViewFeature._internal(
+    'JS_INJECTION_IN_FRAME_AND_WORLD',
+    'JS_INJECTION_IN_FRAME_AND_WORLD',
+  );
+
   ///
   static const MULTI_PROCESS = WebViewFeature._internal(
     'MULTI_PROCESS',
@@ -483,6 +503,7 @@ class WebViewFeature {
     WebViewFeature.GET_WEB_CHROME_CLIENT,
     WebViewFeature.GET_WEB_VIEW_CLIENT,
     WebViewFeature.GET_WEB_VIEW_RENDERER,
+    WebViewFeature.JS_INJECTION_IN_FRAME_AND_WORLD,
     WebViewFeature.MULTI_PROCESS,
     WebViewFeature.MULTI_PROFILE,
     WebViewFeature.MUTE_AUDIO,
@@ -653,6 +674,8 @@ class WebViewFeature {
         return 'GET_WEB_VIEW_CLIENT';
       case 'GET_WEB_VIEW_RENDERER':
         return 'GET_WEB_VIEW_RENDERER';
+      case 'JS_INJECTION_IN_FRAME_AND_WORLD':
+        return 'JS_INJECTION_IN_FRAME_AND_WORLD';
       case 'MULTI_PROCESS':
         return 'MULTI_PROCESS';
       case 'MULTI_PROFILE':

@@ -9,11 +9,13 @@ class WebMessageListener {
   WebMessageListener({
     required String jsObjectName,
     Set<String>? allowedOriginRules,
+    ContentWorld? contentWorld,
     OnPostMessageCallback? onPostMessage,
   }) : this.fromPlatformCreationParams(
          params: PlatformWebMessageListenerCreationParams(
            jsObjectName: jsObjectName,
            allowedOriginRules: allowedOriginRules,
+           contentWorld: contentWorld,
            onPostMessage: onPostMessage,
          ),
        );
@@ -70,6 +72,11 @@ class WebMessageListener {
   ///
   ///{@macro flutter_inappwebview_platform_interface.PlatformWebMessageListener.allowedOriginRules.supported_platforms}
   Set<String>? get allowedOriginRules => platform.allowedOriginRules;
+
+  ///{@macro flutter_inappwebview_platform_interface.PlatformWebMessageListener.contentWorld}
+  ///
+  ///{@macro flutter_inappwebview_platform_interface.PlatformWebMessageListener.contentWorld.supported_platforms}
+  ContentWorld? get contentWorld => platform.contentWorld;
 
   ///{@macro flutter_inappwebview_platform_interface.PlatformWebMessageListener.onPostMessage}
   ///

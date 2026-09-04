@@ -14,6 +14,7 @@ class IOSWebMessageListenerCreationParams
   const IOSWebMessageListenerCreationParams({
     required this.allowedOriginRules,
     required super.jsObjectName,
+    super.contentWorld,
     super.onPostMessage,
   });
 
@@ -26,6 +27,7 @@ class IOSWebMessageListenerCreationParams
     return IOSWebMessageListenerCreationParams(
       allowedOriginRules: params.allowedOriginRules ?? {"*"},
       jsObjectName: params.jsObjectName,
+      contentWorld: params.contentWorld,
       onPostMessage: params.onPostMessage,
     );
   }
@@ -35,7 +37,7 @@ class IOSWebMessageListenerCreationParams
 
   @override
   String toString() {
-    return 'IOSWebMessageListenerCreationParams{jsObjectName: $jsObjectName, allowedOriginRules: $allowedOriginRules, onPostMessage: $onPostMessage}';
+    return 'IOSWebMessageListenerCreationParams{jsObjectName: $jsObjectName, allowedOriginRules: $allowedOriginRules, contentWorld: $contentWorld, onPostMessage: $onPostMessage}';
   }
 }
 
@@ -118,6 +120,7 @@ class IOSWebMessageListener extends PlatformWebMessageListener
       "id": _id,
       "jsObjectName": params.jsObjectName,
       "allowedOriginRules": _iosParams.allowedOriginRules.toList(),
+      "contentWorld": params.contentWorld?.toMap(),
     };
   }
 
@@ -128,7 +131,7 @@ class IOSWebMessageListener extends PlatformWebMessageListener
 
   @override
   String toString() {
-    return 'IOSWebMessageListener{id: $_id, jsObjectName: ${params.jsObjectName}, allowedOriginRules: ${params.allowedOriginRules}, replyProxy: $_replyProxy}';
+    return 'IOSWebMessageListener{id: $_id, jsObjectName: ${params.jsObjectName}, allowedOriginRules: ${params.allowedOriginRules}, contentWorld: ${params.contentWorld}, replyProxy: $_replyProxy}';
   }
 }
 

@@ -401,5 +401,98 @@ void webMessage() {
             'https://*.example.com must not match foo.example.com.evil.test',
       );
     });
+
+    skippableTestWidgets(
+      'WebMessageListener contentWorld isolates the injected object',
+      (WidgetTester tester) async {
+        // Two listeners, added at the same moment and differing only in their content world.
+        // Both halves are load-bearing: the page-world one proves the injection path works at
+        // all, so a `undefined` from the isolated one means isolation rather than a listener
+        // that was never installed. A single-sided test passes against an implementation that
+        // ignores `contentWorld` entirely — that is exactly mutant A below.
+        const worldName = 'myIsolatedWorld';
+
+        final Completer<InAppWebViewController> controllerCompleter =
+            Completer<InAppWebViewController>();
+        final Completer<void> pageLoaded = Completer<void>();
+
+        await tester.pumpWidget(
+          Directionality(
+            textDirection: TextDirection.ltr,
+            child: InAppWebView(
+              key: GlobalKey(),
+              onWebViewCreated: (controller) async {
+                await controller.addWebMessageListener(
+                  WebMessageListener(
+                    jsObjectName: "myIsolatedObj",
+                    contentWorld: ContentWorld.world(name: worldName),
+                    onPostMessage:
+                        (message, sourceOrigin, isMainFrame, replyProxy) {},
+                  ),
+                );
+                await controller.addWebMessageListener(
+                  WebMessageListener(
+                    jsObjectName: "myPageObj",
+                    onPostMessage:
+                        (message, sourceOrigin, isMainFrame, replyProxy) {},
+                  ),
+                );
+                controllerCompleter.complete(controller);
+              },
+              onLoadStop: (controller, url) async {
+                if (!pageLoaded.isCompleted) {
+                  pageLoaded.complete();
+                }
+              },
+            ),
+          ),
+        );
+        final controller = await controllerCompleter.future;
+        await controller.loadUrl(urlRequest: URLRequest(url: TEST_URL_EXAMPLE));
+        await pageLoaded.future;
+
+        // Read both names from both worlds. Four answers, and only one arrangement of them is
+        // consistent with the worlds actually being separate.
+        Future<Object?> readFromPage(String name) =>
+            controller.evaluateJavascript(source: "typeof window.$name");
+        Future<Object?> readFromWorld(String name) =>
+            controller.evaluateJavascript(
+              source: "typeof window.$name",
+              contentWorld: ContentWorld.world(name: worldName),
+            );
+
+        expect(
+          await readFromPage('myPageObj'),
+          'object',
+          reason:
+              'the page-world control must be installed, or nothing below means anything',
+        );
+        expect(
+          await readFromPage('myIsolatedObj'),
+          'undefined',
+          reason:
+              'a listener asked for an isolated world must not be visible to page scripts',
+        );
+        expect(
+          await readFromWorld('myIsolatedObj'),
+          'object',
+          reason:
+              'the isolated listener must be reachable from its own content world',
+        );
+        expect(
+          await readFromWorld('myPageObj'),
+          'undefined',
+          reason: 'a page-world listener must not leak into the isolated world',
+        );
+      },
+      // iOS-only by design. Android's `ContentWorld` is an `<iframe>` emulation that
+      // `androidx`'s isolated worlds are not part of; see the dartdoc on
+      // `PlatformWebMessageListenerCreationParams.contentWorld`.
+      skip:
+          shouldSkip ||
+          !WebMessageListener.isPropertySupported(
+            PlatformWebMessageListenerCreationParamsProperty.contentWorld,
+          ),
+    );
   }, skip: shouldSkip);
 }

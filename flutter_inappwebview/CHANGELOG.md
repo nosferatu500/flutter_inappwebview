@@ -695,6 +695,39 @@ Fourteen WebKit APIs read out of the iOS 26.5 SDK, plus one feature that was hal
   Needs both `WebViewFeature.CUSTOM_REQUEST_HEADERS` and `WebViewFeature.MULTI_PROFILE` — the
   latter is what makes any profile reachable at all.
 
+- **`WebMessageListener.contentWorld`** (iOS) — put the injected JavaScript object in an isolated
+  content world, where page scripts cannot see it or tamper with it:
+
+  ```dart
+  await controller.addWebMessageListener(
+    WebMessageListener(
+      jsObjectName: 'myBridge',
+      contentWorld: ContentWorld.world(name: 'myBridgeWorld'),
+      onPostMessage: (message, sourceOrigin, isMainFrame, replyProxy) {},
+    ),
+  );
+  // Only code naming the same world sees it; from the page, `myBridge` is `undefined`.
+  await controller.evaluateJavascript(
+    source: "myBridge.postMessage('hi')",
+    contentWorld: ContentWorld.world(name: 'myBridgeWorld'),
+  );
+  ```
+
+  Defaults to the page world, which is what every earlier release did, so existing listeners are
+  unaffected. The DOM is shared as normal — only the JavaScript scope differs.
+
+  **iOS only, and deliberately so.** On Android `ContentWorld` is the plugin's `<iframe>`
+  emulation, shared by `evaluateJavascript` and `UserScript`; `androidx`'s real isolated worlds
+  (`WebViewFeature.JS_INJECTION_IN_FRAME_AND_WORLD`, also new below) are a separate mechanism with
+  no way to evaluate code in one on demand, so a listener placed in one would be unreachable from
+  Dart. Android ignores the value. Check `WebMessageListener.isPropertySupported(...contentWorld)`
+  rather than assuming.
+
+- **`WebViewFeature.JS_INJECTION_IN_FRAME_AND_WORLD`** (Android) — the feature constant for
+  `androidx.webkit`'s real isolated JavaScript worlds. **No plugin API uses it yet**; it is exposed
+  so you can detect what the installed WebView can do. Measured `true` on API 33 / WebView 151 and
+  API 37 / WebView 149.
+
 - **`DownloadStartRequest.isUserInitiated` / `.originatingFrame`** — from `WKDownload`
 
 `WebsiteDataType.WKWebsiteDataTypeScreenTime` is the third member of that family and has shipped

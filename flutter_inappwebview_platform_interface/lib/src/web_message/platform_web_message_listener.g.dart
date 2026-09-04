@@ -39,6 +39,17 @@ enum PlatformWebMessageListenerCreationParamsProperty {
   ///{@endtemplate}
   allowedOriginRules,
 
+  ///Can be used to check if the [PlatformWebMessageListenerCreationParams.contentWorld] property is supported at runtime.
+  ///
+  ///{@template flutter_inappwebview_platform_interface.PlatformWebMessageListenerCreationParams.contentWorld.supported_platforms}
+  ///
+  ///**Officially Supported Platforms/Implementations**:
+  ///- iOS WKWebView ([Official API - WKUserContentController.addScriptMessageHandler](https://developer.apple.com/documentation/webkit/wkusercontentcontroller/3585113-addscriptmessagehandler))
+  ///
+  ///Use the [PlatformWebMessageListenerCreationParams.isPropertySupported] method to check if this property is supported at runtime.
+  ///{@endtemplate}
+  contentWorld,
+
   ///Can be used to check if the [PlatformWebMessageListenerCreationParams.jsObjectName] property is supported at runtime.
   ///
   ///{@template flutter_inappwebview_platform_interface.PlatformWebMessageListenerCreationParams.jsObjectName.supported_platforms}
@@ -83,6 +94,9 @@ extension _PlatformWebMessageListenerCreationParamsPropertySupported
               TargetPlatform.android,
               TargetPlatform.iOS,
             ].contains(platform ?? defaultTargetPlatform);
+      case PlatformWebMessageListenerCreationParamsProperty.contentWorld:
+        return ((kIsWeb && platform != null) || !kIsWeb) &&
+            [TargetPlatform.iOS].contains(platform ?? defaultTargetPlatform);
       case PlatformWebMessageListenerCreationParamsProperty.jsObjectName:
         return ((kIsWeb && platform != null) || !kIsWeb) &&
             [

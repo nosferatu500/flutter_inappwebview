@@ -445,6 +445,25 @@ class WebViewFeature_ {
     "CUSTOM_REQUEST_HEADERS",
   );
 
+  ///Feature for [isFeatureSupported]. `androidx.webkit`'s real isolated JavaScript worlds:
+  ///`WebViewCompat.addJavaScriptOnEvent`, the world-taking overloads of
+  ///`addWebMessageListener` / `removeWebMessageListener`, `getExecutionWorld` and
+  ///`JavaScriptReplyProxy.executeJavaScript`.
+  ///
+  ///**No API in this plugin uses it yet, and this constant is exposed so you can see that
+  ///coming.** Android's [ContentWorld] is a `<iframe>` emulation shared by
+  ///[PlatformInAppWebViewController.evaluateJavascript] and [UserScript]; `androidx`'s worlds are
+  ///a different mechanism, and `androidx` offers no way to evaluate arbitrary code in one on
+  ///demand — only injection-time scripts and `JavaScriptReplyProxy.executeJavaScript`, which runs
+  ///in the frame and world that sent a message. Moving one of the three onto real worlds without
+  ///the others would make them silently disagree about what a world is, so the migration is all
+  ///or nothing and has not been done.
+  ///
+  ///Measured `true` on API 33 / WebView 151 and API 37 / WebView 149.
+  static const JS_INJECTION_IN_FRAME_AND_WORLD = WebViewFeature_._internal(
+    "JS_INJECTION_IN_FRAME_AND_WORLD",
+  );
+
   ///Feature for [isFeatureSupported]. This feature covers
   ///[InAppWebViewSettings.includeCookiesOnShouldInterceptRequest],
   ///[WebResourceResponse.cookies], and the service-worker switch
