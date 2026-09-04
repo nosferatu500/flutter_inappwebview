@@ -314,7 +314,33 @@ rename; this entry is the API-owner's view.
   cookie-intercept API is `androidx`-only, and a named profile's Service Worker settings are
   reachable only through the framework's `android.webkit.ServiceWorkerWebSettings`, which declares
   exactly the four older settings and nothing else. No future WebView opens this — there is nothing
-  to call — so the getter answers `null` and the setter is a no-op there.- **`PlatformCookieManager.setAcceptCookie` / `.isAcceptCookieEnabled` gained iOS** (17.0+), from
+  to call — so the getter answers `null` and the setter is a no-op there.
+
+- **The custom-request-header family on `PlatformProfileStore`** (Android), from `androidx.webkit`'s
+  `CUSTOM_REQUEST_HEADERS`, plus the new `CustomHeader` type and the
+  `WebViewFeature.CUSTOM_REQUEST_HEADERS` mirror: `addCustomHeader`, `hasCustomHeader`,
+  `getCustomHeaders`, `clearCustomHeader`, `clearAllCustomHeaders`, each taking the optional
+  `profileName` every profile-scoped surface here takes.
+
+  **These are not per-request headers.** They are attached to a *browsing profile* and sent on every
+  request it makes to an origin matching the header's `originRules` — subresources, prefetches and
+  service-worker requests included, `WebSocket` excluded. That is a different thing from
+  `URLRequest.headers`, which apply to one load. Headers added this way also appear in the request
+  handed to `shouldInterceptRequest`.
+
+  `originRules` uses the same format as `addWebMessageListener`'s allowed origin rules. A header
+  whose rules match nothing is simply never sent; nothing throws.
+
+  **The androidx methods live on `Profile`, which this plugin does not expose as an object** — every
+  profile-scoped surface here (`CookieManager`, `WebStorageManager`, `ServiceWorkerController`,
+  `GeolocationPermissions`) instead takes a profile *name*. These follow that, so the mapping to
+  androidx is by capability rather than by class. androidx's eight methods become five: its three
+  `getCustomHeaders` and two `clearCustomHeader` overloads become optional named arguments, which is
+  what Dart has instead of overloading. No capability is dropped, and the filtering is still done by
+  the platform — its name matching is case-insensitive and its value matching is not, so a Dart-side
+  `where` would not be equivalent.
+
+- **`PlatformCookieManager.setAcceptCookie` / `.isAcceptCookieEnabled` gained iOS** (17.0+), from
   `WKHTTPCookieStore.setCookiePolicy` / `getCookiePolicy`. No signature change and no new method —
   two `@SupportedPlatforms` entries and an iOS implementation, so the pair stops being Android-only.
   The existing `bool` / `bool?` contract already said the right thing and now carries a second

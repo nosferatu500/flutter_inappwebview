@@ -69,6 +69,17 @@ class WebViewFeature {
     'CREATE_WEB_MESSAGE_CHANNEL',
   );
 
+  ///Feature for [isFeatureSupported]. This feature covers the custom-request-header family on
+  ///[PlatformProfileStore]: [PlatformProfileStore.addCustomHeader],
+  ///[PlatformProfileStore.hasCustomHeader], [PlatformProfileStore.getCustomHeaders],
+  ///[PlatformProfileStore.clearCustomHeader] and [PlatformProfileStore.clearAllCustomHeaders].
+  ///
+  ///Note these also need [MULTI_PROFILE], which is what makes a profile reachable at all.
+  static const CUSTOM_REQUEST_HEADERS = WebViewFeature._internal(
+    'CUSTOM_REQUEST_HEADERS',
+    'CUSTOM_REQUEST_HEADERS',
+  );
+
   ///Feature for [isFeatureSupported]. This feature covers
   ///[PlatformInAppWebViewController.setDefaultTrafficStatsTag].
   static const DEFAULT_TRAFFICSTATS_TAGGING = WebViewFeature._internal(
@@ -460,6 +471,7 @@ class WebViewFeature {
     WebViewFeature.BACK_FORWARD_CACHE,
     WebViewFeature.COOKIE_INTERCEPT,
     WebViewFeature.CREATE_WEB_MESSAGE_CHANNEL,
+    WebViewFeature.CUSTOM_REQUEST_HEADERS,
     WebViewFeature.DEFAULT_TRAFFICSTATS_TAGGING,
     WebViewFeature.DELETE_BROWSING_DATA,
     WebViewFeature.DISABLED_ACTION_MODE_MENU_ITEMS,
@@ -617,6 +629,8 @@ class WebViewFeature {
         return 'COOKIE_INTERCEPT';
       case 'CREATE_WEB_MESSAGE_CHANNEL':
         return 'CREATE_WEB_MESSAGE_CHANNEL';
+      case 'CUSTOM_REQUEST_HEADERS':
+        return 'CUSTOM_REQUEST_HEADERS';
       case 'DEFAULT_TRAFFICSTATS_TAGGING':
         return 'DEFAULT_TRAFFICSTATS_TAGGING';
       case 'DELETE_BROWSING_DATA':

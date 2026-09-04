@@ -1218,6 +1218,155 @@ class _ServiceControllersScreenState extends State<ServiceControllersScreen> {
   }
 
   // ProfileStore methods (androidx MULTI_PROFILE)
+  //
+  // The custom-header family below is androidx CUSTOM_REQUEST_HEADERS. These headers are profile
+  // state that outlives this screen: once added they ride every matching request the profile makes
+  // until cleared, so the demo always offers a way to clear them again.
+  Future<void> _addCustomHeader() async {
+    final params = await showParameterDialog(
+      context: context,
+      title: 'Add Custom Request Header',
+      parameters: {'name': 'X-Tenant', 'value': 'acme', 'originRules': '*'},
+      requiredPaths: ['name', 'value', 'originRules'],
+    );
+    if (params == null) return;
+    setState(() => _isLoading = true);
+    try {
+      await ProfileStore.instance().addCustomHeader(
+        CustomHeader(
+          name: params['name']?.toString() ?? '',
+          value: params['value']?.toString() ?? '',
+          // Comma-separated in the dialog; the API takes a set of origin rules in the same format
+          // as addWebMessageListener, e.g. "https://*.example.com" or "*".
+          originRules: (params['originRules']?.toString() ?? '')
+              .split(',')
+              .map((e) => e.trim())
+              .where((e) => e.isNotEmpty)
+              .toSet(),
+        ),
+      );
+      _recordMethodResult(
+        PlatformProfileStoreMethod.addCustomHeader.name,
+        'Added ${params['name']}: ${params['value']}',
+        isError: false,
+      );
+    } catch (e) {
+      _recordMethodResult(
+        PlatformProfileStoreMethod.addCustomHeader.name,
+        'Error: $e',
+        isError: true,
+      );
+    } finally {
+      setState(() => _isLoading = false);
+    }
+  }
+
+  Future<void> _getCustomHeaders() async {
+    setState(() => _isLoading = true);
+    try {
+      final headers = await ProfileStore.instance().getCustomHeaders();
+      _recordMethodResult(
+        PlatformProfileStoreMethod.getCustomHeaders.name,
+        headers.isEmpty
+            ? 'No custom headers'
+            : headers
+                  .map((h) => '${h.name}: ${h.value} -> ${h.originRules}')
+                  .join('\n'),
+        isError: false,
+      );
+    } catch (e) {
+      _recordMethodResult(
+        PlatformProfileStoreMethod.getCustomHeaders.name,
+        'Error: $e',
+        isError: true,
+      );
+    } finally {
+      setState(() => _isLoading = false);
+    }
+  }
+
+  Future<void> _hasCustomHeader() async {
+    final params = await showParameterDialog(
+      context: context,
+      title: 'Has Custom Header',
+      parameters: {'name': 'X-Tenant'},
+      requiredPaths: ['name'],
+    );
+    if (params == null) return;
+    final name = params['name']?.toString() ?? '';
+    setState(() => _isLoading = true);
+    try {
+      final has = await ProfileStore.instance().hasCustomHeader(name);
+      _recordMethodResult(
+        PlatformProfileStoreMethod.hasCustomHeader.name,
+        '$name: $has',
+        isError: false,
+      );
+    } catch (e) {
+      _recordMethodResult(
+        PlatformProfileStoreMethod.hasCustomHeader.name,
+        'Error: $e',
+        isError: true,
+      );
+    } finally {
+      setState(() => _isLoading = false);
+    }
+  }
+
+  Future<void> _clearCustomHeader() async {
+    final params = await showParameterDialog(
+      context: context,
+      title: 'Clear Custom Header',
+      parameters: {'name': 'X-Tenant', 'value': ''},
+      requiredPaths: ['name'],
+    );
+    if (params == null) return;
+    final name = params['name']?.toString() ?? '';
+    final value = params['value']?.toString() ?? '';
+    setState(() => _isLoading = true);
+    try {
+      // An empty value means "clear every value under this name" — the one-argument androidx
+      // overload — rather than "clear the header whose value is the empty string".
+      await ProfileStore.instance().clearCustomHeader(
+        name,
+        headerValue: value.isEmpty ? null : value,
+      );
+      _recordMethodResult(
+        PlatformProfileStoreMethod.clearCustomHeader.name,
+        value.isEmpty ? 'Cleared all values of $name' : 'Cleared $name: $value',
+        isError: false,
+      );
+    } catch (e) {
+      _recordMethodResult(
+        PlatformProfileStoreMethod.clearCustomHeader.name,
+        'Error: $e',
+        isError: true,
+      );
+    } finally {
+      setState(() => _isLoading = false);
+    }
+  }
+
+  Future<void> _clearAllCustomHeaders() async {
+    setState(() => _isLoading = true);
+    try {
+      await ProfileStore.instance().clearAllCustomHeaders();
+      _recordMethodResult(
+        PlatformProfileStoreMethod.clearAllCustomHeaders.name,
+        'All custom headers cleared',
+        isError: false,
+      );
+    } catch (e) {
+      _recordMethodResult(
+        PlatformProfileStoreMethod.clearAllCustomHeaders.name,
+        'Error: $e',
+        isError: true,
+      );
+    } finally {
+      setState(() => _isLoading = false);
+    }
+  }
+
   Future<void> _getAllProfileNames() async {
     setState(() => _isLoading = true);
     try {
@@ -1576,6 +1725,51 @@ class _ServiceControllersScreenState extends State<ServiceControllersScreen> {
                         PlatformProfileStoreMethod.deleteProfile,
                       ),
                       methodName: PlatformProfileStoreMethod.deleteProfile.name,
+                    ),
+                    _buildMethodButton(
+                      'Add Custom Header',
+                      _addCustomHeader,
+                      supportedPlatforms: _profileStorePlatforms(
+                        PlatformProfileStoreMethod.addCustomHeader,
+                      ),
+                      methodName:
+                          PlatformProfileStoreMethod.addCustomHeader.name,
+                    ),
+                    _buildMethodButton(
+                      'Get Custom Headers',
+                      _getCustomHeaders,
+                      supportedPlatforms: _profileStorePlatforms(
+                        PlatformProfileStoreMethod.getCustomHeaders,
+                      ),
+                      methodName:
+                          PlatformProfileStoreMethod.getCustomHeaders.name,
+                    ),
+                    _buildMethodButton(
+                      'Has Custom Header',
+                      _hasCustomHeader,
+                      supportedPlatforms: _profileStorePlatforms(
+                        PlatformProfileStoreMethod.hasCustomHeader,
+                      ),
+                      methodName:
+                          PlatformProfileStoreMethod.hasCustomHeader.name,
+                    ),
+                    _buildMethodButton(
+                      'Clear Custom Header',
+                      _clearCustomHeader,
+                      supportedPlatforms: _profileStorePlatforms(
+                        PlatformProfileStoreMethod.clearCustomHeader,
+                      ),
+                      methodName:
+                          PlatformProfileStoreMethod.clearCustomHeader.name,
+                    ),
+                    _buildMethodButton(
+                      'Clear All Custom Headers',
+                      _clearAllCustomHeaders,
+                      supportedPlatforms: _profileStorePlatforms(
+                        PlatformProfileStoreMethod.clearAllCustomHeaders,
+                      ),
+                      methodName:
+                          PlatformProfileStoreMethod.clearAllCustomHeaders.name,
                     ),
                   ],
                 ),

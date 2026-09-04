@@ -666,7 +666,36 @@ Fourteen WebKit APIs read out of the iOS 26.5 SDK, plus one feature that was hal
   The getter returns `bool?` rather than `bool`. `null` means the switch could not be read at all —
   either the installed WebView lacks the feature, or you passed a `profileName`, for which this
   setting **does not exist** and never will: it is an `androidx`-only API and named profiles are
-  reachable only through the older framework class.- **`DownloadStartRequest.isUserInitiated` / `.originatingFrame`** — from `WKDownload`
+  reachable only through the older framework class.
+
+- **Custom request headers per browsing profile** (Android), from `androidx.webkit`'s
+  `CUSTOM_REQUEST_HEADERS`. Attach a header to a profile and it rides every request that profile
+  makes to a matching origin:
+
+  ```dart
+  await ProfileStore.instance().addCustomHeader(
+    CustomHeader(
+      name: 'X-Tenant',
+      value: 'acme',
+      originRules: {'https://*.acme.example'},
+    ),
+  );
+  ```
+
+  **This is not `URLRequest.headers`.** That applies to one load; this applies to *every* request the
+  profile makes to a matching origin — subresources, prefetches and service-worker requests included
+  (`WebSocket` excluded) — until you clear it. It is process-and-profile state, so clear it when you
+  are done: `clearCustomHeader('X-Tenant')` or `clearAllCustomHeaders()`.
+
+  `originRules` takes the same format as `addWebMessageListener`, e.g. `{'*'}` for every origin. A
+  header whose rules match nothing is silently never sent. Read them back with `getCustomHeaders()`,
+  optionally filtered by `headerName` and `headerValue`, and check one with `hasCustomHeader()`.
+  All five take an optional `profileName`; omit it for the default profile.
+
+  Needs both `WebViewFeature.CUSTOM_REQUEST_HEADERS` and `WebViewFeature.MULTI_PROFILE` — the
+  latter is what makes any profile reachable at all.
+
+- **`DownloadStartRequest.isUserInitiated` / `.originatingFrame`** — from `WKDownload`
 
 `WebsiteDataType.WKWebsiteDataTypeScreenTime` is the third member of that family and has shipped
 since the `WebsiteDataType.ALL` fix below. It stays **deliberately out of `ALL`** — see that entry.

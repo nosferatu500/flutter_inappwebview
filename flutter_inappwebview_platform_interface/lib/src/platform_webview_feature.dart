@@ -435,6 +435,16 @@ class WebViewFeature_ {
     "NAVIGATION_GET_WEB_RESOURCE_ERROR",
   );
 
+  ///Feature for [isFeatureSupported]. This feature covers the custom-request-header family on
+  ///[PlatformProfileStore]: [PlatformProfileStore.addCustomHeader],
+  ///[PlatformProfileStore.hasCustomHeader], [PlatformProfileStore.getCustomHeaders],
+  ///[PlatformProfileStore.clearCustomHeader] and [PlatformProfileStore.clearAllCustomHeaders].
+  ///
+  ///Note these also need [MULTI_PROFILE], which is what makes a profile reachable at all.
+  static const CUSTOM_REQUEST_HEADERS = WebViewFeature_._internal(
+    "CUSTOM_REQUEST_HEADERS",
+  );
+
   ///Feature for [isFeatureSupported]. This feature covers
   ///[InAppWebViewSettings.includeCookiesOnShouldInterceptRequest],
   ///[WebResourceResponse.cookies], and the service-worker switch

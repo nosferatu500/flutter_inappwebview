@@ -159,6 +159,7 @@ by its `WebViewFeature` flag.
 | `CookieManager.setAcceptCookie()` / `.isAcceptCookieEnabled()` | Android, **iOS 17.0+** | The cookie master switch. Governs the WebView's own traffic — it does **not** block `setCookie()` on either platform |
 | `CookieManager.setCookieStoreObserver()` | iOS | Be told when the cookie store changes instead of polling. Carries no payload — re-read the store in the callback |
 | `ServiceWorkerController.setIncludeCookiesOnShouldInterceptRequestEnabled()` / getter | Android | The Service Worker twin of `includeCookiesOnShouldInterceptRequest`, and a **separate switch** — turning on the WebView one does nothing here. The getter returns `bool?`: `null` means the feature is missing **or** you passed a `profileName`, for which this setting does not exist at all |
+| `ProfileStore.addCustomHeader()` / `.hasCustomHeader()` / `.getCustomHeaders()` / `.clearCustomHeader()` / `.clearAllCustomHeaders()` | Android | Headers attached to a **browsing profile**, sent on every request it makes to an origin matching the header's `originRules` — subresources, prefetches and service-worker requests included, `WebSocket` excluded. Not the same thing as `URLRequest.headers`, which apply to a single load. Profile state, so clear it when you are done |
 
 ### New fields on existing types
 
@@ -171,6 +172,7 @@ by its `WebViewFeature` flag.
 | `WebViewPage` (new type) | Android | The payload of the page and Web-Vitals events: a synthesised `id` matching `WebViewNavigation.pageId`, plus the page's `url`. A page is a *document*, not a navigation — several navigations can share one |
 | `WebViewNavigation` (new type) | Android | The payload of the three `onNavigation*` events: `statusCode`, `isBack`/`isForward`/`isReload`/`isRestore`/`isSameDocument`, `didCommit`, and a plugin-synthesised `id` tying the three events together |
 | `WebsiteDataType.WKWebsiteDataTypeScreenTime` | iOS 26.0+ | Screen Time data. Deliberately **not** part of `WebsiteDataType.ALL` — passing it to a bulk delete terminates the app |
+| `CustomHeader` (new type) | Android | The name/value/`originRules` triple `ProfileStore.addCustomHeader()` takes. `originRules` uses the same format as `addWebMessageListener`; a header whose rules match nothing is silently never sent |
 | `WebResourceResponse.cookies` | Android | A list of `Set-Cookie` values applied as if the intercepted response had carried them. A **list**, because `headers` is a `Map` and cannot hold a repeated header name. **Silently ignored** unless cookie interception is enabled — nothing throws and nothing is logged |
 
 > **One caveat, stated rather than buried.** `onWritingToolsActiveChanged` is implemented and its

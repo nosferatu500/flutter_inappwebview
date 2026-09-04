@@ -49,6 +49,50 @@ class ProfileStore {
   Future<String?> getOrCreateProfile({required String name}) =>
       platform.getOrCreateProfile(name: name);
 
+  ///{@macro flutter_inappwebview_platform_interface.PlatformProfileStore.addCustomHeader}
+  ///
+  ///{@macro flutter_inappwebview_platform_interface.PlatformProfileStore.addCustomHeader.supported_platforms}
+  Future<void> addCustomHeader(CustomHeader header, {String? profileName}) =>
+      platform.addCustomHeader(header, profileName: profileName);
+
+  ///{@macro flutter_inappwebview_platform_interface.PlatformProfileStore.hasCustomHeader}
+  ///
+  ///{@macro flutter_inappwebview_platform_interface.PlatformProfileStore.hasCustomHeader.supported_platforms}
+  Future<bool> hasCustomHeader(String headerName, {String? profileName}) =>
+      platform.hasCustomHeader(headerName, profileName: profileName);
+
+  ///{@macro flutter_inappwebview_platform_interface.PlatformProfileStore.getCustomHeaders}
+  ///
+  ///{@macro flutter_inappwebview_platform_interface.PlatformProfileStore.getCustomHeaders.supported_platforms}
+  Future<Set<CustomHeader>> getCustomHeaders({
+    String? headerName,
+    String? headerValue,
+    String? profileName,
+  }) => platform.getCustomHeaders(
+    headerName: headerName,
+    headerValue: headerValue,
+    profileName: profileName,
+  );
+
+  ///{@macro flutter_inappwebview_platform_interface.PlatformProfileStore.clearCustomHeader}
+  ///
+  ///{@macro flutter_inappwebview_platform_interface.PlatformProfileStore.clearCustomHeader.supported_platforms}
+  Future<void> clearCustomHeader(
+    String headerName, {
+    String? headerValue,
+    String? profileName,
+  }) => platform.clearCustomHeader(
+    headerName,
+    headerValue: headerValue,
+    profileName: profileName,
+  );
+
+  ///{@macro flutter_inappwebview_platform_interface.PlatformProfileStore.clearAllCustomHeaders}
+  ///
+  ///{@macro flutter_inappwebview_platform_interface.PlatformProfileStore.clearAllCustomHeaders.supported_platforms}
+  Future<void> clearAllCustomHeaders({String? profileName}) =>
+      platform.clearAllCustomHeaders(profileName: profileName);
+
   ///{@macro flutter_inappwebview_platform_interface.PlatformProfileStore.deleteProfile}
   ///
   ///{@macro flutter_inappwebview_platform_interface.PlatformProfileStore.deleteProfile.supported_platforms}

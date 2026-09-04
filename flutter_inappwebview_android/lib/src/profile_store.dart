@@ -92,6 +92,64 @@ class AndroidProfileStore extends PlatformProfileStore with ChannelController {
   }
 
   @override
+  Future<void> addCustomHeader(
+    CustomHeader header, {
+    String? profileName,
+  }) async {
+    Map<String, dynamic> args = <String, dynamic>{};
+    args.putIfAbsent('profileName', () => profileName);
+    args.putIfAbsent('header', () => header.toMap());
+    await channel?.invokeMethod('addCustomHeader', args);
+  }
+
+  @override
+  Future<bool> hasCustomHeader(String headerName, {String? profileName}) async {
+    Map<String, dynamic> args = <String, dynamic>{};
+    args.putIfAbsent('profileName', () => profileName);
+    args.putIfAbsent('headerName', () => headerName);
+    return await channel?.invokeMethod<bool>('hasCustomHeader', args) ?? false;
+  }
+
+  @override
+  Future<Set<CustomHeader>> getCustomHeaders({
+    String? headerName,
+    String? headerValue,
+    String? profileName,
+  }) async {
+    Map<String, dynamic> args = <String, dynamic>{};
+    args.putIfAbsent('profileName', () => profileName);
+    args.putIfAbsent('headerName', () => headerName);
+    args.putIfAbsent('headerValue', () => headerValue);
+    final result = await channel?.invokeMethod<List<dynamic>?>(
+      'getCustomHeaders',
+      args,
+    );
+    return (result ?? <dynamic>[])
+        .map((e) => CustomHeader.fromMap(e?.cast<String, dynamic>())!)
+        .toSet();
+  }
+
+  @override
+  Future<void> clearCustomHeader(
+    String headerName, {
+    String? headerValue,
+    String? profileName,
+  }) async {
+    Map<String, dynamic> args = <String, dynamic>{};
+    args.putIfAbsent('profileName', () => profileName);
+    args.putIfAbsent('headerName', () => headerName);
+    args.putIfAbsent('headerValue', () => headerValue);
+    await channel?.invokeMethod('clearCustomHeader', args);
+  }
+
+  @override
+  Future<void> clearAllCustomHeaders({String? profileName}) async {
+    Map<String, dynamic> args = <String, dynamic>{};
+    args.putIfAbsent('profileName', () => profileName);
+    await channel?.invokeMethod('clearAllCustomHeaders', args);
+  }
+
+  @override
   Future<bool> deleteProfile({required String name}) async {
     Map<String, dynamic> args = <String, dynamic>{};
     args.putIfAbsent('name', () => name);

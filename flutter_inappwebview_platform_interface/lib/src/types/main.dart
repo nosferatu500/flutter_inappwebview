@@ -26,6 +26,7 @@ export 'cookie.dart' show Cookie;
 export 'create_window_action.dart' show CreateWindowAction;
 export 'cross_origin.dart' show CrossOrigin;
 export 'css_link_html_tag_attributes.dart' show CSSLinkHtmlTagAttributes;
+export 'custom_header.dart' show CustomHeader;
 export 'custom_scheme_response.dart' show CustomSchemeResponse;
 export 'custom_tabs_share_state.dart' show CustomTabsShareState;
 export 'data_detector_types.dart' show DataDetectorTypes;

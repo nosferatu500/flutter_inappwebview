@@ -6,6 +6,7 @@ import 'package:plugin_platform_interface/plugin_platform_interface.dart';
 
 import 'inappwebview_platform.dart';
 import 'platform_webview_feature.dart';
+import 'types/custom_header.dart';
 
 part 'platform_profile_store.g.dart';
 
@@ -210,6 +211,164 @@ abstract class PlatformProfileStore extends PlatformInterface {
   Future<bool> deleteProfile({required String name}) {
     throw UnimplementedError(
       'deleteProfile is not implemented on the current platform',
+    );
+  }
+
+  ///{@template flutter_inappwebview_platform_interface.PlatformProfileStore.addCustomHeader}
+  ///Adds a [CustomHeader] sent on every request this profile makes to an origin matching the
+  ///header's [CustomHeader.originRules].
+  ///
+  ///It applies to requests started **after** this call, and covers subresources, prefetches and
+  ///requests made by service workers — not just navigations. `WebSocket` requests are excluded.
+  ///Headers added here also appear in the request handed to
+  ///[PlatformWebViewCreationParams.shouldInterceptRequest].
+  ///
+  ///Adding the same name and value again **merges** the two rule sets rather than replacing them,
+  ///and there is no "replace" operation — clear the header first if that is what you want.
+  ///
+  ///A no-op where the feature is unsupported.
+  ///{@endtemplate}
+  ///
+  ///{@macro flutter_inappwebview_platform_interface.PlatformProfileStore.addCustomHeader.supported_platforms}
+  @SupportedPlatforms(
+    platforms: [
+      AndroidPlatform(
+        apiName: 'Profile.addCustomHeader',
+        apiUrl:
+            'https://developer.android.com/reference/androidx/webkit/Profile#addCustomHeader(androidx.webkit.CustomHeader)',
+        note:
+            'Requires [WebViewFeature.MULTI_PROFILE] and [WebViewFeature.CUSTOM_REQUEST_HEADERS]. '
+            'The androidx API is on `Profile`; this class reaches it by name, which is how every other profile-scoped surface in this plugin works.',
+      ),
+    ],
+  )
+  Future<void> addCustomHeader(
+    CustomHeader header, {
+    @SupportedPlatforms(platforms: [AndroidPlatform()]) String? profileName,
+  }) {
+    throw UnimplementedError(
+      'addCustomHeader is not implemented on the current platform',
+    );
+  }
+
+  ///{@template flutter_inappwebview_platform_interface.PlatformProfileStore.hasCustomHeader}
+  ///Whether this profile has any custom header with the given [headerName], **case-insensitively**.
+  ///
+  ///Returns `false` where the feature is unsupported, which is indistinguishable from "no such
+  ///header" — check [WebViewFeature.CUSTOM_REQUEST_HEADERS] first if you need to tell them apart.
+  ///{@endtemplate}
+  ///
+  ///{@macro flutter_inappwebview_platform_interface.PlatformProfileStore.hasCustomHeader.supported_platforms}
+  @SupportedPlatforms(
+    platforms: [
+      AndroidPlatform(
+        apiName: 'Profile.hasCustomHeader',
+        apiUrl:
+            'https://developer.android.com/reference/androidx/webkit/Profile#hasCustomHeader(java.lang.String)',
+        note:
+            'Requires [WebViewFeature.MULTI_PROFILE] and [WebViewFeature.CUSTOM_REQUEST_HEADERS]. '
+            'The androidx API is on `Profile`; this class reaches it by name, which is how every other profile-scoped surface in this plugin works.',
+      ),
+    ],
+  )
+  Future<bool> hasCustomHeader(
+    String headerName, {
+    @SupportedPlatforms(platforms: [AndroidPlatform()]) String? profileName,
+  }) {
+    throw UnimplementedError(
+      'hasCustomHeader is not implemented on the current platform',
+    );
+  }
+
+  ///{@template flutter_inappwebview_platform_interface.PlatformProfileStore.getCustomHeaders}
+  ///All custom headers set on this profile.
+  ///
+  ///Pass [headerName] to keep only headers with that name (case-insensitive), and [headerValue]
+  ///as well to keep only the one with that exact value (case-sensitive). Passing [headerValue]
+  ///without [headerName] is meaningless and is ignored.
+  ///
+  ///Returns an empty set where the feature is unsupported.
+  ///{@endtemplate}
+  ///
+  ///{@macro flutter_inappwebview_platform_interface.PlatformProfileStore.getCustomHeaders.supported_platforms}
+  @SupportedPlatforms(
+    platforms: [
+      AndroidPlatform(
+        apiName: 'Profile.getCustomHeaders',
+        apiUrl:
+            'https://developer.android.com/reference/androidx/webkit/Profile#getCustomHeaders()',
+        note:
+            'Requires [WebViewFeature.MULTI_PROFILE] and [WebViewFeature.CUSTOM_REQUEST_HEADERS]. '
+            'The androidx API is on `Profile`; this class reaches it by name, which is how every other profile-scoped surface in this plugin works.',
+      ),
+    ],
+  )
+  Future<Set<CustomHeader>> getCustomHeaders({
+    @SupportedPlatforms(platforms: [AndroidPlatform()]) String? headerName,
+    @SupportedPlatforms(platforms: [AndroidPlatform()]) String? headerValue,
+    @SupportedPlatforms(platforms: [AndroidPlatform()]) String? profileName,
+  }) {
+    throw UnimplementedError(
+      'getCustomHeaders is not implemented on the current platform',
+    );
+  }
+
+  ///{@template flutter_inappwebview_platform_interface.PlatformProfileStore.clearCustomHeader}
+  ///Removes custom headers with the given [headerName] (case-insensitive).
+  ///
+  ///Pass [headerValue] to remove only the header with that exact value (case-sensitive), leaving
+  ///any others that share the name. Omit it to remove every header with that name.
+  ///
+  ///A no-op where the feature is unsupported, and a no-op when nothing matches.
+  ///{@endtemplate}
+  ///
+  ///{@macro flutter_inappwebview_platform_interface.PlatformProfileStore.clearCustomHeader.supported_platforms}
+  @SupportedPlatforms(
+    platforms: [
+      AndroidPlatform(
+        apiName: 'Profile.clearCustomHeader',
+        apiUrl:
+            'https://developer.android.com/reference/androidx/webkit/Profile#clearCustomHeader(java.lang.String)',
+        note:
+            'Requires [WebViewFeature.MULTI_PROFILE] and [WebViewFeature.CUSTOM_REQUEST_HEADERS]. '
+            'The androidx API is on `Profile`; this class reaches it by name, which is how every other profile-scoped surface in this plugin works.',
+      ),
+    ],
+  )
+  Future<void> clearCustomHeader(
+    String headerName, {
+    @SupportedPlatforms(platforms: [AndroidPlatform()]) String? headerValue,
+    @SupportedPlatforms(platforms: [AndroidPlatform()]) String? profileName,
+  }) {
+    throw UnimplementedError(
+      'clearCustomHeader is not implemented on the current platform',
+    );
+  }
+
+  ///{@template flutter_inappwebview_platform_interface.PlatformProfileStore.clearAllCustomHeaders}
+  ///Removes every custom header from this profile.
+  ///
+  ///A no-op where the feature is unsupported.
+  ///{@endtemplate}
+  ///
+  ///{@macro flutter_inappwebview_platform_interface.PlatformProfileStore.clearAllCustomHeaders.supported_platforms}
+  @SupportedPlatforms(
+    platforms: [
+      AndroidPlatform(
+        apiName: 'Profile.clearAllCustomHeaders',
+        apiUrl:
+            'https://developer.android.com/reference/androidx/webkit/Profile#clearAllCustomHeaders()',
+        note:
+            'Requires [WebViewFeature.MULTI_PROFILE] and [WebViewFeature.CUSTOM_REQUEST_HEADERS]. '
+            'The androidx API is on `Profile`; this class reaches it by name, which is how every other profile-scoped surface in this plugin works.',
+      ),
+    ],
+  )
+  Future<void> clearAllCustomHeaders({
+    @SupportedPlatforms(platforms: [AndroidPlatform()]) String? profileName,
+  }) {
+    throw UnimplementedError(
+      'clearAllCustomHeaders is not implemented on the current platform',
     );
   }
 

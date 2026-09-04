@@ -195,6 +195,22 @@ Twelve `androidx.webkit` features, each behind its own `WebViewFeature` flag, an
   created profile `getAllowContentAccess` answers non-null while this one answers `null`, so the
   `null` is about the API rather than about the profile being unreachable.
 
+- **`CUSTOM_REQUEST_HEADERS`** — androidx's eight `Profile` custom-header methods, exposed as five on
+  `ProfileStore` (the three `getCustomHeaders` and two `clearCustomHeader` overloads become optional
+  arguments). Measured live on both AVDs, with the control that matters: of two headers added at the
+  same moment differing only in `originRules`, only the one matching the loaded origin reached the
+  request.
+
+  **The overload selection is done in Kotlin, not in Dart.** `getCustomHeaders(name)` and
+  `getCustomHeaders(name, value)` are called according to which arguments arrived non-null, because
+  androidx matches header *names* case-insensitively and *values* case-sensitively — a Dart-side
+  filter would silently disagree.
+
+  The `Profile` methods are `default` no-ops on an interface ("default to avoid breaking backwards
+  compatibility"), so whether the shipped provider implements them at all was probed before any of
+  this was built — D9's question. It does: adding, reading back, filtering and clearing all work on
+  the default profile and on a named one, and the two do not share state.
+
 Every mirrored `WebViewFeature` constant is now pinned against the real AAR by a test: six of the
 flags `WebViewFeature` declares are `@Deprecated` tombstones that `isFeatureSupported` **throws**
 for, and five others have a native *value* that differs from their name.
