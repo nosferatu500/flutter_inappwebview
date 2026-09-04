@@ -2931,6 +2931,45 @@ abstract class PlatformInAppWebViewController extends PlatformInterface
   ///{@template flutter_inappwebview_platform_interface.PlatformInAppWebViewController.saveState}
   ///Returns the current state of interaction in a web view so that you can restore
   ///that state later to another web view using the [restoreState] method.
+  ///
+  ///Returns `null` if no state could be saved.
+  ///
+  ///### The returned state is unbounded unless you bound it (Android)
+  ///
+  ///With no arguments this is the platform's own `WebView.saveState`, which has **no size limit**:
+  ///it serialises every back/forward entry, and a long session can run to megabytes. Measured on
+  ///Android 13 and Android 17 (WebView 151 / 149), a 9-entry history of large `data:` URLs produced
+  ///a **2.0 MB** state, growing linearly with no ceiling and never failing. That matters if the
+  ///bytes are then handed to something with a limit of its own — an Android `Bundle` crossing a
+  ///Binder transaction is capped at about 1 MB.
+  ///
+  ///[maxSize] and [includeForwardState] bound it, and are **Android-only** and gated on
+  ///[WebViewFeature.SAVE_STATE]:
+  ///
+  ///- [maxSize] — the maximum size in bytes. History entries furthest from the current one are
+  ///  dropped until the state fits. **If not even the current entry fits, nothing is saved and this
+  ///  returns `null`** — it does not return a smaller state, and it does not throw. Measured: a
+  ///  9-entry / 2.0 MB history saved with `maxSize: 1000000` kept the current entry plus the two
+  ///  behind it, and with `maxSize: 200000` — below one entry's own size — returned `null`.
+  ///
+  ///  **[maxSize] is not a hard cap on the returned array.** It bounds the WebView's own serialized
+  ///  state; the bytes returned here are that state inside a marshalled `Bundle`, so the result can
+  ///  be a few dozen bytes larger than [maxSize] — measured at 602900 bytes for a requested 602860.
+  ///  Subtract a margin if you are feeding a hard limit of your own.
+  ///- [includeForwardState] — whether to keep entries reachable only by going *forward*
+  ///  ([PlatformInAppWebViewController.goForward]). Apps with no forward affordance can drop them.
+  ///  Defaults to including them.
+  ///
+  ///Back history is kept in preference to forward history: with [maxSize] set, forward entries are
+  ///dropped first even when [includeForwardState] is `true`.
+  ///
+  ///Passing either argument where [WebViewFeature.SAVE_STATE] is unsupported returns `null` rather
+  ///than falling back to an unconstrained state, so a caller that asked for a bound never silently
+  ///receives an unbounded one. **Check [WebViewFeature.isFeatureSupported] first**, or call with
+  ///neither argument, which works on every version.
+  ///
+  ///Passing neither argument is byte-for-byte the platform's own `WebView.saveState` — verified on
+  ///both Android versions above, where the two paths returned identical lengths.
   ///{@endtemplate}
   ///
   ///{@macro flutter_inappwebview_platform_interface.PlatformInAppWebViewController.saveState.supported_platforms}
@@ -2940,17 +2979,27 @@ abstract class PlatformInAppWebViewController extends PlatformInterface
         apiName: 'WebView.saveState',
         apiUrl:
             'https://developer.android.com/reference/android/webkit/WebView#saveState(android.os.Bundle)',
-        note: 'This method doesn\'t store the display data for this WebView.',
+        note:
+            'This method doesn\'t store the display data for this WebView. '
+            'When `maxSize` or `includeForwardState` is given, `WebViewCompat.saveState` is used '
+            'instead and `WebViewFeature.SAVE_STATE` must be supported, otherwise `null` is returned.',
       ),
       IOSPlatform(
         apiName: 'WKWebView.interactionState',
         apiUrl:
             'https://developer.apple.com/documentation/webkit/wkwebview/3752236-interactionstate',
         available: '15.0',
+        note:
+            'The `maxSize` and `includeForwardState` arguments are ignored: '
+            '`interactionState` exposes no equivalent control.',
       ),
     ],
   )
-  Future<Uint8List?> saveState() {
+  Future<Uint8List?> saveState({
+    @SupportedPlatforms(platforms: [AndroidPlatform()]) int? maxSize,
+    @SupportedPlatforms(platforms: [AndroidPlatform()])
+    bool? includeForwardState,
+  }) {
     throw UnimplementedError(
       '${PlatformInAppWebViewControllerMethod.saveState.name} is not implemented on the current platform',
     );

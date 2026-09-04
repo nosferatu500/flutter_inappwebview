@@ -268,6 +268,18 @@ class WebViewFeature {
         'SAFE_BROWSING_RESPONSE_SHOW_INTERSTITIAL',
       );
 
+  ///Feature for [isFeatureSupported]. This feature covers the `maxSize` and `includeForwardState`
+  ///arguments of [PlatformInAppWebViewController.saveState], and **only** those arguments.
+  ///
+  ///[PlatformInAppWebViewController.saveState] itself works everywhere: called with neither
+  ///argument it uses the framework `WebView.saveState`, which needs no feature. Where this feature
+  ///is unsupported, passing either argument makes the call return `null` rather than quietly
+  ///returning an unconstrained state.
+  static const SAVE_STATE = WebViewFeature._internal(
+    'SAVE_STATE',
+    'SAVE_STATE',
+  );
+
   ///Feature for [isFeatureSupported]. This feature covers [ServiceWorkerController].
   static const SERVICE_WORKER_BASIC_USAGE = WebViewFeature._internal(
     'SERVICE_WORKER_BASIC_USAGE',
@@ -466,6 +478,7 @@ class WebViewFeature {
     WebViewFeature.SAFE_BROWSING_RESPONSE_BACK_TO_SAFETY,
     WebViewFeature.SAFE_BROWSING_RESPONSE_PROCEED,
     WebViewFeature.SAFE_BROWSING_RESPONSE_SHOW_INTERSTITIAL,
+    WebViewFeature.SAVE_STATE,
     WebViewFeature.SERVICE_WORKER_BASIC_USAGE,
     WebViewFeature.SERVICE_WORKER_BLOCK_NETWORK_LOADS,
     WebViewFeature.SERVICE_WORKER_CACHE_MODE,
@@ -651,6 +664,8 @@ class WebViewFeature {
         return 'SAFE_BROWSING_RESPONSE_PROCEED';
       case 'SAFE_BROWSING_RESPONSE_SHOW_INTERSTITIAL':
         return 'SAFE_BROWSING_RESPONSE_SHOW_INTERSTITIAL';
+      case 'SAVE_STATE':
+        return 'SAVE_STATE';
       case 'SERVICE_WORKER_BASIC_USAGE':
         return 'SERVICE_WORKER_BASIC_USAGE';
       case 'SERVICE_WORKER_BLOCK_NETWORK_LOADS':

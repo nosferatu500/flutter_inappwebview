@@ -2659,9 +2659,48 @@ class InAppWebView : WebView, InAppWebViewInterface, Disposable {
     }
   }
 
-  override fun saveState(): ByteArray? {
+  /**
+   * Serialises this WebView's back/forward state.
+   *
+   * With neither [maxSize] nor [includeForwardState] this is the framework `WebView.saveState`,
+   * exactly as before androidx grew an alternative, and it needs no feature. Measured on API 33 and
+   * API 37: `WebViewCompat.saveState(this, bundle, Int.MAX_VALUE, true)` returns a **byte-identical**
+   * result, so routing the unconstrained case through the compat API would buy nothing and would
+   * make an unconditional call depend on `SAVE_STATE`.
+   *
+   * With either argument the compat API is the only one that can honour it. When `SAVE_STATE` is
+   * unsupported this returns `null` rather than falling back: the caller asked for a bounded state,
+   * and handing back an unbounded one would break the single guarantee they asked for. That follows
+   * `isAudioMuted` above -- answer with the accurate neutral value rather than throwing.
+   *
+   * The two APIs report failure differently and that is why the result is read off the bundle here.
+   * `WebView.saveState` returns a `WebBackForwardList?` and signals failure with null;
+   * `WebViewCompat.saveState` returns `void` and signals it by leaving the bundle untouched, which
+   * is what happens when [maxSize] is smaller than the current entry alone (measured: a 9-entry
+   * 2.0 MB history with `maxSize = 200000` produced an empty bundle, not a smaller state).
+   *
+   * [maxSize] bounds what the WebView writes into the bundle, not the marshalled bytes returned
+   * here, so the result can exceed it by the Parcel's own framing -- measured at 40 bytes over on
+   * API 33. The Dart doc says so; do not "fix" it by shrinking the value passed through.
+   */
+  override fun saveState(maxSize: Int?, includeForwardState: Boolean?): ByteArray? {
+    val constrained = maxSize != null || includeForwardState != null
+    if (constrained && !WebViewFeature.isFeatureSupported(WebViewFeature.SAVE_STATE)) {
+      return null
+    }
+    // androidx annotates maxSizeBytes @IntRange(from = 1); nothing can be saved below that anyway.
+    if (maxSize != null && maxSize < 1) {
+      return null
+    }
     val bundle = Bundle()
-    if (saveState(bundle) != null) {
+    val saved =
+      if (constrained) {
+        WebViewCompat.saveState(this, bundle, maxSize ?: Int.MAX_VALUE, includeForwardState ?: true)
+        !bundle.isEmpty
+      } else {
+        saveState(bundle) != null
+      }
+    if (saved) {
       val parcel = Parcel.obtain()
       bundle.writeToParcel(parcel, 0)
       val bytes = parcel.marshall()

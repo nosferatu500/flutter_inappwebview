@@ -691,7 +691,10 @@ class WebViewChannelDelegate(webView: InAppWebView, channel: MethodChannel) :
         result.success(true)
       }
 
-      WebViewChannelDelegateMethods.saveState -> result.success(webView?.saveState())
+      WebViewChannelDelegateMethods.saveState ->
+        result.success(
+          webView?.saveState(call.argument("maxSize"), call.argument("includeForwardState"))
+        )
 
       WebViewChannelDelegateMethods.restoreState -> {
         if (webView != null) {

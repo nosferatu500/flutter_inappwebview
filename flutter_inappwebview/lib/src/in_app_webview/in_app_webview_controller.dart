@@ -694,7 +694,11 @@ class InAppWebViewController {
   ///{@macro flutter_inappwebview_platform_interface.PlatformInAppWebViewController.saveState}
   ///
   ///{@macro flutter_inappwebview_platform_interface.PlatformInAppWebViewController.saveState.supported_platforms}
-  Future<Uint8List?> saveState() => platform.saveState();
+  Future<Uint8List?> saveState({int? maxSize, bool? includeForwardState}) =>
+      platform.saveState(
+        maxSize: maxSize,
+        includeForwardState: includeForwardState,
+      );
 
   ///{@macro flutter_inappwebview_platform_interface.PlatformInAppWebViewController.restoreState}
   ///

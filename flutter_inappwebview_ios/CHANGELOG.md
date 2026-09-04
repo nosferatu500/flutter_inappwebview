@@ -295,6 +295,11 @@ error.
 
 ### Changed
 
+- **`saveState` accepts `maxSize` and `includeForwardState` and ignores them.** They are Android
+  arguments on a cross-platform method; `WKWebView.interactionState` is an opaque blob with no size
+  or forward-history control, so there is nothing to forward them to and nothing to emulate them
+  with. They are not sent over the channel, and the dartdoc says so rather than leaving a caller to
+  discover it.
 - **The JavaScript bridge now uses `WKScriptMessageHandlerWithReply` (iOS 14.0+).**
   `window.flutter_inappwebview.callHandler(...)` used to return a promise the plugin settled itself:
   the injected script minted a callback id, stashed `{resolve, reject}` in a table on `window.top`,

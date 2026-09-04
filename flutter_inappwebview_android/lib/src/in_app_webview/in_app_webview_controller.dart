@@ -2724,8 +2724,17 @@ class AndroidInAppWebViewController extends PlatformInAppWebViewController
   }
 
   @override
-  Future<Uint8List?> saveState() async {
+  Future<Uint8List?> saveState({
+    int? maxSize,
+    bool? includeForwardState,
+  }) async {
     Map<String, dynamic> args = <String, dynamic>{};
+    // Sent as null when absent rather than defaulted here: the Kotlin side distinguishes
+    // "no constraint asked for" (framework WebView.saveState, no feature needed) from
+    // "constrained" (WebViewCompat.saveState, gated on SAVE_STATE), and only null can say the
+    // former. A default of Int.MAX_VALUE / true would look identical to an explicit request.
+    args.putIfAbsent('maxSize', () => maxSize);
+    args.putIfAbsent('includeForwardState', () => includeForwardState);
     return await channel?.invokeMethod<Uint8List?>('saveState', args);
   }
 

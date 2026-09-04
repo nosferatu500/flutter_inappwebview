@@ -435,6 +435,15 @@ class WebViewFeature_ {
     "NAVIGATION_GET_WEB_RESOURCE_ERROR",
   );
 
+  ///Feature for [isFeatureSupported]. This feature covers the `maxSize` and `includeForwardState`
+  ///arguments of [PlatformInAppWebViewController.saveState], and **only** those arguments.
+  ///
+  ///[PlatformInAppWebViewController.saveState] itself works everywhere: called with neither
+  ///argument it uses the framework `WebView.saveState`, which needs no feature. Where this feature
+  ///is unsupported, passing either argument makes the call return `null` rather than quietly
+  ///returning an unconstrained state.
+  static const SAVE_STATE = WebViewFeature_._internal("SAVE_STATE");
+
   ///Feature for [isFeatureSupported]. This feature covers [PlatformProfileStore] and
   ///[InAppWebViewSettings.profileName].
   static const MULTI_PROFILE = WebViewFeature_._internal("MULTI_PROFILE");

@@ -1494,8 +1494,15 @@ enum PlatformInAppWebViewControllerMethod {
   ///
   ///**Officially Supported Platforms/Implementations**:
   ///- Android WebView ([Official API - WebView.saveState](https://developer.android.com/reference/android/webkit/WebView#saveState(android.os.Bundle))):
-  ///    - This method doesn't store the display data for this WebView.
-  ///- iOS WKWebView 15.0+ ([Official API - WKWebView.interactionState](https://developer.apple.com/documentation/webkit/wkwebview/3752236-interactionstate))
+  ///    - This method doesn't store the display data for this WebView. When `maxSize` or `includeForwardState` is given, `WebViewCompat.saveState` is used instead and `WebViewFeature.SAVE_STATE` must be supported, otherwise `null` is returned.
+  ///- iOS WKWebView 15.0+ ([Official API - WKWebView.interactionState](https://developer.apple.com/documentation/webkit/wkwebview/3752236-interactionstate)):
+  ///    - The `maxSize` and `includeForwardState` arguments are ignored: `interactionState` exposes no equivalent control.
+  ///
+  ///**Parameters - Officially Supported Platforms/Implementations**:
+  ///- [maxSize]:
+  ///    - Android WebView
+  ///- [includeForwardState]:
+  ///    - Android WebView
   ///
   ///Use the [PlatformInAppWebViewController.isMethodSupported] method to check if this method is supported at runtime.
   ///{@endtemplate}

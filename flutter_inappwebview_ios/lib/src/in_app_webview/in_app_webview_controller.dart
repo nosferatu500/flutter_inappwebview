@@ -2678,8 +2678,14 @@ class IOSInAppWebViewController extends PlatformInAppWebViewController
     await channel?.invokeMethod('loadSimulatedRequest', args);
   }
 
+  ///`maxSize` and `includeForwardState` are accepted and ignored. `WKWebView.interactionState` is
+  ///an opaque blob with no size or forward-history control, so there is nothing to forward them to
+  ///and nothing to emulate them with; they are not sent over the channel.
   @override
-  Future<Uint8List?> saveState() async {
+  Future<Uint8List?> saveState({
+    int? maxSize,
+    bool? includeForwardState,
+  }) async {
     Map<String, dynamic> args = <String, dynamic>{};
     return await channel?.invokeMethod<Uint8List?>('saveState', args);
   }

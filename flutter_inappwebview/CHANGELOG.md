@@ -609,6 +609,21 @@ Fourteen WebKit APIs read out of the iOS 26.5 SDK, plus one feature that was hal
   answer with URLs the page has a legitimate claim to know about, typically its own origin. The same
   mitigation means you cannot verify the effect from Dart: the only observable part is that the
   request arrived
+- **`saveState` gained `maxSize` and `includeForwardState`** (Android), from
+  `WebViewCompat.saveState`, with `WebViewFeature.SAVE_STATE` to feature-detect them. Existing calls
+  are unaffected — with neither argument the method behaves exactly as before.
+
+  `saveState()` has always returned **as much state as the session had**, with no limit: a 9-entry
+  history of large pages measured at **2.0 MB** on both test devices, growing linearly. If you
+  persist that — into `RestorationMixin`, an Android `Bundle`, a database row — the size is now
+  yours to choose. `includeForwardState: false` additionally drops the entries the user can only
+  reach by going *forward*, which an app with no forward button never needs.
+
+  Read the two `null` cases before relying on them: a `maxSize` too small for even the current page
+  saves **nothing** (not a smaller state), and passing either argument on a WebView without
+  `SAVE_STATE` also returns `null` rather than quietly handing back an unbounded state. `maxSize` is
+  a bound on the WebView's own state and not a hard cap on the array you get, which can run a few
+  dozen bytes over it.
 - **`DownloadStartRequest.isUserInitiated` / `.originatingFrame`** — from `WKDownload`
 
 `WebsiteDataType.WKWebsiteDataTypeScreenTime` is the third member of that family and has shipped

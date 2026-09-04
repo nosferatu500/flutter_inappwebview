@@ -1349,13 +1349,30 @@ class ControllerMethodsRegistry {
       categoryType: ControllerMethodCategoryType.saveRestore,
       methods: [
         ControllerMethodEntry(
-          description: 'Saves WebView state',
+          // The entry id derives from methodEnum, so the bounded form cannot have a registry row of
+          // its own without colliding. It is demonstrated here instead, next to the unbounded one,
+          // which is also the only way to see the size difference the arguments buy.
+          description:
+              'Saves WebView state (unbounded, then capped and without forward history)',
           methodEnum: PlatformInAppWebViewControllerMethod.saveState,
           execute: (controller, params) async {
             final state = await controller.saveState();
-            return state != null
-                ? 'State saved: ${state.length} bytes'
-                : 'Save failed';
+            final full = state != null
+                ? '${state.length} bytes'
+                : 'save failed';
+
+            if (!await WebViewFeature.isFeatureSupported(
+              WebViewFeature.SAVE_STATE,
+            )) {
+              return 'State saved: $full (SAVE_STATE unsupported, so maxSize / '
+                  'includeForwardState would return null here)';
+            }
+            final bounded = await controller.saveState(
+              maxSize: 512 * 1024,
+              includeForwardState: false,
+            );
+            return 'State saved: $full; capped to 512 KB without forward '
+                'history: ${bounded != null ? '${bounded.length} bytes' : 'null (not even the current entry fits)'}';
           },
         ),
         ControllerMethodEntry(

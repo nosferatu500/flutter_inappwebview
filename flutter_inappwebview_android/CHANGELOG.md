@@ -150,6 +150,20 @@ Twelve `androidx.webkit` features, each behind its own `WebViewFeature` flag, an
   link both return the unvisited colour from `getComputedStyle` — so the feature's effect cannot be
   verified from Dart, and an integration test pins that mitigation rather than the rendering
 
+- **`WebViewCompat.saveState`** — the `maxSize` and `includeForwardState` arguments on
+  `saveState`, gated on `WebViewFeature.SAVE_STATE` and supported on both test AVDs (WebView 149 on
+  API 37, 151 on API 33).
+
+  **Switching wholesale was measured and rejected.** `WebViewCompat.saveState(view, bundle,
+  Int.MAX_VALUE, true)` returns a byte-identical result to the framework `WebView.saveState(bundle)`
+  on both AVDs, so routing the unconstrained case through it would change nothing and would make
+  every `saveState()` depend on a feature it does not need. The arguments are the entire item; the
+  no-argument path is untouched.
+
+  The two APIs also report failure differently, which is why the Kotlin reads the outcome off the
+  `Bundle`: `WebView.saveState` returns a `WebBackForwardList?` and signals failure with `null`,
+  while `WebViewCompat.saveState` returns `void` and signals it by leaving the bundle empty — which
+  is what a `maxSize` below one entry's size actually does.
 Every mirrored `WebViewFeature` constant is now pinned against the real AAR by a test: six of the
 flags `WebViewFeature` declares are `@Deprecated` tombstones that `isFeatureSupported` **throws**
 for, and five others have a native *value* that differs from their name.

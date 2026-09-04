@@ -144,6 +144,12 @@ interface InAppWebViewInterface {
   fun setAudioMuted(muted: Boolean)
   fun isAudioMuted(): Boolean
   fun prerenderUrl(url: String): Boolean
-  fun saveState(): ByteArray?
+
+  /**
+   * [maxSize] and [includeForwardState] are nullable on purpose: null means "no constraint asked
+   * for", which selects the framework path and needs no `WebViewFeature.SAVE_STATE`. A default
+   * value here could not express that.
+   */
+  fun saveState(maxSize: Int?, includeForwardState: Boolean?): ByteArray?
   fun restoreState(state: ByteArray): Boolean
 }

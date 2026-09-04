@@ -255,6 +255,29 @@ rename; this entry is the API-owner's view.
   Named `onRequestVisitedHistory` rather than mirroring the platform's `getVisitedHistory`: this is
   a callback the app implements, and a `getX` name sitting among a controller full of real `getX()`
   methods would read as something the app calls
+- **`PlatformInAppWebViewController.saveState` gained `maxSize` and `includeForwardState`**
+  (Android), from `WebViewCompat.saveState`, plus the `WebViewFeature.SAVE_STATE` mirror that gates
+  them. Both are optional and additive: **called with neither, the method is unchanged** and still
+  uses the framework `WebView.saveState`, which requires no feature.
+
+  The reason to have them is that the existing call is **unbounded**, which nothing said. Measured
+  on Android 13 and Android 17 (WebView 151 / 149), a 9-entry history of large `data:` URLs
+  serialised to **2.0 MB**, growing linearly with no ceiling and never failing — awkward if the
+  bytes then have to cross something with a limit of its own, such as an Android `Bundle` in a
+  Binder transaction.
+
+  Three measured behaviours the androidx javadoc does not state, all pinned by tests:
+  **back history is kept in preference to forward history** (with `maxSize` set, forward entries go
+  first even when `includeForwardState` is `true`); **if not even the current entry fits, nothing is
+  saved and the call returns `null`** rather than a smaller state; and **`maxSize` is not a hard cap
+  on the returned array** — it bounds the WebView's own state, which is then wrapped in a marshalled
+  `Bundle`, so the result can be a few dozen bytes over (measured at 602900 for a requested 602860).
+
+  Where `SAVE_STATE` is unsupported, passing either argument returns `null` instead of falling back
+  to an unconstrained state: a caller that asked for a bound never silently receives an unbounded
+  one. `WebViewCompat.saveState` with no effective limits was verified byte-for-byte identical to
+  the framework call, which is why the unconstrained path was left alone rather than routed through
+  the compat API.
 - **`PlatformCookieManager.setAcceptCookie` / `.isAcceptCookieEnabled` gained iOS** (17.0+), from
   `WKHTTPCookieStore.setCookiePolicy` / `getCookiePolicy`. No signature change and no new method —
   two `@SupportedPlatforms` entries and an iOS implementation, so the pair stops being Android-only.
