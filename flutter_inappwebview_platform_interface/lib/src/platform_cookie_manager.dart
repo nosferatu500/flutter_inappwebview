@@ -4,8 +4,6 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter_inappwebview_internal_annotations/flutter_inappwebview_internal_annotations.dart';
 import 'package:plugin_platform_interface/plugin_platform_interface.dart';
 
-import 'in_app_webview/platform_headless_in_app_webview.dart';
-import 'in_app_webview/platform_inappwebview_controller.dart';
 import 'inappwebview_platform.dart';
 import 'types/main.dart';
 import 'web_uri.dart';
@@ -44,9 +42,9 @@ class PlatformCookieManagerCreationParams {
 ///are not shared between profiles, so a WebView running on a non-default profile is *not* affected
 ///by calls that omit `profileName`.
 ///
-///Scoping is per call rather than per instance, matching how `webViewController` already narrows
-///these methods. The trade-off is that omitting it silently falls back to the default profile
-///rather than failing, so a caller working with profiles has to pass it every time.
+///Scoping is per call rather than per instance. The trade-off is that omitting it silently falls
+///back to the default profile rather than failing, so a caller working with profiles has to pass
+///it every time.
 ///
 ///`profileName` requires [WebViewFeature.MULTI_PROFILE]. Without that feature, or when no profile
 ///of that name exists, nothing is read or written and the call reports failure — it never falls
@@ -62,9 +60,7 @@ class PlatformCookieManagerCreationParams {
     ),
     IOSPlatform(
       note:
-          """It is implemented using [WKHTTPCookieStore](https://developer.apple.com/documentation/webkit/wkhttpcookiestore).
-On iOS below 11.0, it is implemented using JavaScript. See https://developer.mozilla.org/en-US/docs/Web/HTTP/Cookies#restrict_access_to_cookies for JavaScript restrictions.
-  """,
+          'It is implemented using [WKHTTPCookieStore](https://developer.apple.com/documentation/webkit/wkhttpcookiestore).',
     ),
   ],
 )
@@ -134,13 +130,6 @@ abstract class PlatformCookieManager extends PlatformInterface {
         apiName: 'WKHTTPCookieStore.setCookie',
         apiUrl:
             'https://developer.apple.com/documentation/webkit/wkhttpcookiestore/2882007-setcookie',
-        note:
-            """On iOS below 11.0, the [webViewController] could be used if you need to set a session-only cookie using JavaScript
-(so [isHttpOnly] cannot be set, see: https://developer.mozilla.org/en-US/docs/Web/HTTP/Cookies#restrict_access_to_cookies) on
-the current URL of the `WebView` managed by that controller. JavaScript must be enabled in order to work.
-If [webViewController] is `null` or JavaScript is disabled for it, it will try to use a [PlatformHeadlessInAppWebView]
-to set the cookie (session-only cookie won't work! In that case, you should set also [expiresDate] or [maxAge]).
-In this case, this method will return always `true`.""",
       ),
     ],
   )
@@ -155,8 +144,6 @@ In this case, this method will return always `true`.""",
     bool? isSecure,
     bool? isHttpOnly,
     HTTPCookieSameSitePolicy? sameSite,
-    @SupportedPlatforms(platforms: [IOSPlatform()])
-    PlatformInAppWebViewController? webViewController,
     @SupportedPlatforms(platforms: [AndroidPlatform()]) String? profileName,
   }) {
     throw UnimplementedError(
@@ -211,8 +198,6 @@ In this case, this method will return always `true`.""",
   )
   Future<List<bool>> setCookies({
     required List<CookieToSet> cookies,
-    @SupportedPlatforms(platforms: [IOSPlatform()])
-    PlatformInAppWebViewController? webViewController,
     @SupportedPlatforms(platforms: [AndroidPlatform()]) String? profileName,
   }) {
     throw UnimplementedError(
@@ -236,21 +221,11 @@ In this case, this method will return always `true`.""",
         apiName: 'WKHTTPCookieStore.getAllCookies',
         apiUrl:
             'https://developer.apple.com/documentation/webkit/wkhttpcookiestore/2882005-getallcookies',
-        note:
-            """On iOS below 11.0, the [webViewController] is used for getting the cookies (also session-only cookies) using JavaScript
-(cookies with `isHttpOnly` enabled cannot be found, see: https://developer.mozilla.org/en-US/docs/Web/HTTP/Cookies#restrict_access_to_cookies)
-from the current context of the `WebView` managed by that controller. JavaScript must be enabled in order to work.
-In this case the [url] parameter is ignored.
-All the cookies returned this way will have all the properties to `null` except for [Cookie.name] and [Cookie.value].
-If [webViewController] is `null` or JavaScript is disabled for it, it will try to use a [PlatformHeadlessInAppWebView]
-to get the cookies (session-only cookies and cookies with `isHttpOnly` enabled won't be found!).""",
       ),
     ],
   )
   Future<List<Cookie>> getCookies({
     required WebUri url,
-    @SupportedPlatforms(platforms: [IOSPlatform()])
-    PlatformInAppWebViewController? webViewController,
     @SupportedPlatforms(platforms: [AndroidPlatform()]) String? profileName,
   }) {
     throw UnimplementedError(
@@ -274,22 +249,12 @@ to get the cookies (session-only cookies and cookies with `isHttpOnly` enabled w
         apiName: 'WKHTTPCookieStore.getAllCookies',
         apiUrl:
             'https://developer.apple.com/documentation/webkit/wkhttpcookiestore/2882005-getallcookies',
-        note:
-            """On iOS below 11.0, the [webViewController] is used for getting the cookie (also session-only cookie) using JavaScript
-(cookie with `isHttpOnly` enabled cannot be found, see: https://developer.mozilla.org/en-US/docs/Web/HTTP/Cookies#restrict_access_to_cookies)
-from the current context of the `WebView` managed by that controller. JavaScript must be enabled in order to work.
-In this case the [url] parameter is ignored.
-All the cookies returned this way will have all the properties to `null` except for [Cookie.name] and [Cookie.value].
-If [webViewController] is `null` or JavaScript is disabled for it, it will try to use a [PlatformHeadlessInAppWebView]
-to get the cookie (session-only cookie and cookie with `isHttpOnly` enabled won't be found!).""",
       ),
     ],
   )
   Future<Cookie?> getCookie({
     required WebUri url,
     required String name,
-    @SupportedPlatforms(platforms: [IOSPlatform()])
-    PlatformInAppWebViewController? webViewController,
     @SupportedPlatforms(platforms: [AndroidPlatform()]) String? profileName,
   }) {
     throw UnimplementedError(
@@ -317,14 +282,6 @@ to get the cookie (session-only cookie and cookie with `isHttpOnly` enabled won'
         apiName: 'WKHTTPCookieStore.delete',
         apiUrl:
             'https://developer.apple.com/documentation/webkit/wkhttpcookiestore/2882009-delete',
-        note:
-            """On iOS below 11.0, the [webViewController] is used for deleting the cookie (also session-only cookie) using JavaScript
-(cookie with `isHttpOnly` enabled cannot be deleted, see: https://developer.mozilla.org/en-US/docs/Web/HTTP/Cookies#restrict_access_to_cookies)
-from the current context of the `WebView` managed by that controller. JavaScript must be enabled in order to work.
-In this case the [url] parameter is ignored.
-If [webViewController] is `null` or JavaScript is disabled for it, it will try to use a [PlatformHeadlessInAppWebView]
-to delete the cookie (session-only cookie and cookie with `isHttpOnly` enabled won't be deleted!).
-In this case, this method will return always `true`.""",
       ),
     ],
   )
@@ -333,8 +290,6 @@ In this case, this method will return always `true`.""",
     required String name,
     String path = "/",
     String? domain,
-    @SupportedPlatforms(platforms: [IOSPlatform()])
-    PlatformInAppWebViewController? webViewController,
     @SupportedPlatforms(platforms: [AndroidPlatform()]) String? profileName,
   }) {
     throw UnimplementedError(
@@ -362,14 +317,6 @@ In this case, this method will return always `true`.""",
         apiName: 'WKHTTPCookieStore.delete',
         apiUrl:
             'https://developer.apple.com/documentation/webkit/wkhttpcookiestore/2882009-delete',
-        note:
-            """On iOS below 11.0, the [webViewController] is used for deleting the cookies (also session-only cookies) using JavaScript
-(cookies with `isHttpOnly` enabled cannot be deleted, see: https://developer.mozilla.org/en-US/docs/Web/HTTP/Cookies#restrict_access_to_cookies)
-from the current context of the `WebView` managed by that controller. JavaScript must be enabled in order to work.
-In this case the [url] parameter is ignored.
-If [webViewController] is `null` or JavaScript is disabled for it, it will try to use a [PlatformHeadlessInAppWebView]
-to delete the cookies (session-only cookies and cookies with `isHttpOnly` enabled won't be deleted!).
-In this case, this method will return always `true`.""",
       ),
     ],
   )
@@ -377,8 +324,6 @@ In this case, this method will return always `true`.""",
     required WebUri url,
     String path = "/",
     String? domain,
-    @SupportedPlatforms(platforms: [IOSPlatform()])
-    PlatformInAppWebViewController? webViewController,
     @SupportedPlatforms(platforms: [AndroidPlatform()]) String? profileName,
   }) {
     throw UnimplementedError(

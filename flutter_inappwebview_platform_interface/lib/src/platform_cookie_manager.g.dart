@@ -32,7 +32,7 @@ extension _PlatformCookieManagerClassSupported on PlatformCookieManager {
   ///- Android WebView:
   ///    - It is implemented using [CookieManager](https://developer.android.com/reference/android/webkit/CookieManager).
   ///- iOS WKWebView:
-  ///    - It is implemented using [WKHTTPCookieStore](https://developer.apple.com/documentation/webkit/wkhttpcookiestore). On iOS below 11.0, it is implemented using JavaScript. See https://developer.mozilla.org/en-US/docs/Web/HTTP/Cookies#restrict_access_to_cookies for JavaScript restrictions.
+  ///    - It is implemented using [WKHTTPCookieStore](https://developer.apple.com/documentation/webkit/wkhttpcookiestore).
   ///
   ///Use the [PlatformCookieManager.isClassSupported] method to check if this class is supported at runtime.
   ///{@endtemplate}
@@ -70,16 +70,13 @@ enum PlatformCookieManagerMethod {
   ///
   ///**Officially Supported Platforms/Implementations**:
   ///- Android WebView ([Official API - CookieManager.getCookie](https://developer.android.com/reference/android/webkit/CookieManager#getCookie(java.lang.String)))
-  ///- iOS WKWebView ([Official API - WKHTTPCookieStore.delete](https://developer.apple.com/documentation/webkit/wkhttpcookiestore/2882009-delete)):
-  ///    - On iOS below 11.0, the [webViewController] is used for deleting the cookie (also session-only cookie) using JavaScript (cookie with `isHttpOnly` enabled cannot be deleted, see: https://developer.mozilla.org/en-US/docs/Web/HTTP/Cookies#restrict_access_to_cookies) from the current context of the `WebView` managed by that controller. JavaScript must be enabled in order to work. In this case the [url] parameter is ignored. If [webViewController] is `null` or JavaScript is disabled for it, it will try to use a [PlatformHeadlessInAppWebView] to delete the cookie (session-only cookie and cookie with `isHttpOnly` enabled won't be deleted!). In this case, this method will return always `true`.
+  ///- iOS WKWebView ([Official API - WKHTTPCookieStore.delete](https://developer.apple.com/documentation/webkit/wkhttpcookiestore/2882009-delete))
   ///
   ///**Parameters - Officially Supported Platforms/Implementations**:
   ///- [url]: all platforms
   ///- [name]: all platforms
   ///- [path]: all platforms
   ///- [domain]: all platforms
-  ///- [webViewController]:
-  ///    - iOS WKWebView
   ///- [profileName]:
   ///    - Android WebView
   ///
@@ -93,15 +90,12 @@ enum PlatformCookieManagerMethod {
   ///
   ///**Officially Supported Platforms/Implementations**:
   ///- Android WebView ([Official API - CookieManager.getCookie](https://developer.android.com/reference/android/webkit/CookieManager#getCookie(java.lang.String)))
-  ///- iOS WKWebView ([Official API - WKHTTPCookieStore.delete](https://developer.apple.com/documentation/webkit/wkhttpcookiestore/2882009-delete)):
-  ///    - On iOS below 11.0, the [webViewController] is used for deleting the cookies (also session-only cookies) using JavaScript (cookies with `isHttpOnly` enabled cannot be deleted, see: https://developer.mozilla.org/en-US/docs/Web/HTTP/Cookies#restrict_access_to_cookies) from the current context of the `WebView` managed by that controller. JavaScript must be enabled in order to work. In this case the [url] parameter is ignored. If [webViewController] is `null` or JavaScript is disabled for it, it will try to use a [PlatformHeadlessInAppWebView] to delete the cookies (session-only cookies and cookies with `isHttpOnly` enabled won't be deleted!). In this case, this method will return always `true`.
+  ///- iOS WKWebView ([Official API - WKHTTPCookieStore.delete](https://developer.apple.com/documentation/webkit/wkhttpcookiestore/2882009-delete))
   ///
   ///**Parameters - Officially Supported Platforms/Implementations**:
   ///- [url]: all platforms
   ///- [path]: all platforms
   ///- [domain]: all platforms
-  ///- [webViewController]:
-  ///    - iOS WKWebView
   ///- [profileName]:
   ///    - Android WebView
   ///
@@ -141,14 +135,11 @@ enum PlatformCookieManagerMethod {
   ///
   ///**Officially Supported Platforms/Implementations**:
   ///- Android WebView ([Official API - CookieManager.getCookie](https://developer.android.com/reference/android/webkit/CookieManager#getCookie(java.lang.String)))
-  ///- iOS WKWebView ([Official API - WKHTTPCookieStore.getAllCookies](https://developer.apple.com/documentation/webkit/wkhttpcookiestore/2882005-getallcookies)):
-  ///    - On iOS below 11.0, the [webViewController] is used for getting the cookie (also session-only cookie) using JavaScript (cookie with `isHttpOnly` enabled cannot be found, see: https://developer.mozilla.org/en-US/docs/Web/HTTP/Cookies#restrict_access_to_cookies) from the current context of the `WebView` managed by that controller. JavaScript must be enabled in order to work. In this case the [url] parameter is ignored. All the cookies returned this way will have all the properties to `null` except for [Cookie.name] and [Cookie.value]. If [webViewController] is `null` or JavaScript is disabled for it, it will try to use a [PlatformHeadlessInAppWebView] to get the cookie (session-only cookie and cookie with `isHttpOnly` enabled won't be found!).
+  ///- iOS WKWebView ([Official API - WKHTTPCookieStore.getAllCookies](https://developer.apple.com/documentation/webkit/wkhttpcookiestore/2882005-getallcookies))
   ///
   ///**Parameters - Officially Supported Platforms/Implementations**:
   ///- [url]: all platforms
   ///- [name]: all platforms
-  ///- [webViewController]:
-  ///    - iOS WKWebView
   ///- [profileName]:
   ///    - Android WebView
   ///
@@ -162,13 +153,10 @@ enum PlatformCookieManagerMethod {
   ///
   ///**Officially Supported Platforms/Implementations**:
   ///- Android WebView ([Official API - CookieManager.getCookie](https://developer.android.com/reference/android/webkit/CookieManager#getCookie(java.lang.String)))
-  ///- iOS WKWebView ([Official API - WKHTTPCookieStore.getAllCookies](https://developer.apple.com/documentation/webkit/wkhttpcookiestore/2882005-getallcookies)):
-  ///    - On iOS below 11.0, the [webViewController] is used for getting the cookies (also session-only cookies) using JavaScript (cookies with `isHttpOnly` enabled cannot be found, see: https://developer.mozilla.org/en-US/docs/Web/HTTP/Cookies#restrict_access_to_cookies) from the current context of the `WebView` managed by that controller. JavaScript must be enabled in order to work. In this case the [url] parameter is ignored. All the cookies returned this way will have all the properties to `null` except for [Cookie.name] and [Cookie.value]. If [webViewController] is `null` or JavaScript is disabled for it, it will try to use a [PlatformHeadlessInAppWebView] to get the cookies (session-only cookies and cookies with `isHttpOnly` enabled won't be found!).
+  ///- iOS WKWebView ([Official API - WKHTTPCookieStore.getAllCookies](https://developer.apple.com/documentation/webkit/wkhttpcookiestore/2882005-getallcookies))
   ///
   ///**Parameters - Officially Supported Platforms/Implementations**:
   ///- [url]: all platforms
-  ///- [webViewController]:
-  ///    - iOS WKWebView
   ///- [profileName]:
   ///    - Android WebView
   ///
@@ -260,8 +248,7 @@ enum PlatformCookieManagerMethod {
   ///
   ///**Officially Supported Platforms/Implementations**:
   ///- Android WebView ([Official API - CookieManager.setCookie](https://developer.android.com/reference/android/webkit/CookieManager#setCookie(java.lang.String,%20java.lang.String,%20android.webkit.ValueCallback%3Cjava.lang.Boolean%3E)))
-  ///- iOS WKWebView ([Official API - WKHTTPCookieStore.setCookie](https://developer.apple.com/documentation/webkit/wkhttpcookiestore/2882007-setcookie)):
-  ///    - On iOS below 11.0, the [webViewController] could be used if you need to set a session-only cookie using JavaScript (so [isHttpOnly] cannot be set, see: https://developer.mozilla.org/en-US/docs/Web/HTTP/Cookies#restrict_access_to_cookies) on the current URL of the `WebView` managed by that controller. JavaScript must be enabled in order to work. If [webViewController] is `null` or JavaScript is disabled for it, it will try to use a [PlatformHeadlessInAppWebView] to set the cookie (session-only cookie won't work! In that case, you should set also [expiresDate] or [maxAge]). In this case, this method will return always `true`.
+  ///- iOS WKWebView ([Official API - WKHTTPCookieStore.setCookie](https://developer.apple.com/documentation/webkit/wkhttpcookiestore/2882007-setcookie))
   ///
   ///**Parameters - Officially Supported Platforms/Implementations**:
   ///- [url]: all platforms
@@ -274,8 +261,6 @@ enum PlatformCookieManagerMethod {
   ///- [isSecure]: all platforms
   ///- [isHttpOnly]: all platforms
   ///- [sameSite]: all platforms
-  ///- [webViewController]:
-  ///    - iOS WKWebView
   ///- [profileName]:
   ///    - Android WebView
   ///
@@ -310,8 +295,6 @@ enum PlatformCookieManagerMethod {
   ///
   ///**Parameters - Officially Supported Platforms/Implementations**:
   ///- [cookies]: all platforms
-  ///- [webViewController]:
-  ///    - iOS WKWebView
   ///- [profileName]:
   ///    - Android WebView
   ///

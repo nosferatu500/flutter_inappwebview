@@ -84,7 +84,6 @@ class AndroidCookieManager extends PlatformCookieManager
     bool? isSecure,
     bool? isHttpOnly,
     HTTPCookieSameSitePolicy? sameSite,
-    PlatformInAppWebViewController? webViewController,
     String? profileName,
   }) async {
     assert(url.toString().isNotEmpty);
@@ -110,7 +109,6 @@ class AndroidCookieManager extends PlatformCookieManager
   @override
   Future<List<bool>> setCookies({
     required List<CookieToSet> cookies,
-    PlatformInAppWebViewController? webViewController,
     String? profileName,
   }) async {
     if (cookies.isEmpty) {
@@ -143,7 +141,6 @@ class AndroidCookieManager extends PlatformCookieManager
   @override
   Future<List<Cookie>> getCookies({
     required WebUri url,
-    PlatformInAppWebViewController? webViewController,
     String? profileName,
   }) async {
     assert(url.toString().isNotEmpty);
@@ -181,7 +178,6 @@ class AndroidCookieManager extends PlatformCookieManager
   Future<Cookie?> getCookie({
     required WebUri url,
     required String name,
-    PlatformInAppWebViewController? webViewController,
     String? profileName,
   }) async {
     assert(url.toString().isNotEmpty);
@@ -220,7 +216,6 @@ class AndroidCookieManager extends PlatformCookieManager
     required String name,
     String path = "/",
     String? domain,
-    PlatformInAppWebViewController? webViewController,
     String? profileName,
   }) async {
     assert(url.toString().isNotEmpty);
@@ -240,7 +235,6 @@ class AndroidCookieManager extends PlatformCookieManager
     required WebUri url,
     String path = "/",
     String? domain,
-    PlatformInAppWebViewController? webViewController,
     String? profileName,
   }) async {
     assert(url.toString().isNotEmpty);

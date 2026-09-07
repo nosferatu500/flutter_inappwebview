@@ -5,9 +5,6 @@ import 'package:flutter/services.dart';
 
 import 'package:flutter_inappwebview_platform_interface/flutter_inappwebview_platform_interface.dart';
 
-import 'in_app_webview/headless_in_app_webview.dart';
-import 'platform_util.dart';
-
 /// Object specifying creation parameters for creating a [IOSCookieManager].
 ///
 /// When adding additional fields make sure they can be null or have a default
@@ -144,29 +141,12 @@ class IOSCookieManager extends PlatformCookieManager with ChannelController {
     bool? isSecure,
     bool? isHttpOnly,
     HTTPCookieSameSitePolicy? sameSite,
-    PlatformInAppWebViewController? webViewController,
     // Android-only; accepted so the signature matches PlatformCookieManager.
     String? profileName,
   }) async {
     assert(url.toString().isNotEmpty);
     assert(name.isNotEmpty);
     assert(path.isNotEmpty);
-
-    if (await _shouldUseJavascript()) {
-      await _setCookieWithJavaScript(
-        url: url,
-        name: name,
-        value: value,
-        domain: domain,
-        path: path,
-        expiresDate: expiresDate,
-        maxAge: maxAge,
-        isSecure: isSecure,
-        sameSite: sameSite,
-        webViewController: webViewController,
-      );
-      return true;
-    }
 
     Map<String, dynamic> args = <String, dynamic>{};
     args.putIfAbsent('url', () => url.toString());
@@ -186,7 +166,6 @@ class IOSCookieManager extends PlatformCookieManager with ChannelController {
   @override
   Future<List<bool>> setCookies({
     required List<CookieToSet> cookies,
-    PlatformInAppWebViewController? webViewController,
     // Android-only; accepted so the signature matches PlatformCookieManager.
     String? profileName,
   }) async {
@@ -199,10 +178,6 @@ class IOSCookieManager extends PlatformCookieManager with ChannelController {
       assert(cookie.path.isNotEmpty);
     }
 
-    // No `_shouldUseJavascript()` branch here, unlike `setCookie`. That branch is reachable only
-    // below system version 10.13 and this module's deployment target is iOS 15.0, so it is dead
-    // code on the singular call too — see `TODO.md`. Mirroring dead code into a new method would
-    // make it look load-bearing.
     Map<String, dynamic> args = <String, dynamic>{};
     args.putIfAbsent(
       'cookies',
@@ -220,79 +195,13 @@ class IOSCookieManager extends PlatformCookieManager with ChannelController {
         List<bool>.filled(cookies.length, false);
   }
 
-  Future<void> _setCookieWithJavaScript({
-    required WebUri url,
-    required String name,
-    required String value,
-    String path = "/",
-    String? domain,
-    int? expiresDate,
-    int? maxAge,
-    bool? isSecure,
-    HTTPCookieSameSitePolicy? sameSite,
-    PlatformInAppWebViewController? webViewController,
-  }) async {
-    var cookieValue = "$name=$value; Path=$path";
-
-    if (domain != null) cookieValue += "; Domain=$domain";
-
-    if (expiresDate != null) {
-      cookieValue += "; Expires=${await _getCookieExpirationDate(expiresDate)}";
-    }
-
-    if (maxAge != null) cookieValue += "; Max-Age=$maxAge";
-
-    if (isSecure != null && isSecure) cookieValue += "; Secure";
-
-    if (sameSite != null && sameSite.isSupported()) {
-      cookieValue += "; SameSite=${sameSite.toNativeValue()!}";
-    }
-
-    cookieValue += ";";
-
-    if (webViewController != null) {
-      final javaScriptEnabled =
-          (await webViewController.getSettings())?.javaScriptEnabled ?? false;
-      if (javaScriptEnabled) {
-        await webViewController.evaluateJavascript(
-          source: 'document.cookie="$cookieValue"',
-        );
-        return;
-      }
-    }
-
-    final setCookieCompleter = Completer<void>();
-    final headlessWebView = IOSHeadlessInAppWebView(
-      IOSHeadlessInAppWebViewCreationParams(
-        initialUrlRequest: URLRequest(url: url),
-        onLoadStop: (controller, url) async {
-          await controller.evaluateJavascript(
-            source: 'document.cookie="$cookieValue"',
-          );
-          setCookieCompleter.complete();
-        },
-      ),
-    );
-    await headlessWebView.run();
-    await setCookieCompleter.future;
-    await headlessWebView.dispose();
-  }
-
   @override
   Future<List<Cookie>> getCookies({
     required WebUri url,
-    PlatformInAppWebViewController? webViewController,
     // Android-only; accepted so the signature matches PlatformCookieManager.
     String? profileName,
   }) async {
     assert(url.toString().isNotEmpty);
-
-    if (await _shouldUseJavascript()) {
-      return await _getCookiesWithJavaScript(
-        url: url,
-        webViewController: webViewController,
-      );
-    }
 
     List<Cookie> cookies = [];
 
@@ -322,87 +231,15 @@ class IOSCookieManager extends PlatformCookieManager with ChannelController {
     return cookies;
   }
 
-  Future<List<Cookie>> _getCookiesWithJavaScript({
-    required WebUri url,
-    PlatformInAppWebViewController? webViewController,
-  }) async {
-    assert(url.toString().isNotEmpty);
-
-    List<Cookie> cookies = [];
-
-    if (webViewController != null) {
-      final javaScriptEnabled =
-          (await webViewController.getSettings())?.javaScriptEnabled ?? false;
-      if (javaScriptEnabled) {
-        List<String> documentCookies =
-            (await webViewController.evaluateJavascript(
-                      source: 'document.cookie',
-                    )
-                    as String)
-                .split(';')
-                .map((documentCookie) => documentCookie.trim())
-                .toList();
-        for (var documentCookie in documentCookies) {
-          List<String> cookie = documentCookie.split('=');
-          if (cookie.length > 1) {
-            cookies.add(Cookie(name: cookie[0], value: cookie[1]));
-          }
-        }
-        return cookies;
-      }
-    }
-
-    final pageLoaded = Completer<void>();
-    final headlessWebView = IOSHeadlessInAppWebView(
-      IOSHeadlessInAppWebViewCreationParams(
-        initialUrlRequest: URLRequest(url: url),
-        onLoadStop: (controller, url) async {
-          pageLoaded.complete();
-        },
-      ),
-    );
-    await headlessWebView.run();
-    await pageLoaded.future;
-
-    List<String> documentCookies =
-        (await headlessWebView.webViewController!.evaluateJavascript(
-                  source: 'document.cookie',
-                )
-                as String)
-            .split(';')
-            .map((documentCookie) => documentCookie.trim())
-            .toList();
-    for (var documentCookie in documentCookies) {
-      List<String> cookie = documentCookie.split('=');
-      if (cookie.length > 1) {
-        cookies.add(Cookie(name: cookie[0], value: cookie[1]));
-      }
-    }
-    await headlessWebView.dispose();
-    return cookies;
-  }
-
   @override
   Future<Cookie?> getCookie({
     required WebUri url,
     required String name,
-    PlatformInAppWebViewController? webViewController,
     // Android-only; accepted so the signature matches PlatformCookieManager.
     String? profileName,
   }) async {
     assert(url.toString().isNotEmpty);
     assert(name.isNotEmpty);
-
-    if (await _shouldUseJavascript()) {
-      List<Cookie> cookies = await _getCookiesWithJavaScript(
-        url: url,
-        webViewController: webViewController,
-      );
-      return cookies.cast<Cookie?>().firstWhere(
-        (cookie) => cookie!.name == name,
-        orElse: () => null,
-      );
-    }
 
     Map<String, dynamic> args = <String, dynamic>{};
     args.putIfAbsent('url', () => url.toString());
@@ -436,25 +273,11 @@ class IOSCookieManager extends PlatformCookieManager with ChannelController {
     required String name,
     String path = "/",
     String? domain,
-    PlatformInAppWebViewController? webViewController,
     // Android-only; accepted so the signature matches PlatformCookieManager.
     String? profileName,
   }) async {
     assert(url.toString().isNotEmpty);
     assert(name.isNotEmpty);
-
-    if (await _shouldUseJavascript()) {
-      await _setCookieWithJavaScript(
-        url: url,
-        name: name,
-        value: "",
-        path: path,
-        domain: domain,
-        maxAge: -1,
-        webViewController: webViewController,
-      );
-      return true;
-    }
 
     Map<String, dynamic> args = <String, dynamic>{};
     args.putIfAbsent('url', () => url.toString());
@@ -469,30 +292,10 @@ class IOSCookieManager extends PlatformCookieManager with ChannelController {
     required WebUri url,
     String path = "/",
     String? domain,
-    PlatformInAppWebViewController? webViewController,
     // Android-only; accepted so the signature matches PlatformCookieManager.
     String? profileName,
   }) async {
     assert(url.toString().isNotEmpty);
-
-    if (await _shouldUseJavascript()) {
-      List<Cookie> cookies = await _getCookiesWithJavaScript(
-        url: url,
-        webViewController: webViewController,
-      );
-      for (var i = 0; i < cookies.length; i++) {
-        await _setCookieWithJavaScript(
-          url: url,
-          name: cookies[i].name,
-          value: "",
-          path: path,
-          domain: domain,
-          maxAge: -1,
-          webViewController: webViewController,
-        );
-      }
-      return true;
-    }
 
     Map<String, dynamic> args = <String, dynamic>{};
     args.putIfAbsent('url', () => url.toString());
@@ -534,23 +337,6 @@ class IOSCookieManager extends PlatformCookieManager with ChannelController {
       );
     }
     return cookies;
-  }
-
-  Future<String> _getCookieExpirationDate(int expiresDate) async {
-    var platformUtil = PlatformUtil.instance();
-    var dateTime = DateTime.fromMillisecondsSinceEpoch(expiresDate).toUtc();
-    return await platformUtil.formatDate(
-      date: dateTime,
-      format: 'EEE, dd MMM yyyy HH:mm:ss z',
-      locale: 'en_US',
-      timezone: 'GMT',
-    );
-  }
-
-  Future<bool> _shouldUseJavascript() async {
-    final platformUtil = PlatformUtil.instance();
-    final systemVersion = await platformUtil.getSystemVersion();
-    return systemVersion.compareTo("10.13") == -1;
   }
 
   @override

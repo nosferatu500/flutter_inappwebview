@@ -287,6 +287,16 @@ and `SaveAsKind` · plus 14 whose last user left with the dropped-platform membe
 in the same "zero references" list and is deliberately kept** — it is iOS API that the Swift side
 reads, and it is unreachable only because `ProxyRule` has never carried `relayHop1` / `relayHop2`.
 
+**Also removed — the `webViewController` parameter on all six `CookieManager` methods**
+(`setCookie`, `setCookies`, `getCookies`, `getCookie`, `deleteCookie`, `deleteCookies`).
+**BREAKING, and it never did anything.** It existed for a JavaScript cookie fallback used below
+iOS 11.0; the guard selecting that fallback compared the system version against `"10.13"` while the
+deployment target is iOS **15.0**, so no supported OS could reach it — and on Android the parameter
+was declared but never read. Roughly 300 lines of unreachable machinery went with it, including the
+headless-WebView cookie path. Passing it is now a compile error instead of a silent no-op, and there
+is no replacement because there was no effect to replace. Its dartdoc — five `note:` blocks
+describing the pre-11.0 JavaScript behaviour — is gone too.
+
 **Also removed — `Util.isMacOS`, `Util.isWindows`, `Util.isLinux` and `Util.isFuchsia`**, the last
 of the dropped platforms' helpers. `Util` is re-exported from this package, so the names disappear
 from the public surface, but each only ever reported "am I running on a platform this fork has no

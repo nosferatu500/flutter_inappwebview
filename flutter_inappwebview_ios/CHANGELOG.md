@@ -298,6 +298,15 @@ error.
 
 ### Removed
 
+- **The JavaScript cookie fallback, and the `webViewController` parameter it existed for** — 213
+  lines from `IOSCookieManager`: `_shouldUseJavascript`, `_setCookieWithJavaScript`,
+  `_getCookiesWithJavaScript`, `_getCookieExpirationDate`, the five guard blocks calling them, and
+  the `headless_in_app_webview` / `platform_util` imports they pulled in. The guard was
+  `(await PlatformUtil.getSystemVersion()).compareTo("10.13") == -1` against a **15.0** deployment
+  target, so it was dead — and dead in a second way too, since that is a *string* comparison:
+  `"9.0".compareTo("10.13")` is `1`, so even a hypothetical pre-10 system would not have taken it.
+  It guarded `setCookie`, `getCookies`, `getCookie`, `deleteCookie` and `deleteCookies`, which is
+  why `webViewController` was a no-op on every one of them
 - All deprecated API: `IOSInAppWebViewOptions` / `IOSInAppBrowserOptions` / `IOSSafariOptions` → the
   `*Settings` classes, the 30 `IOS*` duplicate types, the `iosOn*` event aliases, the `ios*` field
   aliases, `getOptions`/`setOptions`, `findAllAsync` / `findNext` / `clearMatches` (→

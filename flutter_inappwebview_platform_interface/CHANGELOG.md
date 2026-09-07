@@ -18,6 +18,15 @@ rename; this entry is the API-owner's view.
 
 ### Removed — Platform API
 
+- **The `webViewController` parameter, from all six cookie methods** — `setCookie`, `setCookies`,
+  `getCookies`, `getCookie`, `deleteCookie` and `deleteCookies`. **BREAKING**, and it did nothing on
+  either platform. It was annotated iOS-only and read exclusively inside a JavaScript fallback that
+  ran only below system version 10.13, against a deployment target of iOS **15.0** — so the branch
+  was unreachable, and on Android the parameter was declared but never read at all. Its dartdoc
+  described the pre-iOS-11.0 JavaScript behaviour across five `note:` blocks, all of which promised
+  behaviour no supported OS could take. Removed together with the dead machinery behind it. Callers
+  passing it get a compile error rather than the silent no-op they had before; there is no
+  replacement, because there was never an effect to replace
 - `PlatformWebViewEnvironment` (+ `…CreationParams`) and `PlatformWebNotificationController`
   (+ `…CreationParams`, `WebNotificationCloseHandler`), and the
   `InAppWebViewPlatform.createPlatformWebViewEnvironment` /
