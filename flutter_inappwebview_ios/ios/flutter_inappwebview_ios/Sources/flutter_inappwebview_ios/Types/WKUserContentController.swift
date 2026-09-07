@@ -6,48 +6,89 @@
 //
 
 import Foundation
+import ObjectiveC
 import WebKit
 import Collections
+
+/// Boxes a Swift value so it can be stored as an associated object.
+///
+/// `objc_setAssociatedObject` takes an `AnyObject`, and none of the three values below
+/// (`Set`, `Dictionary`, `OrderedSet`) is one.
+private final class AssociatedValueBox<T> {
+    var value: T
+    init(_ value: T) { self.value = value }
+}
 
 extension WKUserContentController {
     static let WINDOW_ID_PREFIX = "WINDOW-ID-"
 
-    // Workaround to create stored properties in an extension:
-    // https://valv0.medium.com/computed-properties-and-extensions-a-pure-swift-approach-64733768112c
+    // These three cannot be stored properties: an extension of a WebKit class cannot add storage.
+    // They are associated objects, so each value lives on its own controller and dies with it.
+    //
+    // They replaced three `[String: …]` statics keyed by the controller's **pointer address**,
+    // formatted with `String(format: "%p", …)` — the shape `WKContentWorld.windowId` had before
+    // §96. `TODO.md` P4c argued this one was the more dangerous of the two, because a
+    // `WKUserContentController` really is deallocated (unlike an interned content world) and so its
+    // address really can be handed to a later one, which would inherit a dead WebView's content
+    // worlds and plugin scripts.
+    //
+    // **Measured before replacing it (§143), and it could not happen**: across a full
+    // `in_app_webview` run on iOS 26.5, 127 controllers were initialized and **none** found an
+    // existing entry under its address, with the three maps never holding more than two entries at
+    // once. The reason is structural rather than lucky — `prepareAndAddUserScripts()` returns early
+    // when `windowId != nil`, because a `window.open` child shares its opener's configuration *and
+    // therefore its controller*, so only a top-level WebView's controller is ever keyed here, and a
+    // top-level WebView always reaches `dispose(windowId: nil)`, which removed the entries.
+    //
+    // What an associated object changes is that none of that has to stay true. The old code was
+    // correct only while "every keyed controller is disposed exactly once" held, and nothing
+    // enforced it or would have reported its breaking.
 
-    private static var _contentWorlds = [String: Set<WKContentWorld>]()
+    private static var contentWorldsKey: UInt8 = 0
     var contentWorlds: Set<WKContentWorld> {
         get {
-            let tmpAddress = String(format: "%p", unsafeBitCast(self, to: Int.self))
-            return WKUserContentController._contentWorlds[tmpAddress] ?? []
+            (objc_getAssociatedObject(self, &WKUserContentController.contentWorldsKey)
+                as? AssociatedValueBox<Set<WKContentWorld>>)?.value ?? []
         }
-        set(newValue) {
-            let tmpAddress = String(format: "%p", unsafeBitCast(self, to: Int.self))
-            WKUserContentController._contentWorlds[tmpAddress] = newValue
+        set {
+            objc_setAssociatedObject(
+                self,
+                &WKUserContentController.contentWorldsKey,
+                AssociatedValueBox(newValue),
+                .OBJC_ASSOCIATION_RETAIN_NONATOMIC
+            )
         }
     }
 
-    private static var _userOnlyScripts = [String: [WKUserScriptInjectionTime:OrderedSet<UserScript>]]()
+    private static var userOnlyScriptsKey: UInt8 = 0
     var userOnlyScripts: [WKUserScriptInjectionTime:OrderedSet<UserScript>] {
         get {
-            let tmpAddress = String(format: "%p", unsafeBitCast(self, to: Int.self))
-            return WKUserContentController._userOnlyScripts[tmpAddress] ?? [:]
+            (objc_getAssociatedObject(self, &WKUserContentController.userOnlyScriptsKey)
+                as? AssociatedValueBox<[WKUserScriptInjectionTime:OrderedSet<UserScript>]>)?.value ?? [:]
         }
-        set(newValue) {
-            let tmpAddress = String(format: "%p", unsafeBitCast(self, to: Int.self))
-            WKUserContentController._userOnlyScripts[tmpAddress] = newValue
+        set {
+            objc_setAssociatedObject(
+                self,
+                &WKUserContentController.userOnlyScriptsKey,
+                AssociatedValueBox(newValue),
+                .OBJC_ASSOCIATION_RETAIN_NONATOMIC
+            )
         }
     }
 
-    private static var _pluginScripts = [String: [WKUserScriptInjectionTime:OrderedSet<PluginScript>]]()
+    private static var pluginScriptsKey: UInt8 = 0
     var pluginScripts: [WKUserScriptInjectionTime:OrderedSet<PluginScript>] {
         get {
-            let tmpAddress = String(format: "%p", unsafeBitCast(self, to: Int.self))
-            return WKUserContentController._pluginScripts[tmpAddress] ?? [:]
+            (objc_getAssociatedObject(self, &WKUserContentController.pluginScriptsKey)
+                as? AssociatedValueBox<[WKUserScriptInjectionTime:OrderedSet<PluginScript>]>)?.value ?? [:]
         }
-        set(newValue) {
-            let tmpAddress = String(format: "%p", unsafeBitCast(self, to: Int.self))
-            WKUserContentController._pluginScripts[tmpAddress] = newValue
+        set {
+            objc_setAssociatedObject(
+                self,
+                &WKUserContentController.pluginScriptsKey,
+                AssociatedValueBox(newValue),
+                .OBJC_ASSOCIATION_RETAIN_NONATOMIC
+            )
         }
     }
 
@@ -66,14 +107,13 @@ extension WKUserContentController {
 
     public func dispose (windowId: Int64?) {
         if windowId == nil {
-            let tmpAddress = String(format: "%p", unsafeBitCast(self, to: Int.self))
+            // The three `removeValue(forKey: tmpAddress)` calls that used to follow each of these
+            // are gone: the storage is associated with this controller and is released with it.
+            // Emptying eagerly is still worth doing — it drops the scripts and worlds now rather
+            // than whenever the controller itself goes.
             contentWorlds.removeAll()
-            WKUserContentController._contentWorlds.removeValue(forKey: tmpAddress)
-
             pluginScripts.removeAll()
-            WKUserContentController._pluginScripts.removeValue(forKey: tmpAddress)
             userOnlyScripts.removeAll()
-            WKUserContentController._userOnlyScripts.removeValue(forKey: tmpAddress)
         }
         else if let windowId = windowId {
             let contentWorldsToRemove = contentWorlds.filter({ $0.windowId == windowId })

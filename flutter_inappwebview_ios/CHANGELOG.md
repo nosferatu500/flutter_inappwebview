@@ -402,6 +402,18 @@ error.
   eventually hands that address to a different `WKContentWorld`, which silently inherits the dead
   one's `windowId`" **could not happen and is retracted**. An associated object removes both the
   growth and the dependency on that behaviour
+- **`WKUserContentController`'s `contentWorlds`, `userOnlyScripts` and `pluginScripts` are stored as
+  associated objects instead of in three static dictionaries keyed by the controller's pointer
+  address** — the same migration as `WKContentWorld.windowId` above, on the sibling that was
+  recorded as the more dangerous of the two, since a controller (unlike an interned content world)
+  really is deallocated and so its address really can be reused. **Measured first, and the
+  inheritance it was feared to allow could not happen**: over a full `in_app_webview` run on iOS
+  26.5, 127 controllers were initialized and none found an entry already stored under its address,
+  and the three maps never held more than two entries at once. The reason is structural — a
+  `window.open` child shares its opener's configuration and therefore its controller, so only a
+  top-level WebView's controller was ever keyed, and a top-level WebView always reaches
+  `dispose(windowId: nil)`. No behaviour change; what the migration removes is a correctness
+  argument that depended on that invariant holding forever with nothing to enforce it
 - 49 Dart-side unit tests, covering the channel argument maps and the settings surface — the package
   previously shipped a single empty placeholder test file
 - The integration suite now runs on iOS: **106 pass / 6 fail / 1 skip** on iOS 17.5 and
