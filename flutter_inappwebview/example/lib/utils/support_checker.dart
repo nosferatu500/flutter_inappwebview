@@ -327,6 +327,17 @@ class SupportChecker {
     ..._eventSupportResolvers.keys,
   };
 
+  /// Classes whose *methods* can be resolved. [registeredClassNames] unions all three maps, so it
+  /// cannot tell a class that only has a method resolver from one that only has an event resolver —
+  /// which is exactly the gap that let every event on six classes report "supported nowhere" while
+  /// those classes looked registered.
+  static Set<String> get methodResolverClassNames =>
+      _methodSupportResolvers.keys.toSet();
+
+  /// Classes whose *events* can be resolved. See [methodResolverClassNames].
+  static Set<String> get eventResolverClassNames =>
+      _eventSupportResolvers.keys.toSet();
+
   static _MethodSupportResolver _buildMethodResolver<T>({
     required List<T> values,
     required bool Function(T method, {TargetPlatform? platform}) checker,
@@ -468,6 +479,45 @@ class SupportChecker {
       checker: (property, {platform}) =>
           FindInteractionController.isPropertySupported(
             property as PlatformFindInteractionControllerCreationParamsProperty,
+            platform: platform,
+          ),
+    ),
+    // The browsers answer for their events through `isEventMethodSupported`, which takes a
+    // *method* enum rather than a property one. `_MethodSupportResolver` and
+    // `_PropertySupportResolver` are the same function type, so a method resolver fits here.
+    classNameOf(InAppBrowser): _buildMethodResolver(
+      values: PlatformInAppBrowserEventsMethod.values,
+      checker: InAppBrowser.isEventMethodSupported,
+    ),
+    classNameOf(ChromeSafariBrowser): _buildMethodResolver(
+      values: PlatformChromeSafariBrowserEventsMethod.values,
+      checker: ChromeSafariBrowser.isEventMethodSupported,
+    ),
+    classNameOf(PullToRefreshController): _buildPropertyResolver(
+      values: PlatformPullToRefreshControllerCreationParamsProperty.values,
+      checker: (property, {platform}) =>
+          PullToRefreshController.isPropertySupported(
+            property as PlatformPullToRefreshControllerCreationParamsProperty,
+            platform: platform,
+          ),
+    ),
+    // These two take `dynamic` and dispatch on the runtime type, so the events enum
+    // (`Platform*Property`) and the creation-params one both reach the right generated check.
+    classNameOf(PrintJobController): _buildPropertyResolver(
+      values: PlatformPrintJobControllerProperty.values,
+      checker: PrintJobController.isPropertySupported,
+    ),
+    classNameOf(WebAuthenticationSession): _buildPropertyResolver(
+      values: PlatformWebAuthenticationSessionProperty.values,
+      checker: WebAuthenticationSession.isPropertySupported,
+    ),
+    // The service worker's one event belongs to `ServiceWorkerClient`, not to the controller, so
+    // the checker comes off that class even though the entry is listed under the controller.
+    classNameOf(ServiceWorkerController): _buildPropertyResolver(
+      values: ServiceWorkerClientProperty.values,
+      checker: (property, {platform}) =>
+          ServiceWorkerClient.isPropertySupported(
+            property as ServiceWorkerClientProperty,
             platform: platform,
           ),
     ),
