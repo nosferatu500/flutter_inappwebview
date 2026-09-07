@@ -305,10 +305,10 @@ class AndroidCookieManager extends PlatformCookieManager
   }
 
   @override
-  Future<void> flush({String? profileName}) async {
+  Future<bool> flush({String? profileName}) async {
     Map<String, dynamic> args = <String, dynamic>{};
     args.putIfAbsent('profileName', () => profileName);
-    await channel?.invokeMethod('flush', args);
+    return await channel?.invokeMethod<bool>('flush', args) ?? false;
   }
 
   @override

@@ -420,6 +420,12 @@ rename; this entry is the API-owner's view.
 
 ### Fixed
 
+- **`PlatformCookieManager.flush` now returns `Future<bool>` instead of `Future<void>`.** BREAKING
+  for an implementer of the platform interface; source-compatible for callers. It was the only
+  mutating method on the class that could not report failure, while the class doc promises a
+  profile-scoped call "reports failure" — so the interface contradicted itself. The dartdoc now
+  states what `false` means: the cookie store could not be resolved and **nothing was written**,
+  rather than a partial or failed write
 - **The code generator now warns, at build time, wherever it emits a bare `!` on a non-nullable enum
   field.** No generated output changes — the emission is legitimate, and all 16 current sites were
   audited and found unreachable — but it used to be *silent*, which is how deleting a catch-all

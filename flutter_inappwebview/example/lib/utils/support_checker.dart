@@ -2540,7 +2540,7 @@ class SupportChecker {
         ),
         ApiMethodDefinition(
           name: PlatformCookieManagerMethod.flush.name,
-          signature: 'Future<void> flush()',
+          signature: 'Future<bool> flush()',
           description: 'Flushes cookies to persistent storage.',
           className: className,
         ),

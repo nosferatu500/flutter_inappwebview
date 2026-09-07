@@ -578,11 +578,14 @@ class _CookieManagerScreenState extends State<CookieManagerScreen> {
   Future<void> _flush() async {
     setState(() => _isLoading = true);
     try {
-      await _cookieManager.flush();
+      final flushed = await _cookieManager.flush();
       _recordMethodResult(
         PlatformCookieManagerMethod.flush.name,
-        'Cookies flushed to persistent storage',
-        isError: false,
+        flushed
+            ? 'Cookies flushed to persistent storage'
+            : 'Nothing was flushed: the cookie store could not be resolved '
+                  '(unknown profile, or no MULTI_PROFILE support)',
+        isError: !flushed,
       );
     } catch (e) {
       _recordMethodResult(

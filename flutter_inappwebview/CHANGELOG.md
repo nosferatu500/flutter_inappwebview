@@ -948,8 +948,17 @@ simulator for the first time:**
   round-trip is now exact. `getSize` also reported a `-1` ("match the screen") axis as a *physical*
   pixel count — `Size(1080, 2400)` for a screen 411.4 logical pixels wide — and now answers in
   logical pixels like every other value in the API. iOS was already correct
-- **`CookieManager.flush()` never returned.** The native side never replied, so the `Future` hung
-  forever
+- **`CookieManager.flush()`'s `Future` never completed.** The native side never replied on the
+  channel, so `await flush()` hung forever. Unrelated to the return-type change below — this was a
+  missing reply, not a missing value
+- **`CookieManager.flush()` now returns `Future<bool>` instead of `Future<void>`**, matching
+  `setCookie` / `deleteCookie` / `deleteCookies` / `deleteAllCookies` / `removeSessionCookies`.
+  The native side already computed the answer — `false` when the cookie store cannot be resolved,
+  meaning **nothing was written** — and Dart discarded it, which also made this class's own
+  documentation false: it promises that a profile-scoped call "reports failure", which a `void`
+  cannot do. Source-compatible for callers (`await manager.flush();` is unchanged, and
+  `Future<bool>` still satisfies a `Future<void>` variable); breaking only for an external
+  implementation of `PlatformCookieManager`
 - **A blocking callback could hang the WebView forever.** The four synchronous callbacks
   (`shouldInterceptRequest`, `onLoadResourceWithCustomScheme`, a custom `WebViewAssetLoader`
   `PathHandler.handle`, and `ServiceWorkerClient.shouldInterceptRequest`) waited on a latch that was

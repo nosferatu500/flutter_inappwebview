@@ -465,6 +465,11 @@ In this case, this method will return always `true`.""",
   ///{@template flutter_inappwebview_platform_interface.PlatformCookieManager.flush}
   ///Ensures all cookies currently accessible through the getCookie API are written to persistent storage.
   ///This call will block the caller until it is done and may perform I/O.
+  ///
+  ///Returns `false` when the cookie store could not be resolved — with a [profileName] that names
+  ///no existing profile, or without [WebViewFeature.MULTI_PROFILE] — in which case **nothing was
+  ///written**. It does not fall back to the default store, so a `false` here means the flush did
+  ///not happen rather than that it failed partway.
   ///{@endtemplate}
   ///
   ///{@macro flutter_inappwebview_platform_interface.PlatformCookieManager.flush.supported_platforms}
@@ -477,7 +482,7 @@ In this case, this method will return always `true`.""",
       ),
     ],
   )
-  Future<void> flush({
+  Future<bool> flush({
     @SupportedPlatforms(platforms: [AndroidPlatform()]) String? profileName,
   }) {
     throw UnimplementedError(

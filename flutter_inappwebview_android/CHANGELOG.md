@@ -276,8 +276,14 @@ for, and five others have a native *value* that differs from their name.
   iOS was unaffected — UIKit points are logical pixels and no conversion happens there.
   Covered by 7 new unit tests (28 → 35) and two integration assertions, all verified to fail against
   the old code
-- **`CookieManager.flush()` never returned.** The native side never replied on the channel, so the
-  `Future` hung forever. Fixed and verified on a device
+- **`CookieManager.flush()` now returns `Future<bool>`**, surfacing the answer `MyCookieManager.flush`
+  already sends: `false` when `getCookieManager(profileName)` resolves to null — an unknown profile,
+  or no `MULTI_PROFILE` support — in which case nothing was written. Dart previously discarded it.
+  A `null` reply (a disposed channel) is read as `false`, unlike `isAcceptCookieEnabled` on the same
+  class, whose platform default is `true`; 4 unit tests pin both choices
+- **`CookieManager.flush()`'s `Future` never completed.** The native side never replied on the
+  channel, so `await flush()` hung forever. Fixed and verified on a device. Unrelated to the
+  return-type change above — this was a missing reply, not a missing value
 - **A blocking callback could hang the WebView forever.** The four synchronous callbacks
   (`shouldInterceptRequest`, `onLoadResourceWithCustomScheme`, a custom `WebViewAssetLoader`
   `PathHandler.handle`, and `ServiceWorkerClient.shouldInterceptRequest`) waited on a latch that was

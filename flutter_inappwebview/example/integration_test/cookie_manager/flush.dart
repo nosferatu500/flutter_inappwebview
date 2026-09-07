@@ -44,6 +44,16 @@ void flush() {
           'result.success(...) on its success path',
     );
 
+    // §137: the reply is now the caller's answer, not just proof the channel replied. On the
+    // default cookie store the manager always resolves, so this is the `true` path; the `false`
+    // path needs an unknown profileName and is covered by the unit tests, since a device that
+    // lacks MULTI_PROFILE would make an integration assertion mean two different things.
+    expect(
+      await cookieManager.flush().timeout(const Duration(seconds: 10)),
+      true,
+      reason: 'flush on the default cookie store must report success',
+    );
+
     // A flush must not disturb what it wrote out.
     final cookie = await cookieManager.getCookie(url: url, name: "myCookie");
     expect(cookie?.value.toString(), "myValue");
