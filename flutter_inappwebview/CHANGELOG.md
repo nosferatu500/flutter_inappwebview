@@ -832,6 +832,14 @@ registration. **Note the consequence**: `serviceWorkerClient` reads the same val
 `ServiceWorkerController`, and setting it through any of them replaces it for all. That was already
 true of the *native* registration; only the Dart side disagreed.
 
+**iOS — declining `onCreateWindow` leaked the child WebView.** Returning `false` (or not handling
+the event) tells the plugin to drop the `window.open` child and load the URL in the opener. The
+child was dropped by the plugin but not by WebKit, which kept calling its delegate afterwards; those
+late callbacks were queued for a window that would never be created, so their WebKit completion
+handlers were never called, the navigation was never decided, and the `WKWebView` was never
+released. Every declined `window.open` cost one leaked WebView for the life of the process. Nothing
+about the API changes — apps that already return `false` simply stop leaking.
+
 **Two long-standing iOS behaviours are now written down as permanent decisions rather than left to
 look like unfinished work.**
 

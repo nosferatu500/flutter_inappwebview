@@ -286,6 +286,15 @@ unit test could see. All four are fixed and proved both ways on a simulator.
   server trust, client certificate) now capture `self` weakly and fall through to their default
   behaviour if the WebView is gone. Observed twice in this repo's own test runs before the fix, both
   times as the app dying mid-suite with no Dart error
+- **A `window.open` child window that `onCreateWindow` declines leaked its `WKWebView` for the life
+  of the process.** While the child is waiting to be adopted, its delegate callbacks are queued in
+  `windowBeforeCreatedCallbacks` instead of being answered. WebKit goes on calling that delegate
+  *after* Dart has declined the window, so a callback — each of which holds a WebKit completion
+  handler — was queued onto an orphan nothing would ever drain: the navigation stayed undecided,
+  WebKit kept the view, and neither `dispose()` nor `deinit` ever ran. A declined child now stops
+  deferring and answers its own callbacks, and is released once WebKit is done with it. Measured on
+  iOS 26.5: in the four-test `WebView Windows` group, the two children that received a post-decline
+  callback never deallocated before this change and all four do after it
 - 48 dead availability checks removed — all at or below the new 15.0 floor — along with the
   below-iOS-14 `callAsyncJavaScript` path and the dead `SFAuthenticationSession` branches
 

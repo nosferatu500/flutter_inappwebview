@@ -20,6 +20,30 @@ public class InAppWebView: WKWebView, UIScrollViewDelegate, WKUIDelegate,
     var plugin: InAppWebViewFlutterPlugin?
     var windowId: Int64?
     var windowCreated = false
+
+    /// Set when Dart declines `onCreateWindow`, so the child this WebView was created for is
+    /// never adopted.
+    ///
+    /// Deferring is only correct while the window may still arrive. WebKit goes on calling the
+    /// orphan's delegate *after* the decline — measured — and each of those callbacks holds a
+    /// WebKit completion handler, so queueing one that nothing will ever drain leaves the
+    /// navigation undecided and WebKit holding the view for the life of the process.
+    var windowAbandoned = false
+
+    /// Delegate callbacks deferred until the `window.open` child window is created.
+    ///
+    /// **Every closure appended here must capture `self` weakly.** This array is owned by the
+    /// WebView, so a closure capturing `self` strongly makes the WebView own something that owns
+    /// the WebView. That cycle forms immediately for a `window.open` child — `createWebViewWith`
+    /// returns the child to WebKit, which navigates it at once, and each resulting delegate
+    /// callback lands here because `windowCreated` is still `false`.
+    ///
+    /// The cycle is normally cut in one of two places: `runWindowBeforeCreatedCallbacks()`, called
+    /// when the window is created and again from `dispose()`. But when Dart declines
+    /// `onCreateWindow`, `CreateWindowCallback.defaultBehaviour` drops the transport and the child
+    /// is never disposed — and **`isolated deinit` cannot back that up, because a retain cycle is
+    /// exactly what stops `deinit` running.** Held strongly, the child leaks for the life of the
+    /// process.
     var windowBeforeCreatedCallbacks: [() -> ()] = []
     var inAppBrowserDelegate: InAppBrowserDelegate?
     var channelDelegate: WebViewChannelDelegate?
@@ -2066,15 +2090,19 @@ public class InAppWebView: WKWebView, UIScrollViewDelegate, WKUIDelegate,
             callback?.defaultBehaviour(nil)
         }
 
-        let runCallback = {
-            if let useShouldOverrideUrlLoading = self.settings?.useShouldOverrideUrlLoading, useShouldOverrideUrlLoading, let channelDelegate = self.channelDelegate {
+        // `[weak self]` breaks a retain cycle, not a dangling reference: when `windowId != nil` and
+        // the window has not been created yet this closure is stored in `self`'s own
+        // `windowBeforeCreatedCallbacks`, so capturing `self` strongly makes the WebView own a
+        // closure that owns the WebView. See the note on `windowBeforeCreatedCallbacks`.
+        let runCallback = { [weak self] in
+            if let useShouldOverrideUrlLoading = self?.settings?.useShouldOverrideUrlLoading, useShouldOverrideUrlLoading, let channelDelegate = self?.channelDelegate {
                 channelDelegate.shouldOverrideUrlLoading(navigationAction: navigationAction, callback: callback)
             } else {
                 callback.defaultBehaviour(nil)
             }
         }
         
-        if windowId != nil, !windowCreated {
+        if windowId != nil, !windowCreated, !windowAbandoned {
             windowBeforeCreatedCallbacks.append(runCallback)
         } else {
             runCallback()
@@ -2313,15 +2341,17 @@ public class InAppWebView: WKWebView, UIScrollViewDelegate, WKUIDelegate,
                 callback?.defaultBehaviour(nil)
             }
             
-            let runCallback = {
-                if let channelDelegate = self.channelDelegate {
+                // `[weak self]` for the same reason as the site above: this closure can be stored in
+                // `self`'s own `windowBeforeCreatedCallbacks`.
+            let runCallback = { [weak self] in
+                if let channelDelegate = self?.channelDelegate {
                     channelDelegate.onReceivedHttpAuthRequest(challenge: HttpAuthenticationChallenge(fromChallenge: challenge), callback: callback)
                 } else {
                     callback.defaultBehaviour(nil)
                 }
             }
             
-            if windowId != nil, !windowCreated {
+            if windowId != nil, !windowCreated, !windowAbandoned {
                 windowBeforeCreatedCallbacks.append(runCallback)
             } else {
                 runCallback()
@@ -2386,15 +2416,17 @@ public class InAppWebView: WKWebView, UIScrollViewDelegate, WKUIDelegate,
                 callback?.defaultBehaviour(nil)
             }
             
-            let runCallback = {
-                if let channelDelegate = self.channelDelegate {
+                // `[weak self]` for the same reason as the site above: this closure can be stored in
+                // `self`'s own `windowBeforeCreatedCallbacks`.
+            let runCallback = { [weak self] in
+                if let channelDelegate = self?.channelDelegate {
                     channelDelegate.onReceivedServerTrustAuthRequest(challenge: ServerTrustChallenge(fromChallenge: challenge), callback: callback)
                 } else {
                     callback.defaultBehaviour(nil)
                 }
             }
             
-            if windowId != nil, !windowCreated {
+            if windowId != nil, !windowCreated, !windowAbandoned {
                 windowBeforeCreatedCallbacks.append(runCallback)
             } else {
                 runCallback()
@@ -2460,15 +2492,17 @@ public class InAppWebView: WKWebView, UIScrollViewDelegate, WKUIDelegate,
                 callback?.defaultBehaviour(nil)
             }
             
-            let runCallback = {
-                if let channelDelegate = self.channelDelegate {
+                // `[weak self]` for the same reason as the site above: this closure can be stored in
+                // `self`'s own `windowBeforeCreatedCallbacks`.
+            let runCallback = { [weak self] in
+                if let channelDelegate = self?.channelDelegate {
                     channelDelegate.onReceivedClientCertRequest(challenge: ClientCertChallenge(fromChallenge: challenge), callback: callback)
                 } else {
                     callback.defaultBehaviour(nil)
                 }
             }
             
-            if windowId != nil, !windowCreated {
+            if windowId != nil, !windowCreated, !windowAbandoned {
                 windowBeforeCreatedCallbacks.append(runCallback)
             } else {
                 runCallback()
@@ -2827,8 +2861,11 @@ public class InAppWebView: WKWebView, UIScrollViewDelegate, WKUIDelegate,
             return !handledByClient
         }
         callback.defaultBehaviour = { [weak self] (handledByClient: Bool?) in
-            if inAppWebViewManager?.windowWebViews[windowId] != nil {
+            if let transport = inAppWebViewManager?.windowWebViews[windowId] {
                 inAppWebViewManager?.windowWebViews.removeValue(forKey: windowId)
+                // Dropping the transport is the plugin's last reference to the child, but not
+                // WebKit's: it is still mid-navigation on it. Let it answer its own callbacks.
+                (transport.webView as? InAppWebView)?.abandonWindowBeforeCreated()
             }
             self?.loadUrl(urlRequest: navigationAction.request, allowingReadAccessTo: nil)
         }
@@ -2928,15 +2965,16 @@ public class InAppWebView: WKWebView, UIScrollViewDelegate, WKUIDelegate,
             callback?.defaultBehaviour(nil)
         }
         
-        let runCallback = {
-            if let channelDelegate = self.channelDelegate {
+        // `[weak self]` for the same reason as the sites above.
+        let runCallback = { [weak self] in
+            if let channelDelegate = self?.channelDelegate {
                 channelDelegate.shouldAllowDeprecatedTLS(challenge: challenge, callback: callback)
             } else {
                 callback.defaultBehaviour(nil)
             }
         }
         
-        if windowId != nil, !windowCreated {
+        if windowId != nil, !windowCreated, !windowAbandoned {
             windowBeforeCreatedCallbacks.append(runCallback)
         } else {
             runCallback()
@@ -3769,6 +3807,16 @@ public class InAppWebView: WKWebView, UIScrollViewDelegate, WKUIDelegate,
         interactionState = state
     }
     
+    /// Settles a `window.open` child that Dart declined.
+    ///
+    /// Runs whatever was already queued and stops queueing, so every later delegate callback
+    /// takes the immediate path and answers WebKit instead of being dropped. Teardown is left
+    /// to `deinit` -> `dispose()`: once nothing is waiting on this WebView, ARC releases it.
+    public func abandonWindowBeforeCreated() {
+        windowAbandoned = true
+        runWindowBeforeCreatedCallbacks()
+    }
+
     public func runWindowBeforeCreatedCallbacks() {
         let callbacks = windowBeforeCreatedCallbacks
         callbacks.forEach { (callback) in
