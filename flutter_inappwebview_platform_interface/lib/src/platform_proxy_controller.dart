@@ -113,6 +113,17 @@ abstract class PlatformProxyController extends PlatformInterface {
   ///URLs that match patterns in the bypass list will not be directed to any proxy.
   ///Instead, the request will be made directly to the origin specified by the URL.
   ///Network connections are not guaranteed to immediately use the new proxy setting; wait for the method to return before loading a page.
+  ///
+  ///**iOS below 26 does not route cleartext `http://` through the proxy.** Measured with an
+  ///identical configuration on both simulators: on iOS 26.5 an `http://` page load arrives at the
+  ///proxy, while on iOS 17.5 it goes straight to the origin server as though no proxy were set.
+  ///`https://` is proxied on both. This is a WebKit behaviour, not a configuration gap — iOS maps
+  ///[ProxySettings] onto `WKWebsiteDataStore.proxyConfigurations` using Network.framework's
+  ///`ProxyConfiguration(httpCONNECTProxy:)`, which is the only HTTP proxy form the framework
+  ///offers (the other is SOCKSv5), and iOS 17 declines to send cleartext requests through a
+  ///CONNECT tunnel. There is no plugin-side workaround; **use `https://` if the traffic must be
+  ///proxied on iOS below 26**. Only 17.5 and 26.5 were measured, so the version that starts
+  ///routing cleartext lies somewhere in 18–26 and is not established.
   ///{@endtemplate}
   ///
   ///{@macro flutter_inappwebview_platform_interface.PlatformProxyController.setProxyOverride.supported_platforms}

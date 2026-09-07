@@ -420,6 +420,17 @@ rename; this entry is the API-owner's view.
 
 ### Fixed
 
+- **`setProxyOverride`'s dartdoc now documents that iOS below 26 does not route cleartext `http://`
+  through the proxy.** No code change — this is WebKit's behaviour. Measured with an identical
+  configuration on two simulators: an `http://` load reaches the proxy on iOS 26.5 and goes straight
+  to the origin server on iOS 17.5, while `https://` is proxied on both. The `https` result is what
+  makes it a platform finding rather than a configuration gap — it proves the proxy is applied and
+  active on 17.5. iOS maps `ProxySettings` onto `WKWebsiteDataStore.proxyConfigurations` through
+  Network.framework's `ProxyConfiguration(httpCONNECTProxy:)`, the only HTTP proxy form that
+  framework offers, and iOS 17 declines to send cleartext through a CONNECT tunnel. Use `https://`
+  if the traffic must be proxied on iOS below 26. The integration test now asserts the *opposite*
+  expectation below the floor rather than skipping, so the day an OS starts routing cleartext the
+  suite says so
 - **`loadUrl`'s dartdoc now documents that `allowingReadAccessTo` discards the rest of the
   `URLRequest` on iOS.** No code change — this is WebKit's behaviour and it had never been written
   down. `loadFileURL:allowingReadAccessToURL:` accepts a URL and nothing else, so a `file://` load
