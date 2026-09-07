@@ -277,10 +277,12 @@ for, and five others have a native *value* that differs from their name.
 - **`CookieManager.flush()` never returned.** The native side never replied on the channel, so the
   `Future` hung forever. Fixed and verified on a device
 - **A blocking callback could hang the WebView forever.** The four synchronous callbacks
-  (`shouldInterceptRequest`, `shouldOverrideUrlLoading`, `onJsBeforeUnload`,
-  `ServiceWorkerClient.shouldInterceptRequest`) waited on a latch that was not always released. The
-  wait is now always released and bounded at 10s; a handler that legitimately takes longer will stop
-  intercepting and log a warning
+  (`shouldInterceptRequest`, `onLoadResourceWithCustomScheme`, a custom `WebViewAssetLoader`
+  `PathHandler.handle`, and `ServiceWorkerClient.shouldInterceptRequest`) waited on a latch that was
+  not always released. The wait is now always released and bounded at 10s; a handler that
+  legitimately takes longer will stop intercepting and log a warning. The first two can since be
+  retuned through `InAppWebViewSettings.syncCallbackTimeoutMillis`; the other two have no WebView
+  settings to read and keep the 10s default
 - **The bundled `FileProvider` granted read access to the entire external-storage root** (upstream
   #2874 / #2873). It is now scoped to the plugin's own directories
 - **Six bugs carried through the Java → Kotlin translation**, fixed once the diff was small enough to

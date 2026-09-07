@@ -939,9 +939,10 @@ simulator for the first time:**
 - **`CookieManager.flush()` never returned.** The native side never replied, so the `Future` hung
   forever
 - **A blocking callback could hang the WebView forever.** The four synchronous callbacks
-  (`shouldInterceptRequest`, `shouldOverrideUrlLoading`, `onJsBeforeUnload`,
-  `ServiceWorkerClient.shouldInterceptRequest`) waited on a latch that was not always released; the
-  wait is now always released and bounded (10s)
+  (`shouldInterceptRequest`, `onLoadResourceWithCustomScheme`, a custom `WebViewAssetLoader`
+  `PathHandler.handle`, and `ServiceWorkerClient.shouldInterceptRequest`) waited on a latch that was
+  not always released; the wait is now always released and bounded (10s). The first two can since be
+  retuned through `InAppWebViewSettings.syncCallbackTimeoutMillis`
 - **The bundled `FileProvider` granted access to the entire external-storage root.** It is now
   scoped, and ships its own `@xml/inappwebview_provider_paths` (upstream #2874 / #2873)
 - **Six bugs carried through the Java → Kotlin translation**, fixed once the diff was readable:
