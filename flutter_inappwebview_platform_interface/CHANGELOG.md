@@ -420,6 +420,15 @@ rename; this entry is the API-owner's view.
 
 ### Fixed
 
+- **The code generator now warns, at build time, wherever it emits a bare `!` on a non-nullable enum
+  field.** No generated output changes — the emission is legitimate, and all 16 current sites were
+  audited and found unreachable — but it used to be *silent*, which is how deleting a catch-all
+  constant re-armed the force-unwrap bug with nothing noticing. Each regeneration now lists the
+  site, its source file and the enum, so a new one is visible when it appears rather than when a
+  platform returns an unmapped value. The generator also calls out a **near-miss** constant name:
+  the catch-all is matched by name (`UNKNOWN` / `UNSPECIFIED` / `NOT_SPECIFIED`) because the
+  annotations cannot carry a marker, so an enum declaring `UNKNOWN_TYPE` or `UNKNOWN_PORTRAIT` reads
+  like it has a fallback and does not. 3 generator tests, each proved against a mutant
 - **`setProxyOverride`'s dartdoc now documents that iOS below 26 does not route cleartext `http://`
   through the proxy.** No code change — this is WebKit's behaviour. Measured with an identical
   configuration on two simulators: an `http://` load reaches the proxy on iOS 26.5 and goes straight

@@ -11,6 +11,14 @@ import 'util.dart';
 
 const _annotationsPackage = 'flutter_inappwebview_internal_annotations';
 
+/// Constant names accepted as an enum's stand-in for an unmapped native value.
+///
+/// Matched by **name**, because the annotations carry no "this is the fallback" marker and
+/// cannot gain one: `flutter_inappwebview_internal_annotations` is published, 238 shipped
+/// sources import it, and a consuming app resolves it from pub.dev — so new annotation
+/// surface breaks every consumer build until that package is republished (trap 14).
+const _catchAllCandidates = ['UNKNOWN', 'UNSPECIFIED', 'NOT_SPECIFIED'];
+
 final _coreChecker = TypeChecker.typeNamedLiterally(
   'ExchangeableObject',
   inPackage: _annotationsPackage,
@@ -760,6 +768,10 @@ class ExchangeableObjectGenerator
     // remove class reference terminating with "_"
     final classNameReference = fieldTypeElement?.name?.replaceFirst("_", "");
     final isNullable = Util.typeIsNullable(elementType);
+    // The map expression this call started from (e.g. `map['level']`). `value` is rewritten
+    // as the expression is built up, so the bare-`!` warning below would otherwise have no
+    // way to say *which* field it is talking about -- this function is not given the name.
+    final sourceExpression = value;
     final displayString = Util.typeDisplayStringWithoutNullability(elementType);
     if (displayString == "Uri") {
       if (!isNullable) {
@@ -912,6 +924,25 @@ class ExchangeableObjectGenerator
           // so degrade to the enum's own UNKNOWN constant where it has one, and only fall
           // back to `!` for enums with no such catch-all.
           final unknownConstant = _findCatchAllConstant(fieldTypeElement);
+          if (unknownConstant == null) {
+            // Warn rather than fail. Every one of these sites was audited and found
+            // unreachable (see DEPRECATION_CLEANUP.md §86/§136), so breaking the build would
+            // be wrong -- but the emission was previously *silent*, which is how a deleted
+            // catch-all re-armed the bug with no gate noticing. Listing them on every
+            // regeneration makes a new site, or a lost fallback, visible at the moment it
+            // appears rather than at the moment a platform returns an unmapped value.
+            final nearMiss = _nearMissCatchAllConstant(fieldTypeElement);
+            log.warning(
+              'Non-nullable enum field decoded from $sourceExpression as '
+              '$classNameReference has no catch-all constant, so a bare `!` is emitted. '
+              'An unmapped native value will throw inside the channel handler and the '
+              'callback will never reach app code.'
+              '${nearMiss != null ? ' NOTE: $classNameReference declares `$nearMiss`, which '
+                        'reads like a catch-all but is not one of '
+                        '${_catchAllCandidates.join(", ")} -- the match is by name, so this '
+                        'constant is NOT used. Rename it or extend the candidate list.' : ''}',
+            );
+          }
           value += unknownConstant != null
               ? ' ?? $classNameReference.$unknownConstant'
               : '!';
@@ -1134,13 +1165,41 @@ class ExchangeableObjectGenerator
     if (element is! ClassElement) {
       return null;
     }
-    const candidates = ['UNKNOWN', 'UNSPECIFIED', 'NOT_SPECIFIED'];
-    for (final candidate in candidates) {
+    for (final candidate in _catchAllCandidates) {
       final matched = element.fields.any(
         (f) => f.isStatic && f.name == candidate,
       );
       if (matched) {
         return candidate;
+      }
+    }
+    return null;
+  }
+
+  /// Name of a constant that *reads* like a catch-all but is not one of
+  /// [_catchAllCandidates], or `null` if there is none.
+  ///
+  /// Matching by name has two failure modes, not one. The known one is deletion — §73
+  /// removed a catch-all and the generator silently reverted to `!`. The other is a
+  /// **near miss**: `InAppWebViewHitTestResultType.UNKNOWN_TYPE` and
+  /// `PrintJobMediaSize.UNKNOWN_PORTRAIT` are catch-alls in every sense except the
+  /// spelling, so this method would not find them. Neither is reachable today (both are
+  /// nullable fields, so no `!` is emitted), which is exactly why it needs saying out
+  /// loud the first time one of them lands on a non-nullable field.
+  String? _nearMissCatchAllConstant(Element? element) {
+    if (element is! ClassElement) {
+      return null;
+    }
+    for (final field in element.fields) {
+      final name = field.name;
+      if (!field.isStatic || name == null) {
+        continue;
+      }
+      if (_catchAllCandidates.contains(name)) {
+        continue;
+      }
+      if (_catchAllCandidates.any((c) => name.contains(c))) {
+        return name;
       }
     }
     return null;
