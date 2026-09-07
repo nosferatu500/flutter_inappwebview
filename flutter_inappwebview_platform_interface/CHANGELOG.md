@@ -95,6 +95,15 @@ rename; this entry is the API-owner's view.
   same client works. Use `PlatformInAppWebViewController.getFavicons()` instead. Removing the event
   also drops it from `PlatformInAppWebViewController.debugLoggingSettings`' default `excludeFilter`,
   which now excludes only `onScrollChanged` and `onOverScrolled`
+- **`Util.isMacOS`, `Util.isWindows`, `Util.isLinux` and `Util.isFuchsia`.** `Util` is exported from
+  this package's public surface, so this is breaking in name — but all four report whether the app
+  is running on a platform this fork no longer has an implementation for, so they could only ever
+  answer `false` in a build that resolves this package. `Util.isWeb`, `Util.isAndroid` and
+  `Util.isIOS` are kept and unchanged. The only caller of any of the four was
+  `ClientCertResponse`'s own constructor assert, which read
+  `action == PROCEED && !Util.isWindows`; the second operand was dead, and the assert is now
+  simply `action == PROCEED`. Behaviour is identical on Android and iOS — 4 new tests pin it,
+  since that constructor previously had none
 
 ### Added
 
@@ -482,10 +491,6 @@ rename; this entry is the API-owner's view.
   `type 'List<dynamic>' is not a subtype of type 'List<int?>' in type cast` **from the constant's own
   initialiser**, so the crash landed wherever the constant was first touched. The generator now emits
   the type argument on both list literals. Regression test included, and it fails on the old output
-- **`onFaviconChanged` is documented as not firing on modern Android WebView.** Its source,
-  `WebChromeClient.onReceivedIcon`, was fed by the long-inert `WebIconDatabase`. Measured on API 33
-  and 37 — on API 33 the WebView does fetch `favicon.ico` and the callback still never arrives, while
-  `onReceivedTitle` from the same client works. `getFavicons()` is the working alternative
 - **An unmapped permission resource killed `onPermissionRequest`.** `PermissionResourceType` had no
   catch-all left, so `PermissionRequest.fromMap` and `PermissionResponse.fromMap` force-unwrapped the
   lookup: one `PermissionRequest.RESOURCE_*` string (Android) or `WKMediaCaptureType` raw value (iOS)

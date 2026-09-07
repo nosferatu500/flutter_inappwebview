@@ -17,18 +17,6 @@ class Util {
 
   static bool get isIOS =>
       !isWeb && defaultTargetPlatform == TargetPlatform.iOS;
-
-  static bool get isMacOS =>
-      !isWeb && defaultTargetPlatform == TargetPlatform.macOS;
-
-  static bool get isWindows =>
-      !isWeb && defaultTargetPlatform == TargetPlatform.windows;
-
-  static bool get isLinux =>
-      !isWeb && defaultTargetPlatform == TargetPlatform.linux;
-
-  static bool get isFuchsia =>
-      !isWeb && defaultTargetPlatform == TargetPlatform.fuchsia;
 }
 
 class IdGenerator {

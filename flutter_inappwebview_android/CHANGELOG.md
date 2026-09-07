@@ -62,8 +62,10 @@ Twelve `androidx.webkit` features, each behind its own `WebViewFeature` flag, an
 - **`PAYMENT_REQUEST`** — `InAppWebViewSettings.paymentRequestEnabled` (upstream #2660, #2722)
 - **`WEB_AUTHENTICATION`** — passkeys, via `InAppWebViewSettings.webAuthenticationSupport`
   (upstream #2743)
-- **`DOWNLOAD_FAVICONS_ENABLED`** — `InAppWebViewSettings.downloadFaviconsEnabled`, which also gates
-  the existing `onReceivedIcon`
+- **`DOWNLOAD_FAVICONS_ENABLED`** — `InAppWebViewSettings.downloadFaviconsEnabled`, which controls
+  whether the WebView issues the favicon request at all. It no longer gates any event: this release
+  removes `onFaviconChanged`, and the `WebChromeClient.onReceivedIcon` it was built on is no longer
+  dispatched. Read favicons with `InAppWebViewController.getFavicons()`
 - **`BACK_FORWARD_CACHE`** — `InAppWebViewSettings.backForwardCacheEnabled`
 - **`ATTRIBUTION_REGISTRATION_BEHAVIOR`** — `InAppWebViewSettings.attributionRegistrationBehavior`
 - **`WEBVIEW_MEDIA_INTEGRITY_API_STATUS`** — `InAppWebViewSettings.webViewMediaIntegrityApiStatus`,
@@ -357,6 +359,16 @@ for, and five others have a native *value* that differs from their name.
   consumer's build and an unconditional `-Werror` would break their app over a future Kotlin warning.
   Five ktlint naming rules are disabled with the reason inline: `enum-entry-name-case` wanted to
   rename the 77 `WebViewChannelDelegateMethods` entries that **are** the channel wire strings
+- **Deleted two unreachable methods on `WebMessageListener`** — `assertOriginRulesValid` and
+  `initJsInstance` (~95 lines). Nothing called either: Android registers listeners through
+  `WebViewCompat.addWebMessageListener`, which validates the rules and matches origins inside the
+  WebView. Both were also broken, which is why they went rather than being fixed —
+  `assertOriginRulesValid` threw on *every* non-wildcard host rule (`host.indexOf("*")` is `-1` for
+  `example.com`, and the guard tested `distance != 0`), and `initJsInstance` emitted JavaScript
+  calling `window.<bridge>._isOriginAllowed`, which is defined nowhere in this module. Neither is
+  unit-testable on the JVM — both need `android.net.Uri` — so a fix could not have been evidenced.
+  `isOriginAllowed` and `Util.hostMatchesWildcardRule` are **kept**: also unreachable here, but
+  unit-tested and deliberately maintained as the Kotlin spelling of a rule that is live on iOS
 - **Android lint: 0 findings** (from 27), with three documented suppressions
 - **The module's first native unit tests** — 23 across 4 test classes, no device or Robolectric
   needed (~4s). They found two real bugs on their first run

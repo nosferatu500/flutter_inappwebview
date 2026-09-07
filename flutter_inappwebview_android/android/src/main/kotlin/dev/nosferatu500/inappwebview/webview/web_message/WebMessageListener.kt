@@ -1,17 +1,13 @@
 package dev.nosferatu500.inappwebview.webview.web_message
 
 import android.net.Uri
-import android.text.TextUtils
 import android.webkit.WebView
 import androidx.webkit.JavaScriptReplyProxy
 import androidx.webkit.WebMessageCompat
 import androidx.webkit.WebViewCompat
 import androidx.webkit.WebViewFeature
 import dev.nosferatu500.inappwebview.Util
-import dev.nosferatu500.inappwebview.plugin_scripts_js.JavaScriptBridgeJS
 import dev.nosferatu500.inappwebview.types.Disposable
-import dev.nosferatu500.inappwebview.types.PluginScript
-import dev.nosferatu500.inappwebview.types.UserScriptInjectionTime
 import dev.nosferatu500.inappwebview.types.WebMessageCompatExt
 import dev.nosferatu500.inappwebview.webview.InAppWebViewInterface
 import dev.nosferatu500.inappwebview.webview.in_app_webview.InAppWebView
@@ -66,103 +62,6 @@ class WebMessageListener(
           isMainFrame
         )
       }
-    }
-  }
-
-  fun initJsInstance() {
-    val view = webView ?: return
-    val jsObjectNameEscaped = Util.replaceAll(jsObjectName, "'", "\\'")
-    val allowedOriginRulesStringList = mutableListOf<String>()
-    for (allowedOriginRule in allowedOriginRules) {
-      if ("*" == allowedOriginRule) {
-        allowedOriginRulesStringList.add("'*'")
-      } else {
-        val rule = Uri.parse(allowedOriginRule)
-        val ruleHost = rule.host
-        val host = if (ruleHost != null) {
-          "'" + Util.replaceAll(ruleHost, "'", "\\'") + "'"
-        } else {
-          "null"
-        }
-        allowedOriginRulesStringList.add(
-          "{scheme: '" + rule.scheme + "', host: " + host + ", port: " +
-            (if (rule.port != -1) rule.port else "null") + "}"
-        )
-      }
-    }
-    val allowedOriginRulesString = TextUtils.join(", ", allowedOriginRulesStringList)
-
-    val source = "(function() {" +
-      "  var allowedOriginRules = [" + allowedOriginRulesString + "];" +
-      "  var isPageBlank = window.location.href === 'about:blank';" +
-      "  var scheme = !isPageBlank ? window.location.protocol.replace(':', '') : null;" +
-      "  var host = !isPageBlank ? window.location.hostname : null;" +
-      "  var port = !isPageBlank ? window.location.port : null;" +
-      "  if (window." + JavaScriptBridgeJS.get_JAVASCRIPT_BRIDGE_NAME() +
-      "._isOriginAllowed(allowedOriginRules, scheme, host, port)) {" +
-      "      window['" + jsObjectNameEscaped +
-      "'] = new FlutterInAppWebViewWebMessageListener('" + jsObjectNameEscaped + "');" +
-      "  }" +
-      "})();"
-    view.getUserContentController().addPluginScript(
-      PluginScript(
-        "WebMessageListener-$jsObjectName",
-        source,
-        UserScriptInjectionTime.AT_DOCUMENT_START,
-        null,
-        false,
-        view.getCustomSettings().pluginScriptsOriginAllowList,
-        view.getCustomSettings().pluginScriptsForMainFrameOnly
-      )
-    )
-  }
-
-  @Throws(Exception::class)
-  fun assertOriginRulesValid() {
-    var index = 0
-    for (originRule in allowedOriginRules) {
-      if (originRule.isEmpty()) {
-        throw Exception("allowedOriginRules[$index] is empty")
-      }
-      if ("*" == originRule) {
-        continue
-      }
-      val url = Uri.parse(originRule)
-      val scheme = url.scheme
-      val host = url.host
-      val path = url.path
-      val port = url.port
-      if (scheme == null) {
-        throw Exception("allowedOriginRules $originRule is invalid")
-      }
-      if (("http" == scheme || "https" == scheme) && host.isNullOrEmpty()) {
-        throw Exception("allowedOriginRules $originRule is invalid")
-      }
-      if ("http" != scheme && "https" != scheme && (host != null || port != -1)) {
-        throw Exception("allowedOriginRules $originRule is invalid")
-      }
-      if (host.isNullOrEmpty() && port != -1) {
-        throw Exception("allowedOriginRules $originRule is invalid")
-      }
-      if (!path.isNullOrEmpty()) {
-        throw Exception("allowedOriginRules $originRule is invalid")
-      }
-      if (host != null) {
-        val distance = host.indexOf("*")
-        if (distance != 0 || !host.startsWith("*.")) {
-          throw Exception("allowedOriginRules $originRule is invalid")
-        }
-        if (host.startsWith("[")) {
-          if (!host.endsWith("]")) {
-            throw Exception("allowedOriginRules $originRule is invalid")
-          }
-          val ipv6 = host.substring(1, host.length - 1)
-          if (!Util.isIPv6(ipv6)) {
-            throw Exception("allowedOriginRules $originRule is invalid")
-          }
-        }
-      }
-      index++
     }
   }
 

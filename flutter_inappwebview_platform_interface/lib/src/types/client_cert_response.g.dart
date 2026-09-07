@@ -47,7 +47,7 @@ class ClientCertResponse {
     this.keyStoreType = "PKCS12",
     this.action = ClientCertResponseAction.CANCEL,
   }) {
-    if (action == ClientCertResponseAction.PROCEED && !Util.isWindows) {
+    if (action == ClientCertResponseAction.PROCEED) {
       assert(certificatePath.isNotEmpty);
     }
     if (Util.isAndroid) assert(keyStoreType != null);

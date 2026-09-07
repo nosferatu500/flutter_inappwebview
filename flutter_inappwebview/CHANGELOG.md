@@ -113,7 +113,7 @@ Together with the deprecated `.android` / `.ios` accessors and the shim classes 
 
 `androidOnFormResubmission`, `androidOnGeolocationPermissionsHidePrompt`,
 `androidOnGeolocationPermissionsShowPrompt`, `androidOnJsBeforeUnload`,
-`androidOnPermissionRequest`, `androidOnReceivedIcon`, `androidOnReceivedLoginRequest`,
+`androidOnPermissionRequest`, `androidOnReceivedLoginRequest`,
 `androidOnReceivedTouchIconUrl`, `androidOnRenderProcessGone`, `androidOnRenderProcessResponsive`,
 `androidOnRenderProcessUnresponsive`, `androidOnSafeBrowsingHit`, `androidShouldInterceptRequest`,
 `iosOnDidReceiveServerRedirectForProvisionalNavigation`, `iosOnNavigationResponse`,
@@ -121,8 +121,12 @@ Together with the deprecated `.android` / `.ios` accessors and the shim classes 
 `androidOnScaleChanged` → `onZoomScaleChanged` · `onLoadError` → `onReceivedError` ·
 `onLoadHttpError` → `onReceivedHttpError` · `onDownloadStart` / `onDownloadStartRequest` →
 `onDownloadStarting` · `onLoadResourceCustomScheme` → `onLoadResourceWithCustomScheme` · `onPrint` →
-`onPrintRequest` · `onReceivedIcon` → `onFaviconChanged` · `onFindResultReceived` →
-`FindInteractionController.onFindResultReceived`
+`onPrintRequest` · `onFindResultReceived` → `FindInteractionController.onFindResultReceived`
+
+**`androidOnReceivedIcon` / `onReceivedIcon` have no replacement event.** They were deprecated in
+favour of `onFaviconChanged`, which this release **also removes** because the underlying Android
+callback is no longer dispatched — see *Removed — `onFaviconChanged`* below. Use
+`InAppWebViewController.getFavicons()` instead of any of the three.
 
 **Field / parameter aliases** — use the unprefixed field:
 
@@ -282,6 +286,14 @@ and `SaveAsKind` · plus 14 whose last user left with the dropped-platform membe
 `BrowserProcessKind` had already lost every constant and were empty shells. **`ProxyRelayHop` was
 in the same "zero references" list and is deliberately kept** — it is iOS API that the Swift side
 reads, and it is unreachable only because `ProxyRule` has never carried `relayHop1` / `relayHop2`.
+
+**Also removed — `Util.isMacOS`, `Util.isWindows`, `Util.isLinux` and `Util.isFuchsia`**, the last
+of the dropped platforms' helpers. `Util` is re-exported from this package, so the names disappear
+from the public surface, but each only ever reported "am I running on a platform this fork has no
+implementation for" and so could only answer `false`. `Util.isWeb`, `Util.isAndroid` and
+`Util.isIOS` are kept. Their one internal caller was `ClientCertResponse`'s constructor assert
+(`action == PROCEED && !Util.isWindows`), whose second operand had been dead since the platforms
+were dropped; it now reads `action == PROCEED`, with identical behaviour on Android and iOS.
 
 ### Changed — `onPrintRequest` is now asked *before* the print job starts, and can suppress it
 
@@ -958,10 +970,6 @@ simulator for the first time:**
   `type 'List<dynamic>' is not a subtype of type 'List<int?>'`. Any Android code touching the
   constant crashed — including `onReceivedError` handlers comparing against it. Fixed in the
   generator, with a regression test
-- **`onFaviconChanged` now documents that it does not fire on modern Android WebView**, where
-  `WebChromeClient.onReceivedIcon` is no longer dispatched (`WebIconDatabase` is inert). Measured on
-  API 33 and 37; `InAppWebViewController.getFavicons()` is the working alternative
-
 - **An unmapped permission resource killed `onPermissionRequest` on both platforms.**
   `PermissionRequest` / `PermissionResponse` force-unwrapped the `PermissionResourceType` lookup, so
   a single `PermissionRequest.RESOURCE_*` string Android adds, or a `WKMediaCaptureType` raw value
