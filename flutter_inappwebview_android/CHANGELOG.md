@@ -323,6 +323,17 @@ for, and five others have a native *value* that differs from their name.
   setting in that method, is guarded on the value actually having changed — so an unrelated
   `setSettings` call no longer disposes and recreates every custom path handler's channel delegate
   for no reason. 1 integration test
+- **A registered `ServiceWorkerClient` stopped being consulted as soon as a second
+  `ServiceWorkerController` was constructed.** Every `AndroidServiceWorkerController` attaches its
+  method-call handler to the same `const MethodChannel`, and `setMethodCallHandler` is
+  last-writer-wins per channel name, so the most recently constructed controller owned every
+  incoming call — while the client itself was held per instance. Since the public
+  `ServiceWorkerController()` constructor makes a new controller every time, a single extra
+  construction anywhere in an app silently orphaned the client set through
+  `setServiceWorkerClient`: `shouldInterceptRequest` stopped firing, service worker requests went
+  through unintercepted, and nothing reported an error. The client is now process-wide, which is
+  also what the platform models — `ServiceWorkerControllerCompat.getInstance()` is a singleton with
+  one native client registration. 6 unit tests
 - **AGP 9 / ProGuard** compatibility (upstream #2852, #2765, #2761)
 - Deleted the dead ~300-line `InputAwareWebView` path
 

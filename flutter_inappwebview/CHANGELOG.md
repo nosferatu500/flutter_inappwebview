@@ -820,6 +820,18 @@ reverse DNS lookup on the calling thread and told the resolver which host the We
 Both helpers are now purely syntactic and never touch the network. **This is a tightening** — if you
 relied on two different origins matching because they shared a canonical name, they no longer do.
 
+**Android — a registered `ServiceWorkerClient` stopped being consulted once a second
+`ServiceWorkerController` existed.** Every controller attaches its method-call handler to the same
+method channel, and the last one constructed owns every incoming call — while the client was held
+per instance. `ServiceWorkerController()` builds a new controller each time it is called, so one
+extra construction anywhere in an app silently orphaned the client passed to
+`setServiceWorkerClient`: `shouldInterceptRequest` stopped firing, service worker requests went
+through unintercepted, and nothing raised an error. The client is now process-wide, matching the
+platform — `ServiceWorkerControllerCompat.getInstance()` is a singleton with a single native client
+registration. **Note the consequence**: `serviceWorkerClient` reads the same value from every
+`ServiceWorkerController`, and setting it through any of them replaces it for all. That was already
+true of the *native* registration; only the Dart side disagreed.
+
 **Two long-standing iOS behaviours are now written down as permanent decisions rather than left to
 look like unfinished work.**
 

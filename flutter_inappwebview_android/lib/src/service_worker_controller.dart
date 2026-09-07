@@ -66,7 +66,21 @@ class AndroidServiceWorkerController extends PlatformServiceWorkerController
     return _instance!;
   }
 
-  ServiceWorkerClient? _serviceWorkerClient;
+  /// Deliberately `static`, and it is not a shortcut — the same reasoning as
+  /// `IOSCookieManager._cookieStoreObserver`.
+  ///
+  /// `createPlatformServiceWorkerController` returns a **new**
+  /// [AndroidServiceWorkerController] on every call — which is what the public
+  /// `ServiceWorkerController()` constructor does — yet every one of them attaches a method-call
+  /// handler to the same `const MethodChannel`, where the last one constructed silently replaces
+  /// the previous handler. Held per instance, a client registered through
+  /// [setServiceWorkerClient] would stop being consulted the moment anything constructed a second
+  /// controller, and `shouldInterceptRequest` would simply stop firing with no error anywhere.
+  ///
+  /// Holding it statically also matches the platform: `ServiceWorkerControllerCompat.getInstance()`
+  /// is process-wide and there is one native `ServiceWorkerClientCompat` registration for it, so
+  /// every [AndroidServiceWorkerController] necessarily sees the same one.
+  static ServiceWorkerClient? _serviceWorkerClient;
 
   @override
   ServiceWorkerClient? get serviceWorkerClient => _serviceWorkerClient;
