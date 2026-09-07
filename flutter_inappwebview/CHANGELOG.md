@@ -998,6 +998,12 @@ simulator for the first time:**
   exception. Its trigger was a channel callback holding a strong reference to the WebView, which the
   Flutter engine could release on a background thread; the three authentication-challenge callbacks
   now hold it weakly. Nothing in the public API changes
+- **Android: changing `InAppWebViewSettings.webViewAssetLoader` through `setSettings` never took
+  effect.** The native side rebuilt the loader from the settings being replaced rather than the
+  incoming ones, so the old path handlers kept serving; with a `CustomPathHandler` the new handler's
+  Dart method channel was left with nothing listening on the native end. Unrelated `setSettings`
+  calls also disposed and recreated every custom path handler's channel delegate, which they no
+  longer do
 - 48 dead availability checks removed on iOS — all of them at or below the new 15.0 floor — along
   with the below-iOS-14 `callAsyncJavaScript` path and the dead `SFAuthenticationSession` branches;
   and the dead ~300-line `InputAwareWebView` path deleted on Android

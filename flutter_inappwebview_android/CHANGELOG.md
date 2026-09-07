@@ -303,6 +303,16 @@ for, and five others have a native *value* that differs from their name.
   second origin is enough, no second WebView required. Both are now per-WebView instance state in a
   new `HttpAuthState`, which also discards the queue and the counter when the protection space
   changes. 9 unit tests
+- **`setSettings` rebuilt `webViewAssetLoader` from the *previous* settings, so changing it at
+  runtime never took effect.** `InAppWebView.setSettings` recreated the `WebViewAssetLoader` from
+  `customSettings`, which is only replaced with the incoming settings on the method's last line — so
+  the loader was always rebuilt from the value being replaced. A `setSettings` that changed
+  `webViewAssetLoader` silently kept serving the old path handlers, and for a `CustomPathHandler` the
+  native side registered the *old* handler id, leaving the new handler's Dart method channel with
+  nothing on the other end. The rebuild is now driven by the new settings and, like every other
+  setting in that method, is guarded on the value actually having changed — so an unrelated
+  `setSettings` call no longer disposes and recreates every custom path handler's channel delegate
+  for no reason. 1 integration test
 - **AGP 9 / ProGuard** compatibility (upstream #2852, #2765, #2761)
 - Deleted the dead ~300-line `InputAwareWebView` path
 

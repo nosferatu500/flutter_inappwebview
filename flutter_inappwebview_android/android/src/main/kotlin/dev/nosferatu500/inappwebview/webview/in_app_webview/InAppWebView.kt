@@ -1703,10 +1703,14 @@ class InAppWebView : WebView, InAppWebViewInterface, Disposable {
       }
     }
 
-    plugin?.let {
-      webViewAssetLoaderExt?.dispose()
-      webViewAssetLoaderExt =
-        WebViewAssetLoaderExt.fromMap(customSettings.webViewAssetLoader, it, context)
+    if (newSettingsMap["webViewAssetLoader"] != null &&
+      customSettings.webViewAssetLoader != newCustomSettings.webViewAssetLoader
+    ) {
+      plugin?.let {
+        webViewAssetLoaderExt?.dispose()
+        webViewAssetLoaderExt =
+          WebViewAssetLoaderExt.fromMap(newCustomSettings.webViewAssetLoader, it, context)
+      }
     }
 
     customSettings = newCustomSettings
