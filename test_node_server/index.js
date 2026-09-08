@@ -19,6 +19,15 @@ const auth = require('basic-auth');
 const app = express();
 const appHttps = express();
 const appAuthBasic = express();
+// A *second* protected origin, on its own port and realm.
+//
+// It exists because the first one is single-use per process: once a test authenticates against
+// 8081, Chromium pre-authenticates that origin for the rest of the run and
+// `onReceivedHttpAuthRequest` never fires for it again. Any test that needs to observe a challenge
+// -- a failure count, or a credential offered to the wrong protection space -- therefore has to run
+// somewhere no earlier test has already unlocked. Keep it that way: **do not authenticate
+// successfully against 8084 in a test that other tests depend on.**
+const appAuthBasic2 = express();
 const fs = require('fs')
 const path = require('path')
 const bodyParser = require('body-parser');
@@ -130,6 +139,46 @@ appAuthBasic.get('/test-index', (req, res) => {
 });
 
 appAuthBasic.listen(8081);
+
+
+// Second protected origin -- see the note next to `appAuthBasic2` above.
+// Same credentials, DIFFERENT realm, so it is a distinct protection space from 8081 in every
+// dimension a `URLProtectionSpace` carries except the host.
+appAuthBasic2.use((req, res, next) => {
+  let user = auth(req)
+
+  if (user === undefined || user['name'] !== 'USERNAME2' || user['pass'] !== 'PASSWORD2') {
+    res.statusCode = 401
+    res.setHeader('WWW-Authenticate', 'Basic realm="Node2"')
+    res.send(`
+        <html>
+          <head>
+          </head>
+          <body>
+            <h1>Unauthorized</h1>
+          </body>
+        </html>
+      `);
+    res.end()
+  } else {
+    next()
+  }
+});
+
+appAuthBasic2.get("/", (req, res) => {
+  res.send(`
+    <html>
+      <head>
+      </head>
+      <body>
+        <h1>Authorized2</h1>
+      </body>
+    </html>
+  `);
+  res.end()
+});
+
+appAuthBasic2.listen(8084);
 
 
 app.use(cors());
