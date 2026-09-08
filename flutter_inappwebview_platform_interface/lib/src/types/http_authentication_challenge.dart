@@ -19,12 +19,14 @@ class HttpAuthenticationChallenge_ extends URLAuthenticationChallenge_ {
   ///realm or port starts its own count, and so does another WebView. It resets when the page
   ///finishes or fails loading, and when you answer [HttpAuthResponseAction.CANCEL].
   ///
-  ///**The two platforms disagree on the first value, and the difference is not a bug you can fix
-  ///from Dart:** Android counts the challenges themselves, so the *first* one reports `1`, while
-  ///iOS forwards `URLAuthenticationChallenge.previousFailureCount`, which reports `0` because
-  ///nothing has failed yet. If you branch on this value — "give up after N attempts" is the usual
-  ///reason to read it — compare relatively or allow for the offset rather than testing against a
-  ///literal.
+  ///**The first challenge for a protection space reports `0`** — the value counts attempts that
+  ///have *already* failed, and on the first one nothing has. Three challenges for the same space
+  ///report `0`, `1`, `2`, on every platform. "Give up after N attempts" is the usual reason to
+  ///read this, so it is safe to compare against a literal.
+  ///
+  ///**This changed on Android in 7.0.0.** Before it, Android counted the challenges themselves and
+  ///reported `1` for the first, one ahead of iOS. If you carry a workaround for that offset,
+  ///remove it.
   int previousFailureCount;
 
   ///The proposed credential for this challenge.

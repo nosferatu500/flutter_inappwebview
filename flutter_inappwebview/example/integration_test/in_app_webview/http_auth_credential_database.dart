@@ -208,7 +208,7 @@ void httpAuthCredentialDatabase() {
       await httpAuthCredentialDatabase.clearAllAuthCredentials();
     });
 
-    skippableTestWidgets('previousFailureCount rises with each failure', (
+    skippableTestWidgets('previousFailureCount starts at zero and rises', (
       WidgetTester tester,
     ) async {
       final Completer<void> done = Completer<void>();
@@ -251,21 +251,19 @@ void httpAuthCredentialDatabase() {
 
       expect(
         counts.length,
-        greaterThanOrEqualTo(2),
+        greaterThanOrEqualTo(3),
         reason: 'expected repeated challenges after failed credentials',
       );
-      // **Deliberately not asserting the first value.** Android counts the challenges, so it
-      // starts at 1; iOS forwards `URLAuthenticationChallenge.previousFailureCount`, which starts
-      // at 0 because nothing has failed yet. That divergence is documented on the field and was
-      // preserved on purpose, so a literal here would pin one platform and fail on the other.
-      // What both must agree on is that it rises.
-      for (var i = 1; i < counts.length; i++) {
-        expect(
-          counts[i],
-          greaterThan(counts[i - 1]),
-          reason: 'previousFailureCount did not rise: $counts',
-        );
-      }
+      // **The literal is the point of this test.** It used to assert only that the sequence rose,
+      // because Android counted the challenges (starting at 1) while iOS forwarded
+      // `URLAuthenticationChallenge.previousFailureCount` (starting at 0), so no literal held on
+      // both. Android now reports what iOS does, and pinning the absolute values is what would
+      // catch it drifting back apart — a relative assertion passes on either convention.
+      expect(
+        counts.sublist(0, 3),
+        [0, 1, 2],
+        reason: 'previousFailureCount must start at 0 and rise by one: $counts',
+      );
     });
   }, skip: shouldSkip);
 }

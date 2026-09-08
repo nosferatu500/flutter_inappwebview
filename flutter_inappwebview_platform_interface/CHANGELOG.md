@@ -574,11 +574,14 @@ rename; this entry is the API-owner's view.
   `goForward` — ends in `onReceivedError` with `WebResourceErrorType.CANCELLED` and no `onLoadStop`
   at all, while the back-forward list still moves correctly. `onUpdateVisitedHistory` fires in both
   cases and is the signal to await
-- **`HttpAuthenticationChallenge.previousFailureCount` now documents its scope and a platform
-  divergence.** It is per WebView and per protection space, and resets when the page finishes or
-  fails and when you answer `CANCEL`. **The first challenge reports `1` on Android and `0` on
-  iOS** — Android counts the challenges, iOS forwards `URLAuthenticationChallenge`'s count — so
-  code that gives up after N attempts must not test against a literal
+- **`HttpAuthenticationChallenge.previousFailureCount` now documents its scope, and the two
+  platforms now agree on its value.** It is per WebView and per protection space, and resets when
+  the page finishes or fails and when you answer `CANCEL`. **The first challenge reports `0` on
+  both platforms**, so three challenges for one space give `0, 1, 2` and code that gives up after
+  N attempts can test against a literal. Android previously reported `1` for the first challenge —
+  it counted the challenges, where iOS forwards `URLAuthenticationChallenge`'s own count — and
+  Android is the side that moved, because iOS cannot change without misreporting a value WebKit
+  supplied
 
 ### Internal
 

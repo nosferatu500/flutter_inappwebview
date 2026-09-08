@@ -1041,6 +1041,13 @@ simulator for the first time:**
   **process-global**, shared by every WebView in the app: one WebView's `onPageFinished` emptied
   another's queue mid-challenge, and one WebView's failures were reported to another's handler as
   `HttpAuthenticationChallenge.previousFailureCount`. Both are now per-WebView
+- **`HttpAuthenticationChallenge.previousFailureCount` counted from 1 on Android and 0 on iOS; it
+  now counts from 0 on both.** The value is the number of attempts that have *already* failed, so
+  three challenges for one protection space report `0, 1, 2` everywhere. Android is what changed —
+  it incremented before dispatching the challenge, where iOS forwards the count WebKit supplies —
+  which makes this **breaking for Android code that tested the value against a literal**, the usual
+  reason being "give up after N attempts". Such code was already wrong on one platform or the
+  other; it can now use a literal safely. If you carry a workaround for the offset, remove it
 - **iOS: a WebView released off the main thread could crash the app.** The crash surfaced in
   `WebViewChannelDelegate`'s deinit and presented as the app dying with no Dart error and no
   exception. Its trigger was a channel callback holding a strong reference to the WebView, which the

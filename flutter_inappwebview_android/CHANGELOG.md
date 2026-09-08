@@ -313,6 +313,16 @@ for, and five others have a native *value* that differs from their name.
   second origin is enough, no second WebView required. Both are now per-WebView instance state in a
   new `HttpAuthState`, which also discards the queue and the counter when the protection space
   changes. 9 unit tests
+- **`HttpAuthenticationChallenge.previousFailureCount` is 0-based now, matching iOS.** Android
+  incremented the counter *before* dispatching the challenge, so the first one reported `1` while
+  iOS reported `0` — an app that gives up after N attempts was off by one depending on the
+  platform. The value is now the number of attempts that have already failed, so three challenges
+  for one protection space report `0, 1, 2` on both platforms. **Breaking for anything that tested
+  the Android value against a literal**; nothing else in the API changes, and the divergence note
+  is gone from the field's dartdoc. Measured on Android 17 and 13 and on iOS 26.5 and 17.5. 2 unit
+  tests, and the integration test that used to assert only that the sequence *rose* now pins the
+  absolute values — a relative assertion passes on either convention, so it could not have caught
+  this drifting back
 - **`setSettings` rebuilt `webViewAssetLoader` from the *previous* settings, so changing it at
   runtime never took effect.** `InAppWebView.setSettings` recreated the `WebViewAssetLoader` from
   `customSettings`, which is only replaced with the incoming settings on the method's last line — so

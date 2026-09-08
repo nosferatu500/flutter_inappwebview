@@ -83,24 +83,35 @@ class HttpAuthStateTest {
     // handler give up.
     val state = HttpAuthState()
 
+    assertEquals(0, state.beginChallenge("a.example.com", "https", "realm", 443))
     assertEquals(1, state.beginChallenge("a.example.com", "https", "realm", 443))
     assertEquals(2, state.beginChallenge("a.example.com", "https", "realm", 443))
-    assertEquals(3, state.beginChallenge("a.example.com", "https", "realm", 443))
 
     assertEquals(
       "a fresh space starts its own count",
-      1,
+      0,
       state.beginChallenge("b.example.com", "https", "realm", 443)
     )
   }
 
   @Test
-  fun `the first challenge of a space reports one, not zero`() {
-    // Pinned deliberately rather than corrected: the statics incremented before dispatching, so
-    // this is Android's existing behaviour, and iOS reports URLAuthenticationChallenge's count
-    // which starts at 0. The platforms disagree by one; reconciling them is filed as its own row.
-    // If that decision is ever taken, this assertion is the one to change.
-    assertEquals(1, HttpAuthState().beginChallenge("host", "https", "realm", 443))
+  fun `the first challenge of a space reports zero, the same as iOS`() {
+    // The platform divergence this used to pin. Android counted the challenges, so the first
+    // reported 1, while iOS forwards `URLAuthenticationChallenge.previousFailureCount`, which is 0
+    // because nothing has failed yet. An app that gives up after N attempts was off by one
+    // depending on the platform. Android moved, because iOS cannot change without misreporting a
+    // value WebKit supplied. Measured on device after the change: both platforms `[0, 1, 2]`.
+    assertEquals(0, HttpAuthState().beginChallenge("host", "https", "realm", 443))
+  }
+
+  @Test
+  fun `the count still rises by one per challenge, so only the offset moved`() {
+    // The negative control for the change above: making `beginChallenge` return a constant 0 would
+    // satisfy every other assertion in this class, because nothing else reads a second count for
+    // the same space. This is what distinguishes "starts at 0" from "is always 0".
+    val state = HttpAuthState()
+    val counts = (1..4).map { state.beginChallenge("host", "https", "realm", 443) }
+    assertEquals(listOf(0, 1, 2, 3), counts)
   }
 
   @Test
@@ -113,7 +124,7 @@ class HttpAuthStateTest {
 
     assertTrue(state.needsCredentials())
     assertNull(state.peekCredential())
-    assertEquals(1, state.beginChallenge("host", "https", "realm", 443))
+    assertEquals(0, state.beginChallenge("host", "https", "realm", 443))
   }
 
   @Test

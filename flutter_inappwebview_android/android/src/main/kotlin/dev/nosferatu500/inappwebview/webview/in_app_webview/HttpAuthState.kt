@@ -52,10 +52,12 @@ class HttpAuthState {
    * everything first: the queue must not be popped for a space it was not filled for, and a
    * failure count belonging to another host must not be reported for this one.
    *
-   * The returned count is 1 on a space's first challenge, not 0. That is the behaviour the two
-   * statics had (the increment preceded the dispatch) and it is deliberately unchanged here —
-   * iOS reports `URLAuthenticationChallenge.previousFailureCount`, which starts at 0, so the two
-   * platforms disagree by one. Reconciling them is a separate decision and is filed.
+   * The returned count is 0 on a space's first challenge: it is the number of attempts that have
+   * *already* failed, so nothing has failed yet when the first one arrives. The two statics this
+   * replaced returned 1 — they incremented before dispatching — which put Android one ahead of
+   * iOS, where the value is `URLAuthenticationChallenge.previousFailureCount` and starts at 0.
+   * Android is the side that could move without misreporting a value the platform supplied, so it
+   * did; both platforms now report `[0, 1, 2]` for three challenges of one space.
    */
   fun beginChallenge(host: String?, protocol: String?, realm: String?, port: Int): Int {
     val challenged = ProtectionSpaceKey(host, protocol, realm, port)
@@ -63,8 +65,10 @@ class HttpAuthState {
       reset()
       space = challenged
     }
+    // Read before incrementing: this challenge is not itself a previous failure.
+    val previousFailures = failureCount
     failureCount++
-    return failureCount
+    return previousFailures
   }
 
   /** Whether the credential queue still has to be fetched for the current space. */
