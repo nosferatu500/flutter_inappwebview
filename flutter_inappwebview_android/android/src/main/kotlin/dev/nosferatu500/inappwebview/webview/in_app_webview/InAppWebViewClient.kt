@@ -2,7 +2,6 @@ package dev.nosferatu500.inappwebview.webview.in_app_webview
 
 import android.annotation.SuppressLint
 import android.graphics.Bitmap
-import android.net.Uri
 import android.net.http.SslError
 import android.os.Message
 import android.util.Log
@@ -22,43 +21,27 @@ import android.webkit.WebViewClient
 import androidx.webkit.WebResourceRequestCompat
 import androidx.webkit.WebViewFeature
 import dev.nosferatu500.inappwebview.Util
-import dev.nosferatu500.inappwebview.credential_database.CredentialDatabase
 import dev.nosferatu500.inappwebview.in_app_browser.InAppBrowserDelegate
 import dev.nosferatu500.inappwebview.plugin_scripts_js.JavaScriptBridgeJS
-import dev.nosferatu500.inappwebview.types.ClientCertChallenge
-import dev.nosferatu500.inappwebview.types.ClientCertResponse
-import dev.nosferatu500.inappwebview.types.HttpAuthResponse
-import dev.nosferatu500.inappwebview.types.HttpAuthenticationChallenge
-import dev.nosferatu500.inappwebview.types.NavigationAction
-import dev.nosferatu500.inappwebview.types.NavigationActionPolicy
-import dev.nosferatu500.inappwebview.types.ServerTrustAuthResponse
-import dev.nosferatu500.inappwebview.types.ServerTrustChallenge
-import dev.nosferatu500.inappwebview.types.URLProtectionSpace
-import dev.nosferatu500.inappwebview.types.URLRequest
 import dev.nosferatu500.inappwebview.types.WebResourceErrorExt
 import dev.nosferatu500.inappwebview.types.WebResourceRequestExt
 import dev.nosferatu500.inappwebview.types.WebResourceResponseExt
 import dev.nosferatu500.inappwebview.webview.WebViewChannelDelegate
-import java.io.ByteArrayInputStream
-import java.net.URI
-import java.net.URISyntaxException
-import java.util.Locale
 
 open class InAppWebViewClient(private var inAppBrowserDelegate: InAppBrowserDelegate?) :
   WebViewClient() {
 
   /**
-   * The HTTP-auth conversation state for **this** WebView.
-   *
-   * It was two `private var`s in the `companion object` — process-global, shared by every WebView
-   * in the app. See [HttpAuthState] for what that cost.
+   * The callback bodies this client shares with [InAppWebViewClientCompat], which also holds the
+   * per-WebView HTTP-auth state. Only the four callbacks that genuinely differ between the two
+   * clients are implemented here; see [InAppWebViewClientCommon] for which and why.
    */
-  private val httpAuthState = HttpAuthState()
+  private val common = InAppWebViewClientCommon(LOG_TAG)
 
   override fun shouldOverrideUrlLoading(view: WebView, request: WebResourceRequest): Boolean {
     val webView = view as InAppWebView
 
-    if (allowSyncUrlLoading(webView, request.url.toString())) {
+    if (common.allowSyncUrlLoading(webView, request.url.toString())) {
       // Allow the request synchronously.
       return false
     }
@@ -93,36 +76,6 @@ open class InAppWebViewClient(private var inAppBrowserDelegate: InAppBrowserDele
     return false
   }
 
-  private fun allowSyncUrlLoading(webView: InAppWebView, url: String): Boolean {
-    val regex = webView.customSettings.regexToAllowSyncUrlLoading
-    if (regex != null && regex.matcher(url).matches()) {
-      Log.d(
-        LOG_TAG,
-        "Request '$url' automatically allowed as it is a match for " +
-          "'regexToAllowSyncUrlLoading'."
-      )
-      return true
-    }
-    return false
-  }
-
-  private fun allowShouldOverrideUrlLoading(
-    webView: WebView,
-    url: String,
-    headers: Map<String, String>?,
-    isForMainFrame: Boolean
-  ) {
-    if (isForMainFrame) {
-      // There isn't any way to load an URL for a frame that is not the main frame,
-      // so call this only on main frame.
-      if (headers != null) {
-        webView.loadUrl(url, headers)
-      } else {
-        webView.loadUrl(url)
-      }
-    }
-  }
-
   fun onShouldOverrideUrlLoading(
     webView: InAppWebView,
     url: String,
@@ -131,38 +84,9 @@ open class InAppWebViewClient(private var inAppBrowserDelegate: InAppBrowserDele
     isForMainFrame: Boolean,
     hasGesture: Boolean,
     isRedirect: Boolean
-  ) {
-    val request = URLRequest(url, method, null, headers)
-    val navigationAction = NavigationAction(request, isForMainFrame, hasGesture, isRedirect)
-
-    val callback = object : WebViewChannelDelegate.ShouldOverrideUrlLoadingCallback() {
-      override fun nonNullSuccess(result: NavigationActionPolicy): Boolean {
-        when (result) {
-          NavigationActionPolicy.ALLOW ->
-            allowShouldOverrideUrlLoading(webView, url, headers, isForMainFrame)
-
-          NavigationActionPolicy.CANCEL -> {}
-        }
-        return false
-      }
-
-      override fun defaultBehaviour(result: NavigationActionPolicy?) {
-        allowShouldOverrideUrlLoading(webView, url, headers, isForMainFrame)
-      }
-
-      override fun error(errorCode: String, errorMessage: String?, errorDetails: Any?) {
-        Log.e(LOG_TAG, errorCode + ", " + (errorMessage ?: ""))
-        defaultBehaviour(null)
-      }
-    }
-
-    val channelDelegate = webView.channelDelegate
-    if (channelDelegate != null) {
-      channelDelegate.shouldOverrideUrlLoading(navigationAction, callback)
-    } else {
-      callback.defaultBehaviour(null)
-    }
-  }
+  ) = common.onShouldOverrideUrlLoading(
+    webView, url, method, headers, isForMainFrame, hasGesture, isRedirect
+  )
 
   @SuppressLint("RestrictedApi")
   fun loadCustomJavaScriptOnPageStarted(view: WebView) {
@@ -201,7 +125,7 @@ open class InAppWebViewClient(private var inAppBrowserDelegate: InAppBrowserDele
     val webView = view as InAppWebView
     webView.isLoading = false
     loadCustomJavaScriptOnPageFinished(webView)
-    httpAuthState.reset()
+    common.httpAuthState.reset()
 
     super.onPageFinished(view, url)
 
@@ -244,7 +168,7 @@ open class InAppWebViewClient(private var inAppBrowserDelegate: InAppBrowserDele
       }
 
       webView.isLoading = false
-      httpAuthState.reset()
+      common.httpAuthState.reset()
 
       inAppBrowserDelegate?.didFailNavigation(
         request.url.toString(), error.errorCode, error.description.toString()
@@ -271,250 +195,34 @@ open class InAppWebViewClient(private var inAppBrowserDelegate: InAppBrowserDele
     )
   }
 
-  // Kotlin has no `Outer.super.member()` form for use inside an anonymous object, so each super
-  // call the callbacks below need is exposed as a private forwarder.
-  private fun superOnReceivedHttpAuthRequest(
-    view: WebView,
-    handler: HttpAuthHandler,
-    host: String?,
-    realm: String?
-  ) = super.onReceivedHttpAuthRequest(view, handler, host, realm)
-
+  // The shared bodies live in [InAppWebViewClientCommon]; what cannot move is `super`, which is
+  // bound to this class. Kotlin has no `Outer.super.member()` form to call from inside the
+  // anonymous callback objects those bodies create, which is what the four private `superOn*`
+  // forwarders used to work around. A lambda written *here* has no such restriction, so each
+  // shared method takes one `() -> Unit` instead.
   override fun onReceivedHttpAuthRequest(
     view: WebView,
     handler: HttpAuthHandler,
     host: String?,
     realm: String?
-  ) {
-    val url = view.url
-    var protocol = "https"
-    var port = 0
-
-    if (url != null) {
-      try {
-        val uri = URI(url)
-        protocol = uri.scheme
-        port = uri.port
-      } catch (e: URISyntaxException) {
-        Log.e(LOG_TAG, "", e)
-      }
-    }
-
-    val failureCount = httpAuthState.beginChallenge(host, protocol, realm, port)
-
-    if (httpAuthState.needsCredentials()) {
-      httpAuthState.setCredentials(
-        CredentialDatabase.getInstance(view.context)
-          .getHttpAuthCredentials(host, protocol, realm, port)
-      )
-    }
-
-    val credentialProposed = httpAuthState.peekCredential()
-
-    val protectionSpace =
-      URLProtectionSpace(host!!, protocol, realm, port, view.certificate, null)
-    val challenge = HttpAuthenticationChallenge(
-      protectionSpace, failureCount, credentialProposed
-    )
-
-    val webView = view as InAppWebView
-    val finalProtocol = protocol
-    val finalPort = port
-    val callback = object : WebViewChannelDelegate.ReceivedHttpAuthRequestCallback() {
-      override fun nonNullSuccess(result: HttpAuthResponse): Boolean {
-        val action = result.action
-        if (action != null) {
-          when (action) {
-            1 -> {
-              val username = result.username
-              val password = result.password
-              if (result.isPermanentPersistence) {
-                CredentialDatabase.getInstance(view.context).setHttpAuthCredential(
-                  host, finalProtocol, realm, finalPort, username, password
-                )
-              }
-              handler.proceed(username, password)
-            }
-
-            2 -> {
-              val credential = httpAuthState.popCredential()
-              if (credential != null) {
-                handler.proceed(credential.username, credential.password)
-              } else {
-                handler.cancel()
-              }
-              // used custom CredentialDatabase!
-              // handler.useHttpAuthUsernamePassword();
-            }
-
-            else -> {
-              httpAuthState.reset()
-              handler.cancel()
-            }
-          }
-
-          return false
-        }
-
-        return true
-      }
-
-      override fun defaultBehaviour(result: HttpAuthResponse?) {
-        superOnReceivedHttpAuthRequest(view, handler, host, realm)
-      }
-
-      override fun error(errorCode: String, errorMessage: String?, errorDetails: Any?) {
-        Log.e(LOG_TAG, errorCode + ", " + (errorMessage ?: ""))
-        defaultBehaviour(null)
-      }
-    }
-
-    val channelDelegate = webView.channelDelegate
-    if (channelDelegate != null) {
-      channelDelegate.onReceivedHttpAuthRequest(challenge, callback)
-    } else {
-      callback.defaultBehaviour(null)
-    }
+  ) = common.onReceivedHttpAuthRequest(view, handler, host, realm) {
+    super.onReceivedHttpAuthRequest(view, handler, host, realm)
   }
-
-  private fun superOnReceivedSslError(
-    view: WebView,
-    handler: SslErrorHandler,
-    sslError: SslError
-  ) = super.onReceivedSslError(view, handler, sslError)
 
   // The plugin does not decide SSL trust: onReceivedServerTrustAuthRequest is forwarded to Dart
   // and the app answers proceed/cancel. defaultBehaviour() below cancels, so doing nothing is
   // secure by default -- handler.proceed() runs only when the embedding app explicitly asks for
   // it, which is the documented purpose of the callback. Lint cannot see the Dart round-trip.
   @SuppressLint("WebViewClientOnReceivedSslError")
-  override fun onReceivedSslError(view: WebView, handler: SslErrorHandler, sslError: SslError) {
-    val url = sslError.url
-    var host = ""
-    var protocol = "https"
-    var port = 0
-
-    try {
-      val uri = URI(url)
-      host = uri.host
-      protocol = uri.scheme
-      port = uri.port
-    } catch (e: URISyntaxException) {
-      Log.e(LOG_TAG, "", e)
+  override fun onReceivedSslError(view: WebView, handler: SslErrorHandler, sslError: SslError) =
+    common.onReceivedSslError(view, handler, sslError) {
+      super.onReceivedSslError(view, handler, sslError)
     }
 
-    val protectionSpace =
-      URLProtectionSpace(host, protocol, null, port, sslError.certificate, sslError)
-    val challenge = ServerTrustChallenge(protectionSpace)
-
-    val webView = view as InAppWebView
-    val callback = object : WebViewChannelDelegate.ReceivedServerTrustAuthRequestCallback() {
-      override fun nonNullSuccess(result: ServerTrustAuthResponse): Boolean {
-        val action = result.action
-        if (action != null) {
-          when (action) {
-            1 -> handler.proceed()
-            else -> handler.cancel()
-          }
-
-          return false
-        }
-
-        return true
-      }
-
-      override fun defaultBehaviour(result: ServerTrustAuthResponse?) {
-        superOnReceivedSslError(view, handler, sslError)
-      }
-
-      override fun error(errorCode: String, errorMessage: String?, errorDetails: Any?) {
-        Log.e(LOG_TAG, errorCode + ", " + (errorMessage ?: ""))
-        defaultBehaviour(null)
-      }
+  override fun onReceivedClientCertRequest(view: WebView, request: ClientCertRequest) =
+    common.onReceivedClientCertRequest(view, request) {
+      super.onReceivedClientCertRequest(view, request)
     }
-
-    val channelDelegate = webView.channelDelegate
-    if (channelDelegate != null) {
-      channelDelegate.onReceivedServerTrustAuthRequest(challenge, callback)
-    } else {
-      callback.defaultBehaviour(null)
-    }
-  }
-
-  private fun superOnReceivedClientCertRequest(view: WebView, request: ClientCertRequest) =
-    super.onReceivedClientCertRequest(view, request)
-
-  override fun onReceivedClientCertRequest(view: WebView, request: ClientCertRequest) {
-    val url = view.url
-    val host = request.host
-    var protocol = "https"
-    val port = request.port
-
-    if (url != null) {
-      try {
-        protocol = URI(url).scheme
-      } catch (e: URISyntaxException) {
-        Log.e(LOG_TAG, "", e)
-      }
-    }
-
-    val protectionSpace =
-      URLProtectionSpace(host, protocol, null, port, view.certificate, null)
-    val challenge =
-      ClientCertChallenge(protectionSpace, request.principals, request.keyTypes)
-
-    val webView = view as InAppWebView
-    val callback = object : WebViewChannelDelegate.ReceivedClientCertRequestCallback() {
-      override fun nonNullSuccess(result: ClientCertResponse): Boolean {
-        val action = result.action
-        val plugin = webView.plugin
-        if (action != null && plugin != null) {
-          when (action) {
-            1 -> {
-              val privateKeyAndCertificates = Util.loadPrivateKeyAndCertificate(
-                plugin,
-                result.certificatePath,
-                result.certificatePassword,
-                result.keyStoreType
-              )
-              if (privateKeyAndCertificates != null) {
-                request.proceed(
-                  privateKeyAndCertificates.privateKey,
-                  privateKeyAndCertificates.certificates
-                )
-              } else {
-                request.cancel()
-              }
-            }
-
-            2 -> request.ignore()
-
-            else -> request.cancel()
-          }
-
-          return false
-        }
-
-        return true
-      }
-
-      override fun defaultBehaviour(result: ClientCertResponse?) {
-        superOnReceivedClientCertRequest(view, request)
-      }
-
-      override fun error(errorCode: String, errorMessage: String?, errorDetails: Any?) {
-        Log.e(LOG_TAG, errorCode + ", " + (errorMessage ?: ""))
-        defaultBehaviour(null)
-      }
-    }
-
-    val channelDelegate = webView.channelDelegate
-    if (channelDelegate != null) {
-      channelDelegate.onReceivedClientCertRequest(challenge, callback)
-    } else {
-      callback.defaultBehaviour(null)
-    }
-  }
 
   override fun onScaleChanged(view: WebView, oldScale: Float, newScale: Float) {
     super.onScaleChanged(view, oldScale, newScale)
@@ -577,91 +285,8 @@ open class InAppWebViewClient(private var inAppBrowserDelegate: InAppBrowserDele
     }
   }
 
-  fun shouldInterceptRequest(view: WebView, request: WebResourceRequestExt): WebResourceResponse? {
-    val webView = view as InAppWebView
-
-    val loader = webView.webViewAssetLoaderExt?.loader
-    if (loader != null) {
-      try {
-        val webResourceResponse = loader.shouldInterceptRequest(Uri.parse(request.url))
-        if (webResourceResponse != null) {
-          return webResourceResponse
-        }
-      } catch (e: Exception) {
-        Log.e(LOG_TAG, "", e)
-      }
-    }
-
-    if (webView.customSettings.useShouldInterceptRequest) {
-      var response: WebResourceResponseExt? = null
-      val channelDelegate = webView.channelDelegate
-      if (channelDelegate != null) {
-        try {
-          response = channelDelegate.shouldInterceptRequest(request)
-        } catch (e: InterruptedException) {
-          Log.e(LOG_TAG, "", e)
-          return null
-        }
-      }
-
-      if (response != null) {
-        // Built on the type, not here: this block used to be duplicated byte-for-byte in the two
-        // client classes and near-identically in the service-worker client (trap 32).
-        return response.toWebResourceResponse()
-      }
-
-      return null
-    }
-
-    val url = request.url
-    var scheme = url.split(":").toTypedArray()[0].lowercase(Locale.ROOT)
-    try {
-      scheme = Uri.parse(request.url).scheme!!
-    } catch (ignored: Exception) {
-    }
-
-    if (webView.customSettings.resourceCustomSchemes.contains(scheme)) {
-      var customSchemeResponse: dev.nosferatu500.inappwebview.types.CustomSchemeResponse? = null
-      val channelDelegate = webView.channelDelegate
-      if (channelDelegate != null) {
-        try {
-          customSchemeResponse = channelDelegate.onLoadResourceWithCustomScheme(request)
-        } catch (e: InterruptedException) {
-          Log.e(LOG_TAG, "", e)
-          return null
-        }
-      }
-
-      if (customSchemeResponse != null) {
-        var response: WebResourceResponse? = null
-        try {
-          response = webView.contentBlockerHandler.checkUrl(
-            webView, request, customSchemeResponse.contentType
-          )
-        } catch (e: Exception) {
-          Log.e(LOG_TAG, "", e)
-        }
-        if (response != null) {
-          return response
-        }
-        return WebResourceResponse(
-          customSchemeResponse.contentType,
-          customSchemeResponse.contentType,
-          ByteArrayInputStream(customSchemeResponse.data)
-        )
-      }
-    }
-
-    var response: WebResourceResponse? = null
-    if (webView.contentBlockerHandler.ruleList.isNotEmpty()) {
-      try {
-        response = webView.contentBlockerHandler.checkUrl(webView, request)
-      } catch (e: Exception) {
-        Log.e(LOG_TAG, "", e)
-      }
-    }
-    return response
-  }
+  fun shouldInterceptRequest(view: WebView, request: WebResourceRequestExt): WebResourceResponse? =
+    common.shouldInterceptRequest(view, request)
 
   override fun shouldInterceptRequest(
     view: WebView,
@@ -669,37 +294,10 @@ open class InAppWebViewClient(private var inAppBrowserDelegate: InAppBrowserDele
   ): WebResourceResponse? =
     shouldInterceptRequest(view, WebResourceRequestExt.fromWebResourceRequest(request))
 
-  private fun superOnFormResubmission(view: WebView, dontResend: Message, resend: Message) =
-    super.onFormResubmission(view, dontResend, resend)
-
-  override fun onFormResubmission(view: WebView, dontResend: Message, resend: Message) {
-    val webView = view as InAppWebView
-    val callback = object : WebViewChannelDelegate.FormResubmissionCallback() {
-      override fun nonNullSuccess(result: Int): Boolean {
-        when (result) {
-          0 -> resend.sendToTarget()
-          else -> dontResend.sendToTarget()
-        }
-        return false
-      }
-
-      override fun defaultBehaviour(result: Int?) {
-        superOnFormResubmission(view, dontResend, resend)
-      }
-
-      override fun error(errorCode: String, errorMessage: String?, errorDetails: Any?) {
-        Log.e(LOG_TAG, errorCode + ", " + (errorMessage ?: ""))
-        defaultBehaviour(null)
-      }
+  override fun onFormResubmission(view: WebView, dontResend: Message, resend: Message) =
+    common.onFormResubmission(view, dontResend, resend) {
+      super.onFormResubmission(view, dontResend, resend)
     }
-
-    val channelDelegate = webView.channelDelegate
-    if (channelDelegate != null) {
-      channelDelegate.onFormResubmission(webView.url, callback)
-    } else {
-      callback.defaultBehaviour(null)
-    }
-  }
 
   override fun onPageCommitVisible(view: WebView, url: String?) {
     super.onPageCommitVisible(view, url)

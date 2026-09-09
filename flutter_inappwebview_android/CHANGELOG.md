@@ -381,6 +381,22 @@ for, and five others have a native *value* that differs from their name.
 
 ### Internal
 
+- **`InAppWebViewClient` and `InAppWebViewClientCompat` no longer carry two copies of the same
+  code.** The two exist because `androidx.webkit.WebViewClientCompat` cannot be used on a Chromium
+  WebView below 73 (crbug 925887), and neither can extend the other — `WebViewClientCompat` already
+  extends `android.webkit.WebViewClient`, and Kotlin has single inheritance. A type-name-normalising
+  `diff` of the two 742/783-line files reduced to **6 hunks / 67 lines**, so every fix in the area
+  had to be made twice, and §97's own note missed the second copy. The shared callback bodies —
+  `onShouldOverrideUrlLoading`, `shouldInterceptRequest`, `onReceivedHttpAuthRequest`,
+  `onReceivedSslError`, `onReceivedClientCertRequest`, `onFormResubmission`, **438 lines verified
+  byte-identical** — now live in a new `InAppWebViewClientCommon`, which also holds the per-WebView
+  `HttpAuthState`. Each shared method that needs `super` takes a single `() -> Unit`; `super` is
+  bound to the owning class and cannot move. **No behaviour change**: the four callbacks that
+  genuinely differ (`shouldOverrideUrlLoading`, `onReceivedError`, `onSafeBrowsingHit`,
+  `onPageCommitVisible`) stay per-class, and each client keeps its own log tag. 1,525 → 1,216 lines;
+  duplicated line-pairs 729 → 328. Verified by running the integration suite **once per client** on
+  Android 17 — the fallback client forced with a temporary probe and confirmed in `logcat` — both
+  **136 / 2 / 0**
 - **ktlint 1.8** formatting (`npm run format:kotlin`) plus `allWarningsAsErrors` behind an opt-in
   `inappwebview.strictKotlin` flag — opt-in on purpose, since the module compiles inside the
   consumer's build and an unconditional `-Werror` would break their app over a future Kotlin warning.
