@@ -412,6 +412,13 @@ error.
 
 ### Internal
 
+- **Both examples adopt the UIScene lifecycle**, via Flutter's own migrator: `AppDelegate` conforms
+  to `FlutterImplicitEngineDelegate` and registers plugins from
+  `didInitializeImplicitFlutterEngine`, and `Info.plist` declares a `UIApplicationSceneManifest`
+  with `FlutterSceneDelegate`. iOS will require the scene lifecycle, and Flutter migrates new
+  projects to it by default — so this is also what consumer apps will look like, which is why it
+  matters that the plugin works there (see the `keyWindow` fix above; without it the
+  `headless_in_app_webview` suite collapses on a migrated app).
 - **The `apple/swift-collections` dependency is gone.** It supplied exactly one type,
   `OrderedSet`, used in one file (`Types/WKUserContentController.swift`) for the two injected-script
   dictionaries. It is now vendored as `Types/OrderedSet.swift`, `internal` so it cannot collide with
