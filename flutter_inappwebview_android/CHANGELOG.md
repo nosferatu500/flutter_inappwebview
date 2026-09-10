@@ -391,12 +391,18 @@ for, and five others have a native *value* that differs from their name.
   `onReceivedSslError`, `onReceivedClientCertRequest`, `onFormResubmission`, **438 lines verified
   byte-identical** — now live in a new `InAppWebViewClientCommon`, which also holds the per-WebView
   `HttpAuthState`. Each shared method that needs `super` takes a single `() -> Unit`; `super` is
-  bound to the owning class and cannot move. **No behaviour change**: the four callbacks that
-  genuinely differ (`shouldOverrideUrlLoading`, `onReceivedError`, `onSafeBrowsingHit`,
-  `onPageCommitVisible`) stay per-class, and each client keeps its own log tag. 1,525 → 1,216 lines;
-  duplicated line-pairs 729 → 328. Verified by running the integration suite **once per client** on
-  Android 17 — the fallback client forced with a temporary probe and confirmed in `logcat` — both
-  **136 / 2 / 0**
+  bound to the owning class and cannot move. Where `super` is called first and unconditionally the
+  override calls it directly and the shared method takes no lambda; where the two clients differ
+  only in *which platform type* a value is read from (`onReceivedError`'s code and description,
+  `onSafeBrowsingHit`'s three response actions), that read is passed in as a lazy lambda so it still
+  happens only on the paths that used to reach it. **No behaviour change**, and each client keeps
+  its own log tag. What stays per-class is the platform-bound half of three callbacks —
+  `onReceivedError` and `onSafeBrowsingHit` (Compat feature-gates its types) and
+  `onPageCommitVisible` (the two signatures disagree on nullability). **1,525 → 1,157 lines**, with
+  the only lines still present in both clients being the override signatures themselves. Verified by
+  running the integration suite **once per client** on Android 17, the fallback forced with a
+  temporary probe and each run's client confirmed in `logcat`: Compat **136 / 2 / 0**, fallback
+  **135 / 2 / 1** (`flingScroll`, the documented flake, 3/3 alone)
 - **ktlint 1.8** formatting (`npm run format:kotlin`) plus `allWarningsAsErrors` behind an opt-in
   `inappwebview.strictKotlin` flag — opt-in on purpose, since the module compiles inside the
   consumer's build and an unconditional `-Werror` would break their app over a future Kotlin warning.
