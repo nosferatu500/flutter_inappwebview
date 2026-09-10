@@ -63,22 +63,6 @@
                 android:resource="@xml/inappwebview_provider_paths" />
         </provider>
 
-        <provider
-            android:name="vn.hunghd.flutterdownloader.DownloadedFileProvider"
-            android:authorities="${applicationId}.flutter_downloader.provider"
-            android:exported="false"
-            android:grantUriPermissions="true">
-            <!--
-              flutter_downloader's own provider, with its own paths file. It previously shared the
-              plugin's `@xml/provider_paths`; that coupling is why narrowing the plugin's paths
-              would otherwise have silently changed this provider too. Each provider declares what
-              it actually needs.
-            -->
-            <meta-data
-                android:name="android.support.FILE_PROVIDER_PATHS"
-                android:resource="@xml/downloader_provider_paths"/>
-        </provider>
-
         <!-- Hybrid composition -->
         <meta-data
             android:name="io.flutter.embedded_views_preview"

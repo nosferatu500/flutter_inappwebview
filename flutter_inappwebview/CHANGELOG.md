@@ -1065,6 +1065,14 @@ simulator for the first time:**
 
 ### Internal
 
+- **Unused dependencies removed** — nothing that affects consumers, since none of them were
+  reachable from the published API. The example drops `flutter_downloader` and `url_launcher`
+  (neither imported anywhere in it), the android and ios packages drop a dev-only
+  `plugin_platform_interface` they never referenced, and `flutter_inappwebview` drops `flutter_driver`
+  (the example declares its own), plus `build_runner`/`generators` and a `build.yaml` for a package
+  that has no annotations and generates no `.g.dart` at all. `flutter_downloader`'s
+  `AndroidManifest.xml` `<provider>` and its paths file went with it — the file's own comment had
+  flagged both as dead configuration.
 - **The Android module is 100% Kotlin** (158 files translated) with ktlint 1.8 formatting and an
   opt-in `allWarningsAsErrors`; Android lint is at **0 findings**
 - **The iOS module builds in Swift 6 language mode** with complete concurrency checking, 0 errors and
