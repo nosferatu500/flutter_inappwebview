@@ -392,6 +392,29 @@ error.
 
 ### Internal
 
+- **The `apple/swift-collections` dependency is gone.** It supplied exactly one type,
+  `OrderedSet`, used in one file (`Types/WKUserContentController.swift`) for the two injected-script
+  dictionaries. It is now vendored as `Types/OrderedSet.swift`, `internal` so it cannot collide with
+  a consumer's own `swift-collections`. **No behaviour change**, including the subtle part: the
+  element types derive from `WKUserScript`/`NSObject` and override neither `hash` nor `isEqual:`, so
+  de-duplication is by object identity — `PluginScript`'s value-based `static func ==` never
+  participated, because a class inherits its `Equatable` witness from `NSObject` and a generic
+  context dispatches through that witness. The vendored type keeps that exactly.
+
+  **Why it was worth removing rather than pinning.** The two integration paths were building
+  *different versions*: `Package.swift` resolved 1.6.0 from Apple's repository, while the podspec
+  pinned `~> 1.1.1` because 1.1.1 is the only version ever published to CocoaPods trunk, by a third
+  party rather than Apple. The pod is also an umbrella: `Podfile.lock` shows CocoaPods building
+  `BitCollections`, `DequeModule`, `HashTreeCollections`, `HeapModule`, `OrderedCollections` and
+  `InternalCollectionsUtilities` to supply the single type. iOS `SwiftCompile` steps 470 → **458**.
+- **The example's Swift unit-test target now compiles and runs, for the first time.** It was broken
+  two ways at once: the example app declared `IPHONEOS_DEPLOYMENT_TARGET = 13.0` while the plugin's
+  `Package.swift` requires iOS 15.0, so the target could not build at all; and `RunnerTests.swift`
+  was the unmodified Flutter template, constructing a `FlutterInappwebviewIosPlugin` and calling a
+  `getPlatformVersion` handler — **neither of which exists** in this plugin. The example is raised
+  to 15.0 (pbxproj and Podfile), the template test is replaced by a smoke test that proves
+  `@testable import` reaches the plugin module, and `OrderedSetTests` covers the vendored type.
+  **12 Swift tests, the first in this repository.**
 - **`WKContentWorld.windowId` is stored as an associated object instead of in a static dictionary
   keyed by the world's pointer address.** No behaviour change — the values, and the JS `windowId`
   variable they drive, are identical. The old `[String: Int64?]` static grew by one entry per

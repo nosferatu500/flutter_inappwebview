@@ -11,15 +11,9 @@ let package = Package(
     products: [
         .library(name: "flutter-inappwebview-ios", targets: ["flutter_inappwebview_ios"])
     ],
-    dependencies: [
-      .package(url: "https://github.com/apple/swift-collections.git", from: "1.6.0")
-    ],
     targets: [
         .target(
             name: "flutter_inappwebview_ios",
-            dependencies: [
-                .product(name: "Collections", package: "swift-collections")
-            ],
             resources: [
                 .process("Resources")
             ],

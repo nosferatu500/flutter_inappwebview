@@ -21,7 +21,10 @@ inline webview, to use an headless webview, and to open an in-app browser window
 
   s.pod_target_xcconfig = { 'DEFINES_MODULE' => 'YES' }
 
-  s.dependency 'swift-collections', '~>1.1.1'
+  # No `swift-collections` dependency: the one type it supplied, `OrderedSet`, is vendored in
+  # `Types/OrderedSet.swift`. See that file for why -- in short, CocoaPods trunk only ever published
+  # 1.1.1 (third-party, not Apple) while SPM resolved 1.6.0, so the two integration paths built
+  # different versions, and the pod compiled six modules to provide one type.
 
   # Must stay in step with Package.swift's `.swiftLanguageMode(.v6)`. CocoaPods consumers get this
   # value as SWIFT_VERSION; SPM consumers get the manifest. Updating only one leaves the plugin

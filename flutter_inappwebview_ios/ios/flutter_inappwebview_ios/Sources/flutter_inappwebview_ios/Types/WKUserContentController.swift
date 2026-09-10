@@ -8,7 +8,6 @@
 import Foundation
 import ObjectiveC
 import WebKit
-import Collections
 
 /// Boxes a Swift value so it can be stored as an associated object.
 ///
