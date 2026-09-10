@@ -82,7 +82,10 @@ public class WebAuthenticationSession: NSObject, ASWebAuthenticationPresentation
     }
     
     public func presentationAnchor(for session: ASWebAuthenticationSession) -> ASPresentationAnchor {
-        return UIApplication.shared.windows.first { $0.isKeyWindow } ?? ASPresentationAnchor()
+        // `UIApplication.windows` is deprecated and empty in a scene-based app, which would make
+        // this fall back to a detached `ASPresentationAnchor()` and give the auth sheet nothing to
+        // present from.
+        return UIApplication.shared.keyWindowCompat ?? ASPresentationAnchor()
     }
     
     public func dispose() {
