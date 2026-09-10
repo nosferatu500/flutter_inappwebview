@@ -51,16 +51,10 @@ class SettingDefinition {
   String get key => property.name;
 
   /// Check if this setting is supported on the given platform.
-  /// Returns true if no property is specified (assumed to be cross-platform).
-  /// Note: Web platform is not mapped to TargetPlatform, so it's not checkable.
   bool isSupportedOnPlatform(SupportedPlatform platform) {
-    // Web is not mapped to TargetPlatform in Flutter
-    if (platform == SupportedPlatform.web) return false;
-    final targetPlatform = platform.targetPlatform;
-    if (targetPlatform == null) return false;
     return InAppWebViewSettings.isPropertySupported(
       property,
-      platform: targetPlatform,
+      platform: platform.targetPlatform,
     );
   }
 
@@ -72,19 +66,12 @@ class SettingDefinition {
   }
 
   /// Get the set of supported platforms for this setting.
-  /// Note: Web platform cannot be checked via TargetPlatform.
   Set<SupportedPlatform> get supportedPlatforms {
-    return SupportedPlatform.values
-        .where((p) => p != SupportedPlatform.web && isSupportedOnPlatform(p))
-        .toSet();
+    return SupportedPlatform.values.where(isSupportedOnPlatform).toSet();
   }
 
   /// Check if this setting has platform-specific support (not available on all platforms).
   bool get hasPlatformLimitations {
-    // Check if the property is NOT supported on all native platforms
-    final nativePlatforms = SupportedPlatform.values.where(
-      (p) => p != SupportedPlatform.web,
-    );
-    return nativePlatforms.any((p) => !isSupportedOnPlatform(p));
+    return SupportedPlatform.values.any((p) => !isSupportedOnPlatform(p));
   }
 }

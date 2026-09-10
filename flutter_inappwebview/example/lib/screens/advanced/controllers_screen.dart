@@ -1,5 +1,3 @@
-import 'dart:io';
-
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_inappwebview/flutter_inappwebview.dart';
@@ -10,6 +8,7 @@ import 'package:flutter_inappwebview_example/widgets/common/resize_handle.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter_inappwebview_example/providers/event_log_provider.dart';
 import 'package:flutter_inappwebview_example/models/event_log_entry.dart';
+import 'package:flutter_inappwebview_example/utils/platform_utils.dart';
 import 'package:flutter_inappwebview_example/utils/support_checker.dart';
 import 'package:flutter_inappwebview_example/widgets/common/support_badge.dart';
 import 'package:flutter_inappwebview_example/widgets/common/parameter_dialog.dart';
@@ -54,15 +53,7 @@ class _ControllersScreenState extends State<ControllersScreen> {
   final Map<String, int> _selectedHistoryIndex = {};
   static const int _maxHistoryEntries = 3;
 
-  SupportedPlatform? get _currentPlatform {
-    if (kIsWeb) return SupportedPlatform.web;
-    if (Platform.isAndroid) return SupportedPlatform.android;
-    if (Platform.isIOS) return SupportedPlatform.ios;
-    if (Platform.isMacOS) return SupportedPlatform.macos;
-    if (Platform.isWindows) return SupportedPlatform.windows;
-    if (Platform.isLinux) return SupportedPlatform.linux;
-    return null;
-  }
+  SupportedPlatform? get _currentPlatform => PlatformUtils.getCurrentPlatform();
 
   Set<SupportedPlatform> _getFindSupportedPlatforms(
     PlatformFindInteractionControllerMethod method,

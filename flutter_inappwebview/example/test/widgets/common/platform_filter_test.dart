@@ -5,7 +5,7 @@ import 'package:flutter_inappwebview_example/utils/support_checker.dart';
 
 void main() {
   group('PlatformFilter', () {
-    testWidgets('should render 6 checkboxes for all platforms', (tester) async {
+    testWidgets('should render one checkbox per platform', (tester) async {
       await tester.pumpWidget(
         MaterialApp(
           home: Scaffold(
@@ -19,8 +19,12 @@ void main() {
 
       await tester.pumpAndSettle();
 
-      // Should find 6 checkboxes (one for each platform)
-      expect(find.byType(CheckboxListTile), findsNWidgets(6));
+      // Derived from the enum rather than hardcoded: the count is a property of
+      // SupportedPlatform, and a literal here just goes stale when it changes.
+      expect(
+        find.byType(CheckboxListTile),
+        findsNWidgets(SupportedPlatform.values.length),
+      );
 
       // Verify platform names are displayed
       for (final platform in SupportedPlatform.values) {

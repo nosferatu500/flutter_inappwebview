@@ -3,13 +3,16 @@ import 'package:flutter/material.dart';
 import 'package:flutter_inappwebview/flutter_inappwebview.dart';
 
 /// Represents a platform for API support checking.
+///
+/// This fork builds for Android and iOS only — §9 dropped macOS, Windows and
+/// Linux, and Web was never implemented. The enum deliberately has no constant
+/// for them: a constant here becomes a column in the support matrix, and every
+/// such column misreported. macOS/Windows/Linux were constant-false (measured:
+/// 0 of 159 `InAppWebViewSettings` properties on each), which is merely noise,
+/// but Web was actively wrong — see [SupportCheckHelper].
 enum SupportedPlatform {
   android,
-  ios,
-  macos,
-  web,
-  windows,
-  linux;
+  ios;
 
   String get displayName {
     switch (this) {
@@ -17,14 +20,6 @@ enum SupportedPlatform {
         return 'Android';
       case SupportedPlatform.ios:
         return 'iOS';
-      case SupportedPlatform.macos:
-        return 'macOS';
-      case SupportedPlatform.web:
-        return 'Web';
-      case SupportedPlatform.windows:
-        return 'Windows';
-      case SupportedPlatform.linux:
-        return 'Linux';
     }
   }
 
@@ -34,14 +29,6 @@ enum SupportedPlatform {
         return Icons.android;
       case SupportedPlatform.ios:
         return Icons.phone_iphone;
-      case SupportedPlatform.macos:
-        return Icons.laptop_mac;
-      case SupportedPlatform.web:
-        return Icons.language;
-      case SupportedPlatform.windows:
-        return Icons.desktop_windows;
-      case SupportedPlatform.linux:
-        return Icons.computer;
     }
   }
 
@@ -51,39 +38,38 @@ enum SupportedPlatform {
         return Colors.green.shade600;
       case SupportedPlatform.ios:
         return Colors.grey.shade700;
-      case SupportedPlatform.macos:
-        return Colors.blueGrey.shade600;
-      case SupportedPlatform.web:
-        return Colors.blue.shade600;
-      case SupportedPlatform.windows:
-        return Colors.lightBlue.shade600;
-      case SupportedPlatform.linux:
-        return Colors.orange.shade700;
     }
   }
 
-  TargetPlatform? get targetPlatform {
+  /// Every [SupportedPlatform] maps to a real [TargetPlatform].
+  ///
+  /// This is deliberately **non-nullable**. The generated support checks read
+  /// `platform ?? defaultTargetPlatform`, so forwarding `null` does not mean
+  /// "no platform" — it means "whatever device is running right now". A
+  /// nullable mapping here is what let the old `web` constant report the host's
+  /// support as Web's.
+  TargetPlatform get targetPlatform {
     switch (this) {
       case SupportedPlatform.android:
         return TargetPlatform.android;
       case SupportedPlatform.ios:
         return TargetPlatform.iOS;
-      case SupportedPlatform.macos:
-        return TargetPlatform.macOS;
-      case SupportedPlatform.windows:
-        return TargetPlatform.windows;
-      case SupportedPlatform.linux:
-        return TargetPlatform.linux;
-      case SupportedPlatform.web:
-        return null; // Web doesn't have a TargetPlatform
     }
   }
 }
 
 /// Helper utilities for support checks across platforms.
+///
+/// Every helper forwards an explicit, non-null [TargetPlatform]. Passing `null`
+/// to a generated `is*Supported` check does **not** mean "unsupported": the
+/// generated code evaluates `platform ?? defaultTargetPlatform`, so a `null`
+/// silently answers for the host device. That is how the removed `Web` column
+/// came to mirror whatever platform the example was running on — measured at
+/// 108 of 159 settings properties on an Android host and 89 on an iOS host,
+/// identical to the Android and iOS columns respectively.
 class SupportCheckHelper {
-  /// Maps [SupportedPlatform] to a [TargetPlatform] when possible.
-  static TargetPlatform? targetPlatformFor(SupportedPlatform platform) {
+  /// Maps [SupportedPlatform] to its [TargetPlatform].
+  static TargetPlatform targetPlatformFor(SupportedPlatform platform) {
     return platform.targetPlatform;
   }
 
@@ -92,9 +78,6 @@ class SupportCheckHelper {
     required SupportedPlatform platform,
     required bool Function({TargetPlatform? platform}) checker,
   }) {
-    if (platform == SupportedPlatform.web) {
-      return checker(platform: null);
-    }
     return checker(platform: targetPlatformFor(platform));
   }
 
@@ -104,9 +87,6 @@ class SupportCheckHelper {
     required T method,
     required bool Function(T method, {TargetPlatform? platform}) checker,
   }) {
-    if (platform == SupportedPlatform.web) {
-      return checker(method, platform: null);
-    }
     return checker(method, platform: targetPlatformFor(platform));
   }
 
@@ -117,9 +97,6 @@ class SupportCheckHelper {
     required bool Function(dynamic property, {TargetPlatform? platform})
     checker,
   }) {
-    if (platform == SupportedPlatform.web) {
-      return checker(property, platform: null);
-    }
     return checker(property, platform: targetPlatformFor(platform));
   }
 
@@ -274,44 +251,6 @@ typedef _PropertySupportResolver =
 
 /// Utility class that provides comprehensive API support information.
 class SupportChecker {
-  // All supported platforms
-  static const allPlatforms = {
-    SupportedPlatform.android,
-    SupportedPlatform.ios,
-    SupportedPlatform.macos,
-    SupportedPlatform.web,
-    SupportedPlatform.windows,
-    SupportedPlatform.linux,
-  };
-
-  // Mobile platforms
-  static const mobilePlatforms = {
-    SupportedPlatform.android,
-    SupportedPlatform.ios,
-  };
-
-  // Native platforms (non-web)
-  static const nativePlatforms = {
-    SupportedPlatform.android,
-    SupportedPlatform.ios,
-    SupportedPlatform.macos,
-    SupportedPlatform.windows,
-    SupportedPlatform.linux,
-  };
-
-  // Desktop platforms
-  static const desktopPlatforms = {
-    SupportedPlatform.macos,
-    SupportedPlatform.windows,
-    SupportedPlatform.linux,
-  };
-
-  // Apple platforms
-  static const applePlatforms = {
-    SupportedPlatform.ios,
-    SupportedPlatform.macos,
-  };
-
   static String _enumName(Object? value) {
     if (value is Enum) return value.name;
     return value.toString().split('.').last;
@@ -724,19 +663,14 @@ class SupportChecker {
     );
   }
 
+  /// The running platform, or `null` where the fork does not build.
   static SupportedPlatform? _getCurrentPlatform() {
-    if (kIsWeb) return SupportedPlatform.web;
+    if (kIsWeb) return null;
     switch (defaultTargetPlatform) {
       case TargetPlatform.android:
         return SupportedPlatform.android;
       case TargetPlatform.iOS:
         return SupportedPlatform.ios;
-      case TargetPlatform.macOS:
-        return SupportedPlatform.macos;
-      case TargetPlatform.windows:
-        return SupportedPlatform.windows;
-      case TargetPlatform.linux:
-        return SupportedPlatform.linux;
       default:
         return null;
     }
