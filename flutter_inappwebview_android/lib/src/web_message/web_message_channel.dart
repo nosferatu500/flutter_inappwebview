@@ -1,6 +1,8 @@
 import 'package:flutter/foundation.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_inappwebview_platform_interface/flutter_inappwebview_platform_interface.dart';
+
+import '../pigeons/web_message.g.dart';
+import 'web_message_converters.dart';
 import 'web_message_port.dart';
 
 /// Object specifying creation parameters for creating a [AndroidWebMessageChannel].
@@ -39,7 +41,7 @@ class AndroidWebMessageChannelCreationParams
 
 ///{@macro flutter_inappwebview_platform_interface.PlatformWebMessageChannel}
 class AndroidWebMessageChannel extends PlatformWebMessageChannel
-    with ChannelController {
+    implements WebMessageChannelFlutterApi {
   /// Constructs a [AndroidWebMessageChannel].
   AndroidWebMessageChannel(PlatformWebMessageChannelCreationParams params)
     : super.implementation(
@@ -49,12 +51,13 @@ class AndroidWebMessageChannel extends PlatformWebMessageChannel
                 params,
               ),
       ) {
-    channel = MethodChannel(
-      'dev.nosferatu500.inappwebview/inappwebview_web_message_channel_${params.id}',
-    );
-    handler = _handleMethod;
-    initMethodCallHandler();
+    hostApi = WebMessageChannelHostApi(messageChannelSuffix: params.id);
+    WebMessageChannelFlutterApi.setUp(this, messageChannelSuffix: params.id);
   }
+
+  /// Transport for this channel instance. The channel id is the `messageChannelSuffix`, so each
+  /// `WebMessageChannel` gets its own set of generated channels (§165).
+  late final WebMessageChannelHostApi hostApi;
 
   static final AndroidWebMessageChannel _staticValue = AndroidWebMessageChannel(
     AndroidWebMessageChannelCreationParams(
@@ -97,24 +100,10 @@ class AndroidWebMessageChannel extends PlatformWebMessageChannel
     return webMessageChannel;
   }
 
-  Future<dynamic> _handleMethod(MethodCall call) async {
-    switch (call.method) {
-      case "onMessage":
-        int index = call.arguments["index"];
-        var port = index == 0 ? _androidPort1 : _androidPort2;
-        if (port.onMessage != null) {
-          WebMessage? message = call.arguments["message"] != null
-              ? WebMessage.fromMap(
-                  call.arguments["message"].cast<String, dynamic>(),
-                )
-              : null;
-          port.onMessage!(message);
-        }
-        break;
-      default:
-        throw UnimplementedError("Unimplemented ${call.method} method");
-    }
-    return null;
+  @override
+  void onMessage(int index, WebMessageData? message) {
+    final port = index == 0 ? _androidPort1 : _androidPort2;
+    port.onMessage?.call(message == null ? null : webMessageFromData(message));
   }
 
   @override
@@ -124,7 +113,9 @@ class AndroidWebMessageChannel extends PlatformWebMessageChannel
 
   @override
   void dispose() {
-    disposeChannel();
+    // Unregisters this instance's generated event handler. Skipping it would leave it bound to a
+    // disposed channel for the life of the messenger.
+    WebMessageChannelFlutterApi.setUp(null, messageChannelSuffix: params.id);
   }
 
   @override
@@ -134,5 +125,7 @@ class AndroidWebMessageChannel extends PlatformWebMessageChannel
 }
 
 extension InternalWebMessageChannel on AndroidWebMessageChannel {
-  MethodChannel? get internalChannel => channel;
+  /// The generated transport, reached by [AndroidWebMessagePort], which posts through the channel
+  /// that owns it.
+  WebMessageChannelHostApi get internalHostApi => hostApi;
 }

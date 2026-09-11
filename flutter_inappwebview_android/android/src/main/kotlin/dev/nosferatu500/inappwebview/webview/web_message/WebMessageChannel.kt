@@ -5,22 +5,40 @@ import androidx.webkit.WebMessageCompat
 import androidx.webkit.WebMessagePortCompat
 import androidx.webkit.WebViewCompat
 import androidx.webkit.WebViewFeature
+import dev.nosferatu500.inappwebview.pigeons.WebMessageChannelFlutterApi
+import dev.nosferatu500.inappwebview.pigeons.WebMessageChannelHostApi
+import dev.nosferatu500.inappwebview.pigeons.WebMessageData
 import dev.nosferatu500.inappwebview.plugin_scripts_js.JavaScriptBridgeJS
 import dev.nosferatu500.inappwebview.types.Disposable
 import dev.nosferatu500.inappwebview.types.WebMessageCompatExt
 import dev.nosferatu500.inappwebview.types.WebMessagePort
 import dev.nosferatu500.inappwebview.webview.InAppWebViewInterface
 import dev.nosferatu500.inappwebview.webview.in_app_webview.InAppWebView
-import io.flutter.plugin.common.MethodChannel
+import io.flutter.plugin.common.BinaryMessenger
 
-// See ChannelDelegateImpl: `this` is published to a platform-thread-only dispatcher.
+/**
+ * Transport is Pigeon-generated ([WebMessageChannelHostApi] / [WebMessageChannelFlutterApi])
+ * rather than a hand-written `MethodChannel`; migrated in §165 together with [WebMessageListener],
+ * which shares its `WebMessageData` payload.
+ *
+ * `WebMessageChannelChannelDelegate` is folded in here -- the generated interface *is* the
+ * dispatcher -- as `TracingControllerChannelDelegate` was in §162.
+ *
+ * **Per-instance channel.** The channel id is the `messageChannelSuffix`, the mechanism the pilot
+ * proved in §14 and the first use of it since.
+ *
+ * No method is `@async`: all three complete inline. `setWebMessageCallback` registers an androidx
+ * callback, but that feeds the [onMessage] *event*, it does not signal completion of the call.
+ */
+// `this` is published to a platform-thread-only dispatcher during construction, as before.
 class WebMessageChannel(
   @JvmField var id: String,
   webView: InAppWebViewInterface
-) : Disposable {
+) : Disposable, WebMessageChannelHostApi {
 
-  @JvmField
-  var channelDelegate: WebMessageChannelChannelDelegate?
+  private var messenger: BinaryMessenger? = webView.getPlugin()?.messenger
+
+  private var flutterApi: WebMessageChannelFlutterApi?
 
   @JvmField
   val compatPorts: MutableList<WebMessagePortCompat>
@@ -32,10 +50,9 @@ class WebMessageChannel(
   var webView: InAppWebViewInterface? = webView
 
   init {
-    val channel = MethodChannel(
-      webView.getPlugin()!!.messenger, METHOD_CHANNEL_NAME_PREFIX + id
-    )
-    channelDelegate = WebMessageChannelChannelDelegate(this, channel)
+    val messenger = webView.getPlugin()!!.messenger
+    flutterApi = WebMessageChannelFlutterApi(messenger, id)
+    WebMessageChannelHostApi.setUp(messenger, this, id)
     if (webView is InAppWebView) {
       compatPorts = WebViewCompat.createWebMessageChannel(webView).toMutableList()
       ports = ArrayList()
@@ -62,88 +79,79 @@ class WebMessageChannel(
     }
   }
 
-  fun setWebMessageCallbackForInAppWebView(index: Int, result: MethodChannel.Result) {
-    if (webView != null && compatPorts.isNotEmpty() &&
+  /**
+   * Returns false only when the view is not an `InAppWebView`.
+   *
+   * It answers **true** when `WEB_MESSAGE_PORT_SET_MESSAGE_CALLBACK` is unsupported and nothing was
+   * registered, so true means "no error" rather than "the callback is live". That is what the
+   * hand-written channel did and it is preserved deliberately -- see the schema.
+   */
+  override fun setWebMessageCallback(index: Long): Boolean {
+    webView as? InAppWebView ?: return false
+    if (compatPorts.isNotEmpty() &&
       WebViewFeature.isFeatureSupported(WebViewFeature.WEB_MESSAGE_PORT_SET_MESSAGE_CALLBACK)
     ) {
-      val webMessagePort = compatPorts[index]
-      try {
-        webMessagePort.setWebMessageCallback(
-          object : WebMessagePortCompat.WebMessageCallbackCompat() {
-            override fun onMessage(port: WebMessagePortCompat, message: WebMessageCompat?) {
-              super.onMessage(port, message)
-              onMessage(
-                index,
-                message?.let { WebMessageCompatExt.fromMapWebMessageCompat(it) }
-              )
-            }
+      val portIndex = index.toInt()
+      compatPorts[portIndex].setWebMessageCallback(
+        object : WebMessagePortCompat.WebMessageCallbackCompat() {
+          override fun onMessage(port: WebMessagePortCompat, message: WebMessageCompat?) {
+            super.onMessage(port, message)
+            onMessage(
+              portIndex,
+              message?.let { WebMessageCompatExt.fromMapWebMessageCompat(it) }
+            )
           }
-        )
-        result.success(true)
-      } catch (e: Exception) {
-        result.error(LOG_TAG, e.message, null)
-      }
-    } else {
-      result.success(true)
+        }
+      )
     }
+    return true
   }
 
-  fun postMessageForInAppWebView(
-    index: Int,
-    message: WebMessageCompatExt,
-    result: MethodChannel.Result
-  ) {
-    val view = webView
-    if (view != null && compatPorts.isNotEmpty() &&
+  /** Same `true`-when-unsupported caveat as [setWebMessageCallback]. */
+  override fun postMessage(index: Long, message: WebMessageData): Boolean {
+    val view = webView as? InAppWebView ?: return false
+    if (compatPorts.isNotEmpty() &&
       WebViewFeature.isFeatureSupported(WebViewFeature.WEB_MESSAGE_PORT_POST_MESSAGE)
     ) {
-      val port = compatPorts[index]
+      val ext = WebMessageCompatExt.fromPigeon(message)
+      val port = compatPorts[index.toInt()]
       val webMessagePorts = mutableListOf<WebMessagePortCompat>()
-      message.ports?.forEach { portExt ->
+      ext.ports?.forEach { portExt ->
         val webMessageChannel = view.getWebMessageChannels()?.get(portExt.webMessageChannelId)
         if (webMessageChannel != null) {
           webMessagePorts.add(webMessageChannel.compatPorts[portExt.index])
         }
       }
-      val data = message.data
-      try {
-        if (WebViewFeature.isFeatureSupported(WebViewFeature.WEB_MESSAGE_ARRAY_BUFFER) &&
-          data != null && message.type == WebMessageCompat.TYPE_ARRAY_BUFFER
-        ) {
-          port.postMessage(
-            WebMessageCompat(data as ByteArray, webMessagePorts.toTypedArray())
-          )
-        } else {
-          port.postMessage(
-            WebMessageCompat(data?.toString(), webMessagePorts.toTypedArray())
-          )
-        }
-        result.success(true)
-      } catch (e: Exception) {
-        result.error(LOG_TAG, e.message, null)
+      val data = ext.data
+      if (WebViewFeature.isFeatureSupported(WebViewFeature.WEB_MESSAGE_ARRAY_BUFFER) &&
+        data != null && ext.type == WebMessageCompat.TYPE_ARRAY_BUFFER
+      ) {
+        // No cast: the schema carries array-buffer payloads as a real ByteArray.
+        port.postMessage(
+          WebMessageCompat(data as ByteArray, webMessagePorts.toTypedArray())
+        )
+      } else {
+        port.postMessage(
+          WebMessageCompat(data?.toString(), webMessagePorts.toTypedArray())
+        )
       }
-    } else {
-      result.success(true)
     }
+    return true
   }
 
-  fun closeForInAppWebView(index: Int, result: MethodChannel.Result) {
-    if (webView != null && compatPorts.isNotEmpty() &&
+  /** Same `true`-when-unsupported caveat as [setWebMessageCallback]. */
+  override fun close(index: Long): Boolean {
+    webView as? InAppWebView ?: return false
+    if (compatPorts.isNotEmpty() &&
       WebViewFeature.isFeatureSupported(WebViewFeature.WEB_MESSAGE_PORT_CLOSE)
     ) {
-      try {
-        compatPorts[index].close()
-        result.success(true)
-      } catch (e: Exception) {
-        result.error(LOG_TAG, e.message, null)
-      }
-    } else {
-      result.success(true)
+      compatPorts[index.toInt()].close()
     }
+    return true
   }
 
   fun onMessage(index: Int, message: WebMessageCompatExt?) {
-    channelDelegate?.onMessage(index, message)
+    flutterApi?.onMessage(index.toLong(), message?.toPigeon()) {}
   }
 
   fun toMap(): MutableMap<String, Any?> = hashMapOf("id" to id)
@@ -157,8 +165,11 @@ class WebMessageChannel(
         }
       }
     }
-    channelDelegate?.dispose()
-    channelDelegate = null
+    // Unregisters the generated handler for this suffix. Skipping it would leave it bound to a
+    // disposed channel for the life of the messenger.
+    messenger?.let { WebMessageChannelHostApi.setUp(it, null, id) }
+    messenger = null
+    flutterApi = null
     compatPorts.clear()
     webView = null
   }

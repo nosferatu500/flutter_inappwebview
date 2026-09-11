@@ -2,6 +2,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter_inappwebview_platform_interface/flutter_inappwebview_platform_interface.dart';
 
 import 'web_message_channel.dart';
+import 'web_message_converters.dart';
 
 /// Object specifying creation parameters for creating a [AndroidWebMessagePort].
 ///
@@ -44,30 +45,28 @@ class AndroidWebMessagePort extends PlatformWebMessagePort {
               ),
       );
 
+  // The bool each host method returns is discarded: the platform interface declares `Future<void>`
+  // for all three, and `false` means only "the view is not an InAppWebView". Kept on the wire so
+  // the distinction survives -- see the schema.
   @override
   Future<void> setWebMessageCallback(WebMessageCallback? onMessage) async {
-    Map<String, dynamic> args = <String, dynamic>{};
-    args.putIfAbsent('index', () => params.index);
-    await _webMessageChannel.internalChannel?.invokeMethod(
-      'setWebMessageCallback',
-      args,
+    await _webMessageChannel.internalHostApi.setWebMessageCallback(
+      params.index,
     );
     _onMessage = onMessage;
   }
 
   @override
   Future<void> postMessage(WebMessage message) async {
-    Map<String, dynamic> args = <String, dynamic>{};
-    args.putIfAbsent('index', () => params.index);
-    args.putIfAbsent('message', () => message.toMap());
-    await _webMessageChannel.internalChannel?.invokeMethod('postMessage', args);
+    await _webMessageChannel.internalHostApi.postMessage(
+      params.index,
+      webMessageToData(message),
+    );
   }
 
   @override
   Future<void> close() async {
-    Map<String, dynamic> args = <String, dynamic>{};
-    args.putIfAbsent('index', () => params.index);
-    await _webMessageChannel.internalChannel?.invokeMethod('close', args);
+    await _webMessageChannel.internalHostApi.close(params.index);
   }
 
   @override

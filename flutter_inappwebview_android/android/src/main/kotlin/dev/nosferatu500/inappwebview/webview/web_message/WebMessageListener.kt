@@ -7,27 +7,34 @@ import androidx.webkit.WebMessageCompat
 import androidx.webkit.WebViewCompat
 import androidx.webkit.WebViewFeature
 import dev.nosferatu500.inappwebview.Util
+import dev.nosferatu500.inappwebview.pigeons.WebMessageData
+import dev.nosferatu500.inappwebview.pigeons.WebMessageListenerFlutterApi
+import dev.nosferatu500.inappwebview.pigeons.WebMessageListenerHostApi
 import dev.nosferatu500.inappwebview.types.Disposable
 import dev.nosferatu500.inappwebview.types.WebMessageCompatExt
 import dev.nosferatu500.inappwebview.webview.InAppWebViewInterface
 import dev.nosferatu500.inappwebview.webview.in_app_webview.InAppWebView
 import io.flutter.plugin.common.BinaryMessenger
-import io.flutter.plugin.common.MethodChannel
 
-// The unchecked cast below is the Flutter codec boundary: StandardMessageCodec decodes to
-// Map<String,Object>/List<Object>, so every read of a structured value is an unverifiable
-// cast. A wrong shape throws ClassCastException at the cast site, which is the intended
-// failure mode.
-//
-// See ChannelDelegateImpl: `this` is published to a platform-thread-only dispatcher.
-@Suppress("UNCHECKED_CAST")
+/**
+ * Transport is Pigeon-generated ([WebMessageListenerHostApi] / [WebMessageListenerFlutterApi])
+ * rather than a hand-written `MethodChannel`; migrated in §165 together with [WebMessageChannel],
+ * which shares its `WebMessageData` payload.
+ *
+ * `WebMessageListenerChannelDelegate` is folded in here, and the class-level
+ * `@Suppress("UNCHECKED_CAST")` went with the `Map<String, Any?>` parse step it covered.
+ *
+ * **Per-instance channel**: the suffix is `<id>_<jsObjectName>`, matching the name the
+ * hand-written channel built.
+ */
+// `this` is published to a platform-thread-only dispatcher during construction, as before.
 class WebMessageListener(
   @JvmField var id: String,
   webView: InAppWebViewInterface,
   messenger: BinaryMessenger,
   @JvmField var jsObjectName: String,
   @JvmField var allowedOriginRules: Set<String>
-) : Disposable {
+) : Disposable, WebMessageListenerHostApi {
 
   @JvmField
   var listener: WebViewCompat.WebMessageListener? = null
@@ -38,14 +45,14 @@ class WebMessageListener(
   @JvmField
   var webView: InAppWebViewInterface? = webView
 
-  @JvmField
-  var channelDelegate: WebMessageListenerChannelDelegate?
+  private var boundMessenger: BinaryMessenger? = messenger
+
+  private var flutterApi: WebMessageListenerFlutterApi?
 
   init {
-    val channel = MethodChannel(
-      messenger, METHOD_CHANNEL_NAME_PREFIX + id + "_" + jsObjectName
-    )
-    channelDelegate = WebMessageListenerChannelDelegate(this, channel)
+    val suffix = channelSuffix(id, jsObjectName)
+    flutterApi = WebMessageListenerFlutterApi(messenger, suffix)
+    WebMessageListenerHostApi.setUp(messenger, this, suffix)
 
     if (webView is InAppWebView) {
       listener = WebViewCompat.WebMessageListener {
@@ -56,30 +63,42 @@ class WebMessageListener(
           javaScriptReplyProxy: JavaScriptReplyProxy
         ->
         replyProxy = javaScriptReplyProxy
-        channelDelegate?.onPostMessage(
-          WebMessageCompatExt.fromMapWebMessageCompat(message),
+        flutterApi?.onPostMessage(
+          WebMessageCompatExt.fromMapWebMessageCompat(message).toPigeon(),
           if (sourceOrigin.toString() == "null") null else sourceOrigin.toString(),
           isMainFrame
-        )
+        ) {}
       }
     }
   }
 
-  fun postMessageForInAppWebView(message: WebMessageCompatExt, result: MethodChannel.Result) {
+  /**
+   * Always answers true when the view is an `InAppWebView`.
+   *
+   * The hand-written channel called `result.success(true)` unconditionally at the end -- including
+   * when there was no reply proxy or `WEB_MESSAGE_LISTENER` was unsupported -- so true means "no
+   * error", not "delivered". Preserved deliberately; see the schema.
+   */
+  override fun postMessage(message: WebMessageData): Boolean {
+    if (webView !is InAppWebView) {
+      return false
+    }
     val proxy = replyProxy
     if (proxy != null && WebViewFeature.isFeatureSupported(WebViewFeature.WEB_MESSAGE_LISTENER)) {
-      val data = message.data
+      val ext = WebMessageCompatExt.fromPigeon(message)
+      val data = ext.data
       if (data != null) {
         if (WebViewFeature.isFeatureSupported(WebViewFeature.WEB_MESSAGE_ARRAY_BUFFER) &&
-          message.type == WebMessageCompat.TYPE_ARRAY_BUFFER
+          ext.type == WebMessageCompat.TYPE_ARRAY_BUFFER
         ) {
+          // No cast: the schema carries array-buffer payloads as a real ByteArray.
           proxy.postMessage(data as ByteArray)
         } else {
           proxy.postMessage(data.toString())
         }
       }
     }
-    result.success(true)
+    return true
   }
 
   /**
@@ -143,8 +162,12 @@ class WebMessageListener(
   }
 
   override fun dispose() {
-    channelDelegate?.dispose()
-    channelDelegate = null
+    // Unregisters the generated handler for this suffix.
+    boundMessenger?.let {
+      WebMessageListenerHostApi.setUp(it, null, channelSuffix(id, jsObjectName))
+    }
+    boundMessenger = null
+    flutterApi = null
     listener = null
     replyProxy = null
     webView = null
@@ -152,9 +175,27 @@ class WebMessageListener(
 
   companion object {
     protected const val LOG_TAG = "WebMessageListener"
+
+    /**
+     * The `messageChannelSuffix` for a listener, matching the id the hand-written channel name
+     * embedded. Built in one place so `init` and `dispose` cannot drift apart -- an unregister
+     * against the wrong suffix silently leaves the handler bound.
+     */
+    @JvmStatic
+    fun channelSuffix(id: String, jsObjectName: String): String = id + "_" + jsObjectName
+
     const val METHOD_CHANNEL_NAME_PREFIX =
       "dev.nosferatu500.inappwebview/inappwebview_web_message_listener_"
 
+    /**
+     * Builds a listener from the untyped map the **WebView channel** still sends.
+     *
+     * The suppression is scoped to this function rather than the class: the Pigeon migration
+     * removed every other cast site, and `addWebMessageListener` lives on
+     * `WebViewChannelDelegate`, which is not migrated yet. When that channel moves, this and the
+     * suppression go with it.
+     */
+    @Suppress("UNCHECKED_CAST")
     @JvmStatic
     fun fromMap(
       webView: InAppWebViewInterface,

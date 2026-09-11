@@ -450,6 +450,31 @@ for, and five others have a native *value* that differs from their name.
 
 ### Internal
 
+- **The two `web_message` channels are Pigeon-generated** — `WebMessageChannel` and
+  `WebMessageListener` — the seventh migration and the **first per-instance channels** since the
+  pilot. Each instance addresses its own generated channels through a `messageChannelSuffix` (the
+  channel id, and `<id>_<jsObjectName>` for a listener), replacing the hand-built channel names.
+  Both `*ChannelDelegate` classes are folded into their owners and deleted, along with
+  `InternalWebMessageChannel`'s `MethodChannel` accessor; `WebMessageCompatExt.toMap()` went with
+  them and `WebMessageListener`'s class-level `@Suppress("UNCHECKED_CAST")` is now scoped to the
+  one function that still needs it. No public API change.
+
+  **`WebMessage.data` now crosses as two typed fields.** It is declared `dynamic` and holds either
+  a `String` or a `Uint8List` keyed by `type`; the old wire carried it untyped and the Kotlin side
+  recovered it with `data as ByteArray`. The schema declares `stringData` and `arrayBufferData`
+  separately, so array buffers travel as a real `ByteArray` and the cast is gone. `type` stays on
+  the wire because it is the only thing distinguishing a `STRING` message whose data is **null**
+  from an absent payload.
+
+  Neither channel is `@async`: every host method completes inline. `setWebMessageCallback`
+  registers an androidx callback, but that feeds the `onMessage` *event* rather than signalling
+  completion of the call.
+
+  One behaviour note: exceptions thrown inside these handlers were previously caught and reported
+  as `result.error(LOG_TAG, …)`; they now propagate to Pigeon's `wrapError`, so the
+  `PlatformException.code` becomes the exception's class name rather than the constant
+  `"WebMessageChannel"` / `"WebMessageListener"`. Breaking only for code matching on that code.
+
 - **The `credential_database` channel is Pigeon-generated**, the sixth migrated and the first with
   **structured return values**. `AndroidHttpAuthCredentialDatabase` drops `ChannelController` and
   holds the generated `CredentialDatabaseHostApi`; `CredentialDatabaseHandler` implements it, and
