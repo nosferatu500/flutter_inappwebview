@@ -11,7 +11,9 @@ export 'web_message/main.dart';
 export 'print_job/main.dart';
 export 'find_interaction/main.dart';
 export 'service_worker_controller.dart';
-export 'webview_feature.dart' hide InternalWebViewFeature;
+// No `hide` needed: the Pigeon migration removed `InternalWebViewFeature`, which existed
+// only to expose the hand-written channel's method-call handler.
+export 'webview_feature.dart';
 export 'geolocation_permissions.dart';
 export 'profile_store.dart';
 // No `hide` needed: the Pigeon migration removed `InternalProxyController`, which existed

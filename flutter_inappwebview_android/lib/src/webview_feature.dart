@@ -1,7 +1,8 @@
 import 'dart:async';
 import 'package:flutter/foundation.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_inappwebview_platform_interface/flutter_inappwebview_platform_interface.dart';
+
+import 'pigeons/webview_feature.g.dart';
 
 /// Object specifying creation parameters for creating a [AndroidWebViewFeature].
 ///
@@ -27,8 +28,13 @@ class AndroidWebViewFeatureCreationParams
 }
 
 ///{@macro flutter_inappwebview_platform_interface.PlatformWebViewFeature}
+///
+/// Transport is Pigeon-generated ([WebViewFeatureHostApi]) rather than a hand-written
+/// `MethodChannel`; the fourth channel migrated, after find_interaction (§14),
+/// process_global_config (§157) and proxy (§160). There is no `messageChannelSuffix` because both
+/// androidx entry points are statics.
 class AndroidWebViewFeature extends PlatformWebViewFeature
-    with ChannelController {
+    implements Disposable {
   /// Creates a new [AndroidWebViewFeature].
   AndroidWebViewFeature(PlatformWebViewFeatureCreationParams params)
     : super.implementation(
@@ -37,17 +43,13 @@ class AndroidWebViewFeature extends PlatformWebViewFeature
             : AndroidWebViewFeatureCreationParams.fromPlatformWebViewFeatureCreationParams(
                 params,
               ),
-      ) {
-    channel = const MethodChannel(
-      'dev.nosferatu500.inappwebview/inappwebview_webviewfeature',
-    );
-    handler = handleMethod;
-    initMethodCallHandler();
-  }
+      );
 
   factory AndroidWebViewFeature.static() {
     return instance();
   }
+
+  final WebViewFeatureHostApi _hostApi = WebViewFeatureHostApi();
 
   static AndroidWebViewFeature? _instance;
 
@@ -65,33 +67,31 @@ class AndroidWebViewFeature extends PlatformWebViewFeature
     return _instance!;
   }
 
-  Future<dynamic> _handleMethod(MethodCall call) async {}
-
   @override
   Future<bool> isFeatureSupported(WebViewFeature feature) async {
-    Map<String, dynamic> args = <String, dynamic>{};
-    args.putIfAbsent("feature", () => feature.toNativeValue());
-    return await channel?.invokeMethod<bool>('isFeatureSupported', args) ??
-        false;
+    // `toNativeValue()` is typed `String?` because the platform interface's WebViewFeature is an
+    // open `_internal(String)` class. All 60 declared constants carry a non-null native value, so
+    // this branch is unreachable today -- but it replaces a Kotlin `feature!!` that would have
+    // thrown, and answering false is what "a feature androidx cannot be asked about" means.
+    final nativeValue = feature.toNativeValue();
+    if (nativeValue == null) {
+      return false;
+    }
+    return await _hostApi.isFeatureSupported(nativeValue);
   }
 
   @override
   Future<bool> isStartupFeatureSupported(WebViewFeature startupFeature) async {
-    Map<String, dynamic> args = <String, dynamic>{};
-    args.putIfAbsent("startupFeature", () => startupFeature.toNativeValue());
-    return await channel?.invokeMethod<bool>(
-          'isStartupFeatureSupported',
-          args,
-        ) ??
-        false;
+    final nativeValue = startupFeature.toNativeValue();
+    if (nativeValue == null) {
+      return false;
+    }
+    return await _hostApi.isStartupFeatureSupported(nativeValue);
   }
 
   @override
   void dispose() {
-    // empty
+    // empty -- the host API holds no per-instance registration to tear down, and this class is a
+    // process-wide singleton (see createPlatformWebViewFeature).
   }
-}
-
-extension InternalWebViewFeature on AndroidWebViewFeature {
-  Future<dynamic> Function(MethodCall call) get handleMethod => _handleMethod;
 }

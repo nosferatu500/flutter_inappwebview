@@ -239,6 +239,21 @@ for, and five others have a native *value* that differs from their name.
 
 ### Fixed
 
+- **`WebViewFeature.isStartupFeatureSupported()` could hang forever instead of answering.** The
+  Kotlin handler read the *activity* and, when it was null, returned **without calling `result` at
+  all** — no success, no error, no `notImplemented` — so the caller's `await` never completed. The
+  activity is null until `onAttachedToActivity` and null again after
+  `onDetachedFromActivityForConfigChanges`, so this was reachable during a configuration change or
+  any call made before the activity attached; the Dart side's `?? false` did not help, because it
+  defaults a null *reply*, not a reply that never arrives.
+
+  It now answers from the plugin's **application** context, which is set before any channel call can
+  arrive. That is the correct argument and not merely a non-null one: androidx documents the
+  parameter as "a Context to access application assets", and its `StartupApiFeature` uses it only
+  for `getPackageManager()` and `WebViewCompat.getCurrentWebViewPackage(context)` — package-manager
+  lookups an application context serves exactly as well as an Activity. Both startup features
+  answer `true` on an API 37 device, measured.
+
 - **A failure inside `ProcessGlobalConfig.apply` could never reach Dart.** The hand-written channel
   answered errors with `result.error(LOG_TAG, "", e)`, passing the raw `Exception` as the details
   payload — and `StandardMessageCodec.writeValue` throws
@@ -420,6 +435,17 @@ for, and five others have a native *value* that differs from their name.
   issued, which is a real network cost per page
 
 ### Internal
+
+- **The `webviewfeature` channel is Pigeon-generated**, the fourth migrated.
+  `AndroidWebViewFeature` drops `ChannelController` and holds the generated
+  `WebViewFeatureHostApi`; `WebViewFeatureManager` implements it instead of dispatching on
+  method-name strings, and `InternalWebViewFeature` is gone with the hand-written handler. Neither
+  method is `@async` — both androidx entry points return `boolean` directly, checked against the
+  1.17.0 sources rather than assumed. The hang this migration fixed is listed under **Fixed**.
+
+  Also gone: a Kotlin `feature!!` on a value the Dart side types `String?`. All 60 `WebViewFeature`
+  constants carry a non-null native value so it could not fire, but the Dart side now answers
+  `false` for a null rather than sending one.
 
 - **The `proxy_controller` channel is Pigeon-generated**, the third migrated after
   `find_interaction` and `process_global_config`. `AndroidProxyController` drops `ChannelController`
