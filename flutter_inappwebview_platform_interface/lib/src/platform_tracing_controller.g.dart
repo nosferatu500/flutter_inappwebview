@@ -39,12 +39,9 @@ class TracingSettings {
   ///- Android WebView ([Official API - TracingConfig](https://developer.android.com/reference/androidx/webkit/TracingConfig))
   TracingSettings({this.categories = const [], this.tracingMode}) {
     assert(
-      categories
-          .map(
-            (e) => e.runtimeType is String || e.runtimeType is TracingCategory,
-          )
-          .contains(false),
-      "categories must contain only String or TracingCategory items",
+      categories.every((e) => e is String || e is TracingCategory),
+      'categories must contain only String or TracingCategory items, but got '
+      '${categories.where((e) => e is! String && e is! TracingCategory).map((e) => e.runtimeType).toList()}',
     );
   }
 

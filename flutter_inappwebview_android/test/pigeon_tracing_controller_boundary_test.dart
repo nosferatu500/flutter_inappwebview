@@ -111,15 +111,21 @@ void main() {
   });
 
   test('a category of neither type is dropped, not sent', () async {
-    await tracing.start(
-      settings: TracingSettings(categories: [42, 3.14, 'blink*']),
-    );
+    // §164 fixed `TracingSettings`'s constructor assert, so these values can no longer be passed
+    // *to the constructor* — it now throws. They are assigned afterwards on purpose, because
+    // **asserts are debug-only**: in a release build the constructor accepts anything, and the
+    // partition below is the only thing standing between a bad element and the wire. Reaching the
+    // field directly is how a release build gets here.
+    final settings = TracingSettings(categories: ['blink*']);
+    settings.categories = [42, 3.14, 'blink*'];
 
-    final settings = sentSettings();
+    await tracing.start(settings: settings);
+
+    final sent = sentSettings();
     // Same outcome as the hand-written path, which dropped these on the Kotlin side. The point is
     // that they reach neither typed list rather than arriving as an untyped element.
-    expect(settings.categoryNames, ['blink*']);
-    expect(settings.predefinedCategories, isEmpty);
+    expect(sent.categoryNames, ['blink*']);
+    expect(sent.predefinedCategories, isEmpty);
   });
 
   test('tracingMode crosses as its native value, and null stays null', () async {

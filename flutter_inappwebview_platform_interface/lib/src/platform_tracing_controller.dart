@@ -260,13 +260,26 @@ class TracingSettings_ {
 
   @ExchangeableObjectConstructor()
   TracingSettings_({this.categories = const [], this.tracingMode}) {
+    // Two faults used to cancel out here, and between them the check did the exact opposite of
+    // its job (§164). It read:
+    //
+    //   categories.map((e) => e.runtimeType is String || e.runtimeType is TracingCategory)
+    //             .contains(false)
+    //
+    //   1. `e.runtimeType` is a `Type`, and a `Type` is never a `String` -- so the predicate was
+    //      false for every element whatever it held. It needs `e is String`, not
+    //      `e.runtimeType is String`.
+    //   2. `.contains(false)` asks "did *any* element fail?", which is the negation of the
+    //      invariant being asserted.
+    //
+    // The result: an empty list mapped to an empty iterable, `contains(false)` was false, and the
+    // assert fired -- so `TracingSettings()`, the documented default, threw in debug. Any
+    // non-empty list passed regardless of its contents, so `TracingSettings(categories: [3.14])`
+    // was accepted. Both measured before the fix.
     assert(
-      categories
-          .map(
-            (e) => e.runtimeType is String || e.runtimeType is TracingCategory,
-          )
-          .contains(false),
-      "categories must contain only String or TracingCategory items",
+      categories.every((e) => e is String || e is TracingCategory),
+      'categories must contain only String or TracingCategory items, but got '
+      '${categories.where((e) => e is! String && e is! TracingCategory).map((e) => e.runtimeType).toList()}',
     );
   }
 

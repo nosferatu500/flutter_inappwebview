@@ -429,6 +429,35 @@ rename; this entry is the API-owner's view.
 
 ### Fixed
 
+- **`TracingSettings()` threw an `AssertionError` in debug — the default construction.** The
+  constructor's category validation was wrong in both directions at once, so it rejected the valid
+  default and accepted anything invalid:
+
+  ```dart
+  assert(
+    categories.map((e) => e.runtimeType is String || e.runtimeType is TracingCategory)
+              .contains(false),
+    "categories must contain only String or TracingCategory items",
+  );
+  ```
+
+  `e.runtimeType` evaluates to a `Type`, and a `Type` is never a `String`, so the predicate was
+  `false` for every element whatever it held; and `.contains(false)` asks "did *any* element fail?",
+  which is the negation of the invariant. An empty list therefore produced an empty iterable whose
+  `.contains(false)` is `false`, firing the assert — while any non-empty list passed regardless of
+  contents. Measured: `TracingSettings()` threw, and `TracingSettings(categories: [3.14,
+  #notACategory])` constructed happily.
+
+  It is now `categories.every((e) => e is String || e is TracingCategory)`, and the message names
+  the offending runtime types. **`TracingSettings()` and `TracingSettings(tracingMode: …)` now
+  work**, which is the user-facing half; the other half is newly strict, so a caller passing
+  something that is neither a `String` nor a `TracingCategory` will now trip the assert in debug
+  where it previously did not. Such a value was never usable — Android's `TracingConfig` builder
+  silently dropped it — so this surfaces an existing silent failure rather than creating one.
+
+  Note that asserts are debug-only: in release the constructor still accepts anything, so
+  `AndroidTracingController.start` continues to filter the list before sending it.
+
 - **`PlatformCookieManager.flush` now returns `Future<bool>` instead of `Future<void>`.** BREAKING
   for an implementer of the platform interface; source-compatible for callers. It was the only
   mutating method on the class that could not report failure, while the class doc promises a
