@@ -239,6 +239,19 @@ for, and five others have a native *value* that differs from their name.
 
 ### Fixed
 
+- **A failure inside `ProcessGlobalConfig.apply` could never reach Dart.** The hand-written channel
+  answered errors with `result.error(LOG_TAG, "", e)`, passing the raw `Exception` as the details
+  payload — and `StandardMessageCodec.writeValue` throws
+  `IllegalArgumentException("Unsupported value: …")` for any type it does not know, so the error
+  envelope failed to encode instead of being delivered. The channel is now Pigeon-generated and the
+  exception is stringified, so a rejected config (most often: already applied once in this process)
+  actually surfaces to the awaiting caller.
+
+  **The `PlatformException.code` changes with it**, from the constant `"ProcessGlobalConfigM"` to
+  the thrown exception's class name, with a real `message` and a stacktrace in `details` in place
+  of the empty string. Breaking only for code matching on that code — which could not have been
+  receiving it anyway, per the above.
+
 - **The ten managers that live on a constant method-channel name are now single instances, so
   constructing one no longer silently unhooks another.** `AndroidCookieManager`,
   `AndroidGeolocationPermissions`, `AndroidHttpAuthCredentialDatabase`,

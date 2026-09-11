@@ -17,4 +17,6 @@ export 'profile_store.dart';
 export 'proxy_controller.dart' hide InternalProxyController;
 export 'webview_asset_loader.dart';
 export 'tracing_controller.dart' hide InternalTracingController;
-export 'process_global_config.dart' hide InternalProcessGlobalConfig;
+// No `hide` needed: the Pigeon migration removed `InternalProcessGlobalConfig`, which existed
+// only to expose the hand-written channel's method-call handler.
+export 'process_global_config.dart';

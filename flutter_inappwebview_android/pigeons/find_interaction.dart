@@ -34,6 +34,11 @@ import 'package:pigeon/pigeon.dart';
         'android/src/main/kotlin/dev/nosferatu500/inappwebview/pigeons/FindInteraction.g.kt',
     kotlinOptions: KotlinOptions(
       package: 'dev.nosferatu500.inappwebview.pigeons',
+      // THIS SCHEMA IS THE DESIGNATED DECLARER OF `FlutterError` for the whole
+      // `dev.nosferatu500.inappwebview.pigeons` package. Pigeon emits that class into every
+      // Kotlin output by default, and all outputs share this package, so exactly one may declare
+      // it -- the rest set `includeErrorClass: false`. Do not delete or repackage this schema
+      // without moving the declaration first, or every other generated file loses the type.
     ),
     dartPackageName: 'flutter_inappwebview_android',
   ),

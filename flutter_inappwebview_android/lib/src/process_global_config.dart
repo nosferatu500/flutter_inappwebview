@@ -1,8 +1,9 @@
 import 'dart:async';
 
 import 'package:flutter/foundation.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_inappwebview_platform_interface/flutter_inappwebview_platform_interface.dart';
+
+import 'pigeons/process_global_config.g.dart';
 
 /// Object specifying creation parameters for creating a [AndroidProcessGlobalConfig].
 ///
@@ -28,8 +29,12 @@ class AndroidProcessGlobalConfigCreationParams
 }
 
 ///{@macro flutter_inappwebview_platform_interface.PlatformProcessGlobalConfig}
+///
+/// Transport is Pigeon-generated ([ProcessGlobalConfigHostApi]) rather than a hand-written
+/// `MethodChannel`; the second channel migrated, after find_interaction (§14). There is no
+/// `messageChannelSuffix` because `ProcessGlobalConfig.apply` is process-global.
 class AndroidProcessGlobalConfig extends PlatformProcessGlobalConfig
-    with ChannelController {
+    implements Disposable {
   /// Creates a new [AndroidProcessGlobalConfig].
   AndroidProcessGlobalConfig(PlatformProcessGlobalConfigCreationParams params)
     : super.implementation(
@@ -38,13 +43,9 @@ class AndroidProcessGlobalConfig extends PlatformProcessGlobalConfig
             : AndroidProcessGlobalConfigCreationParams.fromPlatformProcessGlobalConfigCreationParams(
                 params,
               ),
-      ) {
-    channel = const MethodChannel(
-      'dev.nosferatu500.inappwebview/inappwebview_processglobalconfig',
-    );
-    handler = handleMethod;
-    initMethodCallHandler();
-  }
+      );
+
+  final ProcessGlobalConfigHostApi _hostApi = ProcessGlobalConfigHostApi();
 
   static AndroidProcessGlobalConfig? _instance;
 
@@ -67,21 +68,28 @@ class AndroidProcessGlobalConfig extends PlatformProcessGlobalConfig
     return instance();
   }
 
-  Future<dynamic> _handleMethod(MethodCall call) async {}
-
   @override
   Future<void> apply({required ProcessGlobalConfigSettings settings}) async {
-    Map<String, dynamic> args = <String, dynamic>{};
-    args.putIfAbsent("settings", () => settings.toMap());
-    await channel?.invokeMethod('apply', args);
+    final basePaths = settings.directoryBasePaths;
+    // The bool the host returns is discarded: the platform interface declares
+    // `Future<void> apply(...)`, and false means only "there was no activity". Kept on the wire so
+    // the distinction survives for anyone who later wants to surface it -- see the schema.
+    await _hostApi.apply(
+      ProcessGlobalConfigSettingsData(
+        dataDirectorySuffix: settings.dataDirectorySuffix,
+        directoryBasePaths: basePaths == null
+            ? null
+            : ProcessGlobalConfigDirectoryBasePathsData(
+                dataDirectoryBasePath: basePaths.dataDirectoryBasePath,
+                cacheDirectoryBasePath: basePaths.cacheDirectoryBasePath,
+              ),
+      ),
+    );
   }
 
   @override
   void dispose() {
-    // empty
+    // empty -- the host API holds no per-instance registration to tear down, and this class is a
+    // process-wide singleton (see createPlatformProcessGlobalConfig).
   }
-}
-
-extension InternalProcessGlobalConfig on AndroidProcessGlobalConfig {
-  Future<dynamic> Function(MethodCall call) get handleMethod => _handleMethod;
 }
