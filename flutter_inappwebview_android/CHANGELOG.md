@@ -239,6 +239,20 @@ for, and five others have a native *value* that differs from their name.
 
 ### Fixed
 
+- **`HttpAuthCredentialDatabase.setHttpAuthCredential()` failed with an empty error when the
+  protection space omitted `protocol` or `port`.** `URLProtectionSpace` requires only `host` in its
+  constructor and declares `String? protocol` / `int? port`, so
+  `URLProtectionSpace(host: 'example.com')` is a legal argument — but the Kotlin handler
+  force-unwrapped both, because the credential database keys rows on them. Measured on an API 37
+  device, the call came back as `PlatformException(error, null, null,
+  java.lang.NullPointerException)`: no message, no details, nothing naming the problem.
+
+  It now throws a `PlatformException` whose code is `IllegalArgumentException` and whose message
+  names both fields, the host, and why they are required. **The call still fails** — the row cannot
+  be written without them — but the caller can now tell why. The read/remove methods
+  (`getHttpAuthCredentials`, `removeHttpAuthCredential`, `removeHttpAuthCredentials`) always
+  accepted a partial protection space and are unchanged.
+
 - **`WebViewFeature.isStartupFeatureSupported()` could hang forever instead of answering.** The
   Kotlin handler read the *activity* and, when it was null, returned **without calling `result` at
   all** — no success, no error, no `notImplemented` — so the caller's `await` never completed. The
@@ -435,6 +449,24 @@ for, and five others have a native *value* that differs from their name.
   issued, which is a real network cost per page
 
 ### Internal
+
+- **The `credential_database` channel is Pigeon-generated**, the sixth migrated and the first with
+  **structured return values**. `AndroidHttpAuthCredentialDatabase` drops `ChannelController` and
+  holds the generated `CredentialDatabaseHostApi`; `CredentialDatabaseHandler` implements it, and
+  `InternalHttpAuthCredentialDatabase` is gone with the hand-written handler. `credentialDatabase`
+  and `init()` were public mutable statics nothing outside the class used, and are private now.
+  The NPE this migration replaced is listed under **Fixed**.
+
+  **Nine always-null keys per reply are gone.** `URLProtectionSpace.toMap()` sent five iOS-only
+  fields (`authenticationMethod`, `distinguishedNames`, `receivesCredentialSecurely`, `isProxy`,
+  `proxyType`) as literal nulls, and `URLCredential.toMap()` sent two more (`certificates`,
+  `persistence`). A further two — `sslCertificate` and `sslError` — are real on Android but can
+  never be populated on this channel: the credential database's DAO builds every row through the
+  five-argument `URLProtectionSpace(id, host, protocol, realm, port)` constructor, which nulls
+  both. The generated types name only the four fields the database stores, and the Dart side
+  rebuilds the public objects with the rest at their defaults — the same values that arrived before.
+
+  No method is `@async`: every call goes to a synchronous SQLite DAO.
 
 - **The `tracingcontroller` channel is Pigeon-generated**, the fifth migrated.
   `AndroidTracingController` drops `ChannelController` and holds the generated
