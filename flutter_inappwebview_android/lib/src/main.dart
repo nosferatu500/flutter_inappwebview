@@ -14,7 +14,9 @@ export 'service_worker_controller.dart';
 export 'webview_feature.dart' hide InternalWebViewFeature;
 export 'geolocation_permissions.dart';
 export 'profile_store.dart';
-export 'proxy_controller.dart' hide InternalProxyController;
+// No `hide` needed: the Pigeon migration removed `InternalProxyController`, which existed
+// only to expose the hand-written channel's method-call handler.
+export 'proxy_controller.dart';
 export 'webview_asset_loader.dart';
 export 'tracing_controller.dart' hide InternalTracingController;
 // No `hide` needed: the Pigeon migration removed `InternalProcessGlobalConfig`, which existed

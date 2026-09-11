@@ -1,8 +1,9 @@
 import 'dart:async';
 
 import 'package:flutter/foundation.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_inappwebview_platform_interface/flutter_inappwebview_platform_interface.dart';
+
+import 'pigeons/proxy.g.dart';
 
 /// Object specifying creation parameters for creating a [AndroidProxyController].
 ///
@@ -28,8 +29,12 @@ class AndroidProxyControllerCreationParams
 }
 
 ///{@macro flutter_inappwebview_platform_interface.PlatformProxyController}
+///
+/// Transport is Pigeon-generated ([ProxyHostApi]) rather than a hand-written `MethodChannel`; the
+/// third channel migrated, after find_interaction (§14) and process_global_config (§157). There is
+/// no `messageChannelSuffix` because androidx's `ProxyController` is a process-wide singleton.
 class AndroidProxyController extends PlatformProxyController
-    with ChannelController {
+    implements Disposable {
   /// Creates a new [AndroidProxyController].
   AndroidProxyController(PlatformProxyControllerCreationParams params)
     : super.implementation(
@@ -38,13 +43,9 @@ class AndroidProxyController extends PlatformProxyController
             : AndroidProxyControllerCreationParams.fromPlatformProxyControllerCreationParams(
                 params,
               ),
-      ) {
-    channel = const MethodChannel(
-      'dev.nosferatu500.inappwebview/inappwebview_proxycontroller',
-    );
-    handler = handleMethod;
-    initMethodCallHandler();
-  }
+      );
+
+  final ProxyHostApi _hostApi = ProxyHostApi();
 
   static AndroidProxyController? _instance;
 
@@ -67,27 +68,41 @@ class AndroidProxyController extends PlatformProxyController
     return instance();
   }
 
-  Future<dynamic> _handleMethod(MethodCall call) async {}
-
   @override
   Future<void> setProxyOverride({required ProxySettings settings}) async {
-    Map<String, dynamic> args = <String, dynamic>{};
-    args.putIfAbsent("settings", () => settings.toMap());
-    await channel?.invokeMethod('setProxyOverride', args);
+    // The bool the host returns is discarded: the platform interface declares
+    // `Future<void> setProxyOverride(...)`, and false means only "androidx does not support
+    // PROXY_OVERRIDE". Kept on the wire so the distinction survives -- see the schema.
+    await _hostApi.setProxyOverride(
+      ProxySettingsData(
+        bypassRules: settings.bypassRules,
+        directs: settings.directs,
+        // Only `url` and `schemeFilter` cross the wire. `ProxyRule` carries seven further fields,
+        // all iOS-only, and its `toMap()` used to send every one of them to a Kotlin side that
+        // read neither -- see the schema for why that was worse than merely wasteful.
+        proxyRules: settings.proxyRules
+            .map(
+              (rule) => ProxyRuleData(
+                url: rule.url,
+                schemeFilter: rule.schemeFilter?.toNativeValue(),
+              ),
+            )
+            .toList(),
+        reverseBypassEnabled: settings.reverseBypassEnabled,
+        bypassSimpleHostnames: settings.bypassSimpleHostnames,
+        removeImplicitRules: settings.removeImplicitRules,
+      ),
+    );
   }
 
   @override
   Future<void> clearProxyOverride() async {
-    Map<String, dynamic> args = <String, dynamic>{};
-    await channel?.invokeMethod('clearProxyOverride', args);
+    await _hostApi.clearProxyOverride();
   }
 
   @override
   void dispose() {
-    // empty
+    // empty -- the host API holds no per-instance registration to tear down, and this class is a
+    // process-wide singleton (see createPlatformProxyController).
   }
-}
-
-extension InternalProxyController on AndroidProxyController {
-  Future<dynamic> Function(MethodCall call) get handleMethod => _handleMethod;
 }

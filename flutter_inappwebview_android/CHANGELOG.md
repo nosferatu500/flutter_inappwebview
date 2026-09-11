@@ -421,6 +421,33 @@ for, and five others have a native *value* that differs from their name.
 
 ### Internal
 
+- **The `proxy_controller` channel is Pigeon-generated**, the third migrated after
+  `find_interaction` and `process_global_config`. `AndroidProxyController` drops `ChannelController`
+  and holds the generated `ProxyHostApi`; `ProxyManager` implements it instead of dispatching on
+  method-name strings. No public API change — `setProxyOverride` and `clearProxyOverride` keep their
+  signatures and behaviour.
+
+  Three things fall out of the typed wire:
+
+  - **Each proxy rule now sends two fields instead of nine.** `ProxyRule` declares seven iOS-only
+    fields (`allowFailover`, `username`, `password`, `excludedDomains`, `matchDomains`, `relayHop1`,
+    `relayHop2`) and its `toMap()` emitted all of them unconditionally, so every rule carried seven
+    values the Android side never read. It could not have read them: `ProxySettings.parse` cast the
+    incoming list to `List<Map<String, String>>` and `ProxyRuleExt.fromMap` took a
+    `Map<String, String>`, while the payload held bools, lists and nested maps — a cast that was
+    false at runtime and survived only because Kotlin erases generics. The schema names just `url`
+    and `schemeFilter`, and the cast is gone with it.
+  - **`ProxySettings.kt` and `ProxyRuleExt.kt` are deleted**, left with no callers once the
+    `Map<String, Any?>` parse step went; the class-level `@Suppress("UNCHECKED_CAST")` on both
+    `ProxyManager` and `ProxySettings` went with them.
+  - `ProxyManager`'s `proxyController` field and `init()` were public mutable statics that nothing
+    outside the class ever touched; both are private now.
+
+  Both methods are declared `@async`, because the androidx calls are: `setProxyOverride` and
+  `clearProxyOverride` take an `Executor` plus a completion callback, and a synchronous Pigeon
+  method would have to return before that callback could run — so `await` would have resolved while
+  the proxy was not yet in effect.
+
 - **`InAppWebViewClient` and `InAppWebViewClientCompat` no longer carry two copies of the same
   code.** The two exist because `androidx.webkit.WebViewClientCompat` cannot be used on a Chromium
   WebView below 73 (crbug 925887), and neither can extend the other — `WebViewClientCompat` already
