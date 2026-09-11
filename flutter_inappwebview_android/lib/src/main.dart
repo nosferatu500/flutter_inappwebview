@@ -20,7 +20,9 @@ export 'profile_store.dart';
 // only to expose the hand-written channel's method-call handler.
 export 'proxy_controller.dart';
 export 'webview_asset_loader.dart';
-export 'tracing_controller.dart' hide InternalTracingController;
+// No `hide` needed: the Pigeon migration removed `InternalTracingController`, which existed
+// only to expose the hand-written channel's method-call handler.
+export 'tracing_controller.dart';
 // No `hide` needed: the Pigeon migration removed `InternalProcessGlobalConfig`, which existed
 // only to expose the hand-written channel's method-call handler.
 export 'process_global_config.dart';

@@ -1,7 +1,8 @@
 import 'dart:async';
 import 'package:flutter/foundation.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_inappwebview_platform_interface/flutter_inappwebview_platform_interface.dart';
+
+import 'pigeons/tracing_controller.g.dart';
 
 /// Object specifying creation parameters for creating a [AndroidTracingController].
 ///
@@ -27,8 +28,13 @@ class AndroidTracingControllerCreationParams
 }
 
 ///{@macro flutter_inappwebview_platform_interface.PlatformTracingController}
+///
+/// Transport is Pigeon-generated ([TracingControllerHostApi]) rather than a hand-written
+/// `MethodChannel`; the fifth channel migrated, after find_interaction (§14),
+/// process_global_config (§157), proxy (§160) and webview_feature (§161). There is no
+/// `messageChannelSuffix` because androidx's `TracingController` is a process-wide singleton.
 class AndroidTracingController extends PlatformTracingController
-    with ChannelController {
+    implements Disposable {
   /// Creates a new [AndroidTracingController].
   AndroidTracingController(PlatformTracingControllerCreationParams params)
     : super.implementation(
@@ -37,13 +43,9 @@ class AndroidTracingController extends PlatformTracingController
             : AndroidTracingControllerCreationParams.fromPlatformTracingControllerCreationParams(
                 params,
               ),
-      ) {
-    channel = const MethodChannel(
-      'dev.nosferatu500.inappwebview/inappwebview_tracingcontroller',
-    );
-    handler = handleMethod;
-    initMethodCallHandler();
-  }
+      );
+
+  final TracingControllerHostApi _hostApi = TracingControllerHostApi();
 
   static AndroidTracingController? _instance;
 
@@ -66,34 +68,55 @@ class AndroidTracingController extends PlatformTracingController
     return instance();
   }
 
-  Future<dynamic> _handleMethod(MethodCall call) async {}
-
   @override
   Future<void> start({required TracingSettings settings}) async {
-    Map<String, dynamic> args = <String, dynamic>{};
-    args.putIfAbsent("settings", () => settings.toMap());
-    await channel?.invokeMethod('start', args);
+    // `TracingSettings.categories` is a `List<dynamic>` of `String`s and `TracingCategory`s,
+    // because androidx accepts both: name patterns go to `addCategories(String...)` and the
+    // predefined `CATEGORIES_*` constants to `addCategories(int...)`. The old wire flattened both
+    // into one untyped list and the Kotlin side sorted them back out with `is` checks, silently
+    // dropping anything that matched neither. Partitioning here sends each to the field that
+    // matches the androidx overload it is destined for.
+    final categoryNames = <String>[];
+    final predefinedCategories = <int>[];
+    for (final category in settings.categories) {
+      if (category is String) {
+        categoryNames.add(category);
+      } else if (category is TracingCategory) {
+        final nativeValue = category.toNativeValue();
+        if (nativeValue != null) {
+          predefinedCategories.add(nativeValue);
+        }
+      }
+      // Anything else is not representable by androidx and is dropped here rather than on the
+      // platform side -- same outcome as before, but now it happens where the types are known.
+    }
+
+    // The bool the host returns is discarded: the platform interface declares
+    // `Future<void> start(...)`, and false means only "the feature is unsupported".
+    await _hostApi.start(
+      TracingSettingsData(
+        categoryNames: categoryNames,
+        predefinedCategories: predefinedCategories,
+        tracingMode: settings.tracingMode?.toNativeValue(),
+      ),
+    );
   }
 
   @override
   Future<bool> stop({String? filePath}) async {
-    Map<String, dynamic> args = <String, dynamic>{};
-    args.putIfAbsent("filePath", () => filePath);
-    return await channel?.invokeMethod<bool>('stop', args) ?? false;
+    // Returns androidx's answer directly: false if the framework was not tracing. Note this
+    // resolves *before* the trace has finished being written -- poll [isTracing] for that.
+    return await _hostApi.stop(filePath);
   }
 
   @override
   Future<bool> isTracing() async {
-    Map<String, dynamic> args = <String, dynamic>{};
-    return await channel?.invokeMethod<bool>('isTracing', args) ?? false;
+    return await _hostApi.isTracing();
   }
 
   @override
   void dispose() {
-    // empty
+    // empty -- the host API holds no per-instance registration to tear down, and this class is a
+    // process-wide singleton (see createPlatformTracingController).
   }
-}
-
-extension InternalTracingController on AndroidTracingController {
-  Future<dynamic> Function(MethodCall call) get handleMethod => _handleMethod;
 }

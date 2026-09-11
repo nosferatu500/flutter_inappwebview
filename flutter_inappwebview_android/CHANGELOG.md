@@ -436,6 +436,28 @@ for, and five others have a native *value* that differs from their name.
 
 ### Internal
 
+- **The `tracingcontroller` channel is Pigeon-generated**, the fifth migrated.
+  `AndroidTracingController` drops `ChannelController` and holds the generated
+  `TracingControllerHostApi`; `TracingControllerManager` implements it directly, so
+  `TracingControllerChannelDelegate` is folded in and deleted, along with `TracingSettings.kt`
+  (its `Map<String, Any?>` parse step is replaced by a typed object and its `getRealSettings` had
+  no caller) and `InternalTracingController` on the Dart side. Both class-level
+  `@Suppress("UNCHECKED_CAST")` annotations go with the casts they covered. No public API change.
+
+  **`TracingSettings.categories` is now two typed lists on the wire.** It is declared
+  `List<dynamic>` and holds `String`s and `TracingCategory`s, because androidx has two distinct
+  overloads — `TracingConfig.Builder.addCategories(String...)` for name patterns and
+  `addCategories(int...)` for the predefined `CATEGORIES_*` constants. The old wire flattened both
+  into one heterogeneous list which the Kotlin side sorted out with `is String` / `is Int` checks,
+  **silently dropping any element that matched neither** — and `null` was such an element, which the
+  platform interface's own serialiser can produce. Sending `categoryNames` and
+  `predefinedCategories` separately makes that unrepresentable and removes the runtime type tests.
+
+  No method is `@async`: all three androidx calls return synchronously. `stop` takes an `Executor`
+  but returns `boolean` immediately — the executor is only where the trace is later written — so
+  `stop` returning true still does **not** mean the trace has been flushed to disk. That contract
+  is unchanged; poll `isTracing()` for completion.
+
 - **The `webviewfeature` channel is Pigeon-generated**, the fourth migrated.
   `AndroidWebViewFeature` drops `ChannelController` and holds the generated
   `WebViewFeatureHostApi`; `WebViewFeatureManager` implements it instead of dispatching on
