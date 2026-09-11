@@ -198,8 +198,6 @@ class ExchangeableEnumGenerator
           final platforms =
               fieldAnnotation.getField('platforms')?.toListValue() ??
               <DartObject>[];
-          var hasWebSupport = false;
-          var webSupportValue = null;
           if (platforms.isNotEmpty) {
             for (var platform in platforms) {
               final targetPlatformName = platform
@@ -223,11 +221,6 @@ class ExchangeableEnumGenerator
                         ? platformValueField.toIntValue() ??
                               "'${platformValueField.toStringValue()}'"
                         : constantValue);
-              if (targetPlatformName == "web") {
-                hasWebSupport = true;
-                webSupportValue = platformValue;
-                continue;
-              }
               nativeValueBody += "case TargetPlatform.$targetPlatformName:";
               nativeValueBody += "return $platformValue;";
 
@@ -246,11 +239,6 @@ class ExchangeableEnumGenerator
             nativeValueBody += "break;";
           }
           nativeValueBody += "}";
-          if (hasWebSupport) {
-            nativeValueBody += "if (kIsWeb) {";
-            nativeValueBody += "return $webSupportValue;";
-            nativeValueBody += "}";
-          }
           nativeValueBody += "return $defaultValue;";
           nativeValueBody += "}";
 

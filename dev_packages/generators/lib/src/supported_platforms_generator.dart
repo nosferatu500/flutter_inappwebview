@@ -165,14 +165,9 @@ class SupportedPlatformsGenerator
         final targetPlatforms = platforms
             .map((e) => e.getField("targetPlatformName")!.toStringValue())
             .toList();
-        final hasWebSupport = targetPlatforms.contains("web");
-
         classBuffer.writeln("return ");
-        if (hasWebSupport) {
-          classBuffer.writeln("kIsWeb && platform == null ? true :");
-        }
         classBuffer.writeln(
-          "((kIsWeb && platform != null) || !kIsWeb) && [${targetPlatforms.where((e) => e != 'web').map((e) => "TargetPlatform.$e").join(', ')}].contains(platform ?? defaultTargetPlatform)",
+          "((kIsWeb && platform != null) || !kIsWeb) && [${targetPlatforms.map((e) => "TargetPlatform.$e").join(', ')}].contains(platform ?? defaultTargetPlatform)",
         );
         classBuffer.writeln(";");
       }
@@ -293,15 +288,10 @@ class SupportedPlatformsGenerator
         final targetPlatforms = platforms
             .map((e) => e.getField("targetPlatformName")!.toStringValue())
             .toList();
-        final hasWebSupport = targetPlatforms.contains("web");
-
         classBuffer.writeln("case $enumClassName.$fieldName:");
         classBuffer.writeln("return ");
-        if (hasWebSupport) {
-          classBuffer.writeln("kIsWeb && platform == null ? true :");
-        }
         classBuffer.writeln(
-          "((kIsWeb && platform != null) || !kIsWeb) && [${targetPlatforms.where((e) => e != 'web').map((e) => "TargetPlatform.$e").join(', ')}].contains(platform ?? defaultTargetPlatform)",
+          "((kIsWeb && platform != null) || !kIsWeb) && [${targetPlatforms.map((e) => "TargetPlatform.$e").join(', ')}].contains(platform ?? defaultTargetPlatform)",
         );
         classBuffer.writeln(";");
       }
@@ -398,15 +388,10 @@ class SupportedPlatformsGenerator
         final targetPlatforms = platforms
             .map((e) => e.getField("targetPlatformName")!.toStringValue())
             .toList();
-        final hasWebSupport = targetPlatforms.contains("web");
-
         classBuffer.writeln("case $enumClassName.$methodName:");
         classBuffer.writeln("return ");
-        if (hasWebSupport) {
-          classBuffer.writeln("kIsWeb && platform == null ? true :");
-        }
         classBuffer.writeln(
-          "((kIsWeb && platform != null) || !kIsWeb) && [${targetPlatforms.where((e) => e != 'web').map((e) => "TargetPlatform.$e").join(', ')}].contains(platform ?? defaultTargetPlatform)",
+          "((kIsWeb && platform != null) || !kIsWeb) && [${targetPlatforms.map((e) => "TargetPlatform.$e").join(', ')}].contains(platform ?? defaultTargetPlatform)",
         );
         classBuffer.writeln(";");
       }

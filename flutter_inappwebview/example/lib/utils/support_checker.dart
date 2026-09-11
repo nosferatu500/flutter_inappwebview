@@ -1185,7 +1185,7 @@ class SupportChecker {
         ),
         ApiMethodDefinition(
           name: PlatformInAppWebViewControllerMethod.requestFocus.name,
-          signature: 'Future<void> requestFocus()',
+          signature: 'Future<bool?> requestFocus()',
           description: 'Requests focus for the WebView.',
           className: className,
           category: 'Settings',
@@ -1315,7 +1315,7 @@ class SupportChecker {
         // Media methods
         ApiMethodDefinition(
           name: PlatformInAppWebViewControllerMethod.isInFullscreen.name,
-          signature: 'Future<bool?> isInFullscreen()',
+          signature: 'Future<bool> isInFullscreen()',
           description: 'Returns whether the WebView is in fullscreen mode.',
           className: className,
           category: 'Media',
@@ -1455,7 +1455,7 @@ class SupportChecker {
         ),
         ApiMethodDefinition(
           name: PlatformInAppWebViewControllerMethod.restoreState.name,
-          signature: 'Future<void> restoreState({required Uint8List state})',
+          signature: 'Future<bool> restoreState({required Uint8List state})',
           description: 'Restores the WebView state from a bundle.',
           className: className,
           category: 'Android',
@@ -1480,7 +1480,7 @@ class SupportChecker {
           name: PlatformInAppWebViewControllerMethod
               .setDefaultTrafficStatsTag
               .name,
-          signature: 'Future<bool> setDefaultTrafficStatsTag(int tag)',
+          signature: 'static Future<bool> setDefaultTrafficStatsTag(int tag)',
           description: 'Tags this WebView\'s traffic for TrafficStats.',
           className: className,
           category: 'Android',
@@ -1544,7 +1544,7 @@ class SupportChecker {
         // Other methods
         ApiMethodDefinition(
           name: PlatformInAppWebViewControllerMethod.getViewId.name,
-          signature: 'int getViewId()',
+          signature: 'dynamic getViewId()',
           description: 'Gets the view ID of the WebView.',
           className: className,
           category: 'Other',
@@ -2262,7 +2262,7 @@ class SupportChecker {
         ),
         ApiMethodDefinition(
           name: PlatformHeadlessInAppWebViewMethod.isRunning.name,
-          signature: 'Future<bool> isRunning()',
+          signature: 'bool isRunning()',
           description: 'Checks if the WebView is running.',
           className: className,
         ),
@@ -2520,7 +2520,7 @@ class SupportChecker {
         ApiMethodDefinition(
           name: PlatformChromeSafariBrowserMethod.setActionButton.name,
           signature:
-              'Future<void> ${PlatformChromeSafariBrowserMethod.setActionButton.name}(${ChromeSafariBrowserActionButton} actionButton)',
+              'void ${PlatformChromeSafariBrowserMethod.setActionButton.name}(${ChromeSafariBrowserActionButton} actionButton)',
           description: 'Sets an action button.',
           className: className,
         ),
@@ -2534,7 +2534,7 @@ class SupportChecker {
         ApiMethodDefinition(
           name: PlatformChromeSafariBrowserMethod.setSecondaryToolbar.name,
           signature:
-              'Future<void> ${PlatformChromeSafariBrowserMethod.setSecondaryToolbar.name}(${ChromeSafariBrowserSecondaryToolbar} secondaryToolbar)',
+              'void ${PlatformChromeSafariBrowserMethod.setSecondaryToolbar.name}(${ChromeSafariBrowserSecondaryToolbar} secondaryToolbar)',
           description: 'Sets a secondary toolbar.',
           className: className,
         ),
@@ -3002,7 +3002,7 @@ class SupportChecker {
           name: PlatformPullToRefreshControllerMethod
               .getDefaultSlingshotDistance
               .name,
-          signature: 'Future<double> getDefaultSlingshotDistance()',
+          signature: 'Future<int> getDefaultSlingshotDistance()',
           description: 'Gets the default slingshot distance.',
           className: className,
         ),
@@ -3109,7 +3109,7 @@ class SupportChecker {
         ),
         ApiMethodDefinition(
           name: PlatformWebAuthenticationSessionMethod.start.name,
-          signature: 'Future<void> start()',
+          signature: 'Future<bool> start()',
           description: 'Starts the authentication session.',
           className: className,
         ),
@@ -3161,38 +3161,38 @@ class SupportChecker {
         ApiMethodDefinition(
           name:
               PlatformServiceWorkerControllerMethod.getAllowContentAccess.name,
-          signature: 'Future<bool> getAllowContentAccess()',
+          signature: 'static Future<bool> getAllowContentAccess()',
           description: 'Gets allow content access setting.',
           className: className,
         ),
         ApiMethodDefinition(
           name:
               PlatformServiceWorkerControllerMethod.setAllowContentAccess.name,
-          signature: 'Future<void> setAllowContentAccess(bool allow)',
+          signature: 'static Future<void> setAllowContentAccess(bool allow)',
           description: 'Sets allow content access setting.',
           className: className,
         ),
         ApiMethodDefinition(
           name: PlatformServiceWorkerControllerMethod.getAllowFileAccess.name,
-          signature: 'Future<bool> getAllowFileAccess()',
+          signature: 'static Future<bool> getAllowFileAccess()',
           description: 'Gets allow file access setting.',
           className: className,
         ),
         ApiMethodDefinition(
           name: PlatformServiceWorkerControllerMethod.setAllowFileAccess.name,
-          signature: 'Future<void> setAllowFileAccess(bool allow)',
+          signature: 'static Future<void> setAllowFileAccess(bool allow)',
           description: 'Sets allow file access setting.',
           className: className,
         ),
         ApiMethodDefinition(
           name: PlatformServiceWorkerControllerMethod.getBlockNetworkLoads.name,
-          signature: 'Future<bool> getBlockNetworkLoads()',
+          signature: 'static Future<bool> getBlockNetworkLoads()',
           description: 'Gets block network loads setting.',
           className: className,
         ),
         ApiMethodDefinition(
           name: PlatformServiceWorkerControllerMethod.setBlockNetworkLoads.name,
-          signature: 'Future<void> setBlockNetworkLoads(bool block)',
+          signature: 'static Future<void> setBlockNetworkLoads(bool block)',
           description: 'Sets block network loads setting.',
           className: className,
         ),

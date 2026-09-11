@@ -85,15 +85,7 @@ abstract class Util {
       final apiName = platform.getField("apiName")?.toStringValue();
       final apiUrl = platform.getField("apiUrl")?.toStringValue();
       final available = platform.getField("available")?.toStringValue();
-      final requiresSameOrigin =
-          platform.getField("requiresSameOrigin")?.toBoolValue() ?? false;
       var api = available != null ? "$available+ " : "";
-      if (requiresSameOrigin) {
-        api += "but requires same origin";
-        if (apiName != null || apiUrl != null) {
-          api += " ";
-        }
-      }
       if (apiName != null && apiUrl != null) {
         api += "([Official API - $apiName]($apiUrl))";
       } else if (apiName != null) {
@@ -179,15 +171,7 @@ abstract class Util {
           final apiName = platform.getField("apiName")?.toStringValue();
           final apiUrl = platform.getField("apiUrl")?.toStringValue();
           final available = platform.getField("available")?.toStringValue();
-          final requiresSameOrigin =
-              platform.getField("requiresSameOrigin")?.toBoolValue() ?? false;
           var api = available != null ? "$available+ " : "";
-          if (requiresSameOrigin) {
-            api += "but requires same origin";
-            if (apiName != null || apiUrl != null) {
-              api += " ";
-            }
-          }
           if (apiName != null && apiUrl != null) {
             api += "([Official API - $apiName]($apiUrl))";
           } else if (apiName != null) {
