@@ -63,16 +63,9 @@ class AndroidGeolocationPermissions extends PlatformGeolocationPermissions
     return _instance!;
   }
 
-  static final AndroidGeolocationPermissions _staticValue =
-      AndroidGeolocationPermissions(
-        AndroidGeolocationPermissionsCreationParams(
-          const PlatformGeolocationPermissionsCreationParams(),
-        ),
-      );
-
   /// Provide static access.
   factory AndroidGeolocationPermissions.static() {
-    return _staticValue;
+    return instance();
   }
 
   Future<dynamic> _handleMethod(MethodCall call) async {}

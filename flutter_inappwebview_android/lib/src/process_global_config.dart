@@ -62,16 +62,9 @@ class AndroidProcessGlobalConfig extends PlatformProcessGlobalConfig
     return _instance!;
   }
 
-  static final AndroidProcessGlobalConfig _staticValue =
-      AndroidProcessGlobalConfig(
-        AndroidProcessGlobalConfigCreationParams(
-          const PlatformProcessGlobalConfigCreationParams(),
-        ),
-      );
-
   /// Provide static access.
   factory AndroidProcessGlobalConfig.static() {
-    return _staticValue;
+    return instance();
   }
 
   Future<dynamic> _handleMethod(MethodCall call) async {}

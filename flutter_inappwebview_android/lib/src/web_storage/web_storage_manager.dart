@@ -62,16 +62,9 @@ class AndroidWebStorageManager extends PlatformWebStorageManager
     return _instance!;
   }
 
-  static AndroidWebStorageManager? _static;
-
   /// Provide static access.
   factory AndroidWebStorageManager.static() {
-    _static ??= AndroidWebStorageManager(
-      AndroidWebStorageManagerCreationParams(
-        const PlatformWebStorageManagerCreationParams(),
-      ),
-    );
-    return _static!;
+    return instance();
   }
 
   Future<dynamic> _handleMethod(MethodCall call) async {}

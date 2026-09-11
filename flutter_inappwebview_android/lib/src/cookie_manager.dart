@@ -46,12 +46,8 @@ class AndroidCookieManager extends PlatformCookieManager
     initMethodCallHandler();
   }
 
-  static final AndroidCookieManager _staticValue = AndroidCookieManager(
-    AndroidCookieManagerCreationParams(PlatformCookieManagerCreationParams()),
-  );
-
   factory AndroidCookieManager.static() {
-    return _staticValue;
+    return instance();
   }
 
   static AndroidCookieManager? _instance;

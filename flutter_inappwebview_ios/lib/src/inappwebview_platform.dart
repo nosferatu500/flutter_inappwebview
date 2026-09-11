@@ -28,7 +28,7 @@ class IOSInAppWebViewPlatform extends InAppWebViewPlatform {
   IOSCookieManager createPlatformCookieManager(
     PlatformCookieManagerCreationParams params,
   ) {
-    return IOSCookieManager(params);
+    return IOSCookieManager.instance();
   }
 
   /// Creates a new empty [IOSCookieManager] to access static methods.
@@ -295,7 +295,7 @@ class IOSInAppWebViewPlatform extends InAppWebViewPlatform {
   IOSHttpAuthCredentialDatabase createPlatformHttpAuthCredentialDatabase(
     PlatformHttpAuthCredentialDatabaseCreationParams params,
   ) {
-    return IOSHttpAuthCredentialDatabase(params);
+    return IOSHttpAuthCredentialDatabase.instance();
   }
 
   /// Creates a new empty [IOSHttpAuthCredentialDatabase] to access static methods.
@@ -356,7 +356,7 @@ class IOSInAppWebViewPlatform extends InAppWebViewPlatform {
   IOSWebStorageManager createPlatformWebStorageManager(
     PlatformWebStorageManagerCreationParams params,
   ) {
-    return IOSWebStorageManager(params);
+    return IOSWebStorageManager.instance();
   }
 
   /// Creates a new empty [IOSWebStorageManager] to access static methods.
@@ -396,7 +396,7 @@ class IOSInAppWebViewPlatform extends InAppWebViewPlatform {
   PlatformProxyController createPlatformProxyController(
     PlatformProxyControllerCreationParams params,
   ) {
-    return IOSProxyController(params);
+    return IOSProxyController.instance();
   }
 
   /// Creates a new empty [IOSProxyController] to access static methods.

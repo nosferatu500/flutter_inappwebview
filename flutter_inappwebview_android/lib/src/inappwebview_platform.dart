@@ -34,7 +34,7 @@ class AndroidInAppWebViewPlatform extends InAppWebViewPlatform {
   AndroidCookieManager createPlatformCookieManager(
     PlatformCookieManagerCreationParams params,
   ) {
-    return AndroidCookieManager(params);
+    return AndroidCookieManager.instance();
   }
 
   /// Creates a new empty [AndroidCookieManager] to access static methods.
@@ -302,7 +302,7 @@ class AndroidInAppWebViewPlatform extends InAppWebViewPlatform {
   AndroidHttpAuthCredentialDatabase createPlatformHttpAuthCredentialDatabase(
     PlatformHttpAuthCredentialDatabaseCreationParams params,
   ) {
-    return AndroidHttpAuthCredentialDatabase(params);
+    return AndroidHttpAuthCredentialDatabase.instance();
   }
 
   /// Creates a new empty [AndroidHttpAuthCredentialDatabase] to access static methods.
@@ -343,7 +343,7 @@ class AndroidInAppWebViewPlatform extends InAppWebViewPlatform {
   AndroidProcessGlobalConfig createPlatformProcessGlobalConfig(
     PlatformProcessGlobalConfigCreationParams params,
   ) {
-    return AndroidProcessGlobalConfig(params);
+    return AndroidProcessGlobalConfig.instance();
   }
 
   /// Creates a new empty [AndroidProcessGlobalConfig] to access static methods.
@@ -363,7 +363,7 @@ class AndroidInAppWebViewPlatform extends InAppWebViewPlatform {
   AndroidGeolocationPermissions createPlatformGeolocationPermissions(
     PlatformGeolocationPermissionsCreationParams params,
   ) {
-    return AndroidGeolocationPermissions(params);
+    return AndroidGeolocationPermissions.instance();
   }
 
   /// Creates a new empty [AndroidGeolocationPermissions] to access static methods.
@@ -383,7 +383,7 @@ class AndroidInAppWebViewPlatform extends InAppWebViewPlatform {
   AndroidProfileStore createPlatformProfileStore(
     PlatformProfileStoreCreationParams params,
   ) {
-    return AndroidProfileStore(params);
+    return AndroidProfileStore.instance();
   }
 
   /// Creates a new empty [AndroidProfileStore] to access static methods.
@@ -403,7 +403,7 @@ class AndroidInAppWebViewPlatform extends InAppWebViewPlatform {
   AndroidProxyController createPlatformProxyController(
     PlatformProxyControllerCreationParams params,
   ) {
-    return AndroidProxyController(params);
+    return AndroidProxyController.instance();
   }
 
   /// Creates a new empty [AndroidProxyController] to access static methods.
@@ -423,7 +423,7 @@ class AndroidInAppWebViewPlatform extends InAppWebViewPlatform {
   AndroidServiceWorkerController createPlatformServiceWorkerController(
     PlatformServiceWorkerControllerCreationParams params,
   ) {
-    return AndroidServiceWorkerController(params);
+    return AndroidServiceWorkerController.instance();
   }
 
   /// Creates a new empty [AndroidServiceWorkerController] to access static methods.
@@ -443,7 +443,7 @@ class AndroidInAppWebViewPlatform extends InAppWebViewPlatform {
   AndroidTracingController createPlatformTracingController(
     PlatformTracingControllerCreationParams params,
   ) {
-    return AndroidTracingController(params);
+    return AndroidTracingController.instance();
   }
 
   /// Creates a new empty [AndroidTracingController] to access static methods.
@@ -544,7 +544,7 @@ class AndroidInAppWebViewPlatform extends InAppWebViewPlatform {
   wv.AndroidWebViewFeature createPlatformWebViewFeature(
     PlatformWebViewFeatureCreationParams params,
   ) {
-    return wv.AndroidWebViewFeature(params);
+    return wv.AndroidWebViewFeature.instance();
   }
 
   /// Creates a new empty [wv.AndroidWebViewFeature] to access static methods.
@@ -584,7 +584,7 @@ class AndroidInAppWebViewPlatform extends InAppWebViewPlatform {
   AndroidWebStorageManager createPlatformWebStorageManager(
     PlatformWebStorageManagerCreationParams params,
   ) {
-    return AndroidWebStorageManager(params);
+    return AndroidWebStorageManager.instance();
   }
 
   /// Creates a new empty [AndroidWebStorageManager] to access static methods.

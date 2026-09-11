@@ -141,6 +141,22 @@ Fourteen WebKit APIs read out of the iOS 26.5 SDK:
 
 ### Fixed
 
+- **The four managers that live on a constant method-channel name are now single instances, so
+  constructing one no longer silently unhooks another.** `IOSCookieManager`,
+  `IOSHttpAuthCredentialDatabase`, `IOSProxyController` and `IOSWebStorageManager` each attach a
+  method-call handler to a fixed channel name, but `createPlatform…` minted a new object on every
+  call and `.static()` was a *further* separate object.
+  `MethodChannel.setMethodCallHandler` is last-writer-wins per channel name and tells the loser
+  nothing, so the most recently constructed object silently owned every incoming call — which is
+  why `IOSCookieManager`'s cookie-store observer had to be `static` to survive at all.
+
+  Both `createPlatform…` and `.static()` now resolve to the same instance.
+
+  **Breaking if you relied on getting a distinct object**: two `CookieManager()` values now share
+  one platform object. Nothing observable changes otherwise — these classes hold no per-instance
+  state, and their creation params have no fields. The public constructors are unchanged and still
+  produce a separate instance if called directly.
+
 - **`InAppBrowser`'s bars were drawn with pre-iOS-13 API and were visibly broken on iOS 26.**
   `UINavigationBar.backgroundColor` / `.barTintColor` / `.isTranslucent` have not driven the bar
   background since iOS 13 — only `UINavigationBarAppearance` / `UIToolbarAppearance` do — so

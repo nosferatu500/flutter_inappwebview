@@ -62,16 +62,9 @@ class IOSWebStorageManager extends PlatformWebStorageManager
     return _instance!;
   }
 
-  static IOSWebStorageManager? _static;
-
   /// Provide static access.
   factory IOSWebStorageManager.static() {
-    _static ??= IOSWebStorageManager(
-      IOSWebStorageManagerCreationParams(
-        const PlatformWebStorageManagerCreationParams(),
-      ),
-    );
-    return _static!;
+    return instance();
   }
 
   Future<dynamic> _handleMethod(MethodCall call) async {}

@@ -62,15 +62,9 @@ class IOSProxyController extends PlatformProxyController
     return _instance!;
   }
 
-  static final IOSProxyController _staticValue = IOSProxyController(
-    IOSProxyControllerCreationParams(
-      const PlatformProxyControllerCreationParams(),
-    ),
-  );
-
   /// Provide static access.
   factory IOSProxyController.static() {
-    return _staticValue;
+    return instance();
   }
 
   Future<dynamic> _handleMethod(MethodCall call) async {}

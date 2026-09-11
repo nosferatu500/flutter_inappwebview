@@ -239,6 +239,25 @@ for, and five others have a native *value* that differs from their name.
 
 ### Fixed
 
+- **The ten managers that live on a constant method-channel name are now single instances, so
+  constructing one no longer silently unhooks another.** `AndroidCookieManager`,
+  `AndroidGeolocationPermissions`, `AndroidHttpAuthCredentialDatabase`,
+  `AndroidProcessGlobalConfig`, `AndroidProfileStore`, `AndroidProxyController`,
+  `AndroidServiceWorkerController`, `AndroidTracingController`, `AndroidWebStorageManager` and
+  `AndroidWebViewFeature` each attach a method-call handler to a fixed channel name, but
+  `createPlatform…` minted a new object on every call and `.static()` was a *further* separate
+  object. `MethodChannel.setMethodCallHandler` is last-writer-wins per channel name and tells the
+  loser nothing, so the most recently constructed object silently owned every incoming call.
+
+  That is what broke `ServiceWorkerController.shouldInterceptRequest`: one extra construction
+  anywhere — `CookieManager.isMethodSupported` was enough — stopped it firing. Both
+  `createPlatform…` and `.static()` now resolve to the same instance.
+
+  **Breaking if you relied on getting a distinct object**: two `CookieManager()` values now share
+  one platform object. Nothing observable changes otherwise — these classes hold no per-instance
+  state, and their creation params have no fields. The public constructors are unchanged and still
+  produce a separate instance if called directly.
+
 - **`WebMessageListener`'s origin allow-list compared reverse-DNS hostnames, and could match an
   origin it was not written for.** Both helpers behind it were wrong.
 

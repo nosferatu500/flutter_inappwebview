@@ -62,15 +62,9 @@ class AndroidProxyController extends PlatformProxyController
     return _instance!;
   }
 
-  static final AndroidProxyController _staticValue = AndroidProxyController(
-    AndroidProxyControllerCreationParams(
-      const PlatformProxyControllerCreationParams(),
-    ),
-  );
-
   /// Provide static access.
   factory AndroidProxyController.static() {
-    return _staticValue;
+    return instance();
   }
 
   Future<dynamic> _handleMethod(MethodCall call) async {}

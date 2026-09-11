@@ -61,15 +61,9 @@ class AndroidProfileStore extends PlatformProfileStore with ChannelController {
     return _instance!;
   }
 
-  static final AndroidProfileStore _staticValue = AndroidProfileStore(
-    AndroidProfileStoreCreationParams(
-      const PlatformProfileStoreCreationParams(),
-    ),
-  );
-
   /// Provide static access.
   factory AndroidProfileStore.static() {
-    return _staticValue;
+    return instance();
   }
 
   Future<dynamic> _handleMethod(MethodCall call) async {}

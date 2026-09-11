@@ -61,15 +61,9 @@ class AndroidTracingController extends PlatformTracingController
     return _instance!;
   }
 
-  static final AndroidTracingController _staticValue = AndroidTracingController(
-    AndroidTracingControllerCreationParams(
-      const PlatformTracingControllerCreationParams(),
-    ),
-  );
-
   /// Provide static access.
   factory AndroidTracingController.static() {
-    return _staticValue;
+    return instance();
   }
 
   Future<dynamic> _handleMethod(MethodCall call) async {}
