@@ -126,8 +126,11 @@ class FindSessionData {
 
   int highlightedResultIndex;
 
-  /// Always null on Android; the field exists so the shape matches the platform interface's
-  /// `FindSession`, which carries it for iOS.
+  /// Nullable for the shape's sake — the platform interface's `FindSession` carries this for iOS —
+  /// but Android **never sends null**. Kotlin's `FindSession.searchResultDisplayStyle` defaults to
+  /// `2` and `getActiveFindSession` always forwards it, and `2` is
+  /// `SearchResultDisplayStyle.NONE`. The Dart side still falls back to `NONE` on an unrecognised
+  /// value rather than force-unwrapping, because the platform-interface field is non-nullable.
   int? searchResultDisplayStyle;
 
   List<Object?> _toList() {
