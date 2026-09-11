@@ -323,6 +323,14 @@ error.
 
 ### Removed
 
+- **The `platform_util` channel, whole** — `PlatformUtil.swift`, the Dart `PlatformUtil` class and
+  the plugin's field, construction and disposal of it. Removing the JavaScript cookie fallback
+  (below) removed the channel's only consumer, leaving `getSystemVersion` and `formatDate` answered
+  for nobody: the Dart class was never imported or exported by any file in any package, and the
+  Swift statics (`formatDate`, `getLocaleFromString`, `getDateFromMilliseconds`) had no caller
+  outside their own file. Two tests in this package kept mocking the channel and documenting the
+  version check as live; a handler that throws on any call to it leaves them green, so the mocks and
+  their comments went too
 - **The JavaScript cookie fallback, and the `webViewController` parameter it existed for** — 213
   lines from `IOSCookieManager`: `_shouldUseJavascript`, `_setCookieWithJavaScript`,
   `_getCookiesWithJavaScript`, `_getCookieExpirationDate`, the five guard blocks calling them, and

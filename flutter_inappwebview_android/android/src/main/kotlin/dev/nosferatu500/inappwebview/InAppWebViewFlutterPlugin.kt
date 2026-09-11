@@ -25,7 +25,6 @@ import io.flutter.plugin.platform.PlatformViewRegistry
 
 class InAppWebViewFlutterPlugin : FlutterPlugin, ActivityAware {
 
-  @JvmField var platformUtil: PlatformUtil? = null
   @JvmField var inAppBrowserManager: InAppBrowserManager? = null
   @JvmField var headlessInAppWebViewManager: HeadlessInAppWebViewManager? = null
   @JvmField var chromeSafariBrowserManager: ChromeSafariBrowserManager? = null
@@ -95,7 +94,6 @@ class InAppWebViewFlutterPlugin : FlutterPlugin, ActivityAware {
       FlutterWebViewFactory.VIEW_TYPE_ID, flutterWebViewFactory
     )
 
-    platformUtil = PlatformUtil(this)
     inAppWebViewManager = InAppWebViewManager(this)
     myCookieManager = MyCookieManager(this)
     myWebStorage = MyWebStorage(this)
@@ -114,8 +112,6 @@ class InAppWebViewFlutterPlugin : FlutterPlugin, ActivityAware {
   }
 
   override fun onDetachedFromEngine(binding: FlutterPlugin.FlutterPluginBinding) {
-    platformUtil?.dispose()
-    platformUtil = null
     inAppBrowserManager?.dispose()
     inAppBrowserManager = null
     headlessInAppWebViewManager?.dispose()

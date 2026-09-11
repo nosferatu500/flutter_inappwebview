@@ -24,7 +24,7 @@ import SafariServices
 
 /// `@MainActor`, with an **isolated conformance** to `FlutterPlugin` (SE-0470).
 ///
-/// `init(with:)` constructs every manager in the plugin — `PlatformUtil`, `InAppBrowserManager`,
+/// `init(with:)` constructs every manager in the plugin — `InAppBrowserManager`,
 /// `InAppWebViewManager`, `MyCookieManager` and the rest — all of which are main-actor isolated
 /// because they descend from `FlutterMethodCallDelegate`. Flutter calls `register(with:)` on the
 /// platform thread during engine setup, so this is where the plugin has always run.
@@ -32,7 +32,6 @@ import SafariServices
 public class InAppWebViewFlutterPlugin: NSObject, @MainActor FlutterPlugin {
     
     var registrar: FlutterPluginRegistrar
-    var platformUtil: PlatformUtil?
     var inAppWebViewManager: InAppWebViewManager?
     var myCookieManager: Any?
     var myWebStorageManager: Any?
@@ -54,7 +53,6 @@ public class InAppWebViewFlutterPlugin: NSObject, @MainActor FlutterPlugin {
         
         registrar.register(FlutterWebViewFactory(plugin: self) as FlutterPlatformViewFactory, withId: FlutterWebViewFactory.VIEW_TYPE_ID)
         
-        platformUtil = PlatformUtil(plugin: self)
         inAppBrowserManager = InAppBrowserManager(plugin: self)
         headlessInAppWebViewManager = HeadlessInAppWebViewManager(plugin: self)
         chromeSafariBrowserManager = ChromeSafariBrowserManager(plugin: self)
@@ -76,8 +74,6 @@ public class InAppWebViewFlutterPlugin: NSObject, @MainActor FlutterPlugin {
     }
     
     public func detachFromEngine(for registrar: FlutterPluginRegistrar) {
-        platformUtil?.dispose()
-        platformUtil = nil
         inAppBrowserManager?.dispose()
         inAppBrowserManager = nil
         headlessInAppWebViewManager?.dispose()

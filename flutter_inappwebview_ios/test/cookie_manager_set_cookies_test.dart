@@ -29,18 +29,8 @@ void main() {
         .setMockMethodCallHandler(channel, (MethodCall call) async {
           calls.add(call);
           if (call.method == 'setCookies') return <Object?>[true];
-          // `getSystemVersion` is consulted by the singular call's dead JS branch.
-          if (call.method == 'getSystemVersion') return '26.5';
           return true;
         });
-    TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
-        .setMockMethodCallHandler(
-          const MethodChannel(
-            'dev.nosferatu500.inappwebview/inappwebview_platformutil',
-          ),
-          (MethodCall call) async =>
-              call.method == 'getSystemVersion' ? '26.5' : null,
-        );
   });
 
   tearDown(() {

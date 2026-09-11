@@ -19,13 +19,6 @@ void main() {
   const cookieChannel = MethodChannel(
     'dev.nosferatu500.inappwebview/inappwebview_cookiemanager',
   );
-  // IOSCookieManager falls back to a JavaScript path below iOS 10.13, which it decides by asking
-  // the platform for its version over a separate channel. Answer with a modern one so the tests
-  // exercise the channel path.
-  const platformUtilChannel = MethodChannel(
-    'dev.nosferatu500.inappwebview/inappwebview_platformutil',
-  );
-
   late IOSCookieManager cookieManager;
   final List<MethodCall> calls = <MethodCall>[];
 
@@ -36,10 +29,6 @@ void main() {
     );
     final messenger =
         TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger;
-    messenger.setMockMethodCallHandler(platformUtilChannel, (call) async {
-      if (call.method == 'getSystemVersion') return '17.0';
-      return null;
-    });
     messenger.setMockMethodCallHandler(cookieChannel, (MethodCall call) async {
       calls.add(call);
       if (call.method == 'getCookies') return <dynamic>[];
@@ -51,7 +40,6 @@ void main() {
     final messenger =
         TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger;
     messenger.setMockMethodCallHandler(cookieChannel, null);
-    messenger.setMockMethodCallHandler(platformUtilChannel, null);
   });
 
   Map<Object?, Object?> argsOf(MethodCall call) =>

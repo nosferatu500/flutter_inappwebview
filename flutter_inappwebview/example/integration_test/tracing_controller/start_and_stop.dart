@@ -54,7 +54,22 @@ void startAndStop() {
 
     expect(File(traceFilePath).existsSync(), true);
 
-    await Future.delayed(Duration(seconds: 2));
-    expect(await tracingController.isTracing(), false);
+    // `stop()` returning true means tracing was stopped, NOT that the trace has been written:
+    // the plugin hands androidx an Executor and the flush runs on it. `isTracing()` stays true
+    // until that finishes, and how long that takes scales with the trace — measured at ~6s for
+    // an 8.5 MB file on an API 37 emulator, so the fixed 2-second sleep this replaces failed
+    // deterministically (3 runs out of 3). Poll instead of guessing a duration.
+    var stillTracing = true;
+    for (var i = 0; i < 30 && stillTracing; i++) {
+      await Future.delayed(Duration(seconds: 1));
+      stillTracing = await tracingController.isTracing();
+    }
+    expect(
+      stillTracing,
+      false,
+      reason:
+          'isTracing() was still true 30s after stop() returned true; the trace flush never '
+          'completed (trace file is ${File(traceFilePath).lengthSync()} bytes).',
+    );
   }, skip: shouldSkip);
 }

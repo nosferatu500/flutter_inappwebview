@@ -381,6 +381,14 @@ for, and five others have a native *value* that differs from their name.
 
 ### Removed
 
+- **The `platform_util` channel, whole** — `PlatformUtil.kt`, the Dart `PlatformUtil` class and the
+  plugin's field, construction and disposal of it. The channel
+  (`dev.nosferatu500.inappwebview/inappwebview_platformutil`) carried `getSystemVersion` and
+  `formatDate`, and had **no caller on either side**: the Dart class was never imported or exported
+  by any file in any package, and the Kotlin statics (`formatDate`, `getLocaleFromString`) had no
+  caller outside their own file. Its last consumer was the iOS JavaScript cookie fallback, deleted
+  in this same release. A third Dart method, `getWebCookieExpirationDate`, had no handler on either
+  platform at all and would have thrown `MissingPluginException` on its first call
 - All deprecated API: `AndroidWebViewFeature` → `WebViewFeature`, `AndroidInAppWebViewOptions` /
   `AndroidInAppBrowserOptions` / `AndroidChromeCustomTabsOptions` → the `*Settings` classes, the
   `androidOn*` event aliases, the `android*` field aliases, `getOptions`/`setOptions`,
