@@ -1,8 +1,9 @@
 import 'dart:async';
 
 import 'package:flutter/foundation.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_inappwebview_platform_interface/flutter_inappwebview_platform_interface.dart';
+
+import '../pigeons/web_storage_manager.g.dart';
 
 /// Object specifying creation parameters for creating a [AndroidWebStorageManager].
 ///
@@ -28,8 +29,14 @@ class AndroidWebStorageManagerCreationParams
 }
 
 ///{@macro flutter_inappwebview_platform_interface.PlatformWebStorageManager}
+///
+/// Transport is Pigeon-generated ([WebStorageManagerHostApi]) rather than a hand-written
+/// `MethodChannel`; the ninth channel migrated, after find_interaction (§14),
+/// process_global_config (§157), proxy (§160), webview_feature (§161), tracing_controller (§162),
+/// credential_database (§163), both web_message channels (§165) and cookie_manager (§168). There is
+/// no `messageChannelSuffix` because `android.webkit.WebStorage` is process-global.
 class AndroidWebStorageManager extends PlatformWebStorageManager
-    with ChannelController {
+    implements Disposable {
   /// Creates a new [AndroidWebStorageManager].
   AndroidWebStorageManager(PlatformWebStorageManagerCreationParams params)
     : super.implementation(
@@ -38,13 +45,9 @@ class AndroidWebStorageManager extends PlatformWebStorageManager
             : AndroidWebStorageManagerCreationParams.fromPlatformWebStorageManagerCreationParams(
                 params,
               ),
-      ) {
-    channel = const MethodChannel(
-      'dev.nosferatu500.inappwebview/inappwebview_webstoragemanager',
-    );
-    handler = _handleMethod;
-    initMethodCallHandler();
-  }
+      );
+
+  final WebStorageManagerHostApi _hostApi = WebStorageManagerHostApi();
 
   static AndroidWebStorageManager? _instance;
 
@@ -67,39 +70,26 @@ class AndroidWebStorageManager extends PlatformWebStorageManager
     return instance();
   }
 
-  Future<dynamic> _handleMethod(MethodCall call) async {}
-
   @override
   Future<List<WebStorageOrigin>> getOrigins({String? profileName}) async {
-    List<WebStorageOrigin> originsList = [];
-
-    Map<String, dynamic> args = <String, dynamic>{};
-    args.putIfAbsent('profileName', () => profileName);
-    List<Map<dynamic, dynamic>> origins =
-        (await channel?.invokeMethod<List>(
-          'getOrigins',
-          args,
-        ))?.cast<Map<dynamic, dynamic>>() ??
-        [];
-
-    for (var origin in origins) {
-      originsList.add(
-        WebStorageOrigin(
-          origin: origin["origin"],
-          quota: origin["quota"],
-          usage: origin["usage"],
-        ),
-      );
-    }
-
-    return originsList;
+    final origins = await _hostApi.getOrigins(profileName);
+    return origins
+        .map(
+          (o) => WebStorageOrigin(
+            origin: o.origin,
+            quota: o.quota,
+            usage: o.usage,
+          ),
+        )
+        .toList();
   }
 
   @override
   Future<void> deleteAllData({String? profileName}) async {
-    Map<String, dynamic> args = <String, dynamic>{};
-    args.putIfAbsent('profileName', () => profileName);
-    await channel?.invokeMethod('deleteAllData', args);
+    // The host answers whether the storage was resolved at all, and that answer is dropped here
+    // because the platform interface declares `Future<void>`. Surfacing it is a platform-interface
+    // change (see the schema, and the TODO row it names), not a transport one.
+    await _hostApi.deleteAllData(profileName);
   }
 
   @override
@@ -107,18 +97,13 @@ class AndroidWebStorageManager extends PlatformWebStorageManager
     required String origin,
     String? profileName,
   }) async {
-    Map<String, dynamic> args = <String, dynamic>{};
-    args.putIfAbsent('profileName', () => profileName);
-    args.putIfAbsent("origin", () => origin);
-    await channel?.invokeMethod('deleteOrigin', args);
+    // See deleteAllData for the discarded bool.
+    await _hostApi.deleteOrigin(origin, profileName);
   }
 
   @override
   Future<bool> deleteBrowsingData({String? profileName}) async {
-    Map<String, dynamic> args = <String, dynamic>{};
-    args.putIfAbsent('profileName', () => profileName);
-    return await channel?.invokeMethod<bool>('deleteBrowsingData', args) ??
-        false;
+    return await _hostApi.deleteBrowsingData(profileName);
   }
 
   @override
@@ -126,13 +111,9 @@ class AndroidWebStorageManager extends PlatformWebStorageManager
     required String site,
     String? profileName,
   }) async {
-    Map<String, dynamic> args = <String, dynamic>{};
-    args.putIfAbsent('profileName', () => profileName);
-    args.putIfAbsent("site", () => site);
-    return await channel?.invokeMethod<String>(
-      'deleteBrowsingDataForSite',
-      args,
-    );
+    // Answers the registrable domain the platform actually cleared, which is not necessarily
+    // [site]: "www.example.com" comes back as "example.com".
+    return await _hostApi.deleteBrowsingDataForSite(site, profileName);
   }
 
   @override
@@ -140,10 +121,9 @@ class AndroidWebStorageManager extends PlatformWebStorageManager
     required String origin,
     String? profileName,
   }) async {
-    Map<String, dynamic> args = <String, dynamic>{};
-    args.putIfAbsent('profileName', () => profileName);
-    args.putIfAbsent("origin", () => origin);
-    return await channel?.invokeMethod<int>('getQuotaForOrigin', args) ?? 0;
+    // `0` when the storage could not be resolved, which is indistinguishable from a genuine zero
+    // quota. Preserved from the hand-written channel; see the schema.
+    return await _hostApi.getQuotaForOrigin(origin, profileName);
   }
 
   @override
@@ -151,14 +131,13 @@ class AndroidWebStorageManager extends PlatformWebStorageManager
     required String origin,
     String? profileName,
   }) async {
-    Map<String, dynamic> args = <String, dynamic>{};
-    args.putIfAbsent('profileName', () => profileName);
-    args.putIfAbsent("origin", () => origin);
-    return await channel?.invokeMethod<int>('getUsageForOrigin', args) ?? 0;
+    // `0` on an unresolvable store; see getQuotaForOrigin.
+    return await _hostApi.getUsageForOrigin(origin, profileName);
   }
 
   @override
   void dispose() {
-    // empty
+    // empty -- the host API holds no per-instance registration to tear down, and this class is a
+    // process-wide singleton.
   }
 }

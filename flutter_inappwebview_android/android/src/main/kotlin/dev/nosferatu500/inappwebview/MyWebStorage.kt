@@ -5,188 +5,188 @@ import android.webkit.WebStorage
 import androidx.webkit.ProfileStore
 import androidx.webkit.WebStorageCompat
 import androidx.webkit.WebViewFeature
-import dev.nosferatu500.inappwebview.types.ChannelDelegateImpl
-import io.flutter.plugin.common.MethodCall
-import io.flutter.plugin.common.MethodChannel
+import dev.nosferatu500.inappwebview.pigeons.WebStorageManagerHostApi
+import dev.nosferatu500.inappwebview.pigeons.WebStorageOriginData
+import dev.nosferatu500.inappwebview.types.Disposable
+import io.flutter.plugin.common.BinaryMessenger
 
-class MyWebStorage(plugin: InAppWebViewFlutterPlugin) :
-  ChannelDelegateImpl(MethodChannel(plugin.messenger, METHOD_CHANNEL_NAME)) {
+/**
+ * Transport is Pigeon-generated ([WebStorageManagerHostApi]) rather than a hand-written
+ * `MethodChannel`; the ninth channel migrated, after find_interaction (§14),
+ * process_global_config (§157), proxy (§160), webview_feature (§161), tracing_controller (§162),
+ * credential_database (§163), both web_message channels (§165) and cookie_manager (§168).
+ *
+ * There is no `messageChannelSuffix`: `android.webkit.WebStorage` is process-global, so there is one
+ * channel rather than one per WebView.
+ *
+ * **Five of the seven methods are `@async`** — everything that completes through a `ValueCallback`
+ * or a `Runnable`. [deleteAllData] and [deleteOrigin] wrap `void` platform calls and answer inline.
+ */
+class MyWebStorage(plugin: InAppWebViewFlutterPlugin) : Disposable, WebStorageManagerHostApi {
 
   @JvmField
   var plugin: InAppWebViewFlutterPlugin? = plugin
 
-  override fun onMethodCall(call: MethodCall, result: MethodChannel.Result) {
-    init()
+  private var messenger: BinaryMessenger? = plugin.messenger
 
-    // Null unless the caller scoped this single call to a profile; see PlatformWebStorageManager's
-    // class doc for why the scope is per call rather than per manager instance.
-    val profileName = call.argument<String>("profileName")
-
-    when (call.method) {
-      "getOrigins" -> getOrigins(profileName, result)
-
-      "deleteAllData" -> {
-        val manager = getWebStorage(profileName)
-        if (manager != null) {
-          manager.deleteAllData()
-          result.success(true)
-        } else {
-          result.success(false)
-        }
-      }
-
-      "deleteOrigin" -> {
-        val manager = getWebStorage(profileName)
-        if (manager != null) {
-          manager.deleteOrigin(call.argument("origin"))
-          result.success(true)
-        } else {
-          result.success(false)
-        }
-      }
-
-      "deleteBrowsingData" -> deleteBrowsingData(profileName, result)
-
-      "deleteBrowsingDataForSite" ->
-        deleteBrowsingDataForSite(call.argument("site")!!, profileName, result)
-
-      "getQuotaForOrigin" ->
-        getQuotaForOrigin(call.argument("origin"), profileName, result)
-
-      "getUsageForOrigin" ->
-        getUsageForOrigin(call.argument("origin"), profileName, result)
-
-      else -> result.notImplemented()
-    }
+  init {
+    WebStorageManagerHostApi.setUp(plugin.messenger, this)
   }
 
-  // The raw Map is forced by the platform signature, which is literally
-  // WebStorage.getOrigins(ValueCallback<Map>) -- verified against android.jar. Parameterizing the
-  // callback would no longer match the parameter type, so this cannot be typed away.
+  /**
+   * The raw `Map` is forced by the platform signature, which is literally
+   * `WebStorage.getOrigins(ValueCallback<Map>)` -- verified against `android.jar`. Parameterizing
+   * the callback would no longer match the parameter type, so this cannot be typed away.
+   *
+   * The suppression is scoped to this function rather than the class (it was class-level before),
+   * because the outbound half is now typed: the callback builds [WebStorageOriginData] directly
+   * instead of a `hashMapOf` the Dart side had to read back by key.
+   */
   @Suppress("UNCHECKED_CAST")
-  fun getOrigins(profileName: String?, result: MethodChannel.Result) {
+  override fun getOrigins(
+    profileName: String?,
+    callback: (Result<List<WebStorageOriginData>>) -> Unit
+  ) {
     val manager = getWebStorage(profileName)
     if (manager == null) {
-      result.success(ArrayList<Any?>())
+      callback(Result.success(emptyList()))
       return
     }
     manager.getOrigins(
       ValueCallback<Map<*, *>> { value ->
-        val origins = mutableListOf<Map<String, Any?>>()
-        for (key in value.keys) {
-          val originObj = value[key] as WebStorage.Origin
-          origins.add(
-            hashMapOf(
-              "origin" to originObj.origin,
-              "quota" to originObj.quota,
-              "usage" to originObj.usage
-            )
-          )
+        // `as`, not `filterIsInstance`: the old code cast each value and would throw if the
+        // platform ever handed back something that is not an Origin. Filtering would turn that
+        // into a silently short list, which is a behaviour change dressed up as a tidy-up.
+        val origins = value.values.map {
+          val o = it as WebStorage.Origin
+          WebStorageOriginData(origin = o.origin, quota = o.quota, usage = o.usage)
         }
-        result.success(origins)
+        callback(Result.success(origins))
       } as ValueCallback<Map<Any?, Any?>>
     )
   }
 
-  // Both of these deliberately use the WebStorageCompat overloads that post the done callback to
-  // the main looper, rather than the Executor ones: onMethodCall already runs there, a
-  // MethodChannel.Result must be replied to on the main thread anyway, and -- for
-  // deleteBrowsingDataForSite -- it is what makes reading the returned domain inside the callback
-  // safe. See deleteBrowsingDataForSite below.
-  fun deleteBrowsingData(profileName: String?, result: MethodChannel.Result) {
+  override fun deleteAllData(profileName: String?): Boolean {
+    val manager = getWebStorage(profileName) ?: return false
+    manager.deleteAllData()
+    return true
+  }
+
+  override fun deleteOrigin(origin: String, profileName: String?): Boolean {
+    val manager = getWebStorage(profileName) ?: return false
+    manager.deleteOrigin(origin)
+    return true
+  }
+
+  /**
+   * Uses the [WebStorageCompat] overload that posts the done callback to the main looper rather
+   * than the `Executor` one, as [deleteBrowsingDataForSite] does and for the same family of
+   * reasons.
+   *
+   * The feature gate is required rather than defensive: `WebStorageCompat.deleteBrowsingData` throws
+   * `UnsupportedOperationException` when `DELETE_BROWSING_DATA` is missing.
+   */
+  override fun deleteBrowsingData(profileName: String?, callback: (Result<Boolean>) -> Unit) {
     val manager = getWebStorage(profileName)
     if (manager == null ||
       !WebViewFeature.isFeatureSupported(WebViewFeature.DELETE_BROWSING_DATA)
     ) {
-      // WebStorageCompat.deleteBrowsingData throws UnsupportedOperationException when the feature
-      // is missing, so the gate is required rather than defensive.
-      result.success(false)
+      callback(Result.success(false))
       return
     }
-    WebStorageCompat.deleteBrowsingData(manager) { result.success(true) }
+    WebStorageCompat.deleteBrowsingData(manager) { callback(Result.success(true)) }
   }
 
-  fun deleteBrowsingDataForSite(
+  /**
+   * Answers the domain the platform actually cleared, which is the registrable domain of [site] --
+   * so `"www.example.com"` comes back as `"example.com"`.
+   *
+   * `deleteBrowsingDataForSite` reports completion through a callback *and* returns that domain.
+   * Assigning the return value before the callback can run is safe only because this overload posts
+   * the callback to the main looper we are already on; with the `Executor` overload it would be a
+   * genuine race.
+   *
+   * An unparseable site throws `IllegalArgumentException`, which is now allowed to propagate: Pigeon
+   * reports it through `wrapError`, replacing the old `result.error(LOG_TAG, …)`. See the schema.
+   */
+  override fun deleteBrowsingDataForSite(
     site: String,
     profileName: String?,
-    result: MethodChannel.Result
+    callback: (Result<String?>) -> Unit
   ) {
     val manager = getWebStorage(profileName)
     if (manager == null ||
       !WebViewFeature.isFeatureSupported(WebViewFeature.DELETE_BROWSING_DATA)
     ) {
-      result.success(null)
+      callback(Result.success(null))
       return
     }
-    try {
-      // deleteBrowsingDataForSite returns the domain it actually deleted for -- the site part of
-      // the argument, so "www.example.com" comes back as "example.com" -- and reports completion
-      // through the callback. Assigning the return value before the callback can run is safe only
-      // because the callback is posted to the main looper we are currently on; with the Executor
-      // overload this would be a genuine race.
-      var domain: String? = null
-      domain = WebStorageCompat.deleteBrowsingDataForSite(manager, site) {
-        result.success(domain)
-      }
-    } catch (e: IllegalArgumentException) {
-      // Thrown when the site cannot be parsed as a domain name.
-      result.error(LOG_TAG, e.message, null)
+    var domain: String? = null
+    domain = WebStorageCompat.deleteBrowsingDataForSite(manager, site) {
+      callback(Result.success(domain))
     }
   }
 
-  fun getQuotaForOrigin(
-    origin: String?,
+  override fun getQuotaForOrigin(
+    origin: String,
     profileName: String?,
-    result: MethodChannel.Result
+    callback: (Result<Long>) -> Unit
   ) {
     val manager = getWebStorage(profileName)
     if (manager == null) {
-      result.success(0)
+      callback(Result.success(0L))
       return
     }
-    manager.getQuotaForOrigin(origin) { value -> result.success(value) }
+    manager.getQuotaForOrigin(origin) { value -> callback(Result.success(value)) }
   }
 
-  fun getUsageForOrigin(
-    origin: String?,
+  override fun getUsageForOrigin(
+    origin: String,
     profileName: String?,
-    result: MethodChannel.Result
+    callback: (Result<Long>) -> Unit
   ) {
     val manager = getWebStorage(profileName)
     if (manager == null) {
-      result.success(0)
+      callback(Result.success(0L))
       return
     }
-    manager.getUsageForOrigin(origin) { value -> result.success(value) }
+    manager.getUsageForOrigin(origin) { value -> callback(Result.success(value)) }
   }
 
   override fun dispose() {
-    super.dispose()
+    // Unregisters the generated handler. Skipping it would leave it bound to a disposed manager
+    // for the life of the messenger.
+    messenger?.let { WebStorageManagerHostApi.setUp(it, null) }
+    messenger = null
     plugin = null
   }
 
   companion object {
-    protected const val LOG_TAG = "MyWebStorage"
-    const val METHOD_CHANNEL_NAME = "dev.nosferatu500.inappwebview/inappwebview_webstoragemanager"
+    /**
+     * Resolved lazily on first use, as the hand-written channel did by calling `init()` at the top
+     * of every dispatch.
+     *
+     * Was a public mutable `@JvmField` static plus a public `init()`; nothing outside this class
+     * ever touched either -- measured across the whole module -- so both are private now, matching
+     * the same cleanup in §162 and §168.
+     */
+    private var cachedWebStorage: WebStorage? = null
 
-    @JvmField
-    var webStorageManager: WebStorage? = null
-
-    @JvmStatic
-    fun init() {
-      if (webStorageManager == null) {
-        webStorageManager = WebStorage.getInstance()
+    private fun defaultWebStorage(): WebStorage {
+      if (cachedWebStorage == null) {
+        cachedWebStorage = WebStorage.getInstance()
       }
+      return cachedWebStorage!!
     }
 
     /**
      * Resolves the [WebStorage] a call should act on.
      *
-     * A null [profileName] means the default profile's storage, i.e. the [webStorageManager]
-     * singleton `init` populates. A non-null one means that profile's own storage, and returns null
-     * -- so the caller reports failure -- when `MULTI_PROFILE` is unsupported or no such profile
-     * exists. It never silently falls back to the default profile: reporting "deleted" after
-     * clearing the wrong profile's storage is worse than reporting failure.
+     * A null [profileName] means the default profile's storage. A non-null one means that profile's
+     * own storage, and returns null -- so the caller reports failure -- when `MULTI_PROFILE` is
+     * unsupported or no such profile exists. It never silently falls back to the default profile:
+     * reporting "deleted" after clearing the wrong profile's storage is worse than reporting
+     * failure.
      *
      * Uses `getProfile`, not `getOrCreateProfile`, for the same reasons as MyCookieManager: reading
      * or clearing a profile's storage must not bring the profile into existence, and `getProfile`
@@ -195,7 +195,7 @@ class MyWebStorage(plugin: InAppWebViewFlutterPlugin) :
      */
     private fun getWebStorage(profileName: String?): WebStorage? {
       if (profileName == null) {
-        return webStorageManager
+        return defaultWebStorage()
       }
       if (!WebViewFeature.isFeatureSupported(WebViewFeature.MULTI_PROFILE)) {
         return null

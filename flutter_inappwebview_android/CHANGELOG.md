@@ -450,6 +450,25 @@ for, and five others have a native *value* that differs from their name.
 
 ### Internal
 
+- **The `webstoragemanager` channel is Pigeon-generated**, the ninth migrated.
+  `AndroidWebStorageManager` drops `ChannelController` and holds the generated
+  `WebStorageManagerHostApi`; `MyWebStorage` implements it and its hand-written `onMethodCall`
+  dispatch is gone. `MyWebStorage.webStorageManager` and its `init()` were public statics nothing
+  outside the class called, and are now private. No public API change.
+
+  **Five of the seven methods are `@async`** — everything completing through a `ValueCallback` or a
+  `Runnable`. `deleteAllData` and `deleteOrigin` wrap `void` platform calls and answer inline.
+
+  `getOrigins` now builds a typed `WebStorageOriginData` instead of a `hashMapOf` the Dart side read
+  back by key, so `origin`/`quota`/`usage` are non-null on the wire. The raw-`Map` cast the platform
+  signature forces (`getOrigins(ValueCallback<Map>)`) remains, but the class-level
+  `@Suppress("UNCHECKED_CAST")` is now **scoped to that one function**.
+
+  One behaviour note: `deleteBrowsingDataForSite` previously caught `IllegalArgumentException` — an
+  unparseable site — and answered `result.error("MyWebStorage", message, null)`. It now propagates
+  to Pigeon's `wrapError`, so `PlatformException.code` becomes the exception's class name rather than
+  the constant. Breaking only for code matching on that code.
+
 - **The `cookiemanager` channel is Pigeon-generated**, the eighth migrated and the largest so far at
   **twelve methods**. `AndroidCookieManager` drops `ChannelController` and holds the generated
   `CookieManagerHostApi`; `MyCookieManager` implements it and its hand-written `onMethodCall`

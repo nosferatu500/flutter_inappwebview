@@ -1,69 +1,79 @@
-import 'package:flutter/services.dart';
 import 'package:flutter_inappwebview_android/flutter_inappwebview_android.dart';
+import 'package:flutter_inappwebview_android/src/pigeons/web_storage_manager.g.dart';
 import 'package:flutter_inappwebview_platform_interface/flutter_inappwebview_platform_interface.dart';
 import 'package:flutter_test/flutter_test.dart';
 
-/// Guards the `profileName` argument key on the web-storage channel.
+/// Guards the `profileName` argument on the web-storage channel.
 ///
-/// `MyWebStorage` reads it with `call.argument<String>("profileName")` and treats null as "the
-/// default profile's storage". So a renamed or dropped key does not fail — the call silently acts
-/// on the **default** profile, which for a WebView running on another profile means reading quotas
-/// that are not its own and, worse, reporting a successful delete after clearing somebody else's
-/// storage. Nothing in the compiler, the analyzer or the widget tests can see that.
+/// The Kotlin side treats null as "the default profile's storage". So a dropped `profileName` does
+/// not fail — the call silently acts on the **default** profile, which for a WebView running on
+/// another profile means reading quotas that are not its own and, worse, reporting a successful
+/// delete after clearing somebody else's storage.
+///
+/// Before §169 this was a *key* in an argument map and could be renamed to nothing; it is now a
+/// positional parameter on a generated signature, so the rename failure mode is gone. What remains
+/// worth pinning is that **every method actually forwards the profile it was given** — still
+/// invisible to the compiler, since passing `null` instead of the caller's value type-checks.
+///
+/// Mirrors `cookie_manager_profile_test.dart`, including the `args.last` trick: `profileName` is the
+/// last parameter on all seven methods, whatever else they carry.
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
 
-  const channel = MethodChannel(
-    'dev.nosferatu500.inappwebview/inappwebview_webstoragemanager',
-  );
+  const codec = WebStorageManagerHostApi.pigeonChannelCodec;
+  const prefix =
+      'dev.flutter.pigeon.flutter_inappwebview_android.WebStorageManagerHostApi.';
+
+  // Every method, with the reply shape its caller accepts.
+  const channels = <String, Object?>{
+    '${prefix}getOrigins': <Object?>[],
+    '${prefix}deleteAllData': true,
+    '${prefix}deleteOrigin': true,
+    '${prefix}deleteBrowsingData': true,
+    '${prefix}deleteBrowsingDataForSite': 'example.com',
+    '${prefix}getQuotaForOrigin': 0,
+    '${prefix}getUsageForOrigin': 0,
+  };
 
   late AndroidWebStorageManager webStorageManager;
-  final List<MethodCall> calls = <MethodCall>[];
+  final Map<String, List<Object?>?> received = {};
 
   setUp(() {
-    calls.clear();
+    received.clear();
     webStorageManager = AndroidWebStorageManager(
       const PlatformWebStorageManagerCreationParams(),
     );
-    TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
-        .setMockMethodCallHandler(channel, (MethodCall call) async {
-          calls.add(call);
-          // The reply shape each caller accepts.
-          switch (call.method) {
-            case 'getOrigins':
-              return <dynamic>[];
-            case 'getQuotaForOrigin':
-            case 'getUsageForOrigin':
-              return 0;
-            case 'deleteBrowsingDataForSite':
-              return 'example.com';
-            default:
-              return true;
-          }
-        });
+    final messenger =
+        TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger;
+    channels.forEach((channel, reply) {
+      messenger.setMockMessageHandler(channel, (message) async {
+        received[channel] = message == null
+            ? null
+            : codec.decodeMessage(message) as List<Object?>;
+        return codec.encodeMessage(<Object?>[reply]);
+      });
+    });
   });
 
   tearDown(() {
-    TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
-        .setMockMethodCallHandler(channel, null);
+    final messenger =
+        TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger;
+    for (final channel in channels.keys) {
+      messenger.setMockMessageHandler(channel, null);
+    }
   });
 
-  Map<Object?, Object?> argsOf(MethodCall call) =>
-      call.arguments as Map<Object?, Object?>;
-
   group('AndroidWebStorageManager profileName', () {
-    test('is sent under the key the Android side reads', () async {
+    test('is sent in the position the Android side reads', () async {
       await webStorageManager.deleteAllData(profileName: 'signed_in');
 
-      expect(calls.single.method, 'deleteAllData');
-      expect(argsOf(calls.single)['profileName'], 'signed_in');
+      expect(received['${prefix}deleteAllData'], <Object?>['signed_in']);
     });
 
     test('is null when not given, which means the default profile', () async {
       await webStorageManager.deleteAllData();
 
-      expect(argsOf(calls.single).containsKey('profileName'), isTrue);
-      expect(argsOf(calls.single)['profileName'], isNull);
+      expect(received['${prefix}deleteAllData'], <Object?>[null]);
     });
 
     test('reaches every method that accepts it', () async {
@@ -87,14 +97,17 @@ void main() {
         profileName: 'p',
       );
 
-      expect(calls.length, 7);
-      for (final call in calls) {
+      // All seven methods, one channel each — unlike the cookie manager, no method here is built on
+      // top of another's channel.
+      expect(received.keys.toSet(), channels.keys.toSet());
+
+      received.forEach((channel, args) {
         expect(
-          argsOf(call)['profileName'],
+          args!.last,
           'p',
-          reason: '${call.method} dropped profileName',
+          reason: '${channel.split('.').last} dropped profileName',
         );
-      }
+      });
     });
 
     test('does not disturb the other arguments', () async {
@@ -103,8 +116,10 @@ void main() {
         profileName: 'p',
       );
 
-      expect(argsOf(calls.single)['site'], 'https://www.example.com');
-      expect(argsOf(calls.single)['profileName'], 'p');
+      expect(received['${prefix}deleteBrowsingDataForSite'], <Object?>[
+        'https://www.example.com',
+        'p',
+      ]);
     });
   });
 }
