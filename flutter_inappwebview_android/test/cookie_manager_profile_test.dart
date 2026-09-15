@@ -1,51 +1,75 @@
-import 'package:flutter/services.dart';
 import 'package:flutter_inappwebview_android/flutter_inappwebview_android.dart';
+import 'package:flutter_inappwebview_android/src/pigeons/cookie_manager.g.dart';
 import 'package:flutter_inappwebview_platform_interface/flutter_inappwebview_platform_interface.dart';
 import 'package:flutter_test/flutter_test.dart';
 
-/// Guards the `profileName` argument key on the cookie-manager channel.
+/// Guards the `profileName` argument on the cookie-manager channel.
 ///
-/// `MyCookieManager` reads it with `call.argument<String>("profileName")` and treats null as
-/// "the default cookie store". So a renamed or dropped key does not fail — every call silently
-/// lands on the **default** profile, which for a WebView running on another profile means cookies
-/// written nowhere useful and cookies read that do not exist. Nothing in the compiler, the
-/// analyzer or the widget tests can see that.
+/// The Kotlin side treats null as "the default cookie store". So a dropped `profileName` does not
+/// fail — every call silently lands on the **default** profile, which for a WebView running on
+/// another profile means cookies written nowhere useful and cookies read that do not exist.
 ///
-/// These tests capture the argument map the Android implementation actually sends.
+/// Before §168 this was a *key* in an argument map and could be renamed to nothing; it is now a
+/// positional parameter on a generated signature, so the rename failure mode is gone. What remains
+/// worth pinning — and is why this file survived the migration rather than being folded into the
+/// boundary test — is that **every method that accepts a profile actually forwards the one it was
+/// given**. That is still invisible to the compiler: passing `null` instead of the caller's value
+/// type-checks perfectly.
+///
+/// §167 added the device half of this (`cookies are scoped to their profile`); this is the cheap
+/// half that runs on every `flutter test`.
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
 
-  const channel = MethodChannel(
-    'dev.nosferatu500.inappwebview/inappwebview_cookiemanager',
-  );
+  const codec = CookieManagerHostApi.pigeonChannelCodec;
+  const prefix =
+      'dev.flutter.pigeon.flutter_inappwebview_android.CookieManagerHostApi.';
+
+  // Every method that takes a profile, with the reply shape its caller accepts.
+  const channels = <String, Object?>{
+    '${prefix}setCookie': true,
+    '${prefix}setCookies': <Object?>[true],
+    '${prefix}getCookies': <Object?>[],
+    '${prefix}deleteCookie': true,
+    '${prefix}deleteCookies': true,
+    '${prefix}deleteAllCookies': true,
+    '${prefix}removeSessionCookies': true,
+    '${prefix}flush': true,
+    '${prefix}hasCookies': true,
+    '${prefix}isAcceptCookieEnabled': true,
+    '${prefix}setAcceptCookie': true,
+  };
 
   late AndroidCookieManager cookieManager;
-  final List<MethodCall> calls = <MethodCall>[];
+  final Map<String, List<Object?>?> received = {};
 
   setUp(() {
-    calls.clear();
+    received.clear();
     cookieManager = AndroidCookieManager(
       const PlatformCookieManagerCreationParams(),
     );
-    TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
-        .setMockMethodCallHandler(channel, (MethodCall call) async {
-          calls.add(call);
-          // Shapes each caller accepts: a bool for the mutating calls, a list for getCookies.
-          if (call.method == 'getCookies') return <dynamic>[];
-          return true;
-        });
+    final messenger =
+        TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger;
+    channels.forEach((channel, reply) {
+      messenger.setMockMessageHandler(channel, (message) async {
+        received[channel] = message == null
+            ? null
+            : codec.decodeMessage(message) as List<Object?>;
+        return codec.encodeMessage(<Object?>[reply]);
+      });
+    });
   });
 
   tearDown(() {
-    TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
-        .setMockMethodCallHandler(channel, null);
+    final messenger =
+        TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger;
+    for (final channel in channels.keys) {
+      messenger.setMockMessageHandler(channel, null);
+    }
   });
 
-  Map<Object?, Object?> argsOf(MethodCall call) =>
-      call.arguments as Map<Object?, Object?>;
-
   group('AndroidCookieManager profileName', () {
-    test('is sent under the key the Android side reads', () async {
+    test('is sent in the position the Android side reads', () async {
       await cookieManager.setCookie(
         url: WebUri('https://example.com'),
         name: 'session',
@@ -53,8 +77,7 @@ void main() {
         profileName: 'signed_in',
       );
 
-      expect(calls.single.method, 'setCookie');
-      expect(argsOf(calls.single)['profileName'], 'signed_in');
+      expect(received['${prefix}setCookie']!.last, 'signed_in');
     });
 
     test('is null when not given, which means the default store', () async {
@@ -64,14 +87,21 @@ void main() {
         value: 'abc',
       );
 
-      // Present-but-null rather than absent is what the Kotlin reader expects; either would work
-      // there, but asserting it pins the shape the reader was written against.
-      expect(argsOf(calls.single).containsKey('profileName'), isTrue);
-      expect(argsOf(calls.single)['profileName'], isNull);
+      expect(received['${prefix}setCookie']!.last, isNull);
     });
 
     test('reaches every method that accepts it', () async {
       final url = WebUri('https://example.com');
+      await cookieManager.setCookie(
+        url: url,
+        name: 'n',
+        value: 'v',
+        profileName: 'p',
+      );
+      await cookieManager.setCookies(
+        cookies: [CookieToSet(url: url, name: 'n', value: 'v')],
+        profileName: 'p',
+      );
       await cookieManager.getCookies(url: url, profileName: 'p');
       await cookieManager.getCookie(url: url, name: 'n', profileName: 'p');
       await cookieManager.deleteCookie(url: url, name: 'n', profileName: 'p');
@@ -79,17 +109,33 @@ void main() {
       await cookieManager.deleteAllCookies(profileName: 'p');
       await cookieManager.removeSessionCookies(profileName: 'p');
       await cookieManager.flush(profileName: 'p');
+      await cookieManager.hasCookies(profileName: 'p');
+      await cookieManager.isAcceptCookieEnabled(profileName: 'p');
+      await cookieManager.setAcceptCookie(true, profileName: 'p');
 
-      // getCookie is implemented on top of the getCookies channel method, so 7 calls arrive as
-      // 7 invocations but only 6 distinct method names.
-      expect(calls.length, 7);
-      for (final call in calls) {
+      // Eleven channels, twelve calls: `getCookie` is implemented on top of `getCookies`, so it
+      // reuses that channel rather than adding one.
+      expect(received.keys.toSet(), channels.keys.toSet());
+
+      // `profileName` is the **last** parameter on every one of these, whatever else they carry —
+      // which is what makes a single assertion possible across methods taking one to five
+      // arguments.
+      received.forEach((channel, args) {
         expect(
-          argsOf(call)['profileName'],
+          args!.last,
           'p',
-          reason: '${call.method} dropped profileName',
+          reason: '${channel.split('.').last} dropped profileName',
         );
-      }
+      });
+    });
+
+    test('is not sent by isFileSchemeCookiesAllowed', () async {
+      // The one method on this channel with no profile scope: the native call is static. Asserted
+      // here as well as in its own file because this is the list a future edit would add it to.
+      expect(
+        channels.keys,
+        isNot(contains('${prefix}isFileSchemeCookiesAllowed')),
+      );
     });
   });
 }

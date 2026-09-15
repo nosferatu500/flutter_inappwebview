@@ -1,6 +1,6 @@
 import 'package:flutter/foundation.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_inappwebview_android/flutter_inappwebview_android.dart';
+import 'package:flutter_inappwebview_android/src/pigeons/cookie_manager.g.dart';
 import 'package:flutter_inappwebview_platform_interface/flutter_inappwebview_platform_interface.dart';
 import 'package:flutter_test/flutter_test.dart';
 
@@ -8,46 +8,51 @@ import 'package:flutter_test/flutter_test.dart';
 /// `isFileSchemeCookiesAllowed`.
 ///
 /// The native method is `static`, so the thing worth pinning is what this call must *not* carry:
-/// no `profileName`. Every other method on this channel sends one, and the Kotlin handler for this
-/// one does not read it — if a future edit adds it back out of symmetry, it would imply a
-/// per-profile value that the platform does not have.
+/// no `profileName`. Every other method on this channel sends one — if a future edit adds it back
+/// out of symmetry, it would imply a per-profile value that the platform does not have.
+///
+/// Since §168 the schema declares `isFileSchemeCookiesAllowed()` with no parameters, so the
+/// asymmetry is enforced by the generated signature on both sides rather than by this test alone.
+/// The test still earns its place: it pins that the call goes out **argument-less** (Pigeon sends a
+/// null message body for a no-parameter method), which is the observable form of "no profile
+/// scope", and it keeps the `bool?` null distinct from `false`.
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
 
-  const channel = MethodChannel(
-    'dev.nosferatu500.inappwebview/inappwebview_cookiemanager',
-  );
+  const codec = CookieManagerHostApi.pigeonChannelCodec;
+  const fileSchemeChannel =
+      'dev.flutter.pigeon.flutter_inappwebview_android.CookieManagerHostApi.isFileSchemeCookiesAllowed';
 
   late AndroidCookieManager cookieManager;
-  final List<MethodCall> calls = <MethodCall>[];
   Object? reply;
+  var messageWasNull = false;
 
   setUp(() {
-    calls.clear();
     reply = false;
+    messageWasNull = false;
     cookieManager = AndroidCookieManager(
       const PlatformCookieManagerCreationParams(),
     );
     TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
-        .setMockMethodCallHandler(channel, (MethodCall call) async {
-          calls.add(call);
-          return reply;
+        .setMockMessageHandler(fileSchemeChannel, (message) async {
+          messageWasNull = message == null;
+          return codec.encodeMessage(<Object?>[reply]);
         });
   });
 
   tearDown(() {
     TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
-        .setMockMethodCallHandler(channel, null);
+        .setMockMessageHandler(fileSchemeChannel, null);
   });
 
   group('AndroidCookieManager.isFileSchemeCookiesAllowed', () {
-    test('sends an empty argument map -- no profileName', () async {
+    test('sends no arguments at all -- no profileName', () async {
       await cookieManager.isFileSchemeCookiesAllowed();
 
-      expect(calls.single.method, 'isFileSchemeCookiesAllowed');
-      final args = calls.single.arguments as Map<Object?, Object?>;
-      // The native method is static: there is no instance and no profile to scope to.
-      expect(args, isEmpty);
+      // The native method is static: there is no instance and no profile to scope to. A
+      // no-parameter Pigeon method sends a null body, so anything else here would mean an argument
+      // had been added.
+      expect(messageWasNull, isTrue);
     });
 
     test('returns what the native side read', () async {

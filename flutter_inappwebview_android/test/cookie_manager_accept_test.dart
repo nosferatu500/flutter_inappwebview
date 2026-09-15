@@ -1,89 +1,104 @@
-import 'package:flutter/services.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter_inappwebview_android/flutter_inappwebview_android.dart';
+import 'package:flutter_inappwebview_android/src/pigeons/cookie_manager.g.dart';
 import 'package:flutter_inappwebview_platform_interface/flutter_inappwebview_platform_interface.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 /// Guards the wire shape of the cookie master switch — `CookieManager.setAcceptCookie` /
 /// `acceptCookie`.
 ///
-/// Two things here can only fail at runtime, so both are pinned:
+/// Transport is Pigeon since §168; before that this file mocked the hand-written `MethodChannel`
+/// and asserted **argument keys** (`call.argument("accept")`), because a renamed key arrived as
+/// null and the Kotlin side then reported failure rather than crashing — a silently dead switch.
+/// Pigeon removes that failure mode entirely: arguments are positional and the generated Kotlin
+/// signature is `setAcceptCookie(accept: Boolean, profileName: String?)`, so a mismatch cannot
+/// compile. What is still worth pinning, and is pinned below, is the **order and presence** of
+/// those positional arguments and — unchanged in substance — the **null return**.
 ///
-///  * the **argument keys**. `MyCookieManager` reads `call.argument("accept")` and
-///    `call.argument<String>("profileName")`; a renamed key arrives as null, and the Kotlin side
-///    then reports failure rather than crashing — a silently dead switch.
-///  * the **null return**. `isAcceptCookieEnabled` deliberately does *not* collapse null to false.
-///    The platform default is `true`, so `null` (store unresolvable) and `false` (cookies actively
-///    rejected) are opposite claims and must stay distinguishable.
+/// `isAcceptCookieEnabled` deliberately does *not* collapse null to false. The platform default is
+/// `true`, so `null` (store unresolvable) and `false` (cookies actively rejected) are opposite
+/// claims and must stay distinguishable; the schema types it `bool?` so the wire now carries that
+/// distinction itself.
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
 
-  const channel = MethodChannel(
-    'dev.nosferatu500.inappwebview/inappwebview_cookiemanager',
-  );
+  const codec = CookieManagerHostApi.pigeonChannelCodec;
+  const prefix =
+      'dev.flutter.pigeon.flutter_inappwebview_android.CookieManagerHostApi.';
+  const setAcceptChannel = '${prefix}setAcceptCookie';
+  const isAcceptEnabledChannel = '${prefix}isAcceptCookieEnabled';
 
   late AndroidCookieManager cookieManager;
-  final List<MethodCall> calls = <MethodCall>[];
-  Object? reply;
+  final Map<String, List<Object?>?> received = {};
+  final Map<String, Object?> replies = {};
+
+  void install(String channel) {
+    TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
+        .setMockMessageHandler(channel, (message) async {
+          received[channel] = message == null
+              ? null
+              : codec.decodeMessage(message) as List<Object?>;
+          // `containsKey`, not `?? true`: a deliberate null reply is the point of several tests
+          // here and `??` would quietly turn it back into true.
+          return codec.encodeMessage(<Object?>[
+            replies.containsKey(channel) ? replies[channel] : true,
+          ]);
+        });
+  }
 
   setUp(() {
-    calls.clear();
-    reply = true;
+    received.clear();
+    replies.clear();
     cookieManager = AndroidCookieManager(
       const PlatformCookieManagerCreationParams(),
     );
-    TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
-        .setMockMethodCallHandler(channel, (MethodCall call) async {
-          calls.add(call);
-          return reply;
-        });
+    install(setAcceptChannel);
+    install(isAcceptEnabledChannel);
   });
 
   tearDown(() {
-    TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
-        .setMockMethodCallHandler(channel, null);
+    final messenger =
+        TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger;
+    for (final c in [setAcceptChannel, isAcceptEnabledChannel]) {
+      messenger.setMockMessageHandler(c, null);
+    }
   });
 
-  Map<Object?, Object?> argsOf(MethodCall call) =>
-      call.arguments as Map<Object?, Object?>;
-
   group('AndroidCookieManager.setAcceptCookie', () {
-    test('sends the accept flag under the key the Kotlin side reads', () async {
+    test('sends the accept flag as the first positional argument', () async {
       await cookieManager.setAcceptCookie(false);
 
-      expect(calls.single.method, 'setAcceptCookie');
-      expect(argsOf(calls.single)['accept'], false);
+      expect(received[setAcceptChannel], <Object?>[false, null]);
     });
 
     test('carries profileName like every other method here', () async {
       await cookieManager.setAcceptCookie(true, profileName: 'signed_in');
 
-      expect(argsOf(calls.single)['accept'], true);
-      expect(argsOf(calls.single)['profileName'], 'signed_in');
+      expect(received[setAcceptChannel], <Object?>[true, 'signed_in']);
     });
 
     test('reports false when the native side could not apply it', () async {
       // Kotlin sends false when the cookie store cannot be resolved -- no WebView provider, or a
       // profileName that does not exist.
-      reply = false;
+      replies[setAcceptChannel] = false;
       expect(await cookieManager.setAcceptCookie(true), isFalse);
     });
   });
 
   group('AndroidCookieManager.isAcceptCookieEnabled', () {
-    test('sends no arguments beyond profileName', () async {
+    test('sends profileName as its only argument', () async {
       await cookieManager.isAcceptCookieEnabled();
 
-      expect(calls.single.method, 'isAcceptCookieEnabled');
-      expect(argsOf(calls.single).containsKey('profileName'), isTrue);
-      expect(argsOf(calls.single)['profileName'], isNull);
-      expect(argsOf(calls.single).containsKey('accept'), isFalse);
+      // One argument, not two: the accept flag belongs to the setter only. Under the old map-based
+      // wire this was spelled as "does not contain the key 'accept'".
+      expect(received[isAcceptEnabledChannel], <Object?>[null]);
     });
 
     test('returns what the native side read', () async {
-      reply = false;
+      replies[isAcceptEnabledChannel] = false;
       expect(await cookieManager.isAcceptCookieEnabled(), isFalse);
 
-      reply = true;
+      replies[isAcceptEnabledChannel] = true;
       expect(await cookieManager.isAcceptCookieEnabled(), isTrue);
     });
 
@@ -91,7 +106,7 @@ void main() {
       // This is the whole point of the bool? return type. Kotlin sends null when it could not
       // resolve the store; the platform default is true, so a `?? false` here would report
       // "cookies are rejected" for a state that was never measured.
-      reply = null;
+      replies[isAcceptEnabledChannel] = null;
       expect(await cookieManager.isAcceptCookieEnabled(), isNull);
     });
   });

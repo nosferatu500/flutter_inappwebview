@@ -5,142 +5,57 @@ import android.webkit.CookieManager
 import androidx.webkit.CookieManagerCompat
 import androidx.webkit.ProfileStore
 import androidx.webkit.WebViewFeature
-import dev.nosferatu500.inappwebview.types.ChannelDelegateImpl
-import io.flutter.plugin.common.MethodCall
-import io.flutter.plugin.common.MethodChannel
+import dev.nosferatu500.inappwebview.pigeons.CookieData
+import dev.nosferatu500.inappwebview.pigeons.CookieManagerHostApi
+import dev.nosferatu500.inappwebview.pigeons.CookieToSetData
+import dev.nosferatu500.inappwebview.types.Disposable
+import io.flutter.plugin.common.BinaryMessenger
 import java.text.ParseException
 import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
 import java.util.TimeZone
 
-class MyCookieManager(plugin: InAppWebViewFlutterPlugin) :
-  ChannelDelegateImpl(MethodChannel(plugin.messenger, METHOD_CHANNEL_NAME)) {
+/**
+ * Transport is Pigeon-generated ([CookieManagerHostApi]) rather than a hand-written `MethodChannel`;
+ * the eighth channel migrated, after find_interaction (§14), process_global_config (§157),
+ * proxy (§160), webview_feature (§161), tracing_controller (§162), credential_database (§163) and
+ * both web_message channels (§165).
+ *
+ * There is no `messageChannelSuffix`: `android.webkit.CookieManager` is process-global, so there is
+ * one channel rather than one per WebView.
+ *
+ * **Five of the twelve methods are `@async`** — the ones whose completion arrives on a
+ * `ValueCallback`. [deleteCookies] is the odd one out and is deliberately synchronous; see its
+ * KDoc. Every method but [isFileSchemeCookiesAllowed] takes a `profileName`, and §167's device tests
+ * cover both the resolution and the null-manager branch.
+ */
+class MyCookieManager(plugin: InAppWebViewFlutterPlugin) : Disposable, CookieManagerHostApi {
 
   @JvmField
   var plugin: InAppWebViewFlutterPlugin? = plugin
 
-  override fun onMethodCall(call: MethodCall, result: MethodChannel.Result) {
-    init()
+  private var messenger: BinaryMessenger? = plugin.messenger
 
-    // Null unless the caller scoped this single call to a profile; see PlatformCookieManager's
-    // class doc for why the scope is per call rather than per manager instance.
-    val profileName = call.argument<String>("profileName")
-
-    when (call.method) {
-      "setCookie" -> {
-        val url = call.argument<String>("url")
-        val name = call.argument<String>("name")
-        val value = call.argument<String>("value")
-        val domain = call.argument<String>("domain")
-        val path = call.argument<String>("path")
-        val expiresDateString = call.argument<String>("expiresDate")
-        val expiresDate = expiresDateString?.toLong()
-        val maxAge = call.argument<Int>("maxAge")
-        val isSecure = call.argument<Boolean>("isSecure")
-        val isHttpOnly = call.argument<Boolean>("isHttpOnly")
-        val sameSite = call.argument<String>("sameSite")
-        setCookie(
-          url, name, value, domain, path, expiresDate, maxAge, isSecure, isHttpOnly, sameSite,
-          profileName, result
-        )
-      }
-
-      "setCookies" -> {
-        // The Flutter codec boundary: StandardMessageCodec decodes to Map<String,Object>, so this
-        // cast is unverifiable and a wrong shape throws at the cast site, which is intended.
-        @Suppress("UNCHECKED_CAST")
-        val cookies = call.argument<List<Map<String, Any?>>>("cookies").orEmpty()
-        setCookies(cookies, profileName, result)
-      }
-
-      "getCookies" -> result.success(getCookies(call.argument("url"), profileName))
-
-      "deleteCookie" -> deleteCookie(
-        call.argument("url"), call.argument("name"), call.argument("domain"),
-        call.argument("path"), profileName, result
-      )
-
-      "deleteCookies" -> deleteCookies(
-        call.argument("url"), call.argument("domain"), call.argument("path"), profileName, result
-      )
-
-      "deleteAllCookies" -> deleteAllCookies(profileName, result)
-
-      "removeSessionCookies" -> removeSessionCookies(profileName, result)
-
-      "flush" -> flush(profileName, result)
-
-      "hasCookies" -> hasCookies(profileName, result)
-
-      "isFileSchemeCookiesAllowed" -> isFileSchemeCookiesAllowed(result)
-
-      "setAcceptCookie" -> setAcceptCookie(call.argument("accept"), profileName, result)
-
-      "isAcceptCookieEnabled" -> isAcceptCookieEnabled(profileName, result)
-
-      else -> result.notImplemented()
-    }
+  init {
+    CookieManagerHostApi.setUp(plugin.messenger, this)
   }
 
-  fun setCookie(
-    url: String?,
-    name: String?,
-    value: String?,
-    domain: String?,
-    path: String?,
-    expiresDate: Long?,
-    maxAge: Int?,
-    isSecure: Boolean?,
-    isHttpOnly: Boolean?,
-    sameSite: String?,
+  override fun setCookie(
+    cookie: CookieToSetData,
     profileName: String?,
-    result: MethodChannel.Result
+    callback: (Result<Boolean>) -> Unit
   ) {
     val manager = getCookieManager(profileName)
     if (manager == null) {
-      result.success(false)
+      callback(Result.success(false))
       return
     }
 
-    val cookieValue = buildCookieValue(
-      name, value, domain, path, expiresDate, maxAge, isSecure, isHttpOnly, sameSite
-    )
-
-    manager.setCookie(url, cookieValue) { successful -> result.success(successful) }
+    manager.setCookie(cookie.url, buildCookieValue(cookie)) { successful ->
+      callback(Result.success(successful))
+    }
     manager.flush()
-  }
-
-  /**
-   * The `Set-Cookie`-style string the framework's [CookieManager.setCookie] takes.
-   *
-   * Extracted so the singular and the plural call build a cookie the same way — a second spelling
-   * of this would be a difference nothing tests for and nobody would see until a field went
-   * missing on one path only.
-   */
-  private fun buildCookieValue(
-    name: String?,
-    value: String?,
-    domain: String?,
-    path: String?,
-    expiresDate: Long?,
-    maxAge: Int?,
-    isSecure: Boolean?,
-    isHttpOnly: Boolean?,
-    sameSite: String?
-  ): String {
-    var cookieValue = "$name=$value; Path=$path"
-
-    if (domain != null) cookieValue += "; Domain=$domain"
-    if (expiresDate != null) cookieValue += "; Expires=" + getCookieExpirationDate(expiresDate)
-    if (maxAge != null) cookieValue += "; Max-Age=$maxAge"
-    if (isSecure != null && isSecure) cookieValue += "; Secure"
-    if (isHttpOnly != null && isHttpOnly) cookieValue += "; HttpOnly"
-    if (sameSite != null) cookieValue += "; SameSite=$sameSite"
-
-    cookieValue += ";"
-
-    return cookieValue
   }
 
   /**
@@ -154,19 +69,22 @@ class MyCookieManager(plugin: InAppWebViewFlutterPlugin) :
    * the last one lands; collecting them by append order would scramble the mapping the Dart side
    * documents. And **[CookieManager.flush] is called once at the end** rather than once per
    * cookie, which the singular path cannot do.
+   *
+   * The empty case is also short-circuited on the Dart side, so it never reaches here; the guard
+   * stays because this interface is reachable from anything that speaks the channel.
    */
-  private fun setCookies(
-    cookies: List<Map<String, Any?>>,
+  override fun setCookies(
+    cookies: List<CookieToSetData>,
     profileName: String?,
-    result: MethodChannel.Result
+    callback: (Result<List<Boolean>>) -> Unit
   ) {
     val manager = getCookieManager(profileName)
     if (manager == null) {
-      result.success(List(cookies.size) { false })
+      callback(Result.success(List(cookies.size) { false }))
       return
     }
     if (cookies.isEmpty()) {
-      result.success(emptyList<Boolean>())
+      callback(Result.success(emptyList()))
       return
     }
 
@@ -174,40 +92,28 @@ class MyCookieManager(plugin: InAppWebViewFlutterPlugin) :
     var remaining = cookies.size
 
     for ((index, cookie) in cookies.withIndex()) {
-      val cookieValue = buildCookieValue(
-        cookie["name"] as? String,
-        cookie["value"] as? String,
-        cookie["domain"] as? String,
-        cookie["path"] as? String,
-        (cookie["expiresDate"] as? String)?.toLongOrNull(),
-        cookie["maxAge"] as? Int,
-        cookie["isSecure"] as? Boolean,
-        cookie["isHttpOnly"] as? Boolean,
-        cookie["sameSite"] as? String
-      )
-      manager.setCookie(cookie["url"] as? String, cookieValue) { successful ->
+      manager.setCookie(cookie.url, buildCookieValue(cookie)) { successful ->
         outcomes[index] = successful
         remaining--
         if (remaining == 0) {
           manager.flush()
-          result.success(outcomes.map { it == true })
+          callback(Result.success(outcomes.map { it == true }))
         }
       }
     }
   }
 
-  fun getCookies(url: String?, profileName: String?): List<Map<String, Any?>> {
-    val cookieListMap = mutableListOf<Map<String, Any?>>()
+  override fun getCookies(url: String, profileName: String?): List<CookieData> {
+    val manager = getCookieManager(profileName) ?: return emptyList()
 
-    val manager = getCookieManager(profileName) ?: return cookieListMap
-
-    var cookies: List<String> = emptyList()
-    if (WebViewFeature.isFeatureSupported(WebViewFeature.GET_COOKIE_INFO)) {
-      cookies = CookieManagerCompat.getCookieInfo(manager, url!!)
+    val hasCookieInfo = WebViewFeature.isFeatureSupported(WebViewFeature.GET_COOKIE_INFO)
+    val cookies: List<String> = if (hasCookieInfo) {
+      CookieManagerCompat.getCookieInfo(manager, url)
     } else {
-      manager.getCookie(url)?.let { cookies = it.split(";") }
+      manager.getCookie(url)?.split(";") ?: emptyList()
     }
 
+    val result = mutableListOf<CookieData>()
     for (cookie in cookies) {
       val cookieParams = cookie.split(";").toTypedArray()
       if (cookieParams.isEmpty()) continue
@@ -216,177 +122,148 @@ class MyCookieManager(plugin: InAppWebViewFlutterPlugin) :
       val name = nameValue[0].trim()
       val value = if (nameValue.size > 1) nameValue[1].trim() else ""
 
-      val cookieMap = hashMapOf<String, Any?>(
-        "name" to name,
-        "value" to value,
-        "expiresDate" to null,
-        "isSessionOnly" to null,
-        "domain" to null,
-        "sameSite" to null,
-        "isSecure" to null,
-        "isHttpOnly" to null,
-        "path" to null
-      )
+      if (!hasCookieInfo) {
+        // Without GET_COOKIE_INFO the platform returns a bare `name=value` list, so there are no
+        // attributes to parse and every other field stays null.
+        result.add(CookieData(name = name, value = value))
+        continue
+      }
 
-      if (WebViewFeature.isFeatureSupported(WebViewFeature.GET_COOKIE_INFO)) {
-        cookieMap["isSecure"] = false
-        cookieMap["isHttpOnly"] = false
+      var expiresDate: Long? = null
+      var domain: String? = null
+      var sameSite: String? = null
+      var isSecure = false
+      var isHttpOnly = false
+      var path: String? = null
 
-        for (i in 1 until cookieParams.size) {
-          val cookieParamNameValue = cookieParams[i].split("=".toRegex(), 2).toTypedArray()
-          val cookieParamName = cookieParamNameValue[0].trim()
-          val cookieParamValue =
-            if (cookieParamNameValue.size > 1) cookieParamNameValue[1].trim() else ""
+      for (i in 1 until cookieParams.size) {
+        val paramNameValue = cookieParams[i].split("=".toRegex(), 2).toTypedArray()
+        val paramName = paramNameValue[0].trim()
+        val paramValue = if (paramNameValue.size > 1) paramNameValue[1].trim() else ""
 
-          when {
-            cookieParamName.equals("Expires", ignoreCase = true) -> {
-              try {
-                val sdf = SimpleDateFormat("EEE, dd MMM yyyy HH:mm:ss z", Locale.US)
-                sdf.parse(cookieParamValue)?.let { cookieMap["expiresDate"] = it.time }
-              } catch (e: ParseException) {
-                Log.e(LOG_TAG, "", e)
-              }
+        when {
+          paramName.equals("Expires", ignoreCase = true) -> {
+            try {
+              val sdf = SimpleDateFormat("EEE, dd MMM yyyy HH:mm:ss z", Locale.US)
+              sdf.parse(paramValue)?.let { expiresDate = it.time }
+            } catch (e: ParseException) {
+              Log.e(LOG_TAG, "", e)
             }
-
-            cookieParamName.equals("Max-Age", ignoreCase = true) -> {
-              try {
-                val maxAge = cookieParamValue.toLong()
-                cookieMap["expiresDate"] = System.currentTimeMillis() + maxAge
-              } catch (e: NumberFormatException) {
-                Log.e(LOG_TAG, "", e)
-              }
-            }
-
-            cookieParamName.equals("Domain", ignoreCase = true) ->
-              cookieMap["domain"] = cookieParamValue
-
-            cookieParamName.equals("SameSite", ignoreCase = true) ->
-              cookieMap["sameSite"] = cookieParamValue
-
-            cookieParamName.equals("Secure", ignoreCase = true) ->
-              cookieMap["isSecure"] = true
-
-            cookieParamName.equals("HttpOnly", ignoreCase = true) ->
-              cookieMap["isHttpOnly"] = true
-
-            cookieParamName.equals("Path", ignoreCase = true) ->
-              cookieMap["path"] = cookieParamValue
           }
+
+          paramName.equals("Max-Age", ignoreCase = true) -> {
+            try {
+              expiresDate = System.currentTimeMillis() + paramValue.toLong()
+            } catch (e: NumberFormatException) {
+              Log.e(LOG_TAG, "", e)
+            }
+          }
+
+          paramName.equals("Domain", ignoreCase = true) -> domain = paramValue
+
+          paramName.equals("SameSite", ignoreCase = true) -> sameSite = paramValue
+
+          paramName.equals("Secure", ignoreCase = true) -> isSecure = true
+
+          paramName.equals("HttpOnly", ignoreCase = true) -> isHttpOnly = true
+
+          paramName.equals("Path", ignoreCase = true) -> path = paramValue
         }
       }
 
-      cookieListMap.add(cookieMap)
+      result.add(
+        CookieData(
+          name = name,
+          value = value,
+          expiresDate = expiresDate,
+          domain = domain,
+          sameSite = sameSite,
+          isSecure = isSecure,
+          isHttpOnly = isHttpOnly,
+          path = path
+        )
+      )
     }
-    return cookieListMap
+    return result
   }
 
-  fun deleteCookie(
-    url: String?,
-    name: String?,
+  override fun deleteCookie(
+    url: String,
+    name: String,
     domain: String?,
-    path: String?,
+    path: String,
     profileName: String?,
-    result: MethodChannel.Result
+    callback: (Result<Boolean>) -> Unit
   ) {
     val manager = getCookieManager(profileName)
     if (manager == null) {
-      result.success(false)
+      callback(Result.success(false))
       return
     }
 
-    var cookieValue = "$name=; Path=$path; Max-Age=-1"
-    if (domain != null) cookieValue += "; Domain=$domain"
-    cookieValue += ";"
-
-    manager.setCookie(url, cookieValue) { successful -> result.success(successful) }
+    manager.setCookie(url, expiringCookieValue(name, domain, path)) { successful ->
+      callback(Result.success(successful))
+    }
     manager.flush()
   }
 
-  fun deleteCookies(
-    url: String?,
+  /**
+   * Synchronous, unlike its singular sibling: the per-cookie writes pass a **null** callback, so
+   * nothing signals completion and the reply is a literal `true` meaning "the expiring writes were
+   * issued". That is the behaviour the hand-written channel had and it is preserved rather than
+   * tightened — turning it into a real per-cookie answer would be a behaviour change, not a
+   * migration.
+   */
+  override fun deleteCookies(
+    url: String,
     domain: String?,
-    path: String?,
-    profileName: String?,
-    result: MethodChannel.Result
-  ) {
-    val manager = getCookieManager(profileName)
-    if (manager == null) {
-      result.success(false)
-      return
-    }
+    path: String,
+    profileName: String?
+  ): Boolean {
+    val manager = getCookieManager(profileName) ?: return false
 
     val cookiesString = manager.getCookie(url)
     if (cookiesString != null) {
       for (cookie in cookiesString.split(";")) {
         val name = cookie.split("=".toRegex(), 2).toTypedArray()[0].trim()
-
-        var cookieValue = "$name=; Path=$path; Max-Age=-1"
-        if (domain != null) cookieValue += "; Domain=$domain"
-        cookieValue += ";"
-
-        manager.setCookie(url, cookieValue, null)
+        manager.setCookie(url, expiringCookieValue(name, domain, path), null)
       }
-
       manager.flush()
     }
-    result.success(true)
+    return true
   }
 
-  fun deleteAllCookies(profileName: String?, result: MethodChannel.Result) {
+  override fun deleteAllCookies(profileName: String?, callback: (Result<Boolean>) -> Unit) {
     val manager = getCookieManager(profileName)
     if (manager == null) {
-      result.success(false)
+      callback(Result.success(false))
       return
     }
 
-    manager.removeAllCookies { successful -> result.success(successful) }
+    manager.removeAllCookies { successful -> callback(Result.success(successful)) }
     manager.flush()
   }
 
-  fun removeSessionCookies(profileName: String?, result: MethodChannel.Result) {
+  override fun removeSessionCookies(profileName: String?, callback: (Result<Boolean>) -> Unit) {
     val manager = getCookieManager(profileName)
     if (manager == null) {
-      result.success(false)
+      callback(Result.success(false))
       return
     }
 
-    manager.removeSessionCookies { successful -> result.success(successful) }
+    manager.removeSessionCookies { successful -> callback(Result.success(successful)) }
     manager.flush()
   }
 
   /**
-   * Note the reply on the success path: without it the channel never answers and the Dart
-   * `await flush()` never completes -- a hang rather than an error, since a MethodChannel has no
-   * timeout and nothing supplies a missing reply.
+   * Note the reply: without it the channel never answers and the Dart `await flush()` never
+   * completes -- a hang rather than an error (P0b.9, §55). Pigeon makes the missing reply
+   * unrepresentable, which is the point of this migration for this method in particular.
    */
-  fun flush(profileName: String?, result: MethodChannel.Result) {
-    val manager = getCookieManager(profileName)
-    if (manager == null) {
-      result.success(false)
-      return
-    }
+  override fun flush(profileName: String?): Boolean {
+    val manager = getCookieManager(profileName) ?: return false
     manager.flush()
-    result.success(true)
-  }
-
-  /**
-   * `CookieManager.allowFileSchemeCookies` is a **static** on the framework class, so there is no
-   * manager instance to act on and no profile to scope to.
-   *
-   * It still resolves the manager first, and only as a guard: the static delegates to the WebView
-   * provider internally and throws if none is installed, while `getCookieManager()` already wraps
-   * exactly that case (MissingWebViewPackageException and the Chromium 559720 IllegalArgumentException)
-   * and answers null. Reusing it turns a crash into the same null this class's other getters send.
-   *
-   * The setter, `setAcceptFileSchemeCookies`, is deprecated and deliberately not exposed.
-   */
-  fun isFileSchemeCookiesAllowed(result: MethodChannel.Result) {
-    if (getCookieManager() == null) {
-      result.success(null)
-      return
-    }
-
-    result.success(CookieManager.allowFileSchemeCookies())
+    return true
   }
 
   /**
@@ -396,14 +273,27 @@ class MyCookieManager(plugin: InAppWebViewFlutterPlugin) :
    * "nothing was read" are different answers, and a caller skipping a logout-time clear on the
    * strength of a false would skip it for a store that does hold cookies.
    */
-  fun hasCookies(profileName: String?, result: MethodChannel.Result) {
-    val manager = getCookieManager(profileName)
-    if (manager == null) {
-      result.success(null)
-      return
-    }
+  override fun hasCookies(profileName: String?): Boolean? =
+    getCookieManager(profileName)?.hasCookies()
 
-    result.success(manager.hasCookies())
+  /**
+   * `CookieManager.allowFileSchemeCookies` is a **static** on the framework class, so there is no
+   * manager instance to act on and no profile to scope to -- which is why this is the one method
+   * here with no `profileName`.
+   *
+   * It still resolves the manager first, and only as a guard: the static delegates to the WebView
+   * provider internally and throws if none is installed, while `getCookieManager()` already wraps
+   * exactly that case (MissingWebViewPackageException and the Chromium 559720
+   * IllegalArgumentException) and answers null. Reusing it turns a crash into the same null this
+   * class's other getters send.
+   *
+   * The setter, `setAcceptFileSchemeCookies`, is deprecated and deliberately not exposed.
+   */
+  override fun isFileSchemeCookiesAllowed(): Boolean? {
+    if (getCookieManager() == null) {
+      return null
+    }
+    return CookieManager.allowFileSchemeCookies()
   }
 
   /**
@@ -414,48 +304,76 @@ class MyCookieManager(plugin: InAppWebViewFlutterPlugin) :
    * Reports false rather than throwing when the store cannot be resolved, matching the other
    * write paths on this class.
    */
-  fun setAcceptCookie(accept: Boolean?, profileName: String?, result: MethodChannel.Result) {
-    val manager = getCookieManager(profileName)
-    if (manager == null || accept == null) {
-      result.success(false)
-      return
-    }
-
+  override fun setAcceptCookie(accept: Boolean, profileName: String?): Boolean {
+    val manager = getCookieManager(profileName) ?: return false
     manager.setAcceptCookie(accept)
-    result.success(true)
+    return true
   }
 
   /**
    * Sends null -- not false -- when the store cannot be resolved. The platform default is `true`,
    * so false would tell the caller cookies are being rejected when nothing was actually read.
    */
-  fun isAcceptCookieEnabled(profileName: String?, result: MethodChannel.Result) {
-    val manager = getCookieManager(profileName)
-    if (manager == null) {
-      result.success(null)
-      return
-    }
-
-    result.success(manager.acceptCookie())
-  }
+  override fun isAcceptCookieEnabled(profileName: String?): Boolean? =
+    getCookieManager(profileName)?.acceptCookie()
 
   override fun dispose() {
-    super.dispose()
+    // Unregisters the generated handler. Skipping it would leave it bound to a disposed manager
+    // for the life of the messenger.
+    messenger?.let { CookieManagerHostApi.setUp(it, null) }
+    messenger = null
     plugin = null
   }
 
   companion object {
-    protected const val LOG_TAG = "MyCookieManager"
-    const val METHOD_CHANNEL_NAME = "dev.nosferatu500.inappwebview/inappwebview_cookiemanager"
+    private const val LOG_TAG = "MyCookieManager"
 
-    @JvmField
-    var cookieManager: CookieManager? = null
+    /**
+     * Cached because the *first* `CookieManager.getInstance()` loads Chromium (~100ms). Was a
+     * public mutable `@JvmField` alongside a public `init()`; nothing outside this class ever
+     * touched either — measured across the whole module — so both are gone, the cache is private
+     * and resolution is lazy at the point of use rather than at the top of every dispatch.
+     */
+    private var cachedCookieManager: CookieManager? = null
 
-    @JvmStatic
-    fun init() {
-      if (cookieManager == null) {
-        cookieManager = getCookieManager()
-      }
+    /**
+     * The `Set-Cookie`-style string the framework's [CookieManager.setCookie] takes.
+     *
+     * Takes the wire type directly, so the singular and plural writes cannot drift: they were
+     * previously kept in step by a hand-written Dart helper that had to spell `expiresDate` as a
+     * String to match the singular call. One typed field removes that hazard rather than managing
+     * it — see the schema's [CookieToSetData].
+     *
+     * [CookieToSetData.maxAge] stays a `Long` here: it is only interpolated into the attribute, so
+     * narrowing to `Int` would buy nothing (§162's narrowing was forced by androidx demanding an
+     * `int`; nothing does here).
+     */
+    private fun buildCookieValue(cookie: CookieToSetData): String {
+      var value = "${cookie.name}=${cookie.value}; Path=${cookie.path}"
+
+      cookie.domain?.let { value += "; Domain=$it" }
+      cookie.expiresDate?.let { value += "; Expires=" + getCookieExpirationDate(it) }
+      cookie.maxAge?.let { value += "; Max-Age=$it" }
+      if (cookie.isSecure == true) value += "; Secure"
+      if (cookie.isHttpOnly == true) value += "; HttpOnly"
+      cookie.sameSite?.let { value += "; SameSite=$it" }
+
+      value += ";"
+
+      return value
+    }
+
+    /**
+     * The `Set-Cookie` string that deletes a cookie: same name, empty value, already expired.
+     *
+     * Extracted because [deleteCookie] and [deleteCookies] built it with two copies of the same
+     * four lines, which is how the singular and plural paths drift apart.
+     */
+    private fun expiringCookieValue(name: String, domain: String?, path: String): String {
+      var value = "$name=; Path=$path; Max-Age=-1"
+      if (domain != null) value += "; Domain=$domain"
+      value += ";"
+      return value
     }
 
     /**
@@ -494,9 +412,9 @@ class MyCookieManager(plugin: InAppWebViewFlutterPlugin) :
      * https://github.com/facebook/react-native/blob/1903f6680d9750e244d97c3cd4a9f755a9a47c61/ReactAndroid/src/main/java/com/facebook/react/modules/network/ForwardingCookieHandler.java#L132
      */
     private fun getCookieManager(): CookieManager? {
-      if (cookieManager == null) {
+      if (cachedCookieManager == null) {
         try {
-          cookieManager = CookieManager.getInstance()
+          cachedCookieManager = CookieManager.getInstance()
         } catch (ex: IllegalArgumentException) {
           // https://bugs.chromium.org/p/chromium/issues/detail?id=559720
           return null
@@ -517,11 +435,10 @@ class MyCookieManager(plugin: InAppWebViewFlutterPlugin) :
         }
       }
 
-      return cookieManager
+      return cachedCookieManager
     }
 
-    @JvmStatic
-    fun getCookieExpirationDate(timestamp: Long): String {
+    private fun getCookieExpirationDate(timestamp: Long): String {
       val sdf = SimpleDateFormat("EEE, dd MMM yyyy HH:mm:ss z", Locale.US)
       sdf.timeZone = TimeZone.getTimeZone("GMT")
       return sdf.format(Date(timestamp))

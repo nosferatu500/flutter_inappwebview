@@ -450,6 +450,36 @@ for, and five others have a native *value* that differs from their name.
 
 ### Internal
 
+- **The `cookiemanager` channel is Pigeon-generated**, the eighth migrated and the largest so far at
+  **twelve methods**. `AndroidCookieManager` drops `ChannelController` and holds the generated
+  `CookieManagerHostApi`; `MyCookieManager` implements it and its hand-written `onMethodCall`
+  dispatch is gone, along with `InternalCookieManager`. `MyCookieManager.cookieManager`, its
+  `init()` and `getCookieExpirationDate` were public statics that nothing outside the class ever
+  called, and are now private. No public API change.
+
+  **It is the first schema to mix synchronous and `@async` host methods.** Five are `@async` —
+  `setCookie`, `setCookies`, `deleteCookie`, `deleteAllCookies`, `removeSessionCookies` — because
+  each completes through a `ValueCallback`. `deleteCookies` is **not**, despite its name: it expires
+  each cookie with a null callback and answers `true` synchronously, so its reply means "the
+  expiring writes were issued", exactly as before.
+
+  **`expiresDate` now crosses as a typed `int` in both directions.** It previously travelled as a
+  decimal **String** (`expiresDate?.toString()` in Dart, `.toLong()` in Kotlin), and the plural
+  `setCookies` had to hand-build its per-cookie map to match that spelling, because the generated
+  `CookieToSet.toMap()` sent an `int` and would have produced a silently-null expiry on the plural
+  path only. Both writes now take the same `CookieToSetData`, so one spelling is enforced by the
+  generated signatures and the hand-written map is deleted.
+
+  **`isSessionOnly` is no longer on the wire.** The Kotlin seeded it into every returned cookie as a
+  literal null and never assigned it on either branch, so Android has always answered null for it.
+  `Cookie.isSessionOnly` is still null for Android callers; one always-null key per cookie is gone.
+
+  One behaviour note: `flush` previously read `invokeMethod<bool>(…) ?? false`, so a null reply —
+  including *no handler at all* — was reported as `false`. It is typed non-nullable now, so that
+  case raises a `PlatformException` instead of being folded into the same answer a resolvable-store
+  failure gives. `hasCookies`, `isAcceptCookieEnabled` and `isFileSchemeCookiesAllowed` stay `bool?`
+  and keep their meaningful null.
+
 - **The two `web_message` channels are Pigeon-generated** — `WebMessageChannel` and
   `WebMessageListener` — the seventh migration and the **first per-instance channels** since the
   pilot. Each instance addresses its own generated channels through a `messageChannelSuffix` (the
