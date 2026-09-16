@@ -239,6 +239,24 @@ for, and five others have a native *value* that differs from their name.
 
 ### Fixed
 
+- **`ProxyController.setProxyOverride()` reported a malformed proxy rule as a dead channel instead
+  of an error.** A rule Chromium rejects — `"://"`, `"http://["`, `"%%%"`, `""`, a bypass rule of
+  `" "`, or a `directs` entry of `"bogus"` — raises `IllegalArgumentException` *synchronously* from
+  `ProxyController.setProxyOverride`. Because that is an `@async` Pigeon host method, the throw
+  escaped the generated handler and no reply was sent, so the caller received
+  `PlatformException(channel-error, "Unable to establish connection on channel…")`, naming the
+  transport rather than the rule, and the message handler was left dangling.
+
+  It now fails as `PlatformException(code: "ProxyManager")` carrying androidx's own message. Note
+  androidx **accepts** some strings that look invalid, `"not a url"` among them; only the six above
+  were observed to fail, and the test keeps `"not a url"` as a control so the guard cannot start
+  rejecting everything.
+
+  The same shape was fixed in `WebStorageManager.deleteBrowsingDataForSite` — see *Internal*. Pigeon
+  wraps a **synchronous** host method in `try { … } catch (Throwable) { wrapError(…) }` but leaves an
+  **`@async`** one unwrapped, so only an error delivered through the callback becomes an error
+  envelope.
+
 - **`HttpAuthCredentialDatabase.setHttpAuthCredential()` failed with an empty error when the
   protection space omitted `protocol` or `port`.** `URLProtectionSpace` requires only `host` in its
   constructor and declares `String? protocol` / `int? port`, so
@@ -464,10 +482,14 @@ for, and five others have a native *value* that differs from their name.
   signature forces (`getOrigins(ValueCallback<Map>)`) remains, but the class-level
   `@Suppress("UNCHECKED_CAST")` is now **scoped to that one function**.
 
-  One behaviour note: `deleteBrowsingDataForSite` previously caught `IllegalArgumentException` — an
-  unparseable site — and answered `result.error("MyWebStorage", message, null)`. It now propagates
-  to Pigeon's `wrapError`, so `PlatformException.code` becomes the exception's class name rather than
-  the constant. Breaking only for code matching on that code.
+  `deleteBrowsingDataForSite` still fails with `PlatformException(code: "MyWebStorage")` for a site
+  it cannot parse, exactly as before — **no behaviour change**. An earlier draft of this entry said
+  the code would become the exception's class name via Pigeon's `wrapError`; that was wrong and the
+  migration briefly shipped the bug it implied. Pigeon wraps a **synchronous** host method in
+  `try { … } catch (Throwable) { wrapError(…) }`, but an **`@async`** one is generated as a bare
+  `api.method(args) { result -> … }` with no `try`/`catch`: a synchronous throw escapes the handler,
+  no reply is sent, and the caller gets `PlatformException(channel-error, "Unable to establish
+  connection on channel…")`. The Kotlin now delivers the failure through the callback instead.
 
 - **The `cookiemanager` channel is Pigeon-generated**, the eighth migrated and the largest so far at
   **twelve methods**. `AndroidCookieManager` drops `ChannelController` and holds the generated

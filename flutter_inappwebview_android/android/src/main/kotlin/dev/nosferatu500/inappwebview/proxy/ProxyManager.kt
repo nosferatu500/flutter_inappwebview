@@ -7,6 +7,7 @@ import dev.nosferatu500.inappwebview.InAppWebViewFlutterPlugin
 import dev.nosferatu500.inappwebview.pigeons.ProxyHostApi
 import dev.nosferatu500.inappwebview.pigeons.ProxySettingsData
 import dev.nosferatu500.inappwebview.types.Disposable
+import dev.nosferatu500.inappwebview.types.replyingOnThrow
 import io.flutter.plugin.common.BinaryMessenger
 import java.util.concurrent.Executor
 
@@ -51,34 +52,64 @@ class ProxyManager(plugin: InAppWebViewFlutterPlugin) : Disposable, ProxyHostApi
       return
     }
 
-    val builder = ProxyConfig.Builder()
-    settings.bypassRules.forEach { builder.addBypassRule(it) }
-    settings.directs.forEach { builder.addDirect(it) }
-    settings.proxyRules.forEach { rule ->
-      val schemeFilter = rule.schemeFilter
-      if (schemeFilter != null) {
-        builder.addProxyRule(rule.url, schemeFilter)
-      } else {
-        builder.addProxyRule(rule.url)
+    // 🚨 **A malformed rule raises `IllegalArgumentException` synchronously, and this is an
+    // `@async` host method, so it has to be delivered through [callback] rather than thrown.**
+    //
+    // Pigeon's generated handlers are not symmetric: a *synchronous* one is wrapped in
+    // `try { … } catch (Throwable) { wrapError(…) }`, an `@async` one is a bare
+    // `api.method(args) { result -> … }` with no `try`/`catch`. A throw escapes into
+    // `BasicMessageChannel`, which logs "Failed to handle message" and replies **null**, so the Dart
+    // caller sees `PlatformException(channel-error, "Unable to establish connection on channel…")`
+    // -- an error naming the transport rather than the rule that caused it. §170 found the same
+    // shape in `MyWebStorage.deleteBrowsingDataForSite`.
+    //
+    // **Where the validation happens was measured, and the obvious reading is wrong.** It is natural
+    // to assume `ProxyConfig.Builder.addProxyRule` validates, and to guard only the build -- a guard
+    // that catches nothing, because the device stack trace puts the throw in Chromium underneath the
+    // *controller* call:
+    //
+    //     java.lang.IllegalArgumentException: Invalid Proxy URL: ://
+    //       at org.chromium.android_webview.AwProxyController.a(…)
+    //       at androidx.webkit.internal.ProxyControllerImpl.setProxyOverride(ProxyControllerImpl.java:47)
+    //       at dev.nosferatu500.inappwebview.proxy.ProxyManager.setProxyOverride(…)
+    //
+    // So `controller.setProxyOverride` is inside the guard too. The guard's idempotent `reply`
+    // covers the ordering that makes excluding it tempting: `DIRECT_EXECUTOR` runs the completion
+    // inline, so a throw *after* androidx has already invoked it would otherwise produce a second
+    // reply -- which `AsyncReplyTest` pins.
+    //
+    // [replyingOnThrow] rather than a local try/catch: it is shared by every `@async` method in this
+    // module and unit-tested in `AsyncReplyTest`, which is what makes the guard reviewable where
+    // the call site itself cannot produce a throw on demand.
+    replyingOnThrow(LOG_TAG, callback) { reply ->
+      val builder = ProxyConfig.Builder()
+      settings.bypassRules.forEach { builder.addBypassRule(it) }
+      settings.directs.forEach { builder.addDirect(it) }
+      settings.proxyRules.forEach { rule ->
+        val schemeFilter = rule.schemeFilter
+        if (schemeFilter != null) {
+          builder.addProxyRule(rule.url, schemeFilter)
+        } else {
+          builder.addProxyRule(rule.url)
+        }
       }
-    }
-    // Builder calls with no inverse, so only `true` may invoke them -- null and false both mean
-    // "leave it alone". This is why the two fields stay nullable in the schema.
-    if (settings.bypassSimpleHostnames == true) {
-      builder.bypassSimpleHostnames()
-    }
-    if (settings.removeImplicitRules == true) {
-      builder.removeImplicitRules()
-    }
-    // The old code also tested `reverseBypassEnabled != null`. The field is non-null in the schema
-    // (the platform interface defaults it to false and Dart could never send null), so that test
-    // could not fail and is gone.
-    if (WebViewFeature.isFeatureSupported(WebViewFeature.PROXY_OVERRIDE_REVERSE_BYPASS)) {
-      builder.setReverseBypassEnabled(settings.reverseBypassEnabled)
-    }
-
-    controller.setProxyOverride(builder.build(), DIRECT_EXECUTOR) {
-      callback(Result.success(true))
+      // Builder calls with no inverse, so only `true` may invoke them -- null and false both mean
+      // "leave it alone". This is why the two fields stay nullable in the schema.
+      if (settings.bypassSimpleHostnames == true) {
+        builder.bypassSimpleHostnames()
+      }
+      if (settings.removeImplicitRules == true) {
+        builder.removeImplicitRules()
+      }
+      // The old code also tested `reverseBypassEnabled != null`. The field is non-null in the schema
+      // (the platform interface defaults it to false and Dart could never send null), so that test
+      // could not fail and is gone.
+      if (WebViewFeature.isFeatureSupported(WebViewFeature.PROXY_OVERRIDE_REVERSE_BYPASS)) {
+        builder.setReverseBypassEnabled(settings.reverseBypassEnabled)
+      }
+      controller.setProxyOverride(builder.build(), DIRECT_EXECUTOR) {
+        reply(Result.success(true))
+      }
     }
   }
 
@@ -88,7 +119,9 @@ class ProxyManager(plugin: InAppWebViewFlutterPlugin) : Disposable, ProxyHostApi
       callback(Result.success(false))
       return
     }
-    controller.clearProxyOverride(DIRECT_EXECUTOR) { callback(Result.success(true)) }
+    replyingOnThrow(LOG_TAG, callback) { reply ->
+      controller.clearProxyOverride(DIRECT_EXECUTOR) { reply(Result.success(true)) }
+    }
   }
 
   override fun dispose() {
@@ -100,6 +133,8 @@ class ProxyManager(plugin: InAppWebViewFlutterPlugin) : Disposable, ProxyHostApi
   }
 
   companion object {
+    private const val LOG_TAG = "ProxyManager"
+
     /**
      * Runs the completion callback on the calling thread, which is the behaviour the hand-written
      * channel had.

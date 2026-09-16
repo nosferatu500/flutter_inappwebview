@@ -327,11 +327,18 @@ interface WebStorageManagerHostApi {
    * or the feature is unsupported — note this is the **null** counterpart of
    * [deleteBrowsingData]'s `false`, an inconsistency that predates the migration and is preserved.
    *
-   * **Throws** when the site cannot be parsed as a domain name. The old handler answered
-   * `result.error("MyWebStorage", message, null)`; a Pigeon host method reports a thrown
-   * `IllegalArgumentException` through `wrapError`, so the `PlatformException.code` becomes the
-   * exception's class name instead of the constant. Same shape as §165's note, and breaking only
-   * for code matching on that code.
+   * 🚨 **Fails with `PlatformException(code: "MyWebStorage")` when the site cannot be parsed as a
+   * domain name — and the Kotlin must deliver that through the callback rather than throwing.**
+   *
+   * §169 first wrote this as "the exception propagates to Pigeon's `wrapError`", which is **wrong
+   * for an `@async` method**: the generated handler wraps a *synchronous* host call in
+   * `try { … } catch (Throwable) { wrapError(…) }`, but an `@async` one is a bare
+   * `api.method(args) { result -> … }` with no `try`/`catch`. A synchronous throw escapes the
+   * handler, no reply is sent, and the caller gets `channel-error`. Measured on a device in §170
+   * and fixed there; see the Kotlin.
+   *
+   * The code stays the old `"MyWebStorage"` constant, so this is **not** a breaking change after
+   * all — unlike §165's note, which this paragraph replaces.
    *
    * `@async`: completion is signalled through a `Runnable`, and the return value is read *inside*
    * it — safe only because the compat overload posts to the main looper. See the Kotlin.

@@ -9,6 +9,7 @@ import dev.nosferatu500.inappwebview.pigeons.CookieData
 import dev.nosferatu500.inappwebview.pigeons.CookieManagerHostApi
 import dev.nosferatu500.inappwebview.pigeons.CookieToSetData
 import dev.nosferatu500.inappwebview.types.Disposable
+import dev.nosferatu500.inappwebview.types.replyingOnThrow
 import io.flutter.plugin.common.BinaryMessenger
 import java.text.ParseException
 import java.text.SimpleDateFormat
@@ -41,21 +42,30 @@ class MyCookieManager(plugin: InAppWebViewFlutterPlugin) : Disposable, CookieMan
     CookieManagerHostApi.setUp(plugin.messenger, this)
   }
 
+  /**
+   * Wrapped in [replyingOnThrow], as every `@async` method in this module is (§172): Pigeon does not
+   * wrap `@async` handlers in `try`/`catch`, so a synchronous throw would escape and the caller
+   * would see `channel-error` with no reply rather than a named failure. The guard covers the
+   * profile resolver too, not just the platform call -- §171 fixed a bug whose throw came from a
+   * line that had been reasoned out of a narrower guard.
+   */
   override fun setCookie(
     cookie: CookieToSetData,
     profileName: String?,
     callback: (Result<Boolean>) -> Unit
   ) {
-    val manager = getCookieManager(profileName)
-    if (manager == null) {
-      callback(Result.success(false))
-      return
-    }
+    replyingOnThrow(LOG_TAG, callback) { reply ->
+      val manager = getCookieManager(profileName)
+      if (manager == null) {
+        reply(Result.success(false))
+        return@replyingOnThrow
+      }
 
-    manager.setCookie(cookie.url, buildCookieValue(cookie)) { successful ->
-      callback(Result.success(successful))
+      manager.setCookie(cookie.url, buildCookieValue(cookie)) { successful ->
+        reply(Result.success(successful))
+      }
+      manager.flush()
     }
-    manager.flush()
   }
 
   /**
@@ -78,26 +88,28 @@ class MyCookieManager(plugin: InAppWebViewFlutterPlugin) : Disposable, CookieMan
     profileName: String?,
     callback: (Result<List<Boolean>>) -> Unit
   ) {
-    val manager = getCookieManager(profileName)
-    if (manager == null) {
-      callback(Result.success(List(cookies.size) { false }))
-      return
-    }
-    if (cookies.isEmpty()) {
-      callback(Result.success(emptyList()))
-      return
-    }
+    replyingOnThrow(LOG_TAG, callback) { reply ->
+      val manager = getCookieManager(profileName)
+      if (manager == null) {
+        reply(Result.success(List(cookies.size) { false }))
+        return@replyingOnThrow
+      }
+      if (cookies.isEmpty()) {
+        reply(Result.success(emptyList()))
+        return@replyingOnThrow
+      }
 
-    val outcomes = arrayOfNulls<Boolean>(cookies.size)
-    var remaining = cookies.size
+      val outcomes = arrayOfNulls<Boolean>(cookies.size)
+      var remaining = cookies.size
 
-    for ((index, cookie) in cookies.withIndex()) {
-      manager.setCookie(cookie.url, buildCookieValue(cookie)) { successful ->
-        outcomes[index] = successful
-        remaining--
-        if (remaining == 0) {
-          manager.flush()
-          callback(Result.success(outcomes.map { it == true }))
+      for ((index, cookie) in cookies.withIndex()) {
+        manager.setCookie(cookie.url, buildCookieValue(cookie)) { successful ->
+          outcomes[index] = successful
+          remaining--
+          if (remaining == 0) {
+            manager.flush()
+            reply(Result.success(outcomes.map { it == true }))
+          }
         }
       }
     }
@@ -195,16 +207,18 @@ class MyCookieManager(plugin: InAppWebViewFlutterPlugin) : Disposable, CookieMan
     profileName: String?,
     callback: (Result<Boolean>) -> Unit
   ) {
-    val manager = getCookieManager(profileName)
-    if (manager == null) {
-      callback(Result.success(false))
-      return
-    }
+    replyingOnThrow(LOG_TAG, callback) { reply ->
+      val manager = getCookieManager(profileName)
+      if (manager == null) {
+        reply(Result.success(false))
+        return@replyingOnThrow
+      }
 
-    manager.setCookie(url, expiringCookieValue(name, domain, path)) { successful ->
-      callback(Result.success(successful))
+      manager.setCookie(url, expiringCookieValue(name, domain, path)) { successful ->
+        reply(Result.success(successful))
+      }
+      manager.flush()
     }
-    manager.flush()
   }
 
   /**
@@ -234,25 +248,29 @@ class MyCookieManager(plugin: InAppWebViewFlutterPlugin) : Disposable, CookieMan
   }
 
   override fun deleteAllCookies(profileName: String?, callback: (Result<Boolean>) -> Unit) {
-    val manager = getCookieManager(profileName)
-    if (manager == null) {
-      callback(Result.success(false))
-      return
-    }
+    replyingOnThrow(LOG_TAG, callback) { reply ->
+      val manager = getCookieManager(profileName)
+      if (manager == null) {
+        reply(Result.success(false))
+        return@replyingOnThrow
+      }
 
-    manager.removeAllCookies { successful -> callback(Result.success(successful)) }
-    manager.flush()
+      manager.removeAllCookies { successful -> reply(Result.success(successful)) }
+      manager.flush()
+    }
   }
 
   override fun removeSessionCookies(profileName: String?, callback: (Result<Boolean>) -> Unit) {
-    val manager = getCookieManager(profileName)
-    if (manager == null) {
-      callback(Result.success(false))
-      return
-    }
+    replyingOnThrow(LOG_TAG, callback) { reply ->
+      val manager = getCookieManager(profileName)
+      if (manager == null) {
+        reply(Result.success(false))
+        return@replyingOnThrow
+      }
 
-    manager.removeSessionCookies { successful -> callback(Result.success(successful)) }
-    manager.flush()
+      manager.removeSessionCookies { successful -> reply(Result.success(successful)) }
+      manager.flush()
+    }
   }
 
   /**
