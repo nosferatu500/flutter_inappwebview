@@ -468,6 +468,42 @@ for, and five others have a native *value* that differs from their name.
 
 ### Internal
 
+- **The `inappwebview_profilestore` channel is Pigeon-generated**, the tenth migrated, at **eight
+  methods**. `AndroidProfileStore` drops `ChannelController` and holds the generated
+  `ProfileStoreHostApi`; `ProfileStoreManager` implements it and its hand-written `onMethodCall`
+  dispatch is gone, along with the `METHOD_CHANNEL_NAME` constant nothing outside the class read.
+  No public API change.
+
+  **None of the eight methods is `@async`**, and that is measured rather than assumed: every
+  `ProfileStore` and `Profile` method this channel calls returns directly (read from the androidx
+  1.17.0 sources). `Profile` does have callback-shaped methods — `prefetchUrlAsync` — but this
+  channel calls none of them, so Pigeon's own `try`/`catch` around each synchronous handler is the
+  only error path involved and the `replyingOnThrow` helper has nothing to wrap.
+
+  `deleteProfile` still fails with `PlatformException(code: "ProfileStoreManager")` for all three
+  refusals — a living WebView holds the profile, the profile was loaded into memory this run, or the
+  name is the default profile — exactly as before. **No behaviour change, but it is now an explicit
+  one.** androidx raises two different exception classes for those refusals
+  (`IllegalStateException` and `IllegalArgumentException`) and Pigeon's `wrapError` derives the code
+  from `javaClass.simpleName` for anything that is not a `FlutterError`, so the host re-throws both
+  as `FlutterError("ProfileStoreManager", …)`. Letting them propagate would have replaced one stable
+  code with two exception-class names; that is now pinned by a device test asserting **both**
+  refusals carry the same code, because a single-refusal test reports `"IllegalStateException"`
+  under the broken version and reads as a rename rather than a contract break.
+
+  `addCustomHeader`, `clearCustomHeader` and `clearAllCustomHeaders` are now `void` on the wire.
+  The hand-written handler replied a constant `true` for each — including when the feature was
+  missing or the named profile did not exist, in which case nothing had been added or cleared — and
+  the Dart side, which declares `Future<void>`, discarded it. Dropping it removes a value that never
+  meant anything; making these honestly answerable is a platform-interface change, not a transport
+  one, and is filed rather than done here.
+
+  `getAllProfileNames` loses its cast from an untyped platform `List` and its `?? <String>[]`, and
+  `hasCustomHeader` loses its `?? false`: the schema types both non-null and the host already
+  answers an empty list / `false` for an unresolvable profile. `getCustomHeaders` still selects the
+  androidx overload **on the host side** rather than filtering in Dart, because the platform matches
+  header names case-insensitively and values case-sensitively.
+
 - **The `webstoragemanager` channel is Pigeon-generated**, the ninth migrated.
   `AndroidWebStorageManager` drops `ChannelController` and holds the generated
   `WebStorageManagerHostApi`; `MyWebStorage` implements it and its hand-written `onMethodCall`

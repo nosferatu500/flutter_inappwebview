@@ -59,6 +59,7 @@ part 'load_file_url_request.dart';
 part 'save_state.dart';
 part 'cookie_intercept.dart';
 part 'custom_request_headers.dart';
+part 'profile_store_delete.dart';
 part 'load_url.dart';
 part 'on_console_message.dart';
 part 'on_content_size_changed.dart';
@@ -226,6 +227,7 @@ void main() {
     saveStateBounds();
     cookieIntercept();
     customRequestHeaders();
+    profileStoreDelete();
     keepAlive();
 
     // `printCurrentPage` MUST BE LAST, and must stay last.

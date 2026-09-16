@@ -1,8 +1,9 @@
 import 'dart:async';
 
 import 'package:flutter/foundation.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_inappwebview_platform_interface/flutter_inappwebview_platform_interface.dart';
+
+import 'pigeons/profile_store.g.dart';
 
 /// Object specifying creation parameters for creating a [AndroidProfileStore].
 ///
@@ -28,7 +29,13 @@ class AndroidProfileStoreCreationParams
 }
 
 ///{@macro flutter_inappwebview_platform_interface.PlatformProfileStore}
-class AndroidProfileStore extends PlatformProfileStore with ChannelController {
+///
+/// Transport is Pigeon-generated ([ProfileStoreHostApi]) rather than a hand-written `MethodChannel`;
+/// the tenth channel migrated, after find_interaction (§14), process_global_config (§157), proxy
+/// (§160), webview_feature (§161), tracing_controller (§162), credential_database (§163), both
+/// web_message channels (§165), cookie_manager (§168) and web_storage_manager (§169). There is no
+/// `messageChannelSuffix` because `androidx.webkit.ProfileStore` is process-global.
+class AndroidProfileStore extends PlatformProfileStore implements Disposable {
   /// Creates a new [AndroidProfileStore].
   AndroidProfileStore(PlatformProfileStoreCreationParams params)
     : super.implementation(
@@ -37,13 +44,9 @@ class AndroidProfileStore extends PlatformProfileStore with ChannelController {
             : AndroidProfileStoreCreationParams.fromPlatformProfileStoreCreationParams(
                 params,
               ),
-      ) {
-    channel = const MethodChannel(
-      'dev.nosferatu500.inappwebview/inappwebview_profilestore',
-    );
-    handler = _handleMethod;
-    initMethodCallHandler();
-  }
+      );
+
+  final ProfileStoreHostApi _hostApi = ProfileStoreHostApi();
 
   static AndroidProfileStore? _instance;
 
@@ -66,23 +69,18 @@ class AndroidProfileStore extends PlatformProfileStore with ChannelController {
     return instance();
   }
 
-  Future<dynamic> _handleMethod(MethodCall call) async {}
-
   @override
   Future<List<String>> getAllProfileNames() async {
-    Map<String, dynamic> args = <String, dynamic>{};
-    return (await channel?.invokeMethod<List>(
-          'getAllProfileNames',
-          args,
-        ))?.cast<String>() ??
-        <String>[];
+    // No `?? <String>[]`: the schema types this non-null, and the host already answers an empty
+    // list when MULTI_PROFILE is unsupported. The old cast from an untyped platform `List` is gone
+    // too — Pigeon decodes `List<String>` directly.
+    return await _hostApi.getAllProfileNames();
   }
 
   @override
   Future<String?> getOrCreateProfile({required String name}) async {
-    Map<String, dynamic> args = <String, dynamic>{};
-    args.putIfAbsent('name', () => name);
-    return await channel?.invokeMethod<String>('getOrCreateProfile', args);
+    // `String?`, and the null is "nothing was created" rather than "created with an empty name".
+    return await _hostApi.getOrCreateProfile(name);
   }
 
   @override
@@ -90,18 +88,21 @@ class AndroidProfileStore extends PlatformProfileStore with ChannelController {
     CustomHeader header, {
     String? profileName,
   }) async {
-    Map<String, dynamic> args = <String, dynamic>{};
-    args.putIfAbsent('profileName', () => profileName);
-    args.putIfAbsent('header', () => header.toMap());
-    await channel?.invokeMethod('addCustomHeader', args);
+    await _hostApi.addCustomHeader(
+      CustomHeaderData(
+        name: header.name,
+        value: header.value,
+        originRules: header.originRules.toList(),
+      ),
+      profileName,
+    );
   }
 
   @override
   Future<bool> hasCustomHeader(String headerName, {String? profileName}) async {
-    Map<String, dynamic> args = <String, dynamic>{};
-    args.putIfAbsent('profileName', () => profileName);
-    args.putIfAbsent('headerName', () => headerName);
-    return await channel?.invokeMethod<bool>('hasCustomHeader', args) ?? false;
+    // The `?? false` the hand-written channel needed is gone: the schema types this non-null, and
+    // the host still answers `false` for an unresolvable profile or a missing feature.
+    return await _hostApi.hasCustomHeader(headerName, profileName);
   }
 
   @override
@@ -110,16 +111,21 @@ class AndroidProfileStore extends PlatformProfileStore with ChannelController {
     String? headerValue,
     String? profileName,
   }) async {
-    Map<String, dynamic> args = <String, dynamic>{};
-    args.putIfAbsent('profileName', () => profileName);
-    args.putIfAbsent('headerName', () => headerName);
-    args.putIfAbsent('headerValue', () => headerValue);
-    final result = await channel?.invokeMethod<List<dynamic>?>(
-      'getCustomHeaders',
-      args,
+    final headers = await _hostApi.getCustomHeaders(
+      headerName,
+      headerValue,
+      profileName,
     );
-    return (result ?? <dynamic>[])
-        .map((e) => CustomHeader.fromMap(e?.cast<String, dynamic>())!)
+    // Back to a `Set` because that is what the platform interface declares and what androidx holds;
+    // the wire has no set, so the list is the transport shape only.
+    return headers
+        .map(
+          (h) => CustomHeader(
+            name: h.name,
+            value: h.value,
+            originRules: h.originRules.toSet(),
+          ),
+        )
         .toSet();
   }
 
@@ -129,29 +135,25 @@ class AndroidProfileStore extends PlatformProfileStore with ChannelController {
     String? headerValue,
     String? profileName,
   }) async {
-    Map<String, dynamic> args = <String, dynamic>{};
-    args.putIfAbsent('profileName', () => profileName);
-    args.putIfAbsent('headerName', () => headerName);
-    args.putIfAbsent('headerValue', () => headerValue);
-    await channel?.invokeMethod('clearCustomHeader', args);
+    await _hostApi.clearCustomHeader(headerName, headerValue, profileName);
   }
 
   @override
   Future<void> clearAllCustomHeaders({String? profileName}) async {
-    Map<String, dynamic> args = <String, dynamic>{};
-    args.putIfAbsent('profileName', () => profileName);
-    await channel?.invokeMethod('clearAllCustomHeaders', args);
+    await _hostApi.clearAllCustomHeaders(profileName);
   }
 
   @override
   Future<bool> deleteProfile({required String name}) async {
-    Map<String, dynamic> args = <String, dynamic>{};
-    args.putIfAbsent('name', () => name);
-    return await channel?.invokeMethod<bool>('deleteProfile', args) ?? false;
+    // Throws a `PlatformException(code: "ProfileStoreManager")` when the platform refuses the
+    // deletion — a living WebView holds the profile, the profile was loaded this run, or the name is
+    // the default profile. `false` means only "no such profile" or "MULTI_PROFILE unsupported".
+    return await _hostApi.deleteProfile(name);
   }
 
   @override
   void dispose() {
-    // empty
+    // empty -- the host API holds no per-instance registration to tear down, and this class is a
+    // process-wide singleton.
   }
 }
