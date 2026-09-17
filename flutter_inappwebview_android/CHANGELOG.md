@@ -468,6 +468,34 @@ for, and five others have a native *value* that differs from their name.
 
 ### Internal
 
+- **`print_job_controller` gets an Android device group — 1 test, from zero**, covering all four of
+  the channel's methods (`getInfo`, `cancel`, `restart`, `dispose`) across one job's lifetime.
+  Written as its own item before the Pigeon migration of `PrintJobChannelDelegate`, per the rule
+  §169 earned.
+
+  **It is one test rather than four because reaching the channel at all raises the OS print dialog.**
+  A `PrintJobController` exists on Android only when `printCurrentPage` is given
+  `PrintJobSettings(handledByClient: true)`, and the statement after the controller is constructed is
+  `printManager.print(...)`. There is no path to a controller that does not raise the modal, so the
+  whole lifecycle runs against a single job, and the group lives in its own file and is pinned
+  **last** in the aggregate runner.
+
+  **Trap 83 turns out to be narrower than its wording.** It records that the print dialog cannot be
+  dismissed and that tests after it time out — true of *widget* tests, which need the Flutter UI the
+  dialog covers, and **not** true of channel calls. All four methods answer normally while
+  `PrintActivity` owns the screen, which is what makes this group possible.
+
+  Measured rather than quoted while writing it: `cancel()` and `restart()` are **no-ops on a job in
+  `CREATED` state** (the state a freshly submitted job is in), so those assertions pin reachability
+  and non-interference, not cancellation. `dispose()` is the one teardown with an observable effect —
+  `getInfo()` answers null afterwards.
+
+  Also recorded: **8 of the 15 fields `PrintJobInfo.fromMap` reads are never sent by Android** —
+  `canSpawnSeparateThread`, `currentPage`, `firstPage`, `isCopyingOperation`, `lastPage`,
+  `preferredRenderingQuality`, `showsPrintPanel`, `showsProgressPanel`, each with zero occurrences in
+  the whole Android Kotlin source. They are iOS-only and arrive null. The group asserts they stay
+  null so that a change in either direction shows up.
+
 - **The `inappwebview_geolocationpermissions` channel is Pigeon-generated**, the eleventh migrated,
   at **five methods**. `AndroidGeolocationPermissions` drops `ChannelController` and holds the
   generated `GeolocationPermissionsHostApi`; `GeolocationPermissionsManager` implements it and its
