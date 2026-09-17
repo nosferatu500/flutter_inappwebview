@@ -1,8 +1,9 @@
 import 'dart:async';
 
 import 'package:flutter/foundation.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_inappwebview_platform_interface/flutter_inappwebview_platform_interface.dart';
+
+import 'pigeons/geolocation_permissions.g.dart';
 
 /// Object specifying creation parameters for creating a [AndroidGeolocationPermissions].
 ///
@@ -28,8 +29,15 @@ class AndroidGeolocationPermissionsCreationParams
 }
 
 ///{@macro flutter_inappwebview_platform_interface.PlatformGeolocationPermissions}
+///
+/// Transport is Pigeon-generated ([GeolocationPermissionsHostApi]) rather than a hand-written
+/// `MethodChannel`; the eleventh channel migrated, after find_interaction (§14),
+/// process_global_config (§157), proxy (§160), webview_feature (§161), tracing_controller (§162),
+/// credential_database (§163), both web_message channels (§165), cookie_manager (§168),
+/// web_storage_manager (§169) and profile_store (§173). There is no `messageChannelSuffix` because
+/// `android.webkit.GeolocationPermissions` is process-global.
 class AndroidGeolocationPermissions extends PlatformGeolocationPermissions
-    with ChannelController {
+    implements Disposable {
   /// Creates a new [AndroidGeolocationPermissions].
   AndroidGeolocationPermissions(
     PlatformGeolocationPermissionsCreationParams params,
@@ -39,13 +47,10 @@ class AndroidGeolocationPermissions extends PlatformGeolocationPermissions
             : AndroidGeolocationPermissionsCreationParams.fromPlatformGeolocationPermissionsCreationParams(
                 params,
               ),
-      ) {
-    channel = const MethodChannel(
-      'dev.nosferatu500.inappwebview/inappwebview_geolocationpermissions',
-    );
-    handler = _handleMethod;
-    initMethodCallHandler();
-  }
+      );
+
+  final GeolocationPermissionsHostApi _hostApi =
+      GeolocationPermissionsHostApi();
 
   static AndroidGeolocationPermissions? _instance;
 
@@ -68,29 +73,21 @@ class AndroidGeolocationPermissions extends PlatformGeolocationPermissions
     return instance();
   }
 
-  Future<dynamic> _handleMethod(MethodCall call) async {}
-
   @override
   Future<bool> allow({required String origin, String? profileName}) async {
-    Map<String, dynamic> args = <String, dynamic>{};
-    args.putIfAbsent('profileName', () => profileName);
-    args.putIfAbsent('origin', () => origin);
-    return await channel?.invokeMethod<bool>('allow', args) ?? false;
+    // The `?? false` the hand-written channel needed is gone: the schema types this non-null, and
+    // the host still answers `false` for an unresolvable store.
+    return await _hostApi.allow(origin, profileName);
   }
 
   @override
   Future<bool> clear({required String origin, String? profileName}) async {
-    Map<String, dynamic> args = <String, dynamic>{};
-    args.putIfAbsent('profileName', () => profileName);
-    args.putIfAbsent('origin', () => origin);
-    return await channel?.invokeMethod<bool>('clear', args) ?? false;
+    return await _hostApi.clear(origin, profileName);
   }
 
   @override
   Future<bool> clearAll({String? profileName}) async {
-    Map<String, dynamic> args = <String, dynamic>{};
-    args.putIfAbsent('profileName', () => profileName);
-    return await channel?.invokeMethod<bool>('clearAll', args) ?? false;
+    return await _hostApi.clearAll(profileName);
   }
 
   @override
@@ -98,25 +95,23 @@ class AndroidGeolocationPermissions extends PlatformGeolocationPermissions
     required String origin,
     String? profileName,
   }) async {
-    Map<String, dynamic> args = <String, dynamic>{};
-    args.putIfAbsent('profileName', () => profileName);
-    args.putIfAbsent('origin', () => origin);
-    return await channel?.invokeMethod<bool?>('getAllowed', args);
+    // `bool?`, and the null is not incidental: it means the store could not be resolved, which is a
+    // different answer from `false` ("asked, nothing stored"). The four sibling methods spell the
+    // same condition as `false` or an empty list.
+    return await _hostApi.getAllowed(origin, profileName);
   }
 
   @override
   Future<List<String>> getOrigins({String? profileName}) async {
-    Map<String, dynamic> args = <String, dynamic>{};
-    args.putIfAbsent('profileName', () => profileName);
-    return (await channel?.invokeMethod<List>(
-          'getOrigins',
-          args,
-        ))?.cast<String>() ??
-        <String>[];
+    // Origins come back normalised with a trailing `/`; see the platform-interface dartdoc. The old
+    // cast from an untyped platform `List` and its `?? <String>[]` are both gone — Pigeon decodes
+    // `List<String>` directly and the schema types it non-null.
+    return await _hostApi.getOrigins(profileName);
   }
 
   @override
   void dispose() {
-    // empty
+    // empty -- the host API holds no per-instance registration to tear down, and this class is a
+    // process-wide singleton.
   }
 }

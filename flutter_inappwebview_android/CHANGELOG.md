@@ -468,6 +468,29 @@ for, and five others have a native *value* that differs from their name.
 
 ### Internal
 
+- **The `inappwebview_geolocationpermissions` channel is Pigeon-generated**, the eleventh migrated,
+  at **five methods**. `AndroidGeolocationPermissions` drops `ChannelController` and holds the
+  generated `GeolocationPermissionsHostApi`; `GeolocationPermissionsManager` implements it and its
+  hand-written `onMethodCall` dispatch is gone, along with the `METHOD_CHANNEL_NAME` constant.
+  `getGeolocationPermissions` was a public `@JvmStatic` that nothing outside the class ever called,
+  and is now private. No public API change.
+
+  **Two of the five are `@async`** — `getAllowed` and `getOrigins`, which complete through a
+  `ValueCallback`; `allow`, `clear` and `clearAll` wrap `void` platform calls and answer inline.
+  Both `@async` methods are wrapped in `replyingOnThrow` (§172's standing rule), covering the
+  **whole** body including the store resolution rather than only the part where a throw looks
+  likely — §171's first attempt at that kind of guard was scoped so it could not catch its own bug.
+
+  `getAllowed` still answers **`null`** for an unresolvable store while its four siblings answer
+  `false` or an empty list for the identical condition. That disagreement is deliberate and
+  preserved: `null` means "could not ask", `false` means "asked, nothing stored", and a caller
+  deciding whether to prompt needs them apart. Pigeon makes an unanswered branch unrepresentable, so
+  each of the five is restated by hand in the Kotlin.
+
+  `allow` / `clear` / `clearAll` lose their `?? false` and `getOrigins` loses its cast from an
+  untyped platform `List` plus its `?? <String>[]`: the schema types all four non-null and the host
+  already answers `false` / `[]` for an unresolvable store.
+
 - **`geolocation_permissions` gets an Android device group — 8 tests, from zero.** The channel had
   **no** integration coverage at all (measured: no file under `integration_test/` mentioned
   geolocation), which is the state §169 migrated `web_storage_manager` in. It is written as its own

@@ -1,87 +1,117 @@
 package dev.nosferatu500.inappwebview.geolocation
 
 import android.webkit.GeolocationPermissions
+import android.webkit.ValueCallback
 import androidx.webkit.ProfileStore
 import androidx.webkit.WebViewFeature
 import dev.nosferatu500.inappwebview.InAppWebViewFlutterPlugin
-import dev.nosferatu500.inappwebview.types.ChannelDelegateImpl
-import io.flutter.plugin.common.MethodCall
-import io.flutter.plugin.common.MethodChannel
+import dev.nosferatu500.inappwebview.pigeons.GeolocationPermissionsHostApi
+import dev.nosferatu500.inappwebview.types.Disposable
+import dev.nosferatu500.inappwebview.types.replyingOnThrow
+import io.flutter.plugin.common.BinaryMessenger
 
+/**
+ * Transport is Pigeon-generated ([GeolocationPermissionsHostApi]) rather than a hand-written
+ * `MethodChannel`; the eleventh channel migrated, after find_interaction (§14),
+ * process_global_config (§157), proxy (§160), webview_feature (§161), tracing_controller (§162),
+ * credential_database (§163), both web_message channels (§165), cookie_manager (§168),
+ * web_storage_manager (§169) and profile_store (§173).
+ *
+ * There is no `messageChannelSuffix`: `android.webkit.GeolocationPermissions` is process-global, so
+ * there is one channel rather than one per WebView.
+ *
+ * **Two of the five methods are `@async`** — [getAllowed] and [getOrigins], which complete through a
+ * `ValueCallback`. Both are wrapped in [replyingOnThrow] per §172's standing rule: Pigeon wraps
+ * *synchronous* generated handlers in `try`/`catch` and `@async` ones in **nothing**, so a
+ * synchronous throw inside one of these would escape the handler, send no reply at all, and reach
+ * Dart as `PlatformException(channel-error, …)` — naming the transport rather than the cause.
+ *
+ * The wrap covers the **whole** body including the store resolution, not just the part where a throw
+ * looks likely. §171's first attempt at this scoped a guard by reasoning about where the exception
+ * came from and put it in the wrong place; the rule is to stop predicting.
+ */
 class GeolocationPermissionsManager(plugin: InAppWebViewFlutterPlugin) :
-  ChannelDelegateImpl(MethodChannel(plugin.messenger, METHOD_CHANNEL_NAME)) {
+  Disposable, GeolocationPermissionsHostApi {
 
   @JvmField
   var plugin: InAppWebViewFlutterPlugin? = plugin
 
-  override fun onMethodCall(call: MethodCall, result: MethodChannel.Result) {
-    // Null unless the caller scoped this single call to a profile; see
-    // PlatformGeolocationPermissions' class doc for why the scope is per call.
-    val profileName = call.argument<String>("profileName")
-    val permissions = getGeolocationPermissions(profileName)
+  private var messenger: BinaryMessenger? = plugin.messenger
 
-    when (call.method) {
-      "allow" -> {
-        if (permissions == null) {
-          result.success(false)
-          return
-        }
-        permissions.allow(call.argument("origin"))
-        result.success(true)
+  init {
+    GeolocationPermissionsHostApi.setUp(plugin.messenger, this)
+  }
+
+  override fun allow(origin: String, profileName: String?): Boolean {
+    val permissions = getGeolocationPermissions(profileName) ?: return false
+    permissions.allow(origin)
+    return true
+  }
+
+  override fun clear(origin: String, profileName: String?): Boolean {
+    val permissions = getGeolocationPermissions(profileName) ?: return false
+    permissions.clear(origin)
+    return true
+  }
+
+  override fun clearAll(profileName: String?): Boolean {
+    val permissions = getGeolocationPermissions(profileName) ?: return false
+    permissions.clearAll()
+    return true
+  }
+
+  /**
+   * `null` rather than `false` when the store cannot be resolved: "could not ask" is not the same
+   * answer as "no decision stored", and a caller deciding whether to prompt needs to tell them
+   * apart. This is the only such null on the channel — its four siblings answer `false` or an empty
+   * list for the identical condition, deliberately.
+   */
+  override fun getAllowed(
+    origin: String,
+    profileName: String?,
+    callback: (Result<Boolean?>) -> Unit
+  ) {
+    replyingOnThrow(LOG_TAG, callback) { reply ->
+      val permissions = getGeolocationPermissions(profileName)
+      if (permissions == null) {
+        reply(Result.success(null))
+        return@replyingOnThrow
       }
+      permissions.getAllowed(origin) { allowed -> reply(Result.success(allowed)) }
+    }
+  }
 
-      "clear" -> {
-        if (permissions == null) {
-          result.success(false)
-          return
-        }
-        permissions.clear(call.argument("origin"))
-        result.success(true)
+  /**
+   * The callback hands back a `Set`; the wire has no set, so it is copied into a list. Order is
+   * whatever the set iterates and nothing should depend on it.
+   *
+   * Note the origins come back **normalised with a trailing `/`** — an origin stored as
+   * `https://x.test` is listed as `https://x.test/`. That is the platform's doing, not this
+   * plugin's; measured in §174 and documented on the public `getOrigins`.
+   */
+  override fun getOrigins(profileName: String?, callback: (Result<List<String>>) -> Unit) {
+    replyingOnThrow(LOG_TAG, callback) { reply ->
+      val permissions = getGeolocationPermissions(profileName)
+      if (permissions == null) {
+        reply(Result.success(emptyList()))
+        return@replyingOnThrow
       }
-
-      "clearAll" -> {
-        if (permissions == null) {
-          result.success(false)
-          return
-        }
-        permissions.clearAll()
-        result.success(true)
-      }
-
-      // null rather than false: "could not ask" is not the same answer as "not allowed".
-      "getAllowed" -> {
-        if (permissions == null) {
-          result.success(null)
-          return
-        }
-        permissions.getAllowed(call.argument("origin")) { allowed ->
-          result.success(allowed)
-        }
-      }
-
-      "getOrigins" -> {
-        if (permissions == null) {
-          result.success(ArrayList<String>())
-          return
-        }
-        // The callback hands back a Set; the standard codec only writes lists, so it has to be
-        // copied rather than passed through.
-        permissions.getOrigins { origins -> result.success(ArrayList(origins)) }
-      }
-
-      else -> result.notImplemented()
+      permissions.getOrigins(
+        ValueCallback<Set<String>> { origins -> reply(Result.success(origins.toList())) }
+      )
     }
   }
 
   override fun dispose() {
-    super.dispose()
+    // Unregisters the generated handler. Skipping it would leave it bound to a disposed manager for
+    // the life of the messenger.
+    messenger?.let { GeolocationPermissionsHostApi.setUp(it, null) }
+    messenger = null
     plugin = null
   }
 
   companion object {
-    protected const val LOG_TAG = "GeolocationPermissionsManager"
-    const val METHOD_CHANNEL_NAME =
-      "dev.nosferatu500.inappwebview/inappwebview_geolocationpermissions"
+    private const val LOG_TAG = "GeolocationPermissionsManager"
 
     /**
      * Resolves the [GeolocationPermissions] store a call should act on.
@@ -99,9 +129,11 @@ class GeolocationPermissionsManager(plugin: InAppWebViewFlutterPlugin) :
      *
      * Unlike the service-worker case (see ServiceWorkerSettings), no adapter is needed: androidx has
      * no `GeolocationPermissionsCompat`, so both paths yield the same framework type.
+     *
+     * Was a public `@JvmStatic`; nothing outside this class ever called it -- measured across the
+     * whole module -- so it is private now, matching the same cleanup in §162, §168, §169 and §173.
      */
-    @JvmStatic
-    fun getGeolocationPermissions(profileName: String?): GeolocationPermissions? {
+    private fun getGeolocationPermissions(profileName: String?): GeolocationPermissions? {
       if (profileName == null) {
         return GeolocationPermissions.getInstance()
       }
