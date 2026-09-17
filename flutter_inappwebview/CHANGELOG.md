@@ -407,7 +407,12 @@ implemented on the current platform" on iOS.
   is actually using. `setServiceWorkerClient` remains default-profile only
 - **`WebViewFeature.PRERENDER_WITH_URL`** — `InAppWebViewController.prerenderUrl(WebUri)`
 - **`GeolocationPermissions`** — a new controller surface (`allow`, `clear`, `clearAll`,
-  `getAllowed`, `getOrigins`), profile-aware from the start
+  `getAllowed`, `getOrigins`), profile-aware from the start.
+  **Note that `getOrigins()` returns origins normalised with a trailing `/`**: an origin stored as
+  `https://example.com` reads back as `https://example.com/`. All four other methods accept either
+  form, so listing the origins and acting on each one works — but comparing the list against a
+  string you passed to `allow()` by equality will not match. Measured on Android 17; the dartdoc on
+  `getOrigins` and `allow` now says so
 - **`CookieManager`** — `setAcceptCookie()`, `isAcceptCookieEnabled()`, `hasCookies()`,
   `isFileSchemeCookiesAllowed()`
 - **`InAppWebViewController`** — `postVisualStateCallback()`, `documentHasImages()`,

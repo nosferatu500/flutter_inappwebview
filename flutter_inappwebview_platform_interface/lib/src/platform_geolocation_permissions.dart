@@ -121,6 +121,9 @@ abstract class PlatformGeolocationPermissions extends PlatformInterface {
   ///port, as in `https://example.com` or `https://example.com:8443`. It is not a URL: a path is not
   ///part of the identity a decision is stored against.
   ///
+  ///Note that [getOrigins] reports this origin back in a **normalised** form, with a trailing `/`,
+  ///which is not the string given here. See [getOrigins].
+  ///
   ///Returns `true` once the decision is stored, or `false` when
   ///[WebViewFeature.MULTI_PROFILE] is not supported or the named profile does not exist, in which
   ///case nothing was stored.
@@ -233,6 +236,14 @@ abstract class PlatformGeolocationPermissions extends PlatformInterface {
 
   ///{@template flutter_inappwebview_platform_interface.PlatformGeolocationPermissions.getOrigins}
   ///Returns the origins that have a stored decision allowing the Geolocation API.
+  ///
+  ///**The origins come back normalised, with a trailing `/`.** Storing `https://example.com` with
+  ///[allow] and reading it back here gives `https://example.com/` — measured on Android 17. So
+  ///comparing this list against a string you passed to [allow] by equality will not match, and
+  ///`contains` on the un-normalised form will not find it.
+  ///
+  ///The values returned here *are* accepted by [allow], [clear] and [getAllowed], which take either
+  ///form, so listing the origins and then acting on each one works. Only the comparison is the trap.
   ///
   ///Returns an empty list when nothing is stored, and also when
   ///[WebViewFeature.MULTI_PROFILE] is not supported or the named profile does not exist.

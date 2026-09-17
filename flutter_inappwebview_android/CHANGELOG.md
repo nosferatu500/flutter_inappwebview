@@ -468,6 +468,21 @@ for, and five others have a native *value* that differs from their name.
 
 ### Internal
 
+- **`geolocation_permissions` gets an Android device group — 8 tests, from zero.** The channel had
+  **no** integration coverage at all (measured: no file under `integration_test/` mentioned
+  geolocation), which is the state §169 migrated `web_storage_manager` in. It is written as its own
+  item **before** the Pigeon migration of `GeolocationPermissionsManager`, per the rule §169 earned.
+
+  It found a platform behaviour on its first run, in four tests at once: **`getOrigins()` returns
+  origins normalised with a trailing `/`**, while `allow` / `clear` / `getAllowed` accept the
+  un-normalised form. The two halves of the public API therefore disagree about the spelling. The
+  round trip *does* close — what `getOrigins` emits is accepted by the other four, measured
+  explicitly rather than assumed — so this is a documentation gap and not a functional trap, and the
+  dartdoc now carries it.
+
+  The group pumps no WebView (these are stored decisions, not the prompt), which is also why it was
+  measurable at all on an AVD whose DNS is currently broken.
+
 - **The `inappwebview_profilestore` channel is Pigeon-generated**, the tenth migrated, at **eight
   methods**. `AndroidProfileStore` drops `ChannelController` and holds the generated
   `ProfileStoreHostApi`; `ProfileStoreManager` implements it and its hand-written `onMethodCall`

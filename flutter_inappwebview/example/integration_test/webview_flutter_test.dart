@@ -15,6 +15,7 @@ import 'in_app_localhost_server/main.dart' as in_app_localhost_server_tests;
 import 'tracing_controller/main.dart' as tracing_controller_tests;
 import 'support_methods/main.dart' as support_methods_tests;
 import 'web_storage_manager/main.dart' as web_storage_manager_tests;
+import 'geolocation_permissions/main.dart' as geolocation_permissions_tests;
 
 void main() {
   IntegrationTestWidgetsFlutterBinding.ensureInitialized();
@@ -49,4 +50,5 @@ void main() {
   in_app_localhost_server_tests.main();
   support_methods_tests.main();
   web_storage_manager_tests.main();
+  geolocation_permissions_tests.main();
 }
