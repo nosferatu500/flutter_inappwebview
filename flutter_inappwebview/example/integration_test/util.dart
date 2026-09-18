@@ -154,6 +154,36 @@ class MyInAppBrowser extends InAppBrowser {
 }
 
 class MyChromeSafariBrowser extends ChromeSafariBrowser {
+  /// Every instance created by a test, so a group's `tearDown` can close one a failing test left
+  /// open.
+  ///
+  /// 🚨 **This exists because a Custom Tab left on screen poisons every test after it** — the same
+  /// shape as the print dialog (trap 83), in a different activity. §178 measured it: `request and
+  /// send post messages` timed out at 60s without reaching its `close()`, and the tab it left up
+  /// then took down three unrelated tests that all pass in isolation. Closing inline at the end of
+  /// each test is not enough, because a failure never gets there.
+  static final List<MyChromeSafariBrowser> openInstances =
+      <MyChromeSafariBrowser>[];
+
+  /// Closes anything still open. Safe to call when nothing is.
+  static Future<void> closeAllOpen() async {
+    for (final browser in List<MyChromeSafariBrowser>.from(openInstances)) {
+      try {
+        if (browser.isOpened()) {
+          await browser.close();
+        }
+      } catch (_) {
+        // A browser that is already gone, or whose channel has been torn down, throws here. There
+        // is nothing useful to do about it and a throwing tearDown would mask the real failure.
+      }
+    }
+    openInstances.clear();
+  }
+
+  MyChromeSafariBrowser() {
+    openInstances.add(this);
+  }
+
   final Completer<void> serviceConnected = Completer<void>();
   final Completer<void> opened = Completer<void>();
   final Completer<bool?> firstPageLoaded = Completer<bool?>();

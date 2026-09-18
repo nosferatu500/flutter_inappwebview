@@ -468,6 +468,55 @@ for, and five others have a native *value* that differs from their name.
 
 ### Internal
 
+- **The `chromesafaribrowser_*` per-instance channel is Pigeon-generated**, the thirteenth migrated
+  and the largest so far: **nine host methods plus thirteen events**.
+  `AndroidChromeSafariBrowser` drops `ChannelController` and holds the generated
+  `ChromeCustomTabsHostApi`; `ChromeCustomTabsChannelDelegate` implements it, and its hand-written
+  `onMethodCall` dispatch and the Dart `_handleMethod` switch are both gone. No public API change.
+
+  **Only the per-instance channel is migrated.** `open`, `isAvailable`, `getMaxToolbarItems` and
+  `getPackageName` go to a separate static `ChromeSafariBrowserManager` channel, which carries the
+  settings payload and stays hand-written for now — so the Dart class deliberately holds a Pigeon
+  host API *and* a raw `MethodChannel`.
+
+  The class-level `@Suppress("UNCHECKED_CAST")` on the delegate is **gone**: it existed because every
+  structured read was an unverifiable `Map<String, Any?>` cast at the codec boundary, and the
+  generated types remove both the casts and the need for the suppression.
+
+  **Eleven of the thirteen event names collide with the public API**, which declares them as methods
+  taking domain types (`onNavigationEvent(CustomTabsNavigationEventType?)`) where Pigeon generates
+  wire types (`onNavigationEvent(int)`). The events therefore arrive through a private forwarder that
+  converts each value before calling the public method — the same shape used for `find_interaction`
+  and `print_job`.
+
+  `onCompletedInitialLoad` now takes **no argument**. The public callback declares
+  `bool? didLoadSuccessfully`, and the Kotlin has always sent an empty map, so the value was already
+  null on Android; the forwarder passes null explicitly rather than putting a permanently-null field
+  on the wire.
+
+  `clickableIDs` on the secondary toolbar crosses as a plain list of resources: the public wrapper's
+  only other field is an `onClick` closure, which never crossed and still does not — the Dart side
+  keeps it and dispatches by resource name, as before.
+
+- **The `chrome_safari_browser` integration group goes from 10 / 5 to 13 passing + 2 skipped**, with
+  no plugin code changed. Four of the five failures were not real: `Custom Tabs request and send post
+  messages` hangs its full 60 s without reaching `close()`, and the Custom Tab it leaves on screen
+  covers the Flutter UI so three later tests time out against a view they cannot reach. Run alone,
+  those three pass in about a second each.
+
+  The two genuine failures — `request and send post messages` and `Trusted Web Activity validate
+  relationship` — are **permanently unrunnable in this fork** and are now skipped with that reason.
+  Both need Chrome to verify a digital-asset-link delegation, and
+  `https://inappwebview.dev/.well-known/assetlinks.json` delegates only to the upstream package
+  `com.pichillilorenzo.flutter_inappwebviewexample` and its signing cert.
+
+  Worth knowing when reading the API: **`requestPostMessageChannel` answers `true` even when no
+  channel will ever open** — it reports that the request was accepted, and `onMessageChannelReady` is
+  what says a channel exists.
+
+  A group `tearDown` now closes any browser a failing test left open, so a single failure can no
+  longer take down the tests after it.
+
 - **The `inappwebview_printjobcontroller_*` channel is Pigeon-generated**, the twelfth migrated and
   the **first with both a per-instance channel and an event**. `AndroidPrintJobController` drops
   `ChannelController` and holds the generated `PrintJobControllerHostApi`;

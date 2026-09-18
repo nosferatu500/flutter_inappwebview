@@ -1,5 +1,24 @@
 part of 'main.dart';
 
+/// Why the two digital-asset-link tests are skipped, shared by `custom_tabs.dart` and
+/// `trusted_web_activity.dart` so the two cannot drift apart (§178).
+///
+/// **Measured, not assumed.** `https://inappwebview.dev/.well-known/assetlinks.json` was fetched and
+/// read; it delegates `common.use_as_origin` and `common.handle_all_urls` to exactly one app:
+///
+/// ```json
+/// "package_name": "com.pichillilorenzo.flutter_inappwebviewexample",
+/// "sha256_cert_fingerprints": ["D5:EB:66:89:63:83:62:9B:…"]
+/// ```
+///
+/// This fork's example app is `dev.nosferatu500.inappwebview.example`, signed with a different key,
+/// so the relation can never validate. It is not a plugin bug and no amount of retrying fixes it —
+/// closing it needs a domain this repo controls, which is filed in TODO rather than faked here.
+const String _assetLinksSkipReason =
+    'digital asset links: inappwebview.dev delegates only to the upstream package '
+    '(com.pichillilorenzo.flutter_inappwebviewexample) and its signing cert, so this fork '
+    'cannot be verified as the origin';
+
 void customTabs() {
   final shouldSkip = !ChromeSafariBrowser.isMethodSupported(
     PlatformChromeSafariBrowserMethod.launchUrl,
@@ -183,7 +202,29 @@ void customTabs() {
       expect(chromeSafariBrowser.isOpened(), false);
     });
 
-    skippableTest('request and send post messages', () async {
+    /// 🚨 **Blocked by digital asset links, permanently, and skipped *before* it opens anything.**
+    ///
+    /// Chrome opens a post-message channel only once it has verified that the calling app is
+    /// delegated by the target origin. `https://inappwebview.dev/.well-known/assetlinks.json`
+    /// declares exactly one app — **fetched and read, not assumed**:
+    ///
+    /// ```json
+    /// "package_name": "com.pichillilorenzo.flutter_inappwebviewexample",
+    /// "sha256_cert_fingerprints": ["D5:EB:66:89:…"]
+    /// ```
+    ///
+    /// This fork's example app is `dev.nosferatu500.inappwebview.example`, signed with a different
+    /// key, so `delegate_permission/common.use_as_origin` can never match. Nothing in the plugin can
+    /// change that; it needs a domain this repo controls.
+    ///
+    /// **What that cost before the skip** (§178): `requestPostMessageChannel` answers `true` — it
+    /// only means the request was accepted — and then `onMessageChannelReady` never fires, so the
+    /// test hung for its full 60 s **without reaching `close()`**, leaving the Custom Tab on screen
+    /// and taking down three later tests that pass in isolation.
+    ///
+    /// The skip is the first statement on purpose: skipping after `open()` would leave the tab up
+    /// and re-create the cascade this removes.
+    test('request and send post messages', () async {
       var chromeSafariBrowser = MyChromeSafariBrowser();
       expect(chromeSafariBrowser.isOpened(), false);
 
@@ -221,7 +262,7 @@ void customTabs() {
       await chromeSafariBrowser.close();
       await expectLater(chromeSafariBrowser.closed.future, completes);
       expect(chromeSafariBrowser.isOpened(), false);
-    });
+    }, skip: _assetLinksSkipReason);
 
     skippableTest('Engagement Signals Api', () async {
       var chromeSafariBrowser = MyChromeSafariBrowser();

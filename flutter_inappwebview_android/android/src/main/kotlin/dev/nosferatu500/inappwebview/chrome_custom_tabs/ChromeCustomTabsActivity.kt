@@ -82,8 +82,10 @@ open class ChromeCustomTabsActivity : Activity(), Disposable {
 
     currentManager.browsers[viewId] = this
 
-    val channel = MethodChannel(plugin.messenger, METHOD_CHANNEL_NAME_PREFIX + viewId)
-    channelDelegate = ChromeCustomTabsChannelDelegate(this, channel)
+    // The view id is the Pigeon `messageChannelSuffix`, so both halves must derive it from the same
+    // place. §177 measured the cost of a disagreement, and it is direction-dependent: a HostApi
+    // mismatch errors in ~2s naming the channel, a FlutterApi one just never delivers.
+    channelDelegate = ChromeCustomTabsChannelDelegate(this, plugin.messenger, viewId)
 
     initialUrl = b.getString("url")
     initialHeaders =
@@ -443,7 +445,10 @@ open class ChromeCustomTabsActivity : Activity(), Disposable {
 
   companion object {
     protected const val LOG_TAG = "CustomTabsActivity"
-    const val METHOD_CHANNEL_NAME_PREFIX = "dev.nosferatu500.inappwebview/chromesafaribrowser_"
+
+    // METHOD_CHANNEL_NAME_PREFIX is gone: Pigeon derives the channel name from the API class plus
+    // the `messageChannelSuffix` (the view id), so there is no name for this side to build.
+    // The iOS package still declares its own copy of the old name -- that half is not migrated.
     const val CHROME_CUSTOM_TAB_REQUEST_CODE = 100
     const val NO_HISTORY_CHROME_CUSTOM_TAB_REQUEST_CODE = 101
   }
