@@ -3,7 +3,6 @@ package dev.nosferatu500.inappwebview.print_job
 import dev.nosferatu500.inappwebview.InAppWebViewFlutterPlugin
 import dev.nosferatu500.inappwebview.types.Disposable
 import dev.nosferatu500.inappwebview.types.PrintJobInfoExt
-import io.flutter.plugin.common.MethodChannel
 
 // See ChannelDelegateImpl: `this` is published to a platform-thread-only dispatcher.
 class PrintJobController(
@@ -22,8 +21,10 @@ class PrintJobController(
   var job: android.print.PrintJob? = null
 
   init {
-    val channel = MethodChannel(plugin.messenger, METHOD_CHANNEL_NAME_PREFIX + id)
-    channelDelegate = PrintJobChannelDelegate(this, channel)
+    // The job id is the Pigeon `messageChannelSuffix`, so both halves must derive it from the same
+    // place. §165 measured what a disagreement costs here: no error, just a call that never arrives
+    // and a 60-second timeout at the caller.
+    channelDelegate = PrintJobChannelDelegate(this, plugin.messenger, id)
   }
 
   fun setJob(job: android.print.PrintJob?) {
@@ -41,7 +42,9 @@ class PrintJobController(
   fun getInfo(): PrintJobInfoExt? = job?.let { PrintJobInfoExt.fromPrintJobInfo(it.info) }
 
   override fun dispose() {
-    channelDelegate?.dispose()
+    // `disposeDelegate()`, not `dispose()`: the delegate now implements a *channel* method called
+    // `dispose`, and calling that one from here would recurse. See PrintJobChannelDelegate's doc.
+    channelDelegate?.disposeDelegate()
     channelDelegate = null
     clearManagerSlot()
     job?.cancel()
@@ -62,7 +65,8 @@ class PrintJobController(
 
   companion object {
     protected const val LOG_TAG = "PrintJob"
-    const val METHOD_CHANNEL_NAME_PREFIX =
-      "dev.nosferatu500.inappwebview/inappwebview_printjobcontroller_"
+    // METHOD_CHANNEL_NAME_PREFIX is gone: Pigeon derives the channel name from the API class plus
+    // the `messageChannelSuffix` (the job id), so there is no name for this side to build. Nothing
+    // outside this class ever read it -- measured.
   }
 }

@@ -468,6 +468,33 @@ for, and five others have a native *value* that differs from their name.
 
 ### Internal
 
+- **The `inappwebview_printjobcontroller_*` channel is Pigeon-generated**, the twelfth migrated and
+  the **first with both a per-instance channel and an event**. `AndroidPrintJobController` drops
+  `ChannelController` and holds the generated `PrintJobControllerHostApi`;
+  `PrintJobChannelDelegate` implements it and its hand-written `onMethodCall` dispatch is gone, along
+  with `PrintJobController.METHOD_CHANNEL_NAME_PREFIX`. No public API change.
+
+  The `messageChannelSuffix` is the job id, threaded from `PrintJobController` into both `setUp` and
+  the FlutterApi constructor so the halves cannot drift.
+
+  **Two name collisions, one on each side, both the collision §14 predicted.** On Dart,
+  `PlatformPrintJobController` exposes `onComplete` as a *field* while Pigeon generates a *method* of
+  that name, so the events go through a private `_PrintJobControllerFlutterApiImpl` forwarder rather
+  than the controller implementing the API directly. On Kotlin, the channel method `dispose(): Boolean`
+  cannot coexist with `Disposable.dispose(): Unit`, so the delegate no longer implements `Disposable`
+  and its teardown is `disposeDelegate()` — **not a cosmetic rename**: leaving it as `dispose` makes
+  `PrintJobController.dispose()` call the host method, which calls the controller back, recursing.
+
+  `getInfo`'s payload becomes five typed classes (`PrintJobInfoData`, `PrintJobAttributesData`,
+  `PrintJobMediaSizeData`, `PrintJobResolutionData`, `PrintJobMarginsData`) in place of a 4-level
+  nested `hashMapOf`. The one-key `"printer"` map is flattened to a `printerId` string; the Dart side
+  still rebuilds a non-null `Printer` from it, as the always-present map used to produce.
+
+  **The schema models only the fields Android actually sends** — 7 of `PrintJobInfo`'s 15 and 6 of
+  `PrintJobAttributes`' 12. The other 14 are iOS-only, have zero occurrences in the Android Kotlin
+  source, and previously arrived as *absent map keys* that `fromMap` read as null; the Dart side now
+  passes null explicitly, which is exactly what the old path produced.
+
 - **`print_job_controller` gets an Android device group — 1 test, from zero**, covering all four of
   the channel's methods (`getInfo`, `cancel`, `restart`, `dispose`) across one job's lifetime.
   Written as its own item before the Pigeon migration of `PrintJobChannelDelegate`, per the rule
