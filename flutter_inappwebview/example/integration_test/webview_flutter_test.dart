@@ -16,6 +16,8 @@ import 'tracing_controller/main.dart' as tracing_controller_tests;
 import 'support_methods/main.dart' as support_methods_tests;
 import 'web_storage_manager/main.dart' as web_storage_manager_tests;
 import 'geolocation_permissions/main.dart' as geolocation_permissions_tests;
+import 'pull_to_refresh_controller/main.dart'
+    as pull_to_refresh_controller_tests;
 import 'print_job_controller/main.dart' as print_job_controller_tests;
 
 void main() {
@@ -52,6 +54,7 @@ void main() {
   support_methods_tests.main();
   web_storage_manager_tests.main();
   geolocation_permissions_tests.main();
+  pull_to_refresh_controller_tests.main();
 
   // MUST BE LAST, and must stay last. This group raises the OS print dialog (see
   // `print_job_controller/controller_lifecycle.dart`) and nothing can dismiss it, so any group

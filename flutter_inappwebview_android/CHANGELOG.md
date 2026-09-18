@@ -468,6 +468,34 @@ for, and five others have a native *value* that differs from their name.
 
 ### Internal
 
+- **`pull_to_refresh_controller` gets an Android device group — 5 tests, from zero**, covering all
+  ten of the channel's methods. Written as its own item before the Pigeon migration of
+  `PullToRefreshChannelDelegate`, per the rule §169 earned. No plugin code changed.
+
+  **The channel had no coverage despite a test that looks like it.**
+  `launches with pull-to-refresh feature`, in the `in_app_webview` group, builds a webview with a
+  `PullToRefreshSettings` and asserts only that the page loaded. Those settings ride the *webview
+  creation* payload, not this channel, so the test exercises `PullToRefreshLayout.prepare()` and not
+  one of the ten methods. Measured, not argued: with the Dart channel name deliberately broken, the
+  new group loses **5 of 5** and that test still **passes**.
+
+  `setEnabled`/`isEnabled` and `beginRefreshing`/`endRefreshing`/`isRefreshing` are real round trips
+  answered from `SwipeRefreshLayout`'s own state. `getDefaultSlingshotDistance` is pinned to **-1**,
+  read out of the androidx AAR with `javap -constants` rather than guessed — it is a sentinel
+  meaning "compute the default", not a distance, and it is also the one value that proves the call
+  arrived, since the Dart side falls back to `?? 0` on a null channel.
+
+  ⚠️ **The five remaining setters get transport coverage only**, and that is recorded rather than
+  dressed up: `setColor`, `setBackgroundColor`, `setDistanceToTriggerSync`, `setSlingshotDistance`
+  and `setIndicatorSize` have no getter on either side. A mutant replacing `setColor`'s parsed
+  argument with a hard-coded colour **survives the group** — measured, and the gap to state when
+  this channel is migrated.
+
+  **`onRefresh`, the channel's one event, stays uncovered in the firing direction**: it needs a real
+  drag on a platform view, which `WidgetTester` cannot deliver. The reachable half is pinned
+  instead — `beginRefreshing()` must *not* fire it, since `SwipeRefreshLayout.setRefreshing(true)`
+  moves the indicator without invoking `OnRefreshListener`.
+
 - **The `headless_inappwebview_*` per-instance channel is Pigeon-generated**, the fourteenth
   migrated: **three host methods (`dispose`, `setSize`, `getSize`) plus one event
   (`onWebViewCreated`)**. `AndroidHeadlessInAppWebView` drops `ChannelController` and holds the
@@ -477,9 +505,10 @@ for, and five others have a native *value* that differs from their name.
 
   **Only the per-instance channel is migrated.** `run` goes to a separate static
   `HeadlessInAppWebViewManager` channel and stays hand-written for now — so the Dart class
-  deliberately holds a Pigeon host API *and* a raw `MethodChannel`. Unlike
-  `ChromeSafariBrowserManager`, that manager is *not* blocked by a settings payload: it carries an
-  `initialSize`, which is the same `Size2D` this schema already declares as `Size2DData`.
+  deliberately holds a Pigeon host API *and* a raw `MethodChannel`. That manager is blocked by a
+  settings payload exactly as `ChromeSafariBrowserManager` and `InAppBrowserManager` are: `run`
+  forwards the entire webview creation payload, `initialSettings` included. (This entry originally
+  claimed the opposite; corrected while writing the `pull_to_refresh_controller` group.)
 
   The class-level `@Suppress("UNCHECKED_CAST")` on the delegate is **gone**: it existed for the single
   `call.argument<Map<String, Any?>>("size")` read at the codec boundary, and the generated type

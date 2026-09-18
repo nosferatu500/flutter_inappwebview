@@ -10,8 +10,19 @@
 // channels: this one, and a separate static `HeadlessInAppWebViewManager` channel carrying `run`.
 // After this commit the Dart class holds a Pigeon HostApi *and* a raw `MethodChannel` for the
 // manager; that is deliberate and the two are independent — the same split §179 left behind for
-// `ChromeSafariBrowserManager`. Unlike that one, this manager is **not blocked**: `run` carries an
-// `initialSize`, not a settings payload, so it is the natural follow-on commit. See [Size2DData].
+// `ChromeSafariBrowserManager`.
+//
+// 🚨 **CORRECTION (§181).** This header originally claimed that manager was "not blocked" because
+// `run` carries an `initialSize` rather than a settings payload. **That is wrong.** `run` forwards
+// an opaque `HashMap<String, Any?>` straight into `FlutterWebView`, which reads `initialSettings`,
+// `pullToRefreshSettings`, `contextMenu`, `initialUserScripts`, `initialUrlRequest`, `initialData`,
+// `windowId` and `keepAliveId` out of it — the entire webview creation payload. It is blocked by
+// settings exactly as `InAppBrowserManager` (§163) and `ChromeSafariBrowserManager` are.
+//
+// The claim came from the TODO table's "mentions of settings" column, where that file scores 0 and
+// genuinely never says the word. A 0 there means the file does not *name* settings, never that the
+// channel does not *carry* them. When the manager is finally unblocked, its HostApi still belongs
+// in this file so it reuses [Size2DData].
 //
 // Pre-schema checklist (§160-§165), all nine run before writing this:
 //   1. Settings payload? **No, on this channel.** The three methods are `dispose`, `setSize` and
