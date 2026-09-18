@@ -8,7 +8,6 @@ import dev.nosferatu500.inappwebview.Util
 import dev.nosferatu500.inappwebview.types.Disposable
 import dev.nosferatu500.inappwebview.types.Size2D
 import dev.nosferatu500.inappwebview.webview.in_app_webview.FlutterWebView
-import io.flutter.plugin.common.MethodChannel
 
 // The unchecked cast below is the Flutter codec boundary: StandardMessageCodec decodes to
 // Map<String,Object>/List<Object>, so every read of a structured value is an unverifiable
@@ -39,8 +38,9 @@ class HeadlessInAppWebView(
   private var appliedSizePixels: Pair<Int, Int>? = null
 
   init {
-    val channel = MethodChannel(plugin.messenger, METHOD_CHANNEL_NAME_PREFIX + id)
-    channelDelegate = HeadlessWebViewChannelDelegate(this, channel)
+    // Pigeon derives one channel per method from the schema and appends this suffix, so the id that
+    // used to be interpolated into a single channel name is passed as the suffix instead.
+    channelDelegate = HeadlessWebViewChannelDelegate(this, plugin.messenger, id)
   }
 
   fun onWebViewCreated() {
@@ -126,7 +126,10 @@ class HeadlessInAppWebView(
   }
 
   override fun dispose() {
-    channelDelegate?.dispose()
+    // 🚨 `disposeDelegate()`, NOT `dispose()`. The delegate's `dispose()` is the Pigeon *host*
+    // method, which calls this method straight back — an infinite recursion that compiles cleanly.
+    // See HeadlessWebViewChannelDelegate's class doc (§177's collision, second occurrence).
+    channelDelegate?.disposeDelegate()
     channelDelegate = null
     val currentPlugin = plugin
     if (currentPlugin != null) {
@@ -153,7 +156,8 @@ class HeadlessInAppWebView(
 
   companion object {
     protected const val LOG_TAG = "HeadlessInAppWebView"
-    const val METHOD_CHANNEL_NAME_PREFIX =
-      "dev.nosferatu500.inappwebview/headless_inappwebview_"
+    // METHOD_CHANNEL_NAME_PREFIX is gone with the migration: Pigeon derives its own channel names
+    // from the schema and the id now travels as the messageChannelSuffix. Nothing else referenced
+    // it — checked before deleting.
   }
 }

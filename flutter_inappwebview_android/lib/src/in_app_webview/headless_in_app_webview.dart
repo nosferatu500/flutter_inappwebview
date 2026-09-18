@@ -3,6 +3,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_inappwebview_platform_interface/flutter_inappwebview_platform_interface.dart';
 
 import '../find_interaction/find_interaction_controller.dart';
+import '../pigeons/headless_webview.g.dart';
 import '../pull_to_refresh/pull_to_refresh_controller.dart';
 import 'in_app_webview_controller.dart';
 
@@ -192,18 +193,53 @@ class AndroidHeadlessInAppWebViewCreationParams
   final AndroidPullToRefreshController? pullToRefreshController;
 }
 
+/// Receives [HeadlessWebViewFlutterApi] events and forwards them to the headless webview.
+///
+/// A separate class rather than having [AndroidHeadlessInAppWebView] implement the generated API
+/// directly. Unlike §14's three previous cases this is **not** forced by the compiler: the callback
+/// this event feeds is `params.onWebViewCreated`, a field on the creation-params object, so a
+/// same-named method on the class would not be an inconsistent inheritance. It is kept separate
+/// because the two would read as the same thing and be different: one is the app's callback, the
+/// other is the wire arrival that invokes it.
+class _HeadlessWebViewFlutterApiImpl implements HeadlessWebViewFlutterApi {
+  _HeadlessWebViewFlutterApiImpl(this._headlessWebView);
+
+  final AndroidHeadlessInAppWebView _headlessWebView;
+
+  @override
+  void onWebViewCreated() {
+    _headlessWebView._onWebViewCreated();
+  }
+}
+
 ///{@macro flutter_inappwebview_platform_interface.PlatformHeadlessInAppWebView}
-class AndroidHeadlessInAppWebView extends PlatformHeadlessInAppWebView
-    with ChannelController {
+///
+/// Transport for the per-instance channel is Pigeon-generated ([HeadlessWebViewHostApi] /
+/// [HeadlessWebViewFlutterApi]) rather than a hand-written `MethodChannel`. The *manager* channel
+/// that carries [run] is still a raw `MethodChannel` ([_sharedChannel]); the two are independent
+/// and the manager is the follow-on commit. The public API is unchanged.
+class AndroidHeadlessInAppWebView extends PlatformHeadlessInAppWebView {
   @override
   late final String id;
 
   bool _started = false;
   bool _running = false;
 
+  /// The manager channel, deliberately still hand-written — it carries `run`, which this commit
+  /// does not migrate. See the schema header.
   static const MethodChannel _sharedChannel = MethodChannel(
     'dev.nosferatu500.inappwebview/headless_inappwebview',
   );
+
+  /// Null until [run] calls `_init`, and after [dispose].
+  ///
+  /// `AndroidHeadlessInAppWebView.static()` never runs, so every method below has to tolerate a null
+  /// host API. That matches the previous behaviour, where `channel` was null and
+  /// `channel?.invokeMethod(...)` silently did nothing.
+  HeadlessWebViewHostApi? _hostApi;
+
+  /// Retained so [dispose] can unregister the event handler for this instance's suffix.
+  String? _messageChannelSuffix;
 
   AndroidInAppWebViewController? _webViewController;
 
@@ -246,24 +282,25 @@ class AndroidHeadlessInAppWebView extends PlatformHeadlessInAppWebView
         _webViewController!;
     _androidParams.pullToRefreshController?.init(id);
     _androidParams.findInteractionController?.init(id);
-    channel = MethodChannel(
-      'dev.nosferatu500.inappwebview/headless_inappwebview_$id',
+    // Pigeon derives one channel per method from the schema and appends this suffix, so the id that
+    // used to be interpolated into a single channel name is passed here instead.
+    //
+    // 🚨 Registration order is load-bearing and unchanged: `run()` calls this *before* invoking
+    // `run` on the manager channel, because the platform fires `onWebViewCreated` while handling
+    // that very call. Registering afterwards would be a race, and a missed event on a FlutterApi is
+    // silent — `run and dispose` would hang for 60s rather than report anything.
+    _messageChannelSuffix = id;
+    _hostApi = HeadlessWebViewHostApi(messageChannelSuffix: id);
+    HeadlessWebViewFlutterApi.setUp(
+      _HeadlessWebViewFlutterApiImpl(this),
+      messageChannelSuffix: id,
     );
-    handler = _handleMethod;
-    initMethodCallHandler();
   }
 
-  Future<dynamic> _handleMethod(MethodCall call) async {
-    switch (call.method) {
-      case "onWebViewCreated":
-        if (params.onWebViewCreated != null && _webViewController != null) {
-          params.onWebViewCreated!(_controllerFromPlatform);
-        }
-        break;
-      default:
-        throw UnimplementedError("Unimplemented ${call.method} method");
+  void _onWebViewCreated() {
+    if (params.onWebViewCreated != null && _webViewController != null) {
+      params.onWebViewCreated!(_controllerFromPlatform);
     }
-    return null;
   }
 
   @override
@@ -383,9 +420,10 @@ class AndroidHeadlessInAppWebView extends PlatformHeadlessInAppWebView
       return;
     }
 
-    Map<String, dynamic> args = <String, dynamic>{};
-    args.putIfAbsent('size', () => size.toMap());
-    await channel?.invokeMethod('setSize', args);
+    // The bool the platform answers is discarded, as it always has been: it reports that the
+    // webview had not already gone away, which `_running` has just been checked for. See the
+    // schema, checklist item 9.
+    await _hostApi?.setSize(Size2DData(width: size.width, height: size.height));
   }
 
   @override
@@ -394,12 +432,11 @@ class AndroidHeadlessInAppWebView extends PlatformHeadlessInAppWebView
       return null;
     }
 
-    Map<String, dynamic> args = <String, dynamic>{};
-    Map<String, dynamic> sizeMap = (await channel?.invokeMethod(
-      'getSize',
-      args,
-    ))?.cast<String, dynamic>();
-    return MapSize.fromMap(sizeMap);
+    final size = await _hostApi?.getSize();
+    if (size == null) {
+      return null;
+    }
+    return Size(size.width, size.height);
   }
 
   @override
@@ -407,9 +444,15 @@ class AndroidHeadlessInAppWebView extends PlatformHeadlessInAppWebView
     if (!_running) {
       return;
     }
-    Map<String, dynamic> args = <String, dynamic>{};
-    await channel?.invokeMethod('dispose', args);
-    disposeChannel();
+    await _hostApi?.dispose();
+    // Mirrors disposeChannel(removeMethodCallHandler: true): drop the event handler bound to this
+    // instance's suffix, otherwise it outlives the webview.
+    HeadlessWebViewFlutterApi.setUp(
+      null,
+      messageChannelSuffix: _messageChannelSuffix ?? '',
+    );
+    _messageChannelSuffix = null;
+    _hostApi = null;
     _started = false;
     _running = false;
     _webViewController?.dispose();

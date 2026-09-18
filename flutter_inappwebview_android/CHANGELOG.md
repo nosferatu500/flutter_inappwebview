@@ -468,6 +468,37 @@ for, and five others have a native *value* that differs from their name.
 
 ### Internal
 
+- **The `headless_inappwebview_*` per-instance channel is Pigeon-generated**, the fourteenth
+  migrated: **three host methods (`dispose`, `setSize`, `getSize`) plus one event
+  (`onWebViewCreated`)**. `AndroidHeadlessInAppWebView` drops `ChannelController` and holds the
+  generated `HeadlessWebViewHostApi`; `HeadlessWebViewChannelDelegate` implements it, and its
+  hand-written `onMethodCall` dispatch and the Dart `_handleMethod` switch are both gone. No public
+  API change.
+
+  **Only the per-instance channel is migrated.** `run` goes to a separate static
+  `HeadlessInAppWebViewManager` channel and stays hand-written for now — so the Dart class
+  deliberately holds a Pigeon host API *and* a raw `MethodChannel`. Unlike
+  `ChromeSafariBrowserManager`, that manager is *not* blocked by a settings payload: it carries an
+  `initialSize`, which is the same `Size2D` this schema already declares as `Size2DData`.
+
+  The class-level `@Suppress("UNCHECKED_CAST")` on the delegate is **gone**: it existed for the single
+  `call.argument<Map<String, Any?>>("size")` read at the codec boundary, and the generated type
+  removes both the cast and the need for the suppression. A malformed size is now unrepresentable
+  rather than silently applying nothing and still answering `true`.
+
+  **The event name does *not* collide with the public API** — the first migrated channel where that
+  is true. `onWebViewCreated` is a field on the *creation params*, not a member of the class, so
+  Pigeon's generated method could have lived on `AndroidHeadlessInAppWebView` directly. It still
+  arrives through a private forwarder, for readability rather than to satisfy the compiler.
+
+  🚨 **`HeadlessWebViewChannelDelegate` no longer implements `Disposable`, and its teardown is
+  `disposeDelegate()`.** The channel has a method named `dispose`, so the generated interface
+  contributes `dispose(): Boolean`, which cannot coexist with `Disposable.dispose(): Unit`. That much
+  is a compile error; the part that is not is the call site — `HeadlessInAppWebView.dispose()` calling
+  `channelDelegate?.dispose()` resolves to the *host* method, which calls the webview back. Measured
+  rather than reasoned: that mutant dies as a `java.lang.StackOverflowError` alternating between the
+  two frames, taking 5 of the group's 7 tests with it.
+
 - **The `chromesafaribrowser_*` per-instance channel is Pigeon-generated**, the thirteenth migrated
   and the largest so far: **nine host methods plus thirteen events**.
   `AndroidChromeSafariBrowser` drops `ChannelController` and holds the generated
