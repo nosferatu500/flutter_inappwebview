@@ -15,12 +15,18 @@ void clearFocus() {
         textDirection: TextDirection.ltr,
         child: InAppWebView(
           key: GlobalKey(),
-          initialUrlRequest: URLRequest(url: TEST_CROSS_PLATFORM_URL_1),
+          initialData: InAppWebViewInitialData(
+            data:
+                '<!DOCTYPE html><html><body><input id="field">'
+                '<script>var blurs = 0;'
+                'window.addEventListener("blur", function() { blurs++; });'
+                '</script></body></html>',
+          ),
           onWebViewCreated: (controller) {
             controllerCompleter.complete(controller);
           },
           onLoadStop: (controller, url) {
-            pageLoaded.complete();
+            if (!pageLoaded.isCompleted) pageLoaded.complete();
           },
         ),
       ),
@@ -29,6 +35,31 @@ void clearFocus() {
     final InAppWebViewController controller = await controllerCompleter.future;
     await pageLoaded.future;
 
-    await expectLater(controller.clearFocus(), completes);
+    if (defaultTargetPlatform != TargetPlatform.android) {
+      await expectLater(controller.clearFocus(), completes);
+      return;
+    }
+
+    // A freshly created WebView does not have focus, so clearing it would show nothing: take
+    // focus first, and check that it was taken. Measured on API 37: `document.hasFocus()` reads
+    // false after load, true after `requestFocus()`, false after `clearFocus()`, and exactly one
+    // window `blur` fires. Before this, the test only checked that the call completed, and a
+    // Kotlin handler that replied without clearing anything passed it.
+    expect(await controller.requestFocus(), isTrue);
+    await Future.delayed(const Duration(seconds: 1));
+    expect(
+      await controller.evaluateJavascript(source: 'document.hasFocus()'),
+      isTrue,
+      reason: 'precondition: the page must have focus before it can lose it',
+    );
+
+    await controller.clearFocus();
+    await Future.delayed(const Duration(seconds: 1));
+
+    expect(
+      await controller.evaluateJavascript(source: 'document.hasFocus()'),
+      isFalse,
+    );
+    expect(await controller.evaluateJavascript(source: 'blurs'), 1);
   }, skip: shouldSkip);
 }

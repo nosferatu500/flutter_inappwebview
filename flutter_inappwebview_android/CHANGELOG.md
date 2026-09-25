@@ -468,6 +468,29 @@ for, and five others have a native *value* that differs from their name.
 
 ### Internal
 
+- **Six device tests that could not fail now assert what their method does.** `clearFocus`,
+  `pause`, `resume`, `requestFocusNodeHref`, `requestImageRef` and `clearSslPreferences` were only
+  checked with `expectLater(…, completes)`, and a Kotlin handler that replied without doing anything
+  passed all of them. Now:
+  - `clearFocus`: the page loses focus (`document.hasFocus()`) and a window `blur` fires, after
+    `requestFocus()` gives it focus first.
+  - `pause` / `resume`: `document.visibilityState` goes `hidden` / `visible`, and animation frames
+    stop and restart.
+  - `requestFocusNodeHref` / `requestImageRef`: taps on a link and an image return that link's
+    `url` and `title` and that image's `src`.
+  - `clearSslPreferences`: a remembered PROCEED for the test server's untrusted certificate stops
+    being remembered.
+
+  Test only; no plugin code changed. Every expected value was measured on API 37 first. On iOS
+  the three methods it also supports keep the `completes` check, because iOS wasn't measured.
+- **`getMetaThemeColor` no longer sends a message the Kotlin side never handled.** It used to ask the
+  per-WebView channel for `getMetaThemeColor` first. That message has no native handler, so the
+  request always failed, the error was swallowed, and the method fell through to reading the
+  `theme-color` meta tag with JavaScript. Now it reads the tag directly. No behaviour change:
+  measured on a device before the deletion, breaking the JavaScript path made the method return
+  null. New tests: a unit test pins that only `evaluateJavascript` is sent and that the color is
+  parsed exactly, and an Android device test reads a known `#0a8f3c` page. The existing device test
+  only checked for non-null, so a fallback returning the wrong color passed it.
 - **The `inappwebview_manager` channel is Pigeon-generated**, the seventeenth migrated: **fifteen
   host methods, no events** — the process-wide statics of `InAppWebViewController`.
   `InAppWebViewManager` implements the generated `InAppWebViewManagerHostApi` directly; its

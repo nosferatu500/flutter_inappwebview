@@ -2383,17 +2383,9 @@ class AndroidInAppWebViewController extends PlatformInAppWebViewController
   Future<Color?> getMetaThemeColor() async {
     Color? themeColor;
 
-    try {
-      Map<String, dynamic> args = <String, dynamic>{};
-      themeColor = UtilColor.fromStringRepresentation(
-        await channel?.invokeMethod('getMetaThemeColor', args),
-      );
-      return themeColor;
-    } catch (e) {
-      // not implemented
-    }
-
-    // try using javascript
+    // Android WebView has no theme-color API, so the meta tag is read with JavaScript. The Kotlin
+    // side never handled a `getMetaThemeColor` message: a request for it always failed, was
+    // swallowed, and fell through to this same code.
     var metaTags = await getMetaTags();
     MetaTag? metaTagThemeColor;
 
