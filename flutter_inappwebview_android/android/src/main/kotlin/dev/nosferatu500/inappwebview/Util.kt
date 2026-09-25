@@ -138,6 +138,35 @@ object Util {
     }
 
   /**
+   * Rebuilds [value] with the integer types the standard codec would have produced, for maps that
+   * reach Kotlin over Pigeon and are then read by a hand-written `parse(Map)` (§194, decision B).
+   *
+   * 🚨 Pigeon's Dart codec writes **every** `int` as a 64-bit value, including ints nested inside
+   * an untyped `Map<String?, Object?>`, so they arrive as `Long`. `StandardMessageCodec` wrote an
+   * int that fits in 32 bits as an int32, which Kotlin read as `Int`, and every `value as Int` in
+   * the settings parsers depends on that. Measured on API 37 (§197): without this, opening any
+   * in-app browser crashed with `ClassCastException: Long cannot be cast to Integer` in
+   * `InAppWebViewSettings.parse`, because the default settings contain ints.
+   *
+   * So a `Long` within `Int` range becomes an `Int`, and one outside it stays a `Long`, exactly as
+   * before. Maps and lists are rebuilt as `HashMap` / `ArrayList`, the `Serializable` types the
+   * Activity Bundle reads them back as. Keys, including keys whose value is null, are kept as sent.
+   * Everything else is returned unchanged.
+   */
+  @JvmStatic
+  fun normalizeCodecInts(value: Any?): Any? = when (value) {
+    is Long ->
+      if (value in Int.MIN_VALUE.toLong()..Int.MAX_VALUE.toLong()) value.toInt() else value
+    is Map<*, *> -> HashMap<Any?, Any?>(value.size).also { copy ->
+      for ((k, v) in value) copy[k] = normalizeCodecInts(v)
+    }
+    is List<*> -> ArrayList<Any?>(value.size).also { copy ->
+      for (v in value) copy.add(normalizeCodecInts(v))
+    }
+    else -> value
+  }
+
+  /**
    * Invokes [method] on [channel] from the main thread and blocks the calling thread until Dart
    * answers or [timeoutMillis] elapses.
    *

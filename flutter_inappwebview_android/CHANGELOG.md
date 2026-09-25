@@ -468,6 +468,27 @@ for, and five others have a native *value* that differs from their name.
 
 ### Internal
 
+- **`web history get history list and go back/forward` had a race, now fixed.** Its first wait
+  subscribed to a broadcast stream of page loads *after* `pumpWidget` had started loading. A
+  load that finished first was dropped, and the test hung until its 60 s timeout. A probe caught
+  it in the act ("initial load arrived before subscribing"). The fix subscribes before
+  `pumpWidget`, as the test's later steps already did. It was a long-standing flake: before this,
+  it failed 0 of 5 full runs, but 3 of 6 once the manager migration shifted start-up timing.
+  Test only.
+- **The `inappbrowser` manager channel is Pigeon-generated**, the nineteenth migrated and the first
+  under decision B: `open` and `openWithSystemBrowser` over `InAppBrowserManagerHostApi`. No public
+  API change.
+  - `open` sends one `InAppBrowserOpenRequestData`. The strings and `windowId` are typed. The six
+    fields that go into the browser Activity's Bundle (URL request, settings, context menu, user
+    scripts, pull-to-refresh settings, menu items) stay maps, and the Activity's `parse(Map)` is
+    still their only reader.
+  - 🚨 **Pigeon sends every Dart `int` as 64-bit, including ints nested in those maps**, so they
+    arrive in Kotlin as `Long`. The settings parsers cast `as Int`, and the first device run
+    crashed on every browser open. `Util.normalizeCodecInts` now rebuilds each map with the types
+    the standard codec produced: a `Long` that fits in 32 bits becomes an `Int`, anything larger
+    stays a `Long`, and keys are kept as sent. It has JVM tests.
+  - `openWithSystemBrowser`'s failure is now a `FlutterError` with the same code, message and
+    details, so Dart sees the same `PlatformException`.
 - **Everything `InAppBrowserManager` sends now has a device test, ahead of its migration.** Six new
   `in_app_browser` tests, so the group goes from 7 to 13. They assert, each on a value only the
   right field can produce:

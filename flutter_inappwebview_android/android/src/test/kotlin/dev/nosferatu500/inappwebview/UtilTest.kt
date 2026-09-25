@@ -223,4 +223,70 @@ class UtilTest {
       Util.resolveSyncCallbackTimeoutMillis(Int.MIN_VALUE)
     )
   }
+
+  // --- normalizeCodecInts (§197) -----------------------------------------------------------------
+
+  @Test
+  fun `normalizeCodecInts turns a Long that fits in 32 bits back into an Int`() {
+    // What Pigeon's Dart codec sends for every int, and what the standard codec used to deliver.
+    val normalized = Util.normalizeCodecInts(22L)
+    assertTrue(normalized is Int)
+    assertEquals(22, normalized)
+    assertTrue(Util.normalizeCodecInts(Int.MAX_VALUE.toLong()) is Int)
+    assertTrue(Util.normalizeCodecInts(Int.MIN_VALUE.toLong()) is Int)
+  }
+
+  @Test
+  fun `normalizeCodecInts keeps a Long outside 32 bits a Long, as the standard codec did`() {
+    val big = Int.MAX_VALUE.toLong() + 1
+    assertEquals(big, Util.normalizeCodecInts(big))
+    assertTrue(Util.normalizeCodecInts(big) is Long)
+    assertTrue(Util.normalizeCodecInts(Int.MIN_VALUE.toLong() - 1) is Long)
+  }
+
+  @Test
+  fun `normalizeCodecInts reaches ints nested in maps and lists`() {
+    val sent = mapOf<String?, Any?>(
+      "minimumFontSize" to 22L,
+      "nested" to mapOf("priority" to 1L),
+      "list" to listOf(mapOf("id" to 5L), 7L)
+    )
+
+    @Suppress("UNCHECKED_CAST")
+    val normalized = Util.normalizeCodecInts(sent) as Map<String?, Any?>
+    assertTrue(normalized["minimumFontSize"] is Int)
+    assertTrue((normalized["nested"] as Map<*, *>)["priority"] is Int)
+    val list = normalized["list"] as List<*>
+    assertTrue((list[0] as Map<*, *>)["id"] is Int)
+    assertTrue(list[1] is Int)
+  }
+
+  @Test
+  fun `normalizeCodecInts rebuilds maps and lists as the Serializable types the Bundle reads`() {
+    // The Activity reads these back with `BundleCompat.getSerializable(b, key, HashMap::class.java)`.
+    assertTrue(Util.normalizeCodecInts(mapOf("a" to 1L)) is HashMap<*, *>)
+    assertTrue(Util.normalizeCodecInts(listOf(1L)) is ArrayList<*>)
+  }
+
+  @Test
+  fun `normalizeCodecInts keeps every key, including one whose value is null`() {
+    // Util.getOrDefault tells an absent key from a null value, and two settings paths rely on it
+    // (§197), so a key must survive even when its value is null.
+    @Suppress("UNCHECKED_CAST")
+    val normalized =
+      Util.normalizeCodecInts(mapOf("explicitNull" to null, "value" to "x")) as Map<String, Any?>
+    assertTrue(normalized.containsKey("explicitNull"))
+    assertNull(normalized["explicitNull"])
+    assertEquals(setOf("explicitNull", "value"), normalized.keys)
+  }
+
+  @Test
+  fun `normalizeCodecInts leaves every other type alone`() {
+    assertEquals(1.5, Util.normalizeCodecInts(1.5))
+    assertEquals("s", Util.normalizeCodecInts("s"))
+    assertEquals(true, Util.normalizeCodecInts(true))
+    assertNull(Util.normalizeCodecInts(null))
+    val bytes = byteArrayOf(1, 2)
+    assertTrue(Util.normalizeCodecInts(bytes) === bytes)
+  }
 }

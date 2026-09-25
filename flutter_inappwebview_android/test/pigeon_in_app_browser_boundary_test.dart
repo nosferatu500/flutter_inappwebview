@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:flutter/services.dart';
 import 'package:flutter_inappwebview_android/flutter_inappwebview_android.dart';
 import 'package:flutter_inappwebview_android/src/pigeons/in_app_browser.g.dart';
+import 'package:flutter_inappwebview_android/src/pigeons/in_app_browser_manager.g.dart';
 import 'package:flutter_inappwebview_platform_interface/flutter_inappwebview_platform_interface.dart';
 import 'package:flutter_test/flutter_test.dart';
 
@@ -18,9 +19,9 @@ void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
 
   const codec = InAppBrowserHostApi.pigeonChannelCodec;
-  const managerChannel = MethodChannel(
-    'dev.nosferatu500.inappwebview/inappbrowser',
-  );
+  // The manager's `open`, Pigeon since §197. Answering it is what lets `openUrlRequest` complete.
+  const managerOpen =
+      'dev.flutter.pigeon.flutter_inappwebview_android.InAppBrowserManagerHostApi.open';
 
   late AndroidInAppBrowser browser;
   late _RecordingEvents events;
@@ -61,10 +62,12 @@ void main() {
   setUp(() async {
     sent.clear();
     clicked.clear();
-    // `open` still travels on the manager's hand-written channel and is not part of this
-    // migration; stubbing it is what lets `openUrlRequest` complete and wire the Pigeon APIs up.
     TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
-        .setMockMethodCallHandler(managerChannel, (call) async => null);
+        .setMockMessageHandler(
+          managerOpen,
+          (message) async => InAppBrowserManagerHostApi.pigeonChannelCodec
+              .encodeMessage(<Object?>[true]),
+        );
 
     browser = AndroidInAppBrowser(AndroidInAppBrowserCreationParams());
     events = _RecordingEvents();
@@ -90,7 +93,7 @@ void main() {
           .setMockMessageHandler(hostChannel(m), null);
     }
     TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
-        .setMockMethodCallHandler(managerChannel, null);
+        .setMockMessageHandler(managerOpen, null);
   });
 
   group(

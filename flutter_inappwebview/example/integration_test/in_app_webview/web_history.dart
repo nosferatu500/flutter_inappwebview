@@ -36,6 +36,22 @@ void webHistory() {
       final StreamController<String> pageLoads =
           StreamController<String>.broadcast();
 
+      Future<String> waitForUrl(String expectedUrl) async {
+        await for (final url in pageLoads.stream) {
+          if (url == expectedUrl) {
+            return url;
+          }
+        }
+        throw Exception('Stream closed without receiving $expectedUrl');
+      }
+
+      // Subscribe BEFORE the widget exists, for the same reason as every later step: the stream is
+      // broadcast, so a load that finishes before anyone listens is dropped and the wait never ends.
+      // This first step used to subscribe after `pumpWidget`, and lost that race about half the
+      // time once plugin start-up timing shifted (§198). Measured with a probe:
+      // "initial load arrived before subscribing: [http://<node>:8082/]", then a 60 s timeout.
+      final initialLoad = waitForUrl(historyUrlA.toString());
+
       await tester.pumpWidget(
         Directionality(
           textDirection: TextDirection.ltr,
@@ -57,17 +73,8 @@ void webHistory() {
 
       await tester.pump();
 
-      Future<String> waitForUrl(String expectedUrl) async {
-        await for (final url in pageLoads.stream) {
-          if (url == expectedUrl) {
-            return url;
-          }
-        }
-        throw Exception('Stream closed without receiving $expectedUrl');
-      }
-
       // Wait for initial page load
-      var url = await waitForUrl(historyUrlA.toString());
+      var url = await initialLoad;
       var webHistory = await controller.getCopyBackForwardList();
       expect(url, historyUrlA.toString());
       expect(webHistory!.currentIndex, 0);

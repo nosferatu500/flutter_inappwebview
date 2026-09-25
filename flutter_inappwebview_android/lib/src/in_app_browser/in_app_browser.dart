@@ -8,6 +8,7 @@ import 'package:flutter_inappwebview_platform_interface/flutter_inappwebview_pla
 import '../find_interaction/find_interaction_controller.dart';
 import '../in_app_webview/in_app_webview_controller.dart';
 import '../pigeons/in_app_browser.g.dart';
+import '../pigeons/in_app_browser_manager.g.dart';
 import '../pull_to_refresh/pull_to_refresh_controller.dart';
 
 /// Object specifying creation parameters for creating a [AndroidInAppBrowser].
@@ -103,9 +104,9 @@ class AndroidInAppBrowser extends PlatformInAppBrowser with ChannelController {
   AndroidInAppBrowserCreationParams get _androidParams =>
       params as AndroidInAppBrowserCreationParams;
 
-  static const MethodChannel _staticChannel = MethodChannel(
-    'dev.nosferatu500.inappwebview/inappbrowser',
-  );
+  /// The manager's channel, over Pigeon (§197). `open`'s map-valued fields stay maps (§194, B).
+  static final InAppBrowserManagerHostApi _managerApi =
+      InAppBrowserManagerHostApi();
 
   ContextMenu? _contextMenu;
 
@@ -179,8 +180,17 @@ class AndroidInAppBrowser extends PlatformInAppBrowser with ChannelController {
     onExit?.call();
   }
 
-  Map<String, dynamic> _prepareOpenRequest({
+  /// Marks the browser opened, wires its channels, and builds the request. Exactly one of
+  /// [urlRequest], [assetFilePath] and [data] is given, by the three `open…` methods.
+  InAppBrowserOpenRequestData _prepareOpenRequest({
     InAppBrowserClassSettings? settings,
+    URLRequest? urlRequest,
+    String? assetFilePath,
+    String? data,
+    String? mimeType,
+    String? encoding,
+    String? baseUrl,
+    String? historyUrl,
   }) {
     assert(!_isOpened, 'The browser is already opened.');
     _isOpened = true;
@@ -198,18 +208,23 @@ class AndroidInAppBrowser extends PlatformInAppBrowser with ChannelController {
       menuItemList.add(value.toMap());
     });
 
-    Map<String, dynamic> args = <String, dynamic>{};
-    args.putIfAbsent('id', () => id);
-    args.putIfAbsent('settings', () => initialSettings);
-    args.putIfAbsent('contextMenu', () => contextMenu?.toMap() ?? {});
-    args.putIfAbsent('windowId', () => windowId);
-    args.putIfAbsent(
-      'initialUserScripts',
-      () => initialUserScripts?.map((e) => e.toMap()).toList() ?? [],
+    return InAppBrowserOpenRequestData(
+      id: id,
+      urlRequest: urlRequest?.toMap(),
+      assetFilePath: assetFilePath,
+      data: data,
+      mimeType: mimeType,
+      encoding: encoding,
+      baseUrl: baseUrl,
+      historyUrl: historyUrl,
+      settings: initialSettings,
+      contextMenu: contextMenu?.toMap() ?? {},
+      windowId: windowId,
+      initialUserScripts:
+          initialUserScripts?.map((e) => e.toMap()).toList() ?? [],
+      pullToRefreshSettings: pullToRefreshSettings,
+      menuItems: menuItemList,
     );
-    args.putIfAbsent('pullToRefreshSettings', () => pullToRefreshSettings);
-    args.putIfAbsent('menuItems', () => menuItemList);
-    return args;
   }
 
   @override
@@ -219,9 +234,9 @@ class AndroidInAppBrowser extends PlatformInAppBrowser with ChannelController {
   }) async {
     assert(urlRequest.url != null && urlRequest.url.toString().isNotEmpty);
 
-    Map<String, dynamic> args = _prepareOpenRequest(settings: settings);
-    args.putIfAbsent('urlRequest', () => urlRequest.toMap());
-    await _staticChannel.invokeMethod('open', args);
+    await _managerApi.open(
+      _prepareOpenRequest(settings: settings, urlRequest: urlRequest),
+    );
   }
 
   @override
@@ -231,9 +246,9 @@ class AndroidInAppBrowser extends PlatformInAppBrowser with ChannelController {
   }) async {
     assert(assetFilePath.isNotEmpty);
 
-    Map<String, dynamic> args = _prepareOpenRequest(settings: settings);
-    args.putIfAbsent('assetFilePath', () => assetFilePath);
-    await _staticChannel.invokeMethod('open', args);
+    await _managerApi.open(
+      _prepareOpenRequest(settings: settings, assetFilePath: assetFilePath),
+    );
   }
 
   @override
@@ -245,25 +260,23 @@ class AndroidInAppBrowser extends PlatformInAppBrowser with ChannelController {
     WebUri? historyUrl,
     InAppBrowserClassSettings? settings,
   }) async {
-    Map<String, dynamic> args = _prepareOpenRequest(settings: settings);
-    args.putIfAbsent('data', () => data);
-    args.putIfAbsent('mimeType', () => mimeType);
-    args.putIfAbsent('encoding', () => encoding);
-    args.putIfAbsent('baseUrl', () => baseUrl?.toString() ?? "about:blank");
-    args.putIfAbsent(
-      'historyUrl',
-      () => historyUrl?.toString() ?? "about:blank",
+    await _managerApi.open(
+      _prepareOpenRequest(
+        settings: settings,
+        data: data,
+        mimeType: mimeType,
+        encoding: encoding,
+        baseUrl: baseUrl?.toString() ?? "about:blank",
+        historyUrl: historyUrl?.toString() ?? "about:blank",
+      ),
     );
-    await _staticChannel.invokeMethod('open', args);
   }
 
   @override
   Future<void> openWithSystemBrowser({required WebUri url}) async {
     assert(url.toString().isNotEmpty);
 
-    Map<String, dynamic> args = <String, dynamic>{};
-    args.putIfAbsent('url', () => url.toString());
-    return await _staticChannel.invokeMethod('openWithSystemBrowser', args);
+    await _managerApi.openWithSystemBrowser(url.toString());
   }
 
   @override

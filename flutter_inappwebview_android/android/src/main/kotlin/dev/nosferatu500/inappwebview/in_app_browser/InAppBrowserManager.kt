@@ -30,24 +30,23 @@ import android.provider.Browser
 import android.util.Log
 import android.webkit.MimeTypeMap
 import dev.nosferatu500.inappwebview.InAppWebViewFlutterPlugin
-import dev.nosferatu500.inappwebview.types.ChannelDelegateImpl
-import io.flutter.plugin.common.MethodCall
-import io.flutter.plugin.common.MethodChannel
+import dev.nosferatu500.inappwebview.Util
+import dev.nosferatu500.inappwebview.pigeons.FlutterError
+import dev.nosferatu500.inappwebview.pigeons.InAppBrowserManagerHostApi
+import dev.nosferatu500.inappwebview.pigeons.InAppBrowserOpenRequestData
+import io.flutter.plugin.common.BinaryMessenger
 import java.io.Serializable
 import java.util.UUID
 
 /**
- * InAppBrowserManager
+ * Opens in-app browsers, over Pigeon (§197). Implements [InAppBrowserManagerHostApi] directly.
+ *
+ * The six map-valued fields of [InAppBrowserOpenRequestData] go into the Bundle as the maps Dart
+ * sent (§194, decision B): the Activity's `parse(Map)` is still their only reader. Each passes
+ * through [Util.normalizeCodecInts] first, because Pigeon delivers their nested ints as `Long`
+ * where the parsers cast `as Int` (§197).
  */
-// The unchecked casts below are the Flutter codec boundary: StandardMessageCodec decodes to
-// Map<String,Object>/List<Object>, so every read of a structured value is an unverifiable
-// cast. A wrong shape throws ClassCastException at the cast site, which is the intended
-// failure mode. Suppressed at class level because the whole class is that boundary.
-//
-// See ChannelDelegateImpl: `this` is published to a platform-thread-only dispatcher.
-@Suppress("UNCHECKED_CAST")
-class InAppBrowserManager(plugin: InAppWebViewFlutterPlugin) :
-  ChannelDelegateImpl(MethodChannel(plugin.messenger, METHOD_CHANNEL_NAME)) {
+class InAppBrowserManager(plugin: InAppWebViewFlutterPlugin) : InAppBrowserManagerHostApi {
 
   @JvmField
   var plugin: InAppWebViewFlutterPlugin? = plugin
@@ -55,41 +54,31 @@ class InAppBrowserManager(plugin: InAppWebViewFlutterPlugin) :
   @JvmField
   var id: String = UUID.randomUUID().toString()
 
+  private var messenger: BinaryMessenger? = plugin.messenger
+
   init {
     shared[id] = this
+    InAppBrowserManagerHostApi.setUp(plugin.messenger, this)
   }
 
-  override fun onMethodCall(call: MethodCall, result: MethodChannel.Result) {
-    val activity = plugin?.activity
+  override fun open(request: InAppBrowserOpenRequestData): Boolean {
+    val activity = plugin?.activity ?: return false
+    startBrowser(activity, request)
+    return true
+  }
 
-    when (call.method) {
-      "open" -> {
-        if (activity != null) {
-          open(activity, call.arguments<Map<String, Any?>>()!!)
-          result.success(true)
-        } else {
-          result.success(false)
-        }
-      }
-
-      "openWithSystemBrowser" -> {
-        if (activity != null) {
-          openWithSystemBrowser(activity, call.argument("url")!!, result)
-        } else {
-          result.success(false)
-        }
-      }
-
-      else -> result.notImplemented()
-    }
+  override fun openWithSystemBrowser(url: String): Boolean {
+    val activity = plugin?.activity ?: return false
+    launchSystemBrowser(activity, url)
+    return true
   }
 
   /**
-   * Display a new browser with the specified URL.
-   *
-   * @param url the url to load.
+   * Opens [url] in another app. Throws [FlutterError] when none can, with the code, message and
+   * details the hand-written channel's `result.error` used, so Dart sees the same
+   * `PlatformException` (§196).
    */
-  fun openWithSystemBrowser(activity: Activity, url: String, result: MethodChannel.Result) {
+  private fun launchSystemBrowser(activity: Activity, url: String) {
     try {
       val intent = Intent(Intent.ACTION_VIEW)
       // Omitting the MIME type for file: URLs causes "No Activity found to handle Intent".
@@ -103,11 +92,10 @@ class InAppBrowserManager(plugin: InAppWebViewFlutterPlugin) :
       intent.putExtra(Browser.EXTRA_APPLICATION_ID, activity.packageName)
       // CB-10795: Avoid circular loops by preventing it from opening in the current app
       openExternalExcludeCurrentApp(activity, intent)
-      result.success(true)
       // not catching FileUriExposedException explicitly because buildtools<24 doesn't know about it
     } catch (e: RuntimeException) {
       Log.d(LOG_TAG, "$url cannot be opened: $e")
-      result.error(LOG_TAG, "$url cannot be opened!", null)
+      throw FlutterError(LOG_TAG, "$url cannot be opened!", null)
     }
   }
 
@@ -146,28 +134,35 @@ class InAppBrowserManager(plugin: InAppWebViewFlutterPlugin) :
     }
   }
 
-  fun open(activity: Activity, arguments: Map<String, Any?>) {
-    val windowId = arguments["windowId"] as Int?
-
+  // Field for Bundle key, one line each, in the order the hand-written reads used. §196 asserts
+  // each on a value only the right field produces, so a transposition here fails a device test.
+  private fun startBrowser(activity: Activity, request: InAppBrowserOpenRequestData) {
     val extras = Bundle()
     extras.putString("fromActivity", activity.javaClass.name)
-    extras.putSerializable("initialUrlRequest", arguments["urlRequest"] as Serializable?)
-    extras.putString("initialFile", arguments["assetFilePath"] as String?)
-    extras.putString("initialData", arguments["data"] as String?)
-    extras.putString("initialMimeType", arguments["mimeType"] as String?)
-    extras.putString("initialEncoding", arguments["encoding"] as String?)
-    extras.putString("initialBaseUrl", arguments["baseUrl"] as String?)
-    extras.putString("initialHistoryUrl", arguments["historyUrl"] as String?)
-    extras.putString("id", arguments["id"] as String?)
-    extras.putString("managerId", id)
-    extras.putSerializable("settings", arguments["settings"] as Serializable?)
-    extras.putSerializable("contextMenu", arguments["contextMenu"] as Serializable?)
-    extras.putInt("windowId", windowId ?: -1)
-    extras.putSerializable("initialUserScripts", arguments["initialUserScripts"] as Serializable?)
     extras.putSerializable(
-      "pullToRefreshInitialSettings", arguments["pullToRefreshSettings"] as Serializable?
+      "initialUrlRequest", Util.normalizeCodecInts(request.urlRequest) as Serializable?
     )
-    extras.putSerializable("menuItems", arguments["menuItems"] as Serializable?)
+    extras.putString("initialFile", request.assetFilePath)
+    extras.putString("initialData", request.data)
+    extras.putString("initialMimeType", request.mimeType)
+    extras.putString("initialEncoding", request.encoding)
+    extras.putString("initialBaseUrl", request.baseUrl)
+    extras.putString("initialHistoryUrl", request.historyUrl)
+    extras.putString("id", request.id)
+    extras.putString("managerId", id)
+    extras.putSerializable("settings", Util.normalizeCodecInts(request.settings) as Serializable)
+    extras.putSerializable(
+      "contextMenu", Util.normalizeCodecInts(request.contextMenu) as Serializable
+    )
+    extras.putInt("windowId", request.windowId?.toInt() ?: -1)
+    extras.putSerializable(
+      "initialUserScripts", Util.normalizeCodecInts(request.initialUserScripts) as Serializable
+    )
+    extras.putSerializable(
+      "pullToRefreshInitialSettings",
+      Util.normalizeCodecInts(request.pullToRefreshSettings) as Serializable
+    )
+    extras.putSerializable("menuItems", Util.normalizeCodecInts(request.menuItems) as Serializable)
     startInAppBrowserActivity(activity, extras)
   }
 
@@ -179,15 +174,15 @@ class InAppBrowserManager(plugin: InAppWebViewFlutterPlugin) :
     activity.startActivity(intent)
   }
 
-  override fun dispose() {
-    super.dispose()
+  fun dispose() {
+    messenger?.let { InAppBrowserManagerHostApi.setUp(it, null) }
+    messenger = null
     shared.remove(id)
     plugin = null
   }
 
   companion object {
     protected const val LOG_TAG = "InAppBrowserManager"
-    const val METHOD_CHANNEL_NAME = "dev.nosferatu500.inappwebview/inappbrowser"
 
     @JvmField
     val shared: MutableMap<String, InAppBrowserManager> = HashMap()
