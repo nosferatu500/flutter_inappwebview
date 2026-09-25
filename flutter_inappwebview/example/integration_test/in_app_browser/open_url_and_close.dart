@@ -27,6 +27,15 @@ void openUrlAndClose() {
     expect(url, TEST_URL_1.toString());
 
     await inAppBrowser.close();
+    // `onExit` and `close`'s reply travel on two different Pigeon channels since §195; on the old
+    // shared MethodChannel their order was implied. Kotlin sends `onExit` first, so by the time
+    // `close()` completes the browser must already report itself closed. Checked before awaiting
+    // `browserClosed`, which would hide a reordering.
+    expect(
+      inAppBrowser.isOpened(),
+      false,
+      reason: 'onExit must be delivered before close() completes',
+    );
     await inAppBrowser.browserClosed.future;
     expect(inAppBrowser.isOpened(), false);
     expect(inAppBrowser.webViewController, isNull);

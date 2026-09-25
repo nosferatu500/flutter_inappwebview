@@ -233,39 +233,9 @@ class WebViewChannelDelegate(webView: InAppWebView, channel: MethodChannel) :
         }
       }
 
-      WebViewChannelDelegateMethods.close -> {
-        if (browserActivity != null) {
-          browserActivity.close(result)
-        } else {
-          result.notImplemented()
-        }
-      }
-
-      WebViewChannelDelegateMethods.show -> {
-        if (browserActivity != null) {
-          browserActivity.show()
-          result.success(true)
-        } else {
-          result.notImplemented()
-        }
-      }
-
-      WebViewChannelDelegateMethods.hide -> {
-        if (browserActivity != null) {
-          browserActivity.hide()
-          result.success(true)
-        } else {
-          result.notImplemented()
-        }
-      }
-
-      WebViewChannelDelegateMethods.isHidden -> {
-        if (browserActivity != null) {
-          result.success(browserActivity.isHidden)
-        } else {
-          result.notImplemented()
-        }
-      }
+      // `show`, `hide`, `close` and `isHidden` used to arrive here too, because an in-app browser's
+      // WebView shares the browser's MethodChannel. They are Pigeon now, on
+      // `InAppBrowserChannelDelegate` (§195).
 
       WebViewChannelDelegateMethods.getCopyBackForwardList ->
         result.success(webView?.getCopyBackForwardList())

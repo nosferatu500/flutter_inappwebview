@@ -141,8 +141,10 @@ class InAppBrowserActivity : AppCompatActivity(), InAppBrowserDelegate, Disposab
     currentWebView.findInteractionController = findInteractionController
     findInteractionController.prepare()
 
+    // The browser's own methods and events are Pigeon, suffixed by the browser id (§195). The
+    // MethodChannel now belongs to the WebView's delegate alone.
+    channelDelegate = InAppBrowserChannelDelegate(this, plugin.messenger, viewId)
     val channel = MethodChannel(plugin.messenger, METHOD_CHANNEL_NAME_PREFIX + viewId)
-    channelDelegate = InAppBrowserChannelDelegate(channel)
     currentWebView.channelDelegate = WebViewChannelDelegate(currentWebView, channel)
 
     fromActivity = b.getString("fromActivity")
@@ -365,14 +367,14 @@ class InAppBrowserActivity : AppCompatActivity(), InAppBrowserDelegate, Disposab
   override fun onKeyDown(keyCode: Int, event: KeyEvent): Boolean {
     if (keyCode == KeyEvent.KEYCODE_BACK) {
       if (customSettings.shouldCloseOnBackButtonPressed) {
-        close(null)
+        close()
         return true
       }
       if (customSettings.allowGoBackWithBackButton) {
         if (canGoBack()) {
           goBack()
         } else if (customSettings.closeOnCannotGoBack) {
-          close(null)
+          close()
         }
         return true
       }
@@ -383,12 +385,11 @@ class InAppBrowserActivity : AppCompatActivity(), InAppBrowserDelegate, Disposab
     return super.onKeyDown(keyCode, event)
   }
 
-  fun close(result: MethodChannel.Result?) {
+  /** Sends `onExit`, then disposes. The Pigeon `close` answers `true` after this returns. */
+  fun close() {
     channelDelegate?.onExit()
 
     dispose()
-
-    result?.success(true)
   }
 
   fun reload() {
@@ -451,7 +452,7 @@ class InAppBrowserActivity : AppCompatActivity(), InAppBrowserDelegate, Disposab
   }
 
   fun closeButtonClicked(item: MenuItem) {
-    close(null)
+    close()
   }
 
   fun setSettings(newSettings: InAppBrowserSettings, newSettingsMap: HashMap<String, Any?>) {

@@ -468,6 +468,20 @@ for, and five others have a native *value* that differs from their name.
 
 ### Internal
 
+- **The in-app browser's own methods and events are Pigeon-generated**, the eighteenth channel
+  migrated: `show`, `hide`, `close`, `isHidden` and `onBrowserCreated`, `onMenuItemClicked`,
+  `onExit`, over `InAppBrowserHostApi` / `InAppBrowserFlutterApi`, suffixed by the browser id. No
+  public API change.
+  - **They were never the browser's own channel before.** `InAppBrowserActivity` handed one
+    `inappbrowser_$id` MethodChannel to both the browser delegate and the WebView's delegate. The
+    WebView's registered last, so it answered all four methods, and the browser delegate's handler
+    was empty. That MethodChannel now belongs to the WebView alone, plus the browser's
+    `setSettings`/`getSettings`, which carry the settings map and follow in a later commit.
+  - `close` still sends `onExit` before it answers. The two now travel on different channels, so
+    `open url and close` asserts the order: the browser reports itself closed as soon as `close()`
+    returns. A mutant that answered first failed only that assertion.
+  - A new boundary test covers the Dart half of `onMenuItemClicked`. No device test can press a
+    toolbar item, so it's the only coverage that event has.
 - **Every method on the per-WebView channel now runs on an Android device.** Fifteen had never been
   called by any integration test. Twelve now assert their effect:
   - `canScrollVertically` / `canScrollHorizontally` and `getContentWidth`, on a tall page and a
