@@ -8,6 +8,7 @@ import '../util.dart';
 part 'enabled.dart';
 part 'refreshing.dart';
 part 'appearance.dart';
+part 'in_app_browser.dart';
 
 /// Device coverage for `PullToRefreshChannelDelegate` — **ten channel methods that had none**.
 ///
@@ -29,6 +30,9 @@ part 'appearance.dart';
 ///     only. That is recorded rather than dressed up (§171) — see `appearance.dart`.
 ///   * `onRefresh`, the channel's one event, needs a real drag on a platform view. See
 ///     `refreshing.dart`, where the reachable half of that is pinned instead.
+///   * The delegate has **two construction sites** that compute the channel suffix independently —
+///     `PullToRefreshLayout`'s constructor (the widget and headless paths) and `InAppBrowserActivity`
+///     (XML-inflated). `in_app_browser.dart` covers the second; everything else here covers the first.
 void main() {
   final shouldSkip = !PullToRefreshController.isClassSupported();
 
@@ -36,6 +40,9 @@ void main() {
     enabled();
     refreshing();
     appearance();
+    // Last: it opens a separate activity, and one left on screen by a failure would take every
+    // widget test after it down with it (§178).
+    inAppBrowser();
   }, skip: shouldSkip);
 }
 

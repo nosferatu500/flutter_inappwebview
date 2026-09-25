@@ -7,7 +7,6 @@ import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import dev.nosferatu500.inappwebview.InAppWebViewFlutterPlugin
 import dev.nosferatu500.inappwebview.types.Disposable
 import dev.nosferatu500.inappwebview.webview.in_app_webview.InAppWebView
-import io.flutter.plugin.common.MethodChannel
 
 class PullToRefreshLayout : SwipeRefreshLayout, Disposable {
 
@@ -25,8 +24,11 @@ class PullToRefreshLayout : SwipeRefreshLayout, Disposable {
     settings: PullToRefreshSettings
   ) : super(context) {
     this.settings = settings
-    val channel = MethodChannel(plugin.messenger, METHOD_CHANNEL_NAME_PREFIX + id)
-    channelDelegate = PullToRefreshChannelDelegate(this, channel)
+    // Pigeon derives one channel per method from the schema and appends this suffix, so the id that
+    // used to be interpolated into a single channel name is passed as the suffix instead. It must
+    // stringify the same way Dart's `'$id'` does — for the widget's int view id and for the
+    // headless / InAppBrowser string ids alike.
+    channelDelegate = PullToRefreshChannelDelegate(this, plugin.messenger, id.toString())
   }
 
   constructor(context: Context) : super(context)
@@ -68,7 +70,8 @@ class PullToRefreshLayout : SwipeRefreshLayout, Disposable {
 
   companion object {
     const val LOG_TAG = "PullToRefreshLayout"
-    const val METHOD_CHANNEL_NAME_PREFIX =
-      "dev.nosferatu500.inappwebview/inappwebview_pull_to_refresh_"
+    // METHOD_CHANNEL_NAME_PREFIX is gone with the migration: Pigeon derives its own channel names
+    // from the schema and the id travels as the messageChannelSuffix. Its one other user,
+    // InAppBrowserActivity, now passes the suffix too.
   }
 }

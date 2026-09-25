@@ -468,6 +468,33 @@ for, and five others have a native *value* that differs from their name.
 
 ### Internal
 
+- **The `inappwebview_pull_to_refresh_*` per-instance channel is Pigeon-generated**, the fifteenth
+  migrated: **ten host methods plus one event (`onRefresh`)**. `AndroidPullToRefreshController`
+  drops `ChannelController` and holds the generated `PullToRefreshHostApi`;
+  `PullToRefreshChannelDelegate` implements it, and its hand-written `onMethodCall` dispatch and the
+  Dart `_handleMethod` switch are both gone, along with
+  `PullToRefreshLayout.METHOD_CHANNEL_NAME_PREFIX`. No public API change.
+
+  **The delegate has two construction sites**, and they compute the channel suffix independently:
+  `PullToRefreshLayout`'s constructor (the `InAppWebView` widget and `HeadlessInAppWebView`) and
+  `InAppBrowserActivity`, which inflates the layout from XML and wires the delegate by hand. The
+  second was found by the compiler, not by a search — the search that was run had filtered the
+  `in_app_browser` directory out. The device group gains a test that drives the InAppBrowser path
+  (6 tests now); a mutant breaking only that site's suffix fails it in ~2 s with a `channel-error`
+  and leaves the other five green.
+
+  `onRefresh` collides with the public `onRefresh` getter, so the event arrives through a private
+  forwarder, as for `find_interaction` and `print_job`. **The event direction has no device
+  coverage** — it needs a real drag — and a mutant breaking only the Kotlin FlutterApi suffix passes
+  the whole device group. A new Dart boundary test covers the Dart half of it: the event reaching
+  the callback, a normal `dispose` stopping it, and a keep-alive `dispose` leaving it registered, as
+  the hand-written `disposeChannel(removeMethodCallHandler: !isKeepAlive)` did.
+
+  `setIndicatorSize` now asserts the (unreachable) null native value with `!` rather than putting
+  it on the wire, where the Kotlin `!!` used to reject it; both fail loudly.
+  `SwipeRefreshLayout.setSize` narrows Pigeon's `Long` into an `@IntDef`, and `lintDebug` reports
+  no `WrongConstant` for it.
+
 - **`pull_to_refresh_controller` gets an Android device group — 5 tests, from zero**, covering all
   ten of the channel's methods. Written as its own item before the Pigeon migration of
   `PullToRefreshChannelDelegate`, per the rule §169 earned. No plugin code changed.

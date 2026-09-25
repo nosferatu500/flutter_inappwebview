@@ -114,15 +114,16 @@ class InAppBrowserActivity : AppCompatActivity(), InAppBrowserDelegate, Disposab
     val pullToRefreshInitialSettings = BundleCompat.getSerializable(
       b, "pullToRefreshInitialSettings", HashMap::class.java
     ) as Map<String, Any?>
-    val pullToRefreshLayoutChannel = MethodChannel(
-      plugin.messenger, PullToRefreshLayout.METHOD_CHANNEL_NAME_PREFIX + viewId
-    )
     val pullToRefreshSettings = PullToRefreshSettings()
     pullToRefreshSettings.parse(pullToRefreshInitialSettings)
     val currentPullToRefreshLayout = findViewById<PullToRefreshLayout>(R.id.pullToRefresh)
     pullToRefreshLayout = currentPullToRefreshLayout
+    // The layout is inflated from XML here, so it cannot build its own delegate the way the
+    // `(context, plugin, id, settings)` constructor does, and this is the one other place the
+    // delegate is constructed. `viewId.toString()` matches the old `PREFIX + viewId` concatenation
+    // exactly — for a String? both yield "null" when absent — and Dart's `'$id'` on the other side.
     currentPullToRefreshLayout.channelDelegate =
-      PullToRefreshChannelDelegate(currentPullToRefreshLayout, pullToRefreshLayoutChannel)
+      PullToRefreshChannelDelegate(currentPullToRefreshLayout, plugin.messenger, viewId.toString())
     currentPullToRefreshLayout.settings = pullToRefreshSettings
     currentPullToRefreshLayout.prepare()
 
