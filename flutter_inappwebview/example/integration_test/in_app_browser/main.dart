@@ -1,3 +1,6 @@
+import 'dart:async';
+import 'dart:collection';
+
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -5,6 +8,7 @@ import 'package:flutter_inappwebview/flutter_inappwebview.dart';
 import 'package:flutter_test/flutter_test.dart';
 import '../constants.dart';
 import '../util.dart';
+import '../env.dart';
 
 part 'supported.dart';
 part 'open_data_and_close.dart';
@@ -13,6 +17,7 @@ part 'open_url_and_close.dart';
 part 'set_get_settings.dart';
 part 'hide_and_show.dart';
 part 'custom_menu_items.dart';
+part 'open_payload.dart';
 
 void main() {
   final shouldSkip = !InAppBrowser.isClassSupported();
@@ -25,5 +30,6 @@ void main() {
     setGetSettings();
     hideAndShow();
     customMenuItems();
+    openPayload();
   }, skip: shouldSkip);
 }

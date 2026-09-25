@@ -468,6 +468,20 @@ for, and five others have a native *value* that differs from their name.
 
 ### Internal
 
+- **Everything `InAppBrowserManager` sends now has a device test, ahead of its migration.** Six new
+  `in_app_browser` tests, so the group goes from 7 to 13. They assert, each on a value only the
+  right field can produce:
+  - `openData`'s `data`, `mimeType`, `baseUrl` and `historyUrl`. The base and history URLs are now
+    different: the old test used the same URL for both and passed a swap of the two, measured.
+  - `openUrlRequest`'s headers, via the fixture server's `/echo-headers`.
+  - `initialUserScripts`.
+  - Initial settings containing an int and a color.
+  - `windowId`, through a child browser opened from `onCreateWindow`.
+  - `openWithSystemBrowser`'s error for a URL no app can handle. Its success path starts another
+    app, so it stays untested.
+
+  Not observable, and recorded in the test: `encoding`, since `document.characterSet` stays UTF-8
+  whatever is sent. Test only; no plugin code changed.
 - **The in-app browser's own methods and events are Pigeon-generated**, the eighteenth channel
   migrated: `show`, `hide`, `close`, `isHidden` and `onBrowserCreated`, `onMenuItemClicked`,
   `onExit`, over `InAppBrowserHostApi` / `InAppBrowserFlutterApi`, suffixed by the browser id. No
