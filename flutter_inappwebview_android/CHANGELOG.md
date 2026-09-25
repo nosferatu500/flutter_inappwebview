@@ -468,6 +468,25 @@ for, and five others have a native *value* that differs from their name.
 
 ### Internal
 
+- **Every method on the per-WebView channel now runs on an Android device.** Fifteen had never been
+  called by any integration test. Twelve now assert their effect:
+  - `canScrollVertically` / `canScrollHorizontally` and `getContentWidth`, on a tall page and a
+    2000 px-wide one.
+  - `getSelectedText`: `''` with nothing selected, and the selected word after a selection.
+  - `getHitTestResult`: after a tap on a link.
+  - `isInFullscreen`: across a real fullscreen.
+  - `setAudioMuted` / `isAudioMuted`: read back from the platform.
+  - `prerenderUrl`: the navigated-to page reports a non-zero `activationStart`, against a plain
+    load as control.
+  - `requestFocus` with a direction, and with a direction and rect.
+  - `removeUserScriptsByGroupName`: the other group's script survives.
+  - `setContextMenu`: the replacement item is what gets clicked.
+
+  Three are **routing-only**, and their test says so: `showInputMethod`, `hideInputMethod` and
+  `clearFormData`. The test emulator has a hardware keyboard, so no soft keyboard ever shows, and
+  there is no autocomplete popup to dismiss. Recorded, not changed: for an `InAppWebView`,
+  `setContextMenu` replaces the drawn items, but clicks still go to the callbacks of the
+  `contextMenu` the web view was created with. Test only; no plugin code changed.
 - **Fifteen web-view events get their first Android device test, and `onZoomScaleChanged` gets one
   that can fail.** None of these had ever been observed on Android:
   - `onGeolocationPermissionsShowPrompt` (and the refusal reaches the page).

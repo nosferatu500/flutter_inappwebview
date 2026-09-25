@@ -127,6 +127,16 @@ part 'on_show_file_chooser.dart';
 part 'fullscreen_events.dart';
 part 'render_process_responsiveness.dart';
 part 'on_render_process_gone.dart';
+part 'can_scroll_and_content_width.dart';
+part 'get_selected_text.dart';
+part 'get_hit_test_result.dart';
+part 'is_in_fullscreen.dart';
+part 'mute_audio.dart';
+part 'prerender_url.dart';
+part 'request_focus.dart';
+part 'remove_user_scripts_by_group_name.dart';
+part 'set_context_menu.dart';
+part 'input_method_and_form_data.dart';
 
 void main() {
   final shouldSkip = !InAppWebViewController.isClassSupported();
@@ -250,6 +260,16 @@ void main() {
     onShowFileChooser();
     fullscreenEvents();
     renderProcessResponsiveness();
+    canScrollAndContentWidth();
+    getSelectedText();
+    getHitTestResult();
+    isInFullscreen();
+    muteAudio();
+    prerenderUrl();
+    requestFocus();
+    removeUserScriptsByGroupName();
+    setContextMenu();
+    inputMethodAndFormData();
     // Crashes its renderer on purpose; kept after every other test that is not pinned last, so a
     // shared renderer going down can only affect the print pair below (§192).
     onRenderProcessGone();
