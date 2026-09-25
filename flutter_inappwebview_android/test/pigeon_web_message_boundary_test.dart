@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:typed_data';
 
 import 'package:flutter/services.dart';
@@ -248,6 +249,58 @@ void main() {
       ]);
 
       expect(called, isFalse);
+    });
+  });
+
+  group('dispose unregisters the event handler', () {
+    /// Delivers an event and returns the raw platform reply: an encoded envelope from a registered
+    /// Pigeon handler, null from a channel with none. That observes registration directly — §183's
+    /// technique, after an outbound-mock check and a "callback stayed silent" check were both
+    /// measured blind against a delete-the-unregister mutant.
+    Future<ByteData?> replyTo(String channel, List<Object?> args) {
+      final reply = Completer<ByteData?>();
+      messenger.handlePlatformMessage(
+        channel,
+        codec.encodeMessage(args),
+        reply.complete,
+      );
+      return reply.future;
+    }
+
+    test('a channel stops receiving onMessage after dispose', () async {
+      // Its own id: other tests construct `chan-A` without disposing it, which would keep a handler
+      // registered on that suffix regardless of what this one does.
+      final channel = makeChannel('chan-dispose');
+      final event = '$chEventBase.onMessage.chan-dispose';
+      final args = <Object?>[0, WebMessageData(type: 0, stringData: 'x')];
+
+      // Positive control first, so a null below cannot just mean a misspelt channel.
+      expect(await replyTo(event, args), isNotNull);
+      channel.dispose();
+      expect(await replyTo(event, args), isNull);
+    });
+
+    test('a listener stops receiving onPostMessage after dispose', () async {
+      final listener = AndroidWebMessageListener(
+        AndroidWebMessageListenerCreationParams(
+          jsObjectName: 'disposeObject',
+          allowedOriginRules: {'*'},
+        ),
+      );
+      // Same derivation as `the listener posts on its own suffixed channel` below.
+      final suffix = '${listener.toMap()['id']}_disposeObject';
+      final event =
+          'dev.flutter.pigeon.flutter_inappwebview_android.WebMessageListenerFlutterApi'
+          '.onPostMessage.$suffix';
+      final args = <Object?>[
+        WebMessageData(type: 0, stringData: 'x'),
+        'https://example.com',
+        true,
+      ];
+
+      expect(await replyTo(event, args), isNotNull);
+      listener.dispose();
+      expect(await replyTo(event, args), isNull);
     });
   });
 

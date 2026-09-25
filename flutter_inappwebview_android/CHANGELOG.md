@@ -468,6 +468,15 @@ for, and five others have a native *value* that differs from their name.
 
 ### Internal
 
+- **The headless boundary test's "event handler is unregistered after dispose" check now measures
+  something.** It asserted `checkMockMessageHandler(<FlutterApi channel>, null)`, which inspects
+  the *outbound* mock table while `FlutterApi.setUp` registers an *inbound* handler, so it passed
+  with the unregister deleted. It now delivers `onWebViewCreated` and asserts the platform reply is
+  null, after a positive control showing it is non-null while registered — and fails when the
+  unregister is deleted. The obvious alternative, asserting the callback stays silent, is also blind
+  here: `_onWebViewCreated` already ignores the event once `dispose` has nulled the controller. Test
+  code only.
+
 - **The `inappwebview_pull_to_refresh_*` per-instance channel is Pigeon-generated**, the fifteenth
   migrated: **ten host methods plus one event (`onRefresh`)**. `AndroidPullToRefreshController`
   drops `ChannelController` and holds the generated `PullToRefreshHostApi`;
@@ -494,6 +503,18 @@ for, and five others have a native *value* that differs from their name.
   it on the wire, where the Kotlin `!!` used to reject it; both fail loudly.
   `SwipeRefreshLayout.setSize` narrows Pigeon's `Long` into an `@IntDef`, and `lintDebug` reports
   no `WrongConstant` for it.
+
+- **The event-handler unregistration of five migrated channels is now tested; none was before.**
+  `find_interaction`, both `web_message` channels, `print_job` and `chrome_custom_tabs` each remove
+  their Pigeon event handler in `dispose`, and deleting any of those calls passed every gate. Each
+  now has a boundary test that delivers an event and asserts the platform reply is null after
+  `dispose`, behind a positive control showing it is non-null before — the technique that is blind
+  to neither of the failure modes found in the headless test. `find_interaction` also pins that a
+  keep-alive `dispose` leaves its handler registered; `chrome_custom_tabs` pins that the platform's
+  `onClosed` unregisters too, which is how a closed tab tears down in practice; and `print_job`
+  pins that `onComplete` reaches the controller's callback with both arguments — the first coverage
+  its event direction has had, since no automated test can finish a real print job. `print_job`
+  and `chrome_custom_tabs` had no boundary test file until now. Test code only.
 
 - **`pull_to_refresh_controller` gets an Android device group — 5 tests, from zero**, covering all
   ten of the channel's methods. Written as its own item before the Pigeon migration of

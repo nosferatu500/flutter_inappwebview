@@ -23,7 +23,15 @@ import 'package:flutter_test/flutter_test.dart';
 /// headless test asserted `checkMockMessageHandler(<flutter channel>, null)`, which inspects the
 /// *outbound* mock table — while `FlutterApi.setUp` registers an *inbound* handler. So it is true
 /// whatever `dispose` does, and §182 measured it passing with the unregister deleted. Here the event
-/// is sent after `dispose` and the callback must stay silent, which fails under that mutant.
+/// is sent after `dispose` and the callback must stay silent; §182 measured that failing when *this*
+/// controller's unregister is deleted.
+///
+/// ⚠️ **That silence technique is only valid because nothing else here gates the callback.**
+/// `onRefresh` forwards straight to `params.onRefresh`, which `dispose` leaves alone. It does **not**
+/// transfer to headless: there `_onWebViewCreated` also requires `_webViewController != null`, which
+/// `dispose` nulls, so a still-registered handler is silent too — §183 measured the silence technique
+/// surviving the headless mutant. The signal that depends on registration alone is the platform
+/// reply: an encoded envelope from a registered handler, null from none. See the headless test.
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
 

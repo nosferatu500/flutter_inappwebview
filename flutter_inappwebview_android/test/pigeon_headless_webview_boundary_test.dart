@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:ui';
 
 import 'package:flutter/services.dart';
@@ -162,17 +163,42 @@ void main() {
   });
 
   group('after dispose', () {
+    /// Delivers `onWebViewCreated` and returns the raw reply. A registered
+    /// Pigeon handler always answers with an encoded envelope; a channel with
+    /// no handler answers null. That is the registration itself, observed
+    /// directly.
+    Future<ByteData?> deliverOnWebViewCreated() {
+      final reply = Completer<ByteData?>();
+      TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
+          .handlePlatformMessage(
+            flutterChannel('onWebViewCreated'),
+            codec.encodeMessage(<Object?>[]),
+            reply.complete,
+          );
+      return reply.future;
+    }
+
     test('the event handler for this suffix is unregistered', () async {
+      // Positive control first: without it, a null below could just mean the
+      // channel name is wrong.
+      expect(await deliverOnWebViewCreated(), isNotNull);
+
       stubHost('dispose', true);
       await headlessWebView.dispose();
 
-      // A live handler here would outlive the webview it forwards to. Pigeon
-      // registers per suffix, so this is the half a mismatch loses silently.
-      expect(
-        TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
-            .checkMockMessageHandler(flutterChannel('onWebViewCreated'), null),
-        isTrue,
-      );
+      // A live handler here would outlive the webview it forwards to.
+      //
+      // 🚨 Two tempting assertions here measure nothing (§183: both pass
+      // against a mutant that deletes the unregister; this one fails it):
+      //   * `checkMockMessageHandler(<this channel>, null)` — inspects the
+      //     *outbound* mock table, while `FlutterApi.setUp` registers an
+      //     *inbound* handler, so it is true whatever `dispose` does. This
+      //     test shipped that way in §180.
+      //   * "the callback stays silent" — `_onWebViewCreated` also checks
+      //     `_webViewController != null`, which `dispose` nulls, so a
+      //     still-registered handler is silent too.
+      // The reply is the one signal that depends on registration alone.
+      expect(await deliverOnWebViewCreated(), isNull);
     });
 
     test('further calls no-op instead of throwing', () async {

@@ -1,3 +1,6 @@
+import 'dart:async';
+
+import 'package:flutter/services.dart';
 import 'package:flutter_inappwebview_android/flutter_inappwebview_android.dart';
 // `init` lives on the internal extension, and the event callback can only be
 // supplied through creation params, so the test drives the controller exactly
@@ -190,6 +193,40 @@ void main() {
       // The controller hands itself to the callback; a different object here
       // would mean the FlutterApi impl captured the wrong instance.
       expect(identical(received['controller'], controller), isTrue);
+    });
+  });
+
+  group('dispose and the event handler', () {
+    /// Delivers `onFindResultReceived` and returns the raw platform reply. A
+    /// registered Pigeon handler always answers with an encoded envelope; a
+    /// channel with no handler answers null. That observes registration
+    /// itself, independent of anything the handler does — the technique §183
+    /// established after two other assertions (an outbound-mock check, and
+    /// "the callback stayed silent") were both measured blind.
+    Future<ByteData?> deliverEvent() {
+      final reply = Completer<ByteData?>();
+      TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
+          .handlePlatformMessage(
+            flutterChannel('onFindResultReceived'),
+            codec.encodeMessage(<Object?>[0, 0, false]),
+            reply.complete,
+          );
+      return reply.future;
+    }
+
+    test('dispose unregisters the event handler for this suffix', () async {
+      // Positive control: without it a null below could mean a misspelt
+      // channel rather than an unregistered one.
+      expect(await deliverEvent(), isNotNull);
+      controller.dispose();
+      expect(await deliverEvent(), isNull);
+    });
+
+    test('a keep-alive dispose leaves the event handler registered', () async {
+      // Mirrors the hand-written `disposeChannel(removeMethodCallHandler:
+      // !isKeepAlive)`: a keep-alive webview re-attaches and still needs it.
+      controller.dispose(isKeepAlive: true);
+      expect(await deliverEvent(), isNotNull);
     });
   });
 
