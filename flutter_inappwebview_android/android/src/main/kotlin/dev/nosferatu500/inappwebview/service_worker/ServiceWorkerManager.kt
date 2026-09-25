@@ -10,7 +10,6 @@ import androidx.webkit.WebViewFeature
 import dev.nosferatu500.inappwebview.InAppWebViewFlutterPlugin
 import dev.nosferatu500.inappwebview.types.Disposable
 import dev.nosferatu500.inappwebview.types.WebResourceRequestExt
-import io.flutter.plugin.common.MethodChannel
 
 // See ChannelDelegateImpl: `this` is published to a platform-thread-only dispatcher.
 class ServiceWorkerManager(plugin: InAppWebViewFlutterPlugin) : Disposable {
@@ -22,8 +21,7 @@ class ServiceWorkerManager(plugin: InAppWebViewFlutterPlugin) : Disposable {
   var plugin: InAppWebViewFlutterPlugin? = plugin
 
   init {
-    val channel = MethodChannel(plugin.messenger, METHOD_CHANNEL_NAME)
-    channelDelegate = ServiceWorkerChannelDelegate(this, channel)
+    channelDelegate = ServiceWorkerChannelDelegate(this, plugin.messenger)
   }
 
   fun setServiceWorkerClient(isNull: Boolean?) {
@@ -72,8 +70,8 @@ class ServiceWorkerManager(plugin: InAppWebViewFlutterPlugin) : Disposable {
 
   companion object {
     protected const val LOG_TAG = "ServiceWorkerManager"
-    const val METHOD_CHANNEL_NAME =
-      "dev.nosferatu500.inappwebview/inappwebview_serviceworkercontroller"
+    // METHOD_CHANNEL_NAME is gone with the migration: Pigeon derives its own channel names from the
+    // schema. Checked unfiltered for other users first (§182's rule); there were none.
 
     @JvmField
     var serviceWorkerController: ServiceWorkerControllerCompat? = null

@@ -1,67 +1,83 @@
+import 'dart:async';
+import 'dart:typed_data';
+
 import 'package:flutter/services.dart';
 import 'package:flutter_inappwebview_android/flutter_inappwebview_android.dart';
+import 'package:flutter_inappwebview_android/src/pigeons/service_worker.g.dart';
 import 'package:flutter_inappwebview_platform_interface/flutter_inappwebview_platform_interface.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 /// Guards that a registered [ServiceWorkerClient] keeps receiving `shouldInterceptRequest` after
 /// another [AndroidServiceWorkerController] is constructed.
 ///
-/// Every controller attaches a method-call handler to the same `const MethodChannel`, and
-/// `setMethodCallHandler` is last-writer-wins per channel *name* — so the most recently constructed
-/// controller owns every incoming call. `createPlatformServiceWorkerController` returns a new
-/// controller on each call, which is exactly what the public `ServiceWorkerController()` constructor
-/// does, so a second construction anywhere in an app used to silently orphan the first controller's
-/// client: `shouldInterceptRequest` stopped firing, service worker requests went unintercepted,
-/// and nothing reported an error.
+/// Every controller registers the event handler for the same channel, and registration is
+/// last-writer-wins per channel *name* — so the most recently constructed controller owns every
+/// incoming event. `createPlatformServiceWorkerController` returns a new controller on each call,
+/// which is exactly what the public `ServiceWorkerController()` constructor does, so a second
+/// construction anywhere in an app used to silently orphan the first controller's client:
+/// `shouldInterceptRequest` stopped firing, service worker requests went unintercepted, and nothing
+/// reported an error.
 ///
 /// The fix is that `_serviceWorkerClient` is `static`, matching the platform — there is one
 /// process-wide `ServiceWorkerControllerCompat` and one native client registration for it.
+///
+/// Transport is Pigeon since §186: events arrive on the generated `ServiceWorkerFlutterApi` channel
+/// and the reply carries the app's response back. The assertions are unchanged from the
+/// hand-written channel; only how they reach it is new.
 ///
 /// **These tests share that static field**, so `tearDown` clears it. A leaked client would make a
 /// later test pass for the wrong reason.
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
 
-  const channelName =
-      'dev.nosferatu500.inappwebview/inappwebview_serviceworkercontroller';
-  const channel = MethodChannel(channelName);
-  const codec = StandardMethodCodec();
+  const hostBase =
+      'dev.flutter.pigeon.flutter_inappwebview_android.ServiceWorkerHostApi';
+  const eventChannel =
+      'dev.flutter.pigeon.flutter_inappwebview_android.ServiceWorkerFlutterApi'
+      '.shouldInterceptRequest';
+  const codec = ServiceWorkerFlutterApi.pigeonChannelCodec;
 
-  final List<MethodCall> outgoing = <MethodCall>[];
+  final messenger =
+      TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger;
 
-  Future<void> sendIncomingRequest(String url) async {
-    await TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
-        .handlePlatformMessage(
-          channelName,
-          codec.encodeMethodCall(
-            MethodCall('shouldInterceptRequest', <String, dynamic>{
-              'url': url,
-              'method': 'GET',
-              'headers': <String, String>{},
-              'isForMainFrame': false,
-              'hasGesture': false,
-              'isRedirect': false,
-            }),
-          ),
-          (_) {},
-        );
+  /// Every `setServiceWorkerClient` the controller sent, as its single argument (`isNull`).
+  final List<Object?> sentIsNull = <Object?>[];
+
+  /// Delivers one `shouldInterceptRequest` event and returns the raw reply.
+  Future<ByteData?> sendIncomingRequest(String url) {
+    final reply = Completer<ByteData?>();
+    messenger.handlePlatformMessage(
+      eventChannel,
+      codec.encodeMessage(<Object?>[
+        WebResourceRequestData(
+          url: url,
+          headers: <String, String>{},
+          isRedirect: false,
+          hasGesture: false,
+          isForMainFrame: false,
+          method: 'GET',
+        ),
+      ]),
+      reply.complete,
+    );
+    return reply.future;
   }
 
   setUp(() {
-    outgoing.clear();
-    TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
-        .setMockMethodCallHandler(channel, (call) async {
-          outgoing.add(call);
-          return null;
-        });
+    sentIsNull.clear();
+    messenger.setMockMessageHandler('$hostBase.setServiceWorkerClient', (
+      message,
+    ) async {
+      sentIsNull.add((codec.decodeMessage(message) as List<Object?>).single);
+      return codec.encodeMessage(<Object?>[true]);
+    });
   });
 
   tearDown(() async {
     await AndroidServiceWorkerController(
       const PlatformServiceWorkerControllerCreationParams(),
     ).setServiceWorkerClient(null);
-    TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
-        .setMockMethodCallHandler(channel, null);
+    messenger.setMockMessageHandler('$hostBase.setServiceWorkerClient', null);
   });
 
   AndroidServiceWorkerController newController() =>
@@ -171,6 +187,59 @@ void main() {
     });
   });
 
+  group('the answer crosses back', () {
+    test('a returned response reaches the platform field for field', () async {
+      // The Dart half of the direction §185's device test covers end to end. Distinct values in
+      // every field, so a transposed or dropped one cannot pass.
+      final first = newController();
+      await first.setServiceWorkerClient(
+        ServiceWorkerClient(
+          shouldInterceptRequest: (request) async => WebResourceResponse(
+            contentType: 'text/plain',
+            contentEncoding: 'utf-8',
+            statusCode: 203,
+            reasonPhrase: 'Non-Authoritative Information',
+            headers: {'X-Probe': 'dart'},
+            data: Uint8List.fromList([1, 2, 3]),
+            cookies: ['a=1'],
+          ),
+        ),
+      );
+
+      final reply = await sendIncomingRequest('https://example.com/p.txt');
+      final envelope = codec.decodeMessage(reply) as List<Object?>;
+      final response = envelope.single as WebResourceResponseData;
+
+      expect(response.contentType, 'text/plain');
+      expect(response.contentEncoding, 'utf-8');
+      expect(response.statusCode, 203);
+      expect(response.reasonPhrase, 'Non-Authoritative Information');
+      expect(response.headers, {'X-Probe': 'dart'});
+      expect(response.data, Uint8List.fromList([1, 2, 3]));
+      expect(response.cookies, ['a=1']);
+    });
+
+    test('no client means a null answer, not an error', () async {
+      // Null is "not handled" on the platform side: the request goes to the network. An error
+      // envelope would take the same path there, but would also be a lie about what happened.
+      newController();
+      final reply = await sendIncomingRequest('https://example.com/p.txt');
+      expect(codec.decodeMessage(reply), <Object?>[null]);
+    });
+  });
+
+  group('the event handler lifecycle', () {
+    test('disposing a controller leaves the event handler registered', () async {
+      // The deliberate exception to §184's rule. Every other migrated channel unregisters its
+      // event handler in `dispose`; this one must not, because the handler and the client are
+      // process-wide and one controller's dispose would silently cut off every other one.
+      // Observed through the reply (§183): non-null means a handler answered.
+      final controller = newController();
+      controller.dispose();
+      expect(await sendIncomingRequest('https://example.com/a.js'), isNotNull);
+    });
+  });
+
   group('the native registration is still told', () {
     // Independent of where the client is held: `setServiceWorkerClient` must keep telling the
     // Kotlin whether a client exists, or the native side never installs its own callback.
@@ -180,17 +249,10 @@ void main() {
       await controller.setServiceWorkerClient(
         ServiceWorkerClient(shouldInterceptRequest: (request) async => null),
       );
-      expect(outgoing.last.method, 'setServiceWorkerClient');
-      expect(
-        (outgoing.last.arguments as Map<Object?, Object?>)['isNull'],
-        false,
-      );
+      expect(sentIsNull.last, false);
 
       await controller.setServiceWorkerClient(null);
-      expect(
-        (outgoing.last.arguments as Map<Object?, Object?>)['isNull'],
-        true,
-      );
+      expect(sentIsNull.last, true);
     });
   });
 }

@@ -1,14 +1,18 @@
-import 'package:flutter/services.dart';
 import 'package:flutter_inappwebview_android/flutter_inappwebview_android.dart';
+import 'package:flutter_inappwebview_android/src/pigeons/service_worker.g.dart';
 import 'package:flutter_inappwebview_platform_interface/flutter_inappwebview_platform_interface.dart';
 import 'package:flutter_test/flutter_test.dart';
 
-/// Guards the `profileName` argument key on the service-worker channel, and the deliberate
-/// exception to it.
+/// Guards the `profileName` argument on the service-worker channel, and the deliberate exception to
+/// it.
 ///
-/// `ServiceWorkerChannelDelegate` reads it with `call.argument<String>("profileName")` and treats
-/// null as "the default profile". A renamed or dropped key therefore fails silently: the settings
-/// call acts on the default profile's service workers instead of the profile the caller named.
+/// `ServiceWorkerChannelDelegate` treats a null `profileName` as "the default profile". A dropped
+/// argument therefore fails silently: the settings call acts on the default profile's service
+/// workers instead of the profile the caller named. (§185's device test measures that from the
+/// other end; this pins which argument slot carries it.)
+///
+/// Since §186 the transport is Pigeon, so the profile is a **positional** argument — the last one of
+/// every settings method — rather than a map key. What the tests assert is unchanged.
 ///
 /// `setServiceWorkerClient` is the one method that must *not* carry it — the intercept event has no
 /// profile identity, so a per-profile client could not be told apart in Dart. Asserted here so the
@@ -16,56 +20,76 @@ import 'package:flutter_test/flutter_test.dart';
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
 
-  const channel = MethodChannel(
-    'dev.nosferatu500.inappwebview/inappwebview_serviceworkercontroller',
-  );
+  const hostBase =
+      'dev.flutter.pigeon.flutter_inappwebview_android.ServiceWorkerHostApi';
+  const codec = ServiceWorkerHostApi.pigeonChannelCodec;
+  const methods = [
+    'setServiceWorkerClient',
+    'getAllowContentAccess',
+    'getAllowFileAccess',
+    'getBlockNetworkLoads',
+    'getCacheMode',
+    'getIncludeCookiesOnShouldInterceptRequestEnabled',
+    'setAllowContentAccess',
+    'setAllowFileAccess',
+    'setBlockNetworkLoads',
+    'setCacheMode',
+    'setIncludeCookiesOnShouldInterceptRequestEnabled',
+  ];
+
+  final messenger =
+      TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger;
 
   late AndroidServiceWorkerController controller;
-  final List<MethodCall> calls = <MethodCall>[];
+
+  /// Every host call, as (method, positional arguments).
+  final List<(String, List<Object?>)> calls = <(String, List<Object?>)>[];
 
   setUp(() {
     calls.clear();
     controller = AndroidServiceWorkerController(
       const PlatformServiceWorkerControllerCreationParams(),
     );
-    TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
-        .setMockMethodCallHandler(channel, (MethodCall call) async {
-          calls.add(call);
-          if (call.method == 'getCacheMode') {
-            return CacheMode.LOAD_DEFAULT.toNativeValue();
-          }
-          return true;
-        });
+    for (final method in methods) {
+      messenger.setMockMessageHandler('$hostBase.$method', (message) async {
+        calls.add((method, codec.decodeMessage(message) as List<Object?>));
+        // Each answer must match the generated return type, or the Dart side rejects it.
+        final Object? answer = method == 'getCacheMode'
+            ? CacheMode.LOAD_DEFAULT.toNativeValue()
+            : true;
+        return codec.encodeMessage(<Object?>[answer]);
+      });
+    }
   });
 
   tearDown(() {
-    TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
-        .setMockMethodCallHandler(channel, null);
+    for (final method in methods) {
+      messenger.setMockMessageHandler('$hostBase.$method', null);
+    }
   });
 
-  Map<Object?, Object?> argsOf(MethodCall call) =>
-      call.arguments as Map<Object?, Object?>;
-
   group('AndroidServiceWorkerController profileName', () {
-    test('is sent under the key the Android side reads', () async {
+    test('travels as the last argument, after the value', () async {
       await controller.setCacheMode(
         CacheMode.LOAD_NO_CACHE,
         profileName: 'signed_in',
       );
 
-      expect(calls.single.method, 'setCacheMode');
-      expect(argsOf(calls.single)['profileName'], 'signed_in');
-      expect(
-        argsOf(calls.single)['mode'],
+      final (method, args) = calls.single;
+      expect(method, 'setCacheMode');
+      expect(args, <Object?>[
         CacheMode.LOAD_NO_CACHE.toNativeValue(),
-      );
+        'signed_in',
+      ]);
     });
 
     test('is null when not given, which means the default profile', () async {
       await controller.getCacheMode();
 
-      expect(argsOf(calls.single).containsKey('profileName'), isTrue);
-      expect(argsOf(calls.single)['profileName'], isNull);
+      final (method, args) = calls.single;
+      expect(method, 'getCacheMode');
+      // Present and null — not absent. Pigeon always sends every positional argument.
+      expect(args, <Object?>[null]);
     });
 
     test('reaches every settings method', () async {
@@ -79,26 +103,22 @@ void main() {
       await controller.setCacheMode(CacheMode.LOAD_DEFAULT, profileName: 'p');
 
       expect(calls.length, 8);
-      for (final call in calls) {
-        expect(
-          argsOf(call)['profileName'],
-          'p',
-          reason: '${call.method} dropped profileName',
-        );
+      for (final (method, args) in calls) {
+        expect(args.last, 'p', reason: '$method dropped profileName');
       }
     });
 
     test('setServiceWorkerClient deliberately sends none', () async {
       await controller.setServiceWorkerClient(ServiceWorkerClient());
 
-      expect(calls.single.method, 'setServiceWorkerClient');
-      expect(argsOf(calls.single)['isNull'], isFalse);
+      final (method, args) = calls.single;
+      expect(method, 'setServiceWorkerClient');
       expect(
-        argsOf(calls.single).containsKey('profileName'),
-        isFalse,
+        args,
+        <Object?>[false],
         reason:
-            'the intercept event carries no profile identity, so the client is '
-            'default-profile only by design',
+            'isNull only: the intercept event carries no profile identity, so the '
+            'client is default-profile only by design',
       );
     });
   });

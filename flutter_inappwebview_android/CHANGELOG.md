@@ -468,6 +468,22 @@ for, and five others have a native *value* that differs from their name.
 
 ### Internal
 
+- **The `service_worker_controller` device group goes from 5 to 10 tests**, written before
+  migrating `ServiceWorkerChannelDelegate` to Pigeon. Seven of the channel's eleven methods had never
+  been called on a device, and every existing test answered `shouldInterceptRequest` with `null`, so
+  no `WebResourceResponse` had ever crossed the channel. No plugin code changed.
+
+  The three boolean settings and `cacheMode` now round-trip in both directions on the default
+  profile, and on a named profile with an assertion that the default profile did not move — the
+  only check that sees a `profileName` dropped in transport. The response path is covered with a
+  Service Worker the test brings itself: a page served by `InAppLocalhostServer` on
+  `http://localhost:8080` (a secure context, which a worker needs) registers a worker that re-fetches
+  a probe file, and that worker request is what reaches `shouldInterceptRequest`. A control test
+  lets it through and must read the file; the replacement test answers with its own body, status
+  `203` and an `X-Probe` header and must read all three. Four mutants on the Kotlin side each fail
+  exactly the tests predicted, including one dropping only the response headers, which fails on
+  the header while body and status still pass.
+
 - **The headless boundary test's "event handler is unregistered after dispose" check now measures
   something.** It asserted `checkMockMessageHandler(<FlutterApi channel>, null)`, which inspects
   the *outbound* mock table while `FlutterApi.setUp` registers an *inbound* handler, so it passed
@@ -476,6 +492,31 @@ for, and five others have a native *value* that differs from their name.
   unregister is deleted. The obvious alternative, asserting the callback stays silent, is also blind
   here: `_onWebViewCreated` already ignores the event once `dispose` has nulled the controller. Test
   code only.
+
+- **The `inappwebview_serviceworkercontroller` channel is Pigeon-generated**, the sixteenth
+  migrated: **eleven host methods plus `shouldInterceptRequest`, the first event in the plugin that
+  returns a value**. `AndroidServiceWorkerController` drops `ChannelController` and holds the
+  generated `ServiceWorkerHostApi`; `ServiceWorkerChannelDelegate` implements it, and its
+  hand-written `onMethodCall` dispatch, the Dart `_handleMethod` switch, the
+  `InternalServiceWorkerController` extension and `ServiceWorkerManager.METHOD_CHANNEL_NAME` are
+  gone. So is the delegate's async `shouldInterceptRequest(request, callback)` overload, which had no
+  caller. No public API change: the class now `implements Disposable` explicitly, since that used
+  to arrive through the removed mixin.
+
+  **The Service Worker's request still blocks the Chromium worker thread for Dart's answer**, as it
+  must — `ServiceWorkerClientCompat.shouldInterceptRequest` returns synchronously. The delegate now
+  waits on a latch around the generated FlutterApi's reply, with the same 10-second bound and the
+  same "null means load from the network" fallback as `Util.invokeMethodAndWaitResult`, which it
+  cannot reuse because that helper takes a raw `MethodChannel` and still serves the WebView's own
+  intercepts. A mutant that never releases the latch measures the bound: the request loads from
+  the network after the timeout rather than hanging.
+
+  The client stays process-wide, as the platform's is: every controller registers the same
+  stateless forwarder, which reads the one static client, so a second `ServiceWorkerController()`
+  still cannot orphan it — and `dispose` deliberately leaves the event handler registered, the one
+  migrated channel where that is correct. The three unit tests that drove the raw channel are
+  rewritten against the Pigeon one with their assertions unchanged, and gain three: the response
+  crossing back field for field, a null answer when no client is set, and the dispose exception.
 
 - **The `inappwebview_pull_to_refresh_*` per-instance channel is Pigeon-generated**, the fifteenth
   migrated: **ten host methods plus one event (`onRefresh`)**. `AndroidPullToRefreshController`

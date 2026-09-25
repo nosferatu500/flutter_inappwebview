@@ -1,0 +1,28 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Service Worker intercept test</title>
+</head>
+<body>
+<!--
+  Served by InAppLocalhostServer at http://localhost:8080 — localhost is a secure context, which a
+  Service Worker needs to register. `window.swReady` resolves once the worker below controls this
+  page, so a fetch made after it goes through the worker's `fetch` handler, and the worker's own
+  network fetch goes through `ServiceWorkerClient.shouldInterceptRequest`. See
+  integration_test/service_worker_controller/intercept_response.dart.
+-->
+<script>
+    window.swReady = (async () => {
+        await navigator.serviceWorker.register('service_worker_intercept_test_sw.js');
+        await navigator.serviceWorker.ready;
+        if (!navigator.serviceWorker.controller) {
+            // First visit: the page is controlled only once the worker's `clients.claim()` runs.
+            await new Promise((resolve) =>
+                navigator.serviceWorker.addEventListener('controllerchange', resolve, {once: true}));
+        }
+        return true;
+    })();
+</script>
+</body>
+</html>

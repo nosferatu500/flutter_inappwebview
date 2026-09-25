@@ -1,25 +1,34 @@
 import 'package:flutter/foundation.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_inappwebview_android/flutter_inappwebview_android.dart';
+import 'package:flutter_inappwebview_android/src/pigeons/service_worker.g.dart';
 import 'package:flutter_inappwebview_platform_interface/flutter_inappwebview_platform_interface.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 /// Wire-shape guards for the Service Worker half of `COOKIE_INTERCEPT` (§126).
 ///
-/// The device test can prove the switch round-trips; it cannot see an argument key that the Kotlin
-/// reads under a different name, because `call.argument` returns null and
-/// `settings?.set…(null!!)` would be the only symptom — on a path the device test does exercise,
-/// but with a NullPointerException rather than a wrong value. These pin the names instead.
+/// The device test can prove the switch round-trips; it cannot see an argument sent in the wrong
+/// slot or dropped. These pin the wire instead. Since §186 the transport is Pigeon — positional
+/// arguments rather than map keys — and the assertions are otherwise unchanged. The load-bearing one
+/// is still that a null answer is **not** collapsed to false.
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
 
-  const channel = MethodChannel(
-    'dev.nosferatu500.inappwebview/inappwebview_serviceworkercontroller',
-  );
+  const hostBase =
+      'dev.flutter.pigeon.flutter_inappwebview_android.ServiceWorkerHostApi';
+  const setter = '$hostBase.setIncludeCookiesOnShouldInterceptRequestEnabled';
+  const getter = '$hostBase.getIncludeCookiesOnShouldInterceptRequestEnabled';
+  const codec = ServiceWorkerHostApi.pigeonChannelCodec;
+
+  final messenger =
+      TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger;
 
   late AndroidServiceWorkerController controller;
-  final List<MethodCall> calls = <MethodCall>[];
-  Object? reply;
+
+  /// Every host call, as (channel, positional arguments).
+  final List<(String, List<Object?>)> calls = <(String, List<Object?>)>[];
+
+  /// What the getter answers.
+  bool? reply;
 
   setUp(() {
     calls.clear();
@@ -27,31 +36,28 @@ void main() {
     controller = AndroidServiceWorkerController(
       const PlatformServiceWorkerControllerCreationParams(),
     );
-    TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
-        .setMockMethodCallHandler(channel, (MethodCall call) async {
-          calls.add(call);
-          return reply;
-        });
+    messenger.setMockMessageHandler(setter, (message) async {
+      calls.add((setter, codec.decodeMessage(message) as List<Object?>));
+      return codec.encodeMessage(<Object?>[true]);
+    });
+    messenger.setMockMessageHandler(getter, (message) async {
+      calls.add((getter, codec.decodeMessage(message) as List<Object?>));
+      return codec.encodeMessage(<Object?>[reply]);
+    });
   });
 
   tearDown(() {
-    TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
-        .setMockMethodCallHandler(channel, null);
+    messenger.setMockMessageHandler(setter, null);
+    messenger.setMockMessageHandler(getter, null);
   });
 
-  Map<Object?, Object?> argsOf(MethodCall call) =>
-      call.arguments as Map<Object?, Object?>;
-
   group('setIncludeCookiesOnShouldInterceptRequestEnabled', () {
-    test('sends the flag under the key the Kotlin reads', () async {
+    test('sends the flag first and the profile second', () async {
       await controller.setIncludeCookiesOnShouldInterceptRequestEnabled(true);
 
-      expect(
-        calls.single.method,
-        'setIncludeCookiesOnShouldInterceptRequestEnabled',
-      );
-      expect(argsOf(calls.single)['enabled'], true);
-      expect(argsOf(calls.single)['profileName'], isNull);
+      final (channel, args) = calls.single;
+      expect(channel, setter);
+      expect(args, <Object?>[true, null]);
     });
 
     test('false is sent, not omitted', () async {
@@ -59,8 +65,7 @@ void main() {
       // flowing into every intercepted service-worker request.
       await controller.setIncludeCookiesOnShouldInterceptRequestEnabled(false);
 
-      expect(argsOf(calls.single).containsKey('enabled'), isTrue);
-      expect(argsOf(calls.single)['enabled'], false);
+      expect(calls.single.$2.first, false);
     });
 
     test('carries profileName when given', () async {
@@ -69,7 +74,7 @@ void main() {
         profileName: 'work',
       );
 
-      expect(argsOf(calls.single)['profileName'], 'work');
+      expect(calls.single.$2, <Object?>[true, 'work']);
     });
   });
 
@@ -85,10 +90,11 @@ void main() {
     });
 
     test('a null reply stays null and is NOT collapsed to false', () async {
-      // The load-bearing assertion. Its neighbours (`getAllowContentAccess` and friends) do
-      // `?? false`, so copying one of them would have produced a getter that reports "cookies are
-      // off" for a WebView where the feature is missing and for a named profile where the API does
-      // not exist at all — three states flattened into two, invisibly.
+      // The load-bearing assertion. Its neighbours (`getAllowContentAccess` and friends) answer a
+      // non-null bool, so copying one of them would have produced a getter that reports "cookies
+      // are off" for a WebView where the feature is missing and for a named profile where the API
+      // does not exist at all — three states flattened into two, invisibly. The schema types this
+      // one `bool?` for exactly that reason.
       reply = null;
       expect(
         await controller.getIncludeCookiesOnShouldInterceptRequestEnabled(),
@@ -100,6 +106,7 @@ void main() {
         ),
         isNull,
       );
+      expect(calls.last.$2, <Object?>['work']);
     });
   });
 
