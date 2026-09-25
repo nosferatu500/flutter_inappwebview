@@ -17,8 +17,10 @@ const String _onePixelPng =
     'AhKmMIQAAAABJRU5ErkJggg==';
 
 /// Taps [position] twice. Measured on API 37: the first tap into a freshly loaded page left the hit
-/// test empty (every field null), and the second reported the link. Why is not known, and the
-/// second tap is what the assertions depend on.
+/// test empty (every field null), and the second reported the link. The probable reason, found
+/// later (§192): no frame had been pumped since load, and a gesture sent before one is lost; the
+/// pump after the first tap is what made the second work. See `_pumpFrames`. The second tap is what
+/// the assertions depend on.
 Future<void> _tapTwice(WidgetTester tester, Offset position) async {
   for (var i = 0; i < 2; i++) {
     await tester.tapAt(position);

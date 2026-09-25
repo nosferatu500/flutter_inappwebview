@@ -117,6 +117,16 @@ part 'web_message.dart';
 part 'webview_asset_loader.dart';
 part 'webview_windows.dart';
 part 'keep_alive.dart';
+part 'on_geolocation_permissions_show_prompt.dart';
+part 'on_form_resubmission.dart';
+part 'on_received_login_request.dart';
+part 'on_long_press_hit_test_result.dart';
+part 'context_menu_events.dart';
+part 'on_over_scrolled.dart';
+part 'on_show_file_chooser.dart';
+part 'fullscreen_events.dart';
+part 'render_process_responsiveness.dart';
+part 'on_render_process_gone.dart';
 
 void main() {
   final shouldSkip = !InAppWebViewController.isClassSupported();
@@ -231,6 +241,18 @@ void main() {
     customRequestHeaders();
     profileStoreDelete();
     keepAlive();
+    onGeolocationPermissionsShowPrompt();
+    onFormResubmission();
+    onReceivedLoginRequest();
+    onLongPressHitTestResult();
+    contextMenuEvents();
+    onOverScrolled();
+    onShowFileChooser();
+    fullscreenEvents();
+    renderProcessResponsiveness();
+    // Crashes its renderer on purpose; kept after every other test that is not pinned last, so a
+    // shared renderer going down can only affect the print pair below (§192).
+    onRenderProcessGone();
 
     // `printCurrentPage` MUST BE LAST, and must stay last.
     //

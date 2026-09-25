@@ -44,6 +44,7 @@ void programmaticZoomScale() {
           Completer<InAppWebViewController>();
       final Completer<void> pageLoaded = Completer<void>();
       final Completer<void> onZoomScaleChangedCompleter = Completer<void>();
+      final scaleChanges = <List<double>>[];
 
       var listenForScaleChange = false;
 
@@ -63,7 +64,10 @@ void programmaticZoomScale() {
             },
             onZoomScaleChanged: (controller, oldScale, newScale) {
               if (listenForScaleChange) {
-                onZoomScaleChangedCompleter.complete();
+                scaleChanges.add([oldScale, newScale]);
+                if (!onZoomScaleChangedCompleter.isCompleted) {
+                  onZoomScaleChangedCompleter.complete();
+                }
               }
             },
           ),
@@ -73,11 +77,26 @@ void programmaticZoomScale() {
       final InAppWebViewController controller =
           await controllerCompleter.future;
       await pageLoaded.future;
+      // Lets the page's own layout-time scale changes land before listening, and gives `zoomBy`
+      // a laid-out view to act on (see `_pumpFrames`).
+      await _pumpFrames(tester);
       listenForScaleChange = true;
 
       await controller.zoomBy(zoomFactor: 2);
 
       await expectLater(onZoomScaleChangedCompleter.future, completes);
+
+      if (defaultTargetPlatform == TargetPlatform.android) {
+        // "It fired" could not tell old from new, and swapping them in Kotlin passed it (§189).
+        // Page layout also reports scale changes of its own, so look for the one `zoomBy(2)` makes:
+        // measured on API 37 as 2.625 → 5.25, in device pixels. A swap reads 5.25 → 2.625 instead.
+        await Future.delayed(const Duration(seconds: 1));
+        expect(
+          scaleChanges.any((c) => (c[1] / c[0] - 2).abs() < 0.01),
+          isTrue,
+          reason: 'no scale change doubled the scale: $scaleChanges',
+        );
+      }
     });
 
     skippableTestWidgets('zoomBy', (WidgetTester tester) async {

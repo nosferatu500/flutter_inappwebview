@@ -468,6 +468,30 @@ for, and five others have a native *value* that differs from their name.
 
 ### Internal
 
+- **Fifteen web-view events get their first Android device test, and `onZoomScaleChanged` gets one
+  that can fail.** None of these had ever been observed on Android:
+  - `onGeolocationPermissionsShowPrompt` (and the refusal reaches the page).
+  - `onFormResubmission`.
+  - `onRequestFocus`, which Chromium raises before a form-resubmission prompt and before
+    fullscreen, not for `window.focus()`.
+  - `onReceivedLoginRequest`, via an intercepted `X-Auto-Login` header.
+  - `onLongPressHitTestResult`.
+  - The three context-menu callbacks: create, hide, and a tap on a custom item of the plugin's
+    floating menu.
+  - `onOverScrolled`.
+  - `onShowFileChooser`.
+  - `onEnterFullscreen` / `onExitFullscreen`. Their existing tests never ran on Android.
+  - `onRenderProcessUnresponsive` / `Responsive`, from a 15 s busy loop.
+  - `onRenderProcessGone`, from `chrome://crash`.
+
+  `onZoomScaleChanged` only checked that it fired. Now it checks that `zoomBy(2)` doubles the scale,
+  which a swapped old/new pair fails. Every expected value was measured on API 37 first. The tests
+  are Android-only because iOS wasn't measured.
+
+  Two events stay untested. `onGeolocationPermissionsHidePrompt` couldn't be raised: navigating
+  away and reloading with the prompt pending were both tried. `onPageDeleted` stays deliberately
+  unasserted. Gesture tests pump frames after load: a gesture sent before any frame was pumped was
+  lost. Test only; no plugin code changed.
 - **Six device tests that could not fail now assert what their method does.** `clearFocus`,
   `pause`, `resume`, `requestFocusNodeHref`, `requestImageRef` and `clearSslPreferences` were only
   checked with `expectLater(…, completes)`, and a Kotlin handler that replied without doing anything
