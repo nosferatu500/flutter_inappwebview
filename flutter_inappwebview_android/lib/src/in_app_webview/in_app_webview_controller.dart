@@ -12,7 +12,7 @@ import '../in_app_browser/in_app_browser.dart';
 import '../print_job/main.dart';
 import '../web_message/main.dart';
 import '../web_storage/web_storage.dart';
-import '_static_channel.dart';
+import '../pigeons/in_app_webview_manager.g.dart';
 import 'headless_in_app_webview.dart';
 
 /// Object specifying creation parameters for creating a [AndroidInAppWebViewController].
@@ -48,7 +48,9 @@ class AndroidInAppWebViewControllerCreationParams
 ///callback. Instead, if you are using an [AndroidInAppBrowser] instance, you can get it through the [AndroidInAppBrowser.webViewController] attribute.
 class AndroidInAppWebViewController extends PlatformInAppWebViewController
     with ChannelController {
-  static final MethodChannel _staticChannel = IN_APP_WEBVIEW_STATIC_CHANNEL;
+  /// Process-wide statics (§188). Replaces the hand-written `inappwebview_manager` channel.
+  static final InAppWebViewManagerHostApi _managerHostApi =
+      InAppWebViewManagerHostApi();
 
   // List of properties to be saved and restored for keep alive feature
   Map<String, Function> _javaScriptHandlersMap = HashMap<String, Function>();
@@ -2745,125 +2747,92 @@ class AndroidInAppWebViewController extends PlatformInAppWebViewController
     return await channel?.invokeMethod<bool>('restoreState', args) ?? false;
   }
 
+  // --- process-wide statics ---------------------------------------------------------------------
+  //
+  // Transport is Pigeon-generated (`InAppWebViewManagerHostApi`) since §188, not the hand-written
+  // `inappwebview_manager` channel. Every `bool` a setter answers is discarded, as it always was.
+
   @override
   Future<String> getDefaultUserAgent() async {
-    Map<String, dynamic> args = <String, dynamic>{};
-    return await _staticChannel.invokeMethod<String>(
-          'getDefaultUserAgent',
-          args,
-        ) ??
-        '';
+    // `?? ''` kept: the platform answers null only when the plugin has gone away, and the public
+    // return type is non-nullable.
+    return await _managerHostApi.getDefaultUserAgent() ?? '';
   }
 
   @override
   Future<void> clearClientCertPreferences() async {
-    Map<String, dynamic> args = <String, dynamic>{};
-    await _staticChannel.invokeMethod('clearClientCertPreferences', args);
+    await _managerHostApi.clearClientCertPreferences();
   }
 
   @override
   Future<WebUri?> getSafeBrowsingPrivacyPolicyUrl() async {
-    Map<String, dynamic> args = <String, dynamic>{};
-    String? url = await _staticChannel.invokeMethod(
-      'getSafeBrowsingPrivacyPolicyUrl',
-      args,
-    );
+    final url = await _managerHostApi.getSafeBrowsingPrivacyPolicyUrl();
     return url != null ? WebUri(url) : null;
   }
 
   @override
-  Future<bool> setSafeBrowsingAllowlist({required List<String> hosts}) async {
-    Map<String, dynamic> args = <String, dynamic>{};
-    args.putIfAbsent('hosts', () => hosts);
-    return await _staticChannel.invokeMethod<bool>(
-          'setSafeBrowsingAllowlist',
-          args,
-        ) ??
-        false;
+  Future<bool> setSafeBrowsingAllowlist({required List<String> hosts}) {
+    return _managerHostApi.setSafeBrowsingAllowlist(hosts);
   }
 
   @override
   Future<WebViewPackageInfo?> getCurrentWebViewPackage() async {
-    Map<String, dynamic> args = <String, dynamic>{};
-    Map<String, dynamic>? packageInfo = (await _staticChannel.invokeMethod(
-      'getCurrentWebViewPackage',
-      args,
-    ))?.cast<String, dynamic>();
-    return WebViewPackageInfo.fromMap(packageInfo);
+    final info = await _managerHostApi.getCurrentWebViewPackage();
+    if (info == null) {
+      return null;
+    }
+    return WebViewPackageInfo(
+      versionName: info.versionName,
+      packageName: info.packageName,
+    );
   }
 
   @override
   Future<void> setWebContentsDebuggingEnabled(bool debuggingEnabled) async {
-    Map<String, dynamic> args = <String, dynamic>{};
-    args.putIfAbsent('debuggingEnabled', () => debuggingEnabled);
-    return await _staticChannel.invokeMethod(
-      'setWebContentsDebuggingEnabled',
-      args,
-    );
+    await _managerHostApi.setWebContentsDebuggingEnabled(debuggingEnabled);
   }
 
   @override
-  Future<String?> getVariationsHeader() async {
-    Map<String, dynamic> args = <String, dynamic>{};
-    return await _staticChannel.invokeMethod<String?>(
-      'getVariationsHeader',
-      args,
-    );
+  Future<String?> getVariationsHeader() {
+    return _managerHostApi.getVariationsHeader();
   }
 
   @override
-  Future<bool> isMultiProcessEnabled() async {
-    Map<String, dynamic> args = <String, dynamic>{};
-    return await _staticChannel.invokeMethod<bool>(
-          'isMultiProcessEnabled',
-          args,
-        ) ??
-        false;
+  Future<bool> isMultiProcessEnabled() {
+    return _managerHostApi.isMultiProcessEnabled();
   }
 
   @override
-  Future<bool> setDefaultTrafficStatsTag(int tag) async {
+  Future<bool> setDefaultTrafficStatsTag(int tag) {
     // The native side takes a 32-bit int. Both the signed range and the unsigned form the
-    // androidx javadoc itself uses (0xFFFFFF00 …) are accepted; anything wider would be encoded
-    // as an int64 by the standard codec and fail at the Kotlin cast site.
+    // androidx javadoc itself uses (0xFFFFFF00 …) are accepted — the Kotlin side keeps the low 32
+    // bits — while anything wider would silently change tag, so it is rejected here.
     assert(
       tag >= -0x80000000 && tag <= 0xFFFFFFFF,
       'tag must fit in a 32-bit integer.',
     );
-    Map<String, dynamic> args = <String, dynamic>{};
-    args.putIfAbsent('tag', () => tag);
-    return await _staticChannel.invokeMethod<bool>(
-          'setDefaultTrafficStatsTag',
-          args,
-        ) ??
-        false;
+    return _managerHostApi.setDefaultTrafficStatsTag(tag);
   }
 
   @override
   Future<void> disableWebView() async {
-    Map<String, dynamic> args = <String, dynamic>{};
-    await _staticChannel.invokeMethod('disableWebView', args);
+    await _managerHostApi.disableWebView();
   }
 
   @override
   Future<void> disposeKeepAlive(InAppWebViewKeepAlive keepAlive) async {
-    Map<String, dynamic> args = <String, dynamic>{};
-    args.putIfAbsent('keepAliveId', () => keepAlive.id);
-    await _staticChannel.invokeMethod('disposeKeepAlive', args);
+    await _managerHostApi.disposeKeepAlive(keepAlive.id);
     _keepAliveMap[keepAlive] = null;
   }
 
   @override
   Future<void> clearAllCache({bool includeDiskFiles = true}) async {
-    Map<String, dynamic> args = <String, dynamic>{};
-    args.putIfAbsent('includeDiskFiles', () => includeDiskFiles);
-    await _staticChannel.invokeMethod('clearAllCache', args);
+    await _managerHostApi.clearAllCache(includeDiskFiles);
   }
 
   @override
   Future<void> enableSlowWholeDocumentDraw() async {
-    Map<String, dynamic> args = <String, dynamic>{};
-    await _staticChannel.invokeMethod('enableSlowWholeDocumentDraw', args);
+    await _managerHostApi.enableSlowWholeDocumentDraw();
   }
 
   @override
@@ -2872,19 +2841,13 @@ class AndroidInAppWebViewController extends PlatformInAppWebViewController
       RegExp(r'^[a-zA-Z_]\w*$').hasMatch(bridgeName),
       'bridgeName must be a non-empty string with only alphanumeric and underscore characters. It can\'t start with a number.',
     );
-    Map<String, dynamic> args = <String, dynamic>{};
-    args.putIfAbsent('bridgeName', () => bridgeName);
-    await _staticChannel.invokeMethod('setJavaScriptBridgeName', args);
+    await _managerHostApi.setJavaScriptBridgeName(bridgeName);
   }
 
   @override
-  Future<String> getJavaScriptBridgeName() async {
-    Map<String, dynamic> args = <String, dynamic>{};
-    return await _staticChannel.invokeMethod<String>(
-          'getJavaScriptBridgeName',
-          args,
-        ) ??
-        '';
+  Future<String> getJavaScriptBridgeName() {
+    // No `?? ''` any more: the host method is typed non-null, and the Kotlin side always answers.
+    return _managerHostApi.getJavaScriptBridgeName();
   }
 
   @override

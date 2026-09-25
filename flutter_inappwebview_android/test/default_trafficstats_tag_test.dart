@@ -1,5 +1,6 @@
-import 'package:flutter/services.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter_inappwebview_android/flutter_inappwebview_android.dart';
+import 'package:flutter_inappwebview_android/src/pigeons/in_app_webview_manager.g.dart';
 import 'package:flutter_inappwebview_platform_interface/flutter_inappwebview_platform_interface.dart';
 import 'package:flutter_test/flutter_test.dart';
 
@@ -7,66 +8,65 @@ import 'package:flutter_test/flutter_test.dart';
 /// `setDefaultTrafficStatsTag`.
 ///
 /// This one is a **process-global static**, so unlike the rest of the controller surface it goes on
-/// the manager channel (`…/inappwebview_manager`), not the per-WebView one. Sending it to the wrong
-/// channel is a `MissingPluginException` at runtime and invisible to every gate here, so the channel
-/// name is part of the contract this pins.
+/// the manager API, not the per-WebView channel. Since §188 that is the Pigeon-generated
+/// `InAppWebViewManagerHostApi`, so the channel this pins is the generated one.
 ///
-/// The 32-bit range assertion is pinned too: `TrafficStats` takes a Java `int`, and the standard
-/// codec silently promotes anything wider to an int64, which fails at the Kotlin cast site rather
-/// than at the call.
+/// The 32-bit range assertion is pinned too: `TrafficStats` takes a Java `int`. The Kotlin side
+/// keeps the low 32 bits of the `Long` Pigeon hands it — which is what lets the unsigned form the
+/// androidx javadoc uses (`0xFFFFFF00`) map to the intended tag — so anything wider would silently
+/// become a *different* tag rather than fail, and the Dart assert is the only thing that stops it.
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
 
-  const managerChannel = MethodChannel(
-    'dev.nosferatu500.inappwebview/inappwebview_manager',
-  );
+  const channel =
+      'dev.flutter.pigeon.flutter_inappwebview_android.InAppWebViewManagerHostApi'
+      '.setDefaultTrafficStatsTag';
+  const codec = InAppWebViewManagerHostApi.pigeonChannelCodec;
+
+  final messenger =
+      TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger;
 
   late AndroidInAppWebViewController controller;
-  final List<MethodCall> calls = <MethodCall>[];
-  Object? reply;
+  final List<List<Object?>> calls = <List<Object?>>[];
+  bool reply = true;
 
   setUp(() {
     calls.clear();
     reply = true;
     controller = AndroidInAppWebViewController.static();
-    TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
-        .setMockMethodCallHandler(managerChannel, (MethodCall call) async {
-          calls.add(call);
-          return reply;
-        });
+    messenger.setMockMessageHandler(channel, (message) async {
+      calls.add(codec.decodeMessage(message) as List<Object?>);
+      return codec.encodeMessage(<Object?>[reply]);
+    });
   });
 
   tearDown(() {
-    TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
-        .setMockMethodCallHandler(managerChannel, null);
+    messenger.setMockMessageHandler(channel, null);
   });
 
-  Map<Object?, Object?> argsOf(MethodCall call) =>
-      call.arguments as Map<Object?, Object?>;
-
   group('AndroidInAppWebViewController.setDefaultTrafficStatsTag', () {
-    test('goes on the manager channel, not the per-WebView one', () async {
+    test('goes on the manager API, not the per-WebView channel', () async {
       await controller.setDefaultTrafficStatsTag(0x42);
 
-      expect(calls.single.method, 'setDefaultTrafficStatsTag');
-      expect(argsOf(calls.single)['tag'], 0x42);
+      expect(calls.single, <Object?>[0x42]);
     });
 
     test('accepts the unsigned form the androidx javadoc uses', () async {
       // The javadoc's own example is 0xFFFFFF00, which is above the signed int range but still
-      // 32 bits. The assert must not reject it.
+      // 32 bits. The assert must not reject it, and it must cross unchanged — the Kotlin `toInt()`
+      // is what turns it into the tag.
       await controller.setDefaultTrafficStatsTag(0xFFFFFF00);
 
-      expect(argsOf(calls.single)['tag'], 0xFFFFFF00);
+      expect(calls.single, <Object?>[0xFFFFFF00]);
     });
 
     test('accepts the signed lower bound', () async {
       await controller.setDefaultTrafficStatsTag(-0x80000000);
 
-      expect(argsOf(calls.single)['tag'], -0x80000000);
+      expect(calls.single, <Object?>[-0x80000000]);
     });
 
-    test('rejects a value that would be encoded as an int64', () {
+    test('rejects a value wider than 32 bits', () {
       expect(
         () => controller.setDefaultTrafficStatsTag(0x1FFFFFFFF),
         throwsAssertionError,
@@ -78,10 +78,10 @@ void main() {
     });
 
     test('reports false when the platform could not apply it', () async {
+      // The hand-written version also asserted that a *null* reply read as false. That half is gone
+      // with the transport, not dropped: the host method is typed non-null `bool`, so the Kotlin
+      // side cannot send null, and `false` is how it reports an unsupported feature.
       reply = false;
-      expect(await controller.setDefaultTrafficStatsTag(1), isFalse);
-
-      reply = null;
       expect(await controller.setDefaultTrafficStatsTag(1), isFalse);
     });
   });

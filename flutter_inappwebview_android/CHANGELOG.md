@@ -468,6 +468,26 @@ for, and five others have a native *value* that differs from their name.
 
 ### Internal
 
+- **The `inappwebview_manager` channel is Pigeon-generated**, the seventeenth migrated: **fifteen
+  host methods, no events** — the process-wide statics of `InAppWebViewController`.
+  `InAppWebViewManager` implements the generated `InAppWebViewManagerHostApi` directly; its
+  hand-written dispatch, `METHOD_CHANNEL_NAME`, the Dart `_staticChannel` and this package's
+  `_static_channel.dart` are gone. No public API change. `clearClientCertPreferences` and
+  `setSafeBrowsingAllowlist` answer from platform callbacks, so they are `@async` and run inside
+  `replyingOnThrow`. `setDefaultTrafficStatsTag` still accepts the unsigned `0xFFFFFF00` form: the
+  Kotlin side keeps the low 32 bits of the `Long`, as the old `Number.toInt()` read did.
+
+  The generated interface's `disposeKeepAlive(String): Boolean` collides with the manager's old
+  `disposeKeepAlive(String): Unit`, so that helper and `clearAllCache(Context, Boolean)` became
+  private `disposeKeepAliveWebView` / `clearAllCacheWith`; nothing outside the file called them.
+
+  `getCurrentWebViewPackage`'s device test now checks each field by its shape — a dotted package
+  name, a version starting with a digit — because a mutant swapping the two in the new Kotlin
+  conversion passed the previous non-empty check. A new Dart boundary test covers the fallbacks a
+  device cannot reach (a null user agent reading as `''`, a missing policy URL staying null).
+  `default_trafficstats_tag_test.dart` moves to the Pigeon channel; its null-reply case is gone
+  because the host method is typed non-null.
+
 - **Every `InAppWebViewManager` method now runs on a device**, written before migrating that channel
   to Pigeon; seven of its fifteen had never been called. No plugin code changed.
   `getVariationsHeader`, `isMultiProcessEnabled`, `setDefaultTrafficStatsTag` and the
