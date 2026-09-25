@@ -30,6 +30,7 @@ part 'post_visual_state_callback.dart';
 part 'document_has_images.dart';
 part 'fling_scroll.dart';
 part 'get_current_web_view_package.dart';
+part 'webview_process_statics.dart';
 part 'get_default_user_agent.dart';
 part 'get_favicons.dart';
 part 'get_html.dart';
@@ -212,6 +213,7 @@ void main() {
     pageDownUp();
     clearClientCertPreferences();
     getCurrentWebViewPackage();
+    webViewProcessStatics();
     setWebContentsDebuggingEnabled();
     createPdf();
     applePayAPI();

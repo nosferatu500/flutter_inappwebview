@@ -19,6 +19,9 @@ import 'geolocation_permissions/main.dart' as geolocation_permissions_tests;
 import 'pull_to_refresh_controller/main.dart'
     as pull_to_refresh_controller_tests;
 import 'print_job_controller/main.dart' as print_job_controller_tests;
+// `process_isolated/` is deliberately NOT imported. Each file there changes irreversible
+// process-wide WebView state (`disableWebView`, `enableSlowWholeDocumentDraw`) and must run as its
+// own `flutter test` process; imported here, it would break or alter every group after it (§187).
 
 void main() {
   IntegrationTestWidgetsFlutterBinding.ensureInitialized();

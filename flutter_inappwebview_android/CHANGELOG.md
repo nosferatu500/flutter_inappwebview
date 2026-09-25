@@ -468,6 +468,19 @@ for, and five others have a native *value* that differs from their name.
 
 ### Internal
 
+- **Every `InAppWebViewManager` method now runs on a device**, written before migrating that channel
+  to Pigeon; seven of its fifteen had never been called. No plugin code changed.
+  `getVariationsHeader`, `isMultiProcessEnabled`, `setDefaultTrafficStatsTag` and the
+  `setJavaScriptBridgeName` / `getJavaScriptBridgeName` pair join the `in_app_webview` group — the
+  bridge rename asserted by its effect, a page created afterwards exposing `window.<name>` and not
+  the default. `disableWebView` and `enableSlowWholeDocumentDraw` change irreversible process-wide
+  WebView state, so they live in `integration_test/process_isolated/` as two separate entry files
+  that each run as their own process and are deliberately left out of `webview_flutter_test.dart`;
+  `disableWebView` is asserted by the next `android.webkit` call failing with `WebView is disabled`.
+  Two existing assertions were strengthened: `getDefaultUserAgent`'s `isNotNull` could not fail,
+  because the Dart side answers `?? ''`, and `getCurrentWebViewPackage` checked the object but
+  neither field. Seven mutants on the Kotlin side each fail exactly the test aimed at them.
+
 - **The `service_worker_controller` device group goes from 5 to 10 tests**, written before
   migrating `ServiceWorkerChannelDelegate` to Pigeon. Seven of the channel's eleven methods had never
   been called on a device, and every existing test answered `shouldInterceptRequest` with `null`, so
