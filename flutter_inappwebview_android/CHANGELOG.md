@@ -480,6 +480,14 @@ for, and five others have a native *value* that differs from their name.
 
 ### Internal
 
+- **`takeScreenshot`'s configuration is asserted field by field on a device, before its
+  migration.** The existing test accepted any screenshot, so none of `rect`, `snapshotWidth`,
+  `compressFormat` or `quality` was checked. `quality` is the int that Pigeon will deliver as
+  `Long`. Four Android tests now read each field back out of the image, on a page of four coloured
+  squares: the rect's size and position (by colour), the format's magic bytes (PNG, JPEG, WEBP),
+  quality 1 encoding smaller than 100, and the snapshot's scaled size. Test code only.
+  - The existing test took its screenshot before the WebView had a size (one pumped frame): with
+    the rect ignored, the capture failed with "width and height must be > 0". It pumps frames now.
 - **The `clearSslPreferences` device test no longer depends on socket timing.** It spaced its loads
   12 s apart so the node server's 5 s keep-alive would close the socket, and it flaked in the full
   group, where its failure read exactly like a dropped call. Measured on API 37: each load opens a
