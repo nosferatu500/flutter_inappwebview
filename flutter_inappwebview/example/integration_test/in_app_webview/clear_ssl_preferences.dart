@@ -1,22 +1,31 @@
 part of 'main.dart';
 
 void clearSslPreferences() {
-  final shouldSkip = !InAppWebViewController.isMethodSupported(
-    PlatformInAppWebViewControllerMethod.clearSslPreferences,
-  );
+  // The test forces its fresh connections with `clearClientCertPreferences`, so it needs both.
+  final shouldSkip =
+      !InAppWebViewController.isMethodSupported(
+        PlatformInAppWebViewControllerMethod.clearSslPreferences,
+      ) ||
+      !InAppWebViewController.isMethodSupported(
+        PlatformInAppWebViewControllerMethod.clearClientCertPreferences,
+      );
 
   // What `clearSslPreferences` clears is WebView's memory of "proceed anyway" answers to
   // certificate errors. The test node server's HTTPS port presents a certificate the emulator does
   // not trust, so every *new* connection to it asks `onReceivedServerTrustAuthRequest` unless a
   // PROCEED is remembered.
   //
-  // 🚨 "New connection" is the catch. Loads on a kept-alive socket never re-check the certificate,
-  // so clearing looked like it did nothing until the loads were spaced past the node server's
-  // keep-alive timeout (Node's default, 5 s). Measured on API 37 with 7 s gaps: the load before
-  // clearing does not ask, the one after asks again, and the next one is remembered again. But 7 s
-  // failed 1 run in 5 (the load after clearing did not ask), probably because a request made after
-  // `onLoadStop` (the favicon is the likely one, unconfirmed) keeps a socket alive past the gap. The
-  // gap is 12 s; see §191 for the measured rate.
+  // 🚨 "New connection" is the catch. A load on a pooled socket never re-checks the certificate,
+  // so it can't tell a cleared preference from a remembered one. This test used to wait 12 s
+  // between loads for the node server's 5 s keep-alive to close the socket, and flaked in the
+  // group (§204, §207). Measured on API 37 (§208): each load opens two connections, and the second
+  // one lingers 16–25 s after the load, so a 12 s gap sometimes reused it.
+  //
+  // So each load now starts with `clearClientCertPreferences`, which closes WebView's pooled
+  // connections (measured: every socket to the server is replaced within a second). It also forgets
+  // the CANCEL answered below, so a new TLS handshake asks for a client certificate again. That ask
+  // is asserted, which proves each load really made a fresh connection. Without it, the control
+  // below would pass on a reused socket without testing anything.
   //
   // Counts are relative: `ssl_request.dart` runs earlier in the group, against the same host, and
   // may already have left a PROCEED behind, so the first load may or may not ask.
@@ -25,6 +34,7 @@ void clearSslPreferences() {
         Completer<InAppWebViewController>();
     final url = WebUri("https://${environment["NODE_SERVER_IP"]}:4433/");
     var trustRequests = 0;
+    var clientCertRequests = 0;
     var loadStops = 0;
 
     await tester.pumpWidget(
@@ -47,6 +57,7 @@ void clearSslPreferences() {
           },
           // The server also asks for a client certificate; declining it still loads a page.
           onReceivedClientCertRequest: (controller, challenge) async {
+            clientCertRequests++;
             return ClientCertResponse(action: ClientCertResponseAction.CANCEL);
           },
         ),
@@ -63,10 +74,16 @@ void clearSslPreferences() {
     }
 
     Future<void> loadOnAFreshConnection() async {
-      await Future.delayed(const Duration(seconds: 12));
+      await InAppWebViewController.clearClientCertPreferences();
+      final previousClientCertRequests = clientCertRequests;
       final previous = loadStops;
       await controller.loadUrl(urlRequest: URLRequest(url: url));
       await waitForLoadStop(previous);
+      expect(
+        clientCertRequests,
+        greaterThan(previousClientCertRequests),
+        reason: 'the load must have made a new TLS handshake',
+      );
     }
 
     await waitForLoadStop(0);

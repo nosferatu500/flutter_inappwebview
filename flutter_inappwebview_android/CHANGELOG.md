@@ -480,6 +480,18 @@ for, and five others have a native *value* that differs from their name.
 
 ### Internal
 
+- **The `clearSslPreferences` device test no longer depends on socket timing.** It spaced its loads
+  12 s apart so the node server's 5 s keep-alive would close the socket, and it flaked in the full
+  group, where its failure read exactly like a dropped call. Measured on API 37: each load opens a
+  second connection that lingers 16–25 s, so a load after clearing sometimes reused it and never
+  re-checked the certificate. Test code only.
+  - Each load now starts with `clearClientCertPreferences`, which closes WebView's pooled
+    connections, and asserts that the load asked for a client certificate again. That proves a new
+    TLS handshake, so the control ("a remembered PROCEED doesn't ask") can no longer pass on a
+    reused socket.
+  - The 24 s of gaps are gone. A no-op `clearSslPreferences` fails both alone and after
+    `SSL request` (the group's precondition), and a no-op `clearClientCertPreferences` fails with
+    its own message.
 - **`WebViewChannelDelegate`, the last hand-written channel, starts moving to Pigeon: W1 of five
   commits.** 25 synchronous load, navigation and state methods move to a new
   `InAppWebViewHostApi` (`pigeons/in_app_webview.dart`, twenty-two schemas): `getUrl`,
