@@ -24,6 +24,7 @@ part 'clear_focus.dart';
 part 'clear_ssl_preferences.dart';
 part 'content_blocker.dart';
 part 'create_pdf.dart';
+part 'custom_path_handler.dart';
 part 'get_certificate.dart';
 part 'get_content_height.dart';
 part 'post_visual_state_callback.dart';
@@ -239,6 +240,7 @@ void main() {
     applePayAPI();
     handlesURLScheme();
     webViewAssetLoader();
+    customPathHandler();
     onContentSizeChanged();
     screenTime();
     obscuredContentInsets();

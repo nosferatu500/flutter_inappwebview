@@ -468,6 +468,19 @@ for, and five others have a native *value* that differs from their name.
 
 ### Internal
 
+- **`CustomPathHandler` has device tests, for the first time, ahead of its channel's
+  migration.** Four new `in_app_webview` tests, so the group goes from 167 to 171. The handler is
+  the one `WebViewAssetLoader` path handler that crosses a channel: Kotlin blocks a WebView thread
+  while Dart's `handle(path)` answers. The tests assert:
+  - The path the handler receives (`page.html`, with the loader's prefix and the query stripped),
+    and the page it serves.
+  - Status, reason phrase, headers and content type, read back by a `fetch()` on the page. A
+    status sent without a reason phrase arrives as `200 OK`, because Kotlin uses both or neither.
+  - `contentEncoding`. 🚨 It's visible only when it contradicts what Chrome would detect by
+    itself, so the test sends UTF-8 bytes declared as ISO-8859-1. Two earlier versions that didn't
+    contradict it passed with the encoding dropped.
+  - A `null` answer falls through to the network.
+  - `WebResourceResponse.cookies` isn't covered: the Kotlin side never reads it. Test only.
 - **The `headless_inappwebview` manager channel is Pigeon-generated**, the twenty-first migrated
   and the third under decision B: `run` over `HeadlessInAppWebViewManagerHostApi`, added to the
   existing `pigeons/headless_webview.dart` so it reuses `Size2DData`, which leaves twenty schemas.
