@@ -166,6 +166,50 @@ class InAppBrowserHostApi {
     );
     return pigeonVar_replyValue! as bool;
   }
+
+  /// `InAppBrowserClassSettings.toMap()`: decision B, a map for the Activity's `parse(Map)`. The
+  /// browser's settings and its WebView's arrive together in the one map. Always `true`.
+  Future<bool> setSettings(Map<String?, Object?> settings) async {
+    final pigeonVar_channelName =
+        'dev.flutter.pigeon.flutter_inappwebview_android.InAppBrowserHostApi.setSettings$pigeonVar_messageChannelSuffix';
+    final pigeonVar_channel = BasicMessageChannel<Object?>(
+      pigeonVar_channelName,
+      pigeonChannelCodec,
+      binaryMessenger: pigeonVar_binaryMessenger,
+    );
+    final Future<Object?> pigeonVar_sendFuture = pigeonVar_channel.send(
+      <Object?>[settings],
+    );
+    final pigeonVar_replyList = await pigeonVar_sendFuture as List<Object?>?;
+
+    final Object? pigeonVar_replyValue = _extractReplyValueOrThrow(
+      pigeonVar_replyList,
+      pigeonVar_channelName,
+      isNullValid: false,
+    );
+    return pigeonVar_replyValue! as bool;
+  }
+
+  /// The browser's settings merged with its WebView's, for `InAppBrowserClassSettings.fromMap`.
+  Future<Map<String?, Object?>> getSettings() async {
+    final pigeonVar_channelName =
+        'dev.flutter.pigeon.flutter_inappwebview_android.InAppBrowserHostApi.getSettings$pigeonVar_messageChannelSuffix';
+    final pigeonVar_channel = BasicMessageChannel<Object?>(
+      pigeonVar_channelName,
+      pigeonChannelCodec,
+      binaryMessenger: pigeonVar_binaryMessenger,
+    );
+    final Future<Object?> pigeonVar_sendFuture = pigeonVar_channel.send(null);
+    final pigeonVar_replyList = await pigeonVar_sendFuture as List<Object?>?;
+
+    final Object? pigeonVar_replyValue = _extractReplyValueOrThrow(
+      pigeonVar_replyList,
+      pigeonVar_channelName,
+      isNullValid: false,
+    );
+    return (pigeonVar_replyValue! as Map<Object?, Object?>)
+        .cast<String?, Object?>();
+  }
 }
 
 /// Implemented on the Dart side by a private forwarding class.

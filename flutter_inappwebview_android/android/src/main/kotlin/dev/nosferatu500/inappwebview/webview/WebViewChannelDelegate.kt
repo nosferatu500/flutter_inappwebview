@@ -210,6 +210,14 @@ class WebViewChannelDelegate(webView: InAppWebView, channel: MethodChannel) :
         }
       }
 
+      // The `browserActivity` branches of this pair no longer serve the browser's own
+      // `setSettings`/`getSettings`, which are Pigeon on `InAppBrowserChannelDelegate` (§199). They
+      // serve the browser's *WebView controller*, which is built on the browser's MethodChannel.
+      // 🚨 Its map carries no browser keys, so `InAppBrowserActivity.setSettings` replaces the
+      // browser's stored settings with defaults. The seven that `getRealSettings` does not read live
+      // then read back as defaults (a toolbar colour came back null on API 37, §199), and the
+      // back button and `didChangeTitle` act on the defaults. Kept as it was until this pair
+      // migrates.
       WebViewChannelDelegateMethods.setSettings -> {
         if (browserActivity != null) {
           val inAppBrowserSettings = InAppBrowserSettings()

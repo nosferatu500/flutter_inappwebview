@@ -63,6 +63,13 @@ interface InAppBrowserHostApi {
   /** Sends `onExit`, disposes the Activity, then answers `true`, in that order. */
   fun close(): Boolean
   fun isHidden(): Boolean
+  /**
+   * `InAppBrowserClassSettings.toMap()`: decision B, a map for the Activity's `parse(Map)`. The
+   * browser's settings and its WebView's arrive together in the one map. Always `true`.
+   */
+  fun setSettings(settings: Map<String?, Any?>): Boolean
+  /** The browser's settings merged with its WebView's, for `InAppBrowserClassSettings.fromMap`. */
+  fun getSettings(): Map<String?, Any?>
 
   companion object {
     /** The codec used by InAppBrowserHostApi. */
@@ -124,6 +131,38 @@ interface InAppBrowserHostApi {
           channel.setMessageHandler { _, reply ->
             val wrapped: List<Any?> = try {
               listOf(api.isHidden())
+            } catch (exception: Throwable) {
+              InAppBrowserPigeonUtils.wrapError(exception)
+            }
+            reply.reply(wrapped)
+          }
+        } else {
+          channel.setMessageHandler(null)
+        }
+      }
+      run {
+        val channel = BasicMessageChannel<Any?>(binaryMessenger, "dev.flutter.pigeon.flutter_inappwebview_android.InAppBrowserHostApi.setSettings$separatedMessageChannelSuffix", codec)
+        if (api != null) {
+          channel.setMessageHandler { message, reply ->
+            val args = message as List<Any?>
+            val settingsArg = args[0] as Map<String?, Any?>
+            val wrapped: List<Any?> = try {
+              listOf(api.setSettings(settingsArg))
+            } catch (exception: Throwable) {
+              InAppBrowserPigeonUtils.wrapError(exception)
+            }
+            reply.reply(wrapped)
+          }
+        } else {
+          channel.setMessageHandler(null)
+        }
+      }
+      run {
+        val channel = BasicMessageChannel<Any?>(binaryMessenger, "dev.flutter.pigeon.flutter_inappwebview_android.InAppBrowserHostApi.getSettings$separatedMessageChannelSuffix", codec)
+        if (api != null) {
+          channel.setMessageHandler { _, reply ->
+            val wrapped: List<Any?> = try {
+              listOf(api.getSettings())
             } catch (exception: Throwable) {
               InAppBrowserPigeonUtils.wrapError(exception)
             }

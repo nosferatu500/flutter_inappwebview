@@ -468,6 +468,18 @@ for, and five others have a native *value* that differs from their name.
 
 ### Internal
 
+- **The in-app browser's `setSettings` / `getSettings` are Pigeon-generated**, on the existing
+  `InAppBrowserHostApi`, as maps (decision B). No public API change.
+  - `setSettings`' map goes through `Util.normalizeCodecInts` before the parsers see it, as
+    `open`'s does. Without that, it fails with `Long cannot be cast to Integer`.
+  - Two new device tests, both passing before and after: an int and a colour sent through
+    `setSettings` come back from `getSettings`, and the browser's `webViewController` has its own
+    working settings pair. The boundary test now also checks the map in both directions, and that
+    each pair uses its own transport.
+  - 🚨 **The browser's `webViewController.setSettings` / `getSettings` stay on the MethodChannel.**
+    The controller is built on the browser's channel, and `WebViewChannelDelegate` answers it
+    through the Activity. That path resets the browser's own stored settings to defaults: after
+    it, a toolbar colour set at open reads back as null. This is not new, and it is unchanged here.
 - **`web history get history list and go back/forward` had a race, now fixed.** Its first wait
   subscribed to a broadcast stream of page loads *after* `pumpWidget` had started loading. A
   load that finished first was dropped, and the test hung until its 60 s timeout. A probe caught

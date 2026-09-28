@@ -1,14 +1,15 @@
 package dev.nosferatu500.inappwebview.in_app_browser
 
+import dev.nosferatu500.inappwebview.Util
 import dev.nosferatu500.inappwebview.pigeons.InAppBrowserFlutterApi
 import dev.nosferatu500.inappwebview.pigeons.InAppBrowserHostApi
 import dev.nosferatu500.inappwebview.types.InAppBrowserMenuItem
 import io.flutter.plugin.common.BinaryMessenger
 
 /**
- * The browser Activity's own half of the per-instance channel, over Pigeon (§195). The WebView's
- * half is still `WebViewChannelDelegate` on the `inappbrowser_$id` MethodChannel, and so are the
- * browser's `setSettings`/`getSettings`.
+ * The browser Activity's own half of the per-instance channel, over Pigeon (§195), settings pair
+ * included since §199. The WebView's half is still `WebViewChannelDelegate` on the
+ * `inappbrowser_$id` MethodChannel.
  *
  * Before this, both delegates were handed the same MethodChannel and this one's `onMethodCall` was
  * empty. It only worked because the WebView's delegate registered last and answered for both.
@@ -56,6 +57,23 @@ class InAppBrowserChannelDelegate(
   }
 
   override fun isHidden(): Boolean = activity!!.isHidden
+
+  /**
+   * Moved from `WebViewChannelDelegate`'s `browserActivity` branch (§199), which still answers the
+   * browser's WebView controller. The map goes through [Util.normalizeCodecInts] first: Pigeon
+   * delivers its nested ints as `Long`, and the parsers cast `as Int` (§197).
+   */
+  override fun setSettings(settings: Map<String?, Any?>): Boolean {
+    @Suppress("UNCHECKED_CAST")
+    val settingsMap = Util.normalizeCodecInts(settings) as HashMap<String, Any?>
+    activity!!.setSettings(InAppBrowserSettings().parse(settingsMap), settingsMap)
+    return true
+  }
+
+  // `!!` on the map as well: it is null only when the Activity has no WebView, and the WebView is
+  // assigned before this delegate registers and cleared after [dispose] unregisters it. `toMap()`
+  // widens the key type to Pigeon's `String?` without an unchecked cast.
+  override fun getSettings(): Map<String?, Any?> = activity!!.getCustomSettingsMap()!!.toMap()
 
   // --- events -----------------------------------------------------------------------------------
   // Fire-and-forget, as the hand-written `channel.invokeMethod` calls were (§165, §177, §179, §180).

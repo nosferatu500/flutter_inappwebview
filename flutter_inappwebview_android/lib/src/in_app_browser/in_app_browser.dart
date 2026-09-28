@@ -73,9 +73,9 @@ class _InAppBrowserFlutterApiImpl implements InAppBrowserFlutterApi {
 ///{@macro flutter_inappwebview_platform_interface.PlatformInAppBrowser}
 ///
 /// Transport is split (§195): the browser's own methods and events are Pigeon-generated
-/// ([InAppBrowserHostApi] / [InAppBrowserFlutterApi], suffixed by [id]). The `inappbrowser_$id`
-/// MethodChannel still carries the WebView's surface and the browser's `setSettings` /
-/// `getSettings`.
+/// ([InAppBrowserHostApi] / [InAppBrowserFlutterApi], suffixed by [id]), its `setSettings` /
+/// `getSettings` included since §199. The `inappbrowser_$id` MethodChannel still carries the
+/// WebView's surface, [webViewController]'s own settings pair included.
 class AndroidInAppBrowser extends PlatformInAppBrowser with ChannelController {
   @override
   final String id = IdGenerator.generate();
@@ -347,29 +347,16 @@ class AndroidInAppBrowser extends PlatformInAppBrowser with ChannelController {
   }) async {
     assert(_isOpened, 'The browser is not opened.');
 
-    Map<String, dynamic> args = <String, dynamic>{};
-    args.putIfAbsent('settings', () => settings.toMap());
-    await channel?.invokeMethod('setSettings', args);
+    await _hostApi?.setSettings(settings.toMap());
   }
 
   @override
   Future<InAppBrowserClassSettings?> getSettings() async {
     assert(_isOpened, 'The browser is not opened.');
 
-    Map<String, dynamic> args = <String, dynamic>{};
-
-    Map<dynamic, dynamic>? settings = await channel?.invokeMethod(
-      'getSettings',
-      args,
-    );
-    if (settings != null) {
-      settings = settings.cast<String, dynamic>();
-      return InAppBrowserClassSettings.fromMap(
-        settings as Map<String, dynamic>,
-      );
-    }
-
-    return null;
+    final settings = await _hostApi?.getSettings();
+    if (settings == null) return null;
+    return InAppBrowserClassSettings.fromMap(settings.cast<String, dynamic>());
   }
 
   @override

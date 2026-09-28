@@ -26,7 +26,12 @@ void main() {
   late AndroidInAppBrowser browser;
   late _RecordingEvents events;
   final sent = <String>[];
+  final received = <String, Object?>{};
   final clicked = <int>[];
+
+  // The browser's MethodChannel, which its WebView controller still uses.
+  String methodChannel() =>
+      'dev.nosferatu500.inappwebview/inappbrowser_${browser.id}';
 
   String hostChannel(String method) =>
       'dev.flutter.pigeon.flutter_inappwebview_android.InAppBrowserHostApi'
@@ -36,12 +41,13 @@ void main() {
       'dev.flutter.pigeon.flutter_inappwebview_android.InAppBrowserFlutterApi'
       '.$method.${browser.id}';
 
-  /// Answers one HostApi method with [result], recording that it was called.
+  /// Answers one HostApi method with [result], recording that it was called and what it was sent.
   /// Pigeon's success envelope is a one-element list.
   void stubHost(String method, Object? result) {
     TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
         .setMockMessageHandler(hostChannel(method), (message) async {
           sent.add(method);
+          received[method] = codec.decodeMessage(message);
           return codec.encodeMessage(<Object?>[result]);
         });
   }
@@ -61,6 +67,7 @@ void main() {
 
   setUp(() async {
     sent.clear();
+    received.clear();
     clicked.clear();
     TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
         .setMockMessageHandler(
@@ -88,12 +95,21 @@ void main() {
   });
 
   tearDown(() {
-    for (final m in ['show', 'hide', 'close', 'isHidden']) {
+    for (final m in [
+      'show',
+      'hide',
+      'close',
+      'isHidden',
+      'setSettings',
+      'getSettings',
+    ]) {
       TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
           .setMockMessageHandler(hostChannel(m), null);
     }
     TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
         .setMockMessageHandler(managerOpen, null);
+    TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
+        .setMockMethodCallHandler(MethodChannel(methodChannel()), null);
   });
 
   group(
@@ -115,8 +131,79 @@ void main() {
         stubHost('isHidden', false);
         expect(await browser.isHidden(), isFalse);
       });
+
+      test('setSettings sends the whole settings map, as a map', () async {
+        stubHost('setSettings', true);
+        final settings = InAppBrowserClassSettings(
+          webViewSettings: InAppWebViewSettings(minimumFontSize: 31),
+          browserSettings: InAppBrowserSettings(
+            toolbarTopBackgroundColor: const Color(0xFF7B1FA2),
+          ),
+        );
+        await browser.setSettings(settings: settings);
+        expect(sent, ['setSettings']);
+        // Decision B (§194): the map `parse(Map)` reads, key for key, browser and WebView together.
+        expect(received['setSettings'], [settings.toMap()]);
+      });
+
+      test(
+        'getSettings reads both halves of what the platform answered',
+        () async {
+          stubHost(
+            'getSettings',
+            InAppBrowserClassSettings(
+              webViewSettings: InAppWebViewSettings(minimumFontSize: 31),
+              browserSettings: InAppBrowserSettings(hideToolbarTop: true),
+            ).toMap(),
+          );
+          final settings = await browser.getSettings();
+          expect(sent, ['getSettings']);
+          expect(settings?.webViewSettings.minimumFontSize, 31);
+          expect(settings?.browserSettings.hideToolbarTop, isTrue);
+        },
+      );
     },
   );
+
+  group('the split with the MethodChannel (§199)', () {
+    late List<String> channelCalls;
+
+    setUp(() {
+      channelCalls = [];
+      TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
+          .setMockMethodCallHandler(MethodChannel(methodChannel()), (
+            call,
+          ) async {
+            channelCalls.add(call.method);
+            return call.method == 'getSettings'
+                ? InAppWebViewSettings(minimumFontSize: 27).toMap()
+                : true;
+          });
+      stubHost('setSettings', true);
+      stubHost('getSettings', InAppBrowserClassSettings().toMap());
+    });
+
+    test(
+      'the browser settings pair is Pigeon and not the MethodChannel',
+      () async {
+        await browser.setSettings(settings: InAppBrowserClassSettings());
+        await browser.getSettings();
+        expect(sent, ['setSettings', 'getSettings']);
+        expect(channelCalls, isEmpty);
+      },
+    );
+
+    test(
+      'the WebView controller settings pair stays on the MethodChannel',
+      () async {
+        final controller = browser.webViewController!;
+        await controller.setSettings(settings: InAppWebViewSettings());
+        expect((await controller.getSettings())?.minimumFontSize, 27);
+        expect(channelCalls, ['setSettings', 'getSettings']);
+        expect(sent, isEmpty);
+      },
+    );
+  });
 
   group('Kotlin -> Dart (FlutterApi events)', () {
     test('onBrowserCreated reaches the event handler', () async {
