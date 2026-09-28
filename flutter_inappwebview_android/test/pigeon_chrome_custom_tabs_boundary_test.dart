@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:flutter/services.dart';
 import 'package:flutter_inappwebview_android/flutter_inappwebview_android.dart';
 import 'package:flutter_inappwebview_android/src/pigeons/chrome_custom_tabs.g.dart';
+import 'package:flutter_inappwebview_android/src/pigeons/chrome_safari_browser_manager.g.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 /// Boundary coverage for the chrome-custom-tabs channel's **event unregistration** (§184), which
@@ -22,9 +23,9 @@ void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
 
   const codec = ChromeCustomTabsHostApi.pigeonChannelCodec;
-  const staticChannel = MethodChannel(
-    'dev.nosferatu500.inappwebview/chromesafaribrowser',
-  );
+  // The manager's `open`, Pigeon since §201.
+  const managerOpen =
+      'dev.flutter.pigeon.flutter_inappwebview_android.ChromeSafariBrowserManagerHostApi.open';
   const eventBase =
       'dev.flutter.pigeon.flutter_inappwebview_android.ChromeCustomTabsFlutterApi';
 
@@ -45,9 +46,13 @@ void main() {
   }
 
   setUp(() async {
-    // `open` registers the per-instance handlers and then calls the static manager channel, which
-    // is still hand-written; answering it is what lets `open` complete.
-    messenger.setMockMethodCallHandler(staticChannel, (call) async => null);
+    // `open` registers the per-instance handlers and then calls the manager; answering it is what
+    // lets `open` complete.
+    messenger.setMockMessageHandler(
+      managerOpen,
+      (message) async => ChromeSafariBrowserManagerHostApi.pigeonChannelCodec
+          .encodeMessage(<Object?>[true]),
+    );
     browser = AndroidChromeSafariBrowser(
       AndroidChromeSafariBrowserCreationParams(),
     );
@@ -55,7 +60,7 @@ void main() {
   });
 
   tearDown(() {
-    messenger.setMockMethodCallHandler(staticChannel, null);
+    messenger.setMockMessageHandler(managerOpen, null);
   });
 
   test('dispose unregisters the event handlers for this id', () async {

@@ -7,21 +7,25 @@ import androidx.browser.customtabs.CustomTabsClient
 import androidx.browser.customtabs.CustomTabsIntent
 import dev.nosferatu500.inappwebview.InAppWebViewFlutterPlugin
 import dev.nosferatu500.inappwebview.Util
-import dev.nosferatu500.inappwebview.types.ChannelDelegateImpl
-import io.flutter.plugin.common.MethodCall
-import io.flutter.plugin.common.MethodChannel
+import dev.nosferatu500.inappwebview.pigeons.ChromeSafariBrowserManagerHostApi
+import dev.nosferatu500.inappwebview.pigeons.ChromeSafariBrowserOpenRequestData
+import dev.nosferatu500.inappwebview.pigeons.FlutterError
+import io.flutter.plugin.common.BinaryMessenger
 import java.io.Serializable
 import java.util.UUID
 
-// The unchecked casts below are the Flutter codec boundary: StandardMessageCodec decodes to
-// Map<String,Object>/List<Object>, so every read of a structured value is an unverifiable
-// cast. A wrong shape throws ClassCastException at the cast site, which is the intended
-// failure mode. Suppressed at class level because the whole class is that boundary.
-//
-// See ChannelDelegateImpl: `this` is published to a platform-thread-only dispatcher.
-@Suppress("UNCHECKED_CAST")
+/**
+ * Opens Custom Tabs, over Pigeon (§201). Implements [ChromeSafariBrowserManagerHostApi] directly,
+ * as `InAppBrowserManager` does since §197.
+ *
+ * The four map-valued fields of [ChromeSafariBrowserOpenRequestData] go into the Bundle as the maps
+ * Dart sent (§194, decision B). Each passes through [Util.normalizeCodecInts] first, because Pigeon
+ * delivers their nested ints as `Long` where the Activity's parsers cast `as Int` (§197). The
+ * normalized settings map is also the one this manager reads its three launch settings from, by
+ * key presence, so a null-valued key still fails as it did (§200).
+ */
 class ChromeSafariBrowserManager(plugin: InAppWebViewFlutterPlugin) :
-  ChannelDelegateImpl(MethodChannel(plugin.messenger, METHOD_CHANNEL_NAME)) {
+  ChromeSafariBrowserManagerHostApi {
 
   @JvmField
   var plugin: InAppWebViewFlutterPlugin? = plugin
@@ -32,87 +36,62 @@ class ChromeSafariBrowserManager(plugin: InAppWebViewFlutterPlugin) :
   @JvmField
   val browsers: MutableMap<String, ChromeCustomTabsActivity?> = HashMap()
 
+  private var messenger: BinaryMessenger? = plugin.messenger
+
   init {
     shared[id] = this
+    ChromeSafariBrowserManagerHostApi.setUp(plugin.messenger, this)
   }
 
-  override fun onMethodCall(call: MethodCall, result: MethodChannel.Result) {
-    val viewId = call.argument<String>("id")
-    val activity = plugin?.activity
-
-    when (call.method) {
-      "open" -> {
-        if (activity != null) {
-          open(
-            activity,
-            viewId,
-            call.argument("url"),
-            call.argument<HashMap<String, Any?>>("headers"),
-            call.argument("referrer"),
-            call.argument<ArrayList<String>>("otherLikelyURLs"),
-            call.argument<HashMap<String, Any?>>("settings"),
-            call.argument<HashMap<String, Any?>>("actionButton"),
-            call.argument<HashMap<String, Any?>>("secondaryToolbar"),
-            call.argument<List<HashMap<String, Any?>>>("menuItemList"),
-            result
-          )
-        } else {
-          result.success(false)
-        }
-      }
-
-      "isAvailable" -> {
-        if (activity != null) {
-          result.success(CustomTabActivityHelper.isAvailable(activity))
-        } else {
-          result.success(false)
-        }
-      }
-
-      "getMaxToolbarItems" -> result.success(CustomTabsIntent.getMaxToolbarItems())
-
-      "getPackageName" -> {
-        if (activity != null) {
-          val packages = call.argument<ArrayList<String>>("packages")
-          val ignoreDefault = call.argument<Boolean>("ignoreDefault")!!
-          result.success(CustomTabsClient.getPackageName(activity, packages, ignoreDefault))
-        } else {
-          result.success(null)
-        }
-      }
-
-      else -> result.notImplemented()
-    }
+  override fun open(request: ChromeSafariBrowserOpenRequestData): Boolean {
+    val activity = plugin?.activity ?: return false
+    startBrowser(activity, request)
+    return true
   }
 
-  fun open(
-    activity: Activity,
-    viewId: String?,
-    url: String?,
-    headers: HashMap<String, Any?>?,
-    referrer: String?,
-    otherLikelyURLs: ArrayList<String>?,
-    settings: HashMap<String, Any?>?,
-    actionButton: HashMap<String, Any?>?,
-    secondaryToolbar: HashMap<String, Any?>?,
-    menuItemList: List<HashMap<String, Any?>>?,
-    result: MethodChannel.Result
-  ) {
+  override fun isAvailable(): Boolean {
+    val activity = plugin?.activity ?: return false
+    return CustomTabActivityHelper.isAvailable(activity)
+  }
+
+  override fun getMaxToolbarItems(): Long = CustomTabsIntent.getMaxToolbarItems().toLong()
+
+  override fun getPackageName(packages: List<String>?, ignoreDefault: Boolean): String? {
+    val activity = plugin?.activity ?: return null
+    return CustomTabsClient.getPackageName(activity, packages, ignoreDefault)
+  }
+
+  /**
+   * Renamed from `open` (rule 7: it shared the host method's name). Throws [FlutterError] when
+   * Custom Tabs are unavailable, with the code, message and details the hand-written channel's
+   * `result.error` used, so Dart sees the same `PlatformException`.
+   */
+  private fun startBrowser(activity: Activity, request: ChromeSafariBrowserOpenRequestData) {
+    @Suppress("UNCHECKED_CAST")
+    val settings = Util.normalizeCodecInts(request.settings) as HashMap<String, Any?>
+
     val extras = Bundle()
-    extras.putString("url", url)
-    extras.putString("id", viewId)
+    extras.putString("url", request.url)
+    extras.putString("id", request.id)
     extras.putString("managerId", id)
-    extras.putSerializable("headers", headers)
-    extras.putString("referrer", referrer)
-    extras.putSerializable("otherLikelyURLs", otherLikelyURLs)
+    // Copied into the `Serializable` types the Activity reads back (`HashMap`, and `ArrayList` for
+    // `getStringArrayList`); the codec's own collection types are not part of Pigeon's contract.
+    extras.putSerializable("headers", request.headers?.let { HashMap(it) })
+    extras.putString("referrer", request.referrer)
+    extras.putSerializable("otherLikelyURLs", request.otherLikelyURLs?.let { ArrayList(it) })
     extras.putSerializable("settings", settings)
-    extras.putSerializable("actionButton", actionButton as Serializable?)
-    extras.putSerializable("secondaryToolbar", secondaryToolbar as Serializable?)
-    extras.putSerializable("menuItemList", menuItemList as Serializable?)
+    extras.putSerializable(
+      "actionButton", Util.normalizeCodecInts(request.actionButton) as Serializable?
+    )
+    extras.putSerializable(
+      "secondaryToolbar", Util.normalizeCodecInts(request.secondaryToolbar) as Serializable?
+    )
+    extras.putSerializable(
+      "menuItemList", Util.normalizeCodecInts(request.menuItemList) as Serializable
+    )
 
-    val settingsMap: Map<String, Any?> = settings ?: emptyMap()
-    val isSingleInstance = Util.getOrDefault(settingsMap, "isSingleInstance", false)
-    val isTrustedWebActivity = Util.getOrDefault(settingsMap, "isTrustedWebActivity", false)
+    val isSingleInstance = Util.getOrDefault(settings, "isSingleInstance", false)
+    val isTrustedWebActivity = Util.getOrDefault(settings, "isTrustedWebActivity", false)
     if (CustomTabActivityHelper.isAvailable(activity)) {
       val target = if (!isSingleInstance) {
         if (!isTrustedWebActivity) {
@@ -129,19 +108,19 @@ class ChromeSafariBrowserManager(plugin: InAppWebViewFlutterPlugin) :
       }
       val intent = Intent(activity, target)
       intent.putExtras(extras)
-      if (Util.getOrDefault(settingsMap, "noHistory", false)) {
+      if (Util.getOrDefault(settings, "noHistory", false)) {
         intent.addFlags(Intent.FLAG_ACTIVITY_NO_HISTORY)
       }
       activity.startActivity(intent)
-      result.success(true)
       return
     }
 
-    result.error(LOG_TAG, "ChromeCustomTabs is not available!", null)
+    throw FlutterError(LOG_TAG, "ChromeCustomTabs is not available!", null)
   }
 
-  override fun dispose() {
-    super.dispose()
+  fun dispose() {
+    messenger?.let { ChromeSafariBrowserManagerHostApi.setUp(it, null) }
+    messenger = null
     for (browser in browsers.values) {
       if (browser != null) {
         browser.close()
@@ -155,7 +134,6 @@ class ChromeSafariBrowserManager(plugin: InAppWebViewFlutterPlugin) :
 
   companion object {
     protected const val LOG_TAG = "ChromeBrowserManager"
-    const val METHOD_CHANNEL_NAME = "dev.nosferatu500.inappwebview/chromesafaribrowser"
 
     @JvmField
     val shared: MutableMap<String, ChromeSafariBrowserManager> = HashMap()

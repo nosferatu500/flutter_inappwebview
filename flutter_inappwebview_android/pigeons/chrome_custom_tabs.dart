@@ -15,7 +15,8 @@
 // `isAvailable`, `getMaxToolbarItems` and `getPackageName`. `open` takes the settings payload, which
 // is why the manager shows as `4 7` in the table and stays blocked with `InAppBrowserManager`. After
 // this commit the Dart class holds a Pigeon HostApi *and* a raw `MethodChannel` for the manager;
-// that is deliberate and the two are independent.
+// that is deliberate and the two are independent. **Superseded in §201:** the manager is Pigeon
+// too, in `chrome_safari_browser_manager.dart`, so both halves are generated now.
 //
 // Pre-schema checklist (§160-§165), all nine run before writing this:
 //   1. Settings payload? **No, on this channel.** `ChromeCustomTabsSettings` is read from the

@@ -7,6 +7,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_inappwebview_platform_interface/flutter_inappwebview_platform_interface.dart';
 
 import '../pigeons/chrome_custom_tabs.g.dart';
+import '../pigeons/chrome_safari_browser_manager.g.dart';
 
 /// Object specifying creation parameters for creating a [AndroidChromeSafariBrowser].
 ///
@@ -191,9 +192,10 @@ class AndroidChromeSafariBrowser extends PlatformChromeSafariBrowser {
   final Map<int, ChromeSafariBrowserMenuItem> _menuItems = HashMap();
   ChromeSafariBrowserSecondaryToolbar? _secondaryToolbar;
   bool _isOpened = false;
-  static const MethodChannel _staticChannel = MethodChannel(
-    'dev.nosferatu500.inappwebview/chromesafaribrowser',
-  );
+
+  /// The manager's channel, over Pigeon (§201). `open`'s map-valued fields stay maps (§194, B).
+  static final ChromeSafariBrowserManagerHostApi _managerApi =
+      ChromeSafariBrowserManagerHostApi();
 
   /// Per-instance transport. The `messageChannelSuffix` is [id], which is also what the Kotlin
   /// side uses; §177 measured that a disagreement fails fast in the HostApi direction and
@@ -294,20 +296,19 @@ class AndroidChromeSafariBrowser extends PlatformChromeSafariBrowser {
     var initialSettings =
         settings?.toMap() ?? ChromeSafariBrowserSettings().toMap();
 
-    Map<String, dynamic> args = <String, dynamic>{};
-    args.putIfAbsent('id', () => id);
-    args.putIfAbsent('url', () => url?.toString());
-    args.putIfAbsent('headers', () => headers);
-    args.putIfAbsent(
-      'otherLikelyURLs',
-      () => otherLikelyURLs?.map((e) => e.toString()).toList(),
+    await _managerApi.open(
+      ChromeSafariBrowserOpenRequestData(
+        id: id,
+        url: url?.toString(),
+        headers: headers,
+        referrer: referrer?.toString(),
+        otherLikelyURLs: otherLikelyURLs?.map((e) => e.toString()).toList(),
+        settings: initialSettings,
+        actionButton: _actionButton?.toMap(),
+        secondaryToolbar: _secondaryToolbar?.toMap(),
+        menuItemList: menuItemList,
+      ),
     );
-    args.putIfAbsent('referrer', () => referrer?.toString());
-    args.putIfAbsent('settings', () => initialSettings);
-    args.putIfAbsent('actionButton', () => _actionButton?.toMap());
-    args.putIfAbsent('secondaryToolbar', () => _secondaryToolbar?.toMap());
-    args.putIfAbsent('menuItemList', () => menuItemList);
-    await _staticChannel.invokeMethod('open', args);
   }
 
   @override
@@ -443,29 +444,16 @@ class AndroidChromeSafariBrowser extends PlatformChromeSafariBrowser {
   }
 
   @override
-  Future<bool> isAvailable() async {
-    Map<String, dynamic> args = <String, dynamic>{};
-    return await _staticChannel.invokeMethod<bool>("isAvailable", args) ??
-        false;
-  }
+  Future<bool> isAvailable() => _managerApi.isAvailable();
 
   @override
-  Future<int> getMaxToolbarItems() async {
-    Map<String, dynamic> args = <String, dynamic>{};
-    return await _staticChannel.invokeMethod<int>("getMaxToolbarItems", args) ??
-        0;
-  }
+  Future<int> getMaxToolbarItems() => _managerApi.getMaxToolbarItems();
 
   @override
   Future<String?> getPackageName({
     List<String>? packages,
     bool ignoreDefault = false,
-  }) async {
-    Map<String, dynamic> args = <String, dynamic>{};
-    args.putIfAbsent("packages", () => packages);
-    args.putIfAbsent("ignoreDefault", () => ignoreDefault);
-    return await _staticChannel.invokeMethod<String?>("getPackageName", args);
-  }
+  }) => _managerApi.getPackageName(packages, ignoreDefault);
 
   @override
   bool isOpened() {

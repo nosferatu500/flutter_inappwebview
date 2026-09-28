@@ -468,6 +468,20 @@ for, and five others have a native *value* that differs from their name.
 
 ### Internal
 
+- **The `chromesafaribrowser` manager channel is Pigeon-generated**, the twentieth migrated and
+  the second under decision B: `open`, `isAvailable`, `getMaxToolbarItems` and `getPackageName`
+  over `ChromeSafariBrowserManagerHostApi`. No public API change.
+  - `open` sends one `ChromeSafariBrowserOpenRequestData`. The strings, headers and likely URLs
+    are typed. Settings, action button, secondary toolbar and menu items stay maps, and each goes
+    through `Util.normalizeCodecInts`. Without that, the Custom Tabs Activity crashes the app on
+    start: measured for all three (`ChromeCustomTabsSettings.parse`, `CustomTabsMenuItem.fromMap`,
+    `CustomTabsActionButton.fromMap`).
+  - The manager still reads `isSingleInstance`, `isTrustedWebActivity` and `noHistory` by key
+    presence, from the normalized map, so a null value still fails `open` as before.
+  - Error codes: "Custom Tabs not available" keeps its `ChromeBrowserManager` code and message.
+    🚨 An *unexpected* exception, like that null's NPE, now arrives with the exception's class name
+    as the code (`NullPointerException`) instead of `error`, and its message is now the exception's
+    `toString()`.
 - **Everything `ChromeSafariBrowserManager` receives now has a device test where one is possible,
   ahead of its migration.** A new `open payload` group adds six `chrome_safari_browser` tests, so
   the group goes from 13 to 19 (2 still skipped). The Custom Tab loads from a server the test runs
