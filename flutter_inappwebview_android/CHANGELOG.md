@@ -468,6 +468,20 @@ for, and five others have a native *value* that differs from their name.
 
 ### Internal
 
+- **The custom path handler channel is Pigeon-generated**, the twenty-second migrated, which
+  makes twenty-one schemas: one `@async` `CustomPathHandlerFlutterApi.handle(path)`, suffixed by
+  the handler's id. No public API change.
+  - Kotlin still blocks the WebView thread until Dart answers, with the same semantics: posted to
+    the main looper, a fixed 10 s bound, and a timeout, error, missing handler or null answer all
+    fall through to the network. It uses the latch shape of the service worker's
+    `shouldInterceptRequest`.
+  - The answer stays a `WebResourceResponse.toMap()` map rather than a typed class. The typed
+    version, `WebResourceResponseData`, is declared by the service worker's schema, and Pigeon
+    can't share it across files. It goes through `Util.normalizeCodecInts`: without that, the
+    `statusCode` fails its cast and the request falls through (measured).
+  - The dead callback form of the Kotlin `handle` wasn't ported.
+  - A suffix mismatch is silent, measured: every request waits out the full 10 s and then goes to
+    the network.
 - **`CustomPathHandler` has device tests, for the first time, ahead of its channel's
   migration.** Four new `in_app_webview` tests, so the group goes from 167 to 171. The handler is
   the one `WebViewAssetLoader` path handler that crosses a channel: Kotlin blocks a WebView thread

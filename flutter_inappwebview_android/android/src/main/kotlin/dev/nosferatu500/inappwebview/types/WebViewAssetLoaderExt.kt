@@ -1,14 +1,20 @@
 package dev.nosferatu500.inappwebview.types
 
 import android.content.Context
+import android.os.Handler
+import android.os.Looper
 import android.util.Log
 import android.webkit.WebResourceResponse
 import androidx.webkit.WebViewAssetLoader
 import dev.nosferatu500.inappwebview.InAppWebViewFlutterPlugin
 import dev.nosferatu500.inappwebview.Util
-import io.flutter.plugin.common.MethodChannel
+import dev.nosferatu500.inappwebview.pigeons.CustomPathHandlerFlutterApi
+import io.flutter.plugin.common.BinaryMessenger
 import java.io.ByteArrayInputStream
 import java.io.File
+import java.util.concurrent.CountDownLatch
+import java.util.concurrent.TimeUnit
+import java.util.concurrent.atomic.AtomicReference
 
 // The unchecked casts below are the Flutter codec boundary: StandardMessageCodec decodes to
 // Map<String,Object>/List<Object>, so every read of a structured value is an unverifiable
@@ -32,13 +38,10 @@ class WebViewAssetLoaderExt(
     plugin: InAppWebViewFlutterPlugin
   ) : WebViewAssetLoader.PathHandler, Disposable {
 
+    // Pigeon since §205, suffixed by this handler's id, which is Dart's `AndroidPathHandler._id`.
     @JvmField
-    var channelDelegate: PathHandlerExtChannelDelegate?
-
-    init {
-      val channel = MethodChannel(plugin.messenger, METHOD_CHANNEL_NAME_PREFIX + id)
-      channelDelegate = PathHandlerExtChannelDelegate(this, channel)
-    }
+    var channelDelegate: PathHandlerExtChannelDelegate? =
+      PathHandlerExtChannelDelegate(plugin.messenger, id)
 
     override fun handle(path: String): WebResourceResponse? {
       val delegate = channelDelegate ?: return null
@@ -75,45 +78,70 @@ class WebViewAssetLoaderExt(
 
     companion object {
       protected const val LOG_TAG = "PathHandlerExt"
-      const val METHOD_CHANNEL_NAME_PREFIX =
-        "dev.nosferatu500.inappwebview/inappwebview_custompathhandler_"
     }
   }
 
-  class PathHandlerExtChannelDelegate(
-    pathHandler: PathHandlerExt,
-    channel: MethodChannel
-  ) : ChannelDelegateImpl(channel) {
+  /**
+   * The handler's channel, over Pigeon (§205): one event and no host methods, so nothing is
+   * registered on this side and [dispose] only drops the API.
+   *
+   * The hand-written callback form `handle(path, callback)` was not ported: it had no caller (§204
+   * deleted it and everything still compiled and passed).
+   */
+  class PathHandlerExtChannelDelegate(messenger: BinaryMessenger, id: String) : Disposable {
 
-    private var pathHandler: PathHandlerExt? = pathHandler
+    private var flutterApi: CustomPathHandlerFlutterApi? =
+      CustomPathHandlerFlutterApi(messenger, id)
 
-    class HandleCallback : BaseCallbackResultImpl<WebResourceResponseExt>() {
-      override fun decodeResult(obj: Any?): WebResourceResponseExt? =
-        WebResourceResponseExt.fromMap(obj as Map<String, Any?>?)
-    }
-
-    fun handle(path: String?, callback: HandleCallback) {
-      val channel = this.channel ?: return
-      channel.invokeMethod("handle", hashMapOf<String, Any?>("path" to path), callback)
-    }
-
-    class SyncHandleCallback : SyncBaseCallbackResultImpl<WebResourceResponseExt>() {
-      override fun decodeResult(obj: Any?): WebResourceResponseExt? =
-        HandleCallback().decodeResult(obj)
-    }
-
+    /**
+     * Asks Dart for the response to [path] and **blocks the calling thread** until it answers, with
+     * the semantics of the `Util.invokeMethodAndWaitResult` call it replaces, in
+     * `ServiceWorkerChannelDelegate.shouldInterceptRequest`'s shape (§186):
+     *
+     *  - the call is posted to the main looper, where platform channels must be used;
+     *  - the wait is bounded by [Util.SYNC_CALLBACK_TIMEOUT_MILLIS], because a path handler holds no
+     *    WebView settings to read a longer timeout from, as before;
+     *  - a timeout, a Dart-side throw, no Dart handler, or a null answer all come back as **null**,
+     *    which the loader treats as "not handled", so the request goes to the network.
+     *
+     * The answer map goes through [Util.normalizeCodecInts] first: its `statusCode` arrives as a
+     * `Long`, and `WebResourceResponseExt.fromMap` casts it `as Int?` (§197).
+     */
     @Throws(InterruptedException::class)
-    fun handle(path: String?): WebResourceResponseExt? {
-      val channel = this.channel ?: return null
-      val callback = SyncHandleCallback()
-      return Util.invokeMethodAndWaitResult(
-        channel, "handle", hashMapOf<String, Any?>("path" to path), callback
+    fun handle(path: String): WebResourceResponseExt? {
+      val api = flutterApi ?: return null
+      val latch = CountDownLatch(1)
+      // Written on the main thread, read here after `await`: the latch provides the happens-before.
+      val answer = AtomicReference<Map<String?, Any?>?>(null)
+      Handler(Looper.getMainLooper()).post {
+        api.handle(path) { result ->
+          try {
+            answer.set(result.getOrNull())
+          } finally {
+            latch.countDown()
+          }
+        }
+      }
+      if (!latch.await(Util.SYNC_CALLBACK_TIMEOUT_MILLIS, TimeUnit.MILLISECONDS)) {
+        Log.w(
+          LOG_TAG,
+          "Timed out after ${Util.SYNC_CALLBACK_TIMEOUT_MILLIS}ms waiting for the Dart side to " +
+            "answer \"handle\"; continuing as if it had returned null. Check that the " +
+            "CustomPathHandler returns on every path and does not throw."
+        )
+        return null
+      }
+      return WebResourceResponseExt.fromMap(
+        Util.normalizeCodecInts(answer.get()) as Map<String, Any?>?
       )
     }
 
     override fun dispose() {
-      super.dispose()
-      pathHandler = null
+      flutterApi = null
+    }
+
+    companion object {
+      private const val LOG_TAG = "PathHandlerExtChannelDelegate"
     }
   }
 

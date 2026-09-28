@@ -1,6 +1,7 @@
 import 'package:flutter/foundation.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_inappwebview_platform_interface/flutter_inappwebview_platform_interface.dart';
+
+import 'pigeons/custom_path_handler.g.dart';
 
 /// Object specifying creation parameters for creating a [AndroidPathHandler].
 ///
@@ -25,7 +26,26 @@ class AndroidPathHandlerCreationParams
   }
 }
 
+/// Receives [CustomPathHandlerFlutterApi] events and forwards them to the handler.
+///
+/// A separate class rather than `implements` on [AndroidPathHandler]: the generated `handle` has
+/// the name of the public [PlatformPathHandlerEvents.handle], with wire types (§14).
+class _CustomPathHandlerFlutterApiImpl implements CustomPathHandlerFlutterApi {
+  _CustomPathHandlerFlutterApiImpl(this._handler);
+
+  final AndroidPathHandler _handler;
+
+  @override
+  Future<Map<String?, Object?>?> handle(String path) async =>
+      (await _handler.eventHandler?.handle(path))?.toMap();
+}
+
 ///{@macro flutter_inappwebview_platform_interface.PlatformPathHandler}
+///
+/// Transport is Pigeon-generated since §205 ([CustomPathHandlerFlutterApi], suffixed by the
+/// handler's id). Only the custom type has a platform end, but every type registers, as each opened
+/// a `MethodChannel` before. [ChannelController] stays in the type, which is public, and no channel
+/// is set on it any more.
 abstract mixin class AndroidPathHandler
     implements ChannelController, PlatformPathHandler {
   final String _id = IdGenerator.generate();
@@ -38,21 +58,10 @@ abstract mixin class AndroidPathHandler
 
   void _init(PlatformPathHandlerCreationParams params) {
     path = params.path;
-    channel = MethodChannel(
-      'dev.nosferatu500.inappwebview/inappwebview_custompathhandler_$_id',
+    CustomPathHandlerFlutterApi.setUp(
+      _CustomPathHandlerFlutterApiImpl(this),
+      messageChannelSuffix: _id,
     );
-    handler = _handleMethod;
-    initMethodCallHandler();
-  }
-
-  Future<dynamic> _handleMethod(MethodCall call) async {
-    switch (call.method) {
-      case "handle":
-        String path = call.arguments["path"];
-        return (await eventHandler?.handle(path))?.toMap();
-      default:
-        throw UnimplementedError("Unimplemented ${call.method} method");
-    }
   }
 
   @override
@@ -72,7 +81,8 @@ abstract mixin class AndroidPathHandler
 
   @override
   void dispose() {
-    disposeChannel();
+    // An event handler left registered would outlive the handler it forwards to (§184).
+    CustomPathHandlerFlutterApi.setUp(null, messageChannelSuffix: _id);
     eventHandler = null;
   }
 }
