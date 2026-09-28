@@ -44,10 +44,12 @@ private open class InAppWebViewPigeonCodec : StandardMessageCodec() {
   }
 }
 
+
 /**
  * Implemented by `WebViewChannelDelegate`, registered for as long as the delegate lives.
  *
- * W1 (§207): the synchronous load, navigation and state methods.
+ * W1 (§207): the synchronous load, navigation and state methods. W2 (§210): the nine methods that
+ * answer from a callback.
  *
  * Generated interface from Pigeon that represents a handler of messages from Flutter.
  */
@@ -81,6 +83,26 @@ interface InAppWebViewHostApi {
   fun resumeTimers(): Boolean
   fun prerenderUrl(url: String): Boolean
   fun getContentHeight(): Long?
+  /**
+   * The script's result as WebView reports it: JSON text, which Dart decodes. A non-page
+   * `contentWorld` answers through the page's bridge.
+   */
+  fun evaluateJavascript(source: String, contentWorld: Map<String?, Any?>?, callback: (Result<String?>) -> Unit)
+  /** The same JSON text as before: `{"value": …, "error": …}`, which Dart decodes. */
+  fun callAsyncJavaScript(functionBody: String, arguments: Map<String?, Any?>, contentWorld: Map<String?, Any?>?, callback: (Result<String?>) -> Unit)
+  /**
+   * `screenshotConfiguration` is `ScreenshotConfiguration.toMap()`. Null when the capture throws
+   * `IllegalArgumentException` (for example a 0 × 0 WebView).
+   */
+  fun takeScreenshot(screenshotConfiguration: Map<String?, Any?>?, callback: (Result<ByteArray?>) -> Unit)
+  fun getContentWidth(callback: (Result<Long?>) -> Unit)
+  fun getSelectedText(callback: (Result<String?>) -> Unit)
+  /** The saved file's path, or null when WebView couldn't save. */
+  fun saveWebArchive(filePath: String, autoname: Boolean, callback: (Result<String?>) -> Unit)
+  fun isSecureContext(callback: (Result<Boolean>) -> Unit)
+  /** Answers once the next frame is on screen: that is the feature. */
+  fun postVisualStateCallback(callback: (Result<Unit>) -> Unit)
+  fun documentHasImages(callback: (Result<Boolean>) -> Unit)
 
   companion object {
     /** The codec used by InAppWebViewHostApi. */
@@ -478,6 +500,179 @@ interface InAppWebViewHostApi {
               InAppWebViewPigeonUtils.wrapError(exception)
             }
             reply.reply(wrapped)
+          }
+        } else {
+          channel.setMessageHandler(null)
+        }
+      }
+      run {
+        val channel = BasicMessageChannel<Any?>(binaryMessenger, "dev.flutter.pigeon.flutter_inappwebview_android.InAppWebViewHostApi.evaluateJavascript$separatedMessageChannelSuffix", codec)
+        if (api != null) {
+          channel.setMessageHandler { message, reply ->
+            val args = message as List<Any?>
+            val sourceArg = args[0] as String
+            val contentWorldArg = args[1] as Map<String?, Any?>?
+            api.evaluateJavascript(sourceArg, contentWorldArg) { result: Result<String?> ->
+              val error = result.exceptionOrNull()
+              if (error != null) {
+                reply.reply(InAppWebViewPigeonUtils.wrapError(error))
+              } else {
+                val data = result.getOrNull()
+                reply.reply(InAppWebViewPigeonUtils.wrapResult(data))
+              }
+            }
+          }
+        } else {
+          channel.setMessageHandler(null)
+        }
+      }
+      run {
+        val channel = BasicMessageChannel<Any?>(binaryMessenger, "dev.flutter.pigeon.flutter_inappwebview_android.InAppWebViewHostApi.callAsyncJavaScript$separatedMessageChannelSuffix", codec)
+        if (api != null) {
+          channel.setMessageHandler { message, reply ->
+            val args = message as List<Any?>
+            val functionBodyArg = args[0] as String
+            val argumentsArg = args[1] as Map<String?, Any?>
+            val contentWorldArg = args[2] as Map<String?, Any?>?
+            api.callAsyncJavaScript(functionBodyArg, argumentsArg, contentWorldArg) { result: Result<String?> ->
+              val error = result.exceptionOrNull()
+              if (error != null) {
+                reply.reply(InAppWebViewPigeonUtils.wrapError(error))
+              } else {
+                val data = result.getOrNull()
+                reply.reply(InAppWebViewPigeonUtils.wrapResult(data))
+              }
+            }
+          }
+        } else {
+          channel.setMessageHandler(null)
+        }
+      }
+      run {
+        val channel = BasicMessageChannel<Any?>(binaryMessenger, "dev.flutter.pigeon.flutter_inappwebview_android.InAppWebViewHostApi.takeScreenshot$separatedMessageChannelSuffix", codec)
+        if (api != null) {
+          channel.setMessageHandler { message, reply ->
+            val args = message as List<Any?>
+            val screenshotConfigurationArg = args[0] as Map<String?, Any?>?
+            api.takeScreenshot(screenshotConfigurationArg) { result: Result<ByteArray?> ->
+              val error = result.exceptionOrNull()
+              if (error != null) {
+                reply.reply(InAppWebViewPigeonUtils.wrapError(error))
+              } else {
+                val data = result.getOrNull()
+                reply.reply(InAppWebViewPigeonUtils.wrapResult(data))
+              }
+            }
+          }
+        } else {
+          channel.setMessageHandler(null)
+        }
+      }
+      run {
+        val channel = BasicMessageChannel<Any?>(binaryMessenger, "dev.flutter.pigeon.flutter_inappwebview_android.InAppWebViewHostApi.getContentWidth$separatedMessageChannelSuffix", codec)
+        if (api != null) {
+          channel.setMessageHandler { _, reply ->
+            api.getContentWidth{ result: Result<Long?> ->
+              val error = result.exceptionOrNull()
+              if (error != null) {
+                reply.reply(InAppWebViewPigeonUtils.wrapError(error))
+              } else {
+                val data = result.getOrNull()
+                reply.reply(InAppWebViewPigeonUtils.wrapResult(data))
+              }
+            }
+          }
+        } else {
+          channel.setMessageHandler(null)
+        }
+      }
+      run {
+        val channel = BasicMessageChannel<Any?>(binaryMessenger, "dev.flutter.pigeon.flutter_inappwebview_android.InAppWebViewHostApi.getSelectedText$separatedMessageChannelSuffix", codec)
+        if (api != null) {
+          channel.setMessageHandler { _, reply ->
+            api.getSelectedText{ result: Result<String?> ->
+              val error = result.exceptionOrNull()
+              if (error != null) {
+                reply.reply(InAppWebViewPigeonUtils.wrapError(error))
+              } else {
+                val data = result.getOrNull()
+                reply.reply(InAppWebViewPigeonUtils.wrapResult(data))
+              }
+            }
+          }
+        } else {
+          channel.setMessageHandler(null)
+        }
+      }
+      run {
+        val channel = BasicMessageChannel<Any?>(binaryMessenger, "dev.flutter.pigeon.flutter_inappwebview_android.InAppWebViewHostApi.saveWebArchive$separatedMessageChannelSuffix", codec)
+        if (api != null) {
+          channel.setMessageHandler { message, reply ->
+            val args = message as List<Any?>
+            val filePathArg = args[0] as String
+            val autonameArg = args[1] as Boolean
+            api.saveWebArchive(filePathArg, autonameArg) { result: Result<String?> ->
+              val error = result.exceptionOrNull()
+              if (error != null) {
+                reply.reply(InAppWebViewPigeonUtils.wrapError(error))
+              } else {
+                val data = result.getOrNull()
+                reply.reply(InAppWebViewPigeonUtils.wrapResult(data))
+              }
+            }
+          }
+        } else {
+          channel.setMessageHandler(null)
+        }
+      }
+      run {
+        val channel = BasicMessageChannel<Any?>(binaryMessenger, "dev.flutter.pigeon.flutter_inappwebview_android.InAppWebViewHostApi.isSecureContext$separatedMessageChannelSuffix", codec)
+        if (api != null) {
+          channel.setMessageHandler { _, reply ->
+            api.isSecureContext{ result: Result<Boolean> ->
+              val error = result.exceptionOrNull()
+              if (error != null) {
+                reply.reply(InAppWebViewPigeonUtils.wrapError(error))
+              } else {
+                val data = result.getOrNull()
+                reply.reply(InAppWebViewPigeonUtils.wrapResult(data))
+              }
+            }
+          }
+        } else {
+          channel.setMessageHandler(null)
+        }
+      }
+      run {
+        val channel = BasicMessageChannel<Any?>(binaryMessenger, "dev.flutter.pigeon.flutter_inappwebview_android.InAppWebViewHostApi.postVisualStateCallback$separatedMessageChannelSuffix", codec)
+        if (api != null) {
+          channel.setMessageHandler { _, reply ->
+            api.postVisualStateCallback{ result: Result<Unit> ->
+              val error = result.exceptionOrNull()
+              if (error != null) {
+                reply.reply(InAppWebViewPigeonUtils.wrapError(error))
+              } else {
+                reply.reply(InAppWebViewPigeonUtils.wrapResult(null))
+              }
+            }
+          }
+        } else {
+          channel.setMessageHandler(null)
+        }
+      }
+      run {
+        val channel = BasicMessageChannel<Any?>(binaryMessenger, "dev.flutter.pigeon.flutter_inappwebview_android.InAppWebViewHostApi.documentHasImages$separatedMessageChannelSuffix", codec)
+        if (api != null) {
+          channel.setMessageHandler { _, reply ->
+            api.documentHasImages{ result: Result<Boolean> ->
+              val error = result.exceptionOrNull()
+              if (error != null) {
+                reply.reply(InAppWebViewPigeonUtils.wrapError(error))
+              } else {
+                val data = result.getOrNull()
+                reply.reply(InAppWebViewPigeonUtils.wrapResult(data))
+              }
+            }
           }
         } else {
           channel.setMessageHandler(null)

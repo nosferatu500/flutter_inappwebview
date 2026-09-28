@@ -37,6 +37,25 @@
 //
 // Rule 7: none of the 25 names collides with a member of `WebViewChannelDelegate`.
 //
+// W2 (§210), the nine methods that answer from a callback, checklist run again:
+//   1. Settings payload? None, but three **maps**: `contentWorld` (two methods), `callAsyncJavaScript`'s
+//      `arguments` and `takeScreenshot`'s configuration. All go through `Util.normalizeCodecInts`.
+//      The configuration's `quality` is the one read `as Int`, inside a posted runnable that catches
+//      only `IllegalArgumentException`, so without normalization it would crash the app.
+//   2. `@async`? **All nine**, each wrapped in `replyingOnThrow` (see the generated handlers).
+//   3. A branch that never answers? **Three, unchanged by the migration.** `callAsyncJavaScript`, and
+//      `evaluateJavascript` in a non-page content world, wait for the page's bridge, and a page that
+//      never answers never replies. `postVisualStateCallback` never replies if the WebView is
+//      destroyed first (the platform's contract). A missing WebView answers at once, as before:
+//      null, or `false` for `isSecureContext` and `documentHasImages`.
+//   4. Dart `int` -> Kotlin `Long`? `quality` (above) and any int inside `arguments`. Outbound,
+//      `getContentWidth` widens `Int` to `Long`.
+//   5. Payload type shared? None (maps).
+//   9. Fields the wire carries that the platform never reads? **`afterScreenUpdates`**, in the
+//      configuration map; it's iOS's. It stays in the map: the map is `toMap()`'s, unfiltered.
+// Rule 7: none of the nine names collides with a member of `WebViewChannelDelegate`, which
+// implements the HostApi. `InAppWebView`'s methods of the same names are the callees.
+//
 // Regenerate with BOTH steps, from flutter_inappwebview_android/:
 //   dart run pigeon --input pigeons/in_app_webview.dart
 //   dart format lib/src/pigeons/in_app_webview.g.dart
@@ -67,7 +86,8 @@ import 'package:pigeon/pigeon.dart';
 )
 /// Implemented by `WebViewChannelDelegate`, registered for as long as the delegate lives.
 ///
-/// W1 (§207): the synchronous load, navigation and state methods.
+/// W1 (§207): the synchronous load, navigation and state methods. W2 (§210): the nine methods that
+/// answer from a callback.
 @HostApi()
 abstract class InAppWebViewHostApi {
   String? getUrl();
@@ -127,4 +147,47 @@ abstract class InAppWebViewHostApi {
   bool prerenderUrl(String url);
 
   int? getContentHeight();
+
+  // W2 (§210): the methods that answer from a callback.
+
+  /// The script's result as WebView reports it: JSON text, which Dart decodes. A non-page
+  /// `contentWorld` answers through the page's bridge.
+  @async
+  String? evaluateJavascript(
+    String source,
+    Map<String?, Object?>? contentWorld,
+  );
+
+  /// The same JSON text as before: `{"value": …, "error": …}`, which Dart decodes.
+  @async
+  String? callAsyncJavaScript(
+    String functionBody,
+    Map<String?, Object?> arguments,
+    Map<String?, Object?>? contentWorld,
+  );
+
+  /// `screenshotConfiguration` is `ScreenshotConfiguration.toMap()`. Null when the capture throws
+  /// `IllegalArgumentException` (for example a 0 × 0 WebView).
+  @async
+  Uint8List? takeScreenshot(Map<String?, Object?>? screenshotConfiguration);
+
+  @async
+  int? getContentWidth();
+
+  @async
+  String? getSelectedText();
+
+  /// The saved file's path, or null when WebView couldn't save.
+  @async
+  String? saveWebArchive(String filePath, bool autoname);
+
+  @async
+  bool isSecureContext();
+
+  /// Answers once the next frame is on screen: that is the feature.
+  @async
+  void postVisualStateCallback();
+
+  @async
+  bool documentHasImages();
 }

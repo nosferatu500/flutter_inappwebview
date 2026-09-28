@@ -6,11 +6,12 @@ import 'package:flutter_inappwebview_android/src/pigeons/in_app_webview.g.dart';
 import 'package:flutter_inappwebview_platform_interface/flutter_inappwebview_platform_interface.dart';
 import 'package:flutter_test/flutter_test.dart';
 
-/// Runtime coverage for the per-WebView channel's first Pigeon slice (§207, W1): 25 synchronous
-/// load, navigation and state methods on `InAppWebViewHostApi`. Every message goes through the
-/// **real generated codec** on the real channel names, so this pins the Dart half: each method on
-/// its own channel, under the right suffix, with its arguments in order, and each answer mapped
-/// back. The Kotlin half is pinned on the device by the in_app_webview group (§189–§193).
+/// Runtime coverage for the per-WebView channel's Pigeon slices on `InAppWebViewHostApi`: W1
+/// (§207), 25 synchronous load, navigation and state methods, and W2 (§210), the nine that answer
+/// from a callback. Every message goes through the **real generated codec** on the real channel
+/// names, so this pins the Dart half: each method on its own channel, under the right suffix, with
+/// its arguments in order, and each answer mapped back. The Kotlin half is pinned on the device by
+/// the in_app_webview group (§189–§193, §209).
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
 
@@ -27,17 +28,24 @@ void main() {
     'isLoading', 'clearHistory', 'clearSslPreferences', 'clearFormData',
     'pause', 'resume', 'pauseTimers', 'resumeTimers', 'prerenderUrl',
     'getContentHeight',
+    // W2
+    'evaluateJavascript', 'callAsyncJavaScript', 'takeScreenshot',
+    'getContentWidth', 'getSelectedText', 'saveWebArchive', 'isSecureContext',
+    'postVisualStateCallback', 'documentHasImages',
   ];
 
   /// What each method was sent, by method name.
   final sent = <String, List<Object?>>{};
 
-  /// Stubs every method under [suffix], answering [answers] (default: `true`).
+  /// Stubs every method under [suffix], answering [answers] (default: `true`; an explicit `null`
+  /// answers null).
   void stubAll(String suffix, [Map<String, Object?> answers = const {}]) {
     for (final m in methods) {
       messenger.setMockMessageHandler('$prefix.$m.$suffix', (message) async {
         sent[m] = (codec.decodeMessage(message) as List<Object?>?) ?? [];
-        return codec.encodeMessage(<Object?>[answers[m] ?? true]);
+        return codec.encodeMessage(<Object?>[
+          answers.containsKey(m) ? answers[m] : true,
+        ]);
       });
     }
   }
@@ -190,20 +198,183 @@ void main() {
     );
 
     test(
-      'getContentHeight falls back to JavaScript when the platform answers 0',
+      'getContentHeight and getContentWidth fall back to JavaScript when the platform answers 0',
       () async {
-        // The fallback still goes through the MethodChannel's evaluateJavascript (W2 moves it).
-        stubAll('inappwebview_7', {'getContentHeight': 0});
-        final channel = MethodChannel(
-          'dev.nosferatu500.inappwebview/inappwebview_7',
-        );
-        messenger.setMockMethodCallHandler(channel, (call) async {
-          return call.method == 'evaluateJavascript' ? 987 : null;
+        // WebView reports the script's result as JSON text, which the controller decodes.
+        stubAll('inappwebview_7', {
+          'getContentHeight': 0,
+          'getContentWidth': 0,
+          'evaluateJavascript': '987',
         });
-        addTearDown(() => messenger.setMockMethodCallHandler(channel, null));
         expect(await c.getContentHeight(), 987);
+        expect(sent['evaluateJavascript'], [
+          'document.documentElement.scrollHeight;',
+          null,
+        ]);
+        expect(await c.getContentWidth(), 987);
+        expect(sent['evaluateJavascript'], [
+          'document.documentElement.scrollWidth;',
+          null,
+        ]);
       },
     );
+
+    // The device can't see this half: its JavaScript fallback answers the same width (rule 27, as
+    // getContentHeight's K6 in §207). Only here does "the platform answered" show.
+    test(
+      'getContentWidth returns the platform answer without asking JavaScript',
+      () async {
+        stubAll('inappwebview_7', {'getContentWidth': 1234});
+        expect(await c.getContentWidth(), 1234);
+        expect(sent.keys, ['getContentWidth']);
+      },
+    );
+
+    test(
+      'evaluateJavascript sends the source and content world, and decodes JSON answers',
+      () async {
+        stubAll('inappwebview_7', {
+          'evaluateJavascript': '[1, "a", {"b": true}]',
+        });
+        expect(
+          await c.evaluateJavascript(
+            source: 'the-source',
+            contentWorld: ContentWorld.world(name: 'the-world'),
+          ),
+          [
+            1,
+            'a',
+            {'b': true},
+          ],
+        );
+        expect(sent['evaluateJavascript'], [
+          'the-source',
+          {'name': 'the-world'},
+        ]);
+
+        // Not JSON: returned as the text itself. No content world: sent as null.
+        stubAll('inappwebview_7', {'evaluateJavascript': 'not json'});
+        expect(await c.evaluateJavascript(source: 'plain'), 'not json');
+        expect(sent['evaluateJavascript'], ['plain', null]);
+      },
+    );
+
+    test(
+      'callAsyncJavaScript sends body, arguments and content world, and decodes value and error',
+      () async {
+        stubAll('inappwebview_7', {
+          'callAsyncJavaScript': '{"value": 49, "error": "the-error"}',
+        });
+        final result = await c.callAsyncJavaScript(
+          functionBody: 'return x;',
+          arguments: {
+            'x': 49,
+            'nested': {
+              'n': [1, 2],
+            },
+          },
+          contentWorld: ContentWorld.PAGE,
+        );
+        expect(result?.value, 49);
+        expect(result?.error, 'the-error');
+        expect(sent['callAsyncJavaScript'], [
+          'return x;',
+          {
+            'x': 49,
+            'nested': {
+              'n': [1, 2],
+            },
+          },
+          {'name': 'page'},
+        ]);
+      },
+    );
+
+    test(
+      'takeScreenshot sends ScreenshotConfiguration.toMap() and returns the bytes',
+      () async {
+        stubAll('inappwebview_7', {
+          'takeScreenshot': Uint8List.fromList([9, 8, 7]),
+        });
+        final configuration = ScreenshotConfiguration(
+          rect: InAppWebViewRect(x: 1, y: 2, width: 3, height: 4),
+          snapshotWidth: 5,
+          compressFormat: CompressFormat.JPEG,
+          quality: 6,
+        );
+        expect(
+          await c.takeScreenshot(screenshotConfiguration: configuration),
+          Uint8List.fromList([9, 8, 7]),
+        );
+        expect(sent['takeScreenshot'], [configuration.toMap()]);
+
+        await c.takeScreenshot();
+        expect(sent['takeScreenshot'], [null]);
+      },
+    );
+
+    test(
+      'the other W2 methods map each answer back, each from its own method',
+      () async {
+        // isSecureContext and documentHasImages answer differently, so a crossed wire fails.
+        stubAll('inappwebview_7', {
+          'getSelectedText': 'the-selection',
+          'saveWebArchive': '/the/saved.mht',
+          'isSecureContext': true,
+          'documentHasImages': false,
+          'postVisualStateCallback': null,
+        });
+        expect(await c.getSelectedText(), 'the-selection');
+        expect(
+          await c.saveWebArchive(filePath: '/the/dir', autoname: true),
+          '/the/saved.mht',
+        );
+        expect(sent['saveWebArchive'], ['/the/dir', true]);
+        expect(await c.isSecureContext(), isTrue);
+        expect(await c.documentHasImages(), isFalse);
+        await c.postVisualStateCallback();
+        expect(sent.keys.toSet(), {
+          'getSelectedText',
+          'saveWebArchive',
+          'isSecureContext',
+          'documentHasImages',
+          'postVisualStateCallback',
+        });
+      },
+    );
+
+    test('the W2 methods send nothing on the MethodChannel', () async {
+      stubAll('inappwebview_7', {
+        'evaluateJavascript': '1',
+        'callAsyncJavaScript': '{"value": null, "error": null}',
+        'takeScreenshot': null,
+        'getContentWidth': 1,
+        'getSelectedText': null,
+        'saveWebArchive': null,
+        'postVisualStateCallback': null,
+      });
+      final channel = MethodChannel(
+        'dev.nosferatu500.inappwebview/inappwebview_7',
+      );
+      final onMethodChannel = <String>[];
+      messenger.setMockMethodCallHandler(channel, (call) async {
+        onMethodChannel.add(call.method);
+        return null;
+      });
+      addTearDown(() => messenger.setMockMethodCallHandler(channel, null));
+
+      await c.evaluateJavascript(source: '1');
+      await c.callAsyncJavaScript(functionBody: 'return 1;');
+      await c.takeScreenshot();
+      await c.getContentWidth();
+      await c.getSelectedText();
+      await c.saveWebArchive(filePath: '/d', autoname: true);
+      await c.isSecureContext();
+      await c.postVisualStateCallback();
+      await c.documentHasImages();
+      expect(onMethodChannel, isEmpty);
+      expect(sent.length, 9);
+    });
 
     test(
       'after dispose nothing is sent, and the queries answer their defaults',
@@ -213,6 +384,12 @@ void main() {
         expect(await c.canGoBack(), isFalse);
         expect(await c.isLoading(), isFalse);
         await c.reload();
+        expect(await c.evaluateJavascript(source: '1'), isNull);
+        expect(await c.callAsyncJavaScript(functionBody: 'return 1;'), isNull);
+        expect(await c.takeScreenshot(), isNull);
+        expect(await c.isSecureContext(), isFalse);
+        expect(await c.documentHasImages(), isFalse);
+        await c.postVisualStateCallback();
         expect(sent, isEmpty);
       },
     );

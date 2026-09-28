@@ -2,28 +2,23 @@ package dev.nosferatu500.inappwebview.webview
 
 // The methods still on the hand-written MethodChannel. The rest are Pigeon, on
 // `InAppWebViewHostApi` (pigeons/in_app_webview.dart); W1 (§207) moved the 25 synchronous load,
-// navigation and state methods.
+// navigation and state methods, and W2 (§210) the nine that answer from a callback.
 enum class WebViewChannelDelegateMethods {
   loadUrl,
-  evaluateJavascript,
   injectJavascriptFileFromUrl,
   injectCSSCode,
   injectCSSFileFromUrl,
-  takeScreenshot,
   setSettings,
   getSettings,
   getCopyBackForwardList,
   scrollTo,
   scrollBy,
   printCurrentPage,
-  getContentWidth,
   zoomBy,
   getZoomScale,
-  getSelectedText,
   getHitTestResult,
   pageDown,
   pageUp,
-  saveWebArchive,
   zoomIn,
   zoomOut,
   requestFocus,
@@ -38,8 +33,6 @@ enum class WebViewChannelDelegateMethods {
   removeUserScript,
   removeUserScriptsByGroupName,
   removeAllUserScripts,
-  callAsyncJavaScript,
-  isSecureContext,
   createWebMessageChannel,
   postWebMessage,
   addWebMessageListener,
@@ -52,7 +45,5 @@ enum class WebViewChannelDelegateMethods {
   restoreState,
   setAudioMuted,
   isAudioMuted,
-  postVisualStateCallback,
-  documentHasImages,
   flingScroll,
 }

@@ -50,6 +50,7 @@ import dev.nosferatu500.inappwebview.types.WebResourceRequestExt
 import dev.nosferatu500.inappwebview.types.WebResourceResponseExt
 import dev.nosferatu500.inappwebview.types.WebViewNavigationExt
 import dev.nosferatu500.inappwebview.types.WebViewPageExt
+import dev.nosferatu500.inappwebview.types.replyingOnThrow
 import dev.nosferatu500.inappwebview.webview.in_app_webview.InAppWebView
 import dev.nosferatu500.inappwebview.webview.in_app_webview.InAppWebViewSettings
 import dev.nosferatu500.inappwebview.webview.web_message.WebMessageListener
@@ -109,17 +110,6 @@ class WebViewChannelDelegate(
         result.success(true)
       }
 
-      WebViewChannelDelegateMethods.evaluateJavascript -> {
-        if (webView != null) {
-          val source = call.argument<String>("source")!!
-          val contentWorld =
-            ContentWorld.fromMap(call.argument<Map<String, Any?>>("contentWorld"))
-          webView.evaluateJavascript(source, contentWorld) { value -> result.success(value) }
-        } else {
-          result.success(null)
-        }
-      }
-
       WebViewChannelDelegateMethods.injectJavascriptFileFromUrl -> {
         webView?.injectJavascriptFileFromUrl(
           call.argument("urlFile")!!,
@@ -139,16 +129,6 @@ class WebViewChannelDelegate(
           call.argument<Map<String, Any?>>("cssLinkHtmlTagAttributes")
         )
         result.success(true)
-      }
-
-      WebViewChannelDelegateMethods.takeScreenshot -> {
-        if (webView != null) {
-          webView.takeScreenshot(
-            call.argument<Map<String, Any?>>("screenshotConfiguration"), result
-          )
-        } else {
-          result.success(null)
-        }
       }
 
       // The WebView's own pair, for every WebView, an in-app browser's included (§206). Until §206 a
@@ -203,28 +183,12 @@ class WebViewChannelDelegate(
         }
       }
 
-      WebViewChannelDelegateMethods.getContentWidth -> {
-        if (webView != null) {
-          webView.getContentWidth { contentWidth -> result.success(contentWidth) }
-        } else {
-          result.success(null)
-        }
-      }
-
       WebViewChannelDelegateMethods.zoomBy -> {
         webView?.zoomBy(call.argument<Double>("zoomFactor")!!.toFloat())
         result.success(true)
       }
 
       WebViewChannelDelegateMethods.getZoomScale -> result.success(webView?.getZoomScale())
-
-      WebViewChannelDelegateMethods.getSelectedText -> {
-        if (webView != null) {
-          webView.getSelectedText { value -> result.success(value) }
-        } else {
-          result.success(null)
-        }
-      }
 
       WebViewChannelDelegateMethods.getHitTestResult -> {
         if (webView != null) {
@@ -247,16 +211,6 @@ class WebViewChannelDelegate(
           result.success(webView.pageUp(call.argument<Boolean>("top")!!))
         } else {
           result.success(false)
-        }
-      }
-
-      WebViewChannelDelegateMethods.saveWebArchive -> {
-        if (webView != null) {
-          webView.saveWebArchive(
-            call.argument("filePath")!!, call.argument<Boolean>("autoname")!!
-          ) { value -> result.success(value) }
-        } else {
-          result.success(null)
         }
       }
 
@@ -354,28 +308,6 @@ class WebViewChannelDelegate(
       WebViewChannelDelegateMethods.removeAllUserScripts -> {
         webView?.getUserContentController()?.removeAllUserOnlyScripts()
         result.success(true)
-      }
-
-      WebViewChannelDelegateMethods.callAsyncJavaScript -> {
-        if (webView != null) {
-          val functionBody = call.argument<String>("functionBody")!!
-          val functionArguments = call.argument<Map<String, Any?>>("arguments")!!
-          val contentWorld =
-            ContentWorld.fromMap(call.argument<Map<String, Any?>>("contentWorld"))
-          webView.callAsyncJavaScript(functionBody, functionArguments, contentWorld) { value ->
-            result.success(value)
-          }
-        } else {
-          result.success(null)
-        }
-      }
-
-      WebViewChannelDelegateMethods.isSecureContext -> {
-        if (webView != null) {
-          webView.isSecureContext { value -> result.success(value) }
-        } else {
-          result.success(false)
-        }
       }
 
       WebViewChannelDelegateMethods.createWebMessageChannel -> {
@@ -505,54 +437,10 @@ class WebViewChannelDelegate(
 
       WebViewChannelDelegateMethods.isAudioMuted -> result.success(webView?.isAudioMuted() ?: false)
 
-      // The reply is deliberately deferred until the frame is on screen -- that IS the feature.
-      // `VisualStateCallback` is an abstract *class*, not an interface, so Kotlin cannot SAM-convert
-      // a lambda here and the object expression is required.
-      //
-      // Every path replies exactly once: the platform invokes onComplete at most once per request,
-      // and the null-webView branch answers immediately. The one case with no reply is a WebView
-      // destroyed before the frame lands, which the platform documents as "callback not invoked" and
-      // which the Dart doc tells callers to guard with Future.timeout.
-      WebViewChannelDelegateMethods.postVisualStateCallback -> {
-        if (webView != null) {
-          webView.postVisualStateCallback(
-            nextVisualStateRequestId++,
-            object : WebView.VisualStateCallback() {
-              override fun onComplete(requestId: Long) {
-                result.success(null)
-              }
-            }
-          )
-        } else {
-          result.success(null)
-        }
-      }
-
-      // The platform answers by *dispatching a Message* rather than returning a value or taking a
-      // listener, so the reply has to come out of a Handler. Three notes on the shape:
-      //
-      //  - `Handler(Looper, Handler.Callback)` with a lambda, not `object : Handler()`. The no-arg
-      //    Handler constructor is deprecated, and an anonymous Handler subclass is what Android
-      //    lint's HandlerLeak flags. `Handler.Callback` is an interface, so SAM conversion works
-      //    here -- unlike VisualStateCallback in postVisualStateCallback above, which is an
-      //    abstract class.
-      //  - main looper, because every channel call arrives on it and WebView is thread-affine.
-      //  - the documented contract is arg1 == 1 for "references images", 0 for "does not".
-      WebViewChannelDelegateMethods.documentHasImages -> {
-        if (webView != null) {
-          val handler = Handler(Looper.getMainLooper()) { msg ->
-            result.success(msg.arg1 == 1)
-            true
-          }
-          webView.documentHasImages(Message.obtain(handler))
-        } else {
-          result.success(false)
-        }
-      }
-
-      // Fire-and-forget, unlike its two neighbours above: the platform starts a fling and returns
-      // immediately, so there is nothing to await. Where the scroll ends is decided by the
-      // platform's deceleration, which is why this reports no position back.
+      // Fire-and-forget, unlike `postVisualStateCallback` and `documentHasImages` (Pigeon since
+      // §210): the platform starts a fling and returns immediately, so there is nothing to await.
+      // Where the scroll ends is decided by the platform's deceleration, which is why this reports
+      // no position back.
       WebViewChannelDelegateMethods.flingScroll -> {
         webView?.flingScroll(call.argument("velocityX")!!, call.argument("velocityY")!!)
         result.success(true)
@@ -1357,6 +1245,168 @@ class WebViewChannelDelegate(
   override fun prerenderUrl(url: String): Boolean = webView?.prerenderUrl(url) == true
 
   override fun getContentHeight(): Long? = webView?.contentHeight?.toLong()
+
+  // --- InAppWebViewHostApi, W2 (§210): the methods that answer from a callback -------------------
+  //
+  // Every one is `@async`, whose generated handler has no try/catch, so each body runs inside
+  // `replyingOnThrow`: a synchronous throw becomes an error reply instead of a dead channel. Inbound
+  // maps go through `Util.normalizeCodecInts`, because Pigeon sends nested ints as `Long` (§197).
+
+  override fun evaluateJavascript(
+    source: String,
+    contentWorld: Map<String?, Any?>?,
+    callback: (Result<String?>) -> Unit
+  ) {
+    replyingOnThrow("evaluateJavascript", callback) { reply ->
+      val webView = this.webView
+      if (webView != null) {
+        webView.evaluateJavascript(source, contentWorldOf(contentWorld)) { value ->
+          reply(Result.success(value))
+        }
+      } else {
+        reply(Result.success(null))
+      }
+    }
+  }
+
+  override fun callAsyncJavaScript(
+    functionBody: String,
+    arguments: Map<String?, Any?>,
+    contentWorld: Map<String?, Any?>?,
+    callback: (Result<String?>) -> Unit
+  ) {
+    replyingOnThrow("callAsyncJavaScript", callback) { reply ->
+      val webView = this.webView
+      if (webView != null) {
+        webView.callAsyncJavaScript(
+          functionBody,
+          Util.normalizeCodecInts(arguments) as Map<String, Any?>,
+          contentWorldOf(contentWorld)
+        ) { value -> reply(Result.success(value)) }
+      } else {
+        reply(Result.success(null))
+      }
+    }
+  }
+
+  override fun takeScreenshot(
+    screenshotConfiguration: Map<String?, Any?>?,
+    callback: (Result<ByteArray?>) -> Unit
+  ) {
+    replyingOnThrow("takeScreenshot", callback) { reply ->
+      val webView = this.webView
+      if (webView != null) {
+        // `quality` is read `as Int` inside a posted runnable, where a `Long` would crash the app.
+        webView.takeScreenshot(
+          Util.normalizeCodecInts(screenshotConfiguration) as Map<String, Any?>?
+        ) { bytes -> reply(Result.success(bytes)) }
+      } else {
+        reply(Result.success(null))
+      }
+    }
+  }
+
+  override fun getContentWidth(callback: (Result<Long?>) -> Unit) {
+    replyingOnThrow("getContentWidth", callback) { reply ->
+      val webView = this.webView
+      if (webView != null) {
+        webView.getContentWidth { contentWidth -> reply(Result.success(contentWidth?.toLong())) }
+      } else {
+        reply(Result.success(null))
+      }
+    }
+  }
+
+  override fun getSelectedText(callback: (Result<String?>) -> Unit) {
+    replyingOnThrow("getSelectedText", callback) { reply ->
+      val webView = this.webView
+      if (webView != null) {
+        webView.getSelectedText { value -> reply(Result.success(value)) }
+      } else {
+        reply(Result.success(null))
+      }
+    }
+  }
+
+  override fun saveWebArchive(
+    filePath: String,
+    autoname: Boolean,
+    callback: (Result<String?>) -> Unit
+  ) {
+    replyingOnThrow("saveWebArchive", callback) { reply ->
+      val webView = this.webView
+      if (webView != null) {
+        webView.saveWebArchive(filePath, autoname) { value -> reply(Result.success(value)) }
+      } else {
+        reply(Result.success(null))
+      }
+    }
+  }
+
+  override fun isSecureContext(callback: (Result<Boolean>) -> Unit) {
+    replyingOnThrow("isSecureContext", callback) { reply ->
+      val webView = this.webView
+      if (webView != null) {
+        webView.isSecureContext { value -> reply(Result.success(value)) }
+      } else {
+        reply(Result.success(false))
+      }
+    }
+  }
+
+  // The reply is deliberately deferred until the frame is on screen -- that IS the feature.
+  // `VisualStateCallback` is an abstract *class*, not an interface, so Kotlin cannot SAM-convert
+  // a lambda here and the object expression is required.
+  //
+  // Every path replies exactly once: the platform invokes onComplete at most once per request,
+  // and the null-webView branch answers immediately. The one case with no reply is a WebView
+  // destroyed before the frame lands, which the platform documents as "callback not invoked" and
+  // which the Dart doc tells callers to guard with Future.timeout.
+  override fun postVisualStateCallback(callback: (Result<Unit>) -> Unit) {
+    replyingOnThrow("postVisualStateCallback", callback) { reply ->
+      val webView = this.webView
+      if (webView != null) {
+        webView.postVisualStateCallback(
+          nextVisualStateRequestId++,
+          object : WebView.VisualStateCallback() {
+            override fun onComplete(requestId: Long) {
+              reply(Result.success(Unit))
+            }
+          }
+        )
+      } else {
+        reply(Result.success(Unit))
+      }
+    }
+  }
+
+  // The platform answers by *dispatching a Message* rather than returning a value or taking a
+  // listener, so the reply has to come out of a Handler. Three notes on the shape:
+  //
+  //  - `Handler(Looper, Handler.Callback)` with a lambda, not `object : Handler()`. The no-arg
+  //    Handler constructor is deprecated, and an anonymous Handler subclass is what Android
+  //    lint's HandlerLeak flags. `Handler.Callback` is an interface, so SAM conversion works
+  //    here -- unlike VisualStateCallback in postVisualStateCallback above, which is an
+  //    abstract class.
+  //  - main looper, because every channel call arrives on it and WebView is thread-affine.
+  //  - the documented contract is arg1 == 1 for "references images", 0 for "does not".
+  override fun documentHasImages(callback: (Result<Boolean>) -> Unit) {
+    replyingOnThrow("documentHasImages", callback) { reply ->
+      val webView = this.webView
+      if (webView != null) {
+        val handler = Handler(Looper.getMainLooper()) { msg ->
+          reply(Result.success(msg.arg1 == 1))
+          true
+        }
+        webView.documentHasImages(Message.obtain(handler))
+      } else {
+        reply(Result.success(false))
+      }
+    }
+  }
+
+  private fun contentWorldOf(map: Map<String?, Any?>?): ContentWorld? =
+    ContentWorld.fromMap(Util.normalizeCodecInts(map) as Map<String, Any?>?)
 
   override fun dispose() {
     messenger?.let { InAppWebViewHostApi.setUp(it, null, suffix) }

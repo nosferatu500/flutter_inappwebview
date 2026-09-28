@@ -1923,10 +1923,10 @@ class AndroidInAppWebViewController extends PlatformInAppWebViewController
     required String source,
     ContentWorld? contentWorld,
   }) async {
-    Map<String, dynamic> args = <String, dynamic>{};
-    args.putIfAbsent('source', () => source);
-    args.putIfAbsent('contentWorld', () => contentWorld?.toMap());
-    var data = await channel?.invokeMethod('evaluateJavascript', args);
+    dynamic data = await _hostApi?.evaluateJavascript(
+      source,
+      contentWorld?.toMap(),
+    );
     if (data != null) {
       try {
         // try to json decode the data coming from JavaScript
@@ -2018,12 +2018,7 @@ class AndroidInAppWebViewController extends PlatformInAppWebViewController
   Future<Uint8List?> takeScreenshot({
     ScreenshotConfiguration? screenshotConfiguration,
   }) async {
-    Map<String, dynamic> args = <String, dynamic>{};
-    args.putIfAbsent(
-      'screenshotConfiguration',
-      () => screenshotConfiguration?.toMap(),
-    );
-    return await channel?.invokeMethod<Uint8List?>('takeScreenshot', args);
+    return await _hostApi?.takeScreenshot(screenshotConfiguration?.toMap());
   }
 
   @override
@@ -2131,8 +2126,7 @@ class AndroidInAppWebViewController extends PlatformInAppWebViewController
 
   @override
   Future<int?> getContentWidth() async {
-    Map<String, dynamic> args = <String, dynamic>{};
-    var height = await channel?.invokeMethod('getContentWidth', args);
+    int? height = await _hostApi?.getContentWidth();
     if (height == null || height == 0) {
       // try to use javascript
       var scrollHeight = await evaluateJavascript(
@@ -2172,8 +2166,7 @@ class AndroidInAppWebViewController extends PlatformInAppWebViewController
 
   @override
   Future<String?> getSelectedText() async {
-    Map<String, dynamic> args = <String, dynamic>{};
-    return await channel?.invokeMethod<String?>('getSelectedText', args);
+    return await _hostApi?.getSelectedText();
   }
 
   @override
@@ -2497,15 +2490,15 @@ class AndroidInAppWebViewController extends PlatformInAppWebViewController
     Map<String, dynamic> arguments = const <String, dynamic>{},
     ContentWorld? contentWorld,
   }) async {
-    Map<String, dynamic> args = <String, dynamic>{};
-    args.putIfAbsent('functionBody', () => functionBody);
-    args.putIfAbsent('arguments', () => arguments);
-    args.putIfAbsent('contentWorld', () => contentWorld?.toMap());
-    var data = await channel?.invokeMethod('callAsyncJavaScript', args);
-    if (data == null) {
+    final String? answer = await _hostApi?.callAsyncJavaScript(
+      functionBody,
+      arguments,
+      contentWorld?.toMap(),
+    );
+    if (answer == null) {
       return null;
     }
-    data = json.decode(data);
+    final data = json.decode(answer);
     return CallAsyncJavaScriptResult(
       value: data["value"],
       error: data["error"],
@@ -2524,16 +2517,12 @@ class AndroidInAppWebViewController extends PlatformInAppWebViewController
       );
     }
 
-    Map<String, dynamic> args = <String, dynamic>{};
-    args.putIfAbsent("filePath", () => filePath);
-    args.putIfAbsent("autoname", () => autoname);
-    return await channel?.invokeMethod<String?>('saveWebArchive', args);
+    return await _hostApi?.saveWebArchive(filePath, autoname);
   }
 
   @override
   Future<bool> isSecureContext() async {
-    Map<String, dynamic> args = <String, dynamic>{};
-    return await channel?.invokeMethod<bool>('isSecureContext', args) ?? false;
+    return await _hostApi?.isSecureContext() ?? false;
   }
 
   @override
@@ -2634,17 +2623,14 @@ class AndroidInAppWebViewController extends PlatformInAppWebViewController
 
   @override
   Future<bool> documentHasImages() async {
-    Map<String, dynamic> args = <String, dynamic>{};
-    return await channel?.invokeMethod<bool>('documentHasImages', args) ??
-        false;
+    return await _hostApi?.documentHasImages() ?? false;
   }
 
   @override
   Future<void> postVisualStateCallback() async {
-    Map<String, dynamic> args = <String, dynamic>{};
     // The native requestId is not exposed: this Future is the correlation, and the Kotlin side
     // supplies an id of its own purely so a logcat trace can tell requests apart.
-    return await channel?.invokeMethod('postVisualStateCallback', args);
+    await _hostApi?.postVisualStateCallback();
   }
 
   @override

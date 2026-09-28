@@ -480,6 +480,19 @@ for, and five others have a native *value* that differs from their name.
 
 ### Internal
 
+- **`WebViewChannelDelegate` W2: the nine methods that answer from a callback move to Pigeon.**
+  `evaluateJavascript`, `callAsyncJavaScript`, `takeScreenshot`, `getContentWidth`,
+  `getSelectedText`, `saveWebArchive`, `isSecureContext`, `postVisualStateCallback` and
+  `documentHasImages` join `InAppWebViewHostApi` as `@async` methods. Each runs inside
+  `replyingOnThrow`, so a synchronous throw becomes an error reply (code: the method's name)
+  instead of a dead channel. No public API change; 42 methods are left on the MethodChannel.
+  - The three maps (content world, `callAsyncJavaScript`'s `arguments`, the screenshot
+    configuration) go through `Util.normalizeCodecInts`. Without it, a configured screenshot
+    crashes the app: `quality` is read `as Int` in a posted runnable (measured, a FATAL
+    `ClassCastException`).
+  - `InAppWebView.takeScreenshot` takes a callback instead of a `MethodChannel.Result`.
+  - `get_meta_theme_color_test` now answers the Pigeon `evaluateJavascript`, and asserts that
+    nothing at all reaches the MethodChannel.
 - **`takeScreenshot`'s configuration is asserted field by field on a device, before its
   migration.** The existing test accepted any screenshot, so none of `rect`, `snapshotWidth`,
   `compressFormat` or `quality` was checked. `quality` is the int that Pigeon will deliver as

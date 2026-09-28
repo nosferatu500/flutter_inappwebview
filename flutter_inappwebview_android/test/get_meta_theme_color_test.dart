@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:flutter/services.dart';
 import 'package:flutter_inappwebview_android/flutter_inappwebview_android.dart';
+import 'package:flutter_inappwebview_android/src/pigeons/in_app_webview.g.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 /// Pins `getMetaThemeColor` to its only working path on Android: reading the `theme-color` meta
@@ -11,34 +12,49 @@ import 'package:flutter_test/flutter_test.dart';
 /// the request always failed, the Dart side swallowed the error and fell through to the
 /// JavaScript. Measured on a device before the send was removed (§190): breaking the JavaScript
 /// fallback made the integration test return null, so the channel never supplied the value.
+///
+/// Since §210 the JavaScript goes through the Pigeon `evaluateJavascript`, so the MethodChannel
+/// must see nothing at all: any message there would be a `getMetaThemeColor` again.
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
+
+  final messenger =
+      TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger;
 
   // The per-WebView channel name is built from the controller id.
   const channel = MethodChannel(
     'dev.nosferatu500.inappwebview/inappwebview_11',
   );
+  const evaluateJavascript =
+      'dev.flutter.pigeon.flutter_inappwebview_android.InAppWebViewHostApi.'
+      'evaluateJavascript.inappwebview_11';
+  const codec = InAppWebViewHostApi.pigeonChannelCodec;
 
   late AndroidInAppWebViewController controller;
   final List<MethodCall> calls = <MethodCall>[];
-  Object? reply;
+  final List<Object?> evaluated = <Object?>[];
+  String? reply;
 
   setUp(() {
     calls.clear();
+    evaluated.clear();
     reply = null;
     controller = AndroidInAppWebViewController(
       AndroidInAppWebViewControllerCreationParams(id: 11),
     );
-    TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
-        .setMockMethodCallHandler(channel, (MethodCall call) async {
-          calls.add(call);
-          return reply;
-        });
+    messenger.setMockMethodCallHandler(channel, (MethodCall call) async {
+      calls.add(call);
+      return null;
+    });
+    messenger.setMockMessageHandler(evaluateJavascript, (message) async {
+      evaluated.add((codec.decodeMessage(message) as List<Object?>)[0]);
+      return codec.encodeMessage(<Object?>[reply]);
+    });
   });
 
   tearDown(() {
-    TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
-        .setMockMethodCallHandler(channel, null);
+    messenger.setMockMethodCallHandler(channel, null);
+    messenger.setMockMessageHandler(evaluateJavascript, null);
     controller.dispose();
   });
 
@@ -46,7 +62,7 @@ void main() {
   String metaTags(List<Map<String, Object?>> tags) => jsonEncode(tags);
 
   test(
-    'sends only evaluateJavascript, never a getMetaThemeColor message',
+    'asks only evaluateJavascript, and never sends a getMetaThemeColor message',
     () async {
       reply = metaTags([
         {'name': 'theme-color', 'content': '#0a8f3c', 'attrs': []},
@@ -54,7 +70,8 @@ void main() {
 
       await controller.getMetaThemeColor();
 
-      expect(calls.map((c) => c.method), ['evaluateJavascript']);
+      expect(evaluated, hasLength(1));
+      expect(calls, isEmpty);
     },
   );
 

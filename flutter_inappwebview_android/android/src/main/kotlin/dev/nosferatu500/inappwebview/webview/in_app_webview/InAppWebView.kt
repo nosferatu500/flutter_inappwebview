@@ -850,7 +850,7 @@ class InAppWebView : WebView, InAppWebViewInterface, Disposable {
 
   override fun takeScreenshot(
     screenshotConfiguration: Map<String, Any?>?,
-    result: MethodChannel.Result
+    callback: (ByteArray?) -> Unit
   ) {
     val pixelDensity = Util.getPixelDensity(context)
 
@@ -921,10 +921,10 @@ class InAppWebView : WebView, InAppWebViewInterface, Disposable {
           Log.e(LOG_TAG, "", e)
         }
         screenshotBitmap.recycle()
-        result.success(byteArrayOutputStream.toByteArray())
+        callback(byteArrayOutputStream.toByteArray())
       } catch (e: IllegalArgumentException) {
         Log.e(LOG_TAG, "", e)
-        result.success(null)
+        callback(null)
       }
     }
   }

@@ -57,7 +57,8 @@ class _PigeonCodec extends StandardMessageCodec {
 
 /// Implemented by `WebViewChannelDelegate`, registered for as long as the delegate lives.
 ///
-/// W1 (§207): the synchronous load, navigation and state methods.
+/// W1 (§207): the synchronous load, navigation and state methods. W2 (§210): the nine methods that
+/// answer from a callback.
 class InAppWebViewHostApi {
   /// Constructor for [InAppWebViewHostApi]. The [binaryMessenger] named argument is
   /// available for dependency injection. If it is left null, the default
@@ -568,5 +569,199 @@ class InAppWebViewHostApi {
       isNullValid: true,
     );
     return pigeonVar_replyValue as int?;
+  }
+
+  /// The script's result as WebView reports it: JSON text, which Dart decodes. A non-page
+  /// `contentWorld` answers through the page's bridge.
+  Future<String?> evaluateJavascript(
+    String source,
+    Map<String?, Object?>? contentWorld,
+  ) async {
+    final pigeonVar_channelName =
+        'dev.flutter.pigeon.flutter_inappwebview_android.InAppWebViewHostApi.evaluateJavascript$pigeonVar_messageChannelSuffix';
+    final pigeonVar_channel = BasicMessageChannel<Object?>(
+      pigeonVar_channelName,
+      pigeonChannelCodec,
+      binaryMessenger: pigeonVar_binaryMessenger,
+    );
+    final Future<Object?> pigeonVar_sendFuture = pigeonVar_channel.send(
+      <Object?>[source, contentWorld],
+    );
+    final pigeonVar_replyList = await pigeonVar_sendFuture as List<Object?>?;
+
+    final Object? pigeonVar_replyValue = _extractReplyValueOrThrow(
+      pigeonVar_replyList,
+      pigeonVar_channelName,
+      isNullValid: true,
+    );
+    return pigeonVar_replyValue as String?;
+  }
+
+  /// The same JSON text as before: `{"value": …, "error": …}`, which Dart decodes.
+  Future<String?> callAsyncJavaScript(
+    String functionBody,
+    Map<String?, Object?> arguments,
+    Map<String?, Object?>? contentWorld,
+  ) async {
+    final pigeonVar_channelName =
+        'dev.flutter.pigeon.flutter_inappwebview_android.InAppWebViewHostApi.callAsyncJavaScript$pigeonVar_messageChannelSuffix';
+    final pigeonVar_channel = BasicMessageChannel<Object?>(
+      pigeonVar_channelName,
+      pigeonChannelCodec,
+      binaryMessenger: pigeonVar_binaryMessenger,
+    );
+    final Future<Object?> pigeonVar_sendFuture = pigeonVar_channel.send(
+      <Object?>[functionBody, arguments, contentWorld],
+    );
+    final pigeonVar_replyList = await pigeonVar_sendFuture as List<Object?>?;
+
+    final Object? pigeonVar_replyValue = _extractReplyValueOrThrow(
+      pigeonVar_replyList,
+      pigeonVar_channelName,
+      isNullValid: true,
+    );
+    return pigeonVar_replyValue as String?;
+  }
+
+  /// `screenshotConfiguration` is `ScreenshotConfiguration.toMap()`. Null when the capture throws
+  /// `IllegalArgumentException` (for example a 0 × 0 WebView).
+  Future<Uint8List?> takeScreenshot(
+    Map<String?, Object?>? screenshotConfiguration,
+  ) async {
+    final pigeonVar_channelName =
+        'dev.flutter.pigeon.flutter_inappwebview_android.InAppWebViewHostApi.takeScreenshot$pigeonVar_messageChannelSuffix';
+    final pigeonVar_channel = BasicMessageChannel<Object?>(
+      pigeonVar_channelName,
+      pigeonChannelCodec,
+      binaryMessenger: pigeonVar_binaryMessenger,
+    );
+    final Future<Object?> pigeonVar_sendFuture = pigeonVar_channel.send(
+      <Object?>[screenshotConfiguration],
+    );
+    final pigeonVar_replyList = await pigeonVar_sendFuture as List<Object?>?;
+
+    final Object? pigeonVar_replyValue = _extractReplyValueOrThrow(
+      pigeonVar_replyList,
+      pigeonVar_channelName,
+      isNullValid: true,
+    );
+    return pigeonVar_replyValue as Uint8List?;
+  }
+
+  Future<int?> getContentWidth() async {
+    final pigeonVar_channelName =
+        'dev.flutter.pigeon.flutter_inappwebview_android.InAppWebViewHostApi.getContentWidth$pigeonVar_messageChannelSuffix';
+    final pigeonVar_channel = BasicMessageChannel<Object?>(
+      pigeonVar_channelName,
+      pigeonChannelCodec,
+      binaryMessenger: pigeonVar_binaryMessenger,
+    );
+    final Future<Object?> pigeonVar_sendFuture = pigeonVar_channel.send(null);
+    final pigeonVar_replyList = await pigeonVar_sendFuture as List<Object?>?;
+
+    final Object? pigeonVar_replyValue = _extractReplyValueOrThrow(
+      pigeonVar_replyList,
+      pigeonVar_channelName,
+      isNullValid: true,
+    );
+    return pigeonVar_replyValue as int?;
+  }
+
+  Future<String?> getSelectedText() async {
+    final pigeonVar_channelName =
+        'dev.flutter.pigeon.flutter_inappwebview_android.InAppWebViewHostApi.getSelectedText$pigeonVar_messageChannelSuffix';
+    final pigeonVar_channel = BasicMessageChannel<Object?>(
+      pigeonVar_channelName,
+      pigeonChannelCodec,
+      binaryMessenger: pigeonVar_binaryMessenger,
+    );
+    final Future<Object?> pigeonVar_sendFuture = pigeonVar_channel.send(null);
+    final pigeonVar_replyList = await pigeonVar_sendFuture as List<Object?>?;
+
+    final Object? pigeonVar_replyValue = _extractReplyValueOrThrow(
+      pigeonVar_replyList,
+      pigeonVar_channelName,
+      isNullValid: true,
+    );
+    return pigeonVar_replyValue as String?;
+  }
+
+  /// The saved file's path, or null when WebView couldn't save.
+  Future<String?> saveWebArchive(String filePath, bool autoname) async {
+    final pigeonVar_channelName =
+        'dev.flutter.pigeon.flutter_inappwebview_android.InAppWebViewHostApi.saveWebArchive$pigeonVar_messageChannelSuffix';
+    final pigeonVar_channel = BasicMessageChannel<Object?>(
+      pigeonVar_channelName,
+      pigeonChannelCodec,
+      binaryMessenger: pigeonVar_binaryMessenger,
+    );
+    final Future<Object?> pigeonVar_sendFuture = pigeonVar_channel.send(
+      <Object?>[filePath, autoname],
+    );
+    final pigeonVar_replyList = await pigeonVar_sendFuture as List<Object?>?;
+
+    final Object? pigeonVar_replyValue = _extractReplyValueOrThrow(
+      pigeonVar_replyList,
+      pigeonVar_channelName,
+      isNullValid: true,
+    );
+    return pigeonVar_replyValue as String?;
+  }
+
+  Future<bool> isSecureContext() async {
+    final pigeonVar_channelName =
+        'dev.flutter.pigeon.flutter_inappwebview_android.InAppWebViewHostApi.isSecureContext$pigeonVar_messageChannelSuffix';
+    final pigeonVar_channel = BasicMessageChannel<Object?>(
+      pigeonVar_channelName,
+      pigeonChannelCodec,
+      binaryMessenger: pigeonVar_binaryMessenger,
+    );
+    final Future<Object?> pigeonVar_sendFuture = pigeonVar_channel.send(null);
+    final pigeonVar_replyList = await pigeonVar_sendFuture as List<Object?>?;
+
+    final Object? pigeonVar_replyValue = _extractReplyValueOrThrow(
+      pigeonVar_replyList,
+      pigeonVar_channelName,
+      isNullValid: false,
+    );
+    return pigeonVar_replyValue! as bool;
+  }
+
+  /// Answers once the next frame is on screen: that is the feature.
+  Future<void> postVisualStateCallback() async {
+    final pigeonVar_channelName =
+        'dev.flutter.pigeon.flutter_inappwebview_android.InAppWebViewHostApi.postVisualStateCallback$pigeonVar_messageChannelSuffix';
+    final pigeonVar_channel = BasicMessageChannel<Object?>(
+      pigeonVar_channelName,
+      pigeonChannelCodec,
+      binaryMessenger: pigeonVar_binaryMessenger,
+    );
+    final Future<Object?> pigeonVar_sendFuture = pigeonVar_channel.send(null);
+    final pigeonVar_replyList = await pigeonVar_sendFuture as List<Object?>?;
+
+    _extractReplyValueOrThrow(
+      pigeonVar_replyList,
+      pigeonVar_channelName,
+      isNullValid: true,
+    );
+  }
+
+  Future<bool> documentHasImages() async {
+    final pigeonVar_channelName =
+        'dev.flutter.pigeon.flutter_inappwebview_android.InAppWebViewHostApi.documentHasImages$pigeonVar_messageChannelSuffix';
+    final pigeonVar_channel = BasicMessageChannel<Object?>(
+      pigeonVar_channelName,
+      pigeonChannelCodec,
+      binaryMessenger: pigeonVar_binaryMessenger,
+    );
+    final Future<Object?> pigeonVar_sendFuture = pigeonVar_channel.send(null);
+    final pigeonVar_replyList = await pigeonVar_sendFuture as List<Object?>?;
+
+    final Object? pigeonVar_replyValue = _extractReplyValueOrThrow(
+      pigeonVar_replyList,
+      pigeonVar_channelName,
+      isNullValid: false,
+    );
+    return pigeonVar_replyValue! as bool;
   }
 }

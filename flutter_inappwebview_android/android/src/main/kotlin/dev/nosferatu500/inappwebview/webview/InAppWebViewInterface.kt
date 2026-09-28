@@ -16,7 +16,6 @@ import dev.nosferatu500.inappwebview.types.UserContentController
 import dev.nosferatu500.inappwebview.webview.in_app_webview.InAppWebViewSettings
 import dev.nosferatu500.inappwebview.webview.web_message.WebMessageChannel
 import dev.nosferatu500.inappwebview.webview.web_message.WebMessageListener
-import io.flutter.plugin.common.MethodChannel
 import java.io.IOException
 
 // Declared with getX()/setX() functions rather than Kotlin properties on purpose: the sole
@@ -60,7 +59,7 @@ interface InAppWebViewInterface {
   fun canGoBackOrForward(steps: Int): Boolean
   fun stopLoading()
   fun isLoading(): Boolean
-  fun takeScreenshot(screenshotConfiguration: Map<String, Any?>?, result: MethodChannel.Result)
+  fun takeScreenshot(screenshotConfiguration: Map<String, Any?>?, callback: (ByteArray?) -> Unit)
   fun setSettings(newSettings: InAppWebViewSettings, newSettingsMap: HashMap<String, Any?>)
   fun getCustomSettings(): InAppWebViewSettings
   fun getCustomSettingsMap(): Map<String, Any?>?
