@@ -7,6 +7,8 @@ import 'package:flutter_inappwebview_android/flutter_inappwebview_android.dart';
 // webview exactly the way an app does at runtime.
 import 'package:flutter_inappwebview_android/src/in_app_webview/headless_in_app_webview.dart';
 import 'package:flutter_inappwebview_android/src/pigeons/headless_webview.g.dart';
+import 'package:flutter_inappwebview_platform_interface/flutter_inappwebview_platform_interface.dart'
+    show PullToRefreshSettings;
 import 'package:flutter_test/flutter_test.dart';
 
 /// Runtime coverage for the per-instance headless-webview channel (§180), the
@@ -34,17 +36,19 @@ import 'package:flutter_test/flutter_test.dart';
 ///
 /// Measured, not reasoned: the swap mutant failed `set and get custom size`
 /// with `Size(800.0, 600.0)` and the `-1` test with `845.33` against a
-/// `412.43` bound. **Accident 1 disappears the moment the manager migrates and
-/// `initialSize` becomes a [Size2DData] too** — then the explicit-size test
-/// round-trips cleanly and stops catching a swap. These tests do not depend on
-/// which channel carries `initialSize`, so they keep holding after that commit.
+/// `412.43` bound. **Accident 1 disappeared in §203**, when the manager
+/// migrated and `initialSize` became a [Size2DData] through the same Kotlin
+/// converters. These tests do not depend on which channel carries
+/// `initialSize`, so they keep holding; `run sends initialSize ...` below pins
+/// the new one.
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
 
   const codec = HeadlessWebViewHostApi.pigeonChannelCodec;
-  const managerChannel = MethodChannel(
-    'dev.nosferatu500.inappwebview/headless_inappwebview',
-  );
+  // The manager's `run`, Pigeon since §203. Answering it is what lets `run()`
+  // complete.
+  const managerRun =
+      'dev.flutter.pigeon.flutter_inappwebview_android.HeadlessInAppWebViewManagerHostApi.run';
 
   late AndroidHeadlessInAppWebView headlessWebView;
   late String suffix;
@@ -72,14 +76,20 @@ void main() {
   setUp(() async {
     sent.clear();
     received.clear();
-    // The manager channel still carries `run` and is not part of this
-    // migration; stubbing it is what lets `run()` complete and wire up the
-    // Pigeon APIs.
+    // Stubbing the manager's `run` is what lets `run()` complete and wire up
+    // the per-instance Pigeon APIs. What it was sent is kept for the `run`
+    // group below.
     TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
-        .setMockMethodCallHandler(managerChannel, (call) async => null);
+        .setMockMessageHandler(managerRun, (message) async {
+          sent['run'] = codec.decodeMessage(message);
+          return codec.encodeMessage(<Object?>[true]);
+        });
 
     headlessWebView = AndroidHeadlessInAppWebView(
       AndroidHeadlessInAppWebViewCreationParams(
+        initialSize: const Size(600, 800),
+        initialFile: 'assets/page.html',
+        windowId: 7,
         onWebViewCreated: (controller) {
           received['controller'] = controller;
         },
@@ -95,7 +105,30 @@ void main() {
           .setMockMessageHandler(hostChannel(m), null);
     }
     TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
-        .setMockMethodCallHandler(managerChannel, null);
+        .setMockMessageHandler(managerRun, null);
+  });
+
+  group('the manager\'s run (§203)', () {
+    test('sends the id, the creation map, and initialSize typed', () {
+      final args = sent['run'] as List<Object?>;
+      expect(args[0], headlessWebView.id);
+
+      final params = args[1] as Map<Object?, Object?>;
+      expect(params['initialFile'], 'assets/page.html');
+      expect(params['windowId'], 7);
+      expect(params['initialSettings'], isA<Map<Object?, Object?>>());
+      expect(
+        params['pullToRefreshSettings'],
+        PullToRefreshSettings(enabled: false).toMap(),
+      );
+      // It left the map: only the typed argument carries it now.
+      expect(params.containsKey('initialSize'), isFalse);
+
+      // Asymmetric, as setSize's test is: `Size(600, 600)` would pass a swap.
+      final size = args[2] as Size2DData;
+      expect(size.width, 600);
+      expect(size.height, 800);
+    });
   });
 
   group('Dart -> Kotlin (HostApi)', () {

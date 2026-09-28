@@ -468,6 +468,22 @@ for, and five others have a native *value* that differs from their name.
 
 ### Internal
 
+- **The `headless_inappwebview` manager channel is Pigeon-generated**, the twenty-first migrated
+  and the third under decision B: `run` over `HeadlessInAppWebViewManagerHostApi`, added to the
+  existing `pigeons/headless_webview.dart` so it reuses `Size2DData`, which leaves twenty schemas.
+  No public API change.
+  - `run(id, params, initialSize)`: the creation `params` map stays whole, because
+    `FlutterWebView` reads it and also builds every `InAppWebView` widget. It goes through
+    `Util.normalizeCodecInts`. Without that, every `run` fails with a `ClassCastException`
+    (measured).
+  - `initialSize` is the one key only the headless path read, so it left the map and is typed
+    now. `HeadlessInAppWebView.prepare` takes it directly. Its unreachable `-1 × -1` fallback is
+    gone, because Dart has always sent a size.
+  - 🚨 **One device check was lost, and it's measured.** `initialSize` used to cross the
+    MethodChannel unconverted, which let `set and get custom size` catch a width/height swap in the
+    Kotlin size converters. Now it round-trips through those same converters, so the swap passes
+    that test. `a -1 size is reported back in logical pixels` still catches it (845 against a 412
+    bound), and the boundary test pins `initialSize` asymmetrically on the Dart side.
 - **Everything `HeadlessInAppWebViewManager.run` sends now has a device test where one is
   possible, ahead of its migration.** Five new `headless_in_app_webview` tests, so the group goes
   from 7 to 12. `run`'s params map goes straight into `FlutterWebView`, the same class that builds

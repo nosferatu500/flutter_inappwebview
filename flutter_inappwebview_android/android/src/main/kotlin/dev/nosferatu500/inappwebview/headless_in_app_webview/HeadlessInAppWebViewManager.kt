@@ -22,18 +22,24 @@
 package dev.nosferatu500.inappwebview.headless_in_app_webview
 
 import dev.nosferatu500.inappwebview.InAppWebViewFlutterPlugin
-import dev.nosferatu500.inappwebview.types.ChannelDelegateImpl
+import dev.nosferatu500.inappwebview.Util
+import dev.nosferatu500.inappwebview.pigeons.HeadlessInAppWebViewManagerHostApi
+import dev.nosferatu500.inappwebview.pigeons.Size2DData
+import dev.nosferatu500.inappwebview.types.Size2D
 import dev.nosferatu500.inappwebview.webview.in_app_webview.FlutterWebView
-import io.flutter.plugin.common.MethodCall
-import io.flutter.plugin.common.MethodChannel
+import io.flutter.plugin.common.BinaryMessenger
 
-// The unchecked cast below is the Flutter codec boundary: StandardMessageCodec decodes to
-// Map<String,Object>/List<Object>, so every read of a structured value is an unverifiable
-// cast. A wrong shape throws ClassCastException at the cast site, which is the intended
-// failure mode.
-@Suppress("UNCHECKED_CAST")
+/**
+ * Runs headless webviews, over Pigeon (§203). Implements [HeadlessInAppWebViewManagerHostApi]
+ * directly, as `InAppBrowserManager` (§197) and `ChromeSafariBrowserManager` (§201) do.
+ *
+ * `run`'s params map goes whole into [FlutterWebView], the class that also builds every
+ * `InAppWebView` widget, so its readers stay the single definition (§194, decision B). It passes
+ * through [Util.normalizeCodecInts] first, because Pigeon delivers its nested ints as `Long` where
+ * those readers cast `as Int` (§197).
+ */
 class HeadlessInAppWebViewManager(plugin: InAppWebViewFlutterPlugin) :
-  ChannelDelegateImpl(MethodChannel(plugin.messenger, METHOD_CHANNEL_NAME)) {
+  HeadlessInAppWebViewManagerHostApi {
 
   // Values go null rather than being removed: HeadlessInAppWebView.dispose() nulls its own slot.
   @JvmField
@@ -42,33 +48,37 @@ class HeadlessInAppWebViewManager(plugin: InAppWebViewFlutterPlugin) :
   @JvmField
   var plugin: InAppWebViewFlutterPlugin? = plugin
 
-  override fun onMethodCall(call: MethodCall, result: MethodChannel.Result) {
-    val id = call.argument<String>("id")
+  private var messenger: BinaryMessenger? = plugin.messenger
 
-    when (call.method) {
-      "run" -> {
-        run(id!!, call.argument<HashMap<String, Any?>>("params")!!)
-        result.success(true)
-      }
-
-      else -> result.notImplemented()
-    }
+  init {
+    HeadlessInAppWebViewManagerHostApi.setUp(plugin.messenger, this)
   }
 
-  fun run(id: String, params: HashMap<String, Any?>) {
+  // `true` even when the plugin has already detached and nothing ran, as the hand-written channel
+  // answered.
+  override fun run(id: String, params: Map<String?, Any?>, initialSize: Size2DData): Boolean {
+    @Suppress("UNCHECKED_CAST")
+    val normalized = Util.normalizeCodecInts(params) as HashMap<String, Any?>
+    startHeadless(id, normalized, initialSize.toNative())
+    return true
+  }
+
+  // Renamed from `run` (rule 7: it shared the host method's name).
+  private fun startHeadless(id: String, params: HashMap<String, Any?>, initialSize: Size2D) {
     val currentPlugin = plugin ?: return
     val context = currentPlugin.activity ?: currentPlugin.applicationContext
     val flutterWebView = FlutterWebView(currentPlugin, context, id, params)
     val headlessInAppWebView = HeadlessInAppWebView(currentPlugin, id, flutterWebView)
     webViews[id] = headlessInAppWebView
 
-    headlessInAppWebView.prepare(params)
+    headlessInAppWebView.prepare(initialSize)
     headlessInAppWebView.onWebViewCreated()
     flutterWebView.makeInitialLoad(params)
   }
 
-  override fun dispose() {
-    super.dispose()
+  fun dispose() {
+    messenger?.let { HeadlessInAppWebViewManagerHostApi.setUp(it, null) }
+    messenger = null
     for (headlessInAppWebView in webViews.values) {
       headlessInAppWebView?.dispose()
     }
@@ -78,6 +88,5 @@ class HeadlessInAppWebViewManager(plugin: InAppWebViewFlutterPlugin) :
 
   companion object {
     protected const val LOG_TAG = "HeadlessInAppWebViewManager"
-    const val METHOD_CHANNEL_NAME = "dev.nosferatu500.inappwebview/headless_inappwebview"
   }
 }

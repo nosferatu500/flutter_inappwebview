@@ -106,14 +106,13 @@ class HeadlessWebViewChannelDelegate(
 
 // --- Size2D <-> Pigeon ---------------------------------------------------------------------------
 //
-// Kept local rather than added to `types/`, as §177 and §179 did: `Size2D` also serves
-// `Util.getFullscreenSize` and the manager's `initialSize`, neither of which is a Pigeon concern
-// yet. When the manager migrates it will want these two in a shared place — the schema records that
-// as a prediction along with the type itself.
+// Kept in this package rather than added to `types/`, as §177 and §179 did: `Size2D` also serves
+// `Util.getFullscreenSize`, which is not a Pigeon concern. `internal` since §203, when the manager's
+// `run` began sending `initialSize` as a [Size2DData] too and reused `toNative` rather than a copy.
 //
 // No widening or narrowing in either direction: a size is two `Double`s on both sides, so §162's
 // `[WrongConstant]` trap has nothing to fire on.
 
-private fun Size2DData.toNative(): Size2D = Size2D(width, height)
+internal fun Size2DData.toNative(): Size2D = Size2D(width, height)
 
-private fun Size2D.toPigeon(): Size2DData = Size2DData(width = width, height = height)
+internal fun Size2D.toPigeon(): Size2DData = Size2DData(width = width, height = height)

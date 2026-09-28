@@ -47,11 +47,14 @@ class HeadlessInAppWebView(
     channelDelegate?.onWebViewCreated()
   }
 
-  fun prepare(params: Map<String, Any?>) {
+  /**
+   * [initialSize] arrives typed since §203. It used to be read out of `run`'s params map with
+   * `Size2D.fromMap(...) ?: Size2D(-1.0, -1.0)`; Dart has always sent it, so the fallback was
+   * unreachable and the schema makes it non-null.
+   */
+  fun prepare(initialSize: Size2D) {
     flutterWebView?.getView()?.let { view ->
-      val size = Size2D.fromMap(params["initialSize"] as Map<String, Any?>?)
-        ?: Size2D(-1.0, -1.0)
-      setSize(size)
+      setSize(initialSize)
       view.visibility = View.INVISIBLE
     }
     val activity = plugin?.activity

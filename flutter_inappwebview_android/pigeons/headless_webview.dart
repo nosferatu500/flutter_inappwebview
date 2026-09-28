@@ -66,6 +66,38 @@
 //      "the webview had already gone away" from "done", and a migration is the wrong commit in which
 //      to drop a value from the wire. Recorded here so it is a decision and not an oversight.
 //
+// **§203: the manager's `run` joins this file, as item 5 above planned** (twenty-first channel
+// migrated, the third under decision B). `HeadlessInAppWebViewManagerHostApi.run` takes the
+// headless id, the webview creation `params` map, and `initialSize` as the [Size2DData] declared
+// here. Its own checklist:
+//   1. Settings payload? **Yes, as a map (§194, B), and a map it must stay.** `params` goes whole
+//      into `FlutterWebView`, the class that also builds every `InAppWebView` widget from
+//      platform-view creation params, which can never be Pigeon-typed. `parse(Map)` and the other
+//      map readers stay the single definition. 🚨 Pigeon delivers its nested ints as `Long`, and
+//      three readers cast `as Int`: `windowId` (`FlutterWebView` and `makeInitialLoad`), the
+//      settings ints (`InAppWebViewSettings.parse`), and each user script's `injectionTime`
+//      (`UserScript.fromMap`). So Kotlin passes `params` through `Util.normalizeCodecInts` (§197).
+//      §202 asserts each of those on the device.
+//   2. `@async`? **No.** `run` builds the webview, fires `onWebViewCreated` and starts the first
+//      load, all inline, then answers.
+//   3. A branch that never calls `result`? **None.** A plugin already detached answered `true`
+//      without doing anything; it still does.
+//   4. Dart `int` -> Kotlin `Long`? **Only inside the map** (item 1). `initialSize` is two doubles.
+//   5. Payload type shared? **[Size2DData], resolved as planned**: one declaration, used by both
+//      HostApis. The Kotlin converters in `HeadlessWebViewChannelDelegate.kt` became `internal`
+//      so the manager reuses them. 🚨 This removes the accident `pigeon_headless_webview_boundary_test`
+//      recorded: `initialSize` used to cross unswapped on the MethodChannel, which let
+//      `set and get custom size` catch a symmetric width/height swap. Now it round-trips through
+//      the same converters, so that test cannot see the swap and the `-1` test is the device
+//      guard. §203 measured this.
+//   6. `includeErrorClass: false` -- this file already opts out.
+//   7. Per-instance? **No.** One manager; the id travels as an argument and becomes the suffix of
+//      *this file's* per-instance APIs, which Dart registers before calling `run` (unchanged).
+//   8. Event named after a callback? **No events** on the manager.
+//   9. Fields never read? **`initialSize` left the map.** Only `HeadlessInAppWebView.prepare` read
+//      it, and it now takes the typed value. Every key left in `params` has a reader. `run` keeps the
+//      `bool` it always answered (`true`); Dart discards it.
+//
 // 🚨 **The Kotlin `dispose` collision (§177) is live on this channel and is not a compile error.**
 // The generated interface contributes `fun dispose(): Boolean`, which cannot coexist with
 // `Disposable.dispose(): Unit`. `HeadlessWebViewChannelDelegate` therefore stops implementing
@@ -149,4 +181,15 @@ abstract class HeadlessWebViewFlutterApi {
   /// handling that very call. Registering it afterwards would be a race the tests would see as a
   /// 60-second hang rather than an error (checklist item 7).
   void onWebViewCreated();
+}
+
+/// Implemented by `HeadlessInAppWebViewManager` (§203).
+@HostApi()
+abstract class HeadlessInAppWebViewManagerHostApi {
+  /// Creates headless webview [id], fires its `onWebViewCreated`, and starts its first load.
+  ///
+  /// [params] is the webview creation map `FlutterWebView` reads, key for key (decision B).
+  /// [initialSize] is in logical pixels, with `-1` meaning "match the screen" on that axis, as for
+  /// [HeadlessWebViewHostApi.setSize]. Always `true`.
+  bool run(String id, Map<String?, Object?> params, Size2DData initialSize);
 }

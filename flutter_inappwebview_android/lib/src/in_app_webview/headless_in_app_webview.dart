@@ -215,9 +215,9 @@ class _HeadlessWebViewFlutterApiImpl implements HeadlessWebViewFlutterApi {
 ///{@macro flutter_inappwebview_platform_interface.PlatformHeadlessInAppWebView}
 ///
 /// Transport for the per-instance channel is Pigeon-generated ([HeadlessWebViewHostApi] /
-/// [HeadlessWebViewFlutterApi]) rather than a hand-written `MethodChannel`. The *manager* channel
-/// that carries [run] is still a raw `MethodChannel` ([_sharedChannel]); the two are independent
-/// and the manager is the follow-on commit. The public API is unchanged.
+/// [HeadlessWebViewFlutterApi]) rather than a hand-written `MethodChannel`, and so, since §203, is
+/// the *manager* channel that carries [run] ([HeadlessInAppWebViewManagerHostApi]). The public API
+/// is unchanged.
 class AndroidHeadlessInAppWebView extends PlatformHeadlessInAppWebView {
   @override
   late final String id;
@@ -225,11 +225,10 @@ class AndroidHeadlessInAppWebView extends PlatformHeadlessInAppWebView {
   bool _started = false;
   bool _running = false;
 
-  /// The manager channel, deliberately still hand-written — it carries `run`, which this commit
-  /// does not migrate. See the schema header.
-  static const MethodChannel _sharedChannel = MethodChannel(
-    'dev.nosferatu500.inappwebview/headless_inappwebview',
-  );
+  /// The manager's channel, over Pigeon since §203, declared in the same schema so `run`'s
+  /// `initialSize` reuses [Size2DData].
+  static final HeadlessInAppWebViewManagerHostApi _managerApi =
+      HeadlessInAppWebViewManagerHostApi();
 
   /// Null until [run] calls `_init`, and after [dispose].
   ///
@@ -320,11 +319,11 @@ class AndroidHeadlessInAppWebView extends PlatformHeadlessInAppWebView {
         _androidParams.pullToRefreshController?.params.settings.toMap() ??
         PullToRefreshSettings(enabled: false).toMap();
 
-    Map<String, dynamic> args = <String, dynamic>{};
-    args.putIfAbsent('id', () => id);
-    args.putIfAbsent(
-      'params',
-      () => <String, dynamic>{
+    // `initialSize` travels typed; everything else is the creation map `FlutterWebView` reads
+    // (§194, B).
+    await _managerApi.run(
+      id,
+      <String, dynamic>{
         'initialUrlRequest': params.initialUrlRequest?.toMap(),
         'initialFile': params.initialFile,
         'initialData': params.initialData?.toMap(),
@@ -334,10 +333,12 @@ class AndroidHeadlessInAppWebView extends PlatformHeadlessInAppWebView {
         'initialUserScripts':
             params.initialUserScripts?.map((e) => e.toMap()).toList() ?? [],
         'pullToRefreshSettings': pullToRefreshSettings,
-        'initialSize': params.initialSize.toMap(),
       },
+      Size2DData(
+        width: params.initialSize.width,
+        height: params.initialSize.height,
+      ),
     );
-    await _sharedChannel.invokeMethod('run', args);
     _running = true;
   }
 

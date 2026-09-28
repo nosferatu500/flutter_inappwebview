@@ -373,3 +373,49 @@ class HeadlessWebViewFlutterApi(private val binaryMessenger: BinaryMessenger, pr
     }
   }
 }
+/**
+ * Implemented by `HeadlessInAppWebViewManager` (§203).
+ *
+ * Generated interface from Pigeon that represents a handler of messages from Flutter.
+ */
+interface HeadlessInAppWebViewManagerHostApi {
+  /**
+   * Creates headless webview [id], fires its `onWebViewCreated`, and starts its first load.
+   *
+   * [params] is the webview creation map `FlutterWebView` reads, key for key (decision B).
+   * [initialSize] is in logical pixels, with `-1` meaning "match the screen" on that axis, as for
+   * [HeadlessWebViewHostApi.setSize]. Always `true`.
+   */
+  fun run(id: String, params: Map<String?, Any?>, initialSize: Size2DData): Boolean
+
+  companion object {
+    /** The codec used by HeadlessInAppWebViewManagerHostApi. */
+    val codec: MessageCodec<Any?> by lazy {
+      HeadlessWebViewPigeonCodec()
+    }
+    /** Sets up an instance of `HeadlessInAppWebViewManagerHostApi` to handle messages through the `binaryMessenger`. */
+    @JvmOverloads
+    fun setUp(binaryMessenger: BinaryMessenger, api: HeadlessInAppWebViewManagerHostApi?, messageChannelSuffix: String = "") {
+      val separatedMessageChannelSuffix = if (messageChannelSuffix.isNotEmpty()) ".$messageChannelSuffix" else ""
+      run {
+        val channel = BasicMessageChannel<Any?>(binaryMessenger, "dev.flutter.pigeon.flutter_inappwebview_android.HeadlessInAppWebViewManagerHostApi.run$separatedMessageChannelSuffix", codec)
+        if (api != null) {
+          channel.setMessageHandler { message, reply ->
+            val args = message as List<Any?>
+            val idArg = args[0] as String
+            val paramsArg = args[1] as Map<String?, Any?>
+            val initialSizeArg = args[2] as Size2DData
+            val wrapped: List<Any?> = try {
+              listOf(api.run(idArg, paramsArg, initialSizeArg))
+            } catch (exception: Throwable) {
+              HeadlessWebViewPigeonUtils.wrapError(exception)
+            }
+            reply.reply(wrapped)
+          }
+        } else {
+          channel.setMessageHandler(null)
+        }
+      }
+    }
+  }
+}
