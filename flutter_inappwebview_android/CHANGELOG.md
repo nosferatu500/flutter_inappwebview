@@ -468,6 +468,24 @@ for, and five others have a native *value* that differs from their name.
 
 ### Internal
 
+- **Everything `ChromeSafariBrowserManager` receives now has a device test where one is possible,
+  ahead of its migration.** A new `open payload` group adds six `chrome_safari_browser` tests, so
+  the group goes from 13 to 19 (2 still skipped). The Custom Tab loads from a server the test runs
+  on the emulator's own loopback, so each test reads exactly what Chrome requested:
+  - `open`'s URL and query, and its headers (`accept-language: it-IT` on the page request, while
+    Chrome's own favicon request sends `en-US`).
+  - `isTrustedWebActivity: true`: the only launch whose first request carries `sec-fetch-user: ?1`,
+    with a plain open as the control.
+  - The one int nested in the settings (`displayMode.displayCutoutMode`): the Activity must start
+    rather than crash on its `as Int`.
+  - 🚨 **A null `isSingleInstance`, `isTrustedWebActivity` or `noHistory` fails the `open` call.**
+    The manager reads these keys by presence, and `toMap()` always sends them, so a null fails when
+    unboxed. The test pins that as-is: it is the only way to see that each key reaches the manager.
+  - `isAvailable` (`true`), `getMaxToolbarItems` (`5`, previously only `>= 0`), and
+    `getPackageName` with each argument varied alone.
+  - Not coverable, measured: `referrer` (Chrome replaces it with the app's own), `otherLikelyURLs`
+    (never fetched), and the effect of `isSingleInstance: true` / `noHistory: true` (requests
+    identical to a plain open). Test only.
 - **The in-app browser's `setSettings` / `getSettings` are Pigeon-generated**, on the existing
   `InAppBrowserHostApi`, as maps (decision B). No public API change.
   - `setSettings`' map goes through `Util.normalizeCodecInts` before the parsers see it, as

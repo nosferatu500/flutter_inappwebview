@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/services.dart';
 import 'package:flutter_inappwebview/flutter_inappwebview.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -7,6 +9,7 @@ import '../util.dart';
 part 'custom_menu_item.dart';
 part 'custom_tabs.dart';
 part 'open_and_close.dart';
+part 'open_payload.dart';
 part 'trusted_web_activity.dart';
 part 'sf_safari_view_controller.dart';
 
@@ -27,5 +30,6 @@ void main() {
     customTabs();
     trustedWebActivity();
     sfSafariViewController();
+    openPayload();
   }, skip: shouldSkip);
 }
