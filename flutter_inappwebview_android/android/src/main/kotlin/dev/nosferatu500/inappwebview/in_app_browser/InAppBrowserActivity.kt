@@ -145,7 +145,9 @@ class InAppBrowserActivity : AppCompatActivity(), InAppBrowserDelegate, Disposab
     // MethodChannel now belongs to the WebView's delegate alone.
     channelDelegate = InAppBrowserChannelDelegate(this, plugin.messenger, viewId)
     val channel = MethodChannel(plugin.messenger, METHOD_CHANNEL_NAME_PREFIX + viewId)
-    currentWebView.channelDelegate = WebViewChannelDelegate(currentWebView, channel)
+    // The Pigeon suffix is the channel name's tail, so both transports name this WebView alike (§207).
+    currentWebView.channelDelegate =
+      WebViewChannelDelegate(currentWebView, channel, plugin.messenger, "inappbrowser_$viewId")
 
     fromActivity = b.getString("fromActivity")
 

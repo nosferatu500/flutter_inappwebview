@@ -11,6 +11,8 @@ import androidx.webkit.WebMessagePortCompat
 import androidx.webkit.WebViewCompat
 import androidx.webkit.WebViewFeature
 import dev.nosferatu500.inappwebview.Util
+import dev.nosferatu500.inappwebview.pigeons.FlutterError
+import dev.nosferatu500.inappwebview.pigeons.InAppWebViewHostApi
 import dev.nosferatu500.inappwebview.print_job.PrintJobSettings
 import dev.nosferatu500.inappwebview.types.BaseCallbackResultImpl
 import dev.nosferatu500.inappwebview.types.ChannelDelegateImpl
@@ -51,6 +53,7 @@ import dev.nosferatu500.inappwebview.types.WebViewPageExt
 import dev.nosferatu500.inappwebview.webview.in_app_webview.InAppWebView
 import dev.nosferatu500.inappwebview.webview.in_app_webview.InAppWebViewSettings
 import dev.nosferatu500.inappwebview.webview.web_message.WebMessageListener
+import io.flutter.plugin.common.BinaryMessenger
 import io.flutter.plugin.common.MethodCall
 import io.flutter.plugin.common.MethodChannel
 import java.io.IOException
@@ -59,11 +62,26 @@ import java.io.IOException
 // Map<String,Object>/List<Object>, so every read of a structured value is an unverifiable
 // cast. A wrong shape throws ClassCastException at the cast site, which is the intended
 // failure mode. Suppressed at class level because the whole class is that boundary.
+//
+// Transport is split while the migration is in progress (§207 on, TODO P0a): the methods already
+// moved are Pigeon, on [InAppWebViewHostApi], suffixed by [suffix]; the rest still arrive through
+// [onMethodCall]. [suffix] is the MethodChannel name's tail, `inappwebview_$id` or
+// `inappbrowser_$id`, so the two transports address the same WebView the same way.
 @Suppress("UNCHECKED_CAST")
-class WebViewChannelDelegate(webView: InAppWebView, channel: MethodChannel) :
-  ChannelDelegateImpl(channel) {
+class WebViewChannelDelegate(
+  webView: InAppWebView,
+  channel: MethodChannel,
+  messenger: BinaryMessenger,
+  private val suffix: String
+) : ChannelDelegateImpl(channel), InAppWebViewHostApi {
 
   private var webView: InAppWebView? = webView
+
+  private var messenger: BinaryMessenger? = messenger
+
+  init {
+    InAppWebViewHostApi.setUp(messenger, this, suffix)
+  }
 
   /**
    * Only ever passed to `WebView.postVisualStateCallback` and echoed back to us unread: the channel
@@ -83,49 +101,10 @@ class WebViewChannelDelegate(webView: InAppWebView, channel: MethodChannel) :
     val webView = this.webView
 
     when (method) {
-      WebViewChannelDelegateMethods.getUrl -> result.success(webView?.url)
-
-      WebViewChannelDelegateMethods.getTitle -> result.success(webView?.title)
-
-      WebViewChannelDelegateMethods.getProgress -> result.success(webView?.progress)
-
       WebViewChannelDelegateMethods.loadUrl -> {
         if (webView != null) {
           val urlRequest = call.argument<Map<String, Any?>>("urlRequest")
           webView.loadUrl(URLRequest.fromMap(urlRequest)!!)
-        }
-        result.success(true)
-      }
-
-      WebViewChannelDelegateMethods.postUrl -> {
-        if (webView != null) {
-          webView.postUrl(call.argument("url")!!, call.argument<ByteArray>("postData")!!)
-        }
-        result.success(true)
-      }
-
-      WebViewChannelDelegateMethods.loadData -> {
-        if (webView != null) {
-          webView.loadDataWithBaseURL(
-            call.argument("baseUrl"),
-            call.argument("data")!!,
-            call.argument("mimeType"),
-            call.argument("encoding"),
-            call.argument("historyUrl")
-          )
-        }
-        result.success(true)
-      }
-
-      WebViewChannelDelegateMethods.loadFile -> {
-        if (webView != null) {
-          try {
-            webView.loadFile(call.argument("assetFilePath")!!)
-          } catch (e: IOException) {
-            e.printStackTrace()
-            result.error(LOG_TAG, e.message, null)
-            return
-          }
         }
         result.success(true)
       }
@@ -161,41 +140,6 @@ class WebViewChannelDelegate(webView: InAppWebView, channel: MethodChannel) :
         )
         result.success(true)
       }
-
-      WebViewChannelDelegateMethods.reload -> {
-        webView?.reload()
-        result.success(true)
-      }
-
-      WebViewChannelDelegateMethods.goBack -> {
-        webView?.goBack()
-        result.success(true)
-      }
-
-      WebViewChannelDelegateMethods.canGoBack -> result.success(webView?.canGoBack() == true)
-
-      WebViewChannelDelegateMethods.goForward -> {
-        webView?.goForward()
-        result.success(true)
-      }
-
-      WebViewChannelDelegateMethods.canGoForward ->
-        result.success(webView?.canGoForward() == true)
-
-      WebViewChannelDelegateMethods.goBackOrForward -> {
-        webView?.goBackOrForward(call.argument<Int>("steps")!!)
-        result.success(true)
-      }
-
-      WebViewChannelDelegateMethods.canGoBackOrForward ->
-        result.success(webView?.canGoBackOrForward(call.argument<Int>("steps")!!) == true)
-
-      WebViewChannelDelegateMethods.stopLoading -> {
-        webView?.stopLoading()
-        result.success(true)
-      }
-
-      WebViewChannelDelegateMethods.isLoading -> result.success(webView?.isLoading() == true)
 
       WebViewChannelDelegateMethods.takeScreenshot -> {
         if (webView != null) {
@@ -235,11 +179,6 @@ class WebViewChannelDelegate(webView: InAppWebView, channel: MethodChannel) :
       WebViewChannelDelegateMethods.getCopyBackForwardList ->
         result.success(webView?.getCopyBackForwardList())
 
-      WebViewChannelDelegateMethods.clearSslPreferences -> {
-        webView?.clearSslPreferences()
-        result.success(true)
-      }
-
       WebViewChannelDelegateMethods.scrollTo -> {
         webView?.scrollTo(
           call.argument("x"), call.argument("y"), call.argument("animated")
@@ -254,26 +193,6 @@ class WebViewChannelDelegate(webView: InAppWebView, channel: MethodChannel) :
         result.success(true)
       }
 
-      WebViewChannelDelegateMethods.pause -> {
-        webView?.onPause()
-        result.success(true)
-      }
-
-      WebViewChannelDelegateMethods.resume -> {
-        webView?.onResume()
-        result.success(true)
-      }
-
-      WebViewChannelDelegateMethods.pauseTimers -> {
-        webView?.pauseTimers()
-        result.success(true)
-      }
-
-      WebViewChannelDelegateMethods.resumeTimers -> {
-        webView?.resumeTimers()
-        result.success(true)
-      }
-
       WebViewChannelDelegateMethods.printCurrentPage -> {
         if (webView != null) {
           val settings = PrintJobSettings()
@@ -283,8 +202,6 @@ class WebViewChannelDelegate(webView: InAppWebView, channel: MethodChannel) :
           result.success(null)
         }
       }
-
-      WebViewChannelDelegateMethods.getContentHeight -> result.success(webView?.contentHeight)
 
       WebViewChannelDelegateMethods.getContentWidth -> {
         if (webView != null) {
@@ -298,8 +215,6 @@ class WebViewChannelDelegate(webView: InAppWebView, channel: MethodChannel) :
         webView?.zoomBy(call.argument<Double>("zoomFactor")!!.toFloat())
         result.success(true)
       }
-
-      WebViewChannelDelegateMethods.getOriginalUrl -> result.success(webView?.originalUrl)
 
       WebViewChannelDelegateMethods.getZoomScale -> result.success(webView?.getZoomScale())
 
@@ -406,11 +321,6 @@ class WebViewChannelDelegate(webView: InAppWebView, channel: MethodChannel) :
         } else {
           result.success(null)
         }
-      }
-
-      WebViewChannelDelegateMethods.clearHistory -> {
-        webView?.clearHistory()
-        result.success(true)
       }
 
       WebViewChannelDelegateMethods.addUserScript -> {
@@ -566,11 +476,6 @@ class WebViewChannelDelegate(webView: InAppWebView, channel: MethodChannel) :
         }
       }
 
-      WebViewChannelDelegateMethods.clearFormData -> {
-        webView?.clearFormData()
-        result.success(true)
-      }
-
       WebViewChannelDelegateMethods.hideInputMethod -> {
         if (webView != null) {
           webView.hideInputMethod()
@@ -599,9 +504,6 @@ class WebViewChannelDelegate(webView: InAppWebView, channel: MethodChannel) :
       }
 
       WebViewChannelDelegateMethods.isAudioMuted -> result.success(webView?.isAudioMuted() ?: false)
-
-      WebViewChannelDelegateMethods.prerenderUrl ->
-        result.success(webView?.prerenderUrl(call.argument<String>("url")!!) == true)
 
       // The reply is deliberately deferred until the frame is on screen -- that IS the feature.
       // `VisualStateCallback` is an abstract *class*, not an interface, so Kotlin cannot SAM-convert
@@ -1344,7 +1246,121 @@ class WebViewChannelDelegate(webView: InAppWebView, channel: MethodChannel) :
     channel.invokeMethod("onShowFileChooser", request.toMap(), callback)
   }
 
+  // --- InAppWebViewHostApi, W1 (§207) --------------------------------------------------------------
+  // Each answers exactly what its `when` branch did, including for a WebView already gone: null for
+  // the getters, `false` for the queries and `prerenderUrl`, `true` for everything else.
+
+  override fun getUrl(): String? = webView?.url
+
+  override fun getTitle(): String? = webView?.title
+
+  override fun getProgress(): Long? = webView?.progress?.toLong()
+
+  override fun getOriginalUrl(): String? = webView?.originalUrl
+
+  override fun postUrl(url: String, postData: ByteArray): Boolean {
+    webView?.postUrl(url, postData)
+    return true
+  }
+
+  override fun loadData(
+    data: String,
+    mimeType: String?,
+    encoding: String?,
+    baseUrl: String?,
+    historyUrl: String?
+  ): Boolean {
+    webView?.loadDataWithBaseURL(baseUrl, data, mimeType, encoding, historyUrl)
+    return true
+  }
+
+  // The same code, message and details `result.error` sent, so Dart sees the same PlatformException.
+  override fun loadFile(assetFilePath: String): Boolean {
+    try {
+      webView?.loadFile(assetFilePath)
+    } catch (e: IOException) {
+      e.printStackTrace()
+      throw FlutterError(LOG_TAG, e.message, null)
+    }
+    return true
+  }
+
+  override fun reload(): Boolean {
+    webView?.reload()
+    return true
+  }
+
+  override fun goBack(): Boolean {
+    webView?.goBack()
+    return true
+  }
+
+  override fun canGoBack(): Boolean = webView?.canGoBack() == true
+
+  override fun goForward(): Boolean {
+    webView?.goForward()
+    return true
+  }
+
+  override fun canGoForward(): Boolean = webView?.canGoForward() == true
+
+  override fun goBackOrForward(steps: Long): Boolean {
+    webView?.goBackOrForward(steps.toInt())
+    return true
+  }
+
+  override fun canGoBackOrForward(steps: Long): Boolean =
+    webView?.canGoBackOrForward(steps.toInt()) == true
+
+  override fun stopLoading(): Boolean {
+    webView?.stopLoading()
+    return true
+  }
+
+  override fun isLoading(): Boolean = webView?.isLoading() == true
+
+  override fun clearHistory(): Boolean {
+    webView?.clearHistory()
+    return true
+  }
+
+  override fun clearSslPreferences(): Boolean {
+    webView?.clearSslPreferences()
+    return true
+  }
+
+  override fun clearFormData(): Boolean {
+    webView?.clearFormData()
+    return true
+  }
+
+  override fun pause(): Boolean {
+    webView?.onPause()
+    return true
+  }
+
+  override fun resume(): Boolean {
+    webView?.onResume()
+    return true
+  }
+
+  override fun pauseTimers(): Boolean {
+    webView?.pauseTimers()
+    return true
+  }
+
+  override fun resumeTimers(): Boolean {
+    webView?.resumeTimers()
+    return true
+  }
+
+  override fun prerenderUrl(url: String): Boolean = webView?.prerenderUrl(url) == true
+
+  override fun getContentHeight(): Long? = webView?.contentHeight?.toLong()
+
   override fun dispose() {
+    messenger?.let { InAppWebViewHostApi.setUp(it, null, suffix) }
+    messenger = null
     super.dispose()
     webView = null
   }

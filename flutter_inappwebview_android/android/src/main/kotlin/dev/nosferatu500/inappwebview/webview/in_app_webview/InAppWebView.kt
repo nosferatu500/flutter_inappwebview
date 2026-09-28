@@ -207,7 +207,8 @@ class InAppWebView : WebView, InAppWebViewInterface, Disposable {
     this.plugin = plugin
     this.id = id
     val channel = MethodChannel(plugin.messenger, METHOD_CHANNEL_NAME_PREFIX + id)
-    channelDelegate = WebViewChannelDelegate(this, channel)
+    // The Pigeon suffix is the channel name's tail, so both transports name this WebView alike (§207).
+    channelDelegate = WebViewChannelDelegate(this, channel, plugin.messenger, "inappwebview_$id")
     this.windowId = windowId
     this.customSettings = customSettings
     this.contextMenu = contextMenu

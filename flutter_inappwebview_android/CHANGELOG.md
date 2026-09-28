@@ -480,6 +480,24 @@ for, and five others have a native *value* that differs from their name.
 
 ### Internal
 
+- **`WebViewChannelDelegate`, the last hand-written channel, starts moving to Pigeon: W1 of five
+  commits.** 25 synchronous load, navigation and state methods move to a new
+  `InAppWebViewHostApi` (`pigeons/in_app_webview.dart`, twenty-two schemas): `getUrl`,
+  `getTitle`, `getProgress`, `getOriginalUrl`, `postUrl`, `loadData`, `loadFile`, `reload`,
+  `goBack`/`goForward` and their `can…` queries, `goBackOrForward`/`canGoBackOrForward`,
+  `stopLoading`, `isLoading`, `clearHistory`, `clearSslPreferences`, `clearFormData`, `pause`,
+  `resume`, `pauseTimers`, `resumeTimers`, `prerenderUrl` and `getContentHeight`. No public API
+  change.
+  - Until the migration finishes, each WebView is served on both transports: these 25 on Pigeon,
+    the rest on the MethodChannel.
+  - The Pigeon suffix is the MethodChannel name's tail, `inappwebview_<id>` or
+    `inappbrowser_<id>`, so widget, keep-alive, headless and in-app-browser WebViews stay exactly
+    as distinct as their channels were.
+  - `loadData` no longer sends `allowingReadAccessTo`, which Android never read (it's iOS's).
+  - `loadFile`'s error keeps its code and message.
+  - `prerender_url_test` now asserts on the Pigeon channel. Its "a null reply reads as false"
+    case became "a disposed controller reads as false", because the platform can no longer answer
+    null.
 - **The custom path handler channel is Pigeon-generated**, the twenty-second migrated, which
   makes twenty-one schemas: one `@async` `CustomPathHandlerFlutterApi.handle(path)`, suffixed by
   the handler's id. No public API change.
