@@ -11,8 +11,6 @@ import androidx.webkit.WebMessagePortCompat
 import androidx.webkit.WebViewCompat
 import androidx.webkit.WebViewFeature
 import dev.nosferatu500.inappwebview.Util
-import dev.nosferatu500.inappwebview.in_app_browser.InAppBrowserActivity
-import dev.nosferatu500.inappwebview.in_app_browser.InAppBrowserSettings
 import dev.nosferatu500.inappwebview.print_job.PrintJobSettings
 import dev.nosferatu500.inappwebview.types.BaseCallbackResultImpl
 import dev.nosferatu500.inappwebview.types.ChannelDelegateImpl
@@ -83,7 +81,6 @@ class WebViewChannelDelegate(webView: InAppWebView, channel: MethodChannel) :
     }
 
     val webView = this.webView
-    val browserActivity = webView?.getInAppBrowserDelegate() as? InAppBrowserActivity
 
     when (method) {
       WebViewChannelDelegateMethods.getUrl -> result.success(webView?.url)
@@ -210,21 +207,14 @@ class WebViewChannelDelegate(webView: InAppWebView, channel: MethodChannel) :
         }
       }
 
-      // The `browserActivity` branches of this pair no longer serve the browser's own
-      // `setSettings`/`getSettings`, which are Pigeon on `InAppBrowserChannelDelegate` (§199). They
-      // serve the browser's *WebView controller*, which is built on the browser's MethodChannel.
-      // 🚨 Its map carries no browser keys, so `InAppBrowserActivity.setSettings` replaces the
-      // browser's stored settings with defaults. The seven that `getRealSettings` does not read live
-      // then read back as defaults (a toolbar colour came back null on API 37, §199), and the
-      // back button and `didChangeTitle` act on the defaults. Kept as it was until this pair
-      // migrates.
+      // The WebView's own pair, for every WebView, an in-app browser's included (§206). Until §206 a
+      // browser's WebView took a `browserActivity` branch here, a leftover from when the browser's
+      // own `setSettings`/`getSettings` shared this channel (they are Pigeon since §199). Its map
+      // carries no browser keys, so that branch replaced the browser's stored settings with
+      // defaults: a toolbar colour and a fixed title set at open read back null (measured, §199 and
+      // §206), and the back button and `didChangeTitle` acted on the defaults.
       WebViewChannelDelegateMethods.setSettings -> {
-        if (browserActivity != null) {
-          val inAppBrowserSettings = InAppBrowserSettings()
-          val inAppBrowserSettingsMap = call.argument<HashMap<String, Any?>>("settings")!!
-          inAppBrowserSettings.parse(inAppBrowserSettingsMap)
-          browserActivity.setSettings(inAppBrowserSettings, inAppBrowserSettingsMap)
-        } else if (webView != null) {
+        if (webView != null) {
           val inAppWebViewSettings = InAppWebViewSettings()
           val inAppWebViewSettingsMap = call.argument<HashMap<String, Any?>>("settings")!!
           inAppWebViewSettings.parse(inAppWebViewSettingsMap)
@@ -233,13 +223,10 @@ class WebViewChannelDelegate(webView: InAppWebView, channel: MethodChannel) :
         result.success(true)
       }
 
-      WebViewChannelDelegateMethods.getSettings -> {
-        if (browserActivity != null) {
-          result.success(browserActivity.getCustomSettingsMap())
-        } else {
-          result.success(webView?.getCustomSettingsMap())
-        }
-      }
+      // A browser's WebView used to answer the browser's merged map here. Dart reads it with
+      // `InAppWebViewSettings.fromMap`, which ignores the browser keys, so the answer Dart sees is
+      // the same.
+      WebViewChannelDelegateMethods.getSettings -> result.success(webView?.getCustomSettingsMap())
 
       // `show`, `hide`, `close` and `isHidden` used to arrive here too, because an in-app browser's
       // WebView shares the browser's MethodChannel. They are Pigeon now, on

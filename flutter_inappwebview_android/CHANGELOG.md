@@ -239,6 +239,18 @@ for, and five others have a native *value* that differs from their name.
 
 ### Fixed
 
+- **An in-app browser's `webViewController.setSettings()` reset the browser's own settings to
+  their defaults.** The controller's map carries only WebView keys, but the native side parsed it
+  as browser settings too and stored the result. So a toolbar colour, a fixed title, and the
+  back-button settings (`closeOnCannotGoBack`, `allowGoBackWithBackButton`,
+  `shouldCloseOnBackButtonPressed`) set when the browser opened were silently replaced by
+  defaults. The back button and title updates then acted on those defaults, and
+  `InAppBrowser.getSettings()` reported them. The four settings the browser reads from its live UI
+  (`hidden`, `hideToolbarTop`, `hideUrlBar`, `hideProgressBar`) weren't affected. It now applies to
+  the WebView only, as for any other WebView. `webViewController.getSettings()` is unchanged: it
+  never exposed browser keys. A new device test fails without the fix: the colour came back null.
+  That's the one value measured before the fix. The rest follows from the code, which replaced
+  the whole stored settings object.
 - **`ProxyController.setProxyOverride()` reported a malformed proxy rule as a dead channel instead
   of an error.** A rule Chromium rejects — `"://"`, `"http://["`, `"%%%"`, `""`, a bypass rule of
   `" "`, or a `directs` entry of `"bogus"` — raises `IllegalArgumentException` *synchronously* from

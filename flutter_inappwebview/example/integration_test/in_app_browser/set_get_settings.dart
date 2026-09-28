@@ -82,4 +82,40 @@ void setGetSettings() {
 
     await expectLater(inAppBrowser.close(), completes);
   }, skip: androidOnly);
+
+  skippableTest(
+    'the WebView controller setSettings leaves the browser settings alone',
+    () async {
+      // §206. The controller's map carries no browser keys, and until §206 the browser Activity
+      // parsed it into a fresh `InAppBrowserSettings`, so every browser setting not read live came
+      // back as a default. The colour and the title are two of those seven.
+      var inAppBrowser = new MyInAppBrowser();
+      await inAppBrowser.openData(
+        data: '<html><body>settings</body></html>',
+        settings: InAppBrowserClassSettings(
+          browserSettings: InAppBrowserSettings(
+            toolbarTopBackgroundColor: const Color(0xFF0A8F3C),
+            toolbarTopFixedTitle: 'Fixed Title',
+          ),
+        ),
+      );
+      await inAppBrowser.firstPageLoaded.future;
+
+      await inAppBrowser.webViewController!.setSettings(
+        settings: InAppWebViewSettings(minimumFontSize: 27),
+      );
+
+      final settings = await inAppBrowser.getSettings();
+      // The control: the controller's own setting did apply.
+      expect(settings?.webViewSettings.minimumFontSize, 27);
+      expect(
+        settings?.browserSettings.toolbarTopBackgroundColor,
+        const Color(0xFF0A8F3C),
+      );
+      expect(settings?.browserSettings.toolbarTopFixedTitle, 'Fixed Title');
+
+      await expectLater(inAppBrowser.close(), completes);
+    },
+    skip: androidOnly,
+  );
 }
