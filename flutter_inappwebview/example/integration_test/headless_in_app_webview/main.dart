@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:collection';
 
 import 'package:flutter/foundation.dart';
 import 'package:flutter/widgets.dart';
@@ -12,6 +13,7 @@ part 'convert_to_inappwebview.dart';
 part 'take_screenshot.dart';
 part 'custom_size.dart';
 part 'run_and_dispose.dart';
+part 'run_payload.dart';
 part 'set_get_settings.dart';
 
 void main() {
@@ -24,5 +26,6 @@ void main() {
     customSize();
     setGetSettings();
     convertToInAppWebView();
+    runPayload();
   }, skip: shouldSkip);
 }

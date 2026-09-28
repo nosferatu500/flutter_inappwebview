@@ -468,6 +468,19 @@ for, and five others have a native *value* that differs from their name.
 
 ### Internal
 
+- **Everything `HeadlessInAppWebViewManager.run` sends now has a device test where one is
+  possible, ahead of its migration.** Five new `headless_in_app_webview` tests, so the group goes
+  from 7 to 12. `run`'s params map goes straight into `FlutterWebView`, the same class that builds
+  every `InAppWebView` widget. Each test asserts on a value only the right field can produce:
+  - `initialData`: its data, its MIME type (a second run as `text/plain`), and its base and history
+    URLs, which are read back on different channels, so a swap of the two fails.
+  - `initialFile`: the asset path the WebView ends up on.
+  - An int in `initialSettings` (`minimumFontSize: 23`), which the parser casts `as Int`.
+  - `initialUserScripts`: a document-start script runs. Its `injectionTime` is an int.
+  - `windowId`: a child headless webview given only the `windowId` from `onCreateWindow` shows
+    the popup the parent's page opened.
+  - Not coverable: `contextMenu` (a native menu on a view with no screen) and
+    `pullToRefreshSettings` (no gesture to pull). Test only.
 - **The `chromesafaribrowser` manager channel is Pigeon-generated**, the twentieth migrated and
   the second under decision B: `open`, `isAvailable`, `getMaxToolbarItems` and `getPackageName`
   over `ChromeSafariBrowserManagerHostApi`. No public API change.
