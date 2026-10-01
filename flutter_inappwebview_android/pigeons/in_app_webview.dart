@@ -76,6 +76,25 @@
 //   5. Payload type shared? None (maps).
 //   9. Fields the wire carries that Android never reads? **Two, dropped**: `loadUrl`'s
 //      `allowingReadAccessTo` (iOS's, like W1's `loadData`) and `zoomBy`'s `animated`.
+// W4 (§214), the 35 fire-and-forget events, on `InAppWebViewFlutterApi`:
+//   1. Payloads: scalars are typed; domain objects (hit test result, download request, resource
+//      request / error / response, navigation, page) cross as their `toMap()` maps, read by the same
+//      `fromMap`s as before. Kotlin -> Dart, so no `normalizeCodecInts`: a Kotlin `Int` arrives as a
+//      Dart `int` either way.
+//   2. `@async`? **All 35, on the Dart side only** (a FlutterApi is callback-based in Kotlin anyway).
+//      The Dart handler re-enters the controller's `_handleMethod`, which is async; `@async` lets
+//      Pigeon await it, so a throw (a user callback, or a payload `fromMap` can't read) becomes an
+//      error reply that Kotlin ignores, exactly as the MethodChannel did. A plain `void` would leave
+//      that Future unawaited and turn the same throw into an unhandled zone error.
+//   3. Never answers? Fire-and-forget: Kotlin passes an empty callback, as `invokeMethod` had none.
+//   5. Shared types? None.
+//   7. Per-instance: the same suffix as the HostApi. A FlutterApi mismatch is **silent** (rule 5):
+//      every event would vanish, and every device test waiting for `onLoadStop` would time out.
+//   8. Event named after a callback? The names are the MethodChannel's, unchanged.
+// The Dart handler rebuilds the exact arguments Kotlin used to send and dispatches them through
+// `_handleMethod`, so each event keeps its one definition there (and the unit tests that drive
+// `handleMethod` directly stay valid). W5 moves the value-returning events the same way.
+//
 // Errors: `postWebMessage` and `addWebMessageListener` threw `result.error(LOG_TAG, e.message)`,
 // so they throw a `FlutterError` with the same code and message. Any other throw (an invalid print
 // colour mode, `restoreState(null)`) now arrives under the exception's class name instead of the
@@ -316,4 +335,134 @@ abstract class InAppWebViewHostApi {
   bool isAudioMuted();
 
   bool flingScroll(int velocityX, int velocityY);
+}
+
+/// Implemented by the Dart controller, registered under the same suffix as [InAppWebViewHostApi].
+///
+/// W4 (§214): the fire-and-forget events. Maps are the domain objects' `toMap()`.
+@FlutterApi()
+abstract class InAppWebViewFlutterApi {
+  @async
+  void onLoadStart(String? url);
+
+  @async
+  void onLoadStop(String? url);
+
+  @async
+  void onReceivedError(
+    Map<String?, Object?> request,
+    Map<String?, Object?> error,
+  );
+
+  @async
+  void onReceivedHttpError(
+    Map<String?, Object?> request,
+    Map<String?, Object?> errorResponse,
+  );
+
+  @async
+  void onProgressChanged(int progress);
+
+  @async
+  void onConsoleMessage(String? message, int messageLevel);
+
+  @async
+  void onScrollChanged(int x, int y);
+
+  @async
+  void onOverScrolled(int x, int y, bool clampedX, bool clampedY);
+
+  /// `DownloadStartRequest.toMap()`.
+  @async
+  void onDownloadStarting(Map<String?, Object?> downloadStartRequest);
+
+  @async
+  void onCloseWindow();
+
+  @async
+  void onTitleChanged(String? title);
+
+  @async
+  void onGeolocationPermissionsHidePrompt();
+
+  @async
+  void onReceivedTouchIconUrl(String? url, bool precomposed);
+
+  @async
+  void onPermissionRequestCanceled(String? origin, List<String?>? resources);
+
+  @async
+  void onUpdateVisitedHistory(String? url, bool isReload);
+
+  @async
+  void onZoomScaleChanged(double oldScale, double newScale);
+
+  @async
+  void onPageCommitVisible(String? url);
+
+  /// `HitTestResult.toMap()`, or null.
+  @async
+  void onLongPressHitTestResult(Map<String?, Object?>? hitTestResult);
+
+  /// `HitTestResult.toMap()`, or null.
+  @async
+  void onCreateContextMenu(Map<String?, Object?>? hitTestResult);
+
+  @async
+  void onHideContextMenu();
+
+  @async
+  void onContextMenuActionItemClicked(int id, String? title);
+
+  @async
+  void onEnterFullscreen();
+
+  @async
+  void onExitFullscreen();
+
+  @async
+  void onRequestFocus();
+
+  @async
+  void onRenderProcessGone(bool didCrash, int rendererPriorityAtExit);
+
+  @async
+  void onReceivedLoginRequest(String? realm, String? account, String? args);
+
+  @async
+  void onNavigationStarted(Map<String?, Object?> navigation);
+
+  @async
+  void onNavigationRedirected(Map<String?, Object?> navigation);
+
+  @async
+  void onNavigationCompleted(Map<String?, Object?> navigation);
+
+  @async
+  void onPageLoadEvent(Map<String?, Object?> page);
+
+  @async
+  void onPageDomContentLoadedEvent(Map<String?, Object?> page);
+
+  @async
+  void onPageDeleted(Map<String?, Object?> page);
+
+  @async
+  void onFirstContentfulPaintMillis(
+    Map<String?, Object?> page,
+    int durationMillis,
+  );
+
+  @async
+  void onLargestContentfulPaintMillis(
+    Map<String?, Object?> page,
+    int durationMillis,
+  );
+
+  @async
+  void onPerformanceMarkMillis(
+    Map<String?, Object?> page,
+    String markName,
+    int markTimeMillis,
+  );
 }

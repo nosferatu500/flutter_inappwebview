@@ -12,6 +12,7 @@ import androidx.webkit.WebViewCompat
 import androidx.webkit.WebViewFeature
 import dev.nosferatu500.inappwebview.Util
 import dev.nosferatu500.inappwebview.pigeons.FlutterError
+import dev.nosferatu500.inappwebview.pigeons.InAppWebViewFlutterApi
 import dev.nosferatu500.inappwebview.pigeons.InAppWebViewHostApi
 import dev.nosferatu500.inappwebview.print_job.PrintJobSettings
 import dev.nosferatu500.inappwebview.types.BaseCallbackResultImpl
@@ -80,6 +81,12 @@ class WebViewChannelDelegate(
 
   private var messenger: BinaryMessenger? = messenger
 
+  /**
+   * The fire-and-forget events (W4, §214), under the same suffix as the HostApi. Null after
+   * [dispose], so a late event is dropped, as `this.channel ?: return` dropped it before.
+   */
+  private var flutterApi: InAppWebViewFlutterApi? = InAppWebViewFlutterApi(messenger, suffix)
+
   init {
     InAppWebViewHostApi.setUp(messenger, this, suffix)
   }
@@ -100,56 +107,39 @@ class WebViewChannelDelegate(
   }
 
   fun onLongPressHitTestResult(hitTestResult: HitTestResult?) {
-    val channel = this.channel ?: return
-    channel.invokeMethod("onLongPressHitTestResult", hitTestResult?.toMap())
+    flutterApi?.onLongPressHitTestResult(hitTestResult?.toMap()?.toMap()) {}
   }
 
   fun onScrollChanged(x: Int, y: Int) {
-    val channel = this.channel ?: return
-    channel.invokeMethod("onScrollChanged", hashMapOf<String, Any?>("x" to x, "y" to y))
+    flutterApi?.onScrollChanged(x.toLong(), y.toLong()) {}
   }
 
   fun onDownloadStarting(downloadStartRequest: DownloadStartRequest) {
-    val channel = this.channel ?: return
-    channel.invokeMethod("onDownloadStarting", downloadStartRequest.toMap())
+    flutterApi?.onDownloadStarting(downloadStartRequest.toMap().toMap()) {}
   }
 
   fun onCreateContextMenu(hitTestResult: HitTestResult?) {
-    val channel = this.channel ?: return
-    channel.invokeMethod("onCreateContextMenu", hitTestResult?.toMap())
+    flutterApi?.onCreateContextMenu(hitTestResult?.toMap()?.toMap()) {}
   }
 
   fun onOverScrolled(scrollX: Int, scrollY: Int, clampedX: Boolean, clampedY: Boolean) {
-    val channel = this.channel ?: return
-    channel.invokeMethod(
-      "onOverScrolled",
-      hashMapOf<String, Any?>(
-        "x" to scrollX, "y" to scrollY, "clampedX" to clampedX, "clampedY" to clampedY
-      )
-    )
+    flutterApi?.onOverScrolled(scrollX.toLong(), scrollY.toLong(), clampedX, clampedY) {}
   }
 
   fun onContextMenuActionItemClicked(itemId: Int, itemTitle: String?) {
-    val channel = this.channel ?: return
-    channel.invokeMethod(
-      "onContextMenuActionItemClicked",
-      hashMapOf<String, Any?>("id" to itemId, "title" to itemTitle)
-    )
+    flutterApi?.onContextMenuActionItemClicked(itemId.toLong(), itemTitle) {}
   }
 
   fun onHideContextMenu() {
-    val channel = this.channel ?: return
-    channel.invokeMethod("onHideContextMenu", hashMapOf<String, Any?>())
+    flutterApi?.onHideContextMenu {}
   }
 
   fun onEnterFullscreen() {
-    val channel = this.channel ?: return
-    channel.invokeMethod("onEnterFullscreen", hashMapOf<String, Any?>())
+    flutterApi?.onEnterFullscreen {}
   }
 
   fun onExitFullscreen() {
-    val channel = this.channel ?: return
-    channel.invokeMethod("onExitFullscreen", hashMapOf<String, Any?>())
+    flutterApi?.onExitFullscreen {}
   }
 
   open class JsAlertCallback : BaseCallbackResultImpl<JsAlertResponse>() {
@@ -258,8 +248,7 @@ class WebViewChannelDelegate(
   }
 
   fun onCloseWindow() {
-    val channel = this.channel ?: return
-    channel.invokeMethod("onCloseWindow", hashMapOf<String, Any?>())
+    flutterApi?.onCloseWindow {}
   }
 
   open class GeolocationPermissionsShowPromptCallback :
@@ -285,34 +274,23 @@ class WebViewChannelDelegate(
   }
 
   fun onGeolocationPermissionsHidePrompt() {
-    val channel = this.channel ?: return
-    channel.invokeMethod("onGeolocationPermissionsHidePrompt", hashMapOf<String, Any?>())
+    flutterApi?.onGeolocationPermissionsHidePrompt {}
   }
 
   fun onConsoleMessage(message: String?, messageLevel: Int) {
-    val channel = this.channel ?: return
-    channel.invokeMethod(
-      "onConsoleMessage",
-      hashMapOf<String, Any?>("message" to message, "messageLevel" to messageLevel)
-    )
+    flutterApi?.onConsoleMessage(message, messageLevel.toLong()) {}
   }
 
   fun onProgressChanged(progress: Int) {
-    val channel = this.channel ?: return
-    channel.invokeMethod("onProgressChanged", hashMapOf<String, Any?>("progress" to progress))
+    flutterApi?.onProgressChanged(progress.toLong()) {}
   }
 
   fun onTitleChanged(title: String?) {
-    val channel = this.channel ?: return
-    channel.invokeMethod("onTitleChanged", hashMapOf<String, Any?>("title" to title))
+    flutterApi?.onTitleChanged(title) {}
   }
 
   fun onReceivedTouchIconUrl(url: String?, precomposed: Boolean) {
-    val channel = this.channel ?: return
-    channel.invokeMethod(
-      "onReceivedTouchIconUrl",
-      hashMapOf<String, Any?>("url" to url, "precomposed" to precomposed)
-    )
+    flutterApi?.onReceivedTouchIconUrl(url, precomposed) {}
   }
 
   open class PermissionRequestCallback : BaseCallbackResultImpl<PermissionResponse>() {
@@ -341,11 +319,7 @@ class WebViewChannelDelegate(
   }
 
   fun onPermissionRequestCanceled(origin: String?, resources: List<String>?) {
-    val channel = this.channel ?: return
-    channel.invokeMethod(
-      "onPermissionRequestCanceled",
-      hashMapOf<String, Any?>("origin" to origin, "resources" to resources)
-    )
+    flutterApi?.onPermissionRequestCanceled(origin, resources) {}
   }
 
   open class ShouldOverrideUrlLoadingCallback :
@@ -369,42 +343,26 @@ class WebViewChannelDelegate(
   }
 
   fun onLoadStart(url: String?) {
-    val channel = this.channel ?: return
-    channel.invokeMethod("onLoadStart", hashMapOf<String, Any?>("url" to url))
+    flutterApi?.onLoadStart(url) {}
   }
 
   fun onLoadStop(url: String?) {
-    val channel = this.channel ?: return
-    channel.invokeMethod("onLoadStop", hashMapOf<String, Any?>("url" to url))
+    flutterApi?.onLoadStop(url) {}
   }
 
   fun onUpdateVisitedHistory(url: String?, isReload: Boolean) {
-    val channel = this.channel ?: return
-    channel.invokeMethod(
-      "onUpdateVisitedHistory",
-      hashMapOf<String, Any?>("url" to url, "isReload" to isReload)
-    )
+    flutterApi?.onUpdateVisitedHistory(url, isReload) {}
   }
 
   fun onReceivedError(request: WebResourceRequestExt, error: WebResourceErrorExt) {
-    val channel = this.channel ?: return
-    channel.invokeMethod(
-      "onReceivedError",
-      hashMapOf<String, Any?>("request" to request.toMap(), "error" to error.toMap())
-    )
+    flutterApi?.onReceivedError(request.toMap().toMap(), error.toMap().toMap()) {}
   }
 
   fun onReceivedHttpError(
     request: WebResourceRequestExt,
     errorResponse: WebResourceResponseExt
   ) {
-    val channel = this.channel ?: return
-    channel.invokeMethod(
-      "onReceivedHttpError",
-      hashMapOf<String, Any?>(
-        "request" to request.toMap(), "errorResponse" to errorResponse.toMap()
-      )
-    )
+    flutterApi?.onReceivedHttpError(request.toMap().toMap(), errorResponse.toMap().toMap()) {}
   }
 
   open class ReceivedHttpAuthRequestCallback : BaseCallbackResultImpl<HttpAuthResponse>() {
@@ -460,11 +418,7 @@ class WebViewChannelDelegate(
   }
 
   fun onZoomScaleChanged(oldScale: Float, newScale: Float) {
-    val channel = this.channel ?: return
-    channel.invokeMethod(
-      "onZoomScaleChanged",
-      hashMapOf<String, Any?>("oldScale" to oldScale, "newScale" to newScale)
-    )
+    flutterApi?.onZoomScaleChanged(oldScale.toDouble(), newScale.toDouble()) {}
   }
 
   open class SafeBrowsingHitCallback : BaseCallbackResultImpl<SafeBrowsingResponse>() {
@@ -499,96 +453,51 @@ class WebViewChannelDelegate(
   }
 
   fun onPageCommitVisible(url: String?) {
-    val channel = this.channel ?: return
-    channel.invokeMethod("onPageCommitVisible", hashMapOf<String, Any?>("url" to url))
+    flutterApi?.onPageCommitVisible(url) {}
   }
 
   fun onNavigationStarted(navigation: WebViewNavigationExt) {
-    val channel = this.channel ?: return
-    channel.invokeMethod(
-      "onNavigationStarted",
-      hashMapOf<String, Any?>("navigation" to navigation.toMap())
-    )
+    flutterApi?.onNavigationStarted(navigation.toMap().toMap()) {}
   }
 
   fun onNavigationRedirected(navigation: WebViewNavigationExt) {
-    val channel = this.channel ?: return
-    channel.invokeMethod(
-      "onNavigationRedirected",
-      hashMapOf<String, Any?>("navigation" to navigation.toMap())
-    )
+    flutterApi?.onNavigationRedirected(navigation.toMap().toMap()) {}
   }
 
   fun onNavigationCompleted(navigation: WebViewNavigationExt) {
-    val channel = this.channel ?: return
-    channel.invokeMethod(
-      "onNavigationCompleted",
-      hashMapOf<String, Any?>("navigation" to navigation.toMap())
-    )
+    flutterApi?.onNavigationCompleted(navigation.toMap().toMap()) {}
   }
 
   fun onPageLoadEvent(page: WebViewPageExt) {
-    val channel = this.channel ?: return
-    channel.invokeMethod("onPageLoadEvent", hashMapOf<String, Any?>("page" to page.toMap()))
+    flutterApi?.onPageLoadEvent(page.toMap().toMap()) {}
   }
 
   fun onPageDomContentLoadedEvent(page: WebViewPageExt) {
-    val channel = this.channel ?: return
-    channel.invokeMethod(
-      "onPageDomContentLoadedEvent",
-      hashMapOf<String, Any?>("page" to page.toMap())
-    )
+    flutterApi?.onPageDomContentLoadedEvent(page.toMap().toMap()) {}
   }
 
   fun onPageDeleted(page: WebViewPageExt) {
-    val channel = this.channel ?: return
-    channel.invokeMethod("onPageDeleted", hashMapOf<String, Any?>("page" to page.toMap()))
+    flutterApi?.onPageDeleted(page.toMap().toMap()) {}
   }
 
   fun onFirstContentfulPaintMillis(page: WebViewPageExt, durationMillis: Long) {
-    val channel = this.channel ?: return
-    channel.invokeMethod(
-      "onFirstContentfulPaintMillis",
-      hashMapOf<String, Any?>("page" to page.toMap(), "durationMillis" to durationMillis)
-    )
+    flutterApi?.onFirstContentfulPaintMillis(page.toMap().toMap(), durationMillis) {}
   }
 
   fun onLargestContentfulPaintMillis(page: WebViewPageExt, durationMillis: Long) {
-    val channel = this.channel ?: return
-    channel.invokeMethod(
-      "onLargestContentfulPaintMillis",
-      hashMapOf<String, Any?>("page" to page.toMap(), "durationMillis" to durationMillis)
-    )
+    flutterApi?.onLargestContentfulPaintMillis(page.toMap().toMap(), durationMillis) {}
   }
 
   fun onPerformanceMarkMillis(page: WebViewPageExt, markName: String, markTimeMillis: Long) {
-    val channel = this.channel ?: return
-    channel.invokeMethod(
-      "onPerformanceMarkMillis",
-      hashMapOf<String, Any?>(
-        "page" to page.toMap(),
-        "markName" to markName,
-        "markTimeMillis" to markTimeMillis
-      )
-    )
+    flutterApi?.onPerformanceMarkMillis(page.toMap().toMap(), markName, markTimeMillis) {}
   }
 
   fun onRenderProcessGone(didCrash: Boolean, rendererPriorityAtExit: Int) {
-    val channel = this.channel ?: return
-    channel.invokeMethod(
-      "onRenderProcessGone",
-      hashMapOf<String, Any?>(
-        "didCrash" to didCrash, "rendererPriorityAtExit" to rendererPriorityAtExit
-      )
-    )
+    flutterApi?.onRenderProcessGone(didCrash, rendererPriorityAtExit.toLong()) {}
   }
 
   fun onReceivedLoginRequest(realm: String?, account: String?, args: String?) {
-    val channel = this.channel ?: return
-    channel.invokeMethod(
-      "onReceivedLoginRequest",
-      hashMapOf<String, Any?>("realm" to realm, "account" to account, "args" to args)
-    )
+    flutterApi?.onReceivedLoginRequest(realm, account, args) {}
   }
 
   open class LoadResourceWithCustomSchemeCallback :
@@ -737,8 +646,7 @@ class WebViewChannelDelegate(
   }
 
   fun onRequestFocus() {
-    val channel = this.channel ?: return
-    channel.invokeMethod("onRequestFocus", hashMapOf<String, Any?>())
+    flutterApi?.onRequestFocus {}
   }
 
   open class RequestVisitedHistoryCallback : BaseCallbackResultImpl<List<String>>() {
@@ -1321,6 +1229,7 @@ class WebViewChannelDelegate(
   override fun dispose() {
     messenger?.let { InAppWebViewHostApi.setUp(it, null, suffix) }
     messenger = null
+    flutterApi = null
     super.dispose()
     webView = null
   }

@@ -34,6 +34,20 @@ Object? _extractReplyValueOrThrow(
   return replyList.firstOrNull;
 }
 
+List<Object?> wrapResponse({
+  Object? result,
+  PlatformException? error,
+  bool empty = false,
+}) {
+  if (empty) {
+    return <Object?>[];
+  }
+  if (error == null) {
+    return <Object?>[result];
+  }
+  return <Object?>[error.code, error.message, error.details];
+}
+
 class _PigeonCodec extends StandardMessageCodec {
   const _PigeonCodec();
   @override
@@ -1635,5 +1649,1030 @@ class InAppWebViewHostApi {
       isNullValid: false,
     );
     return pigeonVar_replyValue! as bool;
+  }
+}
+
+/// Implemented by the Dart controller, registered under the same suffix as [InAppWebViewHostApi].
+///
+/// W4 (§214): the fire-and-forget events. Maps are the domain objects' `toMap()`.
+abstract class InAppWebViewFlutterApi {
+  static const MessageCodec<Object?> pigeonChannelCodec = _PigeonCodec();
+
+  Future<void> onLoadStart(String? url);
+
+  Future<void> onLoadStop(String? url);
+
+  Future<void> onReceivedError(
+    Map<String?, Object?> request,
+    Map<String?, Object?> error,
+  );
+
+  Future<void> onReceivedHttpError(
+    Map<String?, Object?> request,
+    Map<String?, Object?> errorResponse,
+  );
+
+  Future<void> onProgressChanged(int progress);
+
+  Future<void> onConsoleMessage(String? message, int messageLevel);
+
+  Future<void> onScrollChanged(int x, int y);
+
+  Future<void> onOverScrolled(int x, int y, bool clampedX, bool clampedY);
+
+  /// `DownloadStartRequest.toMap()`.
+  Future<void> onDownloadStarting(Map<String?, Object?> downloadStartRequest);
+
+  Future<void> onCloseWindow();
+
+  Future<void> onTitleChanged(String? title);
+
+  Future<void> onGeolocationPermissionsHidePrompt();
+
+  Future<void> onReceivedTouchIconUrl(String? url, bool precomposed);
+
+  Future<void> onPermissionRequestCanceled(
+    String? origin,
+    List<String?>? resources,
+  );
+
+  Future<void> onUpdateVisitedHistory(String? url, bool isReload);
+
+  Future<void> onZoomScaleChanged(double oldScale, double newScale);
+
+  Future<void> onPageCommitVisible(String? url);
+
+  /// `HitTestResult.toMap()`, or null.
+  Future<void> onLongPressHitTestResult(Map<String?, Object?>? hitTestResult);
+
+  /// `HitTestResult.toMap()`, or null.
+  Future<void> onCreateContextMenu(Map<String?, Object?>? hitTestResult);
+
+  Future<void> onHideContextMenu();
+
+  Future<void> onContextMenuActionItemClicked(int id, String? title);
+
+  Future<void> onEnterFullscreen();
+
+  Future<void> onExitFullscreen();
+
+  Future<void> onRequestFocus();
+
+  Future<void> onRenderProcessGone(bool didCrash, int rendererPriorityAtExit);
+
+  Future<void> onReceivedLoginRequest(
+    String? realm,
+    String? account,
+    String? args,
+  );
+
+  Future<void> onNavigationStarted(Map<String?, Object?> navigation);
+
+  Future<void> onNavigationRedirected(Map<String?, Object?> navigation);
+
+  Future<void> onNavigationCompleted(Map<String?, Object?> navigation);
+
+  Future<void> onPageLoadEvent(Map<String?, Object?> page);
+
+  Future<void> onPageDomContentLoadedEvent(Map<String?, Object?> page);
+
+  Future<void> onPageDeleted(Map<String?, Object?> page);
+
+  Future<void> onFirstContentfulPaintMillis(
+    Map<String?, Object?> page,
+    int durationMillis,
+  );
+
+  Future<void> onLargestContentfulPaintMillis(
+    Map<String?, Object?> page,
+    int durationMillis,
+  );
+
+  Future<void> onPerformanceMarkMillis(
+    Map<String?, Object?> page,
+    String markName,
+    int markTimeMillis,
+  );
+
+  static void setUp(
+    InAppWebViewFlutterApi? api, {
+    BinaryMessenger? binaryMessenger,
+    String messageChannelSuffix = '',
+  }) {
+    messageChannelSuffix = messageChannelSuffix.isNotEmpty
+        ? '.$messageChannelSuffix'
+        : '';
+    {
+      final pigeonVar_channel = BasicMessageChannel<Object?>(
+        'dev.flutter.pigeon.flutter_inappwebview_android.InAppWebViewFlutterApi.onLoadStart$messageChannelSuffix',
+        pigeonChannelCodec,
+        binaryMessenger: binaryMessenger,
+      );
+      if (api == null) {
+        pigeonVar_channel.setMessageHandler(null);
+      } else {
+        pigeonVar_channel.setMessageHandler((Object? message) async {
+          final List<Object?> args = message! as List<Object?>;
+          final String? arg_url = args[0] as String?;
+          try {
+            await api.onLoadStart(arg_url);
+            return wrapResponse(empty: true);
+          } on PlatformException catch (e) {
+            return wrapResponse(error: e);
+          } catch (e) {
+            return wrapResponse(
+              error: PlatformException(code: 'error', message: e.toString()),
+            );
+          }
+        });
+      }
+    }
+    {
+      final pigeonVar_channel = BasicMessageChannel<Object?>(
+        'dev.flutter.pigeon.flutter_inappwebview_android.InAppWebViewFlutterApi.onLoadStop$messageChannelSuffix',
+        pigeonChannelCodec,
+        binaryMessenger: binaryMessenger,
+      );
+      if (api == null) {
+        pigeonVar_channel.setMessageHandler(null);
+      } else {
+        pigeonVar_channel.setMessageHandler((Object? message) async {
+          final List<Object?> args = message! as List<Object?>;
+          final String? arg_url = args[0] as String?;
+          try {
+            await api.onLoadStop(arg_url);
+            return wrapResponse(empty: true);
+          } on PlatformException catch (e) {
+            return wrapResponse(error: e);
+          } catch (e) {
+            return wrapResponse(
+              error: PlatformException(code: 'error', message: e.toString()),
+            );
+          }
+        });
+      }
+    }
+    {
+      final pigeonVar_channel = BasicMessageChannel<Object?>(
+        'dev.flutter.pigeon.flutter_inappwebview_android.InAppWebViewFlutterApi.onReceivedError$messageChannelSuffix',
+        pigeonChannelCodec,
+        binaryMessenger: binaryMessenger,
+      );
+      if (api == null) {
+        pigeonVar_channel.setMessageHandler(null);
+      } else {
+        pigeonVar_channel.setMessageHandler((Object? message) async {
+          final List<Object?> args = message! as List<Object?>;
+          final Map<String?, Object?> arg_request =
+              (args[0]! as Map<Object?, Object?>).cast<String?, Object?>();
+          final Map<String?, Object?> arg_error =
+              (args[1]! as Map<Object?, Object?>).cast<String?, Object?>();
+          try {
+            await api.onReceivedError(arg_request, arg_error);
+            return wrapResponse(empty: true);
+          } on PlatformException catch (e) {
+            return wrapResponse(error: e);
+          } catch (e) {
+            return wrapResponse(
+              error: PlatformException(code: 'error', message: e.toString()),
+            );
+          }
+        });
+      }
+    }
+    {
+      final pigeonVar_channel = BasicMessageChannel<Object?>(
+        'dev.flutter.pigeon.flutter_inappwebview_android.InAppWebViewFlutterApi.onReceivedHttpError$messageChannelSuffix',
+        pigeonChannelCodec,
+        binaryMessenger: binaryMessenger,
+      );
+      if (api == null) {
+        pigeonVar_channel.setMessageHandler(null);
+      } else {
+        pigeonVar_channel.setMessageHandler((Object? message) async {
+          final List<Object?> args = message! as List<Object?>;
+          final Map<String?, Object?> arg_request =
+              (args[0]! as Map<Object?, Object?>).cast<String?, Object?>();
+          final Map<String?, Object?> arg_errorResponse =
+              (args[1]! as Map<Object?, Object?>).cast<String?, Object?>();
+          try {
+            await api.onReceivedHttpError(arg_request, arg_errorResponse);
+            return wrapResponse(empty: true);
+          } on PlatformException catch (e) {
+            return wrapResponse(error: e);
+          } catch (e) {
+            return wrapResponse(
+              error: PlatformException(code: 'error', message: e.toString()),
+            );
+          }
+        });
+      }
+    }
+    {
+      final pigeonVar_channel = BasicMessageChannel<Object?>(
+        'dev.flutter.pigeon.flutter_inappwebview_android.InAppWebViewFlutterApi.onProgressChanged$messageChannelSuffix',
+        pigeonChannelCodec,
+        binaryMessenger: binaryMessenger,
+      );
+      if (api == null) {
+        pigeonVar_channel.setMessageHandler(null);
+      } else {
+        pigeonVar_channel.setMessageHandler((Object? message) async {
+          final List<Object?> args = message! as List<Object?>;
+          final int arg_progress = args[0]! as int;
+          try {
+            await api.onProgressChanged(arg_progress);
+            return wrapResponse(empty: true);
+          } on PlatformException catch (e) {
+            return wrapResponse(error: e);
+          } catch (e) {
+            return wrapResponse(
+              error: PlatformException(code: 'error', message: e.toString()),
+            );
+          }
+        });
+      }
+    }
+    {
+      final pigeonVar_channel = BasicMessageChannel<Object?>(
+        'dev.flutter.pigeon.flutter_inappwebview_android.InAppWebViewFlutterApi.onConsoleMessage$messageChannelSuffix',
+        pigeonChannelCodec,
+        binaryMessenger: binaryMessenger,
+      );
+      if (api == null) {
+        pigeonVar_channel.setMessageHandler(null);
+      } else {
+        pigeonVar_channel.setMessageHandler((Object? message) async {
+          final List<Object?> args = message! as List<Object?>;
+          final String? arg_message = args[0] as String?;
+          final int arg_messageLevel = args[1]! as int;
+          try {
+            await api.onConsoleMessage(arg_message, arg_messageLevel);
+            return wrapResponse(empty: true);
+          } on PlatformException catch (e) {
+            return wrapResponse(error: e);
+          } catch (e) {
+            return wrapResponse(
+              error: PlatformException(code: 'error', message: e.toString()),
+            );
+          }
+        });
+      }
+    }
+    {
+      final pigeonVar_channel = BasicMessageChannel<Object?>(
+        'dev.flutter.pigeon.flutter_inappwebview_android.InAppWebViewFlutterApi.onScrollChanged$messageChannelSuffix',
+        pigeonChannelCodec,
+        binaryMessenger: binaryMessenger,
+      );
+      if (api == null) {
+        pigeonVar_channel.setMessageHandler(null);
+      } else {
+        pigeonVar_channel.setMessageHandler((Object? message) async {
+          final List<Object?> args = message! as List<Object?>;
+          final int arg_x = args[0]! as int;
+          final int arg_y = args[1]! as int;
+          try {
+            await api.onScrollChanged(arg_x, arg_y);
+            return wrapResponse(empty: true);
+          } on PlatformException catch (e) {
+            return wrapResponse(error: e);
+          } catch (e) {
+            return wrapResponse(
+              error: PlatformException(code: 'error', message: e.toString()),
+            );
+          }
+        });
+      }
+    }
+    {
+      final pigeonVar_channel = BasicMessageChannel<Object?>(
+        'dev.flutter.pigeon.flutter_inappwebview_android.InAppWebViewFlutterApi.onOverScrolled$messageChannelSuffix',
+        pigeonChannelCodec,
+        binaryMessenger: binaryMessenger,
+      );
+      if (api == null) {
+        pigeonVar_channel.setMessageHandler(null);
+      } else {
+        pigeonVar_channel.setMessageHandler((Object? message) async {
+          final List<Object?> args = message! as List<Object?>;
+          final int arg_x = args[0]! as int;
+          final int arg_y = args[1]! as int;
+          final bool arg_clampedX = args[2]! as bool;
+          final bool arg_clampedY = args[3]! as bool;
+          try {
+            await api.onOverScrolled(arg_x, arg_y, arg_clampedX, arg_clampedY);
+            return wrapResponse(empty: true);
+          } on PlatformException catch (e) {
+            return wrapResponse(error: e);
+          } catch (e) {
+            return wrapResponse(
+              error: PlatformException(code: 'error', message: e.toString()),
+            );
+          }
+        });
+      }
+    }
+    {
+      final pigeonVar_channel = BasicMessageChannel<Object?>(
+        'dev.flutter.pigeon.flutter_inappwebview_android.InAppWebViewFlutterApi.onDownloadStarting$messageChannelSuffix',
+        pigeonChannelCodec,
+        binaryMessenger: binaryMessenger,
+      );
+      if (api == null) {
+        pigeonVar_channel.setMessageHandler(null);
+      } else {
+        pigeonVar_channel.setMessageHandler((Object? message) async {
+          final List<Object?> args = message! as List<Object?>;
+          final Map<String?, Object?> arg_downloadStartRequest =
+              (args[0]! as Map<Object?, Object?>).cast<String?, Object?>();
+          try {
+            await api.onDownloadStarting(arg_downloadStartRequest);
+            return wrapResponse(empty: true);
+          } on PlatformException catch (e) {
+            return wrapResponse(error: e);
+          } catch (e) {
+            return wrapResponse(
+              error: PlatformException(code: 'error', message: e.toString()),
+            );
+          }
+        });
+      }
+    }
+    {
+      final pigeonVar_channel = BasicMessageChannel<Object?>(
+        'dev.flutter.pigeon.flutter_inappwebview_android.InAppWebViewFlutterApi.onCloseWindow$messageChannelSuffix',
+        pigeonChannelCodec,
+        binaryMessenger: binaryMessenger,
+      );
+      if (api == null) {
+        pigeonVar_channel.setMessageHandler(null);
+      } else {
+        pigeonVar_channel.setMessageHandler((Object? message) async {
+          try {
+            await api.onCloseWindow();
+            return wrapResponse(empty: true);
+          } on PlatformException catch (e) {
+            return wrapResponse(error: e);
+          } catch (e) {
+            return wrapResponse(
+              error: PlatformException(code: 'error', message: e.toString()),
+            );
+          }
+        });
+      }
+    }
+    {
+      final pigeonVar_channel = BasicMessageChannel<Object?>(
+        'dev.flutter.pigeon.flutter_inappwebview_android.InAppWebViewFlutterApi.onTitleChanged$messageChannelSuffix',
+        pigeonChannelCodec,
+        binaryMessenger: binaryMessenger,
+      );
+      if (api == null) {
+        pigeonVar_channel.setMessageHandler(null);
+      } else {
+        pigeonVar_channel.setMessageHandler((Object? message) async {
+          final List<Object?> args = message! as List<Object?>;
+          final String? arg_title = args[0] as String?;
+          try {
+            await api.onTitleChanged(arg_title);
+            return wrapResponse(empty: true);
+          } on PlatformException catch (e) {
+            return wrapResponse(error: e);
+          } catch (e) {
+            return wrapResponse(
+              error: PlatformException(code: 'error', message: e.toString()),
+            );
+          }
+        });
+      }
+    }
+    {
+      final pigeonVar_channel = BasicMessageChannel<Object?>(
+        'dev.flutter.pigeon.flutter_inappwebview_android.InAppWebViewFlutterApi.onGeolocationPermissionsHidePrompt$messageChannelSuffix',
+        pigeonChannelCodec,
+        binaryMessenger: binaryMessenger,
+      );
+      if (api == null) {
+        pigeonVar_channel.setMessageHandler(null);
+      } else {
+        pigeonVar_channel.setMessageHandler((Object? message) async {
+          try {
+            await api.onGeolocationPermissionsHidePrompt();
+            return wrapResponse(empty: true);
+          } on PlatformException catch (e) {
+            return wrapResponse(error: e);
+          } catch (e) {
+            return wrapResponse(
+              error: PlatformException(code: 'error', message: e.toString()),
+            );
+          }
+        });
+      }
+    }
+    {
+      final pigeonVar_channel = BasicMessageChannel<Object?>(
+        'dev.flutter.pigeon.flutter_inappwebview_android.InAppWebViewFlutterApi.onReceivedTouchIconUrl$messageChannelSuffix',
+        pigeonChannelCodec,
+        binaryMessenger: binaryMessenger,
+      );
+      if (api == null) {
+        pigeonVar_channel.setMessageHandler(null);
+      } else {
+        pigeonVar_channel.setMessageHandler((Object? message) async {
+          final List<Object?> args = message! as List<Object?>;
+          final String? arg_url = args[0] as String?;
+          final bool arg_precomposed = args[1]! as bool;
+          try {
+            await api.onReceivedTouchIconUrl(arg_url, arg_precomposed);
+            return wrapResponse(empty: true);
+          } on PlatformException catch (e) {
+            return wrapResponse(error: e);
+          } catch (e) {
+            return wrapResponse(
+              error: PlatformException(code: 'error', message: e.toString()),
+            );
+          }
+        });
+      }
+    }
+    {
+      final pigeonVar_channel = BasicMessageChannel<Object?>(
+        'dev.flutter.pigeon.flutter_inappwebview_android.InAppWebViewFlutterApi.onPermissionRequestCanceled$messageChannelSuffix',
+        pigeonChannelCodec,
+        binaryMessenger: binaryMessenger,
+      );
+      if (api == null) {
+        pigeonVar_channel.setMessageHandler(null);
+      } else {
+        pigeonVar_channel.setMessageHandler((Object? message) async {
+          final List<Object?> args = message! as List<Object?>;
+          final String? arg_origin = args[0] as String?;
+          final List<String?>? arg_resources = (args[1] as List<Object?>?)
+              ?.cast<String?>();
+          try {
+            await api.onPermissionRequestCanceled(arg_origin, arg_resources);
+            return wrapResponse(empty: true);
+          } on PlatformException catch (e) {
+            return wrapResponse(error: e);
+          } catch (e) {
+            return wrapResponse(
+              error: PlatformException(code: 'error', message: e.toString()),
+            );
+          }
+        });
+      }
+    }
+    {
+      final pigeonVar_channel = BasicMessageChannel<Object?>(
+        'dev.flutter.pigeon.flutter_inappwebview_android.InAppWebViewFlutterApi.onUpdateVisitedHistory$messageChannelSuffix',
+        pigeonChannelCodec,
+        binaryMessenger: binaryMessenger,
+      );
+      if (api == null) {
+        pigeonVar_channel.setMessageHandler(null);
+      } else {
+        pigeonVar_channel.setMessageHandler((Object? message) async {
+          final List<Object?> args = message! as List<Object?>;
+          final String? arg_url = args[0] as String?;
+          final bool arg_isReload = args[1]! as bool;
+          try {
+            await api.onUpdateVisitedHistory(arg_url, arg_isReload);
+            return wrapResponse(empty: true);
+          } on PlatformException catch (e) {
+            return wrapResponse(error: e);
+          } catch (e) {
+            return wrapResponse(
+              error: PlatformException(code: 'error', message: e.toString()),
+            );
+          }
+        });
+      }
+    }
+    {
+      final pigeonVar_channel = BasicMessageChannel<Object?>(
+        'dev.flutter.pigeon.flutter_inappwebview_android.InAppWebViewFlutterApi.onZoomScaleChanged$messageChannelSuffix',
+        pigeonChannelCodec,
+        binaryMessenger: binaryMessenger,
+      );
+      if (api == null) {
+        pigeonVar_channel.setMessageHandler(null);
+      } else {
+        pigeonVar_channel.setMessageHandler((Object? message) async {
+          final List<Object?> args = message! as List<Object?>;
+          final double arg_oldScale = args[0]! as double;
+          final double arg_newScale = args[1]! as double;
+          try {
+            await api.onZoomScaleChanged(arg_oldScale, arg_newScale);
+            return wrapResponse(empty: true);
+          } on PlatformException catch (e) {
+            return wrapResponse(error: e);
+          } catch (e) {
+            return wrapResponse(
+              error: PlatformException(code: 'error', message: e.toString()),
+            );
+          }
+        });
+      }
+    }
+    {
+      final pigeonVar_channel = BasicMessageChannel<Object?>(
+        'dev.flutter.pigeon.flutter_inappwebview_android.InAppWebViewFlutterApi.onPageCommitVisible$messageChannelSuffix',
+        pigeonChannelCodec,
+        binaryMessenger: binaryMessenger,
+      );
+      if (api == null) {
+        pigeonVar_channel.setMessageHandler(null);
+      } else {
+        pigeonVar_channel.setMessageHandler((Object? message) async {
+          final List<Object?> args = message! as List<Object?>;
+          final String? arg_url = args[0] as String?;
+          try {
+            await api.onPageCommitVisible(arg_url);
+            return wrapResponse(empty: true);
+          } on PlatformException catch (e) {
+            return wrapResponse(error: e);
+          } catch (e) {
+            return wrapResponse(
+              error: PlatformException(code: 'error', message: e.toString()),
+            );
+          }
+        });
+      }
+    }
+    {
+      final pigeonVar_channel = BasicMessageChannel<Object?>(
+        'dev.flutter.pigeon.flutter_inappwebview_android.InAppWebViewFlutterApi.onLongPressHitTestResult$messageChannelSuffix',
+        pigeonChannelCodec,
+        binaryMessenger: binaryMessenger,
+      );
+      if (api == null) {
+        pigeonVar_channel.setMessageHandler(null);
+      } else {
+        pigeonVar_channel.setMessageHandler((Object? message) async {
+          final List<Object?> args = message! as List<Object?>;
+          final Map<String?, Object?>? arg_hitTestResult =
+              (args[0] as Map<Object?, Object?>?)?.cast<String?, Object?>();
+          try {
+            await api.onLongPressHitTestResult(arg_hitTestResult);
+            return wrapResponse(empty: true);
+          } on PlatformException catch (e) {
+            return wrapResponse(error: e);
+          } catch (e) {
+            return wrapResponse(
+              error: PlatformException(code: 'error', message: e.toString()),
+            );
+          }
+        });
+      }
+    }
+    {
+      final pigeonVar_channel = BasicMessageChannel<Object?>(
+        'dev.flutter.pigeon.flutter_inappwebview_android.InAppWebViewFlutterApi.onCreateContextMenu$messageChannelSuffix',
+        pigeonChannelCodec,
+        binaryMessenger: binaryMessenger,
+      );
+      if (api == null) {
+        pigeonVar_channel.setMessageHandler(null);
+      } else {
+        pigeonVar_channel.setMessageHandler((Object? message) async {
+          final List<Object?> args = message! as List<Object?>;
+          final Map<String?, Object?>? arg_hitTestResult =
+              (args[0] as Map<Object?, Object?>?)?.cast<String?, Object?>();
+          try {
+            await api.onCreateContextMenu(arg_hitTestResult);
+            return wrapResponse(empty: true);
+          } on PlatformException catch (e) {
+            return wrapResponse(error: e);
+          } catch (e) {
+            return wrapResponse(
+              error: PlatformException(code: 'error', message: e.toString()),
+            );
+          }
+        });
+      }
+    }
+    {
+      final pigeonVar_channel = BasicMessageChannel<Object?>(
+        'dev.flutter.pigeon.flutter_inappwebview_android.InAppWebViewFlutterApi.onHideContextMenu$messageChannelSuffix',
+        pigeonChannelCodec,
+        binaryMessenger: binaryMessenger,
+      );
+      if (api == null) {
+        pigeonVar_channel.setMessageHandler(null);
+      } else {
+        pigeonVar_channel.setMessageHandler((Object? message) async {
+          try {
+            await api.onHideContextMenu();
+            return wrapResponse(empty: true);
+          } on PlatformException catch (e) {
+            return wrapResponse(error: e);
+          } catch (e) {
+            return wrapResponse(
+              error: PlatformException(code: 'error', message: e.toString()),
+            );
+          }
+        });
+      }
+    }
+    {
+      final pigeonVar_channel = BasicMessageChannel<Object?>(
+        'dev.flutter.pigeon.flutter_inappwebview_android.InAppWebViewFlutterApi.onContextMenuActionItemClicked$messageChannelSuffix',
+        pigeonChannelCodec,
+        binaryMessenger: binaryMessenger,
+      );
+      if (api == null) {
+        pigeonVar_channel.setMessageHandler(null);
+      } else {
+        pigeonVar_channel.setMessageHandler((Object? message) async {
+          final List<Object?> args = message! as List<Object?>;
+          final int arg_id = args[0]! as int;
+          final String? arg_title = args[1] as String?;
+          try {
+            await api.onContextMenuActionItemClicked(arg_id, arg_title);
+            return wrapResponse(empty: true);
+          } on PlatformException catch (e) {
+            return wrapResponse(error: e);
+          } catch (e) {
+            return wrapResponse(
+              error: PlatformException(code: 'error', message: e.toString()),
+            );
+          }
+        });
+      }
+    }
+    {
+      final pigeonVar_channel = BasicMessageChannel<Object?>(
+        'dev.flutter.pigeon.flutter_inappwebview_android.InAppWebViewFlutterApi.onEnterFullscreen$messageChannelSuffix',
+        pigeonChannelCodec,
+        binaryMessenger: binaryMessenger,
+      );
+      if (api == null) {
+        pigeonVar_channel.setMessageHandler(null);
+      } else {
+        pigeonVar_channel.setMessageHandler((Object? message) async {
+          try {
+            await api.onEnterFullscreen();
+            return wrapResponse(empty: true);
+          } on PlatformException catch (e) {
+            return wrapResponse(error: e);
+          } catch (e) {
+            return wrapResponse(
+              error: PlatformException(code: 'error', message: e.toString()),
+            );
+          }
+        });
+      }
+    }
+    {
+      final pigeonVar_channel = BasicMessageChannel<Object?>(
+        'dev.flutter.pigeon.flutter_inappwebview_android.InAppWebViewFlutterApi.onExitFullscreen$messageChannelSuffix',
+        pigeonChannelCodec,
+        binaryMessenger: binaryMessenger,
+      );
+      if (api == null) {
+        pigeonVar_channel.setMessageHandler(null);
+      } else {
+        pigeonVar_channel.setMessageHandler((Object? message) async {
+          try {
+            await api.onExitFullscreen();
+            return wrapResponse(empty: true);
+          } on PlatformException catch (e) {
+            return wrapResponse(error: e);
+          } catch (e) {
+            return wrapResponse(
+              error: PlatformException(code: 'error', message: e.toString()),
+            );
+          }
+        });
+      }
+    }
+    {
+      final pigeonVar_channel = BasicMessageChannel<Object?>(
+        'dev.flutter.pigeon.flutter_inappwebview_android.InAppWebViewFlutterApi.onRequestFocus$messageChannelSuffix',
+        pigeonChannelCodec,
+        binaryMessenger: binaryMessenger,
+      );
+      if (api == null) {
+        pigeonVar_channel.setMessageHandler(null);
+      } else {
+        pigeonVar_channel.setMessageHandler((Object? message) async {
+          try {
+            await api.onRequestFocus();
+            return wrapResponse(empty: true);
+          } on PlatformException catch (e) {
+            return wrapResponse(error: e);
+          } catch (e) {
+            return wrapResponse(
+              error: PlatformException(code: 'error', message: e.toString()),
+            );
+          }
+        });
+      }
+    }
+    {
+      final pigeonVar_channel = BasicMessageChannel<Object?>(
+        'dev.flutter.pigeon.flutter_inappwebview_android.InAppWebViewFlutterApi.onRenderProcessGone$messageChannelSuffix',
+        pigeonChannelCodec,
+        binaryMessenger: binaryMessenger,
+      );
+      if (api == null) {
+        pigeonVar_channel.setMessageHandler(null);
+      } else {
+        pigeonVar_channel.setMessageHandler((Object? message) async {
+          final List<Object?> args = message! as List<Object?>;
+          final bool arg_didCrash = args[0]! as bool;
+          final int arg_rendererPriorityAtExit = args[1]! as int;
+          try {
+            await api.onRenderProcessGone(
+              arg_didCrash,
+              arg_rendererPriorityAtExit,
+            );
+            return wrapResponse(empty: true);
+          } on PlatformException catch (e) {
+            return wrapResponse(error: e);
+          } catch (e) {
+            return wrapResponse(
+              error: PlatformException(code: 'error', message: e.toString()),
+            );
+          }
+        });
+      }
+    }
+    {
+      final pigeonVar_channel = BasicMessageChannel<Object?>(
+        'dev.flutter.pigeon.flutter_inappwebview_android.InAppWebViewFlutterApi.onReceivedLoginRequest$messageChannelSuffix',
+        pigeonChannelCodec,
+        binaryMessenger: binaryMessenger,
+      );
+      if (api == null) {
+        pigeonVar_channel.setMessageHandler(null);
+      } else {
+        pigeonVar_channel.setMessageHandler((Object? message) async {
+          final List<Object?> args = message! as List<Object?>;
+          final String? arg_realm = args[0] as String?;
+          final String? arg_account = args[1] as String?;
+          final String? arg_args = args[2] as String?;
+          try {
+            await api.onReceivedLoginRequest(arg_realm, arg_account, arg_args);
+            return wrapResponse(empty: true);
+          } on PlatformException catch (e) {
+            return wrapResponse(error: e);
+          } catch (e) {
+            return wrapResponse(
+              error: PlatformException(code: 'error', message: e.toString()),
+            );
+          }
+        });
+      }
+    }
+    {
+      final pigeonVar_channel = BasicMessageChannel<Object?>(
+        'dev.flutter.pigeon.flutter_inappwebview_android.InAppWebViewFlutterApi.onNavigationStarted$messageChannelSuffix',
+        pigeonChannelCodec,
+        binaryMessenger: binaryMessenger,
+      );
+      if (api == null) {
+        pigeonVar_channel.setMessageHandler(null);
+      } else {
+        pigeonVar_channel.setMessageHandler((Object? message) async {
+          final List<Object?> args = message! as List<Object?>;
+          final Map<String?, Object?> arg_navigation =
+              (args[0]! as Map<Object?, Object?>).cast<String?, Object?>();
+          try {
+            await api.onNavigationStarted(arg_navigation);
+            return wrapResponse(empty: true);
+          } on PlatformException catch (e) {
+            return wrapResponse(error: e);
+          } catch (e) {
+            return wrapResponse(
+              error: PlatformException(code: 'error', message: e.toString()),
+            );
+          }
+        });
+      }
+    }
+    {
+      final pigeonVar_channel = BasicMessageChannel<Object?>(
+        'dev.flutter.pigeon.flutter_inappwebview_android.InAppWebViewFlutterApi.onNavigationRedirected$messageChannelSuffix',
+        pigeonChannelCodec,
+        binaryMessenger: binaryMessenger,
+      );
+      if (api == null) {
+        pigeonVar_channel.setMessageHandler(null);
+      } else {
+        pigeonVar_channel.setMessageHandler((Object? message) async {
+          final List<Object?> args = message! as List<Object?>;
+          final Map<String?, Object?> arg_navigation =
+              (args[0]! as Map<Object?, Object?>).cast<String?, Object?>();
+          try {
+            await api.onNavigationRedirected(arg_navigation);
+            return wrapResponse(empty: true);
+          } on PlatformException catch (e) {
+            return wrapResponse(error: e);
+          } catch (e) {
+            return wrapResponse(
+              error: PlatformException(code: 'error', message: e.toString()),
+            );
+          }
+        });
+      }
+    }
+    {
+      final pigeonVar_channel = BasicMessageChannel<Object?>(
+        'dev.flutter.pigeon.flutter_inappwebview_android.InAppWebViewFlutterApi.onNavigationCompleted$messageChannelSuffix',
+        pigeonChannelCodec,
+        binaryMessenger: binaryMessenger,
+      );
+      if (api == null) {
+        pigeonVar_channel.setMessageHandler(null);
+      } else {
+        pigeonVar_channel.setMessageHandler((Object? message) async {
+          final List<Object?> args = message! as List<Object?>;
+          final Map<String?, Object?> arg_navigation =
+              (args[0]! as Map<Object?, Object?>).cast<String?, Object?>();
+          try {
+            await api.onNavigationCompleted(arg_navigation);
+            return wrapResponse(empty: true);
+          } on PlatformException catch (e) {
+            return wrapResponse(error: e);
+          } catch (e) {
+            return wrapResponse(
+              error: PlatformException(code: 'error', message: e.toString()),
+            );
+          }
+        });
+      }
+    }
+    {
+      final pigeonVar_channel = BasicMessageChannel<Object?>(
+        'dev.flutter.pigeon.flutter_inappwebview_android.InAppWebViewFlutterApi.onPageLoadEvent$messageChannelSuffix',
+        pigeonChannelCodec,
+        binaryMessenger: binaryMessenger,
+      );
+      if (api == null) {
+        pigeonVar_channel.setMessageHandler(null);
+      } else {
+        pigeonVar_channel.setMessageHandler((Object? message) async {
+          final List<Object?> args = message! as List<Object?>;
+          final Map<String?, Object?> arg_page =
+              (args[0]! as Map<Object?, Object?>).cast<String?, Object?>();
+          try {
+            await api.onPageLoadEvent(arg_page);
+            return wrapResponse(empty: true);
+          } on PlatformException catch (e) {
+            return wrapResponse(error: e);
+          } catch (e) {
+            return wrapResponse(
+              error: PlatformException(code: 'error', message: e.toString()),
+            );
+          }
+        });
+      }
+    }
+    {
+      final pigeonVar_channel = BasicMessageChannel<Object?>(
+        'dev.flutter.pigeon.flutter_inappwebview_android.InAppWebViewFlutterApi.onPageDomContentLoadedEvent$messageChannelSuffix',
+        pigeonChannelCodec,
+        binaryMessenger: binaryMessenger,
+      );
+      if (api == null) {
+        pigeonVar_channel.setMessageHandler(null);
+      } else {
+        pigeonVar_channel.setMessageHandler((Object? message) async {
+          final List<Object?> args = message! as List<Object?>;
+          final Map<String?, Object?> arg_page =
+              (args[0]! as Map<Object?, Object?>).cast<String?, Object?>();
+          try {
+            await api.onPageDomContentLoadedEvent(arg_page);
+            return wrapResponse(empty: true);
+          } on PlatformException catch (e) {
+            return wrapResponse(error: e);
+          } catch (e) {
+            return wrapResponse(
+              error: PlatformException(code: 'error', message: e.toString()),
+            );
+          }
+        });
+      }
+    }
+    {
+      final pigeonVar_channel = BasicMessageChannel<Object?>(
+        'dev.flutter.pigeon.flutter_inappwebview_android.InAppWebViewFlutterApi.onPageDeleted$messageChannelSuffix',
+        pigeonChannelCodec,
+        binaryMessenger: binaryMessenger,
+      );
+      if (api == null) {
+        pigeonVar_channel.setMessageHandler(null);
+      } else {
+        pigeonVar_channel.setMessageHandler((Object? message) async {
+          final List<Object?> args = message! as List<Object?>;
+          final Map<String?, Object?> arg_page =
+              (args[0]! as Map<Object?, Object?>).cast<String?, Object?>();
+          try {
+            await api.onPageDeleted(arg_page);
+            return wrapResponse(empty: true);
+          } on PlatformException catch (e) {
+            return wrapResponse(error: e);
+          } catch (e) {
+            return wrapResponse(
+              error: PlatformException(code: 'error', message: e.toString()),
+            );
+          }
+        });
+      }
+    }
+    {
+      final pigeonVar_channel = BasicMessageChannel<Object?>(
+        'dev.flutter.pigeon.flutter_inappwebview_android.InAppWebViewFlutterApi.onFirstContentfulPaintMillis$messageChannelSuffix',
+        pigeonChannelCodec,
+        binaryMessenger: binaryMessenger,
+      );
+      if (api == null) {
+        pigeonVar_channel.setMessageHandler(null);
+      } else {
+        pigeonVar_channel.setMessageHandler((Object? message) async {
+          final List<Object?> args = message! as List<Object?>;
+          final Map<String?, Object?> arg_page =
+              (args[0]! as Map<Object?, Object?>).cast<String?, Object?>();
+          final int arg_durationMillis = args[1]! as int;
+          try {
+            await api.onFirstContentfulPaintMillis(
+              arg_page,
+              arg_durationMillis,
+            );
+            return wrapResponse(empty: true);
+          } on PlatformException catch (e) {
+            return wrapResponse(error: e);
+          } catch (e) {
+            return wrapResponse(
+              error: PlatformException(code: 'error', message: e.toString()),
+            );
+          }
+        });
+      }
+    }
+    {
+      final pigeonVar_channel = BasicMessageChannel<Object?>(
+        'dev.flutter.pigeon.flutter_inappwebview_android.InAppWebViewFlutterApi.onLargestContentfulPaintMillis$messageChannelSuffix',
+        pigeonChannelCodec,
+        binaryMessenger: binaryMessenger,
+      );
+      if (api == null) {
+        pigeonVar_channel.setMessageHandler(null);
+      } else {
+        pigeonVar_channel.setMessageHandler((Object? message) async {
+          final List<Object?> args = message! as List<Object?>;
+          final Map<String?, Object?> arg_page =
+              (args[0]! as Map<Object?, Object?>).cast<String?, Object?>();
+          final int arg_durationMillis = args[1]! as int;
+          try {
+            await api.onLargestContentfulPaintMillis(
+              arg_page,
+              arg_durationMillis,
+            );
+            return wrapResponse(empty: true);
+          } on PlatformException catch (e) {
+            return wrapResponse(error: e);
+          } catch (e) {
+            return wrapResponse(
+              error: PlatformException(code: 'error', message: e.toString()),
+            );
+          }
+        });
+      }
+    }
+    {
+      final pigeonVar_channel = BasicMessageChannel<Object?>(
+        'dev.flutter.pigeon.flutter_inappwebview_android.InAppWebViewFlutterApi.onPerformanceMarkMillis$messageChannelSuffix',
+        pigeonChannelCodec,
+        binaryMessenger: binaryMessenger,
+      );
+      if (api == null) {
+        pigeonVar_channel.setMessageHandler(null);
+      } else {
+        pigeonVar_channel.setMessageHandler((Object? message) async {
+          final List<Object?> args = message! as List<Object?>;
+          final Map<String?, Object?> arg_page =
+              (args[0]! as Map<Object?, Object?>).cast<String?, Object?>();
+          final String arg_markName = args[1]! as String;
+          final int arg_markTimeMillis = args[2]! as int;
+          try {
+            await api.onPerformanceMarkMillis(
+              arg_page,
+              arg_markName,
+              arg_markTimeMillis,
+            );
+            return wrapResponse(empty: true);
+          } on PlatformException catch (e) {
+            return wrapResponse(error: e);
+          } catch (e) {
+            return wrapResponse(
+              error: PlatformException(code: 'error', message: e.toString()),
+            );
+          }
+        });
+      }
+    }
   }
 }

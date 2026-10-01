@@ -480,6 +480,20 @@ for, and five others have a native *value* that differs from their name.
 
 ### Internal
 
+- **`WebViewChannelDelegate` W4: the 35 fire-and-forget events move to Pigeon**, on a new
+  `InAppWebViewFlutterApi` under the same suffix as the HostApi. Load, progress, title, console,
+  scroll and over-scroll, download, errors, fullscreen, context menu, history, zoom, render
+  process, login, navigation and page events. No public API change. Only the 21 value-returning
+  events (W5) are left on the MethodChannel.
+  - The Dart handler rebuilds the exact arguments Kotlin used to send and dispatches them through
+    the controller's existing `_handleMethod`, so each event keeps its one definition.
+  - The events are `@async` on the Dart side, so a throwing callback, or a payload `fromMap` can't
+    read, still becomes an error reply that Kotlin ignores, as it did on the MethodChannel, rather
+    than an unhandled error.
+  - The handler is unregistered on dispose, except on a keep-alive dispose, which keeps it
+    registered exactly as it keeps the MethodChannel handler.
+  - `pigeon_in_app_webview_events_test` (new) delivers all 35 as real Pigeon messages and pins
+    each field, the dispose and keep-alive rules, and the error reply.
 - **W4's coverage check: the five events whose typed fields no device test read are now
   asserted, before their migration.** All 35 fire-and-forget events arrive in some test, but these
   fields never did, so a dropped or constant value would have passed. Test code only.

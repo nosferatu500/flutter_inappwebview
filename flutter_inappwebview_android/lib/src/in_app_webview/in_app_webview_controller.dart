@@ -43,6 +43,213 @@ class AndroidInAppWebViewControllerCreationParams
   }
 }
 
+/// Receives the fire-and-forget [InAppWebViewFlutterApi] events (W4, §214) and dispatches each one
+/// through the controller's `_handleMethod`, rebuilt as the exact [MethodCall] the MethodChannel
+/// used to deliver: the same method name, and the arguments Kotlin used to send, key for key.
+///
+/// So every event keeps its one definition in `_handleMethod` (the widget or browser routing, the
+/// `fromMap` parsing, the debug log), and the unit tests that drive `handleMethod` directly stay
+/// valid. Each method returns the dispatch's Future, which Pigeon awaits: a throw becomes an error
+/// reply, as on the MethodChannel, instead of an unhandled error.
+class _InAppWebViewFlutterApiImpl implements InAppWebViewFlutterApi {
+  _InAppWebViewFlutterApiImpl(this._controller);
+
+  final AndroidInAppWebViewController _controller;
+
+  Future<void> _dispatch(String method, Object? arguments) async {
+    await _controller._handleMethod(MethodCall(method, arguments));
+  }
+
+  @override
+  Future<void> onLoadStart(String? url) =>
+      _dispatch('onLoadStart', {'url': url});
+
+  @override
+  Future<void> onLoadStop(String? url) => _dispatch('onLoadStop', {'url': url});
+
+  @override
+  Future<void> onReceivedError(
+    Map<String?, Object?> request,
+    Map<String?, Object?> error,
+  ) => _dispatch('onReceivedError', {'request': request, 'error': error});
+
+  @override
+  Future<void> onReceivedHttpError(
+    Map<String?, Object?> request,
+    Map<String?, Object?> errorResponse,
+  ) => _dispatch('onReceivedHttpError', {
+    'request': request,
+    'errorResponse': errorResponse,
+  });
+
+  @override
+  Future<void> onProgressChanged(int progress) =>
+      _dispatch('onProgressChanged', {'progress': progress});
+
+  @override
+  Future<void> onConsoleMessage(String? message, int messageLevel) => _dispatch(
+    'onConsoleMessage',
+    {'message': message, 'messageLevel': messageLevel},
+  );
+
+  @override
+  Future<void> onScrollChanged(int x, int y) =>
+      _dispatch('onScrollChanged', {'x': x, 'y': y});
+
+  @override
+  Future<void> onOverScrolled(int x, int y, bool clampedX, bool clampedY) =>
+      _dispatch('onOverScrolled', {
+        'x': x,
+        'y': y,
+        'clampedX': clampedX,
+        'clampedY': clampedY,
+      });
+
+  // Kotlin sent `DownloadStartRequest.toMap()` itself as the arguments.
+  @override
+  Future<void> onDownloadStarting(Map<String?, Object?> downloadStartRequest) =>
+      _dispatch('onDownloadStarting', downloadStartRequest);
+
+  @override
+  Future<void> onCloseWindow() => _dispatch('onCloseWindow', {});
+
+  @override
+  Future<void> onTitleChanged(String? title) =>
+      _dispatch('onTitleChanged', {'title': title});
+
+  @override
+  Future<void> onGeolocationPermissionsHidePrompt() =>
+      _dispatch('onGeolocationPermissionsHidePrompt', {});
+
+  @override
+  Future<void> onReceivedTouchIconUrl(String? url, bool precomposed) =>
+      _dispatch('onReceivedTouchIconUrl', {
+        'url': url,
+        'precomposed': precomposed,
+      });
+
+  @override
+  Future<void> onPermissionRequestCanceled(
+    String? origin,
+    List<String?>? resources,
+  ) => _dispatch('onPermissionRequestCanceled', {
+    'origin': origin,
+    'resources': resources,
+  });
+
+  @override
+  Future<void> onUpdateVisitedHistory(String? url, bool isReload) =>
+      _dispatch('onUpdateVisitedHistory', {'url': url, 'isReload': isReload});
+
+  @override
+  Future<void> onZoomScaleChanged(double oldScale, double newScale) =>
+      _dispatch('onZoomScaleChanged', {
+        'oldScale': oldScale,
+        'newScale': newScale,
+      });
+
+  @override
+  Future<void> onPageCommitVisible(String? url) =>
+      _dispatch('onPageCommitVisible', {'url': url});
+
+  // Kotlin sent `HitTestResult.toMap()` itself (or null) as the arguments.
+  @override
+  Future<void> onLongPressHitTestResult(Map<String?, Object?>? hitTestResult) =>
+      _dispatch('onLongPressHitTestResult', hitTestResult);
+
+  // Kotlin sent `HitTestResult.toMap()` itself (or null) as the arguments.
+  @override
+  Future<void> onCreateContextMenu(Map<String?, Object?>? hitTestResult) =>
+      _dispatch('onCreateContextMenu', hitTestResult);
+
+  @override
+  Future<void> onHideContextMenu() => _dispatch('onHideContextMenu', {});
+
+  @override
+  Future<void> onContextMenuActionItemClicked(int id, String? title) =>
+      _dispatch('onContextMenuActionItemClicked', {'id': id, 'title': title});
+
+  @override
+  Future<void> onEnterFullscreen() => _dispatch('onEnterFullscreen', {});
+
+  @override
+  Future<void> onExitFullscreen() => _dispatch('onExitFullscreen', {});
+
+  @override
+  Future<void> onRequestFocus() => _dispatch('onRequestFocus', {});
+
+  @override
+  Future<void> onRenderProcessGone(bool didCrash, int rendererPriorityAtExit) =>
+      _dispatch('onRenderProcessGone', {
+        'didCrash': didCrash,
+        'rendererPriorityAtExit': rendererPriorityAtExit,
+      });
+
+  @override
+  Future<void> onReceivedLoginRequest(
+    String? realm,
+    String? account,
+    String? args,
+  ) => _dispatch('onReceivedLoginRequest', {
+    'realm': realm,
+    'account': account,
+    'args': args,
+  });
+
+  @override
+  Future<void> onNavigationStarted(Map<String?, Object?> navigation) =>
+      _dispatch('onNavigationStarted', {'navigation': navigation});
+
+  @override
+  Future<void> onNavigationRedirected(Map<String?, Object?> navigation) =>
+      _dispatch('onNavigationRedirected', {'navigation': navigation});
+
+  @override
+  Future<void> onNavigationCompleted(Map<String?, Object?> navigation) =>
+      _dispatch('onNavigationCompleted', {'navigation': navigation});
+
+  @override
+  Future<void> onPageLoadEvent(Map<String?, Object?> page) =>
+      _dispatch('onPageLoadEvent', {'page': page});
+
+  @override
+  Future<void> onPageDomContentLoadedEvent(Map<String?, Object?> page) =>
+      _dispatch('onPageDomContentLoadedEvent', {'page': page});
+
+  @override
+  Future<void> onPageDeleted(Map<String?, Object?> page) =>
+      _dispatch('onPageDeleted', {'page': page});
+
+  @override
+  Future<void> onFirstContentfulPaintMillis(
+    Map<String?, Object?> page,
+    int durationMillis,
+  ) => _dispatch('onFirstContentfulPaintMillis', {
+    'page': page,
+    'durationMillis': durationMillis,
+  });
+
+  @override
+  Future<void> onLargestContentfulPaintMillis(
+    Map<String?, Object?> page,
+    int durationMillis,
+  ) => _dispatch('onLargestContentfulPaintMillis', {
+    'page': page,
+    'durationMillis': durationMillis,
+  });
+
+  @override
+  Future<void> onPerformanceMarkMillis(
+    Map<String?, Object?> page,
+    String markName,
+    int markTimeMillis,
+  ) => _dispatch('onPerformanceMarkMillis', {
+    'page': page,
+    'markName': markName,
+    'markTimeMillis': markTimeMillis,
+  });
+}
+
 ///Controls a WebView, such as an [InAppWebView] widget instance, a [AndroidHeadlessInAppWebView] instance or [AndroidInAppBrowser] WebView instance.
 ///
 ///If you are using the [InAppWebView] widget, an [InAppWebViewController] instance can be obtained by setting the [InAppWebView.onWebViewCreated]
@@ -70,11 +277,24 @@ class AndroidInAppWebViewController extends PlatformInAppWebViewController
 
   AndroidInAppBrowser? _inAppBrowser;
 
-  /// The Pigeon half of the per-WebView transport, while the migration is split (§207 on):
-  /// the methods already moved go here, the rest still go through [channel]. Its suffix is
-  /// [channel]'s name tail, `inappwebview_$id` or `inappbrowser_$id`, as on the Kotlin side. Null
-  /// after [dispose], as [channel] is.
+  /// The Pigeon half of the per-WebView transport (§207 on). Every host method is here since W3
+  /// (§212); [channel] now only carries the events not yet moved. Its suffix is [channel]'s name
+  /// tail, `inappwebview_$id` or `inappbrowser_$id`, as on the Kotlin side. Null after [dispose], as
+  /// [channel] is.
   InAppWebViewHostApi? _hostApi;
+
+  /// The suffix both Pigeon APIs use, kept so [dispose] can unregister [InAppWebViewFlutterApi].
+  /// Its events (W4, §214) arrive there, the rest still through [channel].
+  late final String _pigeonSuffix;
+
+  void _setUpPigeon(String suffix) {
+    _pigeonSuffix = suffix;
+    _hostApi = InAppWebViewHostApi(messageChannelSuffix: suffix);
+    InAppWebViewFlutterApi.setUp(
+      _InAppWebViewFlutterApiImpl(this),
+      messageChannelSuffix: suffix,
+    );
+  }
 
   PlatformInAppBrowserEvents? get _inAppBrowserEventHandler =>
       _inAppBrowser?.eventHandler;
@@ -96,7 +316,7 @@ class AndroidInAppWebViewController extends PlatformInAppWebViewController
     channel = MethodChannel('dev.nosferatu500.inappwebview/inappwebview_$id');
     handler = handleMethod;
     initMethodCallHandler();
-    _hostApi = InAppWebViewHostApi(messageChannelSuffix: 'inappwebview_$id');
+    _setUpPigeon('inappwebview_$id');
 
     final initialUserScripts = webviewParams?.initialUserScripts;
     if (initialUserScripts != null) {
@@ -139,7 +359,7 @@ class AndroidInAppWebViewController extends PlatformInAppWebViewController
               ),
       ) {
     this.channel = channel;
-    _hostApi = InAppWebViewHostApi(messageChannelSuffix: 'inappbrowser_$id');
+    _setUpPigeon('inappbrowser_$id');
     _inAppBrowser = inAppBrowser;
 
     if (initialUserScripts != null) {
@@ -2712,6 +2932,12 @@ class AndroidInAppWebViewController extends PlatformInAppWebViewController
   @override
   void dispose({bool isKeepAlive = false}) {
     disposeChannel(removeMethodCallHandler: !isKeepAlive);
+    // The same rule as the MethodChannel handler above: a keep-alive WebView keeps its event
+    // handler registered (its Kotlin side outlives this controller), and the next controller for
+    // the same keep-alive id registers over it under the same suffix.
+    if (!isKeepAlive) {
+      InAppWebViewFlutterApi.setUp(null, messageChannelSuffix: _pigeonSuffix);
+    }
     _hostApi = null;
     _inAppBrowser = null;
     webStorage.dispose();
