@@ -3,6 +3,7 @@ package dev.nosferatu500.inappwebview.types
 import android.webkit.WebResourceRequest
 import androidx.webkit.WebResourceRequestCompat
 import androidx.webkit.WebViewFeature
+import dev.nosferatu500.inappwebview.pigeons.WebResourceRequestData
 
 class WebResourceRequestExt(
   var url: String,
@@ -20,6 +21,19 @@ class WebResourceRequestExt(
     "hasGesture" to hasGesture,
     "isForMainFrame" to isForMainFrame,
     "method" to method
+  )
+
+  /**
+   * The Pigeon form, for the three blocking waits that carry a request: the service worker's
+   * intercept and, since W5 (§216), the WebView's intercept and custom-scheme load.
+   */
+  fun toPigeon(): WebResourceRequestData = WebResourceRequestData(
+    url = url,
+    headers = headers,
+    isRedirect = isRedirect,
+    hasGesture = hasGesture,
+    isForMainFrame = isForMainFrame,
+    method = method
   )
 
   override fun equals(other: Any?): Boolean {

@@ -2,7 +2,8 @@ import 'dart:async';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_inappwebview_platform_interface/flutter_inappwebview_platform_interface.dart';
 
-import 'pigeons/service_worker.g.dart';
+import 'pigeons/in_app_webview.g.dart';
+import 'web_resource_data.dart';
 
 /// Object specifying creation parameters for creating a [AndroidServiceWorkerController].
 ///
@@ -48,28 +49,8 @@ class _ServiceWorkerFlutterApiImpl implements ServiceWorkerFlutterApi {
       // handler fell through to `return null`.
       return null;
     }
-    final response = await handler(
-      WebResourceRequest(
-        url: WebUri(request.url),
-        headers: request.headers,
-        isRedirect: request.isRedirect,
-        hasGesture: request.hasGesture,
-        isForMainFrame: request.isForMainFrame,
-        method: request.method,
-      ),
-    );
-    if (response == null) {
-      return null;
-    }
-    return WebResourceResponseData(
-      contentType: response.contentType,
-      contentEncoding: response.contentEncoding,
-      statusCode: response.statusCode,
-      reasonPhrase: response.reasonPhrase,
-      headers: response.headers,
-      data: response.data,
-      cookies: response.cookies,
-    );
+    final response = await handler(request.toWebResourceRequest());
+    return response?.toPigeon();
   }
 }
 

@@ -4,6 +4,7 @@ import android.net.Uri
 import android.os.Handler
 import android.os.Looper
 import android.os.Message
+import android.util.Log
 import android.webkit.ValueCallback
 import android.webkit.WebView
 import androidx.webkit.WebMessageCompat
@@ -42,7 +43,6 @@ import dev.nosferatu500.inappwebview.types.ServerTrustChallenge
 import dev.nosferatu500.inappwebview.types.ShowFileChooserRequest
 import dev.nosferatu500.inappwebview.types.ShowFileChooserResponse
 import dev.nosferatu500.inappwebview.types.SslCertificateExt
-import dev.nosferatu500.inappwebview.types.SyncBaseCallbackResultImpl
 import dev.nosferatu500.inappwebview.types.URLRequest
 import dev.nosferatu500.inappwebview.types.UserScript
 import dev.nosferatu500.inappwebview.types.WebMessageCompatExt
@@ -51,6 +51,7 @@ import dev.nosferatu500.inappwebview.types.WebResourceRequestExt
 import dev.nosferatu500.inappwebview.types.WebResourceResponseExt
 import dev.nosferatu500.inappwebview.types.WebViewNavigationExt
 import dev.nosferatu500.inappwebview.types.WebViewPageExt
+import dev.nosferatu500.inappwebview.types.deliverToCallback
 import dev.nosferatu500.inappwebview.types.replyingOnThrow
 import dev.nosferatu500.inappwebview.webview.in_app_webview.InAppWebView
 import dev.nosferatu500.inappwebview.webview.in_app_webview.InAppWebViewSettings
@@ -59,16 +60,18 @@ import io.flutter.plugin.common.BinaryMessenger
 import io.flutter.plugin.common.MethodCall
 import io.flutter.plugin.common.MethodChannel
 import java.io.IOException
+import java.util.concurrent.CountDownLatch
+import java.util.concurrent.TimeUnit
+import java.util.concurrent.atomic.AtomicReference
 
 // The unchecked casts below are the Flutter codec boundary: StandardMessageCodec decodes to
 // Map<String,Object>/List<Object>, so every read of a structured value is an unverifiable
 // cast. A wrong shape throws ClassCastException at the cast site, which is the intended
 // failure mode. Suppressed at class level because the whole class is that boundary.
 //
-// Transport is split while the migration is in progress (§207 on, TODO P0a): the methods already
-// moved are Pigeon, on [InAppWebViewHostApi], suffixed by [suffix]; the rest still arrive through
-// [onMethodCall]. [suffix] is the MethodChannel name's tail, `inappwebview_$id` or
-// `inappbrowser_$id`, so the two transports address the same WebView the same way.
+// Transport is Pigeon since W5 (§216, TODO P0a): host methods on [InAppWebViewHostApi], events on
+// [InAppWebViewFlutterApi], both suffixed by [suffix]. [suffix] is the MethodChannel name's tail,
+// `inappwebview_$id` or `inappbrowser_$id`; the MethodChannel itself is now unused, and goes next.
 @Suppress("UNCHECKED_CAST")
 class WebViewChannelDelegate(
   webView: InAppWebView,
@@ -82,8 +85,9 @@ class WebViewChannelDelegate(
   private var messenger: BinaryMessenger? = messenger
 
   /**
-   * The fire-and-forget events (W4, §214), under the same suffix as the HostApi. Null after
-   * [dispose], so a late event is dropped, as `this.channel ?: return` dropped it before.
+   * Every event, under the same suffix as the HostApi: fire-and-forget since W4 (§214),
+   * value-returning since W5 (§216). Null after [dispose], so a late event is dropped, or takes its
+   * default when it expects an answer, as a null `this.channel` did before.
    */
   private var flutterApi: InAppWebViewFlutterApi? = InAppWebViewFlutterApi(messenger, suffix)
 
@@ -98,8 +102,9 @@ class WebViewChannelDelegate(
    */
   private var nextVisualStateRequestId = 1L
 
-  // Every host method is Pigeon since W3 (§212), on [InAppWebViewHostApi]. The MethodChannel now
-  // carries only Kotlin -> Dart events (W4 and W5 move those). A call that still arrives here gets
+  // Every host method is Pigeon since W3 (§212), on [InAppWebViewHostApi], and every event since W5
+  // (§216), on [InAppWebViewFlutterApi]. Nothing uses the MethodChannel any more; it goes in the
+  // item after W5. Until then, a call that still arrives here gets
   // `notImplemented`, as an unknown method always did, rather than no answer at all from the base
   // class's empty handler.
   override fun onMethodCall(call: MethodCall, result: MethodChannel.Result) {
@@ -142,24 +147,23 @@ class WebViewChannelDelegate(
     flutterApi?.onExitFullscreen {}
   }
 
+  // W5 (§216): each value-returning event below sends on [flutterApi] and hands the reply to the
+  // callback its caller built, through [deliverToCallback], so `decodeResult`, `nonNullSuccess`,
+  // `defaultBehaviour` and `error` are untouched. A null [flutterApi] (after [dispose]) runs the
+  // default, as a null `this.channel` did.
+
   open class JsAlertCallback : BaseCallbackResultImpl<JsAlertResponse>() {
     override fun decodeResult(obj: Any?): JsAlertResponse? =
       JsAlertResponse.fromMap(obj as Map<String, Any?>?)
   }
 
   fun onJsAlert(url: String?, message: String?, isMainFrame: Boolean?, callback: JsAlertCallback) {
-    val channel = this.channel
-    if (channel == null) {
+    val api = flutterApi
+    if (api == null) {
       callback.defaultBehaviour(null)
       return
     }
-    channel.invokeMethod(
-      "onJsAlert",
-      hashMapOf<String, Any?>(
-        "url" to url, "message" to message, "isMainFrame" to isMainFrame
-      ),
-      callback
-    )
+    api.onJsAlert(url, message, isMainFrame) { deliverToCallback(callback, it) }
   }
 
   open class JsConfirmCallback : BaseCallbackResultImpl<JsConfirmResponse>() {
@@ -173,18 +177,12 @@ class WebViewChannelDelegate(
     isMainFrame: Boolean?,
     callback: JsConfirmCallback
   ) {
-    val channel = this.channel
-    if (channel == null) {
+    val api = flutterApi
+    if (api == null) {
       callback.defaultBehaviour(null)
       return
     }
-    channel.invokeMethod(
-      "onJsConfirm",
-      hashMapOf<String, Any?>(
-        "url" to url, "message" to message, "isMainFrame" to isMainFrame
-      ),
-      callback
-    )
+    api.onJsConfirm(url, message, isMainFrame) { deliverToCallback(callback, it) }
   }
 
   open class JsPromptCallback : BaseCallbackResultImpl<JsPromptResponse>() {
@@ -199,21 +197,12 @@ class WebViewChannelDelegate(
     isMainFrame: Boolean?,
     callback: JsPromptCallback
   ) {
-    val channel = this.channel
-    if (channel == null) {
+    val api = flutterApi
+    if (api == null) {
       callback.defaultBehaviour(null)
       return
     }
-    channel.invokeMethod(
-      "onJsPrompt",
-      hashMapOf<String, Any?>(
-        "url" to url,
-        "message" to message,
-        "defaultValue" to defaultValue,
-        "isMainFrame" to isMainFrame
-      ),
-      callback
-    )
+    api.onJsPrompt(url, message, defaultValue, isMainFrame) { deliverToCallback(callback, it) }
   }
 
   open class JsBeforeUnloadCallback : BaseCallbackResultImpl<JsBeforeUnloadResponse>() {
@@ -222,16 +211,12 @@ class WebViewChannelDelegate(
   }
 
   fun onJsBeforeUnload(url: String?, message: String?, callback: JsBeforeUnloadCallback) {
-    val channel = this.channel
-    if (channel == null) {
+    val api = flutterApi
+    if (api == null) {
       callback.defaultBehaviour(null)
       return
     }
-    channel.invokeMethod(
-      "onJsBeforeUnload",
-      hashMapOf<String, Any?>("url" to url, "message" to message),
-      callback
-    )
+    api.onJsBeforeUnload(url, message) { deliverToCallback(callback, it) }
   }
 
   open class CreateWindowCallback : BaseCallbackResultImpl<Boolean>() {
@@ -239,12 +224,12 @@ class WebViewChannelDelegate(
   }
 
   fun onCreateWindow(createWindowAction: CreateWindowAction, callback: CreateWindowCallback) {
-    val channel = this.channel
-    if (channel == null) {
+    val api = flutterApi
+    if (api == null) {
       callback.defaultBehaviour(null)
       return
     }
-    channel.invokeMethod("onCreateWindow", createWindowAction.toMap(), callback)
+    api.onCreateWindow(createWindowAction.toMap().toMap()) { deliverToCallback(callback, it) }
   }
 
   fun onCloseWindow() {
@@ -261,16 +246,12 @@ class WebViewChannelDelegate(
     origin: String?,
     callback: GeolocationPermissionsShowPromptCallback
   ) {
-    val channel = this.channel
-    if (channel == null) {
+    val api = flutterApi
+    if (api == null) {
       callback.defaultBehaviour(null)
       return
     }
-    channel.invokeMethod(
-      "onGeolocationPermissionsShowPrompt",
-      hashMapOf<String, Any?>("origin" to origin),
-      callback
-    )
+    api.onGeolocationPermissionsShowPrompt(origin) { deliverToCallback(callback, it) }
   }
 
   fun onGeolocationPermissionsHidePrompt() {
@@ -304,18 +285,12 @@ class WebViewChannelDelegate(
     frame: Any?,
     callback: PermissionRequestCallback
   ) {
-    val channel = this.channel
-    if (channel == null) {
+    val api = flutterApi
+    if (api == null) {
       callback.defaultBehaviour(null)
       return
     }
-    channel.invokeMethod(
-      "onPermissionRequest",
-      hashMapOf<String, Any?>(
-        "origin" to origin, "resources" to resources, "frame" to frame
-      ),
-      callback
-    )
+    api.onPermissionRequest(origin, resources, frame) { deliverToCallback(callback, it) }
   }
 
   fun onPermissionRequestCanceled(origin: String?, resources: List<String>?) {
@@ -334,12 +309,14 @@ class WebViewChannelDelegate(
     navigationAction: NavigationAction,
     callback: ShouldOverrideUrlLoadingCallback
   ) {
-    val channel = this.channel
-    if (channel == null) {
+    val api = flutterApi
+    if (api == null) {
       callback.defaultBehaviour(null)
       return
     }
-    channel.invokeMethod("shouldOverrideUrlLoading", navigationAction.toMap(), callback)
+    api.shouldOverrideUrlLoading(navigationAction.toMap().toMap()) {
+      deliverToCallback(callback, it)
+    }
   }
 
   fun onLoadStart(url: String?) {
@@ -374,12 +351,12 @@ class WebViewChannelDelegate(
     challenge: HttpAuthenticationChallenge,
     callback: ReceivedHttpAuthRequestCallback
   ) {
-    val channel = this.channel
-    if (channel == null) {
+    val api = flutterApi
+    if (api == null) {
       callback.defaultBehaviour(null)
       return
     }
-    channel.invokeMethod("onReceivedHttpAuthRequest", challenge.toMap(), callback)
+    api.onReceivedHttpAuthRequest(challenge.toMap().toMap()) { deliverToCallback(callback, it) }
   }
 
   open class ReceivedServerTrustAuthRequestCallback :
@@ -392,12 +369,14 @@ class WebViewChannelDelegate(
     challenge: ServerTrustChallenge,
     callback: ReceivedServerTrustAuthRequestCallback
   ) {
-    val channel = this.channel
-    if (channel == null) {
+    val api = flutterApi
+    if (api == null) {
       callback.defaultBehaviour(null)
       return
     }
-    channel.invokeMethod("onReceivedServerTrustAuthRequest", challenge.toMap(), callback)
+    api.onReceivedServerTrustAuthRequest(challenge.toMap().toMap()) {
+      deliverToCallback(callback, it)
+    }
   }
 
   open class ReceivedClientCertRequestCallback : BaseCallbackResultImpl<ClientCertResponse>() {
@@ -409,12 +388,12 @@ class WebViewChannelDelegate(
     challenge: ClientCertChallenge,
     callback: ReceivedClientCertRequestCallback
   ) {
-    val channel = this.channel
-    if (channel == null) {
+    val api = flutterApi
+    if (api == null) {
       callback.defaultBehaviour(null)
       return
     }
-    channel.invokeMethod("onReceivedClientCertRequest", challenge.toMap(), callback)
+    api.onReceivedClientCertRequest(challenge.toMap().toMap()) { deliverToCallback(callback, it) }
   }
 
   fun onZoomScaleChanged(oldScale: Float, newScale: Float) {
@@ -427,16 +406,12 @@ class WebViewChannelDelegate(
   }
 
   fun onSafeBrowsingHit(url: String?, threatType: Int, callback: SafeBrowsingHitCallback) {
-    val channel = this.channel
-    if (channel == null) {
+    val api = flutterApi
+    if (api == null) {
       callback.defaultBehaviour(null)
       return
     }
-    channel.invokeMethod(
-      "onSafeBrowsingHit",
-      hashMapOf<String, Any?>("url" to url, "threatType" to threatType),
-      callback
-    )
+    api.onSafeBrowsingHit(url, threatType.toLong()) { deliverToCallback(callback, it) }
   }
 
   open class FormResubmissionCallback : BaseCallbackResultImpl<Int>() {
@@ -444,12 +419,12 @@ class WebViewChannelDelegate(
   }
 
   fun onFormResubmission(url: String?, callback: FormResubmissionCallback) {
-    val channel = this.channel
-    if (channel == null) {
+    val api = flutterApi
+    if (api == null) {
       callback.defaultBehaviour(null)
       return
     }
-    channel.invokeMethod("onFormResubmission", hashMapOf<String, Any?>("url" to url), callback)
+    api.onFormResubmission(url) { deliverToCallback(callback, it) }
   }
 
   fun onPageCommitVisible(url: String?) {
@@ -500,78 +475,67 @@ class WebViewChannelDelegate(
     flutterApi?.onReceivedLoginRequest(realm, account, args) {}
   }
 
-  open class LoadResourceWithCustomSchemeCallback :
-    BaseCallbackResultImpl<CustomSchemeResponse>() {
-    override fun decodeResult(obj: Any?): CustomSchemeResponse? =
-      CustomSchemeResponse.fromMap(obj as Map<String, Any?>?)
-  }
-
-  fun onLoadResourceWithCustomScheme(
-    request: WebResourceRequestExt,
-    callback: LoadResourceWithCustomSchemeCallback
-  ) {
-    val channel = this.channel
-    if (channel == null) {
-      callback.defaultBehaviour(null)
-      return
+  /**
+   * Blocking (W5, §216): asks Dart and **blocks the calling WebView worker thread** until it
+   * answers, in `ServiceWorkerChannelDelegate.shouldInterceptRequest`'s shape (§186), keeping the
+   * semantics of the `Util.invokeMethodAndWaitResult` call it replaces:
+   *
+   *  - the call is posted to the main looper, where platform channels must be used;
+   *  - the wait is bounded by [syncCallbackTimeoutMillis], read once, at the call;
+   *  - a timeout, a Dart throw, no Dart handler or a null answer all come back as null, so the
+   *    resource loads normally.
+   *
+   * [ask] sends the event and hands [reply] a decoder, which runs on the main thread inside the
+   * reply, as `decodeResult` did. The latch is released whatever the decoder does: a decoder that
+   * throws leaves the answer null, and the throw reaches the messenger's reply handler, which logs
+   * it, as before.
+   */
+  @Throws(InterruptedException::class)
+  private fun <T> waitForDart(
+    event: String,
+    ask: (api: InAppWebViewFlutterApi, reply: (decode: () -> T?) -> Unit) -> Unit
+  ): T? {
+    val api = flutterApi ?: return null
+    val timeoutMillis = syncCallbackTimeoutMillis()
+    val latch = CountDownLatch(1)
+    // Written on the main thread, read here after `await`: the latch provides the happens-before.
+    val answer = AtomicReference<T?>(null)
+    Handler(Looper.getMainLooper()).post {
+      ask(api) { decode ->
+        try {
+          answer.set(decode())
+        } finally {
+          latch.countDown()
+        }
+      }
     }
-    channel.invokeMethod(
-      "onLoadResourceWithCustomScheme",
-      hashMapOf<String, Any?>("request" to request.toMap()),
-      callback
-    )
-  }
-
-  open class SyncLoadResourceWithCustomSchemeCallback :
-    SyncBaseCallbackResultImpl<CustomSchemeResponse>() {
-    override fun decodeResult(obj: Any?): CustomSchemeResponse? =
-      LoadResourceWithCustomSchemeCallback().decodeResult(obj)
+    if (!latch.await(timeoutMillis, TimeUnit.MILLISECONDS)) {
+      Log.w(
+        LOG_TAG,
+        "Timed out after ${timeoutMillis}ms waiting for the Dart side to answer \"$event\"; " +
+          "continuing as if it had returned null. Check that the corresponding handler returns " +
+          "on every path and does not throw."
+      )
+      return null
+    }
+    return answer.get()
   }
 
   @Throws(InterruptedException::class)
-  fun onLoadResourceWithCustomScheme(request: WebResourceRequestExt): CustomSchemeResponse? {
-    val channel = this.channel ?: return null
-    val callback = SyncLoadResourceWithCustomSchemeCallback()
-    return Util.invokeMethodAndWaitResult(
-      channel,
-      "onLoadResourceWithCustomScheme",
-      hashMapOf<String, Any?>("request" to request.toMap()),
-      callback,
-      syncCallbackTimeoutMillis()
-    )
-  }
-
-  open class ShouldInterceptRequestCallback : BaseCallbackResultImpl<WebResourceResponseExt>() {
-    override fun decodeResult(obj: Any?): WebResourceResponseExt? =
-      WebResourceResponseExt.fromMap(obj as Map<String, Any?>?)
-  }
-
-  fun shouldInterceptRequest(
-    request: WebResourceRequestExt,
-    callback: ShouldInterceptRequestCallback
-  ) {
-    val channel = this.channel
-    if (channel == null) {
-      callback.defaultBehaviour(null)
-      return
+  fun onLoadResourceWithCustomScheme(request: WebResourceRequestExt): CustomSchemeResponse? =
+    waitForDart("onLoadResourceWithCustomScheme") { api, reply ->
+      api.onLoadResourceWithCustomScheme(request.toPigeon()) { result ->
+        reply { CustomSchemeResponse.fromMap(result.getOrNull() as Map<String, Any?>?) }
+      }
     }
-    channel.invokeMethod("shouldInterceptRequest", request.toMap(), callback)
-  }
-
-  open class SyncShouldInterceptRequestCallback :
-    SyncBaseCallbackResultImpl<WebResourceResponseExt>() {
-    override fun decodeResult(obj: Any?): WebResourceResponseExt? =
-      ShouldInterceptRequestCallback().decodeResult(obj)
-  }
 
   @Throws(InterruptedException::class)
-  fun shouldInterceptRequest(request: WebResourceRequestExt): WebResourceResponseExt? {
-    val channel = this.channel ?: return null
-    val callback = SyncShouldInterceptRequestCallback()
-    return Util.invokeMethodAndWaitResult(
-      channel, "shouldInterceptRequest", request.toMap(), callback, syncCallbackTimeoutMillis()
-    )
-  }
+  fun shouldInterceptRequest(request: WebResourceRequestExt): WebResourceResponseExt? =
+    waitForDart("shouldInterceptRequest") { api, reply ->
+      api.shouldInterceptRequest(request.toPigeon()) { result ->
+        reply { result.getOrNull()?.let { WebResourceResponseExt.fromPigeon(it) } }
+      }
+    }
 
   /**
    * Read live from the WebView's current settings rather than captured once, so a `setSettings`
@@ -586,14 +550,12 @@ class WebViewChannelDelegate(
   }
 
   fun onRenderProcessUnresponsive(url: String?, callback: RenderProcessUnresponsiveCallback) {
-    val channel = this.channel
-    if (channel == null) {
+    val api = flutterApi
+    if (api == null) {
       callback.defaultBehaviour(null)
       return
     }
-    channel.invokeMethod(
-      "onRenderProcessUnresponsive", hashMapOf<String, Any?>("url" to url), callback
-    )
+    api.onRenderProcessUnresponsive(url) { deliverToCallback(callback, it) }
   }
 
   open class RenderProcessResponsiveCallback : BaseCallbackResultImpl<Int>() {
@@ -601,14 +563,12 @@ class WebViewChannelDelegate(
   }
 
   fun onRenderProcessResponsive(url: String?, callback: RenderProcessResponsiveCallback) {
-    val channel = this.channel
-    if (channel == null) {
+    val api = flutterApi
+    if (api == null) {
       callback.defaultBehaviour(null)
       return
     }
-    channel.invokeMethod(
-      "onRenderProcessResponsive", hashMapOf<String, Any?>("url" to url), callback
-    )
+    api.onRenderProcessResponsive(url) { deliverToCallback(callback, it) }
   }
 
   open class CallJsHandlerCallback : BaseCallbackResultImpl<Any>() {
@@ -620,16 +580,12 @@ class WebViewChannelDelegate(
     data: JavaScriptHandlerFunctionData,
     callback: CallJsHandlerCallback
   ) {
-    val channel = this.channel
-    if (channel == null) {
+    val api = flutterApi
+    if (api == null) {
       callback.defaultBehaviour(null)
       return
     }
-    channel.invokeMethod(
-      "onCallJsHandler",
-      hashMapOf<String, Any?>("handlerName" to handlerName, "data" to data.toMap()),
-      callback
-    )
+    api.onCallJsHandler(handlerName, data.toMap().toMap()) { deliverToCallback(callback, it) }
   }
 
   open class PrintRequestCallback : BaseCallbackResultImpl<Boolean>() {
@@ -637,12 +593,12 @@ class WebViewChannelDelegate(
   }
 
   fun onPrintRequest(url: String?, callback: PrintRequestCallback) {
-    val channel = this.channel
-    if (channel == null) {
+    val api = flutterApi
+    if (api == null) {
       callback.defaultBehaviour(null)
       return
     }
-    channel.invokeMethod("onPrintRequest", hashMapOf<String, Any?>("url" to url), callback)
+    api.onPrintRequest(url) { deliverToCallback(callback, it) }
   }
 
   fun onRequestFocus() {
@@ -658,12 +614,12 @@ class WebViewChannelDelegate(
   }
 
   fun onRequestVisitedHistory(callback: RequestVisitedHistoryCallback) {
-    val channel = this.channel
-    if (channel == null) {
+    val api = flutterApi
+    if (api == null) {
       callback.defaultBehaviour(null)
       return
     }
-    channel.invokeMethod("onRequestVisitedHistory", hashMapOf<String, Any?>(), callback)
+    api.onRequestVisitedHistory { deliverToCallback(callback, it) }
   }
 
   open class ShowFileChooserCallback : BaseCallbackResultImpl<ShowFileChooserResponse>() {
@@ -672,12 +628,12 @@ class WebViewChannelDelegate(
   }
 
   fun onShowFileChooser(request: ShowFileChooserRequest, callback: ShowFileChooserCallback) {
-    val channel = this.channel
-    if (channel == null) {
+    val api = flutterApi
+    if (api == null) {
       callback.defaultBehaviour(null)
       return
     }
-    channel.invokeMethod("onShowFileChooser", request.toMap(), callback)
+    api.onShowFileChooser(request.toMap().toMap()) { deliverToCallback(callback, it) }
   }
 
   // --- InAppWebViewHostApi, W1 (§207) --------------------------------------------------------------

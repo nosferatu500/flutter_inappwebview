@@ -1,7 +1,8 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter_inappwebview_platform_interface/flutter_inappwebview_platform_interface.dart';
 
-import 'pigeons/custom_path_handler.g.dart';
+import 'pigeons/in_app_webview.g.dart';
+import 'web_resource_data.dart';
 
 /// Object specifying creation parameters for creating a [AndroidPathHandler].
 ///
@@ -35,9 +36,10 @@ class _CustomPathHandlerFlutterApiImpl implements CustomPathHandlerFlutterApi {
 
   final AndroidPathHandler _handler;
 
+  /// Typed since W5 (§216); it was the response's `toMap()`.
   @override
-  Future<Map<String?, Object?>?> handle(String path) async =>
-      (await _handler.eventHandler?.handle(path))?.toMap();
+  Future<WebResourceResponseData?> handle(String path) async =>
+      (await _handler.eventHandler?.handle(path))?.toPigeon();
 }
 
 ///{@macro flutter_inappwebview_platform_interface.PlatformPathHandler}

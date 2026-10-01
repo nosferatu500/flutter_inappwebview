@@ -6,7 +6,6 @@ import android.util.Log
 import dev.nosferatu500.inappwebview.Util
 import dev.nosferatu500.inappwebview.pigeons.ServiceWorkerFlutterApi
 import dev.nosferatu500.inappwebview.pigeons.ServiceWorkerHostApi
-import dev.nosferatu500.inappwebview.pigeons.WebResourceRequestData
 import dev.nosferatu500.inappwebview.pigeons.WebResourceResponseData
 import dev.nosferatu500.inappwebview.types.Disposable
 import dev.nosferatu500.inappwebview.types.WebResourceRequestExt
@@ -141,8 +140,8 @@ class ServiceWorkerChannelDelegate(
    * requires the two generated halves to disagree, and they come from one schema. The timeout is the
    * backstop for that, as it was for the hand-written path.
    *
-   * Not reused from `Util` because that helper takes a raw `MethodChannel` and still serves two
-   * `WebViewChannelDelegate` calls and `WebViewAssetLoaderExt`.
+   * Not reused from `Util` because that helper takes a raw `MethodChannel`. Since W5 (§216) it has
+   * no callers left; the WebView's two waits use this shape too.
    */
   @Throws(InterruptedException::class)
   fun shouldInterceptRequest(request: WebResourceRequestExt): WebResourceResponseExt? {
@@ -168,7 +167,7 @@ class ServiceWorkerChannelDelegate(
       )
       return null
     }
-    return answer.get()?.toNative()
+    return answer.get()?.let { WebResourceResponseExt.fromPigeon(it) }
   }
 
   override fun dispose() {
@@ -182,34 +181,3 @@ class ServiceWorkerChannelDelegate(
     private const val LOG_TAG = "ServiceWorkerChannelDelegate"
   }
 }
-
-// --- WebResourceRequestExt / WebResourceResponseExt <-> Pigeon -----------------------------------
-//
-// Kept local rather than added to `types/`, as §177, §179 and §180 did: both native types also serve
-// `WebViewChannelDelegate`'s own `shouldInterceptRequest`, which is still hand-written. When that
-// channel migrates, these two conversions and the two data classes should move with it (see the
-// schema, checklist item 5).
-
-private fun WebResourceRequestExt.toPigeon(): WebResourceRequestData = WebResourceRequestData(
-  url = url,
-  headers = headers,
-  isRedirect = isRedirect,
-  hasGesture = hasGesture,
-  isForMainFrame = isForMainFrame,
-  method = method
-)
-
-/**
- * `statusCode` narrows from Pigeon's `Long` to the `Int` `WebResourceResponse` takes — a plain `int`,
- * not an `@IntDef`. Every other field crosses unchanged, nullability included, because
- * [WebResourceResponseExt.toWebResourceResponse] branches on which are present.
- */
-private fun WebResourceResponseData.toNative(): WebResourceResponseExt = WebResourceResponseExt(
-  contentType = contentType,
-  contentEncoding = contentEncoding,
-  statusCode = statusCode?.toInt(),
-  reasonPhrase = reasonPhrase,
-  headers = headers,
-  data = data,
-  cookies = cookies
-)

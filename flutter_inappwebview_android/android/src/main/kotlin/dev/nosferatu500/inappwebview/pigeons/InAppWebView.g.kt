@@ -37,13 +37,313 @@ private object InAppWebViewPigeonUtils {
       )
     }
   }
+  fun doubleEquals(a: Double, b: Double): Boolean {
+    // Normalize -0.0 to 0.0 and handle NaN equality.
+    return (if (a == 0.0) 0.0 else a) == (if (b == 0.0) 0.0 else b) || (a.isNaN() && b.isNaN())
+  }
+
+  fun floatEquals(a: Float, b: Float): Boolean {
+    // Normalize -0.0 to 0.0 and handle NaN equality.
+    return (if (a == 0.0f) 0.0f else a) == (if (b == 0.0f) 0.0f else b) || (a.isNaN() && b.isNaN())
+  }
+
+  fun doubleHash(d: Double): Int {
+    // Normalize -0.0 to 0.0 and handle NaN to ensure consistent hash codes.
+    val normalized = if (d == 0.0) 0.0 else d
+    val bits = java.lang.Double.doubleToLongBits(normalized)
+    return (bits xor (bits ushr 32)).toInt()
+  }
+
+  fun floatHash(f: Float): Int {
+    // Normalize -0.0 to 0.0 and handle NaN to ensure consistent hash codes.
+    val normalized = if (f == 0.0f) 0.0f else f
+    return java.lang.Float.floatToIntBits(normalized)
+  }
+
+  fun deepEquals(a: Any?, b: Any?): Boolean {
+    if (a === b) {
+      return true
+    }
+    if (a == null || b == null) {
+      return false
+    }
+    if (a is ByteArray && b is ByteArray) {
+      return a.contentEquals(b)
+    }
+    if (a is IntArray && b is IntArray) {
+      return a.contentEquals(b)
+    }
+    if (a is LongArray && b is LongArray) {
+      return a.contentEquals(b)
+    }
+    if (a is DoubleArray && b is DoubleArray) {
+      if (a.size != b.size) return false
+      for (i in a.indices) {
+        if (!doubleEquals(a[i], b[i])) return false
+      }
+      return true
+    }
+    if (a is FloatArray && b is FloatArray) {
+      if (a.size != b.size) return false
+      for (i in a.indices) {
+        if (!floatEquals(a[i], b[i])) return false
+      }
+      return true
+    }
+    if (a is Array<*> && b is Array<*>) {
+      if (a.size != b.size) return false
+      for (i in a.indices) {
+        if (!deepEquals(a[i], b[i])) return false
+      }
+      return true
+    }
+    if (a is List<*> && b is List<*>) {
+      if (a.size != b.size) return false
+      val iterA = a.iterator()
+      val iterB = b.iterator()
+      while (iterA.hasNext() && iterB.hasNext()) {
+        if (!deepEquals(iterA.next(), iterB.next())) return false
+      }
+      return true
+    }
+    if (a is Map<*, *> && b is Map<*, *>) {
+      if (a.size != b.size) return false
+      for (entry in a) {
+        val key = entry.key
+        var found = false
+        for (bEntry in b) {
+          if (deepEquals(key, bEntry.key)) {
+            if (deepEquals(entry.value, bEntry.value)) {
+              found = true
+              break
+            } else {
+              return false
+            }
+          }
+        }
+        if (!found) return false
+      }
+      return true
+    }
+    if (a is Double && b is Double) {
+      return doubleEquals(a, b)
+    }
+    if (a is Float && b is Float) {
+      return floatEquals(a, b)
+    }
+    return a == b
+  }
+
+  fun deepHash(value: Any?): Int {
+    return when (value) {
+      null -> 0
+      is ByteArray -> value.contentHashCode()
+      is IntArray -> value.contentHashCode()
+      is LongArray -> value.contentHashCode()
+      is DoubleArray -> {
+        var result = 1
+        for (item in value) {
+          result = 31 * result + doubleHash(item)
+        }
+        result
+      }
+      is FloatArray -> {
+        var result = 1
+        for (item in value) {
+          result = 31 * result + floatHash(item)
+        }
+        result
+      }
+      is Array<*> -> {
+        var result = 1
+        for (item in value) {
+          result = 31 * result + deepHash(item)
+        }
+        result
+      }
+      is List<*> -> {
+        var result = 1
+        for (item in value) {
+          result = 31 * result + deepHash(item)
+        }
+        result
+      }
+      is Map<*, *> -> {
+        var result = 0
+        for (entry in value) {
+          result += ((deepHash(entry.key) * 31) xor deepHash(entry.value))
+        }
+        result
+      }
+      is Double -> doubleHash(value)
+      is Float -> floatHash(value)
+      else -> value.hashCode()
+    }
+  }
+
+}
+
+/**
+ * Mirrors the native `WebResourceRequestExt` field for field. Moved here from
+ * `service_worker.dart` in W5 (§216): the service worker's intercept and the WebView's carry the
+ * same request.
+ *
+ * Generated class from Pigeon that represents data sent in messages.
+ */
+data class WebResourceRequestData (
+  val url: String,
+  val headers: Map<String, String>? = null,
+  val isRedirect: Boolean,
+  val hasGesture: Boolean,
+  val isForMainFrame: Boolean,
+  val method: String? = null
+)
+ {
+  companion object {
+    fun fromList(pigeonVar_list: List<Any?>): WebResourceRequestData {
+      val url = pigeonVar_list[0] as String
+      val headers = pigeonVar_list[1] as Map<String, String>?
+      val isRedirect = pigeonVar_list[2] as Boolean
+      val hasGesture = pigeonVar_list[3] as Boolean
+      val isForMainFrame = pigeonVar_list[4] as Boolean
+      val method = pigeonVar_list[5] as String?
+      return WebResourceRequestData(url, headers, isRedirect, hasGesture, isForMainFrame, method)
+    }
+  }
+  fun toList(): List<Any?> {
+    return listOf(
+      url,
+      headers,
+      isRedirect,
+      hasGesture,
+      isForMainFrame,
+      method,
+    )
+  }
+  override fun equals(other: Any?): Boolean {
+    if (other == null || other.javaClass != javaClass) {
+      return false
+    }
+    if (this === other) {
+      return true
+    }
+    val other = other as WebResourceRequestData
+    return InAppWebViewPigeonUtils.deepEquals(this.url, other.url) && InAppWebViewPigeonUtils.deepEquals(this.headers, other.headers) && InAppWebViewPigeonUtils.deepEquals(this.isRedirect, other.isRedirect) && InAppWebViewPigeonUtils.deepEquals(this.hasGesture, other.hasGesture) && InAppWebViewPigeonUtils.deepEquals(this.isForMainFrame, other.isForMainFrame) && InAppWebViewPigeonUtils.deepEquals(this.method, other.method)
+  }
+
+  override fun hashCode(): Int {
+    var result = javaClass.hashCode()
+    result = 31 * result + InAppWebViewPigeonUtils.deepHash(this.url)
+    result = 31 * result + InAppWebViewPigeonUtils.deepHash(this.headers)
+    result = 31 * result + InAppWebViewPigeonUtils.deepHash(this.isRedirect)
+    result = 31 * result + InAppWebViewPigeonUtils.deepHash(this.hasGesture)
+    result = 31 * result + InAppWebViewPigeonUtils.deepHash(this.isForMainFrame)
+    result = 31 * result + InAppWebViewPigeonUtils.deepHash(this.method)
+    return result
+  }
+  override fun toString(): String {
+    return "WebResourceRequestData(url=$url, headers=$headers, isRedirect=$isRedirect, hasGesture=$hasGesture, isForMainFrame=$isForMainFrame, method=$method)"
+  }
+}
+
+/**
+ * Mirrors the native `WebResourceResponseExt` field for field. Moved here with
+ * [WebResourceRequestData].
+ *
+ * Every field is nullable because every field of the public `WebResourceResponse` is, and
+ * `WebResourceResponseExt.toWebResourceResponse` branches on which ones are present: a missing
+ * `statusCode` or `reasonPhrase` selects the three-argument framework constructor, and non-empty
+ * `cookies` select the compat path. Defaulting any of them here would change that choice.
+ *
+ * Generated class from Pigeon that represents data sent in messages.
+ */
+data class WebResourceResponseData (
+  val contentType: String? = null,
+  val contentEncoding: String? = null,
+  val statusCode: Long? = null,
+  val reasonPhrase: String? = null,
+  val headers: Map<String, String>? = null,
+  val data: ByteArray? = null,
+  val cookies: List<String>? = null
+)
+ {
+  companion object {
+    fun fromList(pigeonVar_list: List<Any?>): WebResourceResponseData {
+      val contentType = pigeonVar_list[0] as String?
+      val contentEncoding = pigeonVar_list[1] as String?
+      val statusCode = pigeonVar_list[2] as Long?
+      val reasonPhrase = pigeonVar_list[3] as String?
+      val headers = pigeonVar_list[4] as Map<String, String>?
+      val data = pigeonVar_list[5] as ByteArray?
+      val cookies = pigeonVar_list[6] as List<String>?
+      return WebResourceResponseData(contentType, contentEncoding, statusCode, reasonPhrase, headers, data, cookies)
+    }
+  }
+  fun toList(): List<Any?> {
+    return listOf(
+      contentType,
+      contentEncoding,
+      statusCode,
+      reasonPhrase,
+      headers,
+      data,
+      cookies,
+    )
+  }
+  override fun equals(other: Any?): Boolean {
+    if (other == null || other.javaClass != javaClass) {
+      return false
+    }
+    if (this === other) {
+      return true
+    }
+    val other = other as WebResourceResponseData
+    return InAppWebViewPigeonUtils.deepEquals(this.contentType, other.contentType) && InAppWebViewPigeonUtils.deepEquals(this.contentEncoding, other.contentEncoding) && InAppWebViewPigeonUtils.deepEquals(this.statusCode, other.statusCode) && InAppWebViewPigeonUtils.deepEquals(this.reasonPhrase, other.reasonPhrase) && InAppWebViewPigeonUtils.deepEquals(this.headers, other.headers) && InAppWebViewPigeonUtils.deepEquals(this.data, other.data) && InAppWebViewPigeonUtils.deepEquals(this.cookies, other.cookies)
+  }
+
+  override fun hashCode(): Int {
+    var result = javaClass.hashCode()
+    result = 31 * result + InAppWebViewPigeonUtils.deepHash(this.contentType)
+    result = 31 * result + InAppWebViewPigeonUtils.deepHash(this.contentEncoding)
+    result = 31 * result + InAppWebViewPigeonUtils.deepHash(this.statusCode)
+    result = 31 * result + InAppWebViewPigeonUtils.deepHash(this.reasonPhrase)
+    result = 31 * result + InAppWebViewPigeonUtils.deepHash(this.headers)
+    result = 31 * result + InAppWebViewPigeonUtils.deepHash(this.data)
+    result = 31 * result + InAppWebViewPigeonUtils.deepHash(this.cookies)
+    return result
+  }
+  override fun toString(): String {
+    return "WebResourceResponseData(contentType=$contentType, contentEncoding=$contentEncoding, statusCode=$statusCode, reasonPhrase=$reasonPhrase, headers=$headers, data=${data?.contentToString()}, cookies=$cookies)"
+  }
 }
 private open class InAppWebViewPigeonCodec : StandardMessageCodec() {
   override fun readValueOfType(type: Byte, buffer: ByteBuffer): Any? {
-    return     super.readValueOfType(type, buffer)
+    return when (type) {
+      129.toByte() -> {
+        return (readValue(buffer) as? List<Any?>)?.let {
+          WebResourceRequestData.fromList(it)
+        }
+      }
+      130.toByte() -> {
+        return (readValue(buffer) as? List<Any?>)?.let {
+          WebResourceResponseData.fromList(it)
+        }
+      }
+      else -> super.readValueOfType(type, buffer)
+    }
   }
   override fun writeValue(stream: ByteArrayOutputStream, value: Any?)   {
-    super.writeValue(stream, value)
+    when (value) {
+      is WebResourceRequestData -> {
+        stream.write(129)
+        writeValue(stream, value.toList())
+      }
+      is WebResourceResponseData -> {
+        stream.write(130)
+        writeValue(stream, value.toList())
+      }
+      else -> super.writeValue(stream, value)
+    }
   }
 }
 
@@ -2023,6 +2323,715 @@ class InAppWebViewFlutterApi(private val binaryMessenger: BinaryMessenger, priva
           callback(Result.failure(FlutterError(it[0] as String, it[1] as String, it[2] as String?)))
         } else {
           callback(Result.success(Unit))
+        }
+      } else {
+        callback(Result.failure(InAppWebViewPigeonUtils.createConnectionError(channelName)))
+      } 
+    }
+  }
+  /** `JsAlertResponse.toMap()`. */
+  fun onJsAlert(urlArg: String?, messageArg: String?, isMainFrameArg: Boolean?, callback: (Result<Map<String?, Any?>?>) -> Unit)
+{
+    val separatedMessageChannelSuffix = if (messageChannelSuffix.isNotEmpty()) ".$messageChannelSuffix" else ""
+    val channelName = "dev.flutter.pigeon.flutter_inappwebview_android.InAppWebViewFlutterApi.onJsAlert$separatedMessageChannelSuffix"
+    val channel = BasicMessageChannel<Any?>(binaryMessenger, channelName, codec)
+    channel.send(listOf(urlArg, messageArg, isMainFrameArg)) {
+      if (it is List<*>) {
+        if (it.size > 1) {
+          callback(Result.failure(FlutterError(it[0] as String, it[1] as String, it[2] as String?)))
+        } else {
+          val output = it[0] as Map<String?, Any?>?
+          callback(Result.success(output))
+        }
+      } else {
+        callback(Result.failure(InAppWebViewPigeonUtils.createConnectionError(channelName)))
+      } 
+    }
+  }
+  /** `JsConfirmResponse.toMap()`. */
+  fun onJsConfirm(urlArg: String?, messageArg: String?, isMainFrameArg: Boolean?, callback: (Result<Map<String?, Any?>?>) -> Unit)
+{
+    val separatedMessageChannelSuffix = if (messageChannelSuffix.isNotEmpty()) ".$messageChannelSuffix" else ""
+    val channelName = "dev.flutter.pigeon.flutter_inappwebview_android.InAppWebViewFlutterApi.onJsConfirm$separatedMessageChannelSuffix"
+    val channel = BasicMessageChannel<Any?>(binaryMessenger, channelName, codec)
+    channel.send(listOf(urlArg, messageArg, isMainFrameArg)) {
+      if (it is List<*>) {
+        if (it.size > 1) {
+          callback(Result.failure(FlutterError(it[0] as String, it[1] as String, it[2] as String?)))
+        } else {
+          val output = it[0] as Map<String?, Any?>?
+          callback(Result.success(output))
+        }
+      } else {
+        callback(Result.failure(InAppWebViewPigeonUtils.createConnectionError(channelName)))
+      } 
+    }
+  }
+  /** `JsPromptResponse.toMap()`. */
+  fun onJsPrompt(urlArg: String?, messageArg: String?, defaultValueArg: String?, isMainFrameArg: Boolean?, callback: (Result<Map<String?, Any?>?>) -> Unit)
+{
+    val separatedMessageChannelSuffix = if (messageChannelSuffix.isNotEmpty()) ".$messageChannelSuffix" else ""
+    val channelName = "dev.flutter.pigeon.flutter_inappwebview_android.InAppWebViewFlutterApi.onJsPrompt$separatedMessageChannelSuffix"
+    val channel = BasicMessageChannel<Any?>(binaryMessenger, channelName, codec)
+    channel.send(listOf(urlArg, messageArg, defaultValueArg, isMainFrameArg)) {
+      if (it is List<*>) {
+        if (it.size > 1) {
+          callback(Result.failure(FlutterError(it[0] as String, it[1] as String, it[2] as String?)))
+        } else {
+          val output = it[0] as Map<String?, Any?>?
+          callback(Result.success(output))
+        }
+      } else {
+        callback(Result.failure(InAppWebViewPigeonUtils.createConnectionError(channelName)))
+      } 
+    }
+  }
+  /** `JsBeforeUnloadResponse.toMap()`. */
+  fun onJsBeforeUnload(urlArg: String?, messageArg: String?, callback: (Result<Map<String?, Any?>?>) -> Unit)
+{
+    val separatedMessageChannelSuffix = if (messageChannelSuffix.isNotEmpty()) ".$messageChannelSuffix" else ""
+    val channelName = "dev.flutter.pigeon.flutter_inappwebview_android.InAppWebViewFlutterApi.onJsBeforeUnload$separatedMessageChannelSuffix"
+    val channel = BasicMessageChannel<Any?>(binaryMessenger, channelName, codec)
+    channel.send(listOf(urlArg, messageArg)) {
+      if (it is List<*>) {
+        if (it.size > 1) {
+          callback(Result.failure(FlutterError(it[0] as String, it[1] as String, it[2] as String?)))
+        } else {
+          val output = it[0] as Map<String?, Any?>?
+          callback(Result.success(output))
+        }
+      } else {
+        callback(Result.failure(InAppWebViewPigeonUtils.createConnectionError(channelName)))
+      } 
+    }
+  }
+  /** `createWindowAction` is `CreateWindowAction.toMap()`. `true` means the app handles the window. */
+  fun onCreateWindow(createWindowActionArg: Map<String?, Any?>, callback: (Result<Boolean?>) -> Unit)
+{
+    val separatedMessageChannelSuffix = if (messageChannelSuffix.isNotEmpty()) ".$messageChannelSuffix" else ""
+    val channelName = "dev.flutter.pigeon.flutter_inappwebview_android.InAppWebViewFlutterApi.onCreateWindow$separatedMessageChannelSuffix"
+    val channel = BasicMessageChannel<Any?>(binaryMessenger, channelName, codec)
+    channel.send(listOf(createWindowActionArg)) {
+      if (it is List<*>) {
+        if (it.size > 1) {
+          callback(Result.failure(FlutterError(it[0] as String, it[1] as String, it[2] as String?)))
+        } else {
+          val output = it[0] as Boolean?
+          callback(Result.success(output))
+        }
+      } else {
+        callback(Result.failure(InAppWebViewPigeonUtils.createConnectionError(channelName)))
+      } 
+    }
+  }
+  /** `GeolocationPermissionShowPromptResponse.toMap()`. */
+  fun onGeolocationPermissionsShowPrompt(originArg: String?, callback: (Result<Map<String?, Any?>?>) -> Unit)
+{
+    val separatedMessageChannelSuffix = if (messageChannelSuffix.isNotEmpty()) ".$messageChannelSuffix" else ""
+    val channelName = "dev.flutter.pigeon.flutter_inappwebview_android.InAppWebViewFlutterApi.onGeolocationPermissionsShowPrompt$separatedMessageChannelSuffix"
+    val channel = BasicMessageChannel<Any?>(binaryMessenger, channelName, codec)
+    channel.send(listOf(originArg)) {
+      if (it is List<*>) {
+        if (it.size > 1) {
+          callback(Result.failure(FlutterError(it[0] as String, it[1] as String, it[2] as String?)))
+        } else {
+          val output = it[0] as Map<String?, Any?>?
+          callback(Result.success(output))
+        }
+      } else {
+        callback(Result.failure(InAppWebViewPigeonUtils.createConnectionError(channelName)))
+      } 
+    }
+  }
+  /** `PermissionResponse.toMap()`. */
+  fun onPermissionRequest(originArg: String?, resourcesArg: List<String?>?, frameArg: Any?, callback: (Result<Map<String?, Any?>?>) -> Unit)
+{
+    val separatedMessageChannelSuffix = if (messageChannelSuffix.isNotEmpty()) ".$messageChannelSuffix" else ""
+    val channelName = "dev.flutter.pigeon.flutter_inappwebview_android.InAppWebViewFlutterApi.onPermissionRequest$separatedMessageChannelSuffix"
+    val channel = BasicMessageChannel<Any?>(binaryMessenger, channelName, codec)
+    channel.send(listOf(originArg, resourcesArg, frameArg)) {
+      if (it is List<*>) {
+        if (it.size > 1) {
+          callback(Result.failure(FlutterError(it[0] as String, it[1] as String, it[2] as String?)))
+        } else {
+          val output = it[0] as Map<String?, Any?>?
+          callback(Result.success(output))
+        }
+      } else {
+        callback(Result.failure(InAppWebViewPigeonUtils.createConnectionError(channelName)))
+      } 
+    }
+  }
+  /** `navigationAction` is `NavigationAction.toMap()`; the answer a `NavigationActionPolicy` value. */
+  fun shouldOverrideUrlLoading(navigationActionArg: Map<String?, Any?>, callback: (Result<Long?>) -> Unit)
+{
+    val separatedMessageChannelSuffix = if (messageChannelSuffix.isNotEmpty()) ".$messageChannelSuffix" else ""
+    val channelName = "dev.flutter.pigeon.flutter_inappwebview_android.InAppWebViewFlutterApi.shouldOverrideUrlLoading$separatedMessageChannelSuffix"
+    val channel = BasicMessageChannel<Any?>(binaryMessenger, channelName, codec)
+    channel.send(listOf(navigationActionArg)) {
+      if (it is List<*>) {
+        if (it.size > 1) {
+          callback(Result.failure(FlutterError(it[0] as String, it[1] as String, it[2] as String?)))
+        } else {
+          val output = it[0] as Long?
+          callback(Result.success(output))
+        }
+      } else {
+        callback(Result.failure(InAppWebViewPigeonUtils.createConnectionError(channelName)))
+      } 
+    }
+  }
+  /** `challenge` is `HttpAuthenticationChallenge.toMap()`; the answer `HttpAuthResponse.toMap()`. */
+  fun onReceivedHttpAuthRequest(challengeArg: Map<String?, Any?>, callback: (Result<Map<String?, Any?>?>) -> Unit)
+{
+    val separatedMessageChannelSuffix = if (messageChannelSuffix.isNotEmpty()) ".$messageChannelSuffix" else ""
+    val channelName = "dev.flutter.pigeon.flutter_inappwebview_android.InAppWebViewFlutterApi.onReceivedHttpAuthRequest$separatedMessageChannelSuffix"
+    val channel = BasicMessageChannel<Any?>(binaryMessenger, channelName, codec)
+    channel.send(listOf(challengeArg)) {
+      if (it is List<*>) {
+        if (it.size > 1) {
+          callback(Result.failure(FlutterError(it[0] as String, it[1] as String, it[2] as String?)))
+        } else {
+          val output = it[0] as Map<String?, Any?>?
+          callback(Result.success(output))
+        }
+      } else {
+        callback(Result.failure(InAppWebViewPigeonUtils.createConnectionError(channelName)))
+      } 
+    }
+  }
+  /** `challenge` is `ServerTrustChallenge.toMap()`; the answer `ServerTrustAuthResponse.toMap()`. */
+  fun onReceivedServerTrustAuthRequest(challengeArg: Map<String?, Any?>, callback: (Result<Map<String?, Any?>?>) -> Unit)
+{
+    val separatedMessageChannelSuffix = if (messageChannelSuffix.isNotEmpty()) ".$messageChannelSuffix" else ""
+    val channelName = "dev.flutter.pigeon.flutter_inappwebview_android.InAppWebViewFlutterApi.onReceivedServerTrustAuthRequest$separatedMessageChannelSuffix"
+    val channel = BasicMessageChannel<Any?>(binaryMessenger, channelName, codec)
+    channel.send(listOf(challengeArg)) {
+      if (it is List<*>) {
+        if (it.size > 1) {
+          callback(Result.failure(FlutterError(it[0] as String, it[1] as String, it[2] as String?)))
+        } else {
+          val output = it[0] as Map<String?, Any?>?
+          callback(Result.success(output))
+        }
+      } else {
+        callback(Result.failure(InAppWebViewPigeonUtils.createConnectionError(channelName)))
+      } 
+    }
+  }
+  /** `challenge` is `ClientCertChallenge.toMap()`; the answer `ClientCertResponse.toMap()`. */
+  fun onReceivedClientCertRequest(challengeArg: Map<String?, Any?>, callback: (Result<Map<String?, Any?>?>) -> Unit)
+{
+    val separatedMessageChannelSuffix = if (messageChannelSuffix.isNotEmpty()) ".$messageChannelSuffix" else ""
+    val channelName = "dev.flutter.pigeon.flutter_inappwebview_android.InAppWebViewFlutterApi.onReceivedClientCertRequest$separatedMessageChannelSuffix"
+    val channel = BasicMessageChannel<Any?>(binaryMessenger, channelName, codec)
+    channel.send(listOf(challengeArg)) {
+      if (it is List<*>) {
+        if (it.size > 1) {
+          callback(Result.failure(FlutterError(it[0] as String, it[1] as String, it[2] as String?)))
+        } else {
+          val output = it[0] as Map<String?, Any?>?
+          callback(Result.success(output))
+        }
+      } else {
+        callback(Result.failure(InAppWebViewPigeonUtils.createConnectionError(channelName)))
+      } 
+    }
+  }
+  /** `SafeBrowsingResponse.toMap()`. */
+  fun onSafeBrowsingHit(urlArg: String?, threatTypeArg: Long, callback: (Result<Map<String?, Any?>?>) -> Unit)
+{
+    val separatedMessageChannelSuffix = if (messageChannelSuffix.isNotEmpty()) ".$messageChannelSuffix" else ""
+    val channelName = "dev.flutter.pigeon.flutter_inappwebview_android.InAppWebViewFlutterApi.onSafeBrowsingHit$separatedMessageChannelSuffix"
+    val channel = BasicMessageChannel<Any?>(binaryMessenger, channelName, codec)
+    channel.send(listOf(urlArg, threatTypeArg)) {
+      if (it is List<*>) {
+        if (it.size > 1) {
+          callback(Result.failure(FlutterError(it[0] as String, it[1] as String, it[2] as String?)))
+        } else {
+          val output = it[0] as Map<String?, Any?>?
+          callback(Result.success(output))
+        }
+      } else {
+        callback(Result.failure(InAppWebViewPigeonUtils.createConnectionError(channelName)))
+      } 
+    }
+  }
+  /** A `FormResubmissionAction` value. */
+  fun onFormResubmission(urlArg: String?, callback: (Result<Long?>) -> Unit)
+{
+    val separatedMessageChannelSuffix = if (messageChannelSuffix.isNotEmpty()) ".$messageChannelSuffix" else ""
+    val channelName = "dev.flutter.pigeon.flutter_inappwebview_android.InAppWebViewFlutterApi.onFormResubmission$separatedMessageChannelSuffix"
+    val channel = BasicMessageChannel<Any?>(binaryMessenger, channelName, codec)
+    channel.send(listOf(urlArg)) {
+      if (it is List<*>) {
+        if (it.size > 1) {
+          callback(Result.failure(FlutterError(it[0] as String, it[1] as String, it[2] as String?)))
+        } else {
+          val output = it[0] as Long?
+          callback(Result.success(output))
+        }
+      } else {
+        callback(Result.failure(InAppWebViewPigeonUtils.createConnectionError(channelName)))
+      } 
+    }
+  }
+  /** A `WebViewRenderProcessAction` value. */
+  fun onRenderProcessUnresponsive(urlArg: String?, callback: (Result<Long?>) -> Unit)
+{
+    val separatedMessageChannelSuffix = if (messageChannelSuffix.isNotEmpty()) ".$messageChannelSuffix" else ""
+    val channelName = "dev.flutter.pigeon.flutter_inappwebview_android.InAppWebViewFlutterApi.onRenderProcessUnresponsive$separatedMessageChannelSuffix"
+    val channel = BasicMessageChannel<Any?>(binaryMessenger, channelName, codec)
+    channel.send(listOf(urlArg)) {
+      if (it is List<*>) {
+        if (it.size > 1) {
+          callback(Result.failure(FlutterError(it[0] as String, it[1] as String, it[2] as String?)))
+        } else {
+          val output = it[0] as Long?
+          callback(Result.success(output))
+        }
+      } else {
+        callback(Result.failure(InAppWebViewPigeonUtils.createConnectionError(channelName)))
+      } 
+    }
+  }
+  /** A `WebViewRenderProcessAction` value. */
+  fun onRenderProcessResponsive(urlArg: String?, callback: (Result<Long?>) -> Unit)
+{
+    val separatedMessageChannelSuffix = if (messageChannelSuffix.isNotEmpty()) ".$messageChannelSuffix" else ""
+    val channelName = "dev.flutter.pigeon.flutter_inappwebview_android.InAppWebViewFlutterApi.onRenderProcessResponsive$separatedMessageChannelSuffix"
+    val channel = BasicMessageChannel<Any?>(binaryMessenger, channelName, codec)
+    channel.send(listOf(urlArg)) {
+      if (it is List<*>) {
+        if (it.size > 1) {
+          callback(Result.failure(FlutterError(it[0] as String, it[1] as String, it[2] as String?)))
+        } else {
+          val output = it[0] as Long?
+          callback(Result.success(output))
+        }
+      } else {
+        callback(Result.failure(InAppWebViewPigeonUtils.createConnectionError(channelName)))
+      } 
+    }
+  }
+  /**
+   * `data` is `JavaScriptHandlerFunctionData.toMap()`. The answer is the handler's result as JSON
+   * text, which Kotlin splices into the page's `resolve(…)`; null resolves with `null`.
+   */
+  fun onCallJsHandler(handlerNameArg: String?, dataArg: Map<String?, Any?>, callback: (Result<String?>) -> Unit)
+{
+    val separatedMessageChannelSuffix = if (messageChannelSuffix.isNotEmpty()) ".$messageChannelSuffix" else ""
+    val channelName = "dev.flutter.pigeon.flutter_inappwebview_android.InAppWebViewFlutterApi.onCallJsHandler$separatedMessageChannelSuffix"
+    val channel = BasicMessageChannel<Any?>(binaryMessenger, channelName, codec)
+    channel.send(listOf(handlerNameArg, dataArg)) {
+      if (it is List<*>) {
+        if (it.size > 1) {
+          callback(Result.failure(FlutterError(it[0] as String, it[1] as String, it[2] as String?)))
+        } else {
+          val output = it[0] as String?
+          callback(Result.success(output))
+        }
+      } else {
+        callback(Result.failure(InAppWebViewPigeonUtils.createConnectionError(channelName)))
+      } 
+    }
+  }
+  /** `true` means the app prints itself, so the plugin doesn't. */
+  fun onPrintRequest(urlArg: String?, callback: (Result<Boolean?>) -> Unit)
+{
+    val separatedMessageChannelSuffix = if (messageChannelSuffix.isNotEmpty()) ".$messageChannelSuffix" else ""
+    val channelName = "dev.flutter.pigeon.flutter_inappwebview_android.InAppWebViewFlutterApi.onPrintRequest$separatedMessageChannelSuffix"
+    val channel = BasicMessageChannel<Any?>(binaryMessenger, channelName, codec)
+    channel.send(listOf(urlArg)) {
+      if (it is List<*>) {
+        if (it.size > 1) {
+          callback(Result.failure(FlutterError(it[0] as String, it[1] as String, it[2] as String?)))
+        } else {
+          val output = it[0] as Boolean?
+          callback(Result.success(output))
+        }
+      } else {
+        callback(Result.failure(InAppWebViewPigeonUtils.createConnectionError(channelName)))
+      } 
+    }
+  }
+  /** The visited URLs. Null keeps the platform default; an empty list says nothing was visited. */
+  fun onRequestVisitedHistory(callback: (Result<List<String?>?>) -> Unit)
+{
+    val separatedMessageChannelSuffix = if (messageChannelSuffix.isNotEmpty()) ".$messageChannelSuffix" else ""
+    val channelName = "dev.flutter.pigeon.flutter_inappwebview_android.InAppWebViewFlutterApi.onRequestVisitedHistory$separatedMessageChannelSuffix"
+    val channel = BasicMessageChannel<Any?>(binaryMessenger, channelName, codec)
+    channel.send(null) {
+      if (it is List<*>) {
+        if (it.size > 1) {
+          callback(Result.failure(FlutterError(it[0] as String, it[1] as String, it[2] as String?)))
+        } else {
+          val output = it[0] as List<String?>?
+          callback(Result.success(output))
+        }
+      } else {
+        callback(Result.failure(InAppWebViewPigeonUtils.createConnectionError(channelName)))
+      } 
+    }
+  }
+  /** `request` is `ShowFileChooserRequest.toMap()`; the answer `ShowFileChooserResponse.toMap()`. */
+  fun onShowFileChooser(requestArg: Map<String?, Any?>, callback: (Result<Map<String?, Any?>?>) -> Unit)
+{
+    val separatedMessageChannelSuffix = if (messageChannelSuffix.isNotEmpty()) ".$messageChannelSuffix" else ""
+    val channelName = "dev.flutter.pigeon.flutter_inappwebview_android.InAppWebViewFlutterApi.onShowFileChooser$separatedMessageChannelSuffix"
+    val channel = BasicMessageChannel<Any?>(binaryMessenger, channelName, codec)
+    channel.send(listOf(requestArg)) {
+      if (it is List<*>) {
+        if (it.size > 1) {
+          callback(Result.failure(FlutterError(it[0] as String, it[1] as String, it[2] as String?)))
+        } else {
+          val output = it[0] as Map<String?, Any?>?
+          callback(Result.success(output))
+        }
+      } else {
+        callback(Result.failure(InAppWebViewPigeonUtils.createConnectionError(channelName)))
+      } 
+    }
+  }
+  /**
+   * **Blocking**: Kotlin waits for this on a WebView worker thread, up to the WebView's
+   * `syncCallbackTimeoutMillis`. Null, a throw, no handler and a timeout all mean "load it
+   * normally".
+   */
+  fun shouldInterceptRequest(requestArg: WebResourceRequestData, callback: (Result<WebResourceResponseData?>) -> Unit)
+{
+    val separatedMessageChannelSuffix = if (messageChannelSuffix.isNotEmpty()) ".$messageChannelSuffix" else ""
+    val channelName = "dev.flutter.pigeon.flutter_inappwebview_android.InAppWebViewFlutterApi.shouldInterceptRequest$separatedMessageChannelSuffix"
+    val channel = BasicMessageChannel<Any?>(binaryMessenger, channelName, codec)
+    channel.send(listOf(requestArg)) {
+      if (it is List<*>) {
+        if (it.size > 1) {
+          callback(Result.failure(FlutterError(it[0] as String, it[1] as String, it[2] as String?)))
+        } else {
+          val output = it[0] as WebResourceResponseData?
+          callback(Result.success(output))
+        }
+      } else {
+        callback(Result.failure(InAppWebViewPigeonUtils.createConnectionError(channelName)))
+      } 
+    }
+  }
+  /** **Blocking**, as [shouldInterceptRequest]. The answer is `CustomSchemeResponse.toMap()`. */
+  fun onLoadResourceWithCustomScheme(requestArg: WebResourceRequestData, callback: (Result<Map<String?, Any?>?>) -> Unit)
+{
+    val separatedMessageChannelSuffix = if (messageChannelSuffix.isNotEmpty()) ".$messageChannelSuffix" else ""
+    val channelName = "dev.flutter.pigeon.flutter_inappwebview_android.InAppWebViewFlutterApi.onLoadResourceWithCustomScheme$separatedMessageChannelSuffix"
+    val channel = BasicMessageChannel<Any?>(binaryMessenger, channelName, codec)
+    channel.send(listOf(requestArg)) {
+      if (it is List<*>) {
+        if (it.size > 1) {
+          callback(Result.failure(FlutterError(it[0] as String, it[1] as String, it[2] as String?)))
+        } else {
+          val output = it[0] as Map<String?, Any?>?
+          callback(Result.success(output))
+        }
+      } else {
+        callback(Result.failure(InAppWebViewPigeonUtils.createConnectionError(channelName)))
+      } 
+    }
+  }
+}
+/**
+ * Every method but [setServiceWorkerClient] takes a `profileName`: null is the default profile
+ * (androidx `ServiceWorkerWebSettingsCompat`), a name is that profile's framework
+ * `ServiceWorkerWebSettings`. [setServiceWorkerClient] deliberately takes none — the intercept event
+ * carries no profile identity, so a per-profile client could not be told apart in Dart.
+ *
+ * Generated interface from Pigeon that represents a handler of messages from Flutter.
+ */
+interface ServiceWorkerHostApi {
+  /** `false` only when the native manager has gone away. */
+  fun setServiceWorkerClient(isNull: Boolean): Boolean
+  /** `false` also when the settings are unreachable, as before — unlike the cookie-intercept getter. */
+  fun getAllowContentAccess(profileName: String?): Boolean
+  fun getAllowFileAccess(profileName: String?): Boolean
+  fun getBlockNetworkLoads(profileName: String?): Boolean
+  fun getCacheMode(profileName: String?): Long?
+  /**
+   * **Nullable, and must stay so**: null is a real answer (feature unsupported, or a named profile,
+   * whose framework settings have no such API). §126 depends on the three states staying apart.
+   */
+  fun getIncludeCookiesOnShouldInterceptRequestEnabled(profileName: String?): Boolean?
+  fun setAllowContentAccess(allow: Boolean, profileName: String?): Boolean
+  fun setAllowFileAccess(allow: Boolean, profileName: String?): Boolean
+  fun setBlockNetworkLoads(flag: Boolean, profileName: String?): Boolean
+  /** A native `WebSettings` cache-mode constant, narrowed into an `@IntDef` (checklist item 4). */
+  fun setCacheMode(mode: Long, profileName: String?): Boolean
+  fun setIncludeCookiesOnShouldInterceptRequestEnabled(enabled: Boolean, profileName: String?): Boolean
+
+  companion object {
+    /** The codec used by ServiceWorkerHostApi. */
+    val codec: MessageCodec<Any?> by lazy {
+      InAppWebViewPigeonCodec()
+    }
+    /** Sets up an instance of `ServiceWorkerHostApi` to handle messages through the `binaryMessenger`. */
+    @JvmOverloads
+    fun setUp(binaryMessenger: BinaryMessenger, api: ServiceWorkerHostApi?, messageChannelSuffix: String = "") {
+      val separatedMessageChannelSuffix = if (messageChannelSuffix.isNotEmpty()) ".$messageChannelSuffix" else ""
+      run {
+        val channel = BasicMessageChannel<Any?>(binaryMessenger, "dev.flutter.pigeon.flutter_inappwebview_android.ServiceWorkerHostApi.setServiceWorkerClient$separatedMessageChannelSuffix", codec)
+        if (api != null) {
+          channel.setMessageHandler { message, reply ->
+            val args = message as List<Any?>
+            val isNullArg = args[0] as Boolean
+            val wrapped: List<Any?> = try {
+              listOf(api.setServiceWorkerClient(isNullArg))
+            } catch (exception: Throwable) {
+              InAppWebViewPigeonUtils.wrapError(exception)
+            }
+            reply.reply(wrapped)
+          }
+        } else {
+          channel.setMessageHandler(null)
+        }
+      }
+      run {
+        val channel = BasicMessageChannel<Any?>(binaryMessenger, "dev.flutter.pigeon.flutter_inappwebview_android.ServiceWorkerHostApi.getAllowContentAccess$separatedMessageChannelSuffix", codec)
+        if (api != null) {
+          channel.setMessageHandler { message, reply ->
+            val args = message as List<Any?>
+            val profileNameArg = args[0] as String?
+            val wrapped: List<Any?> = try {
+              listOf(api.getAllowContentAccess(profileNameArg))
+            } catch (exception: Throwable) {
+              InAppWebViewPigeonUtils.wrapError(exception)
+            }
+            reply.reply(wrapped)
+          }
+        } else {
+          channel.setMessageHandler(null)
+        }
+      }
+      run {
+        val channel = BasicMessageChannel<Any?>(binaryMessenger, "dev.flutter.pigeon.flutter_inappwebview_android.ServiceWorkerHostApi.getAllowFileAccess$separatedMessageChannelSuffix", codec)
+        if (api != null) {
+          channel.setMessageHandler { message, reply ->
+            val args = message as List<Any?>
+            val profileNameArg = args[0] as String?
+            val wrapped: List<Any?> = try {
+              listOf(api.getAllowFileAccess(profileNameArg))
+            } catch (exception: Throwable) {
+              InAppWebViewPigeonUtils.wrapError(exception)
+            }
+            reply.reply(wrapped)
+          }
+        } else {
+          channel.setMessageHandler(null)
+        }
+      }
+      run {
+        val channel = BasicMessageChannel<Any?>(binaryMessenger, "dev.flutter.pigeon.flutter_inappwebview_android.ServiceWorkerHostApi.getBlockNetworkLoads$separatedMessageChannelSuffix", codec)
+        if (api != null) {
+          channel.setMessageHandler { message, reply ->
+            val args = message as List<Any?>
+            val profileNameArg = args[0] as String?
+            val wrapped: List<Any?> = try {
+              listOf(api.getBlockNetworkLoads(profileNameArg))
+            } catch (exception: Throwable) {
+              InAppWebViewPigeonUtils.wrapError(exception)
+            }
+            reply.reply(wrapped)
+          }
+        } else {
+          channel.setMessageHandler(null)
+        }
+      }
+      run {
+        val channel = BasicMessageChannel<Any?>(binaryMessenger, "dev.flutter.pigeon.flutter_inappwebview_android.ServiceWorkerHostApi.getCacheMode$separatedMessageChannelSuffix", codec)
+        if (api != null) {
+          channel.setMessageHandler { message, reply ->
+            val args = message as List<Any?>
+            val profileNameArg = args[0] as String?
+            val wrapped: List<Any?> = try {
+              listOf(api.getCacheMode(profileNameArg))
+            } catch (exception: Throwable) {
+              InAppWebViewPigeonUtils.wrapError(exception)
+            }
+            reply.reply(wrapped)
+          }
+        } else {
+          channel.setMessageHandler(null)
+        }
+      }
+      run {
+        val channel = BasicMessageChannel<Any?>(binaryMessenger, "dev.flutter.pigeon.flutter_inappwebview_android.ServiceWorkerHostApi.getIncludeCookiesOnShouldInterceptRequestEnabled$separatedMessageChannelSuffix", codec)
+        if (api != null) {
+          channel.setMessageHandler { message, reply ->
+            val args = message as List<Any?>
+            val profileNameArg = args[0] as String?
+            val wrapped: List<Any?> = try {
+              listOf(api.getIncludeCookiesOnShouldInterceptRequestEnabled(profileNameArg))
+            } catch (exception: Throwable) {
+              InAppWebViewPigeonUtils.wrapError(exception)
+            }
+            reply.reply(wrapped)
+          }
+        } else {
+          channel.setMessageHandler(null)
+        }
+      }
+      run {
+        val channel = BasicMessageChannel<Any?>(binaryMessenger, "dev.flutter.pigeon.flutter_inappwebview_android.ServiceWorkerHostApi.setAllowContentAccess$separatedMessageChannelSuffix", codec)
+        if (api != null) {
+          channel.setMessageHandler { message, reply ->
+            val args = message as List<Any?>
+            val allowArg = args[0] as Boolean
+            val profileNameArg = args[1] as String?
+            val wrapped: List<Any?> = try {
+              listOf(api.setAllowContentAccess(allowArg, profileNameArg))
+            } catch (exception: Throwable) {
+              InAppWebViewPigeonUtils.wrapError(exception)
+            }
+            reply.reply(wrapped)
+          }
+        } else {
+          channel.setMessageHandler(null)
+        }
+      }
+      run {
+        val channel = BasicMessageChannel<Any?>(binaryMessenger, "dev.flutter.pigeon.flutter_inappwebview_android.ServiceWorkerHostApi.setAllowFileAccess$separatedMessageChannelSuffix", codec)
+        if (api != null) {
+          channel.setMessageHandler { message, reply ->
+            val args = message as List<Any?>
+            val allowArg = args[0] as Boolean
+            val profileNameArg = args[1] as String?
+            val wrapped: List<Any?> = try {
+              listOf(api.setAllowFileAccess(allowArg, profileNameArg))
+            } catch (exception: Throwable) {
+              InAppWebViewPigeonUtils.wrapError(exception)
+            }
+            reply.reply(wrapped)
+          }
+        } else {
+          channel.setMessageHandler(null)
+        }
+      }
+      run {
+        val channel = BasicMessageChannel<Any?>(binaryMessenger, "dev.flutter.pigeon.flutter_inappwebview_android.ServiceWorkerHostApi.setBlockNetworkLoads$separatedMessageChannelSuffix", codec)
+        if (api != null) {
+          channel.setMessageHandler { message, reply ->
+            val args = message as List<Any?>
+            val flagArg = args[0] as Boolean
+            val profileNameArg = args[1] as String?
+            val wrapped: List<Any?> = try {
+              listOf(api.setBlockNetworkLoads(flagArg, profileNameArg))
+            } catch (exception: Throwable) {
+              InAppWebViewPigeonUtils.wrapError(exception)
+            }
+            reply.reply(wrapped)
+          }
+        } else {
+          channel.setMessageHandler(null)
+        }
+      }
+      run {
+        val channel = BasicMessageChannel<Any?>(binaryMessenger, "dev.flutter.pigeon.flutter_inappwebview_android.ServiceWorkerHostApi.setCacheMode$separatedMessageChannelSuffix", codec)
+        if (api != null) {
+          channel.setMessageHandler { message, reply ->
+            val args = message as List<Any?>
+            val modeArg = args[0] as Long
+            val profileNameArg = args[1] as String?
+            val wrapped: List<Any?> = try {
+              listOf(api.setCacheMode(modeArg, profileNameArg))
+            } catch (exception: Throwable) {
+              InAppWebViewPigeonUtils.wrapError(exception)
+            }
+            reply.reply(wrapped)
+          }
+        } else {
+          channel.setMessageHandler(null)
+        }
+      }
+      run {
+        val channel = BasicMessageChannel<Any?>(binaryMessenger, "dev.flutter.pigeon.flutter_inappwebview_android.ServiceWorkerHostApi.setIncludeCookiesOnShouldInterceptRequestEnabled$separatedMessageChannelSuffix", codec)
+        if (api != null) {
+          channel.setMessageHandler { message, reply ->
+            val args = message as List<Any?>
+            val enabledArg = args[0] as Boolean
+            val profileNameArg = args[1] as String?
+            val wrapped: List<Any?> = try {
+              listOf(api.setIncludeCookiesOnShouldInterceptRequestEnabled(enabledArg, profileNameArg))
+            } catch (exception: Throwable) {
+              InAppWebViewPigeonUtils.wrapError(exception)
+            }
+            reply.reply(wrapped)
+          }
+        } else {
+          channel.setMessageHandler(null)
+        }
+      }
+    }
+  }
+}
+/** Generated class from Pigeon that represents Flutter messages that can be called from Kotlin. */
+class ServiceWorkerFlutterApi(private val binaryMessenger: BinaryMessenger, private val messageChannelSuffix: String = "") {
+  companion object {
+    /** The codec used by ServiceWorkerFlutterApi. */
+    val codec: MessageCodec<Any?> by lazy {
+      InAppWebViewPigeonCodec()
+    }
+  }
+  /**
+   * The app's answer to a Service Worker's request. **Null means "not handled"** and the request
+   * goes to the network — measured in §185 (a mutant that decoded every answer as null made the
+   * replacement test read `from-server`). So the return type is nullable by necessity, not
+   * convenience.
+   *
+   * `@async` because the app's handler is async; on a FlutterApi that affects only the Dart side.
+   */
+  fun shouldInterceptRequest(requestArg: WebResourceRequestData, callback: (Result<WebResourceResponseData?>) -> Unit)
+{
+    val separatedMessageChannelSuffix = if (messageChannelSuffix.isNotEmpty()) ".$messageChannelSuffix" else ""
+    val channelName = "dev.flutter.pigeon.flutter_inappwebview_android.ServiceWorkerFlutterApi.shouldInterceptRequest$separatedMessageChannelSuffix"
+    val channel = BasicMessageChannel<Any?>(binaryMessenger, channelName, codec)
+    channel.send(listOf(requestArg)) {
+      if (it is List<*>) {
+        if (it.size > 1) {
+          callback(Result.failure(FlutterError(it[0] as String, it[1] as String, it[2] as String?)))
+        } else {
+          val output = it[0] as WebResourceResponseData?
+          callback(Result.success(output))
+        }
+      } else {
+        callback(Result.failure(InAppWebViewPigeonUtils.createConnectionError(channelName)))
+      } 
+    }
+  }
+}
+/**
+ * Implemented on the Dart side by a private forwarding class, one per path handler, suffixed by
+ * its id.
+ *
+ * Generated class from Pigeon that represents Flutter messages that can be called from Kotlin.
+ */
+class CustomPathHandlerFlutterApi(private val binaryMessenger: BinaryMessenger, private val messageChannelSuffix: String = "") {
+  companion object {
+    /** The codec used by CustomPathHandlerFlutterApi. */
+    val codec: MessageCodec<Any?> by lazy {
+      InAppWebViewPigeonCodec()
+    }
+  }
+  /**
+   * The response for [path], the part of the URL after the handler's prefix, with no query. Null
+   * means "not handled": the request goes to the network.
+   */
+  fun handle(pathArg: String, callback: (Result<WebResourceResponseData?>) -> Unit)
+{
+    val separatedMessageChannelSuffix = if (messageChannelSuffix.isNotEmpty()) ".$messageChannelSuffix" else ""
+    val channelName = "dev.flutter.pigeon.flutter_inappwebview_android.CustomPathHandlerFlutterApi.handle$separatedMessageChannelSuffix"
+    val channel = BasicMessageChannel<Any?>(binaryMessenger, channelName, codec)
+    channel.send(listOf(pathArg)) {
+      if (it is List<*>) {
+        if (it.size > 1) {
+          callback(Result.failure(FlutterError(it[0] as String, it[1] as String, it[2] as String?)))
+        } else {
+          val output = it[0] as WebResourceResponseData?
+          callback(Result.success(output))
         }
       } else {
         callback(Result.failure(InAppWebViewPigeonUtils.createConnectionError(channelName)))

@@ -480,6 +480,27 @@ for, and five others have a native *value* that differs from their name.
 
 ### Internal
 
+- **`WebViewChannelDelegate` W5: the 19 value-returning events and the two blocking waits move to
+  Pigeon, so nothing uses the per-WebView MethodChannel any more.** JS dialogs, windows,
+  permissions, geolocation, navigation policy, auth challenges, safe browsing, form resubmission,
+  render process, JavaScript handlers, print, visited history and file chooser all join
+  `InAppWebViewFlutterApi`, with `shouldInterceptRequest` and `onLoadResourceWithCustomScheme`. No
+  public API change.
+  - Each event keeps the callback object it had, and every Pigeon reply is handed to it the way the
+    MethodChannel did. An answer goes to `success`, with its ints narrowed (Pigeon sends every Dart
+    int as 64-bit). A Dart throw goes to `error`. **No Dart handler goes to `notImplemented`**, not
+    `error`, so each event still takes its default; the two differ for the JS dialogs and the JS
+    handler (`FlutterApiReply.kt`, pinned by `FlutterApiReplyTest`).
+  - The two blocking waits keep their semantics: posted to the main thread, bounded by the
+    WebView's live `syncCallbackTimeoutMillis`, and null on a timeout, a throw or no handler.
+  - The service-worker and custom path handler schemas are folded into `in_app_webview.dart`, since
+    Pigeon can't share `WebResourceRequestData` / `WebResourceResponseData` across files (20
+    schemas, from 22). The path handler's answer is now typed `WebResourceResponseData`.
+  - Deleted: the two dead callback forms (`shouldInterceptRequest(request, callback)`,
+    `onLoadResourceWithCustomScheme(request, callback)`), their callback classes, and
+    `WebResourceResponseExt.fromMap`, which had no caller left.
+  - `pigeon_in_app_webview_answers_test` (new) delivers all 21 as real Pigeon messages and pins
+    each argument, each answer, the null answer when no callback is set, and the error reply.
 - **W5's coverage check: device tests now read what the plugin does with the answers to the
   value-returning events, before their migration.** Most tests answered with the platform default,
   so an answer the plugin ignored would have passed. Test code only.

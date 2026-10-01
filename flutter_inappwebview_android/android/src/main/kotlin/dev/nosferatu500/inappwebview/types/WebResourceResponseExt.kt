@@ -3,14 +3,10 @@ package dev.nosferatu500.inappwebview.types
 import android.webkit.WebResourceResponse
 import androidx.webkit.WebResourceResponseCompat
 import dev.nosferatu500.inappwebview.Util
+import dev.nosferatu500.inappwebview.pigeons.WebResourceResponseData
 import java.io.ByteArrayInputStream
 import java.util.Arrays
 
-// The unchecked casts below are the Flutter codec boundary: StandardMessageCodec decodes to
-// Map<String,Object>/List<Object>, so every read of a structured value is an unverifiable
-// cast. A wrong shape throws ClassCastException at the cast site, which is the intended
-// failure mode. Suppressed at class level because the whole class is that boundary.
-@Suppress("UNCHECKED_CAST")
 class WebResourceResponseExt(
   var contentType: String?,
   var contentEncoding: String?,
@@ -124,21 +120,22 @@ class WebResourceResponseExt(
         Util.readAllBytes(response.data)
       )
 
+    /**
+     * From the Pigeon form: the service worker's intercept, and since W5 (§216) the WebView's
+     * intercept and the custom path handler. It replaces `fromMap`, whose last two callers (the
+     * WebView's intercept and the path handler) W5 moved here. `statusCode` narrows from Pigeon's `Long` to the `Int`
+     * `WebResourceResponse` takes, a plain `int`, not an `@IntDef`. Every other field crosses
+     * unchanged, nullability included, because [toWebResourceResponse] branches on which are present.
+     */
     @JvmStatic
-    fun fromMap(map: Map<String, Any?>?): WebResourceResponseExt? {
-      if (map == null) {
-        return null
-      }
-      val contentType = map["contentType"] as String?
-      val contentEncoding = map["contentEncoding"] as String?
-      val statusCode = map["statusCode"] as Int?
-      val reasonPhrase = map["reasonPhrase"] as String?
-      val headers = map["headers"] as Map<String, String>?
-      val data = map["data"] as ByteArray?
-      val cookies = map["cookies"] as List<String>?
-      return WebResourceResponseExt(
-        contentType, contentEncoding, statusCode, reasonPhrase, headers, data, cookies
-      )
-    }
+    fun fromPigeon(data: WebResourceResponseData): WebResourceResponseExt = WebResourceResponseExt(
+      contentType = data.contentType,
+      contentEncoding = data.contentEncoding,
+      statusCode = data.statusCode?.toInt(),
+      reasonPhrase = data.reasonPhrase,
+      headers = data.headers,
+      data = data.data,
+      cookies = data.cookies
+    )
   }
 }

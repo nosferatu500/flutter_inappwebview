@@ -48,6 +48,237 @@ List<Object?> wrapResponse({
   return <Object?>[error.code, error.message, error.details];
 }
 
+bool _deepEquals(Object? a, Object? b) {
+  if (identical(a, b)) {
+    return true;
+  }
+  if (a is double && b is double) {
+    if (a.isNaN && b.isNaN) {
+      return true;
+    }
+    return a == b;
+  }
+  if (a is List && b is List) {
+    return a.length == b.length &&
+        a.indexed.every(
+          ((int, dynamic) item) => _deepEquals(item.$2, b[item.$1]),
+        );
+  }
+  if (a is Map && b is Map) {
+    if (a.length != b.length) {
+      return false;
+    }
+    for (final MapEntry<Object?, Object?> entryA in a.entries) {
+      bool found = false;
+      for (final MapEntry<Object?, Object?> entryB in b.entries) {
+        if (_deepEquals(entryA.key, entryB.key)) {
+          if (_deepEquals(entryA.value, entryB.value)) {
+            found = true;
+            break;
+          } else {
+            return false;
+          }
+        }
+      }
+      if (!found) {
+        return false;
+      }
+    }
+    return true;
+  }
+  return a == b;
+}
+
+int _deepHash(Object? value) {
+  if (value is List) {
+    return Object.hashAll(value.map(_deepHash));
+  }
+  if (value is Map) {
+    int result = 0;
+    for (final MapEntry<Object?, Object?> entry in value.entries) {
+      result += (_deepHash(entry.key) * 31) ^ _deepHash(entry.value);
+    }
+    return result;
+  }
+  if (value is double && value.isNaN) {
+    // Normalize NaN to a consistent hash.
+    return 0x7FF8000000000000.hashCode;
+  }
+  if (value is double && value == 0.0) {
+    // Normalize -0.0 to 0.0 so they have the same hash code.
+    return 0.0.hashCode;
+  }
+  return value.hashCode;
+}
+
+/// Mirrors the native `WebResourceRequestExt` field for field. Moved here from
+/// `service_worker.dart` in W5 (§216): the service worker's intercept and the WebView's carry the
+/// same request.
+class WebResourceRequestData {
+  WebResourceRequestData({
+    required this.url,
+    this.headers,
+    required this.isRedirect,
+    required this.hasGesture,
+    required this.isForMainFrame,
+    this.method,
+  });
+
+  String url;
+
+  Map<String, String>? headers;
+
+  bool isRedirect;
+
+  bool hasGesture;
+
+  bool isForMainFrame;
+
+  String? method;
+
+  List<Object?> _toList() {
+    return <Object?>[
+      url,
+      headers,
+      isRedirect,
+      hasGesture,
+      isForMainFrame,
+      method,
+    ];
+  }
+
+  Object encode() {
+    return _toList();
+  }
+
+  static WebResourceRequestData decode(Object result) {
+    result as List<Object?>;
+    return WebResourceRequestData(
+      url: result[0]! as String,
+      headers: (result[1] as Map<Object?, Object?>?)?.cast<String, String>(),
+      isRedirect: result[2]! as bool,
+      hasGesture: result[3]! as bool,
+      isForMainFrame: result[4]! as bool,
+      method: result[5] as String?,
+    );
+  }
+
+  @override
+  // ignore: avoid_equals_and_hash_code_on_mutable_classes
+  bool operator ==(Object other) {
+    if (other is! WebResourceRequestData || other.runtimeType != runtimeType) {
+      return false;
+    }
+    if (identical(this, other)) {
+      return true;
+    }
+    return _deepEquals(url, other.url) &&
+        _deepEquals(headers, other.headers) &&
+        _deepEquals(isRedirect, other.isRedirect) &&
+        _deepEquals(hasGesture, other.hasGesture) &&
+        _deepEquals(isForMainFrame, other.isForMainFrame) &&
+        _deepEquals(method, other.method);
+  }
+
+  @override
+  // ignore: avoid_equals_and_hash_code_on_mutable_classes
+  int get hashCode => _deepHash(<Object?>[runtimeType, ..._toList()]);
+
+  @override
+  String toString() {
+    return 'WebResourceRequestData(url: $url, headers: $headers, isRedirect: $isRedirect, hasGesture: $hasGesture, isForMainFrame: $isForMainFrame, method: $method)';
+  }
+}
+
+/// Mirrors the native `WebResourceResponseExt` field for field. Moved here with
+/// [WebResourceRequestData].
+///
+/// Every field is nullable because every field of the public `WebResourceResponse` is, and
+/// `WebResourceResponseExt.toWebResourceResponse` branches on which ones are present: a missing
+/// `statusCode` or `reasonPhrase` selects the three-argument framework constructor, and non-empty
+/// `cookies` select the compat path. Defaulting any of them here would change that choice.
+class WebResourceResponseData {
+  WebResourceResponseData({
+    this.contentType,
+    this.contentEncoding,
+    this.statusCode,
+    this.reasonPhrase,
+    this.headers,
+    this.data,
+    this.cookies,
+  });
+
+  String? contentType;
+
+  String? contentEncoding;
+
+  int? statusCode;
+
+  String? reasonPhrase;
+
+  Map<String, String>? headers;
+
+  Uint8List? data;
+
+  List<String>? cookies;
+
+  List<Object?> _toList() {
+    return <Object?>[
+      contentType,
+      contentEncoding,
+      statusCode,
+      reasonPhrase,
+      headers,
+      data,
+      cookies,
+    ];
+  }
+
+  Object encode() {
+    return _toList();
+  }
+
+  static WebResourceResponseData decode(Object result) {
+    result as List<Object?>;
+    return WebResourceResponseData(
+      contentType: result[0] as String?,
+      contentEncoding: result[1] as String?,
+      statusCode: result[2] as int?,
+      reasonPhrase: result[3] as String?,
+      headers: (result[4] as Map<Object?, Object?>?)?.cast<String, String>(),
+      data: result[5] as Uint8List?,
+      cookies: (result[6] as List<Object?>?)?.cast<String>(),
+    );
+  }
+
+  @override
+  // ignore: avoid_equals_and_hash_code_on_mutable_classes
+  bool operator ==(Object other) {
+    if (other is! WebResourceResponseData || other.runtimeType != runtimeType) {
+      return false;
+    }
+    if (identical(this, other)) {
+      return true;
+    }
+    return _deepEquals(contentType, other.contentType) &&
+        _deepEquals(contentEncoding, other.contentEncoding) &&
+        _deepEquals(statusCode, other.statusCode) &&
+        _deepEquals(reasonPhrase, other.reasonPhrase) &&
+        _deepEquals(headers, other.headers) &&
+        _deepEquals(data, other.data) &&
+        _deepEquals(cookies, other.cookies);
+  }
+
+  @override
+  // ignore: avoid_equals_and_hash_code_on_mutable_classes
+  int get hashCode => _deepHash(<Object?>[runtimeType, ..._toList()]);
+
+  @override
+  String toString() {
+    return 'WebResourceResponseData(contentType: $contentType, contentEncoding: $contentEncoding, statusCode: $statusCode, reasonPhrase: $reasonPhrase, headers: $headers, data: $data, cookies: $cookies)';
+  }
+}
+
 class _PigeonCodec extends StandardMessageCodec {
   const _PigeonCodec();
   @override
@@ -55,6 +286,12 @@ class _PigeonCodec extends StandardMessageCodec {
     if (value is int) {
       buffer.putUint8(4);
       buffer.putInt64(value);
+    } else if (value is WebResourceRequestData) {
+      buffer.putUint8(129);
+      writeValue(buffer, value.encode());
+    } else if (value is WebResourceResponseData) {
+      buffer.putUint8(130);
+      writeValue(buffer, value.encode());
     } else {
       super.writeValue(buffer, value);
     }
@@ -63,6 +300,10 @@ class _PigeonCodec extends StandardMessageCodec {
   @override
   Object? readValueOfType(int type, ReadBuffer buffer) {
     switch (type) {
+      case 129:
+        return WebResourceRequestData.decode(readValue(buffer)!);
+      case 130:
+        return WebResourceResponseData.decode(readValue(buffer)!);
       default:
         return super.readValueOfType(type, buffer);
     }
@@ -1754,6 +1995,106 @@ abstract class InAppWebViewFlutterApi {
     int markTimeMillis,
   );
 
+  /// `JsAlertResponse.toMap()`.
+  Future<Map<String?, Object?>?> onJsAlert(
+    String? url,
+    String? message,
+    bool? isMainFrame,
+  );
+
+  /// `JsConfirmResponse.toMap()`.
+  Future<Map<String?, Object?>?> onJsConfirm(
+    String? url,
+    String? message,
+    bool? isMainFrame,
+  );
+
+  /// `JsPromptResponse.toMap()`.
+  Future<Map<String?, Object?>?> onJsPrompt(
+    String? url,
+    String? message,
+    String? defaultValue,
+    bool? isMainFrame,
+  );
+
+  /// `JsBeforeUnloadResponse.toMap()`.
+  Future<Map<String?, Object?>?> onJsBeforeUnload(String? url, String? message);
+
+  /// `createWindowAction` is `CreateWindowAction.toMap()`. `true` means the app handles the window.
+  Future<bool?> onCreateWindow(Map<String?, Object?> createWindowAction);
+
+  /// `GeolocationPermissionShowPromptResponse.toMap()`.
+  Future<Map<String?, Object?>?> onGeolocationPermissionsShowPrompt(
+    String? origin,
+  );
+
+  /// `PermissionResponse.toMap()`.
+  Future<Map<String?, Object?>?> onPermissionRequest(
+    String? origin,
+    List<String?>? resources,
+    Object? frame,
+  );
+
+  /// `navigationAction` is `NavigationAction.toMap()`; the answer a `NavigationActionPolicy` value.
+  Future<int?> shouldOverrideUrlLoading(Map<String?, Object?> navigationAction);
+
+  /// `challenge` is `HttpAuthenticationChallenge.toMap()`; the answer `HttpAuthResponse.toMap()`.
+  Future<Map<String?, Object?>?> onReceivedHttpAuthRequest(
+    Map<String?, Object?> challenge,
+  );
+
+  /// `challenge` is `ServerTrustChallenge.toMap()`; the answer `ServerTrustAuthResponse.toMap()`.
+  Future<Map<String?, Object?>?> onReceivedServerTrustAuthRequest(
+    Map<String?, Object?> challenge,
+  );
+
+  /// `challenge` is `ClientCertChallenge.toMap()`; the answer `ClientCertResponse.toMap()`.
+  Future<Map<String?, Object?>?> onReceivedClientCertRequest(
+    Map<String?, Object?> challenge,
+  );
+
+  /// `SafeBrowsingResponse.toMap()`.
+  Future<Map<String?, Object?>?> onSafeBrowsingHit(String? url, int threatType);
+
+  /// A `FormResubmissionAction` value.
+  Future<int?> onFormResubmission(String? url);
+
+  /// A `WebViewRenderProcessAction` value.
+  Future<int?> onRenderProcessUnresponsive(String? url);
+
+  /// A `WebViewRenderProcessAction` value.
+  Future<int?> onRenderProcessResponsive(String? url);
+
+  /// `data` is `JavaScriptHandlerFunctionData.toMap()`. The answer is the handler's result as JSON
+  /// text, which Kotlin splices into the page's `resolve(…)`; null resolves with `null`.
+  Future<String?> onCallJsHandler(
+    String? handlerName,
+    Map<String?, Object?> data,
+  );
+
+  /// `true` means the app prints itself, so the plugin doesn't.
+  Future<bool?> onPrintRequest(String? url);
+
+  /// The visited URLs. Null keeps the platform default; an empty list says nothing was visited.
+  Future<List<String?>?> onRequestVisitedHistory();
+
+  /// `request` is `ShowFileChooserRequest.toMap()`; the answer `ShowFileChooserResponse.toMap()`.
+  Future<Map<String?, Object?>?> onShowFileChooser(
+    Map<String?, Object?> request,
+  );
+
+  /// **Blocking**: Kotlin waits for this on a WebView worker thread, up to the WebView's
+  /// `syncCallbackTimeoutMillis`. Null, a throw, no handler and a timeout all mean "load it
+  /// normally".
+  Future<WebResourceResponseData?> shouldInterceptRequest(
+    WebResourceRequestData request,
+  );
+
+  /// **Blocking**, as [shouldInterceptRequest]. The answer is `CustomSchemeResponse.toMap()`.
+  Future<Map<String?, Object?>?> onLoadResourceWithCustomScheme(
+    WebResourceRequestData request,
+  );
+
   static void setUp(
     InAppWebViewFlutterApi? api, {
     BinaryMessenger? binaryMessenger,
@@ -2664,6 +3005,948 @@ abstract class InAppWebViewFlutterApi {
               arg_markTimeMillis,
             );
             return wrapResponse(empty: true);
+          } on PlatformException catch (e) {
+            return wrapResponse(error: e);
+          } catch (e) {
+            return wrapResponse(
+              error: PlatformException(code: 'error', message: e.toString()),
+            );
+          }
+        });
+      }
+    }
+    {
+      final pigeonVar_channel = BasicMessageChannel<Object?>(
+        'dev.flutter.pigeon.flutter_inappwebview_android.InAppWebViewFlutterApi.onJsAlert$messageChannelSuffix',
+        pigeonChannelCodec,
+        binaryMessenger: binaryMessenger,
+      );
+      if (api == null) {
+        pigeonVar_channel.setMessageHandler(null);
+      } else {
+        pigeonVar_channel.setMessageHandler((Object? message) async {
+          final List<Object?> args = message! as List<Object?>;
+          final String? arg_url = args[0] as String?;
+          final String? arg_message = args[1] as String?;
+          final bool? arg_isMainFrame = args[2] as bool?;
+          try {
+            final Map<String?, Object?>? output = await api.onJsAlert(
+              arg_url,
+              arg_message,
+              arg_isMainFrame,
+            );
+            return wrapResponse(result: output);
+          } on PlatformException catch (e) {
+            return wrapResponse(error: e);
+          } catch (e) {
+            return wrapResponse(
+              error: PlatformException(code: 'error', message: e.toString()),
+            );
+          }
+        });
+      }
+    }
+    {
+      final pigeonVar_channel = BasicMessageChannel<Object?>(
+        'dev.flutter.pigeon.flutter_inappwebview_android.InAppWebViewFlutterApi.onJsConfirm$messageChannelSuffix',
+        pigeonChannelCodec,
+        binaryMessenger: binaryMessenger,
+      );
+      if (api == null) {
+        pigeonVar_channel.setMessageHandler(null);
+      } else {
+        pigeonVar_channel.setMessageHandler((Object? message) async {
+          final List<Object?> args = message! as List<Object?>;
+          final String? arg_url = args[0] as String?;
+          final String? arg_message = args[1] as String?;
+          final bool? arg_isMainFrame = args[2] as bool?;
+          try {
+            final Map<String?, Object?>? output = await api.onJsConfirm(
+              arg_url,
+              arg_message,
+              arg_isMainFrame,
+            );
+            return wrapResponse(result: output);
+          } on PlatformException catch (e) {
+            return wrapResponse(error: e);
+          } catch (e) {
+            return wrapResponse(
+              error: PlatformException(code: 'error', message: e.toString()),
+            );
+          }
+        });
+      }
+    }
+    {
+      final pigeonVar_channel = BasicMessageChannel<Object?>(
+        'dev.flutter.pigeon.flutter_inappwebview_android.InAppWebViewFlutterApi.onJsPrompt$messageChannelSuffix',
+        pigeonChannelCodec,
+        binaryMessenger: binaryMessenger,
+      );
+      if (api == null) {
+        pigeonVar_channel.setMessageHandler(null);
+      } else {
+        pigeonVar_channel.setMessageHandler((Object? message) async {
+          final List<Object?> args = message! as List<Object?>;
+          final String? arg_url = args[0] as String?;
+          final String? arg_message = args[1] as String?;
+          final String? arg_defaultValue = args[2] as String?;
+          final bool? arg_isMainFrame = args[3] as bool?;
+          try {
+            final Map<String?, Object?>? output = await api.onJsPrompt(
+              arg_url,
+              arg_message,
+              arg_defaultValue,
+              arg_isMainFrame,
+            );
+            return wrapResponse(result: output);
+          } on PlatformException catch (e) {
+            return wrapResponse(error: e);
+          } catch (e) {
+            return wrapResponse(
+              error: PlatformException(code: 'error', message: e.toString()),
+            );
+          }
+        });
+      }
+    }
+    {
+      final pigeonVar_channel = BasicMessageChannel<Object?>(
+        'dev.flutter.pigeon.flutter_inappwebview_android.InAppWebViewFlutterApi.onJsBeforeUnload$messageChannelSuffix',
+        pigeonChannelCodec,
+        binaryMessenger: binaryMessenger,
+      );
+      if (api == null) {
+        pigeonVar_channel.setMessageHandler(null);
+      } else {
+        pigeonVar_channel.setMessageHandler((Object? message) async {
+          final List<Object?> args = message! as List<Object?>;
+          final String? arg_url = args[0] as String?;
+          final String? arg_message = args[1] as String?;
+          try {
+            final Map<String?, Object?>? output = await api.onJsBeforeUnload(
+              arg_url,
+              arg_message,
+            );
+            return wrapResponse(result: output);
+          } on PlatformException catch (e) {
+            return wrapResponse(error: e);
+          } catch (e) {
+            return wrapResponse(
+              error: PlatformException(code: 'error', message: e.toString()),
+            );
+          }
+        });
+      }
+    }
+    {
+      final pigeonVar_channel = BasicMessageChannel<Object?>(
+        'dev.flutter.pigeon.flutter_inappwebview_android.InAppWebViewFlutterApi.onCreateWindow$messageChannelSuffix',
+        pigeonChannelCodec,
+        binaryMessenger: binaryMessenger,
+      );
+      if (api == null) {
+        pigeonVar_channel.setMessageHandler(null);
+      } else {
+        pigeonVar_channel.setMessageHandler((Object? message) async {
+          final List<Object?> args = message! as List<Object?>;
+          final Map<String?, Object?> arg_createWindowAction =
+              (args[0]! as Map<Object?, Object?>).cast<String?, Object?>();
+          try {
+            final bool? output = await api.onCreateWindow(
+              arg_createWindowAction,
+            );
+            return wrapResponse(result: output);
+          } on PlatformException catch (e) {
+            return wrapResponse(error: e);
+          } catch (e) {
+            return wrapResponse(
+              error: PlatformException(code: 'error', message: e.toString()),
+            );
+          }
+        });
+      }
+    }
+    {
+      final pigeonVar_channel = BasicMessageChannel<Object?>(
+        'dev.flutter.pigeon.flutter_inappwebview_android.InAppWebViewFlutterApi.onGeolocationPermissionsShowPrompt$messageChannelSuffix',
+        pigeonChannelCodec,
+        binaryMessenger: binaryMessenger,
+      );
+      if (api == null) {
+        pigeonVar_channel.setMessageHandler(null);
+      } else {
+        pigeonVar_channel.setMessageHandler((Object? message) async {
+          final List<Object?> args = message! as List<Object?>;
+          final String? arg_origin = args[0] as String?;
+          try {
+            final Map<String?, Object?>? output = await api
+                .onGeolocationPermissionsShowPrompt(arg_origin);
+            return wrapResponse(result: output);
+          } on PlatformException catch (e) {
+            return wrapResponse(error: e);
+          } catch (e) {
+            return wrapResponse(
+              error: PlatformException(code: 'error', message: e.toString()),
+            );
+          }
+        });
+      }
+    }
+    {
+      final pigeonVar_channel = BasicMessageChannel<Object?>(
+        'dev.flutter.pigeon.flutter_inappwebview_android.InAppWebViewFlutterApi.onPermissionRequest$messageChannelSuffix',
+        pigeonChannelCodec,
+        binaryMessenger: binaryMessenger,
+      );
+      if (api == null) {
+        pigeonVar_channel.setMessageHandler(null);
+      } else {
+        pigeonVar_channel.setMessageHandler((Object? message) async {
+          final List<Object?> args = message! as List<Object?>;
+          final String? arg_origin = args[0] as String?;
+          final List<String?>? arg_resources = (args[1] as List<Object?>?)
+              ?.cast<String?>();
+          final Object? arg_frame = args[2];
+          try {
+            final Map<String?, Object?>? output = await api.onPermissionRequest(
+              arg_origin,
+              arg_resources,
+              arg_frame,
+            );
+            return wrapResponse(result: output);
+          } on PlatformException catch (e) {
+            return wrapResponse(error: e);
+          } catch (e) {
+            return wrapResponse(
+              error: PlatformException(code: 'error', message: e.toString()),
+            );
+          }
+        });
+      }
+    }
+    {
+      final pigeonVar_channel = BasicMessageChannel<Object?>(
+        'dev.flutter.pigeon.flutter_inappwebview_android.InAppWebViewFlutterApi.shouldOverrideUrlLoading$messageChannelSuffix',
+        pigeonChannelCodec,
+        binaryMessenger: binaryMessenger,
+      );
+      if (api == null) {
+        pigeonVar_channel.setMessageHandler(null);
+      } else {
+        pigeonVar_channel.setMessageHandler((Object? message) async {
+          final List<Object?> args = message! as List<Object?>;
+          final Map<String?, Object?> arg_navigationAction =
+              (args[0]! as Map<Object?, Object?>).cast<String?, Object?>();
+          try {
+            final int? output = await api.shouldOverrideUrlLoading(
+              arg_navigationAction,
+            );
+            return wrapResponse(result: output);
+          } on PlatformException catch (e) {
+            return wrapResponse(error: e);
+          } catch (e) {
+            return wrapResponse(
+              error: PlatformException(code: 'error', message: e.toString()),
+            );
+          }
+        });
+      }
+    }
+    {
+      final pigeonVar_channel = BasicMessageChannel<Object?>(
+        'dev.flutter.pigeon.flutter_inappwebview_android.InAppWebViewFlutterApi.onReceivedHttpAuthRequest$messageChannelSuffix',
+        pigeonChannelCodec,
+        binaryMessenger: binaryMessenger,
+      );
+      if (api == null) {
+        pigeonVar_channel.setMessageHandler(null);
+      } else {
+        pigeonVar_channel.setMessageHandler((Object? message) async {
+          final List<Object?> args = message! as List<Object?>;
+          final Map<String?, Object?> arg_challenge =
+              (args[0]! as Map<Object?, Object?>).cast<String?, Object?>();
+          try {
+            final Map<String?, Object?>? output = await api
+                .onReceivedHttpAuthRequest(arg_challenge);
+            return wrapResponse(result: output);
+          } on PlatformException catch (e) {
+            return wrapResponse(error: e);
+          } catch (e) {
+            return wrapResponse(
+              error: PlatformException(code: 'error', message: e.toString()),
+            );
+          }
+        });
+      }
+    }
+    {
+      final pigeonVar_channel = BasicMessageChannel<Object?>(
+        'dev.flutter.pigeon.flutter_inappwebview_android.InAppWebViewFlutterApi.onReceivedServerTrustAuthRequest$messageChannelSuffix',
+        pigeonChannelCodec,
+        binaryMessenger: binaryMessenger,
+      );
+      if (api == null) {
+        pigeonVar_channel.setMessageHandler(null);
+      } else {
+        pigeonVar_channel.setMessageHandler((Object? message) async {
+          final List<Object?> args = message! as List<Object?>;
+          final Map<String?, Object?> arg_challenge =
+              (args[0]! as Map<Object?, Object?>).cast<String?, Object?>();
+          try {
+            final Map<String?, Object?>? output = await api
+                .onReceivedServerTrustAuthRequest(arg_challenge);
+            return wrapResponse(result: output);
+          } on PlatformException catch (e) {
+            return wrapResponse(error: e);
+          } catch (e) {
+            return wrapResponse(
+              error: PlatformException(code: 'error', message: e.toString()),
+            );
+          }
+        });
+      }
+    }
+    {
+      final pigeonVar_channel = BasicMessageChannel<Object?>(
+        'dev.flutter.pigeon.flutter_inappwebview_android.InAppWebViewFlutterApi.onReceivedClientCertRequest$messageChannelSuffix',
+        pigeonChannelCodec,
+        binaryMessenger: binaryMessenger,
+      );
+      if (api == null) {
+        pigeonVar_channel.setMessageHandler(null);
+      } else {
+        pigeonVar_channel.setMessageHandler((Object? message) async {
+          final List<Object?> args = message! as List<Object?>;
+          final Map<String?, Object?> arg_challenge =
+              (args[0]! as Map<Object?, Object?>).cast<String?, Object?>();
+          try {
+            final Map<String?, Object?>? output = await api
+                .onReceivedClientCertRequest(arg_challenge);
+            return wrapResponse(result: output);
+          } on PlatformException catch (e) {
+            return wrapResponse(error: e);
+          } catch (e) {
+            return wrapResponse(
+              error: PlatformException(code: 'error', message: e.toString()),
+            );
+          }
+        });
+      }
+    }
+    {
+      final pigeonVar_channel = BasicMessageChannel<Object?>(
+        'dev.flutter.pigeon.flutter_inappwebview_android.InAppWebViewFlutterApi.onSafeBrowsingHit$messageChannelSuffix',
+        pigeonChannelCodec,
+        binaryMessenger: binaryMessenger,
+      );
+      if (api == null) {
+        pigeonVar_channel.setMessageHandler(null);
+      } else {
+        pigeonVar_channel.setMessageHandler((Object? message) async {
+          final List<Object?> args = message! as List<Object?>;
+          final String? arg_url = args[0] as String?;
+          final int arg_threatType = args[1]! as int;
+          try {
+            final Map<String?, Object?>? output = await api.onSafeBrowsingHit(
+              arg_url,
+              arg_threatType,
+            );
+            return wrapResponse(result: output);
+          } on PlatformException catch (e) {
+            return wrapResponse(error: e);
+          } catch (e) {
+            return wrapResponse(
+              error: PlatformException(code: 'error', message: e.toString()),
+            );
+          }
+        });
+      }
+    }
+    {
+      final pigeonVar_channel = BasicMessageChannel<Object?>(
+        'dev.flutter.pigeon.flutter_inappwebview_android.InAppWebViewFlutterApi.onFormResubmission$messageChannelSuffix',
+        pigeonChannelCodec,
+        binaryMessenger: binaryMessenger,
+      );
+      if (api == null) {
+        pigeonVar_channel.setMessageHandler(null);
+      } else {
+        pigeonVar_channel.setMessageHandler((Object? message) async {
+          final List<Object?> args = message! as List<Object?>;
+          final String? arg_url = args[0] as String?;
+          try {
+            final int? output = await api.onFormResubmission(arg_url);
+            return wrapResponse(result: output);
+          } on PlatformException catch (e) {
+            return wrapResponse(error: e);
+          } catch (e) {
+            return wrapResponse(
+              error: PlatformException(code: 'error', message: e.toString()),
+            );
+          }
+        });
+      }
+    }
+    {
+      final pigeonVar_channel = BasicMessageChannel<Object?>(
+        'dev.flutter.pigeon.flutter_inappwebview_android.InAppWebViewFlutterApi.onRenderProcessUnresponsive$messageChannelSuffix',
+        pigeonChannelCodec,
+        binaryMessenger: binaryMessenger,
+      );
+      if (api == null) {
+        pigeonVar_channel.setMessageHandler(null);
+      } else {
+        pigeonVar_channel.setMessageHandler((Object? message) async {
+          final List<Object?> args = message! as List<Object?>;
+          final String? arg_url = args[0] as String?;
+          try {
+            final int? output = await api.onRenderProcessUnresponsive(arg_url);
+            return wrapResponse(result: output);
+          } on PlatformException catch (e) {
+            return wrapResponse(error: e);
+          } catch (e) {
+            return wrapResponse(
+              error: PlatformException(code: 'error', message: e.toString()),
+            );
+          }
+        });
+      }
+    }
+    {
+      final pigeonVar_channel = BasicMessageChannel<Object?>(
+        'dev.flutter.pigeon.flutter_inappwebview_android.InAppWebViewFlutterApi.onRenderProcessResponsive$messageChannelSuffix',
+        pigeonChannelCodec,
+        binaryMessenger: binaryMessenger,
+      );
+      if (api == null) {
+        pigeonVar_channel.setMessageHandler(null);
+      } else {
+        pigeonVar_channel.setMessageHandler((Object? message) async {
+          final List<Object?> args = message! as List<Object?>;
+          final String? arg_url = args[0] as String?;
+          try {
+            final int? output = await api.onRenderProcessResponsive(arg_url);
+            return wrapResponse(result: output);
+          } on PlatformException catch (e) {
+            return wrapResponse(error: e);
+          } catch (e) {
+            return wrapResponse(
+              error: PlatformException(code: 'error', message: e.toString()),
+            );
+          }
+        });
+      }
+    }
+    {
+      final pigeonVar_channel = BasicMessageChannel<Object?>(
+        'dev.flutter.pigeon.flutter_inappwebview_android.InAppWebViewFlutterApi.onCallJsHandler$messageChannelSuffix',
+        pigeonChannelCodec,
+        binaryMessenger: binaryMessenger,
+      );
+      if (api == null) {
+        pigeonVar_channel.setMessageHandler(null);
+      } else {
+        pigeonVar_channel.setMessageHandler((Object? message) async {
+          final List<Object?> args = message! as List<Object?>;
+          final String? arg_handlerName = args[0] as String?;
+          final Map<String?, Object?> arg_data =
+              (args[1]! as Map<Object?, Object?>).cast<String?, Object?>();
+          try {
+            final String? output = await api.onCallJsHandler(
+              arg_handlerName,
+              arg_data,
+            );
+            return wrapResponse(result: output);
+          } on PlatformException catch (e) {
+            return wrapResponse(error: e);
+          } catch (e) {
+            return wrapResponse(
+              error: PlatformException(code: 'error', message: e.toString()),
+            );
+          }
+        });
+      }
+    }
+    {
+      final pigeonVar_channel = BasicMessageChannel<Object?>(
+        'dev.flutter.pigeon.flutter_inappwebview_android.InAppWebViewFlutterApi.onPrintRequest$messageChannelSuffix',
+        pigeonChannelCodec,
+        binaryMessenger: binaryMessenger,
+      );
+      if (api == null) {
+        pigeonVar_channel.setMessageHandler(null);
+      } else {
+        pigeonVar_channel.setMessageHandler((Object? message) async {
+          final List<Object?> args = message! as List<Object?>;
+          final String? arg_url = args[0] as String?;
+          try {
+            final bool? output = await api.onPrintRequest(arg_url);
+            return wrapResponse(result: output);
+          } on PlatformException catch (e) {
+            return wrapResponse(error: e);
+          } catch (e) {
+            return wrapResponse(
+              error: PlatformException(code: 'error', message: e.toString()),
+            );
+          }
+        });
+      }
+    }
+    {
+      final pigeonVar_channel = BasicMessageChannel<Object?>(
+        'dev.flutter.pigeon.flutter_inappwebview_android.InAppWebViewFlutterApi.onRequestVisitedHistory$messageChannelSuffix',
+        pigeonChannelCodec,
+        binaryMessenger: binaryMessenger,
+      );
+      if (api == null) {
+        pigeonVar_channel.setMessageHandler(null);
+      } else {
+        pigeonVar_channel.setMessageHandler((Object? message) async {
+          try {
+            final List<String?>? output = await api.onRequestVisitedHistory();
+            return wrapResponse(result: output);
+          } on PlatformException catch (e) {
+            return wrapResponse(error: e);
+          } catch (e) {
+            return wrapResponse(
+              error: PlatformException(code: 'error', message: e.toString()),
+            );
+          }
+        });
+      }
+    }
+    {
+      final pigeonVar_channel = BasicMessageChannel<Object?>(
+        'dev.flutter.pigeon.flutter_inappwebview_android.InAppWebViewFlutterApi.onShowFileChooser$messageChannelSuffix',
+        pigeonChannelCodec,
+        binaryMessenger: binaryMessenger,
+      );
+      if (api == null) {
+        pigeonVar_channel.setMessageHandler(null);
+      } else {
+        pigeonVar_channel.setMessageHandler((Object? message) async {
+          final List<Object?> args = message! as List<Object?>;
+          final Map<String?, Object?> arg_request =
+              (args[0]! as Map<Object?, Object?>).cast<String?, Object?>();
+          try {
+            final Map<String?, Object?>? output = await api.onShowFileChooser(
+              arg_request,
+            );
+            return wrapResponse(result: output);
+          } on PlatformException catch (e) {
+            return wrapResponse(error: e);
+          } catch (e) {
+            return wrapResponse(
+              error: PlatformException(code: 'error', message: e.toString()),
+            );
+          }
+        });
+      }
+    }
+    {
+      final pigeonVar_channel = BasicMessageChannel<Object?>(
+        'dev.flutter.pigeon.flutter_inappwebview_android.InAppWebViewFlutterApi.shouldInterceptRequest$messageChannelSuffix',
+        pigeonChannelCodec,
+        binaryMessenger: binaryMessenger,
+      );
+      if (api == null) {
+        pigeonVar_channel.setMessageHandler(null);
+      } else {
+        pigeonVar_channel.setMessageHandler((Object? message) async {
+          final List<Object?> args = message! as List<Object?>;
+          final WebResourceRequestData arg_request =
+              args[0]! as WebResourceRequestData;
+          try {
+            final WebResourceResponseData? output = await api
+                .shouldInterceptRequest(arg_request);
+            return wrapResponse(result: output);
+          } on PlatformException catch (e) {
+            return wrapResponse(error: e);
+          } catch (e) {
+            return wrapResponse(
+              error: PlatformException(code: 'error', message: e.toString()),
+            );
+          }
+        });
+      }
+    }
+    {
+      final pigeonVar_channel = BasicMessageChannel<Object?>(
+        'dev.flutter.pigeon.flutter_inappwebview_android.InAppWebViewFlutterApi.onLoadResourceWithCustomScheme$messageChannelSuffix',
+        pigeonChannelCodec,
+        binaryMessenger: binaryMessenger,
+      );
+      if (api == null) {
+        pigeonVar_channel.setMessageHandler(null);
+      } else {
+        pigeonVar_channel.setMessageHandler((Object? message) async {
+          final List<Object?> args = message! as List<Object?>;
+          final WebResourceRequestData arg_request =
+              args[0]! as WebResourceRequestData;
+          try {
+            final Map<String?, Object?>? output = await api
+                .onLoadResourceWithCustomScheme(arg_request);
+            return wrapResponse(result: output);
+          } on PlatformException catch (e) {
+            return wrapResponse(error: e);
+          } catch (e) {
+            return wrapResponse(
+              error: PlatformException(code: 'error', message: e.toString()),
+            );
+          }
+        });
+      }
+    }
+  }
+}
+
+/// Every method but [setServiceWorkerClient] takes a `profileName`: null is the default profile
+/// (androidx `ServiceWorkerWebSettingsCompat`), a name is that profile's framework
+/// `ServiceWorkerWebSettings`. [setServiceWorkerClient] deliberately takes none — the intercept event
+/// carries no profile identity, so a per-profile client could not be told apart in Dart.
+class ServiceWorkerHostApi {
+  /// Constructor for [ServiceWorkerHostApi]. The [binaryMessenger] named argument is
+  /// available for dependency injection. If it is left null, the default
+  /// BinaryMessenger will be used which routes to the host platform.
+  ServiceWorkerHostApi({
+    BinaryMessenger? binaryMessenger,
+    String messageChannelSuffix = '',
+  }) : pigeonVar_binaryMessenger = binaryMessenger,
+       pigeonVar_messageChannelSuffix = messageChannelSuffix.isNotEmpty
+           ? '.$messageChannelSuffix'
+           : '';
+  final BinaryMessenger? pigeonVar_binaryMessenger;
+
+  static const MessageCodec<Object?> pigeonChannelCodec = _PigeonCodec();
+
+  final String pigeonVar_messageChannelSuffix;
+
+  /// `false` only when the native manager has gone away.
+  Future<bool> setServiceWorkerClient(bool isNull) async {
+    final pigeonVar_channelName =
+        'dev.flutter.pigeon.flutter_inappwebview_android.ServiceWorkerHostApi.setServiceWorkerClient$pigeonVar_messageChannelSuffix';
+    final pigeonVar_channel = BasicMessageChannel<Object?>(
+      pigeonVar_channelName,
+      pigeonChannelCodec,
+      binaryMessenger: pigeonVar_binaryMessenger,
+    );
+    final Future<Object?> pigeonVar_sendFuture = pigeonVar_channel.send(
+      <Object?>[isNull],
+    );
+    final pigeonVar_replyList = await pigeonVar_sendFuture as List<Object?>?;
+
+    final Object? pigeonVar_replyValue = _extractReplyValueOrThrow(
+      pigeonVar_replyList,
+      pigeonVar_channelName,
+      isNullValid: false,
+    );
+    return pigeonVar_replyValue! as bool;
+  }
+
+  /// `false` also when the settings are unreachable, as before — unlike the cookie-intercept getter.
+  Future<bool> getAllowContentAccess(String? profileName) async {
+    final pigeonVar_channelName =
+        'dev.flutter.pigeon.flutter_inappwebview_android.ServiceWorkerHostApi.getAllowContentAccess$pigeonVar_messageChannelSuffix';
+    final pigeonVar_channel = BasicMessageChannel<Object?>(
+      pigeonVar_channelName,
+      pigeonChannelCodec,
+      binaryMessenger: pigeonVar_binaryMessenger,
+    );
+    final Future<Object?> pigeonVar_sendFuture = pigeonVar_channel.send(
+      <Object?>[profileName],
+    );
+    final pigeonVar_replyList = await pigeonVar_sendFuture as List<Object?>?;
+
+    final Object? pigeonVar_replyValue = _extractReplyValueOrThrow(
+      pigeonVar_replyList,
+      pigeonVar_channelName,
+      isNullValid: false,
+    );
+    return pigeonVar_replyValue! as bool;
+  }
+
+  Future<bool> getAllowFileAccess(String? profileName) async {
+    final pigeonVar_channelName =
+        'dev.flutter.pigeon.flutter_inappwebview_android.ServiceWorkerHostApi.getAllowFileAccess$pigeonVar_messageChannelSuffix';
+    final pigeonVar_channel = BasicMessageChannel<Object?>(
+      pigeonVar_channelName,
+      pigeonChannelCodec,
+      binaryMessenger: pigeonVar_binaryMessenger,
+    );
+    final Future<Object?> pigeonVar_sendFuture = pigeonVar_channel.send(
+      <Object?>[profileName],
+    );
+    final pigeonVar_replyList = await pigeonVar_sendFuture as List<Object?>?;
+
+    final Object? pigeonVar_replyValue = _extractReplyValueOrThrow(
+      pigeonVar_replyList,
+      pigeonVar_channelName,
+      isNullValid: false,
+    );
+    return pigeonVar_replyValue! as bool;
+  }
+
+  Future<bool> getBlockNetworkLoads(String? profileName) async {
+    final pigeonVar_channelName =
+        'dev.flutter.pigeon.flutter_inappwebview_android.ServiceWorkerHostApi.getBlockNetworkLoads$pigeonVar_messageChannelSuffix';
+    final pigeonVar_channel = BasicMessageChannel<Object?>(
+      pigeonVar_channelName,
+      pigeonChannelCodec,
+      binaryMessenger: pigeonVar_binaryMessenger,
+    );
+    final Future<Object?> pigeonVar_sendFuture = pigeonVar_channel.send(
+      <Object?>[profileName],
+    );
+    final pigeonVar_replyList = await pigeonVar_sendFuture as List<Object?>?;
+
+    final Object? pigeonVar_replyValue = _extractReplyValueOrThrow(
+      pigeonVar_replyList,
+      pigeonVar_channelName,
+      isNullValid: false,
+    );
+    return pigeonVar_replyValue! as bool;
+  }
+
+  Future<int?> getCacheMode(String? profileName) async {
+    final pigeonVar_channelName =
+        'dev.flutter.pigeon.flutter_inappwebview_android.ServiceWorkerHostApi.getCacheMode$pigeonVar_messageChannelSuffix';
+    final pigeonVar_channel = BasicMessageChannel<Object?>(
+      pigeonVar_channelName,
+      pigeonChannelCodec,
+      binaryMessenger: pigeonVar_binaryMessenger,
+    );
+    final Future<Object?> pigeonVar_sendFuture = pigeonVar_channel.send(
+      <Object?>[profileName],
+    );
+    final pigeonVar_replyList = await pigeonVar_sendFuture as List<Object?>?;
+
+    final Object? pigeonVar_replyValue = _extractReplyValueOrThrow(
+      pigeonVar_replyList,
+      pigeonVar_channelName,
+      isNullValid: true,
+    );
+    return pigeonVar_replyValue as int?;
+  }
+
+  /// **Nullable, and must stay so**: null is a real answer (feature unsupported, or a named profile,
+  /// whose framework settings have no such API). §126 depends on the three states staying apart.
+  Future<bool?> getIncludeCookiesOnShouldInterceptRequestEnabled(
+    String? profileName,
+  ) async {
+    final pigeonVar_channelName =
+        'dev.flutter.pigeon.flutter_inappwebview_android.ServiceWorkerHostApi.getIncludeCookiesOnShouldInterceptRequestEnabled$pigeonVar_messageChannelSuffix';
+    final pigeonVar_channel = BasicMessageChannel<Object?>(
+      pigeonVar_channelName,
+      pigeonChannelCodec,
+      binaryMessenger: pigeonVar_binaryMessenger,
+    );
+    final Future<Object?> pigeonVar_sendFuture = pigeonVar_channel.send(
+      <Object?>[profileName],
+    );
+    final pigeonVar_replyList = await pigeonVar_sendFuture as List<Object?>?;
+
+    final Object? pigeonVar_replyValue = _extractReplyValueOrThrow(
+      pigeonVar_replyList,
+      pigeonVar_channelName,
+      isNullValid: true,
+    );
+    return pigeonVar_replyValue as bool?;
+  }
+
+  Future<bool> setAllowContentAccess(bool allow, String? profileName) async {
+    final pigeonVar_channelName =
+        'dev.flutter.pigeon.flutter_inappwebview_android.ServiceWorkerHostApi.setAllowContentAccess$pigeonVar_messageChannelSuffix';
+    final pigeonVar_channel = BasicMessageChannel<Object?>(
+      pigeonVar_channelName,
+      pigeonChannelCodec,
+      binaryMessenger: pigeonVar_binaryMessenger,
+    );
+    final Future<Object?> pigeonVar_sendFuture = pigeonVar_channel.send(
+      <Object?>[allow, profileName],
+    );
+    final pigeonVar_replyList = await pigeonVar_sendFuture as List<Object?>?;
+
+    final Object? pigeonVar_replyValue = _extractReplyValueOrThrow(
+      pigeonVar_replyList,
+      pigeonVar_channelName,
+      isNullValid: false,
+    );
+    return pigeonVar_replyValue! as bool;
+  }
+
+  Future<bool> setAllowFileAccess(bool allow, String? profileName) async {
+    final pigeonVar_channelName =
+        'dev.flutter.pigeon.flutter_inappwebview_android.ServiceWorkerHostApi.setAllowFileAccess$pigeonVar_messageChannelSuffix';
+    final pigeonVar_channel = BasicMessageChannel<Object?>(
+      pigeonVar_channelName,
+      pigeonChannelCodec,
+      binaryMessenger: pigeonVar_binaryMessenger,
+    );
+    final Future<Object?> pigeonVar_sendFuture = pigeonVar_channel.send(
+      <Object?>[allow, profileName],
+    );
+    final pigeonVar_replyList = await pigeonVar_sendFuture as List<Object?>?;
+
+    final Object? pigeonVar_replyValue = _extractReplyValueOrThrow(
+      pigeonVar_replyList,
+      pigeonVar_channelName,
+      isNullValid: false,
+    );
+    return pigeonVar_replyValue! as bool;
+  }
+
+  Future<bool> setBlockNetworkLoads(bool flag, String? profileName) async {
+    final pigeonVar_channelName =
+        'dev.flutter.pigeon.flutter_inappwebview_android.ServiceWorkerHostApi.setBlockNetworkLoads$pigeonVar_messageChannelSuffix';
+    final pigeonVar_channel = BasicMessageChannel<Object?>(
+      pigeonVar_channelName,
+      pigeonChannelCodec,
+      binaryMessenger: pigeonVar_binaryMessenger,
+    );
+    final Future<Object?> pigeonVar_sendFuture = pigeonVar_channel.send(
+      <Object?>[flag, profileName],
+    );
+    final pigeonVar_replyList = await pigeonVar_sendFuture as List<Object?>?;
+
+    final Object? pigeonVar_replyValue = _extractReplyValueOrThrow(
+      pigeonVar_replyList,
+      pigeonVar_channelName,
+      isNullValid: false,
+    );
+    return pigeonVar_replyValue! as bool;
+  }
+
+  /// A native `WebSettings` cache-mode constant, narrowed into an `@IntDef` (checklist item 4).
+  Future<bool> setCacheMode(int mode, String? profileName) async {
+    final pigeonVar_channelName =
+        'dev.flutter.pigeon.flutter_inappwebview_android.ServiceWorkerHostApi.setCacheMode$pigeonVar_messageChannelSuffix';
+    final pigeonVar_channel = BasicMessageChannel<Object?>(
+      pigeonVar_channelName,
+      pigeonChannelCodec,
+      binaryMessenger: pigeonVar_binaryMessenger,
+    );
+    final Future<Object?> pigeonVar_sendFuture = pigeonVar_channel.send(
+      <Object?>[mode, profileName],
+    );
+    final pigeonVar_replyList = await pigeonVar_sendFuture as List<Object?>?;
+
+    final Object? pigeonVar_replyValue = _extractReplyValueOrThrow(
+      pigeonVar_replyList,
+      pigeonVar_channelName,
+      isNullValid: false,
+    );
+    return pigeonVar_replyValue! as bool;
+  }
+
+  Future<bool> setIncludeCookiesOnShouldInterceptRequestEnabled(
+    bool enabled,
+    String? profileName,
+  ) async {
+    final pigeonVar_channelName =
+        'dev.flutter.pigeon.flutter_inappwebview_android.ServiceWorkerHostApi.setIncludeCookiesOnShouldInterceptRequestEnabled$pigeonVar_messageChannelSuffix';
+    final pigeonVar_channel = BasicMessageChannel<Object?>(
+      pigeonVar_channelName,
+      pigeonChannelCodec,
+      binaryMessenger: pigeonVar_binaryMessenger,
+    );
+    final Future<Object?> pigeonVar_sendFuture = pigeonVar_channel.send(
+      <Object?>[enabled, profileName],
+    );
+    final pigeonVar_replyList = await pigeonVar_sendFuture as List<Object?>?;
+
+    final Object? pigeonVar_replyValue = _extractReplyValueOrThrow(
+      pigeonVar_replyList,
+      pigeonVar_channelName,
+      isNullValid: false,
+    );
+    return pigeonVar_replyValue! as bool;
+  }
+}
+
+abstract class ServiceWorkerFlutterApi {
+  static const MessageCodec<Object?> pigeonChannelCodec = _PigeonCodec();
+
+  /// The app's answer to a Service Worker's request. **Null means "not handled"** and the request
+  /// goes to the network — measured in §185 (a mutant that decoded every answer as null made the
+  /// replacement test read `from-server`). So the return type is nullable by necessity, not
+  /// convenience.
+  ///
+  /// `@async` because the app's handler is async; on a FlutterApi that affects only the Dart side.
+  Future<WebResourceResponseData?> shouldInterceptRequest(
+    WebResourceRequestData request,
+  );
+
+  static void setUp(
+    ServiceWorkerFlutterApi? api, {
+    BinaryMessenger? binaryMessenger,
+    String messageChannelSuffix = '',
+  }) {
+    messageChannelSuffix = messageChannelSuffix.isNotEmpty
+        ? '.$messageChannelSuffix'
+        : '';
+    {
+      final pigeonVar_channel = BasicMessageChannel<Object?>(
+        'dev.flutter.pigeon.flutter_inappwebview_android.ServiceWorkerFlutterApi.shouldInterceptRequest$messageChannelSuffix',
+        pigeonChannelCodec,
+        binaryMessenger: binaryMessenger,
+      );
+      if (api == null) {
+        pigeonVar_channel.setMessageHandler(null);
+      } else {
+        pigeonVar_channel.setMessageHandler((Object? message) async {
+          final List<Object?> args = message! as List<Object?>;
+          final WebResourceRequestData arg_request =
+              args[0]! as WebResourceRequestData;
+          try {
+            final WebResourceResponseData? output = await api
+                .shouldInterceptRequest(arg_request);
+            return wrapResponse(result: output);
+          } on PlatformException catch (e) {
+            return wrapResponse(error: e);
+          } catch (e) {
+            return wrapResponse(
+              error: PlatformException(code: 'error', message: e.toString()),
+            );
+          }
+        });
+      }
+    }
+  }
+}
+
+/// Implemented on the Dart side by a private forwarding class, one per path handler, suffixed by
+/// its id.
+abstract class CustomPathHandlerFlutterApi {
+  static const MessageCodec<Object?> pigeonChannelCodec = _PigeonCodec();
+
+  /// The response for [path], the part of the URL after the handler's prefix, with no query. Null
+  /// means "not handled": the request goes to the network.
+  Future<WebResourceResponseData?> handle(String path);
+
+  static void setUp(
+    CustomPathHandlerFlutterApi? api, {
+    BinaryMessenger? binaryMessenger,
+    String messageChannelSuffix = '',
+  }) {
+    messageChannelSuffix = messageChannelSuffix.isNotEmpty
+        ? '.$messageChannelSuffix'
+        : '';
+    {
+      final pigeonVar_channel = BasicMessageChannel<Object?>(
+        'dev.flutter.pigeon.flutter_inappwebview_android.CustomPathHandlerFlutterApi.handle$messageChannelSuffix',
+        pigeonChannelCodec,
+        binaryMessenger: binaryMessenger,
+      );
+      if (api == null) {
+        pigeonVar_channel.setMessageHandler(null);
+      } else {
+        pigeonVar_channel.setMessageHandler((Object? message) async {
+          final List<Object?> args = message! as List<Object?>;
+          final String arg_path = args[0]! as String;
+          try {
+            final WebResourceResponseData? output = await api.handle(arg_path);
+            return wrapResponse(result: output);
           } on PlatformException catch (e) {
             return wrapResponse(error: e);
           } catch (e) {

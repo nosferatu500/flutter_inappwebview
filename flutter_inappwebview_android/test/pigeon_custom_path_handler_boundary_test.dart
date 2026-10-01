@@ -3,15 +3,16 @@ import 'dart:typed_data';
 
 import 'package:flutter/services.dart';
 import 'package:flutter_inappwebview_android/flutter_inappwebview_android.dart';
-import 'package:flutter_inappwebview_android/src/pigeons/custom_path_handler.g.dart';
+import 'package:flutter_inappwebview_android/src/pigeons/in_app_webview.g.dart';
 import 'package:flutter_inappwebview_platform_interface/flutter_inappwebview_platform_interface.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 /// Runtime coverage for the custom path handler's channel (§205), the twenty-second migrated to
 /// Pigeon. Every message goes through the **real generated codec** on the real channel name, so it
 /// covers the Dart half: the event reaches the app's `handle`, and its `WebResourceResponse` goes
-/// back as the map Kotlin's `WebResourceResponseExt.fromMap` reads. The Kotlin half (wait, map →
-/// `WebResourceResponse`, what the page sees) is pinned on the device by §204.
+/// back as the `WebResourceResponseData` Kotlin's `WebResourceResponseExt.fromPigeon` reads. The
+/// Kotlin half (wait, data → `WebResourceResponse`, what the page sees) is pinned on the device by
+/// §204.
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
 
@@ -51,8 +52,10 @@ void main() {
     handler.eventHandler = events;
   });
 
+  // The answer has been the typed `WebResourceResponseData` since W5 (§216); it was the response's
+  // `toMap()`. Every field carries a value only that field could produce.
   test(
-    'handle reaches the app with the path, and answers its response map',
+    'handle reaches the app with the path, and answers its response field for field',
     () async {
       events.response = WebResourceResponse(
         contentType: 'text/plain',
@@ -61,12 +64,20 @@ void main() {
         reasonPhrase: 'Not Here',
         headers: {'X-Probe': 'probe-value'},
         data: Uint8List.fromList([1, 2, 3]),
+        cookies: ['probe=cookie'],
       );
 
       final reply = await deliver('page.html');
 
       expect(events.paths, ['page.html']);
-      expect(answer(reply), events.response!.toMap());
+      final data = answer(reply) as WebResourceResponseData;
+      expect(data.contentType, 'text/plain');
+      expect(data.contentEncoding, 'ISO-8859-1');
+      expect(data.statusCode, 404);
+      expect(data.reasonPhrase, 'Not Here');
+      expect(data.headers, {'X-Probe': 'probe-value'});
+      expect(data.data, [1, 2, 3]);
+      expect(data.cookies, ['probe=cookie']);
     },
   );
 

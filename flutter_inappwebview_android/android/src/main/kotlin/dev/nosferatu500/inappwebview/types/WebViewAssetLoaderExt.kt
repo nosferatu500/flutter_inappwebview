@@ -9,6 +9,7 @@ import androidx.webkit.WebViewAssetLoader
 import dev.nosferatu500.inappwebview.InAppWebViewFlutterPlugin
 import dev.nosferatu500.inappwebview.Util
 import dev.nosferatu500.inappwebview.pigeons.CustomPathHandlerFlutterApi
+import dev.nosferatu500.inappwebview.pigeons.WebResourceResponseData
 import io.flutter.plugin.common.BinaryMessenger
 import java.io.ByteArrayInputStream
 import java.io.File
@@ -104,15 +105,15 @@ class WebViewAssetLoaderExt(
      *  - a timeout, a Dart-side throw, no Dart handler, or a null answer all come back as **null**,
      *    which the loader treats as "not handled", so the request goes to the network.
      *
-     * The answer map goes through [Util.normalizeCodecInts] first: its `statusCode` arrives as a
-     * `Long`, and `WebResourceResponseExt.fromMap` casts it `as Int?` (§197).
+     * The answer is typed since W5 (§216), so `statusCode` narrows in
+     * [WebResourceResponseExt.fromPigeon] instead of through `Util.normalizeCodecInts`.
      */
     @Throws(InterruptedException::class)
     fun handle(path: String): WebResourceResponseExt? {
       val api = flutterApi ?: return null
       val latch = CountDownLatch(1)
       // Written on the main thread, read here after `await`: the latch provides the happens-before.
-      val answer = AtomicReference<Map<String?, Any?>?>(null)
+      val answer = AtomicReference<WebResourceResponseData?>(null)
       Handler(Looper.getMainLooper()).post {
         api.handle(path) { result ->
           try {
@@ -131,9 +132,7 @@ class WebViewAssetLoaderExt(
         )
         return null
       }
-      return WebResourceResponseExt.fromMap(
-        Util.normalizeCodecInts(answer.get()) as Map<String, Any?>?
-      )
+      return answer.get()?.let { WebResourceResponseExt.fromPigeon(it) }
     }
 
     override fun dispose() {

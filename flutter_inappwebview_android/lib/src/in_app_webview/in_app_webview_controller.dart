@@ -14,6 +14,7 @@ import '../web_message/main.dart';
 import '../web_storage/web_storage.dart';
 import '../pigeons/in_app_webview.g.dart';
 import '../pigeons/in_app_webview_manager.g.dart';
+import '../web_resource_data.dart';
 import 'headless_in_app_webview.dart';
 
 /// Object specifying creation parameters for creating a [AndroidInAppWebViewController].
@@ -43,9 +44,11 @@ class AndroidInAppWebViewControllerCreationParams
   }
 }
 
-/// Receives the fire-and-forget [InAppWebViewFlutterApi] events (W4, §214) and dispatches each one
-/// through the controller's `_handleMethod`, rebuilt as the exact [MethodCall] the MethodChannel
-/// used to deliver: the same method name, and the arguments Kotlin used to send, key for key.
+/// Receives every [InAppWebViewFlutterApi] event (fire-and-forget since W4, §214; value-returning
+/// since W5, §216) and dispatches each one through the controller's `_handleMethod`, rebuilt as the
+/// exact [MethodCall] the MethodChannel used to deliver: the same method name, and the arguments
+/// Kotlin used to send, key for key. A value-returning event answers what `_handleMethod` returns,
+/// which is what the MethodChannel replied.
 ///
 /// So every event keeps its one definition in `_handleMethod` (the widget or browser routing, the
 /// `fromMap` parsing, the debug log), and the unit tests that drive `handleMethod` directly stay
@@ -248,6 +251,179 @@ class _InAppWebViewFlutterApiImpl implements InAppWebViewFlutterApi {
     'markName': markName,
     'markTimeMillis': markTimeMillis,
   });
+
+  // W5 (§216): the events whose answer the platform acts on. Each returns what `_handleMethod`
+  // returns, which is what the MethodChannel used to reply: null when the app set no callback.
+
+  Future<dynamic> _ask(String method, Object? arguments) =>
+      _controller._handleMethod(MethodCall(method, arguments));
+
+  @override
+  Future<Map<String?, Object?>?> onJsAlert(
+    String? url,
+    String? message,
+    bool? isMainFrame,
+  ) async =>
+      await _ask('onJsAlert', {
+            'url': url,
+            'message': message,
+            'isMainFrame': isMainFrame,
+          })
+          as Map<String?, Object?>?;
+
+  @override
+  Future<Map<String?, Object?>?> onJsConfirm(
+    String? url,
+    String? message,
+    bool? isMainFrame,
+  ) async =>
+      await _ask('onJsConfirm', {
+            'url': url,
+            'message': message,
+            'isMainFrame': isMainFrame,
+          })
+          as Map<String?, Object?>?;
+
+  @override
+  Future<Map<String?, Object?>?> onJsPrompt(
+    String? url,
+    String? message,
+    String? defaultValue,
+    bool? isMainFrame,
+  ) async =>
+      await _ask('onJsPrompt', {
+            'url': url,
+            'message': message,
+            'defaultValue': defaultValue,
+            'isMainFrame': isMainFrame,
+          })
+          as Map<String?, Object?>?;
+
+  @override
+  Future<Map<String?, Object?>?> onJsBeforeUnload(
+    String? url,
+    String? message,
+  ) async =>
+      await _ask('onJsBeforeUnload', {'url': url, 'message': message})
+          as Map<String?, Object?>?;
+
+  // Kotlin sent `CreateWindowAction.toMap()` itself as the arguments.
+  @override
+  Future<bool?> onCreateWindow(
+    Map<String?, Object?> createWindowAction,
+  ) async => await _ask('onCreateWindow', createWindowAction) as bool?;
+
+  @override
+  Future<Map<String?, Object?>?> onGeolocationPermissionsShowPrompt(
+    String? origin,
+  ) async =>
+      await _ask('onGeolocationPermissionsShowPrompt', {'origin': origin})
+          as Map<String?, Object?>?;
+
+  @override
+  Future<Map<String?, Object?>?> onPermissionRequest(
+    String? origin,
+    List<String?>? resources,
+    Object? frame,
+  ) async =>
+      await _ask('onPermissionRequest', {
+            'origin': origin,
+            'resources': resources,
+            'frame': frame,
+          })
+          as Map<String?, Object?>?;
+
+  // Kotlin sent `NavigationAction.toMap()` itself as the arguments.
+  @override
+  Future<int?> shouldOverrideUrlLoading(
+    Map<String?, Object?> navigationAction,
+  ) async => await _ask('shouldOverrideUrlLoading', navigationAction) as int?;
+
+  // Kotlin sent each challenge's `toMap()` itself as the arguments.
+  @override
+  Future<Map<String?, Object?>?> onReceivedHttpAuthRequest(
+    Map<String?, Object?> challenge,
+  ) async =>
+      await _ask('onReceivedHttpAuthRequest', challenge)
+          as Map<String?, Object?>?;
+
+  @override
+  Future<Map<String?, Object?>?> onReceivedServerTrustAuthRequest(
+    Map<String?, Object?> challenge,
+  ) async =>
+      await _ask('onReceivedServerTrustAuthRequest', challenge)
+          as Map<String?, Object?>?;
+
+  @override
+  Future<Map<String?, Object?>?> onReceivedClientCertRequest(
+    Map<String?, Object?> challenge,
+  ) async =>
+      await _ask('onReceivedClientCertRequest', challenge)
+          as Map<String?, Object?>?;
+
+  @override
+  Future<Map<String?, Object?>?> onSafeBrowsingHit(
+    String? url,
+    int threatType,
+  ) async =>
+      await _ask('onSafeBrowsingHit', {'url': url, 'threatType': threatType})
+          as Map<String?, Object?>?;
+
+  @override
+  Future<int?> onFormResubmission(String? url) async =>
+      await _ask('onFormResubmission', {'url': url}) as int?;
+
+  @override
+  Future<int?> onRenderProcessUnresponsive(String? url) async =>
+      await _ask('onRenderProcessUnresponsive', {'url': url}) as int?;
+
+  @override
+  Future<int?> onRenderProcessResponsive(String? url) async =>
+      await _ask('onRenderProcessResponsive', {'url': url}) as int?;
+
+  @override
+  Future<String?> onCallJsHandler(
+    String? handlerName,
+    Map<String?, Object?> data,
+  ) async =>
+      await _ask('onCallJsHandler', {'handlerName': handlerName, 'data': data})
+          as String?;
+
+  @override
+  Future<bool?> onPrintRequest(String? url) async =>
+      await _ask('onPrintRequest', {'url': url}) as bool?;
+
+  @override
+  Future<List<String?>?> onRequestVisitedHistory() async =>
+      await _ask('onRequestVisitedHistory', {}) as List<String?>?;
+
+  // Kotlin sent `ShowFileChooserRequest.toMap()` itself as the arguments.
+  @override
+  Future<Map<String?, Object?>?> onShowFileChooser(
+    Map<String?, Object?> request,
+  ) async => await _ask('onShowFileChooser', request) as Map<String?, Object?>?;
+
+  // The two blocking waits. Kotlin sent `WebResourceRequestExt.toMap()` as the arguments of the
+  // first and under `request` for the second, so the typed request is turned back into that map.
+
+  @override
+  Future<WebResourceResponseData?> shouldInterceptRequest(
+    WebResourceRequestData request,
+  ) async {
+    final response =
+        await _ask('shouldInterceptRequest', request.toMethodChannelMap())
+            as Map<String, dynamic>?;
+    return WebResourceResponse.fromMap(response)?.toPigeon();
+  }
+
+  @override
+  Future<Map<String?, Object?>?> onLoadResourceWithCustomScheme(
+    WebResourceRequestData request,
+  ) async =>
+      await _ask('onLoadResourceWithCustomScheme', {
+            'request': request.toMethodChannelMap(),
+          })
+          as Map<String?, Object?>?;
 }
 
 ///Controls a WebView, such as an [InAppWebView] widget instance, a [AndroidHeadlessInAppWebView] instance or [AndroidInAppBrowser] WebView instance.
@@ -277,14 +453,13 @@ class AndroidInAppWebViewController extends PlatformInAppWebViewController
 
   AndroidInAppBrowser? _inAppBrowser;
 
-  /// The Pigeon half of the per-WebView transport (§207 on). Every host method is here since W3
-  /// (§212); [channel] now only carries the events not yet moved. Its suffix is [channel]'s name
-  /// tail, `inappwebview_$id` or `inappbrowser_$id`, as on the Kotlin side. Null after [dispose], as
-  /// [channel] is.
+  /// The per-WebView host methods (§207 on; all of them since W3, §212). Its suffix is [channel]'s
+  /// name tail, `inappwebview_$id` or `inappbrowser_$id`, as on the Kotlin side. Null after
+  /// [dispose], as [channel] is. Since W5 (§216) nothing travels on [channel]; it goes next.
   InAppWebViewHostApi? _hostApi;
 
-  /// The suffix both Pigeon APIs use, kept so [dispose] can unregister [InAppWebViewFlutterApi].
-  /// Its events (W4, §214) arrive there, the rest still through [channel].
+  /// The suffix both Pigeon APIs use, kept so [dispose] can unregister [InAppWebViewFlutterApi],
+  /// where every event arrives: fire-and-forget since W4 (§214), value-returning since W5 (§216).
   late final String _pigeonSuffix;
 
   void _setUpPigeon(String suffix) {

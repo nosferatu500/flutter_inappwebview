@@ -95,6 +95,35 @@
 // `_handleMethod`, so each event keeps its one definition there (and the unit tests that drive
 // `handleMethod` directly stay valid). W5 moves the value-returning events the same way.
 //
+// W5 (§216), the 19 value-returning events and the two blocking waits, on the same FlutterApi. After
+// W5 nothing uses the per-WebView MethodChannel. Checklist:
+//   1. Payloads: arguments as W4 (scalars typed, domain objects as `toMap()` maps), except the two
+//      waits' request, which is the typed `WebResourceRequestData`. Answers are what Dart always
+//      returned: response maps (`toMap()`), an int policy/action, a bool, the visited URLs, the JS
+//      handler's JSON text, and for `shouldInterceptRequest` the typed `WebResourceResponseData`.
+//   2. `@async`? **All 21, Dart side**, as W4: the handler returns `_handleMethod`'s value.
+//   3. Never answers? As before: a Dart callback that never completes leaves the event pending, and
+//      the two waits are bounded by `syncCallbackTimeoutMillis`.
+//   4. Dart `int` -> Kotlin `Long`: **every int answer, and every int inside an answer map**
+//      (policies, dialog/permission/auth/safe-browsing actions, form resubmission, render process).
+//      Each reply goes through `Util.normalizeCodecInts` before the old `decodeResult`, so each
+//      decoder reads what it always did.
+//   5. Shared types: **`WebResourceRequestData` and `WebResourceResponseData` move here** with the
+//      service-worker APIs (§186's recorded resolution: Pigeon can't share a type across schema
+//      files), and the custom path handler's answer is typed with them (§205). `service_worker.dart`
+//      and `custom_path_handler.dart` are deleted.
+//   7. Per-instance: the WebView events use the HostApi's suffix. The service-worker APIs have none
+//      (one process-wide client) and the path handler's is its id, both unchanged.
+//   8. Names: the MethodChannel's, unchanged.
+//   9. Never read on Android: `isMainFrame` (the JS dialogs) and `frame` (permission requests) are
+//      always null here. Kept, as the MethodChannel carried them, so the Dart maps stay key for key.
+// Errors: a Dart throw arrives as a `FlutterError` and goes to each callback's `error`, as the
+// MethodChannel's error envelope did. **A missing Dart handler** (`channel-error`) goes to
+// `notImplemented`, which is what the MethodChannel answered then, so each event takes its old
+// default rather than its error branch (they differ for the JS dialogs and the JS handler, §215).
+//
+// The service-worker APIs (§186) and the custom path handler (§205) keep their own headers below.
+//
 // Errors: `postWebMessage` and `addWebMessageListener` threw `result.error(LOG_TAG, e.message)`,
 // so they throw a `FlutterError` with the same code and message. Any other throw (an invalid print
 // colour mode, `restoreState(null)`) now arrives under the exception's class name instead of the
@@ -465,4 +494,264 @@ abstract class InAppWebViewFlutterApi {
     String markName,
     int markTimeMillis,
   );
+
+  // W5 (§216): the events whose answer the platform acts on. Null is "no answer" for each, the same
+  // value the Dart side returned on the MethodChannel when no callback was set.
+
+  /// `JsAlertResponse.toMap()`.
+  @async
+  Map<String?, Object?>? onJsAlert(
+    String? url,
+    String? message,
+    bool? isMainFrame,
+  );
+
+  /// `JsConfirmResponse.toMap()`.
+  @async
+  Map<String?, Object?>? onJsConfirm(
+    String? url,
+    String? message,
+    bool? isMainFrame,
+  );
+
+  /// `JsPromptResponse.toMap()`.
+  @async
+  Map<String?, Object?>? onJsPrompt(
+    String? url,
+    String? message,
+    String? defaultValue,
+    bool? isMainFrame,
+  );
+
+  /// `JsBeforeUnloadResponse.toMap()`.
+  @async
+  Map<String?, Object?>? onJsBeforeUnload(String? url, String? message);
+
+  /// `createWindowAction` is `CreateWindowAction.toMap()`. `true` means the app handles the window.
+  @async
+  bool? onCreateWindow(Map<String?, Object?> createWindowAction);
+
+  /// `GeolocationPermissionShowPromptResponse.toMap()`.
+  @async
+  Map<String?, Object?>? onGeolocationPermissionsShowPrompt(String? origin);
+
+  /// `PermissionResponse.toMap()`.
+  @async
+  Map<String?, Object?>? onPermissionRequest(
+    String? origin,
+    List<String?>? resources,
+    Object? frame,
+  );
+
+  /// `navigationAction` is `NavigationAction.toMap()`; the answer a `NavigationActionPolicy` value.
+  @async
+  int? shouldOverrideUrlLoading(Map<String?, Object?> navigationAction);
+
+  /// `challenge` is `HttpAuthenticationChallenge.toMap()`; the answer `HttpAuthResponse.toMap()`.
+  @async
+  Map<String?, Object?>? onReceivedHttpAuthRequest(
+    Map<String?, Object?> challenge,
+  );
+
+  /// `challenge` is `ServerTrustChallenge.toMap()`; the answer `ServerTrustAuthResponse.toMap()`.
+  @async
+  Map<String?, Object?>? onReceivedServerTrustAuthRequest(
+    Map<String?, Object?> challenge,
+  );
+
+  /// `challenge` is `ClientCertChallenge.toMap()`; the answer `ClientCertResponse.toMap()`.
+  @async
+  Map<String?, Object?>? onReceivedClientCertRequest(
+    Map<String?, Object?> challenge,
+  );
+
+  /// `SafeBrowsingResponse.toMap()`.
+  @async
+  Map<String?, Object?>? onSafeBrowsingHit(String? url, int threatType);
+
+  /// A `FormResubmissionAction` value.
+  @async
+  int? onFormResubmission(String? url);
+
+  /// A `WebViewRenderProcessAction` value.
+  @async
+  int? onRenderProcessUnresponsive(String? url);
+
+  /// A `WebViewRenderProcessAction` value.
+  @async
+  int? onRenderProcessResponsive(String? url);
+
+  /// `data` is `JavaScriptHandlerFunctionData.toMap()`. The answer is the handler's result as JSON
+  /// text, which Kotlin splices into the page's `resolve(…)`; null resolves with `null`.
+  @async
+  String? onCallJsHandler(String? handlerName, Map<String?, Object?> data);
+
+  /// `true` means the app prints itself, so the plugin doesn't.
+  @async
+  bool? onPrintRequest(String? url);
+
+  /// The visited URLs. Null keeps the platform default; an empty list says nothing was visited.
+  @async
+  List<String?>? onRequestVisitedHistory();
+
+  /// `request` is `ShowFileChooserRequest.toMap()`; the answer `ShowFileChooserResponse.toMap()`.
+  @async
+  Map<String?, Object?>? onShowFileChooser(Map<String?, Object?> request);
+
+  /// **Blocking**: Kotlin waits for this on a WebView worker thread, up to the WebView's
+  /// `syncCallbackTimeoutMillis`. Null, a throw, no handler and a timeout all mean "load it
+  /// normally".
+  @async
+  WebResourceResponseData? shouldInterceptRequest(
+    WebResourceRequestData request,
+  );
+
+  /// **Blocking**, as [shouldInterceptRequest]. The answer is `CustomSchemeResponse.toMap()`.
+  @async
+  Map<String?, Object?>? onLoadResourceWithCustomScheme(
+    WebResourceRequestData request,
+  );
+}
+
+/// Mirrors the native `WebResourceRequestExt` field for field. Moved here from
+/// `service_worker.dart` in W5 (§216): the service worker's intercept and the WebView's carry the
+/// same request.
+class WebResourceRequestData {
+  WebResourceRequestData({
+    required this.url,
+    required this.headers,
+    required this.isRedirect,
+    required this.hasGesture,
+    required this.isForMainFrame,
+    required this.method,
+  });
+
+  final String url;
+  final Map<String, String>? headers;
+  final bool isRedirect;
+  final bool hasGesture;
+  final bool isForMainFrame;
+  final String? method;
+}
+
+/// Mirrors the native `WebResourceResponseExt` field for field. Moved here with
+/// [WebResourceRequestData].
+///
+/// Every field is nullable because every field of the public `WebResourceResponse` is, and
+/// `WebResourceResponseExt.toWebResourceResponse` branches on which ones are present: a missing
+/// `statusCode` or `reasonPhrase` selects the three-argument framework constructor, and non-empty
+/// `cookies` select the compat path. Defaulting any of them here would change that choice.
+class WebResourceResponseData {
+  WebResourceResponseData({
+    this.contentType,
+    this.contentEncoding,
+    this.statusCode,
+    this.reasonPhrase,
+    this.headers,
+    this.data,
+    this.cookies,
+  });
+
+  final String? contentType;
+  final String? contentEncoding;
+  final int? statusCode;
+  final String? reasonPhrase;
+  final Map<String, String>? headers;
+  final Uint8List? data;
+  final List<String>? cookies;
+}
+
+// --- The service-worker channel (§186), moved from `service_worker.dart` in W5 ------------------
+//
+// 🚨 The first FlutterApi in this plugin that returned a value. `shouldInterceptRequest` runs on a
+// Chromium worker thread and must return a `WebResourceResponse?` synchronously, so Kotlin blocks on
+// a latch around the generated reply callback.
+//
+// §186's checklist, unchanged by the move:
+//   1. Settings payload? **No.** The "settings" are the native `ServiceWorkerWebSettings`; every
+//      argument is a primitive or `profileName`.
+//   2. `@async`? No host method. The FlutterApi method is, Dart side only.
+//   3. A branch that never answers? None among the host methods; every path out of the Kotlin wait
+//      releases the latch.
+//   4. Dart `int` -> Kotlin `Long`? `setCacheMode` narrows into `@CacheMode`, and a response's
+//      `statusCode` into `WebResourceResponse`'s `int`.
+//   5. Shared types: the two data classes above.
+//   7. Per-instance? **No**: one process-wide controller and client, no suffix.
+//   8. `shouldInterceptRequest` is a member of `ServiceWorkerClient`, not the controller; a private
+//      forwarder is used anyway, because the client it forwards to is static.
+//   9. Fields never read: none on the request; all seven read on the response.
+
+/// Every method but [setServiceWorkerClient] takes a `profileName`: null is the default profile
+/// (androidx `ServiceWorkerWebSettingsCompat`), a name is that profile's framework
+/// `ServiceWorkerWebSettings`. [setServiceWorkerClient] deliberately takes none — the intercept event
+/// carries no profile identity, so a per-profile client could not be told apart in Dart.
+@HostApi()
+abstract class ServiceWorkerHostApi {
+  /// `false` only when the native manager has gone away.
+  bool setServiceWorkerClient(bool isNull);
+
+  /// `false` also when the settings are unreachable, as before — unlike the cookie-intercept getter.
+  bool getAllowContentAccess(String? profileName);
+
+  bool getAllowFileAccess(String? profileName);
+
+  bool getBlockNetworkLoads(String? profileName);
+
+  int? getCacheMode(String? profileName);
+
+  /// **Nullable, and must stay so**: null is a real answer (feature unsupported, or a named profile,
+  /// whose framework settings have no such API). §126 depends on the three states staying apart.
+  bool? getIncludeCookiesOnShouldInterceptRequestEnabled(String? profileName);
+
+  bool setAllowContentAccess(bool allow, String? profileName);
+
+  bool setAllowFileAccess(bool allow, String? profileName);
+
+  bool setBlockNetworkLoads(bool flag, String? profileName);
+
+  /// A native `WebSettings` cache-mode constant, narrowed into an `@IntDef` (checklist item 4).
+  bool setCacheMode(int mode, String? profileName);
+
+  bool setIncludeCookiesOnShouldInterceptRequestEnabled(
+    bool enabled,
+    String? profileName,
+  );
+}
+
+@FlutterApi()
+abstract class ServiceWorkerFlutterApi {
+  /// The app's answer to a Service Worker's request. **Null means "not handled"** and the request
+  /// goes to the network — measured in §185 (a mutant that decoded every answer as null made the
+  /// replacement test read `from-server`). So the return type is nullable by necessity, not
+  /// convenience.
+  ///
+  /// `@async` because the app's handler is async; on a FlutterApi that affects only the Dart side.
+  @async
+  WebResourceResponseData? shouldInterceptRequest(
+    WebResourceRequestData request,
+  );
+}
+
+// --- The custom `WebViewAssetLoader` path handler (§205), moved from `custom_path_handler.dart` --
+//
+// One event and no host methods: `WebViewAssetLoader` calls `PathHandlerExt.handle(path)` on a
+// Chromium worker thread, so Kotlin **blocks** on the Dart answer (§186's shape), bounded by
+// `Util.SYNC_CALLBACK_TIMEOUT_MILLIS` (a path handler holds no WebView settings). A timeout, a Dart
+// throw, no Dart handler or a null answer all mean "not handled", so the request goes to the
+// network. Per-instance: the suffix is the handler's id, Dart's `AndroidPathHandler._id`, read by
+// `WebViewAssetLoaderExt.fromMap`; a mismatch is silent (the wait times out). The name `handle` is
+// `PlatformPathHandlerEvents.handle`, so the Dart side forwards through a private class.
+//
+// **W5 types the answer** (§205 left it a map until the shared response type had a home):
+// `WebResourceResponseData`, so `statusCode` no longer needs `normalizeCodecInts`. `cookies` still
+// crosses and is still unused by `PathHandlerExt.handle`.
+
+/// Implemented on the Dart side by a private forwarding class, one per path handler, suffixed by
+/// its id.
+@FlutterApi()
+abstract class CustomPathHandlerFlutterApi {
+  /// The response for [path], the part of the URL after the handler's prefix, with no query. Null
+  /// means "not handled": the request goes to the network.
+  @async
+  WebResourceResponseData? handle(String path);
 }
