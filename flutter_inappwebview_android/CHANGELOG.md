@@ -480,6 +480,24 @@ for, and five others have a native *value* that differs from their name.
 
 ### Internal
 
+- **`WebViewChannelDelegate` W3: the last 42 host methods move to Pigeon, so no Dart call uses
+  the per-WebView MethodChannel any more.** Load, inject, settings, scroll, zoom, print, focus,
+  context menu, user scripts, web messages, input method, state and audio all join
+  `InAppWebViewHostApi` as synchronous methods. No public API change. The MethodChannel now carries
+  only Kotlin → Dart events (W4, W5). A call that still arrives on it gets `notImplemented`, as an
+  unknown method always did. `WebViewChannelDelegateMethods` is deleted.
+  - The settings pair crosses as maps (decision B, §194), and every inbound map goes through
+    `Util.normalizeCodecInts`. Measured without it: `setSettings` and `printCurrentPage` answer a
+    `ClassCastException` error, and `setContextMenu` crashes the app when the selection menu opens.
+  - `postWebMessage` and `addWebMessageListener` keep their error code and message
+    (`WebViewChannelDelegate`). Other platform exceptions, such as an invalid print colour mode,
+    now arrive under the exception's class name instead of `error`.
+  - `loadUrl` no longer sends `allowingReadAccessTo`, and `zoomBy` no longer sends `animated`:
+    Android never read either (both are iOS's).
+  - `save_state_bounds_test`, `mute_audio_test` and the browser boundary test's settings split
+    now assert on the Pigeon channels. `mute_audio_test`'s "a missing reply reads as not muted"
+    became "a disposed controller reads as not muted", because the platform can no longer answer
+    null.
 - **W3's two payload gaps are asserted on a device before its migration.** Test code only.
   - `loadUrl` with `headers` (a GET takes its own branch on Android) had no test. A new one loads
     the node server's `/echo-headers` with two headers and reads them back, then loads again

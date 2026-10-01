@@ -91,374 +91,12 @@ class WebViewChannelDelegate(
    */
   private var nextVisualStateRequestId = 1L
 
+  // Every host method is Pigeon since W3 (§212), on [InAppWebViewHostApi]. The MethodChannel now
+  // carries only Kotlin -> Dart events (W4 and W5 move those). A call that still arrives here gets
+  // `notImplemented`, as an unknown method always did, rather than no answer at all from the base
+  // class's empty handler.
   override fun onMethodCall(call: MethodCall, result: MethodChannel.Result) {
-    val method = try {
-      WebViewChannelDelegateMethods.valueOf(call.method)
-    } catch (e: IllegalArgumentException) {
-      result.notImplemented()
-      return
-    }
-
-    val webView = this.webView
-
-    when (method) {
-      WebViewChannelDelegateMethods.loadUrl -> {
-        if (webView != null) {
-          val urlRequest = call.argument<Map<String, Any?>>("urlRequest")
-          webView.loadUrl(URLRequest.fromMap(urlRequest)!!)
-        }
-        result.success(true)
-      }
-
-      WebViewChannelDelegateMethods.injectJavascriptFileFromUrl -> {
-        webView?.injectJavascriptFileFromUrl(
-          call.argument("urlFile")!!,
-          call.argument<Map<String, Any?>>("scriptHtmlTagAttributes")
-        )
-        result.success(true)
-      }
-
-      WebViewChannelDelegateMethods.injectCSSCode -> {
-        webView?.injectCSSCode(call.argument("source")!!)
-        result.success(true)
-      }
-
-      WebViewChannelDelegateMethods.injectCSSFileFromUrl -> {
-        webView?.injectCSSFileFromUrl(
-          call.argument("urlFile")!!,
-          call.argument<Map<String, Any?>>("cssLinkHtmlTagAttributes")
-        )
-        result.success(true)
-      }
-
-      // The WebView's own pair, for every WebView, an in-app browser's included (§206). Until §206 a
-      // browser's WebView took a `browserActivity` branch here, a leftover from when the browser's
-      // own `setSettings`/`getSettings` shared this channel (they are Pigeon since §199). Its map
-      // carries no browser keys, so that branch replaced the browser's stored settings with
-      // defaults: a toolbar colour and a fixed title set at open read back null (measured, §199 and
-      // §206), and the back button and `didChangeTitle` acted on the defaults.
-      WebViewChannelDelegateMethods.setSettings -> {
-        if (webView != null) {
-          val inAppWebViewSettings = InAppWebViewSettings()
-          val inAppWebViewSettingsMap = call.argument<HashMap<String, Any?>>("settings")!!
-          inAppWebViewSettings.parse(inAppWebViewSettingsMap)
-          webView.setSettings(inAppWebViewSettings, inAppWebViewSettingsMap)
-        }
-        result.success(true)
-      }
-
-      // A browser's WebView used to answer the browser's merged map here. Dart reads it with
-      // `InAppWebViewSettings.fromMap`, which ignores the browser keys, so the answer Dart sees is
-      // the same.
-      WebViewChannelDelegateMethods.getSettings -> result.success(webView?.getCustomSettingsMap())
-
-      // `show`, `hide`, `close` and `isHidden` used to arrive here too, because an in-app browser's
-      // WebView shares the browser's MethodChannel. They are Pigeon now, on
-      // `InAppBrowserChannelDelegate` (§195).
-
-      WebViewChannelDelegateMethods.getCopyBackForwardList ->
-        result.success(webView?.getCopyBackForwardList())
-
-      WebViewChannelDelegateMethods.scrollTo -> {
-        webView?.scrollTo(
-          call.argument("x"), call.argument("y"), call.argument("animated")
-        )
-        result.success(true)
-      }
-
-      WebViewChannelDelegateMethods.scrollBy -> {
-        webView?.scrollBy(
-          call.argument("x"), call.argument("y"), call.argument("animated")
-        )
-        result.success(true)
-      }
-
-      WebViewChannelDelegateMethods.printCurrentPage -> {
-        if (webView != null) {
-          val settings = PrintJobSettings()
-          call.argument<Map<String, Any?>>("settings")?.let { settings.parse(it) }
-          result.success(webView.printCurrentPage(settings))
-        } else {
-          result.success(null)
-        }
-      }
-
-      WebViewChannelDelegateMethods.zoomBy -> {
-        webView?.zoomBy(call.argument<Double>("zoomFactor")!!.toFloat())
-        result.success(true)
-      }
-
-      WebViewChannelDelegateMethods.getZoomScale -> result.success(webView?.getZoomScale())
-
-      WebViewChannelDelegateMethods.getHitTestResult -> {
-        if (webView != null) {
-          result.success(HitTestResult.fromWebViewHitTestResult(webView.hitTestResult)?.toMap())
-        } else {
-          result.success(null)
-        }
-      }
-
-      WebViewChannelDelegateMethods.pageDown -> {
-        if (webView != null) {
-          result.success(webView.pageDown(call.argument<Boolean>("bottom")!!))
-        } else {
-          result.success(false)
-        }
-      }
-
-      WebViewChannelDelegateMethods.pageUp -> {
-        if (webView != null) {
-          result.success(webView.pageUp(call.argument<Boolean>("top")!!))
-        } else {
-          result.success(false)
-        }
-      }
-
-      WebViewChannelDelegateMethods.zoomIn -> {
-        if (webView != null) {
-          result.success(webView.zoomIn())
-        } else {
-          result.success(false)
-        }
-      }
-
-      WebViewChannelDelegateMethods.zoomOut -> {
-        if (webView != null) {
-          result.success(webView.zoomOut())
-        } else {
-          result.success(false)
-        }
-      }
-
-      WebViewChannelDelegateMethods.clearFocus -> {
-        webView?.clearFocus()
-        result.success(true)
-      }
-
-      WebViewChannelDelegateMethods.requestFocus -> {
-        if (webView != null) {
-          val direction = call.argument<Int>("direction")
-          val previouslyFocusedRect = InAppWebViewRect.fromMap(
-            call.argument<Map<String, Any?>>("previouslyFocusedRect")
-          )
-          val resultValue = if (direction != null && previouslyFocusedRect != null) {
-            webView.requestFocus(direction, previouslyFocusedRect.toRect())
-          } else if (direction != null) {
-            webView.requestFocus(direction)
-          } else {
-            webView.requestFocus()
-          }
-          result.success(resultValue)
-        } else {
-          result.success(false)
-        }
-      }
-
-      WebViewChannelDelegateMethods.setContextMenu -> {
-        webView?.setContextMenu(call.argument<Map<String, Any?>>("contextMenu"))
-        result.success(true)
-      }
-
-      WebViewChannelDelegateMethods.requestFocusNodeHref ->
-        result.success(webView?.requestFocusNodeHref())
-
-      WebViewChannelDelegateMethods.requestImageRef ->
-        result.success(webView?.requestImageRef())
-
-      WebViewChannelDelegateMethods.getScrollX -> result.success(webView?.scrollX)
-
-      WebViewChannelDelegateMethods.getScrollY -> result.success(webView?.scrollY)
-
-      WebViewChannelDelegateMethods.getCertificate -> {
-        if (webView != null) {
-          result.success(SslCertificateExt.toMap(webView.certificate))
-        } else {
-          result.success(null)
-        }
-      }
-
-      WebViewChannelDelegateMethods.addUserScript -> {
-        if (webView != null) {
-          val userScript = UserScript.fromMap(call.argument<Map<String, Any?>>("userScript"))!!
-          result.success(webView.getUserContentController().addUserOnlyScript(userScript))
-        } else {
-          result.success(false)
-        }
-      }
-
-      WebViewChannelDelegateMethods.removeUserScript -> {
-        if (webView != null) {
-          val index = call.argument<Int>("index")!!
-          val userScript = UserScript.fromMap(call.argument<Map<String, Any?>>("userScript"))!!
-          result.success(
-            webView.getUserContentController()
-              .removeUserOnlyScriptAt(index, userScript.injectionTime)
-          )
-        } else {
-          result.success(false)
-        }
-      }
-
-      WebViewChannelDelegateMethods.removeUserScriptsByGroupName -> {
-        webView?.getUserContentController()
-          ?.removeUserOnlyScriptsByGroupName(call.argument("groupName"))
-        result.success(true)
-      }
-
-      WebViewChannelDelegateMethods.removeAllUserScripts -> {
-        webView?.getUserContentController()?.removeAllUserOnlyScripts()
-        result.success(true)
-      }
-
-      WebViewChannelDelegateMethods.createWebMessageChannel -> {
-        if (webView != null &&
-          WebViewFeature.isFeatureSupported(WebViewFeature.CREATE_WEB_MESSAGE_CHANNEL)
-        ) {
-          result.success(webView.createCompatWebMessageChannel().toMap())
-        } else {
-          result.success(null)
-        }
-      }
-
-      WebViewChannelDelegateMethods.postWebMessage -> {
-        if (webView != null &&
-          WebViewFeature.isFeatureSupported(WebViewFeature.POST_WEB_MESSAGE)
-        ) {
-          val message = WebMessageCompatExt.fromMap(
-            call.argument<Map<String, Any?>>("message")
-          )!!
-          val targetOrigin = call.argument<String>("targetOrigin")
-          val compatPorts = mutableListOf<WebMessagePortCompat>()
-          message.ports?.forEach { portExt ->
-            val webMessageChannel =
-              webView.getWebMessageChannels()?.get(portExt.webMessageChannelId)
-            if (webMessageChannel != null) {
-              compatPorts.add(webMessageChannel.compatPorts[portExt.index])
-            }
-          }
-          val data = message.data
-          try {
-            if (WebViewFeature.isFeatureSupported(WebViewFeature.WEB_MESSAGE_ARRAY_BUFFER) &&
-              data != null && message.type == WebMessageCompat.TYPE_ARRAY_BUFFER
-            ) {
-              WebViewCompat.postWebMessage(
-                webView,
-                WebMessageCompat(data as ByteArray, compatPorts.toTypedArray()),
-                Uri.parse(targetOrigin)
-              )
-            } else {
-              WebViewCompat.postWebMessage(
-                webView,
-                WebMessageCompat(data?.toString(), compatPorts.toTypedArray()),
-                Uri.parse(targetOrigin)
-              )
-            }
-            result.success(true)
-          } catch (e: Exception) {
-            result.error(LOG_TAG, e.message, null)
-          }
-        } else {
-          result.success(true)
-        }
-      }
-
-      WebViewChannelDelegateMethods.addWebMessageListener -> {
-        if (webView != null) {
-          val webMessageListener = WebMessageListener.fromMap(
-            webView,
-            webView.getPlugin()!!.messenger,
-            call.argument<Map<String, Any?>>("webMessageListener")
-          )!!
-          if (WebViewFeature.isFeatureSupported(WebViewFeature.WEB_MESSAGE_LISTENER)) {
-            try {
-              webView.addWebMessageListener(webMessageListener)
-              result.success(true)
-            } catch (e: Exception) {
-              result.error(LOG_TAG, e.message, null)
-            }
-          } else {
-            result.success(true)
-          }
-        } else {
-          result.success(true)
-        }
-      }
-
-      WebViewChannelDelegateMethods.canScrollVertically -> {
-        if (webView != null) {
-          result.success(webView.canScrollVertically())
-        } else {
-          result.success(false)
-        }
-      }
-
-      WebViewChannelDelegateMethods.canScrollHorizontally -> {
-        if (webView != null) {
-          result.success(webView.canScrollHorizontally())
-        } else {
-          result.success(false)
-        }
-      }
-
-      WebViewChannelDelegateMethods.isInFullscreen -> {
-        if (webView != null) {
-          result.success(webView.isInFullscreen())
-        } else {
-          result.success(false)
-        }
-      }
-
-      WebViewChannelDelegateMethods.hideInputMethod -> {
-        if (webView != null) {
-          webView.hideInputMethod()
-          result.success(true)
-        } else {
-          result.success(false)
-        }
-      }
-
-      WebViewChannelDelegateMethods.showInputMethod -> {
-        if (webView != null) {
-          webView.showInputMethod()
-          result.success(true)
-        } else {
-          result.success(false)
-        }
-      }
-
-      WebViewChannelDelegateMethods.setAudioMuted -> {
-        if (webView != null) {
-          webView.setAudioMuted(call.argument<Boolean>("muted")!!)
-          result.success(true)
-        } else {
-          result.success(false)
-        }
-      }
-
-      WebViewChannelDelegateMethods.isAudioMuted -> result.success(webView?.isAudioMuted() ?: false)
-
-      // Fire-and-forget, unlike `postVisualStateCallback` and `documentHasImages` (Pigeon since
-      // §210): the platform starts a fling and returns immediately, so there is nothing to await.
-      // Where the scroll ends is decided by the platform's deceleration, which is why this reports
-      // no position back.
-      WebViewChannelDelegateMethods.flingScroll -> {
-        webView?.flingScroll(call.argument("velocityX")!!, call.argument("velocityY")!!)
-        result.success(true)
-      }
-
-      WebViewChannelDelegateMethods.saveState ->
-        result.success(
-          webView?.saveState(call.argument("maxSize"), call.argument("includeForwardState"))
-        )
-
-      WebViewChannelDelegateMethods.restoreState -> {
-        if (webView != null) {
-          result.success(webView.restoreState(call.argument<ByteArray>("state")!!))
-        } else {
-          result.success(false)
-        }
-      }
-    }
+    result.notImplemented()
   }
 
   fun onLongPressHitTestResult(hitTestResult: HitTestResult?) {
@@ -1404,6 +1042,278 @@ class WebViewChannelDelegate(
       }
     }
   }
+
+  // --- InAppWebViewHostApi, W3 (§212): the rest ------------------------------------------------
+  //
+  // All synchronous. Inbound maps go through `normalize`, i.e. `Util.normalizeCodecInts`, so the
+  // `as Int` reads in the parsers keep working (§197, §211).
+
+  override fun loadUrl(urlRequest: Map<String?, Any?>): Boolean {
+    webView?.loadUrl(URLRequest.fromMap(normalize(urlRequest))!!)
+    return true
+  }
+
+  override fun injectJavascriptFileFromUrl(
+    urlFile: String,
+    scriptHtmlTagAttributes: Map<String?, Any?>?
+  ): Boolean {
+    webView?.injectJavascriptFileFromUrl(urlFile, normalize(scriptHtmlTagAttributes))
+    return true
+  }
+
+  override fun injectCSSCode(source: String): Boolean {
+    webView?.injectCSSCode(source)
+    return true
+  }
+
+  override fun injectCSSFileFromUrl(
+    urlFile: String,
+    cssLinkHtmlTagAttributes: Map<String?, Any?>?
+  ): Boolean {
+    webView?.injectCSSFileFromUrl(urlFile, normalize(cssLinkHtmlTagAttributes))
+    return true
+  }
+
+  // The WebView's own pair, for every WebView, an in-app browser's included (§206). Until §206 a
+  // browser's WebView took a `browserActivity` branch here, a leftover from when the browser's
+  // own `setSettings`/`getSettings` shared this channel (they are Pigeon since §199). Its map
+  // carries no browser keys, so that branch replaced the browser's stored settings with
+  // defaults: a toolbar colour and a fixed title set at open read back null (measured, §199 and
+  // §206), and the back button and `didChangeTitle` acted on the defaults.
+  override fun setSettings(settings: Map<String?, Any?>): Boolean {
+    val webView = this.webView
+    if (webView != null) {
+      val inAppWebViewSettingsMap = normalize(settings) as HashMap<String, Any?>
+      val inAppWebViewSettings = InAppWebViewSettings()
+      inAppWebViewSettings.parse(inAppWebViewSettingsMap)
+      webView.setSettings(inAppWebViewSettings, inAppWebViewSettingsMap)
+    }
+    return true
+  }
+
+  // A browser's WebView used to answer the browser's merged map here. Dart reads it with
+  // `InAppWebViewSettings.fromMap`, which ignores the browser keys, so the answer Dart sees is
+  // the same.
+  override fun getSettings(): Map<String?, Any?>? = webView?.getCustomSettingsMap()?.toMap()
+
+  // `show`, `hide`, `close` and `isHidden` used to arrive on this channel too, because an in-app
+  // browser's WebView shares the browser's MethodChannel. They are Pigeon on
+  // `InAppBrowserChannelDelegate` (§195).
+
+  override fun getCopyBackForwardList(): Map<String?, Any?>? =
+    webView?.getCopyBackForwardList()?.toMap()
+
+  override fun scrollTo(x: Long, y: Long, animated: Boolean): Boolean {
+    webView?.scrollTo(x.toInt(), y.toInt(), animated)
+    return true
+  }
+
+  override fun scrollBy(x: Long, y: Long, animated: Boolean): Boolean {
+    webView?.scrollBy(x.toInt(), y.toInt(), animated)
+    return true
+  }
+
+  override fun printCurrentPage(settings: Map<String?, Any?>?): String? {
+    val webView = this.webView ?: return null
+    val printJobSettings = PrintJobSettings()
+    normalize(settings)?.let { printJobSettings.parse(it) }
+    return webView.printCurrentPage(printJobSettings)
+  }
+
+  override fun zoomBy(zoomFactor: Double): Boolean {
+    webView?.zoomBy(zoomFactor.toFloat())
+    return true
+  }
+
+  override fun getZoomScale(): Double? = webView?.getZoomScale()?.toDouble()
+
+  override fun getHitTestResult(): Map<String?, Any?>? {
+    val webView = this.webView ?: return null
+    return HitTestResult.fromWebViewHitTestResult(webView.hitTestResult)?.toMap()?.toMap()
+  }
+
+  override fun pageDown(bottom: Boolean): Boolean = webView?.pageDown(bottom) == true
+
+  override fun pageUp(top: Boolean): Boolean = webView?.pageUp(top) == true
+
+  override fun zoomIn(): Boolean = webView?.zoomIn() == true
+
+  override fun zoomOut(): Boolean = webView?.zoomOut() == true
+
+  override fun clearFocus(): Boolean {
+    webView?.clearFocus()
+    return true
+  }
+
+  override fun requestFocus(
+    direction: Long?,
+    previouslyFocusedRect: Map<String?, Any?>?
+  ): Boolean {
+    val webView = this.webView ?: return false
+    val rect = InAppWebViewRect.fromMap(normalize(previouslyFocusedRect))
+    return if (direction != null && rect != null) {
+      webView.requestFocus(direction.toInt(), rect.toRect())
+    } else if (direction != null) {
+      webView.requestFocus(direction.toInt())
+    } else {
+      webView.requestFocus()
+    }
+  }
+
+  override fun setContextMenu(contextMenu: Map<String?, Any?>?): Boolean {
+    webView?.setContextMenu(normalize(contextMenu))
+    return true
+  }
+
+  override fun requestFocusNodeHref(): Map<String?, Any?>? =
+    webView?.requestFocusNodeHref()?.toMap()
+
+  override fun requestImageRef(): Map<String?, Any?>? = webView?.requestImageRef()?.toMap()
+
+  override fun getScrollX(): Long? = webView?.scrollX?.toLong()
+
+  override fun getScrollY(): Long? = webView?.scrollY?.toLong()
+
+  override fun getCertificate(): Map<String?, Any?>? {
+    val webView = this.webView ?: return null
+    return SslCertificateExt.toMap(webView.certificate)?.toMap()
+  }
+
+  override fun addUserScript(userScript: Map<String?, Any?>): Boolean {
+    val webView = this.webView ?: return false
+    val script = UserScript.fromMap(normalize(userScript))!!
+    return webView.getUserContentController().addUserOnlyScript(script)
+  }
+
+  override fun removeUserScript(index: Long, userScript: Map<String?, Any?>): Boolean {
+    val webView = this.webView ?: return false
+    val script = UserScript.fromMap(normalize(userScript))!!
+    return webView.getUserContentController()
+      .removeUserOnlyScriptAt(index.toInt(), script.injectionTime)
+  }
+
+  override fun removeUserScriptsByGroupName(groupName: String): Boolean {
+    webView?.getUserContentController()?.removeUserOnlyScriptsByGroupName(groupName)
+    return true
+  }
+
+  override fun removeAllUserScripts(): Boolean {
+    webView?.getUserContentController()?.removeAllUserOnlyScripts()
+    return true
+  }
+
+  override fun createWebMessageChannel(): Map<String?, Any?>? {
+    val webView = this.webView
+    return if (webView != null &&
+      WebViewFeature.isFeatureSupported(WebViewFeature.CREATE_WEB_MESSAGE_CHANNEL)
+    ) {
+      webView.createCompatWebMessageChannel().toMap().toMap()
+    } else {
+      null
+    }
+  }
+
+  override fun postWebMessage(message: Map<String?, Any?>, targetOrigin: String): Boolean {
+    val webView = this.webView
+    if (webView == null ||
+      !WebViewFeature.isFeatureSupported(WebViewFeature.POST_WEB_MESSAGE)
+    ) {
+      return true
+    }
+    val messageExt = WebMessageCompatExt.fromMap(normalize(message))!!
+    val compatPorts = mutableListOf<WebMessagePortCompat>()
+    messageExt.ports?.forEach { portExt ->
+      val webMessageChannel = webView.getWebMessageChannels()?.get(portExt.webMessageChannelId)
+      if (webMessageChannel != null) {
+        compatPorts.add(webMessageChannel.compatPorts[portExt.index])
+      }
+    }
+    val data = messageExt.data
+    try {
+      if (WebViewFeature.isFeatureSupported(WebViewFeature.WEB_MESSAGE_ARRAY_BUFFER) &&
+        data != null && messageExt.type == WebMessageCompat.TYPE_ARRAY_BUFFER
+      ) {
+        WebViewCompat.postWebMessage(
+          webView,
+          WebMessageCompat(data as ByteArray, compatPorts.toTypedArray()),
+          Uri.parse(targetOrigin)
+        )
+      } else {
+        WebViewCompat.postWebMessage(
+          webView,
+          WebMessageCompat(data?.toString(), compatPorts.toTypedArray()),
+          Uri.parse(targetOrigin)
+        )
+      }
+    } catch (e: Exception) {
+      // The code and message `result.error(LOG_TAG, e.message, null)` sent.
+      throw FlutterError(LOG_TAG, e.message, null)
+    }
+    return true
+  }
+
+  override fun addWebMessageListener(webMessageListener: Map<String?, Any?>): Boolean {
+    val webView = this.webView ?: return true
+    val listener = WebMessageListener.fromMap(
+      webView,
+      webView.getPlugin()!!.messenger,
+      normalize(webMessageListener)
+    )!!
+    if (WebViewFeature.isFeatureSupported(WebViewFeature.WEB_MESSAGE_LISTENER)) {
+      try {
+        webView.addWebMessageListener(listener)
+      } catch (e: Exception) {
+        // The code and message `result.error(LOG_TAG, e.message, null)` sent.
+        throw FlutterError(LOG_TAG, e.message, null)
+      }
+    }
+    return true
+  }
+
+  override fun canScrollVertically(): Boolean = webView?.canScrollVertically() == true
+
+  override fun canScrollHorizontally(): Boolean = webView?.canScrollHorizontally() == true
+
+  override fun isInFullscreen(): Boolean = webView?.isInFullscreen() == true
+
+  override fun hideInputMethod(): Boolean {
+    val webView = this.webView ?: return false
+    webView.hideInputMethod()
+    return true
+  }
+
+  override fun showInputMethod(): Boolean {
+    val webView = this.webView ?: return false
+    webView.showInputMethod()
+    return true
+  }
+
+  override fun saveState(maxSize: Long?, includeForwardState: Boolean?): ByteArray? =
+    webView?.saveState(maxSize?.toInt(), includeForwardState)
+
+  override fun restoreState(state: ByteArray?): Boolean {
+    val webView = this.webView ?: return false
+    return webView.restoreState(state!!)
+  }
+
+  override fun setAudioMuted(muted: Boolean): Boolean {
+    val webView = this.webView ?: return false
+    webView.setAudioMuted(muted)
+    return true
+  }
+
+  override fun isAudioMuted(): Boolean = webView?.isAudioMuted() ?: false
+
+  // Fire-and-forget, unlike `postVisualStateCallback` and `documentHasImages` (W2): the platform
+  // starts a fling and returns immediately, so there is nothing to await. Where the scroll ends is
+  // decided by the platform's deceleration, which is why this reports no position back.
+  override fun flingScroll(velocityX: Long, velocityY: Long): Boolean {
+    webView?.flingScroll(velocityX.toInt(), velocityY.toInt())
+    return true
+  }
+
+  private fun normalize(map: Map<String?, Any?>?): Map<String, Any?>? =
+    Util.normalizeCodecInts(map) as Map<String, Any?>?
 
   private fun contentWorldOf(map: Map<String?, Any?>?): ContentWorld? =
     ContentWorld.fromMap(Util.normalizeCodecInts(map) as Map<String, Any?>?)

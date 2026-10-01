@@ -1,51 +1,63 @@
 import 'package:flutter/services.dart';
 import 'package:flutter_inappwebview_android/flutter_inappwebview_android.dart';
+import 'package:flutter_inappwebview_android/src/pigeons/in_app_webview.g.dart';
 import 'package:flutter_inappwebview_platform_interface/flutter_inappwebview_platform_interface.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 /// Guards the wire shape of `WebViewFeature.MUTE_AUDIO` — `setAudioMuted` / `isAudioMuted`.
 ///
-/// Both cross the per-WebView channel, so the failure modes are the usual silent pair: a renamed
-/// argument key arrives as null on the Kotlin side, and `isAudioMuted`'s `?? false` turns a missing
-/// reply into a positive claim that audio is *not* muted. Neither shows up in a build.
+/// Both cross the per-WebView `InAppWebViewHostApi` (Pigeon since §212), so the failure modes are
+/// a dropped or flipped flag on the way in, and an answer read from the wrong method on the way
+/// back. Neither shows up in a build.
+///
+/// Before §212 a null reply (the feature unsupported on this WebView provider) read as "not
+/// muted" through `?? false`. The Pigeon answer is a non-null `bool`, and Kotlin turns the
+/// unsupported case into `false` before replying, so the Dart side can no longer see a null. A
+/// caller that needs to tell "unsupported" from "audible" must still check
+/// WebViewFeature.isFeatureSupported(MUTE_AUDIO) first.
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
 
-  // The per-WebView channel name is built from the controller id.
-  const channel = MethodChannel('dev.nosferatu500.inappwebview/inappwebview_7');
+  final messenger =
+      TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger;
+  const codec = InAppWebViewHostApi.pigeonChannelCodec;
+  String hostChannel(String method) =>
+      'dev.flutter.pigeon.flutter_inappwebview_android.InAppWebViewHostApi.'
+      '$method.inappwebview_7';
 
   late AndroidInAppWebViewController controller;
-  final List<MethodCall> calls = <MethodCall>[];
-  Object? reply;
+  final Map<String, List<Object?>> sent = <String, List<Object?>>{};
+  bool reply = false;
 
   setUp(() {
-    calls.clear();
-    reply = null;
+    sent.clear();
+    reply = false;
     controller = AndroidInAppWebViewController(
       AndroidInAppWebViewControllerCreationParams(id: 7),
     );
-    TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
-        .setMockMethodCallHandler(channel, (MethodCall call) async {
-          calls.add(call);
-          return reply;
-        });
+    for (final method in ['setAudioMuted', 'isAudioMuted']) {
+      messenger.setMockMessageHandler(hostChannel(method), (message) async {
+        sent[method] = codec.decodeMessage(message) as List<Object?>? ?? [];
+        return codec.encodeMessage(<Object?>[
+          method == 'isAudioMuted' ? reply : true,
+        ]);
+      });
+    }
   });
 
   tearDown(() {
-    TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
-        .setMockMethodCallHandler(channel, null);
+    for (final method in ['setAudioMuted', 'isAudioMuted']) {
+      messenger.setMockMessageHandler(hostChannel(method), null);
+    }
     controller.dispose();
   });
 
-  Map<Object?, Object?> argsOf(MethodCall call) =>
-      call.arguments as Map<Object?, Object?>;
-
   group('AndroidInAppWebViewController.setAudioMuted', () {
-    test('sends the flag under the key the Kotlin side reads', () async {
+    test('sends the flag to setAudioMuted', () async {
       await controller.setAudioMuted(true);
 
-      expect(calls.single.method, 'setAudioMuted');
-      expect(argsOf(calls.single)['muted'], true);
+      expect(sent.keys, ['setAudioMuted']);
+      expect(sent['setAudioMuted'], [true]);
     });
 
     test('false is sent, not omitted', () async {
@@ -53,18 +65,16 @@ void main() {
       // error anywhere.
       await controller.setAudioMuted(false);
 
-      expect(argsOf(calls.single).containsKey('muted'), isTrue);
-      expect(argsOf(calls.single)['muted'], false);
+      expect(sent['setAudioMuted'], [false]);
     });
   });
 
   group('AndroidInAppWebViewController.isAudioMuted', () {
     test('sends no arguments', () async {
-      reply = false;
       await controller.isAudioMuted();
 
-      expect(calls.single.method, 'isAudioMuted');
-      expect(argsOf(calls.single), isEmpty);
+      expect(sent.keys, ['isAudioMuted']);
+      expect(sent['isAudioMuted'], isEmpty);
     });
 
     test('returns what the native side read', () async {
@@ -75,14 +85,18 @@ void main() {
       expect(await controller.isAudioMuted(), isFalse);
     });
 
-    test('a missing reply reads as "not muted"', () async {
-      // Documented rather than desirable: the return type is non-nullable `bool`, so `null` from
-      // the platform (feature unsupported on this WebView provider) collapses to false. A caller
-      // that needs to tell "unsupported" from "audible" must check
-      // WebViewFeature.isFeatureSupported(MUTE_AUDIO) first.
-      reply = null;
-      expect(await controller.isAudioMuted(), isFalse);
-    });
+    test(
+      'a disposed controller reads as "not muted" and sends nothing',
+      () async {
+        final disposed = AndroidInAppWebViewController(
+          AndroidInAppWebViewControllerCreationParams(id: 7),
+        );
+        disposed.dispose();
+        reply = true;
+        expect(await disposed.isAudioMuted(), isFalse);
+        expect(sent, isEmpty);
+      },
+    );
   });
 
   group('platform gating', () {

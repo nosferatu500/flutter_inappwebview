@@ -2,6 +2,7 @@ import 'dart:typed_data';
 
 import 'package:flutter/services.dart';
 import 'package:flutter_inappwebview_android/flutter_inappwebview_android.dart';
+import 'package:flutter_inappwebview_android/src/pigeons/in_app_webview.g.dart';
 import 'package:flutter_inappwebview_platform_interface/flutter_inappwebview_platform_interface.dart';
 import 'package:flutter_test/flutter_test.dart';
 
@@ -9,60 +10,69 @@ import 'package:flutter_test/flutter_test.dart';
 /// `includeForwardState`, backed by `WebViewCompat.saveState`.
 ///
 /// The whole design turns on one thing a build cannot see: **absent must arrive as `null`, not as a
-/// default.** The Kotlin reads `call.argument("maxSize")` and treats a null as "no constraint asked
-/// for", which selects the framework `WebView.saveState` and needs no `WebViewFeature.SAVE_STATE`.
-/// If Dart ever helpfully defaulted these to `Int.MAX_VALUE` / `true`, every unconstrained
-/// `saveState()` would silently start requiring that feature and would return `null` on any WebView
-/// without it — with no compile error and no analyzer warning anywhere.
+/// default.** The Kotlin treats a null as "no constraint asked for", which selects the framework
+/// `WebView.saveState` and needs no `WebViewFeature.SAVE_STATE`. If Dart ever helpfully defaulted
+/// these to `Int.MAX_VALUE` / `true`, every unconstrained `saveState()` would silently start
+/// requiring that feature and would return `null` on any WebView without it — with no compile error
+/// and no analyzer warning anywhere.
+///
+/// Since §212 the call is the Pigeon `saveState(maxSize, includeForwardState)`: positional, so the
+/// message is always a two-element list, `[maxSize, includeForwardState]`.
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
 
-  const channel = MethodChannel('dev.nosferatu500.inappwebview/inappwebview_9');
+  final messenger =
+      TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger;
+  const codec = InAppWebViewHostApi.pigeonChannelCodec;
+  const saveStateChannel =
+      'dev.flutter.pigeon.flutter_inappwebview_android.InAppWebViewHostApi.'
+      'saveState.inappwebview_9';
+  const methodChannel = MethodChannel(
+    'dev.nosferatu500.inappwebview/inappwebview_9',
+  );
 
   late AndroidInAppWebViewController controller;
-  final List<MethodCall> calls = <MethodCall>[];
+  final List<List<Object?>> calls = <List<Object?>>[];
+  final List<String> onMethodChannel = <String>[];
   Object? reply;
 
   setUp(() {
     calls.clear();
+    onMethodChannel.clear();
     reply = null;
     controller = AndroidInAppWebViewController(
       AndroidInAppWebViewControllerCreationParams(id: 9),
     );
-    TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
-        .setMockMethodCallHandler(channel, (MethodCall call) async {
-          calls.add(call);
-          return reply;
-        });
+    messenger.setMockMessageHandler(saveStateChannel, (message) async {
+      calls.add(codec.decodeMessage(message) as List<Object?>);
+      return codec.encodeMessage(<Object?>[reply]);
+    });
+    messenger.setMockMethodCallHandler(methodChannel, (call) async {
+      onMethodChannel.add(call.method);
+      return null;
+    });
   });
 
   tearDown(() {
-    TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
-        .setMockMethodCallHandler(channel, null);
+    messenger.setMockMessageHandler(saveStateChannel, null);
+    messenger.setMockMethodCallHandler(methodChannel, null);
     controller.dispose();
   });
 
-  Map<Object?, Object?> argsOf(MethodCall call) =>
-      call.arguments as Map<Object?, Object?>;
-
   group('AndroidInAppWebViewController.saveState', () {
-    test('sends both keys as null when neither bound is given', () async {
+    test('sends both bounds as null when neither is given', () async {
       reply = Uint8List.fromList(<int>[1, 2, 3]);
       await controller.saveState();
 
-      expect(calls.single.method, 'saveState');
-      // Present-and-null, not absent: either spelling reaches the Kotlin side as null, but the
-      // keys are asserted so a future refactor cannot quietly start omitting only one of them.
-      expect(argsOf(calls.single)['maxSize'], isNull);
-      expect(argsOf(calls.single)['includeForwardState'], isNull);
+      expect(calls.single, [null, null]);
+      expect(onMethodChannel, isEmpty);
     });
 
-    test('sends the bounds under the keys the Kotlin side reads', () async {
+    test('sends the bounds in the order the Kotlin side reads', () async {
       reply = Uint8List.fromList(<int>[1]);
       await controller.saveState(maxSize: 512000, includeForwardState: false);
 
-      expect(argsOf(calls.single)['maxSize'], 512000);
-      expect(argsOf(calls.single)['includeForwardState'], false);
+      expect(calls.single, [512000, false]);
     });
 
     test('an explicit false is sent, not dropped as falsy', () async {
@@ -71,17 +81,19 @@ void main() {
       reply = Uint8List.fromList(<int>[1]);
       await controller.saveState(includeForwardState: false);
 
-      expect(argsOf(calls.single).containsKey('includeForwardState'), isTrue);
-      expect(argsOf(calls.single)['includeForwardState'], false);
-      expect(argsOf(calls.single)['maxSize'], isNull);
+      expect(calls.single, [null, false]);
     });
 
     test('either bound alone still leaves the other null', () async {
       reply = Uint8List.fromList(<int>[1]);
       await controller.saveState(maxSize: 1024);
 
-      expect(argsOf(calls.single)['maxSize'], 1024);
-      expect(argsOf(calls.single)['includeForwardState'], isNull);
+      expect(calls.single, [1024, null]);
+    });
+
+    test('the platform answer is returned', () async {
+      reply = Uint8List.fromList(<int>[4, 5, 6]);
+      expect(await controller.saveState(), Uint8List.fromList(<int>[4, 5, 6]));
     });
 
     test('a null reply is returned as null', () async {

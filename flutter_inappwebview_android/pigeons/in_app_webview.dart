@@ -56,6 +56,31 @@
 // Rule 7: none of the nine names collides with a member of `WebViewChannelDelegate`, which
 // implements the HostApi. `InAppWebView`'s methods of the same names are the callees.
 //
+// W3 (§212), the last 42 host methods, checklist run a third time. After W3 the MethodChannel
+// carries only Kotlin -> Dart events (W4, W5):
+//   1. Settings payload? **Yes**: `setSettings` / `getSettings` cross as untyped maps (decision B,
+//      §194), and `parse` stays the single definition. Other inbound maps: `URLRequest`, the two
+//      inject attribute maps, `PrintJobSettings`, the focus rect, the context menu, `UserScript`, the
+//      web message and listener. All go through `Util.normalizeCodecInts`. The int readers among
+//      them (18 in settings, 7 in print settings, the menu item id, `injectionTime`, the message
+//      `type` and port `index`) are each asserted on a device (§211's table).
+//   2. `@async`? **None.** All 42 answer inline.
+//   3. A branch that never answers? None. A missing WebView answers what it always did: `true` for
+//      the commands, `false` for the queries and for `pageDown`/`pageUp`/`zoomIn`/`zoomOut`/
+//      `requestFocus`/`addUserScript`/`removeUserScript`/`restoreState`/the input-method pair/
+//      `setAudioMuted`, null for the getters and `printCurrentPage`.
+//   4. Dart `int` -> Kotlin `Long`: `scrollTo`/`scrollBy`'s x and y, `flingScroll`'s velocities,
+//      `requestFocus`'s direction, `removeUserScript`'s index and `saveState`'s `maxSize`, each
+//      narrowed with `toInt()`. Outbound, `getScrollX`/`getScrollY` widen to `Long`, and
+//      `getZoomScale`'s `Float` widens to `Double`.
+//   5. Payload type shared? None (maps).
+//   9. Fields the wire carries that Android never reads? **Two, dropped**: `loadUrl`'s
+//      `allowingReadAccessTo` (iOS's, like W1's `loadData`) and `zoomBy`'s `animated`.
+// Errors: `postWebMessage` and `addWebMessageListener` threw `result.error(LOG_TAG, e.message)`,
+// so they throw a `FlutterError` with the same code and message. Any other throw (an invalid print
+// colour mode, `restoreState(null)`) now arrives under the exception's class name instead of the
+// MethodChannel's `error` (rule 26).
+//
 // Regenerate with BOTH steps, from flutter_inappwebview_android/:
 //   dart run pigeon --input pigeons/in_app_webview.dart
 //   dart format lib/src/pigeons/in_app_webview.g.dart
@@ -190,4 +215,105 @@ abstract class InAppWebViewHostApi {
 
   @async
   bool documentHasImages();
+
+  // W3 (§212): the rest. Maps are the domain objects' `toMap()`, unfiltered.
+
+  bool loadUrl(Map<String?, Object?> urlRequest);
+
+  bool injectJavascriptFileFromUrl(
+    String urlFile,
+    Map<String?, Object?>? scriptHtmlTagAttributes,
+  );
+
+  bool injectCSSCode(String source);
+
+  bool injectCSSFileFromUrl(
+    String urlFile,
+    Map<String?, Object?>? cssLinkHtmlTagAttributes,
+  );
+
+  /// `InAppWebViewSettings.toMap()`, parsed by `InAppWebViewSettings.parse` (decision B, §194).
+  bool setSettings(Map<String?, Object?> settings);
+
+  Map<String?, Object?>? getSettings();
+
+  Map<String?, Object?>? getCopyBackForwardList();
+
+  bool scrollTo(int x, int y, bool animated);
+
+  bool scrollBy(int x, int y, bool animated);
+
+  /// The new job's id when `handledByClient`, otherwise null.
+  String? printCurrentPage(Map<String?, Object?>? settings);
+
+  bool zoomBy(double zoomFactor);
+
+  double? getZoomScale();
+
+  Map<String?, Object?>? getHitTestResult();
+
+  bool pageDown(bool bottom);
+
+  bool pageUp(bool top);
+
+  bool zoomIn();
+
+  bool zoomOut();
+
+  bool clearFocus();
+
+  bool requestFocus(
+    int? direction,
+    Map<String?, Object?>? previouslyFocusedRect,
+  );
+
+  bool setContextMenu(Map<String?, Object?>? contextMenu);
+
+  Map<String?, Object?>? requestFocusNodeHref();
+
+  Map<String?, Object?>? requestImageRef();
+
+  int? getScrollX();
+
+  int? getScrollY();
+
+  Map<String?, Object?>? getCertificate();
+
+  bool addUserScript(Map<String?, Object?> userScript);
+
+  bool removeUserScript(int index, Map<String?, Object?> userScript);
+
+  bool removeUserScriptsByGroupName(String groupName);
+
+  bool removeAllUserScripts();
+
+  Map<String?, Object?>? createWebMessageChannel();
+
+  /// Throws the platform's failure as a `FlutterError` with code `WebViewChannelDelegate`.
+  bool postWebMessage(Map<String?, Object?> message, String targetOrigin);
+
+  /// Throws the platform's failure as a `FlutterError` with code `WebViewChannelDelegate`.
+  bool addWebMessageListener(Map<String?, Object?> webMessageListener);
+
+  bool canScrollVertically();
+
+  bool canScrollHorizontally();
+
+  bool isInFullscreen();
+
+  bool hideInputMethod();
+
+  bool showInputMethod();
+
+  /// Null bounds mean "no constraint": the framework `WebView.saveState`, no feature needed (§124).
+  Uint8List? saveState(int? maxSize, bool? includeForwardState);
+
+  /// A null `state` throws, as it did on the MethodChannel.
+  bool restoreState(Uint8List? state);
+
+  bool setAudioMuted(bool muted);
+
+  bool isAudioMuted();
+
+  bool flingScroll(int velocityX, int velocityY);
 }

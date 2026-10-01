@@ -103,6 +103,54 @@ interface InAppWebViewHostApi {
   /** Answers once the next frame is on screen: that is the feature. */
   fun postVisualStateCallback(callback: (Result<Unit>) -> Unit)
   fun documentHasImages(callback: (Result<Boolean>) -> Unit)
+  fun loadUrl(urlRequest: Map<String?, Any?>): Boolean
+  fun injectJavascriptFileFromUrl(urlFile: String, scriptHtmlTagAttributes: Map<String?, Any?>?): Boolean
+  fun injectCSSCode(source: String): Boolean
+  fun injectCSSFileFromUrl(urlFile: String, cssLinkHtmlTagAttributes: Map<String?, Any?>?): Boolean
+  /** `InAppWebViewSettings.toMap()`, parsed by `InAppWebViewSettings.parse` (decision B, §194). */
+  fun setSettings(settings: Map<String?, Any?>): Boolean
+  fun getSettings(): Map<String?, Any?>?
+  fun getCopyBackForwardList(): Map<String?, Any?>?
+  fun scrollTo(x: Long, y: Long, animated: Boolean): Boolean
+  fun scrollBy(x: Long, y: Long, animated: Boolean): Boolean
+  /** The new job's id when `handledByClient`, otherwise null. */
+  fun printCurrentPage(settings: Map<String?, Any?>?): String?
+  fun zoomBy(zoomFactor: Double): Boolean
+  fun getZoomScale(): Double?
+  fun getHitTestResult(): Map<String?, Any?>?
+  fun pageDown(bottom: Boolean): Boolean
+  fun pageUp(top: Boolean): Boolean
+  fun zoomIn(): Boolean
+  fun zoomOut(): Boolean
+  fun clearFocus(): Boolean
+  fun requestFocus(direction: Long?, previouslyFocusedRect: Map<String?, Any?>?): Boolean
+  fun setContextMenu(contextMenu: Map<String?, Any?>?): Boolean
+  fun requestFocusNodeHref(): Map<String?, Any?>?
+  fun requestImageRef(): Map<String?, Any?>?
+  fun getScrollX(): Long?
+  fun getScrollY(): Long?
+  fun getCertificate(): Map<String?, Any?>?
+  fun addUserScript(userScript: Map<String?, Any?>): Boolean
+  fun removeUserScript(index: Long, userScript: Map<String?, Any?>): Boolean
+  fun removeUserScriptsByGroupName(groupName: String): Boolean
+  fun removeAllUserScripts(): Boolean
+  fun createWebMessageChannel(): Map<String?, Any?>?
+  /** Throws the platform's failure as a `FlutterError` with code `WebViewChannelDelegate`. */
+  fun postWebMessage(message: Map<String?, Any?>, targetOrigin: String): Boolean
+  /** Throws the platform's failure as a `FlutterError` with code `WebViewChannelDelegate`. */
+  fun addWebMessageListener(webMessageListener: Map<String?, Any?>): Boolean
+  fun canScrollVertically(): Boolean
+  fun canScrollHorizontally(): Boolean
+  fun isInFullscreen(): Boolean
+  fun hideInputMethod(): Boolean
+  fun showInputMethod(): Boolean
+  /** Null bounds mean "no constraint": the framework `WebView.saveState`, no feature needed (§124). */
+  fun saveState(maxSize: Long?, includeForwardState: Boolean?): ByteArray?
+  /** A null `state` throws, as it did on the MethodChannel. */
+  fun restoreState(state: ByteArray?): Boolean
+  fun setAudioMuted(muted: Boolean): Boolean
+  fun isAudioMuted(): Boolean
+  fun flingScroll(velocityX: Long, velocityY: Long): Boolean
 
   companion object {
     /** The codec used by InAppWebViewHostApi. */
@@ -673,6 +721,691 @@ interface InAppWebViewHostApi {
                 reply.reply(InAppWebViewPigeonUtils.wrapResult(data))
               }
             }
+          }
+        } else {
+          channel.setMessageHandler(null)
+        }
+      }
+      run {
+        val channel = BasicMessageChannel<Any?>(binaryMessenger, "dev.flutter.pigeon.flutter_inappwebview_android.InAppWebViewHostApi.loadUrl$separatedMessageChannelSuffix", codec)
+        if (api != null) {
+          channel.setMessageHandler { message, reply ->
+            val args = message as List<Any?>
+            val urlRequestArg = args[0] as Map<String?, Any?>
+            val wrapped: List<Any?> = try {
+              listOf(api.loadUrl(urlRequestArg))
+            } catch (exception: Throwable) {
+              InAppWebViewPigeonUtils.wrapError(exception)
+            }
+            reply.reply(wrapped)
+          }
+        } else {
+          channel.setMessageHandler(null)
+        }
+      }
+      run {
+        val channel = BasicMessageChannel<Any?>(binaryMessenger, "dev.flutter.pigeon.flutter_inappwebview_android.InAppWebViewHostApi.injectJavascriptFileFromUrl$separatedMessageChannelSuffix", codec)
+        if (api != null) {
+          channel.setMessageHandler { message, reply ->
+            val args = message as List<Any?>
+            val urlFileArg = args[0] as String
+            val scriptHtmlTagAttributesArg = args[1] as Map<String?, Any?>?
+            val wrapped: List<Any?> = try {
+              listOf(api.injectJavascriptFileFromUrl(urlFileArg, scriptHtmlTagAttributesArg))
+            } catch (exception: Throwable) {
+              InAppWebViewPigeonUtils.wrapError(exception)
+            }
+            reply.reply(wrapped)
+          }
+        } else {
+          channel.setMessageHandler(null)
+        }
+      }
+      run {
+        val channel = BasicMessageChannel<Any?>(binaryMessenger, "dev.flutter.pigeon.flutter_inappwebview_android.InAppWebViewHostApi.injectCSSCode$separatedMessageChannelSuffix", codec)
+        if (api != null) {
+          channel.setMessageHandler { message, reply ->
+            val args = message as List<Any?>
+            val sourceArg = args[0] as String
+            val wrapped: List<Any?> = try {
+              listOf(api.injectCSSCode(sourceArg))
+            } catch (exception: Throwable) {
+              InAppWebViewPigeonUtils.wrapError(exception)
+            }
+            reply.reply(wrapped)
+          }
+        } else {
+          channel.setMessageHandler(null)
+        }
+      }
+      run {
+        val channel = BasicMessageChannel<Any?>(binaryMessenger, "dev.flutter.pigeon.flutter_inappwebview_android.InAppWebViewHostApi.injectCSSFileFromUrl$separatedMessageChannelSuffix", codec)
+        if (api != null) {
+          channel.setMessageHandler { message, reply ->
+            val args = message as List<Any?>
+            val urlFileArg = args[0] as String
+            val cssLinkHtmlTagAttributesArg = args[1] as Map<String?, Any?>?
+            val wrapped: List<Any?> = try {
+              listOf(api.injectCSSFileFromUrl(urlFileArg, cssLinkHtmlTagAttributesArg))
+            } catch (exception: Throwable) {
+              InAppWebViewPigeonUtils.wrapError(exception)
+            }
+            reply.reply(wrapped)
+          }
+        } else {
+          channel.setMessageHandler(null)
+        }
+      }
+      run {
+        val channel = BasicMessageChannel<Any?>(binaryMessenger, "dev.flutter.pigeon.flutter_inappwebview_android.InAppWebViewHostApi.setSettings$separatedMessageChannelSuffix", codec)
+        if (api != null) {
+          channel.setMessageHandler { message, reply ->
+            val args = message as List<Any?>
+            val settingsArg = args[0] as Map<String?, Any?>
+            val wrapped: List<Any?> = try {
+              listOf(api.setSettings(settingsArg))
+            } catch (exception: Throwable) {
+              InAppWebViewPigeonUtils.wrapError(exception)
+            }
+            reply.reply(wrapped)
+          }
+        } else {
+          channel.setMessageHandler(null)
+        }
+      }
+      run {
+        val channel = BasicMessageChannel<Any?>(binaryMessenger, "dev.flutter.pigeon.flutter_inappwebview_android.InAppWebViewHostApi.getSettings$separatedMessageChannelSuffix", codec)
+        if (api != null) {
+          channel.setMessageHandler { _, reply ->
+            val wrapped: List<Any?> = try {
+              listOf(api.getSettings())
+            } catch (exception: Throwable) {
+              InAppWebViewPigeonUtils.wrapError(exception)
+            }
+            reply.reply(wrapped)
+          }
+        } else {
+          channel.setMessageHandler(null)
+        }
+      }
+      run {
+        val channel = BasicMessageChannel<Any?>(binaryMessenger, "dev.flutter.pigeon.flutter_inappwebview_android.InAppWebViewHostApi.getCopyBackForwardList$separatedMessageChannelSuffix", codec)
+        if (api != null) {
+          channel.setMessageHandler { _, reply ->
+            val wrapped: List<Any?> = try {
+              listOf(api.getCopyBackForwardList())
+            } catch (exception: Throwable) {
+              InAppWebViewPigeonUtils.wrapError(exception)
+            }
+            reply.reply(wrapped)
+          }
+        } else {
+          channel.setMessageHandler(null)
+        }
+      }
+      run {
+        val channel = BasicMessageChannel<Any?>(binaryMessenger, "dev.flutter.pigeon.flutter_inappwebview_android.InAppWebViewHostApi.scrollTo$separatedMessageChannelSuffix", codec)
+        if (api != null) {
+          channel.setMessageHandler { message, reply ->
+            val args = message as List<Any?>
+            val xArg = args[0] as Long
+            val yArg = args[1] as Long
+            val animatedArg = args[2] as Boolean
+            val wrapped: List<Any?> = try {
+              listOf(api.scrollTo(xArg, yArg, animatedArg))
+            } catch (exception: Throwable) {
+              InAppWebViewPigeonUtils.wrapError(exception)
+            }
+            reply.reply(wrapped)
+          }
+        } else {
+          channel.setMessageHandler(null)
+        }
+      }
+      run {
+        val channel = BasicMessageChannel<Any?>(binaryMessenger, "dev.flutter.pigeon.flutter_inappwebview_android.InAppWebViewHostApi.scrollBy$separatedMessageChannelSuffix", codec)
+        if (api != null) {
+          channel.setMessageHandler { message, reply ->
+            val args = message as List<Any?>
+            val xArg = args[0] as Long
+            val yArg = args[1] as Long
+            val animatedArg = args[2] as Boolean
+            val wrapped: List<Any?> = try {
+              listOf(api.scrollBy(xArg, yArg, animatedArg))
+            } catch (exception: Throwable) {
+              InAppWebViewPigeonUtils.wrapError(exception)
+            }
+            reply.reply(wrapped)
+          }
+        } else {
+          channel.setMessageHandler(null)
+        }
+      }
+      run {
+        val channel = BasicMessageChannel<Any?>(binaryMessenger, "dev.flutter.pigeon.flutter_inappwebview_android.InAppWebViewHostApi.printCurrentPage$separatedMessageChannelSuffix", codec)
+        if (api != null) {
+          channel.setMessageHandler { message, reply ->
+            val args = message as List<Any?>
+            val settingsArg = args[0] as Map<String?, Any?>?
+            val wrapped: List<Any?> = try {
+              listOf(api.printCurrentPage(settingsArg))
+            } catch (exception: Throwable) {
+              InAppWebViewPigeonUtils.wrapError(exception)
+            }
+            reply.reply(wrapped)
+          }
+        } else {
+          channel.setMessageHandler(null)
+        }
+      }
+      run {
+        val channel = BasicMessageChannel<Any?>(binaryMessenger, "dev.flutter.pigeon.flutter_inappwebview_android.InAppWebViewHostApi.zoomBy$separatedMessageChannelSuffix", codec)
+        if (api != null) {
+          channel.setMessageHandler { message, reply ->
+            val args = message as List<Any?>
+            val zoomFactorArg = args[0] as Double
+            val wrapped: List<Any?> = try {
+              listOf(api.zoomBy(zoomFactorArg))
+            } catch (exception: Throwable) {
+              InAppWebViewPigeonUtils.wrapError(exception)
+            }
+            reply.reply(wrapped)
+          }
+        } else {
+          channel.setMessageHandler(null)
+        }
+      }
+      run {
+        val channel = BasicMessageChannel<Any?>(binaryMessenger, "dev.flutter.pigeon.flutter_inappwebview_android.InAppWebViewHostApi.getZoomScale$separatedMessageChannelSuffix", codec)
+        if (api != null) {
+          channel.setMessageHandler { _, reply ->
+            val wrapped: List<Any?> = try {
+              listOf(api.getZoomScale())
+            } catch (exception: Throwable) {
+              InAppWebViewPigeonUtils.wrapError(exception)
+            }
+            reply.reply(wrapped)
+          }
+        } else {
+          channel.setMessageHandler(null)
+        }
+      }
+      run {
+        val channel = BasicMessageChannel<Any?>(binaryMessenger, "dev.flutter.pigeon.flutter_inappwebview_android.InAppWebViewHostApi.getHitTestResult$separatedMessageChannelSuffix", codec)
+        if (api != null) {
+          channel.setMessageHandler { _, reply ->
+            val wrapped: List<Any?> = try {
+              listOf(api.getHitTestResult())
+            } catch (exception: Throwable) {
+              InAppWebViewPigeonUtils.wrapError(exception)
+            }
+            reply.reply(wrapped)
+          }
+        } else {
+          channel.setMessageHandler(null)
+        }
+      }
+      run {
+        val channel = BasicMessageChannel<Any?>(binaryMessenger, "dev.flutter.pigeon.flutter_inappwebview_android.InAppWebViewHostApi.pageDown$separatedMessageChannelSuffix", codec)
+        if (api != null) {
+          channel.setMessageHandler { message, reply ->
+            val args = message as List<Any?>
+            val bottomArg = args[0] as Boolean
+            val wrapped: List<Any?> = try {
+              listOf(api.pageDown(bottomArg))
+            } catch (exception: Throwable) {
+              InAppWebViewPigeonUtils.wrapError(exception)
+            }
+            reply.reply(wrapped)
+          }
+        } else {
+          channel.setMessageHandler(null)
+        }
+      }
+      run {
+        val channel = BasicMessageChannel<Any?>(binaryMessenger, "dev.flutter.pigeon.flutter_inappwebview_android.InAppWebViewHostApi.pageUp$separatedMessageChannelSuffix", codec)
+        if (api != null) {
+          channel.setMessageHandler { message, reply ->
+            val args = message as List<Any?>
+            val topArg = args[0] as Boolean
+            val wrapped: List<Any?> = try {
+              listOf(api.pageUp(topArg))
+            } catch (exception: Throwable) {
+              InAppWebViewPigeonUtils.wrapError(exception)
+            }
+            reply.reply(wrapped)
+          }
+        } else {
+          channel.setMessageHandler(null)
+        }
+      }
+      run {
+        val channel = BasicMessageChannel<Any?>(binaryMessenger, "dev.flutter.pigeon.flutter_inappwebview_android.InAppWebViewHostApi.zoomIn$separatedMessageChannelSuffix", codec)
+        if (api != null) {
+          channel.setMessageHandler { _, reply ->
+            val wrapped: List<Any?> = try {
+              listOf(api.zoomIn())
+            } catch (exception: Throwable) {
+              InAppWebViewPigeonUtils.wrapError(exception)
+            }
+            reply.reply(wrapped)
+          }
+        } else {
+          channel.setMessageHandler(null)
+        }
+      }
+      run {
+        val channel = BasicMessageChannel<Any?>(binaryMessenger, "dev.flutter.pigeon.flutter_inappwebview_android.InAppWebViewHostApi.zoomOut$separatedMessageChannelSuffix", codec)
+        if (api != null) {
+          channel.setMessageHandler { _, reply ->
+            val wrapped: List<Any?> = try {
+              listOf(api.zoomOut())
+            } catch (exception: Throwable) {
+              InAppWebViewPigeonUtils.wrapError(exception)
+            }
+            reply.reply(wrapped)
+          }
+        } else {
+          channel.setMessageHandler(null)
+        }
+      }
+      run {
+        val channel = BasicMessageChannel<Any?>(binaryMessenger, "dev.flutter.pigeon.flutter_inappwebview_android.InAppWebViewHostApi.clearFocus$separatedMessageChannelSuffix", codec)
+        if (api != null) {
+          channel.setMessageHandler { _, reply ->
+            val wrapped: List<Any?> = try {
+              listOf(api.clearFocus())
+            } catch (exception: Throwable) {
+              InAppWebViewPigeonUtils.wrapError(exception)
+            }
+            reply.reply(wrapped)
+          }
+        } else {
+          channel.setMessageHandler(null)
+        }
+      }
+      run {
+        val channel = BasicMessageChannel<Any?>(binaryMessenger, "dev.flutter.pigeon.flutter_inappwebview_android.InAppWebViewHostApi.requestFocus$separatedMessageChannelSuffix", codec)
+        if (api != null) {
+          channel.setMessageHandler { message, reply ->
+            val args = message as List<Any?>
+            val directionArg = args[0] as Long?
+            val previouslyFocusedRectArg = args[1] as Map<String?, Any?>?
+            val wrapped: List<Any?> = try {
+              listOf(api.requestFocus(directionArg, previouslyFocusedRectArg))
+            } catch (exception: Throwable) {
+              InAppWebViewPigeonUtils.wrapError(exception)
+            }
+            reply.reply(wrapped)
+          }
+        } else {
+          channel.setMessageHandler(null)
+        }
+      }
+      run {
+        val channel = BasicMessageChannel<Any?>(binaryMessenger, "dev.flutter.pigeon.flutter_inappwebview_android.InAppWebViewHostApi.setContextMenu$separatedMessageChannelSuffix", codec)
+        if (api != null) {
+          channel.setMessageHandler { message, reply ->
+            val args = message as List<Any?>
+            val contextMenuArg = args[0] as Map<String?, Any?>?
+            val wrapped: List<Any?> = try {
+              listOf(api.setContextMenu(contextMenuArg))
+            } catch (exception: Throwable) {
+              InAppWebViewPigeonUtils.wrapError(exception)
+            }
+            reply.reply(wrapped)
+          }
+        } else {
+          channel.setMessageHandler(null)
+        }
+      }
+      run {
+        val channel = BasicMessageChannel<Any?>(binaryMessenger, "dev.flutter.pigeon.flutter_inappwebview_android.InAppWebViewHostApi.requestFocusNodeHref$separatedMessageChannelSuffix", codec)
+        if (api != null) {
+          channel.setMessageHandler { _, reply ->
+            val wrapped: List<Any?> = try {
+              listOf(api.requestFocusNodeHref())
+            } catch (exception: Throwable) {
+              InAppWebViewPigeonUtils.wrapError(exception)
+            }
+            reply.reply(wrapped)
+          }
+        } else {
+          channel.setMessageHandler(null)
+        }
+      }
+      run {
+        val channel = BasicMessageChannel<Any?>(binaryMessenger, "dev.flutter.pigeon.flutter_inappwebview_android.InAppWebViewHostApi.requestImageRef$separatedMessageChannelSuffix", codec)
+        if (api != null) {
+          channel.setMessageHandler { _, reply ->
+            val wrapped: List<Any?> = try {
+              listOf(api.requestImageRef())
+            } catch (exception: Throwable) {
+              InAppWebViewPigeonUtils.wrapError(exception)
+            }
+            reply.reply(wrapped)
+          }
+        } else {
+          channel.setMessageHandler(null)
+        }
+      }
+      run {
+        val channel = BasicMessageChannel<Any?>(binaryMessenger, "dev.flutter.pigeon.flutter_inappwebview_android.InAppWebViewHostApi.getScrollX$separatedMessageChannelSuffix", codec)
+        if (api != null) {
+          channel.setMessageHandler { _, reply ->
+            val wrapped: List<Any?> = try {
+              listOf(api.getScrollX())
+            } catch (exception: Throwable) {
+              InAppWebViewPigeonUtils.wrapError(exception)
+            }
+            reply.reply(wrapped)
+          }
+        } else {
+          channel.setMessageHandler(null)
+        }
+      }
+      run {
+        val channel = BasicMessageChannel<Any?>(binaryMessenger, "dev.flutter.pigeon.flutter_inappwebview_android.InAppWebViewHostApi.getScrollY$separatedMessageChannelSuffix", codec)
+        if (api != null) {
+          channel.setMessageHandler { _, reply ->
+            val wrapped: List<Any?> = try {
+              listOf(api.getScrollY())
+            } catch (exception: Throwable) {
+              InAppWebViewPigeonUtils.wrapError(exception)
+            }
+            reply.reply(wrapped)
+          }
+        } else {
+          channel.setMessageHandler(null)
+        }
+      }
+      run {
+        val channel = BasicMessageChannel<Any?>(binaryMessenger, "dev.flutter.pigeon.flutter_inappwebview_android.InAppWebViewHostApi.getCertificate$separatedMessageChannelSuffix", codec)
+        if (api != null) {
+          channel.setMessageHandler { _, reply ->
+            val wrapped: List<Any?> = try {
+              listOf(api.getCertificate())
+            } catch (exception: Throwable) {
+              InAppWebViewPigeonUtils.wrapError(exception)
+            }
+            reply.reply(wrapped)
+          }
+        } else {
+          channel.setMessageHandler(null)
+        }
+      }
+      run {
+        val channel = BasicMessageChannel<Any?>(binaryMessenger, "dev.flutter.pigeon.flutter_inappwebview_android.InAppWebViewHostApi.addUserScript$separatedMessageChannelSuffix", codec)
+        if (api != null) {
+          channel.setMessageHandler { message, reply ->
+            val args = message as List<Any?>
+            val userScriptArg = args[0] as Map<String?, Any?>
+            val wrapped: List<Any?> = try {
+              listOf(api.addUserScript(userScriptArg))
+            } catch (exception: Throwable) {
+              InAppWebViewPigeonUtils.wrapError(exception)
+            }
+            reply.reply(wrapped)
+          }
+        } else {
+          channel.setMessageHandler(null)
+        }
+      }
+      run {
+        val channel = BasicMessageChannel<Any?>(binaryMessenger, "dev.flutter.pigeon.flutter_inappwebview_android.InAppWebViewHostApi.removeUserScript$separatedMessageChannelSuffix", codec)
+        if (api != null) {
+          channel.setMessageHandler { message, reply ->
+            val args = message as List<Any?>
+            val indexArg = args[0] as Long
+            val userScriptArg = args[1] as Map<String?, Any?>
+            val wrapped: List<Any?> = try {
+              listOf(api.removeUserScript(indexArg, userScriptArg))
+            } catch (exception: Throwable) {
+              InAppWebViewPigeonUtils.wrapError(exception)
+            }
+            reply.reply(wrapped)
+          }
+        } else {
+          channel.setMessageHandler(null)
+        }
+      }
+      run {
+        val channel = BasicMessageChannel<Any?>(binaryMessenger, "dev.flutter.pigeon.flutter_inappwebview_android.InAppWebViewHostApi.removeUserScriptsByGroupName$separatedMessageChannelSuffix", codec)
+        if (api != null) {
+          channel.setMessageHandler { message, reply ->
+            val args = message as List<Any?>
+            val groupNameArg = args[0] as String
+            val wrapped: List<Any?> = try {
+              listOf(api.removeUserScriptsByGroupName(groupNameArg))
+            } catch (exception: Throwable) {
+              InAppWebViewPigeonUtils.wrapError(exception)
+            }
+            reply.reply(wrapped)
+          }
+        } else {
+          channel.setMessageHandler(null)
+        }
+      }
+      run {
+        val channel = BasicMessageChannel<Any?>(binaryMessenger, "dev.flutter.pigeon.flutter_inappwebview_android.InAppWebViewHostApi.removeAllUserScripts$separatedMessageChannelSuffix", codec)
+        if (api != null) {
+          channel.setMessageHandler { _, reply ->
+            val wrapped: List<Any?> = try {
+              listOf(api.removeAllUserScripts())
+            } catch (exception: Throwable) {
+              InAppWebViewPigeonUtils.wrapError(exception)
+            }
+            reply.reply(wrapped)
+          }
+        } else {
+          channel.setMessageHandler(null)
+        }
+      }
+      run {
+        val channel = BasicMessageChannel<Any?>(binaryMessenger, "dev.flutter.pigeon.flutter_inappwebview_android.InAppWebViewHostApi.createWebMessageChannel$separatedMessageChannelSuffix", codec)
+        if (api != null) {
+          channel.setMessageHandler { _, reply ->
+            val wrapped: List<Any?> = try {
+              listOf(api.createWebMessageChannel())
+            } catch (exception: Throwable) {
+              InAppWebViewPigeonUtils.wrapError(exception)
+            }
+            reply.reply(wrapped)
+          }
+        } else {
+          channel.setMessageHandler(null)
+        }
+      }
+      run {
+        val channel = BasicMessageChannel<Any?>(binaryMessenger, "dev.flutter.pigeon.flutter_inappwebview_android.InAppWebViewHostApi.postWebMessage$separatedMessageChannelSuffix", codec)
+        if (api != null) {
+          channel.setMessageHandler { message, reply ->
+            val args = message as List<Any?>
+            val messageArg = args[0] as Map<String?, Any?>
+            val targetOriginArg = args[1] as String
+            val wrapped: List<Any?> = try {
+              listOf(api.postWebMessage(messageArg, targetOriginArg))
+            } catch (exception: Throwable) {
+              InAppWebViewPigeonUtils.wrapError(exception)
+            }
+            reply.reply(wrapped)
+          }
+        } else {
+          channel.setMessageHandler(null)
+        }
+      }
+      run {
+        val channel = BasicMessageChannel<Any?>(binaryMessenger, "dev.flutter.pigeon.flutter_inappwebview_android.InAppWebViewHostApi.addWebMessageListener$separatedMessageChannelSuffix", codec)
+        if (api != null) {
+          channel.setMessageHandler { message, reply ->
+            val args = message as List<Any?>
+            val webMessageListenerArg = args[0] as Map<String?, Any?>
+            val wrapped: List<Any?> = try {
+              listOf(api.addWebMessageListener(webMessageListenerArg))
+            } catch (exception: Throwable) {
+              InAppWebViewPigeonUtils.wrapError(exception)
+            }
+            reply.reply(wrapped)
+          }
+        } else {
+          channel.setMessageHandler(null)
+        }
+      }
+      run {
+        val channel = BasicMessageChannel<Any?>(binaryMessenger, "dev.flutter.pigeon.flutter_inappwebview_android.InAppWebViewHostApi.canScrollVertically$separatedMessageChannelSuffix", codec)
+        if (api != null) {
+          channel.setMessageHandler { _, reply ->
+            val wrapped: List<Any?> = try {
+              listOf(api.canScrollVertically())
+            } catch (exception: Throwable) {
+              InAppWebViewPigeonUtils.wrapError(exception)
+            }
+            reply.reply(wrapped)
+          }
+        } else {
+          channel.setMessageHandler(null)
+        }
+      }
+      run {
+        val channel = BasicMessageChannel<Any?>(binaryMessenger, "dev.flutter.pigeon.flutter_inappwebview_android.InAppWebViewHostApi.canScrollHorizontally$separatedMessageChannelSuffix", codec)
+        if (api != null) {
+          channel.setMessageHandler { _, reply ->
+            val wrapped: List<Any?> = try {
+              listOf(api.canScrollHorizontally())
+            } catch (exception: Throwable) {
+              InAppWebViewPigeonUtils.wrapError(exception)
+            }
+            reply.reply(wrapped)
+          }
+        } else {
+          channel.setMessageHandler(null)
+        }
+      }
+      run {
+        val channel = BasicMessageChannel<Any?>(binaryMessenger, "dev.flutter.pigeon.flutter_inappwebview_android.InAppWebViewHostApi.isInFullscreen$separatedMessageChannelSuffix", codec)
+        if (api != null) {
+          channel.setMessageHandler { _, reply ->
+            val wrapped: List<Any?> = try {
+              listOf(api.isInFullscreen())
+            } catch (exception: Throwable) {
+              InAppWebViewPigeonUtils.wrapError(exception)
+            }
+            reply.reply(wrapped)
+          }
+        } else {
+          channel.setMessageHandler(null)
+        }
+      }
+      run {
+        val channel = BasicMessageChannel<Any?>(binaryMessenger, "dev.flutter.pigeon.flutter_inappwebview_android.InAppWebViewHostApi.hideInputMethod$separatedMessageChannelSuffix", codec)
+        if (api != null) {
+          channel.setMessageHandler { _, reply ->
+            val wrapped: List<Any?> = try {
+              listOf(api.hideInputMethod())
+            } catch (exception: Throwable) {
+              InAppWebViewPigeonUtils.wrapError(exception)
+            }
+            reply.reply(wrapped)
+          }
+        } else {
+          channel.setMessageHandler(null)
+        }
+      }
+      run {
+        val channel = BasicMessageChannel<Any?>(binaryMessenger, "dev.flutter.pigeon.flutter_inappwebview_android.InAppWebViewHostApi.showInputMethod$separatedMessageChannelSuffix", codec)
+        if (api != null) {
+          channel.setMessageHandler { _, reply ->
+            val wrapped: List<Any?> = try {
+              listOf(api.showInputMethod())
+            } catch (exception: Throwable) {
+              InAppWebViewPigeonUtils.wrapError(exception)
+            }
+            reply.reply(wrapped)
+          }
+        } else {
+          channel.setMessageHandler(null)
+        }
+      }
+      run {
+        val channel = BasicMessageChannel<Any?>(binaryMessenger, "dev.flutter.pigeon.flutter_inappwebview_android.InAppWebViewHostApi.saveState$separatedMessageChannelSuffix", codec)
+        if (api != null) {
+          channel.setMessageHandler { message, reply ->
+            val args = message as List<Any?>
+            val maxSizeArg = args[0] as Long?
+            val includeForwardStateArg = args[1] as Boolean?
+            val wrapped: List<Any?> = try {
+              listOf(api.saveState(maxSizeArg, includeForwardStateArg))
+            } catch (exception: Throwable) {
+              InAppWebViewPigeonUtils.wrapError(exception)
+            }
+            reply.reply(wrapped)
+          }
+        } else {
+          channel.setMessageHandler(null)
+        }
+      }
+      run {
+        val channel = BasicMessageChannel<Any?>(binaryMessenger, "dev.flutter.pigeon.flutter_inappwebview_android.InAppWebViewHostApi.restoreState$separatedMessageChannelSuffix", codec)
+        if (api != null) {
+          channel.setMessageHandler { message, reply ->
+            val args = message as List<Any?>
+            val stateArg = args[0] as ByteArray?
+            val wrapped: List<Any?> = try {
+              listOf(api.restoreState(stateArg))
+            } catch (exception: Throwable) {
+              InAppWebViewPigeonUtils.wrapError(exception)
+            }
+            reply.reply(wrapped)
+          }
+        } else {
+          channel.setMessageHandler(null)
+        }
+      }
+      run {
+        val channel = BasicMessageChannel<Any?>(binaryMessenger, "dev.flutter.pigeon.flutter_inappwebview_android.InAppWebViewHostApi.setAudioMuted$separatedMessageChannelSuffix", codec)
+        if (api != null) {
+          channel.setMessageHandler { message, reply ->
+            val args = message as List<Any?>
+            val mutedArg = args[0] as Boolean
+            val wrapped: List<Any?> = try {
+              listOf(api.setAudioMuted(mutedArg))
+            } catch (exception: Throwable) {
+              InAppWebViewPigeonUtils.wrapError(exception)
+            }
+            reply.reply(wrapped)
+          }
+        } else {
+          channel.setMessageHandler(null)
+        }
+      }
+      run {
+        val channel = BasicMessageChannel<Any?>(binaryMessenger, "dev.flutter.pigeon.flutter_inappwebview_android.InAppWebViewHostApi.isAudioMuted$separatedMessageChannelSuffix", codec)
+        if (api != null) {
+          channel.setMessageHandler { _, reply ->
+            val wrapped: List<Any?> = try {
+              listOf(api.isAudioMuted())
+            } catch (exception: Throwable) {
+              InAppWebViewPigeonUtils.wrapError(exception)
+            }
+            reply.reply(wrapped)
+          }
+        } else {
+          channel.setMessageHandler(null)
+        }
+      }
+      run {
+        val channel = BasicMessageChannel<Any?>(binaryMessenger, "dev.flutter.pigeon.flutter_inappwebview_android.InAppWebViewHostApi.flingScroll$separatedMessageChannelSuffix", codec)
+        if (api != null) {
+          channel.setMessageHandler { message, reply ->
+            val args = message as List<Any?>
+            val velocityXArg = args[0] as Long
+            val velocityYArg = args[1] as Long
+            val wrapped: List<Any?> = try {
+              listOf(api.flingScroll(velocityXArg, velocityYArg))
+            } catch (exception: Throwable) {
+              InAppWebViewPigeonUtils.wrapError(exception)
+            }
+            reply.reply(wrapped)
           }
         } else {
           channel.setMessageHandler(null)

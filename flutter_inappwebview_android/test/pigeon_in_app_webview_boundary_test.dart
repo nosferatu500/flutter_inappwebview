@@ -32,6 +32,19 @@ void main() {
     'evaluateJavascript', 'callAsyncJavaScript', 'takeScreenshot',
     'getContentWidth', 'getSelectedText', 'saveWebArchive', 'isSecureContext',
     'postVisualStateCallback', 'documentHasImages',
+    // W3
+    'loadUrl', 'injectJavascriptFileFromUrl', 'injectCSSCode',
+    'injectCSSFileFromUrl', 'setSettings', 'getSettings',
+    'getCopyBackForwardList', 'scrollTo', 'scrollBy', 'printCurrentPage',
+    'zoomBy', 'getZoomScale', 'getHitTestResult', 'pageDown', 'pageUp',
+    'zoomIn', 'zoomOut', 'clearFocus', 'requestFocus', 'setContextMenu',
+    'requestFocusNodeHref', 'requestImageRef', 'getScrollX', 'getScrollY',
+    'getCertificate', 'addUserScript', 'removeUserScript',
+    'removeUserScriptsByGroupName', 'removeAllUserScripts',
+    'createWebMessageChannel', 'postWebMessage', 'addWebMessageListener',
+    'canScrollVertically', 'canScrollHorizontally', 'isInFullscreen',
+    'hideInputMethod', 'showInputMethod', 'saveState', 'restoreState',
+    'setAudioMuted', 'isAudioMuted', 'flingScroll',
   ];
 
   /// What each method was sent, by method name.
@@ -376,6 +389,289 @@ void main() {
       expect(sent.length, 9);
     });
 
+    // W3 (§212).
+
+    test(
+      'the W3 argument-taking methods send their arguments in order, maps as toMap()',
+      () async {
+        // No print job: printCurrentPage answers a nullable job id, not the default `true`.
+        stubAll('inappwebview_7', {'printCurrentPage': null});
+        final request = URLRequest(
+          url: WebUri('https://example.com/load'),
+          method: 'GET',
+          headers: {'X-A': 'a'},
+        );
+        await c.loadUrl(
+          urlRequest: request,
+          allowingReadAccessTo: WebUri('file:///ignored'),
+        );
+        // `allowingReadAccessTo` is iOS's; the Android side never read it (§212).
+        expect(sent['loadUrl'], [request.toMap()]);
+
+        final scriptAttributes = ScriptHtmlTagAttributes(id: 'the-script');
+        await c.injectJavascriptFileFromUrl(
+          urlFile: WebUri('https://example.com/a.js'),
+          scriptHtmlTagAttributes: scriptAttributes,
+        );
+        expect(sent['injectJavascriptFileFromUrl'], [
+          'https://example.com/a.js',
+          scriptAttributes.toMap(),
+        ]);
+
+        final cssAttributes = CSSLinkHtmlTagAttributes(id: 'the-css');
+        await c.injectCSSFileFromUrl(
+          urlFile: WebUri('https://example.com/a.css'),
+          cssLinkHtmlTagAttributes: cssAttributes,
+        );
+        expect(sent['injectCSSFileFromUrl'], [
+          'https://example.com/a.css',
+          cssAttributes.toMap(),
+        ]);
+
+        await c.injectCSSCode(source: 'body{}');
+        expect(sent['injectCSSCode'], ['body{}']);
+
+        final settings = InAppWebViewSettings(minimumFontSize: 13);
+        await c.setSettings(settings: settings);
+        expect(sent['setSettings'], [settings.toMap()]);
+
+        // Distinct x and y, and a different pair for each method.
+        await c.scrollTo(x: 3, y: 4, animated: true);
+        expect(sent['scrollTo'], [3, 4, true]);
+        await c.scrollBy(x: 5, y: 6);
+        expect(sent['scrollBy'], [5, 6, false]);
+        await c.flingScroll(velocityX: 7, velocityY: 8);
+        expect(sent['flingScroll'], [7, 8]);
+
+        final printSettings = PrintJobSettings(jobName: 'the-job');
+        await c.printCurrentPage(settings: printSettings);
+        expect(sent['printCurrentPage'], [printSettings.toMap()]);
+
+        // `animated` is iOS's; the Android side never read it (§212).
+        await c.zoomBy(zoomFactor: 2.5, animated: true);
+        expect(sent['zoomBy'], [2.5]);
+
+        final rect = InAppWebViewRect(x: 1, y: 2, width: 3, height: 4);
+        await c.requestFocus(
+          direction: FocusDirection.DOWN,
+          previouslyFocusedRect: rect,
+        );
+        expect(sent['requestFocus'], [
+          FocusDirection.DOWN.toNativeValue(),
+          rect.toMap(),
+        ]);
+
+        final menu = ContextMenu(
+          menuItems: [ContextMenuItem(id: 9, title: 'x')],
+        );
+        await c.setContextMenu(menu);
+        expect(sent['setContextMenu'], [menu.toMap()]);
+
+        await c.pageDown(bottom: true);
+        expect(sent['pageDown'], [true]);
+        await c.pageUp(top: false);
+        expect(sent['pageUp'], [false]);
+
+        await c.restoreState(Uint8List.fromList([4, 2]));
+        expect(sent['restoreState'], [
+          Uint8List.fromList([4, 2]),
+        ]);
+
+        await c.postWebMessage(
+          message: WebMessage(data: 'the-message'),
+          targetOrigin: WebUri('https://example.com'),
+        );
+        expect(sent['postWebMessage'], [
+          WebMessage(data: 'the-message').toMap(),
+          'https://example.com',
+        ]);
+      },
+    );
+
+    test(
+      'the user-script methods send the script, and removeUserScript its index',
+      () async {
+        final start = UserScript(
+          source: 'var a = 1;',
+          injectionTime: UserScriptInjectionTime.AT_DOCUMENT_START,
+          groupName: 'the-group',
+        );
+        final second = UserScript(
+          source: 'var b = 2;',
+          injectionTime: UserScriptInjectionTime.AT_DOCUMENT_START,
+        );
+        await c.addUserScripts(userScripts: [start, second]);
+        expect(sent['addUserScript'], [second.toMap()]);
+
+        // `second` is at index 1 among the document-start scripts.
+        await c.removeUserScript(userScript: second);
+        expect(sent['removeUserScript'], [1, second.toMap()]);
+
+        await c.removeUserScriptsByGroupName(groupName: 'the-group');
+        expect(sent['removeUserScriptsByGroupName'], ['the-group']);
+
+        await c.removeAllUserScripts();
+        expect(sent['removeAllUserScripts'], isEmpty);
+      },
+    );
+
+    test('the W3 answers map back, each from its own method', () async {
+      // Values chosen so a crossed wire fails: x ≠ y, and the bool pairs answer differently.
+      stubAll('inappwebview_7', {
+        'getSettings': InAppWebViewSettings(minimumFontSize: 31).toMap(),
+        'getZoomScale': 1.75,
+        'getHitTestResult': {'type': 5, 'extra': 'the-extra'},
+        'requestFocusNodeHref': {
+          'url': 'https://example.com/href',
+          'title': 'the-title',
+          'src': 'https://example.com/src',
+        },
+        'requestImageRef': {'url': 'https://example.com/image'},
+        'getScrollX': 11,
+        'getScrollY': 22,
+        'canScrollVertically': true,
+        'canScrollHorizontally': false,
+        'isInFullscreen': true,
+        'zoomIn': true,
+        'zoomOut': false,
+        'pageDown': true,
+        'pageUp': false,
+        'requestFocus': true,
+        'printCurrentPage': 'the-job-id',
+        'saveState': Uint8List.fromList([1, 2, 3]),
+        'restoreState': true,
+        'isAudioMuted': true,
+      });
+      expect((await c.getSettings())?.minimumFontSize, 31);
+      expect(await c.getZoomScale(), 1.75);
+      final hit = await c.getHitTestResult();
+      expect(hit?.type, InAppWebViewHitTestResultType.fromNativeValue(5));
+      expect(hit?.extra, 'the-extra');
+      final href = await c.requestFocusNodeHref();
+      expect(href?.url, WebUri('https://example.com/href'));
+      expect(href?.title, 'the-title');
+      expect(href?.src, 'https://example.com/src');
+      expect(
+        (await c.requestImageRef())?.url,
+        WebUri('https://example.com/image'),
+      );
+      expect(await c.getScrollX(), 11);
+      expect(await c.getScrollY(), 22);
+      expect(await c.canScrollVertically(), isTrue);
+      expect(await c.canScrollHorizontally(), isFalse);
+      expect(await c.isInFullscreen(), isTrue);
+      expect(await c.zoomIn(), isTrue);
+      expect(await c.zoomOut(), isFalse);
+      expect(await c.pageDown(bottom: true), isTrue);
+      expect(await c.pageUp(top: true), isFalse);
+      expect(await c.requestFocus(), isTrue);
+      expect(
+        (await c.printCurrentPage())?.id,
+        'the-job-id',
+        reason: 'the job id becomes the print job controller id',
+      );
+      expect(await c.saveState(), Uint8List.fromList([1, 2, 3]));
+      expect(await c.restoreState(Uint8List(0)), isTrue);
+      expect(await c.isAudioMuted(), isTrue);
+    });
+
+    test(
+      "postWebMessage's platform failure keeps the code and message it had",
+      () async {
+        messenger.setMockMessageHandler(
+          '$prefix.postWebMessage.inappwebview_7',
+          (message) async => codec.encodeMessage(<Object?>[
+            'WebViewChannelDelegate',
+            'the platform refused',
+            null,
+          ]),
+        );
+        await expectLater(
+          c.postWebMessage(message: WebMessage(data: 'x')),
+          throwsA(
+            isA<PlatformException>()
+                .having((e) => e.code, 'code', 'WebViewChannelDelegate')
+                .having((e) => e.message, 'message', 'the platform refused'),
+          ),
+        );
+      },
+    );
+
+    test('no host method reaches the MethodChannel any more', () async {
+      stubAll('inappwebview_7', {
+        'getSettings': null,
+        'getCopyBackForwardList': null,
+        'getZoomScale': null,
+        'getHitTestResult': null,
+        'requestFocusNodeHref': null,
+        'requestImageRef': null,
+        'getScrollX': null,
+        'getScrollY': null,
+        'getCertificate': null,
+        'createWebMessageChannel': null,
+        'printCurrentPage': null,
+        'saveState': null,
+      });
+      final channel = MethodChannel(
+        'dev.nosferatu500.inappwebview/inappwebview_7',
+      );
+      final onMethodChannel = <String>[];
+      messenger.setMockMethodCallHandler(channel, (call) async {
+        onMethodChannel.add(call.method);
+        return null;
+      });
+      addTearDown(() => messenger.setMockMethodCallHandler(channel, null));
+
+      await c.loadUrl(urlRequest: URLRequest(url: WebUri('https://e.com')));
+      await c.injectJavascriptFileFromUrl(urlFile: WebUri('https://e.com/a'));
+      await c.injectCSSCode(source: 'x');
+      await c.injectCSSFileFromUrl(urlFile: WebUri('https://e.com/b'));
+      await c.setSettings(settings: InAppWebViewSettings());
+      await c.getSettings();
+      await c.getCopyBackForwardList();
+      await c.scrollTo(x: 1, y: 1);
+      await c.scrollBy(x: 1, y: 1);
+      await c.printCurrentPage();
+      await c.zoomBy(zoomFactor: 2);
+      await c.getZoomScale();
+      await c.getHitTestResult();
+      await c.pageDown(bottom: true);
+      await c.pageUp(top: true);
+      await c.zoomIn();
+      await c.zoomOut();
+      await c.clearFocus();
+      await c.requestFocus();
+      await c.setContextMenu(null);
+      await c.requestFocusNodeHref();
+      await c.requestImageRef();
+      await c.getScrollX();
+      await c.getScrollY();
+      await c.getCertificate();
+      final script = UserScript(
+        source: 'x',
+        injectionTime: UserScriptInjectionTime.AT_DOCUMENT_END,
+      );
+      await c.addUserScript(userScript: script);
+      await c.removeUserScript(userScript: script);
+      await c.removeUserScriptsByGroupName(groupName: 'g');
+      await c.removeAllUserScripts();
+      await c.createWebMessageChannel();
+      await c.postWebMessage(message: WebMessage(data: 'x'));
+      await c.canScrollVertically();
+      await c.canScrollHorizontally();
+      await c.isInFullscreen();
+      await c.hideInputMethod();
+      await c.showInputMethod();
+      await c.saveState();
+      await c.restoreState(Uint8List(0));
+      await c.setAudioMuted(true);
+      await c.isAudioMuted();
+      await c.flingScroll(velocityX: 1, velocityY: 1);
+      // `addWebMessageListener` needs a real listener; the device pins it (web_message.dart).
+      expect(onMethodChannel, isEmpty);
+      expect(sent.length, 41);
+    });
+
     test(
       'after dispose nothing is sent, and the queries answer their defaults',
       () async {
@@ -390,6 +686,14 @@ void main() {
         expect(await c.isSecureContext(), isFalse);
         expect(await c.documentHasImages(), isFalse);
         await c.postVisualStateCallback();
+        expect(await c.getSettings(), isNull);
+        expect(await c.getScrollX(), isNull);
+        expect(await c.canScrollVertically(), isFalse);
+        expect(await c.isInFullscreen(), isFalse);
+        expect(await c.pageDown(bottom: true), isFalse);
+        expect(await c.restoreState(Uint8List(0)), isFalse);
+        expect(await c.printCurrentPage(), isNull);
+        await c.loadUrl(urlRequest: URLRequest(url: WebUri('https://e.com')));
         expect(sent, isEmpty);
       },
     );

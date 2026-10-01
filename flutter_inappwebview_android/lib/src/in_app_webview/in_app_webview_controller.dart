@@ -1818,13 +1818,8 @@ class AndroidInAppWebViewController extends PlatformInAppWebViewController
       allowingReadAccessTo == null || allowingReadAccessTo.isScheme("file"),
     );
 
-    Map<String, dynamic> args = <String, dynamic>{};
-    args.putIfAbsent('urlRequest', () => urlRequest.toMap());
-    args.putIfAbsent(
-      'allowingReadAccessTo',
-      () => allowingReadAccessTo?.toString(),
-    );
-    await channel?.invokeMethod('loadUrl', args);
+    // `allowingReadAccessTo` is iOS's; the Android side never read it (§212).
+    await _hostApi?.loadUrl(urlRequest.toMap());
   }
 
   @override
@@ -1947,13 +1942,10 @@ class AndroidInAppWebViewController extends PlatformInAppWebViewController
     if (scriptHtmlTagAttributes != null && id != null) {
       _injectedScriptsFromURL[id] = scriptHtmlTagAttributes;
     }
-    Map<String, dynamic> args = <String, dynamic>{};
-    args.putIfAbsent('urlFile', () => urlFile.toString());
-    args.putIfAbsent(
-      'scriptHtmlTagAttributes',
-      () => scriptHtmlTagAttributes?.toMap(),
+    await _hostApi?.injectJavascriptFileFromUrl(
+      urlFile.toString(),
+      scriptHtmlTagAttributes?.toMap(),
     );
-    await channel?.invokeMethod('injectJavascriptFileFromUrl', args);
   }
 
   @override
@@ -1966,9 +1958,7 @@ class AndroidInAppWebViewController extends PlatformInAppWebViewController
 
   @override
   Future<void> injectCSSCode({required String source}) async {
-    Map<String, dynamic> args = <String, dynamic>{};
-    args.putIfAbsent('source', () => source);
-    await channel?.invokeMethod('injectCSSCode', args);
+    await _hostApi?.injectCSSCode(source);
   }
 
   @override
@@ -1977,13 +1967,10 @@ class AndroidInAppWebViewController extends PlatformInAppWebViewController
     CSSLinkHtmlTagAttributes? cssLinkHtmlTagAttributes,
   }) async {
     assert(urlFile.toString().isNotEmpty);
-    Map<String, dynamic> args = <String, dynamic>{};
-    args.putIfAbsent('urlFile', () => urlFile.toString());
-    args.putIfAbsent(
-      'cssLinkHtmlTagAttributes',
-      () => cssLinkHtmlTagAttributes?.toMap(),
+    await _hostApi?.injectCSSFileFromUrl(
+      urlFile.toString(),
+      cssLinkHtmlTagAttributes?.toMap(),
     );
-    await channel?.invokeMethod('injectCSSFileFromUrl', args);
   }
 
   @override
@@ -2023,23 +2010,14 @@ class AndroidInAppWebViewController extends PlatformInAppWebViewController
 
   @override
   Future<void> setSettings({required InAppWebViewSettings settings}) async {
-    Map<String, dynamic> args = <String, dynamic>{};
-
-    args.putIfAbsent('settings', () => settings.toMap());
-    await channel?.invokeMethod('setSettings', args);
+    await _hostApi?.setSettings(settings.toMap());
   }
 
   @override
   Future<InAppWebViewSettings?> getSettings() async {
-    Map<String, dynamic> args = <String, dynamic>{};
-
-    Map<dynamic, dynamic>? settings = await channel?.invokeMethod(
-      'getSettings',
-      args,
-    );
+    final settings = await _hostApi?.getSettings();
     if (settings != null) {
-      settings = settings.cast<String, dynamic>();
-      return InAppWebViewSettings.fromMap(settings as Map<String, dynamic>);
+      return InAppWebViewSettings.fromMap(settings.cast<String, dynamic>());
     }
 
     return null;
@@ -2047,11 +2025,8 @@ class AndroidInAppWebViewController extends PlatformInAppWebViewController
 
   @override
   Future<WebHistory?> getCopyBackForwardList() async {
-    Map<String, dynamic> args = <String, dynamic>{};
-    Map<String, dynamic>? result = (await channel?.invokeMethod(
-      'getCopyBackForwardList',
-      args,
-    ))?.cast<String, dynamic>();
+    final result = (await _hostApi?.getCopyBackForwardList())
+        ?.cast<String, dynamic>();
     return WebHistory.fromMap(result);
   }
 
@@ -2061,11 +2036,7 @@ class AndroidInAppWebViewController extends PlatformInAppWebViewController
     required int y,
     bool animated = false,
   }) async {
-    Map<String, dynamic> args = <String, dynamic>{};
-    args.putIfAbsent('x', () => x);
-    args.putIfAbsent('y', () => y);
-    args.putIfAbsent('animated', () => animated);
-    await channel?.invokeMethod('scrollTo', args);
+    await _hostApi?.scrollTo(x, y, animated);
   }
 
   @override
@@ -2074,11 +2045,7 @@ class AndroidInAppWebViewController extends PlatformInAppWebViewController
     required int y,
     bool animated = false,
   }) async {
-    Map<String, dynamic> args = <String, dynamic>{};
-    args.putIfAbsent('x', () => x);
-    args.putIfAbsent('y', () => y);
-    args.putIfAbsent('animated', () => animated);
-    await channel?.invokeMethod('scrollBy', args);
+    await _hostApi?.scrollBy(x, y, animated);
   }
 
   @override
@@ -2095,12 +2062,7 @@ class AndroidInAppWebViewController extends PlatformInAppWebViewController
   Future<AndroidPrintJobController?> printCurrentPage({
     PrintJobSettings? settings,
   }) async {
-    Map<String, dynamic> args = <String, dynamic>{};
-    args.putIfAbsent("settings", () => settings?.toMap());
-    String? jobId = await channel?.invokeMethod<String?>(
-      'printCurrentPage',
-      args,
-    );
+    final jobId = await _hostApi?.printCurrentPage(settings?.toMap());
     if (jobId != null) {
       return AndroidPrintJobController(
         PlatformPrintJobControllerCreationParams(id: jobId),
@@ -2146,10 +2108,8 @@ class AndroidInAppWebViewController extends PlatformInAppWebViewController
   }) async {
     assert(zoomFactor > 0.01 && zoomFactor <= 100.0);
 
-    Map<String, dynamic> args = <String, dynamic>{};
-    args.putIfAbsent('zoomFactor', () => zoomFactor);
-    args.putIfAbsent('animated', () => animated);
-    return await channel?.invokeMethod('zoomBy', args);
+    // `animated` is iOS's; the Android side never read it (§212).
+    await _hostApi?.zoomBy(zoomFactor);
   }
 
   @override
@@ -2160,8 +2120,7 @@ class AndroidInAppWebViewController extends PlatformInAppWebViewController
 
   @override
   Future<double?> getZoomScale() async {
-    Map<String, dynamic> args = <String, dynamic>{};
-    return await channel?.invokeMethod<double?>('getZoomScale', args);
+    return await _hostApi?.getZoomScale();
   }
 
   @override
@@ -2171,23 +2130,17 @@ class AndroidInAppWebViewController extends PlatformInAppWebViewController
 
   @override
   Future<InAppWebViewHitTestResult?> getHitTestResult() async {
-    Map<String, dynamic> args = <String, dynamic>{};
-    Map<dynamic, dynamic>? hitTestResultMap = await channel?.invokeMethod(
-      'getHitTestResult',
-      args,
-    );
+    final hitTestResultMap = await _hostApi?.getHitTestResult();
 
     if (hitTestResultMap == null) {
       return null;
     }
 
-    hitTestResultMap = hitTestResultMap.cast<String, dynamic>();
-
     InAppWebViewHitTestResultType? type =
         InAppWebViewHitTestResultType.fromNativeValue(
-          hitTestResultMap["type"]?.toInt(),
+          (hitTestResultMap["type"] as num?)?.toInt(),
         );
-    String? extra = hitTestResultMap["extra"];
+    String? extra = hitTestResultMap["extra"] as String?;
     return InAppWebViewHitTestResult(type: type, extra: extra);
   }
 
@@ -2196,38 +2149,30 @@ class AndroidInAppWebViewController extends PlatformInAppWebViewController
     FocusDirection? direction,
     InAppWebViewRect? previouslyFocusedRect,
   }) async {
-    Map<String, dynamic> args = <String, dynamic>{};
-    args.putIfAbsent("direction", () => direction?.toNativeValue());
-    args.putIfAbsent(
-      "previouslyFocusedRect",
-      () => previouslyFocusedRect?.toMap(),
+    return await _hostApi?.requestFocus(
+      direction?.toNativeValue(),
+      previouslyFocusedRect?.toMap(),
     );
-    return await channel?.invokeMethod<bool>('requestFocus', args);
   }
 
   @override
   Future<void> clearFocus() async {
-    Map<String, dynamic> args = <String, dynamic>{};
-    return await channel?.invokeMethod('clearFocus', args);
+    await _hostApi?.clearFocus();
   }
 
   @override
   Future<void> showInputMethod() async {
-    Map<String, dynamic> args = <String, dynamic>{};
-    return await channel?.invokeMethod('showInputMethod', args);
+    await _hostApi?.showInputMethod();
   }
 
   @override
   Future<void> setAudioMuted(bool muted) async {
-    Map<String, dynamic> args = <String, dynamic>{};
-    args.putIfAbsent('muted', () => muted);
-    return await channel?.invokeMethod('setAudioMuted', args);
+    await _hostApi?.setAudioMuted(muted);
   }
 
   @override
   Future<bool> isAudioMuted() async {
-    Map<String, dynamic> args = <String, dynamic>{};
-    return await channel?.invokeMethod<bool>('isAudioMuted', args) ?? false;
+    return await _hostApi?.isAudioMuted() ?? false;
   }
 
   @override
@@ -2237,44 +2182,33 @@ class AndroidInAppWebViewController extends PlatformInAppWebViewController
 
   @override
   Future<void> hideInputMethod() async {
-    Map<String, dynamic> args = <String, dynamic>{};
-    return await channel?.invokeMethod('hideInputMethod', args);
+    await _hostApi?.hideInputMethod();
   }
 
   @override
   Future<void> setContextMenu(ContextMenu? contextMenu) async {
-    Map<String, dynamic> args = <String, dynamic>{};
-    args.putIfAbsent("contextMenu", () => contextMenu?.toMap());
-    await channel?.invokeMethod('setContextMenu', args);
+    await _hostApi?.setContextMenu(contextMenu?.toMap());
     _inAppBrowser?.setContextMenu(contextMenu);
   }
 
   @override
   Future<RequestFocusNodeHrefResult?> requestFocusNodeHref() async {
-    Map<String, dynamic> args = <String, dynamic>{};
-    Map<dynamic, dynamic>? result = await channel?.invokeMethod(
-      'requestFocusNodeHref',
-      args,
-    );
+    final result = await _hostApi?.requestFocusNodeHref();
     return result != null
         ? RequestFocusNodeHrefResult(
-            url: result['url'] != null ? WebUri(result['url']) : null,
-            title: result['title'],
-            src: result['src'],
+            url: result['url'] != null ? WebUri(result['url'] as String) : null,
+            title: result['title'] as String?,
+            src: result['src'] as String?,
           )
         : null;
   }
 
   @override
   Future<RequestImageRefResult?> requestImageRef() async {
-    Map<String, dynamic> args = <String, dynamic>{};
-    Map<dynamic, dynamic>? result = await channel?.invokeMethod(
-      'requestImageRef',
-      args,
-    );
+    final result = await _hostApi?.requestImageRef();
     return result != null
         ? RequestImageRefResult(
-            url: result['url'] != null ? WebUri(result['url']) : null,
+            url: result['url'] != null ? WebUri(result['url'] as String) : null,
           )
         : null;
   }
@@ -2381,34 +2315,27 @@ class AndroidInAppWebViewController extends PlatformInAppWebViewController
 
   @override
   Future<int?> getScrollX() async {
-    Map<String, dynamic> args = <String, dynamic>{};
-    return await channel?.invokeMethod<int?>('getScrollX', args);
+    return await _hostApi?.getScrollX();
   }
 
   @override
   Future<int?> getScrollY() async {
-    Map<String, dynamic> args = <String, dynamic>{};
-    return await channel?.invokeMethod<int?>('getScrollY', args);
+    return await _hostApi?.getScrollY();
   }
 
   @override
   Future<SslCertificate?> getCertificate() async {
-    Map<String, dynamic> args = <String, dynamic>{};
-    Map<String, dynamic>? sslCertificateMap = (await channel?.invokeMethod(
-      'getCertificate',
-      args,
-    ))?.cast<String, dynamic>();
+    final sslCertificateMap = (await _hostApi?.getCertificate())
+        ?.cast<String, dynamic>();
     return SslCertificate.fromMap(sslCertificateMap);
   }
 
   @override
   Future<void> addUserScript({required UserScript userScript}) async {
-    Map<String, dynamic> args = <String, dynamic>{};
-    args.putIfAbsent('userScript', () => userScript.toMap());
     if (!(_userScripts[userScript.injectionTime]?.contains(userScript) ??
         false)) {
       _userScripts[userScript.injectionTime]?.add(userScript);
-      await channel?.invokeMethod('addUserScript', args);
+      await _hostApi?.addUserScript(userScript.toMap());
     }
   }
 
@@ -2427,10 +2354,7 @@ class AndroidInAppWebViewController extends PlatformInAppWebViewController
     }
 
     _userScripts[userScript.injectionTime]?.remove(userScript);
-    Map<String, dynamic> args = <String, dynamic>{};
-    args.putIfAbsent('userScript', () => userScript.toMap());
-    args.putIfAbsent('index', () => index);
-    await channel?.invokeMethod('removeUserScript', args);
+    await _hostApi?.removeUserScript(index, userScript.toMap());
 
     return true;
   }
@@ -2455,9 +2379,7 @@ class AndroidInAppWebViewController extends PlatformInAppWebViewController
       }
     }
 
-    Map<String, dynamic> args = <String, dynamic>{};
-    args.putIfAbsent('groupName', () => groupName);
-    await channel?.invokeMethod('removeUserScriptsByGroupName', args);
+    await _hostApi?.removeUserScriptsByGroupName(groupName);
   }
 
   @override
@@ -2474,8 +2396,7 @@ class AndroidInAppWebViewController extends PlatformInAppWebViewController
     _userScripts[UserScriptInjectionTime.AT_DOCUMENT_START]?.clear();
     _userScripts[UserScriptInjectionTime.AT_DOCUMENT_END]?.clear();
 
-    Map<String, dynamic> args = <String, dynamic>{};
-    await channel?.invokeMethod('removeAllUserScripts', args);
+    await _hostApi?.removeAllUserScripts();
   }
 
   @override
@@ -2527,11 +2448,8 @@ class AndroidInAppWebViewController extends PlatformInAppWebViewController
 
   @override
   Future<AndroidWebMessageChannel?> createWebMessageChannel() async {
-    Map<String, dynamic> args = <String, dynamic>{};
-    Map<String, dynamic>? result = (await channel?.invokeMethod(
-      'createWebMessageChannel',
-      args,
-    ))?.cast<String, dynamic>();
+    final result = (await _hostApi?.createWebMessageChannel())
+        ?.cast<String, dynamic>();
     final webMessageChannel = AndroidWebMessageChannel.static().fromMap(result);
     if (webMessageChannel != null) {
       _webMessageChannels.add(webMessageChannel);
@@ -2545,10 +2463,7 @@ class AndroidInAppWebViewController extends PlatformInAppWebViewController
     WebUri? targetOrigin,
   }) async {
     targetOrigin ??= WebUri('');
-    Map<String, dynamic> args = <String, dynamic>{};
-    args.putIfAbsent('message', () => message.toMap());
-    args.putIfAbsent('targetOrigin', () => targetOrigin.toString());
-    await channel?.invokeMethod('postWebMessage', args);
+    await _hostApi?.postWebMessage(message.toMap(), targetOrigin.toString());
   }
 
   @override
@@ -2568,9 +2483,7 @@ class AndroidInAppWebViewController extends PlatformInAppWebViewController
     _webMessageListeners.add(webMessageListener as AndroidWebMessageListener);
     _webMessageListenerObjNames.add(webMessageListener.params.jsObjectName);
 
-    Map<String, dynamic> args = <String, dynamic>{};
-    args.putIfAbsent('webMessageListener', () => webMessageListener.toMap());
-    await channel?.invokeMethod('addWebMessageListener', args);
+    await _hostApi?.addWebMessageListener(webMessageListener.toMap());
   }
 
   @override
@@ -2583,16 +2496,12 @@ class AndroidInAppWebViewController extends PlatformInAppWebViewController
 
   @override
   Future<bool> canScrollVertically() async {
-    Map<String, dynamic> args = <String, dynamic>{};
-    return await channel?.invokeMethod<bool>('canScrollVertically', args) ??
-        false;
+    return await _hostApi?.canScrollVertically() ?? false;
   }
 
   @override
   Future<bool> canScrollHorizontally() async {
-    Map<String, dynamic> args = <String, dynamic>{};
-    return await channel?.invokeMethod<bool>('canScrollHorizontally', args) ??
-        false;
+    return await _hostApi?.canScrollHorizontally() ?? false;
   }
 
   @override
@@ -2615,10 +2524,7 @@ class AndroidInAppWebViewController extends PlatformInAppWebViewController
     required int velocityX,
     required int velocityY,
   }) async {
-    Map<String, dynamic> args = <String, dynamic>{};
-    args.putIfAbsent('velocityX', () => velocityX);
-    args.putIfAbsent('velocityY', () => velocityY);
-    return await channel?.invokeMethod('flingScroll', args);
+    await _hostApi?.flingScroll(velocityX, velocityY);
   }
 
   @override
@@ -2635,28 +2541,22 @@ class AndroidInAppWebViewController extends PlatformInAppWebViewController
 
   @override
   Future<bool> pageDown({required bool bottom}) async {
-    Map<String, dynamic> args = <String, dynamic>{};
-    args.putIfAbsent("bottom", () => bottom);
-    return await channel?.invokeMethod<bool>('pageDown', args) ?? false;
+    return await _hostApi?.pageDown(bottom) ?? false;
   }
 
   @override
   Future<bool> pageUp({required bool top}) async {
-    Map<String, dynamic> args = <String, dynamic>{};
-    args.putIfAbsent("top", () => top);
-    return await channel?.invokeMethod<bool>('pageUp', args) ?? false;
+    return await _hostApi?.pageUp(top) ?? false;
   }
 
   @override
   Future<bool> zoomIn() async {
-    Map<String, dynamic> args = <String, dynamic>{};
-    return await channel?.invokeMethod<bool>('zoomIn', args) ?? false;
+    return await _hostApi?.zoomIn() ?? false;
   }
 
   @override
   Future<bool> zoomOut() async {
-    Map<String, dynamic> args = <String, dynamic>{};
-    return await channel?.invokeMethod<bool>('zoomOut', args) ?? false;
+    return await _hostApi?.zoomOut() ?? false;
   }
 
   @override
@@ -2666,8 +2566,7 @@ class AndroidInAppWebViewController extends PlatformInAppWebViewController
 
   @override
   Future<bool> isInFullscreen() async {
-    Map<String, dynamic> args = <String, dynamic>{};
-    return await channel?.invokeMethod<bool>('isInFullscreen', args) ?? false;
+    return await _hostApi?.isInFullscreen() ?? false;
   }
 
   @override
@@ -2680,21 +2579,16 @@ class AndroidInAppWebViewController extends PlatformInAppWebViewController
     int? maxSize,
     bool? includeForwardState,
   }) async {
-    Map<String, dynamic> args = <String, dynamic>{};
     // Sent as null when absent rather than defaulted here: the Kotlin side distinguishes
     // "no constraint asked for" (framework WebView.saveState, no feature needed) from
     // "constrained" (WebViewCompat.saveState, gated on SAVE_STATE), and only null can say the
     // former. A default of Int.MAX_VALUE / true would look identical to an explicit request.
-    args.putIfAbsent('maxSize', () => maxSize);
-    args.putIfAbsent('includeForwardState', () => includeForwardState);
-    return await channel?.invokeMethod<Uint8List?>('saveState', args);
+    return await _hostApi?.saveState(maxSize, includeForwardState);
   }
 
   @override
   Future<bool> restoreState(Uint8List? state) async {
-    Map<String, dynamic> args = <String, dynamic>{};
-    args.putIfAbsent('state', () => state);
-    return await channel?.invokeMethod<bool>('restoreState', args) ?? false;
+    return await _hostApi?.restoreState(state) ?? false;
   }
 
   // --- process-wide statics ---------------------------------------------------------------------
