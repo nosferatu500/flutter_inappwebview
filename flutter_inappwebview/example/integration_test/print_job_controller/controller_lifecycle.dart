@@ -131,6 +131,51 @@ void controllerLifecycle() {
           'after dispose the native controller has no job, so getInfo must answer null — this is '
           'the only teardown effect this channel exposes',
     );
+
+    // ---- printCurrentPage's settings reach the job's attributes (§211) -------------------------
+    // Until §211 no test sent orientation, mediaSize, colorMode, duplexMode or resolution (the job
+    // above sends only handledByClient), so seven ints that Pigeon will deliver as Long were never
+    // read. They come back in getInfo().attributes. Two jobs, because orientation is applied as a
+    // media size (UNKNOWN_LANDSCAPE), which an explicit mediaSize overrides. Values are distinct
+    // across same-typed fields: colorMode 1 ≠ duplex 4, width ≠ height, vertical ≠ horizontal dpi.
+    // Android only, as measured (Pixel_10, API 37): both jobs, while the modal is up.
+    if (defaultTargetPlatform == TargetPlatform.android) {
+      final landscape = await controller.printCurrentPage(
+        settings: PrintJobSettings(
+          handledByClient: true,
+          orientation: PrintJobOrientation.LANDSCAPE,
+        ),
+      );
+      final landscapeAttributes = (await landscape!.getInfo())!.attributes!;
+      expect(landscapeAttributes.orientation, PrintJobOrientation.LANDSCAPE);
+      expect(landscapeAttributes.mediaSize?.id, 'UNKNOWN_LANDSCAPE');
+      landscape.dispose();
+
+      final configured = await controller.printCurrentPage(
+        settings: PrintJobSettings(
+          handledByClient: true,
+          mediaSize: PrintJobMediaSize.ISO_A5,
+          colorMode: PrintJobColorMode.MONOCHROME,
+          duplexMode: PrintJobDuplexMode.SHORT_EDGE,
+          resolution: PrintJobResolution(
+            id: 'fork-resolution',
+            label: 'Fork',
+            verticalDpi: 300,
+            horizontalDpi: 600,
+          ),
+        ),
+      );
+      final attributes = (await configured!.getInfo())!.attributes!;
+      expect(attributes.mediaSize?.id, 'ISO_A5');
+      expect(attributes.mediaSize?.widthMils, 5830);
+      expect(attributes.mediaSize?.heightMils, 8270);
+      expect(attributes.colorMode, PrintJobColorMode.MONOCHROME);
+      expect(attributes.duplex, PrintJobDuplexMode.SHORT_EDGE);
+      expect(attributes.resolution?.id, 'fork-resolution');
+      expect(attributes.resolution?.verticalDpi, 300);
+      expect(attributes.resolution?.horizontalDpi, 600);
+      configured.dispose();
+    }
   }, skip: shouldSkip);
 }
 

@@ -44,6 +44,66 @@ void loadUrl() {
     expect(await loadedUrl.future, TEST_CROSS_PLATFORM_URL_1.toString());
   }, skip: shouldSkip1);
 
+  // A GET with headers takes its own branch on Android (`WebView.loadUrl(url, headers)`), and no
+  // other test sent headers through `loadUrl`. The node server's /echo-headers page prints what it
+  // received (lower-cased names), which is what's read back. Two headers with different values, so a
+  // swap or a single dropped header shows; a second load without headers proves they don't stick.
+  // Android only: this is the only platform it was measured on (Pixel_10, API 37, §211).
+  skippableTestWidgets(
+    'loadUrl sends its headers',
+    (WidgetTester tester) async {
+      final Completer<InAppWebViewController> controllerCompleter =
+          Completer<InAppWebViewController>();
+      final StreamController<String> pageLoads =
+          StreamController<String>.broadcast();
+      final url = WebUri(
+        'http://${environment["NODE_SERVER_IP"]}:8082/echo-headers',
+      );
+
+      await tester.pumpWidget(
+        Directionality(
+          textDirection: TextDirection.ltr,
+          child: InAppWebView(
+            key: GlobalKey(),
+            onWebViewCreated: (controller) {
+              controllerCompleter.complete(controller);
+            },
+            onLoadStop: (controller, url) {
+              pageLoads.add(url.toString());
+            },
+          ),
+        ),
+      );
+      final InAppWebViewController controller =
+          await controllerCompleter.future;
+
+      Future<Map<String, dynamic>> received(URLRequest request) async {
+        final loaded = pageLoads.stream.first;
+        await controller.loadUrl(urlRequest: request);
+        expect(await loaded, url.toString());
+        final String text = await controller.evaluateJavascript(
+          source: "document.querySelector('pre').textContent",
+        );
+        return jsonDecode(text) as Map<String, dynamic>;
+      }
+
+      final withHeaders = await received(
+        URLRequest(
+          url: url,
+          headers: {'X-Fork-Probe': 'alpha', 'X-Second-Probe': 'beta'},
+        ),
+      );
+      expect(withHeaders['x-fork-probe'], 'alpha');
+      expect(withHeaders['x-second-probe'], 'beta');
+
+      final withoutHeaders = await received(URLRequest(url: url));
+      expect(withoutHeaders.containsKey('x-fork-probe'), isFalse);
+      expect(withoutHeaders.containsKey('x-second-probe'), isFalse);
+      await pageLoads.close();
+    },
+    skip: shouldSkip1 || defaultTargetPlatform != TargetPlatform.android,
+  );
+
   final shouldSkip2 = !InAppWebViewController.isMethodSupported(
     PlatformInAppWebViewControllerMethod.loadSimulatedRequest,
   );

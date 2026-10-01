@@ -480,6 +480,14 @@ for, and five others have a native *value* that differs from their name.
 
 ### Internal
 
+- **W3's two payload gaps are asserted on a device before its migration.** Test code only.
+  - `loadUrl` with `headers` (a GET takes its own branch on Android) had no test. A new one loads
+    the node server's `/echo-headers` with two headers and reads them back, then loads again
+    without them to show they don't stick.
+  - `printCurrentPage` had never been sent `orientation`, `mediaSize`, `colorMode`, `duplexMode` or
+    `resolution`: seven ints that Pigeon will deliver as `Long`. The print group's single test now
+    prints two more jobs and checks each field in `getInfo().attributes` (orientation needs its own
+    job, because Android applies it as a media size).
 - **`WebViewChannelDelegate` W2: the nine methods that answer from a callback move to Pigeon.**
   `evaluateJavascript`, `callAsyncJavaScript`, `takeScreenshot`, `getContentWidth`,
   `getSelectedText`, `saveWebArchive`, `isSecureContext`, `postVisualStateCallback` and
