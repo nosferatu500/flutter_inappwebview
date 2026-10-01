@@ -77,9 +77,25 @@ void httpAuthCredentialDatabase() {
     });
 
     skippableTestWidgets('save credentials', (WidgetTester tester) async {
+      final httpAuthCredentialDatabase = HttpAuthCredentialDatabase.instance();
+      final protectionSpace = URLProtectionSpace(
+        host: environment["NODE_SERVER_IP"]!,
+        protocol: "http",
+        realm: "Node",
+        port: 8081,
+      );
       final Completer<InAppWebViewController> controllerCompleter =
           Completer<InAppWebViewController>();
       final Completer<void> pageLoaded = Completer<void>();
+
+      // The test above leaves the database empty. Checked, because `permanentPersistence` is
+      // asserted below by what the database holds afterwards (§215).
+      expect(
+        await httpAuthCredentialDatabase.getHttpAuthCredentials(
+          protectionSpace: protectionSpace,
+        ),
+        isEmpty,
+      );
 
       await InAppWebViewController.clearAllCache();
 
@@ -116,6 +132,18 @@ void httpAuthCredentialDatabase() {
         source: "document.body.querySelector('h1').textContent",
       );
       expect(h1Content, "Authorized");
+
+      if (defaultTargetPlatform == TargetPlatform.android) {
+        final saved = await httpAuthCredentialDatabase.getHttpAuthCredentials(
+          protectionSpace: protectionSpace,
+        );
+        await httpAuthCredentialDatabase.clearAllAuthCredentials();
+        expect(
+          saved.map((c) => '${c.username}:${c.password}').toList(),
+          ['USERNAME:PASSWORD'],
+          reason: 'permanentPersistence was not used',
+        );
+      }
     });
 
     // The two tests below run against port **8084**, the fixture's second protected origin, and

@@ -213,5 +213,65 @@ void shouldOverrideUrlLoading() {
 
       pageLoads.close();
     });
+
+    // What a null answer means is not documented. On Android it is CANCEL, not the ALLOW that a
+    // missing handler gets, because the decoder reads anything but a policy as CANCEL. Measured on
+    // API 37 (§215) and pinned here so the Pigeon move keeps it; whether it should be ALLOW is an
+    // open question in TODO.md.
+    skippableTestWidgets(
+      'a null answer cancels the navigation',
+      (WidgetTester tester) async {
+        final Completer<InAppWebViewController> controllerCompleter =
+            Completer<InAppWebViewController>();
+        final loads = <String>[];
+        final asked = <String>[];
+        final start = WebUri("http://${environment["NODE_SERVER_IP"]}:8082/");
+        final target = WebUri(
+          "http://${environment["NODE_SERVER_IP"]}:8082/test-index",
+        );
+
+        await tester.pumpWidget(
+          Directionality(
+            textDirection: TextDirection.ltr,
+            child: InAppWebView(
+              key: GlobalKey(),
+              initialUrlRequest: URLRequest(url: start),
+              onWebViewCreated: (controller) {
+                controllerCompleter.complete(controller);
+              },
+              shouldOverrideUrlLoading: (controller, navigationAction) async {
+                asked.add(navigationAction.request.url.toString());
+                return navigationAction.request.url.toString() ==
+                        target.toString()
+                    ? null
+                    : NavigationActionPolicy.ALLOW;
+              },
+              onLoadStop: (controller, url) {
+                loads.add(url.toString());
+              },
+            ),
+          ),
+        );
+
+        final InAppWebViewController controller =
+            await controllerCompleter.future;
+        for (var i = 0; i < 100 && loads.isEmpty; i++) {
+          await Future.delayed(const Duration(milliseconds: 100));
+        }
+        await controller.evaluateJavascript(
+          source: 'location.href = "$target";',
+        );
+        for (var i = 0; i < 40 && !asked.contains(target.toString()); i++) {
+          await Future.delayed(const Duration(milliseconds: 100));
+        }
+        // Long enough for an allowed load of the local fixture page to have finished.
+        await Future.delayed(const Duration(seconds: 3));
+
+        expect(asked, contains(target.toString()));
+        expect(loads, [start.toString()]);
+        expect((await controller.getUrl()).toString(), start.toString());
+      },
+      skip: defaultTargetPlatform != TargetPlatform.android,
+    );
   }, skip: shouldSkip);
 }

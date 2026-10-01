@@ -1,5 +1,14 @@
 part of 'main.dart';
 
+/// Records the app's lifecycle changes. The print dialog is another app's Activity, so raising it
+/// pauses this one, and that is the only trace of it a test in this process can see.
+class _LifecycleRecorder with WidgetsBindingObserver {
+  final List<AppLifecycleState> states = <AppLifecycleState>[];
+
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) => states.add(state);
+}
+
 void onPrintRequest() {
   final shouldSkip = !InAppWebView.isPropertySupported(
     PlatformWebViewCreationParamsProperty.onPrintRequest,
@@ -18,8 +27,15 @@ void onPrintRequest() {
   // The `false` branch is deliberately NOT covered by an automated test: it is the branch that
   // raises the modal, and nothing in the plugin API can dismiss it (PrintJob.cancel() is a no-op
   // while the job is in CREATED state). `printCurrentPage` below still exercises that path.
+  //
+  // That `true` really suppresses it is asserted through the app lifecycle (§215). Measured on
+  // API 37 with a local page whose handler answered `false`: the dialog took the app through
+  // inactive, hidden and paused within four seconds. Answering `true`, nothing changed.
   skippableTestWidgets('onPrintRequest', (WidgetTester tester) async {
     final Completer<String> onPrintCompleter = Completer<String>();
+    final lifecycle = _LifecycleRecorder();
+    WidgetsBinding.instance.addObserver(lifecycle);
+    addTearDown(() => WidgetsBinding.instance.removeObserver(lifecycle));
     await tester.pumpWidget(
       Directionality(
         textDirection: TextDirection.ltr,
@@ -39,5 +55,14 @@ void onPrintRequest() {
     await tester.pump();
     final String printUrl = await onPrintCompleter.future;
     expect(printUrl, url.toString());
+
+    if (defaultTargetPlatform == TargetPlatform.android) {
+      await Future.delayed(const Duration(seconds: 4));
+      expect(
+        lifecycle.states,
+        isEmpty,
+        reason: 'the app was paused, so the print dialog was raised anyway',
+      );
+    }
   }, skip: shouldSkip);
 }

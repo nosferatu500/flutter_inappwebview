@@ -81,4 +81,101 @@ void renderProcessResponsiveness() {
     },
     skip: shouldSkip,
   );
+
+  // The test above answers null, which is also what the plugin does when Dart says nothing. These
+  // two answer TERMINATE from one event each (§215). Measured on API 37: the renderer is killed,
+  // `onRenderProcessGone` reports `didCrash: false`, and the next WebView in the run loads normally.
+  // `onRenderProcessGone` must be handled, or the platform default kills the app.
+  Future<List<String>> terminateFrom(
+    WidgetTester tester, {
+    required bool fromUnresponsive,
+  }) async {
+    final Completer<InAppWebViewController> controllerCompleter =
+        Completer<InAppWebViewController>();
+    final Completer<void> pageLoaded = Completer<void>();
+    final Completer<RenderProcessGoneDetail> gone =
+        Completer<RenderProcessGoneDetail>();
+    final events = <String>[];
+
+    await tester.pumpWidget(
+      Directionality(
+        textDirection: TextDirection.ltr,
+        child: InAppWebView(
+          key: GlobalKey(),
+          initialData: InAppWebViewInitialData(
+            data:
+                '<!DOCTYPE html><html><body style="height:100vh">busy</body></html>',
+          ),
+          onWebViewCreated: (controller) {
+            controllerCompleter.complete(controller);
+          },
+          onLoadStop: (controller, url) {
+            if (!pageLoaded.isCompleted) pageLoaded.complete();
+          },
+          onRenderProcessUnresponsive: (controller, url) async {
+            events.add('unresponsive');
+            return fromUnresponsive
+                ? WebViewRenderProcessAction.TERMINATE
+                : null;
+          },
+          onRenderProcessResponsive: (controller, url) async {
+            events.add('responsive');
+            return fromUnresponsive
+                ? null
+                : WebViewRenderProcessAction.TERMINATE;
+          },
+          onRenderProcessGone: (controller, detail) {
+            events.add('gone didCrash=${detail.didCrash}');
+            if (!gone.isCompleted) gone.complete(detail);
+          },
+        ),
+      ),
+    );
+
+    final InAppWebViewController controller = await controllerCompleter.future;
+    await pageLoaded.future;
+    await _pumpFrames(tester);
+
+    // Never answered once the renderer is gone, so it is not awaited.
+    unawaited(
+      controller.evaluateJavascript(
+        source: 'var t = Date.now(); while (Date.now() - t < 15000) {} "done";',
+      ),
+    );
+
+    final size = tester.getSize(find.byType(InAppWebView));
+    for (var i = 0; i < 40 && !gone.isCompleted; i++) {
+      await tester.tapAt(Offset(size.width / 2, size.height / 2));
+      await tester.pump(const Duration(milliseconds: 500));
+      await Future.delayed(const Duration(milliseconds: 500));
+    }
+    await gone.future.timeout(const Duration(seconds: 10));
+    return events;
+  }
+
+  skippableTestWidgets(
+    'onRenderProcessUnresponsive TERMINATE kills the renderer',
+    (WidgetTester tester) async {
+      final events = await terminateFrom(tester, fromUnresponsive: true);
+      expect(events.first, 'unresponsive');
+      expect(events.last, 'gone didCrash=false');
+      expect(events, isNot(contains('responsive')));
+    },
+    skip: shouldSkip,
+  );
+
+  skippableTestWidgets(
+    'onRenderProcessResponsive TERMINATE kills the renderer',
+    (WidgetTester tester) async {
+      final events = await terminateFrom(tester, fromUnresponsive: false);
+      expect(events.first, 'unresponsive');
+      expect(events.last, 'gone didCrash=false');
+      expect(
+        events.where((e) => e == 'responsive'),
+        hasLength(1),
+        reason: 'the renderer must die on the first responsive answer',
+      );
+    },
+    skip: shouldSkip,
+  );
 }
