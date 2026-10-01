@@ -480,6 +480,26 @@ for, and five others have a native *value* that differs from their name.
 
 ### Internal
 
+- **W5's coverage check: device tests now read what the plugin does with the answers to the
+  value-returning events, before their migration.** Most tests answered with the platform default,
+  so an answer the plugin ignored would have passed. Test code only.
+  - `onJsBeforeUnload`: CONFIRM navigates and CANCEL stays. The old test was skipped everywhere
+    (Chromium only asks after a user gesture), and its fixture is deleted.
+  - `onGeolocationPermissionsShowPrompt`: an allow-and-retain answer reaches the page and is
+    stored under the reported origin.
+  - `onPermissionRequest`: GRANT and DENY reach the page, through a Widevine request on a local
+    page.
+  - `onFormResubmission`: RESEND posts the form again; DONT_RESEND keeps the old document.
+  - `onRenderProcessUnresponsive` and `onRenderProcessResponsive`: TERMINATE kills the renderer.
+  - `onShowFileChooser`: a returned `file://` path reaches the input.
+  - `onSafeBrowsingHit`: PROCEED loads the page with no error (the interstitial loads the same
+    URL, so the URL alone proved nothing).
+  - `onPrintRequest`: answering `true` raises no print dialog, checked through the app's
+    lifecycle. The check found the test raising one itself: a second request completed its
+    completer again, the throw became an error reply, and on an error the plugin prints.
+  - `onReceivedHttpAuthRequest`: `permanentPersistence` stores the answered credential.
+  - A throwing `onJsConfirm` cancels the dialog (an error, unlike no answer, never shows one), and
+    a null `shouldOverrideUrlLoading` answer cancels the navigation. Both are pinned as measured.
 - **`WebViewChannelDelegate` W4: the 35 fire-and-forget events move to Pigeon**, on a new
   `InAppWebViewFlutterApi` under the same suffix as the HostApi. Load, progress, title, console,
   scroll and over-scroll, download, errors, fullscreen, context menu, history, zoom, render

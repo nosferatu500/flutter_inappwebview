@@ -76,8 +76,9 @@ void javascriptDialogs() {
 
   // A handler that throws is the one answer these dialogs treat differently from no answer: the
   // plugin cancels the dialog instead of showing its own (§215). Measured on API 37: `confirm`
-  // returns false. Had the throw been treated as no answer, the plugin's dialog would be up and
-  // `confirm` would never return, so the poll below would end on "pending".
+  // returns false. Had the throw been treated as no answer, the plugin's dialog would be up, and
+  // that blocks the page: measured with the cancel removed, the poll's evaluateJavascript never
+  // returned. Each poll therefore has its own timeout and reports "blocked".
   skippableTestWidgets(
     'javascript dialogs: a throwing onJsConfirm cancels',
     (WidgetTester tester) async {
@@ -121,7 +122,9 @@ void javascriptDialogs() {
 
       String? answer;
       for (var i = 0; i < 50; i++) {
-        answer = await controller.evaluateJavascript(source: 'answer');
+        answer = await controller
+            .evaluateJavascript(source: 'answer')
+            .timeout(const Duration(seconds: 2), onTimeout: () => 'blocked');
         if (answer != 'pending') break;
         await Future.delayed(const Duration(milliseconds: 100));
       }

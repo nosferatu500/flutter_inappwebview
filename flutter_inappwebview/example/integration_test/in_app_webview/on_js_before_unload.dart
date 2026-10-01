@@ -15,8 +15,9 @@ void onJsBeforeUnload() {
   // the event reports its URL as `about:blank`.
   //
   // The two answers are asserted as a pair. The platform default shows a dialog nothing in the test
-  // can answer, which leaves the navigation pending, so only CONFIRM navigating and CANCEL staying
-  // put prove the plugin used the action Dart returned.
+  // can answer, which leaves the navigation pending, so CANCEL alone looks the same as an ignored
+  // answer (measured, §215: with the answer ignored, the CANCEL test still passes). CONFIRM
+  // navigating is what proves the action is used; CANCEL catches the two actions being swapped.
   Future<List<String>> navigateAway(
     WidgetTester tester,
     JsBeforeUnloadResponseAction action,
@@ -68,7 +69,12 @@ void onJsBeforeUnload() {
     await tester.tapAt(Offset(size.width / 2, size.height / 2));
     await _pumpFrames(tester);
 
-    await controller.evaluateJavascript(source: 'location.href = "$target";');
+    // With the plugin's own dialog up instead of an answer, the page is blocked and this call never
+    // returns (measured with the answer ignored, §215). The timeout turns that into a wrong URL
+    // list rather than the test's 60 s timeout, whose late failure lands on the next test.
+    await controller
+        .evaluateJavascript(source: 'location.href = "$target";')
+        .timeout(const Duration(seconds: 5), onTimeout: () => null);
     for (var i = 0; i < 50 && loads.length < 2; i++) {
       await Future.delayed(const Duration(milliseconds: 100));
     }

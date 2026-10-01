@@ -31,6 +31,11 @@ void onPrintRequest() {
   // That `true` really suppresses it is asserted through the app lifecycle (§215). Measured on
   // API 37 with a local page whose handler answered `false`: the dialog took the app through
   // inactive, hidden and paused within four seconds. Answering `true`, nothing changed.
+  //
+  // That check found this test raising the dialog itself. It prints on every `onLoadStop`, and on
+  // API 37 the request arrived twice; the second completed the completer again and threw. A throwing
+  // handler is an error reply, and on an error the plugin prints as the page asked. So the
+  // completer is guarded and every request answers `true`.
   skippableTestWidgets('onPrintRequest', (WidgetTester tester) async {
     final Completer<String> onPrintCompleter = Completer<String>();
     final lifecycle = _LifecycleRecorder();
@@ -46,7 +51,9 @@ void onPrintRequest() {
             await controller.evaluateJavascript(source: "window.print();");
           },
           onPrintRequest: (controller, url) async {
-            onPrintCompleter.complete(url?.toString());
+            if (!onPrintCompleter.isCompleted) {
+              onPrintCompleter.complete(url?.toString());
+            }
             return true;
           },
         ),

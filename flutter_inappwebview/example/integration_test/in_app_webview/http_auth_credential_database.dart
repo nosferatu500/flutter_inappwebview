@@ -76,26 +76,14 @@ void httpAuthCredentialDatabase() {
       expect(credentials, isEmpty);
     });
 
+    // 🚨 This test cannot see its own answer when it runs after the one above: 8081 is already
+    // unlocked (see the note below), so no challenge fires and "Authorized" comes from Chromium's
+    // cache. Measured in the group on API 37 (§215). `permanentPersistence` is asserted on 8084
+    // by the last test in this group instead.
     skippableTestWidgets('save credentials', (WidgetTester tester) async {
-      final httpAuthCredentialDatabase = HttpAuthCredentialDatabase.instance();
-      final protectionSpace = URLProtectionSpace(
-        host: environment["NODE_SERVER_IP"]!,
-        protocol: "http",
-        realm: "Node",
-        port: 8081,
-      );
       final Completer<InAppWebViewController> controllerCompleter =
           Completer<InAppWebViewController>();
       final Completer<void> pageLoaded = Completer<void>();
-
-      // The test above leaves the database empty. Checked, because `permanentPersistence` is
-      // asserted below by what the database holds afterwards (§215).
-      expect(
-        await httpAuthCredentialDatabase.getHttpAuthCredentials(
-          protectionSpace: protectionSpace,
-        ),
-        isEmpty,
-      );
 
       await InAppWebViewController.clearAllCache();
 
@@ -132,18 +120,6 @@ void httpAuthCredentialDatabase() {
         source: "document.body.querySelector('h1').textContent",
       );
       expect(h1Content, "Authorized");
-
-      if (defaultTargetPlatform == TargetPlatform.android) {
-        final saved = await httpAuthCredentialDatabase.getHttpAuthCredentials(
-          protectionSpace: protectionSpace,
-        );
-        await httpAuthCredentialDatabase.clearAllAuthCredentials();
-        expect(
-          saved.map((c) => '${c.username}:${c.password}').toList(),
-          ['USERNAME:PASSWORD'],
-          reason: 'permanentPersistence was not used',
-        );
-      }
     });
 
     // The two tests below run against port **8084**, the fixture's second protected origin, and
@@ -293,5 +269,68 @@ void httpAuthCredentialDatabase() {
         reason: 'previousFailureCount must start at 0 and rise by one: $counts',
       );
     });
+
+    // `permanentPersistence` stores the answered credential before it is tried, so a wrong one is
+    // stored too. That is what lets this test assert it on 8084 without unlocking it: the
+    // credential never works, the second challenge is cancelled, and 8084 stays locked for anything
+    // after this. Measured on API 37 (§215): the space is stored as http, the realm the server
+    // named, and the port; a right credential (probed in its own process) is stored the same way.
+    skippableTestWidgets(
+      'permanentPersistence saves the answered credential',
+      (WidgetTester tester) async {
+        final httpAuthCredentialDatabase =
+            HttpAuthCredentialDatabase.instance();
+        final protectionSpace = URLProtectionSpace(
+          host: environment["NODE_SERVER_IP"]!,
+          protocol: "http",
+          realm: "Node2",
+          port: 8084,
+        );
+        final Completer<void> done = Completer<void>();
+        var challenges = 0;
+
+        await httpAuthCredentialDatabase.clearAllAuthCredentials();
+        addTearDown(httpAuthCredentialDatabase.clearAllAuthCredentials);
+
+        await tester.pumpWidget(
+          Directionality(
+            textDirection: TextDirection.ltr,
+            child: InAppWebView(
+              key: GlobalKey(),
+              initialUrlRequest: URLRequest(
+                url: WebUri("http://${environment["NODE_SERVER_IP"]}:8084/"),
+              ),
+              onReceivedHttpAuthRequest: (controller, challenge) async {
+                challenges++;
+                if (challenges > 1) {
+                  if (!done.isCompleted) done.complete();
+                  return HttpAuthResponse(
+                    action: HttpAuthResponseAction.CANCEL,
+                  );
+                }
+                return HttpAuthResponse(
+                  username: "WRONG",
+                  password: "WRONG",
+                  action: HttpAuthResponseAction.PROCEED,
+                  permanentPersistence: true,
+                );
+              },
+            ),
+          ),
+        );
+
+        await done.future.timeout(const Duration(seconds: 20));
+
+        final saved = await httpAuthCredentialDatabase.getHttpAuthCredentials(
+          protectionSpace: protectionSpace,
+        );
+        expect(
+          saved.map((c) => '${c.username}:${c.password}').toList(),
+          ['WRONG:WRONG'],
+          reason: 'permanentPersistence was not used',
+        );
+      },
+      skip: defaultTargetPlatform != TargetPlatform.android,
+    );
   }, skip: shouldSkip);
 }
