@@ -68,6 +68,9 @@ void onPermissionRequest() {
     onPermissionRequestCancelCompleter =
         Completer<List<PermissionResourceType>>();
     final expectedValue = [PermissionResourceType.MICROPHONE];
+    // Until §213 only `resources` was read. Measured on API 37: the origin is the permission
+    // site's own, the same one the request reported.
+    String? canceledOrigin;
 
     await tester.pumpWidget(
       Directionality(
@@ -92,6 +95,7 @@ void onPermissionRequest() {
             );
           },
           onPermissionRequestCanceled: (controller, permissionRequest) {
+            canceledOrigin = permissionRequest.origin.toString();
             onPermissionRequestCancelCompleter.complete(
               permissionRequest.resources,
             );
@@ -119,5 +123,6 @@ void onPermissionRequest() {
     final List<PermissionResourceType> canceledResources =
         await onPermissionRequestCancelCompleter.future;
     expect(listEquals(canceledResources, expectedValue), true);
+    expect(canceledOrigin, TEST_PERMISSION_SITE.toString());
   }, skip: shouldSkip2);
 }

@@ -69,4 +69,58 @@ setTimeout(function() {
       '${!kIsWeb ? TEST_CROSS_PLATFORM_URL_1 : TEST_WEB_PLATFORM_BASE_URL}second-push',
     );
   }, skip: shouldSkip);
+
+  // The test above reads only the URL. `isReload` (Android's) was never asserted, so a migration
+  // that sent a constant would have passed it. Measured on API 37 (§213): the first load and a
+  // `pushState` report false, and a reload reports true.
+  skippableTestWidgets(
+    'onUpdateVisitedHistory reports isReload',
+    (WidgetTester tester) async {
+      final Completer<InAppWebViewController> controllerCompleter =
+          Completer<InAppWebViewController>();
+      final StreamController<void> stops = StreamController<void>.broadcast();
+      final history = <(String, bool?)>[];
+      final root = 'http://${environment["NODE_SERVER_IP"]}:8082/';
+
+      await tester.pumpWidget(
+        Directionality(
+          textDirection: TextDirection.ltr,
+          child: InAppWebView(
+            key: GlobalKey(),
+            initialUrlRequest: URLRequest(url: WebUri(root)),
+            onWebViewCreated: (controller) {
+              controllerCompleter.complete(controller);
+            },
+            onLoadStop: (controller, url) {
+              stops.add(null);
+            },
+            onUpdateVisitedHistory: (controller, url, isReload) {
+              history.add((url.toString(), isReload));
+            },
+          ),
+        ),
+      );
+      final InAppWebViewController controller =
+          await controllerCompleter.future;
+      await stops.stream.first;
+
+      await controller.evaluateJavascript(
+        source: "history.pushState({}, '', '/pushed');",
+      );
+      final reloaded = stops.stream.first;
+      await controller.reload();
+      await reloaded;
+      for (var i = 0; i < 20 && history.length < 3; i++) {
+        await Future.delayed(const Duration(milliseconds: 100));
+      }
+
+      expect(history, [
+        (root, false),
+        ('${root}pushed', false),
+        ('${root}pushed', true),
+      ]);
+      await stops.close();
+    },
+    skip: shouldSkip || defaultTargetPlatform != TargetPlatform.android,
+  );
 }

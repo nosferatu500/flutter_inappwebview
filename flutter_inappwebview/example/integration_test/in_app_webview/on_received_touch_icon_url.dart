@@ -44,4 +44,44 @@ void onReceivedTouchIconUrl() {
 
     expect(url, "https://placehold.it/72x72");
   }, skip: shouldSkip);
+
+  // The test above never reads `precomposed`. With both kinds of link on one page, measured on API
+  // 37 (§213): the plain icon reports false and the precomposed one true. A dropped or constant
+  // flag fails one of the two.
+  skippableTestWidgets(
+    'onReceivedTouchIconUrl reports precomposed',
+    (WidgetTester tester) async {
+      final icons = <String, bool>{};
+      final Completer<void> both = Completer<void>();
+
+      await tester.pumpWidget(
+        Directionality(
+          textDirection: TextDirection.ltr,
+          child: InAppWebView(
+            key: GlobalKey(),
+            initialData: InAppWebViewInitialData(
+              baseUrl: WebUri('https://example.com/'),
+              data:
+                  '<!DOCTYPE html><html><head>'
+                  '<link rel="apple-touch-icon" href="https://example.com/plain.png">'
+                  '<link rel="apple-touch-icon-precomposed" '
+                  'href="https://example.com/precomposed.png">'
+                  '</head><body>icons</body></html>',
+            ),
+            onReceivedTouchIconUrl: (controller, url, precomposed) {
+              icons[url.toString()] = precomposed;
+              if (icons.length == 2 && !both.isCompleted) both.complete();
+            },
+          ),
+        ),
+      );
+
+      await both.future.timeout(const Duration(seconds: 15));
+      expect(icons, {
+        'https://example.com/plain.png': false,
+        'https://example.com/precomposed.png': true,
+      });
+    },
+    skip: shouldSkip || defaultTargetPlatform != TargetPlatform.android,
+  );
 }

@@ -480,6 +480,18 @@ for, and five others have a native *value* that differs from their name.
 
 ### Internal
 
+- **W4's coverage check: the five events whose typed fields no device test read are now
+  asserted, before their migration.** All 35 fire-and-forget events arrive in some test, but these
+  fields never did, so a dropped or constant value would have passed. Test code only.
+  - `onLoadStart`'s `url`: a new test reads the loading URL, including after a `pushState`
+    reload.
+  - `onUpdateVisitedHistory`'s `isReload`: `pushState` reports false, a reload true.
+  - `onReceivedTouchIconUrl`'s `precomposed`: a page with both kinds of icon reports false and
+    true.
+  - `onRenderProcessGone`'s `rendererPriorityAtExit`: IMPORTANT by default, and BOUND with a
+    BOUND priority policy.
+  - `onPermissionRequestCanceled`'s `origin`, and `onOverScrolled`'s `x` and `y` at a page's
+    bottom-right corner (they are both 0 at the top, where the old test looked).
 - **`WebViewChannelDelegate` W3: the last 42 host methods move to Pigeon, so no Dart call uses
   the per-WebView MethodChannel any more.** Load, inject, settings, scroll, zoom, print, focus,
   context menu, user scripts, web messages, input method, state and audio all join

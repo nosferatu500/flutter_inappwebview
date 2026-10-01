@@ -70,6 +70,7 @@ part 'on_js_before_unload.dart';
 part 'on_received_error.dart';
 part 'on_received_http_error.dart';
 part 'on_load_resource.dart';
+part 'on_load_start.dart';
 part 'on_load_resource_with_custom_scheme.dart';
 part 'on_navigation_response.dart';
 part 'on_page_commit_visible.dart';
@@ -189,6 +190,7 @@ void main() {
     onWindowFocus();
     onWindowBlur();
     onPageCommitVisible();
+    onLoadStart();
     onTitleChanged();
     programmaticZoomScale();
     onPermissionRequest();
