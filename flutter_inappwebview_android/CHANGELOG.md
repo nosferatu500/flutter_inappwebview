@@ -480,6 +480,19 @@ for, and five others have a native *value* that differs from their name.
 
 ### Internal
 
+- **The per-WebView MethodChannel is gone.** After W5 nothing travelled on
+  `dev.nosferatu500.inappwebview/inappwebview_<id>` or `…/inappbrowser_<id>`, so neither side opens
+  them any more: `InAppWebView` and `InAppBrowserActivity` build `WebViewChannelDelegate` with no
+  channel, and the Dart controller and `AndroidInAppBrowser` register no handler. No public API
+  change.
+  - `AndroidInAppWebViewController.fromInAppBrowser` keeps its `channel` parameter, now nullable
+    and ignored, so the public constructor stays source-compatible. Both classes keep
+    `ChannelController` in their type, with no channel set (as `AndroidPathHandler` since §205).
+  - Deleted with it: `ChannelDelegateImpl`, `IChannelDelegate`, `SyncBaseCallbackResultImpl`,
+    `Util.invokeMethodAndWaitResult`, and the four unused `METHOD_CHANNEL_NAME_PREFIX` constants
+    (`InAppWebView`, `InAppBrowserActivity`, and the two web-message ones left by §165).
+  - `per_webview_method_channel_removed_test` (new) pins that a message on either old name finds no
+    handler, while the same event over Pigeon still arrives.
 - **`WebViewChannelDelegate` W5: the 19 value-returning events and the two blocking waits move to
   Pigeon, so nothing uses the per-WebView MethodChannel any more.** JS dialogs, windows,
   permissions, geolocation, navigation policy, auth challenges, safe browsing, form resubmission,

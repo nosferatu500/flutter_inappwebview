@@ -430,6 +430,10 @@ class _InAppWebViewFlutterApiImpl implements InAppWebViewFlutterApi {
 ///
 ///If you are using the [InAppWebView] widget, an [InAppWebViewController] instance can be obtained by setting the [InAppWebView.onWebViewCreated]
 ///callback. Instead, if you are using an [AndroidInAppBrowser] instance, you can get it through the [AndroidInAppBrowser.webViewController] attribute.
+///
+///Its transport is Pigeon only since §217 ([InAppWebViewHostApi], [InAppWebViewFlutterApi]).
+///[ChannelController] stays in the type, which is public, and no channel is set on it any more, as
+///for `AndroidPathHandler` (§205).
 class AndroidInAppWebViewController extends PlatformInAppWebViewController
     with ChannelController {
   /// Process-wide statics (§188). Replaces the hand-written `inappwebview_manager` channel.
@@ -488,9 +492,6 @@ class AndroidInAppWebViewController extends PlatformInAppWebViewController
                 params,
               ),
       ) {
-    channel = MethodChannel('dev.nosferatu500.inappwebview/inappwebview_$id');
-    handler = handleMethod;
-    initMethodCallHandler();
     _setUpPigeon('inappwebview_$id');
 
     final initialUserScripts = webviewParams?.initialUserScripts;
@@ -521,9 +522,14 @@ class AndroidInAppWebViewController extends PlatformInAppWebViewController
     return _staticValue;
   }
 
+  /// [channel] is ignored since §217: the browser's WebView talks only over Pigeon, suffixed
+  /// `inappbrowser_<id>`. It stays in the signature (now nullable, so callers can pass null) to keep
+  /// this public constructor source-compatible.
   AndroidInAppWebViewController.fromInAppBrowser(
     PlatformInAppWebViewControllerCreationParams params,
-    MethodChannel channel,
+    // Kept for source compatibility; see above.
+    // ignore: avoid_unused_constructor_parameters
+    MethodChannel? channel,
     AndroidInAppBrowser inAppBrowser,
     UnmodifiableListView<UserScript>? initialUserScripts,
   ) : super.implementation(
@@ -533,7 +539,6 @@ class AndroidInAppWebViewController extends PlatformInAppWebViewController
                 params,
               ),
       ) {
-    this.channel = channel;
     _setUpPigeon('inappbrowser_$id');
     _inAppBrowser = inAppBrowser;
 
@@ -3106,10 +3111,9 @@ class AndroidInAppWebViewController extends PlatformInAppWebViewController
 
   @override
   void dispose({bool isKeepAlive = false}) {
-    disposeChannel(removeMethodCallHandler: !isKeepAlive);
-    // The same rule as the MethodChannel handler above: a keep-alive WebView keeps its event
-    // handler registered (its Kotlin side outlives this controller), and the next controller for
-    // the same keep-alive id registers over it under the same suffix.
+    // A keep-alive WebView keeps its event handler registered (its Kotlin side outlives this
+    // controller), and the next controller for the same keep-alive id registers over it under the
+    // same suffix, as it kept its MethodChannel handler before §217.
     if (!isKeepAlive) {
       InAppWebViewFlutterApi.setUp(null, messageChannelSuffix: _pigeonSuffix);
     }

@@ -23,7 +23,6 @@ import dev.nosferatu500.inappwebview.types.CustomTabsActionButton
 import dev.nosferatu500.inappwebview.types.CustomTabsMenuItem
 import dev.nosferatu500.inappwebview.types.CustomTabsSecondaryToolbar
 import dev.nosferatu500.inappwebview.types.Disposable
-import io.flutter.plugin.common.MethodChannel
 
 // The unchecked casts below are the Flutter codec boundary: StandardMessageCodec decodes to
 // Map<String,Object>/List<Object>, so every read of a structured value is an unverifiable

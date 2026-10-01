@@ -17,12 +17,12 @@ import dev.nosferatu500.inappwebview.pigeons.InAppWebViewFlutterApi
 import dev.nosferatu500.inappwebview.pigeons.InAppWebViewHostApi
 import dev.nosferatu500.inappwebview.print_job.PrintJobSettings
 import dev.nosferatu500.inappwebview.types.BaseCallbackResultImpl
-import dev.nosferatu500.inappwebview.types.ChannelDelegateImpl
 import dev.nosferatu500.inappwebview.types.ClientCertChallenge
 import dev.nosferatu500.inappwebview.types.ClientCertResponse
 import dev.nosferatu500.inappwebview.types.ContentWorld
 import dev.nosferatu500.inappwebview.types.CreateWindowAction
 import dev.nosferatu500.inappwebview.types.CustomSchemeResponse
+import dev.nosferatu500.inappwebview.types.Disposable
 import dev.nosferatu500.inappwebview.types.DownloadStartRequest
 import dev.nosferatu500.inappwebview.types.GeolocationPermissionShowPromptResponse
 import dev.nosferatu500.inappwebview.types.HitTestResult
@@ -57,8 +57,6 @@ import dev.nosferatu500.inappwebview.webview.in_app_webview.InAppWebView
 import dev.nosferatu500.inappwebview.webview.in_app_webview.InAppWebViewSettings
 import dev.nosferatu500.inappwebview.webview.web_message.WebMessageListener
 import io.flutter.plugin.common.BinaryMessenger
-import io.flutter.plugin.common.MethodCall
-import io.flutter.plugin.common.MethodChannel
 import java.io.IOException
 import java.util.concurrent.CountDownLatch
 import java.util.concurrent.TimeUnit
@@ -70,15 +68,14 @@ import java.util.concurrent.atomic.AtomicReference
 // failure mode. Suppressed at class level because the whole class is that boundary.
 //
 // Transport is Pigeon since W5 (§216, TODO P0a): host methods on [InAppWebViewHostApi], events on
-// [InAppWebViewFlutterApi], both suffixed by [suffix]. [suffix] is the MethodChannel name's tail,
-// `inappwebview_$id` or `inappbrowser_$id`; the MethodChannel itself is now unused, and goes next.
+// [InAppWebViewFlutterApi], both suffixed by [suffix]. [suffix] is the old MethodChannel name's
+// tail, `inappwebview_$id` or `inappbrowser_$id`; the MethodChannel itself is gone since §217.
 @Suppress("UNCHECKED_CAST")
 class WebViewChannelDelegate(
   webView: InAppWebView,
-  channel: MethodChannel,
   messenger: BinaryMessenger,
   private val suffix: String
-) : ChannelDelegateImpl(channel), InAppWebViewHostApi {
+) : Disposable, InAppWebViewHostApi {
 
   private var webView: InAppWebView? = webView
 
@@ -101,15 +98,6 @@ class WebViewChannelDelegate(
    * in a logcat trace. Not thread-safe by design -- every channel call arrives on the main thread.
    */
   private var nextVisualStateRequestId = 1L
-
-  // Every host method is Pigeon since W3 (§212), on [InAppWebViewHostApi], and every event since W5
-  // (§216), on [InAppWebViewFlutterApi]. Nothing uses the MethodChannel any more; it goes in the
-  // item after W5. Until then, a call that still arrives here gets
-  // `notImplemented`, as an unknown method always did, rather than no answer at all from the base
-  // class's empty handler.
-  override fun onMethodCall(call: MethodCall, result: MethodChannel.Result) {
-    result.notImplemented()
-  }
 
   fun onLongPressHitTestResult(hitTestResult: HitTestResult?) {
     flutterApi?.onLongPressHitTestResult(hitTestResult?.toMap()?.toMap()) {}
@@ -1186,7 +1174,6 @@ class WebViewChannelDelegate(
     messenger?.let { InAppWebViewHostApi.setUp(it, null, suffix) }
     messenger = null
     flutterApi = null
-    super.dispose()
     webView = null
   }
 

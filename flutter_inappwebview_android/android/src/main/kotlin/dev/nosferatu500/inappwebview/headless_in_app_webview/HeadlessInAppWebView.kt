@@ -14,7 +14,7 @@ import dev.nosferatu500.inappwebview.webview.in_app_webview.FlutterWebView
 // cast. A wrong shape throws ClassCastException at the cast site, which is the intended
 // failure mode.
 //
-// See ChannelDelegateImpl: `this` is published to a platform-thread-only dispatcher.
+// See types/Disposable.kt: `this` is published to a platform-thread-only dispatcher.
 @Suppress("UNCHECKED_CAST")
 class HeadlessInAppWebView(
   plugin: InAppWebViewFlutterPlugin,

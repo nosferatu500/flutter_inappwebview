@@ -2,7 +2,6 @@ import 'dart:async';
 import 'dart:collection';
 
 import 'package:flutter/foundation.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_inappwebview_platform_interface/flutter_inappwebview_platform_interface.dart';
 
 import '../find_interaction/find_interaction_controller.dart';
@@ -72,10 +71,11 @@ class _InAppBrowserFlutterApiImpl implements InAppBrowserFlutterApi {
 
 ///{@macro flutter_inappwebview_platform_interface.PlatformInAppBrowser}
 ///
-/// Transport is split (§195): the browser's own methods and events are Pigeon-generated
-/// ([InAppBrowserHostApi] / [InAppBrowserFlutterApi], suffixed by [id]), its `setSettings` /
-/// `getSettings` included since §199. The `inappbrowser_$id` MethodChannel still carries the
-/// WebView's surface, [webViewController]'s own settings pair included.
+/// Transport is Pigeon only: the browser's own methods and events ([InAppBrowserHostApi] /
+/// [InAppBrowserFlutterApi], suffixed by [id], §195, its settings pair since §199), and its
+/// WebView's ([webViewController]'s, suffixed `inappbrowser_<id>`). The `inappbrowser_$id`
+/// MethodChannel that carried the WebView's surface is gone since §217. [ChannelController] stays in
+/// the type, which is public, and no channel is set on it any more.
 class AndroidInAppBrowser extends PlatformInAppBrowser with ChannelController {
   @override
   final String id = IdGenerator.generate();
@@ -124,9 +124,6 @@ class AndroidInAppBrowser extends PlatformInAppBrowser with ChannelController {
   }
 
   void _init() {
-    channel = MethodChannel('dev.nosferatu500.inappwebview/inappbrowser_$id');
-    handler = _handleMethod;
-    initMethodCallHandler();
     _hostApi = InAppBrowserHostApi(messageChannelSuffix: id);
     InAppBrowserFlutterApi.setUp(
       _InAppBrowserFlutterApiImpl(this),
@@ -135,7 +132,7 @@ class AndroidInAppBrowser extends PlatformInAppBrowser with ChannelController {
 
     _webViewController = AndroidInAppWebViewController.fromInAppBrowser(
       AndroidInAppWebViewControllerCreationParams(id: id),
-      channel!,
+      null,
       this,
       initialUserScripts,
     );
@@ -151,11 +148,6 @@ class AndroidInAppBrowser extends PlatformInAppBrowser with ChannelController {
       method: method,
       args: args,
     );
-  }
-
-  /// Everything left on the MethodChannel is the WebView's (§195).
-  Future<dynamic> _handleMethod(MethodCall call) async {
-    return _webViewController?.handleMethod(call);
   }
 
   void _onBrowserCreated() {
@@ -368,7 +360,6 @@ class AndroidInAppBrowser extends PlatformInAppBrowser with ChannelController {
   @mustCallSuper
   void dispose() {
     super.dispose();
-    disposeChannel();
     // An event handler left registered would outlive the browser it forwards to (§184).
     InAppBrowserFlutterApi.setUp(null, messageChannelSuffix: id);
     _hostApi = null;

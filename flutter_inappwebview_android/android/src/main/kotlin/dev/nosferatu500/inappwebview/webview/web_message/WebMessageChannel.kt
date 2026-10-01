@@ -176,7 +176,5 @@ class WebMessageChannel(
 
   companion object {
     protected const val LOG_TAG = "WebMessageChannel"
-    const val METHOD_CHANNEL_NAME_PREFIX =
-      "dev.nosferatu500.inappwebview/inappwebview_web_message_channel_"
   }
 }

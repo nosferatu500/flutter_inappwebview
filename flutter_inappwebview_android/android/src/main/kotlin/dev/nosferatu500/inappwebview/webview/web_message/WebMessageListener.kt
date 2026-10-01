@@ -184,16 +184,12 @@ class WebMessageListener(
     @JvmStatic
     fun channelSuffix(id: String, jsObjectName: String): String = id + "_" + jsObjectName
 
-    const val METHOD_CHANNEL_NAME_PREFIX =
-      "dev.nosferatu500.inappwebview/inappwebview_web_message_listener_"
-
     /**
-     * Builds a listener from the untyped map the **WebView channel** still sends.
+     * Builds a listener from the untyped map `addWebMessageListener` receives: over Pigeon since
+     * W3 (§212), still a map, because domain objects cross as maps (decision B, §194).
      *
      * The suppression is scoped to this function rather than the class: the Pigeon migration
-     * removed every other cast site, and `addWebMessageListener` lives on
-     * `WebViewChannelDelegate`, which is not migrated yet. When that channel moves, this and the
-     * suppression go with it.
+     * removed every other cast site.
      */
     @Suppress("UNCHECKED_CAST")
     @JvmStatic

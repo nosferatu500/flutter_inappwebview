@@ -89,7 +89,6 @@ import dev.nosferatu500.inappwebview.webview.JavaScriptBridgeInterface
 import dev.nosferatu500.inappwebview.webview.WebViewChannelDelegate
 import dev.nosferatu500.inappwebview.webview.web_message.WebMessageChannel
 import dev.nosferatu500.inappwebview.webview.web_message.WebMessageListener
-import io.flutter.plugin.common.MethodChannel
 import org.json.JSONArray
 import org.json.JSONObject
 import java.io.ByteArrayOutputStream
@@ -206,9 +205,9 @@ class InAppWebView : WebView, InAppWebViewInterface, Disposable {
     this.containerView = containerView
     this.plugin = plugin
     this.id = id
-    val channel = MethodChannel(plugin.messenger, METHOD_CHANNEL_NAME_PREFIX + id)
-    // The Pigeon suffix is the channel name's tail, so both transports name this WebView alike (§207).
-    channelDelegate = WebViewChannelDelegate(this, channel, plugin.messenger, "inappwebview_$id")
+    // The Pigeon suffix is the old MethodChannel name's tail (§207); the channel itself is gone
+    // since §217, every method and event having moved to Pigeon by W5.
+    channelDelegate = WebViewChannelDelegate(this, plugin.messenger, "inappwebview_$id")
     this.windowId = windowId
     this.customSettings = customSettings
     this.contextMenu = contextMenu
@@ -2811,7 +2810,6 @@ class InAppWebView : WebView, InAppWebViewInterface, Disposable {
 
   companion object {
     private const val LOG_TAG = "InAppWebView"
-    const val METHOD_CHANNEL_NAME_PREFIX = "dev.nosferatu500.inappwebview/inappwebview_"
 
     @JvmField
     val mHandler = Handler(Looper.getMainLooper())

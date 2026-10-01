@@ -11,7 +11,7 @@ import dev.nosferatu500.inappwebview.InAppWebViewFlutterPlugin
 import dev.nosferatu500.inappwebview.types.Disposable
 import dev.nosferatu500.inappwebview.types.WebResourceRequestExt
 
-// See ChannelDelegateImpl: `this` is published to a platform-thread-only dispatcher.
+// See types/Disposable.kt: `this` is published to a platform-thread-only dispatcher.
 class ServiceWorkerManager(plugin: InAppWebViewFlutterPlugin) : Disposable {
 
   @JvmField

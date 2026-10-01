@@ -37,7 +37,6 @@ import dev.nosferatu500.inappwebview.types.UserScript
 import dev.nosferatu500.inappwebview.webview.WebViewChannelDelegate
 import dev.nosferatu500.inappwebview.webview.in_app_webview.InAppWebView
 import dev.nosferatu500.inappwebview.webview.in_app_webview.InAppWebViewSettings
-import io.flutter.plugin.common.MethodChannel
 import java.io.IOException
 
 // The unchecked casts below are the Flutter codec boundary: StandardMessageCodec decodes to
@@ -141,13 +140,12 @@ class InAppBrowserActivity : AppCompatActivity(), InAppBrowserDelegate, Disposab
     currentWebView.findInteractionController = findInteractionController
     findInteractionController.prepare()
 
-    // The browser's own methods and events are Pigeon, suffixed by the browser id (§195). The
-    // MethodChannel now belongs to the WebView's delegate alone.
+    // The browser's own methods and events are Pigeon, suffixed by the browser id (§195), and so
+    // are its WebView's, suffixed `inappbrowser_<id>`: the old MethodChannel name's tail (§207). That
+    // channel is gone since §217.
     channelDelegate = InAppBrowserChannelDelegate(this, plugin.messenger, viewId)
-    val channel = MethodChannel(plugin.messenger, METHOD_CHANNEL_NAME_PREFIX + viewId)
-    // The Pigeon suffix is the channel name's tail, so both transports name this WebView alike (§207).
     currentWebView.channelDelegate =
-      WebViewChannelDelegate(currentWebView, channel, plugin.messenger, "inappbrowser_$viewId")
+      WebViewChannelDelegate(currentWebView, plugin.messenger, "inappbrowser_$viewId")
 
     fromActivity = b.getString("fromActivity")
 
@@ -603,7 +601,6 @@ class InAppBrowserActivity : AppCompatActivity(), InAppBrowserDelegate, Disposab
 
   companion object {
     protected const val LOG_TAG = "InAppBrowserActivity"
-    const val METHOD_CHANNEL_NAME_PREFIX = "dev.nosferatu500.inappwebview/inappbrowser_"
 
     private val DEFAULT_MENU_ITEM_IDS = intArrayOf(
       R.id.action_close,

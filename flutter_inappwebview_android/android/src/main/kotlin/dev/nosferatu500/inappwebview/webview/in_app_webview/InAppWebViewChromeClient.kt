@@ -62,7 +62,7 @@ import java.util.Locale
 // cast. A wrong shape throws ClassCastException at the cast site, which is the intended
 // failure mode. Suppressed at class level because the whole class is that boundary.
 //
-// See ChannelDelegateImpl: `this` is published to a platform-thread-only dispatcher.
+// See types/Disposable.kt: `this` is published to a platform-thread-only dispatcher.
 @Suppress("UNCHECKED_CAST")
 class InAppWebViewChromeClient(
   plugin: InAppWebViewFlutterPlugin,

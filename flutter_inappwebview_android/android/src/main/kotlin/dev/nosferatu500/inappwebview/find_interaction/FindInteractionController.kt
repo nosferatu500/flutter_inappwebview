@@ -18,7 +18,7 @@ import io.flutter.plugin.common.BinaryMessenger
  * and appends [messageChannelSuffix], which carries the per-WebView id that
  * `METHOD_CHANNEL_NAME_PREFIX + id` used to encode.
  */
-// See ChannelDelegateImpl: `this` is published to a platform-thread-only dispatcher.
+// See types/Disposable.kt: `this` is published to a platform-thread-only dispatcher.
 class FindInteractionController(
   webView: InAppWebViewInterface,
   plugin: InAppWebViewFlutterPlugin,

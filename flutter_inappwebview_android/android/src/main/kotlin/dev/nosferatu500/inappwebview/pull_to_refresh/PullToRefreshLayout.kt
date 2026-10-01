@@ -16,7 +16,7 @@ class PullToRefreshLayout : SwipeRefreshLayout, Disposable {
   @JvmField
   var settings: PullToRefreshSettings = PullToRefreshSettings()
 
-  // See ChannelDelegateImpl: `this` is published to a platform-thread-only dispatcher.
+  // See types/Disposable.kt: `this` is published to a platform-thread-only dispatcher.
   constructor(
     context: Context,
     plugin: InAppWebViewFlutterPlugin,

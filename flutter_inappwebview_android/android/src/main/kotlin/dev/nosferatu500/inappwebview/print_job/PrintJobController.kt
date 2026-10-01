@@ -4,7 +4,7 @@ import dev.nosferatu500.inappwebview.InAppWebViewFlutterPlugin
 import dev.nosferatu500.inappwebview.types.Disposable
 import dev.nosferatu500.inappwebview.types.PrintJobInfoExt
 
-// See ChannelDelegateImpl: `this` is published to a platform-thread-only dispatcher.
+// See types/Disposable.kt: `this` is published to a platform-thread-only dispatcher.
 class PrintJobController(
   @JvmField var id: String,
   @JvmField var settings: PrintJobSettings?,

@@ -6,16 +6,12 @@ import android.graphics.BitmapFactory
 import android.graphics.drawable.BitmapDrawable
 import android.graphics.drawable.Drawable
 import android.net.http.SslCertificate
-import android.os.Handler
-import android.os.Looper
 import android.text.TextUtils
 import android.util.Log
 import android.view.WindowInsets
 import android.view.WindowManager
 import androidx.webkit.WebViewFeature
 import dev.nosferatu500.inappwebview.types.Size2D
-import dev.nosferatu500.inappwebview.types.SyncBaseCallbackResultImpl
-import io.flutter.plugin.common.MethodChannel
 import org.json.JSONArray
 import org.json.JSONObject
 import java.io.ByteArrayInputStream
@@ -35,7 +31,6 @@ import java.security.cert.CertificateException
 import java.security.cert.CertificateFactory
 import java.security.cert.X509Certificate
 import java.util.Objects
-import java.util.concurrent.TimeUnit
 import java.util.regex.Pattern
 import javax.net.ssl.SSLHandshakeException
 
@@ -103,9 +98,10 @@ object Util {
   }
 
   /**
-   * How long [invokeMethodAndWaitResult] waits for the Dart side before giving up, unless the
-   * WebView's `InAppWebViewSettings.syncCallbackTimeoutMillis` raises it (see
-   * [resolveSyncCallbackTimeoutMillis]).
+   * How long a blocking wait for the Dart side lasts before giving up, unless the WebView's
+   * `InAppWebViewSettings.syncCallbackTimeoutMillis` raises it (see
+   * [resolveSyncCallbackTimeoutMillis]). The waits are Pigeon latches since §216:
+   * `WebViewChannelDelegate.waitForDart`, the service worker's and the path handler's.
    *
    * These calls block a WebView worker thread, so an answer that never arrives used to stall
    * that thread for the rest of the WebView's life. Ten seconds is far longer than a correct
@@ -164,35 +160,6 @@ object Util {
       for (v in value) copy.add(normalizeCodecInts(v))
     }
     else -> value
-  }
-
-  /**
-   * Invokes [method] on [channel] from the main thread and blocks the calling thread until Dart
-   * answers or [timeoutMillis] elapses.
-   *
-   * Returns `null` on timeout. The caller cannot distinguish that from Dart legitimately
-   * answering `null`, and does not need to: both mean "no response to substitute".
-   */
-  @JvmStatic
-  @Throws(InterruptedException::class)
-  fun <T> invokeMethodAndWaitResult(
-    channel: MethodChannel,
-    method: String,
-    arguments: Any?,
-    callback: SyncBaseCallbackResultImpl<T>,
-    timeoutMillis: Long = SYNC_CALLBACK_TIMEOUT_MILLIS
-  ): T? {
-    Handler(Looper.getMainLooper()).post { channel.invokeMethod(method, arguments, callback) }
-    if (!callback.latch.await(timeoutMillis, TimeUnit.MILLISECONDS)) {
-      Log.w(
-        LOG_TAG,
-        "Timed out after ${timeoutMillis}ms waiting for the Dart side to answer \"$method\"; " +
-          "continuing as if it had returned null. Check that the corresponding handler returns " +
-          "on every path and does not throw."
-      )
-      return null
-    }
-    return callback.result
   }
 
   @JvmStatic
