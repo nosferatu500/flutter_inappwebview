@@ -1070,6 +1070,9 @@ simulator for the first time:**
 
 ### Internal
 
+- **`lib/src/in_app_webview/_static_channel.dart` is deleted.** It declared a `MethodChannel` for
+  `inappwebview_manager` that nothing imported or exported (orphaned since §188 moved that channel
+  to Pigeon on Android). The iOS package keeps its own live copy.
 - **Unused dependencies removed** — nothing that affects consumers, since none of them were
   reachable from the published API. The example drops `flutter_downloader` and `url_launcher`
   (neither imported anywhere in it), the android and ios packages drop a dev-only
