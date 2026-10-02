@@ -8,7 +8,7 @@ void resizeWebView() {
       );
 
   skippableTestWidgets('resize webview', (WidgetTester tester) async {
-    final String resizeTest = '''
+    const String resizeTest = '''
         <!DOCTYPE html><html>
         <head><title>Resize test</title>
           <script type="text/javascript">

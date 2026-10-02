@@ -13,7 +13,7 @@ void programmaticScroll() {
     skippableTestWidgets('set and get scroll position', (
       WidgetTester tester,
     ) async {
-      final String scrollTestPage = '''
+      const String scrollTestPage = '''
         <!DOCTYPE html>
         <html>
           <head>
@@ -95,7 +95,7 @@ void programmaticScroll() {
     testWidgets(
       'set and get scroll position on Android without Hybrid Composition',
       (WidgetTester tester) async {
-        final String scrollTestPage = '''
+        const String scrollTestPage = '''
         <!DOCTYPE html>
         <html>
           <head>

@@ -138,7 +138,7 @@ void loadUrl() {
     final InAppWebViewController controller = await controllerCompleter.future;
     expect(await firstUrlLoad.future, initialUrl.toString());
 
-    final htmlCode = "<h1>Hello</h1>";
+    const htmlCode = "<h1>Hello</h1>";
     await controller.loadSimulatedRequest(
       urlRequest: URLRequest(url: TEST_CROSS_PLATFORM_URL_1),
       data: Uint8List.fromList(utf8.encode(htmlCode)),

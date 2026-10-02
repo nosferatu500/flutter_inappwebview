@@ -1,7 +1,7 @@
 part of 'main.dart';
 
 void setGetSettings() {
-  final shouldSkip = false;
+  const shouldSkip = false;
 
   skippableTest('set/get settings', () async {
     final Completer<InAppWebViewController> controllerCompleter =

@@ -141,7 +141,7 @@ void webHistory() {
       pageLoads.close();
     }, skip: shouldSkipTest1);
 
-    final shouldSkipTest2 = !kIsWeb;
+    const shouldSkipTest2 = !kIsWeb;
 
     skippableTestWidgets('go back/forward on web platform', (
       WidgetTester tester,

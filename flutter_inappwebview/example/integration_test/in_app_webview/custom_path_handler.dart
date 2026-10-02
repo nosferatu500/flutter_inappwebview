@@ -28,7 +28,7 @@ void customPathHandler() {
       ) ||
       defaultTargetPlatform != TargetPlatform.android;
 
-  final origin = 'https://$TEST_WEBVIEW_ASSET_LOADER_DOMAIN';
+  const origin = 'https://$TEST_WEBVIEW_ASSET_LOADER_DOMAIN';
 
   Uint8List bytes(String s) => Uint8List.fromList(utf8.encode(s));
 

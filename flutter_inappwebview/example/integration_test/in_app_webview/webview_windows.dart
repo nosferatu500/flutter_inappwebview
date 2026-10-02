@@ -241,7 +241,7 @@ void webViewWindows() {
     skippableTestWidgets('javascript does not run in parent window', (
       WidgetTester tester,
     ) async {
-      final String iframe = '''
+      const String iframe = '''
         <!DOCTYPE html>
         <script>
           window.onload = () => {
@@ -319,7 +319,7 @@ void webViewWindows() {
     }, skip: shouldSkipTest5);
 
     // final shouldSkipTest6 = !kIsWeb;
-    final shouldSkipTest6 = true;
+    const shouldSkipTest6 = true;
     // on Web, opening a new window during tests makes crash
     skippableTestWidgets('onCreateWindow called on Web', (
       WidgetTester tester,

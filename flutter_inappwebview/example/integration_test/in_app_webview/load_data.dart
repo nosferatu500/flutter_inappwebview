@@ -32,7 +32,7 @@ void loadData() {
     tester.pump();
     await pageLoads.stream.first;
 
-    final data = """
+    const data = """
 <!doctype html>
 <html lang="en">
     <head>
@@ -47,7 +47,7 @@ void loadData() {
     </body>
 </html>
 """;
-    final mimeType = 'text/html';
+    const mimeType = 'text/html';
 
     await controller.loadData(
       data: data,

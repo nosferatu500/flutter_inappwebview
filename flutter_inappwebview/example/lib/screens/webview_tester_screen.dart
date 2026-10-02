@@ -81,7 +81,7 @@ class _WebViewTesterScreenState extends State<WebViewTesterScreen>
       drawer: AppDrawer(),
       body: LayoutBuilder(
         builder: (context, constraints) {
-          final minRequiredHeight =
+          const minRequiredHeight =
               _minWebViewHeight +
               _minTabsHeight +
               _dividerHeight +

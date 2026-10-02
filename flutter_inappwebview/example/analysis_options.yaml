@@ -29,7 +29,8 @@ linter:
     non_constant_identifier_names: false
     prefer_collection_literals: false
     prefer_const_constructors: false
-    prefer_const_declarations: false
+    # Opt-in: not in flutter_lints, which ships it off (§233).
+    prefer_const_declarations: true
     prefer_const_literals_to_create_immutables: false
     prefer_contains: false
     prefer_final_fields: false

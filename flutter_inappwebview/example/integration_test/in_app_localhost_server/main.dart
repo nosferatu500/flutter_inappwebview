@@ -9,7 +9,7 @@ import '../util.dart';
 part 'load_asset_file.dart';
 
 void main() {
-  final shouldSkip = kIsWeb;
+  const shouldSkip = kIsWeb;
 
   skippableGroup('InAppLocalhostServer', () {
     final InAppLocalhostServer localhostServer = InAppLocalhostServer();

@@ -29,7 +29,7 @@ class AppDrawer extends StatelessWidget {
     final sectionTitleSize = isMobile ? 11.0 : 12.0;
     final itemTitleSize = isMobile ? 13.0 : 14.0;
     final tilePadding = EdgeInsets.symmetric(horizontal: 16);
-    final tileVerticalPadding = 8.0;
+    const tileVerticalPadding = 8.0;
     final children = <Widget>[
       DrawerHeader(
         decoration: const BoxDecoration(color: Colors.blue),

@@ -56,7 +56,7 @@ void webViewAssetLoader() {
         Completer<InAppWebViewController>();
 
     final assetsUrl = TEST_WEBVIEW_ASSET_LOADER_URL.toString();
-    final otherAssetsUrl =
+    const otherAssetsUrl =
         'https://$TEST_WEBVIEW_ASSET_LOADER_DOMAIN/other-assets/flutter_assets/test_assets/website/index.html';
 
     // Settled only by a *main-frame* event for the URL currently awaited. Both

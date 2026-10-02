@@ -568,7 +568,7 @@ class _ControllersScreenState extends State<ControllersScreen> {
       drawer: AppDrawer(),
       body: LayoutBuilder(
         builder: (context, constraints) {
-          final minRequiredHeight =
+          const minRequiredHeight =
               _minWebViewHeight +
               _minContentHeight +
               _dividerHeight +
