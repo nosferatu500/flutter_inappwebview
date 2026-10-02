@@ -9,7 +9,7 @@ void customSize() {
     final Completer<InAppWebViewController> controllerCompleter =
         Completer<InAppWebViewController>();
 
-    var headlessWebView = new HeadlessInAppWebView(
+    var headlessWebView = HeadlessInAppWebView(
       initialUrlRequest: URLRequest(url: TEST_CROSS_PLATFORM_URL_1),
       initialSize: Size(600, 800),
       onWebViewCreated: (controller) {
@@ -48,7 +48,7 @@ void customSize() {
     final Completer<InAppWebViewController> controllerCompleter =
         Completer<InAppWebViewController>();
 
-    var headlessWebView = new HeadlessInAppWebView(
+    var headlessWebView = HeadlessInAppWebView(
       initialUrlRequest: URLRequest(url: TEST_CROSS_PLATFORM_URL_1),
       initialSize: Size(-1, -1),
       onWebViewCreated: (controller) {

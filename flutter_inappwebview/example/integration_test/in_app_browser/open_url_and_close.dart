@@ -4,7 +4,7 @@ void openUrlAndClose() {
   final shouldSkip = !InAppBrowser.isClassSupported();
 
   skippableTest('open url and close', () async {
-    var inAppBrowser = new MyInAppBrowser();
+    var inAppBrowser = MyInAppBrowser();
     expect(inAppBrowser.isOpened(), false);
     expect(() async {
       await inAppBrowser.show();

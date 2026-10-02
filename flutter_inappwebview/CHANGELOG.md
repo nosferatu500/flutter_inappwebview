@@ -1070,6 +1070,9 @@ simulator for the first time:**
 
 ### Internal
 
+- **The example's `unnecessary_new` lint is enabled**, and its 19 `new` keywords removed, all in
+  integration tests (13 files). Each changed line differs from its old self only by that keyword,
+  which Dart has treated as optional since 2.0.
 - **The example's `unnecessary_brace_in_string_interps` lint is enabled**, and its 58 findings fixed
   with `dart fix --code=unnecessary_brace_in_string_interps` (10 files). Every changed line is its
   old self with `${name}` written as `$name` where nothing follows that could extend the name; no

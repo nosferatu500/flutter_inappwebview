@@ -34,7 +34,6 @@ linter:
     prefer_contains: false
     prefer_final_fields: false
     prefer_interpolation_to_compose_strings: false
-    unnecessary_new: false
     unnecessary_nullable_for_final_variable_declarations: false
     unnecessary_overrides: false
     unnecessary_this: false

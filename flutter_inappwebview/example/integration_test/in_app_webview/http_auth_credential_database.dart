@@ -38,7 +38,7 @@ void httpAuthCredentialDatabase() {
               pageLoaded.complete();
             },
             onReceivedHttpAuthRequest: (controller, challenge) async {
-              return new HttpAuthResponse(
+              return HttpAuthResponse(
                 action: HttpAuthResponseAction.USE_SAVED_HTTP_AUTH_CREDENTIALS,
               );
             },
@@ -102,7 +102,7 @@ void httpAuthCredentialDatabase() {
               pageLoaded.complete();
             },
             onReceivedHttpAuthRequest: (controller, challenge) async {
-              return new HttpAuthResponse(
+              return HttpAuthResponse(
                 username: "USERNAME",
                 password: "PASSWORD",
                 action: HttpAuthResponseAction.PROCEED,

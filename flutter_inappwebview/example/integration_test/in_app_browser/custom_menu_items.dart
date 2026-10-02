@@ -4,7 +4,7 @@ void customMenuItems() {
   final shouldSkip = !InAppBrowser.isClassSupported();
 
   skippableTest('custom menu items', () async {
-    var inAppBrowser = new MyInAppBrowser();
+    var inAppBrowser = MyInAppBrowser();
 
     final data = (await rootBundle.load(
       'test_assets/images/flutter-logo.png',
