@@ -143,10 +143,9 @@ class DefaultInAppLocalhostServer extends PlatformInAppLocalhostServer {
               }
 
               request.response.headers.contentType = contentType;
-              // Logs every response's headers, release builds included. Kept as it
-              // was; deleting it is a candidate (§223).
-              // ignore: avoid_print
-              print(request.response.headers);
+              if (kDebugMode) {
+                print(request.response.headers);
+              }
               request.response.add(body);
               unawaited(request.response.close());
             });

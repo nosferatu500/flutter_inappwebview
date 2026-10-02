@@ -792,6 +792,10 @@ since the `WebsiteDataType.ALL` fix below. It stays **deliberately out of `ALL`*
 
 ### Fixed
 
+**`InAppLocalhostServer` printed every served response's headers in release builds.** Five lines of
+the server's own response headers went to the log per file served (measured in a profile build on
+Android). It's now debug-only, like the server's other messages; debug output is unchanged.
+
 **Android — `HeadlessInAppWebView`'s `onShowFileChooser` was never called** (since 6.2.0-beta.3,
 where the event was added). Android's headless params didn't take the field, so the handler was
 dropped and `useOnShowFileChooser` wasn't inferred; a file input opened the system picker without

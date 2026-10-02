@@ -429,6 +429,14 @@ rename; this entry is the API-owner's view.
 
 ### Fixed
 
+- **`DefaultInAppLocalhostServer` printed every served response's headers in release builds.** The
+  file's other prints were behind `kDebugMode`; this one wasn't. Measured in a profile build on API
+  37: five lines (`content-type`, `x-frame-options`, `x-xss-protection`, `transfer-encoding`,
+  `x-content-type-options`) reached logcat per file served. They're the server's own response
+  headers; the request's headers, cookies included, were never printed. It's now debug-only, so
+  debug output is unchanged, and the same profile build logs none. A request `onData` handles was
+  never logged. A new host test pins the debug half: the asset is served, its headers print once,
+  and the request's headers never do.
 - **`TracingSettings()` threw an `AssertionError` in debug — the default construction.** The
   constructor's category validation was wrong in both directions at once, so it rejected the valid
   default and accepted anything invalid:
@@ -673,7 +681,7 @@ rename; this entry is the API-owner's view.
   fallbacks (an undecodable certificate, an unparseable `WebUri`, an `Error` thrown by a
   `ChannelController` handler), 2 are deliberate (the debug-only startup banner,
   `DebugLoggingSettings.usePrint`), and 1, the localhost server logging every response's headers,
-  looks like a leftover. Each carries an ignore and a one-line reason, except `SslCertificate.fromMap`'s
+  looks like a leftover (since made debug-only, see "Fixed"; it no longer needs the ignore). Each carries an ignore and a one-line reason, except `SslCertificate.fromMap`'s
   pair (4 findings, since the generator copies the method into `ssl_certificate.g.dart`). That pair
   moved into a private helper, because the copy drops comments and an ignore could not survive it.
   Two new tests prove the generated code still reaches the helper, including for a map with no
