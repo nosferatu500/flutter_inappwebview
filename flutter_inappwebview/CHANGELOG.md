@@ -1070,6 +1070,9 @@ simulator for the first time:**
 
 ### Internal
 
+- **The `prefer_const_constructors_in_immutables` lint is enabled.** Its one finding here:
+  `InAppWebView.fromPlatform` is now a `const` constructor. Calls without `const` behave exactly as
+  before; callers may now also write `const`.
 - **The example's `prefer_interpolation_to_compose_strings` lint is enabled**, and its 16 findings
   fixed by `dart fix` (15 fixes in 8 files; two findings were one `+` chain). Every rewritten `+`
   joined `String`s, and an interpolated `String` is itself, so no string's value changes. Where the

@@ -14,7 +14,7 @@ import 'in_app_webview_controller.dart';
 class IOSHeadlessInAppWebViewCreationParams
     extends PlatformHeadlessInAppWebViewCreationParams {
   /// Creates a new [IOSHeadlessInAppWebViewCreationParams] instance.
-  IOSHeadlessInAppWebViewCreationParams({
+  const IOSHeadlessInAppWebViewCreationParams({
     super.controllerFromPlatform,
     super.initialSize,
     super.windowId,

@@ -436,6 +436,12 @@ error.
 
 ### Internal
 
+- **The `prefer_const_constructors_in_immutables` lint is enabled.** Four creation-params
+  constructors are now `const`: `IOSInAppBrowserCreationParams`,
+  `IOSHeadlessInAppWebViewCreationParams`, `IOSWebStorageCreationParams` and
+  `IOSStorageCreationParams`. Calls without `const` behave exactly as before; callers may now also
+  write `const`. A new test builds three of them in a `const` context, so taking `const` back would
+  stop it compiling.
 - **The `unnecessary_import` warning is enabled**, and its 4 redundant imports are removed (2 in
   `lib`, 2 in tests). Each was fully covered by another import in the same file. No code changed.
 - **The `deprecated_member_use_from_same_package` lint is enabled.** It is not in `flutter_lints`

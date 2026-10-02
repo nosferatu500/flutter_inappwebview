@@ -18,7 +18,7 @@ import '../pull_to_refresh/pull_to_refresh_controller.dart';
 class AndroidInAppBrowserCreationParams
     extends PlatformInAppBrowserCreationParams {
   /// Creates a new [AndroidInAppBrowserCreationParams] instance.
-  AndroidInAppBrowserCreationParams({
+  const AndroidInAppBrowserCreationParams({
     super.contextMenu,
     AndroidPullToRefreshController? super.pullToRefreshController,
     AndroidFindInteractionController? super.findInteractionController,

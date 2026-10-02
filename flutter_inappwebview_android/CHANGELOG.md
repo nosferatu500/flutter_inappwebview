@@ -480,6 +480,12 @@ for, and five others have a native *value* that differs from their name.
 
 ### Internal
 
+- **The `prefer_const_constructors_in_immutables` lint is enabled.** Four creation-params
+  constructors are now `const`: `AndroidInAppBrowserCreationParams`,
+  `AndroidHeadlessInAppWebViewCreationParams`, `AndroidWebStorageCreationParams` and
+  `AndroidStorageCreationParams`. Calls without `const` behave exactly as before; callers may now
+  also write `const`. A new test builds three of them in a `const` context, so taking `const` back
+  would stop it compiling.
 - **The `unnecessary_import` warning is enabled**, and its 11 redundant imports are removed (2 in
   `lib`, 9 in tests). Each was fully covered by another import in the same file. No code changed.
 - **The `deprecated_member_use_from_same_package` lint is enabled.** It is not in `flutter_lints`

@@ -16,7 +16,7 @@ import 'in_app_webview_controller.dart';
 class AndroidHeadlessInAppWebViewCreationParams
     extends PlatformHeadlessInAppWebViewCreationParams {
   /// Creates a new [AndroidHeadlessInAppWebViewCreationParams] instance.
-  AndroidHeadlessInAppWebViewCreationParams({
+  const AndroidHeadlessInAppWebViewCreationParams({
     super.controllerFromPlatform,
     super.initialSize,
     super.windowId,

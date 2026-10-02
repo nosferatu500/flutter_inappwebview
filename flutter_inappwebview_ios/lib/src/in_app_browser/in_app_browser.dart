@@ -16,7 +16,7 @@ import '../pull_to_refresh/pull_to_refresh_controller.dart';
 /// more information.
 class IOSInAppBrowserCreationParams extends PlatformInAppBrowserCreationParams {
   /// Creates a new [IOSInAppBrowserCreationParams] instance.
-  IOSInAppBrowserCreationParams({
+  const IOSInAppBrowserCreationParams({
     super.contextMenu,
     IOSPullToRefreshController? super.pullToRefreshController,
     IOSFindInteractionController? super.findInteractionController,
