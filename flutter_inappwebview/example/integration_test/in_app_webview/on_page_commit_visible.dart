@@ -26,7 +26,7 @@ void onPageCommitVisible() {
       ),
     );
 
-    final String? url = await onPageCommitVisibleCompleter.future;
+    final String url = await onPageCommitVisibleCompleter.future;
     expect(url, TEST_URL_1.toString());
   }, skip: shouldSkip);
 }

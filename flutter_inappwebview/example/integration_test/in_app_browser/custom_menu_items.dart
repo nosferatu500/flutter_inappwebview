@@ -34,7 +34,7 @@ void customMenuItems() {
       ),
     );
 
-    var icon = null;
+    dynamic icon;
     if ([
       TargetPlatform.iOS,
       TargetPlatform.macOS,

@@ -271,7 +271,7 @@ void main() {
             body: UserScriptTesterWidget(
               onAddScript: (script) async {},
               onRemoveScript: (script) async {},
-              scripts: [],
+              scripts: const [],
             ),
           ),
         ),

@@ -1070,6 +1070,14 @@ simulator for the first time:**
 
 ### Internal
 
+- **Ten small lint rules are enabled in the example, in one item:** `avoid_init_to_null`,
+  `prefer_collection_literals`, `prefer_contains`, `prefer_final_fields`,
+  `unnecessary_nullable_for_final_variable_declarations`, `unnecessary_overrides`,
+  `unnecessary_this`, `use_super_parameters`, `void_checks`, and (opted in, since flutter_lints
+  doesn't ship it) `prefer_const_literals_to_create_immutables`. Their 18 findings are fixed: 17 by
+  `dart fix`, plus `void_checks` by hand (a `Completer<void>` was completed with `true`). The fixes
+  caused two more, also fixed: an untyped `var icon;` is now `dynamic icon;`, the type `var icon =
+  null` had, and `dart:collection` became unused. No value changes anywhere.
 - **The `avoid_return_types_on_setters` lint is enabled.** `PrintJobController.onComplete`'s setter
   loses its `void`, which setters always return. No code changed.
 - **The `prefer_const_constructors_in_immutables` lint is enabled.** Its one finding here:

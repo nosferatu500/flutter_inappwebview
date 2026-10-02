@@ -1,5 +1,4 @@
 import 'dart:async';
-import 'dart:collection';
 import 'dart:io' show Platform;
 
 import 'package:flutter/foundation.dart';
@@ -123,7 +122,7 @@ class Foo {
   Foo({this.bar, this.baz});
 
   Map<String, dynamic> toJson() {
-    return {'bar': this.bar, 'baz': this.baz};
+    return {'bar': bar, 'baz': baz};
   }
 }
 
@@ -133,14 +132,10 @@ class MyInAppBrowser extends InAppBrowser {
   final Completer<void> browserClosed = Completer<void>();
 
   MyInAppBrowser({
-    int? windowId,
-    UnmodifiableListView<UserScript>? initialUserScripts,
-    PullToRefreshController? pullToRefreshController,
-  }) : super(
-         windowId: windowId,
-         initialUserScripts: initialUserScripts,
-         pullToRefreshController: pullToRefreshController,
-       );
+    super.windowId,
+    super.initialUserScripts,
+    super.pullToRefreshController,
+  });
 
   @override
   Future onBrowserCreated() async {

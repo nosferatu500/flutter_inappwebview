@@ -190,7 +190,7 @@ void webMessage() {
               await controller.addWebMessageListener(
                 WebMessageListener(
                   jsObjectName: "myTestObj",
-                  allowedOriginRules: Set.from(["https://*.example.com"]),
+                  allowedOriginRules: {"https://*.example.com"},
                   onPostMessage:
                       (message, sourceOrigin, isMainFrame, replyProxy) {
                         if (isMainFrame &&
@@ -250,7 +250,7 @@ void webMessage() {
               await controller.addWebMessageListener(
                 WebMessageListener(
                   jsObjectName: "myTestObj",
-                  allowedOriginRules: Set.from(["https://*.example.com"]),
+                  allowedOriginRules: {"https://*.example.com"},
                   onPostMessage:
                       (message, sourceOrigin, isMainFrame, replyProxy) {
                         if (isMainFrame &&
@@ -341,7 +341,7 @@ void webMessage() {
               await controller.addWebMessageListener(
                 WebMessageListener(
                   jsObjectName: "myUnanchoredObj",
-                  allowedOriginRules: Set.from(["https://*.example.com"]),
+                  allowedOriginRules: {"https://*.example.com"},
                   onPostMessage:
                       (message, sourceOrigin, isMainFrame, replyProxy) {},
                 ),
@@ -352,7 +352,7 @@ void webMessage() {
               await controller.addWebMessageListener(
                 WebMessageListener(
                   jsObjectName: "myAnchoredObj",
-                  allowedOriginRules: Set.from(["https://*.evil.test"]),
+                  allowedOriginRules: {"https://*.evil.test"},
                   onPostMessage:
                       (message, sourceOrigin, isMainFrame, replyProxy) {},
                 ),

@@ -22,7 +22,7 @@ class _SupportMatrixScreenState extends State<SupportMatrixScreen>
 
   final TextEditingController _searchController = TextEditingController();
   String _searchQuery = '';
-  Set<SupportedPlatform> _selectedPlatforms = {};
+  final Set<SupportedPlatform> _selectedPlatforms = {};
   bool _showOnlySupported = false;
   bool _showMethods = true;
   bool _showEvents = true;

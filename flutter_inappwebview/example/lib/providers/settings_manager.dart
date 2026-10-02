@@ -283,11 +283,6 @@ class SettingsManager extends ChangeNotifier {
     );
   }
 
-  @override
-  void dispose() {
-    super.dispose();
-  }
-
   /// Get all setting definitions organized by category
   static Map<String, List<SettingDefinition>> getSettingDefinitions() {
     return settings_definitions.getSettingDefinitions();

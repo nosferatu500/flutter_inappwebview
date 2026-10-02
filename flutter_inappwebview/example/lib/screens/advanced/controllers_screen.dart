@@ -29,7 +29,7 @@ class _ControllersScreenState extends State<ControllersScreen> {
   FindInteractionController? _findInteractionController;
   PullToRefreshController? _pullToRefreshController;
   bool _webViewReady = false;
-  bool _isLoading = false;
+  final bool _isLoading = false;
   double _webViewHeight = 180;
   static const double _minWebViewHeight = 120;
   static const double _minContentHeight = 260;

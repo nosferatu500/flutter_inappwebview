@@ -23,22 +23,14 @@ linter:
   rules:
     # Opt-in: not in flutter_lints, and no longer an analyzer default (§227).
     deprecated_member_use_from_same_package: true
-    avoid_init_to_null: false
     depend_on_referenced_packages: false
     library_private_types_in_public_api: false
     non_constant_identifier_names: false
-    prefer_collection_literals: false
     prefer_const_constructors: false
     # Opt-in: not in flutter_lints, which ships it off (§233).
     prefer_const_declarations: true
-    prefer_const_literals_to_create_immutables: false
-    prefer_contains: false
-    prefer_final_fields: false
-    unnecessary_nullable_for_final_variable_declarations: false
-    unnecessary_overrides: false
-    unnecessary_this: false
-    use_super_parameters: false
-    void_checks: false
+    # Opt-in: not in flutter_lints, which ships it off (§237).
+    prefer_const_literals_to_create_immutables: true
 
 # Additional information about this file can be found at
 # https://dart.dev/guides/language/analysis-options
