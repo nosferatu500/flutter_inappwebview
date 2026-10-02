@@ -13,7 +13,8 @@ class TrustedWebActivityDefaultDisplayMode_
   static final _type = "DEFAULT_MODE";
 
   @ExchangeableObjectMethod(toMapMergeWith: true)
-  // ignore: unused_element
+  // Generator input only: the generated copy is the one `toMap` calls, with `enumMethod`.
+  // ignore: unused_element, unused_element_parameter
   Map<String, dynamic> _toMapMergeWith({EnumMethod? enumMethod}) {
     return {"type": _type};
   }

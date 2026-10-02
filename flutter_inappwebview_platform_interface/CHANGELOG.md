@@ -614,6 +614,12 @@ rename; this entry is the API-owner's view.
 
 ### Internal
 
+- **The `unused_element_parameter` warning is enabled.** Its two findings are the `enumMethod`
+  parameter of the hand-written `_toMapMergeWith` in `TrustedWebActivityDefaultDisplayMode_` and
+  `TrustedWebActivityImmersiveDisplayMode_`. Those methods are generator input. The generated copy
+  is the one `toMap` calls, and it is called with `enumMethod`, so the parameter has to stay. The
+  existing `// ignore: unused_element` on each now names both diagnostics and says why.
+  Regenerating changed nothing.
 - **The `unnecessary_cast` warning is enabled**, and its two findings fixed. `ContextMenu`'s
   hand-written `_toMapMergeWith` is deleted. It existed to fall back to the deprecated `options`
   when `settings` was null, and once `options` was removed it only rewrote `"settings"` with the
