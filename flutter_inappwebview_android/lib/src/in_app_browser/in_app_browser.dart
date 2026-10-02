@@ -20,8 +20,8 @@ class AndroidInAppBrowserCreationParams
   /// Creates a new [AndroidInAppBrowserCreationParams] instance.
   AndroidInAppBrowserCreationParams({
     super.contextMenu,
-    this.pullToRefreshController,
-    this.findInteractionController,
+    AndroidPullToRefreshController? super.pullToRefreshController,
+    AndroidFindInteractionController? super.findInteractionController,
     super.initialUserScripts,
     super.windowId,
   });
@@ -44,10 +44,12 @@ class AndroidInAppBrowserCreationParams
   }
 
   @override
-  final AndroidFindInteractionController? findInteractionController;
+  AndroidFindInteractionController? get findInteractionController =>
+      super.findInteractionController as AndroidFindInteractionController?;
 
   @override
-  final AndroidPullToRefreshController? pullToRefreshController;
+  AndroidPullToRefreshController? get pullToRefreshController =>
+      super.pullToRefreshController as AndroidPullToRefreshController?;
 }
 
 /// Receives [InAppBrowserFlutterApi] events and forwards them to the browser.

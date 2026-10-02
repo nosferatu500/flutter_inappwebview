@@ -18,8 +18,8 @@ class IOSInAppBrowserCreationParams extends PlatformInAppBrowserCreationParams {
   /// Creates a new [IOSInAppBrowserCreationParams] instance.
   IOSInAppBrowserCreationParams({
     super.contextMenu,
-    this.pullToRefreshController,
-    this.findInteractionController,
+    IOSPullToRefreshController? super.pullToRefreshController,
+    IOSFindInteractionController? super.findInteractionController,
     super.initialUserScripts,
     super.windowId,
   });
@@ -42,10 +42,12 @@ class IOSInAppBrowserCreationParams extends PlatformInAppBrowserCreationParams {
   }
 
   @override
-  final IOSFindInteractionController? findInteractionController;
+  IOSFindInteractionController? get findInteractionController =>
+      super.findInteractionController as IOSFindInteractionController?;
 
   @override
-  final IOSPullToRefreshController? pullToRefreshController;
+  IOSPullToRefreshController? get pullToRefreshController =>
+      super.pullToRefreshController as IOSPullToRefreshController?;
 }
 
 ///{@macro flutter_inappwebview_platform_interface.PlatformInAppBrowser}

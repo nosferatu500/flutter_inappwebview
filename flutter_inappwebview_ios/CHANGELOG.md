@@ -436,6 +436,14 @@ error.
 
 ### Internal
 
+- **The `overridden_fields` lint is enabled**, and its seven findings fixed. The InAppBrowser,
+  headless and widget creation params kept `pullToRefreshController` and `findInteractionController`
+  in their own narrowed fields and never passed them to the base, so the base's copies were always
+  null. The web message listener's params did the same with `allowedOriginRules`, leaving the base
+  copy null where the subclass held `{"*"}`. Nothing read the base copies, so nothing misbehaved.
+  The values now go to the base through super parameters, and getters of the same types narrow them.
+  Constructors keep their signatures. A new unit test pins each getter, through the constructor and
+  through the conversion from the platform-interface params.
 - **The `empty_catches` lint is enabled.** Its two findings here were deliberate fallbacks (the
   web storage value that isn't JSON; the unreadable asset in `getHtml`), so each block now says so
   in a comment. No code changed.

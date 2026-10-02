@@ -15,7 +15,6 @@ linter:
     avoid_print: false
     avoid_return_types_on_setters: false
     non_constant_identifier_names: false
-    overridden_fields: false
     prefer_const_constructors_in_immutables: false
 # Additional information about this file can be found at
 # https://dart.dev/guides/language/analysis-options

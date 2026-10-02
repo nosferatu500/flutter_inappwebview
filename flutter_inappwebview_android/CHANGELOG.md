@@ -480,6 +480,14 @@ for, and five others have a native *value* that differs from their name.
 
 ### Internal
 
+- **The `overridden_fields` lint is enabled**, and its seven findings fixed. The InAppBrowser,
+  headless and widget creation params kept `pullToRefreshController` and `findInteractionController`
+  in their own narrowed fields and never passed them to the base, so the base's copies were always
+  null. The web message listener's params did the same with `allowedOriginRules`, leaving the base
+  copy null where the subclass held `{"*"}`. Nothing read the base copies, so nothing misbehaved.
+  The values now go to the base through super parameters, and getters of the same types narrow them.
+  Constructors keep their signatures. A new unit test pins each getter, through the constructor and
+  through the conversion from the platform-interface params.
 - **The `empty_catches` lint is enabled.** Its three findings here were deliberate fallbacks (a
   value that isn't JSON is returned as it came; an unreadable asset leaves `getHtml` null), so each
   block now says so in a comment. No code changed.

@@ -99,8 +99,8 @@ class AndroidInAppWebViewWidgetCreationParams
     super.initialSettings,
     super.contextMenu,
     super.initialUserScripts,
-    this.pullToRefreshController,
-    this.findInteractionController,
+    AndroidPullToRefreshController? super.pullToRefreshController,
+    AndroidFindInteractionController? super.findInteractionController,
   });
 
   /// Constructs a [AndroidInAppWebViewWidgetCreationParams] using a
@@ -201,10 +201,12 @@ class AndroidInAppWebViewWidgetCreationParams
       );
 
   @override
-  final AndroidFindInteractionController? findInteractionController;
+  AndroidFindInteractionController? get findInteractionController =>
+      super.findInteractionController as AndroidFindInteractionController?;
 
   @override
-  final AndroidPullToRefreshController? pullToRefreshController;
+  AndroidPullToRefreshController? get pullToRefreshController =>
+      super.pullToRefreshController as AndroidPullToRefreshController?;
 }
 
 ///{@macro flutter_inappwebview_platform_interface.PlatformInAppWebViewWidget}

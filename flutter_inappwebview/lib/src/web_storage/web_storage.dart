@@ -167,12 +167,12 @@ class LocalStorage extends Storage {
   }) : this.fromPlatform(platform: PlatformLocalStorage(params));
 
   /// Constructs a [LocalStorage] from a specific platform implementation.
-  LocalStorage.fromPlatform({required this.platform})
+  LocalStorage.fromPlatform({required PlatformLocalStorage platform})
     : super.fromPlatform(platform: platform);
 
   /// Implementation of [PlatformLocalStorage] for the current platform.
   @override
-  final PlatformLocalStorage platform;
+  PlatformLocalStorage get platform => super.platform as PlatformLocalStorage;
 
   ///Check if the current class is supported by the [defaultTargetPlatform] or a specific [platform].
   static bool isClassSupported({TargetPlatform? platform}) =>
@@ -221,12 +221,13 @@ class SessionStorage extends Storage {
   }) : this.fromPlatform(platform: PlatformSessionStorage(params));
 
   /// Constructs a [SessionStorage] from a specific platform implementation.
-  SessionStorage.fromPlatform({required this.platform})
+  SessionStorage.fromPlatform({required PlatformSessionStorage platform})
     : super.fromPlatform(platform: platform);
 
   /// Implementation of [PlatformSessionStorage] for the current platform.
   @override
-  final PlatformSessionStorage platform;
+  PlatformSessionStorage get platform =>
+      super.platform as PlatformSessionStorage;
 
   ///Check if the current class is supported by the [defaultTargetPlatform] or a specific [platform].
   static bool isClassSupported({TargetPlatform? platform}) =>

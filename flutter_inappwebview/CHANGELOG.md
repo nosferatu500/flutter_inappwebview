@@ -1070,6 +1070,12 @@ simulator for the first time:**
 
 ### Internal
 
+- **The `overridden_fields` lint is enabled**, and its six findings here fixed. `LocalStorage`,
+  `SessionStorage` and the four path handlers redeclared the base class's `platform` field with a
+  narrower type. Both fields held the same object, so this was harmless; each is now a getter that
+  narrows the base's one field, and the `fromPlatform` constructors keep their signatures. A new
+  test in the example's suite pins every getter, including the read the path handler's base
+  constructor makes to set `eventHandler`.
 - **The example app's `use_build_context_synchronously` lint is enabled**, and its nine findings
   fixed. The settings editor's save, load, delete and import dialogs used the dialog's own context
   after an `await`, guarded only by the screen's `mounted`; each guard now checks that context too,
