@@ -658,7 +658,7 @@ class InAppWebView extends StatefulWidget {
        );
 
   @override
-  _InAppWebViewState createState() => _InAppWebViewState();
+  State<InAppWebView> createState() => _InAppWebViewState();
 
   ///{@macro flutter_inappwebview_platform_interface.PlatformInAppWebViewWidgetCreationParams.isClassSupported}
   static bool isClassSupported({TargetPlatform? platform}) =>

@@ -1070,6 +1070,11 @@ simulator for the first time:**
 
 ### Internal
 
+- **The `library_private_types_in_public_api` lint is enabled** here and in the example.
+  `InAppWebView.createState()` is declared to return `State<InAppWebView>` instead of the private
+  `_InAppWebViewState`. It returns the same object, and that class adds no public members beyond
+  `State`'s own (`build`, `dispose`), so callers see the same surface. The example's
+  `MyApp.createState()` gets the same change.
 - **The example's Controllers screen loses a loading flag that was never set.** `_isLoading` had no
   assignment anywhere, so its app-bar `AppBarLoadingIndicator` always rendered `SizedBox.shrink()`.
   The field, that one use and its import are deleted, and the screen looks the same. The four other

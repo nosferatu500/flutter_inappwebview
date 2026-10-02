@@ -24,7 +24,6 @@ linter:
     # Opt-in: not in flutter_lints, and no longer an analyzer default (§227).
     deprecated_member_use_from_same_package: true
     depend_on_referenced_packages: false
-    library_private_types_in_public_api: false
     non_constant_identifier_names: false
     prefer_const_constructors: false
     # Opt-in: not in flutter_lints, which ships it off (§233).
