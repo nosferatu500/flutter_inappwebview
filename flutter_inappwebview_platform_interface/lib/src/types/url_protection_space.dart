@@ -19,7 +19,7 @@ List<X509Certificate>? _distinguishedNamesDeserializer(
     distinguishedNames = <X509Certificate>[];
     for (var data in (value.cast<Uint8List>() as List<Uint8List>)) {
       try {
-        distinguishedNames!.add(X509Certificate.fromData(data: data));
+        distinguishedNames.add(X509Certificate.fromData(data: data));
       } catch (e, stacktrace) {
         // Undecodable: skip this certificate and keep the rest.
         // ignore: avoid_print

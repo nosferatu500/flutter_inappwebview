@@ -24,6 +24,5 @@ analyzer:
     deprecated_member_use_from_same_package: ignore
     unnecessary_cast: ignore
     unnecessary_import: ignore
-    unnecessary_non_null_assertion: ignore
     unused_element_parameter: ignore
     dead_null_aware_expression: ignore

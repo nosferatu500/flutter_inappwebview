@@ -614,6 +614,13 @@ rename; this entry is the API-owner's view.
 
 ### Internal
 
+- **The `unnecessary_non_null_assertion` warning is enabled**, and its four `!`s removed. None
+  could ever throw. Three were `list!.add(…)` on a local that the `= <T>[]` just before had already
+  promoted (`URLCredential`'s and `URLProtectionSpace`'s certificate lists, a certificate policy's
+  qualifiers). The fourth was `_nativeValue!` in the generated `ActionModeMenuItem.|`, where the
+  private final field is promoted by the `!= null` check beside it. That one is fixed in the
+  generator, and regenerating changed exactly that line. A new test reaches all four lines, using a
+  self-signed certificate fixture with two policies, one with a CPS qualifier.
 - **The `avoid_print` lint is enabled.** Every one of its 15 findings here still prints exactly
   what it printed, so nothing new is logged and nothing goes silent. 12 are decode-or-skip
   fallbacks (an undecodable certificate, an unparseable `WebUri`, an `Error` thrown by a

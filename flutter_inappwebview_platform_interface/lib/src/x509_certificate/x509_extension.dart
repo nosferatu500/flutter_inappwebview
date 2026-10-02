@@ -437,7 +437,7 @@ class CertificatePoliciesExtension extends X509Extension {
               continue;
             }
             var value = sub.subAtIndex(1)?.asString;
-            qualifiers!.add(CertificatePolicyQualifier(oid: oid, value: value));
+            qualifiers.add(CertificatePolicyQualifier(oid: oid, value: value));
           }
         }
       }

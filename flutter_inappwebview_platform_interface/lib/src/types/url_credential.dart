@@ -16,7 +16,7 @@ List<X509Certificate>? _certificatesDeserializer(
     certificates = <X509Certificate>[];
     for (var data in (value.cast<Uint8List>() as List<Uint8List>)) {
       try {
-        certificates!.add(X509Certificate.fromData(data: data));
+        certificates.add(X509Certificate.fromData(data: data));
       } catch (e, stacktrace) {
         // Undecodable: skip this certificate and keep the rest.
         // ignore: avoid_print

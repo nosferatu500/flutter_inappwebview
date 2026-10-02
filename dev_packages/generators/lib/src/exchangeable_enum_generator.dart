@@ -508,7 +508,7 @@ class ExchangeableEnumGenerator
         "$extClassName operator |($extClassName value) => $extClassName._internal(value.toValue() | _value, ",
       );
       classBuffer.write(
-        "value.toNativeValue() != null && _nativeValue != null ? value.toNativeValue()! | _nativeValue! : null",
+        "value.toNativeValue() != null && _nativeValue != null ? value.toNativeValue()! | _nativeValue : null",
       );
       classBuffer.write(");");
     }
