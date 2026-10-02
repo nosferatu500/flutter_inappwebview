@@ -133,6 +133,8 @@ extension _PlatformAssetsPathHandlerClassSupported
   ///
   ///Use the [PlatformAssetsPathHandler.isClassSupported] method to check if this class is supported at runtime.
   ///{@endtemplate}
+  // Unused: [PlatformAssetsPathHandler.isClassSupported] answers through its creation params. Kept for the doc template above.
+  // ignore: unused_element
   static bool isClassSupported({TargetPlatform? platform}) {
     return ((kIsWeb && platform != null) || !kIsWeb) &&
         [TargetPlatform.android].contains(platform ?? defaultTargetPlatform);
@@ -163,6 +165,8 @@ extension _PlatformResourcesPathHandlerClassSupported
   ///
   ///Use the [PlatformResourcesPathHandler.isClassSupported] method to check if this class is supported at runtime.
   ///{@endtemplate}
+  // Unused: [PlatformResourcesPathHandler.isClassSupported] answers through its creation params. Kept for the doc template above.
+  // ignore: unused_element
   static bool isClassSupported({TargetPlatform? platform}) {
     return ((kIsWeb && platform != null) || !kIsWeb) &&
         [TargetPlatform.android].contains(platform ?? defaultTargetPlatform);
@@ -193,6 +197,8 @@ extension _PlatformInternalStoragePathHandlerClassSupported
   ///
   ///Use the [PlatformInternalStoragePathHandler.isClassSupported] method to check if this class is supported at runtime.
   ///{@endtemplate}
+  // Unused: [PlatformInternalStoragePathHandler.isClassSupported] answers through its creation params. Kept for the doc template above.
+  // ignore: unused_element
   static bool isClassSupported({TargetPlatform? platform}) {
     return ((kIsWeb && platform != null) || !kIsWeb) &&
         [TargetPlatform.android].contains(platform ?? defaultTargetPlatform);
@@ -223,6 +229,8 @@ extension _PlatformCustomPathHandlerClassSupported
   ///
   ///Use the [PlatformCustomPathHandler.isClassSupported] method to check if this class is supported at runtime.
   ///{@endtemplate}
+  // Unused: [PlatformCustomPathHandler.isClassSupported] answers through its creation params. Kept for the doc template above.
+  // ignore: unused_element
   static bool isClassSupported({TargetPlatform? platform}) {
     return ((kIsWeb && platform != null) || !kIsWeb) &&
         [TargetPlatform.android].contains(platform ?? defaultTargetPlatform);

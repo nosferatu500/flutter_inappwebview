@@ -471,9 +471,7 @@ class ServiceWorkerClient {
   ///Check if the current class is supported by the [defaultTargetPlatform] or a specific [platform].
   ///{@endtemplate}
   static bool isClassSupported({TargetPlatform? platform}) =>
-      _PlatformServiceWorkerControllerCreationParamsClassSupported.isClassSupported(
-        platform: platform,
-      );
+      _ServiceWorkerClientClassSupported.isClassSupported(platform: platform);
 
   ///{@template flutter_inappwebview_platform_interface.ServiceWorkerClient.isPropertySupported}
   ///Check if the given [method] is supported by the [defaultTargetPlatform] or a specific [platform].

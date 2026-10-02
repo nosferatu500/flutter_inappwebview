@@ -614,6 +614,13 @@ rename; this entry is the API-owner's view.
 
 ### Internal
 
+- **The `unused_element` lint is enabled.** It found one real slip: `ServiceWorkerClient.isClassSupported`
+  answered from `PlatformServiceWorkerControllerCreationParams`'s platform list instead of its own.
+  Both lists are Android-only, so the answer doesn't change, but it would have drifted silently.
+  Its 17 other findings were generated `isClassSupported` extensions that their classes never call,
+  because those classes answer through their creation params. The extensions are kept for the
+  `supported_platforms` doc template they carry, and the generator now marks exactly those with a
+  reasoned `// ignore: unused_element`. Every extension that is called stays checked.
 - **The `empty_catches` lint is enabled.** Its 20 findings, all in the X.509 parser, were
   deliberate "decode or leave it null" fallbacks, so each block now says what is left in its place.
   No code changed.

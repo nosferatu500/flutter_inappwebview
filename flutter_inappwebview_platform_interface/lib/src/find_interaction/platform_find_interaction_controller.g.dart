@@ -75,6 +75,8 @@ extension _PlatformFindInteractionControllerClassSupported
   ///
   ///Use the [PlatformFindInteractionController.isClassSupported] method to check if this class is supported at runtime.
   ///{@endtemplate}
+  // Unused: [PlatformFindInteractionController.isClassSupported] answers through its creation params. Kept for the doc template above.
+  // ignore: unused_element
   static bool isClassSupported({TargetPlatform? platform}) {
     return ((kIsWeb && platform != null) || !kIsWeb) &&
         [

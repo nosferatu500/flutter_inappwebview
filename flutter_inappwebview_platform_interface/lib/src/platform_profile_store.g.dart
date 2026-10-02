@@ -30,6 +30,8 @@ extension _PlatformProfileStoreClassSupported on PlatformProfileStore {
   ///
   ///Use the [PlatformProfileStore.isClassSupported] method to check if this class is supported at runtime.
   ///{@endtemplate}
+  // Unused: [PlatformProfileStore.isClassSupported] answers through its creation params. Kept for the doc template above.
+  // ignore: unused_element
   static bool isClassSupported({TargetPlatform? platform}) {
     return ((kIsWeb && platform != null) || !kIsWeb) &&
         [TargetPlatform.android].contains(platform ?? defaultTargetPlatform);

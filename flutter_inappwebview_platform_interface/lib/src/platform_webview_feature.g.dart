@@ -818,6 +818,8 @@ extension _PlatformWebViewFeatureClassSupported on PlatformWebViewFeature {
   ///
   ///Use the [PlatformWebViewFeature.isClassSupported] method to check if this class is supported at runtime.
   ///{@endtemplate}
+  // Unused: [PlatformWebViewFeature.isClassSupported] answers through its creation params. Kept for the doc template above.
+  // ignore: unused_element
   static bool isClassSupported({TargetPlatform? platform}) {
     return ((kIsWeb && platform != null) || !kIsWeb) &&
         [TargetPlatform.android].contains(platform ?? defaultTargetPlatform);

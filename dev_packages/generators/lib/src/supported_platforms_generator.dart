@@ -23,11 +23,15 @@ final _coreCheckerSupportedPlatforms = TypeChecker.typeNamedLiterally(
 class SupportedPlatformsGenerator
     extends GeneratorForAnnotation<SupportedPlatforms> {
   @override
-  String generateForAnnotatedElement(
+  Future<String> generateForAnnotatedElement(
     Element element,
     ConstantReader annotation,
     BuildStep buildStep,
-  ) {
+  ) async {
+    // The hand-written library, to see whether it calls the private `_<Class>ClassSupported`
+    // extension emitted below (see the `unused_element` note there). A private extension can only
+    // be called from its own library, and these libraries have no part but the generated one.
+    final librarySource = await buildStep.readAsString(buildStep.inputId);
     final visitor = ModelVisitor();
     // Visits all the children of element in no particular order.
     element.visitChildren(visitor);
@@ -151,6 +155,18 @@ class SupportedPlatformsGenerator
         );
       }
 
+      // Most classes answer `isClassSupported` through this extension. Some answer through their
+      // creation params instead (an instance method, so a platform's params can override it), and
+      // never call it. It is emitted for them anyway, because it carries the `supported_platforms`
+      // template above, which other docs `{@macro}`. So the ignore goes on exactly the extensions
+      // the hand-written library never calls, and every other one stays checked (§220).
+      if (!librarySource.contains('_${className}ClassSupported.')) {
+        classBuffer.writeln(
+          '// Unused: [$className.$isClassSupportedFunctionName] answers through its creation '
+          'params. Kept for the doc template above.',
+        );
+        classBuffer.writeln('// ignore: unused_element');
+      }
       classBuffer.writeln(
         """static bool $isClassSupportedFunctionName({TargetPlatform? platform}) {""",
       );
