@@ -595,7 +595,7 @@ class _SettingsEditorScreenState extends State<SettingsEditorScreen> {
               final name = _profileNameController.text.trim();
               if (name.isNotEmpty) {
                 await settingsManager.saveCurrentSettings(name);
-                if (mounted) {
+                if (mounted && context.mounted) {
                   Navigator.pop(context);
                   ScaffoldMessenger.of(context).showSnackBar(
                     SnackBar(content: Text('Profile "$name" saved')),
@@ -665,7 +665,7 @@ class _SettingsEditorScreenState extends State<SettingsEditorScreen> {
                     ),
                     onTap: () async {
                       await settingsManager.loadProfile(profile.id);
-                      if (mounted) {
+                      if (mounted && dialogContext.mounted) {
                         Navigator.pop(dialogContext);
                         ScaffoldMessenger.of(this.context).showSnackBar(
                           SnackBar(
@@ -708,7 +708,7 @@ class _SettingsEditorScreenState extends State<SettingsEditorScreen> {
             style: ElevatedButton.styleFrom(backgroundColor: Colors.red),
             onPressed: () async {
               await context.read<SettingsManager>().deleteProfile(profile.id);
-              if (mounted) {
+              if (mounted && dialogContext.mounted) {
                 Navigator.pop(dialogContext);
                 onDeleted?.call();
                 ScaffoldMessenger.of(context).showSnackBar(
@@ -856,7 +856,7 @@ class _SettingsEditorScreenState extends State<SettingsEditorScreen> {
               final success = await settingsManager.importSettingsFromJson(
                 importController.text,
               );
-              if (mounted) {
+              if (mounted && context.mounted) {
                 Navigator.pop(context);
                 ScaffoldMessenger.of(context).showSnackBar(
                   SnackBar(

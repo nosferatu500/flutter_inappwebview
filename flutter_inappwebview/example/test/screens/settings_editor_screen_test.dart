@@ -122,6 +122,79 @@ void main() {
       final actionsWidget = tester.widget(actionsFinder);
       expect(actionsWidget, isA<Wrap>());
     });
+
+    // §221: each dialog's "done" branch runs after an await, and its guard now checks the dialog's
+    // own context as well as the screen's `mounted`. These walk the normal path through each one,
+    // so a guard that checked the wrong context would show up as a dialog left open.
+    group('profile and import dialogs close and confirm', () {
+      Future<void> saveProfile(WidgetTester tester, String name) async {
+        await tester.tap(find.byIcon(Icons.save));
+        await tester.pumpAndSettle();
+        await tester.enterText(find.byType(TextField).last, name);
+        await tester.tap(find.widgetWithText(ElevatedButton, 'Save'));
+        await tester.pumpAndSettle();
+      }
+
+      testWidgets('saving a profile', (tester) async {
+        await tester.pumpWidget(createWidget());
+        await tester.pumpAndSettle();
+
+        await saveProfile(tester, 'p1');
+
+        expect(find.byType(AlertDialog), findsNothing);
+        expect(find.text('Profile "p1" saved'), findsOneWidget);
+      });
+
+      testWidgets('loading, then deleting, a saved profile', (tester) async {
+        await tester.pumpWidget(createWidget());
+        await tester.pumpAndSettle();
+        await saveProfile(tester, 'p1');
+        ScaffoldMessenger.of(
+          tester.element(find.byType(Scaffold).first),
+        ).removeCurrentSnackBar();
+        await tester.pumpAndSettle();
+
+        await tester.tap(find.byIcon(Icons.folder_open));
+        await tester.pumpAndSettle();
+        await tester.tap(find.widgetWithText(ListTile, 'p1'));
+        await tester.pumpAndSettle();
+        expect(find.byType(AlertDialog), findsNothing);
+        expect(find.text('Loaded profile "p1"'), findsOneWidget);
+        ScaffoldMessenger.of(
+          tester.element(find.byType(Scaffold).first),
+        ).removeCurrentSnackBar();
+        await tester.pumpAndSettle();
+
+        await tester.tap(find.byIcon(Icons.folder_open));
+        await tester.pumpAndSettle();
+        await tester.tap(find.byIcon(Icons.delete));
+        await tester.pumpAndSettle();
+        await tester.tap(find.widgetWithText(ElevatedButton, 'Delete'));
+        await tester.pumpAndSettle();
+        // The confirmation closes; the profile list it was opened from stays.
+        expect(find.text('Delete Profile'), findsNothing);
+        expect(find.text('Deleted profile "p1"'), findsOneWidget);
+      });
+
+      testWidgets('importing settings', (tester) async {
+        await tester.pumpWidget(createWidget());
+        await tester.pumpAndSettle();
+
+        await tester.tap(find.byIcon(Icons.more_vert));
+        await tester.pumpAndSettle();
+        await tester.tap(find.text('Import JSON'));
+        await tester.pumpAndSettle();
+        await tester.enterText(find.byType(TextField).last, 'not json');
+        await tester.tap(find.widgetWithText(ElevatedButton, 'Import'));
+        await tester.pumpAndSettle();
+
+        expect(find.byType(AlertDialog), findsNothing);
+        expect(
+          find.text('Failed to import settings - invalid JSON'),
+          findsOneWidget,
+        );
+      });
+    });
   });
 }
 

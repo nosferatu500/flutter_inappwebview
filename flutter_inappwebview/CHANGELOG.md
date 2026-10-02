@@ -1070,6 +1070,12 @@ simulator for the first time:**
 
 ### Internal
 
+- **The example app's `use_build_context_synchronously` lint is enabled**, and its nine findings
+  fixed. The settings editor's save, load, delete and import dialogs used the dialog's own context
+  after an `await`, guarded only by the screen's `mounted`; each guard now checks that context too,
+  so a dialog dismissed during the await is skipped instead of popped through a dead context. The
+  test runner reads its providers before awaiting `SharedPreferences`. Three new widget tests walk
+  each dialog's normal path.
 - **`lib/src/in_app_webview/_static_channel.dart` is deleted.** It declared a `MethodChannel` for
   `inappwebview_manager` that nothing imported or exported (orphaned since §188 moved that channel
   to Pigeon on Android). The iOS package keeps its own live copy.
