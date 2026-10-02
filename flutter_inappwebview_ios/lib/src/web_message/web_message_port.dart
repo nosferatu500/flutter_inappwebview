@@ -91,9 +91,9 @@ class IOSWebMessagePort extends PlatformWebMessagePort {
 
 extension InternalWebMessagePort on IOSWebMessagePort {
   WebMessageCallback? get onMessage => _onMessage;
-  void set onMessage(WebMessageCallback? value) => _onMessage = value;
+  set onMessage(WebMessageCallback? value) => _onMessage = value;
 
   IOSWebMessageChannel get webMessageChannel => _webMessageChannel;
-  void set webMessageChannel(IOSWebMessageChannel value) =>
+  set webMessageChannel(IOSWebMessageChannel value) =>
       _webMessageChannel = value;
 }

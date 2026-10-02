@@ -1070,6 +1070,8 @@ simulator for the first time:**
 
 ### Internal
 
+- **The `avoid_return_types_on_setters` lint is enabled.** `PrintJobController.onComplete`'s setter
+  loses its `void`, which setters always return. No code changed.
 - **The `prefer_const_constructors_in_immutables` lint is enabled.** Its one finding here:
   `InAppWebView.fromPlatform` is now a `const` constructor. Calls without `const` behave exactly as
   before; callers may now also write `const`.

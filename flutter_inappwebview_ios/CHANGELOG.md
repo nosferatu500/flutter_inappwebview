@@ -436,6 +436,9 @@ error.
 
 ### Internal
 
+- **The `avoid_return_types_on_setters` lint is enabled.** `IOSWebMessagePort`'s two setters
+  (`onMessage`, `webMessageChannel`) lose their `void`, which setters always return. No code
+  changed.
 - **The `prefer_const_constructors_in_immutables` lint is enabled.** Four creation-params
   constructors are now `const`: `IOSInAppBrowserCreationParams`,
   `IOSHeadlessInAppWebViewCreationParams`, `IOSWebStorageCreationParams` and

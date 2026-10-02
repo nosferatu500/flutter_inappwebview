@@ -14,7 +14,6 @@ linter:
   rules:
     # Opt-in: not in flutter_lints, and no longer an analyzer default (§227).
     deprecated_member_use_from_same_package: true
-    avoid_return_types_on_setters: false
     library_private_types_in_public_api: false
     non_constant_identifier_names: false
 # Additional information about this file can be found at

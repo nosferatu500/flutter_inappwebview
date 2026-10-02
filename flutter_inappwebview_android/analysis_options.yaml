@@ -15,7 +15,6 @@ linter:
     # Opt-in: not in flutter_lints, and no longer an analyzer default (§227).
     deprecated_member_use_from_same_package: true
     avoid_print: false
-    avoid_return_types_on_setters: false
 # Additional information about this file can be found at
 # https://dart.dev/guides/language/analysis-options
 analyzer:
