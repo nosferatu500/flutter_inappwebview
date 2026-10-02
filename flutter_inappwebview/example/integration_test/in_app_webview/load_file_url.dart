@@ -33,13 +33,13 @@ void loadFileUrl() {
       </body>
       </html>
     """;
-      fileHtml = File(htmlFolder.path + "index.html");
+      fileHtml = File("${htmlFolder.path}index.html");
       fileHtml.writeAsStringSync(html);
 
       var js = """
       console.log('message');
       """;
-      fileJs = File(jsFolder.path + "main.js");
+      fileJs = File("${jsFolder.path}main.js");
       fileJs.writeAsStringSync(js);
     });
 

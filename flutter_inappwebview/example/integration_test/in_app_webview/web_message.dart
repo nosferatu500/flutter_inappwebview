@@ -148,7 +148,7 @@ void webMessage() {
               await port1.setWebMessageCallback((message) async {
                 await port1.postMessage(
                   WebMessage(
-                    data: utf8.encode(utf8.decode(message!.data) + " and back"),
+                    data: utf8.encode("${utf8.decode(message!.data)} and back"),
                     type: WebMessageType.ARRAY_BUFFER,
                   ),
                 );
@@ -194,8 +194,7 @@ void webMessage() {
                   onPostMessage:
                       (message, sourceOrigin, isMainFrame, replyProxy) {
                         if (isMainFrame &&
-                            (sourceOrigin.toString() + '/') ==
-                                TEST_URL_EXAMPLE.toString()) {
+                            ('$sourceOrigin/') == TEST_URL_EXAMPLE.toString()) {
                           replyProxy.postMessage(
                             WebMessage(data: message!.data + " and back"),
                           );
@@ -255,12 +254,11 @@ void webMessage() {
                   onPostMessage:
                       (message, sourceOrigin, isMainFrame, replyProxy) {
                         if (isMainFrame &&
-                            (sourceOrigin.toString() + '/') ==
-                                TEST_URL_EXAMPLE.toString()) {
+                            ('$sourceOrigin/') == TEST_URL_EXAMPLE.toString()) {
                           replyProxy.postMessage(
                             WebMessage(
                               data: utf8.encode(
-                                utf8.decode(message!.data) + " and back",
+                                "${utf8.decode(message!.data)} and back",
                               ),
                               type: WebMessageType.ARRAY_BUFFER,
                             ),

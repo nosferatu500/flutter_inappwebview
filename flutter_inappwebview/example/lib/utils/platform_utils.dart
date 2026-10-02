@@ -51,7 +51,7 @@ class PlatformUtils {
   /// package_info_plus or similar to get actual version info.
   static String getFlutterVersion() {
     return FlutterVersion.version != null
-        ? FlutterVersion.version! + ' (' + (FlutterVersion.channel ?? '') + ')'
+        ? '${FlutterVersion.version!} (${FlutterVersion.channel ?? ''})'
         : 'Flutter SDK';
   }
 

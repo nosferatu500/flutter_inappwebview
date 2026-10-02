@@ -1070,6 +1070,11 @@ simulator for the first time:**
 
 ### Internal
 
+- **The example's `prefer_interpolation_to_compose_strings` lint is enabled**, and its 16 findings
+  fixed by `dart fix` (15 fixes in 8 files; two findings were one `+` chain). Every rewritten `+`
+  joined `String`s, and an interpolated `String` is itself, so no string's value changes. Where the
+  fix dropped a `.toString()`, interpolation calls it anyway. The one rewrite in app code,
+  `PlatformUtils.getFlutterVersion`, gained a test that pins its `<version> (<channel>)` shape.
 - **The example's `prefer_const_declarations` lint is enabled.** flutter_lints doesn't ship it, so
   the old `false` turned off something that was already off; it is now opted in with `true`. `dart
   fix` made 20 changes in 17 files, two more than the 18 findings: making

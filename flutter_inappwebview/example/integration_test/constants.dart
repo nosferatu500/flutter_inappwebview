@@ -16,13 +16,13 @@ final TEST_WEB_PLATFORM_BASE_URL = WebUri(
   Uri.base.toString().replaceFirst("/#/", "/"),
 );
 final TEST_WEB_PLATFORM_URL_1 = WebUri(
-  TEST_WEB_PLATFORM_BASE_URL.toString() + 'page.html',
+  '${TEST_WEB_PLATFORM_BASE_URL}page.html',
 );
 final TEST_WEB_PLATFORM_URL_2 = WebUri(
-  TEST_WEB_PLATFORM_BASE_URL.toString() + 'page-2.html',
+  '${TEST_WEB_PLATFORM_BASE_URL}page-2.html',
 );
 final TEST_WEB_PLATFORM_URL_3 = WebUri(
-  TEST_WEB_PLATFORM_BASE_URL.toString() + 'heavy-page.html',
+  '${TEST_WEB_PLATFORM_BASE_URL}heavy-page.html',
 );
 final TEST_NOT_A_WEBSITE_URL = WebUri('https://www.notawebsite..com/');
 final TEST_CHROME_SAFE_BROWSING_MALWARE = WebUri(

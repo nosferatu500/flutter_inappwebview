@@ -21,11 +21,9 @@ void apply() {
               ))
               ? ProcessGlobalConfigDirectoryBasePaths(
                   cacheDirectoryBasePath:
-                      (await getApplicationDocumentsDirectory()).absolute.path +
-                      '/inappwebviewexample/cache',
+                      '${(await getApplicationDocumentsDirectory()).absolute.path}/inappwebviewexample/cache',
                   dataDirectoryBasePath:
-                      (await getApplicationDocumentsDirectory()).absolute.path +
-                      '/inappwebviewexample/data',
+                      '${(await getApplicationDocumentsDirectory()).absolute.path}/inappwebviewexample/data',
                 )
               : null,
         ),
