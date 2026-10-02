@@ -31,7 +31,7 @@ void main() {
           settingsManager: settingsManager,
           eventLogProvider: eventLogProvider,
           networkMonitor: networkMonitor,
-          child: WebViewTesterScreen(),
+          child: const WebViewTesterScreen(),
         ),
       );
     }

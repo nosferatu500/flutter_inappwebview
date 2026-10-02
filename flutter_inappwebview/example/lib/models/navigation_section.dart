@@ -23,7 +23,7 @@ class NavigationSection {
 }
 
 final List<NavigationSection> defaultNavigationSections = [
-  NavigationSection(
+  const NavigationSection(
     items: [
       NavigationItem(
         title: 'WebView Tester',
@@ -48,7 +48,7 @@ final List<NavigationSection> defaultNavigationSections = [
       ),
     ],
   ),
-  NavigationSection(
+  const NavigationSection(
     title: 'Storage & Cookies',
     items: [
       NavigationItem(
@@ -76,19 +76,19 @@ final List<NavigationSection> defaultNavigationSections = [
         icon: Icons.open_in_browser,
         routeName: '/browsers/inapp-browser',
       ),
-      NavigationItem(
+      const NavigationItem(
         title: 'Chrome/Safari Browser',
         icon: Icons.public,
         routeName: '/browsers/chrome-safari-browser',
       ),
-      NavigationItem(
+      const NavigationItem(
         title: 'Headless WebView',
         icon: Icons.visibility_off_outlined,
         routeName: '/browsers/headless',
       ),
     ],
   ),
-  NavigationSection(
+  const NavigationSection(
     title: 'Advanced',
     items: [
       NavigationItem(
@@ -108,7 +108,7 @@ final List<NavigationSection> defaultNavigationSections = [
       ),
     ],
   ),
-  NavigationSection(
+  const NavigationSection(
     title: 'Testing',
     items: [
       NavigationItem(
@@ -123,7 +123,7 @@ final List<NavigationSection> defaultNavigationSections = [
       ),
     ],
   ),
-  NavigationSection(
+  const NavigationSection(
     title: 'Documentation',
     items: [
       NavigationItem(

@@ -1070,6 +1070,13 @@ simulator for the first time:**
 
 ### Internal
 
+- **The example's `prefer_const_constructors` lint is enabled.** flutter_lints doesn't ship it, so
+  the old `false` was dead; it is now opted in with `true`. Its 185 findings were fixed by `dart
+  fix` (167 fixes in 34 files; a `const` parent covers its children's findings), plus 6
+  `unnecessary_const` the fixes created. Every file differs from before only by `const`/`final`
+  keywords and formatting. No `const` collection is mutated, and every newly canonicalized value in
+  the integration tests (`Duration`, `Size`, one `PrintJobResolution` that is only serialized) is
+  identity-insensitive.
 - **The example's `depend_on_referenced_packages` lint is enabled.** Its test mock imports
   `flutter_inappwebview_platform_interface` and `plugin_platform_interface`, which the example only
   had transitively. Both are now `dev_dependencies`, with the constraints the packages that already

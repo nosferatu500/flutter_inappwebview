@@ -39,10 +39,10 @@ void pauseResumeTimers() {
     );
 
     await controller.pauseTimers();
-    await Future.delayed(Duration(seconds: 2));
+    await Future.delayed(const Duration(seconds: 2));
     await controller.resumeTimers();
     expect(await controller.evaluateJavascript(source: "count;"), lessThan(50));
-    await Future.delayed(Duration(seconds: 4));
+    await Future.delayed(const Duration(seconds: 4));
     expect(
       await controller.evaluateJavascript(source: "count;"),
       greaterThan(50),

@@ -11,7 +11,7 @@ void customSize() {
 
     var headlessWebView = HeadlessInAppWebView(
       initialUrlRequest: URLRequest(url: TEST_CROSS_PLATFORM_URL_1),
-      initialSize: Size(600, 800),
+      initialSize: const Size(600, 800),
       onWebViewCreated: (controller) {
         controllerCompleter.complete(controller);
       },
@@ -22,22 +22,22 @@ void customSize() {
 
     final Size? size = await headlessWebView.getSize();
     expect(size, isNotNull);
-    expect(size, Size(600, 800));
+    expect(size, const Size(600, 800));
 
-    await headlessWebView.setSize(Size(1080, 1920));
+    await headlessWebView.setSize(const Size(1080, 1920));
     final Size? newSize = await headlessWebView.getSize();
     expect(newSize, isNotNull);
-    expect(newSize, Size(1080, 1920));
+    expect(newSize, const Size(1080, 1920));
 
     // A size whose physical-pixel product is fractional at *every* density. Android applies the
     // size as `int` layout params, so this is where a dp -> px -> dp conversion drops what was
     // asked for (TODO.md P0b.8). The two sizes above survive on the test AVDs only because
     // density 420 (scale 2.625) makes 600, 800, 1080 and 1920 whole numbers of pixels — an AVD at
     // density 390 returns 599.795 for 600.
-    await headlessWebView.setSize(Size(600.25, 800.75));
+    await headlessWebView.setSize(const Size(600.25, 800.75));
     final Size? fractionalSize = await headlessWebView.getSize();
     expect(fractionalSize, isNotNull);
-    expect(fractionalSize, Size(600.25, 800.75));
+    expect(fractionalSize, const Size(600.25, 800.75));
 
     await headlessWebView.dispose();
 
@@ -50,7 +50,7 @@ void customSize() {
 
     var headlessWebView = HeadlessInAppWebView(
       initialUrlRequest: URLRequest(url: TEST_CROSS_PLATFORM_URL_1),
-      initialSize: Size(-1, -1),
+      initialSize: const Size(-1, -1),
       onWebViewCreated: (controller) {
         controllerCompleter.complete(controller);
       },

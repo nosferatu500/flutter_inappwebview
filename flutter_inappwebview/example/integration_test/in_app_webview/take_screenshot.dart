@@ -31,7 +31,7 @@ void takeScreenshot() {
 
     // Without pumped frames the WebView has no size yet (§209: with the rect ignored, the capture
     // failed with "width and height must be > 0"), so the rect below was drawn from a 0 × 0 view.
-    await Future.delayed(Duration(seconds: 1));
+    await Future.delayed(const Duration(seconds: 1));
     await _pumpFrames(tester);
 
     var screenshotConfiguration = ScreenshotConfiguration(

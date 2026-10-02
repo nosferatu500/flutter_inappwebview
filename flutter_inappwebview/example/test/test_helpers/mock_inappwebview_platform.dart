@@ -34,7 +34,7 @@ class MockInAppWebViewPlatform extends InAppWebViewPlatform
   @override
   PlatformCookieManager createPlatformCookieManagerStatic() {
     return MockPlatformCookieManagerStatic(
-      PlatformCookieManagerCreationParams(),
+      const PlatformCookieManagerCreationParams(),
     );
   }
 

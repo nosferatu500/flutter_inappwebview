@@ -32,7 +32,7 @@ void main() {
         body: '{"test": true}',
         response: '{"success": true}',
         statusCode: 200,
-        duration: Duration(milliseconds: 150),
+        duration: const Duration(milliseconds: 150),
       );
 
       expect(request.id, '2');
@@ -42,7 +42,7 @@ void main() {
       expect(request.body, '{"test": true}');
       expect(request.response, '{"success": true}');
       expect(request.statusCode, 200);
-      expect(request.duration, Duration(milliseconds: 150));
+      expect(request.duration, const Duration(milliseconds: 150));
     });
 
     test('copyWith creates new instance with updated fields', () {
@@ -56,7 +56,7 @@ void main() {
       final updated = original.copyWith(
         statusCode: 200,
         response: '{"data": []}',
-        duration: Duration(milliseconds: 200),
+        duration: const Duration(milliseconds: 200),
       );
 
       expect(updated.id, original.id);
@@ -65,7 +65,7 @@ void main() {
       expect(updated.timestamp, original.timestamp);
       expect(updated.statusCode, 200);
       expect(updated.response, '{"data": []}');
-      expect(updated.duration, Duration(milliseconds: 200));
+      expect(updated.duration, const Duration(milliseconds: 200));
     });
 
     test('toMap serializes correctly', () {
@@ -76,7 +76,7 @@ void main() {
         timestamp: DateTime(2025, 1, 1),
         headers: {'Accept': 'application/json'},
         statusCode: 200,
-        duration: Duration(milliseconds: 100),
+        duration: const Duration(milliseconds: 100),
       );
 
       final map = request.toMap();
@@ -113,7 +113,7 @@ void main() {
       expect(request.body, '{"test": true}');
       expect(request.response, '{"success": true}');
       expect(request.statusCode, 201);
-      expect(request.duration, Duration(milliseconds: 250));
+      expect(request.duration, const Duration(milliseconds: 250));
     });
 
     test('fromMap handles missing optional fields', () {

@@ -47,7 +47,7 @@ void main() {
           category: TestCategory.navigation,
           complexity: TestComplexity.quick,
           supportedPlatforms: ['android'],
-          execute: () async => TestResult(
+          execute: () async => const TestResult(
             passed: true,
             message: 'Test passed',
             duration: Duration.zero,
@@ -81,7 +81,7 @@ void main() {
           category: TestCategory.navigation,
           complexity: TestComplexity.quick,
           supportedPlatforms: ['android'],
-          execute: () async => TestResult(
+          execute: () async => const TestResult(
             passed: true,
             message: 'Test passed',
             duration: Duration.zero,
@@ -97,7 +97,7 @@ void main() {
           category: TestCategory.navigation,
           complexity: TestComplexity.medium,
           supportedPlatforms: ['ios'],
-          execute: () async => TestResult(
+          execute: () async => const TestResult(
             passed: true,
             message: 'Test passed',
             duration: Duration.zero,
@@ -120,7 +120,7 @@ void main() {
           category: TestCategory.navigation,
           complexity: TestComplexity.quick,
           supportedPlatforms: ['android', 'ios'],
-          execute: () async => TestResult(
+          execute: () async => const TestResult(
             passed: true,
             message: 'Test passed',
             duration: Duration.zero,
@@ -142,7 +142,7 @@ void main() {
           category: TestCategory.navigation,
           complexity: TestComplexity.quick,
           supportedPlatforms: ['android'],
-          execute: () async => TestResult(
+          execute: () async => const TestResult(
             passed: true,
             message: 'Test passed',
             duration: Duration.zero,

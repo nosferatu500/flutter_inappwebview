@@ -698,7 +698,7 @@ class TestRunner extends ChangeNotifier {
       category: step.category,
       execute: (controller) async {
         // This is a placeholder - actual execution happens through _executeCustomStep
-        return TestResult(
+        return const TestResult(
           passed: true,
           message: 'Executed via configuration',
           duration: Duration.zero,

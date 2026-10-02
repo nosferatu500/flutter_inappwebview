@@ -35,7 +35,7 @@ void programmaticZoomScale() {
           await controllerCompleter.future;
       await pageLoaded.future;
       expect(await controller.zoomIn(), true);
-      await Future.delayed(Duration(seconds: 1));
+      await Future.delayed(const Duration(seconds: 1));
       expect(await controller.zoomOut(), true);
     }, skip: shouldSkipTest1);
 

@@ -61,7 +61,7 @@ void startAndStop() {
     // deterministically (3 runs out of 3). Poll instead of guessing a duration.
     var stillTracing = true;
     for (var i = 0; i < 30 && stillTracing; i++) {
-      await Future.delayed(Duration(seconds: 1));
+      await Future.delayed(const Duration(seconds: 1));
       stillTracing = await tracingController.isTracing();
     }
     expect(

@@ -13,42 +13,42 @@ List<T> _safeEnumValues<T>(Iterable<T> Function() getter) {
 Map<String, List<SettingDefinition>> getSettingDefinitions() {
   return {
     'General': [
-      SettingDefinition(
+      const SettingDefinition(
         name: 'JavaScript Enabled',
         description: 'Enable JavaScript execution in the WebView',
         type: SettingType.boolean,
         defaultValue: true,
         property: InAppWebViewSettingsProperty.javaScriptEnabled,
       ),
-      SettingDefinition(
+      const SettingDefinition(
         name: 'User Agent',
         description: 'Custom user-agent string for the WebView',
         type: SettingType.string,
         defaultValue: '',
         property: InAppWebViewSettingsProperty.userAgent,
       ),
-      SettingDefinition(
+      const SettingDefinition(
         name: 'Application Name for User Agent',
         description: 'Append to the existing user-agent',
         type: SettingType.string,
         defaultValue: '',
         property: InAppWebViewSettingsProperty.applicationNameForUserAgent,
       ),
-      SettingDefinition(
+      const SettingDefinition(
         name: 'Cache Enabled',
         description: 'Enable browser caching',
         type: SettingType.boolean,
         defaultValue: true,
         property: InAppWebViewSettingsProperty.cacheEnabled,
       ),
-      SettingDefinition(
+      const SettingDefinition(
         name: 'Incognito Mode',
         description: 'Open browser in incognito/private mode',
         type: SettingType.boolean,
         defaultValue: false,
         property: InAppWebViewSettingsProperty.incognito,
       ),
-      SettingDefinition(
+      const SettingDefinition(
         name: 'Support Zoom',
         description: 'Enable zoom gestures and controls',
         type: SettingType.boolean,
@@ -57,35 +57,35 @@ Map<String, List<SettingDefinition>> getSettingDefinitions() {
       ),
     ],
     'Layout': [
-      SettingDefinition(
+      const SettingDefinition(
         name: 'Use Wide ViewPort',
         description: 'Enable support for HTML viewport meta tag',
         type: SettingType.boolean,
         defaultValue: true,
         property: InAppWebViewSettingsProperty.useWideViewPort,
       ),
-      SettingDefinition(
+      const SettingDefinition(
         name: 'Load With Overview Mode',
         description: 'Zoom out content to fit on screen',
         type: SettingType.boolean,
         defaultValue: true,
         property: InAppWebViewSettingsProperty.loadWithOverviewMode,
       ),
-      SettingDefinition(
+      const SettingDefinition(
         name: 'Minimum Font Size',
         description: 'Minimum font size in pixels',
         type: SettingType.integer,
         defaultValue: 8,
         property: InAppWebViewSettingsProperty.minimumFontSize,
       ),
-      SettingDefinition(
+      const SettingDefinition(
         name: 'Default Font Size',
         description: 'Default font size in pixels',
         type: SettingType.integer,
         defaultValue: 16,
         property: InAppWebViewSettingsProperty.defaultFontSize,
       ),
-      SettingDefinition(
+      const SettingDefinition(
         name: 'Default Text Encoding',
         description: 'Default text encoding for HTML pages',
         type: SettingType.string,
@@ -94,7 +94,7 @@ Map<String, List<SettingDefinition>> getSettingDefinitions() {
       ),
     ],
     'Content': [
-      SettingDefinition(
+      const SettingDefinition(
         name: 'Download Favicons',
         description:
             'Fetch page favicons (Android). Only controls the request — use getFavicons() to read them',
@@ -102,7 +102,7 @@ Map<String, List<SettingDefinition>> getSettingDefinitions() {
         defaultValue: null,
         property: InAppWebViewSettingsProperty.downloadFaviconsEnabled,
       ),
-      SettingDefinition(
+      const SettingDefinition(
         name: 'Adaptive Image Glyph',
         description:
             'Allow Genmoji and other adaptive image glyphs in editable content (iOS)',
@@ -110,42 +110,42 @@ Map<String, List<SettingDefinition>> getSettingDefinitions() {
         defaultValue: null,
         property: InAppWebViewSettingsProperty.supportsAdaptiveImageGlyph,
       ),
-      SettingDefinition(
+      const SettingDefinition(
         name: 'Allow Content Access',
         description: 'Enable content URL access',
         type: SettingType.boolean,
         defaultValue: true,
         property: InAppWebViewSettingsProperty.allowContentAccess,
       ),
-      SettingDefinition(
+      const SettingDefinition(
         name: 'Allow File Access',
         description: 'Enable file system access',
         type: SettingType.boolean,
         defaultValue: true,
         property: InAppWebViewSettingsProperty.allowFileAccess,
       ),
-      SettingDefinition(
+      const SettingDefinition(
         name: 'Allow File Access From File URLs',
         description: 'Allow file:// URLs to access other file:// URLs',
         type: SettingType.boolean,
         defaultValue: false,
         property: InAppWebViewSettingsProperty.allowFileAccessFromFileURLs,
       ),
-      SettingDefinition(
+      const SettingDefinition(
         name: 'Allow Universal Access From File URLs',
         description: 'Allow file:// URLs to access any origin',
         type: SettingType.boolean,
         defaultValue: false,
         property: InAppWebViewSettingsProperty.allowUniversalAccessFromFileURLs,
       ),
-      SettingDefinition(
+      const SettingDefinition(
         name: 'Block Network Images',
         description: 'Block loading images from the network',
         type: SettingType.boolean,
         defaultValue: false,
         property: InAppWebViewSettingsProperty.blockNetworkImage,
       ),
-      SettingDefinition(
+      const SettingDefinition(
         name: 'Block Network Loads',
         description: 'Block all network resource loading',
         type: SettingType.boolean,
@@ -154,28 +154,28 @@ Map<String, List<SettingDefinition>> getSettingDefinitions() {
       ),
     ],
     'Media': [
-      SettingDefinition(
+      const SettingDefinition(
         name: 'Media Requires User Gesture',
         description: 'Require user interaction to play media',
         type: SettingType.boolean,
         defaultValue: true,
         property: InAppWebViewSettingsProperty.mediaPlaybackRequiresUserGesture,
       ),
-      SettingDefinition(
+      const SettingDefinition(
         name: 'Allows Inline Media Playback',
         description: 'Allow HTML5 media to play inline',
         type: SettingType.boolean,
         defaultValue: false,
         property: InAppWebViewSettingsProperty.allowsInlineMediaPlayback,
       ),
-      SettingDefinition(
+      const SettingDefinition(
         name: 'Allows AirPlay',
         description: 'Allow AirPlay for media playback',
         type: SettingType.boolean,
         defaultValue: true,
         property: InAppWebViewSettingsProperty.allowsAirPlayForMediaPlayback,
       ),
-      SettingDefinition(
+      const SettingDefinition(
         name: 'Allows Picture-in-Picture',
         description: 'Allow videos to play in picture-in-picture',
         type: SettingType.boolean,
@@ -183,7 +183,7 @@ Map<String, List<SettingDefinition>> getSettingDefinitions() {
         property:
             InAppWebViewSettingsProperty.allowsPictureInPictureMediaPlayback,
       ),
-      SettingDefinition(
+      const SettingDefinition(
         name: 'Auto Adjust Scroll Indicator Insets',
         description: 'Automatically adjust scroll indicator insets',
         type: SettingType.boolean,
@@ -193,7 +193,7 @@ Map<String, List<SettingDefinition>> getSettingDefinitions() {
       ),
     ],
     'JavaScript': [
-      SettingDefinition(
+      const SettingDefinition(
         name: 'JS Can Open Windows',
         description: 'Allow JavaScript to open windows automatically',
         type: SettingType.boolean,
@@ -201,14 +201,14 @@ Map<String, List<SettingDefinition>> getSettingDefinitions() {
         property:
             InAppWebViewSettingsProperty.javaScriptCanOpenWindowsAutomatically,
       ),
-      SettingDefinition(
+      const SettingDefinition(
         name: 'JavaScript Bridge Enabled',
         description: 'Enable the JavaScript bridge',
         type: SettingType.boolean,
         defaultValue: true,
         property: InAppWebViewSettingsProperty.javaScriptBridgeEnabled,
       ),
-      SettingDefinition(
+      const SettingDefinition(
         name: 'JS Bridge Main Frame Only',
         description: 'Restrict JavaScript bridge to main frame',
         type: SettingType.boolean,
@@ -225,7 +225,7 @@ Map<String, List<SettingDefinition>> getSettingDefinitions() {
         enumValues: _safeEnumValues(() => MixedContentMode.values),
         property: InAppWebViewSettingsProperty.mixedContentMode,
       ),
-      SettingDefinition(
+      const SettingDefinition(
         name: 'Use On Show File Chooser',
         description:
             'Route file-upload pickers to the onShowFileChooser event — needed on '
@@ -234,7 +234,7 @@ Map<String, List<SettingDefinition>> getSettingDefinitions() {
         defaultValue: null,
         property: InAppWebViewSettingsProperty.useOnShowFileChooser,
       ),
-      SettingDefinition(
+      const SettingDefinition(
         name: 'Use On Insert Input Suggestion',
         description:
             'Receive keyboard Smart Replies through onInsertInputSuggestion '
@@ -243,7 +243,7 @@ Map<String, List<SettingDefinition>> getSettingDefinitions() {
         defaultValue: null,
         property: InAppWebViewSettingsProperty.useOnInsertInputSuggestion,
       ),
-      SettingDefinition(
+      const SettingDefinition(
         name: 'Use Should Go To Back Forward List Item',
         description:
             'Veto back/forward navigations through shouldGoToBackForwardListItem '
@@ -252,7 +252,7 @@ Map<String, List<SettingDefinition>> getSettingDefinitions() {
         defaultValue: null,
         property: InAppWebViewSettingsProperty.useShouldGoToBackForwardListItem,
       ),
-      SettingDefinition(
+      const SettingDefinition(
         name: 'Use Navigation Listener',
         description:
             'Enable onNavigationStarted/Redirected/Completed (Android, needs '
@@ -261,7 +261,7 @@ Map<String, List<SettingDefinition>> getSettingDefinitions() {
         defaultValue: null,
         property: InAppWebViewSettingsProperty.useNavigationListener,
       ),
-      SettingDefinition(
+      const SettingDefinition(
         name: 'Use On Performance Mark Millis',
         description:
             'Enable onPerformanceMarkMillis (Android). Separate from the navigation '
@@ -270,28 +270,28 @@ Map<String, List<SettingDefinition>> getSettingDefinitions() {
         defaultValue: null,
         property: InAppWebViewSettingsProperty.useOnPerformanceMarkMillis,
       ),
-      SettingDefinition(
+      const SettingDefinition(
         name: 'Use Should Intercept Request',
         description: 'Enable request interception events',
         type: SettingType.boolean,
         defaultValue: false,
         property: InAppWebViewSettingsProperty.useShouldInterceptRequest,
       ),
-      SettingDefinition(
+      const SettingDefinition(
         name: 'Use Should Override URL Loading',
         description: 'Enable URL loading override events',
         type: SettingType.boolean,
         defaultValue: false,
         property: InAppWebViewSettingsProperty.useShouldOverrideUrlLoading,
       ),
-      SettingDefinition(
+      const SettingDefinition(
         name: 'Use On Load Resource',
         description: 'Enable resource loading events',
         type: SettingType.boolean,
         defaultValue: false,
         property: InAppWebViewSettingsProperty.useOnLoadResource,
       ),
-      SettingDefinition(
+      const SettingDefinition(
         name: 'Fraudulent Website Warning',
         description: 'Show warnings for suspected phishing/malware',
         type: SettingType.boolean,
@@ -299,7 +299,7 @@ Map<String, List<SettingDefinition>> getSettingDefinitions() {
         property:
             InAppWebViewSettingsProperty.isFraudulentWebsiteWarningEnabled,
       ),
-      SettingDefinition(
+      const SettingDefinition(
         name: 'Safe Browsing',
         description: 'Enable Google Safe Browsing',
         type: SettingType.boolean,
@@ -315,7 +315,7 @@ Map<String, List<SettingDefinition>> getSettingDefinitions() {
         enumValues: _safeEnumValues(() => WebAuthenticationSupport.values),
         property: InAppWebViewSettingsProperty.webAuthenticationSupport,
       ),
-      SettingDefinition(
+      const SettingDefinition(
         name: 'Lockdown Mode',
         description: 'Apply the system Lockdown Mode restrictions (iOS)',
         type: SettingType.boolean,
@@ -341,7 +341,7 @@ Map<String, List<SettingDefinition>> getSettingDefinitions() {
         enumValues: _safeEnumValues(() => UpgradeToHTTPSPolicy.values),
         property: InAppWebViewSettingsProperty.preferredHTTPSNavigationPolicy,
       ),
-      SettingDefinition(
+      const SettingDefinition(
         name: 'System Screen Time Blocking View',
         description:
             'Let WebKit draw its own overlay when Screen Time blocks the content '
@@ -364,49 +364,49 @@ Map<String, List<SettingDefinition>> getSettingDefinitions() {
       ),
     ],
     'Appearance': [
-      SettingDefinition(
+      const SettingDefinition(
         name: 'Transparent Background',
         description: 'Make the WebView background transparent',
         type: SettingType.boolean,
         defaultValue: false,
         property: InAppWebViewSettingsProperty.transparentBackground,
       ),
-      SettingDefinition(
+      const SettingDefinition(
         name: 'Vertical Scroll Bar',
         description: 'Show vertical scroll bar',
         type: SettingType.boolean,
         defaultValue: true,
         property: InAppWebViewSettingsProperty.verticalScrollBarEnabled,
       ),
-      SettingDefinition(
+      const SettingDefinition(
         name: 'Horizontal Scroll Bar',
         description: 'Show horizontal scroll bar',
         type: SettingType.boolean,
         defaultValue: true,
         property: InAppWebViewSettingsProperty.horizontalScrollBarEnabled,
       ),
-      SettingDefinition(
+      const SettingDefinition(
         name: 'Scrollbar Fading',
         description: 'Fade scrollbars when not scrolling',
         type: SettingType.boolean,
         defaultValue: true,
         property: InAppWebViewSettingsProperty.scrollbarFadingEnabled,
       ),
-      SettingDefinition(
+      const SettingDefinition(
         name: 'Disable Vertical Scroll',
         description: 'Disable vertical scrolling',
         type: SettingType.boolean,
         defaultValue: false,
         property: InAppWebViewSettingsProperty.disableVerticalScroll,
       ),
-      SettingDefinition(
+      const SettingDefinition(
         name: 'Disable Horizontal Scroll',
         description: 'Disable horizontal scrolling',
         type: SettingType.boolean,
         defaultValue: false,
         property: InAppWebViewSettingsProperty.disableHorizontalScroll,
       ),
-      SettingDefinition(
+      const SettingDefinition(
         name: 'Disable Context Menu',
         description: 'Disable the long-press context menu',
         type: SettingType.boolean,
@@ -415,7 +415,7 @@ Map<String, List<SettingDefinition>> getSettingDefinitions() {
       ),
     ],
     'Navigation': [
-      SettingDefinition(
+      const SettingDefinition(
         name: 'Back/Forward Cache',
         description:
             'Keep pages alive for instant back/forward navigation (Android). '
@@ -424,7 +424,7 @@ Map<String, List<SettingDefinition>> getSettingDefinitions() {
         defaultValue: null,
         property: InAppWebViewSettingsProperty.backForwardCacheEnabled,
       ),
-      SettingDefinition(
+      const SettingDefinition(
         name: 'Back/Forward Gestures',
         description: 'Enable swipe gestures for navigation',
         type: SettingType.boolean,
@@ -434,21 +434,21 @@ Map<String, List<SettingDefinition>> getSettingDefinitions() {
       ),
     ],
     'Rendering': [
-      SettingDefinition(
+      const SettingDefinition(
         name: 'Suppress Incremental Rendering',
         description: 'Wait until content is fully loaded before rendering',
         type: SettingType.boolean,
         defaultValue: false,
         property: InAppWebViewSettingsProperty.suppressesIncrementalRendering,
       ),
-      SettingDefinition(
+      const SettingDefinition(
         name: 'Hardware Acceleration',
         description: 'Enable hardware acceleration',
         type: SettingType.boolean,
         defaultValue: true,
         property: InAppWebViewSettingsProperty.hardwareAcceleration,
       ),
-      SettingDefinition(
+      const SettingDefinition(
         name: 'Hybrid Composition',
         description: 'Use Flutter Hybrid Composition',
         type: SettingType.boolean,
@@ -465,7 +465,7 @@ Map<String, List<SettingDefinition>> getSettingDefinitions() {
         enumValues: _safeEnumValues(() => WritingToolsBehavior.values),
         property: InAppWebViewSettingsProperty.writingToolsBehavior,
       ),
-      SettingDefinition(
+      const SettingDefinition(
         name: 'Link Preview',
         description: 'Show link previews on long press',
         type: SettingType.boolean,
@@ -474,7 +474,7 @@ Map<String, List<SettingDefinition>> getSettingDefinitions() {
       ),
     ],
     'Storage': [
-      SettingDefinition(
+      const SettingDefinition(
         name: 'Profile Name',
         description:
             'Which androidx profile this WebView uses — cookies, storage and '
@@ -483,21 +483,21 @@ Map<String, List<SettingDefinition>> getSettingDefinitions() {
         defaultValue: '',
         property: InAppWebViewSettingsProperty.profileName,
       ),
-      SettingDefinition(
+      const SettingDefinition(
         name: 'Third-Party Cookies',
         description: 'Allow third-party cookies',
         type: SettingType.boolean,
         defaultValue: true,
         property: InAppWebViewSettingsProperty.thirdPartyCookiesEnabled,
       ),
-      SettingDefinition(
+      const SettingDefinition(
         name: 'DOM Storage',
         description: 'Enable DOM local storage',
         type: SettingType.boolean,
         defaultValue: true,
         property: InAppWebViewSettingsProperty.domStorageEnabled,
       ),
-      SettingDefinition(
+      const SettingDefinition(
         name: 'Database',
         description: 'Enable database storage API',
         type: SettingType.boolean,
@@ -506,7 +506,7 @@ Map<String, List<SettingDefinition>> getSettingDefinitions() {
       ),
     ],
     'APIs': [
-      SettingDefinition(
+      const SettingDefinition(
         name: 'Payment Request API',
         description:
             'Let web content use the Payment Request API, e.g. Google Pay (Android)',
@@ -514,7 +514,7 @@ Map<String, List<SettingDefinition>> getSettingDefinitions() {
         defaultValue: false,
         property: InAppWebViewSettingsProperty.paymentRequestEnabled,
       ),
-      SettingDefinition(
+      const SettingDefinition(
         name: 'Cookies in shouldInterceptRequest',
         description:
             'Put the Cookie header on intercepted requests, and honour '
@@ -537,7 +537,7 @@ Map<String, List<SettingDefinition>> getSettingDefinitions() {
         ),
         property: InAppWebViewSettingsProperty.attributionRegistrationBehavior,
       ),
-      SettingDefinition(
+      const SettingDefinition(
         name: 'Geolocation',
         description: 'Enable Geolocation API',
         type: SettingType.boolean,
@@ -546,14 +546,14 @@ Map<String, List<SettingDefinition>> getSettingDefinitions() {
       ),
     ],
     'Developer': [
-      SettingDefinition(
+      const SettingDefinition(
         name: 'Inspectable',
         description: 'Allow Web Inspector/DevTools',
         type: SettingType.boolean,
         defaultValue: false,
         property: InAppWebViewSettingsProperty.isInspectable,
       ),
-      SettingDefinition(
+      const SettingDefinition(
         name: 'Sync Callback Timeout (ms)',
         description:
             'How long a WebView thread waits for a Dart answer to '

@@ -27,7 +27,7 @@ void findInteractions() {
     await pageLoaded.future;
 
     await tester.pump();
-    await Future.delayed(Duration(seconds: 1));
+    await Future.delayed(const Duration(seconds: 1));
 
     const firstSearchText = "InAppWebViewInitialFileTest";
     await expectLater(
@@ -36,7 +36,7 @@ void findInteractions() {
     );
     expect(await findInteractionController.getSearchText(), firstSearchText);
     // Allow extra time for find results to be processed
-    await Future.delayed(Duration(seconds: 1));
+    await Future.delayed(const Duration(seconds: 1));
     final session = await findInteractionController.getActiveFindSession();
     expect(session!.resultCount, 2);
     await expectLater(
@@ -114,7 +114,7 @@ void findInteractions() {
     await pageLoaded.future;
 
     await tester.pump();
-    await Future.delayed(Duration(seconds: 1));
+    await Future.delayed(const Duration(seconds: 1));
 
     await findInteractionController.findAll(
       find: "InAppWebViewInitialFileTest",
@@ -173,7 +173,7 @@ void findInteractions() {
 
       await pageLoaded.future;
       await tester.pump();
-      await Future.delayed(Duration(seconds: 1));
+      await Future.delayed(const Duration(seconds: 1));
 
       await findInteractionController.findAll(find: searchText);
       expect(await numberOfMatchesCompleter.future, 2);

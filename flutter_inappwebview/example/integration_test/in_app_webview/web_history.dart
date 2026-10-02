@@ -181,17 +181,17 @@ void webHistory() {
       url = await pageLoads.stream.first;
       expect(url, TEST_WEB_PLATFORM_URL_2.toString());
 
-      await Future.delayed(Duration(seconds: 1));
+      await Future.delayed(const Duration(seconds: 1));
       await controller.goBack();
       url = await pageLoads.stream.first;
       expect(url, TEST_WEB_PLATFORM_URL_1.toString());
 
-      await Future.delayed(Duration(seconds: 1));
+      await Future.delayed(const Duration(seconds: 1));
       await controller.goForward();
       url = await pageLoads.stream.first;
       expect(url, TEST_WEB_PLATFORM_URL_2.toString());
 
-      await Future.delayed(Duration(seconds: 1));
+      await Future.delayed(const Duration(seconds: 1));
       await controller.goBackOrForward(steps: -1);
       url = await pageLoads.stream.first;
       expect(url, TEST_WEB_PLATFORM_URL_1.toString());

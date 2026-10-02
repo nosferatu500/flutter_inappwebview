@@ -19,7 +19,7 @@ void main() {
   group('ParameterDialog enum-like handling', () {
     testWidgets('uses name() for enum-like display', (tester) async {
       final parameters = <String, dynamic>{
-        'mode': EnumParameterValueHint<_TestEnumLike>(
+        'mode': const EnumParameterValueHint<_TestEnumLike>(
           _TestEnumLike.alpha,
           _TestEnumLike.values,
         ),
@@ -42,7 +42,7 @@ void main() {
 
     testWidgets('renders multi-select enum-like values', (tester) async {
       final parameters = <String, dynamic>{
-        'flags': EnumParameterValueHint<_TestEnumLike>(
+        'flags': const EnumParameterValueHint<_TestEnumLike>(
           <_TestEnumLike>[_TestEnumLike.alpha],
           _TestEnumLike.values,
           isMultiSelect: true,

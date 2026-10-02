@@ -157,7 +157,7 @@ void controllerLifecycle() {
           mediaSize: PrintJobMediaSize.ISO_A5,
           colorMode: PrintJobColorMode.MONOCHROME,
           duplexMode: PrintJobDuplexMode.SHORT_EDGE,
-          resolution: PrintJobResolution(
+          resolution: const PrintJobResolution(
             id: 'fork-resolution',
             label: 'Fork',
             verticalDpi: 300,

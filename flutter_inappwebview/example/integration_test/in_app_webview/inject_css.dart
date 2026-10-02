@@ -84,7 +84,7 @@ void injectCSS() {
         ),
         cssLinkHtmlTagAttributes: CSSLinkHtmlTagAttributes(id: 'bootstrap'),
       );
-      await Future.delayed(Duration(seconds: 2));
+      await Future.delayed(const Duration(seconds: 2));
       expect(
         await controller.evaluateJavascript(
           source: "document.head.querySelector('#bootstrap') == null;",

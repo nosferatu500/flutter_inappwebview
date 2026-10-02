@@ -17,7 +17,7 @@ void main() {
       return MaterialApp(
         home: ChangeNotifierProvider<EventLogProvider>.value(
           value: eventLogProvider,
-          child: Scaffold(body: EventConsoleWidget()),
+          child: const Scaffold(body: EventConsoleWidget()),
         ),
       );
     }

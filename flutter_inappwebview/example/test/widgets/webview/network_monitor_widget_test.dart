@@ -17,7 +17,7 @@ void main() {
       return MaterialApp(
         home: ChangeNotifierProvider<NetworkMonitor>.value(
           value: networkMonitor,
-          child: Scaffold(body: NetworkMonitorWidget()),
+          child: const Scaffold(body: NetworkMonitorWidget()),
         ),
       );
     }
@@ -137,7 +137,7 @@ void main() {
           method: 'GET',
           url: 'https://example.com',
           timestamp: DateTime.now(),
-          duration: Duration(milliseconds: 150),
+          duration: const Duration(milliseconds: 150),
         ),
       );
 

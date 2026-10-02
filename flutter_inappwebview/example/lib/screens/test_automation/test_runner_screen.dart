@@ -730,7 +730,7 @@ class _TestRunnerScreenState extends State<TestRunnerScreen> {
               ? Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Row(children: const [Text('Filter: '), SizedBox(width: 8)]),
+                    const Row(children: [Text('Filter: '), SizedBox(width: 8)]),
                     const SizedBox(height: 8),
                     filterContent,
                   ],

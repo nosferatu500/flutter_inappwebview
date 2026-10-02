@@ -1203,7 +1203,7 @@ class _ControllersScreenState extends State<ControllersScreen> {
                 Text(
                   '$PrintJobController is obtained from printCurrentPage() with '
                   'PrintJobSettings(handledByClient: true).',
-                  style: TextStyle(fontSize: 12, color: Colors.grey),
+                  style: const TextStyle(fontSize: 12, color: Colors.grey),
                 ),
                 const SizedBox(height: 12),
                 ElevatedButton.icon(

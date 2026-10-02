@@ -66,7 +66,7 @@ void webArchive() {
       await pageLoaded.future;
 
       // wait a little bit after page load otherwise Android will not save the web archive
-      await Future.delayed(Duration(seconds: 1));
+      await Future.delayed(const Duration(seconds: 1));
 
       var supportDir = await getApplicationSupportDirectory();
 

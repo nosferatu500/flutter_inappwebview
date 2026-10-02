@@ -151,14 +151,14 @@ void programmaticScroll() {
         await pageLoaded.future;
         await controller.scrollTo(x: 0, y: 0);
 
-        await tester.pumpAndSettle(Duration(seconds: 3));
+        await tester.pumpAndSettle(const Duration(seconds: 3));
 
         // Check scrollTo()
         const int X_SCROLL = 123;
         const int Y_SCROLL = 321;
 
         await controller.scrollTo(x: X_SCROLL, y: Y_SCROLL);
-        await tester.pumpAndSettle(Duration(seconds: 2));
+        await tester.pumpAndSettle(const Duration(seconds: 2));
         int? scrollPosX = await controller.getScrollX();
         int? scrollPosY = await controller.getScrollY();
         expect(scrollPosX, X_SCROLL);
@@ -166,7 +166,7 @@ void programmaticScroll() {
 
         // Check scrollBy() (on top of scrollTo())
         await controller.scrollBy(x: X_SCROLL, y: Y_SCROLL);
-        await tester.pumpAndSettle(Duration(seconds: 2));
+        await tester.pumpAndSettle(const Duration(seconds: 2));
         scrollPosX = await controller.getScrollX();
         scrollPosY = await controller.getScrollY();
         expect(scrollPosX, X_SCROLL * 2);

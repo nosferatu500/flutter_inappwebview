@@ -43,7 +43,7 @@ void main() {
             ChangeNotifierProvider(create: (_) => TestRunner()),
             ChangeNotifierProvider(create: (_) => TestConfigurationManager()),
           ],
-          child: MaterialApp(home: const TestRunnerScreen()),
+          child: const MaterialApp(home: TestRunnerScreen()),
         ),
       );
 

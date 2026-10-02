@@ -105,7 +105,7 @@ class _MyAppState extends State<MyApp> {
       title: '$InAppWebView Test Suite',
       theme: ThemeData(
         primarySwatch: Colors.blue,
-        appBarTheme: AppBarTheme(
+        appBarTheme: const AppBarTheme(
           elevation: 2,
           centerTitle: false,
           iconTheme: IconThemeData(color: Colors.white),
@@ -118,25 +118,25 @@ class _MyAppState extends State<MyApp> {
         useMaterial3: false,
       ),
       routes: {
-        '/': (context) => WebViewTesterScreen(),
-        '/platform-info': (context) => PlatformInfoScreen(),
-        '/webview-tester': (context) => WebViewTesterScreen(),
-        '/settings': (context) => SettingsEditorScreen(),
-        '/storage/cookies': (context) => CookieManagerScreen(),
-        '/storage/webstorage': (context) => WebStorageScreen(),
-        '/storage/http-auth': (context) => HttpAuthScreen(),
-        '/browsers/inapp-browser': (context) => InAppBrowserScreen(),
+        '/': (context) => const WebViewTesterScreen(),
+        '/platform-info': (context) => const PlatformInfoScreen(),
+        '/webview-tester': (context) => const WebViewTesterScreen(),
+        '/settings': (context) => const SettingsEditorScreen(),
+        '/storage/cookies': (context) => const CookieManagerScreen(),
+        '/storage/webstorage': (context) => const WebStorageScreen(),
+        '/storage/http-auth': (context) => const HttpAuthScreen(),
+        '/browsers/inapp-browser': (context) => const InAppBrowserScreen(),
         '/browsers/chrome-safari-browser': (context) =>
-            ChromeSafariBrowserScreen(),
-        '/browsers/headless': (context) => HeadlessWebViewScreen(),
-        '/advanced/controllers': (context) => ControllersScreen(),
+            const ChromeSafariBrowserScreen(),
+        '/browsers/headless': (context) => const HeadlessWebViewScreen(),
+        '/advanced/controllers': (context) => const ControllersScreen(),
         '/advanced/service-controllers': (context) =>
-            ServiceControllersScreen(),
-        '/advanced/static-methods': (context) => StaticMethodsScreen(),
-        '/support-matrix': (context) => SupportMatrixScreen(),
-        '/platform-comparison': (context) => PlatformComparisonScreen(),
-        '/test-automation': (context) => TestRunnerScreen(),
-        '/test-configuration': (context) => TestConfigurationScreen(),
+            const ServiceControllersScreen(),
+        '/advanced/static-methods': (context) => const StaticMethodsScreen(),
+        '/support-matrix': (context) => const SupportMatrixScreen(),
+        '/platform-comparison': (context) => const PlatformComparisonScreen(),
+        '/test-automation': (context) => const TestRunnerScreen(),
+        '/test-configuration': (context) => const TestConfigurationScreen(),
       },
     );
   }

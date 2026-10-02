@@ -35,8 +35,11 @@ void main() {
       title: 'Case 1',
       description: 'Desc',
       category: TestCategory.content,
-      execute: (controller) async =>
-          TestResult(passed: true, message: 'ok', duration: Duration.zero),
+      execute: (controller) async => const TestResult(
+        passed: true,
+        message: 'ok',
+        duration: Duration.zero,
+      ),
       supportedPlatforms: const ['android', 'ios'],
     );
 
@@ -45,9 +48,9 @@ void main() {
   });
 
   test('TestCategoryGroup exposes display name and description', () {
-    final group = TestCategoryGroup(
+    const group = TestCategoryGroup(
       category: TestCategory.navigation,
-      tests: const [],
+      tests: [],
     );
 
     expect(group.name, TestCategory.navigation.displayName);

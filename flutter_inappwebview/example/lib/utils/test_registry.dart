@@ -63,10 +63,10 @@ class TestRegistry {
         execute: () async {
           try {
             // This would be called with an actual controller in real scenario
-            return TestResult(
+            return const TestResult(
               passed: true,
               message: 'URL loaded successfully',
-              duration: const Duration(milliseconds: 100),
+              duration: Duration(milliseconds: 100),
             );
           } catch (e) {
             return TestResult(
@@ -91,8 +91,8 @@ class TestRegistry {
         ),
         execute: () async {
           try {
-            return TestResult(
-              duration: const Duration(milliseconds: 100),
+            return const TestResult(
+              duration: Duration(milliseconds: 100),
               passed: true,
               message: 'Current URL retrieved',
             );
@@ -119,8 +119,8 @@ class TestRegistry {
         ),
         execute: () async {
           try {
-            return TestResult(
-              duration: const Duration(milliseconds: 100),
+            return const TestResult(
+              duration: Duration(milliseconds: 100),
               passed: true,
               message: 'Navigated back successfully',
             );
@@ -147,8 +147,8 @@ class TestRegistry {
         ),
         execute: () async {
           try {
-            return TestResult(
-              duration: const Duration(milliseconds: 100),
+            return const TestResult(
+              duration: Duration(milliseconds: 100),
               passed: true,
               message: 'URL loaded successfully',
             );
@@ -176,8 +176,8 @@ class TestRegistry {
         ),
         execute: () async {
           try {
-            return TestResult(
-              duration: const Duration(milliseconds: 100),
+            return const TestResult(
+              duration: Duration(milliseconds: 100),
               passed: true,
               message: 'JavaScript evaluated: 1 + 1 = 2',
             );
@@ -204,8 +204,8 @@ class TestRegistry {
         ),
         execute: () async {
           try {
-            return TestResult(
-              duration: const Duration(milliseconds: 100),
+            return const TestResult(
+              duration: Duration(milliseconds: 100),
               passed: true,
               message: 'Handler added successfully',
             );
@@ -233,8 +233,8 @@ class TestRegistry {
         ),
         execute: () async {
           try {
-            return TestResult(
-              duration: const Duration(milliseconds: 100),
+            return const TestResult(
+              duration: Duration(milliseconds: 100),
               passed: true,
               message: 'Page title retrieved',
             );
@@ -261,8 +261,8 @@ class TestRegistry {
         ),
         execute: () async {
           try {
-            return TestResult(
-              duration: const Duration(milliseconds: 100),
+            return const TestResult(
+              duration: Duration(milliseconds: 100),
               passed: true,
               message: 'HTML content retrieved',
             );
@@ -293,8 +293,8 @@ class TestRegistry {
               name: 'test_cookie',
               value: 'test_value',
             );
-            return TestResult(
-              duration: const Duration(milliseconds: 100),
+            return const TestResult(
+              duration: Duration(milliseconds: 100),
               passed: true,
               message: 'Cookie set successfully',
             );
@@ -351,8 +351,8 @@ class TestRegistry {
         ),
         execute: () async {
           try {
-            return TestResult(
-              duration: const Duration(milliseconds: 100),
+            return const TestResult(
+              duration: Duration(milliseconds: 100),
               passed: true,
               message: 'Screenshot captured',
             );
@@ -379,8 +379,8 @@ class TestRegistry {
         ),
         execute: () async {
           try {
-            return TestResult(
-              duration: const Duration(milliseconds: 100),
+            return const TestResult(
+              duration: Duration(milliseconds: 100),
               passed: true,
               message: 'Print initiated',
             );
@@ -432,8 +432,8 @@ class TestRegistry {
         supportedPlatforms: _getPlatformsForClass(ChromeSafariBrowser),
         execute: () async {
           try {
-            return TestResult(
-              duration: const Duration(milliseconds: 100),
+            return const TestResult(
+              duration: Duration(milliseconds: 100),
               passed: true,
               message: 'Browser opened',
             );
