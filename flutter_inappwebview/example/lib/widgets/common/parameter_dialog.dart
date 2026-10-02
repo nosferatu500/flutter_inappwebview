@@ -207,7 +207,7 @@ class _ParameterDialogState extends State<ParameterDialog> {
     final buffer = StringBuffer();
     for (final segment in path) {
       if (segment is int) {
-        buffer.write('[${segment}]');
+        buffer.write('[$segment]');
       } else {
         if (buffer.isNotEmpty) buffer.write('.');
         buffer.write(segment.toString());

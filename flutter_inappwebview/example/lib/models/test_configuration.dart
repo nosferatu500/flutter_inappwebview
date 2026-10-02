@@ -202,7 +202,7 @@ class CustomTestStep {
         if (expectedResult == null) return false;
         final typeName = result.runtimeType.toString();
         return typeName == expectedResult ||
-            typeName.startsWith('${expectedResult}<') ||
+            typeName.startsWith('$expectedResult<') ||
             _matchesSimpleType(result, expectedResult!);
       case ExpectedResultType.notEmpty:
         if (result == null) return false;

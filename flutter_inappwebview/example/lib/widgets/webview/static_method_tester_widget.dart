@@ -447,7 +447,7 @@ class _StaticMethodTesterWidgetState extends State<StaticMethodTesterWidget> {
             classType: ServiceWorkerController,
             execute: (params) async {
               final controller = ServiceWorkerController.instance();
-              return '${ServiceWorkerController} instance: ${controller.hashCode}';
+              return '$ServiceWorkerController instance: ${controller.hashCode}';
             },
           ),
         ],
@@ -534,7 +534,7 @@ class _StaticMethodTesterWidgetState extends State<StaticMethodTesterWidget> {
             classType: CookieManager,
             execute: (params) async {
               final manager = CookieManager.instance();
-              return '${CookieManager} instance: ${manager.hashCode}';
+              return '$CookieManager instance: ${manager.hashCode}';
             },
           ),
         ],
@@ -550,7 +550,7 @@ class _StaticMethodTesterWidgetState extends State<StaticMethodTesterWidget> {
             classType: HttpAuthCredentialDatabase,
             execute: (params) async {
               final db = HttpAuthCredentialDatabase.instance();
-              return '${HttpAuthCredentialDatabase} instance: ${db.hashCode}';
+              return '$HttpAuthCredentialDatabase instance: ${db.hashCode}';
             },
           ),
         ],
@@ -566,7 +566,7 @@ class _StaticMethodTesterWidgetState extends State<StaticMethodTesterWidget> {
             classType: WebStorageManager,
             execute: (params) async {
               final manager = WebStorageManager.instance();
-              return '${WebStorageManager} instance: ${manager.hashCode}';
+              return '$WebStorageManager instance: ${manager.hashCode}';
             },
           ),
         ],

@@ -1070,6 +1070,10 @@ simulator for the first time:**
 
 ### Internal
 
+- **The example's `unnecessary_brace_in_string_interps` lint is enabled**, and its 58 findings fixed
+  with `dart fix --code=unnecessary_brace_in_string_interps` (10 files). Every changed line is its
+  old self with `${name}` written as `$name` where nothing follows that could extend the name; no
+  string's value changes.
 - **The `unnecessary_import` warning is enabled** here and in the example, and its 14 redundant
   imports are removed (5 in `lib`, 9 in the example). Each was fully covered by another import in
   the same file, mostly `dart:typed_data` or `dart:ui` alongside a Flutter library that re-exports

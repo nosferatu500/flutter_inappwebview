@@ -15,7 +15,7 @@ class HomeScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('${InAppWebView} Test Suite'),
+        title: Text('$InAppWebView Test Suite'),
         actions: [
           Padding(
             padding: const EdgeInsets.all(8.0),

@@ -399,8 +399,8 @@ class TestRegistry {
     register(
       TestCase(
         id: 'browser_open_inapp',
-        title: 'Open ${InAppBrowser}',
-        description: 'Open URL in ${InAppBrowser}',
+        title: 'Open $InAppBrowser',
+        description: 'Open URL in $InAppBrowser',
         category: TestCategory.browsers,
         complexity: TestComplexity.medium,
         supportedPlatforms: _getPlatformsForClass(InAppBrowser),
@@ -409,7 +409,7 @@ class TestRegistry {
             return TestResult(
               duration: const Duration(milliseconds: 100),
               passed: true,
-              message: '${InAppBrowser} opened',
+              message: '$InAppBrowser opened',
             );
           } catch (e) {
             return TestResult(
@@ -426,7 +426,7 @@ class TestRegistry {
       TestCase(
         id: 'browser_chrome_safari',
         title: 'Open Chrome/Safari Browser',
-        description: 'Open URL in ${ChromeSafariBrowser}',
+        description: 'Open URL in $ChromeSafariBrowser',
         category: TestCategory.browsers,
         complexity: TestComplexity.medium,
         supportedPlatforms: _getPlatformsForClass(ChromeSafariBrowser),
