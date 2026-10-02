@@ -88,7 +88,9 @@ class X509Certificate {
       Uint8List? derDataDecoded;
       try {
         derDataDecoded = Uint8List.fromList(base64Decode(base64buffer));
-      } catch (e) {}
+      } catch (e) {
+        // Not valid base64: decodeToDER answers null.
+      }
       if (derDataDecoded != null) {
         return derDataDecoded;
       }
@@ -453,7 +455,9 @@ dynamic firstLeafValue({required ASN1Object block}) {
     ASN1Object? subFirst;
     try {
       subFirst = sub.first;
-    } catch (e) {}
+    } catch (e) {
+      // No first element: falls back to this block's own value below.
+    }
     if (subFirst != null) {
       return firstLeafValue(block: subFirst);
     }

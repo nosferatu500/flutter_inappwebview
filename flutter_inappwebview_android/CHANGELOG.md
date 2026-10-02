@@ -480,6 +480,9 @@ for, and five others have a native *value* that differs from their name.
 
 ### Internal
 
+- **The `empty_catches` lint is enabled.** Its three findings here were deliberate fallbacks (a
+  value that isn't JSON is returned as it came; an unreadable asset leaves `getHtml` null), so each
+  block now says so in a comment. No code changed.
 - **The per-WebView MethodChannel is gone.** After W5 nothing travelled on
   `dev.nosferatu500.inappwebview/inappwebview_<id>` or `…/inappbrowser_<id>`, so neither side opens
   them any more: `InAppWebView` and `InAppBrowserActivity` build `WebViewChannelDelegate` with no

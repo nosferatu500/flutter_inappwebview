@@ -102,7 +102,9 @@ class ASN1DistinguishedNames {
       String? value;
       try {
         value = oidBlock.parent?.sub?.last.value as String?;
-      } catch (e) {}
+      } catch (e) {
+        // No string value: the component keeps its "key=" with no value.
+      }
       if (value != null) {
         result += quote(value);
       }

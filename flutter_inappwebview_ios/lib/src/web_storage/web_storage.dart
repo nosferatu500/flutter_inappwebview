@@ -121,7 +121,9 @@ abstract mixin class IOSStorage implements PlatformStorage {
 
     try {
       return json.decode(itemValue);
-    } catch (e) {}
+    } catch (e) {
+      // Not JSON: the value is returned as it came.
+    }
 
     return itemValue;
   }

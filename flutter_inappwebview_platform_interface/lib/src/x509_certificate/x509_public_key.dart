@@ -38,7 +38,9 @@ class X509PublicKey {
           publicKeyAsn1Objects = ASN1DERDecoder.decode(
             data: keyData.toList(growable: true),
           );
-        } catch (e) {}
+        } catch (e) {
+          // Not decodable DER: the key objects stay null.
+        }
 
         if (publicKeyAsn1Objects != null && publicKeyAsn1Objects.isNotEmpty) {
           var publicKeyModulus = publicKeyAsn1Objects.first

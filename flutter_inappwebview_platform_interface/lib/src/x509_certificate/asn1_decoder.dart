@@ -98,7 +98,9 @@ class ASN1DERDecoder {
               String? str;
               try {
                 str = utf8.decode(contentData);
-              } catch (e) {}
+              } catch (e) {
+                // Not UTF-8: the value stays null.
+              }
               asn1obj.value = str;
             }
           } else {
@@ -113,7 +115,9 @@ class ASN1DERDecoder {
           String? str;
           try {
             str = utf8.decode(contentData);
-          } catch (e) {}
+          } catch (e) {
+            // Not UTF-8: the value stays null.
+          }
           asn1obj.value = str;
         }
       }
@@ -128,7 +132,9 @@ class ASN1DERDecoder {
       int? first;
       try {
         first = iterator.current;
-      } catch (e) {}
+      } catch (e) {
+        // No current element: the byte stays null.
+      }
       if (first != null) {
         if ((first & 0x80) != 0) {
           // long
@@ -140,7 +146,9 @@ class ASN1DERDecoder {
               int? n;
               try {
                 n = iterator.current;
-              } catch (e) {}
+              } catch (e) {
+                // No current element: the byte stays null.
+              }
               if (n != null) {
                 data.add(n);
               }
@@ -172,7 +180,9 @@ class ASN1DERDecoder {
         int? n;
         try {
           n = iterator.current;
-        } catch (e) {}
+        } catch (e) {
+          // No current element: the byte stays null.
+        }
         if (n != null) {
           byteArray.add(n);
         }
@@ -236,7 +246,9 @@ class ASN1DERDecoder {
     String? utc;
     try {
       utc = utf8.decode(contentData);
-    } catch (e) {}
+    } catch (e) {
+      // Not UTF-8: the time stays null.
+    }
     if (utc == null) {
       return null;
     }
@@ -330,7 +342,9 @@ class ASN1DERDecoder {
     String? gentime;
     try {
       gentime = utf8.decode(contentData);
-    } catch (e) {}
+    } catch (e) {
+      // Not UTF-8: the time stays null.
+    }
     if (gentime == null) {
       return null;
     }

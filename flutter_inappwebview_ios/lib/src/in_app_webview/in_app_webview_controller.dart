@@ -1507,7 +1507,9 @@ class IOSInAppWebViewController extends PlatformInAppWebViewController
       try {
         var bytes = await rootBundle.load(assetPath);
         html = utf8.decode(bytes.buffer.asUint8List());
-      } catch (e) {}
+      } catch (e) {
+        // Not a readable bundled asset: html stays null, as when the HTTP fetch below fails.
+      }
     } else {
       try {
         HttpClient client = HttpClient();

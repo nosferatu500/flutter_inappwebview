@@ -1990,7 +1990,9 @@ class AndroidInAppWebViewController extends PlatformInAppWebViewController
       try {
         var bytes = await rootBundle.load(assetPath);
         html = utf8.decode(bytes.buffer.asUint8List());
-      } catch (e) {}
+      } catch (e) {
+        // Not a readable bundled asset: html stays null, as when the HTTP fetch below fails.
+      }
     } else {
       try {
         HttpClient client = HttpClient();
@@ -2327,7 +2329,9 @@ class AndroidInAppWebViewController extends PlatformInAppWebViewController
         // try to json decode the data coming from JavaScript
         // otherwise return it as it is.
         data = json.decode(data);
-      } catch (e) {}
+      } catch (e) {
+        // Not JSON: the value is returned as it came.
+      }
     }
     return data;
   }

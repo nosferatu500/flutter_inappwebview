@@ -614,6 +614,9 @@ rename; this entry is the API-owner's view.
 
 ### Internal
 
+- **The `empty_catches` lint is enabled.** Its 20 findings, all in the X.509 parser, were
+  deliberate "decode or leave it null" fallbacks, so each block now says what is left in its place.
+  No code changed.
 - Pigeon is wired up and the `find_interaction` channel is migrated end to end as a proof
   (`FindInteractionHostApi` / `FindInteractionFlutterApi`, `FindSessionData`); the other ~409
   messages still use `MethodChannel`

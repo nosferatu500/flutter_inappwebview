@@ -436,6 +436,9 @@ error.
 
 ### Internal
 
+- **The `empty_catches` lint is enabled.** Its two findings here were deliberate fallbacks (the
+  web storage value that isn't JSON; the unreadable asset in `getHtml`), so each block now says so
+  in a comment. No code changed.
 - **Both examples adopt the UIScene lifecycle**, via Flutter's own migrator: `AppDelegate` conforms
   to `FlutterImplicitEngineDelegate` and registers plugins from
   `didInitializeImplicitFlutterEngine`, and `Info.plist` declares a `UIApplicationSceneManifest`

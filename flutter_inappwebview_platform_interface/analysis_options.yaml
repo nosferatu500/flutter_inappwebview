@@ -15,7 +15,6 @@ linter:
     avoid_print: false
     avoid_renaming_method_parameters: false
     camel_case_types: false
-    empty_catches: false
     non_constant_identifier_names: false
 # Additional information about this file can be found at
 # https://dart.dev/guides/language/analysis-options

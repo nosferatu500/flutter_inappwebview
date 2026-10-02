@@ -14,7 +14,6 @@ linter:
   rules:
     avoid_print: false
     avoid_return_types_on_setters: false
-    empty_catches: false
     non_constant_identifier_names: false
     overridden_fields: false
     prefer_const_constructors_in_immutables: false

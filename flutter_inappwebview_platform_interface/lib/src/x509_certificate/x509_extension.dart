@@ -29,7 +29,9 @@ class X509Extension {
       ASN1Object? valueBlock;
       try {
         valueBlock = sub.last;
-      } catch (e) {}
+      } catch (e) {
+        // No value block: the value is null.
+      }
       if (valueBlock != null) {
         return firstLeafValue(block: valueBlock);
       }
@@ -43,7 +45,9 @@ class X509Extension {
       ASN1Object? valueBlock;
       try {
         valueBlock = sub.last;
-      } catch (e) {}
+      } catch (e) {
+        // No value block: null.
+      }
       return valueBlock;
     }
     return null;
@@ -54,7 +58,9 @@ class X509Extension {
     var sub = <ASN1Object>[];
     try {
       sub = block?.sub?.last.sub?.last.sub ?? <ASN1Object>[];
-    } catch (e) {}
+    } catch (e) {
+      // Not the expected nesting: no strings.
+    }
 
     for (var item in sub) {
       var name = item.value;
@@ -84,7 +90,9 @@ class X509Extension {
     var sub = <ASN1Object>[];
     try {
       sub = block?.sub?.last.sub?.last.sub ?? <ASN1Object>[];
-    } catch (e) {}
+    } catch (e) {
+      // Not the expected nesting: no alternative names.
+    }
     for (var item in sub) {
       var name = generalName(item: item);
       if (name != null) {
@@ -104,7 +112,9 @@ class X509Extension {
         String? name;
         try {
           name = item.sub?.last.sub?.last.value as String?;
-        } catch (e) {}
+        } catch (e) {
+          // No string value: the name is null.
+        }
         return name;
       case 1:
       case 2:
@@ -126,7 +136,9 @@ class X509Extension {
             var data = utf8.encode(value);
             var oid = ASN1DERDecoder.decodeOid(contentData: data);
             return oid;
-          } catch (e) {}
+          } catch (e) {
+            // Not a decodable OID: the `break` below leads to the `return null` after the switch.
+          }
         }
         break;
       default:
@@ -276,7 +288,9 @@ class AuthorityKeyIdentifierExtension extends X509Extension {
         (element) => element.identifier?.tagNumber().toValue() == 0,
       );
       return sub.encoded;
-    } catch (e) {}
+    } catch (e) {
+      // No element with tag 0, or no sequence: null.
+    }
     return null;
   }
 
@@ -301,7 +315,9 @@ class AuthorityKeyIdentifierExtension extends X509Extension {
         });
       }
       return result;
-    } catch (e) {}
+    } catch (e) {
+      // Not the expected structure: null.
+    }
     return null;
   }
 
@@ -316,7 +332,9 @@ class AuthorityKeyIdentifierExtension extends X509Extension {
         (element) => element.identifier?.tagNumber().toValue() == 2,
       );
       return sub.encoded;
-    } catch (e) {}
+    } catch (e) {
+      // No element with tag 2, or no sequence: null.
+    }
     return null;
   }
 
