@@ -1070,6 +1070,8 @@ simulator for the first time:**
 
 ### Internal
 
+- **The `unnecessary_cast` warning is enabled** in this package and its example. It had no
+  findings in either.
 - **The example's `avoid_print` lint is enabled.** Its six `print`s are integration-test output
   (three Custom Tabs toolbar callbacks, three "SKIPPING …" lines from the `skippable*` helpers) and
   each carries an ignore. No code changed.

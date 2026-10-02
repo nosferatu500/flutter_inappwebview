@@ -49,14 +49,4 @@ class ContextMenu_ {
     this.settings,
     this.onContextMenuActionItemClicked,
   });
-
-  @ExchangeableObjectMethod(toMapMergeWith: true)
-  // ignore: unused_element
-  Map<String, dynamic> _toMapMergeWith({EnumMethod? enumMethod}) {
-    return {
-      "settings": (settings as ContextMenuSettings?)?.toMap(
-        enumMethod: enumMethod,
-      ),
-    };
-  }
 }

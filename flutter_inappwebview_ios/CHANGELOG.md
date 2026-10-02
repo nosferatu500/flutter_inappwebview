@@ -436,6 +436,7 @@ error.
 
 ### Internal
 
+- **The `unnecessary_cast` warning is enabled here.** It had no findings in this package.
 - **The `overridden_fields` lint is enabled**, and its seven findings fixed. The InAppBrowser,
   headless and widget creation params kept `pullToRefreshController` and `findInteractionController`
   in their own narrowed fields and never passed them to the base, so the base's copies were always

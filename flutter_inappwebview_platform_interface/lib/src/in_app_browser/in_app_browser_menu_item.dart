@@ -20,7 +20,7 @@ dynamic _deserializeIcon(dynamic icon, {EnumMethod? enumMethod}) {
     return icon;
   }
   if (icon is Map<String, dynamic>) {
-    final iconMap = icon as Map<String, dynamic>;
+    final iconMap = icon;
     if (iconMap.containsKey('defType')) {
       return AndroidResource.fromMap(iconMap, enumMethod: enumMethod);
     }

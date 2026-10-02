@@ -614,6 +614,13 @@ rename; this entry is the API-owner's view.
 
 ### Internal
 
+- **The `unnecessary_cast` warning is enabled**, and its two findings fixed. `ContextMenu`'s
+  hand-written `_toMapMergeWith` is deleted. It existed to fall back to the deprecated `options`
+  when `settings` was null, and once `options` was removed it only rewrote `"settings"` with the
+  value `toMap` had just written. So `toMap` returns the same map, with the same keys, values and
+  order, and the regenerated `context_menu.g.dart` lost exactly the copied method and its spread.
+  `InAppBrowserMenuItem.fromMap`'s icon deserializer lost a cast that its own `is` check already
+  guaranteed. New tests pin both.
 - **The `unnecessary_non_null_assertion` warning is enabled**, and its four `!`s removed. None
   could ever throw. Three were `list!.add(…)` on a local that the `= <T>[]` just before had already
   promoted (`URLCredential`'s and `URLProtectionSpace`'s certificate lists, a certificate policy's

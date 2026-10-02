@@ -23,5 +23,4 @@ analyzer:
     constant_identifier_names: ignore
     deprecated_member_use: ignore
     deprecated_member_use_from_same_package: ignore
-    unnecessary_cast: ignore
     unnecessary_import: ignore

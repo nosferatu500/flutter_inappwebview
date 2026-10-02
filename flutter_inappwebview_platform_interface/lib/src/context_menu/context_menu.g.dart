@@ -70,15 +70,6 @@ class ContextMenu {
     return instance;
   }
 
-  @ExchangeableObjectMethod(toMapMergeWith: true)
-  Map<String, dynamic> _toMapMergeWith({EnumMethod? enumMethod}) {
-    return {
-      "settings": (settings as ContextMenuSettings?)?.toMap(
-        enumMethod: enumMethod,
-      ),
-    };
-  }
-
   ///Converts instance to a map.
   Map<String, dynamic> toMap({EnumMethod? enumMethod}) {
     return {
@@ -86,7 +77,6 @@ class ContextMenu {
           .map((e) => e.toMap(enumMethod: enumMethod))
           .toList(),
       "settings": settings?.toMap(enumMethod: enumMethod),
-      ..._toMapMergeWith(enumMethod: enumMethod),
     };
   }
 
