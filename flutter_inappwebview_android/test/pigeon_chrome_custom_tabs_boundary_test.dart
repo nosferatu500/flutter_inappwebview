@@ -37,10 +37,12 @@ void main() {
   /// Delivers one argument-less event and returns the raw platform reply.
   Future<ByteData?> deliver(String event) {
     final reply = Completer<ByteData?>();
-    messenger.handlePlatformMessage(
-      '$eventBase.$event.${browser.id}',
-      codec.encodeMessage(<Object?>[]),
-      reply.complete,
+    unawaited(
+      messenger.handlePlatformMessage(
+        '$eventBase.$event.${browser.id}',
+        codec.encodeMessage(<Object?>[]),
+        reply.complete,
+      ),
     );
     return reply.future;
   }

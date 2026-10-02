@@ -259,10 +259,12 @@ void main() {
     /// measured blind against a delete-the-unregister mutant.
     Future<ByteData?> replyTo(String channel, List<Object?> args) {
       final reply = Completer<ByteData?>();
-      messenger.handlePlatformMessage(
-        channel,
-        codec.encodeMessage(args),
-        reply.complete,
+      unawaited(
+        messenger.handlePlatformMessage(
+          channel,
+          codec.encodeMessage(args),
+          reply.complete,
+        ),
       );
       return reply.future;
     }

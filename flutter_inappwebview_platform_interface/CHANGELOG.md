@@ -614,6 +614,9 @@ rename; this entry is the API-owner's view.
 
 ### Internal
 
+- **The `discarded_futures` lint is enabled.** The localhost server's
+  `HttpServer.bind(...).then(...)` chain, whose errors `runZonedGuarded` already catches, is marked
+  `unawaited(...)`. No behaviour changed.
 - **The `unawaited_futures` lint is enabled.** The localhost server's two `request.response.close()`
   calls are marked `unawaited(...)`, as they were already fire-and-forget. No behaviour changed.
 - **Sixteen opt-in lint rules are enabled** (none ships in flutter_lints), each with 0 findings

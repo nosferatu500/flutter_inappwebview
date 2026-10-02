@@ -480,6 +480,13 @@ for, and five others have a native *value* that differs from their name.
 
 ### Internal
 
+- **The `discarded_futures` lint is enabled** (not in flutter_lints). Its 3 library findings were
+  fire-and-forget calls and are now marked `unawaited(...)`: `PrintJobController`'s `onComplete`,
+  the headless WebView's `internalDispose()` on conversion, and the platform view's `create()`. That
+  last one was the `..create()` at the end of a cascade in `onCreatePlatformView`, so the controller
+  is now bound, `create()` called, and the controller returned, in the same order as before. The 9
+  test findings, `handlePlatformMessage` calls whose reply arrives through a completer, are marked
+  too. No behaviour changed.
 - **The `unawaited_futures` lint is enabled here.** It had no findings in this package.
 - **Sixteen opt-in lint rules are enabled** (none ships in flutter_lints), each with 0 findings
   today, as guards: `always_declare_return_types`, `avoid_js_rounded_ints`, `avoid_type_to_string`,

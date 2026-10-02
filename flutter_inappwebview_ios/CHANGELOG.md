@@ -436,6 +436,8 @@ error.
 
 ### Internal
 
+- **The `discarded_futures` lint is enabled.** Its one finding, the headless WebView's
+  `internalDispose()` on conversion, is marked `unawaited(...)`. No behaviour changed.
 - **The `unawaited_futures` lint is enabled.** `IOSPrintJobController` and
   `IOSWebAuthenticationSession` call the app's `onComplete` without awaiting it, as Android does;
   both calls are now marked `unawaited(...)`. No behaviour changed.

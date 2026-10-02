@@ -46,19 +46,21 @@ void main() {
   /// Delivers one `shouldInterceptRequest` event and returns the raw reply.
   Future<ByteData?> sendIncomingRequest(String url) {
     final reply = Completer<ByteData?>();
-    messenger.handlePlatformMessage(
-      eventChannel,
-      codec.encodeMessage(<Object?>[
-        WebResourceRequestData(
-          url: url,
-          headers: <String, String>{},
-          isRedirect: false,
-          hasGesture: false,
-          isForMainFrame: false,
-          method: 'GET',
-        ),
-      ]),
-      reply.complete,
+    unawaited(
+      messenger.handlePlatformMessage(
+        eventChannel,
+        codec.encodeMessage(<Object?>[
+          WebResourceRequestData(
+            url: url,
+            headers: <String, String>{},
+            isRedirect: false,
+            hasGesture: false,
+            isForMainFrame: false,
+            method: 'GET',
+          ),
+        ]),
+        reply.complete,
+      ),
     );
     return reply.future;
   }

@@ -92,66 +92,68 @@ class DefaultInAppLocalhostServer extends PlatformInAppLocalhostServer {
 
     runZonedGuarded(
       () {
-        HttpServer.bind('127.0.0.1', _port, shared: _shared).then((server) {
-          if (kDebugMode) {
-            print('Server running on http://localhost:$_port');
-          }
-
-          _server = server;
-
-          server.listen((HttpRequest request) async {
-            if (await _customOnData?.call(request) ?? false) {
-              // if _customOnData returns true,
-              // it means that the request has been handled
-              return;
+        unawaited(
+          HttpServer.bind('127.0.0.1', _port, shared: _shared).then((server) {
+            if (kDebugMode) {
+              print('Server running on http://localhost:$_port');
             }
 
-            Uint8List body = Uint8List(0);
+            _server = server;
 
-            var path = request.requestedUri.path;
-            path = (path.startsWith('/')) ? path.substring(1) : path;
-            path += (path.endsWith('/')) ? _directoryIndex : '';
-            if (path == '') {
-              // if the path still empty, try to load the index file
-              path = _directoryIndex;
-            }
-            path = _documentRoot + path;
-
-            try {
-              body = (await rootBundle.load(
-                Uri.decodeFull(path),
-              )).buffer.asUint8List();
-            } catch (e) {
-              if (kDebugMode) {
-                print(Uri.decodeFull(path));
-                print(e.toString());
+            server.listen((HttpRequest request) async {
+              if (await _customOnData?.call(request) ?? false) {
+                // if _customOnData returns true,
+                // it means that the request has been handled
+                return;
               }
+
+              Uint8List body = Uint8List(0);
+
+              var path = request.requestedUri.path;
+              path = (path.startsWith('/')) ? path.substring(1) : path;
+              path += (path.endsWith('/')) ? _directoryIndex : '';
+              if (path == '') {
+                // if the path still empty, try to load the index file
+                path = _directoryIndex;
+              }
+              path = _documentRoot + path;
+
+              try {
+                body = (await rootBundle.load(
+                  Uri.decodeFull(path),
+                )).buffer.asUint8List();
+              } catch (e) {
+                if (kDebugMode) {
+                  print(Uri.decodeFull(path));
+                  print(e.toString());
+                }
+                unawaited(request.response.close());
+                return;
+              }
+
+              var contentType = ContentType('text', 'html', charset: 'utf-8');
+              if (!request.requestedUri.path.endsWith('/') &&
+                  request.requestedUri.pathSegments.isNotEmpty) {
+                final mimeType = MimeTypeResolver.lookup(
+                  request.requestedUri.path,
+                );
+                if (mimeType != null) {
+                  contentType = _getContentTypeFromMimeType(mimeType);
+                }
+              }
+
+              request.response.headers.contentType = contentType;
+              // Logs every response's headers, release builds included. Kept as it
+              // was; deleting it is a candidate (§223).
+              // ignore: avoid_print
+              print(request.response.headers);
+              request.response.add(body);
               unawaited(request.response.close());
-              return;
-            }
+            });
 
-            var contentType = ContentType('text', 'html', charset: 'utf-8');
-            if (!request.requestedUri.path.endsWith('/') &&
-                request.requestedUri.pathSegments.isNotEmpty) {
-              final mimeType = MimeTypeResolver.lookup(
-                request.requestedUri.path,
-              );
-              if (mimeType != null) {
-                contentType = _getContentTypeFromMimeType(mimeType);
-              }
-            }
-
-            request.response.headers.contentType = contentType;
-            // Logs every response's headers, release builds included. Kept as it
-            // was; deleting it is a candidate (§223).
-            // ignore: avoid_print
-            print(request.response.headers);
-            request.response.add(body);
-            unawaited(request.response.close());
-          });
-
-          completer.complete();
-        });
+            completer.complete();
+          }),
+        );
       },
       (e, stackTrace) {
         if (kDebugMode) {

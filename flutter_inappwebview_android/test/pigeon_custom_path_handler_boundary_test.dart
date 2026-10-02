@@ -29,12 +29,14 @@ void main() {
   /// registered, null when none is (§183, §184).
   Future<ByteData?> deliver(String path) {
     final reply = Completer<ByteData?>();
-    TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
-        .handlePlatformMessage(
-          channel(),
-          codec.encodeMessage(<Object?>[path]),
-          reply.complete,
-        );
+    unawaited(
+      TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
+          .handlePlatformMessage(
+            channel(),
+            codec.encodeMessage(<Object?>[path]),
+            reply.complete,
+          ),
+    );
     return reply.future;
   }
 

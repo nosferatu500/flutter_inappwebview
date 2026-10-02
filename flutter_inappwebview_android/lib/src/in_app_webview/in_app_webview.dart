@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
@@ -274,37 +275,41 @@ class AndroidInAppWebViewWidget extends PlatformInAppWebViewWidget {
             );
           },
       onCreatePlatformView: (PlatformViewCreationParams params) {
-        return _createAndroidViewController(
-            hybridComposition: useHybridComposition,
-            id: params.id,
-            viewType: 'dev.nosferatu500.inappwebview/inappwebview',
-            layoutDirection:
-                this.params.layoutDirection ??
-                Directionality.maybeOf(context) ??
-                TextDirection.rtl,
-            creationParams: <String, dynamic>{
-              'initialUrlRequest': this.params.initialUrlRequest?.toMap(),
-              'initialFile': this.params.initialFile,
-              'initialData': this.params.initialData?.toMap(),
-              'initialSettings': settingsMap,
-              'contextMenu': this.params.contextMenu?.toMap() ?? {},
-              'windowId': this.params.windowId,
-              'headlessWebViewId':
-                  this.params.headlessWebView?.isRunning() ?? false
-                  ? this.params.headlessWebView?.id
-                  : null,
-              'initialUserScripts':
-                  this.params.initialUserScripts
-                      ?.map((e) => e.toMap())
-                      .toList() ??
-                  [],
-              'pullToRefreshSettings': pullToRefreshSettings,
-              'keepAliveId': this.params.keepAlive?.id,
-            },
-          )
-          ..addOnPlatformViewCreatedListener(params.onPlatformViewCreated)
-          ..addOnPlatformViewCreatedListener((id) => _onPlatformViewCreated(id))
-          ..create();
+        final controller =
+            _createAndroidViewController(
+                hybridComposition: useHybridComposition,
+                id: params.id,
+                viewType: 'dev.nosferatu500.inappwebview/inappwebview',
+                layoutDirection:
+                    this.params.layoutDirection ??
+                    Directionality.maybeOf(context) ??
+                    TextDirection.rtl,
+                creationParams: <String, dynamic>{
+                  'initialUrlRequest': this.params.initialUrlRequest?.toMap(),
+                  'initialFile': this.params.initialFile,
+                  'initialData': this.params.initialData?.toMap(),
+                  'initialSettings': settingsMap,
+                  'contextMenu': this.params.contextMenu?.toMap() ?? {},
+                  'windowId': this.params.windowId,
+                  'headlessWebViewId':
+                      this.params.headlessWebView?.isRunning() ?? false
+                      ? this.params.headlessWebView?.id
+                      : null,
+                  'initialUserScripts':
+                      this.params.initialUserScripts
+                          ?.map((e) => e.toMap())
+                          .toList() ??
+                      [],
+                  'pullToRefreshSettings': pullToRefreshSettings,
+                  'keepAliveId': this.params.keepAlive?.id,
+                },
+              )
+              ..addOnPlatformViewCreatedListener(params.onPlatformViewCreated)
+              ..addOnPlatformViewCreatedListener(
+                (id) => _onPlatformViewCreated(id),
+              );
+        unawaited(controller.create());
+        return controller;
       },
     );
   }
@@ -340,7 +345,7 @@ class AndroidInAppWebViewWidget extends PlatformInAppWebViewWidget {
       viewId = params.headlessWebView?.id;
     }
     viewId = params.keepAlive?.id ?? viewId ?? id;
-    _androidHeadlessInAppWebView?.internalDispose();
+    unawaited(_androidHeadlessInAppWebView?.internalDispose());
     _controller = AndroidInAppWebViewController(
       PlatformInAppWebViewControllerCreationParams(
         id: viewId,

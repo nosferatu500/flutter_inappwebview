@@ -57,12 +57,14 @@ void main() {
   /// registered, null when none is (§183, §184).
   Future<ByteData?> deliver(String method, List<Object?> args) {
     final reply = Completer<ByteData?>();
-    TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
-        .handlePlatformMessage(
-          flutterChannel(method),
-          codec.encodeMessage(args),
-          reply.complete,
-        );
+    unawaited(
+      TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
+          .handlePlatformMessage(
+            flutterChannel(method),
+            codec.encodeMessage(args),
+            reply.complete,
+          ),
+    );
     return reply.future;
   }
 

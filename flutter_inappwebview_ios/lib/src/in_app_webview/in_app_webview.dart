@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
@@ -271,7 +272,7 @@ class IOSInAppWebViewWidget extends PlatformInAppWebViewWidget {
       viewId = params.headlessWebView?.id;
     }
     viewId = params.keepAlive?.id ?? viewId ?? id;
-    _iosHeadlessInAppWebView?.internalDispose();
+    unawaited(_iosHeadlessInAppWebView?.internalDispose());
     _controller = IOSInAppWebViewController(
       PlatformInAppWebViewControllerCreationParams(
         id: viewId,

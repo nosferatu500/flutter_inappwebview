@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/widgets.dart' show EdgeInsets;
 import 'package:flutter_inappwebview_platform_interface/flutter_inappwebview_platform_interface.dart';
@@ -44,7 +45,7 @@ class _PrintJobControllerFlutterApiImpl
 
   @override
   void onComplete(bool completed, String? error) {
-    _controller.onComplete?.call(completed, error);
+    unawaited(_controller.onComplete?.call(completed, error));
   }
 }
 

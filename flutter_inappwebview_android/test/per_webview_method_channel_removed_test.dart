@@ -21,7 +21,9 @@ void main() {
 
   Future<ByteData?> send(String channel, ByteData? message) {
     final reply = Completer<ByteData?>();
-    messenger.handlePlatformMessage(channel, message, reply.complete);
+    unawaited(
+      messenger.handlePlatformMessage(channel, message, reply.complete),
+    );
     return reply.future;
   }
 

@@ -204,12 +204,14 @@ void main() {
     /// "the callback stayed silent") were both measured blind.
     Future<ByteData?> deliverEvent() {
       final reply = Completer<ByteData?>();
-      TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
-          .handlePlatformMessage(
-            flutterChannel('onFindResultReceived'),
-            codec.encodeMessage(<Object?>[0, 0, false]),
-            reply.complete,
-          );
+      unawaited(
+        TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
+            .handlePlatformMessage(
+              flutterChannel('onFindResultReceived'),
+              codec.encodeMessage(<Object?>[0, 0, false]),
+              reply.complete,
+            ),
+      );
       return reply.future;
     }
 

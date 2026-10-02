@@ -201,12 +201,14 @@ void main() {
     /// directly.
     Future<ByteData?> deliverOnWebViewCreated() {
       final reply = Completer<ByteData?>();
-      TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
-          .handlePlatformMessage(
-            flutterChannel('onWebViewCreated'),
-            codec.encodeMessage(<Object?>[]),
-            reply.complete,
-          );
+      unawaited(
+        TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
+            .handlePlatformMessage(
+              flutterChannel('onWebViewCreated'),
+              codec.encodeMessage(<Object?>[]),
+              reply.complete,
+            ),
+      );
       return reply.future;
     }
 

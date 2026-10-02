@@ -36,10 +36,12 @@ void main() {
   /// Delivers `onComplete` and returns the raw platform reply.
   Future<ByteData?> deliverOnComplete(bool completed, String? error) {
     final reply = Completer<ByteData?>();
-    messenger.handlePlatformMessage(
-      onCompleteChannel,
-      codec.encodeMessage(<Object?>[completed, error]),
-      reply.complete,
+    unawaited(
+      messenger.handlePlatformMessage(
+        onCompleteChannel,
+        codec.encodeMessage(<Object?>[completed, error]),
+        reply.complete,
+      ),
     );
     return reply.future;
   }

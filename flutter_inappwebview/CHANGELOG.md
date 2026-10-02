@@ -1070,6 +1070,8 @@ simulator for the first time:**
 
 ### Internal
 
+- **The `discarded_futures` lint is enabled here** (not in the example). It had no findings in this
+  package.
 - **The `unawaited_futures` lint is enabled** here and in the example (it's not in flutter_lints).
   The example's 26 findings: 24 deliberate fire-and-forget calls are now marked `unawaited(...)`
   (stream closes at a test's end, `tester.pump()`s left unawaited on purpose so a load event isn't
