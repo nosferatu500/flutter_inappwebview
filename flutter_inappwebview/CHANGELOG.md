@@ -1070,6 +1070,10 @@ simulator for the first time:**
 
 ### Internal
 
+- **The example's Controllers screen loses a loading flag that was never set.** `_isLoading` had no
+  assignment anywhere, so its app-bar `AppBarLoadingIndicator` always rendered `SizedBox.shrink()`.
+  The field, that one use and its import are deleted, and the screen looks the same. The four other
+  screens that use the indicator do set their flags, and keep them.
 - **Ten small lint rules are enabled in the example, in one item:** `avoid_init_to_null`,
   `prefer_collection_literals`, `prefer_contains`, `prefer_final_fields`,
   `unnecessary_nullable_for_final_variable_declarations`, `unnecessary_overrides`,

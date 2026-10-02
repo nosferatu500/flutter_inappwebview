@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_inappwebview/flutter_inappwebview.dart';
 import 'package:flutter_inappwebview_example/widgets/common/app_drawer.dart';
-import 'package:flutter_inappwebview_example/widgets/common/appbar_loading_indicator.dart';
 import 'package:flutter_inappwebview_example/widgets/common/event_log_card.dart';
 import 'package:flutter_inappwebview_example/widgets/common/resize_handle.dart';
 import 'package:provider/provider.dart';
@@ -29,7 +28,6 @@ class _ControllersScreenState extends State<ControllersScreen> {
   FindInteractionController? _findInteractionController;
   PullToRefreshController? _pullToRefreshController;
   bool _webViewReady = false;
-  final bool _isLoading = false;
   double _webViewHeight = 180;
   static const double _minWebViewHeight = 120;
   static const double _minContentHeight = 260;
@@ -555,7 +553,6 @@ class _ControllersScreenState extends State<ControllersScreen> {
       appBar: AppBar(
         title: const Text('Controllers'),
         actions: [
-          AppBarLoadingIndicator(isLoading: _isLoading),
           IconButton(
             icon: const Icon(Icons.clear_all),
             tooltip: 'Clear Events',
