@@ -55,6 +55,9 @@ dev_dependencies:
 #      url: https://github.com/flutter/plugins.git
 #      path: packages/integration_test
   flutter_lints: ^6.0.0
+  # Imported by test/test_helpers/mock_inappwebview_platform.dart.
+  flutter_inappwebview_platform_interface: ^1.4.0-beta.3
+  plugin_platform_interface: ^2.1.8
 
 # For information on the generic Dart part of this file, see the
 # following page: https://www.dartlang.org/tools/pub/pubspec

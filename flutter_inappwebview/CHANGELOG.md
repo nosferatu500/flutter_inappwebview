@@ -1070,6 +1070,11 @@ simulator for the first time:**
 
 ### Internal
 
+- **The example's `depend_on_referenced_packages` lint is enabled.** Its test mock imports
+  `flutter_inappwebview_platform_interface` and `plugin_platform_interface`, which the example only
+  had transitively. Both are now `dev_dependencies`, with the constraints the packages that already
+  depend on them use (`^1.4.0-beta.3`, `^2.1.8`). Resolution is unchanged: the same versions, and
+  platform_interface is still overridden to the local path.
 - **The `library_private_types_in_public_api` lint is enabled** here and in the example.
   `InAppWebView.createState()` is declared to return `State<InAppWebView>` instead of the private
   `_InAppWebViewState`. It returns the same object, and that class adds no public members beyond
