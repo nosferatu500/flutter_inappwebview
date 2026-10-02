@@ -436,6 +436,9 @@ error.
 
 ### Internal
 
+- **The `unawaited_futures` lint is enabled.** `IOSPrintJobController` and
+  `IOSWebAuthenticationSession` call the app's `onComplete` without awaiting it, as Android does;
+  both calls are now marked `unawaited(...)`. No behaviour changed.
 - **Sixteen opt-in lint rules are enabled** (none ships in flutter_lints), each with 0 findings
   today, as guards: `always_declare_return_types`, `avoid_js_rounded_ints`, `avoid_type_to_string`,
   `cancel_subscriptions`, `conditional_uri_does_not_exist`, `deprecated_consistency`,

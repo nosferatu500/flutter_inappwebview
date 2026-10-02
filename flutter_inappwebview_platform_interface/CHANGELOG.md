@@ -614,6 +614,8 @@ rename; this entry is the API-owner's view.
 
 ### Internal
 
+- **The `unawaited_futures` lint is enabled.** The localhost server's two `request.response.close()`
+  calls are marked `unawaited(...)`, as they were already fire-and-forget. No behaviour changed.
 - **Sixteen opt-in lint rules are enabled** (none ships in flutter_lints), each with 0 findings
   today, as guards: `always_declare_return_types`, `avoid_js_rounded_ints`, `avoid_type_to_string`,
   `cancel_subscriptions`, `conditional_uri_does_not_exist`, `deprecated_consistency`,

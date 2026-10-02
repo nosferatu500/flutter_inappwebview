@@ -1070,6 +1070,12 @@ simulator for the first time:**
 
 ### Internal
 
+- **The `unawaited_futures` lint is enabled** here and in the example (it's not in flutter_lints).
+  The example's 26 findings: 24 deliberate fire-and-forget calls are now marked `unawaited(...)`
+  (stream closes at a test's end, `tester.pump()`s left unawaited on purpose so a load event isn't
+  missed, UI refreshes). Two were real test bugs: the http-auth tests saved a credential with
+  `setHttpAuthCredential` without awaiting it before relying on it, so the negative test could pass
+  without the credential ever being saved. Both now `await`.
 - **Sixteen opt-in lint rules are enabled here and in the example** (none ships in flutter_lints),
   each with 0 findings today, as guards: `always_declare_return_types`, `avoid_js_rounded_ints`,
   `avoid_type_to_string`, `cancel_subscriptions`, `conditional_uri_does_not_exist`,

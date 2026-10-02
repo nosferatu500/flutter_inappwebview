@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_inappwebview/flutter_inappwebview.dart';
 import 'package:flutter_inappwebview_example/widgets/common/app_drawer.dart';
@@ -301,7 +302,7 @@ class _WebStorageScreenState extends State<WebStorageScreen>
       );
       return;
     }
-    _removeItem(key);
+    unawaited(_removeItem(key));
   }
 
   Future<void> _clear() async {
@@ -487,7 +488,7 @@ class _WebStorageScreenState extends State<WebStorageScreen>
       );
       return;
     }
-    _key(index);
+    unawaited(_key(index));
   }
 
   Future<void> _promptGetItem() async {
@@ -508,7 +509,7 @@ class _WebStorageScreenState extends State<WebStorageScreen>
       );
       return;
     }
-    _getItem(key);
+    unawaited(_getItem(key));
   }
 
   Widget _buildMethodHistory(String methodName, {String? title}) {

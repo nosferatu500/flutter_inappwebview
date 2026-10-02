@@ -142,7 +142,7 @@ void userScripts() {
       value = await controller.evaluateJavascript(source: "window.bar;");
       expect(value, isNull);
 
-      pageLoads.close();
+      unawaited(pageLoads.close());
     });
   }, skip: shouldSkip);
 }

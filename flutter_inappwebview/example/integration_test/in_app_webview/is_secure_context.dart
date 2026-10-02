@@ -42,6 +42,6 @@ void isSecureContext() {
       expect(await controller.isSecureContext(), false);
     }
 
-    pageLoads.close();
+    unawaited(pageLoads.close());
   }, skip: shouldSkip);
 }

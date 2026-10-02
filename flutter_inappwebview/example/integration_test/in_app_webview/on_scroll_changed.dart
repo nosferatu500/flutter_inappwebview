@@ -37,7 +37,7 @@ void onScrollChanged() {
     await tester.pump();
     await pageLoaded.future;
 
-    controller.scrollTo(x: 0, y: 500);
+    unawaited(controller.scrollTo(x: 0, y: 500));
 
     await expectLater(onScrollChangedCompleter.future, completes);
   }, skip: shouldSkip);

@@ -138,7 +138,7 @@ void webHistory() {
       expect(webHistory.list![0].url.toString(), historyUrlA.toString());
       expect(webHistory.list![1].url.toString(), historyUrlB.toString());
 
-      pageLoads.close();
+      unawaited(pageLoads.close());
     }, skip: shouldSkipTest1);
 
     const shouldSkipTest2 = !kIsWeb;
@@ -196,7 +196,7 @@ void webHistory() {
       url = await pageLoads.stream.first;
       expect(url, TEST_WEB_PLATFORM_URL_1.toString());
 
-      pageLoads.close();
+      unawaited(pageLoads.close());
     }, skip: shouldSkipTest2);
 
     final shouldSkipTest3 = !InAppWebViewController.isMethodSupported(
@@ -239,7 +239,7 @@ void webHistory() {
       webHistory = await controller.getCopyBackForwardList();
       expect(webHistory!.list!.length, 1);
 
-      pageLoads.close();
+      unawaited(pageLoads.close());
     }, skip: shouldSkipTest3);
   }, skip: shouldSkip);
 }

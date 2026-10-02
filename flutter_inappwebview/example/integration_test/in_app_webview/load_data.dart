@@ -29,7 +29,7 @@ void loadData() {
 
     final InAppWebViewController controller = await controllerCompleter.future;
     // do not wait for pump to not miss the load event
-    tester.pump();
+    unawaited(tester.pump());
     await pageLoads.stream.first;
 
     const data = """
@@ -66,6 +66,6 @@ void loadData() {
       expect(currentUrl, 'data:$mimeType,${Uri.encodeComponent(data)}');
     }
 
-    pageLoads.close();
+    unawaited(pageLoads.close());
   }, skip: shouldSkip);
 }

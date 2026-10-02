@@ -126,7 +126,7 @@ class DefaultInAppLocalhostServer extends PlatformInAppLocalhostServer {
                 print(Uri.decodeFull(path));
                 print(e.toString());
               }
-              request.response.close();
+              unawaited(request.response.close());
               return;
             }
 
@@ -147,7 +147,7 @@ class DefaultInAppLocalhostServer extends PlatformInAppLocalhostServer {
             // ignore: avoid_print
             print(request.response.headers);
             request.response.add(body);
-            request.response.close();
+            unawaited(request.response.close());
           });
 
           completer.complete();

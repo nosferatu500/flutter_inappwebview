@@ -131,7 +131,7 @@ class IOSWebAuthenticationSession extends PlatformWebAuthenticationSession
           call.arguments["errorCode"],
         );
         if (onComplete != null) {
-          onComplete!(uri, error);
+          unawaited(onComplete!(uri, error));
         }
         break;
       default:

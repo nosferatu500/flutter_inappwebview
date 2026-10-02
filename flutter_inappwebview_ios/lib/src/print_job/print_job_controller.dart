@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_inappwebview_platform_interface/flutter_inappwebview_platform_interface.dart';
@@ -57,7 +58,7 @@ class IOSPrintJobController extends PlatformPrintJobController
         bool completed = call.arguments["completed"];
         String? error = call.arguments["error"];
         if (onComplete != null) {
-          onComplete!(completed, error);
+          unawaited(onComplete!(completed, error));
         }
         break;
       default:

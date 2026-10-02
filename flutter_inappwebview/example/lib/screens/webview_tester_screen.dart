@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_inappwebview/flutter_inappwebview.dart';
 import 'package:provider/provider.dart';
@@ -532,7 +533,7 @@ class _WebViewTesterScreenState extends State<WebViewTesterScreen>
         if (url != null) {
           _urlController.text = url.toString();
         }
-        _updateNavigationState();
+        unawaited(_updateNavigationState());
         final title = await controller.getTitle();
         setState(() {
           _currentUrl = url?.toString();

@@ -11,7 +11,7 @@ void httpAuthCredentialDatabase() {
           Completer<InAppWebViewController>();
       final Completer<void> pageLoaded = Completer<void>();
 
-      httpAuthCredentialDatabase.setHttpAuthCredential(
+      await httpAuthCredentialDatabase.setHttpAuthCredential(
         protectionSpace: URLProtectionSpace(
           host: environment["NODE_SERVER_IP"]!,
           protocol: "http",
@@ -142,7 +142,7 @@ void httpAuthCredentialDatabase() {
 
       // Saved for 8081/realm "Node" — a different port *and* a different realm from the origin
       // this WebView will visit, so it is a different `URLProtectionSpace` in two dimensions.
-      httpAuthCredentialDatabase.setHttpAuthCredential(
+      await httpAuthCredentialDatabase.setHttpAuthCredential(
         protectionSpace: URLProtectionSpace(
           host: environment["NODE_SERVER_IP"]!,
           protocol: "http",

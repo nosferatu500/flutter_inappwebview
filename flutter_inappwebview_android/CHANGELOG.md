@@ -480,6 +480,7 @@ for, and five others have a native *value* that differs from their name.
 
 ### Internal
 
+- **The `unawaited_futures` lint is enabled here.** It had no findings in this package.
 - **Sixteen opt-in lint rules are enabled** (none ships in flutter_lints), each with 0 findings
   today, as guards: `always_declare_return_types`, `avoid_js_rounded_ints`, `avoid_type_to_string`,
   `cancel_subscriptions`, `conditional_uri_does_not_exist`, `deprecated_consistency`,

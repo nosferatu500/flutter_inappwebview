@@ -218,7 +218,7 @@ void onPermissionRequest() {
     expect(listEquals(resources, expectedValue), true);
 
     // Reload the webview to cancel the permission request
-    controller.reload();
+    unawaited(controller.reload());
 
     final List<PermissionResourceType> canceledResources =
         await onPermissionRequestCancelCompleter.future;

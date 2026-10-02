@@ -50,7 +50,7 @@ void shouldOverrideUrlLoading() {
       final String? currentUrl = (await controller.getUrl())?.toString();
       expect(currentUrl, TEST_URL_EXAMPLE.toString());
 
-      pageLoads.close();
+      unawaited(pageLoads.close());
     });
 
     final shouldSkipTest2 = !NavigationType.LINK_ACTIVATED.isSupported();
@@ -111,7 +111,7 @@ void shouldOverrideUrlLoading() {
         currentUrl = (await controller.getUrl())?.toString();
         expect(currentUrl, TEST_URL_3.toString());
 
-        pageLoads.close();
+        unawaited(pageLoads.close());
       },
       skip: shouldSkipTest2,
     );
@@ -165,7 +165,7 @@ void shouldOverrideUrlLoading() {
         isNot(contains(TEST_URL_4.host.replaceAll("www.", ""))),
       );
 
-      pageLoads.close();
+      unawaited(pageLoads.close());
     });
 
     skippableTestWidgets('supports asynchronous decisions', (
@@ -210,7 +210,7 @@ void shouldOverrideUrlLoading() {
       final String? currentUrl = (await controller.getUrl())?.toString();
       expect(currentUrl, TEST_URL_EXAMPLE.toString());
 
-      pageLoads.close();
+      unawaited(pageLoads.close());
     });
 
     // What a null answer means is not documented. On Android it is CANCEL, not the ALLOW that a

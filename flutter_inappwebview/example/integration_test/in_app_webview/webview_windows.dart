@@ -39,7 +39,9 @@ void webViewWindows() {
               }
             },
             onCreateWindow: (controller, createNavigationAction) async {
-              controller.loadUrl(urlRequest: createNavigationAction.request);
+              unawaited(
+                controller.loadUrl(urlRequest: createNavigationAction.request),
+              );
               return false;
             },
           ),
@@ -169,7 +171,7 @@ void webViewWindows() {
         final String? currentUrl = (await controller.getUrl())?.toString();
         expect(currentUrl, TEST_URL_ABOUT_BLANK.toString());
 
-        pageLoads.close();
+        unawaited(pageLoads.close());
       },
       skip: shouldSkipTest3,
     );
@@ -233,7 +235,7 @@ void webViewWindows() {
       );
       expect(urlAfterGoBack, contains(TEST_CROSS_PLATFORM_URL_1.host));
 
-      pageLoads.close();
+      unawaited(pageLoads.close());
     }, skip: shouldSkipTest4);
 
     // Android blocks javascript: URLs opened from iframes for security reasons
