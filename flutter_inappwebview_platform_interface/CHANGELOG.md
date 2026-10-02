@@ -614,6 +614,10 @@ rename; this entry is the API-owner's view.
 
 ### Internal
 
+- **The `deprecated_member_use_from_same_package` lint is enabled.** It is not in `flutter_lints`
+  and is no longer on by default, so until now nothing reported a use of the package's own
+  deprecated API. It has no findings today; it will flag any deprecation this fork adds that its own
+  code still uses.
 - **The `avoid_renaming_method_parameters` lint is enabled.** All 101 findings were the same:
   `bool operator ==(value)` overriding `Object.==(Object other)`, in 96 generated enums and 5
   hand-written x509 types (`ASN1IdentifierClass`, `ASN1IdentifierTagNumber`, `KeyUsage`, `OID`,

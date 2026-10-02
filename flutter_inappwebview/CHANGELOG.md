@@ -1070,6 +1070,10 @@ simulator for the first time:**
 
 ### Internal
 
+- **The `deprecated_member_use_from_same_package` lint is enabled here and in the example.** It is
+  not in `flutter_lints` and is no longer on by default, so until now nothing reported a use of the
+  package's own deprecated API. It has no findings today; it will flag any deprecation this fork
+  adds that its own code still uses.
 - **Dead analysis options removed** here and in the example. `prefer_initializing_formals: false`
   disabled a rule with no findings; it is on again, and still finds nothing.
   `deprecated_member_use_from_same_package` is no longer an analyzer diagnostic that's on by

@@ -480,6 +480,10 @@ for, and five others have a native *value* that differs from their name.
 
 ### Internal
 
+- **The `deprecated_member_use_from_same_package` lint is enabled.** It is not in `flutter_lints`
+  and is no longer on by default, so until now nothing reported a use of the package's own
+  deprecated API. It has no findings today; it will flag any deprecation this fork adds that its own
+  code still uses.
 - **A dead analysis option removed.** `deprecated_member_use_from_same_package` is no longer an
   analyzer diagnostic that's on by default, so its `ignore` was inert (measured: a deprecated use
   from the same package is not reported unless the rule is enabled as a lint).

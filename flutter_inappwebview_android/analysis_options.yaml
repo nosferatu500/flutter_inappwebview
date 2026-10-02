@@ -12,6 +12,8 @@ include: package:flutter_lints/flutter.yaml
 # unrelated_type_equality_checks -- are deliberately left enabled.
 linter:
   rules:
+    # Opt-in: not in flutter_lints, and no longer an analyzer default (§227).
+    deprecated_member_use_from_same_package: true
     avoid_print: false
     avoid_return_types_on_setters: false
     prefer_const_constructors_in_immutables: false
