@@ -1,6 +1,5 @@
 import 'package:flutter/painting.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_inappwebview_android/flutter_inappwebview_android.dart';
 // `init` lives on the internal extension, so the test drives the controller exactly the way
 // `InAppWebView`, `HeadlessInAppWebView` and `InAppBrowser` do at runtime.
 import 'package:flutter_inappwebview_android/src/pull_to_refresh/pull_to_refresh_controller.dart';

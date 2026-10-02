@@ -1,4 +1,3 @@
-import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_inappwebview_ios/flutter_inappwebview_ios.dart';
 // The package barrel hides `InternalInAppWebViewController`, so the controller's channel dispatch

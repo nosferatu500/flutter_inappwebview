@@ -7,7 +7,6 @@ import '../util.dart';
 
 import 'platform_in_app_browser.dart';
 import '../types/main.dart';
-import '../types/enum_method.dart';
 
 part 'in_app_browser_menu_item.g.dart';
 

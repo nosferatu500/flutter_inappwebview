@@ -1070,6 +1070,10 @@ simulator for the first time:**
 
 ### Internal
 
+- **The `unnecessary_import` warning is enabled** here and in the example, and its 14 redundant
+  imports are removed (5 in `lib`, 9 in the example). Each was fully covered by another import in
+  the same file, mostly `dart:typed_data` or `dart:ui` alongside a Flutter library that re-exports
+  them. No code changed.
 - **The `deprecated_member_use_from_same_package` lint is enabled here and in the example.** It is
   not in `flutter_lints` and is no longer on by default, so until now nothing reported a use of the
   package's own deprecated API. It has no findings today; it will flag any deprecation this fork

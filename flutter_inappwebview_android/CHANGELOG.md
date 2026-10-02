@@ -480,6 +480,8 @@ for, and five others have a native *value* that differs from their name.
 
 ### Internal
 
+- **The `unnecessary_import` warning is enabled**, and its 11 redundant imports are removed (2 in
+  `lib`, 9 in tests). Each was fully covered by another import in the same file. No code changed.
 - **The `deprecated_member_use_from_same_package` lint is enabled.** It is not in `flutter_lints`
   and is no longer on by default, so until now nothing reported a use of the package's own
   deprecated API. It has no findings today; it will flag any deprecation this fork adds that its own

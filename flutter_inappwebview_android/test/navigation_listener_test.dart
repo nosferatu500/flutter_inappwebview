@@ -1,4 +1,3 @@
-import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_inappwebview_android/flutter_inappwebview_android.dart';
 // The package barrel hides the `InternalInAppWebViewController` extension, so `_handleMethod` is

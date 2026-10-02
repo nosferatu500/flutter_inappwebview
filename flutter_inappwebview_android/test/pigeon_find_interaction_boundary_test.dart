@@ -1,7 +1,6 @@
 import 'dart:async';
 
 import 'package:flutter/services.dart';
-import 'package:flutter_inappwebview_android/flutter_inappwebview_android.dart';
 // `init` lives on the internal extension, and the event callback can only be
 // supplied through creation params, so the test drives the controller exactly
 // the way `InAppWebViewController` does at runtime.

@@ -614,6 +614,10 @@ rename; this entry is the API-owner's view.
 
 ### Internal
 
+- **The `unnecessary_import` warning is enabled**, and its 8 redundant imports are removed. Each was
+  fully covered by another import in the same file. Two of them, in
+  `platform_webview_asset_loader.dart`, were redundant only because that file imports the package's
+  own public barrel from inside `lib/src`. No code changed.
 - **The `deprecated_member_use_from_same_package` lint is enabled.** It is not in `flutter_lints`
   and is no longer on by default, so until now nothing reported a use of the package's own
   deprecated API. It has no findings today; it will flag any deprecation this fork adds that its own
