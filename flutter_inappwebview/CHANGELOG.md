@@ -792,6 +792,12 @@ since the `WebsiteDataType.ALL` fix below. It stays **deliberately out of `ALL`*
 
 ### Fixed
 
+**Android — `HeadlessInAppWebView`'s `onShowFileChooser` was never called** (since 6.2.0-beta.3,
+where the event was added). Android's headless params didn't take the field, so the handler was
+dropped and `useOnShowFileChooser` wasn't inferred; a file input opened the system picker without
+asking. It's now passed on, and the setting is inferred as it is for `InAppWebView`. A new device
+test in the example's headless group reads the inferred setting.
+
 **iOS — `InAppBrowser`'s toolbars were drawn with pre-iOS-13 API and looked broken on iOS 26.** The
 top bar left the status-bar area unpainted (a black strip above it), the three spacers in the bottom
 toolbar collapsed into one, and with the top bar visible the URL field and close button overlapped

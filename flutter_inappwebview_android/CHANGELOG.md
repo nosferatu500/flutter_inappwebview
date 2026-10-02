@@ -239,6 +239,16 @@ for, and five others have a native *value* that differs from their name.
 
 ### Fixed
 
+- **A headless WebView's `onShowFileChooser` was never called** (since 6.2.0-beta.3 / `1.2.0-beta.3`,
+  where the event was added). `AndroidHeadlessInAppWebViewCreationParams` didn't take the field, so
+  the conversion `HeadlessInAppWebView` goes through dropped the handler. With no handler,
+  `useOnShowFileChooser` wasn't inferred either, and a file input opened the system picker without
+  asking. The params now take it, so the handler is called and the setting is inferred as it is for
+  the widget. It's the only Android-supported field the Android params left out; the others they
+  omit are iOS-only. A file chooser opens only on a user gesture, and a headless WebView gets none,
+  so the event is rare there: on API 37 a scripted `click()` on a file input opened nothing. A new
+  host test delivers the event, and a new device test reads the inferred setting: `false` before
+  the fix, `true` after (API 37).
 - **An in-app browser's `webViewController.setSettings()` reset the browser's own settings to
   their defaults.** The controller's map carries only WebView keys, but the native side parsed it
   as browser settings too and stored the result. So a toolbar colour, a fixed title, and the
