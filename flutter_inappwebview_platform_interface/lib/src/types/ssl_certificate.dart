@@ -8,6 +8,18 @@ import 'ssl_certificate_dname.dart';
 
 part 'ssl_certificate.g.dart';
 
+/// Logs why `x509Certificate` could not be decoded. [SslCertificate_.fromMap] then leaves it
+/// null.
+///
+/// A function rather than two inline `print`s because the generator copies `fromMap` into
+/// `ssl_certificate.g.dart` without its comments, so an `// ignore:` there would not survive.
+void _printDecodeError(Object e, StackTrace stacktrace) {
+  // ignore: avoid_print
+  print(e);
+  // ignore: avoid_print
+  print(stacktrace);
+}
+
 ///SSL certificate info (certificate details) class.
 @ExchangeableObject()
 class SslCertificate_ {
@@ -47,8 +59,7 @@ class SslCertificate_ {
     try {
       x509Certificate = X509Certificate.fromData(data: map["x509Certificate"]);
     } catch (e, stacktrace) {
-      print(e);
-      print(stacktrace);
+      _printDecodeError(e, stacktrace);
     }
 
     // Try to get issuedBy from map, otherwise fall back to x509Certificate

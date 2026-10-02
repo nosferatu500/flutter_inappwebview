@@ -21,7 +21,10 @@ List<X509Certificate>? _distinguishedNamesDeserializer(
       try {
         distinguishedNames!.add(X509Certificate.fromData(data: data));
       } catch (e, stacktrace) {
+        // Undecodable: skip this certificate and keep the rest.
+        // ignore: avoid_print
         print(e);
+        // ignore: avoid_print
         print(stacktrace);
       }
     }

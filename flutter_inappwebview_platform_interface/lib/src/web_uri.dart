@@ -50,7 +50,10 @@ class WebUri implements Uri {
       _uri = Uri.parse(_rawValue);
       _isValidUri = true;
     } catch (e, stacktrace) {
+      // Unparseable: keep the raw string, leave [uriValue] empty and [isValidUri] false.
+      // ignore: avoid_print
       print(e);
+      // ignore: avoid_print
       print(stacktrace);
     }
   }

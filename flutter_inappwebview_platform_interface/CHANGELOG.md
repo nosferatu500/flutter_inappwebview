@@ -614,6 +614,16 @@ rename; this entry is the API-owner's view.
 
 ### Internal
 
+- **The `avoid_print` lint is enabled.** Every one of its 15 findings here still prints exactly
+  what it printed, so nothing new is logged and nothing goes silent. 12 are decode-or-skip
+  fallbacks (an undecodable certificate, an unparseable `WebUri`, an `Error` thrown by a
+  `ChannelController` handler), 2 are deliberate (the debug-only startup banner,
+  `DebugLoggingSettings.usePrint`), and 1, the localhost server logging every response's headers,
+  looks like a leftover. Each carries an ignore and a one-line reason, except `SslCertificate.fromMap`'s
+  pair (4 findings, since the generator copies the method into `ssl_certificate.g.dart`). That pair
+  moved into a private helper, because the copy drops comments and an ignore could not survive it.
+  Two new tests prove the generated code still reaches the helper, including for a map with no
+  `x509Certificate` key, which logs a `TypeError` today.
 - **The `unused_element` lint is enabled.** It found one real slip: `ServiceWorkerClient.isClassSupported`
   answered from `PlatformServiceWorkerControllerCreationParams`'s platform list instead of its own.
   Both lists are Android-only, so the answer doesn't change, but it would have drifted silently.

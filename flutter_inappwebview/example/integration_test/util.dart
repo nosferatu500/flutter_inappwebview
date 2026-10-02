@@ -50,6 +50,8 @@ void skippableGroup(
   if (!skip) {
     group(description.toString(), body, skip: skip);
   } else {
+    // A skipped group is never registered, so this line is its only trace.
+    // ignore: avoid_print
     print(
       'SKIPPING GROUP "$description" for platform ${defaultTargetPlatform.toString()}',
     );
@@ -78,6 +80,8 @@ void skippableTest(
       retry: retry,
     );
   } else {
+    // A skipped test is never registered, so this line is its only trace.
+    // ignore: avoid_print
     print(
       'SKIPPING TEST "$description" for platform ${defaultTargetPlatform.toString()}',
     );
@@ -104,6 +108,8 @@ void skippableTestWidgets(
       tags: tags,
     );
   } else {
+    // A skipped test is never registered, so this line is its only trace.
+    // ignore: avoid_print
     print(
       'SKIPPING TEST WIDGET "$description" for platform ${defaultTargetPlatform.toString()}',
     );

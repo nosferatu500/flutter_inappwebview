@@ -576,6 +576,8 @@ void debugLog({
     if (!debugLoggingSettings.usePrint) {
       developer.log(message, name: className);
     } else {
+      // The caller chose print over developer.log (DebugLoggingSettings.usePrint).
+      // ignore: avoid_print
       print('[$className] $message');
     }
   }
@@ -633,7 +635,11 @@ extension InternalChannelController on ChannelController {
       try {
         return await handler!(call);
       } on Error catch (e) {
+        // An Error from the handler is logged and answered as null, i.e. success, not as an error
+        // reply. Rethrowing it is a candidate (§223).
+        // ignore: avoid_print
         print(e);
+        // ignore: avoid_print
         print(e.stackTrace);
       }
     });

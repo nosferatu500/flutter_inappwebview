@@ -1070,6 +1070,9 @@ simulator for the first time:**
 
 ### Internal
 
+- **The example's `avoid_print` lint is enabled.** Its six `print`s are integration-test output
+  (three Custom Tabs toolbar callbacks, three "SKIPPING …" lines from the `skippable*` helpers) and
+  each carries an ignore. No code changed.
 - **The `overridden_fields` lint is enabled**, and its six findings here fixed. `LocalStorage`,
   `SessionStorage` and the four path handlers redeclared the base class's `platform` field with a
   narrower type. Both fields held the same object, so this was harmless; each is now a getter that

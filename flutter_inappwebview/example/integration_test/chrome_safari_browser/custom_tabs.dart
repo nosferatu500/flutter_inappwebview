@@ -156,6 +156,7 @@ void customTabs() {
                 defPackage: "dev.nosferatu500.inappwebview.example",
               ),
               onClick: (WebUri? url) {
+                // ignore: avoid_print
                 print("Button 1 with $url");
               },
             ),
@@ -165,6 +166,7 @@ void customTabs() {
                 defPackage: "dev.nosferatu500.inappwebview.example",
               ),
               onClick: (WebUri? url) {
+                // ignore: avoid_print
                 print("Button 2 with $url");
               },
             ),
@@ -191,6 +193,7 @@ void customTabs() {
                 defPackage: "dev.nosferatu500.inappwebview.example",
               ),
               onClick: (WebUri? url) {
+                // ignore: avoid_print
                 print("Button 3 with $url");
               },
             ),

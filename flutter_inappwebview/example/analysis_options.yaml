@@ -22,7 +22,6 @@ include: package:flutter_lints/flutter.yaml
 linter:
   rules:
     avoid_init_to_null: false
-    avoid_print: false
     depend_on_referenced_packages: false
     library_private_types_in_public_api: false
     non_constant_identifier_names: false
