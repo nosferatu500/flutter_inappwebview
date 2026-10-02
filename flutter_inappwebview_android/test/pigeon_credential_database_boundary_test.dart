@@ -293,8 +293,7 @@ void main() {
     // (code 'channel-error'), so the loose form proves nothing (§157's mutant B).
     errorReply = <Object?>[
       'java.lang.IllegalArgumentException',
-      'setHttpAuthCredential requires protectionSpace.protocol and protectionSpace.port to be '
-          'non-null, because the credential database keys rows on both.',
+      'setHttpAuthCredential requires protectionSpace.protocol and protectionSpace.port to be non-null, because the credential database keys rows on both.',
       null,
     ];
 

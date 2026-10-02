@@ -1012,7 +1012,7 @@ class _TestRunnerScreenState extends State<TestRunnerScreen> {
     }
   }
 
-  void _runSelectedTests() async {
+  Future<void> _runSelectedTests() async {
     final runner = context.read<TestRunner>();
     final config = _currentConfiguration ?? TestConfiguration.defaultConfig();
 
@@ -1031,7 +1031,7 @@ class _TestRunnerScreenState extends State<TestRunnerScreen> {
     }
   }
 
-  void _rerunFailedTests() async {
+  Future<void> _rerunFailedTests() async {
     final runner = context.read<TestRunner>();
 
     try {

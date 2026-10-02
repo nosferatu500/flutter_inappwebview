@@ -1070,6 +1070,14 @@ simulator for the first time:**
 
 ### Internal
 
+- **Three opt-in lint rules are enabled** here and in the example: `avoid_void_async`,
+  `close_sinks`, `no_adjacent_strings_in_list`. The example's findings: two test-runner handlers
+  (`_runSelectedTests`, `_rerunFailedTests`) now return `Future<void>`; a test's
+  `onMessageChannelReady` override, which never awaits, is no longer `async`; and the `onLoadStart`
+  test now closes its `starts` controller after cancelling the iterator reading it.
+  `missing_whitespace_between_adjacent_strings` was measured and not enabled: all 67 findings were
+  HTML and JavaScript test fixtures deliberately built from adjacent literals, with no word-to-word
+  join among them.
 - **The `discarded_futures` lint is enabled here** (not in the example). It had no findings in this
   package.
 - **The `unawaited_futures` lint is enabled** here and in the example (it's not in flutter_lints).

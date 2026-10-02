@@ -480,6 +480,9 @@ for, and five others have a native *value* that differs from their name.
 
 ### Internal
 
+- **Three opt-in lint rules are enabled:** `avoid_void_async`, `close_sinks`,
+  `no_adjacent_strings_in_list`. The one finding, in a test, was an error message split over two
+  adjacent literals inside a list; it's now one literal with the same value.
 - **The `discarded_futures` lint is enabled** (not in flutter_lints). Its 3 library findings were
   fire-and-forget calls and are now marked `unawaited(...)`: `PrintJobController`'s `onComplete`,
   the headless WebView's `internalDispose()` on conversion, and the platform view's `create()`. That

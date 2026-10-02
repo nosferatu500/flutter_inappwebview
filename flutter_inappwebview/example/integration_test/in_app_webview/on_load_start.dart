@@ -56,6 +56,7 @@ void onLoadStart() {
     await reloaded;
 
     await startUrls.cancel();
+    await starts.close();
     await stops.close();
   }, skip: shouldSkip);
 }

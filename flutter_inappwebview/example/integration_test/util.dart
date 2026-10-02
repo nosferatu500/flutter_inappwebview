@@ -228,7 +228,7 @@ class MyChromeSafariBrowser extends ChromeSafariBrowser {
   }
 
   @override
-  void onMessageChannelReady() async {
+  void onMessageChannelReady() {
     if (!messageChannelReady.isCompleted) {
       messageChannelReady.complete();
     }

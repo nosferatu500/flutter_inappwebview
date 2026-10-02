@@ -614,6 +614,8 @@ rename; this entry is the API-owner's view.
 
 ### Internal
 
+- **Three opt-in lint rules are enabled:** `avoid_void_async`, `close_sinks`,
+  `no_adjacent_strings_in_list`. They had no findings in this package.
 - **The `discarded_futures` lint is enabled.** The localhost server's
   `HttpServer.bind(...).then(...)` chain, whose errors `runZonedGuarded` already catches, is marked
   `unawaited(...)`. No behaviour changed.

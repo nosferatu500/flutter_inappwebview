@@ -436,6 +436,8 @@ error.
 
 ### Internal
 
+- **Three opt-in lint rules are enabled:** `avoid_void_async`, `close_sinks`,
+  `no_adjacent_strings_in_list`. They had no findings in this package.
 - **The `discarded_futures` lint is enabled.** Its one finding, the headless WebView's
   `internalDispose()` on conversion, is marked `unawaited(...)`. No behaviour changed.
 - **The `unawaited_futures` lint is enabled.** `IOSPrintJobController` and
