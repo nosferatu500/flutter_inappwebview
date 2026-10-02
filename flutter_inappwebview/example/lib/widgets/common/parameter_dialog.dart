@@ -801,7 +801,7 @@ class _ParameterDialogState extends State<ParameterDialog> {
           );
         } else {
           field = DropdownButtonFormField<dynamic>(
-            value: value,
+            initialValue: value,
             decoration: InputDecoration(
               labelText: label,
               border: const OutlineInputBorder(),
@@ -938,7 +938,7 @@ class _ColorPickerDialogState extends State<_ColorPickerDialog> {
   }
 
   String _colorToHex(Color color) {
-    return '#${color.value.toRadixString(16).padLeft(8, '0').substring(2).toUpperCase()}';
+    return '#${color.toARGB32().toRadixString(16).padLeft(8, '0').substring(2).toUpperCase()}';
   }
 
   Color? _hexToColor(String hex) {
@@ -1088,15 +1088,15 @@ class _ColorPickerDialogState extends State<_ColorPickerDialog> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        'R: ${currentColor.red}',
+                        'R: ${(currentColor.r * 255.0).round().clamp(0, 255)}',
                         style: const TextStyle(fontSize: 11),
                       ),
                       Text(
-                        'G: ${currentColor.green}',
+                        'G: ${(currentColor.g * 255.0).round().clamp(0, 255)}',
                         style: const TextStyle(fontSize: 11),
                       ),
                       Text(
-                        'B: ${currentColor.blue}',
+                        'B: ${(currentColor.b * 255.0).round().clamp(0, 255)}',
                         style: const TextStyle(fontSize: 11),
                       ),
                     ],
@@ -1134,10 +1134,14 @@ class _ColorPickerDialogState extends State<_ColorPickerDialog> {
                             color: color,
                             borderRadius: BorderRadius.circular(4),
                             border: Border.all(
-                              color: _hsvColor.toColor().value == color.value
+                              color:
+                                  _hsvColor.toColor().toARGB32() ==
+                                      color.toARGB32()
                                   ? Colors.black
                                   : Colors.grey.shade300,
-                              width: _hsvColor.toColor().value == color.value
+                              width:
+                                  _hsvColor.toColor().toARGB32() ==
+                                      color.toARGB32()
                                   ? 2
                                   : 1,
                             ),
@@ -1203,7 +1207,7 @@ class _ColorPickerDialogState extends State<_ColorPickerDialog> {
                 activeTrackColor: Colors.transparent,
                 inactiveTrackColor: Colors.transparent,
                 thumbColor: Colors.white,
-                overlayColor: activeColor.withOpacity(0.2),
+                overlayColor: activeColor.withAlpha((255 * 0.2).round()),
               ),
               child: Slider(
                 value: value,

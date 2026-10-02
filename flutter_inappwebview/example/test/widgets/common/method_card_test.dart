@@ -26,8 +26,8 @@ void main() {
 
     final button = tester.widget<ElevatedButton>(buttonFinder);
     final style = button.style;
-    final minSize = style?.minimumSize?.resolve(<MaterialState>{});
-    final padding = style?.padding?.resolve(<MaterialState>{});
+    final minSize = style?.minimumSize?.resolve(<WidgetState>{});
+    final padding = style?.padding?.resolve(<WidgetState>{});
 
     expect(minSize?.height, 40);
     expect(padding, const EdgeInsets.symmetric(horizontal: 12, vertical: 8));

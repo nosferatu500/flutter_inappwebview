@@ -243,7 +243,7 @@ class _HistoryEntryTile extends StatelessWidget {
     final baseColor = entry.isError ? Colors.red : Colors.green;
     final borderColor = isSelected ? baseColor : Colors.grey.shade300;
     final backgroundColor = isSelected
-        ? baseColor.withOpacity(0.1)
+        ? baseColor.withAlpha((255 * 0.1).round())
         : Colors.grey.shade100;
 
     return InkWell(

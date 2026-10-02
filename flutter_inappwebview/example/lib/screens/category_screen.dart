@@ -41,7 +41,9 @@ class _CategoryScreenState extends State<CategoryScreen> {
           if (_selectedPlatforms.isNotEmpty)
             Container(
               padding: const EdgeInsets.all(8.0),
-              color: Theme.of(context).primaryColor.withOpacity(0.1),
+              color: Theme.of(
+                context,
+              ).primaryColor.withAlpha((255 * 0.1).round()),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [

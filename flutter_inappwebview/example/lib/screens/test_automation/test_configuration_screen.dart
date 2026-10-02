@@ -292,7 +292,7 @@ class _TestConfigurationScreenState extends State<TestConfigurationScreen>
       padding: const EdgeInsets.all(8),
       buildDefaultDragHandles: false,
       itemCount: filteredSteps.length,
-      onReorder: (oldIndex, newIndex) {
+      onReorderItem: (oldIndex, newIndex) {
         manager.reorderCustomSteps(oldIndex, newIndex);
       },
       itemBuilder: (context, index) {
@@ -336,31 +336,32 @@ class _TestConfigurationScreenState extends State<TestConfigurationScreen>
                     style: TextStyle(color: Colors.grey.shade600),
                   ),
                   const SizedBox(height: 16),
-                  RadioListTile<TestWebViewType>(
-                    title: Text('$InAppWebView (Visible)'),
-                    subtitle: const Text(
-                      'Display WebView in real-time during test execution',
-                    ),
-                    value: TestWebViewType.inAppWebView,
+                  RadioGroup<TestWebViewType>(
                     groupValue: config.webViewType,
                     onChanged: (value) {
                       if (value != null) {
                         manager.setWebViewType(value);
                       }
                     },
-                  ),
-                  RadioListTile<TestWebViewType>(
-                    title: const Text('Headless WebView'),
-                    subtitle: const Text(
-                      'Run tests in background without visible rendering',
+                    child: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        RadioListTile<TestWebViewType>(
+                          title: Text('$InAppWebView (Visible)'),
+                          subtitle: const Text(
+                            'Display WebView in real-time during test execution',
+                          ),
+                          value: TestWebViewType.inAppWebView,
+                        ),
+                        const RadioListTile<TestWebViewType>(
+                          title: Text('Headless WebView'),
+                          subtitle: Text(
+                            'Run tests in background without visible rendering',
+                          ),
+                          value: TestWebViewType.headless,
+                        ),
+                      ],
                     ),
-                    value: TestWebViewType.headless,
-                    groupValue: config.webViewType,
-                    onChanged: (value) {
-                      if (value != null) {
-                        manager.setWebViewType(value);
-                      }
-                    },
                   ),
                 ],
               ),
@@ -741,9 +742,9 @@ class _TestConfigurationScreenState extends State<TestConfigurationScreen>
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
       decoration: BoxDecoration(
-        color: color.withOpacity(0.1),
+        color: color.withAlpha((255 * 0.1).round()),
         borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: color.withOpacity(0.3)),
+        border: Border.all(color: color.withAlpha((255 * 0.3).round())),
       ),
       child: Text(label, style: TextStyle(fontSize: 10, color: color)),
     );

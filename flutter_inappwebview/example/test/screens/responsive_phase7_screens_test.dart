@@ -59,13 +59,13 @@ void main() {
 
     addTearDown(() async {
       FlutterError.onError = previousOnError;
-      tester.binding.window.clearPhysicalSizeTestValue();
-      tester.binding.window.clearDevicePixelRatioTestValue();
+      tester.view.resetPhysicalSize();
+      tester.view.resetDevicePixelRatio();
     });
 
     const size = Size(360, 700);
-    tester.binding.window.physicalSizeTestValue = size;
-    tester.binding.window.devicePixelRatioTestValue = 1.0;
+    tester.view.physicalSize = size;
+    tester.view.devicePixelRatio = 1.0;
 
     await pumpScreen(tester, const MaterialApp(home: SupportMatrixScreen()));
     assertNoErrors('SupportMatrixScreen');
@@ -113,13 +113,13 @@ void main() {
 
     addTearDown(() async {
       FlutterError.onError = previousOnError;
-      tester.binding.window.clearPhysicalSizeTestValue();
-      tester.binding.window.clearDevicePixelRatioTestValue();
+      tester.view.resetPhysicalSize();
+      tester.view.resetDevicePixelRatio();
     });
 
     const size = Size(800, 900);
-    tester.binding.window.physicalSizeTestValue = size;
-    tester.binding.window.devicePixelRatioTestValue = 1.0;
+    tester.view.physicalSize = size;
+    tester.view.devicePixelRatio = 1.0;
 
     await pumpScreen(tester, const MaterialApp(home: SupportMatrixScreen()));
     expect(find.byKey(const Key('support_matrix_summary_row')), findsOneWidget);

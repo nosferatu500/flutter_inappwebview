@@ -480,6 +480,7 @@ for, and five others have a native *value* that differs from their name.
 
 ### Internal
 
+- **The `deprecated_member_use` warning is enabled here.** It had no findings in this package.
 - **The `avoid_return_types_on_setters` lint is enabled.** `AndroidWebMessagePort`'s two setters
   (`onMessage`, `webMessageChannel`) lose their `void`, which setters always return. No code
   changed.

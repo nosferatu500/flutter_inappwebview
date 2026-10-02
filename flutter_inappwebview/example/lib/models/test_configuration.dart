@@ -1319,10 +1319,10 @@ class TestConfigurationManager extends ChangeNotifier {
     notifyListeners();
   }
 
-  /// Reorder custom test steps
+  /// Moves the custom step at [oldIndex] to [newIndex], the index it has after the move (what
+  /// `ReorderableListView.onReorderItem` reports; no further adjustment is needed).
   void reorderCustomSteps(int oldIndex, int newIndex) {
     final steps = [..._currentConfig.customSteps];
-    if (newIndex > oldIndex) newIndex--;
     final step = steps.removeAt(oldIndex);
     steps.insert(newIndex, step);
 

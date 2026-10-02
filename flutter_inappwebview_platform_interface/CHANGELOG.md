@@ -614,6 +614,7 @@ rename; this entry is the API-owner's view.
 
 ### Internal
 
+- **The `deprecated_member_use` warning is enabled here.** It had no findings in this package.
 - **The `unnecessary_import` warning is enabled**, and its 8 redundant imports are removed. Each was
   fully covered by another import in the same file. Two of them, in
   `platform_webview_asset_loader.dart`, were redundant only because that file imports the package's

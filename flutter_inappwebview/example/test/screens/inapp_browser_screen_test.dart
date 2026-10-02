@@ -23,11 +23,11 @@ void main() {
     }
 
     testWidgets('does not overflow on small height', (tester) async {
-      tester.binding.window.physicalSizeTestValue = const Size(320, 280);
-      tester.binding.window.devicePixelRatioTestValue = 1.0;
+      tester.view.physicalSize = const Size(320, 280);
+      tester.view.devicePixelRatio = 1.0;
       addTearDown(() {
-        tester.binding.window.clearPhysicalSizeTestValue();
-        tester.binding.window.clearDevicePixelRatioTestValue();
+        tester.view.resetPhysicalSize();
+        tester.view.resetDevicePixelRatio();
       });
 
       await tester.pumpWidget(createWidget());
@@ -37,11 +37,11 @@ void main() {
     });
 
     testWidgets('test_inapp_browser_mobile_layout', (tester) async {
-      tester.binding.window.physicalSizeTestValue = const Size(320, 640);
-      tester.binding.window.devicePixelRatioTestValue = 1.0;
+      tester.view.physicalSize = const Size(320, 640);
+      tester.view.devicePixelRatio = 1.0;
       addTearDown(() {
-        tester.binding.window.clearPhysicalSizeTestValue();
-        tester.binding.window.clearDevicePixelRatioTestValue();
+        tester.view.resetPhysicalSize();
+        tester.view.resetDevicePixelRatio();
       });
 
       await tester.pumpWidget(createWidget());

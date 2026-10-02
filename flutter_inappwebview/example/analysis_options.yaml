@@ -36,4 +36,3 @@ linter:
 analyzer:
   errors:
     constant_identifier_names: ignore
-    deprecated_member_use: ignore

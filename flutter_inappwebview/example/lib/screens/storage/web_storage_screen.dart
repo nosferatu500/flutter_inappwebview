@@ -650,7 +650,7 @@ class _WebStorageScreenState extends State<WebStorageScreen>
                 ),
                 Container(
                   decoration: BoxDecoration(
-                    color: Colors.black.withOpacity(0.7),
+                    color: Colors.black.withAlpha((255 * 0.7).round()),
                     borderRadius: BorderRadius.circular(4),
                   ),
                   padding: const EdgeInsets.symmetric(

@@ -374,7 +374,9 @@ class _PlatformComparisonScreenState extends State<PlatformComparisonScreen> {
           decoration: BoxDecoration(
             color: Colors.white,
             borderRadius: BorderRadius.circular(8),
-            border: Border.all(color: value.color.withOpacity(0.5)),
+            border: Border.all(
+              color: value.color.withAlpha((255 * 0.5).round()),
+            ),
           ),
           child: DropdownButtonHideUnderline(
             child: DropdownButton<SupportedPlatform>(
@@ -466,9 +468,9 @@ class _PlatformComparisonScreenState extends State<PlatformComparisonScreen> {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
       decoration: BoxDecoration(
-        color: color.withOpacity(0.1),
+        color: color.withAlpha((255 * 0.1).round()),
         borderRadius: BorderRadius.circular(8),
-        border: Border.all(color: color.withOpacity(0.3)),
+        border: Border.all(color: color.withAlpha((255 * 0.3).round())),
       ),
       child: Column(
         children: [
@@ -648,11 +650,11 @@ class _PlatformComparisonScreenState extends State<PlatformComparisonScreen> {
       statusIcon = Icons.check_circle;
       statusText = 'Both';
     } else if (item.platform1Supported) {
-      rowColor = _platform1.color.withOpacity(0.1);
+      rowColor = _platform1.color.withAlpha((255 * 0.1).round());
       statusIcon = Icons.arrow_back;
       statusText = '${_platform1.displayName} only';
     } else if (item.platform2Supported) {
-      rowColor = _platform2.color.withOpacity(0.1);
+      rowColor = _platform2.color.withAlpha((255 * 0.1).round());
       statusIcon = Icons.arrow_forward;
       statusText = '${_platform2.displayName} only';
     } else {

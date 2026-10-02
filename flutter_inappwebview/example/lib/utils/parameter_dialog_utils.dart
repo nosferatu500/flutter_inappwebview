@@ -22,7 +22,7 @@ class ParameterDialogUtils {
       return DateTime.fromMillisecondsSinceEpoch(value.millisecondsSinceEpoch);
     }
     if (value is Color) {
-      return Color(value.value);
+      return Color(value.toARGB32());
     }
     return value;
   }

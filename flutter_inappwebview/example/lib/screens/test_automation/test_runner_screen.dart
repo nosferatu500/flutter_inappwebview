@@ -816,7 +816,7 @@ class _TestRunnerScreenState extends State<TestRunnerScreen> {
       trailing: Container(
         padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
         decoration: BoxDecoration(
-          color: color.withOpacity(0.1),
+          color: color.withAlpha((255 * 0.1).round()),
           borderRadius: BorderRadius.circular(4),
         ),
         child: Text(
@@ -895,9 +895,11 @@ class _TestRunnerScreenState extends State<TestRunnerScreen> {
         return Container(
           padding: const EdgeInsets.all(12),
           decoration: BoxDecoration(
-            color: statusColor.withOpacity(0.1),
+            color: statusColor.withAlpha((255 * 0.1).round()),
             border: Border(
-              top: BorderSide(color: statusColor.withOpacity(0.3)),
+              top: BorderSide(
+                color: statusColor.withAlpha((255 * 0.3).round()),
+              ),
             ),
           ),
           child: Row(
@@ -950,9 +952,9 @@ class _TestRunnerScreenState extends State<TestRunnerScreen> {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
       decoration: BoxDecoration(
-        color: color.withOpacity(0.1),
+        color: color.withAlpha((255 * 0.1).round()),
         borderRadius: BorderRadius.circular(16),
-        border: Border.all(color: color.withOpacity(0.3)),
+        border: Border.all(color: color.withAlpha((255 * 0.3).round())),
       ),
       child: Row(
         mainAxisSize: MainAxisSize.min,

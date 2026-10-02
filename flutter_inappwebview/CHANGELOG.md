@@ -1070,6 +1070,16 @@ simulator for the first time:**
 
 ### Internal
 
+- **The `deprecated_member_use` warning is enabled** in all five packages, and the example's 118
+  uses of deprecated Flutter APIs are migrated (the packages themselves had none). Most are
+  equivalent by Flutter's own source: `withOpacity(o)` becomes `withAlpha((255 * o).round())`, its
+  exact body (not `withValues`, which would store an unrounded alpha and so a different `Color`);
+  `Color.value` becomes `toARGB32()`; `.red`/`.green`/`.blue` become their documented formula;
+  `DropdownButtonFormField`'s `value` becomes `initialValue`, which it already forwarded to;
+  `MaterialState` becomes `WidgetState`; and the tests' `tester.binding.window…TestValue` becomes
+  `tester.view…`. Two needed real changes, each pinned by a new widget test. The WebView-type radios
+  now sit under a `RadioGroup`. The custom steps list uses `onReorderItem`, whose index is already
+  adjusted, so `TestConfigurationManager.reorderCustomSteps` no longer adjusts it a second time.
 - **The example's `prefer_const_constructors` lint is enabled.** flutter_lints doesn't ship it, so
   the old `false` was dead; it is now opted in with `true`. Its 185 findings were fixed by `dart
   fix` (167 fixes in 34 files; a `const` parent covers its children's findings), plus 6
