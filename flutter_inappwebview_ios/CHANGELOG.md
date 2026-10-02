@@ -436,6 +436,13 @@ error.
 
 ### Internal
 
+- **Sixteen opt-in lint rules are enabled** (none ships in flutter_lints), each with 0 findings
+  today, as guards: `always_declare_return_types`, `avoid_js_rounded_ints`, `avoid_type_to_string`,
+  `cancel_subscriptions`, `conditional_uri_does_not_exist`, `deprecated_consistency`,
+  `literal_only_boolean_expressions`, `no_self_assignments`, `only_throw_errors`,
+  `prefer_void_to_null`, `test_types_in_equals`, `throw_in_finally`, `unnecessary_statements`,
+  `use_late_for_private_fields_and_variables`, `use_named_constants`, `use_to_and_as_if_applicable`.
+  No code changed.
 - **The `avoid_print` lint is enabled here.** It had no findings in this package; the `false` that
   disabled it silenced nothing.
 - **The `deprecated_member_use` warning is enabled here.** It had no findings in this package.
