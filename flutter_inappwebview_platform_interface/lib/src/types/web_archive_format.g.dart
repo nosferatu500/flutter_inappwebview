@@ -160,7 +160,7 @@ class WebArchiveFormat {
   int get hashCode => _value.hashCode;
 
   @override
-  bool operator ==(value) => value == _value;
+  bool operator ==(other) => other == _value;
 
   ///Checks if the value is supported by the [defaultTargetPlatform].
   bool isSupported() {

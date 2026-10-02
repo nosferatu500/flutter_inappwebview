@@ -614,6 +614,13 @@ rename; this entry is the API-owner's view.
 
 ### Internal
 
+- **The `avoid_renaming_method_parameters` lint is enabled.** All 101 findings were the same:
+  `bool operator ==(value)` overriding `Object.==(Object other)`, in 96 generated enums and 5
+  hand-written x509 types (`ASN1IdentifierClass`, `ASN1IdentifierTagNumber`, `KeyUsage`, `OID`,
+  `ASN1DistinguishedNames`). The parameter is renamed to `other`, in the enum generator and in
+  the five, and nothing else changes. Regenerating changed exactly the 96 `==` lines. A new test
+  pins `==` on the three x509 types no test reached, including that an instance still equals its
+  own raw value.
 - **Dead analysis options removed.** `dead_null_aware_expression: ignore` silenced a warning with no
   findings; it is reported again, and still finds nothing. `deprecated_member_use_from_same_package`
   is no longer an analyzer diagnostic that's on by default, so its `ignore` was inert (measured: a

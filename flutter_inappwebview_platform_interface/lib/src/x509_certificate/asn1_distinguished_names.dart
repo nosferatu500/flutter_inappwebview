@@ -79,7 +79,7 @@ class ASN1DistinguishedNames {
   );
 
   @override
-  bool operator ==(value) => value == _oid;
+  bool operator ==(other) => other == _oid;
 
   @override
   int get hashCode => _oid.hashCode;

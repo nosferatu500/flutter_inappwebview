@@ -499,7 +499,7 @@ class ExchangeableEnumGenerator
     if (annotation.read("equalsOperator").boolValue) {
       classBuffer.writeln("""
       @override
-      bool operator ==(value) => value == _value;
+      bool operator ==(other) => other == _value;
       """);
     }
 

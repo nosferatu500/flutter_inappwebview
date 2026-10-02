@@ -47,7 +47,7 @@ class KeyUsage {
   static const decipherOnly = KeyUsage._internal(8);
 
   @override
-  bool operator ==(value) => value == _value;
+  bool operator ==(other) => other == _value;
 
   @override
   int get hashCode => _value.hashCode;
