@@ -436,6 +436,9 @@ error.
 
 ### Internal
 
+- **A dead analysis option removed.** `deprecated_member_use_from_same_package` is no longer an
+  analyzer diagnostic that's on by default, so its `ignore` was inert (measured: a deprecated use
+  from the same package is not reported unless the rule is enabled as a lint).
 - **The `unnecessary_cast` warning is enabled here.** It had no findings in this package.
 - **The `overridden_fields` lint is enabled**, and its seven findings fixed. The InAppBrowser,
   headless and widget creation params kept `pullToRefreshController` and `findInteractionController`

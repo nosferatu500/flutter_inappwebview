@@ -614,6 +614,10 @@ rename; this entry is the API-owner's view.
 
 ### Internal
 
+- **Dead analysis options removed.** `dead_null_aware_expression: ignore` silenced a warning with no
+  findings; it is reported again, and still finds nothing. `deprecated_member_use_from_same_package`
+  is no longer an analyzer diagnostic that's on by default, so its `ignore` was inert (measured: a
+  deprecated use from the same package is not reported unless the rule is enabled as a lint).
 - **The `unused_element_parameter` warning is enabled.** Its two findings are the `enumMethod`
   parameter of the hand-written `_toMapMergeWith` in `TrustedWebActivityDefaultDisplayMode_` and
   `TrustedWebActivityImmersiveDisplayMode_`. Those methods are generator input. The generated copy

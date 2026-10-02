@@ -1070,6 +1070,11 @@ simulator for the first time:**
 
 ### Internal
 
+- **Dead analysis options removed** here and in the example. `prefer_initializing_formals: false`
+  disabled a rule with no findings; it is on again, and still finds nothing.
+  `deprecated_member_use_from_same_package` is no longer an analyzer diagnostic that's on by
+  default, so its `ignore` was inert (measured: a deprecated use from the same package is not
+  reported unless the rule is enabled as a lint). The line is gone from both.
 - **The `unnecessary_cast` warning is enabled** in this package and its example. It had no
   findings in either.
 - **The example's `avoid_print` lint is enabled.** Its six `print`s are integration-test output
