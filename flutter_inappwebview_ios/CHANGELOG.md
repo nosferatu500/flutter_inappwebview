@@ -436,6 +436,8 @@ error.
 
 ### Internal
 
+- **The `avoid_print` lint is enabled here.** It had no findings in this package; the `false` that
+  disabled it silenced nothing.
 - **The `deprecated_member_use` warning is enabled here.** It had no findings in this package.
 - **The `avoid_return_types_on_setters` lint is enabled.** `IOSWebMessagePort`'s two setters
   (`onMessage`, `webMessageChannel`) lose their `void`, which setters always return. No code
