@@ -11,6 +11,18 @@ void userScripts() {
           Completer<InAppWebViewController>();
       final Completer<void> pageLoaded = Completer<void>();
 
+      // This test has timed out at the group's 60 s twice (§209) with an empty stack, so nothing
+      // said which await hung. Each await now has its own bound and names itself when it fails.
+      Future<T> step<T>(
+        String name,
+        Future<T> future, {
+        Duration timeout = const Duration(seconds: 20),
+      }) => future.timeout(
+        timeout,
+        onTimeout: () =>
+            fail('"$name" did not finish within ${timeout.inSeconds} s'),
+      );
+
       await tester.pumpWidget(
         Directionality(
           textDirection: TextDirection.ltr,
@@ -46,37 +58,64 @@ void userScripts() {
               controllerCompleter.complete(controller);
             },
             onLoadStop: (controller, url) async {
-              pageLoaded.complete();
+              if (!pageLoaded.isCompleted) pageLoaded.complete();
             },
           ),
         ),
       );
-      final InAppWebViewController controller =
-          await controllerCompleter.future;
-      await pageLoaded.future;
+      final InAppWebViewController controller = await step(
+        'onWebViewCreated',
+        controllerCompleter.future,
+      );
+      await step(
+        'the first onLoadStop',
+        pageLoaded.future,
+        timeout: const Duration(seconds: 30),
+      );
 
-      expect(await controller.evaluateJavascript(source: "foo;"), 49);
-      expect(await controller.evaluateJavascript(source: "foo2;"), 19);
       expect(
-        await controller.evaluateJavascript(
-          source: "foo2;",
-          contentWorld: ContentWorld.PAGE,
+        await step('foo', controller.evaluateJavascript(source: "foo;")),
+        49,
+      );
+      expect(
+        await step('foo2', controller.evaluateJavascript(source: "foo2;")),
+        19,
+      );
+      expect(
+        await step(
+          'foo2 in PAGE',
+          controller.evaluateJavascript(
+            source: "foo2;",
+            contentWorld: ContentWorld.PAGE,
+          ),
         ),
         19,
       );
-      expect(await controller.evaluateJavascript(source: "bar;"), isNull);
-      expect(await controller.evaluateJavascript(source: "bar2;"), isNull);
       expect(
-        await controller.evaluateJavascript(
-          source: "bar;",
-          contentWorld: ContentWorld.DEFAULT_CLIENT,
+        await step('bar', controller.evaluateJavascript(source: "bar;")),
+        isNull,
+      );
+      expect(
+        await step('bar2', controller.evaluateJavascript(source: "bar2;")),
+        isNull,
+      );
+      expect(
+        await step(
+          'bar in DEFAULT_CLIENT',
+          controller.evaluateJavascript(
+            source: "bar;",
+            contentWorld: ContentWorld.DEFAULT_CLIENT,
+          ),
         ),
         2,
       );
       expect(
-        await controller.evaluateJavascript(
-          source: "bar2;",
-          contentWorld: ContentWorld.world(name: "test"),
+        await step(
+          'bar2 in world "test"',
+          controller.evaluateJavascript(
+            source: "bar2;",
+            contentWorld: ContentWorld.world(name: "test"),
+          ),
         ),
         12,
       );

@@ -1085,6 +1085,9 @@ simulator for the first time:**
 
 ### Internal
 
+- **The `initialUserScripts` device test names the step that hangs.** It had timed out at the
+  group's 60 s twice with an empty stack. Each of its nine awaits now has its own bound (30 s for
+  the page load, 20 s otherwise) and fails with the step's name.
 - **The `getDefaultUserAgent` device test no longer expects `Android` on iOS.** It now checks for
   `AppleWebKit` there (and no `Android`), and keeps `Android` for Android. It had failed on iOS
   since it was tightened, unnoticed because the iOS group couldn't load.
