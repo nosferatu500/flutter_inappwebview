@@ -1085,6 +1085,9 @@ simulator for the first time:**
 
 ### Internal
 
+- **The `getDefaultUserAgent` device test no longer expects `Android` on iOS.** It now checks for
+  `AppleWebKit` there (and no `Android`), and keeps `Android` for Android. It had failed on iOS
+  since it was tightened, unnoticed because the iOS group couldn't load.
 - **The `save credentials` device test now uses its own answer.** It ran after a test that unlocks
   the fixture's protected origin, so the page loaded without a challenge and its credential was
   never used. It now visits the same server under another host name (`10.0.2.2` on the Android
