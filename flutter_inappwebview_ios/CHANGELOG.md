@@ -141,6 +141,13 @@ Fourteen WebKit APIs read out of the iOS 26.5 SDK:
 
 ### Fixed
 
+- **`ProfileStore.isClassSupported()` / `isMethodSupported()` and the same checks on
+  `GeolocationPermissions` threw `UnimplementedError` on iOS instead of answering `false`.** They go
+  through the platform's static factory, and this package had none for those two classes, so the
+  platform interface's throwing default ran. They were the only two of 29. Both now return a stub, as
+  the other Android-only classes do. It also kept the example's iOS `in_app_webview` integration
+  group from loading at all, since one of its tests calls `ProfileStore.isClassSupported()` while the
+  tests are registered. A new host test calls all 29 factories on iOS.
 - **The four managers that live on a constant method-channel name are now single instances, so
   constructing one no longer silently unhooks another.** `IOSCookieManager`,
   `IOSHttpAuthCredentialDatabase`, `IOSProxyController` and `IOSWebStorageManager` each attach a

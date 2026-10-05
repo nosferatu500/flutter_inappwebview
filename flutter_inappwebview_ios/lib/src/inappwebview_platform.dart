@@ -443,6 +443,24 @@ class IOSInAppWebViewPlatform extends InAppWebViewPlatform {
     return _PlatformTracingController.static();
   }
 
+  /// Creates a new empty [PlatformProfileStore] to access static methods.
+  ///
+  /// This function should only be called by the app-facing package.
+  /// Look at using [ProfileStore] in `flutter_inappwebview` instead.
+  @override
+  PlatformProfileStore createPlatformProfileStoreStatic() {
+    return _PlatformProfileStore.static();
+  }
+
+  /// Creates a new empty [PlatformGeolocationPermissions] to access static methods.
+  ///
+  /// This function should only be called by the app-facing package.
+  /// Look at using [GeolocationPermissions] in `flutter_inappwebview` instead.
+  @override
+  PlatformGeolocationPermissions createPlatformGeolocationPermissionsStatic() {
+    return _PlatformGeolocationPermissions.static();
+  }
+
   /// Creates a new empty [PlatformAssetsPathHandler] to access static methods.
   ///
   /// This function should only be called by the app-facing package.
@@ -541,6 +559,25 @@ class _PlatformTracingController extends PlatformTracingController {
       );
 
   factory _PlatformTracingController.static() => _staticValue;
+}
+
+class _PlatformProfileStore extends PlatformProfileStore {
+  _PlatformProfileStore(super.params) : super.implementation();
+  static final _PlatformProfileStore _staticValue = _PlatformProfileStore(
+    const PlatformProfileStoreCreationParams(),
+  );
+
+  factory _PlatformProfileStore.static() => _staticValue;
+}
+
+class _PlatformGeolocationPermissions extends PlatformGeolocationPermissions {
+  _PlatformGeolocationPermissions(super.params) : super.implementation();
+  static final _PlatformGeolocationPermissions _staticValue =
+      _PlatformGeolocationPermissions(
+        const PlatformGeolocationPermissionsCreationParams(),
+      );
+
+  factory _PlatformGeolocationPermissions.static() => _staticValue;
 }
 
 class _PlatformWebViewFeature extends PlatformWebViewFeature {

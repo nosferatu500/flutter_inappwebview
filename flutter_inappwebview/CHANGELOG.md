@@ -792,6 +792,11 @@ since the `WebsiteDataType.ALL` fix below. It stays **deliberately out of `ALL`*
 
 ### Fixed
 
+**iOS — `ProfileStore.isClassSupported()` and `GeolocationPermissions.isClassSupported()` threw
+instead of answering `false`** (and so did `isMethodSupported` on both). Both classes are
+Android-only, and the iOS package had no stub for them. They now answer `false` on iOS, like every
+other Android-only class.
+
 **`InAppLocalhostServer` printed every served response's headers in release builds.** Five lines of
 the server's own response headers went to the log per file served (measured in a profile build on
 Android). It's now debug-only, like the server's other messages; debug output is unchanged.
