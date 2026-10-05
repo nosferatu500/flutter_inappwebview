@@ -1080,6 +1080,12 @@ simulator for the first time:**
 
 ### Internal
 
+- **The `save credentials` device test now uses its own answer.** It ran after a test that unlocks
+  the fixture's protected origin, so the page loaded without a challenge and its credential was
+  never used. It now visits the same server under another host name (`10.0.2.2` on the Android
+  emulator, `127.0.0.1` on the iOS simulator), which starts locked. It asserts that a challenge
+  fired, that the page is authorized, and on Android that `permanentPersistence` stored the
+  credential.
 - **A device test now checks that `removeUserScript` removes the right script.** It removes the
   middle of three document-start scripts, one of them initial, and checks the other two still run.
   The existing test removed the only such script, which sits at index 0 whatever index is sent, so

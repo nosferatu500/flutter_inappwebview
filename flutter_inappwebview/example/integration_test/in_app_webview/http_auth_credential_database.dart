@@ -76,32 +76,43 @@ void httpAuthCredentialDatabase() {
       expect(credentials, isEmpty);
     });
 
-    // 🚨 This test cannot see its own answer when it runs after the one above: 8081 is already
-    // unlocked (see the note below), so no challenge fires and "Authorized" comes from Chromium's
-    // cache. Measured in the group on API 37 (§215). `permanentPersistence` is asserted on 8084
-    // by the last test in this group instead.
+    // The test above unlocks `NODE_SERVER_IP:8081`, and the engine then pre-authenticates that
+    // origin for the rest of the process, so this test used to get "Authorized" without a challenge
+    // and never use its own answer (§215). It now visits the same server and port under another
+    // host name, which is another origin and so starts locked: `10.0.2.2` is the Android
+    // emulator's alias for the host machine, and the iOS simulator shares the Mac's loopback. No
+    // other test uses either name.
     skippableTestWidgets('save credentials', (WidgetTester tester) async {
+      final httpAuthCredentialDatabase = HttpAuthCredentialDatabase.instance();
+      final host = defaultTargetPlatform == TargetPlatform.android
+          ? '10.0.2.2'
+          : '127.0.0.1';
       final Completer<InAppWebViewController> controllerCompleter =
           Completer<InAppWebViewController>();
       final Completer<void> pageLoaded = Completer<void>();
+      var challenges = 0;
 
-      await InAppWebViewController.clearAllCache();
+      await httpAuthCredentialDatabase.clearAllAuthCredentials();
+      addTearDown(httpAuthCredentialDatabase.clearAllAuthCredentials);
 
       await tester.pumpWidget(
         Directionality(
           textDirection: TextDirection.ltr,
           child: InAppWebView(
             key: GlobalKey(),
-            initialUrlRequest: URLRequest(
-              url: WebUri("http://${environment["NODE_SERVER_IP"]}:8081/"),
-            ),
+            initialUrlRequest: URLRequest(url: WebUri("http://$host:8081/")),
             onWebViewCreated: (controller) {
               controllerCompleter.complete(controller);
             },
             onLoadStop: (controller, url) {
-              pageLoaded.complete();
+              if (!pageLoaded.isCompleted) pageLoaded.complete();
             },
             onReceivedHttpAuthRequest: (controller, challenge) async {
+              challenges++;
+              // A second challenge means the answer was rejected; cancel rather than loop.
+              if (challenges > 1) {
+                return HttpAuthResponse(action: HttpAuthResponseAction.CANCEL);
+              }
               return HttpAuthResponse(
                 username: "USERNAME",
                 password: "PASSWORD",
@@ -114,19 +125,43 @@ void httpAuthCredentialDatabase() {
       );
       final InAppWebViewController controller =
           await controllerCompleter.future;
-      await pageLoaded.future;
+      await pageLoaded.future.timeout(const Duration(seconds: 30));
 
+      expect(
+        challenges,
+        greaterThan(0),
+        reason:
+            'no challenge fired, so the origin was already unlocked and the answer below was '
+            'never used. Check no earlier test visits http://$host:8081/.',
+      );
       final String h1Content = await controller.evaluateJavascript(
         source: "document.body.querySelector('h1').textContent",
       );
       expect(h1Content, "Authorized");
+
+      // Android stores the answered credential in the plugin's database (measured on 8084 below).
+      if (defaultTargetPlatform == TargetPlatform.android) {
+        final saved = await httpAuthCredentialDatabase.getHttpAuthCredentials(
+          protectionSpace: URLProtectionSpace(
+            host: host,
+            protocol: "http",
+            realm: "Node",
+            port: 8081,
+          ),
+        );
+        expect(
+          saved.map((c) => '${c.username}:${c.password}').toList(),
+          ['USERNAME:PASSWORD'],
+          reason: 'permanentPersistence did not store the answered credential',
+        );
+      }
     });
 
     // The two tests below run against port **8084**, the fixture's second protected origin, and
-    // must keep running against it. Port 8081 is single-use per process: the two tests above
-    // authenticate successfully there, after which Chromium pre-authenticates that origin and
-    // `onReceivedHttpAuthRequest` never fires for it again — `clearAllCache()` does not clear the
-    // HTTP-auth cache and the plugin exposes nothing that does. A test that needs to *observe* a
+    // must keep running against it. An origin is single-use per process: the two tests above
+    // authenticate successfully on 8081 (each under its own host name), after which Chromium
+    // pre-authenticates that origin and `onReceivedHttpAuthRequest` never fires for it again —
+    // `clearAllCache()` does not clear the HTTP-auth cache and the plugin exposes nothing that does. A test that needs to *observe* a
     // challenge therefore has to run somewhere no earlier test has unlocked. Neither of these ever
     // authenticates successfully, so 8084 stays locked for the whole run.
 
