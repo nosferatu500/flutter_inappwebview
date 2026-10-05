@@ -1085,6 +1085,9 @@ simulator for the first time:**
 
 ### Internal
 
+- **The `flingScroll` device test no longer flings straight after `onLoadStop`.** Measured on API 37,
+  20 flings each in one run: 7 lost right after the load, 0 after pumping frames first. The test
+  now pumps frames before it flings. This was the longest-standing flake in the Android suite.
 - **The `initialUserScripts` device test names the step that hangs.** It had timed out at the
   group's 60 s twice with an empty stack. Each of its nine awaits now has its own bound (30 s for
   the page load, 20 s otherwise) and fails with the step's name.

@@ -45,6 +45,10 @@ void flingScroll() {
     final controller = await controllerCompleter.future;
     await tester.pump();
     await pageLoaded.future;
+    // A fling sent straight after `onLoadStop` can be lost: measured on API 37, 7 of 20 flings that
+    // way left scrollY at 0, and 0 of 20 after these frames (§256). Why isn't pinned down: the page
+    // already reported `window.innerHeight` 923 at that point, so it isn't the page's layout.
+    await _pumpFrames(tester);
 
     expect(await controller.getScrollY(), 0, reason: 'should start at the top');
 
