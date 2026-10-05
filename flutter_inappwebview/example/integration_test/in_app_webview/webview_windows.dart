@@ -128,6 +128,95 @@ void webViewWindows() {
       await expectLater(onCloseWindowCompleter.future, completes);
     }, skip: shouldSkipTest2);
 
+    // A WebView created for a `windowId` doesn't get the scripts `addDocumentStartJavaScript` added
+    // at creation (upstream #1455), so Android re-adds them with `View.post` once the view is
+    // attached (FlutterWebView.makeInitialLoad). Measured on API 37 (§257): the posted block runs
+    // once the popup is attached, but after its first navigation has started, so whether the
+    // *first* document gets the script is a race (lost when the page comes from cache; TODO.md).
+    // What the re-add guarantees is every later document, so the test reloads the popup and checks
+    // that one. Without the re-add the script is missing there too. The parent stays on screen.
+    skippableTestWidgets(
+      'a popup WebView runs its own initialUserScripts',
+      (WidgetTester tester) async {
+        final Completer<int> windowIdCompleter = Completer<int>();
+        final Completer<InAppWebViewController> popupLoaded =
+            Completer<InAppWebViewController>();
+        Completer<void>? popupReloaded;
+
+        Widget tree({int? windowId}) => Directionality(
+          textDirection: TextDirection.ltr,
+          child: Column(
+            children: [
+              Expanded(
+                child: InAppWebView(
+                  key: const ValueKey('parent'),
+                  initialFile:
+                      "test_assets/in_app_webview_on_create_window_test.html",
+                  initialSettings: InAppWebViewSettings(
+                    javaScriptCanOpenWindowsAutomatically: true,
+                    supportMultipleWindows: true,
+                  ),
+                  onCreateWindow: (controller, createNavigationAction) async {
+                    if (!windowIdCompleter.isCompleted) {
+                      windowIdCompleter.complete(
+                        createNavigationAction.windowId,
+                      );
+                    }
+                    return true;
+                  },
+                ),
+              ),
+              if (windowId != null)
+                Expanded(
+                  child: InAppWebView(
+                    key: const ValueKey('popup'),
+                    windowId: windowId,
+                    initialUserScripts: UnmodifiableListView<UserScript>([
+                      UserScript(
+                        source: "window.popupScript = 42;",
+                        injectionTime:
+                            UserScriptInjectionTime.AT_DOCUMENT_START,
+                      ),
+                    ]),
+                    onLoadStop: (controller, url) {
+                      if (url?.scheme == "about") return;
+                      if (!popupLoaded.isCompleted) {
+                        popupLoaded.complete(controller);
+                      } else if (popupReloaded?.isCompleted == false) {
+                        popupReloaded!.complete();
+                      }
+                    },
+                  ),
+                ),
+            ],
+          ),
+        );
+
+        await tester.pumpWidget(tree());
+        final windowId = await windowIdCompleter.future.timeout(
+          const Duration(seconds: 30),
+        );
+        await tester.pumpWidget(tree(windowId: windowId));
+        await _pumpFrames(tester);
+        final popup = await popupLoaded.future.timeout(
+          const Duration(seconds: 30),
+        );
+        final reloaded = popupReloaded = Completer<void>();
+        await popup.reload();
+        await reloaded.future.timeout(const Duration(seconds: 30));
+
+        expect(
+          await popup.evaluateJavascript(source: "window.popupScript"),
+          42,
+          reason:
+              'the popup WebView did not run its own document-start user script',
+        );
+      },
+      // iOS doesn't run a popup's own initialUserScripts (measured §257, TODO.md); this pins the
+      // Android re-add only.
+      skip: shouldSkipTest2 || defaultTargetPlatform != TargetPlatform.android,
+    );
+
     final shouldSkipTest3 =
         kIsWeb ||
         !InAppWebView.isPropertySupported(

@@ -1085,6 +1085,11 @@ simulator for the first time:**
 
 ### Internal
 
+- **Two device tests pin how Android gives a popup WebView its user scripts.** A WebView created
+  for a `windowId` doesn't receive the scripts added at creation, so the plugin re-adds them once the
+  view is attached. Measured on API 37: without that, a popup's own `initialUserScripts` never run.
+  One test covers a popup shown beside its parent, one a headless popup; both check the popup's
+  document after a reload, because the re-add happens after the first navigation has started.
 - **The `flingScroll` device test no longer flings straight after `onLoadStop`.** Measured on API 37,
   20 flings each in one run: 7 lost right after the load, 0 after pumping frames first. The test
   now pumps frames before it flings. This was the longest-standing flake in the Android suite.

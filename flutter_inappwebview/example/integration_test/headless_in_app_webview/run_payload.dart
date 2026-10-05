@@ -206,4 +206,62 @@ void runPayload() {
     },
     skip: shouldSkip,
   );
+
+  // The headless half of the `windowId` user-script re-add (§257): a headless WebView is already
+  // attached when `makeInitialLoad` posts the re-add, and without the post its user script never
+  // runs. As in the widget half (`a popup WebView runs its own initialUserScripts`), the first
+  // document is a race, so the popup is reloaded and the reloaded document is checked.
+  skippableTest('a headless popup runs its own initialUserScripts', () async {
+    HeadlessInAppWebView? child;
+    final childController = Completer<InAppWebViewController>();
+    Completer<void>? childReloaded;
+    final (parent, _) = await _runLoaded(
+      (onCreated, onLoaded) => HeadlessInAppWebView(
+        initialData: InAppWebViewInitialData(
+          data:
+              '<html><body>parent<script>setTimeout(function() {'
+              ' window.open("https://example.com/popup"); }, 500);</script></body></html>',
+        ),
+        initialSettings: InAppWebViewSettings(
+          javaScriptCanOpenWindowsAutomatically: true,
+          supportMultipleWindows: true,
+        ),
+        onCreateWindow: (controller, action) async {
+          child = HeadlessInAppWebView(
+            windowId: action.windowId,
+            initialUserScripts: UnmodifiableListView([
+              UserScript(
+                source: 'window.popupScript = 42;',
+                injectionTime: UserScriptInjectionTime.AT_DOCUMENT_START,
+              ),
+            ]),
+            onLoadStop: (c, url) {
+              if (url?.scheme == 'about') return;
+              if (!childController.isCompleted) {
+                childController.complete(c);
+              } else if (childReloaded?.isCompleted == false) {
+                childReloaded!.complete();
+              }
+            },
+          );
+          await child!.run();
+          return true;
+        },
+        onWebViewCreated: onCreated,
+        onLoadStop: (_, _) => onLoaded(),
+      ),
+    );
+    final c = await childController.future.timeout(const Duration(seconds: 30));
+    final reloaded = childReloaded = Completer<void>();
+    await c.reload();
+    await reloaded.future.timeout(const Duration(seconds: 30));
+    expect(
+      await c.evaluateJavascript(source: 'window.popupScript'),
+      42,
+      reason:
+          'the headless popup did not run its own document-start user script',
+    );
+    await child?.dispose();
+    await parent.dispose();
+  }, skip: shouldSkip);
 }
