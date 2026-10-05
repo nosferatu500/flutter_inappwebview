@@ -792,6 +792,11 @@ since the `WebsiteDataType.ALL` fix below. It stays **deliberately out of `ALL`*
 
 ### Fixed
 
+**Android — a popup WebView's own `initialUserScripts` were unreliable** (a `windowId` WebView from
+`onCreateWindow`): a fast first page in an on-screen popup had none of them, and a headless popup
+had them on no page at all. They're now registered after the window handover and also evaluated
+into the popup's first page, guarded so none runs twice.
+
 **iOS — `ProfileStore.isClassSupported()` and `GeolocationPermissions.isClassSupported()` threw
 instead of answering `false`** (and so did `isMethodSupported` on both). Both classes are
 Android-only, and the iOS package had no stub for them. They now answer `false` on iOS, like every
@@ -1086,10 +1091,10 @@ simulator for the first time:**
 ### Internal
 
 - **Two device tests pin how Android gives a popup WebView its user scripts.** A WebView created
-  for a `windowId` doesn't receive the scripts added at creation, so the plugin re-adds them once the
-  view is attached. Measured on API 37: without that, a popup's own `initialUserScripts` never run.
-  One test covers a popup shown beside its parent, one a headless popup; both check the popup's
-  document after a reload, because the re-add happens after the first navigation has started.
+  for a `windowId` doesn't receive the scripts added at creation, so the plugin registers them at
+  the popup's first page start and evaluates them into that first page. One test covers a popup
+  shown beside its parent (a document-start script and a document-end one in a content world), one
+  a headless popup; both check the first page, run counts, and the page after a reload.
 - **The `flingScroll` device test no longer flings straight after `onLoadStop`.** Measured on API 37,
   20 flings each in one run: 7 lost right after the load, 0 after pumping frames first. The test
   now pumps frames before it flings. This was the longest-standing flake in the Android suite.

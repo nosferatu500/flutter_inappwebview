@@ -163,6 +163,19 @@ class InAppWebView : WebView, InAppWebViewInterface, Disposable {
 
   @JvmField var userContentController = UserContentController(this)
 
+  /**
+   * Set for a `windowId` popup until its first page finishes: its user scripts are evaluated into
+   * that page as well, because they are registered too late for it (§258).
+   */
+  @JvmField var userScriptsFallbackPending = false
+
+  /**
+   * Set for a `windowId` popup until its first page starts, which is when its plugin and user
+   * scripts are registered: [prepare] skips them for such a WebView because the transport handover
+   * would drop them (upstream #1455), and the first page start is after the handover (§258).
+   */
+  @JvmField var userScriptsRegistrationPending = false
+
   @JvmField
   var callAsyncJavaScriptCallbacks: MutableMap<String, ValueCallback<String>> = HashMap()
 

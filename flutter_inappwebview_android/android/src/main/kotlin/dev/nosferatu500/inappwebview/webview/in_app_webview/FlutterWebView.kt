@@ -102,14 +102,17 @@ class FlutterWebView(
         (resultMsg.obj as WebView.WebViewTransport).webView = view
         resultMsg.sendToTarget()
         if (WebViewFeature.isFeatureSupported(WebViewFeature.DOCUMENT_START_SCRIPT)) {
-          // for some reason, if a WebView is created using a window id,
-          // the initial plugin and user scripts injected
-          // with WebViewCompat.addDocumentStartJavaScript will not be added!
-          // https://github.com/pichillilorenzo/flutter_inappwebview/issues/1455
-          //
-          // Also, calling the prepareAndAddUserScripts method right after won't work,
-          // so use the View.post method here.
-          view.post { webView?.prepareAndAddUserScripts() }
+          // A WebView created for a window id loses the plugin and user scripts registered with
+          // WebViewCompat.addDocumentStartJavaScript before the transport handover
+          // (https://github.com/pichillilorenzo/flutter_inappwebview/issues/1455), so prepare()
+          // skips them. They used to be registered from View.post, which ran at the wrong moment
+          // either way (§257, §258): after the popup's first navigation had started (widget
+          // popups, so the first document lacked them), or before the handover took effect
+          // (headless popups, so every document lacked them). The page callbacks now register
+          // them at the popup's first onPageStarted, which is after the handover, and evaluate
+          // them into that first document, guarded so none runs twice.
+          view.userScriptsRegistrationPending = true
+          view.userScriptsFallbackPending = true
         }
       }
     } else {

@@ -20,6 +20,9 @@ class UserContentController(@JvmField var webView: WebView?) : Disposable {
 
   private var contentWorldsCreatorScript: ScriptHandler? = null
 
+  /** A stable id per script, so the registered copy and the fallback copy share one guard. */
+  private val userScriptGuardIds: MutableMap<UserScript, Int> = HashMap()
+
   private val userOnlyScripts: Map<UserScriptInjectionTime, LinkedHashSet<UserScript>> = mapOf(
     UserScriptInjectionTime.AT_DOCUMENT_START to LinkedHashSet(),
     UserScriptInjectionTime.AT_DOCUMENT_END to LinkedHashSet()
@@ -164,21 +167,49 @@ class UserContentController(@JvmField var webView: WebView?) : Disposable {
     updateContentWorldsCreatorScript()
     val view = webView
     if (view != null && WebViewFeature.isFeatureSupported(WebViewFeature.DOCUMENT_START_SCRIPT)) {
-      var source = userOnlyScript.source
-      if (userOnlyScript.injectionTime == UserScriptInjectionTime.AT_DOCUMENT_END) {
-        source = "if (document.readyState === 'complete') { $source} else { " +
-          "window.addEventListener('load', function() { $source }); }"
-      }
-      source = wrapSourceCodeAddChecks(source, userOnlyScript)
-
       val scriptHandler = WebViewCompat.addDocumentStartJavaScript(
         view,
-        wrapSourceCodeInContentWorld(userOnlyScript.contentWorld, source),
+        guardedUserOnlyScriptSource(userOnlyScript),
         userOnlyScript.allowedOriginRules
       )
       scriptHandlerMap[userOnlyScript] = scriptHandler
     }
     return userOnlyScripts[userOnlyScript.injectionTime]!!.add(userOnlyScript)
+  }
+
+  /**
+   * The source a user-only script is registered with, and the same source the popup fallback
+   * evaluates. The innermost user code runs at most once per document and content world: a
+   * `windowId` popup can get both copies for its first document (§258), and a document-end script
+   * registers a `load` listener in each, so the guard has to sit inside that listener.
+   */
+  private fun guardedUserOnlyScriptSource(userOnlyScript: UserScript): String {
+    val id = userScriptGuardIds.getOrPut(userOnlyScript) { userScriptGuardIds.size }
+    val flag = "window._" + JavaScriptBridgeJS.get_JAVASCRIPT_BRIDGE_NAME() + "_userScript" + id
+    // The newline keeps a user source that ends in a `//` comment from swallowing the brace.
+    var source = "if (!$flag) { $flag = true; ${userOnlyScript.source}\n}"
+    if (userOnlyScript.injectionTime == UserScriptInjectionTime.AT_DOCUMENT_END) {
+      source = "if (document.readyState === 'complete') { $source} else { " +
+        "window.addEventListener('load', function() { $source }); }"
+    }
+    source = wrapSourceCodeAddChecks(source, userOnlyScript)
+    return wrapSourceCodeInContentWorld(userOnlyScript.contentWorld, source)
+  }
+
+  /**
+   * Every user-only script, as registered, for evaluating into a `windowId` popup's first document.
+   * Such a popup can't register them before the transport handover (upstream #1455), so they're
+   * registered at its first page start, which is too late for that page itself. The guard in [guardedUserOnlyScriptSource] makes this a no-op where they did run. The
+   * content-world `<iframe>`s are recreated too: their creator is a document-start script as well.
+   */
+  fun generateUserOnlyScriptsFallbackCode(): String {
+    val js = StringBuilder(generateContentWorldsCreatorCode()).append(";")
+    for (injectionTime in UserScriptInjectionTime.entries) {
+      for (script in getUserOnlyScriptsAt(injectionTime)) {
+        js.append(guardedUserOnlyScriptSource(script)).append(";")
+      }
+    }
+    return js.toString()
   }
 
   fun addUserOnlyScripts(userOnlyScripts: List<UserScript>) {

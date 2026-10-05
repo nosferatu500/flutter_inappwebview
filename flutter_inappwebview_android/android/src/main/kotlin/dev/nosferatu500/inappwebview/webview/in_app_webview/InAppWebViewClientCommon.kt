@@ -152,12 +152,28 @@ internal class InAppWebViewClientCommon(
     }
   }
 
+  /** See [InAppWebView.userScriptsFallbackPending]. */
+  private fun loadUserScriptsFallback(webView: InAppWebView) {
+    if (webView.userScriptsFallbackPending) {
+      webView.evaluateJavascript(
+        webView.userContentController.generateUserOnlyScriptsFallbackCode(),
+        null as ValueCallback<String>?
+      )
+    }
+  }
+
   fun onPageStarted(view: WebView, url: String?, superCall: () -> Unit) {
     val webView = view as InAppWebView
     webView.isLoading = true
     webView.disposeWebMessageChannels()
     webView.userContentController.resetContentWorlds()
     loadCustomJavaScriptOnPageStarted(webView)
+    // See [InAppWebView.userScriptsRegistrationPending]: the first page start is after the handover.
+    if (webView.userScriptsRegistrationPending) {
+      webView.userScriptsRegistrationPending = false
+      webView.prepareAndAddUserScripts()
+    }
+    loadUserScriptsFallback(webView)
 
     superCall()
 
@@ -170,6 +186,11 @@ internal class InAppWebViewClientCommon(
     val webView = view as InAppWebView
     webView.isLoading = false
     loadCustomJavaScriptOnPageFinished(webView)
+    loadUserScriptsFallback(webView)
+    // The popup's first real page is done; later documents get the registered scripts.
+    if (url != null && url != "about:blank") {
+      webView.userScriptsFallbackPending = false
+    }
     httpAuthState.reset()
 
     superCall()

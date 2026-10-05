@@ -129,12 +129,12 @@ void webViewWindows() {
     }, skip: shouldSkipTest2);
 
     // A WebView created for a `windowId` doesn't get the scripts `addDocumentStartJavaScript` added
-    // at creation (upstream #1455), so Android re-adds them with `View.post` once the view is
-    // attached (FlutterWebView.makeInitialLoad). Measured on API 37 (§257): the posted block runs
-    // once the popup is attached, but after its first navigation has started, so whether the
-    // *first* document gets the script is a race (lost when the page comes from cache; TODO.md).
-    // What the re-add guarantees is every later document, so the test reloads the popup and checks
-    // that one. Without the re-add the script is missing there too. The parent stays on screen.
+    // at creation (upstream #1455). Android re-adds them with `View.post` once the view is attached,
+    // which is after the popup's first navigation has started (§257), and evaluates them into that
+    // first document as well, guarded so each runs once (§258). The popup opens a local asset, which
+    // loads fast enough that without the fallback its first document always lost the race (measured
+    // §258): the document-start script was missing and an evaluation in the content world never
+    // answered. Checked on the first document and after a reload. The parent stays on screen.
     skippableTestWidgets(
       'a popup WebView runs its own initialUserScripts',
       (WidgetTester tester) async {
@@ -150,11 +150,18 @@ void webViewWindows() {
               Expanded(
                 child: InAppWebView(
                   key: const ValueKey('parent'),
-                  initialFile:
-                      "test_assets/in_app_webview_on_create_window_test.html",
+                  initialData: InAppWebViewInitialData(
+                    data:
+                        '<html><body>parent<script>window.open("page-1.html");'
+                        '</script></body></html>',
+                    baseUrl: WebUri(
+                      'file:///android_asset/flutter_assets/test_assets/',
+                    ),
+                  ),
                   initialSettings: InAppWebViewSettings(
                     javaScriptCanOpenWindowsAutomatically: true,
                     supportMultipleWindows: true,
+                    allowFileAccess: true,
                   ),
                   onCreateWindow: (controller, createNavigationAction) async {
                     if (!windowIdCompleter.isCompleted) {
@@ -173,9 +180,19 @@ void webViewWindows() {
                     windowId: windowId,
                     initialUserScripts: UnmodifiableListView<UserScript>([
                       UserScript(
-                        source: "window.popupScript = 42;",
+                        source:
+                            "window.popupRuns = (window.popupRuns || 0) + 1;",
                         injectionTime:
                             UserScriptInjectionTime.AT_DOCUMENT_START,
+                      ),
+                      // `forMainFrameOnly: false` because on Android a content world is an
+                      // `<iframe>`, so a main-frame-only world script never runs (TODO.md).
+                      UserScript(
+                        source:
+                            "window.popupEndRuns = (window.popupEndRuns || 0) + 1;",
+                        injectionTime: UserScriptInjectionTime.AT_DOCUMENT_END,
+                        contentWorld: ContentWorld.world(name: "popupWorld"),
+                        forMainFrameOnly: false,
                       ),
                     ]),
                     onLoadStop: (controller, url) {
@@ -201,19 +218,51 @@ void webViewWindows() {
         final popup = await popupLoaded.future.timeout(
           const Duration(seconds: 30),
         );
+
+        Future<void> expectScriptsRanOnce(String document) async {
+          expect(
+            await popup.evaluateJavascript(source: "window.popupRuns"),
+            1,
+            reason:
+                '$document: the document-start script should run exactly once',
+          );
+          // The content world is an <iframe> created once the body exists, so poll briefly. An
+          // evaluation into a world that was never created doesn't answer, hence the timeout.
+          Object? endRuns;
+          for (var i = 0; i < 25 && endRuns == null; i++) {
+            endRuns = await popup
+                .evaluateJavascript(
+                  source: "window.popupEndRuns",
+                  contentWorld: ContentWorld.world(name: "popupWorld"),
+                )
+                .timeout(
+                  const Duration(seconds: 3),
+                  onTimeout: () => fail(
+                    '$document: an evaluation in "popupWorld" never answered, '
+                    'so the content world was not created',
+                  ),
+                );
+            if (endRuns == null) {
+              await Future<void>.delayed(const Duration(milliseconds: 200));
+            }
+          }
+          expect(
+            endRuns,
+            1,
+            reason:
+                '$document: the document-end script in "popupWorld" should '
+                'run exactly once',
+          );
+        }
+
+        await expectScriptsRanOnce('first document');
         final reloaded = popupReloaded = Completer<void>();
         await popup.reload();
         await reloaded.future.timeout(const Duration(seconds: 30));
-
-        expect(
-          await popup.evaluateJavascript(source: "window.popupScript"),
-          42,
-          reason:
-              'the popup WebView did not run its own document-start user script',
-        );
+        await expectScriptsRanOnce('after a reload');
       },
-      // iOS doesn't run a popup's own initialUserScripts (measured §257, TODO.md); this pins the
-      // Android re-add only.
+      // iOS doesn't run a popup's own initialUserScripts (measured §257, TODO.md), and the asset URL
+      // is Android's; this pins the Android re-add and fallback only.
       skip: shouldSkipTest2 || defaultTargetPlatform != TargetPlatform.android,
     );
 

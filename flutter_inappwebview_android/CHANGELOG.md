@@ -239,6 +239,16 @@ for, and five others have a native *value* that differs from their name.
 
 ### Fixed
 
+- **A popup WebView's own `initialUserScripts` were unreliable** (a WebView created with a
+  `windowId` from `onCreateWindow`). Scripts registered before the `WebViewTransport` handover are
+  dropped (upstream #1455), and the old workaround re-registered them from `View.post`, which ran
+  at the wrong moment either way. For a popup shown on screen it ran after the popup's first
+  navigation had started, so a fast first page (from cache or a local asset) had none of them, and
+  evaluating JavaScript in one of its content worlds never answered. For a headless popup it ran
+  before the handover took effect, so every page lacked them. The scripts are now registered at the
+  popup's first page start, which is after the handover, and are also evaluated into that first
+  page, with a per-document guard so a script that did run isn't run again. Measured on API 37 with
+  device tests that fail without each part.
 - **A headless WebView's `onShowFileChooser` was never called** (since 6.2.0-beta.3 / `1.2.0-beta.3`,
   where the event was added). `AndroidHeadlessInAppWebViewCreationParams` didn't take the field, so
   the conversion `HeadlessInAppWebView` goes through dropped the handler. With no handler,
