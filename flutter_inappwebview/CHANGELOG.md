@@ -1080,6 +1080,11 @@ simulator for the first time:**
 
 ### Internal
 
+- **A device test now checks that `layoutAlgorithm` reaches the Android WebView**, at creation and
+  through `setSettings`, in both directions. It covers the fix for the `switch` fall-through that
+  turned every value into `TEXT_AUTOSIZING`, which had never run on a device. On Android
+  `getSettings` reports the WebView's own `WebSettings.layoutAlgorithm`, so the test reads what the
+  platform applied.
 - **Three opt-in lint rules are enabled** here and in the example: `avoid_void_async`,
   `close_sinks`, `no_adjacent_strings_in_list`. The example's findings: two test-runner handlers
   (`_runSelectedTests`, `_rerunFailedTests`) now return `Future<void>`; a test's

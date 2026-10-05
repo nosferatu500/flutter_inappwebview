@@ -112,4 +112,70 @@ void setGetSettings() {
     },
     skip: shouldSkip || defaultTargetPlatform != TargetPlatform.iOS,
   );
+
+  // D7 fixed a `switch` with no `break`s that turned every `layoutAlgorithm` into
+  // `TEXT_AUTOSIZING`. On Android `getSettings` reports the WebView's own
+  // `WebSettings.layoutAlgorithm`, not the map the plugin was given, so this reads what the platform
+  // applied: at creation and through `setSettings`, in both directions. Measured on API 37: an
+  // unset WebView reads `null`, because the platform default has no Dart value, so a lost creation
+  // write fails the first expectation too.
+  skippableTestWidgets(
+    'layoutAlgorithm reaches the platform at creation and through setSettings',
+    (WidgetTester tester) async {
+      final Completer<InAppWebViewController> controllerCompleter =
+          Completer<InAppWebViewController>();
+      final Completer<void> pageLoaded = Completer<void>();
+
+      await tester.pumpWidget(
+        Directionality(
+          textDirection: TextDirection.ltr,
+          child: InAppWebView(
+            key: GlobalKey(),
+            initialData: InAppWebViewInitialData(data: '<p>layout</p>'),
+            initialSettings: InAppWebViewSettings(
+              layoutAlgorithm: LayoutAlgorithm.NORMAL,
+            ),
+            onWebViewCreated: (controller) {
+              controllerCompleter.complete(controller);
+            },
+            onLoadStop: (controller, url) {
+              if (!pageLoaded.isCompleted) {
+                pageLoaded.complete();
+              }
+            },
+          ),
+        ),
+      );
+      final InAppWebViewController controller =
+          await controllerCompleter.future;
+      await pageLoaded.future;
+
+      expect(
+        (await controller.getSettings())?.layoutAlgorithm,
+        LayoutAlgorithm.NORMAL,
+        reason: 'at creation',
+      );
+
+      await controller.setSettings(
+        settings: InAppWebViewSettings(
+          layoutAlgorithm: LayoutAlgorithm.TEXT_AUTOSIZING,
+        ),
+      );
+      expect(
+        (await controller.getSettings())?.layoutAlgorithm,
+        LayoutAlgorithm.TEXT_AUTOSIZING,
+        reason: 'through setSettings',
+      );
+
+      await controller.setSettings(
+        settings: InAppWebViewSettings(layoutAlgorithm: LayoutAlgorithm.NORMAL),
+      );
+      expect(
+        (await controller.getSettings())?.layoutAlgorithm,
+        LayoutAlgorithm.NORMAL,
+        reason: 'back through setSettings',
+      );
+    },
+    skip: shouldSkip || defaultTargetPlatform != TargetPlatform.android,
+  );
 }
