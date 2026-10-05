@@ -144,5 +144,84 @@ void userScripts() {
 
       unawaited(pageLoads.close());
     });
+
+    // Dart sends `removeUserScript` the script's index in its own list, and Kotlin removes the
+    // script at that index in its own ordered set (§212). The test above removes the only
+    // document-start script, which is index 0 whatever the index says, so it passed against a
+    // Kotlin that always removed index 0. This one removes the middle of three, after an initial
+    // script, so it also checks that the two lists agree on where the initial scripts sit.
+    skippableTestWidgets('removeUserScript removes the script at its own index', (
+      WidgetTester tester,
+    ) async {
+      final Completer<InAppWebViewController> controllerCompleter =
+          Completer<InAppWebViewController>();
+      // Replaced before each reload, so a load can't be missed the way a broadcast stream misses
+      // one that fires before it's listened to.
+      var nextLoad = Completer<void>();
+
+      final scriptA = UserScript(
+        source: "window.scriptA = 1;",
+        injectionTime: UserScriptInjectionTime.AT_DOCUMENT_START,
+      );
+      final scriptB = UserScript(
+        source: "window.scriptB = 2;",
+        injectionTime: UserScriptInjectionTime.AT_DOCUMENT_START,
+      );
+      final scriptC = UserScript(
+        source: "window.scriptC = 3;",
+        injectionTime: UserScriptInjectionTime.AT_DOCUMENT_START,
+      );
+
+      await tester.pumpWidget(
+        Directionality(
+          textDirection: TextDirection.ltr,
+          child: InAppWebView(
+            key: GlobalKey(),
+            initialUrlRequest: URLRequest(url: TEST_CROSS_PLATFORM_URL_1),
+            initialUserScripts: UnmodifiableListView<UserScript>([scriptA]),
+            onWebViewCreated: (controller) {
+              controllerCompleter.complete(controller);
+            },
+            onLoadStop: (controller, url) {
+              if (!nextLoad.isCompleted) nextLoad.complete();
+            },
+          ),
+        ),
+      );
+
+      final InAppWebViewController controller =
+          await controllerCompleter.future;
+      await nextLoad.future;
+
+      Future<void> reload() async {
+        nextLoad = Completer<void>();
+        await controller.reload();
+        await nextLoad.future.timeout(const Duration(seconds: 30));
+      }
+
+      await controller.addUserScripts(userScripts: [scriptB, scriptC]);
+      await reload();
+      expect(await controller.evaluateJavascript(source: "window.scriptA;"), 1);
+      expect(await controller.evaluateJavascript(source: "window.scriptB;"), 2);
+      expect(await controller.evaluateJavascript(source: "window.scriptC;"), 3);
+
+      expect(await controller.removeUserScript(userScript: scriptB), isTrue);
+      await reload();
+      expect(
+        await controller.evaluateJavascript(source: "window.scriptA;"),
+        1,
+        reason: 'the script before the removed one still runs',
+      );
+      expect(
+        await controller.evaluateJavascript(source: "window.scriptB;"),
+        isNull,
+        reason: 'the removed script no longer runs',
+      );
+      expect(
+        await controller.evaluateJavascript(source: "window.scriptC;"),
+        3,
+        reason: 'the script after the removed one still runs',
+      );
+    });
   }, skip: shouldSkip);
 }

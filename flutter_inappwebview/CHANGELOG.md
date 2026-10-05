@@ -1080,6 +1080,10 @@ simulator for the first time:**
 
 ### Internal
 
+- **A device test now checks that `removeUserScript` removes the right script.** It removes the
+  middle of three document-start scripts, one of them initial, and checks the other two still run.
+  The existing test removed the only such script, which sits at index 0 whatever index is sent, so
+  it passed against an Android implementation that always removed the first script.
 - **A device test now checks that `layoutAlgorithm` reaches the Android WebView**, at creation and
   through `setSettings`, in both directions. It covers the fix for the `switch` fall-through that
   turned every value into `TEXT_AUTOSIZING`, which had never run on a device. On Android
