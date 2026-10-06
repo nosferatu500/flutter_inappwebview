@@ -99,6 +99,10 @@ public class InAppWebView: WKWebView, UIScrollViewDelegate, WKUIDelegate,
 
     var contextMenu: [String: Any]?
     var initialUserScripts: [UserScript] = []
+    /// The rule list compiled from `settings.contentBlockers` and added to this WebView's
+    /// controller, kept so `createWebViewWith` can give a popup the same one:
+    /// `WKUserContentController` has no getter for its rule lists.
+    var contentRuleList: WKContentRuleList?
     
     // https://github.com/mozilla-mobile/firefox-ios/blob/50531a7e9e4d459fb11d4fcb7d4322e08103501f/Client/Frontend/Browser/ContextMenuHelper.swift
     fileprivate var nativeHighlightLongPressRecognizer: UILongPressGestureRecognizer?
@@ -699,12 +703,6 @@ public class InAppWebView: WKWebView, UIScrollViewDelegate, WKUIDelegate,
     }
     
     public func prepareAndAddUserScripts() -> Void {
-        if windowId != nil {
-            // The new created window webview has the same WKWebViewConfiguration variable reference.
-            // So, we cannot set another WKWebViewConfiguration for it unfortunately!
-            // This is a limitation of the official WebKit API.
-            return
-        }
         configuration.userContentController.initialize()
         
         if let applePayAPIEnabled = settings?.applePayAPIEnabled, applePayAPIEnabled {
@@ -1459,6 +1457,7 @@ public class InAppWebView: WKWebView, UIScrollViewDelegate, WKUIDelegate,
         
         if newSettingsMap["contentBlockers"] != nil {
             configuration.userContentController.removeAllContentRuleLists()
+            contentRuleList = nil
             let contentBlockers = newSettings.contentBlockers
             if contentBlockers.count > 0 {
                 do {
@@ -1472,6 +1471,7 @@ public class InAppWebView: WKWebView, UIScrollViewDelegate, WKUIDelegate,
                                 return
                             }
                             self.configuration.userContentController.add(contentRuleList!)
+                            self.contentRuleList = contentRuleList
                     }
                 } catch {
                     print(error.localizedDescription)
@@ -2844,8 +2844,20 @@ public class InAppWebView: WKWebView, UIScrollViewDelegate, WKUIDelegate,
             windowId = inAppWebViewManager.windowAutoincrementId
         }
         
+        // WebKit passes a copy of this WebView's configuration whose `userContentController` is
+        // this WebView's own object (measured §259), so a popup built from it ran this WebView's
+        // user scripts and never its own: anything added to it ran here and in every other popup
+        // too. A fresh controller makes the popup's scripts and handlers its own; `prepare()`
+        // registers them from the popup's settings before its first navigation is answered (those
+        // wait for `windowCreated`). `window.opener` still works (measured). The rule list is the
+        // one thing carried over, so a popup keeps its opener's content blockers as before.
+        configuration.userContentController = WKUserContentController()
+        if let contentRuleList = contentRuleList {
+            configuration.userContentController.add(contentRuleList)
+        }
         let windowWebView = InAppWebView(id: nil, plugin: nil, frame: self.bounds, configuration: configuration, contextMenu: nil)
         windowWebView.windowId = windowId
+        windowWebView.contentRuleList = contentRuleList
 
         let webViewTransport = WebViewTransport(
             webView: windowWebView,
@@ -3854,15 +3866,16 @@ public class InAppWebView: WKWebView, UIScrollViewDelegate, WKUIDelegate,
         }
         webMessageListeners.removeAll()
         interceptOnlyAsyncAjaxRequestsPluginScript = nil
-        if windowId == nil {
-            configuration.userContentController.removeAllPluginScriptMessageHandlers()
-            configuration.userContentController.removeAllUserScripts()
-            configuration.userContentController.removeAllContentRuleLists()
-
-        } else if let wId = windowId, plugin?.inAppWebViewManager?.windowWebViews[wId] != nil {
+        // A popup owns its controller too (`createWebViewWith`), and a controller retains this
+        // WebView as its script message handler, so it is emptied whatever `windowId` is.
+        configuration.userContentController.removeAllPluginScriptMessageHandlers()
+        configuration.userContentController.removeAllUserScripts()
+        configuration.userContentController.removeAllContentRuleLists()
+        contentRuleList = nil
+        if let wId = windowId, plugin?.inAppWebViewManager?.windowWebViews[wId] != nil {
             plugin?.inAppWebViewManager?.windowWebViews.removeValue(forKey: wId)
         }
-        configuration.userContentController.dispose(windowId: windowId)
+        configuration.userContentController.dispose(windowId: nil)
         NotificationCenter.default.removeObserver(self)
         for imp in customIMPs {
             imp_removeBlock(imp)

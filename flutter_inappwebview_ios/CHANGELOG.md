@@ -141,6 +141,19 @@ Fourteen WebKit APIs read out of the iOS 26.5 SDK:
 
 ### Fixed
 
+- **A popup WebView never ran its own `initialUserScripts`, and ran its opener's instead** (a
+  WebView created with a `windowId` from `onCreateWindow`, as a widget or an `InAppBrowser`).
+  WebKit hands `createWebViewWith` the opener's `WKUserContentController`, measured on iOS 26.5 to
+  be the same object, and the popup never registered anything into it. Adding the popup's scripts
+  to it would have run them in the opener and in every other popup as well. A popup now gets a
+  controller of its own and registers its plugin scripts and user scripts into it from its own
+  settings, before its first navigation is answered. **Behaviour change:** a popup no longer runs
+  its opener's user scripts. `supportZoom`, `useOnLoadResource`, `useShouldInterceptAjaxRequest`,
+  `useShouldInterceptFetchRequest` and `enableViewportScale` now come from the popup's settings,
+  not its opener's. It keeps its opener's content blockers (the compiled rule list is copied
+  across). `window.opener` and each WebView's JavaScript handlers work as before (measured).
+  `dispose()` now empties a popup's controller too, since that controller holds the popup as its
+  message handler.
 - **`ProfileStore.isClassSupported()` / `isMethodSupported()` and the same checks on
   `GeolocationPermissions` threw `UnimplementedError` on iOS instead of answering `false`.** They go
   through the platform's static factory, and this package had none for those two classes, so the

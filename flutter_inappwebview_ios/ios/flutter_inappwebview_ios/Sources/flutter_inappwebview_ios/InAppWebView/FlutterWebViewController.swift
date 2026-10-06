@@ -128,6 +128,7 @@ public class FlutterWebViewController: NSObject, @MainActor FlutterPlatformView,
 
                             let configuration = webView.configuration
                             configuration.userContentController.add(contentRuleList!)
+                            webView.contentRuleList = contentRuleList
 
                             self.load(initialUrlRequest: initialUrlRequest, initialFile: initialFile, initialData: initialData)
                     }

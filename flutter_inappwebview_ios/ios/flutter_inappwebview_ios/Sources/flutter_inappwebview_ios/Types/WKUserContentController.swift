@@ -34,10 +34,12 @@ extension WKUserContentController {
     // **Measured before replacing it (§143), and it could not happen**: across a full
     // `in_app_webview` run on iOS 26.5, 127 controllers were initialized and **none** found an
     // existing entry under its address, with the three maps never holding more than two entries at
-    // once. The reason is structural rather than lucky — `prepareAndAddUserScripts()` returns early
-    // when `windowId != nil`, because a `window.open` child shares its opener's configuration *and
-    // therefore its controller*, so only a top-level WebView's controller is ever keyed here, and a
-    // top-level WebView always reaches `dispose(windowId: nil)`, which removed the entries.
+    // once. The reason was structural rather than lucky — `prepareAndAddUserScripts()` returned
+    // early when `windowId != nil`, because a `window.open` child shared its opener's configuration
+    // *and therefore its controller*, so only a top-level WebView's controller was ever keyed here,
+    // and a top-level WebView always reaches `dispose(windowId: nil)`, which removed the entries.
+    // Since §259 a child gets a controller of its own in `createWebViewWith` and registers into it,
+    // and `InAppWebView.dispose()` passes `nil` for every WebView.
     //
     // What an associated object changes is that none of that has to stay true. The old code was
     // correct only while "every keyed controller is disposed exactly once" held, and nothing

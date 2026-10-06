@@ -370,12 +370,11 @@ Also, this event is not called for POST requests and is not called on the first 
         apiUrl:
             'https://developer.apple.com/documentation/webkit/wkuidelegate/1536907-webview',
         note:
-            """Setting these initial settings [InAppWebViewSettings.supportZoom], [InAppWebViewSettings.useOnLoadResource], [InAppWebViewSettings.useShouldInterceptAjaxRequest],
-[InAppWebViewSettings.useShouldInterceptFetchRequest], [InAppWebViewSettings.applicationNameForUserAgent], [InAppWebViewSettings.javaScriptCanOpenWindowsAutomatically],
+            """Setting these initial settings [InAppWebViewSettings.applicationNameForUserAgent], [InAppWebViewSettings.javaScriptCanOpenWindowsAutomatically],
 [InAppWebViewSettings.javaScriptEnabled], [InAppWebViewSettings.minimumFontSize], [InAppWebViewSettings.preferredContentMode], [InAppWebViewSettings.incognito],
 [InAppWebViewSettings.cacheEnabled], [InAppWebViewSettings.mediaPlaybackRequiresUserGesture],
 [InAppWebViewSettings.resourceCustomSchemes], [InAppWebViewSettings.sharedCookiesEnabled],
-[InAppWebViewSettings.enableViewportScale], [InAppWebViewSettings.allowsAirPlayForMediaPlayback],
+[InAppWebViewSettings.allowsAirPlayForMediaPlayback],
 [InAppWebViewSettings.allowsPictureInPictureMediaPlayback], [InAppWebViewSettings.isFraudulentWebsiteWarningEnabled],
 [InAppWebViewSettings.allowsInlineMediaPlayback], [InAppWebViewSettings.suppressesIncrementalRendering], [InAppWebViewSettings.selectionGranularity],
 [InAppWebViewSettings.ignoresViewportScaleLimits], [InAppWebViewSettings.limitsNavigationsToAppBoundDomains],
@@ -384,7 +383,11 @@ will have no effect due to a `WKWebView` limitation when creating the new window
 with a different `WKWebViewConfiguration` instance (see https://developer.apple.com/documentation/webkit/wkuidelegate/1536907-webview).
 So, these options will be inherited from the caller WebView.
 Also, note that calling [InAppWebViewController.setSettings] method using the controller of the new created WebView,
-it will update also the WebView options of the caller WebView.""",
+it will update also the WebView options of the caller WebView.
+The new WebView's scripts are its own, though: it runs its own [initialUserScripts] and not the caller's, and
+[InAppWebViewSettings.supportZoom], [InAppWebViewSettings.useOnLoadResource], [InAppWebViewSettings.useShouldInterceptAjaxRequest],
+[InAppWebViewSettings.useShouldInterceptFetchRequest] and [InAppWebViewSettings.enableViewportScale] apply from its own settings.
+It keeps the caller's [InAppWebViewSettings.contentBlockers].""",
       ),
     ],
   )

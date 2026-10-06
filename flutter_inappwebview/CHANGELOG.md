@@ -792,6 +792,13 @@ since the `WebsiteDataType.ALL` fix below. It stays **deliberately out of `ALL`*
 
 ### Fixed
 
+**iOS — a popup WebView never ran its own `initialUserScripts`, and ran its opener's instead** (a
+`windowId` WebView from `onCreateWindow`). WebKit gives the popup its opener's script controller.
+A popup now has its own and runs its own scripts, as on Android. **Behaviour change:** it no longer
+runs its opener's user scripts. `supportZoom`, `useOnLoadResource`, `useShouldInterceptAjaxRequest`,
+`useShouldInterceptFetchRequest` and `enableViewportScale` now come from the popup's own settings.
+It keeps its opener's content blockers.
+
 **Android — a popup WebView's own `initialUserScripts` were unreliable** (a `windowId` WebView from
 `onCreateWindow`): a fast first page in an on-screen popup had none of them, and a headless popup
 had them on no page at all. They're now registered after the window handover and also evaluated
@@ -1090,6 +1097,9 @@ simulator for the first time:**
 
 ### Internal
 
+- **The popup user-script device test now runs on iOS too**, and checks that the opener's own
+  user script does not run in the popup. A new iOS-only test checks that a popup keeps its opener's
+  content blockers and applies its own `supportZoom: false`.
 - **Two device tests pin how Android gives a popup WebView its user scripts.** A WebView created
   for a `windowId` doesn't receive the scripts added at creation, so the plugin registers them at
   the popup's first page start and evaluates them into that first page. One test covers a popup

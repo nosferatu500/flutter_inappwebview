@@ -429,6 +429,12 @@ rename; this entry is the API-owner's view.
 
 ### Fixed
 
+- **The iOS note on `onCreateWindow` (WebView and `InAppBrowser`) listed five settings a popup
+  can't have.** `supportZoom`, `useOnLoadResource`, `useShouldInterceptAjaxRequest`,
+  `useShouldInterceptFetchRequest` and `enableViewportScale` are applied through the popup's
+  scripts, which now follow its own settings, since the iOS popup has a script controller of its
+  own. The note now says so, and that the popup runs its own `initialUserScripts`, not its
+  opener's, and keeps its opener's content blockers.
 - **`DefaultInAppLocalhostServer` printed every served response's headers in release builds.** The
   file's other prints were behind `kDebugMode`; this one wasn't. Measured in a profile build on API
   37: five lines (`content-type`, `x-frame-options`, `x-xss-protection`, `transfer-encoding`,
