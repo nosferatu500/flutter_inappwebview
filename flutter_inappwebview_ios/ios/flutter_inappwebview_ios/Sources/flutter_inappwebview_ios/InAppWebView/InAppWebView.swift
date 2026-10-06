@@ -1685,11 +1685,35 @@ public class InAppWebView: WKWebView, UIScrollViewDelegate, WKUIDelegate,
         super.callAsyncJavaScript(functionBody, arguments: arguments, in: frame, in: contentWorld, completionHandler: completionHandler)
     }
     
+    /// `callAsyncJavaScript` calls the page still owes an answer, by call.
+    ///
+    /// WebKit answers a call whose page has gone only lazily: measured §267, after a navigation its
+    /// completion didn't come in 15 s, then came 11 ms after the next call, as "Completion handler
+    /// for function call is no longer reachable"; after `dispose()` it didn't come at all. So the
+    /// calls are answered here at a main-frame commit and at `dispose()`, and WebKit's late
+    /// completion for one of them finds nothing and is dropped.
+    private var pendingCallAsyncJavaScript: [UUID: (Any?) -> Void] = [:]
+
+    /// Answers every pending `callAsyncJavaScript` with a `nil` value and [reason] as its error,
+    /// matching Android.
+    public func releasePendingJavaScriptResults(reason: String) {
+        let pending = pendingCallAsyncJavaScript
+        pendingCallAsyncJavaScript.removeAll()
+        for completionHandler in pending.values {
+            completionHandler(["value": nil, "error": reason] as [String: Any?])
+        }
+    }
+
     public func callAsyncJavaScript(functionBody: String, arguments: [String:Any], contentWorld: WKContentWorld, completionHandler: ((Any?) -> Void)? = nil) {
         let jsToInject = configuration.userContentController.generateCodeForScriptEvaluation(scriptMessageHandler: self, source: functionBody, contentWorld: contentWorld)
-        
+
+        let callId = UUID()
+        if let completionHandler = completionHandler {
+            pendingCallAsyncJavaScript[callId] = completionHandler
+        }
         callAsyncJavaScript(jsToInject, arguments: arguments, frame: nil, contentWorld: contentWorld) { (evalResult) in
-            guard let completionHandler = completionHandler else {
+            // Already answered by `releasePendingJavaScriptResults`, or nobody is waiting.
+            guard let completionHandler = self.pendingCallAsyncJavaScript.removeValue(forKey: callId) else {
                 return
             }
             
@@ -3003,6 +3027,8 @@ public class InAppWebView: WKWebView, UIScrollViewDelegate, WKUIDelegate,
     
     public func webView(_ webView: WKWebView,
                         didCommit navigation: WKNavigation!) {
+        // The previous document is gone: what it still owed can't arrive in any useful time.
+        releasePendingJavaScriptResults(reason: "the page navigated away before it answered")
         channelDelegate?.onPageCommitVisible(url: url?.absoluteString)
     }
     
@@ -3838,6 +3864,7 @@ public class InAppWebView: WKWebView, UIScrollViewDelegate, WKUIDelegate,
     }
     
     public func dispose() {
+        releasePendingJavaScriptResults(reason: "the WebView was disposed before the page answered")
         channelDelegate?.dispose()
         channelDelegate = nil
         runWindowBeforeCreatedCallbacks()

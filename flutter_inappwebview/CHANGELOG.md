@@ -792,6 +792,9 @@ since the `WebsiteDataType.ALL` fix below. It stays **deliberately out of `ALL`*
 
 ### Fixed
 
+**iOS — a pending `callAsyncJavaScript` could wait indefinitely after the page navigated away.**
+It now answers at once with an `error`, as on Android.
+
 **iOS — a popup `InAppBrowser` destroyed its opener, and closing the popup crashed the app.**
 Once a browser opened from `onCreateWindow` had appeared over the browser that opened it, the
 opener was closed (`onExit`) although nothing had closed it, and dismissing the popup crashed.

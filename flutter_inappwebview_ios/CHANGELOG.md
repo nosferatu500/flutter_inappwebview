@@ -141,6 +141,13 @@ Fourteen WebKit APIs read out of the iOS 26.5 SDK:
 
 ### Fixed
 
+- **A `callAsyncJavaScript` still pending when the page navigated away could wait indefinitely.**
+  WebKit answers such a call only lazily: measured on iOS 26.5, nothing came in 15 s after the
+  navigation, then the failure arrived 11 ms after the *next* `callAsyncJavaScript`, as "Completion
+  handler for function call is no longer reachable". Pending calls are now answered at the
+  main-frame commit that replaces their page, with a `null` value and the error "the page navigated
+  away before it answered" (the same as Android), and WebKit's late completion is dropped. They're
+  also answered when the WebView is disposed.
 - **Opening a popup `InAppBrowser` destroyed the browser that opened it, and closing the popup
   then crashed the app.** A popup browser (`windowId`) is presented full-screen over its opener,
   and the opener's `viewDidDisappear` disposed any browser that wasn't hidden. So once the popup had

@@ -8,10 +8,19 @@ part of 'main.dart';
 /// the WebView is disposed. Each now answers at once: `callAsyncJavaScript` with an error that
 /// says why, a world `evaluateJavascript` with `null`.
 ///
-/// Android only. iOS worlds are native and answered on both pages; the iOS navigation case also
-/// hung and is filed separately (TODO.md).
+/// Android only, except the navigation case, which iOS shares (§267). iOS worlds are native and
+/// answered on both kinds of page.
 void pendingJavaScriptResults() {
   final shouldSkip = defaultTargetPlatform != TargetPlatform.android;
+  // The navigation case holds on iOS too: WebKit's completion for a call whose page went away came
+  // only lazily (§267: not in 15 s, then 11 ms after the next call, as "Completion handler for
+  // function call is no longer reachable"). The dispose case stays Android-only: on iOS a widget's
+  // WebView wasn't disposed within 20 s of being unmounted, with or without a pending call
+  // (§267, TODO.md), so there is no dispose to answer from yet.
+  final shouldSkipNavigation = ![
+    TargetPlatform.android,
+    TargetPlatform.iOS,
+  ].contains(defaultTargetPlatform);
 
   Future<InAppWebViewController> loadPage(
     WidgetTester tester,
@@ -140,7 +149,7 @@ void pendingJavaScriptResults() {
       expect(result?.value, isNull);
       expect(result?.error, contains('navigated away'));
     },
-    skip: shouldSkip,
+    skip: shouldSkipNavigation,
   );
 
   skippableTestWidgets(
