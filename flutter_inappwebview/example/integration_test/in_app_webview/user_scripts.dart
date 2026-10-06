@@ -42,15 +42,11 @@ void userScripts() {
               UserScript(
                 source: "var bar = 2;",
                 injectionTime: UserScriptInjectionTime.AT_DOCUMENT_END,
-                forMainFrameOnly:
-                    defaultTargetPlatform != TargetPlatform.android,
                 contentWorld: ContentWorld.DEFAULT_CLIENT,
               ),
               UserScript(
                 source: "var bar2 = 12;",
                 injectionTime: UserScriptInjectionTime.AT_DOCUMENT_END,
-                forMainFrameOnly:
-                    defaultTargetPlatform != TargetPlatform.android,
                 contentWorld: ContentWorld.world(name: "test"),
               ),
             ]),
@@ -120,6 +116,88 @@ void userScripts() {
         12,
       );
     });
+
+    // On Android a content world is an `<iframe>` the plugin adds to each frame, and a world script
+    // runs inside it, where `window !== window.top`. Until §262 the main-frame check ran in there
+    // too, so a world script with the default `forMainFrameOnly: true` never ran at all. The check
+    // belongs to the frame the world was made for. This page has a same-origin child frame: the
+    // main-frame-only script must mark the main document and not the child's, and the
+    // `forMainFrameOnly: false` one is the control that the child gets world scripts at all. Each
+    // script marks `window.parent`'s document, which on Android is the frame that owns the world.
+    skippableTestWidgets(
+      'a main-frame-only content-world script runs in the main frame only',
+      (WidgetTester tester) async {
+        final Completer<InAppWebViewController> controllerCompleter =
+            Completer<InAppWebViewController>();
+        String mark(String name) =>
+            "window.parent.document.documentElement.setAttribute('data-$name', '1');";
+
+        await tester.pumpWidget(
+          Directionality(
+            textDirection: TextDirection.ltr,
+            child: InAppWebView(
+              key: GlobalKey(),
+              initialData: InAppWebViewInitialData(
+                data:
+                    '<html><body>main<iframe id="child" src="/test-index">'
+                    '</iframe></body></html>',
+                baseUrl: WebUri(
+                  'http://${environment["NODE_SERVER_IP"]}:8082/',
+                ),
+              ),
+              initialUserScripts: UnmodifiableListView<UserScript>([
+                UserScript(
+                  source: mark('main-only'),
+                  injectionTime: UserScriptInjectionTime.AT_DOCUMENT_END,
+                  contentWorld: ContentWorld.world(name: "frames"),
+                ),
+                UserScript(
+                  source: mark('all-frames'),
+                  injectionTime: UserScriptInjectionTime.AT_DOCUMENT_END,
+                  contentWorld: ContentWorld.world(name: "frames"),
+                  forMainFrameOnly: false,
+                ),
+              ]),
+              onWebViewCreated: (controller) {
+                controllerCompleter.complete(controller);
+              },
+            ),
+          ),
+        );
+        final controller = await controllerCompleter.future;
+
+        // Both documents' marks, read from the main page (the child is same-origin).
+        Future<String?> marks() async =>
+            '${await controller.evaluateJavascript(source: """
+(function() {
+  function read(root) {
+    return root ? root.getAttribute('data-main-only') + '/' +
+        root.getAttribute('data-all-frames') : 'none';
+  }
+  var child = document.getElementById('child');
+  return 'main=' + read(document.documentElement) +
+      ' child=' + read(child && child.contentDocument && child.contentDocument.documentElement);
+})()""")}';
+
+        // Wait for the control in both frames: then every script that was going to run has run.
+        String? seen;
+        for (var i = 0; i < 50; i++) {
+          seen = await marks();
+          if (RegExp(r'^main=\S+/1 child=\S+/1$').hasMatch(seen ?? '')) {
+            break;
+          }
+          await Future<void>.delayed(const Duration(milliseconds: 200));
+        }
+        expect(
+          seen,
+          'main=1/1 child=null/1',
+          reason:
+              'main=<main-only>/<all-frames> child=<main-only>/<all-frames>: the main-frame-only '
+              'world script must mark the main document only, and the control both',
+        );
+      },
+      skip: shouldSkip || defaultTargetPlatform != TargetPlatform.android,
+    );
 
     skippableTestWidgets('add/remove user scripts', (
       WidgetTester tester,

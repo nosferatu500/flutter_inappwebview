@@ -194,14 +194,11 @@ void webViewWindows() {
                       source: "window.popupRuns = (window.popupRuns || 0) + 1;",
                       injectionTime: UserScriptInjectionTime.AT_DOCUMENT_START,
                     ),
-                    // `forMainFrameOnly: false` because on Android a content world is an
-                    // `<iframe>`, so a main-frame-only world script never runs (TODO.md).
                     UserScript(
                       source:
                           "window.popupEndRuns = (window.popupEndRuns || 0) + 1;",
                       injectionTime: UserScriptInjectionTime.AT_DOCUMENT_END,
                       contentWorld: ContentWorld.world(name: "popupWorld"),
-                      forMainFrameOnly: false,
                     ),
                   ]),
                   onLoadStop: (controller, url) {

@@ -182,6 +182,10 @@ class UserContentController(@JvmField var webView: WebView?) : Disposable {
    * evaluates. The innermost user code runs at most once per document and content world: a
    * `windowId` popup can get both copies for its first document (§258), and a document-end script
    * registers a `load` listener in each, so the guard has to sit inside that listener.
+   *
+   * The main-frame and origin checks go **outside** the content-world wrapper, as they do for the
+   * plugin scripts: a world is an `<iframe>`, where `window === window.top` is always false, so
+   * inside it a world script with the default `forMainFrameOnly: true` never ran (measured §262).
    */
   private fun guardedUserOnlyScriptSource(userOnlyScript: UserScript): String {
     val id = userScriptGuardIds.getOrPut(userOnlyScript) { userScriptGuardIds.size }
@@ -192,8 +196,8 @@ class UserContentController(@JvmField var webView: WebView?) : Disposable {
       source = "if (document.readyState === 'complete') { $source} else { " +
         "window.addEventListener('load', function() { $source }); }"
     }
-    source = wrapSourceCodeAddChecks(source, userOnlyScript)
-    return wrapSourceCodeInContentWorld(userOnlyScript.contentWorld, source)
+    source = wrapSourceCodeInContentWorld(userOnlyScript.contentWorld, source)
+    return wrapSourceCodeAddChecks(source, userOnlyScript)
   }
 
   /**

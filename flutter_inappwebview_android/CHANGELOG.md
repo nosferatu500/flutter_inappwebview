@@ -239,6 +239,13 @@ for, and five others have a native *value* that differs from their name.
 
 ### Fixed
 
+- **A user script in a content world never ran with the default `forMainFrameOnly: true`.** A
+  content world on Android is an `<iframe>` the plugin adds to the frame, and the main-frame check
+  (`window === window.top`) was placed inside it, where it's always false. The check now runs in
+  the frame the world belongs to, as it already did for the plugin's own scripts. Measured on API 37
+  with a page that has a same-origin child frame: before, the script ran in neither frame; now it
+  runs in the main frame and not the child's, while a `forMainFrameOnly: false` script still runs in
+  both. The example's tests had been passing `forMainFrameOnly: false` on Android to work around it.
 - **A page's events could arrive under a different page id from the navigation that created it.**
   `WebViewPage.id` and `WebViewNavigation.pageId` are numbered per androidx `Page` object, and the
   listener kept those objects in weak maps. Chromium doesn't keep a `Page` alive either, so after

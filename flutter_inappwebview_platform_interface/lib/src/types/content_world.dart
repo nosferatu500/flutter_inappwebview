@@ -11,7 +11,8 @@ final _contentWorldNameRegExp = RegExp(r'[\s]');
 ///Unfortunately, there isn't any other way to do it.
 ///There are some limitations:
 ///- for any [ContentWorld], except [ContentWorld.PAGE] (that is the webpage itself), if you need to access to the `window` or `document` global Object,
-///you need to use `window.top` and `window.top.document` because the code runs inside an `<iframe>`;
+///you need to use `window.parent` and `window.parent.document` because the code runs inside an `<iframe>` added to that frame
+///(in the main frame that is also `window.top`; a script with [UserScript.forMainFrameOnly] set to `false` also runs in each child frame's own `<iframe>`);
 ///- also, the execution of the inline `<script>` could be blocked by the `Content-Security-Policy` header.
 class ContentWorld {
   ///The name of a custom content world.

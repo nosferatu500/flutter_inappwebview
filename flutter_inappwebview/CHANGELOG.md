@@ -792,6 +792,11 @@ since the `WebsiteDataType.ALL` fix below. It stays **deliberately out of `ALL`*
 
 ### Fixed
 
+**Android — a user script in a content world never ran unless `forMainFrameOnly` was `false`.**
+With the default (`true`), a script in any world other than `ContentWorld.PAGE` didn't run at all.
+It now runs in the main frame, as on iOS. The "NOTE for Android" on `UserScript.contentWorld` that
+described this as a limitation is gone.
+
 **Android — a page's events could carry a different page id from its navigation's `pageId`.**
 After a garbage collection the plugin numbered the same document again, so `onPageLoadEvent`,
 `onPageDomContentLoadedEvent` and the Web Vitals events stopped matching

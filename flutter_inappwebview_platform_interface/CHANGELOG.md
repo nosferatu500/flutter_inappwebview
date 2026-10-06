@@ -429,6 +429,11 @@ rename; this entry is the API-owner's view.
 
 ### Fixed
 
+- **`UserScript.contentWorld` documented an Android bug as a limitation**: that with
+  `forMainFrameOnly: true` a script in a non-`PAGE` content world "will not be executed". The
+  Android package fixed it, and the note is removed. `ContentWorld`'s Android note now says to reach
+  the page through `window.parent` (the frame that owns the world's `<iframe>`), which is
+  `window.top` only in the main frame.
 - **The iOS note on `onCreateWindow` (WebView and `InAppBrowser`) listed five settings a popup
   can't have.** `supportZoom`, `useOnLoadResource`, `useShouldInterceptAjaxRequest`,
   `useShouldInterceptFetchRequest` and `enableViewportScale` are applied through the popup's
