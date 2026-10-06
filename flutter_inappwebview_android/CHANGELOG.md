@@ -239,6 +239,15 @@ for, and five others have a native *value* that differs from their name.
 
 ### Fixed
 
+- **`onNavigationStarted` and `onNavigationRedirected` could describe a later state of the
+  navigation.** The listener was registered with androidx's default, which posts every callback to
+  the main `Looper`; each snapshot then read the live `Navigation` whenever the post ran, after
+  Chromium might have moved on. Measured on API 37: in 1 run of 6, a redirected navigation's
+  `onNavigationStarted` already carried the final url and both `onNavigationRedirected` events
+  carried `didCommit: true` and status 200. It's now registered with a direct executor, so each
+  callback reads the navigation as it is at that event: 0 of 6, every hop in order, all still on the
+  main thread. This was the intermittent "NavigationListener reports the whole navigation
+  lifecycle" device-test failure.
 - **`callAsyncJavaScript`, and `evaluateJavascript` in a content world, could wait forever.**
   Both are answered by the page itself, over the bridge, so whenever the page couldn't answer, the
   Dart future never completed. Measured on API 37, each with no answer in 5–8 s:

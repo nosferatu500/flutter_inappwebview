@@ -3,6 +3,7 @@ package dev.nosferatu500.inappwebview.webview.in_app_webview
 import androidx.webkit.Navigation
 import androidx.webkit.NavigationListener
 import androidx.webkit.Page
+import androidx.webkit.WebViewCompat
 import dev.nosferatu500.inappwebview.types.Disposable
 import dev.nosferatu500.inappwebview.types.WebViewNavigationExt
 import dev.nosferatu500.inappwebview.types.WebViewPageExt
@@ -35,9 +36,16 @@ import dev.nosferatu500.inappwebview.types.WebViewPageExt
  * A page whose `onPageDeleted` never arrives stays until [dispose], so the maps are bounded by the
  * `WebView`'s lifetime.
  *
- * Callbacks arrive on the main thread — `WebViewCompat.addNavigationListener(WebView,
- * NavigationListener)` posts through a `Handler` on the main `Looper` — so no synchronisation is
- * needed here, in common with every other client callback in this plugin.
+ * ### Why it is registered with a direct executor ([register])
+ *
+ * A snapshot reads androidx's [Navigation] **when the callback runs**, and Chromium mutates that
+ * object as the navigation moves on. The two-argument `WebViewCompat.addNavigationListener` posts
+ * every callback to the main `Looper`, so by the time one ran the navigation could already be
+ * further along. Measured on API 37 (§265): in 1 run of 6 the redirect navigation's
+ * `onNavigationStarted` already had the final url and both `onNavigationRedirected` callbacks
+ * already had `didCommit() == true` and status 200, which is the device test's intermittent
+ * failure. With a direct executor, 0 of 6, and every callback still ran on the main thread (60 / 60),
+ * so no synchronisation is needed here, in common with every other client callback in this plugin.
  */
 class InAppWebViewNavigationListener(
   private var webView: InAppWebView?
@@ -128,6 +136,13 @@ class InAppWebViewNavigationListener(
     webView.channelDelegate?.onPerformanceMarkMillis(
       pageSnapshot(page), markName, markTimeMillis
     )
+  }
+
+  companion object {
+    /** Registers [listener] on [webView] so each callback runs as Chromium makes it (see above). */
+    fun register(webView: InAppWebView, listener: InAppWebViewNavigationListener) {
+      WebViewCompat.addNavigationListener(webView, { it.run() }, listener)
+    }
   }
 
   override fun dispose() {

@@ -408,7 +408,7 @@ class InAppWebView : WebView, InAppWebViewInterface, Disposable {
     ) {
       val navigationListener = InAppWebViewNavigationListener(this)
       inAppWebViewNavigationListener = navigationListener
-      WebViewCompat.addNavigationListener(this, navigationListener)
+      InAppWebViewNavigationListener.register(this, navigationListener)
     }
 
     val settings = settings
@@ -1757,7 +1757,7 @@ class InAppWebView : WebView, InAppWebViewInterface, Disposable {
         if (newCustomSettings.useNavigationListener) {
           val navigationListener = InAppWebViewNavigationListener(this)
           inAppWebViewNavigationListener = navigationListener
-          WebViewCompat.addNavigationListener(this, navigationListener)
+          InAppWebViewNavigationListener.register(this, navigationListener)
         }
       }
     }

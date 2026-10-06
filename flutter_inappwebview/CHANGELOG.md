@@ -792,6 +792,11 @@ since the `WebsiteDataType.ALL` fix below. It stays **deliberately out of `ALL`*
 
 ### Fixed
 
+**Android — `onNavigationStarted` / `onNavigationRedirected` could report a later state.** A
+start could already carry the final url of a redirect, and a redirect hop could already say the
+navigation had committed with status 200. Each event now describes the navigation as it was at
+that moment.
+
 **Android — `callAsyncJavaScript` and content-world `evaluateJavascript` could hang forever** on a
 page whose Content-Security-Policy blocks inline scripts, on a document with no `body`, or when the
 page navigated away (or the WebView was disposed) before answering. They now answer at once:
