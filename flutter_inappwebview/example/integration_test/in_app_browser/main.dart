@@ -18,6 +18,7 @@ part 'set_get_settings.dart';
 part 'hide_and_show.dart';
 part 'custom_menu_items.dart';
 part 'open_payload.dart';
+part 'popup_browser.dart';
 
 void main() {
   final shouldSkip = !InAppBrowser.isClassSupported();
@@ -31,5 +32,6 @@ void main() {
     hideAndShow();
     customMenuItems();
     openPayload();
+    popupBrowser();
   }, skip: shouldSkip);
 }

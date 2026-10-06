@@ -141,6 +141,15 @@ Fourteen WebKit APIs read out of the iOS 26.5 SDK:
 
 ### Fixed
 
+- **Opening a popup `InAppBrowser` destroyed the browser that opened it, and closing the popup
+  then crashed the app.** A popup browser (`windowId`) is presented full-screen over its opener,
+  and the opener's `viewDidDisappear` disposed any browser that wasn't hidden. So once the popup had
+  appeared, the opener was disposed (its `onExit` fired, its controller went away) although nothing
+  had closed it. Dismissing the popup brought it back, UIKit reloaded its view, and
+  `loadView`/`viewDidLoad` recursed until the stack overflowed. Measured on iOS 26.5, with the
+  appearance callbacks logged. A browser now disposes in `viewDidDisappear` only when its own
+  navigation controller is being dismissed. A new device test opens a popup over a browser and
+  checks the opener still answers with the popup open and after it closes.
 - **A popup WebView never ran its own `initialUserScripts`, and ran its opener's instead** (a
   WebView created with a `windowId` from `onCreateWindow`, as a widget or an `InAppBrowser`).
   WebKit hands `createWebViewWith` the opener's `WKUserContentController`, measured on iOS 26.5 to

@@ -197,8 +197,14 @@ public class InAppBrowserWebViewController: UIViewController, InAppBrowserDelega
         channelDelegate?.onBrowserCreated()
     }
     
+    /// Disposes only when this browser is going away. A full-screen presentation over it also makes
+    /// it disappear: a popup browser (`windowId`) is presented over its opener, and disposing here
+    /// then destroyed an opener that nothing had closed. Dismissing the popup brought the dead
+    /// opener back, UIKit reloaded its view, and `loadView` (which returns early once `plugin` is
+    /// gone) and `viewDidLoad` recursed until the stack overflowed (measured §266).
     public override func viewDidDisappear(_ animated: Bool) {
-        if !isHidden {
+        let goingAway = navigationController?.isBeingDismissed == true || isBeingDismissed || isMovingFromParent
+        if !isHidden && goingAway {
             dispose()
         }
         super.viewDidDisappear(animated)

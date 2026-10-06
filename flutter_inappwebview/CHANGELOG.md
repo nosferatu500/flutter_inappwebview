@@ -792,6 +792,11 @@ since the `WebsiteDataType.ALL` fix below. It stays **deliberately out of `ALL`*
 
 ### Fixed
 
+**iOS — a popup `InAppBrowser` destroyed its opener, and closing the popup crashed the app.**
+Once a browser opened from `onCreateWindow` had appeared over the browser that opened it, the
+opener was closed (`onExit`) although nothing had closed it, and dismissing the popup crashed.
+The opener now stays open.
+
 **Android — `onNavigationStarted` / `onNavigationRedirected` could report a later state.** A
 start could already carry the final url of a redirect, and a redirect hop could already say the
 navigation had committed with status 200. Each event now describes the navigation as it was at
@@ -1118,6 +1123,9 @@ simulator for the first time:**
 
 ### Internal
 
+- **New `InAppBrowser` device test, `a popup browser leaves its opener open`** (Android and iOS):
+  a popup browser over its opener, with the opener checked alive after the popup has appeared and
+  after it closes.
 - **The `Programmatic Scroll` device test polls for the scroll position instead of reading it
   once.** On Android a read straight after `scrollTo` / `scrollBy` can briefly return the previous
   position, because the renderer applies the scroll asynchronously. Measured on API 37: 2 reads in
