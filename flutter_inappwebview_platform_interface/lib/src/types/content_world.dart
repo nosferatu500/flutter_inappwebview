@@ -13,7 +13,9 @@ final _contentWorldNameRegExp = RegExp(r'[\s]');
 ///- for any [ContentWorld], except [ContentWorld.PAGE] (that is the webpage itself), if you need to access to the `window` or `document` global Object,
 ///you need to use `window.parent` and `window.parent.document` because the code runs inside an `<iframe>` added to that frame
 ///(in the main frame that is also `window.top`; a script with [UserScript.forMainFrameOnly] set to `false` also runs in each child frame's own `<iframe>`);
-///- also, the execution of the inline `<script>` could be blocked by the `Content-Security-Policy` header.
+///- also, the execution of the inline `<script>` could be blocked by the `Content-Security-Policy` header. Then the world can't be
+///created on that page (nor on a document with no `body`), and an evaluation in it answers at once: `evaluateJavascript` with `null`,
+///`callAsyncJavaScript` with an `error` saying why.
 class ContentWorld {
   ///The name of a custom content world.
   ///It cannot contain space characters.

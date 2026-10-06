@@ -182,6 +182,52 @@ class InAppWebView : WebView, InAppWebViewInterface, Disposable {
   @JvmField
   var evaluateJavaScriptContentWorldCallbacks: MutableMap<String, ValueCallback<String>> = HashMap()
 
+  /**
+   * Answers every result still waiting on the page: a `callAsyncJavaScript` with [reason] as its
+   * error, a content-world `evaluateJavascript` with `null` (what a JavaScript error in a world
+   * already returns). Both are answered by the page itself through the bridge, so once the page is
+   * gone nothing else would: measured §263, a pending call never answered after a navigation or
+   * after `dispose()`.
+   */
+  fun releasePendingJavaScriptResults(reason: String) {
+    val asyncCallbacks = callAsyncJavaScriptCallbacks.toMap()
+    callAsyncJavaScriptCallbacks.clear()
+    for ((resultUuid, callback) in asyncCallbacks) {
+      callback.onReceiveValue(
+        JSONObject()
+          .put("value", JSONObject.NULL)
+          .put("error", reason)
+          .put("resultUuid", resultUuid)
+          .toString()
+      )
+    }
+    val worldCallbacks = evaluateJavaScriptContentWorldCallbacks.values.toList()
+    evaluateJavaScriptContentWorldCallbacks.clear()
+    for (callback in worldCallbacks) {
+      callback.onReceiveValue("null")
+    }
+  }
+
+  /**
+   * What a content-world evaluation runs instead when the world can't be made on this page (see
+   * `UserContentController.wrapSourceCodeInContentWorld`): it answers [handlerName] for
+   * [resultUuid] through the page's bridge at once, so the caller isn't left waiting.
+   */
+  private fun contentWorldUnavailableHandler(
+    contentWorld: ContentWorld,
+    handlerName: String,
+    resultUuid: String
+  ): String {
+    val prefix = UserContentController.escapeCode(
+      "The content world \"" + contentWorld.name + "\" could not be created on this page: "
+    )
+    val error = if (handlerName == "callAsyncJavaScript") "$prefix + reason" else "null"
+    return "console.error($prefix + reason);" +
+      "window." + JavaScriptBridgeJS.get_JAVASCRIPT_BRIDGE_NAME() + ".callHandler('" +
+      handlerName + "', {'value': null, 'error': " + error + ", 'resultUuid': '" + resultUuid +
+      "'});"
+  }
+
   @JvmField var webMessageChannels: MutableMap<String, WebMessageChannel> = HashMap()
   @JvmField var webMessageListeners: MutableList<WebMessageListener> = ArrayList()
 
@@ -1790,9 +1836,22 @@ class InAppWebView : WebView, InAppWebViewInterface, Disposable {
         .replace(PluginScriptsUtil.VAR_RESULT_UUID, resultUuid)
     }
     val finalScriptToInject = scriptToInject
+    val onUnavailable =
+      if (resultUuid != null && resultCallback != null && contentWorld != null) {
+        contentWorldUnavailableHandler(
+          contentWorld,
+          "evaluateJavaScriptWithContentWorld",
+          resultUuid
+        )
+      } else {
+        ""
+      }
     mainLooperHandler.post {
-      val generated =
-        userContentController.generateCodeForScriptEvaluation(finalScriptToInject, contentWorld)
+      val generated = userContentController.generateCodeForScriptEvaluation(
+        finalScriptToInject,
+        contentWorld,
+        onUnavailable
+      )
       evaluateJavascript(generated) { s ->
         if (resultUuid == null && resultCallback != null) {
           resultCallback.onReceiveValue(s)
@@ -2463,8 +2522,17 @@ class InAppWebView : WebView, InAppWebViewInterface, Disposable {
       .replace(PluginScriptsUtil.VAR_RESULT_UUID, resultUuid)
       .replace(PluginScriptsUtil.VAR_RESULT_UUID, resultUuid)
 
-    sourceToInject =
-      userContentController.generateCodeForScriptEvaluation(sourceToInject, contentWorld)
+    val onUnavailable =
+      if (contentWorld != null) {
+        contentWorldUnavailableHandler(contentWorld, "callAsyncJavaScript", resultUuid)
+      } else {
+        ""
+      }
+    sourceToInject = userContentController.generateCodeForScriptEvaluation(
+      sourceToInject,
+      contentWorld,
+      onUnavailable
+    )
     evaluateJavascript(sourceToInject, null)
   }
 
@@ -2792,8 +2860,7 @@ class InAppWebView : WebView, InAppWebViewInterface, Disposable {
     removeAllViews()
     checkContextMenuShouldBeClosedTask?.let { removeCallbacks(it) }
     checkScrollStoppedTask?.let { removeCallbacks(it) }
-    callAsyncJavaScriptCallbacks.clear()
-    evaluateJavaScriptContentWorldCallbacks.clear()
+    releasePendingJavaScriptResults("the WebView was disposed before the page answered")
     inAppBrowserDelegate = null
     // Guarded by the field rather than by the setting: `setSettings` can flip
     // `useNavigationListener` after `prepare()`, so the setting no longer says whether a listener

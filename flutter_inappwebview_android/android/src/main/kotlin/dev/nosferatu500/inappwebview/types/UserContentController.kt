@@ -109,7 +109,11 @@ class UserContentController(@JvmField var webView: WebView?) : Disposable {
     return js.toString()
   }
 
-  fun generateCodeForScriptEvaluation(source: String, contentWorld: ContentWorld?): String {
+  fun generateCodeForScriptEvaluation(
+    source: String,
+    contentWorld: ContentWorld?,
+    onUnavailable: String = ""
+  ): String {
     if (contentWorld != null && contentWorld != ContentWorld.PAGE) {
       val sourceWrapped = StringBuilder()
       if (!contentWorlds.contains(contentWorld)) {
@@ -130,12 +134,25 @@ class UserContentController(@JvmField var webView: WebView?) : Disposable {
           )
         sourceWrapped.append(contentWorldCreatorCode).append(";")
       }
-      return sourceWrapped.append(wrapSourceCodeInContentWorld(contentWorld, source)).toString()
+      return sourceWrapped
+        .append(wrapSourceCodeInContentWorld(contentWorld, source, onUnavailable))
+        .toString()
     }
     return source
   }
 
-  fun wrapSourceCodeInContentWorld(contentWorld: ContentWorld?, source: String): String =
+  /**
+   * Wraps [source] to run inside [contentWorld]'s `<iframe>` once it exists and has the plugin
+   * scripts. [onUnavailable] is JavaScript run instead, with a `reason` string in scope, when the
+   * world can't be made on this page: the document finished with no `body`, or its
+   * Content-Security-Policy blocked the world's inline script (measured §263; both used to poll
+   * forever, so an evaluation in such a world never answered).
+   */
+  fun wrapSourceCodeInContentWorld(
+    contentWorld: ContentWorld?,
+    source: String,
+    onUnavailable: String = ""
+  ): String =
     if (contentWorld == null || contentWorld == ContentWorld.PAGE) {
       source
     } else {
@@ -144,6 +161,7 @@ class UserContentController(@JvmField var webView: WebView?) : Disposable {
           PluginScriptsUtil.VAR_CONTENT_WORLD_NAME,
           escapeContentWorldName(contentWorld.name)
         )
+        .replace(VAR_ON_UNAVAILABLE, onUnavailable)
         .replace(PluginScriptsUtil.VAR_JSON_SOURCE_ENCODED, escapeCode(source))
     }
 
@@ -409,6 +427,12 @@ class UserContentController(@JvmField var webView: WebView?) : Disposable {
     @JvmStatic
     fun escapeContentWorldName(name: String): String = name.replace("'", "\\'")
 
+    private const val VAR_ON_UNAVAILABLE = "\$IN_APP_WEBVIEW_ON_CONTENT_WORLD_UNAVAILABLE"
+
+    /** Set inside a world's `<iframe>` by its plugin scripts, so a blocked inline script shows. */
+    private fun WORLD_READY_VARIABLE(): String =
+      "_" + JavaScriptBridgeJS.get_JAVASCRIPT_BRIDGE_NAME() + "_contentWorldReady"
+
     private fun wrapSourceCodeAddChecks(source: String, userScript: UserScript): String {
       val ifStatement = StringBuilder("if (")
       val allowedOriginRules = userScript.allowedOriginRules
@@ -462,7 +486,10 @@ class UserContentController(@JvmField var webView: WebView?) : Disposable {
     private fun CONTENT_WORLDS_GENERATOR_JS_SOURCE(): String =
       "(function() {" +
         "  var interval = setInterval(function() {" +
-        "    if (document.body == null) {return;}" +
+        "    if (document.body == null) {" +
+        "      if (document.readyState === 'complete') {clearInterval(interval);}" +
+        "      return;" +
+        "    }" +
         "    var contentWorldNames = [" + PluginScriptsUtil.VAR_CONTENT_WORLD_NAME_ARRAY + "];" +
         "    for (var contentWorldName of contentWorldNames) {" +
         "      var iframeId = '" + JavaScriptBridgeJS.get_JAVASCRIPT_BRIDGE_NAME() + "_' + contentWorldName;" +
@@ -476,7 +503,8 @@ class UserContentController(@JvmField var webView: WebView?) : Disposable {
         "      if (iframe.contentWindow.document.getElementById('" + JavaScriptBridgeJS.get_JAVASCRIPT_BRIDGE_NAME() + "_plugin_scripts') == null) {" +
         "        var script = iframe.contentWindow.document.createElement('script');" +
         "        script.id = '" + JavaScriptBridgeJS.get_JAVASCRIPT_BRIDGE_NAME() + "_plugin_scripts';" +
-        "        script.innerHTML = " + PluginScriptsUtil.VAR_JSON_SOURCE_ENCODED + ";" +
+        "        script.innerHTML = " + PluginScriptsUtil.VAR_JSON_SOURCE_ENCODED +
+        "          + ';window." + WORLD_READY_VARIABLE() + " = true;';" +
         "        iframe.contentWindow.document.body.append(script);" +
         "      }" +
         "    }" +
@@ -486,8 +514,15 @@ class UserContentController(@JvmField var webView: WebView?) : Disposable {
 
     private fun CONTENT_WORLD_WRAPPER_JS_SOURCE(): String =
       "(function() {" +
+        "  function unavailable(reason) {" + VAR_ON_UNAVAILABLE + "}" +
         "  var interval = setInterval(function() {" +
-        "    if (document.body == null) {return;}" +
+        "    if (document.body == null) {" +
+        "      if (document.readyState === 'complete') {" +
+        "        clearInterval(interval);" +
+        "        unavailable('the document has no body');" +
+        "      }" +
+        "      return;" +
+        "    }" +
         "    var iframeId = '" + JavaScriptBridgeJS.get_JAVASCRIPT_BRIDGE_NAME() + "_" + PluginScriptsUtil.VAR_CONTENT_WORLD_NAME + "';" +
         "    var iframe = document.getElementById(iframeId);" +
         "    if (iframe == null) {" +
@@ -497,6 +532,13 @@ class UserContentController(@JvmField var webView: WebView?) : Disposable {
         "      document.body.append(iframe);" +
         "    }" +
         "    if (iframe.contentWindow.document.querySelector('#" + JavaScriptBridgeJS.get_JAVASCRIPT_BRIDGE_NAME() + "_plugin_scripts') == null) {" +
+        "      return;" +
+        "    }" +
+        // The plugin scripts' element is there but they didn't run: the page's
+        // Content-Security-Policy (which the `<iframe>` inherits) blocks inline scripts.
+        "    if (!iframe.contentWindow." + WORLD_READY_VARIABLE() + ") {" +
+        "      clearInterval(interval);" +
+        "      unavailable('its Content-Security-Policy blocks inline scripts');" +
         "      return;" +
         "    }" +
         "    var script = iframe.contentWindow.document.createElement('script');" +

@@ -239,6 +239,17 @@ for, and five others have a native *value* that differs from their name.
 
 ### Fixed
 
+- **`callAsyncJavaScript`, and `evaluateJavascript` in a content world, could wait forever.**
+  Both are answered by the page itself, over the bridge, so whenever the page couldn't answer, the
+  Dart future never completed. Measured on API 37, each with no answer in 5–8 s:
+  - a content world on a page whose `Content-Security-Policy` blocks inline scripts (the world's
+    `<iframe>` inherits it, so its scripts never ran), or on a document with no `body` (an SVG);
+  - a pending call when the page navigated away, or when the WebView was disposed.
+
+  Now the world wrapper notices both kinds of page and answers at once. At every main-frame page
+  start and at `dispose()`, anything still pending is answered too. `callAsyncJavaScript` gets a
+  `null` value with an `error` that says why; a world `evaluateJavascript` gets `null`, as a
+  JavaScript error in a world already returns, and the reason goes to the page's console.
 - **A user script in a content world never ran with the default `forMainFrameOnly: true`.** A
   content world on Android is an `<iframe>` the plugin adds to the frame, and the main-frame check
   (`window === window.top`) was placed inside it, where it's always false. The check now runs in

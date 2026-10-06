@@ -792,6 +792,12 @@ since the `WebsiteDataType.ALL` fix below. It stays **deliberately out of `ALL`*
 
 ### Fixed
 
+**Android — `callAsyncJavaScript` and content-world `evaluateJavascript` could hang forever** on a
+page whose Content-Security-Policy blocks inline scripts, on a document with no `body`, or when the
+page navigated away (or the WebView was disposed) before answering. They now answer at once:
+`callAsyncJavaScript` with an `error` that says why, a content-world `evaluateJavascript` with
+`null`.
+
 **Android — a user script in a content world never ran unless `forMainFrameOnly` was `false`.**
 With the default (`true`), a script in any world other than `ContentWorld.PAGE` didn't run at all.
 It now runs in the main frame, as on iOS. The "NOTE for Android" on `UserScript.contentWorld` that

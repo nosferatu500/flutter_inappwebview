@@ -429,6 +429,10 @@ rename; this entry is the API-owner's view.
 
 ### Fixed
 
+- **The Android notes on `evaluateJavascript`, `callAsyncJavaScript` and `ContentWorld` now say
+  what happens when the page can't answer**: a content world that can't be created on the page
+  (inline scripts blocked by its CSP, or no `body`), or a page that navigates away first. Both
+  methods used to hang there; the Android package fixed it.
 - **`UserScript.contentWorld` documented an Android bug as a limitation**: that with
   `forMainFrameOnly: true` a script in a non-`PAGE` content world "will not be executed". The
   Android package fixed it, and the note is removed. `ContentWorld`'s Android note now says to reach

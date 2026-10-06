@@ -165,6 +165,8 @@ internal class InAppWebViewClientCommon(
   fun onPageStarted(view: WebView, url: String?, superCall: () -> Unit) {
     val webView = view as InAppWebView
     webView.isLoading = true
+    // A result the previous document still owed can't arrive any more: answer it now.
+    webView.releasePendingJavaScriptResults("the page navigated away before it answered")
     webView.disposeWebMessageChannels()
     webView.userContentController.resetContentWorlds()
     loadCustomJavaScriptOnPageStarted(webView)

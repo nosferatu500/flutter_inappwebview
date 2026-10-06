@@ -677,6 +677,12 @@ abstract class PlatformInAppWebViewController extends PlatformInterface
   ///because, in these events, the `WebView` is not ready to handle it yet.
   ///Instead, you should call this method, for example, inside the [PlatformWebViewCreationParams.onLoadStop] event or in any other events
   ///where you know the page is ready "enough".
+  ///
+  ///**NOTE for Android**: in a [contentWorld] that can't be created on the page (one whose
+  ///`Content-Security-Policy` blocks inline scripts, or a document with no `body`), the result is
+  ///`null` at once, as for a JavaScript error in a content world, and the reason is logged to the
+  ///page's console. A content-world result still pending when the page navigates away, or the
+  ///`WebView` is disposed, is also `null`.
   ///{@endtemplate}
   ///
   ///{@macro flutter_inappwebview_platform_interface.PlatformInAppWebViewController.evaluateJavascript.supported_platforms}
@@ -1968,6 +1974,11 @@ abstract class PlatformInAppWebViewController extends PlatformInterface
   ///because, in these events, the `WebView` is not ready to handle it yet.
   ///Instead, you should call this method, for example, inside the [PlatformWebViewCreationParams.onLoadStop] event or in any other events
   ///where you know the page is ready "enough".
+  ///
+  ///**NOTE for Android**: if the page navigates away, or the `WebView` is disposed, before the
+  ///function settles, the result arrives at once with a `null` value and an `error` that says so.
+  ///In a [contentWorld] that can't be created on the page (one whose `Content-Security-Policy`
+  ///blocks inline scripts, or a document with no `body`), the `error` says that instead.
   ///{@endtemplate}
   ///
   ///{@macro flutter_inappwebview_platform_interface.PlatformInAppWebViewController.callAsyncJavaScript.supported_platforms}
