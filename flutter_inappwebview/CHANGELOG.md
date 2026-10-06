@@ -1113,6 +1113,11 @@ simulator for the first time:**
 
 ### Internal
 
+- **The `Programmatic Scroll` device test polls for the scroll position instead of reading it
+  once.** On Android a read straight after `scrollTo` / `scrollBy` can briefly return the previous
+  position, because the renderer applies the scroll asynchronously. Measured on API 37: 2 reads in
+  120 calls, each correct 25 ms later and steady afterwards. That was this test's intermittent
+  failure. It now waits up to 2 s for the expected position and still fails if it never arrives.
 - **The `saveState` device tests now check each history entry as they build it.** In one iOS run
   the WebView's history had lost page 1 before the state was saved, although page 1 had finished
   loading. The restore test then failed two steps later with only a count. The history builder now

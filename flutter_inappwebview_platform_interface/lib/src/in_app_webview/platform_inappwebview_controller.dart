@@ -1745,6 +1745,8 @@ abstract class PlatformInAppWebViewController extends PlatformInterface
         apiName: 'View.getScrollX',
         apiUrl:
             'https://developer.android.com/reference/android/view/View#getScrollX()',
+        note:
+            'Straight after [PlatformInAppWebViewController.scrollTo] or [PlatformInAppWebViewController.scrollBy] this can still return the previous position for a moment, because the renderer applies the scroll asynchronously.',
       ),
       IOSPlatform(
         apiName: 'UIScrollView.contentOffset',
@@ -1770,6 +1772,8 @@ abstract class PlatformInAppWebViewController extends PlatformInterface
         apiName: 'View.getScrollY',
         apiUrl:
             'https://developer.android.com/reference/android/view/View#getScrollY()',
+        note:
+            'Straight after [PlatformInAppWebViewController.scrollTo] or [PlatformInAppWebViewController.scrollBy] this can still return the previous position for a moment, because the renderer applies the scroll asynchronously.',
       ),
       IOSPlatform(
         apiName: 'UIScrollView.contentOffset',

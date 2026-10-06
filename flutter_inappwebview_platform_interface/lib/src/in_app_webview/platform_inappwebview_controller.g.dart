@@ -683,7 +683,8 @@ enum PlatformInAppWebViewControllerMethod {
   ///{@template flutter_inappwebview_platform_interface.PlatformInAppWebViewController.getScrollX.supported_platforms}
   ///
   ///**Officially Supported Platforms/Implementations**:
-  ///- Android WebView ([Official API - View.getScrollX](https://developer.android.com/reference/android/view/View#getScrollX()))
+  ///- Android WebView ([Official API - View.getScrollX](https://developer.android.com/reference/android/view/View#getScrollX())):
+  ///    - Straight after [PlatformInAppWebViewController.scrollTo] or [PlatformInAppWebViewController.scrollBy] this can still return the previous position for a moment, because the renderer applies the scroll asynchronously.
   ///- iOS WKWebView ([Official API - UIScrollView.contentOffset](https://developer.apple.com/documentation/uikit/uiscrollview/1619404-contentoffset))
   ///
   ///Use the [PlatformInAppWebViewController.isMethodSupported] method to check if this method is supported at runtime.
@@ -695,7 +696,8 @@ enum PlatformInAppWebViewControllerMethod {
   ///{@template flutter_inappwebview_platform_interface.PlatformInAppWebViewController.getScrollY.supported_platforms}
   ///
   ///**Officially Supported Platforms/Implementations**:
-  ///- Android WebView ([Official API - View.getScrollY](https://developer.android.com/reference/android/view/View#getScrollY()))
+  ///- Android WebView ([Official API - View.getScrollY](https://developer.android.com/reference/android/view/View#getScrollY())):
+  ///    - Straight after [PlatformInAppWebViewController.scrollTo] or [PlatformInAppWebViewController.scrollBy] this can still return the previous position for a moment, because the renderer applies the scroll asynchronously.
   ///- iOS WKWebView ([Official API - UIScrollView.contentOffset](https://developer.apple.com/documentation/uikit/uiscrollview/1619404-contentoffset))
   ///
   ///Use the [PlatformInAppWebViewController.isMethodSupported] method to check if this method is supported at runtime.

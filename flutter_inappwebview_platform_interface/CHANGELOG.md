@@ -637,6 +637,9 @@ rename; this entry is the API-owner's view.
 
 ### Internal
 
+- **`getScrollX` / `getScrollY` now note, for Android, that straight after `scrollTo` or
+  `scrollBy` they can still return the previous position for a moment**: the renderer applies the
+  scroll asynchronously (measured on API 37, 2 reads in 120 calls, correct 25 ms later).
 - **Three opt-in lint rules are enabled:** `avoid_void_async`, `close_sinks`,
   `no_adjacent_strings_in_list`. They had no findings in this package.
 - **The `discarded_futures` lint is enabled.** The localhost server's
