@@ -23,6 +23,23 @@ void saveStateBounds() {
       defaultTargetPlatform == TargetPlatform.android &&
       await WebViewFeature.isFeatureSupported(WebViewFeature.SAVE_STATE);
 
+  /// The marker of each history entry, in order; an entry without one (`about:blank`) is skipped.
+  List<String> markersOf(WebHistory? history) => [
+    for (final e in history?.list ?? <WebHistoryItem>[])
+      if (RegExp(r'SSMARK\d+X').firstMatch('${e.url}') case final m?)
+        m.group(0)!,
+  ];
+
+  /// A history entry's url is a 40 KB data: URL, so each one is named by its marker.
+  String describe(WebHistory? history) {
+    final entries = history?.list?.map((e) {
+      final url = '${e.url}';
+      return RegExp(r'SSMARK\d+X').firstMatch(url)?.group(0) ??
+          (url.length > 40 ? '${url.substring(0, 40)}…' : url);
+    }).toList();
+    return '$entries at index ${history?.currentIndex}';
+  }
+
   /// Builds a WebView with [entries] fat history entries and leaves the cursor in the middle, so
   /// there is both back and forward history to bound.
   ///
@@ -80,6 +97,37 @@ void saveStateBounds() {
         loads.any((u) => u.contains(marker)),
         isTrue,
         reason: 'navigation $i of $entries never finished loading',
+      );
+
+      // Then wait for the history to show it, before the next load. A finished load is not
+      // enough: in one iOS group run (§261) page 1's onLoadStop had arrived, yet the source's
+      // back/forward list held `[about:blank, SSMARK2X]` when the state was saved, so page 2 had
+      // taken page 1's entry. Why is unknown (it failed 1 run in about 22, and never in the 21
+      // that carried a probe). Checking here fails at the step that lost the entry, with the list,
+      // instead of two steps later as "the restore lost an entry".
+      final expected = [for (var n = 1; n <= i; n++) 'SSMARK${n}X'];
+      WebHistory? history;
+      var inHistory = false;
+      final historyDeadline = DateTime.now().add(const Duration(seconds: 15));
+      while (!inHistory && DateTime.now().isBefore(historyDeadline)) {
+        history = await controller.getCopyBackForwardList();
+        final current = history?.list?.elementAtOrNull(
+          history.currentIndex ?? -1,
+        );
+        inHistory =
+            listEquals(markersOf(history), expected) &&
+            '${current?.url}'.contains(marker);
+        if (!inHistory) {
+          await tester.pump(const Duration(milliseconds: 200));
+          await Future<void>.delayed(const Duration(milliseconds: 200));
+        }
+      }
+      expect(
+        inHistory,
+        isTrue,
+        reason:
+            'page $i of $entries finished loading, but the back/forward list does not hold '
+            'pages $expected in order with page $i current: ${describe(history)}',
       );
     }
     return controller;
@@ -207,6 +255,7 @@ void saveStateBounds() {
     final sourceTitled =
         sourceList?.list?.where((e) => '${e.url}'.contains('title')).length ??
         0;
+
     final state = await controller.saveState();
     expect(state, isNotNull);
 
@@ -238,19 +287,24 @@ void saveStateBounds() {
     // flake showed up under a mutant that could not possibly have affected this path, which is what
     // identified it as the test's own timing rather than the change's).
     var entries = 0;
+    WebHistory? restoredList;
     final deadline = DateTime.now().add(const Duration(seconds: 15));
     while (entries < 2 && DateTime.now().isBefore(deadline)) {
       await settle(tester);
-      final list = await restored.getCopyBackForwardList();
+      restoredList = await restored.getCopyBackForwardList();
       entries =
-          list?.list?.where((e) => '${e.url}'.contains('title')).length ?? 0;
+          restoredList?.list
+              ?.where((e) => '${e.url}'.contains('title'))
+              .length ??
+          0;
     }
     expect(
       entries,
       greaterThanOrEqualTo(2),
       reason:
           'the restored WebView lost the saved history entries '
-          '(source had $sourceTitled, restored had $entries)',
+          '(source had $sourceTitled: ${describe(sourceList)}; '
+          'restored had $entries: ${describe(restoredList)})',
     );
   }, skip: shouldSkip);
 }

@@ -1102,6 +1102,11 @@ simulator for the first time:**
 
 ### Internal
 
+- **The `saveState` device tests now check each history entry as they build it.** In one iOS run
+  the WebView's history had lost page 1 before the state was saved, although page 1 had finished
+  loading. The restore test then failed two steps later with only a count. The history builder now
+  waits for every page to appear in the back/forward list, in order, before loading the next. If
+  one never does, it fails at that step and prints the list. The cause on iOS isn't known yet.
 - **The popup user-script device test now runs on iOS too**, and checks that the opener's own
   user script does not run in the popup. A new iOS-only test checks that a popup keeps its opener's
   content blockers and applies its own `supportZoom: false`.
