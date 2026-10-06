@@ -792,6 +792,11 @@ since the `WebsiteDataType.ALL` fix below. It stays **deliberately out of `ALL`*
 
 ### Fixed
 
+**Android — a page's events could carry a different page id from its navigation's `pageId`.**
+After a garbage collection the plugin numbered the same document again, so `onPageLoadEvent`,
+`onPageDomContentLoadedEvent` and the Web Vitals events stopped matching
+`WebViewNavigation.pageId`. Ids now stay the same for a page's whole life.
+
 **iOS — a popup WebView never ran its own `initialUserScripts`, and ran its opener's instead** (a
 `windowId` WebView from `onCreateWindow`). WebKit gives the popup its opener's script controller.
 A popup now has its own and runs its own scripts, as on Android. **Behaviour change:** it no longer

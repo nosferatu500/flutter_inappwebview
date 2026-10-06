@@ -6,7 +6,6 @@ import androidx.webkit.Page
 import dev.nosferatu500.inappwebview.types.Disposable
 import dev.nosferatu500.inappwebview.types.WebViewNavigationExt
 import dev.nosferatu500.inappwebview.types.WebViewPageExt
-import java.util.WeakHashMap
 
 /**
  * Forwards `androidx.webkit` navigation callbacks to Dart, turning androidx's *object identities*
@@ -21,17 +20,20 @@ import java.util.WeakHashMap
  * its own it would leave Dart unable to tell which snapshots belong together. So each identity is
  * assigned a counter value here and the value travels with every snapshot.
  *
- * Neither [Navigation] nor [Page] overrides `equals`/`hashCode`, so a [WeakHashMap] keyed by them
- * has exactly the identity semantics required — and, unlike an `IdentityHashMap`, it also drops
- * entries whose key the platform has released, which matters because the two lifetimes are
- * different and one of them has no guaranteed end:
+ * Neither [Navigation] nor [Page] overrides `equals`/`hashCode`: the instance is the key. But the
+ * instance is only stable while something holds it. Chromium's `getOrCreatePeer` doesn't keep the
+ * peer alive, so once it is garbage-collected the same page arrives as a **new** [Page] object.
+ * Measured on API 37 (§260): with a weak map the page events of a document reached Dart under a
+ * second id, so they no longer matched the `pageId` of the navigation that created it. So the maps
+ * hold their keys **strongly**, which keeps androidx handing back the same peer, and each entry is
+ * released at the event that ends it:
  *
- * - a **navigation** id is released at `onNavigationCompleted`, which always arrives;
- * - a **page** id is released only at `onPageDeleted`, which may arrive much later or, for a page
- *   living in the back/forward cache, never.
+ * - a **navigation** at `onNavigationCompleted`;
+ * - a **page** at `onPageDeleted`, which may arrive much later (a page in the back/forward cache
+ *   outlives its navigation).
  *
- * Releasing them the other way round would leak one entry per navigation for the lifetime of the
- * `WebView`.
+ * A page whose `onPageDeleted` never arrives stays until [dispose], so the maps are bounded by the
+ * `WebView`'s lifetime.
  *
  * Callbacks arrive on the main thread — `WebViewCompat.addNavigationListener(WebView,
  * NavigationListener)` posts through a `Handler` on the main `Looper` — so no synchronisation is
@@ -41,8 +43,8 @@ class InAppWebViewNavigationListener(
   private var webView: InAppWebView?
 ) : NavigationListener, Disposable {
 
-  private val navigationIds = WeakHashMap<Navigation, Long>()
-  private val pageIds = WeakHashMap<Page, Long>()
+  private val navigationIds = HashMap<Navigation, Long>()
+  private val pageIds = HashMap<Page, Long>()
   private var nextNavigationId = 1L
   private var nextPageId = 1L
 
@@ -52,7 +54,9 @@ class InAppWebViewNavigationListener(
   private fun pageId(page: Page?): Long? =
     page?.let { pageIds.getOrPut(it) { nextPageId++ } }
 
-  private fun pageSnapshot(page: Page): WebViewPageExt =
+  // `internal` for `InAppWebViewNavigationListenerTest`: every caller passes it through
+  // `webView?.`, which skips it when there is no WebView, and the JVM test has none.
+  internal fun pageSnapshot(page: Page): WebViewPageExt =
     WebViewPageExt.fromPage(page, pageIds.getOrPut(page) { nextPageId++ })
 
   private fun snapshot(navigation: Navigation): WebViewNavigationExt =

@@ -330,12 +330,15 @@ void navigationListener() {
 
     // ---- 2. a page id links the page events to the navigation that created the document ----
     //
-    // Polled rather than read once. `onPageLoadEvent` and the `onNavigationCompleted` of the
-    // navigation that created that page are independent callbacks with no guaranteed order, and on
-    // the slower API 33 emulator the page event wins the race: reading `completed` immediately
-    // found only an earlier navigation (`id=1 pageId=1`) while the loaded page was already `id=2`.
-    // Waiting for the correlation is the honest test; asserting over whatever had arrived so far
-    // was not.
+    // Polled rather than read once: a page event and the `onNavigationCompleted` of the navigation
+    // that created the page are independent callbacks with no guaranteed order (a page's FCP has
+    // been logged before its navigation completed).
+    //
+    // The failure this used to show, `navigations: [id=1 pageId=1], page id=2`, was not ordering.
+    // The page ids were assigned per `Page` object in a weak map, and Chromium doesn't keep that
+    // object alive, so after a GC the same document arrived as a new object under id 2. Measured
+    // in §260 with a GC posted after `onNavigationCompleted`: 3 / 3 failed like this with the weak
+    // map, 0 / 3 with the strong one the listener uses now.
     final page = loaded.first;
     WebViewNavigation? navigation;
     for (var i = 0; i < 100; i++) {

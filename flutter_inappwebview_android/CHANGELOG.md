@@ -239,6 +239,17 @@ for, and five others have a native *value* that differs from their name.
 
 ### Fixed
 
+- **A page's events could arrive under a different page id from the navigation that created it.**
+  `WebViewPage.id` and `WebViewNavigation.pageId` are numbered per androidx `Page` object, and the
+  listener kept those objects in weak maps. Chromium doesn't keep a `Page` alive either, so after
+  a garbage collection the same document arrived as a new object and got a new id. Its
+  `onPageLoadEvent`, `onPageDomContentLoadedEvent` and Web Vitals events then matched no
+  navigation. Measured on API 37 with a GC posted after `onNavigationCompleted`: 3 / 3 runs failed
+  like this with the weak maps, 0 / 3 with strong ones. The listener now holds each `Page` until
+  `onPageDeleted`, which keeps androidx handing back the same object, and each `Navigation` until
+  `onNavigationCompleted` (the same `getOrCreatePeer` mechanism, not measured separately);
+  `dispose()` releases whatever is left. This was the intermittent
+  "page lifecycle and Web Vitals" device-test failure.
 - **A popup WebView's own `initialUserScripts` were unreliable** (a WebView created with a
   `windowId` from `onCreateWindow`). Scripts registered before the `WebViewTransport` handover are
   dropped (upstream #1455), and the old workaround re-registered them from `View.post`, which ran
