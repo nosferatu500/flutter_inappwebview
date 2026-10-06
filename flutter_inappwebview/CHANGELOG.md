@@ -792,6 +792,12 @@ since the `WebsiteDataType.ALL` fix below. It stays **deliberately out of `ALL`*
 
 ### Fixed
 
+**An `InAppWebView` rebuilt by its parent was never disposed.** A rebuild above the widget (a
+`setState` that builds a new `InAppWebView`) left its controller with the first widget object, so
+removing the widget later disposed nothing: its JavaScript handlers, and everything else the
+controller's `dispose` releases, stayed alive. Measured on Android and iOS. The controller now
+moves to each new widget object and is disposed with the widget.
+
 **iOS — a pending `callAsyncJavaScript` could wait indefinitely after the page navigated away.**
 It now answers at once with an `error`, as on Android.
 
@@ -1126,6 +1132,10 @@ simulator for the first time:**
 
 ### Internal
 
+- **New tests for disposal after a rebuild.** Device (Android and iOS): `the controller is disposed
+  with its widget`, then the same after a parent rebuild, and after a rebuild that keeps one
+  platform widget object (`InAppWebView.fromPlatform`). Host: the facade hands the old platform
+  widget to the new one on a rebuild, before `dispose`.
 - **The device test `a pending callAsyncJavaScript answers when the WebView is disposed` now runs
   on iOS too.** It was Android-only because an unmounted iOS widget's WebView looked like it was
   never disposed. Measured, that came from the test itself: with no pointer activity the test

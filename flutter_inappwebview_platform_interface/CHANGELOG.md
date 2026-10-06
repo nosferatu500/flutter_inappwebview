@@ -116,6 +116,11 @@ rename; this entry is the API-owner's view.
 
 ### Added
 
+- **`PlatformInAppWebViewWidget.didUpdateWidget(oldWidget)`**, for implementations. The app-facing
+  `InAppWebView` calls it when a rebuild replaces its platform widget object while the `State`, the
+  platform view and the controller carry on, so an implementation can move its per-view state
+  (its controller) to the new object before `dispose` runs on it. `oldWidget` is this same object
+  when the app rebuilds around one platform widget. Does nothing by default.
 - **`ProxyRule.relayHop1` / `.relayHop2`** (iOS 17.0+), typed `ProxyRelayHop?`. This makes
   `ProxyRelayHop` reachable for the first time: the type was exported and iOS-annotated, and
   `ProxyManager.swift` has always read `map["relayHop1"]` / `map["relayHop2"]` and built

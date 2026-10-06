@@ -350,6 +350,17 @@ class IOSInAppWebViewWidget extends PlatformInAppWebViewWidget {
   }
 
   @override
+  void didUpdateWidget(covariant PlatformInAppWebViewWidget oldWidget) {
+    // The same object when the app rebuilds around one platform widget: nothing to move, and
+    // clearing the old one's controller would clear this one's.
+    if (identical(oldWidget, this) || oldWidget is! IOSInAppWebViewWidget) {
+      return;
+    }
+    _controller = oldWidget._controller;
+    oldWidget._controller = null;
+  }
+
+  @override
   void dispose() {
     dynamic viewId = _controller?.getViewId();
     debugLog(

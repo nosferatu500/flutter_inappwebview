@@ -239,6 +239,11 @@ for, and five others have a native *value* that differs from their name.
 
 ### Fixed
 
+- **An `InAppWebView` rebuilt by its parent was never disposed.** `onPlatformViewCreated` stores
+  the controller on the platform widget object of that moment, and a rebuild makes a new one, so
+  the widget's `dispose` ran on an object with no controller. Measured: the controller kept its
+  JavaScript handlers after the widget was removed. `didUpdateWidget` now moves the controller to
+  the new object (not when the rebuild keeps the same object).
 - **`onNavigationStarted` and `onNavigationRedirected` could describe a later state of the
   navigation.** The listener was registered with androidx's default, which posts every callback to
   the main `Looper`; each snapshot then read the live `Navigation` whenever the post ran, after

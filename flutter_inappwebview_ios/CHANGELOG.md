@@ -141,6 +141,11 @@ Fourteen WebKit APIs read out of the iOS 26.5 SDK:
 
 ### Fixed
 
+- **An `InAppWebView` rebuilt by its parent was never disposed.** `onPlatformViewCreated` stores
+  the controller on the platform widget object of that moment, and a rebuild makes a new one, so
+  the widget's `dispose` ran on an object with no controller. Measured: the controller kept its
+  JavaScript handlers after the widget was removed. `didUpdateWidget` now moves the controller to
+  the new object (not when the rebuild keeps the same object).
 - **A `callAsyncJavaScript` still pending when the page navigated away could wait indefinitely.**
   WebKit answers such a call only lazily: measured on iOS 26.5, nothing came in 15 s after the
   navigation, then the failure arrived 11 ms after the *next* `callAsyncJavaScript`, as "Completion

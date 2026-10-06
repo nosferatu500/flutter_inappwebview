@@ -138,6 +138,7 @@ part 'remove_user_scripts_by_group_name.dart';
 part 'set_context_menu.dart';
 part 'input_method_and_form_data.dart';
 part 'pending_javascript_results.dart';
+part 'widget_rebuild.dart';
 
 void main() {
   final shouldSkip = !InAppWebViewController.isClassSupported();
@@ -163,6 +164,7 @@ void main() {
     javascriptHandlerReplyTypes();
     javascriptHandlerCrossOriginIframe();
     pendingJavaScriptResults();
+    widgetRebuild();
     resizeWebView();
     setCustomUserAgent();
     videoPlaybackPolicy();

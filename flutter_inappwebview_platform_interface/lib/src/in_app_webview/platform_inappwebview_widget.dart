@@ -251,6 +251,15 @@ abstract class PlatformInAppWebViewWidget extends PlatformInterface
   /// Gets the `InAppWebViewController` instance controller
   T controllerFromPlatform<T>(PlatformInAppWebViewController controller);
 
+  /// Called when a rebuild replaces the app-facing widget, and with it this platform widget,
+  /// while its `State`, its platform view and its controller carry on. [oldWidget] is the platform
+  /// widget this one replaces; it is this same object when the app rebuilds with one platform
+  /// widget (`InAppWebView.fromPlatform`). An implementation that keeps per-view state, such as
+  /// its controller, moves it from [oldWidget] here, so that [dispose] finds it.
+  ///
+  /// Does nothing by default.
+  void didUpdateWidget(covariant PlatformInAppWebViewWidget oldWidget) {}
+
   ///{@macro flutter_inappwebview_platform_interface.PlatformInAppWebViewWidgetCreationParams.isClassSupported}
   bool isClassSupported({TargetPlatform? platform}) =>
       params.isClassSupported(platform: platform);

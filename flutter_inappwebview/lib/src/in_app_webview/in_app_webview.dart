@@ -681,6 +681,12 @@ class _InAppWebViewState extends State<InAppWebView> {
   }
 
   @override
+  void didUpdateWidget(InAppWebView oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    widget.platform.didUpdateWidget(oldWidget.platform);
+  }
+
+  @override
   void dispose() {
     widget.platform.dispose();
     super.dispose();
