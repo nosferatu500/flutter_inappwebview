@@ -8,16 +8,16 @@ part of 'main.dart';
 /// the WebView is disposed. Each now answers at once: `callAsyncJavaScript` with an error that
 /// says why, a world `evaluateJavascript` with `null`.
 ///
-/// Android only, except the navigation case, which iOS shares (§267). iOS worlds are native and
-/// answered on both kinds of page.
+/// Android only, except the two pending-call cases, which iOS shares (§267, §268). iOS worlds are
+/// native and answered on both kinds of page.
 void pendingJavaScriptResults() {
   final shouldSkip = defaultTargetPlatform != TargetPlatform.android;
-  // The navigation case holds on iOS too: WebKit's completion for a call whose page went away came
-  // only lazily (§267: not in 15 s, then 11 ms after the next call, as "Completion handler for
-  // function call is no longer reachable"). The dispose case stays Android-only: on iOS a widget's
-  // WebView wasn't disposed within 20 s of being unmounted, with or without a pending call
-  // (§267, TODO.md), so there is no dispose to answer from yet.
-  final shouldSkipNavigation = ![
+  // The pending-call cases hold on iOS too. Navigation: WebKit's completion for a call whose page
+  // went away came only lazily (§267: not in 15 s, then 11 ms after the next call, as "Completion
+  // handler for function call is no longer reachable"). Dispose: an iOS widget's WebView is
+  // disposed when the engine releases its platform view, and a view that was never composited
+  // wasn't released until a later frame composited another one (§268).
+  final shouldSkipPendingCall = ![
     TargetPlatform.android,
     TargetPlatform.iOS,
   ].contains(defaultTargetPlatform);
@@ -149,7 +149,7 @@ void pendingJavaScriptResults() {
       expect(result?.value, isNull);
       expect(result?.error, contains('navigated away'));
     },
-    skip: shouldSkipNavigation,
+    skip: shouldSkipPendingCall,
   );
 
   skippableTestWidgets(
@@ -162,6 +162,11 @@ void pendingJavaScriptResults() {
           baseUrl: WebUri('https://www.example.com/'),
         ),
       );
+      // With no pointer activity the binding draws only the frames a test pumps, and `loadPage`
+      // pumps none after the platform view exists. Without this frame the iOS view wasn't
+      // composited, and unmounting it disposed nothing until the next test composited another
+      // WebView (§268).
+      await tester.pump();
       final pending = controller.callAsyncJavaScript(
         functionBody:
             'await new Promise(function(r) { setTimeout(r, 10000); }); return 7;',
@@ -172,6 +177,6 @@ void pendingJavaScriptResults() {
       expect(result?.value, isNull);
       expect(result?.error, contains('disposed'));
     },
-    skip: shouldSkip,
+    skip: shouldSkipPendingCall,
   );
 }

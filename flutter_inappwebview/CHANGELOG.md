@@ -1126,6 +1126,12 @@ simulator for the first time:**
 
 ### Internal
 
+- **The device test `a pending callAsyncJavaScript answers when the WebView is disposed` now runs
+  on iOS too.** It was Android-only because an unmounted iOS widget's WebView looked like it was
+  never disposed. Measured, that came from the test itself: with no pointer activity the test
+  binding draws only the frames a test pumps, so the platform view was never composited, and the engine keeps a never-composited
+  view until a later frame composites another one. The test now pumps one frame before unmounting.
+  Then the WebView is disposed within milliseconds and the pending call is answered.
 - **New `InAppBrowser` device test, `a popup browser leaves its opener open`** (Android and iOS):
   a popup browser over its opener, with the opener checked alive after the popup has appeared and
   after it closes.
