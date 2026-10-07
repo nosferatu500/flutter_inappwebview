@@ -52,4 +52,51 @@ void refreshing() {
     // programmatic refresh re-enter the app's own handler.
     expect(onRefreshFired, false);
   }, skip: shouldSkip);
+
+  // A `beginRefreshing` made before the WebView is on screen. iOS's `UIRefreshControl` ignores it
+  // while it has no window and doesn't catch up when the window arrives, so the refresh was lost
+  // (measured §288: the two tests above failed whenever the view wasn't composited yet). The
+  // plugin now applies it when the window arrives. Called from `onWebViewCreated`, before any
+  // frame has composited the view.
+  skippableTestWidgets(
+    'beginRefreshing before the WebView is on screen takes effect once it is',
+    (WidgetTester tester) async {
+      var onRefreshFired = false;
+      final Completer<void> begun = Completer<void>();
+      final Completer<void> pageLoaded = Completer<void>();
+      final controller = PullToRefreshController(
+        settings: PullToRefreshSettings(enabled: true),
+        onRefresh: () => onRefreshFired = true,
+      );
+      await tester.pumpWidget(
+        Directionality(
+          textDirection: TextDirection.ltr,
+          child: InAppWebView(
+            key: GlobalKey(),
+            initialFile: "test_assets/in_app_webview_initial_file_test.html",
+            pullToRefreshController: controller,
+            onWebViewCreated: (_) async {
+              await controller.beginRefreshing();
+              begun.complete();
+            },
+            onLoadStop: (webViewController, url) {
+              if (!pageLoaded.isCompleted) pageLoaded.complete();
+            },
+          ),
+        ),
+      );
+      await begun.future.timeout(const Duration(seconds: 20));
+      await pageLoaded.future.timeout(const Duration(seconds: 20));
+      for (var i = 0; i < 10; i++) {
+        await tester.pump(const Duration(milliseconds: 50));
+        await Future<void>.delayed(const Duration(milliseconds: 50));
+      }
+
+      expect(await controller.isRefreshing(), true);
+      await controller.endRefreshing();
+      expect(await controller.isRefreshing(), false);
+      expect(onRefreshFired, false);
+    },
+    skip: shouldSkip,
+  );
 }

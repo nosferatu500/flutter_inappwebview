@@ -141,6 +141,13 @@ Fourteen WebKit APIs read out of the iOS 26.5 SDK:
 
 ### Fixed
 
+- **`PullToRefreshController.beginRefreshing()` was lost when called before the WebView was on
+  screen.** `UIRefreshControl` ignores `beginRefreshing()` while it has no window and doesn't catch
+  up when the window arrives. Measured: called after `onLoadStop` but before the view was first
+  composited, `isRefreshing` stayed `false` (which is why the `beginRefreshing` tests failed on
+  iOS whenever that timing came up). Such a call is now remembered, reported by `isRefreshing` until
+  the window arrives, and applied then; `endRefreshing()` cancels it. Android already took effect
+  either way
 - **A popup's `setSettings` skipped a value equal to its own default while it held an inherited
   one.** A popup shares its opener's `WKPreferences`, so it inherits the opener's values, while its
   stored settings hold its own defaults; `setSettings` compared the request against those and did

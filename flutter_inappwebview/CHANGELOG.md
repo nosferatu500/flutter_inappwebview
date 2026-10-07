@@ -792,6 +792,9 @@ since the `WebsiteDataType.ALL` fix below. It stays **deliberately out of `ALL`*
 
 ### Fixed
 
+**iOS — `PullToRefreshController.beginRefreshing()` was lost when called before the WebView was on
+screen**: UIKit ignores it then. It is now applied when the WebView appears, as on Android.
+
 **iOS — a popup's `setSettings` could skip a setting it had inherited from its opener**: a popup
 inheriting `javaScriptCanOpenWindowsAutomatically: true` kept it after `setSettings(false)`, because
 the request was compared with the popup's stored default instead of the live value.
