@@ -792,6 +792,11 @@ since the `WebsiteDataType.ALL` fix below. It stays **deliberately out of `ALL`*
 
 ### Fixed
 
+**iOS — `onLoadStart`, `onPageCommitVisible` and `onLoadStop` could report the URL of a later
+`loadUrl`**: an event of the previous page delivered after `loadUrl` was called carried the new
+URL, so a page that finished after `loadUrl(B)` arrived as B's `onLoadStop` before B had started.
+Each event now reports its own navigation's URL, as on Android.
+
 **iOS — `onEnterFullscreen` was missed for the first native video fullscreen in the app**: the
 player's window has no scene, and the plugin required it to be in the WebView's.
 
@@ -1152,6 +1157,16 @@ simulator for the first time:**
 
 ### Internal
 
+- **New device test `loadUrl does not relabel the previous page's events`** (both platforms):
+  page A blocks its web process for 1.5 s after it commits, `loadUrl(B)` is called from A's
+  `onPageCommitVisible`, and the first event naming B must be B's own `onLoadStart`, with one
+  `onLoadStop` for B. It failed on iOS before the fix above
+- **The iOS `saveState` test's lost history entry is explained.** On iOS, `onLoadStop` for one
+  navigation can arrive carrying the URL of a `loadUrl` issued after it. In the iOS group, the
+  initial `about:blank`'s `onLoadStop` arrived as page 1's, page 1 not yet started, and page 2 then
+  replaced page 1 (2 of 60 tries in the group). The test already waits for each page to reach the
+  back/forward list before loading the next, which measured 5 of 5 correct through the same race;
+  its comment now gives the cause. Comment only; the plugin fix is filed separately
 - **Two iOS device tests that sometimes timed out in group runs now fail at the step that hangs.**
   `shouldGoToBackForwardListItem can veto a back navigation` subscribed to `onLoadStop` for its
   first page only after `onWebViewCreated`, so a fast local load could finish first and the test

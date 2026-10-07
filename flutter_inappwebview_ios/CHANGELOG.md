@@ -141,6 +141,19 @@ Fourteen WebKit APIs read out of the iOS 26.5 SDK:
 
 ### Fixed
 
+- **`onLoadStart`, `onPageCommitVisible` and `onLoadStop` could report the URL of a later
+  `loadUrl`.** They sent `WKWebView.url`, which names a requested page as soon as `load()` is
+  called, so an event of the previous navigation that was delivered after that carried the new
+  URL. Measured on iOS 26.5: a page that finished after `loadUrl(B)` was called from its
+  `onPageCommitVisible` arrived as an `onLoadStop` for B before B had started, and B then finished
+  again (on the run before the fix, and on each of three mutants that undo it); and in a run of the
+  full test group a WebView's initial `about:blank` finished as the page requested right after
+  creation in 5 of 100 tries. An app that matched `onLoadStop`'s URL to know its page
+  had loaded acted too early, and its next `loadUrl` replaced that page's history entry. Each event
+  now reports its own navigation's URL, as on Android: the URL `WKWebView.url` held for that
+  navigation before a newer one was requested. The same URL now fills the native `InAppBrowser`'s
+  address bar at start and finish, and `onReceivedError`'s request when the error names no failing
+  URL
 - **`onEnterFullscreen` was missed for the first native video fullscreen in the app.** The plugin
   detects that fullscreen from the player window's `didBecomeVisibleNotification`, and required the
   window to be in the WebView's scene. Measured on iOS 26.5: on the app's first presentation the

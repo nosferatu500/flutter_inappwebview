@@ -53,6 +53,30 @@ public class InAppWebView: WKWebView, UIScrollViewDelegate, WKUIDelegate,
     var webMessageChannels: [String: WebMessageChannel] = [:]
     var webMessageListeners: [WebMessageListener] = []
     var currentOriginalUrl: URL?
+
+    /// What each navigation's own events report as their URL; see `url(for:)`.
+    ///
+    /// `WKWebView.url` names a `load()` request the moment it is issued, so an event of the previous
+    /// navigation delivered after that carried the new URL. Measured (`DEPRECATION_CLEANUP.md` §278,
+    /// §279): the initial about:blank's finish arrived as `onLoadStop` for the page requested 4–6 ms
+    /// earlier, and a page that finished after `loadUrl` was called from its commit arrived as the
+    /// next page's `onLoadStop`, before that page had started. Android reports each navigation's own
+    /// URL. Weak keys: WebKit owns the navigations.
+    private let navigationRecords = NSMapTable<WKNavigation, NavigationRecord>.weakToStrongObjects()
+    /// How many navigations this view has issued (`load`, `reload`, `goBack`, …).
+    private var issuedNavigations = 0
+
+    private final class NavigationRecord {
+        /// `issuedNavigations` when the navigation was first seen.
+        let issue: Int
+        var url: URL?
+
+        init(issue: Int, url: URL?) {
+            self.issue = issue
+            self.url = url
+        }
+    }
+
     var inFullscreen = false
     weak var fullscreenWindow: UIWindow? // Track the window that entered fullscreen
     var preventGestureDelay = false
@@ -1132,6 +1156,103 @@ public class InAppWebView: WKWebView, UIScrollViewDelegate, WKUIDelegate,
         })
     }
     
+    // Every `WKWebView` method that starts a navigation and returns it, so `url(for:)` knows when a
+    // newer one was issued (`restoreState` counts its own). Pass-throughs otherwise.
+    @discardableResult
+    override public func load(_ request: URLRequest) -> WKNavigation? {
+        return issued(super.load(request))
+    }
+
+    @discardableResult
+    override public func load(_ data: Data, mimeType MIMEType: String, characterEncodingName: String, baseURL: URL) -> WKNavigation? {
+        return issued(super.load(data, mimeType: MIMEType, characterEncodingName: characterEncodingName, baseURL: baseURL))
+    }
+
+    @discardableResult
+    override public func loadHTMLString(_ string: String, baseURL: URL?) -> WKNavigation? {
+        return issued(super.loadHTMLString(string, baseURL: baseURL))
+    }
+
+    @discardableResult
+    override public func loadFileURL(_ URL: URL, allowingReadAccessTo readAccessURL: URL) -> WKNavigation? {
+        return issued(super.loadFileURL(URL, allowingReadAccessTo: readAccessURL))
+    }
+
+    @discardableResult
+    override public func loadFileRequest(_ request: URLRequest, allowingReadAccessTo readAccessURL: URL) -> WKNavigation {
+        let navigation = super.loadFileRequest(request, allowingReadAccessTo: readAccessURL)
+        issued(navigation)
+        return navigation
+    }
+
+    @discardableResult
+    override public func loadSimulatedRequest(_ request: URLRequest, response: URLResponse, responseData data: Data) -> WKNavigation {
+        let navigation = super.loadSimulatedRequest(request, response: response, responseData: data)
+        issued(navigation)
+        return navigation
+    }
+
+    @discardableResult
+    override public func loadSimulatedRequest(_ request: URLRequest, responseHTML string: String) -> WKNavigation {
+        let navigation = super.loadSimulatedRequest(request, responseHTML: string)
+        issued(navigation)
+        return navigation
+    }
+
+    @discardableResult
+    override public func reload() -> WKNavigation? {
+        return issued(super.reload())
+    }
+
+    @discardableResult
+    override public func reloadFromOrigin() -> WKNavigation? {
+        return issued(super.reloadFromOrigin())
+    }
+
+    @discardableResult
+    override public func goBack() -> WKNavigation? {
+        return issued(super.goBack())
+    }
+
+    @discardableResult
+    override public func goForward() -> WKNavigation? {
+        return issued(super.goForward())
+    }
+
+    @discardableResult
+    override public func go(to item: WKBackForwardListItem) -> WKNavigation? {
+        return issued(super.go(to: item))
+    }
+
+    @discardableResult
+    private func issued(_ navigation: WKNavigation?) -> WKNavigation? {
+        issuedNavigations += 1
+        if let navigation = navigation {
+            navigationRecords.setObject(NavigationRecord(issue: issuedNavigations, url: url), forKey: navigation)
+        }
+        return navigation
+    }
+
+    /// The URL an event of `navigation` reports. While no other navigation has been issued since
+    /// this one was first seen, that's `WKWebView.url`, recorded on every event; after that, the last
+    /// URL recorded for it. Without a navigation, `WKWebView.url`. A navigation the page starts
+    /// while an issued one is still pending gets the pending URL, as before (not measured).
+    private func url(for navigation: WKNavigation?) -> URL? {
+        guard let navigation = navigation else { return url }
+        guard let record = navigationRecords.object(forKey: navigation) else {
+            // Not issued by this view (a link, the page's own script): first seen now.
+            navigationRecords.setObject(NavigationRecord(issue: issuedNavigations, url: url), forKey: navigation)
+            return url
+        }
+        guard record.issue == issuedNavigations else {
+            return record.url ?? url
+        }
+        if let current = url {
+            record.url = current
+        }
+        return url
+    }
+
     public func loadUrl(urlRequest: URLRequest, allowingReadAccessTo: URL?) {
         let url = urlRequest.url!
         
@@ -2207,7 +2328,8 @@ public class InAppWebView: WKWebView, UIScrollViewDelegate, WKUIDelegate,
     }
     
     public func webView(_ webView: WKWebView, didStartProvisionalNavigation navigation: WKNavigation!) {
-        currentOriginalUrl = url
+        let navigationUrl = url(for: navigation)
+        currentOriginalUrl = navigationUrl
         lastTouchPoint = nil
         
         disposeWebMessageChannels()
@@ -2216,12 +2338,13 @@ public class InAppWebView: WKWebView, UIScrollViewDelegate, WKUIDelegate,
         configuration.userContentController.resetContentWorlds(windowId: windowId)
 
         
-        channelDelegate?.onLoadStart(url: url?.absoluteString)
-        
-        inAppBrowserDelegate?.didStartNavigation(url: url)
+        channelDelegate?.onLoadStart(url: navigationUrl?.absoluteString)
+
+        inAppBrowserDelegate?.didStartNavigation(url: navigationUrl)
     }
-    
+
     public func webView(_ webView: WKWebView, didFinish navigation: WKNavigation!) {
+        let navigationUrl = url(for: navigation)
         initializeWindowIdJS()
         
         resetCredentialsProposed()
@@ -2235,9 +2358,9 @@ public class InAppWebView: WKWebView, UIScrollViewDelegate, WKUIDelegate,
             setNeedsLayout()
         }
 
-        channelDelegate?.onLoadStop(url: url?.absoluteString)
-        
-        inAppBrowserDelegate?.didFinishNavigation(url: url)
+        channelDelegate?.onLoadStop(url: navigationUrl?.absoluteString)
+
+        inAppBrowserDelegate?.didFinishNavigation(url: navigationUrl)
     }
     
     public func webView(_ view: WKWebView,
@@ -2248,8 +2371,9 @@ public class InAppWebView: WKWebView, UIScrollViewDelegate, WKUIDelegate,
     
     public func webView(_ webView: WKWebView, didFail navigation: WKNavigation!, withError error: Error) {
         resetCredentialsProposed()
-        
-        var urlError: URL = url ?? URL(string: "about:blank")!
+
+        let navigationUrl = url(for: navigation)
+        var urlError: URL = navigationUrl ?? URL(string: "about:blank")!
         var errorCode = -1
         var errorDescription = "domain=\(error._domain), code=\(error._code), \(error.localizedDescription)"
         
@@ -2275,7 +2399,7 @@ public class InAppWebView: WKWebView, UIScrollViewDelegate, WKUIDelegate,
         
         channelDelegate?.onReceivedError(request: webResourceRequest, error: webResourceError)
         
-        inAppBrowserDelegate?.didFailNavigation(url: url, error: error)
+        inAppBrowserDelegate?.didFailNavigation(url: navigationUrl, error: error)
     }
     
     public func webView(_ webView: WKWebView, didReceive challenge: URLAuthenticationChallenge, completionHandler: @escaping @MainActor @Sendable (URLSession.AuthChallengeDisposition, URLCredential?) -> Void) {
@@ -3026,11 +3150,14 @@ public class InAppWebView: WKWebView, UIScrollViewDelegate, WKUIDelegate,
                         didCommit navigation: WKNavigation!) {
         // The previous document is gone: what it still owed can't arrive in any useful time.
         releasePendingJavaScriptResults(reason: "the page navigated away before it answered")
-        channelDelegate?.onPageCommitVisible(url: url?.absoluteString)
+        channelDelegate?.onPageCommitVisible(url: url(for: navigation)?.absoluteString)
     }
-    
+
     public func webView(_ webView: WKWebView,
                         didReceiveServerRedirectForProvisionalNavigation navigation: WKNavigation!) {
+        // Records where the navigation is now, should a newer one be issued before it ends. That
+        // `WKWebView.url` is the redirect target here is by reading; no test redirects.
+        _ = url(for: navigation)
         channelDelegate?.onDidReceiveServerRedirectForProvisionalNavigation()
     }
     
@@ -3843,6 +3970,8 @@ public class InAppWebView: WKWebView, UIScrollViewDelegate, WKUIDelegate,
     
     public func restoreState(state: Data) {
         interactionState = state
+        // Navigates, but hands back no `WKNavigation`: still a newer navigation for `url(for:)`.
+        issued(nil)
     }
     
     /// Settles a `window.open` child that Dart declined.

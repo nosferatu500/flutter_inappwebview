@@ -104,6 +104,76 @@ void loadUrl() {
     skip: shouldSkip1 || defaultTargetPlatform != TargetPlatform.android,
   );
 
+  skippableTestWidgets("loadUrl does not relabel the previous page's events", (
+    WidgetTester tester,
+  ) async {
+    // Page A commits, then blocks its web process for 1.5 s in an inline script, so its finish
+    // is still to come when `loadUrl(B)` is issued from A's commit. Every event must name its
+    // own navigation: before §279 iOS sent `WKWebView.url`, which names B as soon as B is
+    // requested, so A's finish arrived as an `onLoadStop` for B before B had started.
+    final pageA = WebUri(
+      'data:text/html,<title>A</title><!--NAVURLA-->'
+      '<script>var t = Date.now(); while (Date.now() - t < 1500) {}</script>',
+    );
+    final pageB = WebUri('data:text/html,<title>B</title><!--NAVURLB-->');
+    String name(WebUri? url) => '$url'.contains('NAVURLA')
+        ? 'A'
+        : '$url'.contains('NAVURLB')
+        ? 'B'
+        : '$url';
+    final events = <String>[];
+    var issuedB = false;
+
+    await tester.pumpWidget(
+      Directionality(
+        textDirection: TextDirection.ltr,
+        child: InAppWebView(
+          key: GlobalKey(),
+          initialUrlRequest: URLRequest(url: pageA),
+          onLoadStart: (controller, url) => events.add('start ${name(url)}'),
+          onPageCommitVisible: (controller, url) {
+            events.add('commit ${name(url)}');
+            if (name(url) == 'A' && !issuedB) {
+              issuedB = true;
+              events.add('loadUrl B');
+              controller.loadUrl(urlRequest: URLRequest(url: pageB));
+            }
+          },
+          onLoadStop: (controller, url) => events.add('stop ${name(url)}'),
+        ),
+      ),
+    );
+
+    final deadline = DateTime.now().add(const Duration(seconds: 20));
+    bool bFinished() {
+      final start = events.indexOf('start B');
+      return start >= 0 && events.skip(start).contains('stop B');
+    }
+
+    while (!bFinished() && DateTime.now().isBefore(deadline)) {
+      await tester.pump(const Duration(milliseconds: 100));
+      await Future<void>.delayed(const Duration(milliseconds: 100));
+    }
+    expect(
+      bFinished(),
+      isTrue,
+      reason: 'B never started and finished: $events',
+    );
+
+    // The first event naming B after it was requested is B's own start.
+    final requested = events.indexOf('loadUrl B');
+    expect(
+      events.skip(requested + 1).firstWhere((e) => e.endsWith(' B')),
+      'start B',
+      reason: 'an event named B before B started: $events',
+    );
+    expect(
+      events.where((e) => e == 'stop B').length,
+      1,
+      reason: 'B finished more than once: $events',
+    );
+  }, skip: shouldSkip1);
+
   final shouldSkip2 = !InAppWebViewController.isMethodSupported(
     PlatformInAppWebViewControllerMethod.loadSimulatedRequest,
   );

@@ -99,12 +99,15 @@ void saveStateBounds() {
         reason: 'navigation $i of $entries never finished loading',
       );
 
-      // Then wait for the history to show it, before the next load. A finished load is not
-      // enough: in one iOS group run (§261) page 1's onLoadStop had arrived, yet the source's
-      // back/forward list held `[about:blank, SSMARK2X]` when the state was saved, so page 2 had
-      // taken page 1's entry. Why is unknown (it failed 1 run in about 22, and never in the 21
-      // that carried a probe). Checking here fails at the step that lost the entry, with the list,
-      // instead of two steps later as "the restore lost an entry".
+      // Then wait for the history to show it, before the next load. On iOS the onLoadStop above
+      // can belong to the previous navigation: the plugin reports `WKWebView.url`, which names
+      // a `loadUrl` request as soon as it is issued. Measured (§278): the initial about:blank's
+      // finish, delivered 4-6 ms after `loadUrl` for page 1, arrived as "onLoadStop SSMARK1X";
+      // page 1 had not started, and page 2, issued next, replaced it, leaving
+      // `[about:blank, SSMARK2X]`, the list §261's flake saved (2 of 60 tries in the group, 0 of
+      // 60 alone).
+      // Waiting for the list rides that out (page 1's own load then lands, 5 of 5 measured), and
+      // fails here, with the list, if the entry is really lost.
       final expected = [for (var n = 1; n <= i; n++) 'SSMARK${n}X'];
       WebHistory? history;
       var inHistory = false;
