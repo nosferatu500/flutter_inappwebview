@@ -1167,6 +1167,11 @@ simulator for the first time:**
 
 ### Internal
 
+- **New device test `a popup WebView's content blockers apply to its first page`** (both
+  platforms): the popup's own `BLOCK` rule on its first document must stop it (an error, no
+  `onLoadStop`). On iOS that pins the wait before a popup's first navigation until its own rule
+  list is compiled: released early, the page loaded, which the `CSS_DISPLAY_NONE` tests could not
+  see
 - **New device test `a popup browser runs its own user scripts, not its opener's`** (in_app_browser
   group, both platforms): a `windowId` `InAppBrowser` opened from its opener's `window.open` runs
   its own document-start `initialUserScripts`, not the opener's, and has `window.opener`. On iOS

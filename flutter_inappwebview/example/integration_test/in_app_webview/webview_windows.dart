@@ -439,6 +439,105 @@ void webViewWindows() {
       skip: shouldSkipTest2,
     );
 
+    // A popup's own content blockers apply to its first page too: on iOS that page's navigation
+    // waits until the popup's rule list is compiled and added (§274). A `BLOCK` rule on the popup's
+    // own document tells whether it waited; a `CSS_DISPLAY_NONE` rule can't, since one added a few
+    // ms late still hides. Measured (§284): released before the list was in, the page loaded
+    // (`start`, `stop`); with the wait, `start` then an error. Android: the error alone.
+    skippableTestWidgets(
+      "a popup WebView's content blockers apply to its first page",
+      (WidgetTester tester) async {
+        final origin = 'http://${environment["NODE_SERVER_IP"]}:8082';
+        final target = '$origin/test-redirect-target';
+        final windowIdCompleter = Completer<int>();
+        final events = <String>[];
+
+        Widget tree({int? windowId}) => Directionality(
+          textDirection: TextDirection.ltr,
+          child: Column(
+            children: [
+              Expanded(
+                child: InAppWebView(
+                  key: const ValueKey('parent'),
+                  initialData: InAppWebViewInitialData(
+                    data:
+                        '<html><body>parent<script>window.open("$target");'
+                        '</script></body></html>',
+                    baseUrl: WebUri('$origin/'),
+                  ),
+                  initialSettings: InAppWebViewSettings(
+                    javaScriptCanOpenWindowsAutomatically: true,
+                    supportMultipleWindows: true,
+                  ),
+                  onCreateWindow: (controller, createNavigationAction) async {
+                    if (!windowIdCompleter.isCompleted) {
+                      windowIdCompleter.complete(
+                        createNavigationAction.windowId,
+                      );
+                    }
+                    return true;
+                  },
+                ),
+              ),
+              if (windowId != null)
+                Expanded(
+                  child: InAppWebView(
+                    key: const ValueKey('popup'),
+                    windowId: windowId,
+                    initialSettings: InAppWebViewSettings(
+                      contentBlockers: [
+                        ContentBlocker(
+                          trigger: ContentBlockerTrigger(
+                            urlFilter: '.*test-redirect-target.*',
+                          ),
+                          action: ContentBlockerAction(
+                            type: ContentBlockerActionType.BLOCK,
+                          ),
+                        ),
+                      ],
+                    ),
+                    onLoadStart: (controller, url) => events.add('start $url'),
+                    onLoadStop: (controller, url) => events.add('stop $url'),
+                    onReceivedError: (controller, request, error) =>
+                        events.add('error ${request.url} ${error.type}'),
+                  ),
+                ),
+            ],
+          ),
+        );
+
+        await tester.pumpWidget(tree());
+        final windowId = await windowIdCompleter.future.timeout(
+          const Duration(seconds: 20),
+          onTimeout: () =>
+              fail("the opener's onCreateWindow never came (20 s)"),
+        );
+        await tester.pumpWidget(tree(windowId: windowId));
+        for (var i = 0; i < 50; i++) {
+          await tester.pump(const Duration(milliseconds: 100));
+          await Future<void>.delayed(const Duration(milliseconds: 100));
+        }
+        expect(
+          events.where(
+            (e) => e.startsWith('stop ') && e.contains('test-redirect-target'),
+          ),
+          isEmpty,
+          reason:
+              "the popup's own BLOCK rule should stop its first page: $events",
+        );
+        // And it did stop it, rather than the page never being asked for: blocked, the load
+        // ends in an error on both platforms (measured: type UNKNOWN on each).
+        expect(
+          events.where(
+            (e) => e.startsWith('error ') && e.contains('test-redirect-target'),
+          ),
+          isNotEmpty,
+          reason: "the popup's first page should end in an error: $events",
+        );
+      },
+      skip: shouldSkipTest2,
+    );
+
     // iOS only: the popup's plugin scripts follow its own settings now that it has its own
     // `WKUserContentController` (§259); `supportZoom: false` adds a viewport meta on iOS only.
     skippableTestWidgets(
