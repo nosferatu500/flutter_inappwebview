@@ -239,6 +239,17 @@ for, and five others have a native *value* that differs from their name.
 
 ### Fixed
 
+- **A rebuilt `InAppWebView` kept calling the first build's callbacks.** The controller read its
+  callbacks from the params of the widget that created it, so after a parent rebuild passed new
+  ones (a closure over new state, say) events still went to the old closures, and a callback the
+  rebuild added never ran. Measured: after a rebuild, the next page's `onLoadStop` went to the
+  first build's closure and an added `onTitleChanged` never fired. A rebuild now hands its params
+  to the controller (`AndroidInAppWebViewController.updateWebViewParams`), so events go to the
+  latest callbacks. What the WebView read at creation is not redone: the initial page and settings,
+  and the `use*` settings a callback switches on when present at creation
+  (`shouldOverrideUrlLoading`, `onLoadResource`, `onDownloadStarting`, the Ajax and fetch
+  interceptors, the navigation-listener and page events, …), so such a callback added only at a
+  rebuild still isn't sent its events (by reading the code that switches them on; not measured)
 - **An `AT_DOCUMENT_END` user script in a content world ran while the page was still loading.**
   A content world is an `<iframe>`, and the script's document-end check ran inside it, reading the
   `<iframe>`'s `readyState`, which is `complete` as soon as the world exists. Measured on API 37

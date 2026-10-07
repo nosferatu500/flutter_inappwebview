@@ -141,6 +141,17 @@ Fourteen WebKit APIs read out of the iOS 26.5 SDK:
 
 ### Fixed
 
+- **A rebuilt `InAppWebView` kept calling the first build's callbacks.** The controller read its
+  callbacks from the params of the widget that created it, so after a parent rebuild passed new
+  ones (a closure over new state, say) events still went to the old closures, and a callback the
+  rebuild added never ran. Measured: after a rebuild, the next page's `onLoadStop` went to the
+  first build's closure and an added `onTitleChanged` never fired. A rebuild now hands its params
+  to the controller (`IOSInAppWebViewController.updateWebViewParams`), so events go to the latest
+  callbacks. What the WebView read at creation is not redone: the initial page and settings, and
+  the `use*` settings a callback switches on when present at creation
+  (`shouldOverrideUrlLoading`, `onLoadResource`, `onDownloadStarting`, the Ajax and fetch
+  interceptors, …), so such a callback added only at a rebuild still isn't sent its events (by
+  reading the code that switches them on; not measured)
 - **`onLoadStart`, `onPageCommitVisible` and `onLoadStop` could report the URL of a later
   `loadUrl`.** They sent `WKWebView.url`, which names a requested page as soon as `load()` is
   called, so an event of the previous navigation that was delivered after that carried the new

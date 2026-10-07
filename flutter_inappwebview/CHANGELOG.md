@@ -792,6 +792,12 @@ since the `WebsiteDataType.ALL` fix below. It stays **deliberately out of `ALL`*
 
 ### Fixed
 
+**A rebuilt `InAppWebView` kept calling the first build's callbacks** (both platforms): after a
+parent rebuild passed new callbacks, events still went to the first build's closures, and one the
+rebuild added never ran. Events now go to the latest callbacks. A callback that switches on a
+native `use*` setting when present at creation (`shouldOverrideUrlLoading`, `onLoadResource`,
+`onDownloadStarting`, the Ajax and fetch interceptors, …) still needs to be there at creation.
+
 **iOS — `onLoadStart`, `onPageCommitVisible` and `onLoadStop` could report the URL of a later
 `loadUrl`**: an event of the previous page delivered after `loadUrl` was called carried the new
 URL, so a page that finished after `loadUrl(B)` arrived as B's `onLoadStop` before B had started.

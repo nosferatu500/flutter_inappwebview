@@ -445,6 +445,8 @@ class AndroidInAppWebViewWidget extends PlatformInAppWebViewWidget {
     }
     _controller = oldWidget._controller;
     oldWidget._controller = null;
+    // And its events go to this widget's callbacks from now on.
+    _controller?.updateWebViewParams(params);
   }
 
   @override

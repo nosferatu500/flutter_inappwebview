@@ -365,6 +365,8 @@ class IOSInAppWebViewWidget extends PlatformInAppWebViewWidget {
     oldWidget._controller = null;
     _platformViewId = oldWidget._platformViewId;
     oldWidget._platformViewId = null;
+    // And its events go to this widget's callbacks from now on.
+    _controller?.updateWebViewParams(params);
   }
 
   @override

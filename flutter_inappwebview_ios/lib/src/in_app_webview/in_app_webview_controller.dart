@@ -74,6 +74,22 @@ class IOSInAppWebViewController extends PlatformInAppWebViewController
 
   dynamic _controllerFromPlatform;
 
+  PlatformWebViewCreationParams? _rebuiltWebViewParams;
+
+  /// The params whose callbacks receive this WebView's events: the creating widget's, until a
+  /// rebuild hands over its own through [updateWebViewParams].
+  @override
+  PlatformWebViewCreationParams? get webviewParams =>
+      _rebuiltWebViewParams ?? super.webviewParams;
+
+  /// Called by [IOSInAppWebViewWidget] when a rebuild moves this controller to a new widget, so
+  /// events go to that widget's callbacks. Before, they kept going to the first widget's (measured,
+  /// §282). What was read from the params at creation (the initial page, settings, user scripts,
+  /// and the `use*` settings switched on because a callback was present) is not redone.
+  void updateWebViewParams(PlatformWebViewCreationParams webviewParams) {
+    _rebuiltWebViewParams = webviewParams;
+  }
+
   @override
   late IOSWebStorage webStorage;
 
@@ -1316,7 +1332,7 @@ class IOSInAppWebViewController extends PlatformInAppWebViewController
               if (webviewParams != null &&
                   webviewParams!.shouldInterceptAjaxRequest != null) {
                 return jsonEncode(
-                  await params.webviewParams!.shouldInterceptAjaxRequest!(
+                  await webviewParams!.shouldInterceptAjaxRequest!(
                     _controllerFromPlatform,
                     request,
                   ),
