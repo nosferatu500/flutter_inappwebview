@@ -434,6 +434,12 @@ rename; this entry is the API-owner's view.
 
 ### Fixed
 
+- **The iOS note on `onCreateWindow` (WebView and `InAppBrowser`) said a popup keeps its caller's
+  `contentBlockers`**, which stopped being true when a popup started applying its own; it now
+  says so. Its `setSettings` sentence is narrowed to what was measured: on a popup it changes the
+  caller's shared-configuration settings too (`minimumFontSize` and `javaScriptEnabled` were
+  read back from the caller), while its plugin-script settings, `supportZoom` checked, stay its
+  own.
 - **The Android notes on `evaluateJavascript`, `callAsyncJavaScript` and `ContentWorld` now say
   what happens when the page can't answer**: a content world that can't be created on the page
   (inline scripts blocked by its CSP, or no `body`), or a page that navigates away first. Both

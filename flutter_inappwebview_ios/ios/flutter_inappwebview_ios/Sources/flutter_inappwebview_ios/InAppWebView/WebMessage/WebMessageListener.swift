@@ -144,9 +144,10 @@ public class WebMessageListener: FlutterMethodCallDelegate {
             id: map["id"] as! String,
             jsObjectName: map["jsObjectName"] as! String,
             allowedOriginRules: Set(map["allowedOriginRules"] as! [String]),
-            // `windowId` is what namespaces a `window.open` child's worlds from its opener's, the
-            // same way `UserScript.fromMap` does it -- without it two windows asking for the world
-            // "a" would share one scope.
+            // `windowId` namespaces a `window.open` child's worlds from its opener's, the same way
+            // `UserScript.fromMap` does. Since §259 each window has its own controller, so this is
+            // bookkeeping: without the prefix, an opener and a popup with a listener of the same
+            // name in world "a" still each received only their own messages (measured §275).
             contentWorld: WKContentWorld.fromMap(map: map["contentWorld"] as? [String:Any?], windowId: windowId)
         )
     }

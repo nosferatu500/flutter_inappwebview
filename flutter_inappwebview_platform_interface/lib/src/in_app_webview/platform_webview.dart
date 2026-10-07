@@ -382,12 +382,12 @@ Also, this event is not called for POST requests and is not called on the first 
 will have no effect due to a `WKWebView` limitation when creating the new window WebView: it's impossible to return the new `WKWebView`
 with a different `WKWebViewConfiguration` instance (see https://developer.apple.com/documentation/webkit/wkuidelegate/1536907-webview).
 So, these options will be inherited from the caller WebView.
-Also, note that calling [InAppWebViewController.setSettings] method using the controller of the new created WebView,
-it will update also the WebView options of the caller WebView.
+Those of them that [InAppWebViewController.setSettings] can still change, it changes for the caller WebView too when called on the
+new one: they live in the configuration the two share (measured with [InAppWebViewSettings.minimumFontSize] and [InAppWebViewSettings.javaScriptEnabled]).
 The new WebView's scripts are its own, though: it runs its own [initialUserScripts] and not the caller's, and
 [InAppWebViewSettings.supportZoom], [InAppWebViewSettings.useOnLoadResource], [InAppWebViewSettings.useShouldInterceptAjaxRequest],
 [InAppWebViewSettings.useShouldInterceptFetchRequest] and [InAppWebViewSettings.enableViewportScale] apply from its own settings.
-It keeps the caller's [InAppWebViewSettings.contentBlockers].""",
+It applies its own [InAppWebViewSettings.contentBlockers] and none of the caller's.""",
       ),
     ],
   )

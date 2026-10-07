@@ -502,6 +502,11 @@ error.
 
 ### Internal
 
+- **`WebMessageListener.fromMap`'s comment on the `windowId` world prefix is corrected.** It said
+  that without the prefix an opener and a popup asking for the world "a" would share one scope.
+  Since each popup has its own `WKUserContentController`, removing the prefix changed nothing
+  measurable: with a listener of the same name in world "a" in both, each still received only its
+  own messages. The prefix stays, as bookkeeping.
 - **Three opt-in lint rules are enabled:** `avoid_void_async`, `close_sinks`,
   `no_adjacent_strings_in_list`. They had no findings in this package.
 - **The `discarded_futures` lint is enabled.** Its one finding, the headless WebView's
