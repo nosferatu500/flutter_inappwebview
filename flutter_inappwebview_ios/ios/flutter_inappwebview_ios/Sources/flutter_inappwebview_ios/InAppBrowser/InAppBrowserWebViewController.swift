@@ -52,8 +52,15 @@ public class InAppBrowserWebViewController: UIViewController, InAppBrowserDelega
     var menuItems: [InAppBrowserMenuItem] = []
     private var webViewTopConstraint: NSLayoutConstraint?
 
+    /// Sets `view` on every path, as UIKit requires of a `loadView` override. Without a plugin (this
+    /// browser was disposed) there is nothing to build: it gets an empty view, and `viewDidLoad`
+    /// stops at the missing WebView. Before, this returned with no view and `viewDidLoad` read
+    /// `view`, so UIKit loaded it again, recursing until the stack overflowed: measured by dismissing
+    /// a popup over an opener disposed with §266's bug restored (`Runner-2026-10-07-152758`, §281).
+    /// It's `viewDidLoad`'s guard that ends that crash; the empty view alone is untested there.
     public override func loadView() {
         guard let plugin = plugin else {
+            view = UIView()
             return
         }
         
@@ -66,10 +73,11 @@ public class InAppBrowserWebViewController: UIViewController, InAppBrowserDelega
         }
         
         let preWebviewConfiguration = InAppWebView.preWKWebViewConfiguration(settings: webViewSettings)
+        let webView: InAppWebView
         if let wId = windowId, let webViewTransport = plugin.inAppWebViewManager?.windowWebViews[wId] {
             webView = webViewTransport.webView
-            webView!.contextMenu = contextMenu
-            webView!.initialUserScripts = userScripts
+            webView.contextMenu = contextMenu
+            webView.initialUserScripts = userScripts
         } else {
             webView = InAppWebView(id: nil,
                                    plugin: nil,
@@ -78,11 +86,8 @@ public class InAppBrowserWebViewController: UIViewController, InAppBrowserDelega
                                    contextMenu: contextMenu,
                                    userScripts: userScripts)
         }
-        
-        guard let webView = webView else {
-            return
-        }
-        
+        self.webView = webView
+
         webView.inAppBrowserDelegate = self
         webView.id = id
         webView.plugin = plugin
@@ -117,7 +122,11 @@ public class InAppBrowserWebViewController: UIViewController, InAppBrowserDelega
     
     public override func viewDidLoad() {
         super.viewDidLoad()
-        
+        // `loadView` built nothing (disposed): no views to lay out, no load to start.
+        guard webView != nil else {
+            return
+        }
+
         webView?.translatesAutoresizingMaskIntoConstraints = false
         progressBar.translatesAutoresizingMaskIntoConstraints = false
         
@@ -203,8 +212,9 @@ public class InAppBrowserWebViewController: UIViewController, InAppBrowserDelega
     /// Disposes only when this browser is going away. A full-screen presentation over it also makes
     /// it disappear: a popup browser (`windowId`) is presented over its opener, and disposing here
     /// then destroyed an opener that nothing had closed. Dismissing the popup brought the dead
-    /// opener back, UIKit reloaded its view, and `loadView` (which returns early once `plugin` is
-    /// gone) and `viewDidLoad` recursed until the stack overflowed (measured §266).
+    /// opener back, UIKit reloaded its view, and `loadView` (which then returned without a view once
+    /// `plugin` was gone) and `viewDidLoad` recursed until the stack overflowed (measured §266; the
+    /// recursion itself is fixed in §281).
     public override func viewDidDisappear(_ animated: Bool) {
         let goingAway = navigationController?.isBeingDismissed == true || isBeingDismissed || isMovingFromParent
         if !isHidden && goingAway {

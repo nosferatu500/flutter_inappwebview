@@ -521,6 +521,13 @@ error.
 
 ### Internal
 
+- **A disposed `InAppBrowser` whose view UIKit reloads no longer overflows the stack.**
+  `loadView` returned without a view once the browser was disposed, and `viewDidLoad` read `view`,
+  so UIKit loaded it again, recursing. No known path reaches it since the opener-disposal fix, so it
+  was reproduced with that bug restored: dismissing a popup over its disposed opener crashed with
+  the recursion before (1 / 1) and not after (1 / 1). `loadView` now sets an empty view and
+  `viewDidLoad` stops when there is no WebView; without that second guard it crashed instead on an
+  Auto Layout exception from laying out the disposed browser's views
 - **`WebMessageListener.fromMap`'s comment on the `windowId` world prefix is corrected.** It said
   that without the prefix an opener and a popup asking for the world "a" would share one scope.
   Since each popup has its own `WKUserContentController`, removing the prefix changed nothing
