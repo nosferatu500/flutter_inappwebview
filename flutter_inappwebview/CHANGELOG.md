@@ -1157,6 +1157,12 @@ simulator for the first time:**
 
 ### Internal
 
+- **New device test `a popup browser runs its own user scripts, not its opener's`** (in_app_browser
+  group, both platforms): a `windowId` `InAppBrowser` opened from its opener's `window.open` runs
+  its own document-start `initialUserScripts`, not the opener's, and has `window.opener`. On iOS
+  this was pinned only by a throwaway probe since the fix that gave a popup its own script
+  controller, because closing a popup browser crashed until the opener-disposal fix. Undoing either
+  half of that fix fails it on iOS
 - **New device test `loadUrl does not relabel the previous page's events`** (both platforms):
   page A blocks its web process for 1.5 s after it commits, `loadUrl(B)` is called from A's
   `onPageCommitVisible`, and the first event naming B must be B's own `onLoadStart`, with one
