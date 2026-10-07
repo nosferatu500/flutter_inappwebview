@@ -792,6 +792,9 @@ since the `WebsiteDataType.ALL` fix below. It stays **deliberately out of `ALL`*
 
 ### Fixed
 
+**iOS — `onEnterFullscreen` was missed for the first native video fullscreen in the app**: the
+player's window has no scene, and the plugin required it to be in the WebView's.
+
 **iOS — a popup applied its opener's `contentBlockers` and ignored its own** (Android already
 used the popup's own). **Breaking** for an iOS app that relied on a popup inheriting them: a
 popup now applies its own `contentBlockers` and none of its opener's, on both platforms.

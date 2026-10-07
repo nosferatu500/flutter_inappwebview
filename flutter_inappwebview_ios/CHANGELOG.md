@@ -141,6 +141,12 @@ Fourteen WebKit APIs read out of the iOS 26.5 SDK:
 
 ### Fixed
 
+- **`onEnterFullscreen` was missed for the first native video fullscreen in the app.** The plugin
+  detects that fullscreen from the player window's `didBecomeVisibleNotification`, and required the
+  window to be in the WebView's scene. Measured on iOS 26.5: on the app's first presentation the
+  player's window has no scene at all (`nil` when it becomes visible and still 200 ms later), so
+  the event never came, while the video was playing fullscreen. A window with no scene is now
+  accepted; one in another scene still isn't.
 - **A popup applied its opener's `contentBlockers` and ignored its own.** **Breaking** for an app
   that relied on a popup inheriting them. WebKit hands `createWebViewWith` the opener's
   configuration; the opener's compiled rule list was copied into the popup and the popup's own

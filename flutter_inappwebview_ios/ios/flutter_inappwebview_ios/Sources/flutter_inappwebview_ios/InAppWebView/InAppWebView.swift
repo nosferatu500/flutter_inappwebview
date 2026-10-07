@@ -3152,8 +3152,11 @@ public class InAppWebView: WKWebView, UIScrollViewDelegate, WKUIDelegate,
         }
         
         // Check if the fullscreen window is in the same window scene as our WebView (iOS 13+)
-        // This helps ensure the fullscreen event is related to our app/scene
-        if fullscreenWindow.windowScene != myWindow.windowScene {
+        // This helps ensure the fullscreen event is related to our app/scene. A window with no
+        // scene can't belong to another one: on the app's first native video fullscreen the
+        // player's window has none (iOS 26.5: `nil` at the notification and still 200 ms later), so
+        // requiring ours rejected it and `onEnterFullscreen` never came (§277).
+        if let fullscreenScene = fullscreenWindow.windowScene, fullscreenScene != myWindow.windowScene {
             return false
         }
 
