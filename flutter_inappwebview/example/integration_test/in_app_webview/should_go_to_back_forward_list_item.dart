@@ -40,8 +40,12 @@ void shouldGoToBackForwardListItem() {
   ) async {
     final Completer<InAppWebViewController> controllerCompleter =
         Completer<InAppWebViewController>();
-    final StreamController<String> pageLoads =
-        StreamController<String>.broadcast();
+    // Every `onLoadStop`, kept from creation. The test used to listen on a broadcast stream and
+    // subscribe for the first page only after `onWebViewCreated` and a frame; a fast local load
+    // that finished first was dropped and the test hung until its 60 s timeout. Measured (§276):
+    // with 3 s added before that subscription it timed out (1 of 1), the signature of its group-run
+    // failures.
+    final List<String> loadStops = <String>[];
     final List<WebHistoryItem> seen = <WebHistoryItem>[];
     final List<bool> instantBack = <bool>[];
     // Flipped between phases; the handler itself is registered once, at creation, because that is
@@ -64,7 +68,7 @@ void shouldGoToBackForwardListItem() {
             controllerCompleter.complete(controller);
           },
           onLoadStop: (controller, url) {
-            pageLoads.add(url!.toString());
+            loadStops.add(url.toString());
           },
         ),
       ),
@@ -73,13 +77,14 @@ void shouldGoToBackForwardListItem() {
     final InAppWebViewController controller = await controllerCompleter.future;
     await tester.pump();
 
-    Future<String> waitForUrl(String expectedUrl) async {
-      await for (final url in pageLoads.stream) {
-        if (url == expectedUrl) {
-          return url;
+    Future<void> waitForLoadStop(String url) async {
+      final elapsed = Stopwatch()..start();
+      while (!loadStops.contains(url)) {
+        if (elapsed.elapsed > const Duration(seconds: 20)) {
+          fail('no onLoadStop for $url in 20 s; onLoadStop so far: $loadStops');
         }
+        await Future<void>.delayed(const Duration(milliseconds: 50));
       }
-      throw Exception('Stream closed without receiving $expectedUrl');
     }
 
     /// Polls `getUrl()` instead of waiting for `onLoadStop`.
@@ -97,12 +102,9 @@ void shouldGoToBackForwardListItem() {
       }
     }
 
-    await waitForUrl(urlA.toString());
-
-    // Subscribe before navigating, or the load can complete before the listener attaches.
-    var loadFuture = waitForUrl(urlB.toString());
+    await waitForLoadStop(urlA.toString());
     await controller.loadUrl(urlRequest: URLRequest(url: urlB));
-    await loadFuture;
+    await waitForLoadStop(urlB.toString());
     expect(await controller.canGoBack(), isTrue);
 
     // ---- 1. page-initiated back, CANCEL: does not happen ----
@@ -182,7 +184,5 @@ void shouldGoToBackForwardListItem() {
     // under memory pressure is exactly where that could go either way. Recorded so a later reader
     // can see it was considered rather than forgotten.
     expect(instantBack, hasLength(seen.length));
-
-    await pageLoads.close();
   }, skip: shouldSkip);
 }

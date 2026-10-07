@@ -57,6 +57,27 @@ void videoPlaybackPolicy() {
       videoTestBase64 = base64Encode(const Utf8Encoder().convert(videoTest));
     });
 
+    // Waits for the native fullscreen player, and on a timeout fails with the video's own state, so
+    // a hang says whether the video never started or played without going fullscreen (§276: the
+    // two fullscreen tests waited without a limit; one hung a run for 17 minutes).
+    Future<void> expectEntersFullscreen(
+      InAppWebViewController controller,
+      Completer<void> onEnterFullscreen,
+    ) async {
+      try {
+        await onEnterFullscreen.future.timeout(const Duration(seconds: 15));
+      } on TimeoutException {
+        final state = await controller.evaluateJavascript(
+          source:
+              "(function() { var v = document.getElementById('video'); return v ? JSON.stringify({"
+              "paused: v.paused, readyState: v.readyState, currentTime: v.currentTime, "
+              "displayingFullscreen: v.webkitDisplayingFullscreen, "
+              "error: v.error ? v.error.code : null}) : 'no video element'; })()",
+        );
+        fail('onEnterFullscreen did not come in 15 s; the video: $state');
+      }
+    }
+
     skippableTestWidgets('Auto media playback', (WidgetTester tester) async {
       Completer<InAppWebViewController> controllerCompleter =
           Completer<InAppWebViewController>();
@@ -214,11 +235,15 @@ void videoPlaybackPolicy() {
           ),
         );
 
-        await pageLoaded.future;
+        final controller = await controllerCompleter.future;
+        await pageLoaded.future.timeout(
+          const Duration(seconds: 15),
+          onTimeout: () => fail('the video page did not load in 15 s'),
+        );
 
         await tester.pump();
 
-        await expectLater(onEnterFullscreenCompleter.future, completes);
+        await expectEntersFullscreen(controller, onEnterFullscreenCompleter);
       },
       skip: shouldSkipTest3,
     );
@@ -270,11 +295,16 @@ void videoPlaybackPolicy() {
       );
 
       InAppWebViewController controller = await controllerCompleter.future;
-      await pageLoaded.future;
+      // Each wait fails at its own step, so a hang names where it was (§276: this test once timed
+      // out at 60 s on iOS with nothing to say which step it was in).
+      await pageLoaded.future.timeout(
+        const Duration(seconds: 15),
+        onTimeout: () => fail('the video page did not load in 15 s'),
+      );
       await tester.pump();
 
       // Wait for the video to actually BE fullscreen instead of sleeping a fixed 2s and hoping.
-      await expectLater(onEnterFullscreenCompleter.future, completes);
+      await expectEntersFullscreen(controller, onEnterFullscreenCompleter);
 
       // The native player ignores webkitExitFullscreen() while its presentation animation is still
       // running — measured on iOS 17.5 and 26.5, a single call fires nothing and the element is
@@ -286,7 +316,12 @@ void videoPlaybackPolicy() {
         await Future.delayed(const Duration(milliseconds: 500));
       }
 
-      await expectLater(onExitFullscreenCompleter.future, completes);
+      if (!onExitFullscreenCompleter.isCompleted) {
+        fail(
+          'onExitFullscreen did not come after 40 exitFullscreen() calls '
+          '500 ms apart',
+        );
+      }
       expect(
         await controller.evaluateJavascript(
           source: 'document.getElementById("video").webkitDisplayingFullscreen',

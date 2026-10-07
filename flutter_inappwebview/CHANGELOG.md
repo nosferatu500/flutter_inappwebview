@@ -1149,6 +1149,15 @@ simulator for the first time:**
 
 ### Internal
 
+- **Two iOS device tests that sometimes timed out in group runs now fail at the step that hangs.**
+  `shouldGoToBackForwardListItem can veto a back navigation` subscribed to `onLoadStop` for its
+  first page only after `onWebViewCreated`, so a fast local load could finish first and the test
+  waited until its 60 s timeout; measured, adding 3 s before that subscription timed it out. It now
+  records every `onLoadStop` from creation and waits at most 20 s. `exit fullscreen event` and
+  `Video plays fullscreen when allowsInlineMediaPlayback is false` (which had no time limit at all
+  and once held a run for 17 minutes) wait at most 15 s for the page and for `onEnterFullscreen`,
+  and fail with the video's state: paused, ready state, current time, whether it is displaying
+  fullscreen, and its error.
 - **The popup device test `a popup WebView keeps its opener's content blockers and uses its own
   settings` is now two tests:** `a popup WebView applies its own content blockers, not its
   opener's` (Android and iOS; it failed on iOS before the fix) and `a popup WebView uses its own
