@@ -1176,6 +1176,11 @@ simulator for the first time:**
 
 ### Internal
 
+- **`a malformed proxy rule fails as a named error` no longer fails on iOS**: it tests androidx's
+  validation and the Pigeon error path, and on iOS it called the Android-only
+  `WebViewFeature.isFeatureSupported` first (`UnimplementedError`). It runs on Android only now.
+  On iOS the same six inputs were measured: `setProxyOverride` returns normally and drops the rules
+  it can't parse
 - **New device test `a popup WebView's content blockers apply to its first page`** (both
   platforms): the popup's own `BLOCK` rule on its first document must stop it (an error, no
   `onLoadStop`). On iOS that pins the wait before a popup's first navigation until its own rule

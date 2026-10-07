@@ -19,10 +19,18 @@ part of 'main.dart';
 /// Every input below was measured producing `channel-error` against the unfixed code. They are kept
 /// as a set rather than reduced to one because they enter through three different builder methods,
 /// and a fix that guarded only the rule loop would still pass with a single `addProxyRule` case.
+///
+/// Android only. The test checks androidx's validation and the Pigeon error path, and on iOS it
+/// failed before reaching either, calling the Android-only `WebViewFeature.isFeatureSupported`
+/// (`UnimplementedError`). iOS has no such error to check: its `setProxyOverride` returned normally
+/// for all six inputs, dropping the rules it can't parse (`ProxyRule.toProxyConfiguration()` returns
+/// nil; `bypassRules` and `directs` don't exist in iOS's `ProxySettings`). Measured §287; filed.
 void malformedRules() {
-  final shouldSkip = !ProxyController.isMethodSupported(
-    PlatformProxyControllerMethod.setProxyOverride,
-  );
+  final shouldSkip =
+      defaultTargetPlatform != TargetPlatform.android ||
+      !ProxyController.isMethodSupported(
+        PlatformProxyControllerMethod.setProxyOverride,
+      );
 
   /// The failure a caller should see: something that names the plugin, with a message.
   final Matcher failsWithNamedError = throwsA(
