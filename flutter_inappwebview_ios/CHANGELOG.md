@@ -141,6 +141,16 @@ Fourteen WebKit APIs read out of the iOS 26.5 SDK:
 
 ### Fixed
 
+- **A popup's `setSettings` skipped a value equal to its own default while it held an inherited
+  one.** A popup shares its opener's `WKPreferences`, so it inherits the opener's values, while its
+  stored settings hold its own defaults; `setSettings` compared the request against those and did
+  nothing when they matched. Measured: a popup inheriting `javaScriptCanOpenWindowsAutomatically:
+  true` kept it after `setSettings(false)`. The eight settings backed by `WKPreferences`
+  (`javaScriptCanOpenWindowsAutomatically`, `javaScriptEnabled`, `minimumFontSize`,
+  `allowFileAccessFromFileURLs`, `isFraudulentWebsiteWarningEnabled`,
+  `isSiteSpecificQuirksModeEnabled`, `isTextInteractionEnabled`, `shouldPrintBackgrounds`) now
+  compare against the live value, which `getSettings` already reported. As before, the opener
+  changes with them: the object is shared
 - **`contentBlockers` that WebKit can't compile left a blank WebView and no sign of why.** **A
   behaviour change**: such a WebView now refuses every navigation and reports it. Measured with a
   `urlFilter` of `(alpha|beta)` (WebKit's rule regex has no alternation): an `InAppWebView` sent

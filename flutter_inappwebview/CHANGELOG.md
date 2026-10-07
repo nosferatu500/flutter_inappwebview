@@ -792,6 +792,10 @@ since the `WebsiteDataType.ALL` fix below. It stays **deliberately out of `ALL`*
 
 ### Fixed
 
+**iOS — a popup's `setSettings` could skip a setting it had inherited from its opener**: a popup
+inheriting `javaScriptCanOpenWindowsAutomatically: true` kept it after `setSettings(false)`, because
+the request was compared with the popup's stored default instead of the live value.
+
 **iOS — `contentBlockers` that WebKit can't compile left a blank WebView and no sign of why**
 (an `InAppBrowser` didn't even send `onBrowserCreated`; a popup loaded without the rules). **A
 behaviour change**: the WebView now loads nothing and sends `onReceivedError` for the page, its

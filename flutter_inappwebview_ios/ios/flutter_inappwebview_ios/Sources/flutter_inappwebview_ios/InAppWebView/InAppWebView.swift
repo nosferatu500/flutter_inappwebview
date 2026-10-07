@@ -1493,16 +1493,21 @@ public class InAppWebView: WKWebView, UIScrollViewDelegate, WKUIDelegate,
             allowsBackForwardNavigationGestures = newSettings.allowsBackForwardNavigationGestures
         }
         
-        if newSettingsMap["javaScriptCanOpenWindowsAutomatically"] != nil && settings?.javaScriptCanOpenWindowsAutomatically != newSettings.javaScriptCanOpenWindowsAutomatically {
+        // The settings backed by `configuration.preferences` (and `javaScriptEnabled`'s
+        // `defaultWebpagePreferences` half) compare against the live value, as `getSettings` reads
+        // them, not the stored one: a popup shares its opener's preferences object and inherits its
+        // values while its stored settings hold its own defaults, so a request equal to the stored
+        // default was skipped and the inherited value stayed (measured §275, fixed §286).
+        if newSettingsMap["javaScriptCanOpenWindowsAutomatically"] != nil && configuration.preferences.javaScriptCanOpenWindowsAutomatically != newSettings.javaScriptCanOpenWindowsAutomatically {
             configuration.preferences.javaScriptCanOpenWindowsAutomatically = newSettings.javaScriptCanOpenWindowsAutomatically
         }
         
-        if newSettingsMap["minimumFontSize"] != nil && settings?.minimumFontSize != newSettings.minimumFontSize {
+        if newSettingsMap["minimumFontSize"] != nil && configuration.preferences.minimumFontSize != CGFloat(newSettings.minimumFontSize) {
             configuration.preferences.minimumFontSize = CGFloat(newSettings.minimumFontSize)
         }
         
         
-        if newSettingsMap["isFraudulentWebsiteWarningEnabled"] != nil && settings?.isFraudulentWebsiteWarningEnabled != newSettings.isFraudulentWebsiteWarningEnabled {
+        if newSettingsMap["isFraudulentWebsiteWarningEnabled"] != nil && configuration.preferences.isFraudulentWebsiteWarningEnabled != newSettings.isFraudulentWebsiteWarningEnabled {
             configuration.preferences.isFraudulentWebsiteWarningEnabled = newSettings.isFraudulentWebsiteWarningEnabled
         }
         if newSettingsMap["preferredContentMode"] != nil && settings?.preferredContentMode != newSettings.preferredContentMode {
@@ -1561,11 +1566,11 @@ public class InAppWebView: WKWebView, UIScrollViewDelegate, WKUIDelegate,
         }
 
         
-        if newSettingsMap["allowFileAccessFromFileURLs"] != nil && settings?.allowFileAccessFromFileURLs != newSettings.allowFileAccessFromFileURLs {
+        if newSettingsMap["allowFileAccessFromFileURLs"] != nil && configuration.preferences.value(forKey: "allowFileAccessFromFileURLs") as? Bool != newSettings.allowFileAccessFromFileURLs {
             configuration.preferences.setValue(newSettings.allowFileAccessFromFileURLs, forKey: "allowFileAccessFromFileURLs")
         }
         
-        if newSettingsMap["javaScriptEnabled"] != nil && settings?.javaScriptEnabled != newSettings.javaScriptEnabled {
+        if newSettingsMap["javaScriptEnabled"] != nil && configuration.preferences.javaScriptEnabled != newSettings.javaScriptEnabled {
             configuration.preferences.javaScriptEnabled = newSettings.javaScriptEnabled
         }
         
@@ -1577,7 +1582,7 @@ public class InAppWebView: WKWebView, UIScrollViewDelegate, WKUIDelegate,
             pageZoom = CGFloat(newSettings.pageZoom)
         }
 
-        if newSettingsMap["javaScriptEnabled"] != nil && settings?.javaScriptEnabled != newSettings.javaScriptEnabled {
+        if newSettingsMap["javaScriptEnabled"] != nil && configuration.defaultWebpagePreferences.allowsContentJavaScript != newSettings.javaScriptEnabled {
             configuration.defaultWebpagePreferences.allowsContentJavaScript = newSettings.javaScriptEnabled
         }
 
@@ -1609,7 +1614,7 @@ public class InAppWebView: WKWebView, UIScrollViewDelegate, WKUIDelegate,
             }
         }
         
-        if newSettingsMap["isTextInteractionEnabled"] != nil && settings?.isTextInteractionEnabled != newSettings.isTextInteractionEnabled {
+        if newSettingsMap["isTextInteractionEnabled"] != nil && configuration.preferences.isTextInteractionEnabled != newSettings.isTextInteractionEnabled {
             configuration.preferences.isTextInteractionEnabled = newSettings.isTextInteractionEnabled
         }
         if newSettingsMap["underPageBackgroundColor"] != nil, settings?.underPageBackgroundColor != newSettings.underPageBackgroundColor,
@@ -1618,7 +1623,7 @@ public class InAppWebView: WKWebView, UIScrollViewDelegate, WKUIDelegate,
         }
 
         if #available(iOS 15.4, *) {
-            if newSettingsMap["isSiteSpecificQuirksModeEnabled"] != nil, settings?.isSiteSpecificQuirksModeEnabled != newSettings.isSiteSpecificQuirksModeEnabled {
+            if newSettingsMap["isSiteSpecificQuirksModeEnabled"] != nil, configuration.preferences.isSiteSpecificQuirksModeEnabled != newSettings.isSiteSpecificQuirksModeEnabled {
                 configuration.preferences.isSiteSpecificQuirksModeEnabled = newSettings.isSiteSpecificQuirksModeEnabled
             }
         }
@@ -1638,7 +1643,7 @@ public class InAppWebView: WKWebView, UIScrollViewDelegate, WKUIDelegate,
             if newSettingsMap["isInspectable"] != nil, settings?.isInspectable != newSettings.isInspectable {
                 isInspectable = newSettings.isInspectable
             }
-            if newSettingsMap["shouldPrintBackgrounds"] != nil, settings?.shouldPrintBackgrounds != newSettings.shouldPrintBackgrounds {
+            if newSettingsMap["shouldPrintBackgrounds"] != nil, configuration.preferences.shouldPrintBackgrounds != newSettings.shouldPrintBackgrounds {
                 configuration.preferences.shouldPrintBackgrounds = newSettings.shouldPrintBackgrounds
             }
         }

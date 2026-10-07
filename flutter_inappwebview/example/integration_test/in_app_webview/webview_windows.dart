@@ -577,6 +577,36 @@ void webViewWindows() {
       skip: shouldSkipTest2 || defaultTargetPlatform != TargetPlatform.iOS,
     );
 
+    // A popup's setSettings applies a value it inherited. On iOS a popup shares its opener's
+    // preferences object, so it inherits `javaScriptCanOpenWindowsAutomatically: true`, while its
+    // stored settings hold the default `false`; setSettings compared against those and skipped the
+    // request (measured §275). Now it compares against the live value (§286).
+    skippableTestWidgets(
+      "a popup WebView's setSettings applies a value it inherited",
+      (WidgetTester tester) async {
+        final (:opener, :popup) = await openPopup(tester);
+        Future<bool?> canOpen(InAppWebViewController c) async =>
+            (await c.getSettings())?.javaScriptCanOpenWindowsAutomatically;
+        final isIOS = defaultTargetPlatform == TargetPlatform.iOS;
+        expect(
+          await canOpen(popup),
+          isIOS,
+          reason:
+              'the control: an iOS popup inherits its opener\'s true; an Android '
+              'popup has its own default',
+        );
+        await popup.setSettings(
+          settings: InAppWebViewSettings(
+            javaScriptCanOpenWindowsAutomatically: false,
+          ),
+        );
+        expect(await canOpen(popup), false);
+        // iOS: the preferences object is the opener's too (§275). Android: separate.
+        expect(await canOpen(opener), !isIOS);
+      },
+      skip: shouldSkipTest2,
+    );
+
     // iOS only: the popup's plugin scripts follow its own settings now that it has its own
     // `WKUserContentController` (§259); `supportZoom: false` adds a viewport meta on iOS only.
     skippableTestWidgets(
