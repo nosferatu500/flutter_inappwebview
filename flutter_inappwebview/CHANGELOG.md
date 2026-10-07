@@ -792,6 +792,10 @@ since the `WebsiteDataType.ALL` fix below. It stays **deliberately out of `ALL`*
 
 ### Fixed
 
+**iOS — a popup applied its opener's `contentBlockers` and ignored its own** (Android already
+used the popup's own). **Breaking** for an iOS app that relied on a popup inheriting them: a
+popup now applies its own `contentBlockers` and none of its opener's, on both platforms.
+
 **Android — an `AT_DOCUMENT_END` user script in a content world ran while the page was still
 loading**, before the page had even finished parsing, instead of when the same script in the page
 world runs (at `load`). It now runs at the same point.
@@ -1145,6 +1149,11 @@ simulator for the first time:**
 
 ### Internal
 
+- **The popup device test `a popup WebView keeps its opener's content blockers and uses its own
+  settings` is now two tests:** `a popup WebView applies its own content blockers, not its
+  opener's` (Android and iOS; it failed on iOS before the fix) and `a popup WebView uses its own
+  settings` (iOS). Their shared popup helper fails within 20 s naming the step that didn't come
+  (the opener's `onCreateWindow`, or the popup's load).
 - **New device test, `a document-end script in a content world runs when one in the page world
   does`** (Android and iOS): both scripts record the page's `readyState` into its `<html>` element,
   on a page whose image Android holds back 2 s.

@@ -2873,15 +2873,12 @@ public class InAppWebView: WKWebView, UIScrollViewDelegate, WKUIDelegate,
         // user scripts and never its own: anything added to it ran here and in every other popup
         // too. A fresh controller makes the popup's scripts and handlers its own; `prepare()`
         // registers them from the popup's settings before its first navigation is answered (those
-        // wait for `windowCreated`). `window.opener` still works (measured). The rule list is the
-        // one thing carried over, so a popup keeps its opener's content blockers as before.
+        // wait for `windowCreated`). `window.opener` still works (measured). Nothing is carried
+        // over, content blockers included: the popup compiles its own before its first navigation
+        // is answered (`releaseWindowAfterContentBlockers`, §274).
         configuration.userContentController = WKUserContentController()
-        if let contentRuleList = contentRuleList {
-            configuration.userContentController.add(contentRuleList)
-        }
         let windowWebView = InAppWebView(id: nil, plugin: nil, frame: self.bounds, configuration: configuration, contextMenu: nil)
         windowWebView.windowId = windowId
-        windowWebView.contentRuleList = contentRuleList
 
         let webViewTransport = WebViewTransport(
             webView: windowWebView,
@@ -3861,6 +3858,35 @@ public class InAppWebView: WKWebView, UIScrollViewDelegate, WKUIDelegate,
             callback()
         }
         windowBeforeCreatedCallbacks.removeAll()
+    }
+
+    /// Opens a popup (`windowId`) once its own `contentBlockers` are in: a popup applies its own,
+    /// not its opener's, as on Android (decision 2026-10-07, §274). Compiling is asynchronous, so
+    /// `windowCreated` stays false until then, and the first navigation's callbacks wait in
+    /// `windowBeforeCreatedCallbacks` (measured: 2-20 ms). A compile error is printed and the popup
+    /// opens without them, rather than never.
+    public func releaseWindowAfterContentBlockers() {
+        guard let contentBlockers = settings?.contentBlockers, contentBlockers.count > 0,
+              let jsonData = try? JSONSerialization.data(withJSONObject: contentBlockers, options: []) else {
+            windowCreated = true
+            runWindowBeforeCreatedCallbacks()
+            return
+        }
+        WKContentRuleListStore.default().compileContentRuleList(
+            forIdentifier: "ContentBlockingRules",
+            encodedContentRuleList: String(data: jsonData, encoding: .utf8)) { [weak self] (contentRuleList, error) in
+                guard let self = self else {
+                    return
+                }
+                if let error = error {
+                    print(error.localizedDescription)
+                } else if let contentRuleList = contentRuleList {
+                    self.configuration.userContentController.add(contentRuleList)
+                    self.contentRuleList = contentRuleList
+                }
+                self.windowCreated = true
+                self.runWindowBeforeCreatedCallbacks()
+        }
     }
     
     public func dispose() {

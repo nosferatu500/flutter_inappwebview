@@ -141,6 +141,14 @@ Fourteen WebKit APIs read out of the iOS 26.5 SDK:
 
 ### Fixed
 
+- **A popup applied its opener's `contentBlockers` and ignored its own.** **Breaking** for an app
+  that relied on a popup inheriting them. WebKit hands `createWebViewWith` the opener's
+  configuration; the opener's compiled rule list was copied into the popup and the popup's own
+  setting was never compiled, though `getSettings()` reported it. Measured on iOS 26.5: in a
+  popup the opener's rule applied and the popup's own didn't, the opposite of Android. An
+  `InAppWebView(windowId:)` popup now applies its own, and nothing from its opener, as on
+  Android; its first navigation waits until they're compiled (measured: 2–20 ms). A popup
+  `InAppBrowser` takes the same path (not measured with content blockers).
 - **A WebView removed before it was ever drawn stayed alive, its page running.** The engine
   releases a platform view, and with it the native WebView, only while it composites a frame that
   has, or just had, a platform view. So a WebView removed within a frame of being added lived on

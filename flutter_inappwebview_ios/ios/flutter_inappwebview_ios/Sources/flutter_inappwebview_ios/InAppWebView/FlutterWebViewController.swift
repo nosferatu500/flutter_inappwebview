@@ -83,7 +83,10 @@ public class FlutterWebViewController: NSObject, @MainActor FlutterPlatformView,
 
         webView!.settings = settings
         webView!.prepare()
-        webView!.windowCreated = true
+        // A popup is created in `makeInitialLoad`, once its own content blockers are in.
+        if windowId == nil {
+            webView!.windowCreated = true
+        }
     }
     
     public func webView() -> InAppWebView? {
@@ -141,7 +144,7 @@ public class FlutterWebViewController: NSObject, @MainActor FlutterPlatformView,
             load(initialUrlRequest: initialUrlRequest, initialFile: initialFile, initialData: initialData)
         }
         else if windowId != nil {
-            webView.runWindowBeforeCreatedCallbacks()
+            webView.releaseWindowAfterContentBlockers()
         }
     }
     

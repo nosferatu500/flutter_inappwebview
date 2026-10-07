@@ -273,90 +273,180 @@ void webViewWindows() {
       await expectScriptsRanOnce('after a reload');
     }, skip: shouldSkipTest2);
 
-    // iOS only: what a popup still takes from its opener, now that it has its own
-    // `WKUserContentController` (§259). WebKit's controller has no getter for its rule lists, so the
-    // opener's compiled content blockers are copied across at `createWebViewWith`; and the plugin
-    // scripts follow the popup's own settings, `supportZoom: false` being the one checked here.
-    skippableTestWidgets(
-      'a popup WebView keeps its opener\'s content blockers and uses its own settings',
-      (WidgetTester tester) async {
-        final Completer<int> windowIdCompleter = Completer<int>();
-        final Completer<InAppWebViewController> popupLoaded =
-            Completer<InAppWebViewController>();
+    // A popup is mounted as `InAppWebView(windowId:)` once its opener's `onCreateWindow` has
+    // answered true. Returns both controllers after the popup's first load.
+    Future<({InAppWebViewController opener, InAppWebViewController popup})>
+    openPopup(
+      WidgetTester tester, {
+      InAppWebViewSettings? openerSettings,
+      InAppWebViewSettings? popupSettings,
+    }) async {
+      final Completer<int> windowIdCompleter = Completer<int>();
+      final Completer<InAppWebViewController> popupLoaded =
+          Completer<InAppWebViewController>();
+      final Completer<InAppWebViewController> openerCreated =
+          Completer<InAppWebViewController>();
+      openerSettings ??= InAppWebViewSettings();
+      openerSettings.javaScriptCanOpenWindowsAutomatically = true;
+      openerSettings.supportMultipleWindows = true;
 
-        Widget tree({int? windowId}) => Directionality(
-          textDirection: TextDirection.ltr,
-          child: Column(
-            children: [
+      Widget tree({int? windowId}) => Directionality(
+        textDirection: TextDirection.ltr,
+        child: Column(
+          children: [
+            Expanded(
+              child: InAppWebView(
+                key: const ValueKey('parent'),
+                initialData: InAppWebViewInitialData(
+                  data:
+                      '<html><body>parent<script>window.open('
+                      '"$TEST_URL_EXAMPLE");</script></body></html>',
+                  baseUrl: TEST_URL_EXAMPLE,
+                ),
+                initialSettings: openerSettings,
+                onWebViewCreated: (controller) {
+                  if (!openerCreated.isCompleted) {
+                    openerCreated.complete(controller);
+                  }
+                },
+                onCreateWindow: (controller, createNavigationAction) async {
+                  if (!windowIdCompleter.isCompleted) {
+                    windowIdCompleter.complete(createNavigationAction.windowId);
+                  }
+                  return true;
+                },
+              ),
+            ),
+            if (windowId != null)
               Expanded(
                 child: InAppWebView(
-                  key: const ValueKey('parent'),
-                  initialData: InAppWebViewInitialData(
-                    data:
-                        '<html><body>parent<script>window.open('
-                        '"$TEST_URL_EXAMPLE");</script></body></html>',
-                    baseUrl: TEST_URL_EXAMPLE,
-                  ),
-                  initialSettings: InAppWebViewSettings(
-                    javaScriptCanOpenWindowsAutomatically: true,
-                    supportMultipleWindows: true,
-                    contentBlockers: [
-                      ContentBlocker(
-                        trigger: ContentBlockerTrigger(urlFilter: ".*"),
-                        action: ContentBlockerAction(
-                          type: ContentBlockerActionType.CSS_DISPLAY_NONE,
-                          selector: "#opener-blocked",
-                        ),
-                      ),
-                    ],
-                  ),
-                  onCreateWindow: (controller, createNavigationAction) async {
-                    if (!windowIdCompleter.isCompleted) {
-                      windowIdCompleter.complete(
-                        createNavigationAction.windowId,
-                      );
+                  key: const ValueKey('popup'),
+                  windowId: windowId,
+                  initialSettings: popupSettings,
+                  onLoadStop: (controller, url) {
+                    if (url?.scheme == "about") return;
+                    if (!popupLoaded.isCompleted) {
+                      popupLoaded.complete(controller);
                     }
-                    return true;
                   },
                 ),
               ),
-              if (windowId != null)
-                Expanded(
-                  child: InAppWebView(
-                    key: const ValueKey('popup'),
-                    windowId: windowId,
-                    initialSettings: InAppWebViewSettings(supportZoom: false),
-                    onLoadStop: (controller, url) {
-                      if (url?.scheme == "about") return;
-                      if (!popupLoaded.isCompleted) {
-                        popupLoaded.complete(controller);
-                      }
-                    },
-                  ),
-                ),
-            ],
+          ],
+        ),
+      );
+
+      await tester.pumpWidget(tree());
+      final windowId = await windowIdCompleter.future.timeout(
+        const Duration(seconds: 20),
+        onTimeout: () => fail("the opener's onCreateWindow never came (20 s)"),
+      );
+      await tester.pumpWidget(tree(windowId: windowId));
+      await _pumpFrames(tester);
+      final popup = await popupLoaded.future.timeout(
+        const Duration(seconds: 20),
+        onTimeout: () =>
+            fail('the popup (windowId $windowId) never loaded (20 s)'),
+      );
+      return (opener: await openerCreated.future, popup: popup);
+    }
+
+    ContentBlocker hide(String selector) => ContentBlocker(
+      trigger: ContentBlockerTrigger(urlFilter: ".*"),
+      action: ContentBlockerAction(
+        type: ContentBlockerActionType.CSS_DISPLAY_NONE,
+        selector: selector,
+      ),
+    );
+
+    Future<Object?> displayOf(InAppWebViewController webView, String id) =>
+        webView.evaluateJavascript(
+          source:
+              "document.body.insertAdjacentHTML('beforeend', "
+              "'<div id=\"$id\">x</div>'); "
+              "getComputedStyle(document.getElementById('$id')).display",
+        );
+
+    // A popup applies its own `contentBlockers`, not its opener's, on both platforms. iOS used to
+    // do the opposite: WebKit's controller has no getter for its rule lists, so `createWebViewWith`
+    // copied the opener's compiled list into the popup, and the popup's own were never compiled
+    // (measured §274, Android already as here). The popup's first navigation now waits for its
+    // own list (2-20 ms measured). Every WebView compiles its list under one identifier, and the
+    // opener keeps its own rule after the popup's is compiled.
+    skippableTestWidgets(
+      'a popup WebView applies its own content blockers, not its opener\'s',
+      (WidgetTester tester) async {
+        final (:opener, :popup) = await openPopup(
+          tester,
+          openerSettings: InAppWebViewSettings(
+            contentBlockers: [hide('#opener-blocked')],
+          ),
+          popupSettings: InAppWebViewSettings(
+            contentBlockers: [hide('#popup-blocked')],
           ),
         );
-
-        await tester.pumpWidget(tree());
-        final windowId = await windowIdCompleter.future.timeout(
-          const Duration(seconds: 30),
-        );
-        await tester.pumpWidget(tree(windowId: windowId));
-        await _pumpFrames(tester);
-        final popup = await popupLoaded.future.timeout(
-          const Duration(seconds: 30),
-        );
-
         expect(
-          await popup.evaluateJavascript(
-            source:
-                "document.body.insertAdjacentHTML('beforeend', "
-                "'<div id=\"opener-blocked\">x</div>'); "
-                "getComputedStyle(document.getElementById('opener-blocked')).display",
-          ),
+          await displayOf(popup, 'unblocked'),
+          'block',
+          reason: 'the control: an element no rule names is shown',
+        );
+        expect(
+          await displayOf(popup, 'popup-blocked'),
           'none',
-          reason: "the opener's css-display-none content blocker should apply",
+          reason:
+              "the popup's own css-display-none content blocker should apply",
+        );
+        expect(
+          await displayOf(popup, 'opener-blocked'),
+          'block',
+          reason: "the opener's content blocker should not apply in the popup",
+        );
+        expect(
+          await displayOf(opener, 'opener-blocked'),
+          'none',
+          reason: "the opener's own content blocker should still apply to it",
+        );
+        expect(
+          await displayOf(opener, 'popup-blocked'),
+          'block',
+          reason: "the popup's content blocker should not apply to the opener",
+        );
+      },
+      skip: shouldSkipTest2,
+    );
+
+    // The case the copy in `createWebViewWith` used to cover: a popup with no content blockers of
+    // its own got its opener's on iOS. Now it gets none, as on Android (§274).
+    skippableTestWidgets(
+      'a popup WebView without content blockers doesn\'t take its opener\'s',
+      (WidgetTester tester) async {
+        final (:opener, :popup) = await openPopup(
+          tester,
+          openerSettings: InAppWebViewSettings(
+            contentBlockers: [hide('#opener-blocked')],
+          ),
+        );
+        expect(
+          await displayOf(opener, 'opener-blocked'),
+          'none',
+          reason: "the control: the opener's content blocker applies to it",
+        );
+        expect(
+          await displayOf(popup, 'opener-blocked'),
+          'block',
+          reason: "the opener's content blocker should not apply in the popup",
+        );
+      },
+      skip: shouldSkipTest2,
+    );
+
+    // iOS only: the popup's plugin scripts follow its own settings now that it has its own
+    // `WKUserContentController` (§259); `supportZoom: false` adds a viewport meta on iOS only.
+    skippableTestWidgets(
+      'a popup WebView uses its own settings',
+      (WidgetTester tester) async {
+        final (opener: _, :popup) = await openPopup(
+          tester,
+          popupSettings: InAppWebViewSettings(supportZoom: false),
         );
         expect(
           await popup.evaluateJavascript(

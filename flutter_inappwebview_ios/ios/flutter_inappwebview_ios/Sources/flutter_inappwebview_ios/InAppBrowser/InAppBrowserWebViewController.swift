@@ -102,7 +102,10 @@ public class InAppBrowserWebViewController: UIViewController, InAppBrowserDelega
         findInteractionController.prepare()
         
         prepareWebView()
-        webView.windowCreated = true
+        // A popup browser is created below, once its own content blockers are in.
+        if windowId == nil {
+            webView.windowCreated = true
+        }
         
         progressBar = UIProgressView(progressViewStyle: .bar)
         
@@ -131,7 +134,7 @@ public class InAppBrowserWebViewController: UIViewController, InAppBrowserDelega
         
         if windowId != nil {
             channelDelegate?.onBrowserCreated()
-            webView?.runWindowBeforeCreatedCallbacks()
+            webView?.releaseWindowAfterContentBlockers()
         } else {
             if let contentBlockers = webView?.settings?.contentBlockers, contentBlockers.count > 0 {
                 do {
