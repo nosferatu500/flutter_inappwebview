@@ -792,6 +792,10 @@ since the `WebsiteDataType.ALL` fix below. It stays **deliberately out of `ALL`*
 
 ### Fixed
 
+**iOS — a WebView unmounted in the frame that mounted it kept running** until a later frame
+composited another platform view: its widget never learned the engine's view id to dispose it by.
+It now disposes by a token of its own.
+
 **A rebuilt `InAppWebView` kept calling the first build's callbacks** (both platforms): after a
 parent rebuild passed new callbacks, events still went to the first build's closures, and one the
 rebuild added never ran. Events now go to the latest callbacks. A callback that switches on a

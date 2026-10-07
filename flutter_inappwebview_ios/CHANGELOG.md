@@ -141,6 +141,14 @@ Fourteen WebKit APIs read out of the iOS 26.5 SDK:
 
 ### Fixed
 
+- **A WebView unmounted in the frame that mounted it kept running.** The early native dispose
+  (below) was keyed by the engine's platform view id, which the widget only learns from
+  `onPlatformViewCreated`, and a widget unmounted before that, e.g. under a `LayoutBuilder` laid
+  out twice in one frame, never gets it. Its WebView then lived, page running, until a later frame
+  composited another platform view (measured: 3.6 s, released when a second WebView appeared; a
+  page writing a cookie every 100 ms still changed it a second later). The widget now makes its own
+  token, sends it in `creationParams` and disposes by it. Ordinary mount/unmount timing never
+  reached this (0 of 80 tries, six WebViews created at once among them)
 - **A rebuilt `InAppWebView` kept calling the first build's callbacks.** The controller read its
   callbacks from the params of the widget that created it, so after a parent rebuild passed new
   ones (a closure over new state, say) events still went to the old closures, and a callback the

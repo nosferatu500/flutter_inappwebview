@@ -18,9 +18,12 @@ public class InAppWebViewManager: ChannelDelegate {
     var keepAliveWebViews: [String:FlutterWebViewController?] = [:]
     var windowWebViews: [Int64:WebViewTransport] = [:]
     var windowAutoincrementId: Int64 = 0
-    /// Every widget's controller by the engine's platform view id, held weakly: the engine owns them.
-    /// `disposeWebView` finds one here when its widget is disposed.
-    let flutterWebViews = NSMapTable<NSNumber, FlutterWebViewController>.strongToWeakObjects()
+    /// Every widget's controller by the token its widget sent in `creationParams` (`disposeToken`),
+    /// held weakly: the engine owns them. `disposeWebView` finds one here when its widget is
+    /// disposed. A token, not the engine's view id: the widget knows it before
+    /// `onPlatformViewCreated`, which a widget unmounted in the frame that mounted it never gets
+    /// (§283).
+    let flutterWebViews = NSMapTable<NSString, FlutterWebViewController>.strongToWeakObjects()
     
     init(plugin: InAppWebViewFlutterPlugin) {
         super.init(channel: FlutterMethodChannel(name: InAppWebViewManager.METHOD_CHANNEL_NAME, binaryMessenger: plugin.registrar.messenger()))
@@ -47,8 +50,8 @@ public class InAppWebViewManager: ChannelDelegate {
                 result(true)
                 break
             case "disposeWebView":
-                let viewId = arguments!["viewId"] as! Int64
-                disposeWebView(viewId: viewId)
+                let token = arguments!["token"] as! String
+                disposeWebView(token: token)
                 result(true)
                 break
             case "clearAllCache":
@@ -109,8 +112,8 @@ public class InAppWebViewManager: ChannelDelegate {
     /// its page running, until a later frame composited one (§268). Detached as well, so it
     /// deallocates now. Nothing for a keep-alive WebView (`dispose(removeFromSuperview:)` checks),
     /// nor for one the engine already released; the engine's release after this does nothing.
-    public func disposeWebView(viewId: Int64) {
-        let key = NSNumber(value: viewId)
+    public func disposeWebView(token: String) {
+        let key = token as NSString
         guard let flutterWebView = flutterWebViews.object(forKey: key) else {
             return
         }

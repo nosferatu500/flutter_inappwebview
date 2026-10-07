@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
@@ -212,8 +213,21 @@ class IOSInAppWebViewWidget extends PlatformInAppWebViewWidget {
 
   IOSInAppWebViewController? _controller;
 
-  /// The engine's id for this widget's platform view, which the native side disposes by.
-  int? _platformViewId;
+  /// Names this widget's native WebView to `disposeWebView`. The widget makes it and sends it in
+  /// `creationParams`, so it is known from the start: the engine's view id only arrives with
+  /// `onPlatformViewCreated`, and a widget unmounted before that (a mount and unmount in one frame)
+  /// had no id to send, so its WebView lived until a later frame composited one (§283). It moves
+  /// with the controller across rebuilds; the creation params of later builds are never sent.
+  String? _disposeToken = _newDisposeToken();
+
+  static final String _disposeTokenPrefix = Random()
+      .nextInt(1 << 32)
+      .toRadixString(36);
+  static int _disposeTokens = 0;
+
+  // The prefix keeps a token made after a hot restart from naming a WebView made before it.
+  static String _newDisposeToken() =>
+      '$_disposeTokenPrefix-${_disposeTokens++}';
 
   IOSHeadlessInAppWebView? get _iosHeadlessInAppWebView =>
       params.headlessWebView as IOSHeadlessInAppWebView?;
@@ -265,13 +279,13 @@ class IOSInAppWebViewWidget extends PlatformInAppWebViewWidget {
         'pullToRefreshSettings': pullToRefreshSettings,
         'keepAliveId': params.keepAlive?.id,
         'preventGestureDelay': params.preventGestureDelay,
+        'disposeToken': _disposeToken,
       },
       creationParamsCodec: const StandardMessageCodec(),
     );
   }
 
   void _onPlatformViewCreated(int id) {
-    _platformViewId = id;
     dynamic viewId = id;
     if (params.headlessWebView?.isRunning() ?? false) {
       viewId = params.headlessWebView?.id;
@@ -363,8 +377,8 @@ class IOSInAppWebViewWidget extends PlatformInAppWebViewWidget {
     }
     _controller = oldWidget._controller;
     oldWidget._controller = null;
-    _platformViewId = oldWidget._platformViewId;
-    oldWidget._platformViewId = null;
+    _disposeToken = oldWidget._disposeToken;
+    oldWidget._disposeToken = null;
     // And its events go to this widget's callbacks from now on.
     _controller?.updateWebViewParams(params);
   }
@@ -384,16 +398,18 @@ class IOSInAppWebViewWidget extends PlatformInAppWebViewWidget {
     _controller = null;
     params.pullToRefreshController?.dispose(isKeepAlive: isKeepAlive);
     params.findInteractionController?.dispose(isKeepAlive: isKeepAlive);
-    final platformViewId = _platformViewId;
-    _platformViewId = null;
-    if (!isKeepAlive && platformViewId != null) {
+    final disposeToken = _disposeToken;
+    _disposeToken = null;
+    if (!isKeepAlive && disposeToken != null) {
       // The engine releases a platform view, and with it the native WebView, only while it
       // composites a frame that has, or just had, a platform view. A WebView removed before it was
       // ever composited stayed alive, its page running, until some later frame composited one
       // (§268). So the native side disposes it now; whichever of the two comes second does nothing.
+      // Sent even if `onPlatformViewCreated` never came (§283): the platform view's `create` was
+      // sent first, so native has registered the token by the time this arrives.
       unawaited(
         IN_APP_WEBVIEW_STATIC_CHANNEL.invokeMethod('disposeWebView', {
-          'viewId': platformViewId,
+          'token': disposeToken,
         }),
       );
     }

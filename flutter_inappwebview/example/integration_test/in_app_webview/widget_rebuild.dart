@@ -4,6 +4,24 @@ part of 'main.dart';
 /// keeps the same `State`, the same platform view and the same controller. The controller used to
 /// stay with the first platform object, so the widget's dispose ran on one that had none and the
 /// controller was never disposed (§269: measured on both platforms).
+/// Lays its child out twice in every layout, 300 px wide and then 100 px wide, so a `LayoutBuilder`
+/// child builds twice in one frame.
+class _LayoutTwice extends SingleChildRenderObjectWidget {
+  const _LayoutTwice({super.child});
+
+  @override
+  RenderObject createRenderObject(BuildContext context) => _RenderLayoutTwice();
+}
+
+class _RenderLayoutTwice extends RenderProxyBox {
+  @override
+  void performLayout() {
+    child!.layout(const BoxConstraints.tightFor(width: 300, height: 300));
+    child!.layout(const BoxConstraints.tightFor(width: 100, height: 100));
+    size = constraints.constrain(const Size(300, 300));
+  }
+}
+
 void widgetRebuild() {
   final shouldSkip = ![
     TargetPlatform.android,
@@ -131,6 +149,81 @@ void widgetRebuild() {
       expectDisposed(c);
     },
     skip: shouldSkip,
+  );
+
+  // A WebView mounted and unmounted in the same frame (here: under a `LayoutBuilder` laid out twice,
+  // the second time too narrow for it) never gets `onPlatformViewCreated` on iOS, so before §283 its
+  // widget had no id to dispose it by, and the page kept running until some later frame composited
+  // another platform view (measured: 3.6 s, then released when a second WebView appeared). Its page
+  // writes a cookie every 100 ms, read here a second apart: a cookie that still changes is a page
+  // that is still running. Nothing else is composited meanwhile, which would release it anyway.
+  // iOS only: on Android this setup fails inside Flutter itself, `_PlatformViewPlaceholderBox`'s
+  // post-frame callback calling `localToGlobal` on the box the second layout detached (debug
+  // assertion 'attached', measured §283), before the plugin is involved.
+  skippableTestWidgets(
+    'a WebView unmounted in the frame that mounted it stops running',
+    (WidgetTester tester) async {
+      final origin = WebUri('http://${environment["NODE_SERVER_IP"]}:8082/');
+      final cookies = CookieManager.instance();
+      await cookies.deleteAllCookies();
+      var builds = 0;
+      var created = false;
+
+      await tester.pumpWidget(
+        Directionality(
+          textDirection: TextDirection.ltr,
+          child: Center(
+            child: _LayoutTwice(
+              child: LayoutBuilder(
+                builder: (context, constraints) {
+                  builds++;
+                  return constraints.maxWidth > 150
+                      ? InAppWebView(
+                          initialData: InAppWebViewInitialData(
+                            data:
+                                '<html><body>tick<script>setInterval(function() {'
+                                ' document.cookie = "tick=" + Date.now() + "; path=/"; },'
+                                ' 100);</script></body></html>',
+                            baseUrl: origin,
+                          ),
+                          onWebViewCreated: (_) => created = true,
+                        )
+                      : const SizedBox();
+                },
+              ),
+            ),
+          ),
+        ),
+      );
+      expect(
+        builds,
+        2,
+        reason: 'the LayoutBuilder must build twice in one frame',
+      );
+
+      Future<String?> tick() async => (await cookies.getCookie(
+        url: origin,
+        name: 'tick',
+      ))?.value?.toString();
+      await Future<void>.delayed(const Duration(milliseconds: 1500));
+      final first = await tick();
+      await Future<void>.delayed(const Duration(milliseconds: 1000));
+      final second = await tick();
+      expect(
+        created,
+        isFalse,
+        reason: 'the path under test: no onPlatformViewCreated',
+      );
+      expect(
+        second,
+        first,
+        reason:
+            'the unmounted WebView is still running its page ("tick" changed '
+            'from $first to $second)',
+      );
+      await cookies.deleteAllCookies();
+    },
+    skip: defaultTargetPlatform != TargetPlatform.iOS,
   );
 
   // A rebuild's callbacks are the ones called: a replaced `onLoadStop` and an `onTitleChanged`
