@@ -127,6 +127,8 @@ public class FlutterWebViewController: NSObject, @MainActor FlutterPlatformView,
                             if let error = error {
                                 // Loaded anyway, so the app hears why: the navigation is refused
                                 // with this error (`InAppWebView.contentBlockersError`, §285).
+                                webView.contentBlockersError = error.localizedDescription
+                                self.load(initialUrlRequest: initialUrlRequest, initialFile: initialFile, initialData: initialData)
                                 return
                             }
 
