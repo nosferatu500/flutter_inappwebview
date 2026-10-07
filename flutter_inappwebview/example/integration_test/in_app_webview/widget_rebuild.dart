@@ -22,7 +22,8 @@ void widgetRebuild() {
   ) async {
     final c = await controller.future.timeout(const Duration(seconds: 20));
     await loaded.future.timeout(const Duration(seconds: 20));
-    // Composite the view before anything else, so that unmounting it releases it on iOS (§268).
+    // Composite the view first, as an app's next frame would; with no pointer activity the binding
+    // draws only the frames a test pumps (§268).
     await tester.pump();
     // Disposing the controller drops its JavaScript handlers (the app's closures), and reading
     // them back needs neither the platform nor a live channel, so this tells a disposed

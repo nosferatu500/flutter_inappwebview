@@ -18,6 +18,9 @@ public class InAppWebViewManager: ChannelDelegate {
     var keepAliveWebViews: [String:FlutterWebViewController?] = [:]
     var windowWebViews: [Int64:WebViewTransport] = [:]
     var windowAutoincrementId: Int64 = 0
+    /// Every widget's controller by the engine's platform view id, held weakly: the engine owns them.
+    /// `disposeWebView` finds one here when its widget is disposed.
+    let flutterWebViews = NSMapTable<NSNumber, FlutterWebViewController>.strongToWeakObjects()
     
     init(plugin: InAppWebViewFlutterPlugin) {
         super.init(channel: FlutterMethodChannel(name: InAppWebViewManager.METHOD_CHANNEL_NAME, binaryMessenger: plugin.registrar.messenger()))
@@ -41,6 +44,11 @@ public class InAppWebViewManager: ChannelDelegate {
             case "disposeKeepAlive":
                 let keepAliveId = arguments!["keepAliveId"] as! String
                 disposeKeepAlive(keepAliveId: keepAliveId)
+                result(true)
+                break
+            case "disposeWebView":
+                let viewId = arguments!["viewId"] as! Int64
+                disposeWebView(viewId: viewId)
                 result(true)
                 break
             case "clearAllCache":
@@ -95,6 +103,21 @@ public class InAppWebViewManager: ChannelDelegate {
         }
     }
     
+    /// Disposes a widget's WebView when the widget is disposed, instead of waiting for the engine to
+    /// release its platform view: the engine does that only while compositing a frame that has, or
+    /// just had, a platform view, so a WebView removed before it was ever composited stayed alive,
+    /// its page running, until a later frame composited one (§268). Detached as well, so it
+    /// deallocates now. Nothing for a keep-alive WebView (`dispose(removeFromSuperview:)` checks),
+    /// nor for one the engine already released; the engine's release after this does nothing.
+    public func disposeWebView(viewId: Int64) {
+        let key = NSNumber(value: viewId)
+        guard let flutterWebView = flutterWebViews.object(forKey: key) else {
+            return
+        }
+        flutterWebViews.removeObject(forKey: key)
+        flutterWebView.dispose(removeFromSuperview: true)
+    }
+
     public func clearAllCache(includeDiskFiles: Bool, completionHandler: @escaping () -> Void) {
         var websiteDataTypes = Set([WKWebsiteDataTypeMemoryCache])
         if includeDiskFiles {
@@ -117,6 +140,7 @@ public class InAppWebViewManager: ChannelDelegate {
             }
         }
         keepAliveWebViews.removeAll()
+        flutterWebViews.removeAllObjects()
         windowWebViews.removeAll()
         webViewForUserAgent = nil
         defaultUserAgent = nil

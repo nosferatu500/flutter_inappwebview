@@ -141,6 +141,23 @@ Fourteen WebKit APIs read out of the iOS 26.5 SDK:
 
 ### Fixed
 
+- **A WebView removed before it was ever drawn stayed alive, its page running.** The engine
+  releases a platform view, and with it the native WebView, only while it composites a frame that
+  has, or just had, a platform view. So a WebView removed within a frame of being added lived on
+  until some later frame drew another platform view (and, by the engine's code, for good if none
+  did). Measured on iOS 26.5: 5 of 5 such WebViews kept running their page for 5.4 s, until the
+  next WebView was drawn. The widget's `dispose` now asks the native side to dispose its WebView at
+  once (`disposeWebView`, by the engine's view id) and detaches it, so it is released immediately:
+  measured, 1–2 ms after the dispose. Not for a `keepAlive` WebView; whichever of the two disposals
+  comes second does nothing.
+- **The app could crash when a WebView was removed during an authentication challenge.** The
+  HTTP-auth, server-trust, client-certificate and deprecated-TLS callbacks prepare the challenge on
+  a background queue before asking Dart, and that step held a strong reference to the WebView's
+  channel delegate. If the WebView was disposed meanwhile, the delegate was released on that
+  background thread, where its deinit traps (`_checkExpectedExecutor`): the long-standing crash
+  seen about once in twenty test-suite runs. Reproduced on demand by delaying that step while
+  removing the widget (HTTP auth and server trust, each crashing in the one run tried); with the
+  delegate now held weakly, the same runs pass.
 - **An `InAppWebView` rebuilt by its parent was never disposed.** `onPlatformViewCreated` stores
   the controller on the platform widget object of that moment, and a rebuild makes a new one, so
   the widget's `dispose` ran on an object with no controller. Measured: the controller kept its

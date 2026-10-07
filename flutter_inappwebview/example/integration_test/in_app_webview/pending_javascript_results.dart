@@ -8,15 +8,16 @@ part of 'main.dart';
 /// the WebView is disposed. Each now answers at once: `callAsyncJavaScript` with an error that
 /// says why, a world `evaluateJavascript` with `null`.
 ///
-/// Android only, except the two pending-call cases, which iOS shares (§267, §268). iOS worlds are
-/// native and answered on both kinds of page.
+/// Android only, except the three pending-call cases, which iOS shares (§267, §268, §270). iOS
+/// worlds are native and answered on both kinds of page.
 void pendingJavaScriptResults() {
   final shouldSkip = defaultTargetPlatform != TargetPlatform.android;
   // The pending-call cases hold on iOS too. Navigation: WebKit's completion for a call whose page
   // went away came only lazily (§267: not in 15 s, then 11 ms after the next call, as "Completion
-  // handler for function call is no longer reachable"). Dispose: an iOS widget's WebView is
-  // disposed when the engine releases its platform view, and a view that was never composited
-  // wasn't released until a later frame composited another one (§268).
+  // handler for function call is no longer reachable"). Dispose: an iOS widget's WebView used to be
+  // disposed only when the engine released its platform view, and a view that was never composited
+  // wasn't released until a later frame composited another one (§268). The widget now disposes it
+  // itself (§270); the two dispose tests cover a composited view and one that never was.
   final shouldSkipPendingCall = ![
     TargetPlatform.android,
     TargetPlatform.iOS,
@@ -163,10 +164,35 @@ void pendingJavaScriptResults() {
         ),
       );
       // With no pointer activity the binding draws only the frames a test pumps, and `loadPage`
-      // pumps none after the platform view exists. Without this frame the iOS view wasn't
-      // composited, and unmounting it disposed nothing until the next test composited another
-      // WebView (§268).
+      // pumps none after the platform view exists. This frame composites the iOS view, so this is
+      // the ordinary case; the next test leaves it out (§268, §270).
       await tester.pump();
+      final pending = controller.callAsyncJavaScript(
+        functionBody:
+            'await new Promise(function(r) { setTimeout(r, 10000); }); return 7;',
+      );
+      await Future<void>.delayed(const Duration(milliseconds: 300));
+      await tester.pumpWidget(const SizedBox());
+      final result = await answered(pending, 'the pending call');
+      expect(result?.value, isNull);
+      expect(result?.error, contains('disposed'));
+    },
+    skip: shouldSkipPendingCall,
+  );
+
+  skippableTestWidgets(
+    'a pending callAsyncJavaScript answers when a WebView that was never composited is disposed',
+    (WidgetTester tester) async {
+      // No frame after `loadPage`: the iOS view isn't composited (see above), as in an app that
+      // removes a WebView within a frame of adding it. Before §270 the call wasn't answered in
+      // 5 s here, because the WebView waited for the engine's release (§268).
+      final controller = await loadPage(
+        tester,
+        InAppWebViewInitialData(
+          data: '<html><body>page</body></html>',
+          baseUrl: WebUri('https://www.example.com/'),
+        ),
+      );
       final pending = controller.callAsyncJavaScript(
         functionBody:
             'await new Promise(function(r) { setTimeout(r, 10000); }); return 7;',

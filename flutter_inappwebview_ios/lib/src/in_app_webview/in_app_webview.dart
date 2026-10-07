@@ -6,6 +6,7 @@ import 'package:flutter_inappwebview_platform_interface/flutter_inappwebview_pla
 
 import '../find_interaction/find_interaction_controller.dart';
 import '../pull_to_refresh/pull_to_refresh_controller.dart';
+import '_static_channel.dart';
 import 'headless_in_app_webview.dart';
 import 'in_app_webview_controller.dart';
 
@@ -211,6 +212,9 @@ class IOSInAppWebViewWidget extends PlatformInAppWebViewWidget {
 
   IOSInAppWebViewController? _controller;
 
+  /// The engine's id for this widget's platform view, which the native side disposes by.
+  int? _platformViewId;
+
   IOSHeadlessInAppWebView? get _iosHeadlessInAppWebView =>
       params.headlessWebView as IOSHeadlessInAppWebView?;
 
@@ -267,6 +271,7 @@ class IOSInAppWebViewWidget extends PlatformInAppWebViewWidget {
   }
 
   void _onPlatformViewCreated(int id) {
+    _platformViewId = id;
     dynamic viewId = id;
     if (params.headlessWebView?.isRunning() ?? false) {
       viewId = params.headlessWebView?.id;
@@ -358,6 +363,8 @@ class IOSInAppWebViewWidget extends PlatformInAppWebViewWidget {
     }
     _controller = oldWidget._controller;
     oldWidget._controller = null;
+    _platformViewId = oldWidget._platformViewId;
+    oldWidget._platformViewId = null;
   }
 
   @override
@@ -375,6 +382,19 @@ class IOSInAppWebViewWidget extends PlatformInAppWebViewWidget {
     _controller = null;
     params.pullToRefreshController?.dispose(isKeepAlive: isKeepAlive);
     params.findInteractionController?.dispose(isKeepAlive: isKeepAlive);
+    final platformViewId = _platformViewId;
+    _platformViewId = null;
+    if (!isKeepAlive && platformViewId != null) {
+      // The engine releases a platform view, and with it the native WebView, only while it
+      // composites a frame that has, or just had, a platform view. A WebView removed before it was
+      // ever composited stayed alive, its page running, until some later frame composited one
+      // (§268). So the native side disposes it now; whichever of the two comes second does nothing.
+      unawaited(
+        IN_APP_WEBVIEW_STATIC_CHANNEL.invokeMethod('disposeWebView', {
+          'viewId': platformViewId,
+        }),
+      );
+    }
   }
 
   @override

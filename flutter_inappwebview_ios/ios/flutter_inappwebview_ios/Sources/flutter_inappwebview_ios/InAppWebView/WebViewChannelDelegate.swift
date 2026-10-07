@@ -990,8 +990,11 @@ public class WebViewChannelDelegate: ChannelDelegate {
         // passes through the global-queue closure; `arguments` is a fresh dictionary nothing else
         // holds. Swift 6 models both as sends out of a task-isolated context, which is why the
         // diagnostic fires -- there is no second accessor for them to race with.
+        // The outer closure needs its own `[weak self]`: without it Swift captures `self` strongly
+        // to form the inner weak reference, and if the WebView is disposed meanwhile this block
+        // drops the last reference on a global-queue thread, where the deinit traps (§271).
         nonisolated(unsafe) let callback = callback
-        DispatchQueue.global().async {
+        DispatchQueue.global().async { [weak self] in
             nonisolated(unsafe) let arguments = challenge.toMap()
             DispatchQueue.main.async { [weak self] in
                 if self?.channel == nil {
@@ -1028,8 +1031,11 @@ public class WebViewChannelDelegate: ChannelDelegate {
         // passes through the global-queue closure; `arguments` is a fresh dictionary nothing else
         // holds. Swift 6 models both as sends out of a task-isolated context, which is why the
         // diagnostic fires -- there is no second accessor for them to race with.
+        // The outer closure needs its own `[weak self]`: without it Swift captures `self` strongly
+        // to form the inner weak reference, and if the WebView is disposed meanwhile this block
+        // drops the last reference on a global-queue thread, where the deinit traps (§271).
         nonisolated(unsafe) let callback = callback
-        DispatchQueue.global().async {
+        DispatchQueue.global().async { [weak self] in
             nonisolated(unsafe) let arguments = challenge.toMap()
             DispatchQueue.main.async { [weak self] in
                 if self?.channel == nil {
@@ -1066,8 +1072,11 @@ public class WebViewChannelDelegate: ChannelDelegate {
         // passes through the global-queue closure; `arguments` is a fresh dictionary nothing else
         // holds. Swift 6 models both as sends out of a task-isolated context, which is why the
         // diagnostic fires -- there is no second accessor for them to race with.
+        // The outer closure needs its own `[weak self]`: without it Swift captures `self` strongly
+        // to form the inner weak reference, and if the WebView is disposed meanwhile this block
+        // drops the last reference on a global-queue thread, where the deinit traps (§271).
         nonisolated(unsafe) let callback = callback
-        DispatchQueue.global().async {
+        DispatchQueue.global().async { [weak self] in
             nonisolated(unsafe) let arguments = challenge.toMap()
             DispatchQueue.main.async { [weak self] in
                 if self?.channel == nil {
@@ -1193,8 +1202,11 @@ public class WebViewChannelDelegate: ChannelDelegate {
         // passes through the global-queue closure; `arguments` is a fresh dictionary nothing else
         // holds. Swift 6 models both as sends out of a task-isolated context, which is why the
         // diagnostic fires -- there is no second accessor for them to race with.
+        // The outer closure needs its own `[weak self]`: without it Swift captures `self` strongly
+        // to form the inner weak reference, and if the WebView is disposed meanwhile this block
+        // drops the last reference on a global-queue thread, where the deinit traps (§271).
         nonisolated(unsafe) let callback = callback
-        DispatchQueue.global().async {
+        DispatchQueue.global().async { [weak self] in
             nonisolated(unsafe) let arguments = challenge.toMap()
             DispatchQueue.main.async { [weak self] in
                 if self?.channel == nil {

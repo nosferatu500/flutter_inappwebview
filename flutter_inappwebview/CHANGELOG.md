@@ -792,6 +792,15 @@ since the `WebsiteDataType.ALL` fix below. It stays **deliberately out of `ALL`*
 
 ### Fixed
 
+**iOS — a WebView removed before it was ever drawn stayed alive, its page running**, until some
+later frame drew another platform view (by the engine's code, for good if none did). Flutter's
+engine releases a platform view only while drawing a frame that has, or just had, one. Removing an
+`InAppWebView` now disposes and releases its native WebView at once, except with `keepAlive`.
+
+**iOS — the app could crash when a WebView was removed during an authentication challenge**
+(HTTP auth, server trust, client certificate or deprecated TLS). A background step kept the last
+reference to part of the WebView and released it off the main thread, where it traps.
+
 **An `InAppWebView` rebuilt by its parent was never disposed.** A rebuild above the widget (a
 `setState` that builds a new `InAppWebView`) left its controller with the first widget object, so
 removing the widget later disposed nothing: its JavaScript handlers, and everything else the
@@ -1132,6 +1141,9 @@ simulator for the first time:**
 
 ### Internal
 
+- **New device test, `a pending callAsyncJavaScript answers when a WebView that was never
+  composited is disposed`** (Android and iOS): the dispose case without a drawn frame, which on
+  iOS waited for the engine's release before the WebView was disposed explicitly.
 - **New tests for disposal after a rebuild.** Device (Android and iOS): `the controller is disposed
   with its widget`, then the same after a parent rebuild, and after a rebuild that keeps one
   platform widget object (`InAppWebView.fromPlatform`). Host: the facade hands the old platform

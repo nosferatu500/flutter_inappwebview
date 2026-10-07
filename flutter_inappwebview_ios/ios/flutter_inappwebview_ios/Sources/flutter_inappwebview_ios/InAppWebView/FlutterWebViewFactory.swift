@@ -67,6 +67,7 @@ public class FlutterWebViewFactory: NSObject, @MainActor FlutterPlatformViewFact
         if let keepAliveId = keepAliveId {
             plugin.inAppWebViewManager?.keepAliveWebViews[keepAliveId] = flutterWebView!
         }
+        plugin.inAppWebViewManager?.flutterWebViews.setObject(flutterWebView!, forKey: NSNumber(value: viewId))
         
         flutterWebView?.webView()?.preventGestureDelay = preventGestureDelay
         
