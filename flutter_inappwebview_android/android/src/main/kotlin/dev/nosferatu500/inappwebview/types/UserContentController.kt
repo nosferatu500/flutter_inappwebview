@@ -204,17 +204,20 @@ class UserContentController(@JvmField var webView: WebView?) : Disposable {
    * The main-frame and origin checks go **outside** the content-world wrapper, as they do for the
    * plugin scripts: a world is an `<iframe>`, where `window === window.top` is always false, so
    * inside it a world script with the default `forMainFrameOnly: true` never ran (measured §262).
+   * So does the document-end check: inside the world it read the `<iframe>`'s `readyState`, which
+   * is `complete` as soon as the world exists, so a world script ran while the page was still
+   * parsing, about 3 s before a page-world one on a page with a slow image (measured §273).
    */
   private fun guardedUserOnlyScriptSource(userOnlyScript: UserScript): String {
     val id = userScriptGuardIds.getOrPut(userOnlyScript) { userScriptGuardIds.size }
     val flag = "window._" + JavaScriptBridgeJS.get_JAVASCRIPT_BRIDGE_NAME() + "_userScript" + id
     // The newline keeps a user source that ends in a `//` comment from swallowing the brace.
     var source = "if (!$flag) { $flag = true; ${userOnlyScript.source}\n}"
+    source = wrapSourceCodeInContentWorld(userOnlyScript.contentWorld, source)
     if (userOnlyScript.injectionTime == UserScriptInjectionTime.AT_DOCUMENT_END) {
       source = "if (document.readyState === 'complete') { $source} else { " +
         "window.addEventListener('load', function() { $source }); }"
     }
-    source = wrapSourceCodeInContentWorld(userOnlyScript.contentWorld, source)
     return wrapSourceCodeAddChecks(source, userOnlyScript)
   }
 

@@ -340,5 +340,95 @@ void userScripts() {
         reason: 'the script after the removed one still runs',
       );
     });
+
+    // On Android a content world is an `<iframe>`, and the document-end check used to run inside
+    // it, so a world script ran as soon as the world existed, while the page was still parsing
+    // (§273: parent `readyState` 'loading', 24-271 ms in, ~3 s before a page-world one). Both
+    // scripts write into the page's `<html>` element: on iOS a world shares the DOM but not
+    // globals, and `window.parent` is the page from an Android world and `window` itself on iOS.
+    skippableTestWidgets(
+      'a document-end script in a content world runs when one in the page world does',
+      (WidgetTester tester) async {
+        final created = Completer<InAppWebViewController>();
+        final loaded = Completer<void>();
+        String record(String key) =>
+            'var d = (window.parent || window).document;'
+            'd.documentElement.dataset.$key = d.readyState;';
+        final slowImage = defaultTargetPlatform == TargetPlatform.android;
+        await tester.pumpWidget(
+          Directionality(
+            textDirection: TextDirection.ltr,
+            child: InAppWebView(
+              key: GlobalKey(),
+              initialData: InAppWebViewInitialData(
+                data:
+                    '<html><body>document end'
+                    '${slowImage ? '<img src="https://www.example.com/slow.png">' : ''}'
+                    '</body></html>',
+                baseUrl: WebUri('https://www.example.com/'),
+              ),
+              initialSettings: InAppWebViewSettings(
+                useShouldInterceptRequest: slowImage,
+              ),
+              initialUserScripts: UnmodifiableListView<UserScript>([
+                UserScript(
+                  source: record('page'),
+                  injectionTime: UserScriptInjectionTime.AT_DOCUMENT_END,
+                ),
+                UserScript(
+                  source: record('world'),
+                  injectionTime: UserScriptInjectionTime.AT_DOCUMENT_END,
+                  contentWorld: ContentWorld.world(name: 'documentEnd'),
+                ),
+              ]),
+              // Holds the page's `load` back 2 s, which is what let the world script run first.
+              shouldInterceptRequest: slowImage
+                  ? (controller, request) async {
+                      if (!request.url.path.endsWith('slow.png')) return null;
+                      await Future<void>.delayed(const Duration(seconds: 2));
+                      return WebResourceResponse(
+                        contentType: 'image/png',
+                        data: Uint8List(0),
+                      );
+                    }
+                  : null,
+              onWebViewCreated: created.complete,
+              onLoadStop: (controller, url) {
+                if (!loaded.isCompleted) loaded.complete();
+              },
+            ),
+          ),
+        );
+        final controller = await created.future;
+        await loaded.future.timeout(const Duration(seconds: 30));
+
+        Future<Object?> readBoth() => controller.evaluateJavascript(
+          source:
+              'JSON.stringify([document.documentElement.dataset.page || null, '
+              'document.documentElement.dataset.world || null])',
+        );
+        var both = await readBoth();
+        final elapsed = Stopwatch()..start();
+        while ('$both'.contains('null') &&
+            elapsed.elapsed < const Duration(seconds: 10)) {
+          await Future<void>.delayed(const Duration(milliseconds: 100));
+          both = await readBoth();
+        }
+        final states = (jsonDecode('$both') as List).cast<String?>();
+        expect(
+          states[1],
+          isNot('loading'),
+          reason:
+              'the world script ran while the page was still parsing ($states)',
+        );
+        expect(
+          states[1],
+          states[0],
+          reason:
+              'page-world and content-world document-end scripts saw the page in different '
+              'states [page, world]: $states',
+        );
+      },
+    );
   }, skip: shouldSkip);
 }

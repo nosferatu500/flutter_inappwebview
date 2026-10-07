@@ -792,6 +792,10 @@ since the `WebsiteDataType.ALL` fix below. It stays **deliberately out of `ALL`*
 
 ### Fixed
 
+**Android — an `AT_DOCUMENT_END` user script in a content world ran while the page was still
+loading**, before the page had even finished parsing, instead of when the same script in the page
+world runs (at `load`). It now runs at the same point.
+
 **iOS — a WebView removed before it was ever drawn stayed alive, its page running**, until some
 later frame drew another platform view (by the engine's code, for good if none did). Flutter's
 engine releases a platform view only while drawing a frame that has, or just had, one. Removing an
@@ -1141,6 +1145,9 @@ simulator for the first time:**
 
 ### Internal
 
+- **New device test, `a document-end script in a content world runs when one in the page world
+  does`** (Android and iOS): both scripts record the page's `readyState` into its `<html>` element,
+  on a page whose image Android holds back 2 s.
 - **The iOS device test `can open new window and go back` uses two local fixture pages, and
   waits with a limit.** It failed on every run. Logged: with https://flutter.dev/ and
   https://github.com/flutter, the back navigation committed and was then cancelled a few ms later

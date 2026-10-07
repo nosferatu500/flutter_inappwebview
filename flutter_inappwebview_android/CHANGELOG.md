@@ -239,6 +239,12 @@ for, and five others have a native *value* that differs from their name.
 
 ### Fixed
 
+- **An `AT_DOCUMENT_END` user script in a content world ran while the page was still loading.**
+  A content world is an `<iframe>`, and the script's document-end check ran inside it, reading the
+  `<iframe>`'s `readyState`, which is `complete` as soon as the world exists. Measured on API 37
+  with a page whose image took 3 s: the world script ran 24–271 ms in, with the page's
+  `readyState` still `loading`, while the same script in the page world ran at `load`, 3 s later.
+  The check now watches the page, so a content-world script runs when a page-world one does.
 - **An `InAppWebView` rebuilt by its parent was never disposed.** `onPlatformViewCreated` stores
   the controller on the platform widget object of that moment, and a rebuild makes a new one, so
   the widget's `dispose` ran on an object with no controller. Measured: the controller kept its
