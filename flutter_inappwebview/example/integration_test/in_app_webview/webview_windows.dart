@@ -439,6 +439,75 @@ void webViewWindows() {
       skip: shouldSkipTest2,
     );
 
+    // The popup's events for its first page, `:8082/test-redirect-target`, over 5 s, when the
+    // popup's only content blocker is [blocker]: `start`, `stop` and `error <url> <type>
+    // <description>`.
+    Future<List<String>> popupFirstPageEvents(
+      WidgetTester tester,
+      ContentBlocker blocker,
+    ) async {
+      final origin = 'http://${environment["NODE_SERVER_IP"]}:8082';
+      final target = '$origin/test-redirect-target';
+      final windowIdCompleter = Completer<int>();
+      final events = <String>[];
+
+      Widget tree({int? windowId}) => Directionality(
+        textDirection: TextDirection.ltr,
+        child: Column(
+          children: [
+            Expanded(
+              child: InAppWebView(
+                key: const ValueKey('parent'),
+                initialData: InAppWebViewInitialData(
+                  data:
+                      '<html><body>parent<script>window.open("$target");'
+                      '</script></body></html>',
+                  baseUrl: WebUri('$origin/'),
+                ),
+                initialSettings: InAppWebViewSettings(
+                  javaScriptCanOpenWindowsAutomatically: true,
+                  supportMultipleWindows: true,
+                ),
+                onCreateWindow: (controller, createNavigationAction) async {
+                  if (!windowIdCompleter.isCompleted) {
+                    windowIdCompleter.complete(createNavigationAction.windowId);
+                  }
+                  return true;
+                },
+              ),
+            ),
+            if (windowId != null)
+              Expanded(
+                child: InAppWebView(
+                  key: const ValueKey('popup'),
+                  windowId: windowId,
+                  initialSettings: InAppWebViewSettings(
+                    contentBlockers: [blocker],
+                  ),
+                  onLoadStart: (controller, url) => events.add('start $url'),
+                  onLoadStop: (controller, url) => events.add('stop $url'),
+                  onReceivedError: (controller, request, error) => events.add(
+                    'error ${request.url} ${error.type} ${error.description}',
+                  ),
+                ),
+              ),
+          ],
+        ),
+      );
+
+      await tester.pumpWidget(tree());
+      final windowId = await windowIdCompleter.future.timeout(
+        const Duration(seconds: 20),
+        onTimeout: () => fail("the opener's onCreateWindow never came (20 s)"),
+      );
+      await tester.pumpWidget(tree(windowId: windowId));
+      for (var i = 0; i < 50; i++) {
+        await tester.pump(const Duration(milliseconds: 100));
+        await Future<void>.delayed(const Duration(milliseconds: 100));
+      }
+      return events;
+    }
+
     // A popup's own content blockers apply to its first page too: on iOS that page's navigation
     // waits until the popup's rule list is compiled and added (§274). A `BLOCK` rule on the popup's
     // own document tells whether it waited; a `CSS_DISPLAY_NONE` rule can't, since one added a few
@@ -447,76 +516,15 @@ void webViewWindows() {
     skippableTestWidgets(
       "a popup WebView's content blockers apply to its first page",
       (WidgetTester tester) async {
-        final origin = 'http://${environment["NODE_SERVER_IP"]}:8082';
-        final target = '$origin/test-redirect-target';
-        final windowIdCompleter = Completer<int>();
-        final events = <String>[];
-
-        Widget tree({int? windowId}) => Directionality(
-          textDirection: TextDirection.ltr,
-          child: Column(
-            children: [
-              Expanded(
-                child: InAppWebView(
-                  key: const ValueKey('parent'),
-                  initialData: InAppWebViewInitialData(
-                    data:
-                        '<html><body>parent<script>window.open("$target");'
-                        '</script></body></html>',
-                    baseUrl: WebUri('$origin/'),
-                  ),
-                  initialSettings: InAppWebViewSettings(
-                    javaScriptCanOpenWindowsAutomatically: true,
-                    supportMultipleWindows: true,
-                  ),
-                  onCreateWindow: (controller, createNavigationAction) async {
-                    if (!windowIdCompleter.isCompleted) {
-                      windowIdCompleter.complete(
-                        createNavigationAction.windowId,
-                      );
-                    }
-                    return true;
-                  },
-                ),
-              ),
-              if (windowId != null)
-                Expanded(
-                  child: InAppWebView(
-                    key: const ValueKey('popup'),
-                    windowId: windowId,
-                    initialSettings: InAppWebViewSettings(
-                      contentBlockers: [
-                        ContentBlocker(
-                          trigger: ContentBlockerTrigger(
-                            urlFilter: '.*test-redirect-target.*',
-                          ),
-                          action: ContentBlockerAction(
-                            type: ContentBlockerActionType.BLOCK,
-                          ),
-                        ),
-                      ],
-                    ),
-                    onLoadStart: (controller, url) => events.add('start $url'),
-                    onLoadStop: (controller, url) => events.add('stop $url'),
-                    onReceivedError: (controller, request, error) =>
-                        events.add('error ${request.url} ${error.type}'),
-                  ),
-                ),
-            ],
+        final events = await popupFirstPageEvents(
+          tester,
+          ContentBlocker(
+            trigger: ContentBlockerTrigger(
+              urlFilter: '.*test-redirect-target.*',
+            ),
+            action: ContentBlockerAction(type: ContentBlockerActionType.BLOCK),
           ),
         );
-
-        await tester.pumpWidget(tree());
-        final windowId = await windowIdCompleter.future.timeout(
-          const Duration(seconds: 20),
-          onTimeout: () =>
-              fail("the opener's onCreateWindow never came (20 s)"),
-        );
-        await tester.pumpWidget(tree(windowId: windowId));
-        for (var i = 0; i < 50; i++) {
-          await tester.pump(const Duration(milliseconds: 100));
-          await Future<void>.delayed(const Duration(milliseconds: 100));
-        }
         expect(
           events.where(
             (e) => e.startsWith('stop ') && e.contains('test-redirect-target'),
@@ -536,6 +544,37 @@ void webViewWindows() {
         );
       },
       skip: shouldSkipTest2,
+    );
+
+    // iOS: a popup whose rules WebKit can't compile (no `|` in its rule regex) doesn't load its
+    // first page, and says why. Before §285 it loaded without them (§274 released it anyway).
+    skippableTestWidgets(
+      'a popup WebView whose content blockers fail to compile loads nothing',
+      (WidgetTester tester) async {
+        final events = await popupFirstPageEvents(
+          tester,
+          ContentBlocker(
+            trigger: ContentBlockerTrigger(urlFilter: '(alpha|beta)'),
+            action: ContentBlockerAction(type: ContentBlockerActionType.BLOCK),
+          ),
+        );
+        expect(
+          events.where((e) => e.startsWith('stop ')),
+          isEmpty,
+          reason: 'the popup must not load without its rules: $events',
+        );
+        expect(
+          events.where((e) => e.startsWith('error ')),
+          [
+            allOf(
+              contains('test-redirect-target'),
+              contains('contentBlockers could not be compiled'),
+            ),
+          ],
+          reason: 'one error for the first page naming the cause: $events',
+        );
+      },
+      skip: shouldSkipTest2 || defaultTargetPlatform != TargetPlatform.iOS,
     );
 
     // iOS only: the popup's plugin scripts follow its own settings now that it has its own

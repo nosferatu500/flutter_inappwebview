@@ -45,4 +45,56 @@ void contentBlocker() {
     );
     await expectLater(pageLoaded.future, completes);
   }, skip: shouldSkip);
+
+  // iOS: rules that WebKit can't compile (its rule regex has no `|`) stop the page from loading,
+  // and say so through `onReceivedError`. Before §285 the WebView sent nothing after
+  // `onWebViewCreated` and stayed blank (measured: 10 s). Android's regex accepts the same rule.
+  skippableTestWidgets(
+    'content blockers that fail to compile stop the initial load with an error',
+    (WidgetTester tester) async {
+      final url = WebUri('http://${environment["NODE_SERVER_IP"]}:8082/');
+      final events = <String>[];
+      await tester.pumpWidget(
+        Directionality(
+          textDirection: TextDirection.ltr,
+          child: InAppWebView(
+            key: GlobalKey(),
+            initialUrlRequest: URLRequest(url: url),
+            initialSettings: InAppWebViewSettings(
+              contentBlockers: [
+                ContentBlocker(
+                  trigger: ContentBlockerTrigger(urlFilter: '(alpha|beta)'),
+                  action: ContentBlockerAction(
+                    type: ContentBlockerActionType.BLOCK,
+                  ),
+                ),
+              ],
+            ),
+            onLoadStop: (controller, u) => events.add('stop $u'),
+            onReceivedError: (controller, request, error) =>
+                events.add('error ${request.url} ${error.description}'),
+          ),
+        ),
+      );
+      final deadline = DateTime.now().add(const Duration(seconds: 10));
+      while (!events.any((e) => e.startsWith('error ')) &&
+          DateTime.now().isBefore(deadline)) {
+        await tester.pump(const Duration(milliseconds: 100));
+        await Future<void>.delayed(const Duration(milliseconds: 100));
+      }
+      expect(
+        events.where((e) => e.startsWith('error $url')),
+        [contains('contentBlockers could not be compiled')],
+        reason: 'one error for the initial URL naming the cause: $events',
+      );
+      // Then make sure the page doesn't load after all.
+      await Future<void>.delayed(const Duration(seconds: 1));
+      expect(
+        events.where((e) => e.startsWith('stop ')),
+        isEmpty,
+        reason: 'the page must not load without its rules: $events',
+      );
+    },
+    skip: shouldSkip || defaultTargetPlatform != TargetPlatform.iOS,
+  );
 }

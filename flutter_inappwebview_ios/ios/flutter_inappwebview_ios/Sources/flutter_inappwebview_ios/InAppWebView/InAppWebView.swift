@@ -127,7 +127,13 @@ public class InAppWebView: WKWebView, UIScrollViewDelegate, WKUIDelegate,
     /// controller, kept so `createWebViewWith` can give a popup the same one:
     /// `WKUserContentController` has no getter for its rule lists.
     var contentRuleList: WKContentRuleList?
-    
+    /// WebKit's message when `settings.contentBlockers` failed to compile at creation. While set,
+    /// every navigation is cancelled and reported through `onReceivedError`: no page runs without
+    /// rules the app asked for. Before, the widget and `InAppBrowser` silently never loaded their
+    /// initial page and a popup loaded without its rules (measured, §285). A `setSettings` that
+    /// sets `contentBlockers` clears it.
+    var contentBlockersError: String?
+
     // https://github.com/mozilla-mobile/firefox-ios/blob/50531a7e9e4d459fb11d4fcb7d4322e08103501f/Client/Frontend/Browser/ContextMenuHelper.swift
     fileprivate var nativeHighlightLongPressRecognizer: UILongPressGestureRecognizer?
     fileprivate var nativeLoupeGesture: UILongPressGestureRecognizer?
@@ -1579,6 +1585,9 @@ public class InAppWebView: WKWebView, UIScrollViewDelegate, WKUIDelegate,
         if newSettingsMap["contentBlockers"] != nil {
             configuration.userContentController.removeAllContentRuleLists()
             contentRuleList = nil
+            // New rules replace the ones that failed at creation. A compile error here still only
+            // prints and leaves no rules (filed, §285).
+            contentBlockersError = nil
             let contentBlockers = newSettings.contentBlockers
             if contentBlockers.count > 0 {
                 do {
@@ -2240,6 +2249,15 @@ public class InAppWebView: WKWebView, UIScrollViewDelegate, WKUIDelegate,
         // `windowBeforeCreatedCallbacks`, so capturing `self` strongly makes the WebView own a
         // closure that owns the WebView. See the note on `windowBeforeCreatedCallbacks`.
         let runCallback = { [weak self] in
+            if let message = self?.contentBlockersError {
+                let url = navigationAction.request.url ?? URL(string: "about:blank")!
+                self?.channelDelegate?.onReceivedError(
+                    request: WebResourceRequest(url: url, headers: nil),
+                    error: WebResourceError(type: -1, errorDescription: "contentBlockers could not be compiled, so nothing is loaded: \(message)"))
+                decisionHandlerCalled = true
+                decisionHandler(.cancel)
+                return
+            }
             if let useShouldOverrideUrlLoading = self?.settings?.useShouldOverrideUrlLoading, useShouldOverrideUrlLoading, let channelDelegate = self?.channelDelegate {
                 channelDelegate.shouldOverrideUrlLoading(navigationAction: navigationAction, callback: callback)
             } else {
@@ -4011,7 +4029,8 @@ public class InAppWebView: WKWebView, UIScrollViewDelegate, WKUIDelegate,
                     return
                 }
                 if let error = error {
-                    print(error.localizedDescription)
+                    // Released anyway: its first navigation is then refused with the error.
+                    self.contentBlockersError = error.localizedDescription
                 } else if let contentRuleList = contentRuleList {
                     self.configuration.userContentController.add(contentRuleList)
                     self.contentRuleList = contentRuleList

@@ -154,7 +154,11 @@ public class InAppBrowserWebViewController: UIViewController, InAppBrowserDelega
                         encodedContentRuleList: blockRules) { (contentRuleList, error) in
 
                             if let error = error {
-                                print(error.localizedDescription)
+                                // Loaded anyway, so `onBrowserCreated` comes and the navigation
+                                // is refused with this error (`InAppWebView.contentBlockersError`,
+                                // §285).
+                                self.webView?.contentBlockersError = error.localizedDescription
+                                self.initLoad()
                                 return
                             }
 

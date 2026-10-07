@@ -792,6 +792,11 @@ since the `WebsiteDataType.ALL` fix below. It stays **deliberately out of `ALL`*
 
 ### Fixed
 
+**iOS — `contentBlockers` that WebKit can't compile left a blank WebView and no sign of why**
+(an `InAppBrowser` didn't even send `onBrowserCreated`; a popup loaded without the rules). **A
+behaviour change**: the WebView now loads nothing and sends `onReceivedError` for the page, its
+description starting `contentBlockers could not be compiled` and naming WebKit's reason.
+
 **iOS — a WebView unmounted in the frame that mounted it kept running** until a later frame
 composited another platform view: its widget never learned the engine's view id to dispose it by.
 It now disposes by a token of its own.

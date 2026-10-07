@@ -125,7 +125,8 @@ public class FlutterWebViewController: NSObject, @MainActor FlutterPlatformView,
                         encodedContentRuleList: blockRules) { (contentRuleList, error) in
 
                             if let error = error {
-                                print(error.localizedDescription)
+                                // Loaded anyway, so the app hears why: the navigation is refused
+                                // with this error (`InAppWebView.contentBlockersError`, §285).
                                 return
                             }
 

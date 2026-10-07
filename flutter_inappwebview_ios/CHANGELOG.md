@@ -141,6 +141,16 @@ Fourteen WebKit APIs read out of the iOS 26.5 SDK:
 
 ### Fixed
 
+- **`contentBlockers` that WebKit can't compile left a blank WebView and no sign of why.** **A
+  behaviour change**: such a WebView now refuses every navigation and reports it. Measured with a
+  `urlFilter` of `(alpha|beta)` (WebKit's rule regex has no alternation): an `InAppWebView` sent
+  nothing after `onWebViewCreated` and never loaded its initial page, and an `InAppBrowser` sent
+  nothing at all, not even `onBrowserCreated`, in 10 s; the compile error went only to Swift's
+  `print`. A popup with such rules loaded without them. Now each of the three loads nothing and
+  sends `onReceivedError` for the page, its description starting `contentBlockers could not be
+  compiled` and ending with WebKit's message (the browser sends `onBrowserCreated` first). A later
+  `setSettings` of `contentBlockers` clears it. Android compiles rules differently and loaded this
+  page normally
 - **A WebView unmounted in the frame that mounted it kept running.** The early native dispose
   (below) was keyed by the engine's platform view id, which the widget only learns from
   `onPlatformViewCreated`, and a widget unmounted before that, e.g. under a `LayoutBuilder` laid
