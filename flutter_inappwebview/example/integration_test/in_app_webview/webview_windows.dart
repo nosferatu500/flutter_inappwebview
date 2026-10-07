@@ -423,20 +423,28 @@ void webViewWindows() {
     // on Android, for some reason, it works on an example app but not in this test
     final shouldSkipTest4 =
         kIsWeb || defaultTargetPlatform == TargetPlatform.android;
+    // Two plain fixture pages, not live sites. With https://flutter.dev/ and
+    // https://github.com/flutter the back navigation committed and was then cancelled (-999, no
+    // `onLoadStop`) in 5 of 6 iOS runs, a few ms after the commit: the sites' own scripts, since
+    // the same steps between these two pages finished in 5 of 5 (#4).
     skippableTestWidgets('can open new window and go back', (
       WidgetTester tester,
     ) async {
+      final page1 = 'http://${environment["NODE_SERVER_IP"]}:8082/';
+      final page2 =
+          'http://${environment["NODE_SERVER_IP"]}:8082/test-redirect-target';
       final Completer<InAppWebViewController> controllerCompleter =
           Completer<InAppWebViewController>();
-      final StreamController<String> pageLoads =
-          StreamController<String>.broadcast();
+      // Every `onLoadStop`, kept from the start, so a load that finishes before a wait begins
+      // still counts, and a missing one fails with what did arrive.
+      final loadStops = <String>[];
 
       await tester.pumpWidget(
         Directionality(
           textDirection: TextDirection.ltr,
           child: InAppWebView(
             key: GlobalKey(),
-            initialUrlRequest: URLRequest(url: TEST_CROSS_PLATFORM_URL_1),
+            initialUrlRequest: URLRequest(url: WebUri(page1)),
             onWebViewCreated: (controller) {
               controllerCompleter.complete(controller);
             },
@@ -445,7 +453,7 @@ void webViewWindows() {
               javaScriptCanOpenWindowsAutomatically: true,
             ),
             onLoadStop: (controller, url) {
-              pageLoads.add(url!.toString());
+              loadStops.add(url.toString());
             },
           ),
         ),
@@ -456,30 +464,30 @@ void webViewWindows() {
       final InAppWebViewController controller =
           await controllerCompleter.future;
 
-      Future<String> waitForUrl(String expectedUrl) async {
-        await for (final url in pageLoads.stream) {
-          if (url == expectedUrl) {
-            return url;
+      Future<void> waitForLoadStop(String url, {required int count}) async {
+        final elapsed = Stopwatch()..start();
+        while (loadStops.where((u) => u == url).length < count) {
+          if (elapsed.elapsed > const Duration(seconds: 20)) {
+            fail(
+              'onLoadStop #$count for $url did not come in 20 s; '
+              'onLoadStop so far: $loadStops',
+            );
           }
+          await Future<void>.delayed(const Duration(milliseconds: 50));
         }
-        throw Exception('Stream closed without receiving $expectedUrl');
       }
 
-      // Wait for initial page load
-      await waitForUrl(TEST_CROSS_PLATFORM_URL_1.toString());
+      await waitForLoadStop(page1, count: 1);
+      // No `onCreateWindow`: the window's URL opens in this WebView.
       await controller.evaluateJavascript(
-        source: 'window.open("$TEST_URL_1", "_blank");',
+        source: 'window.open("$page2", "_blank");',
       );
-      final currentUrl = await waitForUrl(TEST_URL_1.toString());
-      expect(currentUrl, contains(TEST_URL_1.host));
+      await waitForLoadStop(page2, count: 1);
+      expect((await controller.getUrl()).toString(), page2);
 
       await controller.goBack();
-      final urlAfterGoBack = await waitForUrl(
-        TEST_CROSS_PLATFORM_URL_1.toString(),
-      );
-      expect(urlAfterGoBack, contains(TEST_CROSS_PLATFORM_URL_1.host));
-
-      unawaited(pageLoads.close());
+      await waitForLoadStop(page1, count: 2);
+      expect((await controller.getUrl()).toString(), page1);
     }, skip: shouldSkipTest4);
 
     // Android blocks javascript: URLs opened from iframes for security reasons

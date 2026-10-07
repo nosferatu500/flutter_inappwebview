@@ -1141,6 +1141,12 @@ simulator for the first time:**
 
 ### Internal
 
+- **The iOS device test `can open new window and go back` uses two local fixture pages, and
+  waits with a limit.** It failed on every run. Logged: with https://flutter.dev/ and
+  https://github.com/flutter, the back navigation committed and was then cancelled a few ms later
+  (`-999`, so no `onLoadStop`) in 5 of 6 runs, while the same steps between two plain fixture
+  pages finished in 5 of 5: the live sites' own scripts. Each wait now gives up after 20 s and
+  names the `onLoadStop` URLs that did arrive, instead of hanging until the 1-minute test timeout.
 - **New device test, `a pending callAsyncJavaScript answers when a WebView that was never
   composited is disposed`** (Android and iOS): the dispose case without a drawn frame, which on
   iOS waited for the engine's release before the WebView was disposed explicitly.
