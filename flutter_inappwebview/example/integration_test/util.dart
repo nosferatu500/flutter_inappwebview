@@ -29,6 +29,44 @@ int? iosMajorVersion() {
   return match == null ? null : int.tryParse(match.group(0)!);
 }
 
+/// One deadline for a whole test, shared by its waits, so a hang fails naming the step it was in
+/// instead of reaching the 60 s test timeout with nothing to say which (§297). Pumps are steps too:
+/// a `pump` once hung on iOS with no wait of its own (§283). 50 s leaves the failure inside the test.
+class TestDeadline {
+  TestDeadline([Duration total = const Duration(seconds: 50)])
+    : _end = DateTime.now().add(total);
+
+  final DateTime _end;
+
+  /// [future], failing with [name] and [state] if the deadline passes first.
+  Future<T> step<T>(String name, Future<T> future, {String Function()? state}) {
+    final left = _end.difference(DateTime.now());
+    return future.timeout(
+      left.isNegative ? Duration.zero : left,
+      onTimeout: () => _fail(name, state),
+    );
+  }
+
+  /// Polls [done] every 50 ms until it holds, failing like [step] if the deadline passes first.
+  /// For events a test records as they come: waiting on a broadcast stream's `first` misses one
+  /// that fired before the wait began (§297).
+  Future<void> until(
+    String name,
+    bool Function() done, {
+    String Function()? state,
+  }) async {
+    while (!done()) {
+      if (!DateTime.now().isBefore(_end)) _fail(name, state);
+      await Future<void>.delayed(const Duration(milliseconds: 50));
+    }
+  }
+
+  Never _fail(String name, String Function()? state) => fail(
+    '$name: not done when the test deadline passed'
+    '${state == null ? '' : ' (${state()})'}',
+  );
+}
+
 class _NullOrEmpty extends Matcher {
   const _NullOrEmpty();
 

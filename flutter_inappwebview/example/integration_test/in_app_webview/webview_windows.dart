@@ -146,6 +146,9 @@ void webViewWindows() {
           Completer<InAppWebViewController>();
       Completer<void>? popupReloaded;
       final isAndroid = defaultTargetPlatform == TargetPlatform.android;
+      final deadline = TestDeadline();
+      final popupEvents = <String>[];
+      String state() => 'popup events: $popupEvents';
 
       Widget tree({int? windowId}) => Directionality(
         textDirection: TextDirection.ltr,
@@ -201,7 +204,10 @@ void webViewWindows() {
                       contentWorld: ContentWorld.world(name: "popupWorld"),
                     ),
                   ]),
+                  onLoadStart: (controller, url) =>
+                      popupEvents.add('start $url'),
                   onLoadStop: (controller, url) {
+                    popupEvents.add('stop $url');
                     if (url?.scheme == "about") return;
                     if (!popupLoaded.isCompleted) {
                       popupLoaded.complete(controller);
@@ -215,25 +221,41 @@ void webViewWindows() {
         ),
       );
 
-      await tester.pumpWidget(tree());
-      final windowId = await windowIdCompleter.future.timeout(
-        const Duration(seconds: 30),
+      await deadline.step('mounting the opener', tester.pumpWidget(tree()));
+      final windowId = await deadline.step(
+        "the opener's onCreateWindow",
+        windowIdCompleter.future,
       );
-      await tester.pumpWidget(tree(windowId: windowId));
-      await _pumpFrames(tester);
-      final popup = await popupLoaded.future.timeout(
-        const Duration(seconds: 30),
+      await deadline.step(
+        'mounting the popup (windowId $windowId)',
+        tester.pumpWidget(tree(windowId: windowId)),
+      );
+      await deadline.step(
+        'pumping frames after mounting the popup',
+        _pumpFrames(tester),
+        state: state,
+      );
+      final popup = await deadline.step(
+        "the popup's first load",
+        popupLoaded.future,
+        state: state,
       );
 
       Future<void> expectScriptsRanOnce(String document) async {
         expect(
-          await popup.evaluateJavascript(source: "window.popupRuns"),
+          await deadline.step(
+            '$document: reading window.popupRuns',
+            popup.evaluateJavascript(source: "window.popupRuns"),
+          ),
           1,
           reason:
               '$document: the document-start script should run exactly once',
         );
         expect(
-          await popup.evaluateJavascript(source: "window.openerRuns"),
+          await deadline.step(
+            '$document: reading window.openerRuns',
+            popup.evaluateJavascript(source: "window.openerRuns"),
+          ),
           isNull,
           reason: "$document: the opener's user script should not run here",
         );
@@ -268,8 +290,8 @@ void webViewWindows() {
 
       await expectScriptsRanOnce('first document');
       final reloaded = popupReloaded = Completer<void>();
-      await popup.reload();
-      await reloaded.future.timeout(const Duration(seconds: 30));
+      await deadline.step('asking the popup to reload', popup.reload());
+      await deadline.step("the popup's reload", reloaded.future, state: state);
       await expectScriptsRanOnce('after a reload');
     }, skip: shouldSkipTest2);
 
@@ -277,10 +299,13 @@ void webViewWindows() {
     // answered true. Returns both controllers after the popup's first load.
     Future<({InAppWebViewController opener, InAppWebViewController popup})>
     openPopup(
-      WidgetTester tester, {
+      WidgetTester tester,
+      TestDeadline deadline, {
       InAppWebViewSettings? openerSettings,
       InAppWebViewSettings? popupSettings,
     }) async {
+      final popupEvents = <String>[];
+      String state() => 'popup events: $popupEvents';
       final Completer<int> windowIdCompleter = Completer<int>();
       final Completer<InAppWebViewController> popupLoaded =
           Completer<InAppWebViewController>();
@@ -323,7 +348,10 @@ void webViewWindows() {
                   key: const ValueKey('popup'),
                   windowId: windowId,
                   initialSettings: popupSettings,
+                  onLoadStart: (controller, url) =>
+                      popupEvents.add('start $url'),
                   onLoadStop: (controller, url) {
+                    popupEvents.add('stop $url');
                     if (url?.scheme == "about") return;
                     if (!popupLoaded.isCompleted) {
                       popupLoaded.complete(controller);
@@ -335,19 +363,32 @@ void webViewWindows() {
         ),
       );
 
-      await tester.pumpWidget(tree());
-      final windowId = await windowIdCompleter.future.timeout(
-        const Duration(seconds: 20),
-        onTimeout: () => fail("the opener's onCreateWindow never came (20 s)"),
+      await deadline.step('mounting the opener', tester.pumpWidget(tree()));
+      final windowId = await deadline.step(
+        "the opener's onCreateWindow",
+        windowIdCompleter.future,
       );
-      await tester.pumpWidget(tree(windowId: windowId));
-      await _pumpFrames(tester);
-      final popup = await popupLoaded.future.timeout(
-        const Duration(seconds: 20),
-        onTimeout: () =>
-            fail('the popup (windowId $windowId) never loaded (20 s)'),
+      await deadline.step(
+        'mounting the popup (windowId $windowId)',
+        tester.pumpWidget(tree(windowId: windowId)),
       );
-      return (opener: await openerCreated.future, popup: popup);
+      await deadline.step(
+        'pumping frames after mounting the popup',
+        _pumpFrames(tester),
+        state: state,
+      );
+      final popup = await deadline.step(
+        "the popup's first load",
+        popupLoaded.future,
+        state: state,
+      );
+      return (
+        opener: await deadline.step(
+          "the opener's onWebViewCreated",
+          openerCreated.future,
+        ),
+        popup: popup,
+      );
     }
 
     ContentBlocker hide(String selector) => ContentBlocker(
@@ -358,13 +399,19 @@ void webViewWindows() {
       ),
     );
 
-    Future<Object?> displayOf(InAppWebViewController webView, String id) =>
-        webView.evaluateJavascript(
-          source:
-              "document.body.insertAdjacentHTML('beforeend', "
-              "'<div id=\"$id\">x</div>'); "
-              "getComputedStyle(document.getElementById('$id')).display",
-        );
+    Future<Object?> displayOf(
+      TestDeadline deadline,
+      InAppWebViewController webView,
+      String id,
+    ) => deadline.step(
+      'reading the display of #$id',
+      webView.evaluateJavascript(
+        source:
+            "document.body.insertAdjacentHTML('beforeend', "
+            "'<div id=\"$id\">x</div>'); "
+            "getComputedStyle(document.getElementById('$id')).display",
+      ),
+    );
 
     // A popup applies its own `contentBlockers`, not its opener's, on both platforms. iOS used to
     // do the opposite: WebKit's controller has no getter for its rule lists, so `createWebViewWith`
@@ -375,8 +422,10 @@ void webViewWindows() {
     skippableTestWidgets(
       'a popup WebView applies its own content blockers, not its opener\'s',
       (WidgetTester tester) async {
+        final deadline = TestDeadline();
         final (:opener, :popup) = await openPopup(
           tester,
+          deadline,
           openerSettings: InAppWebViewSettings(
             contentBlockers: [hide('#opener-blocked')],
           ),
@@ -385,28 +434,28 @@ void webViewWindows() {
           ),
         );
         expect(
-          await displayOf(popup, 'unblocked'),
+          await displayOf(deadline, popup, 'unblocked'),
           'block',
           reason: 'the control: an element no rule names is shown',
         );
         expect(
-          await displayOf(popup, 'popup-blocked'),
+          await displayOf(deadline, popup, 'popup-blocked'),
           'none',
           reason:
               "the popup's own css-display-none content blocker should apply",
         );
         expect(
-          await displayOf(popup, 'opener-blocked'),
+          await displayOf(deadline, popup, 'opener-blocked'),
           'block',
           reason: "the opener's content blocker should not apply in the popup",
         );
         expect(
-          await displayOf(opener, 'opener-blocked'),
+          await displayOf(deadline, opener, 'opener-blocked'),
           'none',
           reason: "the opener's own content blocker should still apply to it",
         );
         expect(
-          await displayOf(opener, 'popup-blocked'),
+          await displayOf(deadline, opener, 'popup-blocked'),
           'block',
           reason: "the popup's content blocker should not apply to the opener",
         );
@@ -419,19 +468,21 @@ void webViewWindows() {
     skippableTestWidgets(
       'a popup WebView without content blockers doesn\'t take its opener\'s',
       (WidgetTester tester) async {
+        final deadline = TestDeadline();
         final (:opener, :popup) = await openPopup(
           tester,
+          deadline,
           openerSettings: InAppWebViewSettings(
             contentBlockers: [hide('#opener-blocked')],
           ),
         );
         expect(
-          await displayOf(opener, 'opener-blocked'),
+          await displayOf(deadline, opener, 'opener-blocked'),
           'none',
           reason: "the control: the opener's content blocker applies to it",
         );
         expect(
-          await displayOf(popup, 'opener-blocked'),
+          await displayOf(deadline, popup, 'opener-blocked'),
           'block',
           reason: "the opener's content blocker should not apply in the popup",
         );
@@ -495,14 +546,23 @@ void webViewWindows() {
         ),
       );
 
-      await tester.pumpWidget(tree());
-      final windowId = await windowIdCompleter.future.timeout(
-        const Duration(seconds: 20),
-        onTimeout: () => fail("the opener's onCreateWindow never came (20 s)"),
+      final deadline = TestDeadline();
+      String state() => 'popup events: $events';
+      await deadline.step('mounting the opener', tester.pumpWidget(tree()));
+      final windowId = await deadline.step(
+        "the opener's onCreateWindow",
+        windowIdCompleter.future,
       );
-      await tester.pumpWidget(tree(windowId: windowId));
+      await deadline.step(
+        'mounting the popup (windowId $windowId)',
+        tester.pumpWidget(tree(windowId: windowId)),
+      );
       for (var i = 0; i < 50; i++) {
-        await tester.pump(const Duration(milliseconds: 100));
+        await deadline.step(
+          'pumping frames while the popup loads',
+          tester.pump(const Duration(milliseconds: 100)),
+          state: state,
+        );
         await Future<void>.delayed(const Duration(milliseconds: 100));
       }
       return events;
@@ -584,9 +644,13 @@ void webViewWindows() {
     skippableTestWidgets(
       "a popup WebView's setSettings applies a value it inherited",
       (WidgetTester tester) async {
-        final (:opener, :popup) = await openPopup(tester);
+        final deadline = TestDeadline();
+        final (:opener, :popup) = await openPopup(tester, deadline);
         Future<bool?> canOpen(InAppWebViewController c) async =>
-            (await c.getSettings())?.javaScriptCanOpenWindowsAutomatically;
+            (await deadline.step(
+              'reading javaScriptCanOpenWindowsAutomatically',
+              c.getSettings(),
+            ))?.javaScriptCanOpenWindowsAutomatically;
         final isIOS = defaultTargetPlatform == TargetPlatform.iOS;
         expect(
           await canOpen(popup),
@@ -595,9 +659,12 @@ void webViewWindows() {
               'the control: an iOS popup inherits its opener\'s true; an Android '
               'popup has its own default',
         );
-        await popup.setSettings(
-          settings: InAppWebViewSettings(
-            javaScriptCanOpenWindowsAutomatically: false,
+        await deadline.step(
+          "the popup's setSettings",
+          popup.setSettings(
+            settings: InAppWebViewSettings(
+              javaScriptCanOpenWindowsAutomatically: false,
+            ),
           ),
         );
         expect(await canOpen(popup), false);
@@ -612,15 +679,20 @@ void webViewWindows() {
     skippableTestWidgets(
       'a popup WebView uses its own settings',
       (WidgetTester tester) async {
+        final deadline = TestDeadline();
         final (opener: _, :popup) = await openPopup(
           tester,
+          deadline,
           popupSettings: InAppWebViewSettings(supportZoom: false),
         );
         expect(
-          await popup.evaluateJavascript(
-            source:
-                "Array.from(document.querySelectorAll('meta[name=viewport]'))"
-                ".some(function(m) { return m.content.indexOf('user-scalable=no') >= 0; })",
+          await deadline.step(
+            "reading the popup's viewport meta",
+            popup.evaluateJavascript(
+              source:
+                  "Array.from(document.querySelectorAll('meta[name=viewport]'))"
+                  ".some(function(m) { return m.content.indexOf('user-scalable=no') >= 0; })",
+            ),
           ),
           true,
           reason:
@@ -639,41 +711,63 @@ void webViewWindows() {
     skippableTestWidgets(
       'window.open() with target _blank opens in same window',
       (WidgetTester tester) async {
+        final deadline = TestDeadline();
         final Completer<InAppWebViewController> controllerCompleter =
             Completer<InAppWebViewController>();
-        final StreamController<String> pageLoads =
-            StreamController<String>.broadcast();
-        await tester.pumpWidget(
-          Directionality(
-            textDirection: TextDirection.ltr,
-            child: InAppWebView(
-              key: GlobalKey(),
-              onWebViewCreated: (controller) {
-                controllerCompleter.complete(controller);
-              },
-              initialUrlRequest: URLRequest(url: TEST_URL_ABOUT_BLANK),
-              initialSettings: InAppWebViewSettings(
-                javaScriptEnabled: true,
-                javaScriptCanOpenWindowsAutomatically: true,
+        // Every `onLoadStop`, kept from the start. This test used to wait on a broadcast stream's
+        // `first`, which misses a load that finished before the wait began, and it once hung to its
+        // 60 s timeout on iOS with nothing to say where (§297). Which wait it was is not known: in
+        // 13 later runs both loads came after their waits began.
+        final loadStops = <String>[];
+        String state() => 'onLoadStop so far: $loadStops';
+        await deadline.step(
+          'mounting the WebView',
+          tester.pumpWidget(
+            Directionality(
+              textDirection: TextDirection.ltr,
+              child: InAppWebView(
+                key: GlobalKey(),
+                onWebViewCreated: (controller) {
+                  controllerCompleter.complete(controller);
+                },
+                initialUrlRequest: URLRequest(url: TEST_URL_ABOUT_BLANK),
+                initialSettings: InAppWebViewSettings(
+                  javaScriptEnabled: true,
+                  javaScriptCanOpenWindowsAutomatically: true,
+                ),
+                onLoadStop: (controller, url) {
+                  loadStops.add(url.toString());
+                },
               ),
-              onLoadStop: (controller, url) {
-                pageLoads.add(url!.toString());
-              },
             ),
           ),
         );
-        await pageLoads.stream.first;
-        final InAppWebViewController controller =
-            await controllerCompleter.future;
-
-        await controller.evaluateJavascript(
-          source: 'window.open("$TEST_URL_ABOUT_BLANK", "_blank");',
+        await deadline.until(
+          'the first onLoadStop',
+          () => loadStops.isNotEmpty,
+          state: state,
         );
-        await pageLoads.stream.first;
-        final String? currentUrl = (await controller.getUrl())?.toString();
-        expect(currentUrl, TEST_URL_ABOUT_BLANK.toString());
+        final InAppWebViewController controller = await deadline.step(
+          'onWebViewCreated',
+          controllerCompleter.future,
+        );
 
-        unawaited(pageLoads.close());
+        await deadline.step(
+          'window.open',
+          controller.evaluateJavascript(
+            source: 'window.open("$TEST_URL_ABOUT_BLANK", "_blank");',
+          ),
+        );
+        await deadline.until(
+          "the window's onLoadStop in this WebView",
+          () => loadStops.length >= 2,
+          state: state,
+        );
+        final String? currentUrl = (await deadline.step(
+          'getUrl',
+          controller.getUrl(),
+        ))?.toString();
+        expect(currentUrl, TEST_URL_ABOUT_BLANK.toString());
       },
       skip: shouldSkipTest3,
     );

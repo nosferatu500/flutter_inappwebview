@@ -1189,6 +1189,13 @@ simulator for the first time:**
 
 ### Internal
 
+- **The popup and rebuild device tests name the step they hang in.** A shared `TestDeadline`
+  (50 s, under the 60 s test timeout) bounds each wait and pump in the `WebView Windows` popup tests
+  and the three "controller is disposed with its widget" tests, so a hang fails with its step and
+  state instead of an anonymous timeout. The first measured runs named one: frames pumped right
+  after mounting a popup, which then never came (2 of 5 group runs). `window.open() with target
+  _blank opens in same window` records its loads instead of waiting on a broadcast stream, which
+  misses one that came before the wait
 - **A device test covers the Android keyboard workaround without Hybrid Composition:** the
   keyboard stays up on an input, and a tap outside dismisses it. It needs a docked soft keyboard,
   which the test emulators (hardware keyboard) don't show by default, so there it skips; its

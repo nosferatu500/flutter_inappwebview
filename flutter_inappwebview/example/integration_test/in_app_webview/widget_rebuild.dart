@@ -35,14 +35,15 @@ void widgetRebuild() {
 
   Future<InAppWebViewController> created(
     WidgetTester tester,
+    TestDeadline deadline,
     Completer<InAppWebViewController> controller,
     Completer<void> loaded,
   ) async {
-    final c = await controller.future.timeout(const Duration(seconds: 20));
-    await loaded.future.timeout(const Duration(seconds: 20));
+    final c = await deadline.step('onWebViewCreated', controller.future);
+    await deadline.step('the first onLoadStop', loaded.future);
     // Composite the view first, as an app's next frame would; with no pointer activity the binding
     // draws only the frames a test pumps (§268).
-    await tester.pump();
+    await deadline.step('the first frame after loading', tester.pump());
     // Disposing the controller drops its JavaScript handlers (the app's closures), and reading
     // them back needs neither the platform nor a live channel, so this tells a disposed
     // controller from a leaked one on both platforms.
@@ -62,56 +63,70 @@ void widgetRebuild() {
   skippableTestWidgets('the controller is disposed with its widget', (
     WidgetTester tester,
   ) async {
+    final deadline = TestDeadline();
     final controller = Completer<InAppWebViewController>();
     final loaded = Completer<void>();
-    await tester.pumpWidget(
-      Directionality(
-        textDirection: TextDirection.ltr,
-        child: InAppWebView(
-          key: GlobalKey(),
-          initialData: data,
-          onWebViewCreated: (c) => controller.complete(c),
-          onLoadStop: (c, url) {
-            if (!loaded.isCompleted) loaded.complete();
-          },
+    await deadline.step(
+      'mounting the WebView',
+      tester.pumpWidget(
+        Directionality(
+          textDirection: TextDirection.ltr,
+          child: InAppWebView(
+            key: GlobalKey(),
+            initialData: data,
+            onWebViewCreated: (c) => controller.complete(c),
+            onLoadStop: (c, url) {
+              if (!loaded.isCompleted) loaded.complete();
+            },
+          ),
         ),
       ),
     );
-    final c = await created(tester, controller, loaded);
-    await tester.pumpWidget(const SizedBox());
+    final c = await created(tester, deadline, controller, loaded);
+    await deadline.step(
+      'unmounting the WebView',
+      tester.pumpWidget(const SizedBox()),
+    );
     expectDisposed(c);
   }, skip: shouldSkip);
 
   skippableTestWidgets(
     'the controller is disposed with its widget after a parent rebuild',
     (WidgetTester tester) async {
+      final deadline = TestDeadline();
       final controller = Completer<InAppWebViewController>();
       final loaded = Completer<void>();
       final generation = ValueNotifier<int>(0);
       final key = GlobalKey();
-      await tester.pumpWidget(
-        Directionality(
-          textDirection: TextDirection.ltr,
-          child: ValueListenableBuilder<int>(
-            valueListenable: generation,
-            // A new InAppWebView, and so a new platform widget object, on every rebuild.
-            builder: (context, _, _) => InAppWebView(
-              key: key,
-              initialData: data,
-              onWebViewCreated: (c) => controller.complete(c),
-              onLoadStop: (c, url) {
-                if (!loaded.isCompleted) loaded.complete();
-              },
+      await deadline.step(
+        'mounting the WebView',
+        tester.pumpWidget(
+          Directionality(
+            textDirection: TextDirection.ltr,
+            child: ValueListenableBuilder<int>(
+              valueListenable: generation,
+              // A new InAppWebView, and so a new platform widget object, on every rebuild.
+              builder: (context, _, _) => InAppWebView(
+                key: key,
+                initialData: data,
+                onWebViewCreated: (c) => controller.complete(c),
+                onLoadStop: (c, url) {
+                  if (!loaded.isCompleted) loaded.complete();
+                },
+              ),
             ),
           ),
         ),
       );
-      final c = await created(tester, controller, loaded);
+      final c = await created(tester, deadline, controller, loaded);
       generation.value++;
-      await tester.pump();
+      await deadline.step('the first rebuild', tester.pump());
       generation.value++;
-      await tester.pump();
-      await tester.pumpWidget(const SizedBox());
+      await deadline.step('the second rebuild', tester.pump());
+      await deadline.step(
+        'unmounting the WebView',
+        tester.pumpWidget(const SizedBox()),
+      );
       expectDisposed(c);
     },
     skip: shouldSkip,
@@ -131,21 +146,28 @@ void widgetRebuild() {
           if (!loaded.isCompleted) loaded.complete();
         },
       ).platform;
-      await tester.pumpWidget(
-        Directionality(
-          textDirection: TextDirection.ltr,
-          child: ValueListenableBuilder<int>(
-            valueListenable: generation,
-            // A new InAppWebView on every rebuild, sharing one platform widget object.
-            builder: (context, _, _) =>
-                InAppWebView.fromPlatform(key: key, platform: platform),
+      final deadline = TestDeadline();
+      await deadline.step(
+        'mounting the WebView',
+        tester.pumpWidget(
+          Directionality(
+            textDirection: TextDirection.ltr,
+            child: ValueListenableBuilder<int>(
+              valueListenable: generation,
+              // A new InAppWebView on every rebuild, sharing one platform widget object.
+              builder: (context, _, _) =>
+                  InAppWebView.fromPlatform(key: key, platform: platform),
+            ),
           ),
         ),
       );
-      final c = await created(tester, controller, loaded);
+      final c = await created(tester, deadline, controller, loaded);
       generation.value++;
-      await tester.pump();
-      await tester.pumpWidget(const SizedBox());
+      await deadline.step('the rebuild', tester.pump());
+      await deadline.step(
+        'unmounting the WebView',
+        tester.pumpWidget(const SizedBox()),
+      );
       expectDisposed(c);
     },
     skip: shouldSkip,
