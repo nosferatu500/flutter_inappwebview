@@ -127,10 +127,6 @@ public class InAppWebView: WKWebView, UIScrollViewDelegate, WKUIDelegate,
 
     var contextMenu: [String: Any]?
     var initialUserScripts: [UserScript] = []
-    /// The rule list compiled from `settings.contentBlockers` and added to this WebView's
-    /// controller, kept so `createWebViewWith` can give a popup the same one:
-    /// `WKUserContentController` has no getter for its rule lists.
-    var contentRuleList: WKContentRuleList?
     /// WebKit's message when `settings.contentBlockers` failed to compile at creation. While set,
     /// every navigation is cancelled and reported through `onReceivedError`: no page runs without
     /// rules the app asked for. Before, the widget and `InAppBrowser` silently never loaded their
@@ -1618,7 +1614,6 @@ public class InAppWebView: WKWebView, UIScrollViewDelegate, WKUIDelegate,
             let contentBlockers = newSettings.contentBlockers
             if contentBlockers.isEmpty {
                 configuration.userContentController.removeAllContentRuleLists()
-                contentRuleList = nil
                 contentBlockersError = nil
             } else if let jsonData = try? JSONSerialization.data(withJSONObject: contentBlockers, options: []) {
                 compilingContentBlockers = true
@@ -1632,7 +1627,6 @@ public class InAppWebView: WKWebView, UIScrollViewDelegate, WKUIDelegate,
                         if let contentRuleList = contentRuleList, error == nil {
                             self.configuration.userContentController.removeAllContentRuleLists()
                             self.configuration.userContentController.add(contentRuleList)
-                            self.contentRuleList = contentRuleList
                             self.contentBlockersError = nil
                             contentBlockersApplied?(nil)
                         } else {
@@ -4084,7 +4078,6 @@ public class InAppWebView: WKWebView, UIScrollViewDelegate, WKUIDelegate,
                     self.contentBlockersError = error.localizedDescription
                 } else if let contentRuleList = contentRuleList {
                     self.configuration.userContentController.add(contentRuleList)
-                    self.contentRuleList = contentRuleList
                 }
                 self.windowCreated = true
                 self.runWindowBeforeCreatedCallbacks()
@@ -4126,7 +4119,6 @@ public class InAppWebView: WKWebView, UIScrollViewDelegate, WKUIDelegate,
         configuration.userContentController.removeAllPluginScriptMessageHandlers()
         configuration.userContentController.removeAllUserScripts()
         configuration.userContentController.removeAllContentRuleLists()
-        contentRuleList = nil
         if let wId = windowId, plugin?.inAppWebViewManager?.windowWebViews[wId] != nil {
             plugin?.inAppWebViewManager?.windowWebViews.removeValue(forKey: wId)
         }

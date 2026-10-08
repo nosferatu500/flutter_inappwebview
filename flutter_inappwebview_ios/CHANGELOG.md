@@ -584,6 +584,8 @@ error.
 
 ### Internal
 
+- **`InAppWebView.contentRuleList` is gone.** Nothing had read it since popups stopped taking their
+  opener's rule list; it was only written (six places) and its doc still said a popup gets the same one
 - **A disposed `InAppBrowser` whose view UIKit reloads no longer overflows the stack.**
   `loadView` returned without a view once the browser was disposed, and `viewDidLoad` read `view`,
   so UIKit loaded it again, recursing. No known path reaches it since the opener-disposal fix, so it

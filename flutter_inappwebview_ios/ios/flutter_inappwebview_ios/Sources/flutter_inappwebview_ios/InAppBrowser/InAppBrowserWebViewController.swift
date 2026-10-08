@@ -164,7 +164,6 @@ public class InAppBrowserWebViewController: UIViewController, InAppBrowserDelega
 
                             let configuration = self.webView!.configuration
                             configuration.userContentController.add(contentRuleList!)
-                            self.webView!.contentRuleList = contentRuleList
 
                             self.initLoad()
                     }
