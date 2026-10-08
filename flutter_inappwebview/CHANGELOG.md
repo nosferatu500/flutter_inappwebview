@@ -792,6 +792,11 @@ since the `WebsiteDataType.ALL` fix below. It stays **deliberately out of `ALL`*
 
 ### Fixed
 
+**Android — an `InAppWebView` rebuilt before its view existed kept the first build's controller**:
+`onWebViewCreated` and the first events went to the first build's callbacks, and removing the
+widget didn't dispose the controller. It now follows the widget in the tree, as on iOS. A device
+test pins it on both platforms.
+
 **iOS — `onUpdateVisitedHistory` fired when a load was requested, not when it happened**: before the
 page had started, and even for a load `shouldOverrideUrlLoading` refused (reported as the refused URL,
 then again as the page it stayed on). It now fires when the load commits, and for a reload, as on

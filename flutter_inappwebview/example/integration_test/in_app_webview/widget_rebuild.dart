@@ -173,6 +173,86 @@ void widgetRebuild() {
     skip: shouldSkip,
   );
 
+  // §299. A rebuild before the platform view exists. On Android `PlatformViewLink` calls
+  // `onCreatePlatformView` once, with the first build's closure, and the platform view is created
+  // later; the rebuild's `didUpdateWidget` has no controller to move yet. `_LayoutTwice` builds
+  // the WebView twice in its first frame (same State, a new widget object), so the rebuild always
+  // comes first; a rebuild from a later pump raced the view's creation (§299: either order).
+  skippableTestWidgets(
+    'a rebuild before the platform view exists leaves the controller with the live widget',
+    (WidgetTester tester) async {
+      final deadline = TestDeadline();
+      final events = <String>[];
+      var builds = 0;
+      final controller = Completer<InAppWebViewController>();
+      String state() => 'events: $events';
+      await deadline.frame(
+        'mounting the WebView',
+        tester.pumpWidget(
+          Directionality(
+            textDirection: TextDirection.ltr,
+            child: _LayoutTwice(
+              child: LayoutBuilder(
+                builder: (context, constraints) {
+                  final build = builds++;
+                  events.add('build $build');
+                  return InAppWebView(
+                    initialData: data,
+                    onWebViewCreated: (c) {
+                      events.add('created by build $build');
+                      if (!controller.isCompleted) controller.complete(c);
+                    },
+                    onLoadStop: (c, url) => events.add('stop to build $build'),
+                  );
+                },
+              ),
+            ),
+          ),
+        ),
+      );
+      final c = await deadline.step(
+        'onWebViewCreated',
+        controller.future,
+        state: state,
+      );
+      await deadline.until(
+        'onLoadStop',
+        () => events.any((e) => e.startsWith('stop')),
+        state: state,
+      );
+      await deadline.frame('the first frame after loading', tester.pump());
+      c.addJavaScriptHandler(handlerName: 'rebuild', callback: (_) {});
+      await deadline.frame(
+        'unmounting the WebView',
+        tester.pumpWidget(const SizedBox()),
+      );
+
+      // Each callback event goes to the latest build at the time it arrives.
+      final misrouted = <String>[];
+      var latest = -1;
+      for (final e in events) {
+        if (e.startsWith('build ')) {
+          latest = int.parse(e.substring(6));
+        } else if (!e.endsWith('build $latest')) {
+          misrouted.add('$e (latest build $latest)');
+        }
+      }
+      expect(
+        events.take(2),
+        ['build 0', 'build 1'],
+        reason: 'the precondition: two builds before anything else: $events',
+      );
+      // Both at once, so a failure shows the disposal too.
+      expect(
+        'misrouted $misrouted, disposed '
+            '${!c.hasJavaScriptHandler(handlerName: 'rebuild')}',
+        'misrouted [], disposed true',
+        reason: 'events: $events',
+      );
+    },
+    skip: shouldSkip,
+  );
+
   // A WebView mounted and unmounted in the same frame (here: under a `LayoutBuilder` laid out twice,
   // the second time too narrow for it) never gets `onPlatformViewCreated` on iOS, so before §283 its
   // widget had no id to dispose it by, and the page kept running until some later frame composited

@@ -229,6 +229,14 @@ class AndroidInAppWebViewWidget extends PlatformInAppWebViewWidget {
 
   AndroidInAppWebViewController? _controller;
 
+  /// The widget object currently in the tree for this view, moved along with [_controller].
+  ///
+  /// `PlatformViewLink` calls `onCreatePlatformView` once, with the first build's closure, and the
+  /// view is created later. A rebuild in between used to leave `_onPlatformViewCreated` running on
+  /// that first object: measured (§299), its `onWebViewCreated` and `onLoadStop` fired instead of
+  /// the live widget's, and the live widget's `dispose` had no controller to dispose.
+  _CurrentWidget? _current;
+
   AndroidHeadlessInAppWebView? get _androidHeadlessInAppWebView =>
       params.headlessWebView as AndroidHeadlessInAppWebView?;
 
@@ -260,6 +268,7 @@ class AndroidInAppWebViewWidget extends PlatformInAppWebViewWidget {
     }
 
     var useHybridComposition = initialSettings.useHybridComposition ?? true;
+    final current = _current ??= _CurrentWidget(this);
 
     return PlatformViewLink(
       key: params.key,
@@ -306,7 +315,7 @@ class AndroidInAppWebViewWidget extends PlatformInAppWebViewWidget {
               )
               ..addOnPlatformViewCreatedListener(params.onPlatformViewCreated)
               ..addOnPlatformViewCreatedListener(
-                (id) => _onPlatformViewCreated(id),
+                (id) => current.widget._onPlatformViewCreated(id),
               );
         unawaited(controller.create());
         return controller;
@@ -447,6 +456,8 @@ class AndroidInAppWebViewWidget extends PlatformInAppWebViewWidget {
     oldWidget._controller = null;
     // And its events go to this widget's callbacks from now on.
     _controller?.updateWebViewParams(params);
+    _current = oldWidget._current?..widget = this;
+    oldWidget._current = null;
   }
 
   @override
@@ -471,4 +482,11 @@ class AndroidInAppWebViewWidget extends PlatformInAppWebViewWidget {
     // unused
     throw UnimplementedError();
   }
+}
+
+/// See [AndroidInAppWebViewWidget._current].
+class _CurrentWidget {
+  _CurrentWidget(this.widget);
+
+  AndroidInAppWebViewWidget widget;
 }

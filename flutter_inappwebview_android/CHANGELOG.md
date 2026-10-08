@@ -239,6 +239,12 @@ for, and five others have a native *value* that differs from their name.
 
 ### Fixed
 
+- **A rebuild before the platform view existed left the controller with the first build.**
+  `PlatformViewLink` creates the view once, with the first build's closure, and the view appears
+  later; a rebuild in between had no controller to move yet. Measured (a widget built twice in its
+  first frame): `onWebViewCreated` and the first `onLoadStop` went to the first build's callbacks,
+  and removing the widget didn't dispose the controller. The view-created callback now reaches the
+  widget currently in the tree, as on iOS
 - **A rebuilt `InAppWebView` kept calling the first build's callbacks.** The controller read its
   callbacks from the params of the widget that created it, so after a parent rebuild passed new
   ones (a closure over new state, say) events still went to the old closures, and a callback the
