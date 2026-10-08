@@ -1194,6 +1194,10 @@ simulator for the first time:**
 
 ### Internal
 
+- **An Android device test covers a WebView removed in the frame after it was added**, in both
+  rendering modes: its page stops and its controller is disposed. Measured first: by ordinary timing
+  the view is always created before that frame completes (6 / 6); the literal same-frame case can't
+  run on Android, where Flutter's own debug assertion fires first
 - **Device tests no longer lose a whole run to a dropped frame.** As a WebView is mounted (a popup,
   so far) or removed, the engine sometimes never answers a test's frame request (measured: frames enabled, one
   scheduled, the platform thread answering); every later test then failed on the test binding's

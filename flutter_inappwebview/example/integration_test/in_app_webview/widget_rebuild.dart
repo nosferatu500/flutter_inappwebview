@@ -328,6 +328,76 @@ void widgetRebuild() {
     skip: defaultTargetPlatform != TargetPlatform.iOS,
   );
 
+  // Android: a WebView unmounted in the frame after its mount (§300). The literal same-frame case
+  // above can't run on Android (Flutter's own debug assertion fires first). By ordinary timing the
+  // view was always created before the unmounting frame completed (6 / 6, both modes: e.g. unmount
+  // requested at 250 ms, created at 1043 ms, the frame done at 2099 ms), and then the controller was
+  // disposed and the page stopped. Pinned in both rendering modes.
+  skippableTestWidgets(
+    'a WebView unmounted in the frame after its mount stops and is disposed',
+    (WidgetTester tester) async {
+      final deadline = TestDeadline();
+      final origin = WebUri('http://${environment["NODE_SERVER_IP"]}:8082/');
+      final cookies = CookieManager.instance();
+      final results = <String>[];
+      for (final hybrid in [true, false]) {
+        await deadline.step('deleting cookies', cookies.deleteAllCookies());
+        InAppWebViewController? created;
+        await deadline.frame(
+          'mounting the WebView (hybrid $hybrid)',
+          tester.pumpWidget(
+            Directionality(
+              textDirection: TextDirection.ltr,
+              child: InAppWebView(
+                key: GlobalKey(),
+                initialData: InAppWebViewInitialData(
+                  data:
+                      '<html><body>tick<script>setInterval(function() {'
+                      ' document.cookie = "tick=" + Date.now() + "; path=/"; },'
+                      ' 100);</script></body></html>',
+                  baseUrl: origin,
+                ),
+                initialSettings: InAppWebViewSettings(
+                  useHybridComposition: hybrid,
+                ),
+                onWebViewCreated: (c) {
+                  created = c;
+                  c.addJavaScriptHandler(
+                    handlerName: 'probe',
+                    callback: (_) {},
+                  );
+                },
+              ),
+            ),
+          ),
+        );
+        await deadline.frame(
+          'unmounting the WebView (hybrid $hybrid)',
+          tester.pumpWidget(const SizedBox()),
+        );
+        Future<String?> tick() async => (await deadline.step(
+          'reading the tick cookie',
+          cookies.getCookie(url: origin, name: 'tick'),
+        ))?.value?.toString();
+        await Future<void>.delayed(const Duration(milliseconds: 1500));
+        final first = await tick();
+        await Future<void>.delayed(const Duration(milliseconds: 1000));
+        final second = await tick();
+        results.add(
+          'hybrid $hybrid: page ${first == second ? 'not running' : 'still running ($first -> $second)'}, '
+          'controller ${created == null ? 'never created' : (created!.hasJavaScriptHandler(handlerName: 'probe') ? 'NOT disposed' : 'disposed')}',
+        );
+      }
+      await deadline.step('deleting cookies', cookies.deleteAllCookies());
+      expect(
+        results.where((r) => r.contains('still running') || r.contains('NOT')),
+        isEmpty,
+        reason: '$results',
+      );
+    },
+    skip: defaultTargetPlatform != TargetPlatform.android,
+  );
+
   // A rebuild's callbacks are the ones called: a replaced `onLoadStop` and an `onTitleChanged`
   // the rebuild added. Before §282 the controller kept the first widget's params, so both went
   // to the first build's closures, or nowhere (measured on both platforms).
