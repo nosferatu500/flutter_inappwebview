@@ -792,6 +792,10 @@ since the `WebsiteDataType.ALL` fix below. It stays **deliberately out of `ALL`*
 
 ### Fixed
 
+**`WebViewFeature.isFeatureSupported` and `isStartupFeatureSupported` are documented to throw on each
+other's features** (a `PlatformException`, not `false`; measured on Android). A new device test pins
+it.
+
 **iOS — `PullToRefreshController.beginRefreshing()` was lost when called before the WebView was on
 screen**: UIKit ignores it then. It is now applied when the WebView appears, as on Android.
 

@@ -434,6 +434,11 @@ rename; this entry is the API-owner's view.
 
 ### Fixed
 
+- **`WebViewFeature.isFeatureSupported` / `isStartupFeatureSupported` docs now say they throw on each
+  other's features.** They said only that each "accepts certain features"; measured on Android,
+  passing a startup feature to `isFeatureSupported`, or any other feature to
+  `isStartupFeatureSupported`, throws `PlatformException` (code `RuntimeException`, `Unknown feature
+  <name>`) rather than returning `false`
 - **The iOS note on `onCreateWindow` (WebView and `InAppBrowser`) said a popup keeps its caller's
   `contentBlockers`**, which stopped being true when a popup started applying its own; it now
   says so. Its `setSettings` sentence is narrowed to what was measured: on a popup it changes the

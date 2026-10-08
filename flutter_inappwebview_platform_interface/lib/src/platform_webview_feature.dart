@@ -85,9 +85,10 @@ abstract class PlatformWebViewFeature extends PlatformInterface {
   ///this will check whether a feature is supported, depending on the combination of the desired feature, the Android version of device,
   ///and the WebView APK on the device. If running on a device with a lower API level, this will always return `false`.
   ///
-  ///**Note**: This method is different from [isStartupFeatureSupported] and this
-  ///method only accepts certain features.
-  ///Please verify that the correct feature checking method is used for a particular feature.
+  ///**Note**: This method is different from [isStartupFeatureSupported], and the two check separate
+  ///lists. Given a startup feature (`STARTUP_FEATURE_*`) this method doesn't return `false`, it
+  ///throws a `PlatformException` (Android: code `RuntimeException`, message
+  ///`java.lang.RuntimeException: Unknown feature <name>`).
   ///
   ///**Note**: If this method returns `false`, it is not safe to invoke the methods
   ///requiring the desired feature.
@@ -118,8 +119,10 @@ abstract class PlatformWebViewFeature extends PlatformInterface {
   ///the Android version of device, and the WebView APK on the device.
   ///If running on a device with a lower API level, this will always return `false`.
   ///
-  ///**Note**: This method is different from [isFeatureSupported] and this method only accepts startup features.
-  ///Please verify that the correct feature checking method is used for a particular feature.
+  ///**Note**: This method is different from [isFeatureSupported], and the two check separate lists.
+  ///It only accepts the startup features (`STARTUP_FEATURE_*`): given any other feature it doesn't
+  ///return `false`, it throws a `PlatformException` (Android: code `RuntimeException`, message
+  ///`java.lang.RuntimeException: Unknown feature <name>`).
   ///
   ///**Note**: If this method returns `false`, it is not safe to invoke the methods requiring the desired feature.
   ///Furthermore, if this method returns `false` for a particular feature,
