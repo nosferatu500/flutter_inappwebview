@@ -141,6 +141,15 @@ Fourteen WebKit APIs read out of the iOS 26.5 SDK:
 
 ### Fixed
 
+- **`onUpdateVisitedHistory` reported a load as soon as it was requested.** It came from KVO on
+  `WKWebView.url`, which names a `load()` request at once. Measured on iOS 26.5: after
+  `loadUrl(B)`, `onUpdateVisitedHistory(B)` arrived 2–3 ms later and 1.5 s before B started, while
+  the back-forward list still ended at the previous page; a `loadUrl` refused by
+  `shouldOverrideUrlLoading` was reported twice (the refused URL, then the page it stayed on); and a
+  reload was not reported at all. A load is now reported when it commits, a reload included
+  (`isReload` stays `null` on iOS), and `pushState`, `replaceState` and fragment changes are still
+  reported at once. The `InAppBrowser` toolbar is updated from the same place. Android already
+  reported each load after it started, and a reload
 - **`PullToRefreshController.beginRefreshing()` was lost when called before the WebView was on
   screen.** `UIRefreshControl` ignores `beginRefreshing()` while it has no window and doesn't catch
   up when the window arrives. Measured: called after `onLoadStop` but before the view was first

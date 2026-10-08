@@ -66,6 +66,10 @@ public class InAppWebView: WKWebView, UIScrollViewDelegate, WKUIDelegate,
     /// How many navigations this view has issued (`load`, `reload`, `goBack`, …).
     private var issuedNavigations = 0
 
+    /// The history entry and URL `onUpdateVisitedHistory` last reported; see `observeValue`.
+    private weak var lastReportedHistoryItem: WKBackForwardListItem?
+    private var lastReportedHistoryUrl: URL?
+
     private final class NavigationRecord {
         /// `issuedNavigations` when the navigation was first seen.
         let issue: Int
@@ -938,9 +942,17 @@ public class InAppWebView: WKWebView, UIScrollViewDelegate, WKUIDelegate,
             inAppBrowserDelegate?.didChangeProgress(progress: estimatedProgress)
         } else if keyPath == #keyPath(WKWebView.url) && change?[.newKey] is URL {
             initializeWindowIdJS()
+            // Only a same-document change (pushState, replaceState, a fragment) is already in the
+            // history here; a load is reported from `didCommit`. Measured (§296): when a load or
+            // `goBack` changes the URL, the current item still names the previous page, and a load
+            // refused by `shouldOverrideUrlLoading` moves the URL there and back with no history
+            // change, the way back landing on the item last reported.
             let newUrl = change?[NSKeyValueChangeKey.newKey] as? URL
-            channelDelegate?.onUpdateVisitedHistory(url: newUrl?.absoluteString, isReload: nil)
-            inAppBrowserDelegate?.didUpdateVisitedHistory(url: newUrl)
+            let item = backForwardList.currentItem
+            if let newUrl = newUrl, item?.url == newUrl,
+               !(item === lastReportedHistoryItem && newUrl == lastReportedHistoryUrl) {
+                reportVisitedHistory(url: newUrl)
+            }
         } else if keyPath == #keyPath(WKWebView.title) && change?[.newKey] is String {
             let newTitle = change?[.newKey] as? String
             channelDelegate?.onTitleChanged(title: newTitle)
@@ -3173,7 +3185,18 @@ public class InAppWebView: WKWebView, UIScrollViewDelegate, WKUIDelegate,
                         didCommit navigation: WKNavigation!) {
         // The previous document is gone: what it still owed can't arrive in any useful time.
         releasePendingJavaScriptResults(reason: "the page navigated away before it answered")
-        channelDelegate?.onPageCommitVisible(url: url(for: navigation)?.absoluteString)
+        let navigationUrl = url(for: navigation)
+        // The load is in the history from here on (§296), reloads included.
+        reportVisitedHistory(url: navigationUrl)
+        channelDelegate?.onPageCommitVisible(url: navigationUrl?.absoluteString)
+    }
+
+    /// `onUpdateVisitedHistory`, and remembers what it reported for the next `WKWebView.url` change.
+    private func reportVisitedHistory(url: URL?) {
+        lastReportedHistoryItem = backForwardList.currentItem
+        lastReportedHistoryUrl = url
+        channelDelegate?.onUpdateVisitedHistory(url: url?.absoluteString, isReload: nil)
+        inAppBrowserDelegate?.didUpdateVisitedHistory(url: url)
     }
 
     public func webView(_ webView: WKWebView,

@@ -792,6 +792,12 @@ since the `WebsiteDataType.ALL` fix below. It stays **deliberately out of `ALL`*
 
 ### Fixed
 
+**iOS — `onUpdateVisitedHistory` fired when a load was requested, not when it happened**: before the
+page had started, and even for a load `shouldOverrideUrlLoading` refused (reported as the refused URL,
+then again as the page it stayed on). It now fires when the load commits, and for a reload, as on
+Android; `pushState`, `replaceState` and fragment changes still report at once. Two device tests pin
+it on both platforms.
+
 **`WebViewFeature.isFeatureSupported` and `isStartupFeatureSupported` are documented to throw on each
 other's features** (a `PlatformException`, not `false`; measured on Android). A new device test pins
 it.
