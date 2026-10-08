@@ -690,7 +690,8 @@ class SupportChecker {
         // Navigation methods
         ApiMethodDefinition(
           name: PlatformInAppWebViewControllerMethod.loadUrl.name,
-          signature: 'Future<void> loadUrl({required URLRequest urlRequest})',
+          signature:
+              'Future<void> loadUrl({required URLRequest urlRequest, WebUri? allowingReadAccessTo})',
           description: 'Loads the given URL with optional headers.',
           className: className,
           category: 'Navigation',
@@ -1185,7 +1186,8 @@ class SupportChecker {
         ),
         ApiMethodDefinition(
           name: PlatformInAppWebViewControllerMethod.requestFocus.name,
-          signature: 'Future<bool?> requestFocus()',
+          signature:
+              'Future<bool?> requestFocus({FocusDirection? direction, InAppWebViewRect? previouslyFocusedRect})',
           description: 'Requests focus for the WebView.',
           className: className,
           category: 'Settings',
@@ -1218,7 +1220,7 @@ class SupportChecker {
         ApiMethodDefinition(
           name: PlatformInAppWebViewControllerMethod.createPdf.name,
           signature:
-              'Future<Uint8List?> createPdf({PdfConfiguration? pdfConfiguration})',
+              'Future<Uint8List?> createPdf({PDFConfiguration? pdfConfiguration})',
           description: 'Creates a PDF from the current page.',
           className: className,
           category: 'Screenshot',
@@ -1306,7 +1308,7 @@ class SupportChecker {
         ApiMethodDefinition(
           name: PlatformInAppWebViewControllerMethod.hasWebMessageListener.name,
           signature:
-              'bool hasWebMessageListener({required String jsObjectName})',
+              'bool hasWebMessageListener(WebMessageListener webMessageListener)',
           description: 'Checks if a web message listener exists.',
           className: className,
           category: 'Web Messaging',
@@ -1426,7 +1428,7 @@ class SupportChecker {
         ApiMethodDefinition(
           name: PlatformInAppWebViewControllerMethod.saveWebArchive.name,
           signature:
-              'Future<String?> saveWebArchive({required String basename, ...})',
+              'Future<String?> saveWebArchive({required String filePath, bool autoname = false})',
           description: 'Saves the current page as a web archive.',
           className: className,
           category: 'Android',
@@ -1448,14 +1450,15 @@ class SupportChecker {
         ),
         ApiMethodDefinition(
           name: PlatformInAppWebViewControllerMethod.saveState.name,
-          signature: 'Future<Uint8List?> saveState()',
+          signature:
+              'Future<Uint8List?> saveState({int? maxSize, bool? includeForwardState})',
           description: 'Saves the WebView state to a bundle.',
           className: className,
           category: 'Android',
         ),
         ApiMethodDefinition(
           name: PlatformInAppWebViewControllerMethod.restoreState.name,
-          signature: 'Future<bool> restoreState({required Uint8List state})',
+          signature: 'Future<bool> restoreState(Uint8List state)',
           description: 'Restores the WebView state from a bundle.',
           className: className,
           category: 'Android',
@@ -1551,7 +1554,7 @@ class SupportChecker {
         ),
         ApiMethodDefinition(
           name: PlatformInAppWebViewControllerMethod.dispose.name,
-          signature: 'void dispose()',
+          signature: 'void dispose({bool isKeepAlive = false})',
           description: 'Disposes the controller and releases resources.',
           className: className,
           category: 'Other',
@@ -2503,7 +2506,7 @@ class SupportChecker {
         ApiMethodDefinition(
           name: PlatformChromeSafariBrowserMethod.prewarmConnections.name,
           signature:
-              'static Future<PrewarmingToken?> prewarmConnections({required List<WebUri> urls})',
+              'static Future<PrewarmingToken?> prewarmConnections(List<WebUri> URLs)',
           description: 'Prewarms connections.',
           className: className,
           isStatic: true,
@@ -2512,7 +2515,7 @@ class SupportChecker {
           name:
               PlatformChromeSafariBrowserMethod.invalidatePrewarmingToken.name,
           signature:
-              'static Future<void> invalidatePrewarmingToken({required PrewarmingToken prewarmingToken})',
+              'static Future<void> invalidatePrewarmingToken(PrewarmingToken prewarmingToken)',
           description: 'Invalidates a prewarming token.',
           className: className,
           isStatic: true,
@@ -2556,7 +2559,7 @@ class SupportChecker {
         ApiMethodDefinition(
           name: PlatformChromeSafariBrowserMethod.postMessage.name,
           signature:
-              'Future<CustomTabsPostMessageResultType> postMessage({required String message})',
+              'Future<CustomTabsPostMessageResultType> postMessage(String message)',
           description: 'Posts a message.',
           className: className,
         ),
@@ -2687,14 +2690,15 @@ class SupportChecker {
         ),
         ApiMethodDefinition(
           name: PlatformCookieManagerMethod.getCookies.name,
-          signature: 'Future<List<Cookie>> getCookies({required WebUri url})',
+          signature:
+              'Future<List<Cookie>> getCookies({required WebUri url, String? profileName})',
           description: 'Gets all cookies for a URL.',
           className: className,
         ),
         ApiMethodDefinition(
           name: PlatformCookieManagerMethod.getCookie.name,
           signature:
-              'Future<Cookie?> getCookie({required WebUri url, required String name})',
+              'Future<Cookie?> getCookie({required WebUri url, required String name, String? profileName})',
           description: 'Gets a specific cookie.',
           className: className,
         ),
@@ -2715,7 +2719,7 @@ class SupportChecker {
         ApiMethodDefinition(
           name: PlatformCookieManagerMethod.deleteCookies.name,
           signature:
-              'Future<bool> deleteCookies({required WebUri url, String? domain, String? path, ...})',
+              'Future<bool> deleteCookies({required WebUri url, String path = "/", String? domain, String? profileName})',
           description: 'Deletes cookies for a URL.',
           className: className,
         ),
@@ -2761,13 +2765,13 @@ class SupportChecker {
         ),
         ApiMethodDefinition(
           name: PlatformCookieManagerMethod.removeSessionCookies.name,
-          signature: 'Future<bool> removeSessionCookies()',
+          signature: 'Future<bool> removeSessionCookies({String? profileName})',
           description: 'Removes all session cookies.',
           className: className,
         ),
         ApiMethodDefinition(
           name: PlatformCookieManagerMethod.flush.name,
-          signature: 'Future<bool> flush()',
+          signature: 'Future<bool> flush({String? profileName})',
           description: 'Flushes cookies to persistent storage.',
           className: className,
         ),
@@ -2916,7 +2920,7 @@ class SupportChecker {
         ),
         ApiMethodDefinition(
           name: PlatformFindInteractionControllerMethod.dispose.name,
-          signature: 'void dispose()',
+          signature: 'void dispose({bool isKeepAlive = false})',
           description: 'Disposes the controller.',
           className: className,
         ),
@@ -2987,14 +2991,13 @@ class SupportChecker {
               .setDistanceToTriggerSync
               .name,
           signature:
-              'Future<void> setDistanceToTriggerSync(double distanceToTrigger)',
+              'Future<void> setDistanceToTriggerSync(int distanceToTriggerSync)',
           description: 'Sets the distance to trigger refresh.',
           className: className,
         ),
         ApiMethodDefinition(
           name: PlatformPullToRefreshControllerMethod.setSlingshotDistance.name,
-          signature:
-              'Future<void> setSlingshotDistance(double slingshotDistance)',
+          signature: 'Future<void> setSlingshotDistance(int slingshotDistance)',
           description: 'Sets the slingshot distance.',
           className: className,
         ),
@@ -3021,7 +3024,7 @@ class SupportChecker {
         ),
         ApiMethodDefinition(
           name: PlatformPullToRefreshControllerMethod.dispose.name,
-          signature: 'void dispose()',
+          signature: 'void dispose({bool isKeepAlive = false})',
           description: 'Disposes the controller.',
           className: className,
         ),
@@ -3161,38 +3164,44 @@ class SupportChecker {
         ApiMethodDefinition(
           name:
               PlatformServiceWorkerControllerMethod.getAllowContentAccess.name,
-          signature: 'static Future<bool> getAllowContentAccess()',
+          signature:
+              'static Future<bool> getAllowContentAccess({String? profileName})',
           description: 'Gets allow content access setting.',
           className: className,
         ),
         ApiMethodDefinition(
           name:
               PlatformServiceWorkerControllerMethod.setAllowContentAccess.name,
-          signature: 'static Future<void> setAllowContentAccess(bool allow)',
+          signature:
+              'static Future<void> setAllowContentAccess(bool allow, {String? profileName})',
           description: 'Sets allow content access setting.',
           className: className,
         ),
         ApiMethodDefinition(
           name: PlatformServiceWorkerControllerMethod.getAllowFileAccess.name,
-          signature: 'static Future<bool> getAllowFileAccess()',
+          signature:
+              'static Future<bool> getAllowFileAccess({String? profileName})',
           description: 'Gets allow file access setting.',
           className: className,
         ),
         ApiMethodDefinition(
           name: PlatformServiceWorkerControllerMethod.setAllowFileAccess.name,
-          signature: 'static Future<void> setAllowFileAccess(bool allow)',
+          signature:
+              'static Future<void> setAllowFileAccess(bool allow, {String? profileName})',
           description: 'Sets allow file access setting.',
           className: className,
         ),
         ApiMethodDefinition(
           name: PlatformServiceWorkerControllerMethod.getBlockNetworkLoads.name,
-          signature: 'static Future<bool> getBlockNetworkLoads()',
+          signature:
+              'static Future<bool> getBlockNetworkLoads({String? profileName})',
           description: 'Gets block network loads setting.',
           className: className,
         ),
         ApiMethodDefinition(
           name: PlatformServiceWorkerControllerMethod.setBlockNetworkLoads.name,
-          signature: 'static Future<void> setBlockNetworkLoads(bool block)',
+          signature:
+              'static Future<void> setBlockNetworkLoads(bool flag, {String? profileName})',
           description: 'Sets block network loads setting.',
           className: className,
         ),

@@ -1,18 +1,21 @@
 // Gates the `signature:` strings in `support_checker.dart` against the real
 // declarations in the `flutter_inappwebview` facade.
 //
-// WHY ONLY THE RETURN TYPE. The strings are hand-written *summaries*, not exact
-// signatures — 30 of them abbreviate their parameter list with a literal `...`
-// (`'Future<void> loadData({required String data, ...})'`). Dart has no runtime
-// reflection, so nothing can check them as a whole without either generating
-// them or rewriting all 252. But every defect ever found in this field was a
-// **return type** that lied: §137 (`flush`), §139 (`deleteCookie`,
-// `deleteCookies`, `deleteAllCookies`) and nine more found by this test when it
-// was first written. The return type is the part that is both checkable and
-// the part that has actually gone wrong, so that is what is pinned here.
+// The strings are hand-written, and 25 of them abbreviate their parameter list
+// with a literal `...` (`'Future<void> loadData({required String data, ...})'`).
+// Two tests:
 //
-// The parameter lists remain unchecked free text. That is a known, deliberate
-// gap — see the P6 row.
+// * The return type and `static` (§153). Return types that lied were the first
+//   defects found here: §137 (`flush`), §139 (`deleteCookie`, `deleteCookies`,
+//   `deleteAllCookies`) and nine more when this test was first written.
+// * The parameter list (§292). A list without `...` must match the declaration
+//   exactly: names in order, positional / named / optional, `required`, and
+//   types. One with `...` is a summary, so only the parameters it does name are
+//   checked, each against the declaration. §292 found 26 wrong when it added
+//   this: optional parameters left out without a `...`, named where the real
+//   parameter is positional, and wrong names and types.
+//
+// Default values aren't compared (a summary may leave them out).
 import 'dart:io';
 
 import 'package:flutter_test/flutter_test.dart';
@@ -80,6 +83,90 @@ _Declaration? _findDeclaration(String classBody, String methodName) {
     return _Declaration(type, m.group(1) != null);
   }
   return null;
+}
+
+/// The text between the `(` at [open] and its matching `)`.
+String? _balanced(String s, int open) {
+  var depth = 0;
+  for (var i = open; i < s.length; i++) {
+    if (s[i] == '(') depth++;
+    if (s[i] == ')') {
+      depth--;
+      if (depth == 0) return s.substring(open + 1, i);
+    }
+  }
+  return null;
+}
+
+/// The parameter list of [methodName]'s declaration in [classBody], found the
+/// same way [_findDeclaration] finds its return type.
+String? _declaredParameters(String classBody, String methodName) {
+  final pattern = RegExp(
+    r'(?:^|\n)[ \t]*(static[ \t]+)?([\w<>,\s?.]+?)[ \t]+' +
+        RegExp.escape(methodName) +
+        r'[ \t]*\(',
+  );
+  for (final m in pattern.allMatches(classBody)) {
+    final type = _normalize(m.group(2)!);
+    if (type.contains('.') && !type.startsWith('Future<')) continue;
+    if (type == 'return' || type == 'await') continue;
+    return _balanced(classBody, m.end - 1);
+  }
+  return null;
+}
+
+/// Splits a parameter list on its top-level commas.
+List<String> _splitTopLevel(String s) {
+  final parts = <String>[];
+  var depth = 0;
+  var last = 0;
+  for (var i = 0; i < s.length; i++) {
+    final c = s[i];
+    if ('<([{'.contains(c)) depth++;
+    if ('>)]}'.contains(c)) depth--;
+    if (c == ',' && depth == 0) {
+      parts.add(s.substring(last, i));
+      last = i + 1;
+    }
+  }
+  parts.add(s.substring(last));
+  return parts.map((p) => p.trim()).where((p) => p.isNotEmpty).toList();
+}
+
+/// One entry per parameter: `<kind><!if required> <type> <name>`, kind being
+/// `p` (positional), `n` (named) or `o` (optional positional). Defaults,
+/// comments and annotations are dropped.
+List<String> _parameters(String list) {
+  final s = list
+      .replaceAll(RegExp(r'//[^\n]*'), '')
+      .replaceAll(RegExp(r'@\w+(\([^)]*\))?'), '');
+  final result = <String>[];
+  void add(String part, String kind) {
+    for (var p in _splitTopLevel(part)) {
+      final eq = p.indexOf('=');
+      if (eq >= 0) p = p.substring(0, eq);
+      p = p.trim().replaceAll(RegExp(r'\s+'), ' ');
+      final required = p.startsWith('required ');
+      if (required) p = p.substring('required '.length);
+      final space = p.lastIndexOf(' ');
+      final name = space < 0 ? p : p.substring(space + 1);
+      final type = space < 0 ? '' : _normalize(p.substring(0, space));
+      result.add('$kind${required ? '!' : ''} $type $name');
+    }
+  }
+
+  final brace = s.indexOf('{');
+  final bracket = s.indexOf('[');
+  if (brace >= 0) {
+    add(s.substring(0, brace), 'p');
+    add(s.substring(brace + 1, s.lastIndexOf('}')), 'n');
+  } else if (bracket >= 0 && !s.substring(0, bracket).contains('<')) {
+    add(s.substring(0, bracket), 'p');
+    add(s.substring(bracket + 1, s.lastIndexOf(']')), 'o');
+  } else {
+    add(s, 'p');
+  }
+  return result;
 }
 
 /// Display class name -> the class that actually declares the methods.
@@ -181,6 +268,67 @@ void main() {
         reason:
             'Only $checked signatures were checked; the gate has stopped covering the list.',
       );
+    });
+
+    test('every stated parameter list matches the declared one', () {
+      final lies = <String>[];
+      final unresolved = <String>[];
+      var exact = 0;
+      var abbreviated = 0;
+
+      for (final classDef in SupportChecker.getAllApiDefinitions()) {
+        final body =
+            classBodies[_declaringClass[classDef.className] ??
+                classDef.className];
+        for (final method in classDef.methods) {
+          final at = method.signature.indexOf(' ${method.name}(');
+          final stated = at < 0
+              ? null
+              : _balanced(method.signature, at + method.name.length + 1);
+          final declared = body == null
+              ? null
+              : _declaredParameters(body, method.name);
+          if (stated == null || declared == null) {
+            unresolved.add('${classDef.className}.${method.name}');
+            continue;
+          }
+          final declaredParameters = _parameters(declared);
+          final where = '${classDef.className}.${method.name}';
+          if (stated.contains('...')) {
+            // A summary: each parameter it names must exist as named.
+            abbreviated++;
+            final listed = _parameters(
+              stated.replaceAll('...', ''),
+            ).where((p) => !p.endsWith(' '));
+            for (final p in listed) {
+              if (!declaredParameters.contains(p)) {
+                lies.add('$where: names "$p", not among $declaredParameters');
+              }
+            }
+          } else {
+            exact++;
+            final statedParameters = _parameters(stated);
+            if (statedParameters.join(', ') != declaredParameters.join(', ')) {
+              lies.add(
+                '$where: says (${statedParameters.join(', ')}), '
+                'declares (${declaredParameters.join(', ')}); '
+                'list them all, or abbreviate with "..."',
+              );
+            }
+          }
+        }
+      }
+
+      expect(unresolved, isEmpty, reason: unresolved.join('\n'));
+      expect(
+        lies,
+        isEmpty,
+        reason:
+            'A displayed signature that lies is worse than none:\n${lies.join('\n')}',
+      );
+      // Coverage floors, as for the return types.
+      expect(exact, greaterThanOrEqualTo(225));
+      expect(abbreviated, 25);
     });
 
     test('the corpus is the size we think it is', () {

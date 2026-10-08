@@ -1183,6 +1183,14 @@ simulator for the first time:**
 
 ### Internal
 
+- **The example's support screen showed 26 wrong parameter lists; they are fixed and gated.**
+  Only return types and `static` were checked against the facade before. Measured: 15 left out
+  optional parameters without a `...` (`profileName`, `isKeepAlive`, `maxSize`, …), 7 named a
+  parameter that is positional or used a wrong name (`hasWebMessageListener({required String
+  jsObjectName})` for `hasWebMessageListener(WebMessageListener webMessageListener)`), 2 had a
+  wrong type, and 2 abbreviated ones named a parameter that doesn't exist or mistyped one.
+  `support_checker_signature_test` now checks every parameter list: exactly when written out,
+  and each named parameter when abbreviated with `...`
 - **`a malformed proxy rule fails as a named error` no longer fails on iOS**: it tests androidx's
   validation and the Pigeon error path, and on iOS it called the Android-only
   `WebViewFeature.isFeatureSupported` first (`UnimplementedError`). It runs on Android only now.
