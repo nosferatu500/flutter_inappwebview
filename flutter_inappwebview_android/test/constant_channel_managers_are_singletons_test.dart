@@ -2,24 +2,29 @@ import 'package:flutter_inappwebview_android/flutter_inappwebview_android.dart';
 import 'package:flutter_inappwebview_platform_interface/flutter_inappwebview_platform_interface.dart';
 import 'package:flutter_test/flutter_test.dart';
 
-/// Every manager below attaches its method-call handler to a **constant**
-/// `MethodChannel` name. `setMethodCallHandler` is last-writer-wins per channel
-/// name and tells the loser nothing, so if a factory mints a new object each
-/// call, the previously-registered one silently stops receiving calls.
+/// Pins that each process-wide manager's factory returns one instance (§155).
 ///
-/// That is not hypothetical: it is how `ServiceWorkerController.shouldInterceptRequest`
-/// broke (§141), and why `AndroidServiceWorkerController._serviceWorkerClient`
-/// and `IOSCookieManager`'s observer are `static` — workarounds that move the
-/// *state* process-wide so it stops mattering which object owns the handler.
+/// Why it mattered: these managers once attached their handlers to a **constant**
+/// `MethodChannel` name, and `setMethodCallHandler` is last-writer-wins per name
+/// and tells the loser nothing, so a factory minting a new object each call left
+/// the previous one deaf. That is how `ServiceWorkerController.shouldInterceptRequest`
+/// broke (§141).
 ///
-/// §155 made the factories return one instance instead, which fixes the
-/// ordinary path. This pins that.
+/// Where it stands (re-measured §291): all ten are Pigeon now. Nine only call the
+/// platform (a `HostApi`) and register no Dart-side handler at all, so a second
+/// instance takes nothing from the first. `ServiceWorkerController` still
+/// registers one, `ServiceWorkerFlutterApi.setUp`, on a constant channel, once
+/// per construction and last writer wins, but that handler is stateless: it reads
+/// the `static` `_serviceWorkerClient`, so whichever instance registered last
+/// answers the same. The test stays as a guard: one instance per factory is still
+/// the contract, and a manager that gains a Dart-side handler would bring the
+/// hazard back.
 ///
 /// WHAT THIS DOES NOT CLAIM. The public constructors are still public, so a
-/// caller can create a second instance and take the handler. §141's regression
-/// test exercises exactly that and must keep passing — the `static` fields are
-/// what make it survivable. Closing that hole means private constructors, a
-/// breaking change to this package, and is deliberately not done here.
+/// caller can create a second instance. §141's regression test exercises that
+/// for `ServiceWorkerController` and must keep passing; the `static` client is
+/// what makes it survivable. Closing that means private constructors, a breaking
+/// change to this package, and is deliberately not done here.
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
 
@@ -77,9 +82,7 @@ void main() {
         expect(
           identical(first, second),
           isTrue,
-          reason:
-              '${entry.key}: the factory returned two different objects, so the '
-              'second has taken the method-call handler from the first.',
+          reason: '${entry.key}: the factory returned two different objects.',
         );
       });
     }

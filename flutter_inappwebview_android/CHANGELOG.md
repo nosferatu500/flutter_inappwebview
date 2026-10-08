@@ -560,6 +560,10 @@ for, and five others have a native *value* that differs from their name.
 
 ### Internal
 
+- **`constant_channel_managers_are_singletons_test`'s explanation is current again.** It said every
+  manager attaches a handler to a constant `MethodChannel`; re-measured, all ten are Pigeon, nine
+  register no Dart-side handler, and `ServiceWorkerController`'s one is stateless. The test (one
+  instance per factory) is unchanged; its doc and failure message now say why it is still kept
 - **Three opt-in lint rules are enabled:** `avoid_void_async`, `close_sinks`,
   `no_adjacent_strings_in_list`. The one finding, in a test, was an error message split over two
   adjacent literals inside a list; it's now one literal with the same value.
