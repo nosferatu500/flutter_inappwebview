@@ -560,6 +560,13 @@ for, and five others have a native *value* that differs from their name.
 
 ### Internal
 
+- **`InputMethodManager.HIDE_NOT_ALWAYS` is no longer used.** The tap-outside-to-dismiss
+  workaround (only without Hybrid Composition) hides the keyboard with flags 0, as
+  `hideInputMethod` already did, and its `@Suppress("DEPRECATION")` helper is gone. The flag is
+  documented as having no effect from API 36, and before that it only spared a keyboard shown with
+  `SHOW_FORCED`, which this plugin never uses. Measured on API 33 and API 37 emulators: the keyboard
+  is dismissed the same way with either flag, on API 33 also after a `SHOW_FORCED` show, and also
+  with the workaround's hide deleted
 - **`constant_channel_managers_are_singletons_test`'s explanation is current again.** It said every
   manager attaches a handler to a constant `MethodChannel`; re-measured, all ten are Pigeon, nine
   register no Dart-side handler, and `ServiceWorkerController`'s one is stateless. The test (one

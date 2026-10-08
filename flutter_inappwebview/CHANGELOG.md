@@ -1183,6 +1183,10 @@ simulator for the first time:**
 
 ### Internal
 
+- **A device test covers the Android keyboard workaround without Hybrid Composition:** the
+  keyboard stays up on an input, and a tap outside dismisses it. It needs a docked soft keyboard,
+  which the test emulators (hardware keyboard) don't show by default, so there it skips; its
+  comment says how to get one on API 33 and API 37
 - **The example's `LaunchScreen.storyboard` no longer warns "older than the deployment target".**
   Its `<deployment version="4352">` is gone, as `WebView.storyboard`'s was. Measured with Xcode
   26.6's `ibtool`: the warning comes for any `version` below 5376, whatever the minimum deployment
