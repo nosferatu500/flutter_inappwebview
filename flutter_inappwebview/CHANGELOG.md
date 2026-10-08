@@ -1203,6 +1203,11 @@ simulator for the first time:**
 
 ### Internal
 
+- **The all-groups test entry point (`webview_flutter_test.dart`) runs to the end on Android.**
+  `printCurrentPage` raises a print dialog nothing can dismiss, and it took every later group down
+  with it; it now skips there (it still runs in its own group). Measured: all groups ran, 342 passed
+  in 928 s. The one failure that run found was a `WebStorageManager.getOrigins` test that assumed no
+  earlier test had used storage; it now checks only the origin it writes to
 - **An Android device test covers a WebView removed in the frame after it was added**, in both
   rendering modes: its page stops and its controller is disposed. Measured first: by ordinary timing
   the view is always created before that frame completes (6 / 6); the literal same-frame case can't

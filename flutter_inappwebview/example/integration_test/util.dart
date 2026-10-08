@@ -30,6 +30,10 @@ int? iosMajorVersion() {
   return match == null ? null : int.tryParse(match.group(0)!);
 }
 
+/// True when every group runs in one process (`webview_flutter_test.dart` sets it before
+/// registering them). Tests that leave state no later group can recover from skip there (§304).
+bool runningAllGroups = false;
+
 /// [pumping] (a `pump` or `pumpWidget`), asking the engine for its frame again every 2 s that it
 /// has not come, up to 10 times, and printing each time.
 ///

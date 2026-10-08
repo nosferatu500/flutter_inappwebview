@@ -1,6 +1,8 @@
 import 'package:flutter_inappwebview/flutter_inappwebview.dart';
 import 'package:integration_test/integration_test.dart';
 
+import 'util.dart';
+
 import 'process_global_config/main.dart' as process_global_config_tests;
 import 'in_app_webview/main.dart' as in_app_webview_tests;
 import 'find_interaction_controller/main.dart'
@@ -42,6 +44,9 @@ void main() {
   PlatformFindInteractionController.debugLoggingSettings.usePrint = true;
   PlatformFindInteractionController.debugLoggingSettings.maxLogMessageLength =
       7000;
+
+  // Before any group registers its tests: skips are decided at registration (§304).
+  runningAllGroups = true;
 
   process_global_config_tests.main();
   in_app_webview_tests.main();

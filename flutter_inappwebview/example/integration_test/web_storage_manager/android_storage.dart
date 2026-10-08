@@ -21,72 +21,80 @@ void androidStorage() {
   final fixtureOrigin = 'http://${environment['NODE_SERVER_IP']}:8082';
 
   skippableGroup('android storage', () {
-    skippableTestWidgets('getOrigins is empty even with storage in use', (
-      WidgetTester tester,
-    ) async {
-      // 🚨 **Measured, and it is the headline finding of this group.** `WebStorage.getOrigins()`
-      // reports origins using the **Web SQL Database** API, which modern Chromium has removed --
-      // `typeof openDatabase` is `"undefined"` on the API 37 WebView. So this returns an empty list
-      // no matter how much storage a page actually uses.
-      //
-      // The probe behind this loaded the fixture, wrote **50 000 characters** into `localStorage`
-      // (confirmed by reading it back in JS), waited 3 s, and still got `[]`.
-      //
-      // This is pinned rather than filed as a bug because it is the platform's behaviour, not the
-      // plugin's -- but it means `getOrigins`, `getQuotaForOrigin` and `getUsageForOrigin` are
-      // effectively dead API on a current WebView, which no unit test could ever reveal.
-      final manager = WebStorageManager.instance();
+    skippableTestWidgets(
+      "getOrigins doesn't list an origin that only uses localStorage",
+      (WidgetTester tester) async {
+        // 🚨 **Measured.** `WebStorage.getOrigins()` is documented to report origins using Web SQL,
+        // which modern Chromium has removed (`typeof openDatabase` is `"undefined"` on the API 37
+        // WebView), and `localStorage` doesn't count: the probe behind this wrote **50 000
+        // characters** into it (read back in JS), waited 3 s, and got `[]`.
+        //
+        // It is not empty in general, though. Run after the other groups (`webview_flutter_test.dart`,
+        // §304) it listed `https://mdn.github.io/` (usage 384 961) and `http://localhost:8080/`
+        // (usage 0), the origins of the two service-worker tests. So this asserts only what it
+        // measures: the fixture origin, which uses `localStorage` alone, isn't listed.
+        final manager = WebStorageManager.instance();
 
-      final controllerCompleter = Completer<InAppWebViewController>();
-      final pageLoaded = Completer<String>();
+        final controllerCompleter = Completer<InAppWebViewController>();
+        final pageLoaded = Completer<String>();
 
-      await tester.pumpWidget(
-        Directionality(
-          textDirection: TextDirection.ltr,
-          child: InAppWebView(
-            key: GlobalKey(),
-            initialUrlRequest: URLRequest(url: WebUri('$fixtureOrigin/')),
-            initialSettings: InAppWebViewSettings(
-              databaseEnabled: true,
-              domStorageEnabled: true,
+        await tester.pumpWidget(
+          Directionality(
+            textDirection: TextDirection.ltr,
+            child: InAppWebView(
+              key: GlobalKey(),
+              initialUrlRequest: URLRequest(url: WebUri('$fixtureOrigin/')),
+              initialSettings: InAppWebViewSettings(
+                databaseEnabled: true,
+                domStorageEnabled: true,
+              ),
+              onWebViewCreated: controllerCompleter.complete,
+              onLoadStop: (controller, url) {
+                if (!pageLoaded.isCompleted) {
+                  pageLoaded.complete(url.toString());
+                }
+              },
             ),
-            onWebViewCreated: controllerCompleter.complete,
-            onLoadStop: (controller, url) {
-              if (!pageLoaded.isCompleted) pageLoaded.complete(url.toString());
-            },
           ),
-        ),
-      );
+        );
 
-      final controller = await controllerCompleter.future;
-      await pageLoaded.future;
+        final controller = await controllerCompleter.future;
+        await pageLoaded.future;
 
-      final written = await controller.evaluateJavascript(
-        source:
-            "(function(){localStorage.setItem('probe','x'.repeat(50000));"
-            "return localStorage.getItem('probe').length;})();",
-      );
-      expect(
-        written,
-        50000,
-        reason: 'the page really did store 50 000 characters',
-      );
+        final written = await controller.evaluateJavascript(
+          source:
+              "(function(){localStorage.setItem('probe','x'.repeat(50000));"
+              "return localStorage.getItem('probe').length;})();",
+        );
+        expect(
+          written,
+          50000,
+          reason: 'the page really did store 50 000 characters',
+        );
 
-      // The negative control for the assertion below: Web SQL is what getOrigins reports on, and it
-      // no longer exists. Without this, an empty list would just look like a broken channel.
-      final hasWebSql = await controller.evaluateJavascript(
-        source: "(typeof openDatabase === 'function')",
-      );
-      expect(
-        hasWebSql,
-        isFalse,
-        reason:
-            'if a future WebView restores Web SQL, getOrigins may start reporting and this '
-            'group needs revisiting',
-      );
+        // The negative control for the assertion below: Web SQL is what getOrigins reports on, and it
+        // no longer exists. Without this, an empty list would just look like a broken channel.
+        final hasWebSql = await controller.evaluateJavascript(
+          source: "(typeof openDatabase === 'function')",
+        );
+        expect(
+          hasWebSql,
+          isFalse,
+          reason:
+              'if a future WebView restores Web SQL, getOrigins may start reporting and this '
+              'group needs revisiting',
+        );
 
-      expect(await manager.getOrigins(), isEmpty);
-    }, skip: shouldSkip);
+        final origins = await manager.getOrigins();
+        expect(
+          origins.map((o) => o.origin),
+          isNot(anyElement(startsWith(fixtureOrigin))),
+          reason:
+              'localStorage alone should not make getOrigins list the origin: $origins',
+        );
+      },
+      skip: shouldSkip,
+    );
 
     skippableTest(
       'getQuotaForOrigin reports one global figure, not a per-origin one',
