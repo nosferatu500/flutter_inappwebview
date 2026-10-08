@@ -15,40 +15,57 @@ void webViewWindows() {
     skippableTestWidgets('onCreateWindow return false', (
       WidgetTester tester,
     ) async {
+      final deadline = TestDeadline();
       final Completer<InAppWebViewController> controllerCompleter =
           Completer<InAppWebViewController>();
       final Completer<void> pageLoaded = Completer<void>();
-      await InAppWebViewController.clearAllCache();
+      final events = <String>[];
+      String state() => 'events: $events';
+      await deadline.step(
+        'clearAllCache',
+        InAppWebViewController.clearAllCache(),
+      );
 
-      await tester.pumpWidget(
-        Directionality(
-          textDirection: TextDirection.ltr,
-          child: InAppWebView(
-            key: GlobalKey(),
-            initialFile:
-                "test_assets/in_app_webview_on_create_window_test.html",
-            initialSettings: InAppWebViewSettings(
-              javaScriptCanOpenWindowsAutomatically: true,
+      await deadline.frame(
+        'mounting the WebView',
+        tester.pumpWidget(
+          Directionality(
+            textDirection: TextDirection.ltr,
+            child: InAppWebView(
+              key: GlobalKey(),
+              initialFile:
+                  "test_assets/in_app_webview_on_create_window_test.html",
+              initialSettings: InAppWebViewSettings(
+                javaScriptCanOpenWindowsAutomatically: true,
+              ),
+              onWebViewCreated: (controller) {
+                controllerCompleter.complete(controller);
+              },
+              onLoadStop: (controller, url) {
+                events.add('stop $url');
+                if (url!.toString() == TEST_URL_EXAMPLE.toString()) {
+                  pageLoaded.complete();
+                }
+              },
+              onCreateWindow: (controller, createNavigationAction) async {
+                events.add('onCreateWindow');
+                unawaited(
+                  controller.loadUrl(
+                    urlRequest: createNavigationAction.request,
+                  ),
+                );
+                return false;
+              },
             ),
-            onWebViewCreated: (controller) {
-              controllerCompleter.complete(controller);
-            },
-            onLoadStop: (controller, url) {
-              if (url!.toString() == TEST_URL_EXAMPLE.toString()) {
-                pageLoaded.complete();
-              }
-            },
-            onCreateWindow: (controller, createNavigationAction) async {
-              unawaited(
-                controller.loadUrl(urlRequest: createNavigationAction.request),
-              );
-              return false;
-            },
           ),
         ),
       );
-      await tester.pump();
-      await expectLater(pageLoaded.future, completes);
+      await deadline.frame('the first frame', tester.pump());
+      await deadline.step(
+        "the window's URL loaded in this WebView",
+        pageLoaded.future,
+        state: state,
+      );
     }, skip: shouldSkipTest1);
 
     final shouldSkipTest2 =
@@ -60,72 +77,109 @@ void webViewWindows() {
     skippableTestWidgets('onCreateWindow return true', (
       WidgetTester tester,
     ) async {
+      final deadline = TestDeadline();
       final Completer<InAppWebViewController> controllerCompleter =
           Completer<InAppWebViewController>();
       final Completer<int> onCreateWindowCompleter = Completer<int>();
-      await InAppWebViewController.clearAllCache();
+      final popupEvents = <String>[];
+      String state() => 'popup events: $popupEvents';
+      await deadline.step(
+        'clearAllCache',
+        InAppWebViewController.clearAllCache(),
+      );
 
-      await tester.pumpWidget(
-        Directionality(
-          textDirection: TextDirection.ltr,
-          child: InAppWebView(
-            key: GlobalKey(),
-            initialFile:
-                "test_assets/in_app_webview_on_create_window_test.html",
-            initialSettings: InAppWebViewSettings(
-              javaScriptCanOpenWindowsAutomatically: true,
-              supportMultipleWindows: true,
+      await deadline.frame(
+        'mounting the opener',
+        tester.pumpWidget(
+          Directionality(
+            textDirection: TextDirection.ltr,
+            child: InAppWebView(
+              key: GlobalKey(),
+              initialFile:
+                  "test_assets/in_app_webview_on_create_window_test.html",
+              initialSettings: InAppWebViewSettings(
+                javaScriptCanOpenWindowsAutomatically: true,
+                supportMultipleWindows: true,
+              ),
+              onWebViewCreated: (controller) {
+                controllerCompleter.complete(controller);
+              },
+              onCreateWindow: (controller, createNavigationAction) async {
+                onCreateWindowCompleter.complete(
+                  createNavigationAction.windowId,
+                );
+                return true;
+              },
             ),
-            onWebViewCreated: (controller) {
-              controllerCompleter.complete(controller);
-            },
-            onCreateWindow: (controller, createNavigationAction) async {
-              onCreateWindowCompleter.complete(createNavigationAction.windowId);
-              return true;
-            },
           ),
         ),
       );
 
-      await tester.pump();
+      await deadline.frame('the first frame', tester.pump());
 
-      var windowId = await onCreateWindowCompleter.future;
+      var windowId = await deadline.step(
+        "the opener's onCreateWindow",
+        onCreateWindowCompleter.future,
+      );
 
       final Completer windowControllerCompleter =
           Completer<InAppWebViewController>();
       final Completer<String> windowPageLoaded = Completer<String>();
       final Completer<void> onCloseWindowCompleter = Completer<void>();
 
-      await InAppWebViewController.clearAllCache();
+      await deadline.step(
+        'clearAllCache',
+        InAppWebViewController.clearAllCache(),
+      );
 
-      await tester.pumpWidget(
-        Directionality(
-          textDirection: TextDirection.ltr,
-          child: InAppWebView(
-            key: GlobalKey(),
-            windowId: windowId,
-            onWebViewCreated: (controller) {
-              windowControllerCompleter.complete(controller);
-            },
-            onLoadStop: (controller, url) async {
-              if (url!.scheme != "about" && !windowPageLoaded.isCompleted) {
-                windowPageLoaded.complete(url.toString());
-                await controller.evaluateJavascript(source: "window.close();");
-              }
-            },
-            onCloseWindow: (controller) {
-              onCloseWindowCompleter.complete();
-            },
+      await deadline.frame(
+        'mounting the popup (windowId $windowId)',
+        tester.pumpWidget(
+          Directionality(
+            textDirection: TextDirection.ltr,
+            child: InAppWebView(
+              key: GlobalKey(),
+              windowId: windowId,
+              onWebViewCreated: (controller) {
+                windowControllerCompleter.complete(controller);
+              },
+              onLoadStart: (controller, url) => popupEvents.add('start $url'),
+              onLoadStop: (controller, url) async {
+                popupEvents.add('stop $url');
+                if (url!.scheme != "about" && !windowPageLoaded.isCompleted) {
+                  windowPageLoaded.complete(url.toString());
+                  await controller.evaluateJavascript(
+                    source: "window.close();",
+                  );
+                }
+              },
+              onCloseWindow: (controller) {
+                popupEvents.add('onCloseWindow');
+                onCloseWindowCompleter.complete();
+              },
+            ),
           ),
         ),
       );
 
-      await tester.pump();
+      await deadline.frame(
+        'the first frame after mounting the popup',
+        tester.pump(),
+        state: state,
+      );
 
-      final String windowUrlLoaded = await windowPageLoaded.future;
+      final String windowUrlLoaded = await deadline.step(
+        "the popup's first load",
+        windowPageLoaded.future,
+        state: state,
+      );
 
       expect(windowUrlLoaded, TEST_URL_EXAMPLE.toString());
-      await expectLater(onCloseWindowCompleter.future, completes);
+      await deadline.step(
+        "the popup's onCloseWindow after window.close()",
+        onCloseWindowCompleter.future,
+        state: state,
+      );
     }, skip: shouldSkipTest2);
 
     // A popup WebView runs its own scripts, not its opener's.
@@ -221,12 +275,12 @@ void webViewWindows() {
         ),
       );
 
-      await deadline.step('mounting the opener', tester.pumpWidget(tree()));
+      await deadline.frame('mounting the opener', tester.pumpWidget(tree()));
       final windowId = await deadline.step(
         "the opener's onCreateWindow",
         windowIdCompleter.future,
       );
-      await deadline.step(
+      await deadline.frame(
         'mounting the popup (windowId $windowId)',
         tester.pumpWidget(tree(windowId: windowId)),
       );
@@ -363,12 +417,12 @@ void webViewWindows() {
         ),
       );
 
-      await deadline.step('mounting the opener', tester.pumpWidget(tree()));
+      await deadline.frame('mounting the opener', tester.pumpWidget(tree()));
       final windowId = await deadline.step(
         "the opener's onCreateWindow",
         windowIdCompleter.future,
       );
-      await deadline.step(
+      await deadline.frame(
         'mounting the popup (windowId $windowId)',
         tester.pumpWidget(tree(windowId: windowId)),
       );
@@ -548,17 +602,17 @@ void webViewWindows() {
 
       final deadline = TestDeadline();
       String state() => 'popup events: $events';
-      await deadline.step('mounting the opener', tester.pumpWidget(tree()));
+      await deadline.frame('mounting the opener', tester.pumpWidget(tree()));
       final windowId = await deadline.step(
         "the opener's onCreateWindow",
         windowIdCompleter.future,
       );
-      await deadline.step(
+      await deadline.frame(
         'mounting the popup (windowId $windowId)',
         tester.pumpWidget(tree(windowId: windowId)),
       );
       for (var i = 0; i < 50; i++) {
-        await deadline.step(
+        await deadline.frame(
           'pumping frames while the popup loads',
           tester.pump(const Duration(milliseconds: 100)),
           state: state,
@@ -720,7 +774,7 @@ void webViewWindows() {
         // 13 later runs both loads came after their waits began.
         final loadStops = <String>[];
         String state() => 'onLoadStop so far: $loadStops';
-        await deadline.step(
+        await deadline.frame(
           'mounting the WebView',
           tester.pumpWidget(
             Directionality(
@@ -790,56 +844,72 @@ void webViewWindows() {
       // Every `onLoadStop`, kept from the start, so a load that finishes before a wait begins
       // still counts, and a missing one fails with what did arrive.
       final loadStops = <String>[];
+      final deadline = TestDeadline();
+      String state() => 'onLoadStop so far: $loadStops';
 
-      await tester.pumpWidget(
-        Directionality(
-          textDirection: TextDirection.ltr,
-          child: InAppWebView(
-            key: GlobalKey(),
-            initialUrlRequest: URLRequest(url: WebUri(page1)),
-            onWebViewCreated: (controller) {
-              controllerCompleter.complete(controller);
-            },
-            initialSettings: InAppWebViewSettings(
-              javaScriptEnabled: true,
-              javaScriptCanOpenWindowsAutomatically: true,
+      await deadline.frame(
+        'mounting the WebView',
+        tester.pumpWidget(
+          Directionality(
+            textDirection: TextDirection.ltr,
+            child: InAppWebView(
+              key: GlobalKey(),
+              initialUrlRequest: URLRequest(url: WebUri(page1)),
+              onWebViewCreated: (controller) {
+                controllerCompleter.complete(controller);
+              },
+              initialSettings: InAppWebViewSettings(
+                javaScriptEnabled: true,
+                javaScriptCanOpenWindowsAutomatically: true,
+              ),
+              onLoadStop: (controller, url) {
+                loadStops.add(url.toString());
+              },
             ),
-            onLoadStop: (controller, url) {
-              loadStops.add(url.toString());
-            },
           ),
         ),
       );
 
-      await tester.pump();
+      await deadline.frame('the first frame', tester.pump());
 
-      final InAppWebViewController controller =
-          await controllerCompleter.future;
+      final InAppWebViewController controller = await deadline.step(
+        'onWebViewCreated',
+        controllerCompleter.future,
+      );
 
-      Future<void> waitForLoadStop(String url, {required int count}) async {
-        final elapsed = Stopwatch()..start();
-        while (loadStops.where((u) => u == url).length < count) {
-          if (elapsed.elapsed > const Duration(seconds: 20)) {
-            fail(
-              'onLoadStop #$count for $url did not come in 20 s; '
-              'onLoadStop so far: $loadStops',
-            );
-          }
-          await Future<void>.delayed(const Duration(milliseconds: 50));
-        }
-      }
+      Future<void> waitForLoadStop(String url, {required int count}) =>
+          deadline.until(
+            'onLoadStop #$count for $url',
+            () => loadStops.where((u) => u == url).length >= count,
+            state: state,
+          );
 
       await waitForLoadStop(page1, count: 1);
       // No `onCreateWindow`: the window's URL opens in this WebView.
-      await controller.evaluateJavascript(
-        source: 'window.open("$page2", "_blank");',
+      await deadline.step(
+        'window.open',
+        controller.evaluateJavascript(
+          source: 'window.open("$page2", "_blank");',
+        ),
       );
       await waitForLoadStop(page2, count: 1);
-      expect((await controller.getUrl()).toString(), page2);
+      expect(
+        (await deadline.step(
+          'getUrl on page 2',
+          controller.getUrl(),
+        )).toString(),
+        page2,
+      );
 
-      await controller.goBack();
+      await deadline.step('goBack', controller.goBack());
       await waitForLoadStop(page1, count: 2);
-      expect((await controller.getUrl()).toString(), page1);
+      expect(
+        (await deadline.step(
+          'getUrl after goBack',
+          controller.getUrl(),
+        )).toString(),
+        page1,
+      );
     }, skip: shouldSkipTest4);
 
     // Android blocks javascript: URLs opened from iframes for security reasons
@@ -883,43 +953,53 @@ void webViewWindows() {
       final Completer<InAppWebViewController> controllerCompleter =
           Completer<InAppWebViewController>();
       final Completer<void> pageLoadCompleter = Completer<void>();
+      final deadline = TestDeadline();
 
-      await tester.pumpWidget(
-        Directionality(
-          textDirection: TextDirection.ltr,
-          child: InAppWebView(
-            key: GlobalKey(),
-            initialUrlRequest: URLRequest(
-              url: WebUri(
-                'data:text/html;charset=utf-8;base64,$openWindowTestBase64',
+      await deadline.frame(
+        'mounting the WebView',
+        tester.pumpWidget(
+          Directionality(
+            textDirection: TextDirection.ltr,
+            child: InAppWebView(
+              key: GlobalKey(),
+              initialUrlRequest: URLRequest(
+                url: WebUri(
+                  'data:text/html;charset=utf-8;base64,$openWindowTestBase64',
+                ),
               ),
+              onWebViewCreated: (controller) {
+                controllerCompleter.complete(controller);
+              },
+              initialSettings: InAppWebViewSettings(
+                javaScriptEnabled: true,
+                javaScriptCanOpenWindowsAutomatically: true,
+              ),
+              onLoadStop: (controller, url) {
+                pageLoadCompleter.complete();
+              },
             ),
-            onWebViewCreated: (controller) {
-              controllerCompleter.complete(controller);
-            },
-            initialSettings: InAppWebViewSettings(
-              javaScriptEnabled: true,
-              javaScriptCanOpenWindowsAutomatically: true,
-            ),
-            onLoadStop: (controller, url) {
-              pageLoadCompleter.complete();
-            },
           ),
         ),
       );
 
-      final InAppWebViewController controller =
-          await controllerCompleter.future;
-      await pageLoadCompleter.future;
+      final InAppWebViewController controller = await deadline.step(
+        'onWebViewCreated',
+        controllerCompleter.future,
+      );
+      await deadline.step('the page load', pageLoadCompleter.future);
 
-      final iframeLoaded = await controller.evaluateJavascript(
-        source: 'iframeLoaded',
+      final iframeLoaded = await deadline.step(
+        'reading iframeLoaded',
+        controller.evaluateJavascript(source: 'iframeLoaded'),
       );
       expect(iframeLoaded, true);
 
-      final pElement = await controller.evaluateJavascript(
-        source:
-            'document.querySelector("p") && document.querySelector("p").textContent',
+      final pElement = await deadline.step(
+        'reading the <p> element',
+        controller.evaluateJavascript(
+          source:
+              'document.querySelector("p") && document.querySelector("p").textContent',
+        ),
       );
       expect(pElement, null);
     }, skip: shouldSkipTest5);

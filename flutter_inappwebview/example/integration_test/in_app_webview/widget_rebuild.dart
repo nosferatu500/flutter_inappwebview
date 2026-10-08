@@ -43,7 +43,7 @@ void widgetRebuild() {
     await deadline.step('the first onLoadStop', loaded.future);
     // Composite the view first, as an app's next frame would; with no pointer activity the binding
     // draws only the frames a test pumps (§268).
-    await deadline.step('the first frame after loading', tester.pump());
+    await deadline.frame('the first frame after loading', tester.pump());
     // Disposing the controller drops its JavaScript handlers (the app's closures), and reading
     // them back needs neither the platform nor a live channel, so this tells a disposed
     // controller from a leaked one on both platforms.
@@ -66,7 +66,7 @@ void widgetRebuild() {
     final deadline = TestDeadline();
     final controller = Completer<InAppWebViewController>();
     final loaded = Completer<void>();
-    await deadline.step(
+    await deadline.frame(
       'mounting the WebView',
       tester.pumpWidget(
         Directionality(
@@ -83,7 +83,7 @@ void widgetRebuild() {
       ),
     );
     final c = await created(tester, deadline, controller, loaded);
-    await deadline.step(
+    await deadline.frame(
       'unmounting the WebView',
       tester.pumpWidget(const SizedBox()),
     );
@@ -98,7 +98,7 @@ void widgetRebuild() {
       final loaded = Completer<void>();
       final generation = ValueNotifier<int>(0);
       final key = GlobalKey();
-      await deadline.step(
+      await deadline.frame(
         'mounting the WebView',
         tester.pumpWidget(
           Directionality(
@@ -120,10 +120,10 @@ void widgetRebuild() {
       );
       final c = await created(tester, deadline, controller, loaded);
       generation.value++;
-      await deadline.step('the first rebuild', tester.pump());
+      await deadline.frame('the first rebuild', tester.pump());
       generation.value++;
-      await deadline.step('the second rebuild', tester.pump());
-      await deadline.step(
+      await deadline.frame('the second rebuild', tester.pump());
+      await deadline.frame(
         'unmounting the WebView',
         tester.pumpWidget(const SizedBox()),
       );
@@ -147,7 +147,7 @@ void widgetRebuild() {
         },
       ).platform;
       final deadline = TestDeadline();
-      await deadline.step(
+      await deadline.frame(
         'mounting the WebView',
         tester.pumpWidget(
           Directionality(
@@ -163,8 +163,8 @@ void widgetRebuild() {
       );
       final c = await created(tester, deadline, controller, loaded);
       generation.value++;
-      await deadline.step('the rebuild', tester.pump());
-      await deadline.step(
+      await deadline.frame('the rebuild', tester.pump());
+      await deadline.frame(
         'unmounting the WebView',
         tester.pumpWidget(const SizedBox()),
       );

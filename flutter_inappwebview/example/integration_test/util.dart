@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:io' show Platform;
 
 import 'package:flutter/foundation.dart';
+import 'package:flutter/scheduler.dart';
 import 'package:flutter_inappwebview/flutter_inappwebview.dart';
 import 'package:flutter_test/flutter_test.dart';
 
@@ -29,6 +30,37 @@ int? iosMajorVersion() {
   return match == null ? null : int.tryParse(match.group(0)!);
 }
 
+/// [pumping] (a `pump` or `pumpWidget`), asking the engine for its frame again every 2 s that it
+/// has not come, up to 10 times, and printing each time.
+///
+/// The engine sometimes drops a frame request (§298). Measured on Android: right after a popup
+/// WebView was mounted, a pump's frame did not come in 5 s, with frames enabled, a frame scheduled
+/// and the platform thread answering a plugin call; one more `platformDispatcher.scheduleFrame()`
+/// brought it. Unrescued, the pump waited forever and every later test in the run failed on the
+/// test binding's asserts. With this: 4 rescues in 41 `WebView Windows` group runs (2 on Android, 2
+/// on iOS, all after mounting a popup) and 1 in a full Android group (removing a WebView), each
+/// needing one request.
+Future<void> rescueFrame(String name, Future<void> pumping) async {
+  var done = false;
+  unawaited(
+    pumping.then<void>((_) => done = true, onError: (Object _) => done = true),
+  );
+  for (var rescues = 0; rescues < 10; rescues++) {
+    await Future.any<void>([
+      pumping,
+      Future<void>.delayed(const Duration(seconds: 2)),
+    ]);
+    if (done) break;
+    // ignore: avoid_print
+    print(
+      'frame watchdog: "$name" has waited ${2 * (rescues + 1)} s for a frame; '
+      'asking the engine again (§298)',
+    );
+    SchedulerBinding.instance.platformDispatcher.scheduleFrame();
+  }
+  return pumping;
+}
+
 /// One deadline for a whole test, shared by its waits, so a hang fails naming the step it was in
 /// instead of reaching the 60 s test timeout with nothing to say which (§297). Pumps are steps too:
 /// a `pump` once hung on iOS with no wait of its own (§283). 50 s leaves the failure inside the test.
@@ -47,6 +79,13 @@ class TestDeadline {
     );
   }
 
+  /// [step] for a `pump` or `pumpWidget`, with [rescueFrame].
+  Future<void> frame(
+    String name,
+    Future<void> pumping, {
+    String Function()? state,
+  }) => step(name, rescueFrame(name, pumping), state: state);
+
   /// Polls [done] every 50 ms until it holds, failing like [step] if the deadline passes first.
   /// For events a test records as they come: waiting on a broadcast stream's `first` misses one
   /// that fired before the wait began (§297).
@@ -61,10 +100,17 @@ class TestDeadline {
     }
   }
 
-  Never _fail(String name, String Function()? state) => fail(
-    '$name: not done when the test deadline passed'
-    '${state == null ? '' : ' (${state()})'}',
-  );
+  Never _fail(String name, String Function()? state) {
+    final scheduler = SchedulerBinding.instance;
+    fail(
+      '$name: not done when the test deadline passed'
+      '${state == null ? '' : ' (${state()})'}'
+      ' [frames: enabled ${scheduler.framesEnabled}, '
+      'scheduled ${scheduler.hasScheduledFrame}, '
+      'phase ${scheduler.schedulerPhase.name}, '
+      'lifecycle ${scheduler.lifecycleState?.name}]',
+    );
+  }
 }
 
 class _NullOrEmpty extends Matcher {

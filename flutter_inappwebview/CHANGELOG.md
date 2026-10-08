@@ -1189,6 +1189,12 @@ simulator for the first time:**
 
 ### Internal
 
+- **Device tests no longer lose a whole run to a dropped frame.** As a WebView is mounted (a popup,
+  so far) or removed, the engine sometimes never answers a test's frame request (measured: frames enabled, one
+  scheduled, the platform thread answering); every later test then failed on the test binding's
+  asserts. A pump that has had no frame for 2 s now asks the engine again, which brought it each
+  time, and prints that it did. All the `WebView Windows` tests run under one per-test deadline,
+  and a deadline failure reports the scheduler's state
 - **The popup and rebuild device tests name the step they hang in.** A shared `TestDeadline`
   (50 s, under the 60 s test timeout) bounds each wait and pump in the `WebView Windows` popup tests
   and the three "controller is disposed with its widget" tests, so a hang fails with its step and
