@@ -1183,6 +1183,11 @@ simulator for the first time:**
 
 ### Internal
 
+- **The example's `LaunchScreen.storyboard` no longer warns "older than the deployment target".**
+  Its `<deployment version="4352">` is gone, as `WebView.storyboard`'s was. Measured with Xcode
+  26.6's `ibtool`: the warning comes for any `version` below 5376, whatever the minimum deployment
+  target (15.0, 17.0 and 26.0 tried), and never without the attribute, so the message doesn't
+  compare against the deployment target at all
 - **The example's support screen showed 26 wrong parameter lists; they are fixed and gated.**
   Only return types and `static` were checked against the facade before. Measured: 15 left out
   optional parameters without a `...` (`profileName`, `isKeepAlive`, `maxSize`, …), 7 named a
