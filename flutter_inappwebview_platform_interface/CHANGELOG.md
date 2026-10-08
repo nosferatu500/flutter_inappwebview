@@ -653,6 +653,10 @@ rename; this entry is the API-owner's view.
 
 ### Internal
 
+- **`setProxyOverride`'s doc says what a rule the platform can't parse does** (a `PlatformException`
+  with code `ProxyManager`; on iOS the setting in force is kept), that the platforms reject different
+  URLs, and two iOS routing facts measured while testing it: a local-network address wasn't proxied,
+  and a host already reached kept its old route after a change
 - **`InAppWebViewSettings.contentBlockers` says what happens on iOS when WebKit can't compile the
   rules**: at creation nothing loads (each navigation is reported through `onReceivedError`); through
   `setSettings` it throws a `PlatformException` and the previous rules stay. Also that rules set through

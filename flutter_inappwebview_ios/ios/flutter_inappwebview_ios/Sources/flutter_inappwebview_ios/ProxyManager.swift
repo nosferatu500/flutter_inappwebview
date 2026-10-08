@@ -24,8 +24,18 @@ public class ProxyManager: ChannelDelegate {
         case "setProxyOverride":
             if let args = arguments?["settings"] as? [String:Any?],
                let settings = ProxySettings.fromMap(map: args) {
-                setProxyOverride(settings)
-                result(true)
+                // All or nothing, as Android: a rule that can't be parsed fails the call and leaves
+                // the current override in place. Before §303 such a rule was dropped and the call
+                // returned normally; with every rule dropped, traffic went direct.
+                let (proxyConfigurations, rejected) = settings.toProxyConfigurations()
+                if rejected.isEmpty {
+                    setProxyOverride(proxyConfigurations)
+                    result(true)
+                } else {
+                    result(FlutterError(code: "ProxyManager",
+                                        message: "Proxy rules that can't be parsed, so the proxy override is unchanged: \(rejected)",
+                                        details: nil))
+                }
             } else {
                 result(false)
             }
@@ -40,8 +50,7 @@ public class ProxyManager: ChannelDelegate {
         }
     }
     
-    public func setProxyOverride(_ settings: ProxySettings) {
-        let proxyConfigurations = settings.toProxyConfigurations()
+    public func setProxyOverride(_ proxyConfigurations: [ProxyConfiguration]) {
         WKWebsiteDataStore.default().proxyConfigurations = proxyConfigurations
         WKWebsiteDataStore.nonPersistent().proxyConfigurations = proxyConfigurations
     }
@@ -81,14 +90,18 @@ public class ProxySettings {
         )
     }
     
-    public func toProxyConfigurations() -> [ProxyConfiguration] {
+    /// The configurations, and the URL of every rule that can't be turned into one.
+    public func toProxyConfigurations() -> (configurations: [ProxyConfiguration], rejected: [String]) {
         var proxyConfigurations: [ProxyConfiguration] = []
+        var rejected: [String] = []
         for rule in proxyRules {
             if let proxyConfiguration = rule.toProxyConfiguration() {
                 proxyConfigurations.append(proxyConfiguration)
+            } else {
+                rejected.append(rule.url)
             }
         }
-        return proxyConfigurations
+        return (proxyConfigurations, rejected)
     }
 }
 
@@ -139,6 +152,7 @@ public class ProxyRule {
         )
     }
     
+    /// Nil when the URL, or a relay hop's, can't be parsed.
     public func toProxyConfiguration() -> ProxyConfiguration? {
         guard let endpointUrl = URL(string: url.contains("://") ? url : "http://" + url),
               let port: NWEndpoint.Port = .init(rawValue: UInt16(endpointUrl.port ?? 80)),
@@ -156,7 +170,11 @@ public class ProxyRule {
         var proxyConfiguration: ProxyConfiguration
         let proxyRelayHops: [ProxyRelayHop] = [relayHop1, relayHop2].filter({ $0 != nil }).map({ $0! })
         if !proxyRelayHops.isEmpty {
-            proxyConfiguration = ProxyConfiguration(relayHops: proxyRelayHops.compactMap({ $0.toRelayHop() }))
+            let relayHops = proxyRelayHops.compactMap({ $0.toRelayHop() })
+            guard relayHops.count == proxyRelayHops.count else {
+                return nil
+            }
+            proxyConfiguration = ProxyConfiguration(relayHops: relayHops)
         } else {
             proxyConfiguration = endpointUrl.scheme?.lowercased() == "socks5" ?
             ProxyConfiguration(socksv5Proxy: endpoint) :

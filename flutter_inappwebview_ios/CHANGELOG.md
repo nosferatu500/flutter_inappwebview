@@ -141,6 +141,11 @@ Fourteen WebKit APIs read out of the iOS 26.5 SDK:
 
 ### Fixed
 
+- **`ProxyController.setProxyOverride` silently dropped a proxy rule it couldn't parse.** Measured:
+  `'://'`, `'http://['`, `'%%%'` and `''` each returned normally, and a call whose every rule was
+  dropped left an empty override, so traffic went direct while the app believed it was proxied. Now
+  all or nothing, as on Android: such a rule (or a relay hop that can't be parsed) fails the call with
+  a `PlatformException` (code `ProxyManager`) naming the rule URLs, and the override in force is kept
 - **`setSettings` with `contentBlockers` WebKit couldn't compile silently removed all blocking.** It
   removed the old rule list first and only printed the compile error. Measured: the next page loaded
   with nothing blocked, and `getSettings` reported the rule that had failed. The new rules are now

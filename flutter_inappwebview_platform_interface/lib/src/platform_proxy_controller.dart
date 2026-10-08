@@ -124,6 +124,14 @@ abstract class PlatformProxyController extends PlatformInterface {
   ///CONNECT tunnel. There is no plugin-side workaround; **use `https://` if the traffic must be
   ///proxied on iOS below 26**. Only 17.5 and 26.5 were measured, so the version that starts
   ///routing cleartext lies somewhere in 18–26 and is not established.
+  ///
+  ///A proxy rule the platform can't parse makes the call throw a `PlatformException` with code
+  ///`ProxyManager`; on iOS the setting already in force is kept. The platforms don't reject the same
+  ///URLs (Android accepts `"not a url"`, iOS doesn't).
+  ///
+  ///Also measured on iOS 26.5: a local-network address (`192.168.x.x`) was not sent through the
+  ///proxy, and a host the app had already reached kept its old route after the setting changed,
+  ///while hosts it hadn't reached used the new one.
   ///{@endtemplate}
   ///
   ///{@macro flutter_inappwebview_platform_interface.PlatformProxyController.setProxyOverride.supported_platforms}

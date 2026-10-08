@@ -22,9 +22,8 @@ part of 'main.dart';
 ///
 /// Android only. The test checks androidx's validation and the Pigeon error path, and on iOS it
 /// failed before reaching either, calling the Android-only `WebViewFeature.isFeatureSupported`
-/// (`UnimplementedError`). iOS has no such error to check: its `setProxyOverride` returned normally
-/// for all six inputs, dropping the rules it can't parse (`ProxyRule.toProxyConfiguration()` returns
-/// nil; `bypassRules` and `directs` don't exist in iOS's `ProxySettings`). Measured §287; filed.
+/// (`UnimplementedError`). iOS has its own test below: it used to return normally for every rule it
+/// couldn't parse, dropping it (measured §287); since §303 it throws the same named error.
 void malformedRules() {
   final shouldSkip =
       defaultTargetPlatform != TargetPlatform.android ||
@@ -100,4 +99,144 @@ void malformedRules() {
     // left dangling by the throw.
     await expectLater(proxyController.clearProxyOverride(), completes);
   }, skip: shouldSkip);
+
+  // iOS: a rule that can't be parsed fails the call, and the override in force stays (§303). It used
+  // to be dropped, the call returning normally; with every rule dropped the override became empty
+  // and traffic went direct. The override is seen through traffic: a proxy nobody listens on makes a
+  // page fail, and only a kept override keeps it failing. Measured first (§303): the LAN fixture
+  // bypasses the proxy, and a host already reached keeps its route after a change, so each check
+  // loads a public host this test hasn't reached (the control needs the internet). The mixed call
+  // comes first, so the last failed call has no rule that parses. iOS 26 and later only: iOS 17
+  // doesn't send cleartext HTTP through the proxy (§135).
+  final iosMajor = iosMajorVersion();
+  skippableTestWidgets(
+    'iOS: a proxy rule that can\'t be parsed fails and keeps the override',
+    (WidgetTester tester) async {
+      final deadline = TestDeadline();
+      final proxyController = ProxyController.instance();
+      final events = <String>[];
+      final controllerCompleter = Completer<InAppWebViewController>();
+      await deadline.frame(
+        'mounting the WebView',
+        tester.pumpWidget(
+          Directionality(
+            textDirection: TextDirection.ltr,
+            child: InAppWebView(
+              key: GlobalKey(),
+              initialData: InAppWebViewInitialData(data: 'start'),
+              onWebViewCreated: (c) => controllerCompleter.complete(c),
+              onLoadStop: (c, url) => events.add('stop $url'),
+              onReceivedError: (c, request, error) =>
+                  events.add('error ${request.url}'),
+            ),
+          ),
+        ),
+      );
+      final controller = await deadline.step(
+        'onWebViewCreated',
+        controllerCompleter.future,
+      );
+      await deadline.until(
+        'the initial load',
+        () => events.any((e) => e.startsWith('stop')),
+      );
+
+      // Loads [page] and says how it ended: 'stop' or 'error'.
+      Future<String> load(String why, WebUri page) async {
+        final before = events.length;
+        await deadline.step(
+          'loadUrl ($why)',
+          controller.loadUrl(urlRequest: URLRequest(url: page)),
+        );
+        await deadline.until(
+          '$page ending ($why)',
+          () => events.skip(before).any((e) => e.contains('$page')),
+          state: () => 'events: $events',
+        );
+        return events
+            .skip(before)
+            .firstWhere((e) => e.contains('$page'))
+            .split(' ')
+            .first;
+      }
+
+      try {
+        await deadline.step(
+          'clearProxyOverride',
+          proxyController.clearProxyOverride(),
+        );
+        await deadline.step(
+          'setProxyOverride to a closed port',
+          proxyController.setProxyOverride(
+            settings: ProxySettings(
+              proxyRules: [ProxyRule(url: 'http://127.0.0.1:9')],
+            ),
+          ),
+        );
+        expect(
+          await load(
+            'through the closed proxy',
+            WebUri('http://www.example.org/'),
+          ),
+          'error',
+          reason: 'the precondition: the override is in force',
+        );
+
+        final failures = <String, Object?>{};
+        for (final rules in <List<String>>[
+          ['http://127.0.0.1:8080', '://'],
+          ['://'],
+          ['http://['],
+          ['%%%'],
+          [''],
+        ]) {
+          Object? thrown;
+          try {
+            await deadline.step(
+              'setProxyOverride($rules)',
+              proxyController.setProxyOverride(
+                settings: ProxySettings(
+                  proxyRules: [for (final url in rules) ProxyRule(url: url)],
+                ),
+              ),
+            );
+          } catch (e) {
+            thrown = e;
+          }
+          failures['$rules'] = thrown is PlatformException
+              ? thrown.code
+              : thrown;
+        }
+        expect(failures, {
+          '[://]': 'ProxyManager',
+          '[http://[]': 'ProxyManager',
+          '[%%%]': 'ProxyManager',
+          '[]': 'ProxyManager',
+          '[http://127.0.0.1:8080, ://]': 'ProxyManager',
+        });
+        expect(
+          await load(
+            'after the failed calls',
+            WebUri('http://www.example.net/'),
+          ),
+          'error',
+          reason: 'the failed calls must leave the override in force',
+        );
+      } finally {
+        await deadline.step(
+          'clearProxyOverride',
+          proxyController.clearProxyOverride(),
+        );
+      }
+      expect(
+        await load('with the override cleared', WebUri('http://example.com/')),
+        'stop',
+        reason: 'the control: the page loads without a proxy',
+      );
+    },
+    skip:
+        defaultTargetPlatform != TargetPlatform.iOS ||
+        iosMajor == null ||
+        iosMajor < 26,
+  );
 }

@@ -792,6 +792,10 @@ since the `WebsiteDataType.ALL` fix below. It stays **deliberately out of `ALL`*
 
 ### Fixed
 
+**iOS — `setProxyOverride` with a proxy rule it can't parse now throws and keeps the current
+proxy**, as Android already did: it used to drop the rule silently, and with every rule dropped,
+traffic went direct. A device test pins it.
+
 **iOS — `setSettings` with `contentBlockers` that WebKit can't compile now throws and keeps the
 previous rules**: it used to drop every rule silently, so pages loaded unblocked while `getSettings`
 reported the failed rule. It now throws a `PlatformException` (code `contentBlockers`); the call's
