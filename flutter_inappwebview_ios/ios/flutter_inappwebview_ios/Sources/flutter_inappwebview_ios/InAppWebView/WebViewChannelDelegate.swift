@@ -160,18 +160,32 @@ public class WebViewChannelDelegate: ChannelDelegate {
             }
             break
         case .setSettings:
+            // Answered once any new `contentBlockers` are in force, or with an error when they
+            // failed to compile and the previous rules were kept (§301).
+            let reply: (String?) -> Void = { error in
+                if let error = error {
+                    result(FlutterError(code: "contentBlockers",
+                                        message: "contentBlockers could not be compiled, so the previous rules are kept: \(error)",
+                                        details: nil))
+                } else {
+                    result(true)
+                }
+            }
             if let iabController = webView?.inAppBrowserDelegate as? InAppBrowserWebViewController {
                 let inAppBrowserSettings = InAppBrowserSettings()
                 let inAppBrowserSettingsMap = arguments!["settings"] as! [String: Any]
                 let _ = inAppBrowserSettings.parse(settings: inAppBrowserSettingsMap)
-                iabController.setSettings(newSettings: inAppBrowserSettings, newSettingsMap: inAppBrowserSettingsMap)
-            } else {
+                iabController.setSettings(newSettings: inAppBrowserSettings, newSettingsMap: inAppBrowserSettingsMap,
+                                          contentBlockersApplied: reply)
+            } else if let webView = webView {
                 let inAppWebViewSettings = InAppWebViewSettings()
                 let inAppWebViewSettingsMap = arguments!["settings"] as! [String: Any]
                 let _ = inAppWebViewSettings.parse(settings: inAppWebViewSettingsMap)
-                webView?.setSettings(newSettings: inAppWebViewSettings, newSettingsMap: inAppWebViewSettingsMap)
+                webView.setSettings(newSettings: inAppWebViewSettings, newSettingsMap: inAppWebViewSettingsMap,
+                                    contentBlockersApplied: reply)
+            } else {
+                result(true)
             }
-            result(true)
             break
         case .getSettings:
             if let iabController = webView?.inAppBrowserDelegate as? InAppBrowserWebViewController {

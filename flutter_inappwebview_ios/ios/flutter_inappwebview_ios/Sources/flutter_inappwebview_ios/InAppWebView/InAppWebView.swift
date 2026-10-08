@@ -1338,8 +1338,18 @@ public class InAppWebView: WKWebView, UIScrollViewDelegate, WKUIDelegate,
     /// Before adding a `configuration.x = y` here, check whether WebKit exposes a live object for
     /// it: `preferredHTTPSNavigationPolicy` writes to the per-navigation `WKWebpagePreferences`,
     /// which is why it is the one HTTPS-upgrade setting that does respond to `setSettings`.
-    func setSettings(newSettings: InAppWebViewSettings, newSettingsMap: [String: Any]) {
-        
+    /// [contentBlockersApplied] is called once, after the rest is applied: with nil, or with WebKit's
+    /// message when `contentBlockers` failed to compile (the previous rules are kept, §301). When the
+    /// map sets `contentBlockers`, that is after the new rules are in force.
+    func setSettings(newSettings: InAppWebViewSettings, newSettingsMap: [String: Any],
+                     contentBlockersApplied: ((String?) -> Void)? = nil) {
+        var compilingContentBlockers = false
+        defer {
+            if !compilingContentBlockers {
+                contentBlockersApplied?(nil)
+            }
+        }
+
         // MUST be the first! In this way, all the settings that uses evaluateJavaScript can be applied/blocked!
         if newSettingsMap["applePayAPIEnabled"] != nil && settings?.applePayAPIEnabled != newSettings.applePayAPIEnabled {
             if let settings = settings {
@@ -1600,28 +1610,41 @@ public class InAppWebView: WKWebView, UIScrollViewDelegate, WKUIDelegate,
 
         
         if newSettingsMap["contentBlockers"] != nil {
-            configuration.userContentController.removeAllContentRuleLists()
-            contentRuleList = nil
-            // New rules replace the ones that failed at creation. A compile error here still only
-            // prints and leaves no rules (filed, §285).
-            contentBlockersError = nil
+            // Compiled first; the rules in force change only on success. Before §301 the old rules
+            // were removed first and a compile error only printed: measured, pages then loaded with
+            // nothing blocked while `getSettings` reported the rule that failed. On success the new
+            // rules also replace a creation-time failure (`contentBlockersError`).
+            let previousContentBlockers = settings?.contentBlockers ?? []
             let contentBlockers = newSettings.contentBlockers
-            if contentBlockers.count > 0 {
-                do {
-                    let jsonData = try JSONSerialization.data(withJSONObject: contentBlockers, options: [])
-                    let blockRules = String(data: jsonData, encoding: .utf8)
-                    WKContentRuleListStore.default().compileContentRuleList(
-                        forIdentifier: "ContentBlockingRules",
-                        encodedContentRuleList: blockRules) { (contentRuleList, error) in
-                            if let error = error {
-                                print(error.localizedDescription)
-                                return
-                            }
-                            self.configuration.userContentController.add(contentRuleList!)
+            if contentBlockers.isEmpty {
+                configuration.userContentController.removeAllContentRuleLists()
+                contentRuleList = nil
+                contentBlockersError = nil
+            } else if let jsonData = try? JSONSerialization.data(withJSONObject: contentBlockers, options: []) {
+                compilingContentBlockers = true
+                WKContentRuleListStore.default().compileContentRuleList(
+                    forIdentifier: "ContentBlockingRules",
+                    encodedContentRuleList: String(data: jsonData, encoding: .utf8)) { [weak self] (contentRuleList, error) in
+                        guard let self = self else {
+                            contentBlockersApplied?(nil)
+                            return
+                        }
+                        if let contentRuleList = contentRuleList, error == nil {
+                            self.configuration.userContentController.removeAllContentRuleLists()
+                            self.configuration.userContentController.add(contentRuleList)
                             self.contentRuleList = contentRuleList
-                    }
-                } catch {
-                    print(error.localizedDescription)
+                            self.contentBlockersError = nil
+                            contentBlockersApplied?(nil)
+                        } else {
+                            self.settings?.contentBlockers = previousContentBlockers
+                            contentBlockersApplied?(error?.localizedDescription ?? "unknown error")
+                        }
+                }
+            } else {
+                compilingContentBlockers = true
+                DispatchQueue.main.async { [weak self] in
+                    self?.settings?.contentBlockers = previousContentBlockers
+                    contentBlockersApplied?("the rules could not be encoded as JSON")
                 }
             }
         }

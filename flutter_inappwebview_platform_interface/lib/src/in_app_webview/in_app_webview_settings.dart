@@ -223,6 +223,12 @@ class InAppWebViewSettings_ {
   List<String>? resourceCustomSchemes;
 
   ///List of [ContentBlocker] that are a set of rules used to block content in the browser window.
+  ///
+  ///On iOS the rules are compiled by WebKit, which rejects some that Android accepts (for example a
+  ///`urlFilter` with `|`). Rules that don't compile at creation stop the WebView from loading
+  ///anything: every navigation is cancelled and reported through `onReceivedError`. Given to
+  ///`setSettings`, they make it throw a `PlatformException`, and the previous rules stay in force.
+  ///Rules set through `setSettings` apply from the next navigation, not to the current page.
   @SupportedPlatforms(
     platforms: [
       AndroidPlatform(),

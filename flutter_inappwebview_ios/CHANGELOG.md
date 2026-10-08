@@ -141,6 +141,14 @@ Fourteen WebKit APIs read out of the iOS 26.5 SDK:
 
 ### Fixed
 
+- **`setSettings` with `contentBlockers` WebKit couldn't compile silently removed all blocking.** It
+  removed the old rule list first and only printed the compile error. Measured: the next page loaded
+  with nothing blocked, and `getSettings` reported the rule that had failed. The new rules are now
+  compiled first and replace the old ones only on success; on failure the previous rules stay in force
+  (and `getSettings` reports them) and `setSettings` throws a `PlatformException` (code
+  `contentBlockers`) carrying WebKit's message, after applying the call's other settings. Its future
+  now completes once new rules are in force. Rules set this way apply from the next navigation;
+  the `contentBlockers` doc says so
 - **`onUpdateVisitedHistory` reported a load as soon as it was requested.** It came from KVO on
   `WKWebView.url`, which names a `load()` request at once. Measured on iOS 26.5: after
   `loadUrl(B)`, `onUpdateVisitedHistory(B)` arrived 2–3 ms later and 1.5 s before B started, while

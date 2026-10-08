@@ -579,10 +579,16 @@ public class InAppBrowserWebViewController: UIViewController, InAppBrowserDelega
         webView?.goBackOrForward(steps: steps)
     }
 
-    public func setSettings(newSettings: InAppBrowserSettings, newSettingsMap: [String: Any]) {
+    public func setSettings(newSettings: InAppBrowserSettings, newSettingsMap: [String: Any],
+                            contentBlockersApplied: ((String?) -> Void)? = nil) {
         let newInAppWebViewSettings = InAppWebViewSettings()
         let _ = newInAppWebViewSettings.parse(settings: newSettingsMap)
-        webView?.setSettings(newSettings: newInAppWebViewSettings, newSettingsMap: newSettingsMap)
+        if let webView = webView {
+            webView.setSettings(newSettings: newInAppWebViewSettings, newSettingsMap: newSettingsMap,
+                                contentBlockersApplied: contentBlockersApplied)
+        } else {
+            contentBlockersApplied?(nil)
+        }
         
         if newSettingsMap["hidden"] != nil, browserSettings?.hidden != newSettings.hidden {
             if newSettings.hidden {

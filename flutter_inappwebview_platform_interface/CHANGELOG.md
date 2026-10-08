@@ -653,6 +653,10 @@ rename; this entry is the API-owner's view.
 
 ### Internal
 
+- **`InAppWebViewSettings.contentBlockers` says what happens on iOS when WebKit can't compile the
+  rules**: at creation nothing loads (each navigation is reported through `onReceivedError`); through
+  `setSettings` it throws a `PlatformException` and the previous rules stay. Also that rules set through
+  `setSettings` apply from the next navigation. Regenerated.
 - **`getScrollX` / `getScrollY` now note, for Android, that straight after `scrollTo` or
   `scrollBy` they can still return the previous position for a moment**: the renderer applies the
   scroll asynchronously (measured on API 37, 2 reads in 120 calls, correct 25 ms later).

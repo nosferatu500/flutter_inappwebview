@@ -792,6 +792,11 @@ since the `WebsiteDataType.ALL` fix below. It stays **deliberately out of `ALL`*
 
 ### Fixed
 
+**iOS — `setSettings` with `contentBlockers` that WebKit can't compile now throws and keeps the
+previous rules**: it used to drop every rule silently, so pages loaded unblocked while `getSettings`
+reported the failed rule. It now throws a `PlatformException` (code `contentBlockers`); the call's
+other settings are still applied. A device test pins it.
+
 **Android — an `InAppWebView` rebuilt before its view existed kept the first build's controller**:
 `onWebViewCreated` and the first events went to the first build's callbacks, and removing the
 widget didn't dispose the controller. It now follows the widget in the tree, as on iOS. A device

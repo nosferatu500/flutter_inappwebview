@@ -97,4 +97,128 @@ void contentBlocker() {
     },
     skip: shouldSkip || defaultTargetPlatform != TargetPlatform.iOS,
   );
+
+  // iOS: `setSettings` with rules WebKit can't compile throws, and the previous rules stay (§301).
+  // Before, it removed the old rules first and the compile error only printed: measured, the next
+  // page loaded with nothing blocked and `getSettings` reported the rule that failed. CSS rules set
+  // through `setSettings` apply from the next navigation, so each check reloads.
+  skippableTestWidgets(
+    'setSettings with content blockers that fail to compile throws and keeps the previous rules',
+    (WidgetTester tester) async {
+      final deadline = TestDeadline();
+      final url = WebUri('http://${environment["NODE_SERVER_IP"]}:8082/');
+      var stops = 0;
+      final controllerCompleter = Completer<InAppWebViewController>();
+      ContentBlocker hide(String id) => ContentBlocker(
+        trigger: ContentBlockerTrigger(urlFilter: '.*'),
+        action: ContentBlockerAction(
+          type: ContentBlockerActionType.CSS_DISPLAY_NONE,
+          selector: '#$id',
+        ),
+      );
+      await deadline.frame(
+        'mounting the WebView',
+        tester.pumpWidget(
+          Directionality(
+            textDirection: TextDirection.ltr,
+            child: InAppWebView(
+              key: GlobalKey(),
+              initialUrlRequest: URLRequest(url: url),
+              initialSettings: InAppWebViewSettings(
+                contentBlockers: [hide('a')],
+              ),
+              onWebViewCreated: (c) => controllerCompleter.complete(c),
+              onLoadStop: (controller, u) => stops++,
+            ),
+          ),
+        ),
+      );
+      final c = await deadline.step(
+        'onWebViewCreated',
+        controllerCompleter.future,
+      );
+      await deadline.until('the first onLoadStop', () => stops > 0);
+
+      Future<void> reload(String why) async {
+        final before = stops;
+        await deadline.step(
+          'loadUrl ($why)',
+          c.loadUrl(urlRequest: URLRequest(url: url)),
+        );
+        await deadline.until('onLoadStop ($why)', () => stops > before);
+      }
+
+      Future<String> state() async {
+        String display(Object? v) => '$v';
+        final a = await deadline.step(
+          'reading #a',
+          c.evaluateJavascript(source: _displayOf('a')),
+        );
+        final b = await deadline.step(
+          'reading #b',
+          c.evaluateJavascript(source: _displayOf('b')),
+        );
+        final settings = await deadline.step('getSettings', c.getSettings());
+        return 'a ${display(a)}, b ${display(b)}, getSettings '
+            '${settings?.contentBlockers?.map((r) => r.action.selector ?? r.trigger.urlFilter).toList()}';
+      }
+
+      await deadline.step(
+        'setSettings with #b',
+        c.setSettings(
+          settings: InAppWebViewSettings(contentBlockers: [hide('b')]),
+        ),
+      );
+      await reload('after #b');
+      expect(
+        await state(),
+        'a block, b none, getSettings [#b]',
+        reason: 'the control: valid rules replace the old ones',
+      );
+
+      Object? thrown;
+      try {
+        await deadline.step(
+          'setSettings with rules that fail to compile',
+          c.setSettings(
+            settings: InAppWebViewSettings(
+              contentBlockers: [
+                ContentBlocker(
+                  trigger: ContentBlockerTrigger(urlFilter: '(alpha|beta)'),
+                  action: ContentBlockerAction(
+                    type: ContentBlockerActionType.BLOCK,
+                  ),
+                ),
+              ],
+            ),
+          ),
+        );
+      } catch (e) {
+        thrown = e;
+      }
+      expect(
+        thrown,
+        isA<PlatformException>()
+            .having((e) => e.code, 'code', 'contentBlockers')
+            .having(
+              (e) => e.message,
+              'message',
+              contains('could not be compiled, so the previous rules are kept'),
+            ),
+      );
+      await reload('after the failed setSettings');
+      expect(
+        await state(),
+        'a block, b none, getSettings [#b]',
+        reason: 'the previous rules should still be in force, and reported',
+      );
+    },
+    skip: shouldSkip || defaultTargetPlatform != TargetPlatform.iOS,
+  );
 }
+
+/// JavaScript that adds `<div id="[id]">` if the page has none and returns its computed `display`.
+String _displayOf(String id) =>
+    "if (!document.getElementById('$id')) "
+    "document.body.insertAdjacentHTML('beforeend', '<div id=\"$id\">x</div>'); "
+    "getComputedStyle(document.getElementById('$id')).display";
