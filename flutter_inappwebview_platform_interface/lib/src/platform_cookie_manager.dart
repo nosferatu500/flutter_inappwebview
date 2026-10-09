@@ -335,6 +335,11 @@ abstract class PlatformCookieManager extends PlatformInterface {
   ///Removes all cookies.
   ///
   ///The return value indicates whether any cookies were removed.
+  ///
+  ///On Android only cookies go: `localStorage`, IndexedDB, Cache Storage, the origin-private file
+  ///system and service worker registrations are kept (measured on Android 17, WebView 153).
+  ///`WebStorageManager.deleteBrowsingData` clears all of those and cookies together, where
+  ///`WebViewFeature.DELETE_BROWSING_DATA` is supported.
   ///{@endtemplate}
   ///
   ///{@macro flutter_inappwebview_platform_interface.PlatformCookieManager.deleteAllCookies.supported_platforms}

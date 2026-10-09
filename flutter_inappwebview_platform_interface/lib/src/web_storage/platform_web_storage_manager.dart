@@ -219,8 +219,14 @@ abstract class PlatformWebStorageManager extends PlatformInterface {
   ///{@template flutter_inappwebview_platform_interface.PlatformWebStorageManager.deleteBrowsingData}
   ///Deletes all the data stored by websites.
   ///
-  ///This is stronger than [deleteAllData]: it also clears Cache Storage (measured on Android 17,
-  ///WebView 153), the network cache and the cookies.
+  ///This is stronger than each of the narrower clearing methods, which keep what they don't name.
+  ///Measured on Android 17 (WebView 153), with one origin holding a cookie, `localStorage`, IndexedDB,
+  ///Cache Storage, origin-private file system data and a service worker: this cleared all six, and
+  ///[getOrigins] was empty afterwards. It also clears the network cache, per androidx's documentation
+  ///(not measured here). [deleteAllData] kept Cache Storage, the service worker and the
+  ///cookie; `CookieManager.deleteAllCookies` removed only the cookie; `clearAllCache` kept all six.
+  ///Those methods don't delegate here: they work without [WebViewFeature.DELETE_BROWSING_DATA] and
+  ///each clears only what its name says.
   ///
   ///Only data stored *before* the call is guaranteed to go. Deletion is not atomic, so data written
   ///while it runs may or may not survive.

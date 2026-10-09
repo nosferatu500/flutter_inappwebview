@@ -3377,6 +3377,12 @@ abstract class PlatformInAppWebViewController extends PlatformInterface
   ///Clears the resource cache. Note that the cache is per-application, so this will clear the cache for all WebViews used.
   ///
   ///[includeDiskFiles] if `false`, only the RAM cache is cleared. The default value is `true`.
+  ///
+  ///On Android this is the HTTP resource cache only: cookies, `localStorage`, IndexedDB, Cache
+  ///Storage, the origin-private file system and service worker registrations are kept (measured on
+  ///Android 17, WebView 153, with [includeDiskFiles] `true`). `WebStorageManager.deleteBrowsingData`
+  ///clears all of that and the cache together. It isn't used here, because it needs
+  ///`WebViewFeature.DELETE_BROWSING_DATA` and clears far more than this method promises.
   ///{@endtemplate}
   ///
   ///{@macro flutter_inappwebview_platform_interface.PlatformInAppWebViewController.clearAllCache.supported_platforms}

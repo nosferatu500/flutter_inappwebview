@@ -665,6 +665,16 @@ rename; this entry is the API-owner's view.
 
 ### Internal
 
+- **The clearing methods' docs say what each one keeps, and why they don't delegate to
+  `deleteBrowsingData`.** Measured on Android 17 (WebView 153), with one origin holding a cookie,
+  `localStorage`, IndexedDB, Cache Storage, OPFS data and a service worker:
+  - `clearAllCache` kept all six;
+  - `CookieManager.deleteAllCookies` removed only the cookie;
+  - `deleteAllData` kept Cache Storage, the service worker and the cookie;
+  - `deleteBrowsingData` cleared everything.
+
+  The narrower methods stay as they are (decision D6): they work without
+  `WebViewFeature.DELETE_BROWSING_DATA`, and each clears only what its name says
 - **`shouldOverrideUrlLoading`'s doc says what each answer does.** `null` and no handler load, and a
   throwing handler cancels, the same on both platforms (a behaviour change in the platform packages).
   `useShouldOverrideUrlLoading`'s doc says that, set without a handler, navigations load.
