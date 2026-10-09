@@ -14,10 +14,12 @@ extension URLProtectionSpace {
             return nil
         }
         
-        var secResult = SecTrustResultType.invalid
-        let secTrustEvaluateStatus = SecTrustEvaluate(serverTrust, &secResult);
-        
-        if secTrustEvaluateStatus == errSecSuccess, let serverCertificate = SecTrustGetCertificateAtIndex(serverTrust, 0) {
+        // Evaluated first, as before, so the chain is built; the verdict is ignored on purpose. The
+        // leaf is wanted for an untrusted certificate too (a self-signed server's), which is what the
+        // deprecated `SecTrustEvaluate` gave: its status reported the call, not the trust.
+        _ = SecTrustEvaluateWithError(serverTrust, nil)
+        if let chain = SecTrustCopyCertificateChain(serverTrust) as? [SecCertificate],
+           let serverCertificate = chain.first {
             return serverCertificate.data
         }
         return nil
@@ -36,9 +38,13 @@ extension URLProtectionSpace {
             return nil
         }
         
+        // `SecTrustGetTrustResult` reads back the result type the evaluation stored, which is what
+        // the deprecated `SecTrustEvaluate` returned. A trusted certificate gives `.unspecified`,
+        // not `.proceed`, so it is reported as an `SslError` too, as before.
+        _ = SecTrustEvaluateWithError(serverTrust, nil)
         var secResult = SecTrustResultType.invalid
-        SecTrustEvaluate(serverTrust, &secResult);
-        
+        SecTrustGetTrustResult(serverTrust, &secResult)
+
         guard let sslErrorType = secResult != SecTrustResultType.proceed ? secResult : nil else {
             return nil
         }

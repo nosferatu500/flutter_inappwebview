@@ -1560,7 +1560,7 @@ simulator for the first time:**
 - **The Android module is 100% Kotlin** (158 files translated) with ktlint 1.8 formatting and an
   opt-in `allWarningsAsErrors`; Android lint is at **0 findings**
 - **The iOS module builds in Swift 6 language mode** with complete concurrency checking and 0 errors.
-  It has no concurrency warnings; 22 warnings for deprecated iOS APIs remain (see the
+  It has no concurrency warnings; 14 warnings for deprecated iOS APIs remain (see the
   `flutter_inappwebview_ios` 7.0.0 entry)
 - **Pigeon** is wired up and the `find_interaction` channel is migrated end to end as a proof; the
   other ~409 messages still use `MethodChannel`

@@ -43,15 +43,24 @@ extension UIApplication {
             return any
         }
 
-        return legacyKeyWindow
+        return (self as LegacyKeyWindowProviding).legacyKeyWindow
     }
 
     /// The pre-scene key window.
     ///
     /// Marked deprecated itself so that reaching for the deprecated `windows` does not warn: this
-    /// is the deliberate fallback for apps with no scenes, not an oversight.
+    /// is the deliberate fallback for apps with no scenes, not an oversight. `keyWindowCompat` calls
+    /// it through `LegacyKeyWindowProviding`, whose requirement isn't deprecated, so that call doesn't
+    /// warn either.
     @available(iOS, deprecated: 13.0, message: "Only reached when the app has no connected scenes.")
-    private var legacyKeyWindow: UIWindow? {
+    fileprivate var legacyKeyWindow: UIWindow? {
         windows.first { $0.isKeyWindow } ?? windows.first
     }
 }
+
+@MainActor
+private protocol LegacyKeyWindowProviding {
+    var legacyKeyWindow: UIWindow? { get }
+}
+
+extension UIApplication: LegacyKeyWindowProviding {}

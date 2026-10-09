@@ -579,7 +579,7 @@ public class WebViewChannelDelegate: ChannelDelegate {
                         result(true)
                     }
                 } else {
-                    webView.closeAllMediaPresentations()
+                    (webView as LegacyMediaPresentationClosing).legacyCloseAllMediaPresentations()
                     result(true)
                 }
             } else {
@@ -1329,5 +1329,21 @@ public class WebViewChannelDelegate: ChannelDelegate {
     isolated deinit {
         debugPrint("WebViewChannelDelegate - dealloc")
         dispose()
+    }
+}
+
+/// iOS 15's `closeAllMediaPresentations()`, deprecated in 15.0 and still used there on purpose: the
+/// completion-handler form crashes on 15 (see the `.closeAllMediaPresentations` case). The helper is
+/// marked deprecated so its own call doesn't warn, and it's reached through this protocol, whose
+/// requirement isn't deprecated, so the call site doesn't warn either.
+@MainActor
+private protocol LegacyMediaPresentationClosing {
+    func legacyCloseAllMediaPresentations()
+}
+
+extension InAppWebView: LegacyMediaPresentationClosing {
+    @available(iOS, deprecated: 15.0, message: "iOS 15 only: the completion-handler form crashes there.")
+    fileprivate func legacyCloseAllMediaPresentations() {
+        closeAllMediaPresentations()
     }
 }

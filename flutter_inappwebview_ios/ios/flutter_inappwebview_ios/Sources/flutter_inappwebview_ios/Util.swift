@@ -121,7 +121,8 @@ public class Util {
             case "LOOKUP_SUGGESTION":
                 return .lookupSuggestion
             case "SPOTLIGHT_SUGGESTION":
-                return .spotlightSuggestion
+                // The SDK defines the deprecated `spotlightSuggestion` as `lookupSuggestion`: one bit.
+                return .lookupSuggestion
             case "ALL":
                 return .all
             default:
@@ -155,7 +156,8 @@ public class Util {
             if type.contains(.lookupSuggestion) {
                 dataDetectorTypeString.append("LOOKUP_SUGGESTION")
             }
-            if type.contains(.spotlightSuggestion) {
+            // Same bit as `lookupSuggestion` (the SDK aliases it), so both names are reported, as before.
+            if type.contains(.lookupSuggestion) {
                 dataDetectorTypeString.append("SPOTLIGHT_SUGGESTION")
             }
         }

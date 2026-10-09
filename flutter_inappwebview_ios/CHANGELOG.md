@@ -7,7 +7,7 @@ carries the full user-facing list; this entry is what changed in this package.
 
 - **Deployment target 12.0 → 15.0**, in `Package.swift`
 - **The module builds in Swift 6 language mode** (`.swiftLanguageMode(.v6)` in the SPM manifest) with complete concurrency checking and 0 errors.
-  It has no concurrency warnings. Building this package's own example still shows 22 compiler
+  It has no concurrency warnings. Building this package's own example still shows 14 compiler
   warnings from it, all uses of deprecated iOS APIs. The `flutter_inappwebview` example doesn't
   show them, because Xcode compiles the package there with `-suppress-warnings`
 - **Xcode 26 / Swift 6.2+ is now required to build the module.** This is the most disruptive change
@@ -598,9 +598,27 @@ error.
 
 ### Internal
 
+- **8 deprecated-API warnings are gone, with the same behaviour: 22 → 14.** The 14 left need
+  decisions.
+  - `URLProtectionSpace`'s `sslCertificate` and `sslError` use `SecTrustEvaluateWithError`,
+    `SecTrustGetTrustResult` and `SecTrustCopyCertificateChain` instead of `SecTrustEvaluate` and
+    `SecTrustGetCertificateAtIndex`. Both report what they did before: the leaf certificate of an
+    untrusted (self-signed) server too, and an `SslError` of type "unspecified" for a trusted
+    certificate. Measured on iOS 26.5 and 17.5, before and after: the same `sslError` code and
+    message, the same certificate (names, dates, DER length and checksum) and the same `getCertificate()`, for a
+    self-signed server and a publicly trusted one.
+  - The `SPOTLIGHT_SUGGESTION` data detector maps to `lookupSuggestion`, the bit the SDK defines the
+    deprecated `spotlightSuggestion` as; both names are still reported.
+  - `SafariViewController`'s unused `init(…entersReaderIfAvailable:…)`, the only caller of the
+    deprecated `SFSafariViewController(url:entersReaderIfAvailable:)`, is deleted; the reader flag
+    already reached Safari through the configuration.
+  - The two deliberate legacy calls stay, without a warning: the pre-scene key window (apps with no
+    scenes) and iOS 15's `closeAllMediaPresentations()` (the completion-handler form crashes on 15).
+    Each is reached through a protocol requirement that isn't deprecated.
 - **The module's concurrency warnings are gone: 178 → 22.** They only show when this package's own
   example is built (the `flutter_inappwebview` example compiles the package with
-  `-suppress-warnings`). The 22 left are uses of deprecated iOS APIs. What changed:
+  `-suppress-warnings`). The 22 left were uses of deprecated iOS APIs (see the entry above). What
+  changed:
   - Code that reads main-actor UIKit/WebKit state from a nonisolated context is now `@MainActor`,
     and every caller is already on the main actor: `getRealSettings` (the base and its seven
     overrides), `FindSession.fromUIFindSession`, both `fromWKNavigationResponse:`
