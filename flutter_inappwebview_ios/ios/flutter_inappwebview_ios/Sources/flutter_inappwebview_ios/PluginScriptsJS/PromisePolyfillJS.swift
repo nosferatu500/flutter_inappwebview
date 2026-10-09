@@ -8,6 +8,9 @@
 import Foundation
 import WebKit
 
+/// `@MainActor`: builds a `PluginScript`, a `WKUserScript` and so main-actor isolated, and is only
+/// ever called while configuring a `WKUserContentController` on the main thread.
+@MainActor
 public class PromisePolyfillJS {
     public static let PROMISE_POLYFILL_JS_PLUGIN_SCRIPT_GROUP_NAME = "IN_APP_WEBVIEW_PROMISE_POLYFILL_JS_PLUGIN_SCRIPT"
     

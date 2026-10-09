@@ -90,6 +90,7 @@ public class Util {
         return ""
     }
     
+    @MainActor
     public static func getContentWorld(name: String) -> WKContentWorld {
         switch name {
         case "defaultClient":

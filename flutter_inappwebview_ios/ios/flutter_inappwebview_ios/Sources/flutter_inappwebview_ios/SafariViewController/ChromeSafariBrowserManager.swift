@@ -40,7 +40,10 @@ public class ChromeSafariBrowserManager: ChannelDelegate {
                 break
             case "clearWebsiteData":
                 if #available(iOS 16.0, *) {
-                    SFSafariViewController.DataStore.default.clearWebsiteData {
+                    // Awaited from a main-actor task so `result` is answered on the main thread:
+                    // the completion-handler form's closure is `@Sendable` and not main-actor.
+                    Task {
+                        await SFSafariViewController.DataStore.default.clearWebsiteData()
                         result(true)
                     }
                 } else {

@@ -121,7 +121,7 @@ public class InAppWebViewManager: ChannelDelegate {
         flutterWebView.dispose(removeFromSuperview: true)
     }
 
-    public func clearAllCache(includeDiskFiles: Bool, completionHandler: @escaping () -> Void) {
+    public func clearAllCache(includeDiskFiles: Bool, completionHandler: @escaping @MainActor @Sendable () -> Void) {
         var websiteDataTypes = Set([WKWebsiteDataTypeMemoryCache])
         if includeDiskFiles {
             websiteDataTypes.insert(WKWebsiteDataTypeDiskCache)

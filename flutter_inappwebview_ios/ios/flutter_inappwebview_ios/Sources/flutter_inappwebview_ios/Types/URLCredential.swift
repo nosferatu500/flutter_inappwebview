@@ -10,11 +10,9 @@ import Foundation
 extension URLCredential {
     public func toMap () -> [String:Any?] {
         var x509Certificates: [Data] = []
-        // certificates could be nil!!!
-        if certificates != nil {
-            for certificate in certificates {
-                x509Certificates.append((certificate as! SecCertificate).data)
-            }
+        // `certificates` is non-optional in Swift: a nil from Objective-C bridges as an empty array.
+        for certificate in certificates {
+            x509Certificates.append((certificate as! SecCertificate).data)
         }
         return [
             "password": password,

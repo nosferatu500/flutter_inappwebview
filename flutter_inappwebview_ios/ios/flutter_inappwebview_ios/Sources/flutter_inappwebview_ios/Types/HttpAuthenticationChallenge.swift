@@ -7,12 +7,14 @@
 
 import Foundation
 
-public class HttpAuthenticationChallenge: NSObject {
-    var protectionSpace: URLProtectionSpace!
-    var previousFailureCount: Int = 0
-    var failureResponse: URLResponse?
-    var error: Error?
-    var proposedCredential: URLCredential?
+/// `Sendable` (immutable, every field `Sendable`) so `toMap()` can run on a global queue, which
+/// `WebViewChannelDelegate` does to keep certificate extraction off the main thread (#1678).
+public final class HttpAuthenticationChallenge: NSObject, Sendable {
+    let protectionSpace: URLProtectionSpace
+    let previousFailureCount: Int
+    let failureResponse: URLResponse?
+    let error: Error?
+    let proposedCredential: URLCredential?
     
     public init(fromChallenge: URLAuthenticationChallenge) {
         protectionSpace = fromChallenge.protectionSpace

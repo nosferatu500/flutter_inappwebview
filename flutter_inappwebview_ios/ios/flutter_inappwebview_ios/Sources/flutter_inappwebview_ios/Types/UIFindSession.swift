@@ -20,6 +20,7 @@ public class FindSession: NSObject {
     }
     
     @available(iOS 16.0, *)
+    @MainActor
     public static func fromUIFindSession(uiFindSession: UIFindSession) -> FindSession {
         return FindSession(resultCount: uiFindSession.resultCount,
                            highlightedResultIndex: uiFindSession.highlightedResultIndex,

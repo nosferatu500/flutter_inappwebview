@@ -7,10 +7,9 @@ carries the full user-facing list; this entry is what changed in this package.
 
 - **Deployment target 12.0 → 15.0**, in `Package.swift`
 - **The module builds in Swift 6 language mode** (`.swiftLanguageMode(.v6)` in the SPM manifest) with complete concurrency checking and 0 errors.
-  It is not warning-free: building this package's own example shows 178 compiler warnings from it
-  (mostly main-actor isolation, plus `Sendable` and iOS deprecation warnings). The
-  `flutter_inappwebview` example doesn't show them, because Xcode compiles the package there with
-  `-suppress-warnings`
+  It has no concurrency warnings. Building this package's own example still shows 22 compiler
+  warnings from it, all uses of deprecated iOS APIs. The `flutter_inappwebview` example doesn't
+  show them, because Xcode compiles the package there with `-suppress-warnings`
 - **Xcode 26 / Swift 6.2+ is now required to build the module.** This is the most disruptive change
   here and it is not visible in the version numbers: `isolated deinit` (SE-0371) is used at 32 sites
   so that `deinit { dispose() }` is legal under Swift 6, and that feature needs a Swift 6.2+
@@ -599,6 +598,25 @@ error.
 
 ### Internal
 
+- **The module's concurrency warnings are gone: 178 → 22.** They only show when this package's own
+  example is built (the `flutter_inappwebview` example compiles the package with
+  `-suppress-warnings`). The 22 left are uses of deprecated iOS APIs. What changed:
+  - Code that reads main-actor UIKit/WebKit state from a nonisolated context is now `@MainActor`,
+    and every caller is already on the main actor: `getRealSettings` (the base and its seven
+    overrides), `FindSession.fromUIFindSession`, both `fromWKNavigationResponse:`
+    initializers, `Util.getContentWorld` and `PromisePolyfillJS`.
+  - Two overrides of nonisolated Objective-C members assert the main actor with
+    `MainActor.assumeIsolated`: `InAppWebView.responds(to:)` (only for the two opt-in UI-delegate
+    selectors) and `CustomUIActivity.perform()`. `CustomUIActivity`'s properties are `let`s.
+  - `InAppBrowserNavigationController`'s `deinit` is `isolated`.
+  - Completion handlers passed straight to WebKit are typed `@MainActor @Sendable`, as WebKit's
+    are. The three challenge wrappers are immutable and `Sendable`.
+  - Two completions now run on the main thread. Accepting a server-trust challenge
+    (`ServerTrustAuthResponseAction.PROCEED`) answered WebKit's main-actor completion handler from a
+    global queue; the trust exceptions are still computed there. `ChromeSafariBrowser.clearWebsiteData`
+    answered Dart from a completion the SDK doesn't promise to run on the main thread; it now awaits
+    the call on the main actor.
+  - Two checks that were always true are gone.
 - **`Package.swift` depends on `FlutterFramework`**, as Flutter 3.44's plugin template does:
   `.package(name: "FlutterFramework", path: "../FlutterFramework")` and the matching target product.
   flutter_tools generates that package next to each plugin's link in the app's build. Flutter 3.44.0,

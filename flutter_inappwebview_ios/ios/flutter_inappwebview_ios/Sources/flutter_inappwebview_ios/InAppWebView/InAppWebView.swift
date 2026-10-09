@@ -1827,7 +1827,7 @@ public class InAppWebView: WKWebView, UIScrollViewDelegate, WKUIDelegate,
     }
 #endif
     
-    public func evaluateJavaScript(_ javaScript: String, frame: WKFrameInfo? = nil, contentWorld: WKContentWorld, completionHandler: ((Result<Any, Error>) -> Void)? = nil) {
+    public func evaluateJavaScript(_ javaScript: String, frame: WKFrameInfo? = nil, contentWorld: WKContentWorld, completionHandler: (@MainActor @Sendable (Result<Any, Error>) -> Void)? = nil) {
         if let applePayAPIEnabled = settings?.applePayAPIEnabled, applePayAPIEnabled {
             return
         }
@@ -1842,7 +1842,7 @@ public class InAppWebView: WKWebView, UIScrollViewDelegate, WKUIDelegate,
         injectDeferredObject(source: source, contentWorld: contentWorld, withWrapper: nil, completionHandler: completionHandler)
     }
     
-    public func callAsyncJavaScript(_ functionBody: String, arguments: [String : Any] = [:], frame: WKFrameInfo? = nil, contentWorld: WKContentWorld, completionHandler: ((Result<Any, Error>) -> Void)? = nil) {
+    public func callAsyncJavaScript(_ functionBody: String, arguments: [String : Any] = [:], frame: WKFrameInfo? = nil, contentWorld: WKContentWorld, completionHandler: (@MainActor @Sendable (Result<Any, Error>) -> Void)? = nil) {
         if let applePayAPIEnabled = settings?.applePayAPIEnabled, applePayAPIEnabled {
             return
         }
@@ -2070,10 +2070,15 @@ public class InAppWebView: WKWebView, UIScrollViewDelegate, WKUIDelegate,
     ///
     /// `super.responds(to:)` handles everything else, so this narrows the lie to exactly one
     /// selector.
+    ///
+    /// `NSObject.responds(to:)` is nonisolated, so reading the main-actor `settings` goes through
+    /// `MainActor.assumeIsolated`, only for the two selectors that need it. Measured on iOS 26.5 (§323):
+    /// WebKit asked about the open-panel selector 6 times in the `headless_in_app_webview` group, always
+    /// on the main thread. It didn't ask about the input-suggestion one in that run.
     public override func responds(to aSelector: Selector!) -> Bool {
         if #available(iOS 18.4, *) {
             if aSelector == #selector(WKUIDelegate.webView(_:runOpenPanelWith:initiatedByFrame:completionHandler:)) {
-                return settings?.useOnShowFileChooser ?? false
+                return MainActor.assumeIsolated { settings?.useOnShowFileChooser ?? false }
             }
         }
         // Same mechanism, different reason. `runOpenPanelWithParameters` documents what WebKit does
@@ -2085,7 +2090,7 @@ public class InAppWebView: WKWebView, UIScrollViewDelegate, WKUIDelegate,
         // responsibility.
         if #available(iOS 26.0, *) {
             if aSelector == #selector(WKUIDelegate.webView(_:insertInputSuggestion:)) {
-                return settings?.useOnInsertInputSuggestion ?? false
+                return MainActor.assumeIsolated { settings?.useOnInsertInputSuggestion ?? false }
             }
         }
         return super.responds(to: aSelector)
@@ -2590,11 +2595,19 @@ public class InAppWebView: WKWebView, UIScrollViewDelegate, WKUIDelegate,
                             break
                         case 1:
                             // workaround for https://github.com/pichillilorenzo/flutter_inappwebview/issues/1924
+                            // The trust exceptions are still computed off the main thread, but
+                            // WebKit is answered on it: its completion handler is main-actor
+                            // isolated, and this used to call it from the global queue.
+                            // `SecTrust` isn't `Sendable`; the rebinding only states that this
+                            // block takes it along, as it always did.
+                            nonisolated(unsafe) let serverTrust = serverTrust
                             DispatchQueue.global().async {
                                 let exceptions = SecTrustCopyExceptions(serverTrust)
                                 SecTrustSetExceptions(serverTrust, exceptions)
                                 let credential = URLCredential(trust: serverTrust)
-                                completionHandler(.useCredential, credential)
+                                DispatchQueue.main.async {
+                                    completionHandler(.useCredential, credential)
+                                }
                             }
                             break
                         default:
@@ -3074,7 +3087,7 @@ public class InAppWebView: WKWebView, UIScrollViewDelegate, WKUIDelegate,
                 inAppWebViewManager?.windowWebViews.removeValue(forKey: windowId)
                 // Dropping the transport is the plugin's last reference to the child, but not
                 // WebKit's: it is still mid-navigation on it. Let it answer its own callbacks.
-                (transport.webView as? InAppWebView)?.abandonWindowBeforeCreated()
+                transport.webView.abandonWindowBeforeCreated()
             }
             self?.loadUrl(urlRequest: navigationAction.request, allowingReadAccessTo: nil)
         }
@@ -3835,7 +3848,7 @@ public class InAppWebView: WKWebView, UIScrollViewDelegate, WKUIDelegate,
         return Float(scrollView.zoomScale)
     }
     
-    public func getSelectedText(completionHandler: @escaping (Any?, Error?) -> Void) {
+    public func getSelectedText(completionHandler: @escaping @MainActor @Sendable (Any?, Error?) -> Void) {
         if configuration.preferences.javaScriptEnabled {
             evaluateJavaScript(PluginScriptsUtil.GET_SELECTED_TEXT_JS_SOURCE, completionHandler: completionHandler)
         } else {

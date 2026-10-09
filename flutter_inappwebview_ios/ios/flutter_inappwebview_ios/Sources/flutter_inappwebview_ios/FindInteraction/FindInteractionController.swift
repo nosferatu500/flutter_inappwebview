@@ -65,7 +65,7 @@ public class FindInteractionController: NSObject, Disposable {
 //        }
     }
     
-    public func findAll(find: String?, completionHandler: ((Any?, Error?) -> Void)?) {
+    public func findAll(find: String?, completionHandler: (@MainActor @Sendable (Any?, Error?) -> Void)?) {
         guard let webView else {
             if let completionHandler = completionHandler {
                 completionHandler(nil, nil)
@@ -104,7 +104,7 @@ public class FindInteractionController: NSObject, Disposable {
         }
     }
 
-    public func findNext(forward: Bool, completionHandler: ((Any?, Error?) -> Void)?) {
+    public func findNext(forward: Bool, completionHandler: (@MainActor @Sendable (Any?, Error?) -> Void)?) {
         guard let webView else {
             if let completionHandler = completionHandler {
                 completionHandler(nil, nil)
@@ -127,7 +127,7 @@ public class FindInteractionController: NSObject, Disposable {
         }
     }
 
-    public func clearMatches(completionHandler: ((Any?, Error?) -> Void)?) {
+    public func clearMatches(completionHandler: (@MainActor @Sendable (Any?, Error?) -> Void)?) {
         guard let webView else {
             if let completionHandler = completionHandler {
                 completionHandler(nil, nil)

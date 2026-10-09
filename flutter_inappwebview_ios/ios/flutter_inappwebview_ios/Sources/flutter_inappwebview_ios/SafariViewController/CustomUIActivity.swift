@@ -10,16 +10,21 @@ import UIKit
 
 /// `@MainActor` because `perform()` reaches through the plugin to a `ChromeSafariBrowserManager`
 /// and calls a channel delegate — both main-actor isolated now.
+///
+/// `UIActivity`'s overridable members are nonisolated, so an override can't use the class's
+/// isolation. The three the getters read (`type`, `label`, `image`) are `let`s of `Sendable` types,
+/// which a nonisolated getter may read, and `perform()` asserts the main actor (UIKit calls it on
+/// the main thread).
 @MainActor
 class CustomUIActivity: UIActivity {
-    var plugin: InAppWebViewFlutterPlugin
-    var viewId: String
-    var id: Int64
-    var url: URL
-    var title: String?
-    var type: UIActivity.ActivityType?
-    var label: String?
-    var image: UIImage?
+    let plugin: InAppWebViewFlutterPlugin
+    let viewId: String
+    let id: Int64
+    let url: URL
+    let title: String?
+    let type: UIActivity.ActivityType?
+    let label: String?
+    let image: UIImage?
     
     init(plugin: InAppWebViewFlutterPlugin, viewId: String, id: Int64, url: URL, title: String?, label: String?, type: UIActivity.ActivityType?, image: UIImage?) {
         self.plugin = plugin
@@ -53,7 +58,12 @@ class CustomUIActivity: UIActivity {
     }
 
     override func perform() {
-        let browser = plugin.chromeSafariBrowserManager?.browsers[viewId]
-        browser??.channelDelegate?.onItemActionPerform(id: id, url: url, title: title)
+        // Copied out first: the class isn't `Sendable` (`UIActivity` isn't), so the closure must not
+        // capture `self`.
+        let plugin = plugin, viewId = viewId, id = id, url = url, title = title
+        MainActor.assumeIsolated {
+            let browser = plugin.chromeSafariBrowserManager?.browsers[viewId]
+            browser??.channelDelegate?.onItemActionPerform(id: id, url: url, title: title)
+        }
     }
 }

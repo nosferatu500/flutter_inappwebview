@@ -7,8 +7,9 @@
 
 import Foundation
 
-public class ClientCertChallenge: NSObject {
-    var protectionSpace: URLProtectionSpace!
+/// `Sendable` for the same reason as `HttpAuthenticationChallenge`.
+public final class ClientCertChallenge: NSObject, Sendable {
+    let protectionSpace: URLProtectionSpace
     
     public init(fromChallenge: URLAuthenticationChallenge) {
         protectionSpace = fromChallenge.protectionSpace

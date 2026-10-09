@@ -9,7 +9,7 @@ import Foundation
 import UIKit
 
 public class InAppBrowserNavigationController: UINavigationController {
-    deinit {
+    isolated deinit {
         debugPrint("InAppBrowserNavigationController - dealloc")
         UIApplication.shared.delegate?.window??.makeKeyAndVisible()
     }

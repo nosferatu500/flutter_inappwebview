@@ -33,6 +33,7 @@ public class WebResourceRequest: NSObject {
         self.method = fromURLRequest.httpMethod ?? "GET"
     }
     
+    @MainActor
     public init(fromWKNavigationResponse: WKNavigationResponse) {
         let response = fromWKNavigationResponse.response as? HTTPURLResponse
         self.url = response?.url ?? URL(string: "about:blank")!

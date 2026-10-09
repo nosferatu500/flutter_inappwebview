@@ -43,6 +43,9 @@ public class ISettings<T>: NSObject {
         return settings
     }
     
+    /// `@MainActor` because every override reads UIKit/WebKit state from `obj` (a view, view
+    /// controller or session), and both callers are main-actor views. Overrides inherit it.
+    @MainActor
     func getRealSettings(obj: T?) -> [String: Any?] {
         let realSettings: [String: Any?] = toMap()
         return realSettings

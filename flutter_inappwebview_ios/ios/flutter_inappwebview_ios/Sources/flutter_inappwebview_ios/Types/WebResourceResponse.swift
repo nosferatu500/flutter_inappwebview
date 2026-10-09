@@ -26,6 +26,7 @@ public class WebResourceResponse: NSObject {
         self.reasonPhrase = reasonPhrase
     }
     
+    @MainActor
     public init(fromWKNavigationResponse: WKNavigationResponse) {
         let response = fromWKNavigationResponse.response as? HTTPURLResponse
         self.contentType = response?.mimeType ?? ""
