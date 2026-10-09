@@ -225,4 +225,56 @@ void customRequestHeaders() {
       await store.clearAllCustomHeaders();
     }
   }, skip: shouldSkip);
+
+  // D4 (§313): each write says whether the profile was reached. `false` for a profile that doesn't
+  // exist, where nothing is done; `true` for the default and an existing named profile, including a
+  // clear that matches nothing.
+  skippableTestWidgets('the writes report whether the profile was reached', (
+    WidgetTester tester,
+  ) async {
+    if (!await available()) {
+      markTestSkipped('CUSTOM_REQUEST_HEADERS or MULTI_PROFILE unsupported');
+      return;
+    }
+    const profile = 'customHeaderAnswerTest';
+    const missing = 'inappwebview_no_such_profile';
+    final store = ProfileStore.instance();
+    await store.getOrCreateProfile(name: profile);
+    final header = CustomHeader(
+      name: 'X-Answer',
+      value: 'v',
+      originRules: {'*'},
+    );
+    try {
+      expect(await store.addCustomHeader(header), isTrue);
+      expect(await store.addCustomHeader(header, profileName: profile), isTrue);
+      expect(
+        await store.addCustomHeader(header, profileName: missing),
+        isFalse,
+      );
+
+      expect(await store.clearCustomHeader('X-Answer'), isTrue);
+      expect(
+        await store.clearCustomHeader('X-Answer'),
+        isTrue,
+        reason:
+            'the profile was reached; that nothing matched is not a failure',
+      );
+      expect(
+        await store.clearCustomHeader('X-Answer', profileName: missing),
+        isFalse,
+      );
+
+      expect(await store.clearAllCustomHeaders(profileName: profile), isTrue);
+      expect(await store.clearAllCustomHeaders(profileName: missing), isFalse);
+      expect(
+        await store.hasCustomHeader('X-Answer', profileName: profile),
+        isFalse,
+        reason: 'the control: the named profile was really cleared',
+      );
+    } finally {
+      await store.clearAllCustomHeaders();
+      await store.clearAllCustomHeaders(profileName: profile);
+    }
+  }, skip: shouldSkip);
 }

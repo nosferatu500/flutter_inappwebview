@@ -792,6 +792,13 @@ since the `WebsiteDataType.ALL` fix below. It stays **deliberately out of `ALL`*
 
 ### Fixed
 
+**Android — `ProfileStore.addCustomHeader()`, `.clearCustomHeader()` and `.clearAllCustomHeaders()`
+say whether they reached the profile: they return `Future<bool>`** (signature change). `false`
+means `CUSTOM_REQUEST_HEADERS` or `MULTI_PROFILE` is unsupported, or no profile has that name, and
+nothing was done. Before, those cases were silent, so a header added to a mistyped profile name was
+simply lost. `true` from `clearCustomHeader` means the profile was reached, not that a header
+matched. Code that `await`s and ignores the result needs no change.
+
 **Android — `WebStorageManager.deleteAllData()` and `.deleteOrigin()` say whether they did anything:
 they return `Future<bool>`** (signature change). `false` means the storage couldn't be resolved: a
 `profileName` that doesn't exist, or any `profileName` without `MULTI_PROFILE`. In that case nothing

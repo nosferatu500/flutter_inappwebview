@@ -83,12 +83,10 @@ class AndroidProfileStore extends PlatformProfileStore implements Disposable {
     return await _hostApi.getOrCreateProfile(name);
   }
 
+  // The three writes answer whether the profile was resolved (D4, §313); `false` = nothing done.
   @override
-  Future<void> addCustomHeader(
-    CustomHeader header, {
-    String? profileName,
-  }) async {
-    await _hostApi.addCustomHeader(
+  Future<bool> addCustomHeader(CustomHeader header, {String? profileName}) {
+    return _hostApi.addCustomHeader(
       CustomHeaderData(
         name: header.name,
         value: header.value,
@@ -130,18 +128,15 @@ class AndroidProfileStore extends PlatformProfileStore implements Disposable {
   }
 
   @override
-  Future<void> clearCustomHeader(
+  Future<bool> clearCustomHeader(
     String headerName, {
     String? headerValue,
     String? profileName,
-  }) async {
-    await _hostApi.clearCustomHeader(headerName, headerValue, profileName);
-  }
+  }) => _hostApi.clearCustomHeader(headerName, headerValue, profileName);
 
   @override
-  Future<void> clearAllCustomHeaders({String? profileName}) async {
-    await _hostApi.clearAllCustomHeaders(profileName);
-  }
+  Future<bool> clearAllCustomHeaders({String? profileName}) =>
+      _hostApi.clearAllCustomHeaders(profileName);
 
   @override
   Future<bool> deleteProfile({required String name}) async {

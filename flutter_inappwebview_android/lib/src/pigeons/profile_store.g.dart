@@ -308,18 +308,11 @@ class ProfileStoreHostApi {
 
   /// Adds [header] to the profile named [profileName], or to the default profile when it is null.
   ///
-  /// 🚨 **`void`, where the old channel answered a constant `true`.** The hand-written handler ran
-  /// `customHeaderProfile(call)?.addCustomHeader(...)` and then replied `true` unconditionally --
-  /// including when `CUSTOM_REQUEST_HEADERS` was missing, and when the named profile did not exist,
-  /// in which case the elvis swallowed the call and nothing was added. The Dart side declares
-  /// `Future<void>` and discarded that `true` anyway, so dropping it changes nothing observable and
-  /// stops the wire carrying a value that never meant anything.
-  ///
-  /// This is the mirror image of §169's finding on `web_storage_manager`, where the host computed a
-  /// meaningful answer that Dart threw away. Here the host threw away the meaning and Dart was
-  /// discarding the husk. Making it honestly answerable is a platform-interface change (`Future<bool>`
-  /// on five methods), not a transport one, and is filed rather than done here.
-  Future<void> addCustomHeader(
+  /// Answers whether the profile was resolved (D4, §313): `false` when `CUSTOM_REQUEST_HEADERS` or
+  /// `MULTI_PROFILE` is missing, or no profile has that name, in which case nothing was added. The
+  /// hand-written channel replied a constant `true` even then; §173 made it `void`, since Dart
+  /// discarded that `true` anyway, and filed the honest answer, which this is.
+  Future<bool> addCustomHeader(
     CustomHeaderData header,
     String? profileName,
   ) async {
@@ -335,11 +328,12 @@ class ProfileStoreHostApi {
     );
     final pigeonVar_replyList = await pigeonVar_sendFuture as List<Object?>?;
 
-    _extractReplyValueOrThrow(
+    final Object? pigeonVar_replyValue = _extractReplyValueOrThrow(
       pigeonVar_replyList,
       pigeonVar_channelName,
-      isNullValid: true,
+      isNullValid: false,
     );
+    return pigeonVar_replyValue! as bool;
   }
 
   /// Whether the profile carries any header called [headerName], matched case-insensitively.
@@ -408,8 +402,9 @@ class ProfileStoreHostApi {
   /// Removes headers called [headerName] -- every value under that name when [headerValue] is null,
   /// otherwise only the one with that exact value.
   ///
-  /// `void`; see [addCustomHeader] for why the old constant `true` is gone.
-  Future<void> clearCustomHeader(
+  /// Answers whether the profile was resolved, as [addCustomHeader] does; `true` doesn't say that a
+  /// header was removed.
+  Future<bool> clearCustomHeader(
     String headerName,
     String? headerValue,
     String? profileName,
@@ -426,15 +421,17 @@ class ProfileStoreHostApi {
     );
     final pigeonVar_replyList = await pigeonVar_sendFuture as List<Object?>?;
 
-    _extractReplyValueOrThrow(
+    final Object? pigeonVar_replyValue = _extractReplyValueOrThrow(
       pigeonVar_replyList,
       pigeonVar_channelName,
-      isNullValid: true,
+      isNullValid: false,
     );
+    return pigeonVar_replyValue! as bool;
   }
 
-  /// Removes every header from the profile. `void`; see [addCustomHeader].
-  Future<void> clearAllCustomHeaders(String? profileName) async {
+  /// Removes every header from the profile. Answers whether the profile was resolved; see
+  /// [addCustomHeader].
+  Future<bool> clearAllCustomHeaders(String? profileName) async {
     final pigeonVar_channelName =
         'dev.flutter.pigeon.flutter_inappwebview_android.ProfileStoreHostApi.clearAllCustomHeaders$pigeonVar_messageChannelSuffix';
     final pigeonVar_channel = BasicMessageChannel<Object?>(
@@ -447,10 +444,11 @@ class ProfileStoreHostApi {
     );
     final pigeonVar_replyList = await pigeonVar_sendFuture as List<Object?>?;
 
-    _extractReplyValueOrThrow(
+    final Object? pigeonVar_replyValue = _extractReplyValueOrThrow(
       pigeonVar_replyList,
       pigeonVar_channelName,
-      isNullValid: true,
+      isNullValid: false,
     );
+    return pigeonVar_replyValue! as bool;
   }
 }

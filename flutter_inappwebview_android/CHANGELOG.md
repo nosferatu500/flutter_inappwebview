@@ -239,6 +239,12 @@ for, and five others have a native *value* that differs from their name.
 
 ### Fixed
 
+- **The custom-header writes couldn't say they did nothing.** `ProfileStoreManager` resolved the
+  profile through an elvis, so with `CUSTOM_REQUEST_HEADERS` or `MULTI_PROFILE` missing, or an
+  unknown profile name, `addCustomHeader` / `clearCustomHeader` / `clearAllCustomHeaders` silently
+  did nothing. (The hand-written channel replied a constant `true`; §173 made them `void`.) They now
+  answer whether the profile was resolved, on the wire (`bool` in the Pigeon schema, regenerated)
+  and from `AndroidProfileStore`
 - **`deleteAllData` / `deleteOrigin` dropped the host's answer.** `MyWebStorage` answers `false` when
   the storage can't be resolved (no such profile, or a profile without `MULTI_PROFILE`), and since
   §169 that answer reached Dart only to be discarded. `AndroidWebStorageManager` now returns it, as

@@ -52,7 +52,7 @@ class ProfileStore {
   ///{@macro flutter_inappwebview_platform_interface.PlatformProfileStore.addCustomHeader}
   ///
   ///{@macro flutter_inappwebview_platform_interface.PlatformProfileStore.addCustomHeader.supported_platforms}
-  Future<void> addCustomHeader(CustomHeader header, {String? profileName}) =>
+  Future<bool> addCustomHeader(CustomHeader header, {String? profileName}) =>
       platform.addCustomHeader(header, profileName: profileName);
 
   ///{@macro flutter_inappwebview_platform_interface.PlatformProfileStore.hasCustomHeader}
@@ -77,7 +77,7 @@ class ProfileStore {
   ///{@macro flutter_inappwebview_platform_interface.PlatformProfileStore.clearCustomHeader}
   ///
   ///{@macro flutter_inappwebview_platform_interface.PlatformProfileStore.clearCustomHeader.supported_platforms}
-  Future<void> clearCustomHeader(
+  Future<bool> clearCustomHeader(
     String headerName, {
     String? headerValue,
     String? profileName,
@@ -90,7 +90,7 @@ class ProfileStore {
   ///{@macro flutter_inappwebview_platform_interface.PlatformProfileStore.clearAllCustomHeaders}
   ///
   ///{@macro flutter_inappwebview_platform_interface.PlatformProfileStore.clearAllCustomHeaders.supported_platforms}
-  Future<void> clearAllCustomHeaders({String? profileName}) =>
+  Future<bool> clearAllCustomHeaders({String? profileName}) =>
       platform.clearAllCustomHeaders(profileName: profileName);
 
   ///{@macro flutter_inappwebview_platform_interface.PlatformProfileStore.deleteProfile}

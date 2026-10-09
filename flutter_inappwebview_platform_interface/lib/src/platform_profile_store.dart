@@ -226,7 +226,9 @@ abstract class PlatformProfileStore extends PlatformInterface {
   ///Adding the same name and value again **merges** the two rule sets rather than replacing them,
   ///and there is no "replace" operation — clear the header first if that is what you want.
   ///
-  ///A no-op where the feature is unsupported.
+  ///Returns `false`, having added nothing, when the profile can't be reached:
+  ///[WebViewFeature.CUSTOM_REQUEST_HEADERS] or [WebViewFeature.MULTI_PROFILE] is unsupported, or no
+  ///profile has that [profileName]. `true` otherwise.
   ///{@endtemplate}
   ///
   ///{@macro flutter_inappwebview_platform_interface.PlatformProfileStore.addCustomHeader.supported_platforms}
@@ -242,7 +244,7 @@ abstract class PlatformProfileStore extends PlatformInterface {
       ),
     ],
   )
-  Future<void> addCustomHeader(
+  Future<bool> addCustomHeader(
     CustomHeader header, {
     @SupportedPlatforms(platforms: [AndroidPlatform()]) String? profileName,
   }) {
@@ -319,7 +321,9 @@ abstract class PlatformProfileStore extends PlatformInterface {
   ///Pass [headerValue] to remove only the header with that exact value (case-sensitive), leaving
   ///any others that share the name. Omit it to remove every header with that name.
   ///
-  ///A no-op where the feature is unsupported, and a no-op when nothing matches.
+  ///Returns `false`, having removed nothing, when the profile can't be reached (as for
+  ///[addCustomHeader]). `true` means the profile was reached, not that a header matched: when
+  ///nothing matches it is a no-op that still returns `true`.
   ///{@endtemplate}
   ///
   ///{@macro flutter_inappwebview_platform_interface.PlatformProfileStore.clearCustomHeader.supported_platforms}
@@ -335,7 +339,7 @@ abstract class PlatformProfileStore extends PlatformInterface {
       ),
     ],
   )
-  Future<void> clearCustomHeader(
+  Future<bool> clearCustomHeader(
     String headerName, {
     @SupportedPlatforms(platforms: [AndroidPlatform()]) String? headerValue,
     @SupportedPlatforms(platforms: [AndroidPlatform()]) String? profileName,
@@ -348,7 +352,8 @@ abstract class PlatformProfileStore extends PlatformInterface {
   ///{@template flutter_inappwebview_platform_interface.PlatformProfileStore.clearAllCustomHeaders}
   ///Removes every custom header from this profile.
   ///
-  ///A no-op where the feature is unsupported.
+  ///Returns `false`, having removed nothing, when the profile can't be reached (as for
+  ///[addCustomHeader]). `true` otherwise.
   ///{@endtemplate}
   ///
   ///{@macro flutter_inappwebview_platform_interface.PlatformProfileStore.clearAllCustomHeaders.supported_platforms}
@@ -364,7 +369,7 @@ abstract class PlatformProfileStore extends PlatformInterface {
       ),
     ],
   )
-  Future<void> clearAllCustomHeaders({
+  Future<bool> clearAllCustomHeaders({
     @SupportedPlatforms(platforms: [AndroidPlatform()]) String? profileName,
   }) {
     throw UnimplementedError(

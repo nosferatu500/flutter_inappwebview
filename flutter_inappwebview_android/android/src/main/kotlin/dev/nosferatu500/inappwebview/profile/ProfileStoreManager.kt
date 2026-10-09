@@ -73,13 +73,13 @@ class ProfileStoreManager(plugin: InAppWebViewFlutterPlugin) : Disposable, Profi
   }
 
   /**
-   * Answers nothing. The hand-written handler replied a constant `true` here even when the elvis
-   * below swallowed the call, and the Dart side discarded it; see the schema.
+   * Answers whether the profile was resolved; `false` means nothing was added (D4, §313). The
+   * hand-written handler replied a constant `true` even then; see the schema.
    */
-  override fun addCustomHeader(header: CustomHeaderData, profileName: String?) {
-    customHeaderProfile(profileName)?.addCustomHeader(
-      CustomHeader(header.name, header.value, header.originRules.toSet())
-    )
+  override fun addCustomHeader(header: CustomHeaderData, profileName: String?): Boolean {
+    val profile = customHeaderProfile(profileName) ?: return false
+    profile.addCustomHeader(CustomHeader(header.name, header.value, header.originRules.toSet()))
+    return true
   }
 
   override fun hasCustomHeader(headerName: String, profileName: String?): Boolean =
@@ -111,17 +111,20 @@ class ProfileStoreManager(plugin: InAppWebViewFlutterPlugin) : Disposable, Profi
     headerName: String,
     headerValue: String?,
     profileName: String?
-  ) {
-    val profile = customHeaderProfile(profileName)
+  ): Boolean {
+    val profile = customHeaderProfile(profileName) ?: return false
     if (headerValue == null) {
-      profile?.clearCustomHeader(headerName)
+      profile.clearCustomHeader(headerName)
     } else {
-      profile?.clearCustomHeader(headerName, headerValue)
+      profile.clearCustomHeader(headerName, headerValue)
     }
+    return true
   }
 
-  override fun clearAllCustomHeaders(profileName: String?) {
-    customHeaderProfile(profileName)?.clearAllCustomHeaders()
+  override fun clearAllCustomHeaders(profileName: String?): Boolean {
+    val profile = customHeaderProfile(profileName) ?: return false
+    profile.clearAllCustomHeaders()
+    return true
   }
 
   override fun dispose() {

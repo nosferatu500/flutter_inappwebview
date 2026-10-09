@@ -438,6 +438,10 @@ rename; this entry is the API-owner's view.
 
 ### Fixed
 
+- **`PlatformProfileStore.addCustomHeader`, `.clearCustomHeader` and `.clearAllCustomHeaders` return
+  `Future<bool>`** (breaking for implementations). `false` means the profile couldn't be reached and
+  nothing was done. The docs replace "a no-op where the feature is unsupported", and say that
+  `clearCustomHeader`'s `true` doesn't mean a header matched
 - **`PlatformWebStorageManager.deleteAllData` and `.deleteOrigin` return `Future<bool>`**
   (breaking for implementations). `false` means the storage couldn't be resolved and nothing was
   deleted. Until now an implementation computed the answer and had no way to return it. The docs say

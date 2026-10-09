@@ -318,19 +318,12 @@ interface ProfileStoreHostApi {
   /**
    * Adds [header] to the profile named [profileName], or to the default profile when it is null.
    *
-   * 🚨 **`void`, where the old channel answered a constant `true`.** The hand-written handler ran
-   * `customHeaderProfile(call)?.addCustomHeader(...)` and then replied `true` unconditionally --
-   * including when `CUSTOM_REQUEST_HEADERS` was missing, and when the named profile did not exist,
-   * in which case the elvis swallowed the call and nothing was added. The Dart side declares
-   * `Future<void>` and discarded that `true` anyway, so dropping it changes nothing observable and
-   * stops the wire carrying a value that never meant anything.
-   *
-   * This is the mirror image of §169's finding on `web_storage_manager`, where the host computed a
-   * meaningful answer that Dart threw away. Here the host threw away the meaning and Dart was
-   * discarding the husk. Making it honestly answerable is a platform-interface change (`Future<bool>`
-   * on five methods), not a transport one, and is filed rather than done here.
+   * Answers whether the profile was resolved (D4, §313): `false` when `CUSTOM_REQUEST_HEADERS` or
+   * `MULTI_PROFILE` is missing, or no profile has that name, in which case nothing was added. The
+   * hand-written channel replied a constant `true` even then; §173 made it `void`, since Dart
+   * discarded that `true` anyway, and filed the honest answer, which this is.
    */
-  fun addCustomHeader(header: CustomHeaderData, profileName: String?)
+  fun addCustomHeader(header: CustomHeaderData, profileName: String?): Boolean
   /**
    * Whether the profile carries any header called [headerName], matched case-insensitively.
    *
@@ -358,11 +351,15 @@ interface ProfileStoreHostApi {
    * Removes headers called [headerName] -- every value under that name when [headerValue] is null,
    * otherwise only the one with that exact value.
    *
-   * `void`; see [addCustomHeader] for why the old constant `true` is gone.
+   * Answers whether the profile was resolved, as [addCustomHeader] does; `true` doesn't say that a
+   * header was removed.
    */
-  fun clearCustomHeader(headerName: String, headerValue: String?, profileName: String?)
-  /** Removes every header from the profile. `void`; see [addCustomHeader]. */
-  fun clearAllCustomHeaders(profileName: String?)
+  fun clearCustomHeader(headerName: String, headerValue: String?, profileName: String?): Boolean
+  /**
+   * Removes every header from the profile. Answers whether the profile was resolved; see
+   * [addCustomHeader].
+   */
+  fun clearAllCustomHeaders(profileName: String?): Boolean
 
   companion object {
     /** The codec used by ProfileStoreHostApi. */
@@ -430,8 +427,7 @@ interface ProfileStoreHostApi {
             val headerArg = args[0] as CustomHeaderData
             val profileNameArg = args[1] as String?
             val wrapped: List<Any?> = try {
-              api.addCustomHeader(headerArg, profileNameArg)
-              listOf(null)
+              listOf(api.addCustomHeader(headerArg, profileNameArg))
             } catch (exception: Throwable) {
               ProfileStorePigeonUtils.wrapError(exception)
             }
@@ -487,8 +483,7 @@ interface ProfileStoreHostApi {
             val headerValueArg = args[1] as String?
             val profileNameArg = args[2] as String?
             val wrapped: List<Any?> = try {
-              api.clearCustomHeader(headerNameArg, headerValueArg, profileNameArg)
-              listOf(null)
+              listOf(api.clearCustomHeader(headerNameArg, headerValueArg, profileNameArg))
             } catch (exception: Throwable) {
               ProfileStorePigeonUtils.wrapError(exception)
             }
@@ -505,8 +500,7 @@ interface ProfileStoreHostApi {
             val args = message as List<Any?>
             val profileNameArg = args[0] as String?
             val wrapped: List<Any?> = try {
-              api.clearAllCustomHeaders(profileNameArg)
-              listOf(null)
+              listOf(api.clearAllCustomHeaders(profileNameArg))
             } catch (exception: Throwable) {
               ProfileStorePigeonUtils.wrapError(exception)
             }

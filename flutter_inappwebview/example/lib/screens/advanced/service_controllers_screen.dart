@@ -1232,7 +1232,7 @@ class _ServiceControllersScreenState extends State<ServiceControllersScreen> {
     if (params == null) return;
     setState(() => _isLoading = true);
     try {
-      await ProfileStore.instance().addCustomHeader(
+      final added = await ProfileStore.instance().addCustomHeader(
         CustomHeader(
           name: params['name']?.toString() ?? '',
           value: params['value']?.toString() ?? '',
@@ -1247,8 +1247,10 @@ class _ServiceControllersScreenState extends State<ServiceControllersScreen> {
       );
       _recordMethodResult(
         PlatformProfileStoreMethod.addCustomHeader.name,
-        'Added ${params['name']}: ${params['value']}',
-        isError: false,
+        added
+            ? 'Added ${params['name']}: ${params['value']}'
+            : 'Profile not reachable (feature missing or no such profile): nothing done',
+        isError: !added,
       );
     } catch (e) {
       _recordMethodResult(
@@ -1327,14 +1329,18 @@ class _ServiceControllersScreenState extends State<ServiceControllersScreen> {
     try {
       // An empty value means "clear every value under this name" — the one-argument androidx
       // overload — rather than "clear the header whose value is the empty string".
-      await ProfileStore.instance().clearCustomHeader(
+      final reached = await ProfileStore.instance().clearCustomHeader(
         name,
         headerValue: value.isEmpty ? null : value,
       );
       _recordMethodResult(
         PlatformProfileStoreMethod.clearCustomHeader.name,
-        value.isEmpty ? 'Cleared all values of $name' : 'Cleared $name: $value',
-        isError: false,
+        !reached
+            ? 'Profile not reachable (feature missing or no such profile): nothing done'
+            : value.isEmpty
+            ? 'Cleared all values of $name'
+            : 'Cleared $name: $value',
+        isError: !reached,
       );
     } catch (e) {
       _recordMethodResult(
@@ -1350,11 +1356,13 @@ class _ServiceControllersScreenState extends State<ServiceControllersScreen> {
   Future<void> _clearAllCustomHeaders() async {
     setState(() => _isLoading = true);
     try {
-      await ProfileStore.instance().clearAllCustomHeaders();
+      final reached = await ProfileStore.instance().clearAllCustomHeaders();
       _recordMethodResult(
         PlatformProfileStoreMethod.clearAllCustomHeaders.name,
-        'All custom headers cleared',
-        isError: false,
+        reached
+            ? 'All custom headers cleared'
+            : 'Profile not reachable (feature missing or no such profile): nothing done',
+        isError: !reached,
       );
     } catch (e) {
       _recordMethodResult(

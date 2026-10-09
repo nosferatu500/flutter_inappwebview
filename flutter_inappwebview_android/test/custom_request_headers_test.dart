@@ -57,6 +57,10 @@ void main() {
     replies.clear();
     replies[getChannel] = <Object?>[];
     replies[hasChannel] = false;
+    // The writes answer whether the profile was resolved (D4, §313).
+    replies[addChannel] = true;
+    replies[clearChannel] = true;
+    replies[clearAllChannel] = true;
     store = AndroidProfileStore(const PlatformProfileStoreCreationParams());
     for (final c in allChannels) {
       install(c);
@@ -141,16 +145,33 @@ void main() {
       expect(headerArg(addChannel, 0).originRules, isEmpty);
       expect(headerArg(addChannel, 0).originRules, isNotNull);
     });
+  });
 
-    test('the host answers nothing and the future still completes', () async {
-      // `void` on the host since §173 — the old channel replied a constant `true` that Dart threw
-      // away. This pins that the absent reply is not mistaken for a failure.
-      await expectLater(
-        store.addCustomHeader(
-          CustomHeader(name: 'X-A', value: 'v', originRules: const {'*'}),
-        ),
-        completes,
+  group('the writes return the host answer', () {
+    // D4 (§313): `false` means the profile couldn't be reached and nothing was done. §173 had made
+    // the three writes `void`, dropping a constant `true` that meant nothing.
+    final header = CustomHeader(
+      name: 'X-A',
+      value: 'v',
+      originRules: const {'*'},
+    );
+    test('addCustomHeader', () async {
+      expect(await store.addCustomHeader(header), isTrue);
+      replies[addChannel] = false;
+      expect(await store.addCustomHeader(header, profileName: 'nope'), isFalse);
+    });
+    test('clearCustomHeader', () async {
+      expect(await store.clearCustomHeader('X-A'), isTrue);
+      replies[clearChannel] = false;
+      expect(
+        await store.clearCustomHeader('X-A', profileName: 'nope'),
+        isFalse,
       );
+    });
+    test('clearAllCustomHeaders', () async {
+      expect(await store.clearAllCustomHeaders(), isTrue);
+      replies[clearAllChannel] = false;
+      expect(await store.clearAllCustomHeaders(profileName: 'nope'), isFalse);
     });
   });
 
