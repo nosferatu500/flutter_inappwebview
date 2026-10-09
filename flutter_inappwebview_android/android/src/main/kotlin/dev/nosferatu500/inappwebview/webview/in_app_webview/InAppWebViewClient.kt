@@ -170,6 +170,13 @@ open class InAppWebViewClient(inAppBrowserDelegate: InAppBrowserDelegate?) : Web
     args: String?
   ) = common.onReceivedLoginRequest(view, realm, account, args)
 
+  // Drops the platform default, which re-injects a key the page didn't handle into the window
+  // (`ViewRootImpl.dispatchUnhandledInputEvent`). Inherited from upstream (2019) with no reason
+  // given. Measured in a plain app (§316, API 37, WebView 153; the page had no input; X, Escape,
+  // F2, Space): Flutter's `HardwareKeyboard` sees every key before the WebView either way, the page
+  // gets the same events, and with the default restored nothing observable changed: no second key
+  // event in Flutter, no back navigation on Escape. So this is kept, as harmless. An app that wants
+  // the keys a page ignores uses `HardwareKeyboard` / `Focus` in Dart, which run first (§120).
   override fun onUnhandledKeyEvent(view: WebView, event: KeyEvent) {}
 
   fun dispose() = common.dispose()

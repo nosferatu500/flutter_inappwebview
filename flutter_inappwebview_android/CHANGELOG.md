@@ -593,6 +593,12 @@ for, and five others have a native *value* that differs from their name.
 
 ### Internal
 
+- **The empty `onUnhandledKeyEvent` override is explained, from a measurement.** Both WebView
+  clients drop the platform default, which re-injects a key the page didn't handle into the window.
+  The override came from upstream in 2019 with no reason given. Measured in a plain app on API 37:
+  Flutter's `HardwareKeyboard` sees every key before the WebView either way, and restoring the
+  default changed nothing observable (no second key event in Flutter, no back navigation on Escape).
+  So it stays, with a comment saying so and pointing apps at `HardwareKeyboard`
 - **The `WebStorageManager` Pigeon schema's docs say what the quota and usage measure.** The quota
   is one global figure, and usage counts IndexedDB, Cache Storage, the origin-private file system
   and service workers, not Web SQL or `localStorage`. Comments only; the generated Kotlin and Dart
