@@ -594,6 +594,10 @@ error.
 
 ### Internal
 
+- **Two Swift comments no longer cite a deleted notes file.** `JavaScriptBridgeJS` and `Util.swift`
+  named `NEXT_SESSION_IOS.md`, which was merged into the fork's session notes and deleted. They now
+  point at the sections that hold what they describe: the Swift 6 static inventory (§42) and where
+  the global it missed was found (§43). Comments only
 - **`InAppWebView.contentRuleList` is gone.** Nothing had read it since popups stopped taking their
   opener's rule list; it was only written (six places) and its doc still said a popup gets the same one
 - **A disposed `InAppBrowser` whose view UIKit reloads no longer overflows the stack.**

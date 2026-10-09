@@ -8,10 +8,10 @@
 import Foundation
 import WebKit
 
-/// The **eleventh** piece of mutable global state in this package, and the one the Swift 6 recon in
-/// `NEXT_SESSION_IOS.md` missed: its inventory was built with `grep 'static var'`, and this is a
-/// bare top-level `var`, so it never appeared. Written from `InAppWebView`'s touch handling and read
-/// back when a long press resolves — both main-thread paths.
+/// The **eleventh** piece of mutable global state in this package, and the one the Swift 6
+/// inventory (§42) missed, found in §43: the inventory was built with `grep 'static var'`, and this
+/// is a bare top-level `var`, so it never appeared. Written from `InAppWebView`'s touch handling and
+/// read back when a long press resolves — both main-thread paths.
 @MainActor
 var SharedLastTouchPointTimestamp: [InAppWebView: Int64] = [:]
 

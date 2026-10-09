@@ -11,7 +11,7 @@ import Foundation
 /// every member builds JS source around it, on the main thread, during WebView setup.
 @MainActor
 public class JavaScriptBridgeJS {
-    /// One of the seven genuinely-mutable statics `NEXT_SESSION_IOS.md` identified — Dart can rename
+    /// One of the seven genuinely-mutable statics the Swift 6 inventory found (§42) — Dart can rename
     /// the whole JS bridge global at runtime through `InAppWebViewManager`'s method channel, so this
     /// is not the constant its `SCREAMING_CASE` name suggests (see §42).
     ///
