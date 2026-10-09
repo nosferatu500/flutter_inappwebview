@@ -792,6 +792,18 @@ since the `WebsiteDataType.ALL` fix below. It stays **deliberately out of `ALL`*
 
 ### Fixed
 
+**`shouldOverrideUrlLoading` answers mean the same on both platforms, and `null` no longer
+blocks** (behaviour change). Measured before:
+- a `null` answer cancelled the navigation on both platforms;
+- a handler that threw allowed it on Android and cancelled it on iOS;
+- `useShouldOverrideUrlLoading: true` with no handler cancelled the navigation on Android, and on
+  iOS every navigation, the first load included.
+
+Now `null` and a missing handler are no decision, and the navigation loads. A handler that throws
+cancels on both: the callback is often an allow-list, and a bug in it must not let every navigation
+through. The error is printed. `ALLOW` and `CANCEL` are unchanged. Device tests pin all three on
+both platforms.
+
 **iOS — `setProxyOverride` with a proxy rule it can't parse now throws and keeps the current
 proxy**, as Android already did: it used to drop the rule silently, and with every rule dropped,
 traffic went direct. A device test pins it.

@@ -653,6 +653,10 @@ rename; this entry is the API-owner's view.
 
 ### Internal
 
+- **`shouldOverrideUrlLoading`'s doc says what each answer does.** `null` and no handler load, and a
+  throwing handler cancels, the same on both platforms (a behaviour change in the platform packages).
+  `useShouldOverrideUrlLoading`'s doc says that, set without a handler, navigations load.
+  `InAppBrowser.shouldOverrideUrlLoading` shares the text
 - **`WebStorageManager`'s docs say what Android's storage methods actually cover.** They named
   Application Cache and Web SQL, which current WebViews no longer have. Measured on Android 17
   (WebView 153):

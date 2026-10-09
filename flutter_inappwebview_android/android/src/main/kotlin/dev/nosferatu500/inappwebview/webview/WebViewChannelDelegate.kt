@@ -287,10 +287,11 @@ class WebViewChannelDelegate(
 
   open class ShouldOverrideUrlLoadingCallback :
     BaseCallbackResultImpl<NavigationActionPolicy>() {
-    override fun decodeResult(obj: Any?): NavigationActionPolicy {
-      val action = if (obj is Int) obj else NavigationActionPolicy.CANCEL.rawValue()
-      return NavigationActionPolicy.fromValue(action)
-    }
+    // No policy (a null answer, or no Dart handler) is no decision: `null` runs `defaultBehaviour`,
+    // which allows, as on iOS (D1, §309). It used to read as CANCEL (measured §215). A throwing
+    // handler is answered CANCEL by the Dart side before it gets here.
+    override fun decodeResult(obj: Any?): NavigationActionPolicy? =
+      if (obj is Int) NavigationActionPolicy.fromValue(obj) else null
   }
 
   fun shouldOverrideUrlLoading(

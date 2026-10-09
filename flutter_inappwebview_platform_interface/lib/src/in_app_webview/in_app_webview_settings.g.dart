@@ -1589,6 +1589,8 @@ class InAppWebViewSettings {
   ///it will be automatically inferred as `true`, otherwise, the default value is `false`.
   ///This logic will not be applied for [PlatformInAppBrowser], where you must set the value manually.
   ///
+  ///Set to `true` with no handler, navigations load as if it were `false`.
+  ///
   ///**Officially Supported Platforms/Implementations**:
   ///- Android WebView
   ///- iOS WKWebView

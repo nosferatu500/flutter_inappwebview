@@ -568,4 +568,29 @@ void main() {
       expect(envelope[1], contains('confirm failed'));
     },
   );
+
+  // The exception to the test above (D1, §309): an error would reach Kotlin's `error`, which
+  // allows, so a throwing `shouldOverrideUrlLoading` answers CANCEL instead.
+  test(
+    'a throwing shouldOverrideUrlLoading answers CANCEL, not an error',
+    () async {
+      final controller = AndroidInAppWebViewController(
+        AndroidInAppWebViewControllerCreationParams(
+          id: 18,
+          webviewParams: AndroidInAppWebViewWidgetCreationParams(
+            shouldOverrideUrlLoading: (_, a) async =>
+                throw StateError('an allow-list bug'),
+          ),
+        ),
+      );
+      addTearDown(controller.dispose);
+
+      final reply = await deliver('shouldOverrideUrlLoading', [
+        {'request': urlRequest, 'isForMainFrame': true},
+      ], suffix: 'inappwebview_18');
+      expect(codec.decodeMessage(reply), [
+        NavigationActionPolicy.CANCEL.toNativeValue(),
+      ], reason: 'a success envelope carrying CANCEL');
+    },
+  );
 }

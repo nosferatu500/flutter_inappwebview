@@ -924,11 +924,15 @@ public class WebViewChannelDelegate: ChannelDelegate {
     public class ShouldOverrideUrlLoadingCallback: BaseCallbackResult<WKNavigationActionPolicy> {
         override init() {
             super.init()
+            // No policy (a null answer, or no Dart handler) is no decision: `nil` runs
+            // `defaultBehaviour`, which allows, as on Android (D1, §309). It used to read as cancel,
+            // which with `useShouldOverrideUrlLoading` and no handler blocked every navigation,
+            // the first load included. A throwing handler is answered cancel by the Dart side.
             self.decodeResult = { (obj: Any?) in
                 if let action = obj as? Int {
                     return WKNavigationActionPolicy.init(rawValue: action) ?? WKNavigationActionPolicy.cancel
                 }
-                return WKNavigationActionPolicy.cancel
+                return nil
             }
         }
         

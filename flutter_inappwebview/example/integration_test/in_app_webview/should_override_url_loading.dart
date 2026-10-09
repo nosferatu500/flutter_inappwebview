@@ -213,64 +213,105 @@ void shouldOverrideUrlLoading() {
       unawaited(pageLoads.close());
     });
 
-    // What a null answer means is not documented. On Android it is CANCEL, not the ALLOW that a
-    // missing handler gets, because the decoder reads anything but a policy as CANCEL. Measured on
-    // API 37 (§215) and pinned here so the Pigeon move keeps it; whether it should be ALLOW is an
-    // open question in TODO.md.
-    skippableTestWidgets(
-      'a null answer cancels the navigation',
-      (WidgetTester tester) async {
-        final Completer<InAppWebViewController> controllerCompleter =
-            Completer<InAppWebViewController>();
-        final loads = <String>[];
-        final asked = <String>[];
-        final start = WebUri("http://${environment["NODE_SERVER_IP"]}:8082/");
-        final target = WebUri(
-          "http://${environment["NODE_SERVER_IP"]}:8082/test-index",
-        );
-
-        await tester.pumpWidget(
+    // What each kind of answer does, the same on both platforms (D1, §309). Measured before: a
+    // null answer cancelled on both; a throwing handler allowed on Android and cancelled on iOS; and
+    // `useShouldOverrideUrlLoading: true` with no handler cancelled the navigation on Android and
+    // every navigation on iOS, the first load included. Each test loads `:8082/`, then navigates
+    // to `/test-index` from JS, and returns the `onLoadStop` URLs, `getUrl`, and whether the handler
+    // was asked for the target.
+    Future<({List<String> loads, String? url, bool asked})> navigate(
+      WidgetTester tester,
+      Future<NavigationActionPolicy?> Function(
+        InAppWebViewController controller,
+        NavigationAction action,
+      )?
+      handler,
+    ) async {
+      final deadline = TestDeadline();
+      final start = "http://${environment["NODE_SERVER_IP"]}:8082/";
+      final target = "http://${environment["NODE_SERVER_IP"]}:8082/test-index";
+      final loads = <String>[];
+      final asked = <String>[];
+      final created = Completer<InAppWebViewController>();
+      await deadline.frame(
+        'mounting the WebView',
+        tester.pumpWidget(
           Directionality(
             textDirection: TextDirection.ltr,
             child: InAppWebView(
               key: GlobalKey(),
-              initialUrlRequest: URLRequest(url: start),
-              onWebViewCreated: (controller) {
-                controllerCompleter.complete(controller);
-              },
-              shouldOverrideUrlLoading: (controller, navigationAction) async {
-                asked.add(navigationAction.request.url.toString());
-                return navigationAction.request.url.toString() ==
-                        target.toString()
-                    ? null
-                    : NavigationActionPolicy.ALLOW;
-              },
-              onLoadStop: (controller, url) {
-                loads.add(url.toString());
-              },
+              initialUrlRequest: URLRequest(url: WebUri(start)),
+              initialSettings: InAppWebViewSettings(
+                useShouldOverrideUrlLoading: true,
+              ),
+              onWebViewCreated: created.complete,
+              shouldOverrideUrlLoading: handler == null
+                  ? null
+                  : (controller, action) {
+                      asked.add(action.request.url.toString());
+                      return handler(controller, action);
+                    },
+              onLoadStop: (controller, url) => loads.add(url.toString()),
             ),
           ),
-        );
+        ),
+      );
+      final controller = await deadline.step(
+        'onWebViewCreated',
+        created.future,
+      );
+      await deadline.until(
+        'the first page',
+        () => loads.contains(start),
+        state: () => 'loads: $loads',
+      );
+      await deadline.step(
+        'navigating from JS',
+        controller.evaluateJavascript(source: 'location.href = "$target";'),
+      );
+      // An allowed load of this fixture page finishes in well under a second; a cancelled one
+      // never does, so the wait is a fixed one, long enough for either.
+      await Future<void>.delayed(const Duration(seconds: 3));
+      return (
+        loads: loads,
+        url: (await deadline.step('getUrl', controller.getUrl()))?.toString(),
+        asked: asked.contains(target),
+      );
+    }
 
-        final InAppWebViewController controller =
-            await controllerCompleter.future;
-        for (var i = 0; i < 100 && loads.isEmpty; i++) {
-          await Future.delayed(const Duration(milliseconds: 100));
-        }
-        await controller.evaluateJavascript(
-          source: 'location.href = "$target";',
-        );
-        for (var i = 0; i < 40 && !asked.contains(target.toString()); i++) {
-          await Future.delayed(const Duration(milliseconds: 100));
-        }
-        // Long enough for an allowed load of the local fixture page to have finished.
-        await Future.delayed(const Duration(seconds: 3));
+    final targetUrl = "http://${environment["NODE_SERVER_IP"]}:8082/test-index";
 
-        expect(asked, contains(target.toString()));
-        expect(loads, [start.toString()]);
-        expect((await controller.getUrl()).toString(), start.toString());
+    skippableTestWidgets('a null answer allows the navigation', (
+      WidgetTester tester,
+    ) async {
+      final r = await navigate(tester, (controller, action) async => null);
+      expect(r.asked, isTrue, reason: 'the handler was asked: ${r.loads}');
+      expect(r.loads, contains(targetUrl));
+      expect(r.url, targetUrl);
+    });
+
+    skippableTestWidgets('a handler that throws cancels the navigation', (
+      WidgetTester tester,
+    ) async {
+      final r = await navigate(tester, (controller, action) async {
+        if (action.request.url.toString() == targetUrl) {
+          throw StateError('an allow-list bug');
+        }
+        return NavigationActionPolicy.ALLOW;
+      });
+      expect(r.asked, isTrue, reason: 'the handler was asked: ${r.loads}');
+      expect(r.loads, isNot(contains(targetUrl)));
+      expect(r.url, isNot(targetUrl));
+    });
+
+    skippableTestWidgets(
+      'useShouldOverrideUrlLoading with no handler allows every navigation',
+      (WidgetTester tester) async {
+        // `navigate` waits for the first page, which iOS used to cancel here as well.
+        final r = await navigate(tester, null);
+        expect(r.loads, contains(targetUrl));
+        expect(r.url, targetUrl);
       },
-      skip: defaultTargetPlatform != TargetPlatform.android,
     );
   }, skip: shouldSkip);
 }

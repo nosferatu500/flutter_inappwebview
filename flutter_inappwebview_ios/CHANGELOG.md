@@ -141,6 +141,11 @@ Fourteen WebKit APIs read out of the iOS 26.5 SDK:
 
 ### Fixed
 
+- **`useShouldOverrideUrlLoading: true` with no handler blocked every navigation, the first load
+  included; a `null` answer cancelled** (behaviour change). The decoder read anything but a policy
+  as cancel. Now no policy is no decision and the navigation loads, as on Android. A handler that
+  throws cancels, as it did for a thrown `Error` (measured). By reading the code, an `Exception`
+  reached the error path, which allowed; the Dart side now answers cancel for both
 - **`ProxyController.setProxyOverride` silently dropped a proxy rule it couldn't parse.** Measured:
   `'://'`, `'http://['`, `'%%%'` and `''` each returned normally, and a call whose every rule was
   dropped left an empty override, so traffic went direct while the app believed it was proxied. Now

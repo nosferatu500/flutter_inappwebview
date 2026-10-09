@@ -239,6 +239,12 @@ for, and five others have a native *value* that differs from their name.
 
 ### Fixed
 
+- **A `null` `shouldOverrideUrlLoading` answer cancelled the navigation; a throwing handler allowed
+  it** (behaviour change). `ShouldOverrideUrlLoadingCallback.decodeResult` read anything but a
+  policy as CANCEL, and a Dart throw reached `error`, which allowed. Measured: a `null` answer
+  cancelled, and so did `useShouldOverrideUrlLoading: true` with no handler. Now no policy is no
+  decision and the navigation loads, while a throwing handler is answered CANCEL by the Dart side,
+  as on iOS
 - **A rebuild before the platform view existed left the controller with the first build.**
   `PlatformViewLink` creates the view once, with the first build's closure, and the view appears
   later; a rebuild in between had no controller to move yet. Measured (a widget built twice in its

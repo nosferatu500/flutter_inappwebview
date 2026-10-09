@@ -212,6 +212,12 @@ class PlatformWebViewCreationParams<T> {
   ///
   ///[navigationAction] represents an object that contains information about an action that causes navigation to occur.
   ///
+  ///Answer [NavigationActionPolicy.ALLOW] to load and [NavigationActionPolicy.CANCEL] not to.
+  ///`null` is no decision, and the navigation loads, as it does when no handler is set while
+  ///[InAppWebViewSettings.useShouldOverrideUrlLoading] is `true`. A handler that throws cancels the
+  ///navigation (the error is printed), so a bug in an allow-list doesn't let every navigation
+  ///through. Same on Android and iOS.
+  ///
   ///**NOTE**: In order to be able to listen this event, check the [InAppWebViewSettings.useShouldOverrideUrlLoading] setting documentation.
   ///{@endtemplate}
   ///

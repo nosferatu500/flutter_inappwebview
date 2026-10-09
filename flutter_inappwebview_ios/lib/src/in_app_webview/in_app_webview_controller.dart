@@ -322,16 +322,29 @@ class IOSInAppWebViewController extends PlatformInAppWebViewController
             arguments,
           )!;
 
-          if (webviewParams != null &&
-              webviewParams!.shouldOverrideUrlLoading != null) {
-            return (await webviewParams!.shouldOverrideUrlLoading!(
-              _controllerFromPlatform,
+          // No answer (null) is no decision, which the platform takes as ALLOW; a handler that
+          // throws cancels instead (D1, §309): the callback is often an allow-list, and a bug in it
+          // must not let every navigation through. The error is printed, as the channel prints its
+          // handlers' other errors.
+          try {
+            if (webviewParams != null &&
+                webviewParams!.shouldOverrideUrlLoading != null) {
+              return (await webviewParams!.shouldOverrideUrlLoading!(
+                _controllerFromPlatform,
+                navigationAction,
+              ))?.toNativeValue();
+            }
+            return (await _inAppBrowserEventHandler!.shouldOverrideUrlLoading(
               navigationAction,
             ))?.toNativeValue();
+          } catch (e, stackTrace) {
+            // ignore: avoid_print
+            print(
+              'shouldOverrideUrlLoading threw, so the navigation is cancelled: '
+              '$e\n$stackTrace',
+            );
+            return NavigationActionPolicy.CANCEL.toNativeValue();
           }
-          return (await _inAppBrowserEventHandler!.shouldOverrideUrlLoading(
-            navigationAction,
-          ))?.toNativeValue();
         }
         break;
       case "onConsoleMessage":
