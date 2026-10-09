@@ -1203,8 +1203,16 @@ simulator for the first time:**
 
 ### Internal
 
+- **The device tests' dropped frame is a hang in Flutter's test binding, and apps don't get it.**
+  Measured in a plain app first: over 630 cycles of mounting and removing WebViews and popups on
+  Android and iOS, no frame stalled for a second. A control that withheld one frame froze the app
+  until the probe asked the engine again, except on Android right at a view's creation, where the
+  view's metrics update asks the engine itself. Then reproduced without a WebView: when a pump
+  starts between `onBeginFrame` and `onDrawFrame` of a frame the live test binding skipped, the
+  binding completes it without drawing and asks for no next frame, so the following pump waits
+  forever. The watchdog's documentation now says so; the watchdog is unchanged
 - **Every device test is protected from a dropped frame, not only the converted ones.** A watchdog
-  installed for the whole run asks the engine again when a frame it was asked for hasn't come in 2 s,
+  installed for the whole run asks the engine for a frame when a pump has had none for 2 s,
   and prints that it did; it replaces the per-pump rescue. Measured: no false alarm in a full
   `in_app_webview` group on Android or iOS, and on its own it carried 15 of 15 popup-test runs through
   6 dropped frames
@@ -1218,8 +1226,8 @@ simulator for the first time:**
   the view is always created before that frame completes (6 / 6); the literal same-frame case can't
   run on Android, where Flutter's own debug assertion fires first
 - **Device tests no longer lose a whole run to a dropped frame.** As a WebView is mounted (a popup,
-  so far) or removed, the engine sometimes never answers a test's frame request (measured: frames enabled, one
-  scheduled, the platform thread answering); every later test then failed on the test binding's
+  so far) or removed, a test's pump sometimes never gets a frame (measured: frames enabled, one
+  scheduled, the platform thread answering; the test binding's own hang, found later); every later test then failed on the test binding's
   asserts. A pump that has had no frame for 2 s now asks the engine again, which brought it each
   time, and prints that it did. All the `WebView Windows` tests run under one per-test deadline,
   and a deadline failure reports the scheduler's state

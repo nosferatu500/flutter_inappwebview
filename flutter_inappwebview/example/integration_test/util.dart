@@ -32,18 +32,25 @@ int? iosMajorVersion() {
 
 bool _frameWatchdogInstalled = false;
 
-/// Asks the engine again for a frame it was asked for and never delivered, for every test (§305).
+/// Asks the engine for a frame when a pump has had none for 2 s, for every test (§305).
 ///
-/// The engine sometimes drops a frame request (§298): right after a WebView's platform view was
-/// created or removed, a pump's frame didn't come, with frames enabled, a frame scheduled and the
-/// platform thread answering; one more `platformDispatcher.scheduleFrame()` brought it. Unrescued,
-/// the pump waited forever and every later test in the run failed on the test binding's asserts.
-/// In live test mode the binding asks for the next frame after every frame, so the engine calls
-/// `onBeginFrame` continuously; 2 s without one while a frame is scheduled and frames are enabled
-/// is that drop. Measured (§305): no event in a full `in_app_webview` group on Android or iOS, and
-/// alone it carried 15 of 15 `WebView Windows` runs through 6 drops. Each rescue is recorded and
-/// printed at the end of its test. Installed once, at registration, wrapping the binding's own
-/// `onBeginFrame`.
+/// The hang it covers is the live test binding's, not the engine's (§306). For a frame no pump
+/// asked for, the binding skips `handleBeginFrame`, so `hasScheduledFrame` stays true, and its
+/// `handleDrawFrame` asks the engine for the next frame. A pump that starts in the engine's
+/// microtask flush between such a frame's `onBeginFrame` and `onDrawFrame` sees `hasScheduledFrame`
+/// true and asks for nothing; that frame's draw then completes the pump without drawing and asks
+/// for no next frame, and the following pump waits forever. Reproduced without a WebView (Android
+/// 3 of 3 runs, iOS 2 of 2 once its launch-time metrics updates, which also ask the engine, had
+/// stopped). With merged platform and UI threads a native event runs its Dart handler at once and
+/// leaves the handler's microtasks to the next flush, which can be a frame's, so a test resuming
+/// from a WebView callback can pump there: §298's four popup hangs were each in the first pump
+/// after the `pumpWidget` that followed `onCreateWindow` (not yet caught in the act). Unrescued,
+/// every later test in the run failed on the test binding's asserts. In live test mode the binding
+/// asks for the next frame after every frame, so the engine calls `onBeginFrame` continuously; 2 s
+/// without one while a frame is scheduled and frames are enabled is that hang. Measured (§305): no
+/// event in a full `in_app_webview` group on Android or iOS, and alone it carried 15 of 15
+/// `WebView Windows` runs through 6 hangs. Each rescue is recorded and printed at the end of its
+/// test. Installed once, at registration, wrapping the binding's own `onBeginFrame`.
 void installFrameWatchdog() {
   if (_frameWatchdogInstalled) return;
   final binding = SchedulerBinding.instance;
@@ -124,8 +131,8 @@ class TestDeadline {
     );
   }
 
-  /// [step] for a `pump` or `pumpWidget`. A frame the engine drops is asked for again by
-  /// [installFrameWatchdog] (§305), so a pump waits at most a few seconds longer.
+  /// [step] for a `pump` or `pumpWidget`. A pump the live binding leaves with no frame requested
+  /// (§306) is rescued by [installFrameWatchdog] (§305), so it waits at most a few seconds longer.
   Future<void> frame(
     String name,
     Future<void> pumping, {
