@@ -108,6 +108,18 @@ abstract class PlatformPathHandler {
       'toJson is not implemented on the current platform',
     );
   }
+
+  ///{@template flutter_inappwebview_platform_interface.PlatformPathHandler.dispose}
+  ///Releases the handler's connection to the platform. Call it once no WebView's settings use this
+  ///handler any more: the plugin never disposes a handler itself, because one handler can be shared
+  ///by several WebViews and passed to `setSettings` again.
+  ///
+  ///Safe to call more than once. A disposed handler can't be used again: a WebView whose settings
+  ///still contain it no longer reaches [PlatformPathHandlerEvents.handle], and a request for the
+  ///handler's path fails as for a URL nothing serves (measured on Android: a page's `fetch` of it
+  ///rejected). Create a new handler instead.
+  ///{@endtemplate}
+  void dispose() {}
 }
 
 ///{@template flutter_inappwebview_platform_interface.PlatformPathHandlerEvents}
@@ -241,6 +253,10 @@ abstract class PlatformAssetsPathHandler extends PlatformInterface
   @override
   String get path => params.path;
 
+  /// Nothing to release by default; an implementation with a platform connection overrides it.
+  @override
+  void dispose() {}
+
   ///{@macro flutter_inappwebview_platform_interface.PlatformAssetsPathHandlerCreationParams.isClassSupported}
   bool isClassSupported({TargetPlatform? platform}) =>
       params.isClassSupported(platform: platform);
@@ -355,6 +371,10 @@ abstract class PlatformResourcesPathHandler extends PlatformInterface
 
   @override
   String get path => params.path;
+
+  /// Nothing to release by default; an implementation with a platform connection overrides it.
+  @override
+  void dispose() {}
 
   ///{@macro flutter_inappwebview_platform_interface.PlatformResourcesPathHandlerCreationParams.isClassSupported}
   bool isClassSupported({TargetPlatform? platform}) =>
@@ -486,6 +506,10 @@ abstract class PlatformInternalStoragePathHandler extends PlatformInterface
   @override
   String get path => params.path;
 
+  /// Nothing to release by default; an implementation with a platform connection overrides it.
+  @override
+  void dispose() {}
+
   ///{@macro flutter_inappwebview_platform_interface.PlatformInternalStoragePathHandlerCreationParams.directory}
   String get directory => params.directory;
 
@@ -598,6 +622,10 @@ abstract class PlatformCustomPathHandler extends PlatformInterface
 
   @override
   String get path => params.path;
+
+  /// Nothing to release by default; an implementation with a platform connection overrides it.
+  @override
+  void dispose() {}
 
   ///{@macro flutter_inappwebview_platform_interface.PlatformCustomPathHandlerCreationParams.isClassSupported}
   bool isClassSupported({TargetPlatform? platform}) =>

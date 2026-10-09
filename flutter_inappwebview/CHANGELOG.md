@@ -792,6 +792,14 @@ since the `WebsiteDataType.ALL` fix below. It stays **deliberately out of `ALL`*
 
 ### Fixed
 
+**Android — a `WebViewAssetLoader` path handler can now be released: `PathHandler.dispose()`.**
+Every handler an app created stayed registered for the engine's life, even after no WebView used
+it, and nothing could release it: the public type had no `dispose`, and
+the platform one threw a `LateInitializationError` after unregistering. The plugin doesn't release
+a handler itself, because one can serve several WebViews and be passed to `setSettings` again. Call
+`dispose()` once nothing uses it. It is safe to repeat, and afterwards the handler's path fails to
+load like a URL nothing serves. A device test pins both halves.
+
 **Android — `ChromeSafariBrowser.open` with `isSingleInstance`, `isTrustedWebActivity` or
 `noHistory` set to `null` threw a `PlatformException` instead of opening.** A null now means the
 setting's default (`false`). A device test opens with each one and checks, from the request Chrome

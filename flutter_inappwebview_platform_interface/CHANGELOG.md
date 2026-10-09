@@ -116,6 +116,10 @@ rename; this entry is the API-owner's view.
 
 ### Added
 
+- **`PlatformPathHandler.dispose()`**, which `PathHandler.dispose()` calls. The default does
+  nothing, and each `Platform*PathHandler` inherits a no-op, so an implementation with no platform
+  connection, or an existing one, needs no change. The doc says when to call it and what a disposed
+  handler's path does
 - **`PlatformInAppWebViewWidget.didUpdateWidget(oldWidget)`**, for implementations. The app-facing
   `InAppWebView` calls it when a rebuild replaces its platform widget object while the `State`, the
   platform view and the controller carry on, so an implementation can move its per-view state

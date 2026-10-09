@@ -239,6 +239,11 @@ for, and five others have a native *value* that differs from their name.
 
 ### Fixed
 
+- **`AndroidPathHandler.dispose()` threw a `LateInitializationError`, and nothing called it.** It
+  unregistered the handler's Pigeon channel, then cleared `eventHandler`, which was `late final` and
+  already set. `eventHandler` is now a plain field, so `dispose()` returns and is safe to repeat.
+  The app reaches it through the new `PathHandler.dispose()`. A disposed handler is unregistered: a
+  request for its path gets no handler (measured: the page's `fetch` rejected)
 - **`ChromeSafariBrowser.open` threw when `isSingleInstance`, `isTrustedWebActivity` or `noHistory`
   was `null`.** The fields are nullable and `toMap()` always sends them. The manager read them by key
   presence, and unboxing the null threw a `PlatformException` (`NullPointerException`) before

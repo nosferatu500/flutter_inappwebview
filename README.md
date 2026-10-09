@@ -161,6 +161,7 @@ by its `WebViewFeature` flag.
 | `CookieManager.setCookieStoreObserver()` | iOS | Be told when the cookie store changes instead of polling. Carries no payload — re-read the store in the callback |
 | `ServiceWorkerController.setIncludeCookiesOnShouldInterceptRequestEnabled()` / getter | Android | The Service Worker twin of `includeCookiesOnShouldInterceptRequest`, and a **separate switch** — turning on the WebView one does nothing here. The getter returns `bool?`: `null` means the feature is missing **or** you passed a `profileName`, for which this setting does not exist at all |
 | `ProfileStore.addCustomHeader()` / `.hasCustomHeader()` / `.getCustomHeaders()` / `.clearCustomHeader()` / `.clearAllCustomHeaders()` | Android | Headers attached to a **browsing profile**, sent on every request it makes to an origin matching the header's `originRules` — subresources, prefetches and service-worker requests included, `WebSocket` excluded. Not the same thing as `URLRequest.headers`, which apply to a single load. Profile state, so clear it when you are done |
+| `PathHandler.dispose()` | Android | Release a `WebViewAssetLoader` path handler once no WebView's settings use it. The plugin never disposes one itself, because one handler can serve several WebViews and be passed to `setSettings` again. Safe to repeat; a disposed handler can't be reused, and its path then fails to load like a URL nothing serves |
 
 ### New fields on existing types
 

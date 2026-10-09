@@ -52,8 +52,9 @@ abstract mixin class AndroidPathHandler
     implements ChannelController, PlatformPathHandler {
   final String _id = IdGenerator.generate();
 
+  /// Not `final`: [dispose] clears it, and as `late final` that second write threw (§205, D3 §311).
   @override
-  late final PlatformPathHandlerEvents? eventHandler;
+  PlatformPathHandlerEvents? eventHandler;
 
   @override
   late final String path;
@@ -81,6 +82,8 @@ abstract mixin class AndroidPathHandler
     return 'AndroidPathHandler{path: $path, type: $type}';
   }
 
+  /// Called by the app through `PathHandler.dispose` (D3, §311): the plugin can't, since one handler
+  /// can serve several WebViews. Safe to repeat: both steps are.
   @override
   void dispose() {
     // An event handler left registered would outlive the handler it forwards to (§184).

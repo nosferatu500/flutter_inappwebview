@@ -42,6 +42,10 @@ abstract class PathHandler
 
   @override
   Map<String, dynamic> toJson() => platform.toJson();
+
+  ///{@macro flutter_inappwebview_platform_interface.PlatformPathHandler.dispose}
+  @override
+  void dispose() => platform.dispose();
 }
 
 ///{@macro flutter_inappwebview_platform_interface.PlatformAssetsPathHandler}

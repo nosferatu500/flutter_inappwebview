@@ -92,17 +92,24 @@ void main() {
     },
   );
 
-  test('dispose unregisters the handler for this id, then throws', () async {
-    // Positive control first, so a null below cannot just mean a misspelt channel.
-    expect(await deliver('before.txt'), isNotNull);
-    // 🚨 Pinned, not endorsed (§205). `eventHandler` is `late final` and already set, so dispose's
-    // `eventHandler = null` throws, as it did after `disposeChannel()` before. Nothing in the
-    // plugin calls it: the public `PathHandler` has no `dispose`. The order is what matters here:
-    // the unregister runs first, so it happens despite the throw.
-    expect(handler.dispose, throwsA(isA<Error>()));
-    expect(await deliver('after.txt'), isNull);
-    expect(events.paths, ['before.txt']);
-  });
+  test(
+    'dispose unregisters the handler for this id, and is safe to repeat',
+    () async {
+      // Positive control first, so a null below cannot just mean a misspelt channel.
+      expect(await deliver('before.txt'), isNotNull);
+      // D3 (§311): the app calls this through `PathHandler.dispose`. It used to throw after
+      // unregistering, because `eventHandler` was `late final` and already set (§205).
+      expect(handler.dispose, returnsNormally);
+      expect(handler.eventHandler, isNull);
+      expect(
+        handler.dispose,
+        returnsNormally,
+        reason: 'a second call is a no-op',
+      );
+      expect(await deliver('after.txt'), isNull);
+      expect(events.paths, ['before.txt']);
+    },
+  );
 }
 
 class _RecordingEvents implements PlatformPathHandlerEvents {
