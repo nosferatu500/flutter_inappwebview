@@ -6,7 +6,11 @@ carries the full user-facing list; this entry is what changed in this package.
 ### Requirements — all breaking
 
 - **Deployment target 12.0 → 15.0**, in `Package.swift`
-- **The module builds in Swift 6 language mode** (`.swiftLanguageMode(.v6)` in the SPM manifest) with complete concurrency checking, 0 errors and 0 warnings
+- **The module builds in Swift 6 language mode** (`.swiftLanguageMode(.v6)` in the SPM manifest) with complete concurrency checking and 0 errors.
+  It is not warning-free: building this package's own example shows 178 compiler warnings from it
+  (mostly main-actor isolation, plus `Sendable` and iOS deprecation warnings). The
+  `flutter_inappwebview` example doesn't show them, because Xcode compiles the package there with
+  `-suppress-warnings`
 - **Xcode 26 / Swift 6.2+ is now required to build the module.** This is the most disruptive change
   here and it is not visible in the version numbers: `isolated deinit` (SE-0371) is used at 32 sites
   so that `deinit { dispose() }` is legal under Swift 6, and that feature needs a Swift 6.2+
@@ -595,6 +599,12 @@ error.
 
 ### Internal
 
+- **`Package.swift` depends on `FlutterFramework`**, as Flutter 3.44's plugin template does:
+  `.package(name: "FlutterFramework", path: "../FlutterFramework")` and the matching target product.
+  flutter_tools generates that package next to each plugin's link in the app's build. Flutter 3.44.0,
+  this package's floor, already ships that template and the check that asks for it (3.41.x has
+  neither). Building this package's own example no longer warns "missing a dependency on
+  FlutterFramework". Both examples build
 - **Two Swift comments no longer cite a deleted notes file.** `JavaScriptBridgeJS` and `Util.swift`
   named `NEXT_SESSION_IOS.md`, which was merged into the fork's session notes and deleted. They now
   point at the sections that hold what they describe: the Swift 6 static inventory (§42) and where

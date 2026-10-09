@@ -11,9 +11,15 @@ let package = Package(
     products: [
         .library(name: "flutter-inappwebview-ios", targets: ["flutter_inappwebview_ios"])
     ],
+    dependencies: [
+        .package(name: "FlutterFramework", path: "../FlutterFramework")
+    ],
     targets: [
         .target(
             name: "flutter_inappwebview_ios",
+            dependencies: [
+                .product(name: "FlutterFramework", package: "FlutterFramework")
+            ],
             resources: [
                 .process("Resources")
             ],
