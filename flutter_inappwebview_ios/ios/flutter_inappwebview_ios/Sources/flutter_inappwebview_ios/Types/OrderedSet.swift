@@ -10,11 +10,11 @@ import Foundation
 /// This replaces `OrderedCollections.OrderedSet` from `apple/swift-collections`, which the plugin
 /// depended on for **one type in one file** — `WKUserContentController`'s two script dictionaries.
 /// The dependency cost more than it looks: SPM resolved `swift-collections` 1.6.0 while the
-/// CocoaPods podspec pinned `~> 1.1.1`, because 1.1.1 is the only version ever published to
-/// CocoaPods trunk (by a third party, not Apple), so the two integration paths compiled *different
-/// versions of a dependency* — and the CocoaPods umbrella pod builds six modules
-/// (`BitCollections`, `DequeModule`, `HashTreeCollections`, `HeapModule`, `OrderedCollections` and
-/// `InternalCollectionsUtilities`) to supply the single type used here.
+/// CocoaPods podspec of the time (removed since, §321) pinned `~> 1.1.1`, because 1.1.1 is the only
+/// version ever published to CocoaPods trunk (by a third party, not Apple), so the two integration
+/// paths compiled *different versions of a dependency* — and the CocoaPods umbrella pod builds six
+/// modules (`BitCollections`, `DequeModule`, `HashTreeCollections`, `HeapModule`,
+/// `OrderedCollections` and `InternalCollectionsUtilities`) to supply the single type used here.
 ///
 /// **Deliberately not a general-purpose port.** It implements only the surface
 /// `WKUserContentController` uses — `append`, `remove(_:)`, `remove(at:)`, `removeAll`, index

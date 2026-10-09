@@ -21,6 +21,7 @@ bugs that includes four on iOS which were silently swallowing events.
 | iOS deployment target | 12.0 | **15.0** |
 | iOS Swift language mode | 5.0 | **6.0** |
 | **Xcode needed to build the iOS module** | 15 | **26** (Swift 6.2+) |
+| iOS integration | CocoaPods | **Swift Package Manager only** |
 
 - **The Xcode 26 floor is the most disruptive item after `minSdk 30`, and it is not obvious from the
   version numbers.** It comes from `isolated deinit` (SE-0371), used at 32 sites so that
@@ -32,7 +33,11 @@ bugs that includes four on iOS which were silently swallowing events.
   own `minSdk`. AGP rejects an app below its library's floor.
 - **macOS, Windows, Linux and Web are gone.** The `flutter_inappwebview_macos`, `_windows`, `_linux`
   and `_web` packages no longer exist and are no longer resolved.
-- **Swift Package Manager support** for the iOS module (it still builds under CocoaPods).
+- **The iOS module is integrated through Swift Package Manager only: CocoaPods support is removed**
+  (no podspec). Swift Package Manager is on by default in Flutter 3.44, this release's floor, and an
+  app can still use CocoaPods for its other plugins. An app that turned Swift Package Manager off
+  (`flutter config --no-enable-swift-package-manager`, or `enable-swift-package-manager: false` under
+  `flutter: config:` in its pubspec) has to turn it back on, or the plugin has no way into the build.
 
 ### BREAKING: the Android namespace and every method/event channel name changed
 
@@ -1569,7 +1574,9 @@ simulator for the first time:**
 2. Drop the `Android` / `IOS` prefix from the duplicate types, events, fields and methods listed
    above. Every replacement already existed in 6.x.
 3. Raise `minSdk` to 30 and your iOS deployment target to 15.0; build the iOS module with
-   **Xcode 26 or newer**.
+   **Xcode 26 or newer**. Keep Swift Package Manager enabled (Flutter's default): the iOS module
+   has no podspec any more, and if your Podfile only existed for this plugin, `pod deintegrate` it
+   away.
 4. Delete any macOS / Windows / Linux / Web-only API — there is nothing to migrate to. `switch`
    chains over `WebResourceErrorType`, `SslErrorType` and `PermissionResourceType` may name
    constants that no longer exist; these are constant classes rather than Dart `enum`s, so the

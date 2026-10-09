@@ -4,11 +4,15 @@ The Apple iOS WKWebView implementation of [`flutter_inappwebview`](https://pub.d
 
 ## Requirements
 
-- iOS 15.0+ — declared in both `ios/flutter_inappwebview_ios.podspec` (`s.platform`) and
-  `ios/flutter_inappwebview_ios/Package.swift` (`platforms`). The consuming app's
-  `IPHONEOS_DEPLOYMENT_TARGET` (and `platform :ios` in its `Podfile`, if it uses CocoaPods) must be
-  15.0 or higher.
-- Xcode `>= 15.0` (Swift 5.9)
+- iOS 15.0+ — declared in `ios/flutter_inappwebview_ios/Package.swift` (`platforms`). The consuming
+  app's `IPHONEOS_DEPLOYMENT_TARGET` must be 15.0 or higher.
+- **Swift Package Manager.** Since 7.0 the plugin is integrated through Swift Package Manager only;
+  it has no podspec. Flutter enables Swift Package Manager by default (the plugin needs Flutter
+  3.44 or newer). An app that turned it off, with `flutter config --no-enable-swift-package-manager`
+  or with `enable-swift-package-manager: false` under `flutter: config:` in its `pubspec.yaml`, has
+  to turn it back on: without it the plugin has no way into the build. The app can still use
+  CocoaPods for its other plugins.
+- Xcode 26 or newer.
 
 ## Usage
 

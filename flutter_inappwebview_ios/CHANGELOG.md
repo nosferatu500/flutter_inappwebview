@@ -5,16 +5,17 @@ carries the full user-facing list; this entry is what changed in this package.
 
 ### Requirements — all breaking
 
-- **Deployment target 12.0 → 15.0**, in the podspec, `Package.swift` and the example's Podfile
-- **The module builds in Swift 6 language mode** (`swift_version` 5.0 → 6.0 in both the podspec and
-  the SPM manifest) with complete concurrency checking, 0 errors and 0 warnings
+- **Deployment target 12.0 → 15.0**, in `Package.swift`
+- **The module builds in Swift 6 language mode** (`.swiftLanguageMode(.v6)` in the SPM manifest) with complete concurrency checking, 0 errors and 0 warnings
 - **Xcode 26 / Swift 6.2+ is now required to build the module.** This is the most disruptive change
   here and it is not visible in the version numbers: `isolated deinit` (SE-0371) is used at 32 sites
   so that `deinit { dispose() }` is legal under Swift 6, and that feature needs a Swift 6.2+
   compiler. Flutter 3.44 itself only requires Xcode 15, so this plugin demands a newer toolchain
   than Flutter does — **a consumer on Xcode 16 cannot build it.** The alternatives were a runtime
   trap or dropping the teardown safety net
-- **Swift Package Manager support**; CocoaPods still works
+- **Swift Package Manager only: CocoaPods support is removed.** The podspec is gone, and so is the
+  CocoaPods integration of both example apps (`pod deintegrate`, their Podfiles and the `Pods`
+  includes). An app that turned Swift Package Manager off has to turn it back on (see the README)
 - Every method/event channel name changed to the `dev.nosferatu500.inappwebview/…` prefix
 
 ### Added
