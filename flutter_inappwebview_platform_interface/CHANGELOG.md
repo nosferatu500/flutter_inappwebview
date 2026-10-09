@@ -438,6 +438,10 @@ rename; this entry is the API-owner's view.
 
 ### Fixed
 
+- **`PlatformWebStorageManager.deleteAllData` and `.deleteOrigin` return `Future<bool>`**
+  (breaking for implementations). `false` means the storage couldn't be resolved and nothing was
+  deleted. Until now an implementation computed the answer and had no way to return it. The docs say
+  what `true` means: the deletion was handed to the storage, which may not have finished
 - **`WebViewFeature.isFeatureSupported` / `isStartupFeatureSupported` docs now say they throw on each
   other's features.** They said only that each "accepts certain features"; measured on Android,
   passing a startup feature to `isFeatureSupported`, or any other feature to

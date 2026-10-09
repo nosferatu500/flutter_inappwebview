@@ -12,8 +12,9 @@
 //   2. `@async`? **Five of seven.** `getOrigins`, `deleteBrowsingData`, `deleteBrowsingDataForSite`,
 //      `getQuotaForOrigin` and `getUsageForOrigin` all complete through a `ValueCallback` or a
 //      `Runnable`. `deleteAllData` and `deleteOrigin` are `void` platform calls that return inline.
-//   3. A branch that never calls `result`? **None** -- all seven audited. Two of them answer in a
-//      way the Dart side then throws away; see [deleteAllData] and [getQuotaForOrigin].
+//   3. A branch that never calls `result`? **None** -- all seven audited. Two answered in a way
+//      the Dart side threw away; [deleteAllData]'s is returned since §312, [getQuotaForOrigin]'s
+//      `0` for an unresolvable store is still ambiguous.
 //   4. Dart `int` -> Kotlin `Long`? **Yes**, and it is free here: `quota`/`usage` are `long` on
 //      `WebStorage.Origin` and `ValueCallback<Long>` on the two getters, so the generated `Long` is
 //      what the platform already hands over. No narrowing anywhere (contrast §162).
@@ -106,19 +107,15 @@ abstract class WebStorageManagerHostApi {
 
   /// Clears storage for every origin.
   ///
-  /// 🚨 **The `bool` is computed and then discarded by Dart**, which declares
-  /// `Future<void> deleteAllData(...)`. `false` means the storage could not be resolved — no such
-  /// profile, or no `MULTI_PROFILE` — so a caller clearing a named profile's storage currently
-  /// cannot tell that nothing happened. That is §137's `flush` finding exactly, one channel later.
-  ///
-  /// It stays on the wire for the same reason §157/§160/§162/§163 kept theirs: the distinction is
-  /// real and free to carry, and surfacing it is a platform-interface change that belongs in its own
-  /// commit. Filed in TODO.
+  /// The `bool` is what `deleteAllData` returns since D4 (§312): `false` means the storage could not
+  /// be resolved (no such profile, or a profile without `MULTI_PROFILE`) and nothing was deleted.
+  /// §169 kept it on the wire while Dart, declaring `Future<void>`, discarded it (§137's `flush`
+  /// finding, one channel later).
   ///
   /// Not `@async`: `WebStorage.deleteAllData()` returns `void` and inline.
   bool deleteAllData(String? profileName);
 
-  /// Clears storage for one origin. See [deleteAllData] for the discarded `bool`.
+  /// Clears storage for one origin. See [deleteAllData] for the `bool`.
   ///
   /// [origin] is non-null: the public API requires it. The old handler read
   /// `call.argument("origin")` into a nullable and handed that straight to

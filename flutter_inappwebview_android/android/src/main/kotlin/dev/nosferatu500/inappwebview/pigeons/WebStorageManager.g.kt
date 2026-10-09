@@ -292,20 +292,16 @@ interface WebStorageManagerHostApi {
   /**
    * Clears storage for every origin.
    *
-   * 🚨 **The `bool` is computed and then discarded by Dart**, which declares
-   * `Future<void> deleteAllData(...)`. `false` means the storage could not be resolved — no such
-   * profile, or no `MULTI_PROFILE` — so a caller clearing a named profile's storage currently
-   * cannot tell that nothing happened. That is §137's `flush` finding exactly, one channel later.
-   *
-   * It stays on the wire for the same reason §157/§160/§162/§163 kept theirs: the distinction is
-   * real and free to carry, and surfacing it is a platform-interface change that belongs in its own
-   * commit. Filed in TODO.
+   * The `bool` is what `deleteAllData` returns since D4 (§312): `false` means the storage could not
+   * be resolved (no such profile, or a profile without `MULTI_PROFILE`) and nothing was deleted.
+   * §169 kept it on the wire while Dart, declaring `Future<void>`, discarded it (§137's `flush`
+   * finding, one channel later).
    *
    * Not `@async`: `WebStorage.deleteAllData()` returns `void` and inline.
    */
   fun deleteAllData(profileName: String?): Boolean
   /**
-   * Clears storage for one origin. See [deleteAllData] for the discarded `bool`.
+   * Clears storage for one origin. See [deleteAllData] for the `bool`.
    *
    * [origin] is non-null: the public API requires it. The old handler read
    * `call.argument("origin")` into a nullable and handed that straight to

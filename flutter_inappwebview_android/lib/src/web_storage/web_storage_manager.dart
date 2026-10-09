@@ -84,22 +84,15 @@ class AndroidWebStorageManager extends PlatformWebStorageManager
         .toList();
   }
 
+  // The host answers whether the storage was resolved at all; `false` means nothing was deleted.
+  // It was dropped until D4 (§312), when the platform interface declared `Future<void>`.
   @override
-  Future<void> deleteAllData({String? profileName}) async {
-    // The host answers whether the storage was resolved at all, and that answer is dropped here
-    // because the platform interface declares `Future<void>`. Surfacing it is a platform-interface
-    // change (see the schema, and the TODO row it names), not a transport one.
-    await _hostApi.deleteAllData(profileName);
-  }
+  Future<bool> deleteAllData({String? profileName}) =>
+      _hostApi.deleteAllData(profileName);
 
   @override
-  Future<void> deleteOrigin({
-    required String origin,
-    String? profileName,
-  }) async {
-    // See deleteAllData for the discarded bool.
-    await _hostApi.deleteOrigin(origin, profileName);
-  }
+  Future<bool> deleteOrigin({required String origin, String? profileName}) =>
+      _hostApi.deleteOrigin(origin, profileName);
 
   @override
   Future<bool> deleteBrowsingData({String? profileName}) async {

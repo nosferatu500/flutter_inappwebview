@@ -792,6 +792,13 @@ since the `WebsiteDataType.ALL` fix below. It stays **deliberately out of `ALL`*
 
 ### Fixed
 
+**Android — `WebStorageManager.deleteAllData()` and `.deleteOrigin()` say whether they did anything:
+they return `Future<bool>`** (signature change). `false` means the storage couldn't be resolved: a
+`profileName` that doesn't exist, or any `profileName` without `MULTI_PROFILE`. In that case nothing
+was deleted. The platform computed this answer and the plugin threw it away, so clearing a named
+profile's storage could silently do nothing. `true` means the deletion was handed to the storage,
+not that the data is already gone. Code that `await`s and ignores the result needs no change.
+
 **Android — a `WebViewAssetLoader` path handler can now be released: `PathHandler.dispose()`.**
 Every handler an app created stayed registered for the engine's life, even after no WebView used
 it, and nothing could release it: the public type had no `dispose`, and

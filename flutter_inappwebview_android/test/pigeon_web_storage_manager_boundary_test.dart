@@ -137,24 +137,25 @@ void main() {
     });
   });
 
-  group('the answers Dart discards', () {
-    test('deleteAllData completes whatever the host answers', () async {
-      // The platform interface declares `Future<void>`, so the host's bool is dropped. Both values
-      // are exercised to pin that neither throws nor changes the observable outcome — the point
-      // being that a caller cannot currently tell a no-op from a real delete.
+  group('deleteAllData and deleteOrigin return the host answer', () {
+    // D4 (§312): `false` means the storage could not be resolved and nothing was deleted. Until
+    // then the platform interface declared `Future<void>` and these answers were dropped.
+    test('deleteAllData', () async {
       replies[deleteAllDataChannel] = true;
-      await expectLater(manager.deleteAllData(), completes);
+      expect(await manager.deleteAllData(), isTrue);
 
       replies[deleteAllDataChannel] = false;
-      await expectLater(manager.deleteAllData(profileName: 'nope'), completes);
+      expect(await manager.deleteAllData(profileName: 'nope'), isFalse);
     });
 
-    test('deleteOrigin sends the origin and discards the answer', () async {
+    test('deleteOrigin, which also sends the origin', () async {
       replies[deleteOriginChannel] = false;
-      await expectLater(
-        manager.deleteOrigin(origin: 'https://example.com'),
-        completes,
+      expect(
+        await manager.deleteOrigin(origin: 'https://example.com'),
+        isFalse,
       );
+      replies[deleteOriginChannel] = true;
+      expect(await manager.deleteOrigin(origin: 'https://example.com'), isTrue);
 
       expect(received[deleteOriginChannel], <Object?>[
         'https://example.com',

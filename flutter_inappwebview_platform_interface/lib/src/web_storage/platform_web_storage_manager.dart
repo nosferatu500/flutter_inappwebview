@@ -153,6 +153,11 @@ abstract class PlatformWebStorageManager extends PlatformInterface {
   ///Not everything [getOrigins] counts: on Android, Cache Storage, service worker registrations and
   ///cookies are kept, so origins can still be listed afterwards (measured on Android 17, WebView
   ///153). [deleteBrowsingData] clears those too.
+  ///
+  ///Returns `true` when the deletion was handed to the storage, and `false` when the storage
+  ///couldn't be resolved (a `profileName` that doesn't exist, or any `profileName` while
+  ///[WebViewFeature.MULTI_PROFILE] is missing), in which case nothing was deleted. `true` doesn't mean the data is gone yet: see
+  ///[deleteOrigin].
   ///{@endtemplate}
   ///
   ///{@macro flutter_inappwebview_platform_interface.PlatformWebStorageManager.deleteAllData.supported_platforms}
@@ -165,7 +170,7 @@ abstract class PlatformWebStorageManager extends PlatformInterface {
       ),
     ],
   )
-  Future<void> deleteAllData({
+  Future<bool> deleteAllData({
     @SupportedPlatforms(platforms: [AndroidPlatform()]) String? profileName,
   }) {
     throw UnimplementedError(
@@ -186,6 +191,10 @@ abstract class PlatformWebStorageManager extends PlatformInterface {
   ///makes in between can be lost: `indexedDB.databases()` never resolved in 1 of 10 tries, while
   ///calls made after the deletion worked. Wait for [getUsageForOrigin] to drop before using the
   ///origin's IndexedDB again.
+  ///
+  ///Returns `true` when the deletion was handed to the storage, and `false` when the storage
+  ///couldn't be resolved (a `profileName` that doesn't exist, or any `profileName` while
+  ///[WebViewFeature.MULTI_PROFILE] is missing), in which case nothing was deleted.
   ///{@endtemplate}
   ///
   ///{@macro flutter_inappwebview_platform_interface.PlatformWebStorageManager.deleteOrigin.supported_platforms}
@@ -198,7 +207,7 @@ abstract class PlatformWebStorageManager extends PlatformInterface {
       ),
     ],
   )
-  Future<void> deleteOrigin({
+  Future<bool> deleteOrigin({
     required String origin,
     @SupportedPlatforms(platforms: [AndroidPlatform()]) String? profileName,
   }) {

@@ -239,6 +239,11 @@ for, and five others have a native *value* that differs from their name.
 
 ### Fixed
 
+- **`deleteAllData` / `deleteOrigin` dropped the host's answer.** `MyWebStorage` answers `false` when
+  the storage can't be resolved (no such profile, or a profile without `MULTI_PROFILE`), and since
+  §169 that answer reached Dart only to be discarded. `AndroidWebStorageManager` now returns it, as
+  `PlatformWebStorageManager` declares `Future<bool>`. The Pigeon schema's notes were updated; the
+  generated files differ only in comments
 - **`AndroidPathHandler.dispose()` threw a `LateInitializationError`, and nothing called it.** It
   unregistered the handler's Pigeon channel, then cleared `eventHandler`, which was `late final` and
   already set. `eventHandler` is now a plain field, so `dispose()` returns and is safe to repeat.

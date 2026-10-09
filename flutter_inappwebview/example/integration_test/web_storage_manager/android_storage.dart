@@ -300,20 +300,25 @@ void androidStorage() {
     );
 
     skippableTest(
-      'deleteAllData and deleteOrigin complete, answer discarded',
+      'deleteAllData and deleteOrigin report true, and false for an unknown profile',
       () async {
-        // Both are `Future<void>` while the host computes a bool -- §137's `flush` finding, filed by
-        // §169. This pins that the unresolvable-profile case is *silent* rather than throwing, which
-        // is the behaviour a caller currently gets and cannot distinguish from success.
+        // D4 (§312). `false` is the unresolvable-storage branch: a profile that doesn't exist (or any
+        // profile without MULTI_PROFILE), where nothing is deleted. Until then both returned
+        // `Future<void>` and a caller couldn't tell that no-op from a real delete.
         final manager = WebStorageManager.instance();
-        await expectLater(manager.deleteAllData(), completes);
-        await expectLater(
-          manager.deleteOrigin(origin: fixtureOrigin),
-          completes,
+        expect(await manager.deleteAllData(), isTrue);
+        expect(await manager.deleteOrigin(origin: fixtureOrigin), isTrue);
+        const noSuchProfile = 'inappwebview_no_such_profile';
+        expect(
+          await manager.deleteAllData(profileName: noSuchProfile),
+          isFalse,
         );
-        await expectLater(
-          manager.deleteAllData(profileName: 'inappwebview_no_such_profile'),
-          completes,
+        expect(
+          await manager.deleteOrigin(
+            origin: fixtureOrigin,
+            profileName: noSuchProfile,
+          ),
+          isFalse,
         );
       },
       skip: shouldSkip,

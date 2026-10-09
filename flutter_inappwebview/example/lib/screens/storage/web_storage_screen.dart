@@ -924,13 +924,16 @@ class _WebStorageScreenState extends State<WebStorageScreen>
 
     setState(() => _isLoading = true);
     try {
-      await _webStorageManager.deleteAllData();
-      setState(() => _webStorageOrigins = []);
+      final deleted = await _webStorageManager.deleteAllData();
       _recordMethodResult(
         _managerMethodKey(PlatformWebStorageManagerMethod.deleteAllData),
-        'All web storage data deleted',
-        isError: false,
+        deleted
+            ? 'Deletion requested (Cache Storage, service workers and cookies are kept)'
+            : 'Storage not found: nothing deleted',
+        isError: !deleted,
       );
+      // Not cleared locally: origins that keep Cache Storage or a service worker stay listed.
+      await _getOrigins();
     } catch (e) {
       _recordMethodResult(
         _managerMethodKey(PlatformWebStorageManagerMethod.deleteAllData),
@@ -945,11 +948,13 @@ class _WebStorageScreenState extends State<WebStorageScreen>
   Future<void> _deleteOrigin(String origin) async {
     setState(() => _isLoading = true);
     try {
-      await _webStorageManager.deleteOrigin(origin: origin);
+      final deleted = await _webStorageManager.deleteOrigin(origin: origin);
       _recordMethodResult(
         _managerMethodKey(PlatformWebStorageManagerMethod.deleteOrigin),
-        'Deleted origin: $origin',
-        isError: false,
+        deleted
+            ? 'Deletion requested for $origin'
+            : 'Storage not found: nothing deleted for $origin',
+        isError: !deleted,
       );
       await _getOrigins();
     } catch (e) {
