@@ -104,7 +104,7 @@ replacement that did not already exist in 6.x, so every migration is a rename.
 `URLResponse` · `IOSWKDataDetectorTypes` → `DataDetectorTypes` · `IOSWKFrameInfo` → `FrameInfo` ·
 `IOSWKNavigationResponse` → `NavigationResponse` · `IOSWKNavigationType` → `NavigationType` ·
 `IOSWKPDFConfiguration` → `PDFConfiguration` · `IOSWKSecurityOrigin` → `SecurityOrigin` ·
-`IOSWKSelectionGranularity` → `SelectionGranularity` · `IOSWKWebsiteDataRecord` →
+`IOSWKSelectionGranularity` → none (removed with its setting, below) · `IOSWKWebsiteDataRecord` →
 `WebsiteDataRecord` · `IOSWKWebsiteDataType` → `WebsiteDataType` · `IOSWKWindowFeatures` →
 `WindowFeatures` · `PermissionRequestResponse` → `PermissionResponse` ·
 `PermissionRequestResponseAction` → `PermissionResponseAction` · `JavaScriptHandlerCallback` →
@@ -174,6 +174,9 @@ every supported platform, not renames:
   allow-list existed for, so it does nothing
 - `InAppWebViewSettings.clearCache` / `.clearSessionCache` — use
   `InAppWebViewController.clearAllCache()`
+- `InAppWebViewSettings.selectionGranularity` (+ the `SelectionGranularity` type) — iOS-only, and
+  WebKit has ignored `WKWebViewConfiguration.selectionGranularity` since iOS 11 (Apple: "selection
+  granularity is always `character`"), below the 15.0 floor
 - `LayoutAlgorithm.NARROW_COLUMNS` — surveying found it was **never settable** (a `switch` with no
   `break`s); the fall-through was fixed at the same time
 - `WebViewFeature.SAFE_BROWSING_WHITELIST` → `SAFE_BROWSING_ALLOWLIST`;
@@ -1051,16 +1054,16 @@ saved for one host can no longer be offered to a different one. `getCertificate`
 on iOS it reports a **process-wide** certificate recorded during a server-trust challenge, which
 WebKit issues only once per host per process.
 
-**iOS — 15 settings are applied only when the WebView is created, and now say so.** Changing any
+**iOS — 14 settings are applied only when the WebView is created, and now say so.** Changing any
 of them with `setSettings` on a running WebView has never had an effect, and the plugin no longer
 pretends otherwise: `WKWebView.configuration` returns a fresh copy on every access — measured, not
 inferred — so writing to it is discarded. The list is `mediaPlaybackRequiresUserGesture`,
-`allowsInlineMediaPlayback`, `suppressesIncrementalRendering`, `selectionGranularity`,
+`allowsInlineMediaPlayback`, `suppressesIncrementalRendering`,
 `ignoresViewportScaleLimits`, `dataDetectorTypes`, `allowsAirPlayForMediaPlayback`,
 `allowsPictureInPictureMediaPlayback`, `applicationNameForUserAgent`,
 `allowUniversalAccessFromFileURLs`, `limitsNavigationsToAppBoundDomains`,
-`upgradeKnownHostsToHTTPS`, `incognito`, `cacheEnabled` and `sharedCookiesEnabled`. Each one's
-dartdoc says so, and two name the live alternative: use `userAgent` instead of
+`upgradeKnownHostsToHTTPS`, `incognito`, `cacheEnabled` and `sharedCookiesEnabled`. (A fifteenth,
+`selectionGranularity`, has since been removed: see above.) Each one's dartdoc says so, and two name the live alternative: use `userAgent` instead of
 `applicationNameForUserAgent`, and `preferredHTTPSNavigationPolicy` instead of
 `upgradeKnownHostsToHTTPS`. **To change one of these, recreate the WebView** — as the example app
 does, by keying the widget on its settings revision. Everything else keeps responding to
@@ -1559,9 +1562,8 @@ simulator for the first time:**
   flagged both as dead configuration.
 - **The Android module is 100% Kotlin** (158 files translated) with ktlint 1.8 formatting and an
   opt-in `allWarningsAsErrors`; Android lint is at **0 findings**
-- **The iOS module builds in Swift 6 language mode** with complete concurrency checking and 0 errors.
-  It has no concurrency warnings; 14 warnings for deprecated iOS APIs remain (see the
-  `flutter_inappwebview_ios` 7.0.0 entry)
+- **The iOS module builds in Swift 6 language mode** with complete concurrency checking, 0 errors
+  and 0 warnings (see the `flutter_inappwebview_ios` 7.0.0 entry for how that's measured)
 - **Pigeon** is wired up and the `find_interaction` channel is migrated end to end as a proof; the
   other ~409 messages still use `MethodChannel`
 - **412 unit tests** (from 276) — including the Android module's first native tests, which found two

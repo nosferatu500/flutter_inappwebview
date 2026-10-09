@@ -58,7 +58,6 @@ public class InAppWebViewSettings: ISettings<InAppWebView> {
     var allowsInlineMediaPlayback = false
     var allowsPictureInPictureMediaPlayback = true
     var isFraudulentWebsiteWarningEnabled = true
-    var selectionGranularity = 0
     var dataDetectorTypes: [String] = ["NONE"] // WKDataDetectorTypeNone
     var preferredContentMode = 0
     var sharedCookiesEnabled = false
@@ -253,7 +252,6 @@ public class InAppWebViewSettings: ISettings<InAppWebView> {
             realSettings["preferredContentMode"] = configuration.defaultWebpagePreferences.preferredContentMode.rawValue
             realSettings["automaticallyAdjustsScrollIndicatorInsets"] = webView.scrollView.automaticallyAdjustsScrollIndicatorInsets
 
-            realSettings["selectionGranularity"] = configuration.selectionGranularity.rawValue
             realSettings["accessibilityIgnoresInvertColors"] = webView.accessibilityIgnoresInvertColors
             realSettings["contentInsetAdjustmentBehavior"] = webView.scrollView.contentInsetAdjustmentBehavior.rawValue
 
@@ -267,7 +265,6 @@ public class InAppWebViewSettings: ISettings<InAppWebView> {
             realSettings["allowUniversalAccessFromFileURLs"] = configuration.value(forKey: "allowUniversalAccessFromFileURLs")
             realSettings["allowFileAccessFromFileURLs"] = configuration.preferences.value(forKey: "allowFileAccessFromFileURLs")
             realSettings["isDirectionalLockEnabled"] = webView.scrollView.isDirectionalLockEnabled
-            realSettings["javaScriptEnabled"] = configuration.preferences.javaScriptEnabled
             realSettings["mediaType"] = webView.mediaType
             realSettings["pageZoom"] = Float(webView.pageZoom)
             realSettings["limitsNavigationsToAppBoundDomains"] = configuration.limitsNavigationsToAppBoundDomains

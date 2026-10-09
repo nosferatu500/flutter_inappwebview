@@ -7,9 +7,9 @@ carries the full user-facing list; this entry is what changed in this package.
 
 - **Deployment target 12.0 → 15.0**, in `Package.swift`
 - **The module builds in Swift 6 language mode** (`.swiftLanguageMode(.v6)` in the SPM manifest) with complete concurrency checking and 0 errors.
-  It has no concurrency warnings. Building this package's own example still shows 14 compiler
-  warnings from it, all uses of deprecated iOS APIs. The `flutter_inappwebview` example doesn't
-  show them, because Xcode compiles the package there with `-suppress-warnings`
+  It also has 0 compiler warnings, measured by building this package's own example. The
+  `flutter_inappwebview` example can't show them either way, because Xcode compiles the package
+  there with `-suppress-warnings`
 - **Xcode 26 / Swift 6.2+ is now required to build the module.** This is the most disruptive change
   here and it is not visible in the version numbers: `isolated deinit` (SE-0371) is used at 32 sites
   so that `deinit { dispose() }` is legal under Swift 6, and that feature needs a Swift 6.2+
@@ -485,6 +485,9 @@ error.
 
 ### Removed
 
+- **`selectionGranularity`**: the setting, its application at creation and its `getSettings`
+  read. WebKit has ignored it since iOS 11; the Dart setting is removed in
+  `flutter_inappwebview_platform_interface`
 - **The `platform_util` channel, whole** — `PlatformUtil.swift`, the Dart `PlatformUtil` class and
   the plugin's field, construction and disposal of it. Removing the JavaScript cookie fallback
   (below) removed the channel's only consumer, leaving `getSystemVersion` and `formatDate` answered
@@ -553,8 +556,8 @@ error.
   Nothing changes at runtime — the removed lines never had an effect, and every one of these
   settings is still applied at creation by `preWKWebViewConfiguration`. What changes is that
   `setSettings` no longer looks as though it applies them: `mediaPlaybackRequiresUserGesture`,
-  `allowsInlineMediaPlayback`, `suppressesIncrementalRendering`, `selectionGranularity`,
-  `ignoresViewportScaleLimits`, `dataDetectorTypes`, `allowsAirPlayForMediaPlayback`,
+  `allowsInlineMediaPlayback`, `suppressesIncrementalRendering`, `selectionGranularity` (since
+  removed entirely), `ignoresViewportScaleLimits`, `dataDetectorTypes`, `allowsAirPlayForMediaPlayback`,
   `allowsPictureInPictureMediaPlayback`, `applicationNameForUserAgent`,
   `allowUniversalAccessFromFileURLs`, `limitsNavigationsToAppBoundDomains`,
   `upgradeKnownHostsToHTTPS`, and the `WKWebsiteDataStore` replacement behind `incognito`,
@@ -598,6 +601,19 @@ error.
 
 ### Internal
 
+- **The last 14 warnings are gone: the module builds with 0.**
+  - `javaScriptEnabled` keeps its meaning: the deprecated `WKPreferences.javaScriptEnabled` is still
+    written, alongside `allowsContentJavaScript`, through a non-deprecated accessor. Measured on iOS
+    26.5 and 17.5, the deprecated preference is what makes `false` turn off *all* JavaScript, the
+    app's `evaluateJavascript` included, and makes `setSettings` take effect at once. With
+    `allowsContentJavaScript` alone, `evaluateJavascript` keeps working and the page keeps its
+    scripts until the next load. The new accessor gives the same results as before in every
+    measured case. A dead read of the deprecated preference in `getSettings`, overwritten on the
+    next line, is gone.
+  - `WKProcessPool` is gone (`WKProcessPoolManager` and the shared-pool assignment). Apple: "Creating
+    and using multiple instances of WKProcessPool no longer has any effect" since iOS 15, this
+    package's floor.
+  - `selectionGranularity` is removed (see Removed).
 - **8 deprecated-API warnings are gone, with the same behaviour: 22 → 14.** The 14 left need
   decisions.
   - `URLProtectionSpace`'s `sslCertificate` and `sslError` use `SecTrustEvaluateWithError`,

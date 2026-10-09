@@ -129,7 +129,6 @@ export 'scrollview_content_inset_adjustment_behavior.dart'
     show ScrollViewContentInsetAdjustmentBehavior;
 export 'scrollview_deceleration_rate.dart' show ScrollViewDecelerationRate;
 export 'security_origin.dart' show SecurityOrigin;
-export 'selection_granularity.dart' show SelectionGranularity;
 export 'server_trust_auth_response.dart' show ServerTrustAuthResponse;
 export 'server_trust_auth_response_action.dart'
     show ServerTrustAuthResponseAction;

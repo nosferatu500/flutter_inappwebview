@@ -716,7 +716,7 @@ public class InAppWebView: WKWebView, UIScrollViewDelegate, WKUIDelegate,
             configuration.defaultWebpagePreferences.preferredContentMode = WKWebpagePreferences.ContentMode(rawValue: settings.preferredContentMode)!
 
             
-            configuration.preferences.javaScriptEnabled = settings.javaScriptEnabled
+            configuration.preferences.allJavaScriptEnabled = settings.javaScriptEnabled
             configuration.defaultWebpagePreferences.allowsContentJavaScript = settings.javaScriptEnabled
 
             
@@ -789,12 +789,10 @@ public class InAppWebView: WKWebView, UIScrollViewDelegate, WKUIDelegate,
         let configuration = WKWebViewConfiguration()
         // initialzie WKUserContentController here to fix possible "undefined is not an object (evaluating 'window.webkit.messageHandlers')" javascript error
         configuration.userContentController = WKUserContentController()
-        configuration.processPool = WKProcessPoolManager.sharedProcessPool
-        
+
         if let settings = settings {
             configuration.allowsInlineMediaPlayback = settings.allowsInlineMediaPlayback
             configuration.suppressesIncrementalRendering = settings.suppressesIncrementalRendering
-            configuration.selectionGranularity = WKSelectionGranularity.init(rawValue: settings.selectionGranularity)!
             
             if settings.allowUniversalAccessFromFileURLs {
                 configuration.setValue(settings.allowUniversalAccessFromFileURLs, forKey: "allowUniversalAccessFromFileURLs")
@@ -887,7 +885,7 @@ public class InAppWebView: WKWebView, UIScrollViewDelegate, WKUIDelegate,
         let hitTestResult = HitTestResult(type: .unknownType, extra: nil)
         
         if let lastLongPressTouhLocation = lastLongPressTouchPoint {
-            if configuration.preferences.javaScriptEnabled {
+            if configuration.preferences.allJavaScriptEnabled {
                 self.evaluateJavaScript("window.\(JavaScriptBridgeJS.get_JAVASCRIPT_BRIDGE_NAME())._findElementsAtPoint(\(lastLongPressTouhLocation.x),\(lastLongPressTouhLocation.y))", completionHandler: {(value, error) in
                     if error != nil {
                         print("Long press gesture recognizer error: \(error?.localizedDescription ?? "")")
@@ -1324,7 +1322,8 @@ public class InAppWebView: WKWebView, UIScrollViewDelegate, WKUIDelegate,
     ///
     /// So these 15 writes were removed rather than kept as no-ops (see `DEPRECATION_CLEANUP.md`
     /// §95): `mediaPlaybackRequiresUserGesture`, `allowsInlineMediaPlayback`,
-    /// `suppressesIncrementalRendering`, `selectionGranularity`, `ignoresViewportScaleLimits`,
+    /// `suppressesIncrementalRendering`, `selectionGranularity` (since removed: WebKit has ignored it
+    /// since iOS 11, §325), `ignoresViewportScaleLimits`,
     /// `dataDetectorTypes`, `allowsAirPlayForMediaPlayback`, `allowsPictureInPictureMediaPlayback`,
     /// `applicationNameForUserAgent`, `allowUniversalAccessFromFileURLs`,
     /// `limitsNavigationsToAppBoundDomains`, `upgradeKnownHostsToHTTPS`, and the three
@@ -1588,8 +1587,8 @@ public class InAppWebView: WKWebView, UIScrollViewDelegate, WKUIDelegate,
             configuration.preferences.setValue(newSettings.allowFileAccessFromFileURLs, forKey: "allowFileAccessFromFileURLs")
         }
         
-        if newSettingsMap["javaScriptEnabled"] != nil && configuration.preferences.javaScriptEnabled != newSettings.javaScriptEnabled {
-            configuration.preferences.javaScriptEnabled = newSettings.javaScriptEnabled
+        if newSettingsMap["javaScriptEnabled"] != nil && configuration.preferences.allJavaScriptEnabled != newSettings.javaScriptEnabled {
+            configuration.preferences.allJavaScriptEnabled = newSettings.javaScriptEnabled
         }
         
         if settings?.mediaType != newSettings.mediaType {
@@ -3849,7 +3848,7 @@ public class InAppWebView: WKWebView, UIScrollViewDelegate, WKUIDelegate,
     }
     
     public func getSelectedText(completionHandler: @escaping @MainActor @Sendable (Any?, Error?) -> Void) {
-        if configuration.preferences.javaScriptEnabled {
+        if configuration.preferences.allJavaScriptEnabled {
             evaluateJavaScript(PluginScriptsUtil.GET_SELECTED_TEXT_JS_SOURCE, completionHandler: completionHandler)
         } else {
             completionHandler(nil, nil)
@@ -3857,7 +3856,7 @@ public class InAppWebView: WKWebView, UIScrollViewDelegate, WKUIDelegate,
     }
     
     public func getHitTestResult(completionHandler: @escaping (HitTestResult) -> Void) {
-        if configuration.preferences.javaScriptEnabled, let lastTouchLocation = lastTouchPoint {
+        if configuration.preferences.allJavaScriptEnabled, let lastTouchLocation = lastTouchPoint {
             self.evaluateJavaScript("window.\(JavaScriptBridgeJS.get_JAVASCRIPT_BRIDGE_NAME())._findElementsAtPoint(\(lastTouchLocation.x),\(lastTouchLocation.y))", completionHandler: {(value, error) in
                 if error != nil {
                     print("getHitTestResult error: \(error?.localizedDescription ?? "")")
@@ -3875,7 +3874,7 @@ public class InAppWebView: WKWebView, UIScrollViewDelegate, WKUIDelegate,
     }
     
     public func requestFocusNodeHref(completionHandler: @escaping ([String: Any?]?, Error?) -> Void) {
-        if configuration.preferences.javaScriptEnabled {
+        if configuration.preferences.allJavaScriptEnabled {
             // add some delay to make it sure _lastAnchorOrImageTouched is updated
             DispatchQueue.main.asyncAfter(deadline: .now() + 0.15) {
                 self.evaluateJavaScript("window.\(JavaScriptBridgeJS.get_JAVASCRIPT_BRIDGE_NAME())._lastAnchorOrImageTouched", completionHandler: {(value, error) in
@@ -3889,7 +3888,7 @@ public class InAppWebView: WKWebView, UIScrollViewDelegate, WKUIDelegate,
     }
     
     public func requestImageRef(completionHandler: @escaping ([String: Any?]?, Error?) -> Void) {
-        if configuration.preferences.javaScriptEnabled {
+        if configuration.preferences.allJavaScriptEnabled {
             // add some delay to make it sure _lastImageTouched is updated
             DispatchQueue.main.asyncAfter(deadline: .now() + 0.15) {
                 self.evaluateJavaScript("window.\(JavaScriptBridgeJS.get_JAVASCRIPT_BRIDGE_NAME())._lastImageTouched", completionHandler: {(value, error) in
@@ -4164,5 +4163,36 @@ public class InAppWebView: WKWebView, UIScrollViewDelegate, WKUIDelegate,
     
     deinit {
         debugPrint("InAppWebView - dealloc")
+    }
+}
+
+/// `WKPreferences.javaScriptEnabled`, deprecated in iOS 14 and still used on purpose (§325). It turns
+/// off *all* JavaScript, the app's `evaluateJavaScript` included, and a change takes effect at once.
+/// Its suggested replacement, `WKWebpagePreferences.allowsContentJavaScript` (also set), only blocks
+/// the page's own scripts, from the next navigation. Measured on iOS 26.5 and 17.5; replacing it
+/// would change what `javaScriptEnabled: false` means for apps.
+///
+/// The deprecated property is reached through `LegacyJavaScriptEnabling`, whose requirement isn't
+/// deprecated, so the call sites don't warn.
+extension WKPreferences {
+    var allJavaScriptEnabled: Bool {
+        get { (self as LegacyJavaScriptEnabling).legacyJavaScriptEnabled }
+        set {
+            let preferences: LegacyJavaScriptEnabling = self
+            preferences.legacyJavaScriptEnabled = newValue
+        }
+    }
+}
+
+@MainActor
+private protocol LegacyJavaScriptEnabling: AnyObject {
+    var legacyJavaScriptEnabled: Bool { get set }
+}
+
+extension WKPreferences: LegacyJavaScriptEnabling {
+    @available(iOS, deprecated: 14.0, message: "Turns off all JavaScript at once; see allJavaScriptEnabled.")
+    fileprivate var legacyJavaScriptEnabled: Bool {
+        get { javaScriptEnabled }
+        set { javaScriptEnabled = newValue }
     }
 }

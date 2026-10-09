@@ -18,6 +18,10 @@ rename; this entry is the API-owner's view.
 
 ### Removed — Platform API
 
+- **`InAppWebViewSettings.selectionGranularity` and the `SelectionGranularity` type.** **BREAKING**,
+  and a no-op: the setting was iOS-only, and WebKit has ignored
+  `WKWebViewConfiguration.selectionGranularity` since iOS 11 (Apple's deprecation note: "selection
+  granularity is always `character`"), below the 15.0 floor. There is no replacement
 - **The `webViewController` parameter, from all six cookie methods** — `setCookie`, `setCookies`,
   `getCookies`, `getCookie`, `deleteCookie` and `deleteCookies`. **BREAKING**, and it did nothing on
   either platform. It was annotated iOS-only and read exclusively inside a JavaScript fallback that
@@ -630,16 +634,16 @@ rename; this entry is the API-owner's view.
   screen's own logical size. The Android note now explains the physical-pixel conversion (multiplied
   by the display density, rounded to the nearest `int` pixel) instead of saying only that `double`
   values become `int`
-- **15 `InAppWebViewSettings` properties now say they are creation-only on iOS.** Their
+- **14 `InAppWebViewSettings` properties now say they are creation-only on iOS.** Their
   `IOSPlatform` notes state that changing them with `setSettings` on a running WebView has no
   effect, because `WKWebView.configuration` hands out a fresh copy on every access. Measured on iOS
   17.5 and 26.5 by setting each one and reading it back through `getSettings`, which re-reads the
   real configuration: `mediaPlaybackRequiresUserGesture`, `allowsInlineMediaPlayback`,
-  `suppressesIncrementalRendering`, `selectionGranularity`, `ignoresViewportScaleLimits`,
+  `suppressesIncrementalRendering`, `ignoresViewportScaleLimits`,
   `dataDetectorTypes`, `allowsAirPlayForMediaPlayback`, `allowsPictureInPictureMediaPlayback`,
   `applicationNameForUserAgent`, `allowUniversalAccessFromFileURLs`,
   `limitsNavigationsToAppBoundDomains`, `upgradeKnownHostsToHTTPS`, `incognito`, `cacheEnabled`,
-  `sharedCookiesEnabled`. Two carry the live alternative: `userAgent` for
+  `sharedCookiesEnabled` (a fifteenth, `selectionGranularity`, has since been removed: see Removed). Two carry the live alternative: `userAgent` for
   `applicationNameForUserAgent`, and `preferredHTTPSNavigationPolicy` for `upgradeKnownHostsToHTTPS`.
   The other iOS settings are unaffected: writes through `WKPreferences` and `WKWebpagePreferences`
   reach the live WebView, and eight of them were measured doing so in the same run

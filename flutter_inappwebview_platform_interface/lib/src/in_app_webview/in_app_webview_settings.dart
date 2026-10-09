@@ -17,7 +17,6 @@ import '../types/writing_tools_behavior.dart';
 import '../types/upgrade_to_https_policy.dart';
 import '../types/security_restriction_mode.dart';
 import '../types/scrollview_deceleration_rate.dart';
-import '../types/selection_granularity.dart';
 import '../types/user_preferred_content_mode.dart';
 import '../types/vertical_scrollbar_position.dart';
 import '../types/user_agent_metadata.dart';
@@ -1513,21 +1512,6 @@ as it can cause framerate drops on animations in Android 9 and lower (see [Hybri
   )
   bool? isFraudulentWebsiteWarningEnabled;
 
-  ///The level of granularity with which the user can interactively select content in the web view.
-  ///The default value is [SelectionGranularity.DYNAMIC].
-  @SupportedPlatforms(
-    platforms: [
-      IOSPlatform(
-        apiName: "WKWebViewConfiguration.selectionGranularity",
-        apiUrl:
-            "https://developer.apple.com/documentation/webkit/wkwebviewconfiguration/1614756-selectiongranularity",
-        note:
-            "Applied when the WebView is created. Changing it with `setSettings` on a running WebView has **no** effect: `WKWebView.configuration` returns a fresh copy on every access, so the write is discarded. Recreate the WebView to change it.",
-      ),
-    ],
-  )
-  SelectionGranularity_? selectionGranularity;
-
   ///Specifying a dataDetectoryTypes value adds interactivity to web content that matches the value.
   ///For example, Safari adds a link to “apple.com” in the text “Visit apple.com” if the dataDetectorTypes property is set to [DataDetectorTypes.LINK].
   ///The default value is [DataDetectorTypes.NONE].
@@ -2570,7 +2554,6 @@ as it can cause framerate drops on animations in Android 9 and lower (see [Hybri
     this.allowsInlineMediaPlayback = false,
     this.allowsPictureInPictureMediaPlayback = true,
     this.isFraudulentWebsiteWarningEnabled = true,
-    this.selectionGranularity = SelectionGranularity_.DYNAMIC,
     this.dataDetectorTypes = const [DataDetectorTypes_.NONE],
     this.sharedCookiesEnabled = false,
     this.automaticallyAdjustsScrollIndicatorInsets = false,
