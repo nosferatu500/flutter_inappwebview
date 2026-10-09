@@ -6,16 +6,20 @@ part of 'web_storage_origin.dart';
 // ExchangeableObjectGenerator
 // **************************************************************************
 
-///Class that encapsulates information about the amount of storage currently used by an origin for the JavaScript storage APIs.
-///An origin comprises the host, scheme and port of a URI. See [PlatformWebStorageManager] for details.
+///Class that encapsulates information about the amount of quota-managed storage an origin uses.
+///An origin comprises the host, scheme and port of a URI. See
+///[PlatformWebStorageManager.getOrigins] for which storage counts.
 class WebStorageOrigin {
   ///The string representation of this origin.
   String? origin;
 
-  ///The quota for this origin, for the Web SQL Database API, in bytes.
+  ///The storage quota, in bytes. On Android one global figure, the same for every origin (see
+  ///[PlatformWebStorageManager.getQuotaForOrigin]).
   int? quota;
 
-  ///The total amount of storage currently being used by this origin, for all JavaScript storage APIs, in bytes.
+  ///The amount of storage this origin uses, in bytes: IndexedDB, Cache Storage, the origin-private
+  ///file system and service worker registrations, not cookies, `localStorage` or `sessionStorage`
+  ///(see [PlatformWebStorageManager.getUsageForOrigin]).
   int? usage;
   WebStorageOrigin({this.origin, this.quota, this.usage});
 

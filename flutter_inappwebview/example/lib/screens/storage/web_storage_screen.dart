@@ -1263,7 +1263,7 @@ class _WebStorageScreenState extends State<WebStorageScreen>
         const SizedBox(height: 16),
         _buildManagerMethodSection(
           PlatformWebStorageManagerMethod.getOrigins.name,
-          'Get origins using Application Cache or Web SQL Database',
+          'Get origins using IndexedDB, Cache Storage, OPFS or service workers',
           _getManagerMethodPlatforms(
             PlatformWebStorageManagerMethod.getOrigins.name,
           ),
@@ -1271,7 +1271,7 @@ class _WebStorageScreenState extends State<WebStorageScreen>
         ),
         _buildManagerMethodSection(
           PlatformWebStorageManagerMethod.deleteAllData.name,
-          'Clear all storage (App Cache, Web SQL, HTML5 Storage)',
+          'Clear IndexedDB, OPFS and localStorage for every origin',
           _getManagerMethodPlatforms(
             PlatformWebStorageManagerMethod.deleteAllData.name,
           ),
@@ -1279,7 +1279,7 @@ class _WebStorageScreenState extends State<WebStorageScreen>
         ),
         _buildManagerMethodSection(
           PlatformWebStorageManagerMethod.deleteOrigin.name,
-          'Clear storage for a specific origin',
+          'Clear IndexedDB and OPFS for one origin',
           _getManagerMethodPlatforms(
             PlatformWebStorageManagerMethod.deleteOrigin.name,
           ),

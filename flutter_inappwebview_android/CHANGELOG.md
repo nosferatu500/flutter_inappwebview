@@ -566,6 +566,10 @@ for, and five others have a native *value* that differs from their name.
 
 ### Internal
 
+- **The `WebStorageManager` Pigeon schema's docs say what the quota and usage measure.** The quota
+  is one global figure, and usage counts IndexedDB, Cache Storage, the origin-private file system
+  and service workers, not Web SQL or `localStorage`. Comments only; the generated Kotlin and Dart
+  were regenerated, with no code change
 - **`InputMethodManager.HIDE_NOT_ALWAYS` is no longer used.** The tap-outside-to-dismiss
   workaround (only without Hybrid Composition) hides the keyboard with flags 0, as
   `hideInputMethod` already did, and its `@Suppress("DEPRECATION")` helper is gone. The flag is

@@ -653,6 +653,19 @@ rename; this entry is the API-owner's view.
 
 ### Internal
 
+- **`WebStorageManager`'s docs say what Android's storage methods actually cover.** They named
+  Application Cache and Web SQL, which current WebViews no longer have. Measured on Android 17
+  (WebView 153):
+  - `getOrigins` and `getUsageForOrigin` count IndexedDB, Cache Storage, the origin-private file
+    system and service workers, but not cookies, `localStorage` or `sessionStorage`.
+  - `deleteAllData` clears IndexedDB, the origin-private file system and `localStorage`, but keeps
+    Cache Storage, service workers and cookies.
+  - `deleteOrigin` clears only that origin's IndexedDB and origin-private file system. Its future
+    completes before the data is gone, and an IndexedDB call the page makes in that window can be
+    lost (1 in 10 measured), so the doc says to wait for the usage to drop.
+  - `getQuotaForOrigin` is one global figure.
+
+  `WebStorageOrigin`'s field docs follow
 - **`onReceivedError`'s doc says which failed loads it reports.** A refused connection and a host
   that doesn't resolve are reported on both platforms. On iOS, a URL on a port WebKit refuses to
   use (port 1 among them) loads `about:blank` with no error. A bare `WKWebView` does the same, so

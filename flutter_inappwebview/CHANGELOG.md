@@ -1203,6 +1203,12 @@ simulator for the first time:**
 
 ### Internal
 
+- **An Android device test pins what `WebStorageManager` counts and what `deleteOrigin` clears.**
+  An origin using IndexedDB and Cache Storage is listed by `getOrigins` with both counted in its
+  usage. `deleteOrigin` then clears the IndexedDB and keeps the Cache Storage, so the origin stays
+  listed. This is also the missing positive control for the existing "`localStorage` alone isn't
+  listed" test, whose comment and the usage test's name no longer blame Web SQL. The example app's
+  storage labels say what the methods clear
 - **Device tests cover what `onReceivedError` reports for a load that can't connect.** A refused
   connection is reported on both platforms as `CANNOT_CONNECT_TO_HOST`. For port 1, which the
   engines refuse to use, Android reports `UNKNOWN` (`net::ERR_UNSAFE_PORT`) while iOS loads

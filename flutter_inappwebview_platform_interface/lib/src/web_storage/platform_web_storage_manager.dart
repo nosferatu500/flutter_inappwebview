@@ -119,7 +119,14 @@ abstract class PlatformWebStorageManager extends PlatformInterface {
   final PlatformWebStorageManagerCreationParams params;
 
   ///{@template flutter_inappwebview_platform_interface.PlatformWebStorageManager.getOrigins}
-  ///Gets the origins currently using either the Application Cache or Web SQL Database APIs.
+  ///Gets the origins that hold quota-managed storage, each with its usage and quota.
+  ///
+  ///On Android an origin is listed once it uses IndexedDB, Cache Storage, the origin-private file
+  ///system or a service worker registration. Cookies, `localStorage` and `sessionStorage` don't
+  ///count: an origin that uses only those isn't listed (measured on Android 17, WebView 153).
+  ///Origins are reported with a trailing `/`, as in `http://127.0.0.1:8080/`. Android's own
+  ///documentation still describes this as Application Cache and Web SQL Database storage, which
+  ///current WebViews no longer have.
   ///{@endtemplate}
   ///
   ///{@macro flutter_inappwebview_platform_interface.PlatformWebStorageManager.getOrigins.supported_platforms}
@@ -141,8 +148,11 @@ abstract class PlatformWebStorageManager extends PlatformInterface {
   }
 
   ///{@template flutter_inappwebview_platform_interface.PlatformWebStorageManager.deleteAllData}
-  ///Clears all storage currently being used by the JavaScript storage APIs.
-  ///This includes the Application Cache, Web SQL Database and the HTML5 Web Storage APIs.
+  ///Clears every origin's IndexedDB, origin-private file system and `localStorage` data.
+  ///
+  ///Not everything [getOrigins] counts: on Android, Cache Storage, service worker registrations and
+  ///cookies are kept, so origins can still be listed afterwards (measured on Android 17, WebView
+  ///153). [deleteBrowsingData] clears those too.
   ///{@endtemplate}
   ///
   ///{@macro flutter_inappwebview_platform_interface.PlatformWebStorageManager.deleteAllData.supported_platforms}
@@ -164,8 +174,18 @@ abstract class PlatformWebStorageManager extends PlatformInterface {
   }
 
   ///{@template flutter_inappwebview_platform_interface.PlatformWebStorageManager.deleteOrigin}
-  ///Clears the storage currently being used by both the Application Cache and Web SQL Database APIs by the given [origin].
-  ///The origin is specified using its string representation.
+  ///Clears the IndexedDB and origin-private file system data of the given [origin], specified
+  ///using its string representation (with or without a trailing `/`).
+  ///
+  ///On Android the origin's `localStorage`, Cache Storage, service worker registrations and cookies
+  ///are kept, so it can still be listed by [getOrigins] afterwards (measured on Android 17, WebView
+  ///153). [deleteBrowsingDataForSite] deletes a whole site's data.
+  ///
+  ///On Android the returned future completes before the data is gone (measured: within 1 ms, with
+  ///the deletion visible in [getUsageForOrigin] 4-17 ms later). An IndexedDB call the origin's page
+  ///makes in between can be lost: `indexedDB.databases()` never resolved in 1 of 10 tries, while
+  ///calls made after the deletion worked. Wait for [getUsageForOrigin] to drop before using the
+  ///origin's IndexedDB again.
   ///{@endtemplate}
   ///
   ///{@macro flutter_inappwebview_platform_interface.PlatformWebStorageManager.deleteOrigin.supported_platforms}
@@ -190,8 +210,8 @@ abstract class PlatformWebStorageManager extends PlatformInterface {
   ///{@template flutter_inappwebview_platform_interface.PlatformWebStorageManager.deleteBrowsingData}
   ///Deletes all the data stored by websites.
   ///
-  ///This is stronger than [deleteAllData]: on top of the JavaScript-readable storage APIs it also
-  ///clears the network cache and the cookies.
+  ///This is stronger than [deleteAllData]: it also clears Cache Storage (measured on Android 17,
+  ///WebView 153), the network cache and the cookies.
   ///
   ///Only data stored *before* the call is guaranteed to go. Deletion is not atomic, so data written
   ///while it runs may or may not survive.
@@ -264,9 +284,12 @@ abstract class PlatformWebStorageManager extends PlatformInterface {
   }
 
   ///{@template flutter_inappwebview_platform_interface.PlatformWebStorageManager.getQuotaForOrigin}
-  ///Gets the storage quota for the Web SQL Database API for the given [origin].
-  ///The quota is given in bytes and the origin is specified using its string representation.
-  ///Note that a quota is not enforced on a per-origin basis for the Application Cache API.
+  ///Gets the storage quota for the given [origin], in bytes. The origin is specified using its
+  ///string representation.
+  ///
+  ///On Android this is one global figure, not a per-origin limit: the same number comes back for
+  ///every origin, for one with no storage at all, and for a string that isn't an origin (measured
+  ///on Android 17, WebView 153). Android's own documentation describes a Web SQL Database quota.
   ///{@endtemplate}
   ///
   ///{@macro flutter_inappwebview_platform_interface.PlatformWebStorageManager.getQuotaForOrigin.supported_platforms}
@@ -289,8 +312,12 @@ abstract class PlatformWebStorageManager extends PlatformInterface {
   }
 
   ///{@template flutter_inappwebview_platform_interface.PlatformWebStorageManager.getUsageForOrigin}
-  ///Gets the amount of storage currently being used by both the Application Cache and Web SQL Database APIs by the given [origin].
-  ///The amount is given in bytes and the origin is specified using its string representation.
+  ///Gets the amount of storage the given [origin] currently uses, in bytes. The origin is specified
+  ///using its string representation.
+  ///
+  ///It counts what [getOrigins] counts: on Android IndexedDB, Cache Storage, the origin-private file
+  ///system and service worker registrations, not cookies, `localStorage` or `sessionStorage`
+  ///(measured on Android 17, WebView 153).
   ///{@endtemplate}
   ///
   ///{@macro flutter_inappwebview_platform_interface.PlatformWebStorageManager.getUsageForOrigin.supported_platforms}

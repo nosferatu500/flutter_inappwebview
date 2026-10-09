@@ -119,11 +119,12 @@ class WebStorageOriginData {
 
   String origin;
 
-  /// Bytes, for the Web SQL Database API. Dart `int` -> Kotlin `Long`, which is already what
-  /// `WebStorage.Origin.getQuota()` returns.
+  /// Bytes: Chromium's one global quota, the same for every origin (§308). Dart `int` -> Kotlin
+  /// `Long`, which is already what `WebStorage.Origin.getQuota()` returns.
   int quota;
 
-  /// Bytes, across all JavaScript storage APIs. See [quota].
+  /// Bytes of quota-managed storage: IndexedDB, Cache Storage, the origin-private file system and
+  /// service worker registrations, not cookies or `localStorage` (§308). See [quota].
   int usage;
 
   List<Object?> _toList() {
@@ -210,7 +211,7 @@ class WebStorageManagerHostApi {
 
   final String pigeonVar_messageChannelSuffix;
 
-  /// Every origin currently using storage.
+  /// Every origin currently using quota-managed storage (see [WebStorageOriginData.usage]).
   ///
   /// `@async`: `WebStorage.getOrigins` reports through a `ValueCallback<Map>`.
   ///
@@ -378,7 +379,7 @@ class WebStorageManagerHostApi {
     return pigeonVar_replyValue as String?;
   }
 
-  /// The Web SQL quota for one origin, in bytes.
+  /// The quota for one origin, in bytes: Chromium's one global figure, whatever the origin (§308).
   ///
   /// `@async`: `WebStorage.getQuotaForOrigin` reports through a `ValueCallback<Long>`.
   ///
@@ -408,7 +409,7 @@ class WebStorageManagerHostApi {
     return pigeonVar_replyValue! as int;
   }
 
-  /// Bytes currently used by one origin, across all JavaScript storage APIs.
+  /// Bytes of quota-managed storage currently used by one origin (see [WebStorageOriginData.usage]).
   ///
   /// `@async`, and answers `0` on an unresolvable store; see [getQuotaForOrigin].
   Future<int> getUsageForOrigin(String origin, String? profileName) async {
