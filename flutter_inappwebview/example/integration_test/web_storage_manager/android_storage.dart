@@ -422,5 +422,151 @@ void androidStorage() {
       },
       skip: shouldSkip,
     );
+
+    // What each clearing method keeps (§308, §315; the docs of all four state this matrix). One origin
+    // gets a cookie, `localStorage`, IndexedDB, Cache Storage, OPFS data and a service worker; the method
+    // runs; a fresh WebView reads back which are still there. 2 s after the call, as measured: earlier,
+    // an IndexedDB read can race the deletion (§308).
+    const clearingOrigin = 'http://127.0.0.1:8080';
+    const writeAll = """
+      document.cookie = 'zz=1; max-age=3600';
+      localStorage.setItem('zz', 'x');
+      const db = await new Promise((ok, ko) => {
+        const r = indexedDB.open('zz', 1);
+        r.onupgradeneeded = () => r.result.createObjectStore('s');
+        r.onsuccess = () => ok(r.result); r.onerror = () => ko(r.error);
+      });
+      await new Promise((ok, ko) => {
+        const t = db.transaction('s', 'readwrite');
+        t.objectStore('s').put('x', 'k');
+        t.oncomplete = ok; t.onerror = () => ko(t.error);
+      });
+      db.close();
+      await (await caches.open('zz')).put('/zz', new Response('x'));
+      const root = await navigator.storage.getDirectory();
+      const f = await root.getFileHandle('zz.txt', {create: true});
+      const w = await f.createWritable(); await w.write('x'); await w.close();
+      await navigator.serviceWorker.register('/test_assets/service_worker_intercept_test_sw.js');
+      await navigator.serviceWorker.ready;
+      return 'written';""";
+    const readAll = """
+      let opfs = true;
+      try { await (await navigator.storage.getDirectory()).getFileHandle('zz.txt'); }
+      catch (e) { opfs = false; }
+      return JSON.stringify({
+        cookie: document.cookie.includes('zz=1'),
+        localStorage: localStorage.getItem('zz') !== null,
+        indexedDB: (await indexedDB.databases()).some(d => d.name === 'zz'),
+        cacheStorage: (await caches.keys()).includes('zz'),
+        opfs: opfs,
+        serviceWorker: (await navigator.serviceWorker.getRegistrations()).length > 0,
+      });""";
+    String kept(Map<String, bool> m) =>
+        '{"cookie":${m['cookie']},"localStorage":${m['localStorage']},'
+        '"indexedDB":${m['indexedDB']},"cacheStorage":${m['cacheStorage']},'
+        '"opfs":${m['opfs']},"serviceWorker":${m['serviceWorker']}}';
+    final allKept = {
+      for (final k in [
+        'cookie',
+        'localStorage',
+        'indexedDB',
+        'cacheStorage',
+        'opfs',
+        'serviceWorker',
+      ])
+        k: true,
+    };
+    final clearing = <String, (Future<void> Function(), Map<String, bool>)>{
+      'clearAllCache': (
+        () => InAppWebViewController.clearAllCache(includeDiskFiles: true),
+        allKept,
+      ),
+      'CookieManager.deleteAllCookies': (
+        () => CookieManager.instance().deleteAllCookies(),
+        {...allKept, 'cookie': false},
+      ),
+      'deleteAllData': (
+        () => WebStorageManager.instance().deleteAllData(),
+        {...allKept, 'localStorage': false, 'indexedDB': false, 'opfs': false},
+      ),
+      'deleteBrowsingData': (
+        () => WebStorageManager.instance().deleteBrowsingData(),
+        {for (final k in allKept.keys) k: false},
+      ),
+    };
+    clearing.forEach((method, entry) {
+      final (clear, expected) = entry;
+      skippableTestWidgets('$method keeps what its doc says it keeps', (
+        WidgetTester tester,
+      ) async {
+        final deadline = TestDeadline();
+        final manager = WebStorageManager.instance();
+        if (!await WebViewFeature.isFeatureSupported(
+          WebViewFeature.DELETE_BROWSING_DATA,
+        )) {
+          markTestSkipped(
+            'needs DELETE_BROWSING_DATA to start from no storage',
+          );
+          return;
+        }
+        final server = InAppLocalhostServer();
+        await deadline.step('starting the localhost server', server.start());
+        addTearDown(server.close);
+        addTearDown(manager.deleteBrowsingData);
+        await deadline.step('deleteBrowsingData', manager.deleteBrowsingData());
+        await deadline.step(
+          'deleteAllCookies',
+          CookieManager.instance().deleteAllCookies(),
+        );
+
+        Future<InAppWebViewController> mount(String name) async {
+          final loaded = Completer<InAppWebViewController>();
+          await deadline.frame(
+            'mounting $name',
+            tester.pumpWidget(
+              Directionality(
+                textDirection: TextDirection.ltr,
+                child: InAppWebView(
+                  key: ValueKey(name),
+                  initialUrlRequest: URLRequest(
+                    url: WebUri('$clearingOrigin/test_assets/page-1.html'),
+                  ),
+                  onLoadStop: (controller, url) {
+                    if (!loaded.isCompleted) loaded.complete(controller);
+                  },
+                ),
+              ),
+            ),
+          );
+          return deadline.step('$name: the page load', loaded.future);
+        }
+
+        Future<Object?> run(
+          InAppWebViewController c,
+          String what,
+          String js,
+        ) async => (await deadline.step(
+          what,
+          c.callAsyncJavaScript(functionBody: js),
+        ))?.value;
+
+        final writer = await mount('the writer');
+        expect(await run(writer, 'writing all six', writeAll), 'written');
+        expect(
+          await run(writer, 'reading back before $method', readAll),
+          kept(allKept),
+          reason: 'the control: all six are stored before the call',
+        );
+
+        await deadline.step(method, clear());
+        await Future<void>.delayed(const Duration(seconds: 2));
+        await deadline.frame('unmounting', tester.pumpWidget(const SizedBox()));
+        final reader = await mount('the reader');
+        expect(
+          await run(reader, 'reading back after $method', readAll),
+          kept(expected),
+        );
+      }, skip: shouldSkip);
+    });
   }, skip: shouldSkip);
 }

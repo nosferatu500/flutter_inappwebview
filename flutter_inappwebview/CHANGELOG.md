@@ -1243,6 +1243,17 @@ simulator for the first time:**
 
 ### Internal
 
+- **Android device tests pin what each clearing method keeps.** One test per method: an origin gets
+  a cookie, `localStorage`, IndexedDB, Cache Storage, OPFS data and a service worker, then the method
+  runs and a fresh WebView reads back what's left. The expected results are the ones the docs state:
+  - `clearAllCache` keeps all six;
+  - `deleteAllCookies` removes only the cookie;
+  - `deleteAllData` removes `localStorage`, IndexedDB and OPFS;
+  - `deleteBrowsingData` removes all six.
+
+  The tests passed on Android 17 and on Android 13 (WebView 151), where these results hadn't been
+  measured before. Until now nothing checked that `deleteAllData` deletes anything: a native mutant
+  that skipped the call passed every test
 - **An Android device test pins what `WebStorageManager` counts and what `deleteOrigin` clears.**
   An origin using IndexedDB and Cache Storage is listed by `getOrigins` with both counted in its
   usage. `deleteOrigin` then clears the IndexedDB and keeps the Cache Storage, so the origin stays
