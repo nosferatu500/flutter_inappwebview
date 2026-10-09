@@ -90,8 +90,11 @@ class ChromeSafariBrowserManager(plugin: InAppWebViewFlutterPlugin) :
       "menuItemList", Util.normalizeCodecInts(request.menuItemList) as Serializable
     )
 
-    val isSingleInstance = Util.getOrDefault(settings, "isSingleInstance", false)
-    val isTrustedWebActivity = Util.getOrDefault(settings, "isTrustedWebActivity", false)
+    // A null setting is its default, as `ChromeCustomTabsSettings.parse` treats it (D2, §310). The
+    // Dart fields are nullable and `toMap()` always sends them; reading by key presence
+    // (`Util.getOrDefault`) unboxed the null and threw before anything launched (measured §200).
+    val isSingleInstance = settings["isSingleInstance"] as Boolean? ?: false
+    val isTrustedWebActivity = settings["isTrustedWebActivity"] as Boolean? ?: false
     if (CustomTabActivityHelper.isAvailable(activity)) {
       val target = if (!isSingleInstance) {
         if (!isTrustedWebActivity) {
@@ -108,7 +111,7 @@ class ChromeSafariBrowserManager(plugin: InAppWebViewFlutterPlugin) :
       }
       val intent = Intent(activity, target)
       intent.putExtras(extras)
-      if (Util.getOrDefault(settings, "noHistory", false)) {
+      if (settings["noHistory"] as Boolean? ?: false) {
         intent.addFlags(Intent.FLAG_ACTIVITY_NO_HISTORY)
       }
       activity.startActivity(intent)

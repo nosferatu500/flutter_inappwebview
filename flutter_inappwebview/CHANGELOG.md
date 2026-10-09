@@ -792,6 +792,12 @@ since the `WebsiteDataType.ALL` fix below. It stays **deliberately out of `ALL`*
 
 ### Fixed
 
+**Android — `ChromeSafariBrowser.open` with `isSingleInstance`, `isTrustedWebActivity` or
+`noHistory` set to `null` threw a `PlatformException` instead of opening.** A null now means the
+setting's default (`false`). A device test opens with each one and checks, from the request Chrome
+makes, that a null `isTrustedWebActivity` opens a plain Custom Tab. iOS already ignored null
+settings.
+
 **`shouldOverrideUrlLoading` answers mean the same on both platforms, and `null` no longer
 blocks** (behaviour change). Measured before:
 - a `null` answer cancelled the navigation on both platforms;

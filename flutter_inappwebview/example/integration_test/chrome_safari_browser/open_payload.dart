@@ -42,7 +42,7 @@ class _RequestRecorder {
 ///   * `headers` other than CORS-safelisted ones: Chrome dropped `x-probe`; `accept-language` is
 ///     the one asserted.
 ///   * `isSingleInstance: true` and `noHistory: true`: the page request was identical to a plain
-///     open. Only their key-presence reads are asserted, by the null test below.
+///     open. Only that a null value opens is asserted, by the null test below.
 ///   * `actionButton`, `menuItemList`, `secondaryToolbar`: Chrome's own UI, which a test cannot read.
 ///     Their ints (`id`) are cast `as Int` when the Activity starts, so the existing tests that open
 ///     with them would crash the app if an int ever arrived as a `Long`.
@@ -118,31 +118,32 @@ void openPayload() {
       expect(recorder.document('/display-mode').uri.path, '/display-mode');
     });
 
-    skippableTest('a null launch setting is not treated as absent', () async {
-      // Pinned, not endorsed (§200). The manager reads these three keys by *presence*
-      // (`Util.getOrDefault`), and `toMap()` always sends them, so a null arrives as a present
-      // key and fails unboxing before anything is launched. This is the only observable of each
-      // read: a transport that dropped null-valued keys would open the browser instead.
-      for (final settings in [
-        ChromeSafariBrowserSettings(isSingleInstance: null),
-        ChromeSafariBrowserSettings(isTrustedWebActivity: null),
-        ChromeSafariBrowserSettings(noHistory: null),
-      ]) {
-        await expectLater(
-          MyChromeSafariBrowser().open(
-            url: recorder.url('/null'),
-            settings: settings,
-          ),
-          throwsA(
-            isA<PlatformException>().having(
-              (e) => e.message,
-              'message',
-              contains('booleanValue()'),
-            ),
-          ),
-        );
-      }
-      expect(recorder.requests, isEmpty);
+    skippableTest('a null launch setting means its default', () async {
+      // D2 (§310). The manager reads these three keys itself, and `toMap()` always sends them, so a
+      // null arrives as a present key. It used to read them by presence (`Util.getOrDefault`) and
+      // fail unboxing before anything launched (§200 pinned that `PlatformException`). Now a null
+      // is the default, as the Activity's own settings parser already treated it: each opens.
+      await openAndClose(
+        '/null-single-instance',
+        settings: ChromeSafariBrowserSettings(isSingleInstance: null),
+      );
+      await openAndClose(
+        '/null-no-history',
+        settings: ChromeSafariBrowserSettings(noHistory: null),
+      );
+      await openAndClose(
+        '/null-twa',
+        settings: ChromeSafariBrowserSettings(isTrustedWebActivity: null),
+      );
+      expect(recorder.document('/null-single-instance').uri.path, isNotEmpty);
+      expect(recorder.document('/null-no-history').uri.path, isNotEmpty);
+      // Not a Trusted Web Activity: the one request difference measured between the targets (the
+      // `isTrustedWebActivity` test above), so this checks the default value, not only the open.
+      expect(
+        recorder.document('/null-twa').headers.value('sec-fetch-user'),
+        isNull,
+        reason: 'a null isTrustedWebActivity opens a plain Custom Tab',
+      );
     });
 
     skippableTest('isAvailable and getMaxToolbarItems', () async {

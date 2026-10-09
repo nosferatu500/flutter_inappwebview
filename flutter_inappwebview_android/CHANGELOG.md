@@ -239,6 +239,11 @@ for, and five others have a native *value* that differs from their name.
 
 ### Fixed
 
+- **`ChromeSafariBrowser.open` threw when `isSingleInstance`, `isTrustedWebActivity` or `noHistory`
+  was `null`.** The fields are nullable and `toMap()` always sends them. The manager read them by key
+  presence, and unboxing the null threw a `PlatformException` (`NullPointerException`) before
+  anything launched (measured §200). A null now means the setting's default (`false`), as the
+  Activity's own settings parser already treated it
 - **A `null` `shouldOverrideUrlLoading` answer cancelled the navigation; a throwing handler allowed
   it** (behaviour change). `ShouldOverrideUrlLoadingCallback.decodeResult` read anything but a
   policy as CANCEL, and a Dart throw reached `error`, which allowed. Measured: a `null` answer
