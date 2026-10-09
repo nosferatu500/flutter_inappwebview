@@ -1203,6 +1203,13 @@ simulator for the first time:**
 
 ### Internal
 
+- **Device tests cover what `onReceivedError` reports for a load that can't connect.** A refused
+  connection is reported on both platforms as `CANNOT_CONNECT_TO_HOST`. For port 1, which the
+  engines refuse to use, Android reports `UNKNOWN` (`net::ERR_UNSAFE_PORT`) while iOS loads
+  `about:blank` with no error. That iOS behaviour is WebKit's (a bare `WKWebView` does the same),
+  and the test pins it so a WebKit change shows up. An earlier note that iOS reported nothing for
+  an unreachable host had tried port 1: a closed port or an unknown host is reported on iOS too.
+  `onReceivedError`'s doc now says so
 - **The device tests' dropped frame is a hang in Flutter's test binding, and apps don't get it.**
   Measured in a plain app first: over 630 cycles of mounting and removing WebViews and popups on
   Android and iOS, no frame stalled for a second. A control that withheld one frame froze the app

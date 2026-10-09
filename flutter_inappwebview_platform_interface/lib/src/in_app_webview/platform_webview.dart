@@ -107,6 +107,16 @@ class PlatformWebViewCreationParams<T> {
 
   ///{@template flutter_inappwebview_platform_interface.PlatformWebViewCreationParams.onReceivedError}
   ///Event fired when the `WebView` encounters an [error] loading a [request].
+  ///
+  ///A host that refuses the connection or doesn't resolve is reported on both platforms, as
+  ///[WebResourceErrorType.CANNOT_CONNECT_TO_HOST] or [WebResourceErrorType.HOST_LOOKUP].
+  ///
+  ///**iOS: a URL on a port WebKit refuses to use loads `about:blank` instead, with no error.**
+  ///WebKit itself, not the plugin, blocks a list of ports, port 1 among them. Such a navigation
+  ///starts for the URL, then commits and finishes `about:blank` (`onLoadStop` with `about:blank`,
+  ///and an `about:blank` history entry), and this event never fires. Android reports it here as
+  ///[WebResourceErrorType.UNKNOWN] with the description `net::ERR_UNSAFE_PORT`, then commits its
+  ///error page under the URL.
   ///{@endtemplate}
   ///
   ///{@macro flutter_inappwebview_platform_interface.PlatformWebViewCreationParams.onReceivedError.supported_platforms}

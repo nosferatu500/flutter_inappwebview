@@ -653,6 +653,11 @@ rename; this entry is the API-owner's view.
 
 ### Internal
 
+- **`onReceivedError`'s doc says which failed loads it reports.** A refused connection and a host
+  that doesn't resolve are reported on both platforms. On iOS, a URL on a port WebKit refuses to
+  use (port 1 among them) loads `about:blank` with no error. A bare `WKWebView` does the same, so
+  this is WebKit's behaviour, not the plugin's. Android reports `UNKNOWN`, `net::ERR_UNSAFE_PORT`.
+  `InAppBrowser.onReceivedError` shares the text
 - **`setProxyOverride`'s doc says what a rule the platform can't parse does** (a `PlatformException`
   with code `ProxyManager`; on iOS the setting in force is kept), that the platforms reject different
   URLs, and two iOS routing facts measured while testing it: a local-network address wasn't proxied,
