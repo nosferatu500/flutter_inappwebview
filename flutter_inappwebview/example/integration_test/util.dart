@@ -30,40 +30,81 @@ int? iosMajorVersion() {
   return match == null ? null : int.tryParse(match.group(0)!);
 }
 
+bool _frameWatchdogInstalled = false;
+
+/// Asks the engine again for a frame it was asked for and never delivered, for every test (§305).
+///
+/// The engine sometimes drops a frame request (§298): right after a WebView's platform view was
+/// created or removed, a pump's frame didn't come, with frames enabled, a frame scheduled and the
+/// platform thread answering; one more `platformDispatcher.scheduleFrame()` brought it. Unrescued,
+/// the pump waited forever and every later test in the run failed on the test binding's asserts.
+/// In live test mode the binding asks for the next frame after every frame, so the engine calls
+/// `onBeginFrame` continuously; 2 s without one while a frame is scheduled and frames are enabled
+/// is that drop. Measured (§305): no event in a full `in_app_webview` group on Android or iOS, and
+/// alone it carried 15 of 15 `WebView Windows` runs through 6 drops. Each rescue is recorded and
+/// printed at the end of its test. Installed once, at registration, wrapping the binding's own
+/// `onBeginFrame`.
+void installFrameWatchdog() {
+  if (_frameWatchdogInstalled) return;
+  final binding = SchedulerBinding.instance;
+  final dispatcher = binding.platformDispatcher;
+  // The binding registers its frame callbacks lazily, with `??=`, from `scheduleFrame`, which
+  // returns early while frames are disabled, as they still were when tests register (measured,
+  // §305: "no onBeginFrame to wrap" every time). This is the same registration, unconditionally.
+  // ignore: invalid_use_of_protected_member
+  binding.ensureFrameCallbacksRegistered();
+  final FrameCallback? handleBeginFrame = dispatcher.onBeginFrame;
+  if (handleBeginFrame == null) {
+    _frameWatchdogEvents.add('not installed: no onBeginFrame to wrap');
+    return;
+  }
+  _frameWatchdogInstalled = true;
+  _frameWatchdogEvents.add('frame watchdog installed (§305)');
+  _lastBeginFrame = DateTime.now();
+  dispatcher.onBeginFrame = (Duration timeStamp) {
+    _lastBeginFrame = DateTime.now();
+    handleBeginFrame(timeStamp);
+  };
+  Timer.periodic(const Duration(milliseconds: 500), (_) {
+    _frameWatchdogTicks++;
+    final idle = DateTime.now().difference(_lastBeginFrame);
+    if (idle < const Duration(seconds: 2) ||
+        !binding.hasScheduledFrame ||
+        !binding.framesEnabled) {
+      return;
+    }
+    // Printed from the test's zone by `skippableTestWidgets` (a print from here reaches no test).
+    _frameWatchdogEvents.add(
+      'frame watchdog: no frame for ${idle.inMilliseconds} ms with one scheduled; '
+      'asked the engine again (§305)',
+    );
+    _lastBeginFrame = DateTime.now();
+    dispatcher.scheduleFrame();
+  });
+}
+
+DateTime _lastBeginFrame = DateTime.now();
+int _frameWatchdogTicks = 0;
+final List<String> _frameWatchdogEvents = <String>[];
+
+/// The watchdog's state, for failure messages.
+String frameWatchdogState() =>
+    'watchdog: installed $_frameWatchdogInstalled, ticks $_frameWatchdogTicks, '
+    'last onBeginFrame ${DateTime.now().difference(_lastBeginFrame).inMilliseconds} ms ago, '
+    'events $_frameWatchdogEvents';
+
+/// Prints, from the current test's zone, what the watchdog did since the last call.
+void printFrameWatchdogEvents() {
+  for (final event in _frameWatchdogEvents) {
+    // ignore: avoid_print
+    print(event);
+  }
+  _frameWatchdogEvents.clear();
+}
+
 /// True when every group runs in one process (`webview_flutter_test.dart` sets it before
 /// registering them). Tests that leave state no later group can recover from skip there (§304).
 bool runningAllGroups = false;
-
-/// [pumping] (a `pump` or `pumpWidget`), asking the engine for its frame again every 2 s that it
-/// has not come, up to 10 times, and printing each time.
-///
-/// The engine sometimes drops a frame request (§298). Measured on Android: right after a popup
-/// WebView was mounted, a pump's frame did not come in 5 s, with frames enabled, a frame scheduled
-/// and the platform thread answering a plugin call; one more `platformDispatcher.scheduleFrame()`
-/// brought it. Unrescued, the pump waited forever and every later test in the run failed on the
-/// test binding's asserts. With this: 4 rescues in 41 `WebView Windows` group runs (2 on Android, 2
-/// on iOS, all after mounting a popup) and 1 in a full Android group (removing a WebView), each
-/// needing one request.
-Future<void> rescueFrame(String name, Future<void> pumping) async {
-  var done = false;
-  unawaited(
-    pumping.then<void>((_) => done = true, onError: (Object _) => done = true),
-  );
-  for (var rescues = 0; rescues < 10; rescues++) {
-    await Future.any<void>([
-      pumping,
-      Future<void>.delayed(const Duration(seconds: 2)),
-    ]);
-    if (done) break;
-    // ignore: avoid_print
-    print(
-      'frame watchdog: "$name" has waited ${2 * (rescues + 1)} s for a frame; '
-      'asking the engine again (§298)',
-    );
-    SchedulerBinding.instance.platformDispatcher.scheduleFrame();
-  }
-  return pumping;
-}
 
 /// One deadline for a whole test, shared by its waits, so a hang fails naming the step it was in
 /// instead of reaching the 60 s test timeout with nothing to say which (§297). Pumps are steps too:
@@ -83,12 +124,13 @@ class TestDeadline {
     );
   }
 
-  /// [step] for a `pump` or `pumpWidget`, with [rescueFrame].
+  /// [step] for a `pump` or `pumpWidget`. A frame the engine drops is asked for again by
+  /// [installFrameWatchdog] (§305), so a pump waits at most a few seconds longer.
   Future<void> frame(
     String name,
     Future<void> pumping, {
     String Function()? state,
-  }) => step(name, rescueFrame(name, pumping), state: state);
+  }) => step(name, pumping, state: state);
 
   /// Polls [done] every 50 ms until it holds, failing like [step] if the deadline passes first.
   /// For events a test records as they come: waiting on a broadcast stream's `first` misses one
@@ -112,7 +154,7 @@ class TestDeadline {
       ' [frames: enabled ${scheduler.framesEnabled}, '
       'scheduled ${scheduler.hasScheduledFrame}, '
       'phase ${scheduler.schedulerPhase.name}, '
-      'lifecycle ${scheduler.lifecycleState?.name}]',
+      'lifecycle ${scheduler.lifecycleState?.name}; ${frameWatchdogState()}]',
     );
   }
 }
@@ -185,9 +227,16 @@ void skippableTestWidgets(
   dynamic tags,
 }) {
   if (!skip) {
+    installFrameWatchdog();
     testWidgets(
       description,
-      callback,
+      (tester) async {
+        try {
+          await callback(tester);
+        } finally {
+          printFrameWatchdogEvents();
+        }
+      },
       skip: skip,
       timeout: timeout,
       semanticsEnabled: semanticsEnabled,

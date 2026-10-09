@@ -9,11 +9,7 @@ part of 'main.dart';
 /// why §191's first tap into a fresh page reported nothing: its "second tap" came after a pump.
 Future<void> _pumpFrames(WidgetTester tester) async {
   for (var i = 0; i < 20; i++) {
-    // Rescued: the engine sometimes drops a frame, so far right after a popup was mounted (§298).
-    await rescueFrame(
-      '_pumpFrames pump $i',
-      tester.pump(const Duration(milliseconds: 50)),
-    );
+    await tester.pump(const Duration(milliseconds: 50));
     await Future.delayed(const Duration(milliseconds: 50));
   }
 }

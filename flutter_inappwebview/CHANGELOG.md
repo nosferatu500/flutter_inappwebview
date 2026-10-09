@@ -1203,6 +1203,11 @@ simulator for the first time:**
 
 ### Internal
 
+- **Every device test is protected from a dropped frame, not only the converted ones.** A watchdog
+  installed for the whole run asks the engine again when a frame it was asked for hasn't come in 2 s,
+  and prints that it did; it replaces the per-pump rescue. Measured: no false alarm in a full
+  `in_app_webview` group on Android or iOS, and on its own it carried 15 of 15 popup-test runs through
+  6 dropped frames
 - **The all-groups test entry point (`webview_flutter_test.dart`) runs to the end on Android.**
   `printCurrentPage` raises a print dialog nothing can dismiss, and it took every later group down
   with it; it now skips there (it still runs in its own group). Measured: all groups ran, 342 passed
