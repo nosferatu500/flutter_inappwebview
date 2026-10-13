@@ -239,6 +239,11 @@ for, and five others have a native *value* that differs from their name.
 
 ### Fixed
 
+- **`hasCustomHeader` answered `false` for a profile it couldn't reach.** `ProfileStoreManager` now
+  answers `null` there (`bool?` in the Pigeon schema, regenerated: the signature, the Dart side's
+  null handling and the notes), and `AndroidProfileStore` returns it, as `PlatformProfileStore`
+  declares `Future<bool?>`. A host test pins that `null` reaches the caller, and the device test asks
+  about a profile that doesn't exist, along with `getCustomHeaders`' empty set for it
 - **`getQuotaForOrigin` / `getUsageForOrigin` answered `0` for storage that couldn't be resolved.**
   `MyWebStorage` now answers `null` there (`int?` in the Pigeon schema, regenerated: the two
   signatures, the Dart side's null handling and the notes), and `AndroidWebStorageManager` returns

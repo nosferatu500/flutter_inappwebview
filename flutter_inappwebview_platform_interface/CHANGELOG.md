@@ -442,6 +442,10 @@ rename; this entry is the API-owner's view.
 
 ### Fixed
 
+- **`PlatformProfileStore.hasCustomHeader` returns `Future<bool?>`** (breaking for implementations and
+  callers). `null` means the profile can't be reached (`CUSTOM_REQUEST_HEADERS` or `MULTI_PROFILE`
+  unsupported, or no profile has that name), so `false` means no such header. `getCustomHeaders`'
+  docs now say its empty set also covers an unreachable profile, not only a missing feature
 - **`PlatformWebStorageManager.getQuotaForOrigin` and `.getUsageForOrigin` return `Future<int?>`**
   (breaking for implementations and callers). `null` means the storage couldn't be resolved (a
   `profileName` that doesn't exist, or any `profileName` while `MULTI_PROFILE` is missing). They

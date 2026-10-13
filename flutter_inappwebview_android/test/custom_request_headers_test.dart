@@ -266,6 +266,16 @@ void main() {
       expect(await store.hasCustomHeader('X-A', profileName: 'work'), isFalse);
       expect(received[hasChannel], <Object?>['X-A', 'work']);
     });
+
+    test('null, the unreachable-profile answer, is returned as null', () async {
+      // §330: the host answers null when the profile or the feature can't be reached. Before, the
+      // schema typed it non-null and the host answered false, as for "no such header".
+      replies[hasChannel] = null;
+      expect(
+        await store.hasCustomHeader('X-A', profileName: 'missing'),
+        isNull,
+      );
+    });
   });
 
   group('platform gating', () {

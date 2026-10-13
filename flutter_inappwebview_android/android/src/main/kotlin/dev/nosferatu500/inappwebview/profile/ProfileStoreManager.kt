@@ -82,8 +82,12 @@ class ProfileStoreManager(plugin: InAppWebViewFlutterPlugin) : Disposable, Profi
     return true
   }
 
-  override fun hasCustomHeader(headerName: String, profileName: String?): Boolean =
-    customHeaderProfile(profileName)?.hasCustomHeader(headerName) ?: false
+  /**
+   * `null` when the profile or the feature can't be resolved, not a `false` that reads as "no
+   * such header" (§330).
+   */
+  override fun hasCustomHeader(headerName: String, profileName: String?): Boolean? =
+    customHeaderProfile(profileName)?.hasCustomHeader(headerName)
 
   /**
    * The three androidx overloads collapse into one method with optional arguments, so this branch

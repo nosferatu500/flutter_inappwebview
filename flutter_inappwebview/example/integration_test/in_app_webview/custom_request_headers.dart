@@ -267,6 +267,14 @@ void customRequestHeaders() {
 
       expect(await store.clearAllCustomHeaders(profileName: profile), isTrue);
       expect(await store.clearAllCustomHeaders(profileName: missing), isFalse);
+      // §330: the read says it couldn't reach the profile, where it answered `false` before, which
+      // the reachable profiles' "no such header" also answers (see `X-Absent` and the control below).
+      expect(
+        await store.hasCustomHeader('X-Answer', profileName: missing),
+        isNull,
+      );
+      // Kept on purpose (§330): an unreachable profile lists no headers, like a profile with none.
+      expect(await store.getCustomHeaders(profileName: missing), isEmpty);
       expect(
         await store.hasCustomHeader('X-Answer', profileName: profile),
         isFalse,

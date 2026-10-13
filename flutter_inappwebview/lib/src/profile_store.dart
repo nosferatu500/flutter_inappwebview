@@ -58,7 +58,7 @@ class ProfileStore {
   ///{@macro flutter_inappwebview_platform_interface.PlatformProfileStore.hasCustomHeader}
   ///
   ///{@macro flutter_inappwebview_platform_interface.PlatformProfileStore.hasCustomHeader.supported_platforms}
-  Future<bool> hasCustomHeader(String headerName, {String? profileName}) =>
+  Future<bool?> hasCustomHeader(String headerName, {String? profileName}) =>
       platform.hasCustomHeader(headerName, profileName: profileName);
 
   ///{@macro flutter_inappwebview_platform_interface.PlatformProfileStore.getCustomHeaders}

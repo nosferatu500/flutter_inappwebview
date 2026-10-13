@@ -1301,8 +1301,10 @@ class _ServiceControllersScreenState extends State<ServiceControllersScreen> {
       final has = await ProfileStore.instance().hasCustomHeader(name);
       _recordMethodResult(
         PlatformProfileStoreMethod.hasCustomHeader.name,
-        '$name: $has',
-        isError: false,
+        has == null
+            ? 'Profile not reachable (feature missing or no such profile)'
+            : '$name: $has',
+        isError: has == null,
       );
     } catch (e) {
       _recordMethodResult(

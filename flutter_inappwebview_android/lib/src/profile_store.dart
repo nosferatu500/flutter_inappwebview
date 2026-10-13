@@ -97,9 +97,11 @@ class AndroidProfileStore extends PlatformProfileStore implements Disposable {
   }
 
   @override
-  Future<bool> hasCustomHeader(String headerName, {String? profileName}) async {
-    // The `?? false` the hand-written channel needed is gone: the schema types this non-null, and
-    // the host still answers `false` for an unresolvable profile or a missing feature.
+  Future<bool?> hasCustomHeader(
+    String headerName, {
+    String? profileName,
+  }) async {
+    // `null` for an unresolvable profile or a missing feature (§330).
     return await _hostApi.hasCustomHeader(headerName, profileName);
   }
 

@@ -800,6 +800,13 @@ since the `WebsiteDataType.ALL` fix below. It stays **deliberately out of `ALL`*
 
 ### Fixed
 
+**Android — `ProfileStore.hasCustomHeader()` says when it couldn't look: it returns `Future<bool?>`**
+(signature change). `null` means the profile can't be reached: `CUSTOM_REQUEST_HEADERS` or
+`MULTI_PROFILE` is unsupported, or no profile has that name. It answered `false`, which "no such
+header" also answers, so a mistyped profile name read as "the header isn't set". `false` now always
+means no such header. `getCustomHeaders()` keeps answering an empty set for an unreachable profile,
+and its docs now say so. Code that uses the answer as a `bool` needs a null check.
+
 **Android — `WebStorageManager.getQuotaForOrigin()` and `.getUsageForOrigin()` say when they read
 nothing: they return `Future<int?>`** (signature change). `null` means the storage couldn't be
 resolved: a `profileName` that doesn't exist, or any `profileName` without `MULTI_PROFILE`. They

@@ -256,8 +256,9 @@ abstract class PlatformProfileStore extends PlatformInterface {
   ///{@template flutter_inappwebview_platform_interface.PlatformProfileStore.hasCustomHeader}
   ///Whether this profile has any custom header with the given [headerName], **case-insensitively**.
   ///
-  ///Returns `false` where the feature is unsupported, which is indistinguishable from "no such
-  ///header" — check [WebViewFeature.CUSTOM_REQUEST_HEADERS] first if you need to tell them apart.
+  ///Returns `null` when the profile can't be reached:
+  ///[WebViewFeature.CUSTOM_REQUEST_HEADERS] or [WebViewFeature.MULTI_PROFILE] is unsupported, or no
+  ///profile has that [profileName], so `false` always means no such header.
   ///{@endtemplate}
   ///
   ///{@macro flutter_inappwebview_platform_interface.PlatformProfileStore.hasCustomHeader.supported_platforms}
@@ -273,7 +274,7 @@ abstract class PlatformProfileStore extends PlatformInterface {
       ),
     ],
   )
-  Future<bool> hasCustomHeader(
+  Future<bool?> hasCustomHeader(
     String headerName, {
     @SupportedPlatforms(platforms: [AndroidPlatform()]) String? profileName,
   }) {
@@ -289,7 +290,10 @@ abstract class PlatformProfileStore extends PlatformInterface {
   ///as well to keep only the one with that exact value (case-sensitive). Passing [headerValue]
   ///without [headerName] is meaningless and is ignored.
   ///
-  ///Returns an empty set where the feature is unsupported.
+  ///Returns an empty set when the profile can't be reached:
+  ///[WebViewFeature.CUSTOM_REQUEST_HEADERS] or [WebViewFeature.MULTI_PROFILE] is unsupported, or no
+  ///profile has that [profileName]. That reads the same as a profile with no headers; [hasCustomHeader]
+  ///returns `null` in that case, so use it to tell them apart.
   ///{@endtemplate}
   ///
   ///{@macro flutter_inappwebview_platform_interface.PlatformProfileStore.getCustomHeaders.supported_platforms}

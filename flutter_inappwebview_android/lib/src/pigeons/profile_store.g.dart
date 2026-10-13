@@ -338,12 +338,10 @@ class ProfileStoreHostApi {
 
   /// Whether the profile carries any header called [headerName], matched case-insensitively.
   ///
-  /// `bool`, not `bool?`: `false` here collapses "no such header" with "the profile or the feature
-  /// could not be resolved". That collapse predates this migration -- the Kotlin had `?: false` and
-  /// the Dart `?? false` -- and is preserved rather than fixed, because widening it is a change to
-  /// `PlatformProfileStore.hasCustomHeader`'s declared `Future<bool>`. Contrast `hasCookies` in
-  /// `cookie_manager.dart`, where §168 *did* have a `bool?` to preserve.
-  Future<bool> hasCustomHeader(String headerName, String? profileName) async {
+  /// Answers `null` when the profile or the feature can't be resolved, as `hasCookies` does in
+  /// `cookie_manager.dart` (§168). It answered `false` until §330, which "no such header" couldn't be
+  /// told apart from.
+  Future<bool?> hasCustomHeader(String headerName, String? profileName) async {
     final pigeonVar_channelName =
         'dev.flutter.pigeon.flutter_inappwebview_android.ProfileStoreHostApi.hasCustomHeader$pigeonVar_messageChannelSuffix';
     final pigeonVar_channel = BasicMessageChannel<Object?>(
@@ -359,9 +357,9 @@ class ProfileStoreHostApi {
     final Object? pigeonVar_replyValue = _extractReplyValueOrThrow(
       pigeonVar_replyList,
       pigeonVar_channelName,
-      isNullValid: false,
+      isNullValid: true,
     );
-    return pigeonVar_replyValue! as bool;
+    return pigeonVar_replyValue as bool?;
   }
 
   /// The profile's headers, optionally filtered.
@@ -373,7 +371,8 @@ class ProfileStoreHostApi {
   /// cases wrong. A null [headerName] selects the unfiltered overload; a non-null [headerName] with
   /// a null [headerValue] selects the name-only one.
   ///
-  /// Answers an empty list when the profile or the feature could not be resolved.
+  /// Answers an empty list when the profile or the feature could not be resolved: kept on purpose
+  /// (§330, the user's decision); `hasCustomHeader`'s `null` is the way to tell.
   Future<List<CustomHeaderData>> getCustomHeaders(
     String? headerName,
     String? headerValue,
