@@ -1,13 +1,12 @@
 import 'dart:typed_data';
 import 'dart:ui';
 
-import 'package:flutter_inappwebview_internal_annotations/flutter_inappwebview_internal_annotations.dart';
+import 'package:nosferatu500_inappwebview_internal_annotations/nosferatu500_inappwebview_internal_annotations.dart';
 
 import '../util.dart';
 
 import 'platform_in_app_browser.dart';
 import '../types/main.dart';
-import '../types/enum_method.dart';
 
 part 'in_app_browser_menu_item.g.dart';
 
@@ -20,7 +19,7 @@ dynamic _deserializeIcon(dynamic icon, {EnumMethod? enumMethod}) {
     return icon;
   }
   if (icon is Map<String, dynamic>) {
-    final iconMap = icon as Map<String, dynamic>;
+    final iconMap = icon;
     if (iconMap.containsKey('defType')) {
       return AndroidResource.fromMap(iconMap, enumMethod: enumMethod);
     }
@@ -32,9 +31,7 @@ dynamic _deserializeIcon(dynamic icon, {EnumMethod? enumMethod}) {
 }
 
 ///Class that represents a custom menu item for a [PlatformInAppBrowser] instance.
-@SupportedPlatforms(
-  platforms: [AndroidPlatform(), IOSPlatform(), MacOSPlatform()],
-)
+@SupportedPlatforms(platforms: [AndroidPlatform(), IOSPlatform()])
 @ExchangeableObject()
 class InAppBrowserMenuItem_ {
   ///The menu item id.
@@ -55,7 +52,6 @@ class InAppBrowserMenuItem_ {
     platforms: [
       AndroidPlatform(),
       IOSPlatform(available: "13.0"),
-      MacOSPlatform(),
     ],
   )
   Color_? iconColor;

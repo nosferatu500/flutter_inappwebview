@@ -1,7 +1,7 @@
 import 'dart:ui';
 
 import 'package:flutter/foundation.dart';
-import 'package:flutter_inappwebview_internal_annotations/flutter_inappwebview_internal_annotations.dart';
+import 'package:nosferatu500_inappwebview_internal_annotations/nosferatu500_inappwebview_internal_annotations.dart';
 import 'package:plugin_platform_interface/plugin_platform_interface.dart';
 
 import '../debug_logging_settings.dart';
@@ -15,14 +15,14 @@ import 'pull_to_refresh_settings.dart';
 // ignore: uri_has_not_been_generated
 part 'platform_pull_to_refresh_controller.g.dart';
 
-///{@template flutter_inappwebview_platform_interface.PlatformPullToRefreshControllerCreationParams}
+///{@template nosferatu500_inappwebview_platform_interface.PlatformPullToRefreshControllerCreationParams}
 /// Object specifying creation parameters for creating a [PlatformPullToRefreshController].
 ///
 /// Platform specific implementations can add additional fields by extending
 /// this class.
 ///{@endtemplate}
 ///
-///{@macro flutter_inappwebview_platform_interface.PlatformPullToRefreshControllerCreationParams.supported_platforms}
+///{@macro nosferatu500_inappwebview_platform_interface.PlatformPullToRefreshControllerCreationParams.supported_platforms}
 @SupportedPlatforms(platforms: [AndroidPlatform(), IOSPlatform()])
 class PlatformPullToRefreshControllerCreationParams {
   /// Used by the platform implementation to create a new [PlatformPullToRefreshController].
@@ -31,23 +31,23 @@ class PlatformPullToRefreshControllerCreationParams {
     this.onRefresh,
   }) : settings = settings ?? PullToRefreshSettings();
 
-  ///{@template flutter_inappwebview_platform_interface.PlatformPullToRefreshControllerCreationParams.settings}
+  ///{@template nosferatu500_inappwebview_platform_interface.PlatformPullToRefreshControllerCreationParams.settings}
   /// Initial settings.
   ///{@endtemplate}
   ///
-  ///{@macro flutter_inappwebview_platform_interface.PlatformPullToRefreshControllerCreationParams.settings.supported_platforms}
+  ///{@macro nosferatu500_inappwebview_platform_interface.PlatformPullToRefreshControllerCreationParams.settings.supported_platforms}
   @SupportedPlatforms(platforms: [AndroidPlatform(), IOSPlatform()])
   late PullToRefreshSettings settings;
 
-  ///{@template flutter_inappwebview_platform_interface.PlatformPullToRefreshControllerCreationParams.onRefresh}
+  ///{@template nosferatu500_inappwebview_platform_interface.PlatformPullToRefreshControllerCreationParams.onRefresh}
   ///Event called when a swipe gesture triggers a refresh.
   ///{@endtemplate}
   ///
-  ///{@macro flutter_inappwebview_platform_interface.PlatformPullToRefreshControllerCreationParams.onRefresh.supported_platforms}
+  ///{@macro nosferatu500_inappwebview_platform_interface.PlatformPullToRefreshControllerCreationParams.onRefresh.supported_platforms}
   @SupportedPlatforms(platforms: [AndroidPlatform(), IOSPlatform()])
   final void Function()? onRefresh;
 
-  ///{@template flutter_inappwebview_platform_interface.PlatformPullToRefreshControllerCreationParams.isClassSupported}
+  ///{@template nosferatu500_inappwebview_platform_interface.PlatformPullToRefreshControllerCreationParams.isClassSupported}
   ///Check if the current class is supported by the [defaultTargetPlatform] or a specific [platform].
   ///{@endtemplate}
   bool isClassSupported({TargetPlatform? platform}) =>
@@ -55,7 +55,7 @@ class PlatformPullToRefreshControllerCreationParams {
         platform: platform,
       );
 
-  ///{@template flutter_inappwebview_platform_interface.PlatformPullToRefreshControllerCreationParams.isPropertySupported}
+  ///{@template nosferatu500_inappwebview_platform_interface.PlatformPullToRefreshControllerCreationParams.isPropertySupported}
   ///Check if the given [property] is supported by the [defaultTargetPlatform] or a specific [platform].
   ///{@endtemplate}
   bool isPropertySupported(
@@ -68,7 +68,7 @@ class PlatformPullToRefreshControllerCreationParams {
       );
 }
 
-///{@template flutter_inappwebview_platform_interface.PlatformPullToRefreshController}
+///{@template nosferatu500_inappwebview_platform_interface.PlatformPullToRefreshController}
 ///A standard controller that can initiate the refreshing of a scroll view’s contents.
 ///This should be used whenever the user can refresh the contents of a WebView via a vertical swipe gesture.
 ///
@@ -76,7 +76,7 @@ class PlatformPullToRefreshControllerCreationParams {
 ///(for example [PlatformWebViewCreationParams.onWebViewCreated] or [PlatformInAppBrowserEvents.onBrowserCreated]).
 ///{@endtemplate}
 ///
-///{@macro flutter_inappwebview_platform_interface.PlatformPullToRefreshController.supported_platforms}
+///{@macro nosferatu500_inappwebview_platform_interface.PlatformPullToRefreshController.supported_platforms}
 @SupportedPlatforms(
   platforms: [
     AndroidPlatform(
@@ -97,7 +97,7 @@ abstract class PlatformPullToRefreshController extends PlatformInterface
   ) {
     assert(
       InAppWebViewPlatform.instance != null,
-      'A platform implementation for `flutter_inappwebview` has not been set. Please '
+      'A platform implementation for `nosferatu500_inappwebview` has not been set. Please '
       'ensure that an implementation of `InAppWebViewPlatform` has been set to '
       '`InAppWebViewPlatform.instance` before use. For unit testing, '
       '`InAppWebViewPlatform.instance` can be set with your own test implementation.',
@@ -114,7 +114,7 @@ abstract class PlatformPullToRefreshController extends PlatformInterface
   factory PlatformPullToRefreshController.static() {
     assert(
       InAppWebViewPlatform.instance != null,
-      'A platform implementation for `flutter_inappwebview` has not been set. Please '
+      'A platform implementation for `nosferatu500_inappwebview` has not been set. Please '
       'ensure that an implementation of `flutter_inappwebview` has been set to '
       '`InAppWebViewPlatform.instance` before use. For unit testing, '
       '`InAppWebViewPlatform.instance` can be set with your own test implementation.',
@@ -139,21 +139,21 @@ abstract class PlatformPullToRefreshController extends PlatformInterface
   /// The parameters used to initialize the [PlatformPullToRefreshController].
   final PlatformPullToRefreshControllerCreationParams params;
 
-  ///{@macro flutter_inappwebview_platform_interface.PlatformPullToRefreshControllerCreationParams.settings}
+  ///{@macro nosferatu500_inappwebview_platform_interface.PlatformPullToRefreshControllerCreationParams.settings}
   ///
-  ///{@macro flutter_inappwebview_platform_interface.PlatformPullToRefreshControllerCreationParams.settings.supported_platforms}
+  ///{@macro nosferatu500_inappwebview_platform_interface.PlatformPullToRefreshControllerCreationParams.settings.supported_platforms}
   PullToRefreshSettings get settings => params.settings;
 
-  ///{@macro flutter_inappwebview_platform_interface.PlatformPullToRefreshControllerCreationParams.onRefresh}
+  ///{@macro nosferatu500_inappwebview_platform_interface.PlatformPullToRefreshControllerCreationParams.onRefresh}
   ///
-  ///{@macro flutter_inappwebview_platform_interface.PlatformPullToRefreshControllerCreationParams.onRefresh.supported_platforms}
+  ///{@macro nosferatu500_inappwebview_platform_interface.PlatformPullToRefreshControllerCreationParams.onRefresh.supported_platforms}
   void Function()? get onRefresh => params.onRefresh;
 
-  ///{@template flutter_inappwebview_platform_interface.PlatformPullToRefreshController.setEnabled}
+  ///{@template nosferatu500_inappwebview_platform_interface.PlatformPullToRefreshController.setEnabled}
   ///Sets whether the pull-to-refresh feature is enabled or not.
   ///{@endtemplate}
   ///
-  ///{@macro flutter_inappwebview_platform_interface.PlatformPullToRefreshController.setEnabled.supported_platforms}
+  ///{@macro nosferatu500_inappwebview_platform_interface.PlatformPullToRefreshController.setEnabled.supported_platforms}
   @SupportedPlatforms(
     platforms: [
       AndroidPlatform(
@@ -174,11 +174,11 @@ abstract class PlatformPullToRefreshController extends PlatformInterface
     );
   }
 
-  ///{@template flutter_inappwebview_platform_interface.PlatformPullToRefreshController.isEnabled}
+  ///{@template nosferatu500_inappwebview_platform_interface.PlatformPullToRefreshController.isEnabled}
   ///Returns `true` is pull-to-refresh feature is enabled, otherwise `false`.
   ///{@endtemplate}
   ///
-  ///{@macro flutter_inappwebview_platform_interface.PlatformPullToRefreshController.isEnabled.supported_platforms}
+  ///{@macro nosferatu500_inappwebview_platform_interface.PlatformPullToRefreshController.isEnabled.supported_platforms}
   @SupportedPlatforms(
     platforms: [
       AndroidPlatform(
@@ -199,7 +199,7 @@ abstract class PlatformPullToRefreshController extends PlatformInterface
     );
   }
 
-  ///{@template flutter_inappwebview_platform_interface.PlatformPullToRefreshController.beginRefreshing}
+  ///{@template nosferatu500_inappwebview_platform_interface.PlatformPullToRefreshController.beginRefreshing}
   ///Tells the controller that a refresh operation was started programmatically.
   ///
   ///Call this method when an external event source triggers a programmatic refresh of your scrolling view.
@@ -207,7 +207,7 @@ abstract class PlatformPullToRefreshController extends PlatformInterface
   ///When the refresh operation ends, be sure to call the [endRefreshing] method to return the controller to its default state.
   ///{@endtemplate}
   ///
-  ///{@macro flutter_inappwebview_platform_interface.PlatformPullToRefreshController.beginRefreshing.supported_platforms}
+  ///{@macro nosferatu500_inappwebview_platform_interface.PlatformPullToRefreshController.beginRefreshing.supported_platforms}
   @SupportedPlatforms(
     platforms: [
       AndroidPlatform(
@@ -228,7 +228,7 @@ abstract class PlatformPullToRefreshController extends PlatformInterface
     );
   }
 
-  ///{@template flutter_inappwebview_platform_interface.PlatformPullToRefreshController.endRefreshing}
+  ///{@template nosferatu500_inappwebview_platform_interface.PlatformPullToRefreshController.endRefreshing}
   ///Tells the controller that a refresh operation has ended.
   ///
   ///Call this method at the end of any refresh operation (whether it was initiated programmatically or by the user)
@@ -237,7 +237,7 @@ abstract class PlatformPullToRefreshController extends PlatformInterface
   ///If animations are also enabled, the control is hidden using an animation.
   ///{@endtemplate}
   ///
-  ///{@macro flutter_inappwebview_platform_interface.PlatformPullToRefreshController.endRefreshing.supported_platforms}
+  ///{@macro nosferatu500_inappwebview_platform_interface.PlatformPullToRefreshController.endRefreshing.supported_platforms}
   @SupportedPlatforms(
     platforms: [
       AndroidPlatform(
@@ -258,11 +258,11 @@ abstract class PlatformPullToRefreshController extends PlatformInterface
     );
   }
 
-  ///{@template flutter_inappwebview_platform_interface.PlatformPullToRefreshController.isRefreshing}
+  ///{@template nosferatu500_inappwebview_platform_interface.PlatformPullToRefreshController.isRefreshing}
   ///Returns whether a refresh operation has been triggered and is in progress.
   ///{@endtemplate}
   ///
-  ///{@macro flutter_inappwebview_platform_interface.PlatformPullToRefreshController.isRefreshing.supported_platforms}
+  ///{@macro nosferatu500_inappwebview_platform_interface.PlatformPullToRefreshController.isRefreshing.supported_platforms}
   @SupportedPlatforms(
     platforms: [
       AndroidPlatform(
@@ -283,11 +283,11 @@ abstract class PlatformPullToRefreshController extends PlatformInterface
     );
   }
 
-  ///{@template flutter_inappwebview_platform_interface.PlatformPullToRefreshController.setColor}
+  ///{@template nosferatu500_inappwebview_platform_interface.PlatformPullToRefreshController.setColor}
   ///Sets the color of the refresh control.
   ///{@endtemplate}
   ///
-  ///{@macro flutter_inappwebview_platform_interface.PlatformPullToRefreshController.setColor.supported_platforms}
+  ///{@macro nosferatu500_inappwebview_platform_interface.PlatformPullToRefreshController.setColor.supported_platforms}
   @SupportedPlatforms(
     platforms: [
       AndroidPlatform(
@@ -308,11 +308,11 @@ abstract class PlatformPullToRefreshController extends PlatformInterface
     );
   }
 
-  ///{@template flutter_inappwebview_platform_interface.PlatformPullToRefreshController.setBackgroundColor}
+  ///{@template nosferatu500_inappwebview_platform_interface.PlatformPullToRefreshController.setBackgroundColor}
   ///Sets the background color of the refresh control.
   ///{@endtemplate}
   ///
-  ///{@macro flutter_inappwebview_platform_interface.PlatformPullToRefreshController.setBackgroundColor.supported_platforms}
+  ///{@macro nosferatu500_inappwebview_platform_interface.PlatformPullToRefreshController.setBackgroundColor.supported_platforms}
   @SupportedPlatforms(
     platforms: [
       AndroidPlatform(
@@ -333,11 +333,11 @@ abstract class PlatformPullToRefreshController extends PlatformInterface
     );
   }
 
-  ///{@template flutter_inappwebview_platform_interface.PlatformPullToRefreshController.setDistanceToTriggerSync}
+  ///{@template nosferatu500_inappwebview_platform_interface.PlatformPullToRefreshController.setDistanceToTriggerSync}
   ///Set the distance to trigger a sync in dips.
   ///{@endtemplate}
   ///
-  ///{@macro flutter_inappwebview_platform_interface.PlatformPullToRefreshController.setDistanceToTriggerSync.supported_platforms}
+  ///{@macro nosferatu500_inappwebview_platform_interface.PlatformPullToRefreshController.setDistanceToTriggerSync.supported_platforms}
   @SupportedPlatforms(
     platforms: [
       AndroidPlatform(
@@ -353,11 +353,11 @@ abstract class PlatformPullToRefreshController extends PlatformInterface
     );
   }
 
-  ///{@template flutter_inappwebview_platform_interface.PlatformPullToRefreshController.setSlingshotDistance}
+  ///{@template nosferatu500_inappwebview_platform_interface.PlatformPullToRefreshController.setSlingshotDistance}
   ///Sets the distance that the refresh indicator can be pulled beyond its resting position during a swipe gesture.
   ///{@endtemplate}
   ///
-  ///{@macro flutter_inappwebview_platform_interface.PlatformPullToRefreshController.setSlingshotDistance.supported_platforms}
+  ///{@macro nosferatu500_inappwebview_platform_interface.PlatformPullToRefreshController.setSlingshotDistance.supported_platforms}
   @SupportedPlatforms(
     platforms: [
       AndroidPlatform(
@@ -373,11 +373,11 @@ abstract class PlatformPullToRefreshController extends PlatformInterface
     );
   }
 
-  ///{@template flutter_inappwebview_platform_interface.PlatformPullToRefreshController.getDefaultSlingshotDistance}
+  ///{@template nosferatu500_inappwebview_platform_interface.PlatformPullToRefreshController.getDefaultSlingshotDistance}
   ///Gets the default distance that the refresh indicator can be pulled beyond its resting position during a swipe gesture.
   ///{@endtemplate}
   ///
-  ///{@macro flutter_inappwebview_platform_interface.PlatformPullToRefreshController.getDefaultSlingshotDistance.supported_platforms}
+  ///{@macro nosferatu500_inappwebview_platform_interface.PlatformPullToRefreshController.getDefaultSlingshotDistance.supported_platforms}
   @SupportedPlatforms(
     platforms: [
       AndroidPlatform(
@@ -393,11 +393,11 @@ abstract class PlatformPullToRefreshController extends PlatformInterface
     );
   }
 
-  ///{@template flutter_inappwebview_platform_interface.PlatformPullToRefreshController.setIndicatorSize}
+  ///{@template nosferatu500_inappwebview_platform_interface.PlatformPullToRefreshController.setIndicatorSize}
   ///Sets the size of the refresh indicator. One of [PullToRefreshSize.DEFAULT], or [PullToRefreshSize.LARGE].
   ///{@endtemplate}
   ///
-  ///{@macro flutter_inappwebview_platform_interface.PlatformPullToRefreshController.setIndicatorSize.supported_platforms}
+  ///{@macro nosferatu500_inappwebview_platform_interface.PlatformPullToRefreshController.setIndicatorSize.supported_platforms}
   @SupportedPlatforms(
     platforms: [
       AndroidPlatform(
@@ -413,11 +413,11 @@ abstract class PlatformPullToRefreshController extends PlatformInterface
     );
   }
 
-  ///{@template flutter_inappwebview_platform_interface.PlatformPullToRefreshController.setStyledTitle}
+  ///{@template nosferatu500_inappwebview_platform_interface.PlatformPullToRefreshController.setStyledTitle}
   ///Sets the styled title text to display in the refresh control.
   ///{@endtemplate}
   ///
-  ///{@macro flutter_inappwebview_platform_interface.PlatformPullToRefreshController.setStyledTitle.supported_platforms}
+  ///{@macro nosferatu500_inappwebview_platform_interface.PlatformPullToRefreshController.setStyledTitle.supported_platforms}
   @SupportedPlatforms(
     platforms: [
       IOSPlatform(
@@ -433,11 +433,11 @@ abstract class PlatformPullToRefreshController extends PlatformInterface
     );
   }
 
-  ///{@template flutter_inappwebview_platform_interface.PlatformPullToRefreshController.dispose}
+  ///{@template nosferatu500_inappwebview_platform_interface.PlatformPullToRefreshController.dispose}
   ///Disposes the controller.
   ///{@endtemplate}
   ///
-  ///{@macro flutter_inappwebview_platform_interface.PlatformPullToRefreshController.dispose.supported_platforms}
+  ///{@macro nosferatu500_inappwebview_platform_interface.PlatformPullToRefreshController.dispose.supported_platforms}
   @SupportedPlatforms(platforms: [AndroidPlatform(), IOSPlatform()])
   @override
   void dispose({bool isKeepAlive = false}) {
@@ -446,13 +446,13 @@ abstract class PlatformPullToRefreshController extends PlatformInterface
     );
   }
 
-  ///{@macro flutter_inappwebview_platform_interface.PlatformPullToRefreshControllerCreationParams.isClassSupported}
+  ///{@macro nosferatu500_inappwebview_platform_interface.PlatformPullToRefreshControllerCreationParams.isClassSupported}
   bool isClassSupported({TargetPlatform? platform}) =>
       _PlatformPullToRefreshControllerClassSupported.isClassSupported(
         platform: platform,
       );
 
-  ///{@template flutter_inappwebview_platform_interface.PlatformPullToRefreshController.isPropertySupported}
+  ///{@template nosferatu500_inappwebview_platform_interface.PlatformPullToRefreshController.isPropertySupported}
   ///Check if the given [property] is supported by the [defaultTargetPlatform] or a specific [platform].
   ///{@endtemplate}
   bool isPropertySupported(
@@ -460,7 +460,7 @@ abstract class PlatformPullToRefreshController extends PlatformInterface
     TargetPlatform? platform,
   }) => params.isPropertySupported(property, platform: platform);
 
-  ///{@template flutter_inappwebview_platform_interface.PlatformPullToRefreshController.isMethodSupported}
+  ///{@template nosferatu500_inappwebview_platform_interface.PlatformPullToRefreshController.isMethodSupported}
   ///Check if the given [method] is supported by the [defaultTargetPlatform] or a specific [platform].
   ///{@endtemplate}
   bool isMethodSupported(

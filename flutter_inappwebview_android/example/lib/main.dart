@@ -1,8 +1,8 @@
 import 'dart:async';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_inappwebview_platform_interface/flutter_inappwebview_platform_interface.dart';
-import 'package:flutter_inappwebview_android/flutter_inappwebview_android.dart';
+import 'package:nosferatu500_inappwebview_platform_interface/nosferatu500_inappwebview_platform_interface.dart';
+import 'package:nosferatu500_inappwebview_android/nosferatu500_inappwebview_android.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 Future main() async {

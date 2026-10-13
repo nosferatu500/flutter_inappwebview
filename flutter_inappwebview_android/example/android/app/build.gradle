@@ -1,5 +1,9 @@
 plugins {
     id "com.android.application"
+    // MainActivity is Kotlin. This app sets android.builtInKotlin=false globally (other plugins
+    // still apply org.jetbrains.kotlin.android, which built-in Kotlin rejects), so Kotlin has to
+    // be opted back in for this module -- the documented module-by-module migration path.
+    id "com.android.built-in-kotlin"
     id "dev.flutter.flutter-gradle-plugin"
 }
 
@@ -22,19 +26,23 @@ if (flutterVersionName == null) {
 }
 
 android {
-    namespace 'com.pichillilorenzo.flutter_inappwebview_android_example'
+    namespace 'dev.nosferatu500.inappwebview.android.example'
 
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_17
         targetCompatibility = JavaVersion.VERSION_17
     }
 
-    compileSdk = flutter.compileSdkVersion
+    // Not flutter.compileSdkVersion (36 on Flutter 3.44): the plugin module depends on
+    // androidx.core 1.19.0, whose AAR metadata requires consumers to compile against API 37+.
+    // AGP fails the build rather than warning when that is unmet, so every app using this plugin
+    // needs the same line until Flutter's default reaches 37.
+    compileSdk = 37
     ndkVersion = flutter.ndkVersion
 
     defaultConfig {
         // TODO: Specify your own unique Application ID (https://developer.android.com/studio/build/application-id.html).
-        applicationId "com.pichillilorenzo.flutter_inappwebview_android_example"
+        applicationId "dev.nosferatu500.inappwebview.android.example"
         // Must match the plugin's minSdk: AGP rejects an app below the floor of
         // a library it consumes.
         minSdk = 30
@@ -46,7 +54,7 @@ android {
 
     buildTypes {
         release {
-            // only for com.pichillilorenzo.flutter_inappwebview_android.R.menu.menu_main
+            // only for dev.nosferatu500.inappwebview.R.menu.menu_main
             minifyEnabled = false
             shrinkResources = false
 

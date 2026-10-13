@@ -124,7 +124,7 @@ void javascriptCodeEvaluation() {
           await controllerCompleter.future;
       await pageLoaded.future;
 
-      final String functionBody = """
+      const String functionBody = """
         var p = new Promise(function (resolve, reject) {
            window.setTimeout(function() {
              if (x >= 0) {

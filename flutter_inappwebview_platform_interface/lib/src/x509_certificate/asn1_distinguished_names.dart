@@ -79,7 +79,7 @@ class ASN1DistinguishedNames {
   );
 
   @override
-  bool operator ==(value) => value == _oid;
+  bool operator ==(other) => other == _oid;
 
   @override
   int get hashCode => _oid.hashCode;
@@ -102,7 +102,9 @@ class ASN1DistinguishedNames {
       String? value;
       try {
         value = oidBlock.parent?.sub?.last.value as String?;
-      } catch (e) {}
+      } catch (e) {
+        // No string value: the component keeps its "key=" with no value.
+      }
       if (value != null) {
         result += quote(value);
       }

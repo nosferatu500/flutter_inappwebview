@@ -79,14 +79,6 @@ class PrintJobInfo {
   ///- MacOS
   int? numberOfPages;
 
-  ///The page order that will be used to generate the pages in this job.
-  ///This is the physical page order of the pages.
-  ///It depends on the stacking order of the printer, the capability of the app to reverse page order, etc.
-  ///
-  ///**Officially Supported Platforms/Implementations**:
-  ///- MacOS
-  PrintJobPageOrder? pageOrder;
-
   ///The printing quality.
   ///
   ///**Officially Supported Platforms/Implementations**:
@@ -131,7 +123,6 @@ class PrintJobInfo {
     this.label,
     this.lastPage,
     this.numberOfPages,
-    this.pageOrder,
     this.preferredRenderingQuality,
     this.printer,
     this.showsPrintPanel,
@@ -161,13 +152,6 @@ class PrintJobInfo {
       label: map['label'],
       lastPage: map['lastPage'],
       numberOfPages: map['numberOfPages'],
-      pageOrder: switch (enumMethod ?? EnumMethod.nativeValue) {
-        EnumMethod.nativeValue => PrintJobPageOrder.fromNativeValue(
-          map['pageOrder'],
-        ),
-        EnumMethod.value => PrintJobPageOrder.fromValue(map['pageOrder']),
-        EnumMethod.name => PrintJobPageOrder.byName(map['pageOrder']),
-      },
       preferredRenderingQuality: switch (enumMethod ?? EnumMethod.nativeValue) {
         EnumMethod.nativeValue => PrintJobRenderingQuality.fromNativeValue(
           map['preferredRenderingQuality'],
@@ -207,11 +191,6 @@ class PrintJobInfo {
       "label": label,
       "lastPage": lastPage,
       "numberOfPages": numberOfPages,
-      "pageOrder": switch (enumMethod ?? EnumMethod.nativeValue) {
-        EnumMethod.nativeValue => pageOrder?.toNativeValue(),
-        EnumMethod.value => pageOrder?.toValue(),
-        EnumMethod.name => pageOrder?.name(),
-      },
       "preferredRenderingQuality": switch (enumMethod ??
           EnumMethod.nativeValue) {
         EnumMethod.nativeValue => preferredRenderingQuality?.toNativeValue(),
@@ -236,6 +215,6 @@ class PrintJobInfo {
 
   @override
   String toString() {
-    return 'PrintJobInfo{attributes: $attributes, canSpawnSeparateThread: $canSpawnSeparateThread, copies: $copies, creationTime: $creationTime, currentPage: $currentPage, firstPage: $firstPage, isCopyingOperation: $isCopyingOperation, label: $label, lastPage: $lastPage, numberOfPages: $numberOfPages, pageOrder: $pageOrder, preferredRenderingQuality: $preferredRenderingQuality, printer: $printer, showsPrintPanel: $showsPrintPanel, showsProgressPanel: $showsProgressPanel, state: $state}';
+    return 'PrintJobInfo{attributes: $attributes, canSpawnSeparateThread: $canSpawnSeparateThread, copies: $copies, creationTime: $creationTime, currentPage: $currentPage, firstPage: $firstPage, isCopyingOperation: $isCopyingOperation, label: $label, lastPage: $lastPage, numberOfPages: $numberOfPages, preferredRenderingQuality: $preferredRenderingQuality, printer: $printer, showsPrintPanel: $showsPrintPanel, showsProgressPanel: $showsProgressPanel, state: $state}';
   }
 }

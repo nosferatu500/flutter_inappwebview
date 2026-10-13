@@ -4,12 +4,12 @@ import 'package:analyzer/dart/element/type.dart';
 import 'package:analyzer/dart/constant/value.dart';
 import 'package:build/build.dart';
 import 'package:collection/collection.dart';
-import 'package:flutter_inappwebview_internal_annotations/flutter_inappwebview_internal_annotations.dart';
+import 'package:nosferatu500_inappwebview_internal_annotations/nosferatu500_inappwebview_internal_annotations.dart';
 
 import 'model_visitor.dart';
 import 'util.dart';
 
-const _annotationsPackage = 'flutter_inappwebview_internal_annotations';
+const _annotationsPackage = 'nosferatu500_inappwebview_internal_annotations';
 
 final _coreCheckerDeprecated = TypeChecker.typeNamedLiterally(
   'Deprecated',
@@ -23,11 +23,15 @@ final _coreCheckerSupportedPlatforms = TypeChecker.typeNamedLiterally(
 class SupportedPlatformsGenerator
     extends GeneratorForAnnotation<SupportedPlatforms> {
   @override
-  String generateForAnnotatedElement(
+  Future<String> generateForAnnotatedElement(
     Element element,
     ConstantReader annotation,
     BuildStep buildStep,
-  ) {
+  ) async {
+    // The hand-written library, to see whether it calls the private `_<Class>ClassSupported`
+    // extension emitted below (see the `unused_element` note there). A private extension can only
+    // be called from its own library, and these libraries have no part but the generated one.
+    final librarySource = await buildStep.readAsString(buildStep.inputId);
     final visitor = ModelVisitor();
     // Visits all the children of element in no particular order.
     element.visitChildren(visitor);
@@ -151,6 +155,18 @@ class SupportedPlatformsGenerator
         );
       }
 
+      // Most classes answer `isClassSupported` through this extension. Some answer through their
+      // creation params instead (an instance method, so a platform's params can override it), and
+      // never call it. It is emitted for them anyway, because it carries the `supported_platforms`
+      // template above, which other docs `{@macro}`. So the ignore goes on exactly the extensions
+      // the hand-written library never calls, and every other one stays checked (§220).
+      if (!librarySource.contains('_${className}ClassSupported.')) {
+        classBuffer.writeln(
+          '// Unused: [$className.$isClassSupportedFunctionName] answers through its creation '
+          'params. Kept for the doc template above.',
+        );
+        classBuffer.writeln('// ignore: unused_element');
+      }
       classBuffer.writeln(
         """static bool $isClassSupportedFunctionName({TargetPlatform? platform}) {""",
       );
@@ -165,14 +181,9 @@ class SupportedPlatformsGenerator
         final targetPlatforms = platforms
             .map((e) => e.getField("targetPlatformName")!.toStringValue())
             .toList();
-        final hasWebSupport = targetPlatforms.contains("web");
-
         classBuffer.writeln("return ");
-        if (hasWebSupport) {
-          classBuffer.writeln("kIsWeb && platform == null ? true :");
-        }
         classBuffer.writeln(
-          "((kIsWeb && platform != null) || !kIsWeb) && [${targetPlatforms.where((e) => e != 'web').map((e) => "TargetPlatform.$e").join(', ')}].contains(platform ?? defaultTargetPlatform)",
+          "((kIsWeb && platform != null) || !kIsWeb) && [${targetPlatforms.map((e) => "TargetPlatform.$e").join(', ')}].contains(platform ?? defaultTargetPlatform)",
         );
         classBuffer.writeln(";");
       }
@@ -293,15 +304,10 @@ class SupportedPlatformsGenerator
         final targetPlatforms = platforms
             .map((e) => e.getField("targetPlatformName")!.toStringValue())
             .toList();
-        final hasWebSupport = targetPlatforms.contains("web");
-
         classBuffer.writeln("case $enumClassName.$fieldName:");
         classBuffer.writeln("return ");
-        if (hasWebSupport) {
-          classBuffer.writeln("kIsWeb && platform == null ? true :");
-        }
         classBuffer.writeln(
-          "((kIsWeb && platform != null) || !kIsWeb) && [${targetPlatforms.where((e) => e != 'web').map((e) => "TargetPlatform.$e").join(', ')}].contains(platform ?? defaultTargetPlatform)",
+          "((kIsWeb && platform != null) || !kIsWeb) && [${targetPlatforms.map((e) => "TargetPlatform.$e").join(', ')}].contains(platform ?? defaultTargetPlatform)",
         );
         classBuffer.writeln(";");
       }
@@ -398,15 +404,10 @@ class SupportedPlatformsGenerator
         final targetPlatforms = platforms
             .map((e) => e.getField("targetPlatformName")!.toStringValue())
             .toList();
-        final hasWebSupport = targetPlatforms.contains("web");
-
         classBuffer.writeln("case $enumClassName.$methodName:");
         classBuffer.writeln("return ");
-        if (hasWebSupport) {
-          classBuffer.writeln("kIsWeb && platform == null ? true :");
-        }
         classBuffer.writeln(
-          "((kIsWeb && platform != null) || !kIsWeb) && [${targetPlatforms.where((e) => e != 'web').map((e) => "TargetPlatform.$e").join(', ')}].contains(platform ?? defaultTargetPlatform)",
+          "((kIsWeb && platform != null) || !kIsWeb) && [${targetPlatforms.map((e) => "TargetPlatform.$e").join(', ')}].contains(platform ?? defaultTargetPlatform)",
         );
         classBuffer.writeln(";");
       }

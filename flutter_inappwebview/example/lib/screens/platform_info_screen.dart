@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_inappwebview/flutter_inappwebview.dart';
+import 'package:nosferatu500_inappwebview/nosferatu500_inappwebview.dart';
 import '../utils/platform_utils.dart';
 import '../widgets/common/section_card.dart';
 
@@ -154,9 +154,9 @@ class PlatformInfoScreen extends StatelessWidget {
   Map<String, bool> _getCoreWebViewFeatures() {
     try {
       return {
-        '${InAppWebView} (Widget)': InAppWebView.isClassSupported(),
-        '${InAppWebViewController}': InAppWebViewController.isClassSupported(),
-        '${HeadlessInAppWebView}': HeadlessInAppWebView.isClassSupported(),
+        '$InAppWebView (Widget)': InAppWebView.isClassSupported(),
+        '$InAppWebViewController': InAppWebViewController.isClassSupported(),
+        '$HeadlessInAppWebView': HeadlessInAppWebView.isClassSupported(),
       };
     } catch (e) {
       return {};
@@ -167,9 +167,9 @@ class PlatformInfoScreen extends StatelessWidget {
   Map<String, bool> _getBrowserFeatures() {
     try {
       return {
-        '${InAppBrowser}': InAppBrowser.isClassSupported(),
-        '${ChromeSafariBrowser}': ChromeSafariBrowser.isClassSupported(),
-        '${WebAuthenticationSession}':
+        '$InAppBrowser': InAppBrowser.isClassSupported(),
+        '$ChromeSafariBrowser': ChromeSafariBrowser.isClassSupported(),
+        '$WebAuthenticationSession':
             WebAuthenticationSession.isClassSupported(),
       };
     } catch (e) {
@@ -181,12 +181,12 @@ class PlatformInfoScreen extends StatelessWidget {
   Map<String, bool> _getStorageFeatures() {
     try {
       return {
-        '${CookieManager}': CookieManager.isClassSupported(),
-        '${WebStorage}': WebStorage.isClassSupported(),
-        '${LocalStorage}': LocalStorage.isClassSupported(),
-        '${SessionStorage}': SessionStorage.isClassSupported(),
-        '${WebStorageManager}': WebStorageManager.isClassSupported(),
-        '${HttpAuthCredentialDatabase}':
+        '$CookieManager': CookieManager.isClassSupported(),
+        '$WebStorage': WebStorage.isClassSupported(),
+        '$LocalStorage': LocalStorage.isClassSupported(),
+        '$SessionStorage': SessionStorage.isClassSupported(),
+        '$WebStorageManager': WebStorageManager.isClassSupported(),
+        '$HttpAuthCredentialDatabase':
             HttpAuthCredentialDatabase.isClassSupported(),
       };
     } catch (e) {
@@ -198,15 +198,15 @@ class PlatformInfoScreen extends StatelessWidget {
   Map<String, bool> _getControllerFeatures() {
     try {
       return {
-        '${PullToRefreshController}':
-            PullToRefreshController.isClassSupported(),
-        '${FindInteractionController}':
+        '$PullToRefreshController': PullToRefreshController.isClassSupported(),
+        '$FindInteractionController':
             FindInteractionController.isClassSupported(),
-        '${PrintJobController}': PrintJobController.isClassSupported(),
-        '${ServiceWorkerController}':
-            ServiceWorkerController.isClassSupported(),
-        '${ProxyController}': ProxyController.isClassSupported(),
-        '${TracingController}': TracingController.isClassSupported(),
+        '$PrintJobController': PrintJobController.isClassSupported(),
+        '$ServiceWorkerController': ServiceWorkerController.isClassSupported(),
+        '$ProxyController': ProxyController.isClassSupported(),
+        '$TracingController': TracingController.isClassSupported(),
+        '$ProfileStore': ProfileStore.isClassSupported(),
+        '$GeolocationPermissions': GeolocationPermissions.isClassSupported(),
       };
     } catch (e) {
       return {};
@@ -217,8 +217,8 @@ class PlatformInfoScreen extends StatelessWidget {
   Map<String, bool> _getMessagingFeatures() {
     try {
       return {
-        '${WebMessageChannel}': WebMessageChannel.isClassSupported(),
-        '${WebMessageListener}': WebMessageListener.isClassSupported(),
+        '$WebMessageChannel': WebMessageChannel.isClassSupported(),
+        '$WebMessageListener': WebMessageListener.isClassSupported(),
       };
     } catch (e) {
       return {};
@@ -228,10 +228,7 @@ class PlatformInfoScreen extends StatelessWidget {
   /// Advanced features
   Map<String, bool> _getAdvancedFeatures() {
     try {
-      return {
-        '${WebViewEnvironment}': WebViewEnvironment.isClassSupported(),
-        '${ProcessGlobalConfig}': ProcessGlobalConfig.isClassSupported(),
-      };
+      return {'$ProcessGlobalConfig': ProcessGlobalConfig.isClassSupported()};
     } catch (e) {
       return {};
     }

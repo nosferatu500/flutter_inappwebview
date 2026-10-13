@@ -8,7 +8,7 @@ void resizeWebView() {
       );
 
   skippableTestWidgets('resize webview', (WidgetTester tester) async {
-    final String resizeTest = '''
+    const String resizeTest = '''
         <!DOCTYPE html><html>
         <head><title>Resize test</title>
           <script type="text/javascript">
@@ -44,8 +44,8 @@ void resizeWebView() {
 
         controller.addJavaScriptHandler(
           handlerName: 'resize',
-          callback: (args) {
-            resizeCompleter.complete(true);
+          callback: (data) {
+            resizeCompleter.complete();
           },
         );
       },

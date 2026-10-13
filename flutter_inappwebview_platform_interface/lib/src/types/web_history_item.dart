@@ -1,4 +1,4 @@
-import 'package:flutter_inappwebview_internal_annotations/flutter_inappwebview_internal_annotations.dart';
+import 'package:nosferatu500_inappwebview_internal_annotations/nosferatu500_inappwebview_internal_annotations.dart';
 
 import '../web_uri.dart';
 import 'web_history.dart';
@@ -25,16 +25,11 @@ class WebHistoryItem_ {
   ///Position offset respect to the currentIndex of the back-forward [WebHistory.list].
   int? offset;
 
-  ///Unique id of the navigation history entry.
-  @SupportedPlatforms(platforms: [WindowsPlatform()])
-  int? entryId;
-
   WebHistoryItem_({
     this.originalUrl,
     this.title,
     this.url,
     this.index,
     this.offset,
-    this.entryId,
   });
 }

@@ -10,12 +10,28 @@ part of 'print_job_state.dart';
 class PrintJobState {
   final int _value;
   final int? _nativeValue;
-  const PrintJobState._internal(this._value, this._nativeValue);
+
+  /// Native values accepted *in addition* to [_nativeValue] when resolving from a
+  /// native value. Inbound only -- [toNativeValue] still returns [_nativeValue].
+  // ignore: unused_field
+  final List<int?> _alsoAcceptsNativeValues;
+  const PrintJobState._internal(
+    this._value,
+    this._nativeValue, [
+    this._alsoAcceptsNativeValues = const [],
+  ]);
   // ignore: unused_element
   factory PrintJobState._internalMultiPlatform(
     int value,
-    Function nativeValue,
-  ) => PrintJobState._internal(value, nativeValue());
+    Function nativeValue, [
+    Function? alsoAcceptsNativeValues,
+  ]) => PrintJobState._internal(
+    value,
+    nativeValue(),
+    alsoAcceptsNativeValues != null
+        ? alsoAcceptsNativeValues() as List<int?>
+        : const [],
+  );
 
   ///Print job state: The print job is blocked.
   ///
@@ -40,14 +56,11 @@ class PrintJobState {
   ///**Officially Supported Platforms/Implementations**:
   ///- Android WebView ([Official API - PrintJobInfo.STATE_CANCELED](https://developer.android.com/reference/android/print/PrintJobInfo#STATE_CANCELED))
   ///- iOS WKWebView
-  ///- macOS WKWebView
   static final CANCELED = PrintJobState._internalMultiPlatform(7, () {
     switch (defaultTargetPlatform) {
       case TargetPlatform.android:
         return 7;
       case TargetPlatform.iOS:
-        return 7;
-      case TargetPlatform.macOS:
         return 7;
       default:
         break;
@@ -62,14 +75,11 @@ class PrintJobState {
   ///**Officially Supported Platforms/Implementations**:
   ///- Android WebView ([Official API - PrintJobInfo.STATE_COMPLETED](https://developer.android.com/reference/android/print/PrintJobInfo#STATE_COMPLETED))
   ///- iOS WKWebView
-  ///- macOS WKWebView
   static final COMPLETED = PrintJobState._internalMultiPlatform(5, () {
     switch (defaultTargetPlatform) {
       case TargetPlatform.android:
         return 5;
       case TargetPlatform.iOS:
-        return 5;
-      case TargetPlatform.macOS:
         return 5;
       default:
         break;
@@ -84,14 +94,11 @@ class PrintJobState {
   ///**Officially Supported Platforms/Implementations**:
   ///- Android WebView ([Official API - PrintJobInfo.STATE_CREATED](https://developer.android.com/reference/android/print/PrintJobInfo#STATE_CREATED))
   ///- iOS WKWebView
-  ///- macOS WKWebView
   static final CREATED = PrintJobState._internalMultiPlatform(1, () {
     switch (defaultTargetPlatform) {
       case TargetPlatform.android:
         return 1;
       case TargetPlatform.iOS:
-        return 1;
-      case TargetPlatform.macOS:
         return 1;
       default:
         break;
@@ -141,14 +148,11 @@ class PrintJobState {
   ///**Officially Supported Platforms/Implementations**:
   ///- Android WebView ([Official API - PrintJobInfo.STATE_STARTED](https://developer.android.com/reference/android/print/PrintJobInfo#STATE_STARTED))
   ///- iOS WKWebView
-  ///- macOS WKWebView
   static final STARTED = PrintJobState._internalMultiPlatform(3, () {
     switch (defaultTargetPlatform) {
       case TargetPlatform.android:
         return 3;
       case TargetPlatform.iOS:
-        return 3;
-      case TargetPlatform.macOS:
         return 3;
       default:
         break;
@@ -182,6 +186,10 @@ class PrintJobState {
   }
 
   ///Gets a possible [PrintJobState] instance from a native value.
+  ///
+  ///Falls back to constants that declare [value] among their additionally accepted
+  ///native values, so a platform reporting more than one code for the same condition
+  ///still resolves instead of returning `null`.
   static PrintJobState? fromNativeValue(int? value) {
     if (value != null) {
       try {
@@ -189,7 +197,13 @@ class PrintJobState {
           (element) => element.toNativeValue() == value,
         );
       } catch (e) {
-        return null;
+        try {
+          return PrintJobState.values.firstWhere(
+            (element) => element._alsoAcceptsNativeValues.contains(value),
+          );
+        } catch (e) {
+          return null;
+        }
       }
     }
     return null;
@@ -256,7 +270,7 @@ class PrintJobState {
   int get hashCode => _value.hashCode;
 
   @override
-  bool operator ==(value) => value == _value;
+  bool operator ==(other) => other == _value;
 
   ///Checks if the value is supported by the [defaultTargetPlatform].
   bool isSupported() {

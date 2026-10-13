@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_inappwebview/flutter_inappwebview.dart';
+import 'package:nosferatu500_inappwebview/nosferatu500_inappwebview.dart';
 import '../widgets/common/app_drawer.dart';
 import '../utils/constants.dart';
 import '../utils/test_registry.dart';
@@ -15,7 +15,7 @@ class HomeScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('${InAppWebView} Test Suite'),
+        title: Text('$InAppWebView Test Suite'),
         actions: [
           Padding(
             padding: const EdgeInsets.all(8.0),
@@ -165,7 +165,7 @@ class HomeScreen extends StatelessWidget {
                   vertical: 4,
                 ),
                 decoration: BoxDecoration(
-                  color: color.withOpacity(0.1),
+                  color: color.withAlpha((255 * 0.1).round()),
                   borderRadius: BorderRadius.circular(12),
                 ),
                 child: Text(

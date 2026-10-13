@@ -1,3 +1,4 @@
+import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:flutter_inappwebview_example/utils/platform_utils.dart';
 
@@ -13,6 +14,16 @@ void main() {
       final flutterVersion = PlatformUtils.getFlutterVersion();
       expect(flutterVersion, isNotEmpty);
       expect(flutterVersion, isA<String>());
+    });
+
+    test('getFlutterVersion reads "<version> (<channel>)"', () {
+      // `flutter test` defines FLUTTER_VERSION, so this takes the version branch rather than the
+      // 'Flutter SDK' fallback; asserted, so the test cannot silently fall back.
+      expect(FlutterVersion.version, isNotNull);
+      expect(
+        PlatformUtils.getFlutterVersion(),
+        '${FlutterVersion.version} (${FlutterVersion.channel ?? ''})',
+      );
     });
 
     test('getDartVersion returns non-empty string', () {

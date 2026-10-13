@@ -1,10 +1,11 @@
+import 'dart:async';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
-import 'package:flutter_inappwebview_platform_interface/flutter_inappwebview_platform_interface.dart';
+import 'package:nosferatu500_inappwebview_platform_interface/nosferatu500_inappwebview_platform_interface.dart';
 
 import '../find_interaction/find_interaction_controller.dart';
 import '../pull_to_refresh/pull_to_refresh_controller.dart';
@@ -56,6 +57,16 @@ class AndroidInAppWebViewWidgetCreationParams
     super.onEnterFullscreen,
     super.onExitFullscreen,
     super.onPageCommitVisible,
+    super.onNavigationStarted,
+    super.onNavigationRedirected,
+    super.onNavigationCompleted,
+    super.onPageLoadEvent,
+    super.onPageDomContentLoadedEvent,
+    super.onPageDeleted,
+    super.onFirstContentfulPaintMillis,
+    super.onLargestContentfulPaintMillis,
+    super.onPerformanceMarkMillis,
+    super.onRequestVisitedHistory,
     super.onTitleChanged,
     super.onWindowFocus,
     super.onWindowBlur,
@@ -89,8 +100,8 @@ class AndroidInAppWebViewWidgetCreationParams
     super.initialSettings,
     super.contextMenu,
     super.initialUserScripts,
-    this.pullToRefreshController,
-    this.findInteractionController,
+    AndroidPullToRefreshController? super.pullToRefreshController,
+    AndroidFindInteractionController? super.findInteractionController,
   });
 
   /// Constructs a [AndroidInAppWebViewWidgetCreationParams] using a
@@ -137,6 +148,16 @@ class AndroidInAppWebViewWidgetCreationParams
         onEnterFullscreen: params.onEnterFullscreen,
         onExitFullscreen: params.onExitFullscreen,
         onPageCommitVisible: params.onPageCommitVisible,
+        onNavigationStarted: params.onNavigationStarted,
+        onNavigationRedirected: params.onNavigationRedirected,
+        onNavigationCompleted: params.onNavigationCompleted,
+        onPageLoadEvent: params.onPageLoadEvent,
+        onPageDomContentLoadedEvent: params.onPageDomContentLoadedEvent,
+        onPageDeleted: params.onPageDeleted,
+        onFirstContentfulPaintMillis: params.onFirstContentfulPaintMillis,
+        onLargestContentfulPaintMillis: params.onLargestContentfulPaintMillis,
+        onPerformanceMarkMillis: params.onPerformanceMarkMillis,
+        onRequestVisitedHistory: params.onRequestVisitedHistory,
         onTitleChanged: params.onTitleChanged,
         onWindowFocus: params.onWindowFocus,
         onWindowBlur: params.onWindowBlur,
@@ -181,17 +202,19 @@ class AndroidInAppWebViewWidgetCreationParams
       );
 
   @override
-  final AndroidFindInteractionController? findInteractionController;
+  AndroidFindInteractionController? get findInteractionController =>
+      super.findInteractionController as AndroidFindInteractionController?;
 
   @override
-  final AndroidPullToRefreshController? pullToRefreshController;
+  AndroidPullToRefreshController? get pullToRefreshController =>
+      super.pullToRefreshController as AndroidPullToRefreshController?;
 }
 
-///{@macro flutter_inappwebview_platform_interface.PlatformInAppWebViewWidget}
+///{@macro nosferatu500_inappwebview_platform_interface.PlatformInAppWebViewWidget}
 class AndroidInAppWebViewWidget extends PlatformInAppWebViewWidget {
   /// Constructs a [AndroidInAppWebViewWidget].
   ///
-  ///{@macro flutter_inappwebview_platform_interface.PlatformInAppWebViewWidget}
+  ///{@macro nosferatu500_inappwebview_platform_interface.PlatformInAppWebViewWidget}
   AndroidInAppWebViewWidget(PlatformInAppWebViewWidgetCreationParams params)
     : super.implementation(
         params is AndroidInAppWebViewWidgetCreationParams
@@ -205,6 +228,14 @@ class AndroidInAppWebViewWidget extends PlatformInAppWebViewWidget {
       params as AndroidInAppWebViewWidgetCreationParams;
 
   AndroidInAppWebViewController? _controller;
+
+  /// The widget object currently in the tree for this view, moved along with [_controller].
+  ///
+  /// `PlatformViewLink` calls `onCreatePlatformView` once, with the first build's closure, and the
+  /// view is created later. A rebuild in between used to leave `_onPlatformViewCreated` running on
+  /// that first object: measured (§299), its `onWebViewCreated` and `onLoadStop` fired instead of
+  /// the live widget's, and the live widget's `dispose` had no controller to dispose.
+  _CurrentWidget? _current;
 
   AndroidHeadlessInAppWebView? get _androidHeadlessInAppWebView =>
       params.headlessWebView as AndroidHeadlessInAppWebView?;
@@ -237,10 +268,11 @@ class AndroidInAppWebViewWidget extends PlatformInAppWebViewWidget {
     }
 
     var useHybridComposition = initialSettings.useHybridComposition ?? true;
+    final current = _current ??= _CurrentWidget(this);
 
     return PlatformViewLink(
       key: params.key,
-      viewType: 'com.pichillilorenzo/flutter_inappwebview',
+      viewType: 'dev.nosferatu500.inappwebview/inappwebview',
       surfaceFactory:
           (BuildContext context, PlatformViewController controller) {
             return AndroidViewSurface(
@@ -252,37 +284,41 @@ class AndroidInAppWebViewWidget extends PlatformInAppWebViewWidget {
             );
           },
       onCreatePlatformView: (PlatformViewCreationParams params) {
-        return _createAndroidViewController(
-            hybridComposition: useHybridComposition,
-            id: params.id,
-            viewType: 'com.pichillilorenzo/flutter_inappwebview',
-            layoutDirection:
-                this.params.layoutDirection ??
-                Directionality.maybeOf(context) ??
-                TextDirection.rtl,
-            creationParams: <String, dynamic>{
-              'initialUrlRequest': this.params.initialUrlRequest?.toMap(),
-              'initialFile': this.params.initialFile,
-              'initialData': this.params.initialData?.toMap(),
-              'initialSettings': settingsMap,
-              'contextMenu': this.params.contextMenu?.toMap() ?? {},
-              'windowId': this.params.windowId,
-              'headlessWebViewId':
-                  this.params.headlessWebView?.isRunning() ?? false
-                  ? this.params.headlessWebView?.id
-                  : null,
-              'initialUserScripts':
-                  this.params.initialUserScripts
-                      ?.map((e) => e.toMap())
-                      .toList() ??
-                  [],
-              'pullToRefreshSettings': pullToRefreshSettings,
-              'keepAliveId': this.params.keepAlive?.id,
-            },
-          )
-          ..addOnPlatformViewCreatedListener(params.onPlatformViewCreated)
-          ..addOnPlatformViewCreatedListener((id) => _onPlatformViewCreated(id))
-          ..create();
+        final controller =
+            _createAndroidViewController(
+                hybridComposition: useHybridComposition,
+                id: params.id,
+                viewType: 'dev.nosferatu500.inappwebview/inappwebview',
+                layoutDirection:
+                    this.params.layoutDirection ??
+                    Directionality.maybeOf(context) ??
+                    TextDirection.rtl,
+                creationParams: <String, dynamic>{
+                  'initialUrlRequest': this.params.initialUrlRequest?.toMap(),
+                  'initialFile': this.params.initialFile,
+                  'initialData': this.params.initialData?.toMap(),
+                  'initialSettings': settingsMap,
+                  'contextMenu': this.params.contextMenu?.toMap() ?? {},
+                  'windowId': this.params.windowId,
+                  'headlessWebViewId':
+                      this.params.headlessWebView?.isRunning() ?? false
+                      ? this.params.headlessWebView?.id
+                      : null,
+                  'initialUserScripts':
+                      this.params.initialUserScripts
+                          ?.map((e) => e.toMap())
+                          .toList() ??
+                      [],
+                  'pullToRefreshSettings': pullToRefreshSettings,
+                  'keepAliveId': this.params.keepAlive?.id,
+                },
+              )
+              ..addOnPlatformViewCreatedListener(params.onPlatformViewCreated)
+              ..addOnPlatformViewCreatedListener(
+                (id) => current.widget._onPlatformViewCreated(id),
+              );
+        unawaited(controller.create());
+        return controller;
       },
     );
   }
@@ -318,7 +354,7 @@ class AndroidInAppWebViewWidget extends PlatformInAppWebViewWidget {
       viewId = params.headlessWebView?.id;
     }
     viewId = params.keepAlive?.id ?? viewId ?? id;
-    _androidHeadlessInAppWebView?.internalDispose();
+    unawaited(_androidHeadlessInAppWebView?.internalDispose());
     _controller = AndroidInAppWebViewController(
       PlatformInAppWebViewControllerCreationParams(
         id: viewId,
@@ -381,10 +417,47 @@ class AndroidInAppWebViewWidget extends PlatformInAppWebViewWidget {
         settings.useOnNavigationResponse == null) {
       settings.useOnNavigationResponse = true;
     }
+    // One platform listener carries all nine of these events, so ANY of their handlers infers the
+    // registration. Without this a handler compiles, reads correctly and never fires.
+    if ((params.onNavigationStarted != null ||
+            params.onNavigationRedirected != null ||
+            params.onNavigationCompleted != null ||
+            params.onPageLoadEvent != null ||
+            params.onPageDomContentLoadedEvent != null ||
+            params.onPageDeleted != null ||
+            params.onFirstContentfulPaintMillis != null ||
+            params.onLargestContentfulPaintMillis != null ||
+            params.onPerformanceMarkMillis != null) &&
+        settings.useNavigationListener == null) {
+      settings.useNavigationListener = true;
+    }
+    // `onPerformanceMarkMillis` is inferred ONLY from its own handler, never from the eight
+    // others. It is the one unbounded event in the family -- a page can call `performance.mark()`
+    // hundreds of times per load -- so opting into the cheap events must not silently opt the app
+    // into a channel message per mark.
+    if (params.onPerformanceMarkMillis != null &&
+        settings.useOnPerformanceMarkMillis == null) {
+      settings.useOnPerformanceMarkMillis = true;
+    }
     if (params.onShowFileChooser != null &&
         settings.useOnShowFileChooser == null) {
       settings.useOnShowFileChooser = true;
     }
+  }
+
+  @override
+  void didUpdateWidget(covariant PlatformInAppWebViewWidget oldWidget) {
+    // The same object when the app rebuilds around one platform widget: nothing to move, and
+    // clearing the old one's controller would clear this one's.
+    if (identical(oldWidget, this) || oldWidget is! AndroidInAppWebViewWidget) {
+      return;
+    }
+    _controller = oldWidget._controller;
+    oldWidget._controller = null;
+    // And its events go to this widget's callbacks from now on.
+    _controller?.updateWebViewParams(params);
+    _current = oldWidget._current?..widget = this;
+    oldWidget._current = null;
   }
 
   @override
@@ -409,4 +482,11 @@ class AndroidInAppWebViewWidget extends PlatformInAppWebViewWidget {
     // unused
     throw UnimplementedError();
   }
+}
+
+/// See [AndroidInAppWebViewWidget._current].
+class _CurrentWidget {
+  _CurrentWidget(this.widget);
+
+  AndroidInAppWebViewWidget widget;
 }

@@ -1,4 +1,4 @@
-import 'package:flutter_inappwebview_internal_annotations/flutter_inappwebview_internal_annotations.dart';
+import 'package:nosferatu500_inappwebview_internal_annotations/nosferatu500_inappwebview_internal_annotations.dart';
 
 import '../in_app_webview/platform_webview.dart';
 import '../web_uri.dart';
@@ -19,7 +19,7 @@ class JsPromptRequest_ {
   String? defaultValue;
 
   ///Indicates whether the request was made for the main frame.
-  @SupportedPlatforms(platforms: [IOSPlatform(), MacOSPlatform()])
+  @SupportedPlatforms(platforms: [IOSPlatform()])
   bool? isMainFrame;
 
   JsPromptRequest_({

@@ -29,7 +29,7 @@ void loadFile() {
 
     final InAppWebViewController controller = await controllerCompleter.future;
     // do not wait for pump to not miss the load event
-    tester.pump();
+    unawaited(tester.pump());
     await pageLoads.stream.first;
 
     await controller.loadFile(
@@ -45,6 +45,6 @@ void loadFile() {
       endsWith("test_assets/in_app_webview_initial_file_test.html"),
     );
 
-    pageLoads.close();
+    unawaited(pageLoads.close());
   }, skip: shouldSkip);
 }

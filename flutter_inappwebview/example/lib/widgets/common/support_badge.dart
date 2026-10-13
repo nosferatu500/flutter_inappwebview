@@ -25,10 +25,10 @@ class SupportBadge extends StatelessWidget {
     final borderRadius = compact ? 10.0 : 12.0;
 
     final backgroundColor = isSupported
-        ? platform.color.withOpacity(0.12)
+        ? platform.color.withAlpha((255 * 0.12).round())
         : Colors.grey.shade200;
     final borderColor = isSupported
-        ? platform.color.withOpacity(0.4)
+        ? platform.color.withAlpha((255 * 0.4).round())
         : Colors.grey.shade300;
     final iconColor = isSupported ? platform.color : Colors.grey.shade500;
 

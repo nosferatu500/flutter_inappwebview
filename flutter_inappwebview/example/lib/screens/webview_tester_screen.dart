@@ -1,5 +1,6 @@
+import 'dart:async';
 import 'package:flutter/material.dart';
-import 'package:flutter_inappwebview/flutter_inappwebview.dart';
+import 'package:nosferatu500_inappwebview/nosferatu500_inappwebview.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter_inappwebview_example/models/event_log_entry.dart';
 import 'package:flutter_inappwebview_example/models/network_request.dart';
@@ -12,7 +13,6 @@ import 'package:flutter_inappwebview_example/widgets/webview/javascript_console_
 import 'package:flutter_inappwebview_example/widgets/webview/user_script_tester_widget.dart';
 import 'package:flutter_inappwebview_example/widgets/common/app_drawer.dart';
 import 'package:flutter_inappwebview_example/providers/settings_manager.dart';
-import 'package:flutter_inappwebview_example/widgets/common/profile_selector_card.dart';
 import 'package:flutter_inappwebview_example/utils/responsive_utils.dart';
 
 /// Main screen for testing InAppWebView functionality
@@ -82,7 +82,7 @@ class _WebViewTesterScreenState extends State<WebViewTesterScreen>
       drawer: AppDrawer(),
       body: LayoutBuilder(
         builder: (context, constraints) {
-          final minRequiredHeight =
+          const minRequiredHeight =
               _minWebViewHeight +
               _minTabsHeight +
               _dividerHeight +
@@ -122,14 +122,7 @@ class _WebViewTesterScreenState extends State<WebViewTesterScreen>
           if (isMobile)
             _buildCollapsibleSettings()
           else
-            ProfileSelectorCard(
-              compact: true,
-              onEditSettingsProfile: () =>
-                  Navigator.pushNamed(context, '/settings'),
-              onEditEnvironmentProfile: () =>
-                  Navigator.pushNamed(context, '/environment-settings'),
-            ),
-          Container(height: _dividerHeight, color: Colors.grey.shade300),
+            Container(height: _dividerHeight, color: Colors.grey.shade300),
           SizedBox(height: _minTabsHeight, child: _buildBottomTabs()),
         ],
       ),
@@ -164,22 +157,15 @@ class _WebViewTesterScreenState extends State<WebViewTesterScreen>
             if (isMobile)
               _buildCollapsibleSettings()
             else
-              ProfileSelectorCard(
-                compact: true,
-                onEditSettingsProfile: () =>
-                    Navigator.pushNamed(context, '/settings'),
-                onEditEnvironmentProfile: () =>
-                    Navigator.pushNamed(context, '/environment-settings'),
+              _buildResizeHandle(
+                onDrag: (delta) {
+                  setState(() {
+                    _webViewHeight = (_webViewHeight + delta)
+                        .clamp(_minWebViewHeight, effectiveMax)
+                        .toDouble();
+                  });
+                },
               ),
-            _buildResizeHandle(
-              onDrag: (delta) {
-                setState(() {
-                  _webViewHeight = (_webViewHeight + delta)
-                      .clamp(_minWebViewHeight, effectiveMax)
-                      .toDouble();
-                });
-              },
-            ),
             Expanded(child: _buildBottomTabs()),
           ],
         );
@@ -389,16 +375,7 @@ class _WebViewTesterScreenState extends State<WebViewTesterScreen>
                 ),
               ],
             ),
-            if (_settingsExpanded) ...[
-              const SizedBox(height: 8),
-              ProfileSelectorCard(
-                compact: true,
-                onEditSettingsProfile: () =>
-                    Navigator.pushNamed(context, '/settings'),
-                onEditEnvironmentProfile: () =>
-                    Navigator.pushNamed(context, '/environment-settings'),
-              ),
-            ],
+            if (_settingsExpanded) ...[const SizedBox(height: 8)],
           ],
         ),
       ),
@@ -513,11 +490,8 @@ class _WebViewTesterScreenState extends State<WebViewTesterScreen>
         InAppWebViewSettings();
 
     return InAppWebView(
-      key: ValueKey(
-        'webview-${settingsManager.settingsRevision}-${settingsManager.environmentRevision}',
-      ),
+      key: ValueKey('webview-${settingsManager.settingsRevision}'),
       initialUrlRequest: URLRequest(url: WebUri(_urlController.text)),
-      webViewEnvironment: settingsManager.webViewEnvironment,
       initialSettings: mergedSettings,
 
       // ============================================================
@@ -559,7 +533,7 @@ class _WebViewTesterScreenState extends State<WebViewTesterScreen>
         if (url != null) {
           _urlController.text = url.toString();
         }
-        _updateNavigationState();
+        unawaited(_updateNavigationState());
         final title = await controller.getTitle();
         setState(() {
           _currentUrl = url?.toString();
@@ -646,6 +620,16 @@ class _WebViewTesterScreenState extends State<WebViewTesterScreen>
             'url': url?.toString(),
             'isForMainFrame': navigationAction.isForMainFrame,
             'navigationType': navigationAction.navigationType?.name(),
+            // iOS 13.4+: which modifier keys were held and which mouse button was used, plus
+            // whether a content rule list produced this navigation rather than the page.
+            'modifierFlags': navigationAction.modifierFlags
+                ?.map((flag) => flag.name())
+                .toList(),
+            'buttonNumber': navigationAction.buttonNumber
+                ?.map((mask) => mask.name())
+                .toList(),
+            'isContentRuleListRedirect':
+                navigationAction.isContentRuleListRedirect,
           },
         );
 
@@ -986,11 +970,15 @@ class _WebViewTesterScreenState extends State<WebViewTesterScreen>
             'mimeType': downloadStartRequest.mimeType,
             'contentLength': downloadStartRequest.contentLength,
             'suggestedFilename': downloadStartRequest.suggestedFilename,
+            // iOS only, from WKDownload: whether a user gesture started it, and the frame that
+            // asked. Both are null on Android, which reports neither.
+            'isUserInitiated': downloadStartRequest.isUserInitiated,
+            'originatingFrame': downloadStartRequest
+                .originatingFrame
+                ?.request
+                ?.url
+                ?.toString(),
           },
-        );
-        return DownloadStartResponse(
-          handled: true,
-          action: DownloadStartResponseAction.CANCEL,
         );
       },
 
@@ -1034,13 +1022,15 @@ class _WebViewTesterScreenState extends State<WebViewTesterScreen>
       // ============================================================
 
       // 36. onPrintRequest
-      onPrintRequest: (controller, url, printJobController) async {
+      onPrintRequest: (controller, url) async {
         _logEvent(
           EventType.ui,
           PlatformWebViewCreationParamsProperty.onPrintRequest.name,
           data: {'url': url?.toString()},
         );
-        return false; // Don't handle print
+        // false => the plugin prints the page and the OS print dialog appears.
+        // Returning true here would suppress it entirely.
+        return false;
       },
 
       // ============================================================
@@ -1069,6 +1059,13 @@ class _WebViewTesterScreenState extends State<WebViewTesterScreen>
 
       // 39. onPermissionRequest
       onPermissionRequest: (controller, permissionRequest) async {
+        // A resource this plugin version does not map arrives as
+        // PermissionResourceType.UNKNOWN rather than throwing inside the channel handler.
+        // There is no way to tell what was asked for, so never grant it: keep only the
+        // resources you recognise, and deny outright if that leaves nothing.
+        final known = permissionRequest.resources
+            .where((r) => r != PermissionResourceType.UNKNOWN)
+            .toList();
         _logEvent(
           EventType.ui,
           PlatformWebViewCreationParamsProperty.onPermissionRequest.name,
@@ -1076,11 +1073,14 @@ class _WebViewTesterScreenState extends State<WebViewTesterScreen>
             'resources': permissionRequest.resources
                 .map((r) => r.name)
                 .toList(),
+            'unknown': permissionRequest.resources.length - known.length,
           },
         );
         return PermissionResponse(
-          resources: permissionRequest.resources,
-          action: PermissionResponseAction.GRANT,
+          resources: known,
+          action: known.isEmpty
+              ? PermissionResponseAction.DENY
+              : PermissionResponseAction.GRANT,
         );
       },
 
@@ -1207,22 +1207,10 @@ class _WebViewTesterScreenState extends State<WebViewTesterScreen>
       },
 
       // ============================================================
-      // ICON EVENTS (2)
+      // ICON EVENTS (1)
       // ============================================================
 
-      // 49. onFaviconChanged
-      onFaviconChanged: (controller, request) {
-        _logEvent(
-          EventType.ui,
-          PlatformWebViewCreationParamsProperty.onFaviconChanged.name,
-          data: {
-            'iconSize': request.icon?.length,
-            'url': request.url?.toString(),
-          },
-        );
-      },
-
-      // 50. onReceivedTouchIconUrl
+      // 49. onReceivedTouchIconUrl
       onReceivedTouchIconUrl: (controller, url, precomposed) {
         _logEvent(
           EventType.ui,
@@ -1298,6 +1286,142 @@ class _WebViewTesterScreenState extends State<WebViewTesterScreen>
         );
       },
 
+      // 55a. shouldGoToBackForwardListItem -- iOS 26.0+, gated by
+      // useShouldGoToBackForwardListItem (inferred true because this handler is supplied).
+      // Always allows; it is here to show the payload, not to veto anything.
+      shouldGoToBackForwardListItem:
+          (controller, backForwardListItem, willUseInstantBack) {
+            _logEvent(
+              EventType.navigation,
+              PlatformWebViewCreationParamsProperty
+                  .shouldGoToBackForwardListItem
+                  .name,
+              data: {
+                'url': backForwardListItem.url?.toString(),
+                'title': backForwardListItem.title,
+                'offset': backForwardListItem.offset,
+                'willUseInstantBack': willUseInstantBack,
+              },
+            );
+            return ShouldGoToBackForwardListItemAction.ALLOW;
+          },
+
+      // 55b. onWritingToolsActiveChanged -- iOS 18.0+, and it needs Apple Intelligence and a real
+      // device to fire, so it will stay silent in the simulator.
+      onWritingToolsActiveChanged: (controller, active) {
+        _logEvent(
+          EventType.ui,
+          PlatformWebViewCreationParamsProperty
+              .onWritingToolsActiveChanged
+              .name,
+          data: {'active': active},
+        );
+      },
+
+      // 55c. onNavigationStarted / onNavigationRedirected / onNavigationCompleted -- Android only,
+      // behind WebViewFeature.NAVIGATION_LISTENER. Supplying these handlers infers
+      // `useNavigationListener`, so the settings toggle does not have to be turned on by hand.
+      // `id` is what ties the three together; `statusCode` is only non-null once committed.
+      onNavigationStarted: (controller, navigation) {
+        _logEvent(
+          EventType.navigation,
+          PlatformWebViewCreationParamsProperty.onNavigationStarted.name,
+          data: {
+            'id': navigation.id,
+            'url': navigation.url?.toString(),
+            'wasInitiatedByPage': navigation.wasInitiatedByPage,
+            'isSameDocument': navigation.isSameDocument,
+            'isReload': navigation.isReload,
+            'isBack': navigation.isBack,
+            'isForward': navigation.isForward,
+          },
+        );
+      },
+      onNavigationRedirected: (controller, navigation) {
+        _logEvent(
+          EventType.navigation,
+          PlatformWebViewCreationParamsProperty.onNavigationRedirected.name,
+          data: {'id': navigation.id, 'url': navigation.url?.toString()},
+        );
+      },
+      onNavigationCompleted: (controller, navigation) {
+        _logEvent(
+          EventType.navigation,
+          PlatformWebViewCreationParamsProperty.onNavigationCompleted.name,
+          data: {
+            'id': navigation.id,
+            'pageId': navigation.pageId,
+            'url': navigation.url?.toString(),
+            'didCommit': navigation.didCommit,
+            'didCommitErrorPage': navigation.didCommitErrorPage,
+            'statusCode': navigation.statusCode,
+            'error': navigation.webResourceError?.description,
+          },
+        );
+      },
+
+      // 55d. Page lifecycle + Web Vitals -- Android only, same NAVIGATION_LISTENER registration as
+      // the three onNavigation* events above. `page.id` is what links them to a document;
+      // `onPerformanceMarkMillis` is deliberately NOT demonstrated with a handler here, because
+      // supplying one would infer `useOnPerformanceMarkMillis` and put a channel message on every
+      // `performance.mark()` for anyone opening this screen. It is exercised from the settings
+      // editor and the integration test instead.
+      onPageLoadEvent: (controller, page) {
+        _logEvent(
+          EventType.navigation,
+          PlatformWebViewCreationParamsProperty.onPageLoadEvent.name,
+          data: {'id': page.id, 'url': page.url?.toString()},
+        );
+      },
+      onPageDomContentLoadedEvent: (controller, page) {
+        _logEvent(
+          EventType.navigation,
+          PlatformWebViewCreationParamsProperty
+              .onPageDomContentLoadedEvent
+              .name,
+          data: {'id': page.id, 'url': page.url?.toString()},
+        );
+      },
+      onPageDeleted: (controller, page) {
+        _logEvent(
+          EventType.navigation,
+          PlatformWebViewCreationParamsProperty.onPageDeleted.name,
+          data: {'id': page.id, 'url': page.url?.toString()},
+        );
+      },
+      onFirstContentfulPaintMillis: (controller, page, durationMillis) {
+        _logEvent(
+          EventType.performance,
+          PlatformWebViewCreationParamsProperty
+              .onFirstContentfulPaintMillis
+              .name,
+          data: {'id': page.id, 'durationMillis': durationMillis},
+        );
+      },
+      onLargestContentfulPaintMillis: (controller, page, durationMillis) {
+        _logEvent(
+          EventType.performance,
+          PlatformWebViewCreationParamsProperty
+              .onLargestContentfulPaintMillis
+              .name,
+          data: {'id': page.id, 'durationMillis': durationMillis},
+        );
+      },
+
+      // 55e. onRequestVisitedHistory -- Android only. Fires once per WebView, when the engine asks
+      // which URLs to treat as visited for `:visited` styling. Answering with the current address
+      // is the smallest honest demo; a real app would answer from its own history store, and only
+      // with URLs the page has a claim to know about (see the dartdoc's privacy note).
+      onRequestVisitedHistory: (controller) async {
+        final current = await controller.getUrl();
+        _logEvent(
+          EventType.navigation,
+          PlatformWebViewCreationParamsProperty.onRequestVisitedHistory.name,
+          data: {'answered': current?.toString()},
+        );
+        return current != null ? <WebUri>[current] : <WebUri>[];
+      },
+
       // 56. onContentSizeChanged
       onContentSizeChanged: (controller, oldContentSize, newContentSize) {
         _logEvent(
@@ -1315,32 +1439,6 @@ class _WebViewTesterScreenState extends State<WebViewTesterScreen>
       // ============================================================
       // SYSTEM EVENTS (2)
       // ============================================================
-
-      // 57. onProcessFailed
-      onProcessFailed: (controller, detail) {
-        _logEvent(
-          EventType.error,
-          PlatformWebViewCreationParamsProperty.onProcessFailed.name,
-          data: {
-            'kind': detail.kind.name(),
-            'reason': detail.reason?.name(),
-            'exitCode': detail.exitCode,
-          },
-        );
-      },
-
-      // 58. onAcceleratorKeyPressed
-      onAcceleratorKeyPressed: (controller, keyEventInfo) {
-        _logEvent(
-          EventType.ui,
-          PlatformWebViewCreationParamsProperty.onAcceleratorKeyPressed.name,
-          data: {
-            'keyEventKind': keyEventInfo.keyEventKind,
-            'virtualKey': keyEventInfo.virtualKey,
-            'physicalKeyStatus': keyEventInfo.physicalKeyStatus?.toMap(),
-          },
-        );
-      },
 
       // ============================================================
       // OTHER EVENTS (2)
@@ -1366,6 +1464,19 @@ class _WebViewTesterScreenState extends State<WebViewTesterScreen>
           },
         );
         return ShowFileChooserResponse(handledByClient: false);
+      },
+
+      // 61. onInsertInputSuggestion
+      onInsertInputSuggestion: (controller, inputSuggestion) {
+        _logEvent(
+          EventType.ui,
+          PlatformWebViewCreationParamsProperty.onInsertInputSuggestion.name,
+          data: {
+            // Null unless the suggestion is a UISmartReplySuggestion — the base
+            // UIInputSuggestion has no properties at all.
+            'smartReply': inputSuggestion.smartReply,
+          },
+        );
       },
     );
   }

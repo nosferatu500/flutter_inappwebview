@@ -1,5 +1,5 @@
 import 'package:flutter/foundation.dart';
-import 'package:flutter_inappwebview/flutter_inappwebview.dart';
+import 'package:nosferatu500_inappwebview/nosferatu500_inappwebview.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 import '../util.dart';
@@ -45,29 +45,6 @@ void main() {
       expect(
         () => WebMessageListener.isPropertySupported(
           PlatformWebMessageListenerCreationParamsProperty.values.first,
-          platform: defaultTargetPlatform,
-        ),
-        returnsNormally,
-      );
-    });
-
-    skippableTest('WebViewEnvironment support methods are callable', () {
-      expect(
-        () => WebViewEnvironment.isClassSupported(
-          platform: defaultTargetPlatform,
-        ),
-        returnsNormally,
-      );
-      expect(
-        () => WebViewEnvironment.isMethodSupported(
-          PlatformWebViewEnvironmentMethod.values.first,
-          platform: defaultTargetPlatform,
-        ),
-        returnsNormally,
-      );
-      expect(
-        () => WebViewEnvironment.isPropertySupported(
-          PlatformWebViewEnvironmentCreationParamsProperty.values.first,
           platform: defaultTargetPlatform,
         ),
         returnsNormally,
@@ -320,13 +297,6 @@ void main() {
       expect(
         () => CookieManager.isMethodSupported(
           PlatformCookieManagerMethod.values.first,
-          platform: defaultTargetPlatform,
-        ),
-        returnsNormally,
-      );
-      expect(
-        () => CookieManager.isPropertySupported(
-          PlatformCookieManagerCreationParamsProperty.values.first,
           platform: defaultTargetPlatform,
         ),
         returnsNormally,

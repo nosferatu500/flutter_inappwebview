@@ -1,15 +1,15 @@
 import 'dart:async';
 
 import 'package:flutter/foundation.dart';
-import 'package:flutter_inappwebview_platform_interface/flutter_inappwebview_platform_interface.dart';
+import 'package:nosferatu500_inappwebview_platform_interface/nosferatu500_inappwebview_platform_interface.dart';
 
-///{@macro flutter_inappwebview_platform_interface.PlatformHttpAuthCredentialDatabase}
+///{@macro nosferatu500_inappwebview_platform_interface.PlatformHttpAuthCredentialDatabase}
 ///
-///{@macro flutter_inappwebview_platform_interface.PlatformHttpAuthCredentialDatabase.supported_platforms}
+///{@macro nosferatu500_inappwebview_platform_interface.PlatformHttpAuthCredentialDatabase.supported_platforms}
 class HttpAuthCredentialDatabase {
-  ///{@macro flutter_inappwebview_platform_interface.PlatformHttpAuthCredentialDatabase}
+  ///{@macro nosferatu500_inappwebview_platform_interface.PlatformHttpAuthCredentialDatabase}
   ///
-  ///{@macro flutter_inappwebview_platform_interface.PlatformHttpAuthCredentialDatabase.supported_platforms}
+  ///{@macro nosferatu500_inappwebview_platform_interface.PlatformHttpAuthCredentialDatabase.supported_platforms}
   HttpAuthCredentialDatabase()
     : this.fromPlatformCreationParams(
         const PlatformHttpAuthCredentialDatabaseCreationParams(),
@@ -36,22 +36,22 @@ class HttpAuthCredentialDatabase {
     return _instance!;
   }
 
-  ///{@macro flutter_inappwebview_platform_interface.PlatformHttpAuthCredentialDatabase.getAllAuthCredentials}
+  ///{@macro nosferatu500_inappwebview_platform_interface.PlatformHttpAuthCredentialDatabase.getAllAuthCredentials}
   ///
-  ///{@macro flutter_inappwebview_platform_interface.PlatformHttpAuthCredentialDatabase.getAllAuthCredentials.supported_platforms}
+  ///{@macro nosferatu500_inappwebview_platform_interface.PlatformHttpAuthCredentialDatabase.getAllAuthCredentials.supported_platforms}
   Future<List<URLProtectionSpaceHttpAuthCredentials>> getAllAuthCredentials() =>
       platform.getAllAuthCredentials();
 
-  ///{@macro flutter_inappwebview_platform_interface.PlatformHttpAuthCredentialDatabase.getHttpAuthCredentials}
+  ///{@macro nosferatu500_inappwebview_platform_interface.PlatformHttpAuthCredentialDatabase.getHttpAuthCredentials}
   ///
-  ///{@macro flutter_inappwebview_platform_interface.PlatformHttpAuthCredentialDatabase.getHttpAuthCredentials.supported_platforms}
+  ///{@macro nosferatu500_inappwebview_platform_interface.PlatformHttpAuthCredentialDatabase.getHttpAuthCredentials.supported_platforms}
   Future<List<URLCredential>> getHttpAuthCredentials({
     required URLProtectionSpace protectionSpace,
   }) => platform.getHttpAuthCredentials(protectionSpace: protectionSpace);
 
-  ///{@macro flutter_inappwebview_platform_interface.PlatformHttpAuthCredentialDatabase.setHttpAuthCredential}
+  ///{@macro nosferatu500_inappwebview_platform_interface.PlatformHttpAuthCredentialDatabase.setHttpAuthCredential}
   ///
-  ///{@macro flutter_inappwebview_platform_interface.PlatformHttpAuthCredentialDatabase.setHttpAuthCredential.supported_platforms}
+  ///{@macro nosferatu500_inappwebview_platform_interface.PlatformHttpAuthCredentialDatabase.setHttpAuthCredential.supported_platforms}
   Future<void> setHttpAuthCredential({
     required URLProtectionSpace protectionSpace,
     required URLCredential credential,
@@ -60,9 +60,9 @@ class HttpAuthCredentialDatabase {
     credential: credential,
   );
 
-  ///{@macro flutter_inappwebview_platform_interface.PlatformHttpAuthCredentialDatabase.removeHttpAuthCredential}
+  ///{@macro nosferatu500_inappwebview_platform_interface.PlatformHttpAuthCredentialDatabase.removeHttpAuthCredential}
   ///
-  ///{@macro flutter_inappwebview_platform_interface.PlatformHttpAuthCredentialDatabase.removeHttpAuthCredential.supported_platforms}
+  ///{@macro nosferatu500_inappwebview_platform_interface.PlatformHttpAuthCredentialDatabase.removeHttpAuthCredential.supported_platforms}
   Future<void> removeHttpAuthCredential({
     required URLProtectionSpace protectionSpace,
     required URLCredential credential,
@@ -71,29 +71,29 @@ class HttpAuthCredentialDatabase {
     credential: credential,
   );
 
-  ///{@macro flutter_inappwebview_platform_interface.PlatformHttpAuthCredentialDatabase.removeHttpAuthCredentials}
+  ///{@macro nosferatu500_inappwebview_platform_interface.PlatformHttpAuthCredentialDatabase.removeHttpAuthCredentials}
   ///
-  ///{@macro flutter_inappwebview_platform_interface.PlatformHttpAuthCredentialDatabase.removeHttpAuthCredentials.supported_platforms}
+  ///{@macro nosferatu500_inappwebview_platform_interface.PlatformHttpAuthCredentialDatabase.removeHttpAuthCredentials.supported_platforms}
   Future<void> removeHttpAuthCredentials({
     required URLProtectionSpace protectionSpace,
   }) => platform.removeHttpAuthCredentials(protectionSpace: protectionSpace);
 
-  ///{@macro flutter_inappwebview_platform_interface.PlatformHttpAuthCredentialDatabase.clearAllAuthCredentials}
+  ///{@macro nosferatu500_inappwebview_platform_interface.PlatformHttpAuthCredentialDatabase.clearAllAuthCredentials}
   ///
-  ///{@macro flutter_inappwebview_platform_interface.PlatformHttpAuthCredentialDatabase.clearAllAuthCredentials.supported_platforms}
+  ///{@macro nosferatu500_inappwebview_platform_interface.PlatformHttpAuthCredentialDatabase.clearAllAuthCredentials.supported_platforms}
   Future<void> clearAllAuthCredentials() => platform.clearAllAuthCredentials();
 
-  ///{@macro flutter_inappwebview_platform_interface.PlatformHttpAuthCredentialDatabaseCreationParams.isClassSupported}
+  ///{@macro nosferatu500_inappwebview_platform_interface.PlatformHttpAuthCredentialDatabaseCreationParams.isClassSupported}
   ///
-  ///{@macro flutter_inappwebview_platform_interface.PlatformHttpAuthCredentialDatabaseCreationParams.isClassSupported.supported_platforms}
+  ///{@macro nosferatu500_inappwebview_platform_interface.PlatformHttpAuthCredentialDatabaseCreationParams.isClassSupported.supported_platforms}
   static bool isClassSupported({TargetPlatform? platform}) =>
       PlatformHttpAuthCredentialDatabase.static().isClassSupported(
         platform: platform,
       );
 
-  ///{@macro flutter_inappwebview_platform_interface.PlatformHttpAuthCredentialDatabase.isMethodSupported}
+  ///{@macro nosferatu500_inappwebview_platform_interface.PlatformHttpAuthCredentialDatabase.isMethodSupported}
   ///
-  ///{@macro flutter_inappwebview_platform_interface.PlatformHttpAuthCredentialDatabase.isMethodSupported.supported_platforms}
+  ///{@macro nosferatu500_inappwebview_platform_interface.PlatformHttpAuthCredentialDatabase.isMethodSupported.supported_platforms}
   static bool isMethodSupported(
     PlatformHttpAuthCredentialDatabaseMethod method, {
     TargetPlatform? platform,

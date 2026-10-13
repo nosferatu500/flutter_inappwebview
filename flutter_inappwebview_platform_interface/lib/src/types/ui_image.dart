@@ -1,5 +1,5 @@
 import 'dart:typed_data';
-import 'package:flutter_inappwebview_internal_annotations/flutter_inappwebview_internal_annotations.dart';
+import 'package:nosferatu500_inappwebview_internal_annotations/nosferatu500_inappwebview_internal_annotations.dart';
 
 import 'enum_method.dart';
 
@@ -19,12 +19,7 @@ class UIImage_ {
   String? name;
 
   ///The name of the system symbol image.
-  @SupportedPlatforms(
-    platforms: [
-      IOSPlatform(available: "13.0"),
-      MacOSPlatform(available: "11.0"),
-    ],
-  )
+  @SupportedPlatforms(platforms: [IOSPlatform(available: "13.0")])
   String? systemName;
 
   ///The data object containing the image data.

@@ -340,7 +340,7 @@ void interceptAjaxRequest() {
 
               var body = ajaxRequest.data.cast<int>();
               var bodyString = String.fromCharCodes(body);
-              assert(bodyString.indexOf("WebKitFormBoundary") >= 0);
+              assert(bodyString.contains("WebKitFormBoundary"));
 
               ajaxRequest.data = utf8.encode(
                 bodyString

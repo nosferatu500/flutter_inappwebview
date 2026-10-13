@@ -1,6 +1,6 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:flutter_inappwebview/flutter_inappwebview.dart';
+import 'package:nosferatu500_inappwebview/nosferatu500_inappwebview.dart';
 import 'package:flutter_inappwebview_example/utils/settings_defaults.dart';
 
 void main() {
@@ -17,17 +17,6 @@ void main() {
       enumMethod: EnumMethod.nativeValue,
     );
     final expected = InAppWebViewSettings().toMap(
-      enumMethod: EnumMethod.nativeValue,
-    );
-
-    expect(defaults, expected);
-  });
-
-  test('default environment settings map matches constructor defaults', () {
-    final defaults = defaultWebViewEnvironmentSettings().toMap(
-      enumMethod: EnumMethod.nativeValue,
-    );
-    final expected = WebViewEnvironmentSettings().toMap(
       enumMethod: EnumMethod.nativeValue,
     );
 

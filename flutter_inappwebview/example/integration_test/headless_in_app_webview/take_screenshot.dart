@@ -10,7 +10,7 @@ void takeScreenshot() {
         Completer<InAppWebViewController>();
     final Completer<void> pageLoaded = Completer<void>();
 
-    var headlessWebView = new HeadlessInAppWebView(
+    var headlessWebView = HeadlessInAppWebView(
       initialUrlRequest: URLRequest(url: TEST_URL_1),
       onWebViewCreated: (controller) {
         controllerCompleter.complete(controller);

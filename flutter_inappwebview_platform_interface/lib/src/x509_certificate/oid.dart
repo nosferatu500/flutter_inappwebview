@@ -234,7 +234,7 @@ class OID {
   static const timeStamping = OID._internal("1.3.6.1.5.5.7.3.8");
 
   @override
-  bool operator ==(value) => value == _value;
+  bool operator ==(other) => other == _value;
 
   @override
   int get hashCode => _value.hashCode;

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:flutter_inappwebview/flutter_inappwebview.dart';
+import 'package:nosferatu500_inappwebview/nosferatu500_inappwebview.dart';
 import 'package:flutter_inappwebview_example/providers/event_log_provider.dart';
 import 'package:flutter_inappwebview_example/providers/network_monitor.dart';
 import 'package:flutter_inappwebview_example/providers/settings_manager.dart';
@@ -8,19 +8,9 @@ import 'package:flutter_inappwebview_example/providers/settings_manager.dart';
 import 'mock_inappwebview_platform.dart';
 
 /// Creates a mock SettingsManager for testing.
-/// This bypasses the SharedPreferences and WebViewEnvironment dependencies.
+/// This bypasses the SharedPreferences dependency.
 class MockSettingsManager extends SettingsManager {
-  MockSettingsManager()
-    : super(
-        environmentFactory: (_) async => null,
-        environmentSupportChecker: () => false,
-      );
-
-  @override
-  WebViewEnvironmentSettings buildEnvironmentSettings() =>
-      WebViewEnvironmentSettings(
-        releaseChannels: EnvironmentReleaseChannels.STABLE,
-      );
+  MockSettingsManager() : super();
 
   @override
   InAppWebViewSettings buildSettings() => InAppWebViewSettings();

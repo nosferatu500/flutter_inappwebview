@@ -9,9 +9,11 @@ import 'in_app_webview/platform_headless_in_app_webview.dart';
 import 'in_app_webview/platform_inappwebview_controller.dart';
 import 'in_app_webview/platform_inappwebview_widget.dart';
 import 'platform_cookie_manager.dart';
+import 'platform_geolocation_permissions.dart';
 import 'platform_http_auth_credentials_database.dart';
 import 'platform_in_app_localhost_server.dart';
 import 'platform_process_global_config.dart';
+import 'platform_profile_store.dart';
 import 'platform_proxy_controller.dart';
 import 'platform_service_worker_controller.dart';
 import 'platform_tracing_controller.dart';
@@ -23,10 +25,8 @@ import 'web_authentication_session/platform_web_authenticate_session.dart';
 import 'web_message/platform_web_message_channel.dart';
 import 'web_message/platform_web_message_listener.dart';
 import 'web_message/platform_web_message_port.dart';
-import 'web_notification/platform_web_notification_controller.dart';
 import 'web_storage/platform_web_storage.dart';
 import 'web_storage/platform_web_storage_manager.dart';
-import 'webview_environment/platform_webview_environment.dart';
 
 // Logs the donation link in debug mode only once.
 // If you are reading this, consider supporting the
@@ -35,6 +35,7 @@ bool _alreadyShown = false;
 void _logPluginSupportLinks() {
   if (_alreadyShown || !kDebugMode) return;
   _alreadyShown = true;
+  // ignore: avoid_print
   print("""\n
 🚀 Hi, flutter_inappwebview here, thank you for using it! If you like this plugin → 💙 Support development https://inappwebview.dev/donate ⭐ Star on GitHub https://github.com/pichillilorenzo/flutter_inappwebview 📱 Showcase your app https://inappwebview.dev/showcase
 """);
@@ -469,6 +470,50 @@ abstract class InAppWebViewPlatform extends PlatformInterface {
     );
   }
 
+  /// Creates a new [PlatformGeolocationPermissions].
+  ///
+  /// This function should only be called by the app-facing package.
+  /// Look at using [GeolocationPermissions] in `flutter_inappwebview` instead.
+  PlatformGeolocationPermissions createPlatformGeolocationPermissions(
+    PlatformGeolocationPermissionsCreationParams params,
+  ) {
+    throw UnimplementedError(
+      'createPlatformGeolocationPermissions is not implemented on the current platform.',
+    );
+  }
+
+  /// Creates a new empty [PlatformGeolocationPermissions] to access static methods.
+  ///
+  /// This function should only be called by the app-facing package.
+  /// Look at using [GeolocationPermissions] in `flutter_inappwebview` instead.
+  PlatformGeolocationPermissions createPlatformGeolocationPermissionsStatic() {
+    throw UnimplementedError(
+      'createPlatformGeolocationPermissionsStatic is not implemented on the current platform.',
+    );
+  }
+
+  /// Creates a new [PlatformProfileStore].
+  ///
+  /// This function should only be called by the app-facing package.
+  /// Look at using [ProfileStore] in `flutter_inappwebview` instead.
+  PlatformProfileStore createPlatformProfileStore(
+    PlatformProfileStoreCreationParams params,
+  ) {
+    throw UnimplementedError(
+      'createPlatformProfileStore is not implemented on the current platform.',
+    );
+  }
+
+  /// Creates a new empty [PlatformProfileStore] to access static methods.
+  ///
+  /// This function should only be called by the app-facing package.
+  /// Look at using [ProfileStore] in `flutter_inappwebview` instead.
+  PlatformProfileStore createPlatformProfileStoreStatic() {
+    throw UnimplementedError(
+      'createPlatformProfileStoreStatic is not implemented on the current platform.',
+    );
+  }
+
   /// Creates a new [PlatformProxyController].
   ///
   /// This function should only be called by the app-facing package.
@@ -686,51 +731,6 @@ abstract class InAppWebViewPlatform extends PlatformInterface {
   PlatformChromeSafariBrowser createPlatformChromeSafariBrowserStatic() {
     throw UnimplementedError(
       'createPlatformChromeSafariBrowserStatic is not implemented on the current platform.',
-    );
-  }
-
-  /// Creates a new [PlatformWebViewEnvironment].
-  ///
-  /// This function should only be called by the app-facing package.
-  /// Look at using [WebViewEnvironment] in `flutter_inappwebview` instead.
-  PlatformWebViewEnvironment createPlatformWebViewEnvironment(
-    PlatformWebViewEnvironmentCreationParams params,
-  ) {
-    throw UnimplementedError(
-      'createPlatformWebViewEnvironment is not implemented on the current platform.',
-    );
-  }
-
-  /// Creates a new empty [PlatformWebViewEnvironment] to access static methods.
-  ///
-  /// This function should only be called by the app-facing package.
-  /// Look at using [WebViewEnvironment] in `flutter_inappwebview` instead.
-  PlatformWebViewEnvironment createPlatformWebViewEnvironmentStatic() {
-    throw UnimplementedError(
-      'createPlatformWebViewEnvironmentStatic is not implemented on the current platform.',
-    );
-  }
-
-  /// Creates a new [PlatformWebNotificationController].
-  ///
-  /// This function should only be called by the app-facing package.
-  /// Look at using [WebNotificationController] in `flutter_inappwebview` instead.
-  PlatformWebNotificationController createPlatformWebNotificationController(
-    PlatformWebNotificationControllerCreationParams params,
-  ) {
-    throw UnimplementedError(
-      'createPlatformWebNotificationController is not implemented on the current platform.',
-    );
-  }
-
-  /// Creates a new empty [PlatformWebNotificationController] to access static methods.
-  ///
-  /// This function should only be called by the app-facing package.
-  /// Look at using [WebNotificationController] in `flutter_inappwebview` instead.
-  PlatformWebNotificationController
-  createPlatformWebNotificationControllerStatic() {
-    throw UnimplementedError(
-      'createPlatformWebNotificationControllerStatic is not implemented on the current platform.',
     );
   }
 }

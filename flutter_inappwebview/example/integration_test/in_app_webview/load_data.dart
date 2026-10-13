@@ -29,10 +29,10 @@ void loadData() {
 
     final InAppWebViewController controller = await controllerCompleter.future;
     // do not wait for pump to not miss the load event
-    tester.pump();
+    unawaited(tester.pump());
     await pageLoads.stream.first;
 
-    final data = """
+    const data = """
 <!doctype html>
 <html lang="en">
     <head>
@@ -47,7 +47,7 @@ void loadData() {
     </body>
 </html>
 """;
-    final mimeType = 'text/html';
+    const mimeType = 'text/html';
 
     await controller.loadData(
       data: data,
@@ -63,9 +63,9 @@ void loadData() {
     if (!kIsWeb) {
       expect(currentUrl, TEST_CROSS_PLATFORM_URL_1.toString());
     } else {
-      expect(currentUrl, 'data:$mimeType,' + Uri.encodeComponent(data));
+      expect(currentUrl, 'data:$mimeType,${Uri.encodeComponent(data)}');
     }
 
-    pageLoads.close();
+    unawaited(pageLoads.close());
   }, skip: shouldSkip);
 }

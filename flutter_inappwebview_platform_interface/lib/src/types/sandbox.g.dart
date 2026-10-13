@@ -10,10 +10,28 @@ part of 'sandbox.dart';
 class Sandbox {
   final String? _value;
   final String? _nativeValue;
-  const Sandbox._internal(this._value, this._nativeValue);
+
+  /// Native values accepted *in addition* to [_nativeValue] when resolving from a
+  /// native value. Inbound only -- [toNativeValue] still returns [_nativeValue].
+  // ignore: unused_field
+  final List<String?> _alsoAcceptsNativeValues;
+  const Sandbox._internal(
+    this._value,
+    this._nativeValue, [
+    this._alsoAcceptsNativeValues = const [],
+  ]);
   // ignore: unused_element
-  factory Sandbox._internalMultiPlatform(String? value, Function nativeValue) =>
-      Sandbox._internal(value, nativeValue());
+  factory Sandbox._internalMultiPlatform(
+    String? value,
+    Function nativeValue, [
+    Function? alsoAcceptsNativeValues,
+  ]) => Sandbox._internal(
+    value,
+    nativeValue(),
+    alsoAcceptsNativeValues != null
+        ? alsoAcceptsNativeValues() as List<String?>
+        : const [],
+  );
 
   ///Allow all.
   static const ALLOW_ALL = [_ALL];
@@ -210,7 +228,7 @@ class Sandbox {
   int get hashCode => _value.hashCode;
 
   @override
-  bool operator ==(value) => value == _value;
+  bool operator ==(other) => other == _value;
 
   ///Checks if the value is supported by the [defaultTargetPlatform].
   bool isSupported() {

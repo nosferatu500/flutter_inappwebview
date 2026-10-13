@@ -22,7 +22,7 @@ class _SupportMatrixScreenState extends State<SupportMatrixScreen>
 
   final TextEditingController _searchController = TextEditingController();
   String _searchQuery = '';
-  Set<SupportedPlatform> _selectedPlatforms = {};
+  final Set<SupportedPlatform> _selectedPlatforms = {};
   bool _showOnlySupported = false;
   bool _showMethods = true;
   bool _showEvents = true;
@@ -137,12 +137,8 @@ class _SupportMatrixScreenState extends State<SupportMatrixScreen>
 
       if (classDef.methods.isNotEmpty) {
         buffer.writeln('### Methods\n');
-        buffer.writeln(
-          '| Method | Android | iOS | macOS | Web | Windows | Linux |',
-        );
-        buffer.writeln(
-          '|--------|---------|-----|-------|-----|---------|-------|',
-        );
+        buffer.writeln(_markdownHeader('Method'));
+        buffer.writeln(_markdownDivider('Method'));
         for (final method in classDef.methods) {
           final supportedPlatforms =
               SupportChecker.getSupportedPlatformsForMethod(
@@ -151,12 +147,8 @@ class _SupportMatrixScreenState extends State<SupportMatrixScreen>
               );
           final row = [
             '`${method.name}`',
-            _platformMark(supportedPlatforms, SupportedPlatform.android),
-            _platformMark(supportedPlatforms, SupportedPlatform.ios),
-            _platformMark(supportedPlatforms, SupportedPlatform.macos),
-            _platformMark(supportedPlatforms, SupportedPlatform.web),
-            _platformMark(supportedPlatforms, SupportedPlatform.windows),
-            _platformMark(supportedPlatforms, SupportedPlatform.linux),
+            for (final platform in SupportedPlatform.values)
+              _platformMark(supportedPlatforms, platform),
           ];
           buffer.writeln('| ${row.join(' | ')} |');
         }
@@ -165,12 +157,8 @@ class _SupportMatrixScreenState extends State<SupportMatrixScreen>
 
       if (classDef.events.isNotEmpty) {
         buffer.writeln('### Events\n');
-        buffer.writeln(
-          '| Event | Android | iOS | macOS | Web | Windows | Linux |',
-        );
-        buffer.writeln(
-          '|-------|---------|-----|-------|-----|---------|-------|',
-        );
+        buffer.writeln(_markdownHeader('Event'));
+        buffer.writeln(_markdownDivider('Event'));
         for (final event in classDef.events) {
           final supportedPlatforms =
               SupportChecker.getSupportedPlatformsForEvent(
@@ -179,12 +167,8 @@ class _SupportMatrixScreenState extends State<SupportMatrixScreen>
               );
           final row = [
             '`${event.name}`',
-            _platformMark(supportedPlatforms, SupportedPlatform.android),
-            _platformMark(supportedPlatforms, SupportedPlatform.ios),
-            _platformMark(supportedPlatforms, SupportedPlatform.macos),
-            _platformMark(supportedPlatforms, SupportedPlatform.web),
-            _platformMark(supportedPlatforms, SupportedPlatform.windows),
-            _platformMark(supportedPlatforms, SupportedPlatform.linux),
+            for (final platform in SupportedPlatform.values)
+              _platformMark(supportedPlatforms, platform),
           ];
           buffer.writeln('| ${row.join(' | ')} |');
         }
@@ -200,6 +184,16 @@ class _SupportMatrixScreenState extends State<SupportMatrixScreen>
       ),
     );
   }
+
+  /// Header row for an exported table, one column per [SupportedPlatform] so
+  /// the export cannot drift out of step with the enum the screen renders.
+  String _markdownHeader(String firstColumn) =>
+      '| $firstColumn | '
+      '${SupportedPlatform.values.map((p) => p.displayName).join(' | ')} |';
+
+  String _markdownDivider(String firstColumn) =>
+      '|${'-' * (firstColumn.length + 2)}|'
+      '${SupportedPlatform.values.map((p) => '-' * (p.displayName.length + 2)).join('|')}|';
 
   String _platformMark(
     Set<SupportedPlatform> platforms,
@@ -307,9 +301,11 @@ class _SupportMatrixScreenState extends State<SupportMatrixScreen>
                     vertical: 6,
                   ),
                   decoration: BoxDecoration(
-                    color: platform.color.withOpacity(0.1),
+                    color: platform.color.withAlpha((255 * 0.1).round()),
                     borderRadius: BorderRadius.circular(16),
-                    border: Border.all(color: platform.color.withOpacity(0.3)),
+                    border: Border.all(
+                      color: platform.color.withAlpha((255 * 0.3).round()),
+                    ),
                   ),
                   child: Row(
                     mainAxisSize: MainAxisSize.min,
@@ -343,7 +339,7 @@ class _SupportMatrixScreenState extends State<SupportMatrixScreen>
         color: Colors.white,
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.05),
+            color: Colors.black.withAlpha((255 * 0.05).round()),
             blurRadius: 4,
             offset: const Offset(0, 2),
           ),

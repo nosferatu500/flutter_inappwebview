@@ -1,4 +1,4 @@
-group = 'com.pichillilorenzo.flutter_inappwebview_android'
+group = 'dev.nosferatu500.inappwebview'
 version = '1.0-SNAPSHOT'
 
 // No buildscript block: this module requires AGP 9 and is always built as a
@@ -15,13 +15,31 @@ rootProject.allprojects {
 apply plugin: 'com.android.library'
 
 android {
-    namespace = 'com.pichillilorenzo.flutter_inappwebview_android'
-    compileSdk = flutter.compileSdkVersion
+    namespace = 'dev.nosferatu500.inappwebview'
+    // Not flutter.compileSdkVersion (36 on Flutter 3.44): androidx.core 1.19.0 publishes AAR
+    // metadata requiring consumers to compile against API 37+, and lint fails the build rather
+    // than warning when that is unmet. The main example already pins 37 for the same class of
+    // reason (permission_handler 13). Drop back to flutter.compileSdkVersion once Flutter's
+    // default reaches 37.
+    compileSdk = 37
 
-    // AGP 9 enables built-in Kotlin for every module it is applied to. This
-    // plugin has no Kotlin sources, so opt out to drop an empty Kotlin compile
-    // task and the implicit kotlin-stdlib dependency it would add to consumers.
-    enableKotlin = false
+    // This module's sources are Kotlin, so built-in Kotlin must stay on -- do not
+    // reintroduce `enableKotlin = false`. Nothing else is needed here: whichever
+    // Kotlin toolchain the consuming app ends up with compiles this module.
+    //
+    //   * app on AGP 9 defaults (android.builtInKotlin=true): AGP's built-in
+    //     Kotlin is applied to every module, including this one.
+    //   * app with android.builtInKotlin=false (still required whenever some
+    //     other plugin applies org.jetbrains.kotlin.android, which built-in
+    //     Kotlin rejects): Flutter's own Gradle plugin applies `kotlin-android`
+    //     to every plugin subproject that applies AGP and does not already
+    //     declare KGP -- see FlutterPluginUtils.kt. Both example apps here take
+    //     this path.
+    //
+    // Declaring a Kotlin plugin explicitly would break one of those two cases:
+    // `com.android.built-in-kotlin` is not on this module's classpath unless the
+    // app resolves it, and applying KGP here fails under built-in Kotlin with
+    // "Cannot add extension with name 'kotlin'".
 
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_17
@@ -46,9 +64,54 @@ android {
     }
 }
 
+// Kotlin defaults its jvmTarget to the Gradle JVM, which leaves it inconsistent
+// with the 17 set in compileOptions above ("Inconsistent JVM-target
+// compatibility detected"). Set it on the compile tasks rather than through a
+// DSL block: the `android { kotlinOptions { } }` extension only exists under
+// KGP, and this module is also built under AGP's built-in Kotlin, which does not
+// provide it. Task names are the same either way.
+tasks.matching { it.name ==~ /compile.*Kotlin/ }.configureEach {
+    compilerOptions.jvmTarget = org.jetbrains.kotlin.gradle.dsl.JvmTarget.JVM_17
+
+    // This module's Kotlin warning baseline is zero and is meant to stay there.
+    // `allWarningsAsErrors = true` unconditionally would be the wrong way to hold
+    // it: this module is compiled inside the *consuming app's* build, so a future
+    // Kotlin release that introduces a new warning in our sources would break
+    // THEIR build, over a warning they cannot fix and did not write.
+    //
+    // So it is opt-in, and both example projects opt in via their own
+    // gradle.properties -- which are not published. Every gate in this repo
+    // therefore compiles strict, and no consumer ever does.
+    compilerOptions.allWarningsAsErrors.set(
+            providers.gradleProperty('inappwebview.strictKotlin')
+                    .map { it == 'true' }
+                    .orElse(false)
+    )
+}
+
 dependencies {
+    // Used directly -- ContextCompat, ViewCompat, WindowCompat, WindowInsetsCompat,
+    // WindowInsetsControllerCompat, BundleCompat and FileProvider, across 4 files -- but it was
+    // reaching the classpath only transitively (appcompat -> fragment -> core), which holds only
+    // for as long as appcompat keeps bringing it. Pinned current, like the other androidx
+    // dependencies here, rather than at the 1.13.1 that happened to resolve.
+    implementation 'androidx.core:core:1.19.0'
     implementation 'androidx.webkit:webkit:1.17.0'
     implementation 'androidx.browser:browser:1.10.0'
     implementation 'androidx.appcompat:appcompat:1.8.0'
     implementation 'androidx.swiperefreshlayout:swiperefreshlayout:1.2.0'
+
+    // JVM unit tests (src/test). These never reach a consumer: `testImplementation`
+    // is not part of the published AAR's POM.
+    //
+    // JUnit 4, not 5: AGP wires 4 up for `testDebugUnitTest` with no extra plugin,
+    // and this module cannot casually add Gradle plugins (see the note above).
+    testImplementation 'junit:junit:4.13.2'
+    // A real org.json. Unit tests otherwise link against the stub in android.jar,
+    // where every method throws "Stub!", which would make Util.JSONStringify
+    // untestable. AGP puts android.jar last on the unit-test classpath, so this
+    // wins. Deliberately NOT `testOptions.unitTests.returnDefaultValues = true`:
+    // that turns every unmocked framework call into a silent 0/null and would hide
+    // exactly the kind of bug these tests exist to catch.
+    testImplementation 'org.json:json:20250107'
 }

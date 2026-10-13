@@ -1,4 +1,4 @@
-import 'package:flutter_inappwebview_internal_annotations/flutter_inappwebview_internal_annotations.dart';
+import 'package:nosferatu500_inappwebview_internal_annotations/nosferatu500_inappwebview_internal_annotations.dart';
 
 import '../in_app_webview/platform_webview.dart';
 import '../types/in_app_webview_hit_test_result.dart';
@@ -49,14 +49,4 @@ class ContextMenu_ {
     this.settings,
     this.onContextMenuActionItemClicked,
   });
-
-  @ExchangeableObjectMethod(toMapMergeWith: true)
-  // ignore: unused_element
-  Map<String, dynamic> _toMapMergeWith({EnumMethod? enumMethod}) {
-    return {
-      "settings": (settings as ContextMenuSettings?)?.toMap(
-        enumMethod: enumMethod,
-      ),
-    };
-  }
 }

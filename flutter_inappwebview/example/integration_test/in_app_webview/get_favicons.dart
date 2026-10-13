@@ -32,7 +32,7 @@ void getFavicons() {
     await tester.pump();
     await pageLoaded.future;
 
-    final List<Favicon>? favicons = await controller.getFavicons();
+    final List<Favicon> favicons = await controller.getFavicons();
     expect(favicons, isNotNull);
     expect(favicons, isNotEmpty);
   }, skip: shouldSkip);

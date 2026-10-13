@@ -1,13 +1,15 @@
-import 'package:flutter_inappwebview_platform_interface/flutter_inappwebview_platform_interface.dart';
+import 'package:nosferatu500_inappwebview_platform_interface/nosferatu500_inappwebview_platform_interface.dart';
 
 import 'chrome_safari_browser/chrome_safari_browser.dart';
 import 'cookie_manager.dart';
 import 'find_interaction/main.dart';
 import 'http_auth_credentials_database.dart';
 import 'in_app_browser/in_app_browser.dart';
+import 'geolocation_permissions.dart';
 import 'in_app_webview/main.dart';
 import 'print_job/main.dart';
 import 'process_global_config.dart';
+import 'profile_store.dart';
 import 'proxy_controller.dart';
 import 'pull_to_refresh/main.dart';
 import 'service_worker_controller.dart';
@@ -32,7 +34,7 @@ class AndroidInAppWebViewPlatform extends InAppWebViewPlatform {
   AndroidCookieManager createPlatformCookieManager(
     PlatformCookieManagerCreationParams params,
   ) {
-    return AndroidCookieManager(params);
+    return AndroidCookieManager.instance();
   }
 
   /// Creates a new empty [AndroidCookieManager] to access static methods.
@@ -300,7 +302,7 @@ class AndroidInAppWebViewPlatform extends InAppWebViewPlatform {
   AndroidHttpAuthCredentialDatabase createPlatformHttpAuthCredentialDatabase(
     PlatformHttpAuthCredentialDatabaseCreationParams params,
   ) {
-    return AndroidHttpAuthCredentialDatabase(params);
+    return AndroidHttpAuthCredentialDatabase.instance();
   }
 
   /// Creates a new empty [AndroidHttpAuthCredentialDatabase] to access static methods.
@@ -341,7 +343,7 @@ class AndroidInAppWebViewPlatform extends InAppWebViewPlatform {
   AndroidProcessGlobalConfig createPlatformProcessGlobalConfig(
     PlatformProcessGlobalConfigCreationParams params,
   ) {
-    return AndroidProcessGlobalConfig(params);
+    return AndroidProcessGlobalConfig.instance();
   }
 
   /// Creates a new empty [AndroidProcessGlobalConfig] to access static methods.
@@ -353,6 +355,46 @@ class AndroidInAppWebViewPlatform extends InAppWebViewPlatform {
     return AndroidProcessGlobalConfig.static();
   }
 
+  /// Creates a new [AndroidGeolocationPermissions].
+  ///
+  /// This function should only be called by the app-facing package.
+  /// Look at using [GeolocationPermissions] in `flutter_inappwebview` instead.
+  @override
+  AndroidGeolocationPermissions createPlatformGeolocationPermissions(
+    PlatformGeolocationPermissionsCreationParams params,
+  ) {
+    return AndroidGeolocationPermissions.instance();
+  }
+
+  /// Creates a new empty [AndroidGeolocationPermissions] to access static methods.
+  ///
+  /// This function should only be called by the app-facing package.
+  /// Look at using [GeolocationPermissions] in `flutter_inappwebview` instead.
+  @override
+  AndroidGeolocationPermissions createPlatformGeolocationPermissionsStatic() {
+    return AndroidGeolocationPermissions.static();
+  }
+
+  /// Creates a new [AndroidProfileStore].
+  ///
+  /// This function should only be called by the app-facing package.
+  /// Look at using [ProfileStore] in `flutter_inappwebview` instead.
+  @override
+  AndroidProfileStore createPlatformProfileStore(
+    PlatformProfileStoreCreationParams params,
+  ) {
+    return AndroidProfileStore.instance();
+  }
+
+  /// Creates a new empty [AndroidProfileStore] to access static methods.
+  ///
+  /// This function should only be called by the app-facing package.
+  /// Look at using [ProfileStore] in `flutter_inappwebview` instead.
+  @override
+  AndroidProfileStore createPlatformProfileStoreStatic() {
+    return AndroidProfileStore.static();
+  }
+
   /// Creates a new [AndroidProxyController].
   ///
   /// This function should only be called by the app-facing package.
@@ -361,7 +403,7 @@ class AndroidInAppWebViewPlatform extends InAppWebViewPlatform {
   AndroidProxyController createPlatformProxyController(
     PlatformProxyControllerCreationParams params,
   ) {
-    return AndroidProxyController(params);
+    return AndroidProxyController.instance();
   }
 
   /// Creates a new empty [AndroidProxyController] to access static methods.
@@ -381,7 +423,7 @@ class AndroidInAppWebViewPlatform extends InAppWebViewPlatform {
   AndroidServiceWorkerController createPlatformServiceWorkerController(
     PlatformServiceWorkerControllerCreationParams params,
   ) {
-    return AndroidServiceWorkerController(params);
+    return AndroidServiceWorkerController.instance();
   }
 
   /// Creates a new empty [AndroidServiceWorkerController] to access static methods.
@@ -401,7 +443,7 @@ class AndroidInAppWebViewPlatform extends InAppWebViewPlatform {
   AndroidTracingController createPlatformTracingController(
     PlatformTracingControllerCreationParams params,
   ) {
-    return AndroidTracingController(params);
+    return AndroidTracingController.instance();
   }
 
   /// Creates a new empty [AndroidTracingController] to access static methods.
@@ -502,7 +544,7 @@ class AndroidInAppWebViewPlatform extends InAppWebViewPlatform {
   wv.AndroidWebViewFeature createPlatformWebViewFeature(
     PlatformWebViewFeatureCreationParams params,
   ) {
-    return wv.AndroidWebViewFeature(params);
+    return wv.AndroidWebViewFeature.instance();
   }
 
   /// Creates a new empty [wv.AndroidWebViewFeature] to access static methods.
@@ -542,7 +584,7 @@ class AndroidInAppWebViewPlatform extends InAppWebViewPlatform {
   AndroidWebStorageManager createPlatformWebStorageManager(
     PlatformWebStorageManagerCreationParams params,
   ) {
-    return AndroidWebStorageManager(params);
+    return AndroidWebStorageManager.instance();
   }
 
   /// Creates a new empty [AndroidWebStorageManager] to access static methods.
@@ -581,15 +623,6 @@ class AndroidInAppWebViewPlatform extends InAppWebViewPlatform {
   // exception.                                                               //
   // ************************************************************************ //
 
-  /// Creates a new empty [PlatformWebViewEnvironment] to access static methods.
-  ///
-  /// This function should only be called by the app-facing package.
-  /// Look at using [WebViewEnvironment] in `flutter_inappwebview` instead.
-  @override
-  PlatformWebViewEnvironment createPlatformWebViewEnvironmentStatic() {
-    return _PlatformWebViewEnvironment.static();
-  }
-
   /// Creates a new empty [PlatformWebAuthenticationSession] to access static methods.
   ///
   /// This function should only be called by the app-facing package.
@@ -598,16 +631,6 @@ class AndroidInAppWebViewPlatform extends InAppWebViewPlatform {
   PlatformWebAuthenticationSession
   createPlatformWebAuthenticationSessionStatic() {
     return _PlatformWebAuthenticationSession.static();
-  }
-
-  /// Creates a new empty [PlatformWebNotificationController] to access static methods.
-  ///
-  /// This function should only be called by the app-facing package.
-  /// Look at using [WebNotificationController] in `flutter_inappwebview` instead.
-  @override
-  PlatformWebNotificationController
-  createPlatformWebNotificationControllerStatic() {
-    return _PlatformWebNotificationController.static();
   }
 }
 
@@ -621,29 +644,4 @@ class _PlatformWebAuthenticationSession
       );
 
   factory _PlatformWebAuthenticationSession.static() => _staticValue;
-}
-
-class _PlatformWebViewEnvironment extends PlatformWebViewEnvironment {
-  _PlatformWebViewEnvironment(super.params) : super.implementation();
-  static final _PlatformWebViewEnvironment _staticValue =
-      _PlatformWebViewEnvironment(
-        const PlatformWebViewEnvironmentCreationParams(),
-      );
-
-  factory _PlatformWebViewEnvironment.static() => _staticValue;
-}
-
-class _PlatformWebNotificationController
-    extends PlatformWebNotificationController {
-  _PlatformWebNotificationController(super.params) : super.implementation();
-
-  static final _PlatformWebNotificationController _staticValue =
-      _PlatformWebNotificationController(
-        PlatformWebNotificationControllerCreationParams(
-          id: '',
-          notification: WebNotification(),
-        ),
-      );
-
-  factory _PlatformWebNotificationController.static() => _staticValue;
 }

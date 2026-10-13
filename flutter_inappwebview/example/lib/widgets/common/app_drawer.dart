@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_inappwebview/flutter_inappwebview.dart';
+import 'package:nosferatu500_inappwebview/nosferatu500_inappwebview.dart';
 import 'package:flutter_inappwebview_example/models/navigation_section.dart';
 import 'package:flutter_inappwebview_example/utils/responsive_utils.dart';
 import 'package:pointer_interceptor/pointer_interceptor.dart';
@@ -28,8 +28,8 @@ class AppDrawer extends StatelessWidget {
     final headerSubtitleSize = isMobile ? 12.0 : 14.0;
     final sectionTitleSize = isMobile ? 11.0 : 12.0;
     final itemTitleSize = isMobile ? 13.0 : 14.0;
-    final tilePadding = EdgeInsets.symmetric(horizontal: 16);
-    final tileVerticalPadding = 8.0;
+    const tilePadding = EdgeInsets.symmetric(horizontal: 16);
+    const tileVerticalPadding = 8.0;
     final children = <Widget>[
       DrawerHeader(
         decoration: const BoxDecoration(color: Colors.blue),

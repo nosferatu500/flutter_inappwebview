@@ -1,6 +1,6 @@
 import 'dart:ui';
 import 'package:flutter/foundation.dart';
-import 'package:flutter_inappwebview_internal_annotations/flutter_inappwebview_internal_annotations.dart';
+import 'package:nosferatu500_inappwebview_internal_annotations/nosferatu500_inappwebview_internal_annotations.dart';
 
 import '../types/attributed_string.dart';
 import '../types/pull_to_refresh_size.dart';

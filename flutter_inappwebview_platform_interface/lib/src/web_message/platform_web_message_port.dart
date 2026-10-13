@@ -1,5 +1,5 @@
 import 'package:flutter/foundation.dart';
-import 'package:flutter_inappwebview_internal_annotations/flutter_inappwebview_internal_annotations.dart';
+import 'package:nosferatu500_inappwebview_internal_annotations/nosferatu500_inappwebview_internal_annotations.dart';
 import 'package:plugin_platform_interface/plugin_platform_interface.dart';
 
 import '../inappwebview_platform.dart';
@@ -25,7 +25,7 @@ class PlatformWebMessagePortCreationParams {
   }
 }
 
-///{@template flutter_inappwebview_platform_interface.PlatformWebMessagePort}
+///{@template nosferatu500_inappwebview_platform_interface.PlatformWebMessagePort}
 ///The representation of the [HTML5 message ports](https://html.spec.whatwg.org/multipage/comms.html#messageport).
 ///
 ///A Message port represents one endpoint of a Message Channel. In Android webview, there is no separate Message Channel object.
@@ -46,23 +46,15 @@ class PlatformWebMessagePortCreationParams {
 ///It is possible to transfer both ports of a channel to JavaScript, for example for communication between subframes.
 ///{@endtemplate}
 ///
-///{@macro flutter_inappwebview_platform_interface.PlatformWebMessagePort.supported_platforms}
-@SupportedPlatforms(
-  platforms: [
-    AndroidPlatform(),
-    IOSPlatform(),
-    MacOSPlatform(),
-    LinuxPlatform(note: 'Implemented via JavaScript MessageChannel API.'),
-    WindowsPlatform(note: 'Implemented via JavaScript MessageChannel API.'),
-  ],
-)
+///{@macro nosferatu500_inappwebview_platform_interface.PlatformWebMessagePort.supported_platforms}
+@SupportedPlatforms(platforms: [AndroidPlatform(), IOSPlatform()])
 abstract class PlatformWebMessagePort extends PlatformInterface
     implements IWebMessagePort {
   /// Creates a new [PlatformWebMessagePort]
   factory PlatformWebMessagePort(PlatformWebMessagePortCreationParams params) {
     assert(
       InAppWebViewPlatform.instance != null,
-      'A platform implementation for `flutter_inappwebview` has not been set. Please '
+      'A platform implementation for `nosferatu500_inappwebview` has not been set. Please '
       'ensure that an implementation of `InAppWebViewPlatform` has been set to '
       '`InAppWebViewPlatform.instance` before use. For unit testing, '
       '`InAppWebViewPlatform.instance` can be set with your own test implementation.',
@@ -92,60 +84,36 @@ abstract class PlatformWebMessagePort extends PlatformInterface
 }
 
 abstract class IWebMessagePort {
-  ///{@template flutter_inappwebview_platform_interface.PlatformWebMessagePort.setWebMessageCallback}
+  ///{@template nosferatu500_inappwebview_platform_interface.PlatformWebMessagePort.setWebMessageCallback}
   ///Sets a callback to receive message events on the main thread.
   ///{@endtemplate}
   ///
-  ///{@macro flutter_inappwebview_platform_interface.PlatformWebMessagePort.setWebMessageCallback.supported_platforms}
-  @SupportedPlatforms(
-    platforms: [
-      AndroidPlatform(),
-      IOSPlatform(),
-      MacOSPlatform(),
-      LinuxPlatform(note: 'Implemented via JavaScript MessageChannel API.'),
-      WindowsPlatform(note: 'Implemented via JavaScript MessageChannel API.'),
-    ],
-  )
+  ///{@macro nosferatu500_inappwebview_platform_interface.PlatformWebMessagePort.setWebMessageCallback.supported_platforms}
+  @SupportedPlatforms(platforms: [AndroidPlatform(), IOSPlatform()])
   Future<void> setWebMessageCallback(WebMessageCallback? onMessage) {
     throw UnimplementedError(
       'setWebMessageCallback is not implemented on the current platform',
     );
   }
 
-  ///{@template flutter_inappwebview_platform_interface.PlatformWebMessagePort.postMessage}
+  ///{@template nosferatu500_inappwebview_platform_interface.PlatformWebMessagePort.postMessage}
   ///Post a WebMessage to the entangled port.
   ///{@endtemplate}
   ///
-  ///{@macro flutter_inappwebview_platform_interface.PlatformWebMessagePort.postMessage.supported_platforms}
-  @SupportedPlatforms(
-    platforms: [
-      AndroidPlatform(),
-      IOSPlatform(),
-      MacOSPlatform(),
-      LinuxPlatform(note: 'Implemented via JavaScript MessageChannel API.'),
-      WindowsPlatform(note: 'Implemented via JavaScript MessageChannel API.'),
-    ],
-  )
+  ///{@macro nosferatu500_inappwebview_platform_interface.PlatformWebMessagePort.postMessage.supported_platforms}
+  @SupportedPlatforms(platforms: [AndroidPlatform(), IOSPlatform()])
   Future<void> postMessage(WebMessage message) {
     throw UnimplementedError(
       'postMessage is not implemented on the current platform',
     );
   }
 
-  ///{@template flutter_inappwebview_platform_interface.PlatformWebMessagePort.close}
+  ///{@template nosferatu500_inappwebview_platform_interface.PlatformWebMessagePort.close}
   ///Close the message port and free any resources associated with it.
   ///{@endtemplate}
   ///
-  ///{@macro flutter_inappwebview_platform_interface.PlatformWebMessagePort.close.supported_platforms}
-  @SupportedPlatforms(
-    platforms: [
-      AndroidPlatform(),
-      IOSPlatform(),
-      MacOSPlatform(),
-      LinuxPlatform(note: 'Implemented via JavaScript MessageChannel API.'),
-      WindowsPlatform(note: 'Implemented via JavaScript MessageChannel API.'),
-    ],
-  )
+  ///{@macro nosferatu500_inappwebview_platform_interface.PlatformWebMessagePort.close.supported_platforms}
+  @SupportedPlatforms(platforms: [AndroidPlatform(), IOSPlatform()])
   Future<void> close() {
     throw UnimplementedError(
       'close is not implemented on the current platform',

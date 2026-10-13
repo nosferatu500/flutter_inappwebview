@@ -1,5 +1,4 @@
 import 'dart:convert';
-import 'dart:typed_data';
 import 'package:flutter/foundation.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:flutter_inappwebview_example/widgets/common/parameter_dialog.dart';
@@ -203,7 +202,7 @@ class CustomTestStep {
         if (expectedResult == null) return false;
         final typeName = result.runtimeType.toString();
         return typeName == expectedResult ||
-            typeName.startsWith('${expectedResult}<') ||
+            typeName.startsWith('$expectedResult<') ||
             _matchesSimpleType(result, expectedResult!);
       case ExpectedResultType.notEmpty:
         if (result == null) return false;
@@ -1320,10 +1319,10 @@ class TestConfigurationManager extends ChangeNotifier {
     notifyListeners();
   }
 
-  /// Reorder custom test steps
+  /// Moves the custom step at [oldIndex] to [newIndex], the index it has after the move (what
+  /// `ReorderableListView.onReorderItem` reports; no further adjustment is needed).
   void reorderCustomSteps(int oldIndex, int newIndex) {
     final steps = [..._currentConfig.customSteps];
-    if (newIndex > oldIndex) newIndex--;
     final step = steps.removeAt(oldIndex);
     steps.insert(newIndex, step);
 

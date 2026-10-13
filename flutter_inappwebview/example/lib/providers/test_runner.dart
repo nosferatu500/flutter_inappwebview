@@ -1,10 +1,9 @@
 import 'dart:async';
 import 'dart:convert';
-import 'dart:ui';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/foundation.dart';
-import 'package:flutter_inappwebview/flutter_inappwebview.dart';
+import 'package:nosferatu500_inappwebview/nosferatu500_inappwebview.dart';
 import '../models/test_configuration.dart';
 import '../models/test_result.dart';
 import '../models/test_runner_models.dart';
@@ -699,7 +698,7 @@ class TestRunner extends ChangeNotifier {
       category: step.category,
       execute: (controller) async {
         // This is a placeholder - actual execution happens through _executeCustomStep
-        return TestResult(
+        return const TestResult(
           passed: true,
           message: 'Executed via configuration',
           duration: Duration.zero,

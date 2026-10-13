@@ -1,14 +1,11 @@
 import 'package:flutter/foundation.dart';
-import 'package:flutter_inappwebview_internal_annotations/flutter_inappwebview_internal_annotations.dart';
-import 'package:flutter_inappwebview_platform_interface/flutter_inappwebview_platform_interface.dart';
+import 'package:nosferatu500_inappwebview_internal_annotations/nosferatu500_inappwebview_internal_annotations.dart';
+import 'package:nosferatu500_inappwebview_platform_interface/nosferatu500_inappwebview_platform_interface.dart';
 import 'package:plugin_platform_interface/plugin_platform_interface.dart';
-
-import 'inappwebview_platform.dart';
-import 'types/web_resource_response.dart';
 
 part 'platform_webview_asset_loader.g.dart';
 
-///{@template flutter_inappwebview_platform_interface.WebViewAssetLoader}
+///{@template nosferatu500_inappwebview_platform_interface.WebViewAssetLoader}
 ///Helper class to load local files including application's static assets and resources using http(s):// URLs inside a `WebView` class.
 ///Loading local files using web-like URLs instead of `file://` is desirable as it is compatible with the Same-Origin policy.
 ///
@@ -20,7 +17,7 @@ part 'platform_webview_asset_loader.g.dart';
 ///(at paths reserved for this purpose) or the default domain reserved for this: `appassets.androidplatform.net`.
 ///{@endtemplate}
 ///
-///{@macro flutter_inappwebview_platform_interface.WebViewAssetLoader.supported_platforms}
+///{@macro nosferatu500_inappwebview_platform_interface.WebViewAssetLoader.supported_platforms}
 @SupportedPlatforms(platforms: [AndroidPlatform()])
 @ExchangeableObject(copyMethod: true)
 class WebViewAssetLoader_ {
@@ -44,26 +41,26 @@ class WebViewAssetLoader_ {
   WebViewAssetLoader_({this.domain, this.httpAllowed, this.pathHandlers});
 }
 
-///{@template flutter_inappwebview_platform_interface.PlatformPathHandlerCreationParams}
+///{@template nosferatu500_inappwebview_platform_interface.PlatformPathHandlerCreationParams}
 /// Object specifying creation parameters for creating a [PlatformPathHandler].
 ///
 /// Platform specific implementations can add additional fields by extending
 /// this class.
 ///{@endtemplate}
 ///
-///{@macro flutter_inappwebview_platform_interface.PlatformPathHandlerCreationParams.supported_platforms}
+///{@macro nosferatu500_inappwebview_platform_interface.PlatformPathHandlerCreationParams.supported_platforms}
 @SupportedPlatforms(platforms: [AndroidPlatform()])
 @immutable
 class PlatformPathHandlerCreationParams {
   /// Used by the platform implementation to create a new [PlatformPathHandler].
   const PlatformPathHandlerCreationParams({required this.path});
 
-  ///{@template flutter_inappwebview_platform_interface.PlatformPathHandlerCreationParams.path}
-  ///{@macro flutter_inappwebview_platform_interface.PlatformPathHandler.path}
+  ///{@template nosferatu500_inappwebview_platform_interface.PlatformPathHandlerCreationParams.path}
+  ///{@macro nosferatu500_inappwebview_platform_interface.PlatformPathHandler.path}
   ///{@endtemplate}
   final String path;
 
-  ///{@template flutter_inappwebview_platform_interface.PlatformPathHandlerCreationParams.isClassSupported}
+  ///{@template nosferatu500_inappwebview_platform_interface.PlatformPathHandlerCreationParams.isClassSupported}
   ///Check if the current class is supported by the [defaultTargetPlatform] or a specific [platform].
   ///{@endtemplate}
   bool isClassSupported({TargetPlatform? platform}) =>
@@ -72,26 +69,26 @@ class PlatformPathHandlerCreationParams {
       );
 }
 
-///{@template flutter_inappwebview_platform_interface.PlatformPathHandler}
+///{@template nosferatu500_inappwebview_platform_interface.PlatformPathHandler}
 ///A handler that produces responses for a registered path.
 ///
 ///Implement this interface to handle other use-cases according to your app's needs.
 ///{@endtemplate}
 ///
-///{@macro flutter_inappwebview_platform_interface.PlatformPathHandler.supported_platforms}
+///{@macro nosferatu500_inappwebview_platform_interface.PlatformPathHandler.supported_platforms}
 @SupportedPlatforms(platforms: [AndroidPlatform()])
 abstract class PlatformPathHandler {
   /// Event handler object that handles the [PlatformPathHandler] events.
   late final PlatformPathHandlerEvents? eventHandler;
 
-  ///{@template flutter_inappwebview_platform_interface.PlatformPathHandler.type}
+  ///{@template nosferatu500_inappwebview_platform_interface.PlatformPathHandler.type}
   ///The path handler type.
   ///{@endtemplate}
   String get type {
     throw UnimplementedError('type is not implemented on the current platform');
   }
 
-  ///{@template flutter_inappwebview_platform_interface.PlatformPathHandler.path}
+  ///{@template nosferatu500_inappwebview_platform_interface.PlatformPathHandler.path}
   ///The suffix path to be handled.
   ///
   ///The path should start and end with a `"/"` and it shouldn't collide with a real web path.
@@ -111,16 +108,28 @@ abstract class PlatformPathHandler {
       'toJson is not implemented on the current platform',
     );
   }
+
+  ///{@template nosferatu500_inappwebview_platform_interface.PlatformPathHandler.dispose}
+  ///Releases the handler's connection to the platform. Call it once no WebView's settings use this
+  ///handler any more: the plugin never disposes a handler itself, because one handler can be shared
+  ///by several WebViews and passed to `setSettings` again.
+  ///
+  ///Safe to call more than once. A disposed handler can't be used again: a WebView whose settings
+  ///still contain it no longer reaches [PlatformPathHandlerEvents.handle], and a request for the
+  ///handler's path fails as for a URL nothing serves (measured on Android: a page's `fetch` of it
+  ///rejected). Create a new handler instead.
+  ///{@endtemplate}
+  void dispose() {}
 }
 
-///{@template flutter_inappwebview_platform_interface.PlatformPathHandlerEvents}
+///{@template nosferatu500_inappwebview_platform_interface.PlatformPathHandlerEvents}
 ///Interface path handler events.
 ///{@endtemplate}
 ///
-///{@macro flutter_inappwebview_platform_interface.PlatformPathHandlerEvents.supported_platforms}
+///{@macro nosferatu500_inappwebview_platform_interface.PlatformPathHandlerEvents.supported_platforms}
 @SupportedPlatforms(platforms: [AndroidPlatform()])
 abstract class PlatformPathHandlerEvents {
-  ///{@template flutter_inappwebview_platform_interface.PlatformPathHandler.handle}
+  ///{@template nosferatu500_inappwebview_platform_interface.PlatformPathHandler.handle}
   ///Handles the requested URL by returning the appropriate response.
   ///
   ///Returning a `null` value means that the handler decided not to handle this path.
@@ -137,14 +146,14 @@ abstract class PlatformPathHandlerEvents {
   }
 }
 
-///{@template flutter_inappwebview_platform_interface.PlatformAssetsPathHandlerCreationParams}
+///{@template nosferatu500_inappwebview_platform_interface.PlatformAssetsPathHandlerCreationParams}
 /// Object specifying creation parameters for creating a [PlatformAssetsPathHandler].
 ///
 /// Platform specific implementations can add additional fields by extending
 /// this class.
 ///{@endtemplate}
 ///
-///{@macro flutter_inappwebview_platform_interface.PlatformAssetsPathHandlerCreationParams.supported_platforms}
+///{@macro nosferatu500_inappwebview_platform_interface.PlatformAssetsPathHandlerCreationParams.supported_platforms}
 @SupportedPlatforms(platforms: [AndroidPlatform()])
 @immutable
 class PlatformAssetsPathHandlerCreationParams
@@ -163,7 +172,7 @@ class PlatformAssetsPathHandlerCreationParams
     return PlatformAssetsPathHandlerCreationParams(params);
   }
 
-  ///{@template flutter_inappwebview_platform_interface.PlatformAssetsPathHandlerCreationParams.isClassSupported}
+  ///{@template nosferatu500_inappwebview_platform_interface.PlatformAssetsPathHandlerCreationParams.isClassSupported}
   ///Check if the current class is supported by the [defaultTargetPlatform] or a specific [platform].
   ///{@endtemplate}
   @override
@@ -173,7 +182,7 @@ class PlatformAssetsPathHandlerCreationParams
       );
 }
 
-///{@template flutter_inappwebview_platform_interface.PlatformAssetsPathHandler}
+///{@template nosferatu500_inappwebview_platform_interface.PlatformAssetsPathHandler}
 ///Handler class to open a file from assets directory in the application APK.
 ///
 ///Opens the requested file from the application's assets directory.
@@ -189,7 +198,7 @@ class PlatformAssetsPathHandlerCreationParams
 ///If the file does not have a recognised extension, `text/plain` will be used by default.
 ///{@endtemplate}
 ///
-///{@macro flutter_inappwebview_platform_interface.PlatformAssetsPathHandler.supported_platforms}
+///{@macro nosferatu500_inappwebview_platform_interface.PlatformAssetsPathHandler.supported_platforms}
 @SupportedPlatforms(platforms: [AndroidPlatform()])
 abstract class PlatformAssetsPathHandler extends PlatformInterface
     implements PlatformPathHandler {
@@ -199,7 +208,7 @@ abstract class PlatformAssetsPathHandler extends PlatformInterface
   ) {
     assert(
       InAppWebViewPlatform.instance != null,
-      'A platform implementation for `flutter_inappwebview` has not been set. Please '
+      'A platform implementation for `nosferatu500_inappwebview` has not been set. Please '
       'ensure that an implementation of `InAppWebViewPlatform` has been set to '
       '`InAppWebViewPlatform.instance` before use. For unit testing, '
       '`InAppWebViewPlatform.instance` can be set with your own test implementation.',
@@ -215,7 +224,7 @@ abstract class PlatformAssetsPathHandler extends PlatformInterface
   factory PlatformAssetsPathHandler.static() {
     assert(
       InAppWebViewPlatform.instance != null,
-      'A platform implementation for `flutter_inappwebview` has not been set. Please '
+      'A platform implementation for `nosferatu500_inappwebview` has not been set. Please '
       'ensure that an implementation of `InAppWebViewPlatform` has been set to '
       '`InAppWebViewPlatform.instance` before use. For unit testing, '
       '`InAppWebViewPlatform.instance` can be set with your own test implementation.',
@@ -244,19 +253,23 @@ abstract class PlatformAssetsPathHandler extends PlatformInterface
   @override
   String get path => params.path;
 
-  ///{@macro flutter_inappwebview_platform_interface.PlatformAssetsPathHandlerCreationParams.isClassSupported}
+  /// Nothing to release by default; an implementation with a platform connection overrides it.
+  @override
+  void dispose() {}
+
+  ///{@macro nosferatu500_inappwebview_platform_interface.PlatformAssetsPathHandlerCreationParams.isClassSupported}
   bool isClassSupported({TargetPlatform? platform}) =>
       params.isClassSupported(platform: platform);
 }
 
-///{@template flutter_inappwebview_platform_interface.PlatformResourcesPathHandlerCreationParams}
+///{@template nosferatu500_inappwebview_platform_interface.PlatformResourcesPathHandlerCreationParams}
 /// Object specifying creation parameters for creating a [PlatformResourcesPathHandler].
 ///
 /// Platform specific implementations can add additional fields by extending
 /// this class.
 ///{@endtemplate}
 ///
-///{@macro flutter_inappwebview_platform_interface.PlatformResourcesPathHandlerCreationParams.supported_platforms}
+///{@macro nosferatu500_inappwebview_platform_interface.PlatformResourcesPathHandlerCreationParams.supported_platforms}
 @SupportedPlatforms(platforms: [AndroidPlatform()])
 @immutable
 class PlatformResourcesPathHandlerCreationParams
@@ -275,7 +288,7 @@ class PlatformResourcesPathHandlerCreationParams
     return PlatformResourcesPathHandlerCreationParams(params);
   }
 
-  ///{@template flutter_inappwebview_platform_interface.PlatformResourcesPathHandlerCreationParams.isClassSupported}
+  ///{@template nosferatu500_inappwebview_platform_interface.PlatformResourcesPathHandlerCreationParams.isClassSupported}
   ///Check if the current class is supported by the [defaultTargetPlatform] or a specific [platform].
   ///{@endtemplate}
   @override
@@ -285,7 +298,7 @@ class PlatformResourcesPathHandlerCreationParams
       );
 }
 
-///{@template flutter_inappwebview_platform_interface.PlatformResourcesPathHandler}
+///{@template nosferatu500_inappwebview_platform_interface.PlatformResourcesPathHandler}
 ///Handler class to open a file from resources directory in the application APK.
 ///
 ///Opens the requested file from application's resources directory.
@@ -301,7 +314,7 @@ class PlatformResourcesPathHandlerCreationParams
 ///If the file does not have a recognised extension, `text/plain` will be used by default.
 ///{@endtemplate}
 ///
-///{@macro flutter_inappwebview_platform_interface.PlatformResourcesPathHandler.supported_platforms}
+///{@macro nosferatu500_inappwebview_platform_interface.PlatformResourcesPathHandler.supported_platforms}
 @SupportedPlatforms(platforms: [AndroidPlatform()])
 abstract class PlatformResourcesPathHandler extends PlatformInterface
     implements PlatformPathHandler {
@@ -311,7 +324,7 @@ abstract class PlatformResourcesPathHandler extends PlatformInterface
   ) {
     assert(
       InAppWebViewPlatform.instance != null,
-      'A platform implementation for `flutter_inappwebview` has not been set. Please '
+      'A platform implementation for `nosferatu500_inappwebview` has not been set. Please '
       'ensure that an implementation of `InAppWebViewPlatform` has been set to '
       '`InAppWebViewPlatform.instance` before use. For unit testing, '
       '`InAppWebViewPlatform.instance` can be set with your own test implementation.',
@@ -328,7 +341,7 @@ abstract class PlatformResourcesPathHandler extends PlatformInterface
   factory PlatformResourcesPathHandler.static() {
     assert(
       InAppWebViewPlatform.instance != null,
-      'A platform implementation for `flutter_inappwebview` has not been set. Please '
+      'A platform implementation for `nosferatu500_inappwebview` has not been set. Please '
       'ensure that an implementation of `InAppWebViewPlatform` has been set to '
       '`InAppWebViewPlatform.instance` before use. For unit testing, '
       '`InAppWebViewPlatform.instance` can be set with your own test implementation.',
@@ -359,19 +372,23 @@ abstract class PlatformResourcesPathHandler extends PlatformInterface
   @override
   String get path => params.path;
 
-  ///{@macro flutter_inappwebview_platform_interface.PlatformResourcesPathHandlerCreationParams.isClassSupported}
+  /// Nothing to release by default; an implementation with a platform connection overrides it.
+  @override
+  void dispose() {}
+
+  ///{@macro nosferatu500_inappwebview_platform_interface.PlatformResourcesPathHandlerCreationParams.isClassSupported}
   bool isClassSupported({TargetPlatform? platform}) =>
       params.isClassSupported(platform: platform);
 }
 
-///{@template flutter_inappwebview_platform_interface.PlatformInternalStoragePathHandlerCreationParams}
+///{@template nosferatu500_inappwebview_platform_interface.PlatformInternalStoragePathHandlerCreationParams}
 /// Object specifying creation parameters for creating a [PlatformInternalStoragePathHandler].
 ///
 /// Platform specific implementations can add additional fields by extending
 /// this class.
 ///{@endtemplate}
 ///
-///{@macro flutter_inappwebview_platform_interface.PlatformInternalStoragePathHandlerCreationParams.supported_platforms}
+///{@macro nosferatu500_inappwebview_platform_interface.PlatformInternalStoragePathHandlerCreationParams.supported_platforms}
 @SupportedPlatforms(platforms: [AndroidPlatform()])
 @immutable
 class PlatformInternalStoragePathHandlerCreationParams
@@ -395,12 +412,12 @@ class PlatformInternalStoragePathHandlerCreationParams
     );
   }
 
-  ///{@template flutter_inappwebview_platform_interface.PlatformInternalStoragePathHandlerCreationParams.directory}
+  ///{@template nosferatu500_inappwebview_platform_interface.PlatformInternalStoragePathHandlerCreationParams.directory}
   ///The directory for which files should be served.
   ///{@endtemplate}
   final String directory;
 
-  ///{@template flutter_inappwebview_platform_interface.PlatformInternalStoragePathHandlerCreationParams.isClassSupported}
+  ///{@template nosferatu500_inappwebview_platform_interface.PlatformInternalStoragePathHandlerCreationParams.isClassSupported}
   ///Check if the current class is supported by the [defaultTargetPlatform] or a specific [platform].
   ///{@endtemplate}
   @override
@@ -410,7 +427,7 @@ class PlatformInternalStoragePathHandlerCreationParams
       );
 }
 
-///{@template flutter_inappwebview_platform_interface.PlatformInternalStoragePathHandler}
+///{@template nosferatu500_inappwebview_platform_interface.PlatformInternalStoragePathHandler}
 ///Handler class to open files from application internal storage.
 ///For more information about android storage please refer to
 ///[Android Developers Docs: Data and file storage overview](https://developer.android.com/guide/topics/data/data-storage).
@@ -431,7 +448,7 @@ class PlatformInternalStoragePathHandlerCreationParams
 ///If the file does not have a recognised extension, `text/plain` will be used by default.
 ///{@endtemplate}
 ///
-///{@macro flutter_inappwebview_platform_interface.PlatformInternalStoragePathHandler.supported_platforms}
+///{@macro nosferatu500_inappwebview_platform_interface.PlatformInternalStoragePathHandler.supported_platforms}
 @SupportedPlatforms(platforms: [AndroidPlatform()])
 abstract class PlatformInternalStoragePathHandler extends PlatformInterface
     implements PlatformPathHandler {
@@ -441,7 +458,7 @@ abstract class PlatformInternalStoragePathHandler extends PlatformInterface
   ) {
     assert(
       InAppWebViewPlatform.instance != null,
-      'A platform implementation for `flutter_inappwebview` has not been set. Please '
+      'A platform implementation for `nosferatu500_inappwebview` has not been set. Please '
       'ensure that an implementation of `InAppWebViewPlatform` has been set to '
       '`InAppWebViewPlatform.instance` before use. For unit testing, '
       '`InAppWebViewPlatform.instance` can be set with your own test implementation.',
@@ -458,7 +475,7 @@ abstract class PlatformInternalStoragePathHandler extends PlatformInterface
   factory PlatformInternalStoragePathHandler.static() {
     assert(
       InAppWebViewPlatform.instance != null,
-      'A platform implementation for `flutter_inappwebview` has not been set. Please '
+      'A platform implementation for `nosferatu500_inappwebview` has not been set. Please '
       'ensure that an implementation of `InAppWebViewPlatform` has been set to '
       '`InAppWebViewPlatform.instance` before use. For unit testing, '
       '`InAppWebViewPlatform.instance` can be set with your own test implementation.',
@@ -489,22 +506,26 @@ abstract class PlatformInternalStoragePathHandler extends PlatformInterface
   @override
   String get path => params.path;
 
-  ///{@macro flutter_inappwebview_platform_interface.PlatformInternalStoragePathHandlerCreationParams.directory}
+  /// Nothing to release by default; an implementation with a platform connection overrides it.
+  @override
+  void dispose() {}
+
+  ///{@macro nosferatu500_inappwebview_platform_interface.PlatformInternalStoragePathHandlerCreationParams.directory}
   String get directory => params.directory;
 
-  ///{@macro flutter_inappwebview_platform_interface.PlatformInternalStoragePathHandlerCreationParams.isClassSupported}
+  ///{@macro nosferatu500_inappwebview_platform_interface.PlatformInternalStoragePathHandlerCreationParams.isClassSupported}
   bool isClassSupported({TargetPlatform? platform}) =>
       params.isClassSupported(platform: platform);
 }
 
-///{@template flutter_inappwebview_platform_interface.PlatformCustomPathHandlerCreationParams}
+///{@template nosferatu500_inappwebview_platform_interface.PlatformCustomPathHandlerCreationParams}
 /// Object specifying creation parameters for creating a [PlatformCustomPathHandler].
 ///
 /// Platform specific implementations can add additional fields by extending
 /// this class.
 ///{@endtemplate}
 ///
-///{@macro flutter_inappwebview_platform_interface.PlatformCustomPathHandlerCreationParams.supported_platforms}
+///{@macro nosferatu500_inappwebview_platform_interface.PlatformCustomPathHandlerCreationParams.supported_platforms}
 @SupportedPlatforms(platforms: [AndroidPlatform()])
 @immutable
 class PlatformCustomPathHandlerCreationParams
@@ -523,7 +544,7 @@ class PlatformCustomPathHandlerCreationParams
     return PlatformCustomPathHandlerCreationParams(params);
   }
 
-  ///{@template flutter_inappwebview_platform_interface.PlatformCustomPathHandlerCreationParams.isClassSupported}
+  ///{@template nosferatu500_inappwebview_platform_interface.PlatformCustomPathHandlerCreationParams.isClassSupported}
   ///Check if the current class is supported by the [defaultTargetPlatform] or a specific [platform].
   ///{@endtemplate}
   @override
@@ -533,7 +554,7 @@ class PlatformCustomPathHandlerCreationParams
       );
 }
 
-///{@template flutter_inappwebview_platform_interface.PlatformCustomPathHandler}
+///{@template nosferatu500_inappwebview_platform_interface.PlatformCustomPathHandler}
 ///Custom handler class used to implement a custom logic to open a file.
 ///
 ///The matched prefix path used shouldn't be a prefix of a real web path.
@@ -547,7 +568,7 @@ class PlatformCustomPathHandlerCreationParams
 ///If the file does not have a recognised extension, `text/plain` will be used by default.
 ///{@endtemplate}
 ///
-///{@macro flutter_inappwebview_platform_interface.PlatformCustomPathHandler.supported_platforms}
+///{@macro nosferatu500_inappwebview_platform_interface.PlatformCustomPathHandler.supported_platforms}
 @SupportedPlatforms(platforms: [AndroidPlatform()])
 abstract class PlatformCustomPathHandler extends PlatformInterface
     implements PlatformPathHandler {
@@ -557,7 +578,7 @@ abstract class PlatformCustomPathHandler extends PlatformInterface
   ) {
     assert(
       InAppWebViewPlatform.instance != null,
-      'A platform implementation for `flutter_inappwebview` has not been set. Please '
+      'A platform implementation for `nosferatu500_inappwebview` has not been set. Please '
       'ensure that an implementation of `InAppWebViewPlatform` has been set to '
       '`InAppWebViewPlatform.instance` before use. For unit testing, '
       '`InAppWebViewPlatform.instance` can be set with your own test implementation.',
@@ -573,7 +594,7 @@ abstract class PlatformCustomPathHandler extends PlatformInterface
   factory PlatformCustomPathHandler.static() {
     assert(
       InAppWebViewPlatform.instance != null,
-      'A platform implementation for `flutter_inappwebview` has not been set. Please '
+      'A platform implementation for `nosferatu500_inappwebview` has not been set. Please '
       'ensure that an implementation of `InAppWebViewPlatform` has been set to '
       '`InAppWebViewPlatform.instance` before use. For unit testing, '
       '`InAppWebViewPlatform.instance` can be set with your own test implementation.',
@@ -602,7 +623,11 @@ abstract class PlatformCustomPathHandler extends PlatformInterface
   @override
   String get path => params.path;
 
-  ///{@macro flutter_inappwebview_platform_interface.PlatformCustomPathHandlerCreationParams.isClassSupported}
+  /// Nothing to release by default; an implementation with a platform connection overrides it.
+  @override
+  void dispose() {}
+
+  ///{@macro nosferatu500_inappwebview_platform_interface.PlatformCustomPathHandlerCreationParams.isClassSupported}
   bool isClassSupported({TargetPlatform? platform}) =>
       params.isClassSupported(platform: platform);
 }

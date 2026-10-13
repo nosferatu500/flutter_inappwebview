@@ -3,10 +3,10 @@ import 'package:analyzer/dart/element/element.dart';
 import 'package:analyzer/dart/element/nullability_suffix.dart';
 import 'package:analyzer/dart/element/type.dart';
 import 'package:collection/collection.dart';
-import 'package:flutter_inappwebview_internal_annotations/flutter_inappwebview_internal_annotations.dart';
+import 'package:nosferatu500_inappwebview_internal_annotations/nosferatu500_inappwebview_internal_annotations.dart';
 import 'package:source_gen/source_gen.dart';
 
-const _annotationsPackage = 'flutter_inappwebview_internal_annotations';
+const _annotationsPackage = 'nosferatu500_inappwebview_internal_annotations';
 
 final _coreCheckerObjectMethod = TypeChecker.typeNamedLiterally(
   'ExchangeableObjectMethod',
@@ -85,15 +85,7 @@ abstract class Util {
       final apiName = platform.getField("apiName")?.toStringValue();
       final apiUrl = platform.getField("apiUrl")?.toStringValue();
       final available = platform.getField("available")?.toStringValue();
-      final requiresSameOrigin =
-          platform.getField("requiresSameOrigin")?.toBoolValue() ?? false;
       var api = available != null ? "$available+ " : "";
-      if (requiresSameOrigin) {
-        api += "but requires same origin";
-        if (apiName != null || apiUrl != null) {
-          api += " ";
-        }
-      }
       if (apiName != null && apiUrl != null) {
         api += "([Official API - $apiName]($apiUrl))";
       } else if (apiName != null) {
@@ -179,15 +171,7 @@ abstract class Util {
           final apiName = platform.getField("apiName")?.toStringValue();
           final apiUrl = platform.getField("apiUrl")?.toStringValue();
           final available = platform.getField("available")?.toStringValue();
-          final requiresSameOrigin =
-              platform.getField("requiresSameOrigin")?.toBoolValue() ?? false;
           var api = available != null ? "$available+ " : "";
-          if (requiresSameOrigin) {
-            api += "but requires same origin";
-            if (apiName != null || apiUrl != null) {
-              api += " ";
-            }
-          }
           if (apiName != null && apiUrl != null) {
             api += "([Official API - $apiName]($apiUrl))";
           } else if (apiName != null) {

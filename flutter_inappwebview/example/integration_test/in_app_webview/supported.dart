@@ -28,12 +28,6 @@ void supported() {
           TargetPlatform.windows,
         ].contains(defaultTargetPlatform),
       );
-      expect(
-        InAppWebViewController.isMethodSupported(
-          PlatformInAppWebViewControllerMethod.openDevTools,
-        ),
-        defaultTargetPlatform == TargetPlatform.windows,
-      );
 
       expect(InAppWebView.isClassSupported(), true);
       expect(
@@ -64,12 +58,6 @@ void supported() {
           TargetPlatform.windows,
         ].contains(defaultTargetPlatform),
       );
-      expect(
-        InAppWebView.isPropertySupported(
-          PlatformWebViewCreationParamsProperty.onAcceleratorKeyPressed,
-        ),
-        defaultTargetPlatform == TargetPlatform.windows,
-      );
 
       expect(
         InAppWebViewSettings.isPropertySupported(
@@ -86,12 +74,6 @@ void supported() {
           TargetPlatform.macOS,
           TargetPlatform.windows,
         ].contains(defaultTargetPlatform),
-      );
-      expect(
-        InAppWebViewSettings.isPropertySupported(
-          InAppWebViewSettingsProperty.handleAcceleratorKeyPressed,
-        ),
-        defaultTargetPlatform == TargetPlatform.windows,
       );
     }, skip: false);
   }, skip: false);

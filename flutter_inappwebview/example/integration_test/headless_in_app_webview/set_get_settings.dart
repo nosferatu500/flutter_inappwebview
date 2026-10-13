@@ -1,14 +1,14 @@
 part of 'main.dart';
 
 void setGetSettings() {
-  final shouldSkip = false;
+  const shouldSkip = false;
 
   skippableTest('set/get settings', () async {
     final Completer<InAppWebViewController> controllerCompleter =
         Completer<InAppWebViewController>();
     final Completer<void> pageLoaded = Completer<void>();
 
-    var headlessWebView = new HeadlessInAppWebView(
+    var headlessWebView = HeadlessInAppWebView(
       initialUrlRequest: URLRequest(url: TEST_CROSS_PLATFORM_URL_1),
       initialSettings: InAppWebViewSettings(javaScriptEnabled: false),
       onWebViewCreated: (controller) {

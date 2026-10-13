@@ -8,10 +8,10 @@
 [![All Contributors](https://img.shields.io/badge/all_contributors-100-orange.svg?style=flat-square)](#contributors-)
 <!-- ALL-CONTRIBUTORS-BADGE:END -->
 
-[![flutter_inappwebview version](https://img.shields.io/pub/v/flutter_inappwebview?include_prereleases)](https://pub.dartlang.org/packages/flutter_inappwebview)
-[![Pub Points](https://img.shields.io/pub/points/flutter_inappwebview)](https://pub.dev/packages/flutter_inappwebview/score)
-[![Pub Popularity](https://img.shields.io/pub/popularity/flutter_inappwebview)](https://pub.dev/packages/flutter_inappwebview/score)
-[![Pub Likes](https://img.shields.io/pub/likes/flutter_inappwebview)](https://pub.dev/packages/flutter_inappwebview/score)
+[![nosferatu500_inappwebview version](https://img.shields.io/pub/v/nosferatu500_inappwebview?include_prereleases)](https://pub.dev/packages/nosferatu500_inappwebview)
+[![Pub Points](https://img.shields.io/pub/points/nosferatu500_inappwebview)](https://pub.dev/packages/nosferatu500_inappwebview/score)
+[![Pub Popularity](https://img.shields.io/pub/popularity/nosferatu500_inappwebview)](https://pub.dev/packages/nosferatu500_inappwebview/score)
+[![Pub Likes](https://img.shields.io/pub/likes/nosferatu500_inappwebview)](https://pub.dev/packages/nosferatu500_inappwebview/score)
 [![Awesome Flutter](https://img.shields.io/badge/Awesome-Flutter-blue.svg?longCache=true&style=flat-square)](https://stackoverflow.com/questions/tagged/flutter-inappwebview)
 [![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](/LICENSE)
 
@@ -21,13 +21,9 @@
 
 ###### Supported Platforms
 
-[![flutter_inappwebview_platform_interface version](https://img.shields.io/pub/v/flutter_inappwebview_platform_interface?include_prereleases&label=Platform%20Interface)](https://pub.dartlang.org/packages/flutter_inappwebview_platform_interface)
-[![flutter_inappwebview_android version](https://img.shields.io/pub/v/flutter_inappwebview_android?include_prereleases&label=Android)](https://pub.dartlang.org/packages/flutter_inappwebview_android)
-[![flutter_inappwebview_ios version](https://img.shields.io/pub/v/flutter_inappwebview_ios?include_prereleases&label=iOS)](https://pub.dartlang.org/packages/flutter_inappwebview_ios)
-[![flutter_inappwebview_macos version](https://img.shields.io/pub/v/flutter_inappwebview_macos?include_prereleases&label=macOS)](https://pub.dartlang.org/packages/flutter_inappwebview_macos)
-[![flutter_inappwebview_windows version](https://img.shields.io/pub/v/flutter_inappwebview_windows?include_prereleases&label=Windows)](https://pub.dartlang.org/packages/flutter_inappwebview_windows)
-[![flutter_inappwebview_linux version](https://img.shields.io/pub/v/flutter_inappwebview_linux?include_prereleases&label=linux)](https://pub.dartlang.org/packages/flutter_inappwebview_linux)
-[![flutter_inappwebview_web version](https://img.shields.io/pub/v/flutter_inappwebview_web?include_prereleases&label=Web)](https://pub.dartlang.org/packages/flutter_inappwebview_web)
+[![nosferatu500_inappwebview_platform_interface version](https://img.shields.io/pub/v/nosferatu500_inappwebview_platform_interface?include_prereleases&label=Platform%20Interface)](https://pub.dev/packages/nosferatu500_inappwebview_platform_interface)
+[![nosferatu500_inappwebview_android version](https://img.shields.io/pub/v/nosferatu500_inappwebview_android?include_prereleases&label=Android)](https://pub.dev/packages/nosferatu500_inappwebview_android)
+[![nosferatu500_inappwebview_ios version](https://img.shields.io/pub/v/nosferatu500_inappwebview_ios?include_prereleases&label=iOS)](https://pub.dev/packages/nosferatu500_inappwebview_ios)
 
 A Flutter plugin that allows you to add an inline webview, to use an headless webview, and to open an in-app browser window.
 
@@ -57,20 +53,18 @@ Send a submission request to the [Submit App](https://inappwebview.dev/submit-ap
 - Flutter: ">=3.32.0"
 - Android: `minSdk >= 30`, [AGP](https://developer.android.com/build/releases/gradle-plugin) version `>= 9.0.0` (AGP 8 and lower are not supported), Gradle `>= 9.1.0`, JDK `>= 17` (use [Android Studio - Android Gradle plugin Upgrade Assistant](https://developer.android.com/build/agp-upgrade-assistant) for help)
 - iOS 15.0+, Xcode version `>= 15.0`
-- macOS 12.0+, Xcode version `>= 15.0`
-- Windows: [NuGet CLI](https://learn.microsoft.com/en-us/nuget/install-nuget-client-tools?tabs=windows#nugetexe-cli) available on your PATH environment variable
-- Linux: WPE 2.0 WebKit built
 
 ## Installation
 
-Add `flutter_inappwebview` as a [dependency in your pubspec.yaml file](https://flutter.io/using-packages/).
+Add `nosferatu500_inappwebview` as a [dependency in your pubspec.yaml file](https://flutter.io/using-packages/):
+
+```sh
+flutter pub add nosferatu500_inappwebview
+```
 
 ### Platform Installation Setup:
 - [Android](https://inappwebview.dev/docs/intro/#setup-android)
 - [iOS](https://inappwebview.dev/docs/intro/#setup-ios)
-- [macOS](https://inappwebview.dev/docs/intro/#setup-macos)
-- [Windows](https://inappwebview.dev/docs/intro/#setup-windows)
-- [Web](https://inappwebview.dev/docs/intro/#setup-web)
 
 ## Support
 

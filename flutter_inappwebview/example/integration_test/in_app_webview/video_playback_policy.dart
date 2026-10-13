@@ -27,13 +27,22 @@ void videoPlaybackPolicy() {
               var video = document.getElementById("video");
               return video.paused;
             }
+            // `allowsInlineMediaPlayback: false` makes iOS play the video in its own NATIVE
+            // fullscreen player, which is not the DOM Fullscreen API: measured on iOS 17.5 and
+            // 26.5, `document.fullscreenElement` and `document.webkitFullscreenElement` are both
+            // null while `video.webkitDisplayingFullscreen` is true. `document.exitFullscreen()`
+            // therefore has nothing to exit and does nothing at all — which is what this test used
+            // to call. `HTMLVideoElement.webkitExitFullscreen()` is the one that leaves native
+            // video fullscreen, so try it first and keep the DOM calls as the fallback for
+            // platforms that really are in document fullscreen.
             function exitFullscreen() {
-              if (document.exitFullscreen) {
+              var video = document.getElementById("video");
+              if (video && video.webkitExitFullscreen) {
+                video.webkitExitFullscreen();
+              } else if (document.exitFullscreen) {
                 document.exitFullscreen();
               } else if (document.webkitExitFullscreen) {
                 document.webkitExitFullscreen();
-              } else if (document.msExitFullscreen) {
-                document.msExitFullscreen();
               }
             }
           </script>
@@ -47,6 +56,27 @@ void videoPlaybackPolicy() {
       ''';
       videoTestBase64 = base64Encode(const Utf8Encoder().convert(videoTest));
     });
+
+    // Waits for the native fullscreen player, and on a timeout fails with the video's own state, so
+    // a hang says whether the video never started or played without going fullscreen (§276: the
+    // two fullscreen tests waited without a limit; one hung a run for 17 minutes).
+    Future<void> expectEntersFullscreen(
+      InAppWebViewController controller,
+      Completer<void> onEnterFullscreen,
+    ) async {
+      try {
+        await onEnterFullscreen.future.timeout(const Duration(seconds: 15));
+      } on TimeoutException {
+        final state = await controller.evaluateJavascript(
+          source:
+              "(function() { var v = document.getElementById('video'); return v ? JSON.stringify({"
+              "paused: v.paused, readyState: v.readyState, currentTime: v.currentTime, "
+              "displayingFullscreen: v.webkitDisplayingFullscreen, "
+              "error: v.error ? v.error.code : null}) : 'no video element'; })()",
+        );
+        fail('onEnterFullscreen did not come in 15 s; the video: $state');
+      }
+    }
 
     skippableTestWidgets('Auto media playback', (WidgetTester tester) async {
       Completer<InAppWebViewController> controllerCompleter =
@@ -205,11 +235,15 @@ void videoPlaybackPolicy() {
           ),
         );
 
-        await pageLoaded.future;
+        final controller = await controllerCompleter.future;
+        await pageLoaded.future.timeout(
+          const Duration(seconds: 15),
+          onTimeout: () => fail('the video page did not load in 15 s'),
+        );
 
         await tester.pump();
 
-        await expectLater(onEnterFullscreenCompleter.future, completes);
+        await expectEntersFullscreen(controller, onEnterFullscreenCompleter);
       },
       skip: shouldSkipTest3,
     );
@@ -222,6 +256,7 @@ void videoPlaybackPolicy() {
       Completer<InAppWebViewController> controllerCompleter =
           Completer<InAppWebViewController>();
       Completer<void> pageLoaded = Completer<void>();
+      Completer<void> onEnterFullscreenCompleter = Completer<void>();
       Completer<void> onExitFullscreenCompleter = Completer<void>();
 
       await tester.pumpWidget(
@@ -245,21 +280,55 @@ void videoPlaybackPolicy() {
             onLoadStop: (controller, url) {
               pageLoaded.complete();
             },
+            onEnterFullscreen: (controller) {
+              if (!onEnterFullscreenCompleter.isCompleted) {
+                onEnterFullscreenCompleter.complete();
+              }
+            },
             onExitFullscreen: (controller) {
-              onExitFullscreenCompleter.complete();
+              if (!onExitFullscreenCompleter.isCompleted) {
+                onExitFullscreenCompleter.complete();
+              }
             },
           ),
         ),
       );
 
       InAppWebViewController controller = await controllerCompleter.future;
-      await pageLoaded.future;
-
-      await Future.delayed(Duration(seconds: 2));
+      // Each wait fails at its own step, so a hang names where it was (§276: this test once timed
+      // out at 60 s on iOS with nothing to say which step it was in).
+      await pageLoaded.future.timeout(
+        const Duration(seconds: 15),
+        onTimeout: () => fail('the video page did not load in 15 s'),
+      );
       await tester.pump();
-      await controller.evaluateJavascript(source: "exitFullscreen();");
 
-      await expectLater(onExitFullscreenCompleter.future, completes);
+      // Wait for the video to actually BE fullscreen instead of sleeping a fixed 2s and hoping.
+      await expectEntersFullscreen(controller, onEnterFullscreenCompleter);
+
+      // The native player ignores webkitExitFullscreen() while its presentation animation is still
+      // running — measured on iOS 17.5 and 26.5, a single call fires nothing and the element is
+      // still reporting webkitDisplayingFullscreen afterwards, while retrying succeeds after about
+      // one second. So ask repeatedly until the event arrives rather than sleeping a guessed amount.
+      for (var i = 0; i < 40 && !onExitFullscreenCompleter.isCompleted; i++) {
+        await controller.evaluateJavascript(source: "exitFullscreen();");
+        if (onExitFullscreenCompleter.isCompleted) break;
+        await Future.delayed(const Duration(milliseconds: 500));
+      }
+
+      if (!onExitFullscreenCompleter.isCompleted) {
+        fail(
+          'onExitFullscreen did not come after 40 exitFullscreen() calls '
+          '500 ms apart',
+        );
+      }
+      expect(
+        await controller.evaluateJavascript(
+          source: 'document.getElementById("video").webkitDisplayingFullscreen',
+        ),
+        false,
+        reason: 'the video should have left native fullscreen',
+      );
     }, skip: shouldSkipTest4);
   }, skip: shouldSkip);
 }

@@ -1,13 +1,13 @@
 import 'dart:async';
 
 import 'package:flutter/foundation.dart';
-import 'package:flutter_inappwebview_platform_interface/flutter_inappwebview_platform_interface.dart';
+import 'package:nosferatu500_inappwebview_platform_interface/nosferatu500_inappwebview_platform_interface.dart';
 
-///{@macro flutter_inappwebview_platform_interface.PlatformTracingController}
+///{@macro nosferatu500_inappwebview_platform_interface.PlatformTracingController}
 ///
-///{@macro flutter_inappwebview_platform_interface.PlatformTracingController.supported_platforms}
+///{@macro nosferatu500_inappwebview_platform_interface.PlatformTracingController.supported_platforms}
 class TracingController {
-  ///{@macro flutter_inappwebview_platform_interface.PlatformTracingController}
+  ///{@macro nosferatu500_inappwebview_platform_interface.PlatformTracingController}
   TracingController()
     : this.fromPlatformCreationParams(
         const PlatformTracingControllerCreationParams(),
@@ -34,27 +34,27 @@ class TracingController {
     return _instance!;
   }
 
-  ///{@macro flutter_inappwebview_platform_interface.PlatformTracingController.start}
+  ///{@macro nosferatu500_inappwebview_platform_interface.PlatformTracingController.start}
   ///
-  ///{@macro flutter_inappwebview_platform_interface.PlatformTracingController.start.supported_platforms}
+  ///{@macro nosferatu500_inappwebview_platform_interface.PlatformTracingController.start.supported_platforms}
   Future<void> start({required TracingSettings settings}) =>
       platform.start(settings: settings);
 
-  ///{@macro flutter_inappwebview_platform_interface.PlatformTracingController.stop}
+  ///{@macro nosferatu500_inappwebview_platform_interface.PlatformTracingController.stop}
   ///
-  ///{@macro flutter_inappwebview_platform_interface.PlatformTracingController.stop.supported_platforms}
+  ///{@macro nosferatu500_inappwebview_platform_interface.PlatformTracingController.stop.supported_platforms}
   Future<bool> stop({String? filePath}) => platform.stop(filePath: filePath);
 
-  ///{@macro flutter_inappwebview_platform_interface.PlatformTracingController.isTracing}
+  ///{@macro nosferatu500_inappwebview_platform_interface.PlatformTracingController.isTracing}
   ///
-  ///{@macro flutter_inappwebview_platform_interface.PlatformTracingController.isTracing.supported_platforms}
+  ///{@macro nosferatu500_inappwebview_platform_interface.PlatformTracingController.isTracing.supported_platforms}
   Future<bool> isTracing() => platform.isTracing();
 
-  ///{@macro flutter_inappwebview_platform_interface.PlatformTracingControllerCreationParams.isClassSupported}
+  ///{@macro nosferatu500_inappwebview_platform_interface.PlatformTracingControllerCreationParams.isClassSupported}
   static bool isClassSupported({TargetPlatform? platform}) =>
       PlatformTracingController.static().isClassSupported(platform: platform);
 
-  ///{@macro flutter_inappwebview_platform_interface.PlatformTracingController.isMethodSupported}
+  ///{@macro nosferatu500_inappwebview_platform_interface.PlatformTracingController.isMethodSupported}
   static bool isMethodSupported(
     PlatformTracingControllerMethod method, {
     TargetPlatform? platform,

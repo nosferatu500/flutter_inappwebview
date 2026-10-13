@@ -8,14 +8,11 @@ part of 'platform_in_app_localhost_server.dart';
 
 extension _PlatformInAppLocalhostServerCreationParamsClassSupported
     on PlatformInAppLocalhostServerCreationParams {
-  ///{@template flutter_inappwebview_platform_interface.PlatformInAppLocalhostServerCreationParams.supported_platforms}
+  ///{@template nosferatu500_inappwebview_platform_interface.PlatformInAppLocalhostServerCreationParams.supported_platforms}
   ///
   ///**Officially Supported Platforms/Implementations**:
   ///- Android WebView
   ///- iOS WKWebView
-  ///- macOS WKWebView
-  ///- Windows WebView2
-  ///- Linux WPE WebKit
   ///
   ///Use the [PlatformInAppLocalhostServerCreationParams.isClassSupported] method to check if this class is supported at runtime.
   ///{@endtemplate}
@@ -24,34 +21,27 @@ extension _PlatformInAppLocalhostServerCreationParamsClassSupported
         [
           TargetPlatform.android,
           TargetPlatform.iOS,
-          TargetPlatform.macOS,
-          TargetPlatform.windows,
-          TargetPlatform.linux,
         ].contains(platform ?? defaultTargetPlatform);
   }
 }
 
 extension _PlatformInAppLocalhostServerClassSupported
     on PlatformInAppLocalhostServer {
-  ///{@template flutter_inappwebview_platform_interface.PlatformInAppLocalhostServer.supported_platforms}
+  ///{@template nosferatu500_inappwebview_platform_interface.PlatformInAppLocalhostServer.supported_platforms}
   ///
   ///**Officially Supported Platforms/Implementations**:
   ///- Android WebView
   ///- iOS WKWebView
-  ///- macOS WKWebView
-  ///- Windows WebView2
-  ///- Linux WPE WebKit
   ///
   ///Use the [PlatformInAppLocalhostServer.isClassSupported] method to check if this class is supported at runtime.
   ///{@endtemplate}
+  // Unused: [PlatformInAppLocalhostServer.isClassSupported] answers through its creation params. Kept for the doc template above.
+  // ignore: unused_element
   static bool isClassSupported({TargetPlatform? platform}) {
     return ((kIsWeb && platform != null) || !kIsWeb) &&
         [
           TargetPlatform.android,
           TargetPlatform.iOS,
-          TargetPlatform.macOS,
-          TargetPlatform.windows,
-          TargetPlatform.linux,
         ].contains(platform ?? defaultTargetPlatform);
   }
 }
@@ -60,14 +50,11 @@ extension _PlatformInAppLocalhostServerClassSupported
 enum PlatformInAppLocalhostServerMethod {
   ///Can be used to check if the [PlatformInAppLocalhostServer.close] method is supported at runtime.
   ///
-  ///{@template flutter_inappwebview_platform_interface.PlatformInAppLocalhostServer.close.supported_platforms}
+  ///{@template nosferatu500_inappwebview_platform_interface.PlatformInAppLocalhostServer.close.supported_platforms}
   ///
   ///**Officially Supported Platforms/Implementations**:
   ///- Android WebView
   ///- iOS WKWebView
-  ///- macOS WKWebView
-  ///- Windows WebView2
-  ///- Linux WPE WebKit
   ///
   ///Use the [PlatformInAppLocalhostServer.isMethodSupported] method to check if this method is supported at runtime.
   ///{@endtemplate}
@@ -75,14 +62,11 @@ enum PlatformInAppLocalhostServerMethod {
 
   ///Can be used to check if the [PlatformInAppLocalhostServer.isRunning] method is supported at runtime.
   ///
-  ///{@template flutter_inappwebview_platform_interface.PlatformInAppLocalhostServer.isRunning.supported_platforms}
+  ///{@template nosferatu500_inappwebview_platform_interface.PlatformInAppLocalhostServer.isRunning.supported_platforms}
   ///
   ///**Officially Supported Platforms/Implementations**:
   ///- Android WebView
   ///- iOS WKWebView
-  ///- macOS WKWebView
-  ///- Windows WebView2
-  ///- Linux WPE WebKit
   ///
   ///Use the [PlatformInAppLocalhostServer.isMethodSupported] method to check if this method is supported at runtime.
   ///{@endtemplate}
@@ -90,14 +74,11 @@ enum PlatformInAppLocalhostServerMethod {
 
   ///Can be used to check if the [PlatformInAppLocalhostServer.start] method is supported at runtime.
   ///
-  ///{@template flutter_inappwebview_platform_interface.PlatformInAppLocalhostServer.start.supported_platforms}
+  ///{@template nosferatu500_inappwebview_platform_interface.PlatformInAppLocalhostServer.start.supported_platforms}
   ///
   ///**Officially Supported Platforms/Implementations**:
   ///- Android WebView
   ///- iOS WKWebView
-  ///- macOS WKWebView
-  ///- Windows WebView2
-  ///- Linux WPE WebKit
   ///
   ///Use the [PlatformInAppLocalhostServer.isMethodSupported] method to check if this method is supported at runtime.
   ///{@endtemplate}
@@ -116,27 +97,18 @@ extension _PlatformInAppLocalhostServerMethodSupported
             [
               TargetPlatform.android,
               TargetPlatform.iOS,
-              TargetPlatform.macOS,
-              TargetPlatform.windows,
-              TargetPlatform.linux,
             ].contains(platform ?? defaultTargetPlatform);
       case PlatformInAppLocalhostServerMethod.isRunning:
         return ((kIsWeb && platform != null) || !kIsWeb) &&
             [
               TargetPlatform.android,
               TargetPlatform.iOS,
-              TargetPlatform.macOS,
-              TargetPlatform.windows,
-              TargetPlatform.linux,
             ].contains(platform ?? defaultTargetPlatform);
       case PlatformInAppLocalhostServerMethod.start:
         return ((kIsWeb && platform != null) || !kIsWeb) &&
             [
               TargetPlatform.android,
               TargetPlatform.iOS,
-              TargetPlatform.macOS,
-              TargetPlatform.windows,
-              TargetPlatform.linux,
             ].contains(platform ?? defaultTargetPlatform);
     }
   }

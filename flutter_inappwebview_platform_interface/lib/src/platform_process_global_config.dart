@@ -1,7 +1,7 @@
 import 'dart:async';
 
 import 'package:flutter/foundation.dart';
-import 'package:flutter_inappwebview_internal_annotations/flutter_inappwebview_internal_annotations.dart';
+import 'package:nosferatu500_inappwebview_internal_annotations/nosferatu500_inappwebview_internal_annotations.dart';
 import 'package:plugin_platform_interface/plugin_platform_interface.dart';
 
 import 'in_app_webview/platform_inappwebview_controller.dart';
@@ -11,21 +11,21 @@ import 'types/enum_method.dart';
 
 part 'platform_process_global_config.g.dart';
 
-///{@template flutter_inappwebview_platform_interface.PlatformProcessGlobalConfigCreationParams}
+///{@template nosferatu500_inappwebview_platform_interface.PlatformProcessGlobalConfigCreationParams}
 /// Object specifying creation parameters for creating a [PlatformProcessGlobalConfig].
 ///
 /// Platform specific implementations can add additional fields by extending
 /// this class.
 ///{@endtemplate}
 ///
-///{@macro flutter_inappwebview_platform_interface.PlatformProcessGlobalConfigCreationParams.supported_platforms}
+///{@macro nosferatu500_inappwebview_platform_interface.PlatformProcessGlobalConfigCreationParams.supported_platforms}
 @SupportedPlatforms(platforms: [AndroidPlatform()])
 @immutable
 class PlatformProcessGlobalConfigCreationParams {
   /// Used by the platform implementation to create a new [PlatformProcessGlobalConfig].
   const PlatformProcessGlobalConfigCreationParams();
 
-  ///{@template flutter_inappwebview_platform_interface.PlatformProcessGlobalConfigCreationParams.isClassSupported}
+  ///{@template nosferatu500_inappwebview_platform_interface.PlatformProcessGlobalConfigCreationParams.isClassSupported}
   ///Check if the current class is supported by the [defaultTargetPlatform] or a specific [platform].
   ///{@endtemplate}
   bool isClassSupported({TargetPlatform? platform}) =>
@@ -34,7 +34,7 @@ class PlatformProcessGlobalConfigCreationParams {
       );
 }
 
-///{@template flutter_inappwebview_platform_interface.PlatformProcessGlobalConfig}
+///{@template nosferatu500_inappwebview_platform_interface.PlatformProcessGlobalConfig}
 ///Process Global Configuration for `WebView`.
 ///WebView has some process-global configuration parameters
 ///that cannot be changed once WebView has been loaded.
@@ -56,7 +56,7 @@ class PlatformProcessGlobalConfigCreationParams {
 ///to ensure that it happens before any other thread can call a method that loads `WebView`.
 ///{@endtemplate}
 ///
-///{@macro flutter_inappwebview_platform_interface.PlatformProcessGlobalConfig.supported_platforms}
+///{@macro nosferatu500_inappwebview_platform_interface.PlatformProcessGlobalConfig.supported_platforms}
 @SupportedPlatforms(
   platforms: [
     AndroidPlatform(
@@ -73,7 +73,7 @@ abstract class PlatformProcessGlobalConfig extends PlatformInterface {
   ) {
     assert(
       InAppWebViewPlatform.instance != null,
-      'A platform implementation for `flutter_inappwebview` has not been set. Please '
+      'A platform implementation for `nosferatu500_inappwebview` has not been set. Please '
       'ensure that an implementation of `InAppWebViewPlatform` has been set to '
       '`WebViewPlatform.instance` before use. For unit testing, '
       '`WebViewPlatform.instance` can be set with your own test implementation.',
@@ -89,7 +89,7 @@ abstract class PlatformProcessGlobalConfig extends PlatformInterface {
   factory PlatformProcessGlobalConfig.static() {
     assert(
       InAppWebViewPlatform.instance != null,
-      'A platform implementation for `flutter_inappwebview` has not been set. Please '
+      'A platform implementation for `nosferatu500_inappwebview` has not been set. Please '
       'ensure that an implementation of `InAppWebViewPlatform` has been set to '
       '`InAppWebViewPlatform.instance` before use. For unit testing, '
       '`InAppWebViewPlatform.instance` can be set with your own test implementation.',
@@ -115,14 +115,14 @@ abstract class PlatformProcessGlobalConfig extends PlatformInterface {
   /// The parameters used to initialize the [PlatformProcessGlobalConfig].
   final PlatformProcessGlobalConfigCreationParams params;
 
-  ///{@template flutter_inappwebview_platform_interface.PlatformProcessGlobalConfig.apply}
+  ///{@template nosferatu500_inappwebview_platform_interface.PlatformProcessGlobalConfig.apply}
   ///Applies the configuration to be used by `WebView` on loading.
   ///This method can only be called once.
   ///
   ///Calling this method will not cause `WebView` to be loaded and will not block the calling thread.
   ///{@endtemplate}
   ///
-  ///{@macro flutter_inappwebview_platform_interface.PlatformProcessGlobalConfig.apply.supported_platforms}
+  ///{@macro nosferatu500_inappwebview_platform_interface.PlatformProcessGlobalConfig.apply.supported_platforms}
   @SupportedPlatforms(
     platforms: [
       AndroidPlatform(
@@ -138,11 +138,11 @@ abstract class PlatformProcessGlobalConfig extends PlatformInterface {
     );
   }
 
-  ///{@macro flutter_inappwebview_platform_interface.PlatformProcessGlobalConfigCreationParams.isClassSupported}
+  ///{@macro nosferatu500_inappwebview_platform_interface.PlatformProcessGlobalConfigCreationParams.isClassSupported}
   bool isClassSupported({TargetPlatform? platform}) =>
       params.isClassSupported(platform: platform);
 
-  ///{@template flutter_inappwebview_platform_interface.PlatformProcessGlobalConfig.isMethodSupported}
+  ///{@template nosferatu500_inappwebview_platform_interface.PlatformProcessGlobalConfig.isMethodSupported}
   ///Check if the given [method] is supported by the [defaultTargetPlatform] or a specific [platform].
   ///{@endtemplate}
   bool isMethodSupported(
@@ -154,11 +154,11 @@ abstract class PlatformProcessGlobalConfig extends PlatformInterface {
   );
 }
 
-///{@template flutter_inappwebview_platform_interface.ProcessGlobalConfigSettings}
+///{@template nosferatu500_inappwebview_platform_interface.ProcessGlobalConfigSettings}
 ///Class that represents the settings used to configure the [PlatformProcessGlobalConfig].
 ///{@endtemplate}
 ///
-///{@macro flutter_inappwebview_platform_interface.ProcessGlobalConfigSettings.supported_platforms}
+///{@macro nosferatu500_inappwebview_platform_interface.ProcessGlobalConfigSettings.supported_platforms}
 @SupportedPlatforms(
   platforms: [
     AndroidPlatform(
@@ -190,7 +190,7 @@ class ProcessGlobalConfigSettings_ {
   ///on WebView are in the same process, to avoid needing multiple data directories.
   ///The [PlatformInAppWebViewController.disableWebView] method can be used to ensure that the other processes do not use WebView by accident in this case.
   ///
-  ///{@macro flutter_inappwebview_platform_interface.ProcessGlobalConfigSettings.dataDirectorySuffix.supported_platforms}
+  ///{@macro nosferatu500_inappwebview_platform_interface.ProcessGlobalConfigSettings.dataDirectorySuffix.supported_platforms}
   @SupportedPlatforms(
     platforms: [
       AndroidPlatform(
@@ -219,7 +219,7 @@ class ProcessGlobalConfigSettings_ {
   ///If they do not already exist, `WebView` will attempt to create them during initialization, along with any missing parent directories.
   ///In such a case, the directory in which `WebView` creates missing directories must be readable and writable by the current process.
   ///
-  ///{@macro flutter_inappwebview_platform_interface.ProcessGlobalConfigSettings.directoryBasePaths.supported_platforms}
+  ///{@macro nosferatu500_inappwebview_platform_interface.ProcessGlobalConfigSettings.directoryBasePaths.supported_platforms}
   @SupportedPlatforms(
     platforms: [
       AndroidPlatform(
@@ -235,7 +235,7 @@ class ProcessGlobalConfigSettings_ {
     this.directoryBasePaths,
   });
 
-  ///{@template flutter_inappwebview_platform_interface.ProcessGlobalConfigSettings.isClassSupported}
+  ///{@template nosferatu500_inappwebview_platform_interface.ProcessGlobalConfigSettings.isClassSupported}
   ///Check if the current class is supported by the [defaultTargetPlatform] or a specific [platform].
   ///{@endtemplate}
   static bool isClassSupported({TargetPlatform? platform}) =>
@@ -243,7 +243,7 @@ class ProcessGlobalConfigSettings_ {
         platform: platform,
       );
 
-  ///{@template flutter_inappwebview_platform_interface.ProcessGlobalConfigSettings.isPropertySupported}
+  ///{@template nosferatu500_inappwebview_platform_interface.ProcessGlobalConfigSettings.isPropertySupported}
   ///Check if the current class is supported by the [defaultTargetPlatform] or a specific [platform].
   ///{@endtemplate}
   static bool isPropertySupported(

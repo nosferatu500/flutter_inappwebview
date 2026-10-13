@@ -46,7 +46,7 @@ class ASN1IdentifierClass {
   }
 
   @override
-  bool operator ==(value) => value == _value;
+  bool operator ==(other) => other == _value;
 
   @override
   int get hashCode => _value.hashCode;
@@ -200,7 +200,7 @@ class ASN1IdentifierTagNumber {
   }
 
   @override
-  bool operator ==(value) => value == _value;
+  bool operator ==(other) => other == _value;
 
   @override
   int get hashCode => _value.hashCode;

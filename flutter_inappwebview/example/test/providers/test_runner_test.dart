@@ -134,7 +134,7 @@ void main() {
         description: 'Test description',
         category: TestCategory.navigation,
         execute: (controller) async {
-          return TestResult(
+          return const TestResult(
             passed: true,
             message: 'Test passed',
             duration: Duration.zero,
@@ -155,7 +155,7 @@ void main() {
         description: 'Test description',
         category: TestCategory.navigation,
         supportedPlatforms: ['android', 'ios'],
-        execute: (controller) async => TestResult(
+        execute: (controller) async => const TestResult(
           passed: true,
           message: 'Test passed',
           duration: Duration.zero,
@@ -231,7 +231,7 @@ void main() {
             title: 'Test 1',
             description: 'Description',
             category: TestCategory.navigation,
-            execute: (controller) async => TestResult(
+            execute: (controller) async => const TestResult(
               passed: true,
               message: 'Test passed',
               duration: Duration.zero,

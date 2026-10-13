@@ -1,3 +1,1617 @@
+## 7.0.0
+
+The Android half of a hard fork of 6.2.0-beta.3 / `1.2.0-beta.3`. The `nosferatu500_inappwebview` 7.0.0
+entry carries the full user-facing list; this entry is what changed in this package.
+
+### Requirements and packaging — all breaking
+
+- **The package is renamed `nosferatu500_inappwebview_android`** (was `flutter_inappwebview_android`),
+  and so is its Gradle project. Its Pigeon channels are now
+  `dev.flutter.pigeon.nosferatu500_inappwebview_android.…`, regenerated on both sides
+- **`minSdk` 19 → 30** (Android 11). Well above Flutter's own floor of 24; AGP rejects an app below
+  its library's floor, so every consuming app must raise its `minSdk`
+- **Android Gradle Plugin 9 required.** The module declares no AGP classpath of its own and uses the
+  AGP 9-only `enableKotlin` DSL; AGP 8 is no longer supported
+- **The module is 100% Kotlin** — all 157 sources translated from Java, 0 `.java` files left
+- **Namespace / Gradle `group`: `com.pichillilorenzo.flutter_inappwebview_android` →
+  `dev.nosferatu500.inappwebview`**, and `pluginClass` with it
+- **Every method/event channel name: `com.pichillilorenzo/…` →
+  `dev.nosferatu500.inappwebview/…`.** Invisible through the public Dart API, breaking for anything
+  talking to the channels directly, and what lets this fork be installed alongside upstream
+- **The bundled `FileProvider`'s `<provider>` block changed in all three of its parts.** Apps declare
+  it themselves, because the authority derives from their own `applicationId`, so all three are
+  breaking:
+  - `android:name`: `com.pichillilorenzo.flutter_inappwebview_android.InAppWebViewFileProvider` →
+    **`dev.nosferatu500.inappwebview.InAppWebViewFileProvider`**
+  - `android:authorities`: `${applicationId}.flutter_inappwebview_android.fileprovider` →
+    **`${applicationId}.dev.nosferatu500.inappwebview.fileprovider`**
+  - the `meta-data` resource: `@xml/provider_paths` → **`@xml/inappwebview_provider_paths`**, which
+    is scoped to the app's own external files directory (see *Fixed*); `@xml/provider_paths` no
+    longer exists here
+
+  **A stale authority is silent.** `FileProvider.getUriForFile` throws `IllegalArgumentException`,
+  `InAppWebViewChromeClient.getOutputUri()` logs it and returns null, and
+  `<input type="file" capture>` then produces nothing — no Dart error and no event. Copy the whole
+  block from the `InAppWebViewFileProvider` KDoc rather than editing one line of the 6.x one
+- **Consuming apps must now compile against API 37+.** The module declares
+  `androidx.core:core:1.19.0`, whose AAR metadata requires it, and AGP **fails** the build rather
+  than warning when it is unmet. Add `compileSdk = 37` to your app's `android/app/build.gradle`
+  until Flutter's own default reaches 37 (it is 36 on Flutter 3.44). `minSdk` and `targetSdk` are
+  unaffected — this only governs which SDK your app compiles against
+- Native dependencies: `androidx.webkit` 1.14.0 → **1.17.0**, `androidx.browser` 1.9.0 → **1.10.0**,
+  `androidx.appcompat` 1.7.1 → **1.8.0**, and **`androidx.core` is now declared directly at
+  1.19.0** — it was used directly (`ContextCompat`, `ViewCompat`, `WindowCompat`,
+  `WindowInsetsCompat`, `WindowInsetsControllerCompat`, `BundleCompat`, `FileProvider`) while
+  reaching the classpath only transitively through appcompat
+- **New Dart dependency: `meta` (`^1.15.0`).** Required by the Pigeon-generated
+  `lib/src/pigeons/*.g.dart`, which import `package:meta/meta.dart`. It was previously reaching the
+  package only transitively, which `flutter pub publish` rejects outright — an undeclared import
+  from `lib/` is a validation **error**, not a warning
+
+### Added
+
+Twelve `androidx.webkit` features, each behind its own `WebViewFeature` flag, and eight
+`android.webkit` APIs the plugin had never exposed:
+
+- **`setCookies`** — the plural cookie write. The framework has no batch API, so `MyCookieManager`
+  loops; the saving is the **single channel round trip**, which was measured to be ~94% of the cost
+  of doing this from Dart one call at a time. `CookieManager.setCookie`'s callback is asynchronous,
+  so the results are written into a fixed-size array **by index** and the reply is sent only once
+  the last one lands — collecting them in completion order would scramble the ordering the Dart
+  side promises. `flush()` is called **once at the end** rather than once per cookie, which the
+  singular path cannot do. Cookie-string building was extracted into a shared `buildCookieValue` so
+  the two calls cannot build a cookie differently
+- **`MUTE_AUDIO`** — `InAppWebViewController.setAudioMuted()` / `.isAudioMuted()`
+- **`PAYMENT_REQUEST`** — `InAppWebViewSettings.paymentRequestEnabled` (upstream #2660, #2722)
+- **`WEB_AUTHENTICATION`** — passkeys, via `InAppWebViewSettings.webAuthenticationSupport`
+  (upstream #2743)
+- **`DOWNLOAD_FAVICONS_ENABLED`** — `InAppWebViewSettings.downloadFaviconsEnabled`, which controls
+  whether the WebView issues the favicon request at all. It no longer gates any event: this release
+  removes `onFaviconChanged`, and the `WebChromeClient.onReceivedIcon` it was built on is no longer
+  dispatched. Read favicons with `InAppWebViewController.getFavicons()`
+- **`BACK_FORWARD_CACHE`** — `InAppWebViewSettings.backForwardCacheEnabled`
+- **`ATTRIBUTION_REGISTRATION_BEHAVIOR`** — `InAppWebViewSettings.attributionRegistrationBehavior`
+- **`WEBVIEW_MEDIA_INTEGRITY_API_STATUS`** — `InAppWebViewSettings.webViewMediaIntegrityApiStatus`,
+  with per-origin overrides
+- **`USER_AGENT_METADATA`** (+ `…_FORM_FACTORS`) — User-Agent Client Hints, via
+  `InAppWebViewSettings.userAgentMetadata`
+- **`DEFAULT_TRAFFICSTATS_TAGGING`** — `InAppWebViewController.setDefaultTrafficStatsTag()`
+- **`DELETE_BROWSING_DATA`** — `WebStorageManager.deleteBrowsingData()` /
+  `.deleteBrowsingDataForSite()`
+- **`MULTI_PROFILE`** — a `ProfileStore` controller (`AndroidProfileStore`) plus
+  `InAppWebViewSettings.profileName`, and the plugin's own storage APIs are now profile-aware:
+  cookies, web storage, service-worker settings and geolocation all act on the profile the WebView is
+  actually using, instead of silently acting on the default profile. `setServiceWorkerClient` remains
+  default-profile only
+- **`PRERENDER_WITH_URL`** — `InAppWebViewController.prerenderUrl(WebUri)`
+- **`GeolocationPermissions`** — a new controller surface (`AndroidGeolocationPermissions`: `allow`,
+  `clear`, `clearAll`, `getAllowed`, `getOrigins`), profile-aware from the start
+- **`CookieManager`** — `setAcceptCookie()`, `isAcceptCookieEnabled()`, `hasCookies()`,
+  `isFileSchemeCookiesAllowed()`
+- **`InAppWebViewController`** — `postVisualStateCallback()`, `documentHasImages()`, `flingScroll()`
+- **`InAppWebViewSettings.syncCallbackTimeoutMillis`** — the bound on how long a WebView worker
+  thread blocks waiting for Dart to answer `shouldInterceptRequest` or
+  `onLoadResourceWithCustomScheme`, previously the hardcoded `Util.SYNC_CALLBACK_TIMEOUT_MILLIS`
+  (10s). Read live from `customSettings` on each callback, so `setSettings` takes effect
+  immediately; `0` or less falls back to the default rather than being honoured, because
+  `latch.await(0)` would make every synchronous callback a silent no-op. The two blocking waits that
+  have no WebView settings to read — a custom `WebViewAssetLoader` `PathHandler.handle` and
+  `ServiceWorkerClient.shouldInterceptRequest` — keep the fixed 10s
+
+- **`NAVIGATION_LISTENER`** (+ **`NAVIGATION_GET_WEB_RESOURCE_ERROR`**) —
+  `onNavigationStarted` / `onNavigationRedirected` / `onNavigationCompleted`, carrying the new
+  `WebViewNavigation` type, behind `InAppWebViewSettings.useNavigationListener`.
+
+  **`Navigation.getStatusCode()` is the reason to want this**: it reports the HTTP status of a
+  navigation that succeeded, which no existing event could — `onReceivedHttpError` fires only for
+  error responses. It is reported as `null` until the navigation commits rather than as `0`. The
+  events also see navigations nothing else in the plugin does: same-document navigations
+  (`history.pushState`, fragment jumps), back/forward traversals and reloads, each classified by
+  `isBack`/`isForward`/`isReload`/`isRestore`/`isSameDocument`/`wasInitiatedByPage`. And
+  `onNavigationRedirected` is the first redirect event here that is not conditional on the app's own
+  choices — `NavigationAction.isRedirect` only ever reported redirects for navigations
+  `shouldOverrideUrlLoading` was offered.
+
+  Two implementation notes worth knowing. **The id is synthesised by the plugin**, from a
+  `WeakHashMap` keyed on androidx's interned peer: androidx says "same navigation" with object
+  identity, which no method channel can carry. Neither `Navigation` nor `Page` overrides
+  `equals`/`hashCode`, so a `WeakHashMap` gives identity semantics *and* drops entries the platform
+  has released. **The listener is registered only when the setting is on**, and the setting is
+  inferred from any of the three handlers being supplied; it can also be toggled through
+  `setSettings` at runtime, which starts a fresh id sequence. `addNavigationListener` throws
+  `UnsupportedOperationException` rather than degrading, so the feature check is not optional.
+
+  `Navigation.getWebResourceError()` is the **only** method on `Navigation` that androidx guards with
+  a feature check of its own, and `Page` has no gated method at all — `Page.getUrl()` is callable
+  even though `WebViewFeature.PAGE_GET_URL` is one of the six tombstones below
+- **The rest of the same listener** — `onPageLoadEvent`, `onPageDomContentLoadedEvent`,
+  `onPageDeleted`, `onFirstContentfulPaintMillis`, `onLargestContentfulPaintMillis` and
+  `onPerformanceMarkMillis`, carrying the new `WebViewPage` type.
+
+  **`onPageDomContentLoadedEvent` is `DOMContentLoaded` with no injected JavaScript**, which this
+  plugin could not report before: the alternative is a user script plus a bridge call on every page,
+  which costs an injection per load and can be defeated by the page's own CSP.
+  **`onPageDeleted` is the only way to observe back/forward-cache eviction** — `backForwardCacheEnabled`
+  shipped in 7.0.0 with no way to see whether a page was still cached or had been thrown away.
+  And the two paint callbacks are Web Vitals **straight from the engine**, with no
+  `PerformanceObserver` to install.
+
+  `onPerformanceMarkMillis` is gated separately by `InAppWebViewSettings.useOnPerformanceMarkMillis`
+  and is the only one that is: a page can call `performance.mark()` hundreds of times during one
+  load, so it is a different cost class from everything else here, all of which is bounded at about
+  one message per page. The Kotlin listener drops the callback before it reaches the channel when
+  the setting is off — the native callback still arrives, it simply stops there — and an integration
+  test proves that by keeping a Dart handler installed while turning the gate off explicitly.
+
+  Page ids come from the same `WeakHashMap` as `WebViewNavigation.pageId`, so the two agree; the
+  eviction that releases them lives in `onPageDeleted`, which is why that override existed before
+  this entry's event did
+
+- **`WebChromeClient.getVisitedHistory`** — the new `onRequestVisitedHistory` event, which is how
+  the engine asks the app which URLs to treat as visited for `:visited` link styling. Nothing else
+  in the plugin could supply that: a `WebView` cannot know what the user visited elsewhere in the
+  app, so without an answer every link in every page renders unvisited.
+
+  **Measured before it was written, because D6 was rejected on the same question:** this hook is
+  live on modern Chromium — a `logcat` probe caught it — and it fires **once per `WebView`** (1 call
+  for a single-WebView run, 117 across a ~120-test group), not once per page load. That frequency is
+  why there is no settings gate.
+
+  `null` from Dart falls through to `super.getVisitedHistory`, leaving the engine's callback
+  unanswered exactly as a plugin-less `WebView` does; an empty list is instead a real answer. Also
+  measured: the engine does **not** let script read the state back — a reported and an unreported
+  link both return the unvisited colour from `getComputedStyle` — so the feature's effect cannot be
+  verified from Dart, and an integration test pins that mitigation rather than the rendering
+
+- **`WebViewCompat.saveState`** — the `maxSize` and `includeForwardState` arguments on
+  `saveState`, gated on `WebViewFeature.SAVE_STATE` and supported on both test AVDs (WebView 149 on
+  API 37, 151 on API 33).
+
+  **Switching wholesale was measured and rejected.** `WebViewCompat.saveState(view, bundle,
+  Int.MAX_VALUE, true)` returns a byte-identical result to the framework `WebView.saveState(bundle)`
+  on both AVDs, so routing the unconstrained case through it would change nothing and would make
+  every `saveState()` depend on a feature it does not need. The arguments are the entire item; the
+  no-argument path is untouched.
+
+  The two APIs also report failure differently, which is why the Kotlin reads the outcome off the
+  `Bundle`: `WebView.saveState` returns a `WebBackForwardList?` and signals failure with `null`,
+  while `WebViewCompat.saveState` returns `void` and signals it by leaving the bundle empty — which
+  is what a `maxSize` below one entry's size actually does.
+
+- **`COOKIE_INTERCEPT`** — `WebSettingsCompat.setCookiesIncludedInShouldInterceptRequest` behind
+  `InAppWebViewSettings.includeCookiesOnShouldInterceptRequest`, and
+  `WebResourceResponseCompat.setCookies` behind `WebResourceResponse.cookies`. Supported on both
+  test AVDs (WebView 149 on API 37, 151 on API 33); the platform default was measured **off**.
+
+  `WebResourceResponseCompat` does **not** change what `shouldInterceptRequest` returns: its
+  `toWebResourceResponse()` folds the cookie values into a private multi-cookie header that the
+  WebView unpacks, so the return type and every caller are unaffected.
+
+  **The response-building block was duplicated three times and is now one method on
+  `WebResourceResponseExt`.** `InAppWebViewClient` and `InAppWebViewClientCompat` held
+  byte-identical copies and `ServiceWorkerManager` a near-identical one — and it is
+  `InAppWebViewClientCompat` that actually runs on Chromium >= 73, i.e. on every realistic device,
+  so a change made to the obvious copy alone would have reached almost nobody. `cookies` therefore
+  works on the service-worker intercept path too, though it stays inert there until that switch is
+  added.
+
+- **`ServiceWorkerWebSettingsCompat.setIncludeCookiesOnShouldInterceptRequestEnabled` /
+  `isIncludeCookiesOnShouldInterceptRequestEnabled`**, completing `COOKIE_INTERCEPT`. Measured on
+  both AVDs: the default-profile switch reads `false` before anything writes it, and round-trips in
+  both directions.
+
+  `ServiceWorkerSettings` has **two** implementations and only one can carry this. The
+  androidx-backed one (default profile) implements it behind the feature check; the framework-backed
+  one (named profiles) answers `null` and no-ops, because `android.webkit.ServiceWorkerWebSettings`
+  has no such method — verified with `javap` against `android.jar`, which declares exactly the four
+  older settings. Measured on device with the control that makes it mean something: for the *same*
+  created profile `getAllowContentAccess` answers non-null while this one answers `null`, so the
+  `null` is about the API rather than about the profile being unreachable.
+
+- **`CUSTOM_REQUEST_HEADERS`** — androidx's eight `Profile` custom-header methods, exposed as five on
+  `ProfileStore` (the three `getCustomHeaders` and two `clearCustomHeader` overloads become optional
+  arguments). Measured live on both AVDs, with the control that matters: of two headers added at the
+  same moment differing only in `originRules`, only the one matching the loaded origin reached the
+  request.
+
+  **The overload selection is done in Kotlin, not in Dart.** `getCustomHeaders(name)` and
+  `getCustomHeaders(name, value)` are called according to which arguments arrived non-null, because
+  androidx matches header *names* case-insensitively and *values* case-sensitively — a Dart-side
+  filter would silently disagree.
+
+  The `Profile` methods are `default` no-ops on an interface ("default to avoid breaking backwards
+  compatibility"), so whether the shipped provider implements them at all was probed before any of
+  this was built — D9's question. It does: adding, reading back, filtering and clearing all work on
+  the default profile and on a named one, and the two do not share state.
+
+Every mirrored `WebViewFeature` constant is now pinned against the real AAR by a test: six of the
+flags `WebViewFeature` declares are `@Deprecated` tombstones that `isFeatureSupported` **throws**
+for, and five others have a native *value* that differs from their name.
+
+### Changed
+
+- **`onPrintRequest` is asked before the print job starts.** `JavaScriptBridgeInterface`'s
+  `window.print()` handler no longer calls `printCurrentPage()` up front; it invokes the Dart event
+  first and only prints from the callback's `defaultBehaviour`, so returning `true` means
+  `PrintManager.print` is never called and no print dialog appears. Returning `false`, `null`, an
+  error, and having no handler at all all still print. The job is now created with
+  `handledByClient = false`, so no `PrintJobController` is allocated on this path.
+  `WebViewChannelDelegate.onPrintRequest` drops its `printJobId` argument and no longer sends that
+  map key. Measured on API 37 and API 33: `true` leaves no `com.android.printspooler` process,
+  `false` and no-handler both spawn one
+
+### Fixed
+
+- **`hasCustomHeader` answered `false` for a profile it couldn't reach.** `ProfileStoreManager` now
+  answers `null` there (`bool?` in the Pigeon schema, regenerated: the signature, the Dart side's
+  null handling and the notes), and `AndroidProfileStore` returns it, as `PlatformProfileStore`
+  declares `Future<bool?>`. A host test pins that `null` reaches the caller, and the device test asks
+  about a profile that doesn't exist, along with `getCustomHeaders`' empty set for it
+- **`getQuotaForOrigin` / `getUsageForOrigin` answered `0` for storage that couldn't be resolved.**
+  `MyWebStorage` now answers `null` there (`int?` in the Pigeon schema, regenerated: the two
+  signatures, the Dart side's null handling and the notes), and `AndroidWebStorageManager` returns
+  it, as `PlatformWebStorageManager` declares `Future<int?>`. A host test pins that `null` reaches
+  the caller, and the device test asks both about a profile that doesn't exist
+- **The custom-header writes couldn't say they did nothing.** `ProfileStoreManager` resolved the
+  profile through an elvis, so with `CUSTOM_REQUEST_HEADERS` or `MULTI_PROFILE` missing, or an
+  unknown profile name, `addCustomHeader` / `clearCustomHeader` / `clearAllCustomHeaders` silently
+  did nothing. (The hand-written channel replied a constant `true`; §173 made them `void`.) They now
+  answer whether the profile was resolved, on the wire (`bool` in the Pigeon schema, regenerated)
+  and from `AndroidProfileStore`
+- **`deleteAllData` / `deleteOrigin` dropped the host's answer.** `MyWebStorage` answers `false` when
+  the storage can't be resolved (no such profile, or a profile without `MULTI_PROFILE`), and since
+  §169 that answer reached Dart only to be discarded. `AndroidWebStorageManager` now returns it, as
+  `PlatformWebStorageManager` declares `Future<bool>`. The Pigeon schema's notes were updated; the
+  generated files differ only in comments
+- **`AndroidPathHandler.dispose()` threw a `LateInitializationError`, and nothing called it.** It
+  unregistered the handler's Pigeon channel, then cleared `eventHandler`, which was `late final` and
+  already set. `eventHandler` is now a plain field, so `dispose()` returns and is safe to repeat.
+  The app reaches it through the new `PathHandler.dispose()`. A disposed handler is unregistered: a
+  request for its path gets no handler (measured: the page's `fetch` rejected)
+- **`ChromeSafariBrowser.open` threw when `isSingleInstance`, `isTrustedWebActivity` or `noHistory`
+  was `null`.** The fields are nullable and `toMap()` always sends them. The manager read them by key
+  presence, and unboxing the null threw a `PlatformException` (`NullPointerException`) before
+  anything launched (measured §200). A null now means the setting's default (`false`), as the
+  Activity's own settings parser already treated it
+- **A `null` `shouldOverrideUrlLoading` answer cancelled the navigation; a throwing handler allowed
+  it** (behaviour change). `ShouldOverrideUrlLoadingCallback.decodeResult` read anything but a
+  policy as CANCEL, and a Dart throw reached `error`, which allowed. Measured: a `null` answer
+  cancelled, and so did `useShouldOverrideUrlLoading: true` with no handler. Now no policy is no
+  decision and the navigation loads, while a throwing handler is answered CANCEL by the Dart side,
+  as on iOS
+- **A rebuild before the platform view existed left the controller with the first build.**
+  `PlatformViewLink` creates the view once, with the first build's closure, and the view appears
+  later; a rebuild in between had no controller to move yet. Measured (a widget built twice in its
+  first frame): `onWebViewCreated` and the first `onLoadStop` went to the first build's callbacks,
+  and removing the widget didn't dispose the controller. The view-created callback now reaches the
+  widget currently in the tree, as on iOS
+- **A rebuilt `InAppWebView` kept calling the first build's callbacks.** The controller read its
+  callbacks from the params of the widget that created it, so after a parent rebuild passed new
+  ones (a closure over new state, say) events still went to the old closures, and a callback the
+  rebuild added never ran. Measured: after a rebuild, the next page's `onLoadStop` went to the
+  first build's closure and an added `onTitleChanged` never fired. A rebuild now hands its params
+  to the controller (`AndroidInAppWebViewController.updateWebViewParams`), so events go to the
+  latest callbacks. What the WebView read at creation is not redone: the initial page and settings,
+  and the `use*` settings a callback switches on when present at creation
+  (`shouldOverrideUrlLoading`, `onLoadResource`, `onDownloadStarting`, the Ajax and fetch
+  interceptors, the navigation-listener and page events, …), so such a callback added only at a
+  rebuild still isn't sent its events (by reading the code that switches them on; not measured)
+- **An `AT_DOCUMENT_END` user script in a content world ran while the page was still loading.**
+  A content world is an `<iframe>`, and the script's document-end check ran inside it, reading the
+  `<iframe>`'s `readyState`, which is `complete` as soon as the world exists. Measured on API 37
+  with a page whose image took 3 s: the world script ran 24–271 ms in, with the page's
+  `readyState` still `loading`, while the same script in the page world ran at `load`, 3 s later.
+  The check now watches the page, so a content-world script runs when a page-world one does.
+- **An `InAppWebView` rebuilt by its parent was never disposed.** `onPlatformViewCreated` stores
+  the controller on the platform widget object of that moment, and a rebuild makes a new one, so
+  the widget's `dispose` ran on an object with no controller. Measured: the controller kept its
+  JavaScript handlers after the widget was removed. `didUpdateWidget` now moves the controller to
+  the new object (not when the rebuild keeps the same object).
+- **`onNavigationStarted` and `onNavigationRedirected` could describe a later state of the
+  navigation.** The listener was registered with androidx's default, which posts every callback to
+  the main `Looper`; each snapshot then read the live `Navigation` whenever the post ran, after
+  Chromium might have moved on. Measured on API 37: in 1 run of 6, a redirected navigation's
+  `onNavigationStarted` already carried the final url and both `onNavigationRedirected` events
+  carried `didCommit: true` and status 200. It's now registered with a direct executor, so each
+  callback reads the navigation as it is at that event: 0 of 6, every hop in order, all still on the
+  main thread. This was the intermittent "NavigationListener reports the whole navigation
+  lifecycle" device-test failure.
+- **`callAsyncJavaScript`, and `evaluateJavascript` in a content world, could wait forever.**
+  Both are answered by the page itself, over the bridge, so whenever the page couldn't answer, the
+  Dart future never completed. Measured on API 37, each with no answer in 5–8 s:
+  - a content world on a page whose `Content-Security-Policy` blocks inline scripts (the world's
+    `<iframe>` inherits it, so its scripts never ran), or on a document with no `body` (an SVG);
+  - a pending call when the page navigated away, or when the WebView was disposed.
+
+  Now the world wrapper notices both kinds of page and answers at once. At every main-frame page
+  start and at `dispose()`, anything still pending is answered too. `callAsyncJavaScript` gets a
+  `null` value with an `error` that says why; a world `evaluateJavascript` gets `null`, as a
+  JavaScript error in a world already returns, and the reason goes to the page's console.
+- **A user script in a content world never ran with the default `forMainFrameOnly: true`.** A
+  content world on Android is an `<iframe>` the plugin adds to the frame, and the main-frame check
+  (`window === window.top`) was placed inside it, where it's always false. The check now runs in
+  the frame the world belongs to, as it already did for the plugin's own scripts. Measured on API 37
+  with a page that has a same-origin child frame: before, the script ran in neither frame; now it
+  runs in the main frame and not the child's, while a `forMainFrameOnly: false` script still runs in
+  both. The example's tests had been passing `forMainFrameOnly: false` on Android to work around it.
+- **A page's events could arrive under a different page id from the navigation that created it.**
+  `WebViewPage.id` and `WebViewNavigation.pageId` are numbered per androidx `Page` object, and the
+  listener kept those objects in weak maps. Chromium doesn't keep a `Page` alive either, so after
+  a garbage collection the same document arrived as a new object and got a new id. Its
+  `onPageLoadEvent`, `onPageDomContentLoadedEvent` and Web Vitals events then matched no
+  navigation. Measured on API 37 with a GC posted after `onNavigationCompleted`: 3 / 3 runs failed
+  like this with the weak maps, 0 / 3 with strong ones. The listener now holds each `Page` until
+  `onPageDeleted`, which keeps androidx handing back the same object, and each `Navigation` until
+  `onNavigationCompleted` (the same `getOrCreatePeer` mechanism, not measured separately);
+  `dispose()` releases whatever is left. This was the intermittent
+  "page lifecycle and Web Vitals" device-test failure.
+- **A popup WebView's own `initialUserScripts` were unreliable** (a WebView created with a
+  `windowId` from `onCreateWindow`). Scripts registered before the `WebViewTransport` handover are
+  dropped (upstream #1455), and the old workaround re-registered them from `View.post`, which ran
+  at the wrong moment either way. For a popup shown on screen it ran after the popup's first
+  navigation had started, so a fast first page (from cache or a local asset) had none of them, and
+  evaluating JavaScript in one of its content worlds never answered. For a headless popup it ran
+  before the handover took effect, so every page lacked them. The scripts are now registered at the
+  popup's first page start, which is after the handover, and are also evaluated into that first
+  page, with a per-document guard so a script that did run isn't run again. Measured on API 37 with
+  device tests that fail without each part.
+- **A headless WebView's `onShowFileChooser` was never called** (since 6.2.0-beta.3 / `1.2.0-beta.3`,
+  where the event was added). `AndroidHeadlessInAppWebViewCreationParams` didn't take the field, so
+  the conversion `HeadlessInAppWebView` goes through dropped the handler. With no handler,
+  `useOnShowFileChooser` wasn't inferred either, and a file input opened the system picker without
+  asking. The params now take it, so the handler is called and the setting is inferred as it is for
+  the widget. It's the only Android-supported field the Android params left out; the others they
+  omit are iOS-only. A file chooser opens only on a user gesture, and a headless WebView gets none,
+  so the event is rare there: on API 37 a scripted `click()` on a file input opened nothing. A new
+  host test delivers the event, and a new device test reads the inferred setting: `false` before
+  the fix, `true` after (API 37).
+- **An in-app browser's `webViewController.setSettings()` reset the browser's own settings to
+  their defaults.** The controller's map carries only WebView keys, but the native side parsed it
+  as browser settings too and stored the result. So a toolbar colour, a fixed title, and the
+  back-button settings (`closeOnCannotGoBack`, `allowGoBackWithBackButton`,
+  `shouldCloseOnBackButtonPressed`) set when the browser opened were silently replaced by
+  defaults. The back button and title updates then acted on those defaults, and
+  `InAppBrowser.getSettings()` reported them. The four settings the browser reads from its live UI
+  (`hidden`, `hideToolbarTop`, `hideUrlBar`, `hideProgressBar`) weren't affected. It now applies to
+  the WebView only, as for any other WebView. `webViewController.getSettings()` is unchanged: it
+  never exposed browser keys. A new device test fails without the fix: the colour came back null.
+  That's the one value measured before the fix. The rest follows from the code, which replaced
+  the whole stored settings object.
+- **`ProxyController.setProxyOverride()` reported a malformed proxy rule as a dead channel instead
+  of an error.** A rule Chromium rejects — `"://"`, `"http://["`, `"%%%"`, `""`, a bypass rule of
+  `" "`, or a `directs` entry of `"bogus"` — raises `IllegalArgumentException` *synchronously* from
+  `ProxyController.setProxyOverride`. Because that is an `@async` Pigeon host method, the throw
+  escaped the generated handler and no reply was sent, so the caller received
+  `PlatformException(channel-error, "Unable to establish connection on channel…")`, naming the
+  transport rather than the rule, and the message handler was left dangling.
+
+  It now fails as `PlatformException(code: "ProxyManager")` carrying androidx's own message. Note
+  androidx **accepts** some strings that look invalid, `"not a url"` among them; only the six above
+  were observed to fail, and the test keeps `"not a url"` as a control so the guard cannot start
+  rejecting everything.
+
+  The same shape was fixed in `WebStorageManager.deleteBrowsingDataForSite` — see *Internal*. Pigeon
+  wraps a **synchronous** host method in `try { … } catch (Throwable) { wrapError(…) }` but leaves an
+  **`@async`** one unwrapped, so only an error delivered through the callback becomes an error
+  envelope.
+
+- **`HttpAuthCredentialDatabase.setHttpAuthCredential()` failed with an empty error when the
+  protection space omitted `protocol` or `port`.** `URLProtectionSpace` requires only `host` in its
+  constructor and declares `String? protocol` / `int? port`, so
+  `URLProtectionSpace(host: 'example.com')` is a legal argument — but the Kotlin handler
+  force-unwrapped both, because the credential database keys rows on them. Measured on an API 37
+  device, the call came back as `PlatformException(error, null, null,
+  java.lang.NullPointerException)`: no message, no details, nothing naming the problem.
+
+  It now throws a `PlatformException` whose code is `IllegalArgumentException` and whose message
+  names both fields, the host, and why they are required. **The call still fails** — the row cannot
+  be written without them — but the caller can now tell why. The read/remove methods
+  (`getHttpAuthCredentials`, `removeHttpAuthCredential`, `removeHttpAuthCredentials`) always
+  accepted a partial protection space and are unchanged.
+
+- **`WebViewFeature.isStartupFeatureSupported()` could hang forever instead of answering.** The
+  Kotlin handler read the *activity* and, when it was null, returned **without calling `result` at
+  all** — no success, no error, no `notImplemented` — so the caller's `await` never completed. The
+  activity is null until `onAttachedToActivity` and null again after
+  `onDetachedFromActivityForConfigChanges`, so this was reachable during a configuration change or
+  any call made before the activity attached; the Dart side's `?? false` did not help, because it
+  defaults a null *reply*, not a reply that never arrives.
+
+  It now answers from the plugin's **application** context, which is set before any channel call can
+  arrive. That is the correct argument and not merely a non-null one: androidx documents the
+  parameter as "a Context to access application assets", and its `StartupApiFeature` uses it only
+  for `getPackageManager()` and `WebViewCompat.getCurrentWebViewPackage(context)` — package-manager
+  lookups an application context serves exactly as well as an Activity. Both startup features
+  answer `true` on an API 37 device, measured.
+
+- **A failure inside `ProcessGlobalConfig.apply` could never reach Dart.** The hand-written channel
+  answered errors with `result.error(LOG_TAG, "", e)`, passing the raw `Exception` as the details
+  payload — and `StandardMessageCodec.writeValue` throws
+  `IllegalArgumentException("Unsupported value: …")` for any type it does not know, so the error
+  envelope failed to encode instead of being delivered. The channel is now Pigeon-generated and the
+  exception is stringified, so a rejected config (most often: already applied once in this process)
+  actually surfaces to the awaiting caller.
+
+  **The `PlatformException.code` changes with it**, from the constant `"ProcessGlobalConfigM"` to
+  the thrown exception's class name, with a real `message` and a stacktrace in `details` in place
+  of the empty string. Breaking only for code matching on that code — which could not have been
+  receiving it anyway, per the above.
+
+- **The ten managers that live on a constant method-channel name are now single instances, so
+  constructing one no longer silently unhooks another.** `AndroidCookieManager`,
+  `AndroidGeolocationPermissions`, `AndroidHttpAuthCredentialDatabase`,
+  `AndroidProcessGlobalConfig`, `AndroidProfileStore`, `AndroidProxyController`,
+  `AndroidServiceWorkerController`, `AndroidTracingController`, `AndroidWebStorageManager` and
+  `AndroidWebViewFeature` each attach a method-call handler to a fixed channel name, but
+  `createPlatform…` minted a new object on every call and `.static()` was a *further* separate
+  object. `MethodChannel.setMethodCallHandler` is last-writer-wins per channel name and tells the
+  loser nothing, so the most recently constructed object silently owned every incoming call.
+
+  That is what broke `ServiceWorkerController.shouldInterceptRequest`: one extra construction
+  anywhere — `CookieManager.isMethodSupported` was enough — stopped it firing. Both
+  `createPlatform…` and `.static()` now resolve to the same instance.
+
+  **Breaking if you relied on getting a distinct object**: two `CookieManager()` values now share
+  one platform object. Nothing observable changes otherwise — these classes hold no per-instance
+  state, and their creation params have no fields. The public constructors are unchanged and still
+  produce a separate instance if called directly.
+
+- **`WebMessageListener`'s origin allow-list compared reverse-DNS hostnames, and could match an
+  origin it was not written for.** Both helpers behind it were wrong.
+
+  `Util.isIPv6` was `Inet6Address.getByName(address); true`. `Inet6Address` declares no
+  `getByName`, so that resolved to the inherited `InetAddress.getByName` — which parses IPv4
+  literals **and resolves hostnames** — and nothing type-checked the result. It therefore answered
+  *"is this resolvable"*: `127.0.0.1` and `example.com` both returned `true`.
+
+  `Util.normalizeIPv6` returned `canonicalHostName`, a **reverse DNS lookup** producing a hostname
+  rather than a normalized address — `::1` came back as `"localhost"`. Combined with the bug above
+  it ran on **every** origin check rather than only IPv6 ones, so each check could cost a forward
+  and a reverse lookup **on the calling thread** and disclosed the visited host to the resolver.
+
+  The security consequence is that the allow-list's IPv6 comparison was made between canonical
+  *names*: an allowed-origin rule of `[::1]` and a page origin of `127.0.0.1` both canonicalise to
+  `"localhost"` on a typical machine and compared **equal**, so a listener could be reached from an
+  origin the rule did not name. `isIPv6` is now purely syntactic and never touches the network, and
+  `normalizeIPv6` returns `hostAddress`. **This is a tightening**: origins that previously matched
+  only through a shared canonical name no longer match. Both spellings `::1` and `[::1]` are
+  accepted, since `Uri.getHost()` keeps the brackets. Covered by 8 unit tests (23 → 28), each
+  verified to fail against the old implementation
+
+- **`HeadlessInAppWebView.setSize` / `getSize` did not round-trip, and a `-1` axis was reported in
+  the wrong unit.** The Dart API is in logical pixels; a `View`'s layout params are `Int` physical
+  pixels. `setSize` **truncated** the conversion and `getSize` divided the result back, so on any
+  device whose density makes the product fractional you did not get out what you put in —
+  `Size(600, 800)` came back as `Size(599.795, 800)` at density 390, and a non-integer size such as
+  `Size(600.25, 800.75)` lost precision at every density. `setSize` now rounds, and `getSize`
+  answers from the size last requested for as long as those are still the layout params on the view,
+  so the round-trip is exact.
+
+  Separately, `getSize` reported a `-1` ("match the screen") axis as a **physical** pixel count:
+  `Size(-1, -1)` on a density-420 device answered `Size(1080, 2400)` for a screen 411.4 logical
+  pixels wide. It now answers in logical pixels, like every other value the API accepts or returns.
+  iOS was unaffected — UIKit points are logical pixels and no conversion happens there.
+  Covered by 7 new unit tests (28 → 35) and two integration assertions, all verified to fail against
+  the old code
+- **`CookieManager.flush()` now returns `Future<bool>`**, surfacing the answer `MyCookieManager.flush`
+  already sends: `false` when `getCookieManager(profileName)` resolves to null — an unknown profile,
+  or no `MULTI_PROFILE` support — in which case nothing was written. Dart previously discarded it.
+  A `null` reply (a disposed channel) is read as `false`, unlike `isAcceptCookieEnabled` on the same
+  class, whose platform default is `true`; 4 unit tests pin both choices
+- **`CookieManager.flush()`'s `Future` never completed.** The native side never replied on the
+  channel, so `await flush()` hung forever. Fixed and verified on a device. Unrelated to the
+  return-type change above — this was a missing reply, not a missing value
+- **A blocking callback could hang the WebView forever.** The four synchronous callbacks
+  (`shouldInterceptRequest`, `onLoadResourceWithCustomScheme`, a custom `WebViewAssetLoader`
+  `PathHandler.handle`, and `ServiceWorkerClient.shouldInterceptRequest`) waited on a latch that was
+  not always released. The wait is now always released and bounded at 10s; a handler that
+  legitimately takes longer will stop intercepting and log a warning. The first two can since be
+  retuned through `InAppWebViewSettings.syncCallbackTimeoutMillis`; the other two have no WebView
+  settings to read and keep the 10s default
+- **The bundled `FileProvider` granted read access to the entire external-storage root** (upstream
+  #2874 / #2873). It is now scoped to the plugin's own directories
+- **Six bugs carried through the Java → Kotlin translation**, fixed once the diff was small enough to
+  review: `MediaSizeExt` unit conversion, `HeadlessInAppWebView.setSize`, `mayLaunchUrl`,
+  `getRealSettings`, a boxed-value comparison in `setSettings` that made settings updates no-ops, and
+  `JsBeforeUnloadResponse.toString()`
+- **`WebMessageListener.isOriginAllowed`'s wildcard was an unanchored substring test** —
+  `*.example.com` matched `foo.example.com.evil.test`. Now anchored at the end of the host, so it is
+  subdomains only. **Not user-visible on Android**: listeners are registered through
+  `WebViewCompat.addWebMessageListener`, which matches origins inside the WebView, and nothing in
+  this module calls the Kotlin copy. It is fixed and unit-tested (`Util.hostMatchesWildcardRule`)
+  because the same rule is live on iOS and a fork should not ship two spellings of one security check
+- **The HTTP-auth state was process-global, and one WebView could be given another's password.**
+  `previousAuthRequestFailureCount` and `credentialsProposed` were `companion object` vars on
+  **both** `InAppWebViewClient` and `InAppWebViewClientCompat`, so every WebView in the app shared
+  one credential queue and one failure counter, and any WebView's `onPageFinished` /
+  `onReceivedError` emptied them mid-challenge for the others. Worse, the queue is *fetched* by
+  matching host + protocol + realm + port but nothing re-checked that on the way out, so **a queue
+  filled for one host could be popped for another** — one page with authenticated subresources on a
+  second origin is enough, no second WebView required. Both are now per-WebView instance state in a
+  new `HttpAuthState`, which also discards the queue and the counter when the protection space
+  changes. 9 unit tests
+- **`HttpAuthenticationChallenge.previousFailureCount` is 0-based now, matching iOS.** Android
+  incremented the counter *before* dispatching the challenge, so the first one reported `1` while
+  iOS reported `0` — an app that gives up after N attempts was off by one depending on the
+  platform. The value is now the number of attempts that have already failed, so three challenges
+  for one protection space report `0, 1, 2` on both platforms. **Breaking for anything that tested
+  the Android value against a literal**; nothing else in the API changes, and the divergence note
+  is gone from the field's dartdoc. Measured on Android 17 and 13 and on iOS 26.5 and 17.5. 2 unit
+  tests, and the integration test that used to assert only that the sequence *rose* now pins the
+  absolute values — a relative assertion passes on either convention, so it could not have caught
+  this drifting back
+- **`setSettings` rebuilt `webViewAssetLoader` from the *previous* settings, so changing it at
+  runtime never took effect.** `InAppWebView.setSettings` recreated the `WebViewAssetLoader` from
+  `customSettings`, which is only replaced with the incoming settings on the method's last line — so
+  the loader was always rebuilt from the value being replaced. A `setSettings` that changed
+  `webViewAssetLoader` silently kept serving the old path handlers, and for a `CustomPathHandler` the
+  native side registered the *old* handler id, leaving the new handler's Dart method channel with
+  nothing on the other end. The rebuild is now driven by the new settings and, like every other
+  setting in that method, is guarded on the value actually having changed — so an unrelated
+  `setSettings` call no longer disposes and recreates every custom path handler's channel delegate
+  for no reason. 1 integration test
+- **A registered `ServiceWorkerClient` stopped being consulted as soon as a second
+  `ServiceWorkerController` was constructed.** Every `AndroidServiceWorkerController` attaches its
+  method-call handler to the same `const MethodChannel`, and `setMethodCallHandler` is
+  last-writer-wins per channel name, so the most recently constructed controller owned every
+  incoming call — while the client itself was held per instance. Since the public
+  `ServiceWorkerController()` constructor makes a new controller every time, a single extra
+  construction anywhere in an app silently orphaned the client set through
+  `setServiceWorkerClient`: `shouldInterceptRequest` stopped firing, service worker requests went
+  through unintercepted, and nothing reported an error. The client is now process-wide, which is
+  also what the platform models — `ServiceWorkerControllerCompat.getInstance()` is a singleton with
+  one native client registration. 6 unit tests
+- **AGP 9 / ProGuard** compatibility (upstream #2852, #2765, #2761)
+- Deleted the dead ~300-line `InputAwareWebView` path
+
+### Removed
+
+- **The `platform_util` channel, whole** — `PlatformUtil.kt`, the Dart `PlatformUtil` class and the
+  plugin's field, construction and disposal of it. The channel
+  (`dev.nosferatu500.inappwebview/inappwebview_platformutil`) carried `getSystemVersion` and
+  `formatDate`, and had **no caller on either side**: the Dart class was never imported or exported
+  by any file in any package, and the Kotlin statics (`formatDate`, `getLocaleFromString`) had no
+  caller outside their own file. Its last consumer was the iOS JavaScript cookie fallback, deleted
+  in this same release. A third Dart method, `getWebCookieExpirationDate`, had no handler on either
+  platform at all and would have thrown `MissingPluginException` on its first call
+- All deprecated API: `AndroidWebViewFeature` → `WebViewFeature`, `AndroidInAppWebViewOptions` /
+  `AndroidInAppBrowserOptions` / `AndroidChromeCustomTabsOptions` → the `*Settings` classes, the
+  `androidOn*` event aliases, the `android*` field aliases, `getOptions`/`setOptions`,
+  `InAppWebViewController.setSafeBrowsingWhitelist()` (→ `setSafeBrowsingAllowlist`),
+  `.startSafeBrowsing()`, `.clearCache()` (→ `clearAllCache`), `.getScale()` (→ `getZoomScale`),
+  `PullToRefreshController.setSize()` (→ `setIndicatorSize`)
+- Settings that were provably no-ops at `minSdk 30` / `targetSdk 33+`:
+  `InAppWebViewSettings.saveFormData`, `.forceDark`, `.forceDarkStrategy` (use
+  `algorithmicDarkeningAllowed`), `.requestedWithHeaderOriginAllowList` (androidx cancelled the
+  header removal it existed for), and `LayoutAlgorithm.NARROW_COLUMNS`, which surveying found was
+  **never settable** — a `switch` with no `break`s, fixed at the same time
+- `WebViewFeature.FORCE_DARK`, `.FORCE_DARK_STRATEGY`, `.REQUESTED_WITH_HEADER_ALLOW_LIST`,
+  `.SAFE_BROWSING_WHITELIST` (→ `SAFE_BROWSING_ALLOWLIST`) and `.START_SAFE_BROWSING`
+- The `createPlatformWebViewEnvironment` / `createPlatformWebViewEnvironmentStatic` overrides —
+  `PlatformWebViewEnvironment` was Windows/Linux-only and no longer exists
+- `onDownloadStarting` no longer serializes a response back to the native side: the event returns
+  `FutureOr<void>`, and `WebViewChannelDelegate.kt` never read the returned value
+- **`PrintJobController.disposeNoCancel()`**, whose only caller was the old `onPrintRequest`
+  path — it dropped the plugin's tracking while leaving the OS job running, and there is no longer
+  a job the plugin owns but has not handed to Dart
+- **`onFaviconChanged`**, with its `WebChromeClient.onReceivedIcon` override in
+  `InAppWebViewChromeClient.kt` and the `onFaviconChanged` sender in `WebViewChannelDelegate.kt`. The
+  framework no longer dispatches `onReceivedIcon` — `WebIconDatabase`, its source, has been inert
+  since API 19 — so the event could not fire. Measured on API 33 and API 37: with
+  `downloadFaviconsEnabled: true` reading back `true`, the WebView does fetch `favicon.ico`
+  (confirmed through `onLoadResource`) and `onReceivedIcon` is still never called, while
+  `onReceivedTitle` from the same client is. Use `InAppWebViewController.getFavicons()`.
+  `InAppWebViewSettings.downloadFaviconsEnabled` is kept — it still controls whether the request is
+  issued, which is a real network cost per page
+
+### Internal
+
+- **Version 7.0.0 in the pubspec, which said 1.2.0-beta.3 under this CHANGELOG's 7.0.0 heading.** The
+  platform interface constraint is `^7.0.0` (was `^1.4.0-beta.3`); all five packages ship at 7.0.0.
+
+- **The empty `onUnhandledKeyEvent` override is explained, from a measurement.** Both WebView
+  clients drop the platform default, which re-injects a key the page didn't handle into the window.
+  The override came from upstream in 2019 with no reason given. Measured in a plain app on API 37:
+  Flutter's `HardwareKeyboard` sees every key before the WebView either way, and restoring the
+  default changed nothing observable (no second key event in Flutter, no back navigation on Escape).
+  So it stays, with a comment saying so and pointing apps at `HardwareKeyboard`
+- **The `WebStorageManager` Pigeon schema's docs say what the quota and usage measure.** The quota
+  is one global figure, and usage counts IndexedDB, Cache Storage, the origin-private file system
+  and service workers, not Web SQL or `localStorage`. Comments only; the generated Kotlin and Dart
+  were regenerated, with no code change
+- **`InputMethodManager.HIDE_NOT_ALWAYS` is no longer used.** The tap-outside-to-dismiss
+  workaround (only without Hybrid Composition) hides the keyboard with flags 0, as
+  `hideInputMethod` already did, and its `@Suppress("DEPRECATION")` helper is gone. The flag is
+  documented as having no effect from API 36, and before that it only spared a keyboard shown with
+  `SHOW_FORCED`, which this plugin never uses. Measured on API 33 and API 37 emulators: the keyboard
+  is dismissed the same way with either flag, on API 33 also after a `SHOW_FORCED` show, and also
+  with the workaround's hide deleted
+- **`constant_channel_managers_are_singletons_test`'s explanation is current again.** It said every
+  manager attaches a handler to a constant `MethodChannel`; re-measured, all ten are Pigeon, nine
+  register no Dart-side handler, and `ServiceWorkerController`'s one is stateless. The test (one
+  instance per factory) is unchanged; its doc and failure message now say why it is still kept
+- **Three opt-in lint rules are enabled:** `avoid_void_async`, `close_sinks`,
+  `no_adjacent_strings_in_list`. The one finding, in a test, was an error message split over two
+  adjacent literals inside a list; it's now one literal with the same value.
+- **The `discarded_futures` lint is enabled** (not in flutter_lints). Its 3 library findings were
+  fire-and-forget calls and are now marked `unawaited(...)`: `PrintJobController`'s `onComplete`,
+  the headless WebView's `internalDispose()` on conversion, and the platform view's `create()`. That
+  last one was the `..create()` at the end of a cascade in `onCreatePlatformView`, so the controller
+  is now bound, `create()` called, and the controller returned, in the same order as before. The 9
+  test findings, `handlePlatformMessage` calls whose reply arrives through a completer, are marked
+  too. No behaviour changed.
+- **The `unawaited_futures` lint is enabled here.** It had no findings in this package.
+- **Sixteen opt-in lint rules are enabled** (none ships in flutter_lints), each with 0 findings
+  today, as guards: `always_declare_return_types`, `avoid_js_rounded_ints`, `avoid_type_to_string`,
+  `cancel_subscriptions`, `conditional_uri_does_not_exist`, `deprecated_consistency`,
+  `literal_only_boolean_expressions`, `no_self_assignments`, `only_throw_errors`,
+  `prefer_void_to_null`, `test_types_in_equals`, `throw_in_finally`, `unnecessary_statements`,
+  `use_late_for_private_fields_and_variables`, `use_named_constants`, `use_to_and_as_if_applicable`.
+  No code changed.
+- **The `avoid_print` lint is enabled here.** It had no findings in this package; the `false` that
+  disabled it silenced nothing.
+- **The `deprecated_member_use` warning is enabled here.** It had no findings in this package.
+- **The `avoid_return_types_on_setters` lint is enabled.** `AndroidWebMessagePort`'s two setters
+  (`onMessage`, `webMessageChannel`) lose their `void`, which setters always return. No code
+  changed.
+- **The `prefer_const_constructors_in_immutables` lint is enabled.** Four creation-params
+  constructors are now `const`: `AndroidInAppBrowserCreationParams`,
+  `AndroidHeadlessInAppWebViewCreationParams`, `AndroidWebStorageCreationParams` and
+  `AndroidStorageCreationParams`. Calls without `const` behave exactly as before; callers may now
+  also write `const`. A new test builds three of them in a `const` context, so taking `const` back
+  would stop it compiling.
+- **The `unnecessary_import` warning is enabled**, and its 11 redundant imports are removed (2 in
+  `lib`, 9 in tests). Each was fully covered by another import in the same file. No code changed.
+- **The `deprecated_member_use_from_same_package` lint is enabled.** It is not in `flutter_lints`
+  and is no longer on by default, so until now nothing reported a use of the package's own
+  deprecated API. It has no findings today; it will flag any deprecation this fork adds that its own
+  code still uses.
+- **A dead analysis option removed.** `deprecated_member_use_from_same_package` is no longer an
+  analyzer diagnostic that's on by default, so its `ignore` was inert (measured: a deprecated use
+  from the same package is not reported unless the rule is enabled as a lint).
+- **The `unnecessary_cast` warning is enabled here.** It had no findings in this package.
+- **The `overridden_fields` lint is enabled**, and its seven findings fixed. The InAppBrowser,
+  headless and widget creation params kept `pullToRefreshController` and `findInteractionController`
+  in their own narrowed fields and never passed them to the base, so the base's copies were always
+  null. The web message listener's params did the same with `allowedOriginRules`, leaving the base
+  copy null where the subclass held `{"*"}`. Nothing read the base copies, so nothing misbehaved.
+  The values now go to the base through super parameters, and getters of the same types narrow them.
+  Constructors keep their signatures. A new unit test pins each getter, through the constructor and
+  through the conversion from the platform-interface params.
+- **The `empty_catches` lint is enabled.** Its three findings here were deliberate fallbacks (a
+  value that isn't JSON is returned as it came; an unreadable asset leaves `getHtml` null), so each
+  block now says so in a comment. No code changed.
+- **The per-WebView MethodChannel is gone.** After W5 nothing travelled on
+  `dev.nosferatu500.inappwebview/inappwebview_<id>` or `…/inappbrowser_<id>`, so neither side opens
+  them any more: `InAppWebView` and `InAppBrowserActivity` build `WebViewChannelDelegate` with no
+  channel, and the Dart controller and `AndroidInAppBrowser` register no handler. No public API
+  change.
+  - `AndroidInAppWebViewController.fromInAppBrowser` keeps its `channel` parameter, now nullable
+    and ignored, so the public constructor stays source-compatible. Both classes keep
+    `ChannelController` in their type, with no channel set (as `AndroidPathHandler` since §205).
+  - Deleted with it: `ChannelDelegateImpl`, `IChannelDelegate`, `SyncBaseCallbackResultImpl`,
+    `Util.invokeMethodAndWaitResult`, and the four unused `METHOD_CHANNEL_NAME_PREFIX` constants
+    (`InAppWebView`, `InAppBrowserActivity`, and the two web-message ones left by §165).
+  - `per_webview_method_channel_removed_test` (new) pins that a message on either old name finds no
+    handler, while the same event over Pigeon still arrives.
+- **`WebViewChannelDelegate` W5: the 19 value-returning events and the two blocking waits move to
+  Pigeon, so nothing uses the per-WebView MethodChannel any more.** JS dialogs, windows,
+  permissions, geolocation, navigation policy, auth challenges, safe browsing, form resubmission,
+  render process, JavaScript handlers, print, visited history and file chooser all join
+  `InAppWebViewFlutterApi`, with `shouldInterceptRequest` and `onLoadResourceWithCustomScheme`. No
+  public API change.
+  - Each event keeps the callback object it had, and every Pigeon reply is handed to it the way the
+    MethodChannel did. An answer goes to `success`, with its ints narrowed (Pigeon sends every Dart
+    int as 64-bit). A Dart throw goes to `error`. **No Dart handler goes to `notImplemented`**, not
+    `error`, so each event still takes its default; the two differ for the JS dialogs and the JS
+    handler (`FlutterApiReply.kt`, pinned by `FlutterApiReplyTest`).
+  - The two blocking waits keep their semantics: posted to the main thread, bounded by the
+    WebView's live `syncCallbackTimeoutMillis`, and null on a timeout, a throw or no handler.
+  - The service-worker and custom path handler schemas are folded into `in_app_webview.dart`, since
+    Pigeon can't share `WebResourceRequestData` / `WebResourceResponseData` across files (20
+    schemas, from 22). The path handler's answer is now typed `WebResourceResponseData`.
+  - Deleted: the two dead callback forms (`shouldInterceptRequest(request, callback)`,
+    `onLoadResourceWithCustomScheme(request, callback)`), their callback classes, and
+    `WebResourceResponseExt.fromMap`, which had no caller left.
+  - `pigeon_in_app_webview_answers_test` (new) delivers all 21 as real Pigeon messages and pins
+    each argument, each answer, the null answer when no callback is set, and the error reply.
+- **W5's coverage check: device tests now read what the plugin does with the answers to the
+  value-returning events, before their migration.** Most tests answered with the platform default,
+  so an answer the plugin ignored would have passed. Test code only.
+  - `onJsBeforeUnload`: CONFIRM navigates and CANCEL stays. The old test was skipped everywhere
+    (Chromium only asks after a user gesture), and its fixture is deleted.
+  - `onGeolocationPermissionsShowPrompt`: an allow-and-retain answer reaches the page and is
+    stored under the reported origin.
+  - `onPermissionRequest`: GRANT and DENY reach the page, through a Widevine request on a local
+    page.
+  - `onFormResubmission`: RESEND posts the form again; DONT_RESEND keeps the old document.
+  - `onRenderProcessUnresponsive` and `onRenderProcessResponsive`: TERMINATE kills the renderer.
+  - `onShowFileChooser`: a returned `file://` path reaches the input.
+  - `onSafeBrowsingHit`: PROCEED loads the page with no error (the interstitial loads the same
+    URL, so the URL alone proved nothing).
+  - `onPrintRequest`: answering `true` raises no print dialog, checked through the app's
+    lifecycle. The check found the test raising one itself: a second request completed its
+    completer again, the throw became an error reply, and on an error the plugin prints.
+  - `onReceivedHttpAuthRequest`: `permanentPersistence` stores the answered credential.
+  - A throwing `onJsConfirm` cancels the dialog (an error, unlike no answer, never shows one), and
+    a null `shouldOverrideUrlLoading` answer cancels the navigation. Both are pinned as measured.
+- **`WebViewChannelDelegate` W4: the 35 fire-and-forget events move to Pigeon**, on a new
+  `InAppWebViewFlutterApi` under the same suffix as the HostApi. Load, progress, title, console,
+  scroll and over-scroll, download, errors, fullscreen, context menu, history, zoom, render
+  process, login, navigation and page events. No public API change. Only the 21 value-returning
+  events (W5) are left on the MethodChannel.
+  - The Dart handler rebuilds the exact arguments Kotlin used to send and dispatches them through
+    the controller's existing `_handleMethod`, so each event keeps its one definition.
+  - The events are `@async` on the Dart side, so a throwing callback, or a payload `fromMap` can't
+    read, still becomes an error reply that Kotlin ignores, as it did on the MethodChannel, rather
+    than an unhandled error.
+  - The handler is unregistered on dispose, except on a keep-alive dispose, which keeps it
+    registered exactly as it keeps the MethodChannel handler.
+  - `pigeon_in_app_webview_events_test` (new) delivers all 35 as real Pigeon messages and pins
+    each field, the dispose and keep-alive rules, and the error reply.
+- **W4's coverage check: the five events whose typed fields no device test read are now
+  asserted, before their migration.** All 35 fire-and-forget events arrive in some test, but these
+  fields never did, so a dropped or constant value would have passed. Test code only.
+  - `onLoadStart`'s `url`: a new test reads the loading URL, including after a `pushState`
+    reload.
+  - `onUpdateVisitedHistory`'s `isReload`: `pushState` reports false, a reload true.
+  - `onReceivedTouchIconUrl`'s `precomposed`: a page with both kinds of icon reports false and
+    true.
+  - `onRenderProcessGone`'s `rendererPriorityAtExit`: IMPORTANT by default, and BOUND with a
+    BOUND priority policy.
+  - `onPermissionRequestCanceled`'s `origin`, and `onOverScrolled`'s `x` and `y` at a page's
+    bottom-right corner (they are both 0 at the top, where the old test looked).
+- **`WebViewChannelDelegate` W3: the last 42 host methods move to Pigeon, so no Dart call uses
+  the per-WebView MethodChannel any more.** Load, inject, settings, scroll, zoom, print, focus,
+  context menu, user scripts, web messages, input method, state and audio all join
+  `InAppWebViewHostApi` as synchronous methods. No public API change. The MethodChannel now carries
+  only Kotlin → Dart events (W4, W5). A call that still arrives on it gets `notImplemented`, as an
+  unknown method always did. `WebViewChannelDelegateMethods` is deleted.
+  - The settings pair crosses as maps (decision B, §194), and every inbound map goes through
+    `Util.normalizeCodecInts`. Measured without it: `setSettings` and `printCurrentPage` answer a
+    `ClassCastException` error, and `setContextMenu` crashes the app when the selection menu opens.
+  - `postWebMessage` and `addWebMessageListener` keep their error code and message
+    (`WebViewChannelDelegate`). Other platform exceptions, such as an invalid print colour mode,
+    now arrive under the exception's class name instead of `error`.
+  - `loadUrl` no longer sends `allowingReadAccessTo`, and `zoomBy` no longer sends `animated`:
+    Android never read either (both are iOS's).
+  - `save_state_bounds_test`, `mute_audio_test` and the browser boundary test's settings split
+    now assert on the Pigeon channels. `mute_audio_test`'s "a missing reply reads as not muted"
+    became "a disposed controller reads as not muted", because the platform can no longer answer
+    null.
+- **W3's two payload gaps are asserted on a device before its migration.** Test code only.
+  - `loadUrl` with `headers` (a GET takes its own branch on Android) had no test. A new one loads
+    the node server's `/echo-headers` with two headers and reads them back, then loads again
+    without them to show they don't stick.
+  - `printCurrentPage` had never been sent `orientation`, `mediaSize`, `colorMode`, `duplexMode` or
+    `resolution`: seven ints that Pigeon will deliver as `Long`. The print group's single test now
+    prints two more jobs and checks each field in `getInfo().attributes` (orientation needs its own
+    job, because Android applies it as a media size).
+- **`WebViewChannelDelegate` W2: the nine methods that answer from a callback move to Pigeon.**
+  `evaluateJavascript`, `callAsyncJavaScript`, `takeScreenshot`, `getContentWidth`,
+  `getSelectedText`, `saveWebArchive`, `isSecureContext`, `postVisualStateCallback` and
+  `documentHasImages` join `InAppWebViewHostApi` as `@async` methods. Each runs inside
+  `replyingOnThrow`, so a synchronous throw becomes an error reply (code: the method's name)
+  instead of a dead channel. No public API change; 42 methods are left on the MethodChannel.
+  - The three maps (content world, `callAsyncJavaScript`'s `arguments`, the screenshot
+    configuration) go through `Util.normalizeCodecInts`. Without it, a configured screenshot
+    crashes the app: `quality` is read `as Int` in a posted runnable (measured, a FATAL
+    `ClassCastException`).
+  - `InAppWebView.takeScreenshot` takes a callback instead of a `MethodChannel.Result`.
+  - `get_meta_theme_color_test` now answers the Pigeon `evaluateJavascript`, and asserts that
+    nothing at all reaches the MethodChannel.
+- **`takeScreenshot`'s configuration is asserted field by field on a device, before its
+  migration.** The existing test accepted any screenshot, so none of `rect`, `snapshotWidth`,
+  `compressFormat` or `quality` was checked. `quality` is the int that Pigeon will deliver as
+  `Long`. Four Android tests now read each field back out of the image, on a page of four coloured
+  squares: the rect's size and position (by colour), the format's magic bytes (PNG, JPEG, WEBP),
+  quality 1 encoding smaller than 100, and the snapshot's scaled size. Test code only.
+  - The existing test took its screenshot before the WebView had a size (one pumped frame): with
+    the rect ignored, the capture failed with "width and height must be > 0". It pumps frames now.
+- **The `clearSslPreferences` device test no longer depends on socket timing.** It spaced its loads
+  12 s apart so the node server's 5 s keep-alive would close the socket, and it flaked in the full
+  group, where its failure read exactly like a dropped call. Measured on API 37: each load opens a
+  second connection that lingers 16–25 s, so a load after clearing sometimes reused it and never
+  re-checked the certificate. Test code only.
+  - Each load now starts with `clearClientCertPreferences`, which closes WebView's pooled
+    connections, and asserts that the load asked for a client certificate again. That proves a new
+    TLS handshake, so the control ("a remembered PROCEED doesn't ask") can no longer pass on a
+    reused socket.
+  - The 24 s of gaps are gone. A no-op `clearSslPreferences` fails both alone and after
+    `SSL request` (the group's precondition), and a no-op `clearClientCertPreferences` fails with
+    its own message.
+- **`WebViewChannelDelegate`, the last hand-written channel, starts moving to Pigeon: W1 of five
+  commits.** 25 synchronous load, navigation and state methods move to a new
+  `InAppWebViewHostApi` (`pigeons/in_app_webview.dart`, twenty-two schemas): `getUrl`,
+  `getTitle`, `getProgress`, `getOriginalUrl`, `postUrl`, `loadData`, `loadFile`, `reload`,
+  `goBack`/`goForward` and their `can…` queries, `goBackOrForward`/`canGoBackOrForward`,
+  `stopLoading`, `isLoading`, `clearHistory`, `clearSslPreferences`, `clearFormData`, `pause`,
+  `resume`, `pauseTimers`, `resumeTimers`, `prerenderUrl` and `getContentHeight`. No public API
+  change.
+  - Until the migration finishes, each WebView is served on both transports: these 25 on Pigeon,
+    the rest on the MethodChannel.
+  - The Pigeon suffix is the MethodChannel name's tail, `inappwebview_<id>` or
+    `inappbrowser_<id>`, so widget, keep-alive, headless and in-app-browser WebViews stay exactly
+    as distinct as their channels were.
+  - `loadData` no longer sends `allowingReadAccessTo`, which Android never read (it's iOS's).
+  - `loadFile`'s error keeps its code and message.
+  - `prerender_url_test` now asserts on the Pigeon channel. Its "a null reply reads as false"
+    case became "a disposed controller reads as false", because the platform can no longer answer
+    null.
+- **The custom path handler channel is Pigeon-generated**, the twenty-second migrated, which
+  makes twenty-one schemas: one `@async` `CustomPathHandlerFlutterApi.handle(path)`, suffixed by
+  the handler's id. No public API change.
+  - Kotlin still blocks the WebView thread until Dart answers, with the same semantics: posted to
+    the main looper, a fixed 10 s bound, and a timeout, error, missing handler or null answer all
+    fall through to the network. It uses the latch shape of the service worker's
+    `shouldInterceptRequest`.
+  - The answer stays a `WebResourceResponse.toMap()` map rather than a typed class. The typed
+    version, `WebResourceResponseData`, is declared by the service worker's schema, and Pigeon
+    can't share it across files. It goes through `Util.normalizeCodecInts`: without that, the
+    `statusCode` fails its cast and the request falls through (measured).
+  - The dead callback form of the Kotlin `handle` wasn't ported.
+  - A suffix mismatch is silent, measured: every request waits out the full 10 s and then goes to
+    the network.
+- **`CustomPathHandler` has device tests, for the first time, ahead of its channel's
+  migration.** Four new `in_app_webview` tests, so the group goes from 167 to 171. The handler is
+  the one `WebViewAssetLoader` path handler that crosses a channel: Kotlin blocks a WebView thread
+  while Dart's `handle(path)` answers. The tests assert:
+  - The path the handler receives (`page.html`, with the loader's prefix and the query stripped),
+    and the page it serves.
+  - Status, reason phrase, headers and content type, read back by a `fetch()` on the page. A
+    status sent without a reason phrase arrives as `200 OK`, because Kotlin uses both or neither.
+  - `contentEncoding`. 🚨 It's visible only when it contradicts what Chrome would detect by
+    itself, so the test sends UTF-8 bytes declared as ISO-8859-1. Two earlier versions that didn't
+    contradict it passed with the encoding dropped.
+  - A `null` answer falls through to the network.
+  - `WebResourceResponse.cookies` isn't covered: the Kotlin side never reads it. Test only.
+- **The `headless_inappwebview` manager channel is Pigeon-generated**, the twenty-first migrated
+  and the third under decision B: `run` over `HeadlessInAppWebViewManagerHostApi`, added to the
+  existing `pigeons/headless_webview.dart` so it reuses `Size2DData`, which leaves twenty schemas.
+  No public API change.
+  - `run(id, params, initialSize)`: the creation `params` map stays whole, because
+    `FlutterWebView` reads it and also builds every `InAppWebView` widget. It goes through
+    `Util.normalizeCodecInts`. Without that, every `run` fails with a `ClassCastException`
+    (measured).
+  - `initialSize` is the one key only the headless path read, so it left the map and is typed
+    now. `HeadlessInAppWebView.prepare` takes it directly. Its unreachable `-1 × -1` fallback is
+    gone, because Dart has always sent a size.
+  - 🚨 **One device check was lost, and it's measured.** `initialSize` used to cross the
+    MethodChannel unconverted, which let `set and get custom size` catch a width/height swap in the
+    Kotlin size converters. Now it round-trips through those same converters, so the swap passes
+    that test. `a -1 size is reported back in logical pixels` still catches it (845 against a 412
+    bound), and the boundary test pins `initialSize` asymmetrically on the Dart side.
+- **Everything `HeadlessInAppWebViewManager.run` sends now has a device test where one is
+  possible, ahead of its migration.** Five new `headless_in_app_webview` tests, so the group goes
+  from 7 to 12. `run`'s params map goes straight into `FlutterWebView`, the same class that builds
+  every `InAppWebView` widget. Each test asserts on a value only the right field can produce:
+  - `initialData`: its data, its MIME type (a second run as `text/plain`), and its base and history
+    URLs, which are read back on different channels, so a swap of the two fails.
+  - `initialFile`: the asset path the WebView ends up on.
+  - An int in `initialSettings` (`minimumFontSize: 23`), which the parser casts `as Int`.
+  - `initialUserScripts`: a document-start script runs. Its `injectionTime` is an int.
+  - `windowId`: a child headless webview given only the `windowId` from `onCreateWindow` shows
+    the popup the parent's page opened.
+  - Not coverable: `contextMenu` (a native menu on a view with no screen) and
+    `pullToRefreshSettings` (no gesture to pull). Test only.
+- **The `chromesafaribrowser` manager channel is Pigeon-generated**, the twentieth migrated and
+  the second under decision B: `open`, `isAvailable`, `getMaxToolbarItems` and `getPackageName`
+  over `ChromeSafariBrowserManagerHostApi`. No public API change.
+  - `open` sends one `ChromeSafariBrowserOpenRequestData`. The strings, headers and likely URLs
+    are typed. Settings, action button, secondary toolbar and menu items stay maps, and each goes
+    through `Util.normalizeCodecInts`. Without that, the Custom Tabs Activity crashes the app on
+    start: measured for all three (`ChromeCustomTabsSettings.parse`, `CustomTabsMenuItem.fromMap`,
+    `CustomTabsActionButton.fromMap`).
+  - The manager still reads `isSingleInstance`, `isTrustedWebActivity` and `noHistory` by key
+    presence, from the normalized map, so a null value still fails `open` as before.
+  - Error codes: "Custom Tabs not available" keeps its `ChromeBrowserManager` code and message.
+    🚨 An *unexpected* exception, like that null's NPE, now arrives with the exception's class name
+    as the code (`NullPointerException`) instead of `error`, and its message is now the exception's
+    `toString()`.
+- **Everything `ChromeSafariBrowserManager` receives now has a device test where one is possible,
+  ahead of its migration.** A new `open payload` group adds six `chrome_safari_browser` tests, so
+  the group goes from 13 to 19 (2 still skipped). The Custom Tab loads from a server the test runs
+  on the emulator's own loopback, so each test reads exactly what Chrome requested:
+  - `open`'s URL and query, and its headers (`accept-language: it-IT` on the page request, while
+    Chrome's own favicon request sends `en-US`).
+  - `isTrustedWebActivity: true`: the only launch whose first request carries `sec-fetch-user: ?1`,
+    with a plain open as the control.
+  - The one int nested in the settings (`displayMode.displayCutoutMode`): the Activity must start
+    rather than crash on its `as Int`.
+  - 🚨 **A null `isSingleInstance`, `isTrustedWebActivity` or `noHistory` fails the `open` call.**
+    The manager reads these keys by presence, and `toMap()` always sends them, so a null fails when
+    unboxed. The test pins that as-is: it is the only way to see that each key reaches the manager.
+  - `isAvailable` (`true`), `getMaxToolbarItems` (`5`, previously only `>= 0`), and
+    `getPackageName` with each argument varied alone.
+  - Not coverable, measured: `referrer` (Chrome replaces it with the app's own), `otherLikelyURLs`
+    (never fetched), and the effect of `isSingleInstance: true` / `noHistory: true` (requests
+    identical to a plain open). Test only.
+- **The in-app browser's `setSettings` / `getSettings` are Pigeon-generated**, on the existing
+  `InAppBrowserHostApi`, as maps (decision B). No public API change.
+  - `setSettings`' map goes through `Util.normalizeCodecInts` before the parsers see it, as
+    `open`'s does. Without that, it fails with `Long cannot be cast to Integer`.
+  - Two new device tests, both passing before and after: an int and a colour sent through
+    `setSettings` come back from `getSettings`, and the browser's `webViewController` has its own
+    working settings pair. The boundary test now also checks the map in both directions, and that
+    each pair uses its own transport.
+  - 🚨 **The browser's `webViewController.setSettings` / `getSettings` stay on the MethodChannel.**
+    The controller is built on the browser's channel, and `WebViewChannelDelegate` answers it
+    through the Activity. That path resets the browser's own stored settings to defaults: after
+    it, a toolbar colour set at open reads back as null. This is not new, and it is unchanged here.
+- **`web history get history list and go back/forward` had a race, now fixed.** Its first wait
+  subscribed to a broadcast stream of page loads *after* `pumpWidget` had started loading. A
+  load that finished first was dropped, and the test hung until its 60 s timeout. A probe caught
+  it in the act ("initial load arrived before subscribing"). The fix subscribes before
+  `pumpWidget`, as the test's later steps already did. It was a long-standing flake: before this,
+  it failed 0 of 5 full runs, but 3 of 6 once the manager migration shifted start-up timing.
+  Test only.
+- **The `inappbrowser` manager channel is Pigeon-generated**, the nineteenth migrated and the first
+  under decision B: `open` and `openWithSystemBrowser` over `InAppBrowserManagerHostApi`. No public
+  API change.
+  - `open` sends one `InAppBrowserOpenRequestData`. The strings and `windowId` are typed. The six
+    fields that go into the browser Activity's Bundle (URL request, settings, context menu, user
+    scripts, pull-to-refresh settings, menu items) stay maps, and the Activity's `parse(Map)` is
+    still their only reader.
+  - 🚨 **Pigeon sends every Dart `int` as 64-bit, including ints nested in those maps**, so they
+    arrive in Kotlin as `Long`. The settings parsers cast `as Int`, and the first device run
+    crashed on every browser open. `Util.normalizeCodecInts` now rebuilds each map with the types
+    the standard codec produced: a `Long` that fits in 32 bits becomes an `Int`, anything larger
+    stays a `Long`, and keys are kept as sent. It has JVM tests.
+  - `openWithSystemBrowser`'s failure is now a `FlutterError` with the same code, message and
+    details, so Dart sees the same `PlatformException`.
+- **Everything `InAppBrowserManager` sends now has a device test, ahead of its migration.** Six new
+  `in_app_browser` tests, so the group goes from 7 to 13. They assert, each on a value only the
+  right field can produce:
+  - `openData`'s `data`, `mimeType`, `baseUrl` and `historyUrl`. The base and history URLs are now
+    different: the old test used the same URL for both and passed a swap of the two, measured.
+  - `openUrlRequest`'s headers, via the fixture server's `/echo-headers`.
+  - `initialUserScripts`.
+  - Initial settings containing an int and a color.
+  - `windowId`, through a child browser opened from `onCreateWindow`.
+  - `openWithSystemBrowser`'s error for a URL no app can handle. Its success path starts another
+    app, so it stays untested.
+
+  Not observable, and recorded in the test: `encoding`, since `document.characterSet` stays UTF-8
+  whatever is sent. Test only; no plugin code changed.
+- **The in-app browser's own methods and events are Pigeon-generated**, the eighteenth channel
+  migrated: `show`, `hide`, `close`, `isHidden` and `onBrowserCreated`, `onMenuItemClicked`,
+  `onExit`, over `InAppBrowserHostApi` / `InAppBrowserFlutterApi`, suffixed by the browser id. No
+  public API change.
+  - **They were never the browser's own channel before.** `InAppBrowserActivity` handed one
+    `inappbrowser_$id` MethodChannel to both the browser delegate and the WebView's delegate. The
+    WebView's registered last, so it answered all four methods, and the browser delegate's handler
+    was empty. That MethodChannel now belongs to the WebView alone, plus the browser's
+    `setSettings`/`getSettings`, which carry the settings map and follow in a later commit.
+  - `close` still sends `onExit` before it answers. The two now travel on different channels, so
+    `open url and close` asserts the order: the browser reports itself closed as soon as `close()`
+    returns. A mutant that answered first failed only that assertion.
+  - A new boundary test covers the Dart half of `onMenuItemClicked`. No device test can press a
+    toolbar item, so it's the only coverage that event has.
+- **Every method on the per-WebView channel now runs on an Android device.** Fifteen had never been
+  called by any integration test. Twelve now assert their effect:
+  - `canScrollVertically` / `canScrollHorizontally` and `getContentWidth`, on a tall page and a
+    2000 px-wide one.
+  - `getSelectedText`: `''` with nothing selected, and the selected word after a selection.
+  - `getHitTestResult`: after a tap on a link.
+  - `isInFullscreen`: across a real fullscreen.
+  - `setAudioMuted` / `isAudioMuted`: read back from the platform.
+  - `prerenderUrl`: the navigated-to page reports a non-zero `activationStart`, against a plain
+    load as control.
+  - `requestFocus` with a direction, and with a direction and rect.
+  - `removeUserScriptsByGroupName`: the other group's script survives.
+  - `setContextMenu`: the replacement item is what gets clicked.
+
+  Three are **routing-only**, and their test says so: `showInputMethod`, `hideInputMethod` and
+  `clearFormData`. The test emulator has a hardware keyboard, so no soft keyboard ever shows, and
+  there is no autocomplete popup to dismiss. Recorded, not changed: for an `InAppWebView`,
+  `setContextMenu` replaces the drawn items, but clicks still go to the callbacks of the
+  `contextMenu` the web view was created with. Test only; no plugin code changed.
+- **Fifteen web-view events get their first Android device test, and `onZoomScaleChanged` gets one
+  that can fail.** None of these had ever been observed on Android:
+  - `onGeolocationPermissionsShowPrompt` (and the refusal reaches the page).
+  - `onFormResubmission`.
+  - `onRequestFocus`, which Chromium raises before a form-resubmission prompt and before
+    fullscreen, not for `window.focus()`.
+  - `onReceivedLoginRequest`, via an intercepted `X-Auto-Login` header.
+  - `onLongPressHitTestResult`.
+  - The three context-menu callbacks: create, hide, and a tap on a custom item of the plugin's
+    floating menu.
+  - `onOverScrolled`.
+  - `onShowFileChooser`.
+  - `onEnterFullscreen` / `onExitFullscreen`. Their existing tests never ran on Android.
+  - `onRenderProcessUnresponsive` / `Responsive`, from a 15 s busy loop.
+  - `onRenderProcessGone`, from `chrome://crash`.
+
+  `onZoomScaleChanged` only checked that it fired. Now it checks that `zoomBy(2)` doubles the scale,
+  which a swapped old/new pair fails. Every expected value was measured on API 37 first. The tests
+  are Android-only because iOS wasn't measured.
+
+  Two events stay untested. `onGeolocationPermissionsHidePrompt` couldn't be raised: navigating
+  away and reloading with the prompt pending were both tried. `onPageDeleted` stays deliberately
+  unasserted. Gesture tests pump frames after load: a gesture sent before any frame was pumped was
+  lost. Test only; no plugin code changed.
+- **Six device tests that could not fail now assert what their method does.** `clearFocus`,
+  `pause`, `resume`, `requestFocusNodeHref`, `requestImageRef` and `clearSslPreferences` were only
+  checked with `expectLater(…, completes)`, and a Kotlin handler that replied without doing anything
+  passed all of them. Now:
+  - `clearFocus`: the page loses focus (`document.hasFocus()`) and a window `blur` fires, after
+    `requestFocus()` gives it focus first.
+  - `pause` / `resume`: `document.visibilityState` goes `hidden` / `visible`, and animation frames
+    stop and restart.
+  - `requestFocusNodeHref` / `requestImageRef`: taps on a link and an image return that link's
+    `url` and `title` and that image's `src`.
+  - `clearSslPreferences`: a remembered PROCEED for the test server's untrusted certificate stops
+    being remembered.
+
+  Test only; no plugin code changed. Every expected value was measured on API 37 first. On iOS
+  the three methods it also supports keep the `completes` check, because iOS wasn't measured.
+- **`getMetaThemeColor` no longer sends a message the Kotlin side never handled.** It used to ask the
+  per-WebView channel for `getMetaThemeColor` first. That message has no native handler, so the
+  request always failed, the error was swallowed, and the method fell through to reading the
+  `theme-color` meta tag with JavaScript. Now it reads the tag directly. No behaviour change:
+  measured on a device before the deletion, breaking the JavaScript path made the method return
+  null. New tests: a unit test pins that only `evaluateJavascript` is sent and that the color is
+  parsed exactly, and an Android device test reads a known `#0a8f3c` page. The existing device test
+  only checked for non-null, so a fallback returning the wrong color passed it.
+- **The `inappwebview_manager` channel is Pigeon-generated**, the seventeenth migrated: **fifteen
+  host methods, no events** — the process-wide statics of `InAppWebViewController`.
+  `InAppWebViewManager` implements the generated `InAppWebViewManagerHostApi` directly; its
+  hand-written dispatch, `METHOD_CHANNEL_NAME`, the Dart `_staticChannel` and this package's
+  `_static_channel.dart` are gone. No public API change. `clearClientCertPreferences` and
+  `setSafeBrowsingAllowlist` answer from platform callbacks, so they are `@async` and run inside
+  `replyingOnThrow`. `setDefaultTrafficStatsTag` still accepts the unsigned `0xFFFFFF00` form: the
+  Kotlin side keeps the low 32 bits of the `Long`, as the old `Number.toInt()` read did.
+
+  The generated interface's `disposeKeepAlive(String): Boolean` collides with the manager's old
+  `disposeKeepAlive(String): Unit`, so that helper and `clearAllCache(Context, Boolean)` became
+  private `disposeKeepAliveWebView` / `clearAllCacheWith`; nothing outside the file called them.
+
+  `getCurrentWebViewPackage`'s device test now checks each field by its shape — a dotted package
+  name, a version starting with a digit — because a mutant swapping the two in the new Kotlin
+  conversion passed the previous non-empty check. A new Dart boundary test covers the fallbacks a
+  device cannot reach (a null user agent reading as `''`, a missing policy URL staying null).
+  `default_trafficstats_tag_test.dart` moves to the Pigeon channel; its null-reply case is gone
+  because the host method is typed non-null.
+
+- **Every `InAppWebViewManager` method now runs on a device**, written before migrating that channel
+  to Pigeon; seven of its fifteen had never been called. No plugin code changed.
+  `getVariationsHeader`, `isMultiProcessEnabled`, `setDefaultTrafficStatsTag` and the
+  `setJavaScriptBridgeName` / `getJavaScriptBridgeName` pair join the `in_app_webview` group — the
+  bridge rename asserted by its effect, a page created afterwards exposing `window.<name>` and not
+  the default. `disableWebView` and `enableSlowWholeDocumentDraw` change irreversible process-wide
+  WebView state, so they live in `integration_test/process_isolated/` as two separate entry files
+  that each run as their own process and are deliberately left out of `webview_flutter_test.dart`;
+  `disableWebView` is asserted by the next `android.webkit` call failing with `WebView is disabled`.
+  Two existing assertions were strengthened: `getDefaultUserAgent`'s `isNotNull` could not fail,
+  because the Dart side answers `?? ''`, and `getCurrentWebViewPackage` checked the object but
+  neither field. Seven mutants on the Kotlin side each fail exactly the test aimed at them.
+
+- **The `service_worker_controller` device group goes from 5 to 10 tests**, written before
+  migrating `ServiceWorkerChannelDelegate` to Pigeon. Seven of the channel's eleven methods had never
+  been called on a device, and every existing test answered `shouldInterceptRequest` with `null`, so
+  no `WebResourceResponse` had ever crossed the channel. No plugin code changed.
+
+  The three boolean settings and `cacheMode` now round-trip in both directions on the default
+  profile, and on a named profile with an assertion that the default profile did not move — the
+  only check that sees a `profileName` dropped in transport. The response path is covered with a
+  Service Worker the test brings itself: a page served by `InAppLocalhostServer` on
+  `http://localhost:8080` (a secure context, which a worker needs) registers a worker that re-fetches
+  a probe file, and that worker request is what reaches `shouldInterceptRequest`. A control test
+  lets it through and must read the file; the replacement test answers with its own body, status
+  `203` and an `X-Probe` header and must read all three. Four mutants on the Kotlin side each fail
+  exactly the tests predicted, including one dropping only the response headers, which fails on
+  the header while body and status still pass.
+
+- **The headless boundary test's "event handler is unregistered after dispose" check now measures
+  something.** It asserted `checkMockMessageHandler(<FlutterApi channel>, null)`, which inspects
+  the *outbound* mock table while `FlutterApi.setUp` registers an *inbound* handler, so it passed
+  with the unregister deleted. It now delivers `onWebViewCreated` and asserts the platform reply is
+  null, after a positive control showing it is non-null while registered — and fails when the
+  unregister is deleted. The obvious alternative, asserting the callback stays silent, is also blind
+  here: `_onWebViewCreated` already ignores the event once `dispose` has nulled the controller. Test
+  code only.
+
+- **The `inappwebview_serviceworkercontroller` channel is Pigeon-generated**, the sixteenth
+  migrated: **eleven host methods plus `shouldInterceptRequest`, the first event in the plugin that
+  returns a value**. `AndroidServiceWorkerController` drops `ChannelController` and holds the
+  generated `ServiceWorkerHostApi`; `ServiceWorkerChannelDelegate` implements it, and its
+  hand-written `onMethodCall` dispatch, the Dart `_handleMethod` switch, the
+  `InternalServiceWorkerController` extension and `ServiceWorkerManager.METHOD_CHANNEL_NAME` are
+  gone. So is the delegate's async `shouldInterceptRequest(request, callback)` overload, which had no
+  caller. No public API change: the class now `implements Disposable` explicitly, since that used
+  to arrive through the removed mixin.
+
+  **The Service Worker's request still blocks the Chromium worker thread for Dart's answer**, as it
+  must — `ServiceWorkerClientCompat.shouldInterceptRequest` returns synchronously. The delegate now
+  waits on a latch around the generated FlutterApi's reply, with the same 10-second bound and the
+  same "null means load from the network" fallback as `Util.invokeMethodAndWaitResult`, which it
+  cannot reuse because that helper takes a raw `MethodChannel` and still serves the WebView's own
+  intercepts. A mutant that never releases the latch measures the bound: the request loads from
+  the network after the timeout rather than hanging.
+
+  The client stays process-wide, as the platform's is: every controller registers the same
+  stateless forwarder, which reads the one static client, so a second `ServiceWorkerController()`
+  still cannot orphan it — and `dispose` deliberately leaves the event handler registered, the one
+  migrated channel where that is correct. The three unit tests that drove the raw channel are
+  rewritten against the Pigeon one with their assertions unchanged, and gain three: the response
+  crossing back field for field, a null answer when no client is set, and the dispose exception.
+
+- **The `inappwebview_pull_to_refresh_*` per-instance channel is Pigeon-generated**, the fifteenth
+  migrated: **ten host methods plus one event (`onRefresh`)**. `AndroidPullToRefreshController`
+  drops `ChannelController` and holds the generated `PullToRefreshHostApi`;
+  `PullToRefreshChannelDelegate` implements it, and its hand-written `onMethodCall` dispatch and the
+  Dart `_handleMethod` switch are both gone, along with
+  `PullToRefreshLayout.METHOD_CHANNEL_NAME_PREFIX`. No public API change.
+
+  **The delegate has two construction sites**, and they compute the channel suffix independently:
+  `PullToRefreshLayout`'s constructor (the `InAppWebView` widget and `HeadlessInAppWebView`) and
+  `InAppBrowserActivity`, which inflates the layout from XML and wires the delegate by hand. The
+  second was found by the compiler, not by a search — the search that was run had filtered the
+  `in_app_browser` directory out. The device group gains a test that drives the InAppBrowser path
+  (6 tests now); a mutant breaking only that site's suffix fails it in ~2 s with a `channel-error`
+  and leaves the other five green.
+
+  `onRefresh` collides with the public `onRefresh` getter, so the event arrives through a private
+  forwarder, as for `find_interaction` and `print_job`. **The event direction has no device
+  coverage** — it needs a real drag — and a mutant breaking only the Kotlin FlutterApi suffix passes
+  the whole device group. A new Dart boundary test covers the Dart half of it: the event reaching
+  the callback, a normal `dispose` stopping it, and a keep-alive `dispose` leaving it registered, as
+  the hand-written `disposeChannel(removeMethodCallHandler: !isKeepAlive)` did.
+
+  `setIndicatorSize` now asserts the (unreachable) null native value with `!` rather than putting
+  it on the wire, where the Kotlin `!!` used to reject it; both fail loudly.
+  `SwipeRefreshLayout.setSize` narrows Pigeon's `Long` into an `@IntDef`, and `lintDebug` reports
+  no `WrongConstant` for it.
+
+- **The event-handler unregistration of five migrated channels is now tested; none was before.**
+  `find_interaction`, both `web_message` channels, `print_job` and `chrome_custom_tabs` each remove
+  their Pigeon event handler in `dispose`, and deleting any of those calls passed every gate. Each
+  now has a boundary test that delivers an event and asserts the platform reply is null after
+  `dispose`, behind a positive control showing it is non-null before — the technique that is blind
+  to neither of the failure modes found in the headless test. `find_interaction` also pins that a
+  keep-alive `dispose` leaves its handler registered; `chrome_custom_tabs` pins that the platform's
+  `onClosed` unregisters too, which is how a closed tab tears down in practice; and `print_job`
+  pins that `onComplete` reaches the controller's callback with both arguments — the first coverage
+  its event direction has had, since no automated test can finish a real print job. `print_job`
+  and `chrome_custom_tabs` had no boundary test file until now. Test code only.
+
+- **`pull_to_refresh_controller` gets an Android device group — 5 tests, from zero**, covering all
+  ten of the channel's methods. Written as its own item before the Pigeon migration of
+  `PullToRefreshChannelDelegate`, per the rule §169 earned. No plugin code changed.
+
+  **The channel had no coverage despite a test that looks like it.**
+  `launches with pull-to-refresh feature`, in the `in_app_webview` group, builds a webview with a
+  `PullToRefreshSettings` and asserts only that the page loaded. Those settings ride the *webview
+  creation* payload, not this channel, so the test exercises `PullToRefreshLayout.prepare()` and not
+  one of the ten methods. Measured, not argued: with the Dart channel name deliberately broken, the
+  new group loses **5 of 5** and that test still **passes**.
+
+  `setEnabled`/`isEnabled` and `beginRefreshing`/`endRefreshing`/`isRefreshing` are real round trips
+  answered from `SwipeRefreshLayout`'s own state. `getDefaultSlingshotDistance` is pinned to **-1**,
+  read out of the androidx AAR with `javap -constants` rather than guessed — it is a sentinel
+  meaning "compute the default", not a distance, and it is also the one value that proves the call
+  arrived, since the Dart side falls back to `?? 0` on a null channel.
+
+  ⚠️ **The five remaining setters get transport coverage only**, and that is recorded rather than
+  dressed up: `setColor`, `setBackgroundColor`, `setDistanceToTriggerSync`, `setSlingshotDistance`
+  and `setIndicatorSize` have no getter on either side. A mutant replacing `setColor`'s parsed
+  argument with a hard-coded colour **survives the group** — measured, and the gap to state when
+  this channel is migrated.
+
+  **`onRefresh`, the channel's one event, stays uncovered in the firing direction**: it needs a real
+  drag on a platform view, which `WidgetTester` cannot deliver. The reachable half is pinned
+  instead — `beginRefreshing()` must *not* fire it, since `SwipeRefreshLayout.setRefreshing(true)`
+  moves the indicator without invoking `OnRefreshListener`.
+
+- **The `headless_inappwebview_*` per-instance channel is Pigeon-generated**, the fourteenth
+  migrated: **three host methods (`dispose`, `setSize`, `getSize`) plus one event
+  (`onWebViewCreated`)**. `AndroidHeadlessInAppWebView` drops `ChannelController` and holds the
+  generated `HeadlessWebViewHostApi`; `HeadlessWebViewChannelDelegate` implements it, and its
+  hand-written `onMethodCall` dispatch and the Dart `_handleMethod` switch are both gone. No public
+  API change.
+
+  **Only the per-instance channel is migrated.** `run` goes to a separate static
+  `HeadlessInAppWebViewManager` channel and stays hand-written for now — so the Dart class
+  deliberately holds a Pigeon host API *and* a raw `MethodChannel`. That manager is blocked by a
+  settings payload exactly as `ChromeSafariBrowserManager` and `InAppBrowserManager` are: `run`
+  forwards the entire webview creation payload, `initialSettings` included. (This entry originally
+  claimed the opposite; corrected while writing the `pull_to_refresh_controller` group.)
+
+  The class-level `@Suppress("UNCHECKED_CAST")` on the delegate is **gone**: it existed for the single
+  `call.argument<Map<String, Any?>>("size")` read at the codec boundary, and the generated type
+  removes both the cast and the need for the suppression. A malformed size is now unrepresentable
+  rather than silently applying nothing and still answering `true`.
+
+  **The event name does *not* collide with the public API** — the first migrated channel where that
+  is true. `onWebViewCreated` is a field on the *creation params*, not a member of the class, so
+  Pigeon's generated method could have lived on `AndroidHeadlessInAppWebView` directly. It still
+  arrives through a private forwarder, for readability rather than to satisfy the compiler.
+
+  🚨 **`HeadlessWebViewChannelDelegate` no longer implements `Disposable`, and its teardown is
+  `disposeDelegate()`.** The channel has a method named `dispose`, so the generated interface
+  contributes `dispose(): Boolean`, which cannot coexist with `Disposable.dispose(): Unit`. That much
+  is a compile error; the part that is not is the call site — `HeadlessInAppWebView.dispose()` calling
+  `channelDelegate?.dispose()` resolves to the *host* method, which calls the webview back. Measured
+  rather than reasoned: that mutant dies as a `java.lang.StackOverflowError` alternating between the
+  two frames, taking 5 of the group's 7 tests with it.
+
+- **The `chromesafaribrowser_*` per-instance channel is Pigeon-generated**, the thirteenth migrated
+  and the largest so far: **nine host methods plus thirteen events**.
+  `AndroidChromeSafariBrowser` drops `ChannelController` and holds the generated
+  `ChromeCustomTabsHostApi`; `ChromeCustomTabsChannelDelegate` implements it, and its hand-written
+  `onMethodCall` dispatch and the Dart `_handleMethod` switch are both gone. No public API change.
+
+  **Only the per-instance channel is migrated.** `open`, `isAvailable`, `getMaxToolbarItems` and
+  `getPackageName` go to a separate static `ChromeSafariBrowserManager` channel, which carries the
+  settings payload and stays hand-written for now — so the Dart class deliberately holds a Pigeon
+  host API *and* a raw `MethodChannel`.
+
+  The class-level `@Suppress("UNCHECKED_CAST")` on the delegate is **gone**: it existed because every
+  structured read was an unverifiable `Map<String, Any?>` cast at the codec boundary, and the
+  generated types remove both the casts and the need for the suppression.
+
+  **Eleven of the thirteen event names collide with the public API**, which declares them as methods
+  taking domain types (`onNavigationEvent(CustomTabsNavigationEventType?)`) where Pigeon generates
+  wire types (`onNavigationEvent(int)`). The events therefore arrive through a private forwarder that
+  converts each value before calling the public method — the same shape used for `find_interaction`
+  and `print_job`.
+
+  `onCompletedInitialLoad` now takes **no argument**. The public callback declares
+  `bool? didLoadSuccessfully`, and the Kotlin has always sent an empty map, so the value was already
+  null on Android; the forwarder passes null explicitly rather than putting a permanently-null field
+  on the wire.
+
+  `clickableIDs` on the secondary toolbar crosses as a plain list of resources: the public wrapper's
+  only other field is an `onClick` closure, which never crossed and still does not — the Dart side
+  keeps it and dispatches by resource name, as before.
+
+- **The `chrome_safari_browser` integration group goes from 10 / 5 to 13 passing + 2 skipped**, with
+  no plugin code changed. Four of the five failures were not real: `Custom Tabs request and send post
+  messages` hangs its full 60 s without reaching `close()`, and the Custom Tab it leaves on screen
+  covers the Flutter UI so three later tests time out against a view they cannot reach. Run alone,
+  those three pass in about a second each.
+
+  The two genuine failures — `request and send post messages` and `Trusted Web Activity validate
+  relationship` — are **permanently unrunnable in this fork** and are now skipped with that reason.
+  Both need Chrome to verify a digital-asset-link delegation, and
+  `https://inappwebview.dev/.well-known/assetlinks.json` delegates only to the upstream package
+  `com.pichillilorenzo.flutter_inappwebviewexample` and its signing cert.
+
+  Worth knowing when reading the API: **`requestPostMessageChannel` answers `true` even when no
+  channel will ever open** — it reports that the request was accepted, and `onMessageChannelReady` is
+  what says a channel exists.
+
+  A group `tearDown` now closes any browser a failing test left open, so a single failure can no
+  longer take down the tests after it.
+
+- **The `inappwebview_printjobcontroller_*` channel is Pigeon-generated**, the twelfth migrated and
+  the **first with both a per-instance channel and an event**. `AndroidPrintJobController` drops
+  `ChannelController` and holds the generated `PrintJobControllerHostApi`;
+  `PrintJobChannelDelegate` implements it and its hand-written `onMethodCall` dispatch is gone, along
+  with `PrintJobController.METHOD_CHANNEL_NAME_PREFIX`. No public API change.
+
+  The `messageChannelSuffix` is the job id, threaded from `PrintJobController` into both `setUp` and
+  the FlutterApi constructor so the halves cannot drift.
+
+  **Two name collisions, one on each side, both the collision §14 predicted.** On Dart,
+  `PlatformPrintJobController` exposes `onComplete` as a *field* while Pigeon generates a *method* of
+  that name, so the events go through a private `_PrintJobControllerFlutterApiImpl` forwarder rather
+  than the controller implementing the API directly. On Kotlin, the channel method `dispose(): Boolean`
+  cannot coexist with `Disposable.dispose(): Unit`, so the delegate no longer implements `Disposable`
+  and its teardown is `disposeDelegate()` — **not a cosmetic rename**: leaving it as `dispose` makes
+  `PrintJobController.dispose()` call the host method, which calls the controller back, recursing.
+
+  `getInfo`'s payload becomes five typed classes (`PrintJobInfoData`, `PrintJobAttributesData`,
+  `PrintJobMediaSizeData`, `PrintJobResolutionData`, `PrintJobMarginsData`) in place of a 4-level
+  nested `hashMapOf`. The one-key `"printer"` map is flattened to a `printerId` string; the Dart side
+  still rebuilds a non-null `Printer` from it, as the always-present map used to produce.
+
+  **The schema models only the fields Android actually sends** — 7 of `PrintJobInfo`'s 15 and 6 of
+  `PrintJobAttributes`' 12. The other 14 are iOS-only, have zero occurrences in the Android Kotlin
+  source, and previously arrived as *absent map keys* that `fromMap` read as null; the Dart side now
+  passes null explicitly, which is exactly what the old path produced.
+
+- **`print_job_controller` gets an Android device group — 1 test, from zero**, covering all four of
+  the channel's methods (`getInfo`, `cancel`, `restart`, `dispose`) across one job's lifetime.
+  Written as its own item before the Pigeon migration of `PrintJobChannelDelegate`, per the rule
+  §169 earned.
+
+  **It is one test rather than four because reaching the channel at all raises the OS print dialog.**
+  A `PrintJobController` exists on Android only when `printCurrentPage` is given
+  `PrintJobSettings(handledByClient: true)`, and the statement after the controller is constructed is
+  `printManager.print(...)`. There is no path to a controller that does not raise the modal, so the
+  whole lifecycle runs against a single job, and the group lives in its own file and is pinned
+  **last** in the aggregate runner.
+
+  **Trap 83 turns out to be narrower than its wording.** It records that the print dialog cannot be
+  dismissed and that tests after it time out — true of *widget* tests, which need the Flutter UI the
+  dialog covers, and **not** true of channel calls. All four methods answer normally while
+  `PrintActivity` owns the screen, which is what makes this group possible.
+
+  Measured rather than quoted while writing it: `cancel()` and `restart()` are **no-ops on a job in
+  `CREATED` state** (the state a freshly submitted job is in), so those assertions pin reachability
+  and non-interference, not cancellation. `dispose()` is the one teardown with an observable effect —
+  `getInfo()` answers null afterwards.
+
+  Also recorded: **8 of the 15 fields `PrintJobInfo.fromMap` reads are never sent by Android** —
+  `canSpawnSeparateThread`, `currentPage`, `firstPage`, `isCopyingOperation`, `lastPage`,
+  `preferredRenderingQuality`, `showsPrintPanel`, `showsProgressPanel`, each with zero occurrences in
+  the whole Android Kotlin source. They are iOS-only and arrive null. The group asserts they stay
+  null so that a change in either direction shows up.
+
+- **The `inappwebview_geolocationpermissions` channel is Pigeon-generated**, the eleventh migrated,
+  at **five methods**. `AndroidGeolocationPermissions` drops `ChannelController` and holds the
+  generated `GeolocationPermissionsHostApi`; `GeolocationPermissionsManager` implements it and its
+  hand-written `onMethodCall` dispatch is gone, along with the `METHOD_CHANNEL_NAME` constant.
+  `getGeolocationPermissions` was a public `@JvmStatic` that nothing outside the class ever called,
+  and is now private. No public API change.
+
+  **Two of the five are `@async`** — `getAllowed` and `getOrigins`, which complete through a
+  `ValueCallback`; `allow`, `clear` and `clearAll` wrap `void` platform calls and answer inline.
+  Both `@async` methods are wrapped in `replyingOnThrow` (§172's standing rule), covering the
+  **whole** body including the store resolution rather than only the part where a throw looks
+  likely — §171's first attempt at that kind of guard was scoped so it could not catch its own bug.
+
+  `getAllowed` still answers **`null`** for an unresolvable store while its four siblings answer
+  `false` or an empty list for the identical condition. That disagreement is deliberate and
+  preserved: `null` means "could not ask", `false` means "asked, nothing stored", and a caller
+  deciding whether to prompt needs them apart. Pigeon makes an unanswered branch unrepresentable, so
+  each of the five is restated by hand in the Kotlin.
+
+  `allow` / `clear` / `clearAll` lose their `?? false` and `getOrigins` loses its cast from an
+  untyped platform `List` plus its `?? <String>[]`: the schema types all four non-null and the host
+  already answers `false` / `[]` for an unresolvable store.
+
+- **`geolocation_permissions` gets an Android device group — 8 tests, from zero.** The channel had
+  **no** integration coverage at all (measured: no file under `integration_test/` mentioned
+  geolocation), which is the state §169 migrated `web_storage_manager` in. It is written as its own
+  item **before** the Pigeon migration of `GeolocationPermissionsManager`, per the rule §169 earned.
+
+  It found a platform behaviour on its first run, in four tests at once: **`getOrigins()` returns
+  origins normalised with a trailing `/`**, while `allow` / `clear` / `getAllowed` accept the
+  un-normalised form. The two halves of the public API therefore disagree about the spelling. The
+  round trip *does* close — what `getOrigins` emits is accepted by the other four, measured
+  explicitly rather than assumed — so this is a documentation gap and not a functional trap, and the
+  dartdoc now carries it.
+
+  The group pumps no WebView (these are stored decisions, not the prompt), which is also why it was
+  measurable at all on an AVD whose DNS is currently broken.
+
+- **The `inappwebview_profilestore` channel is Pigeon-generated**, the tenth migrated, at **eight
+  methods**. `AndroidProfileStore` drops `ChannelController` and holds the generated
+  `ProfileStoreHostApi`; `ProfileStoreManager` implements it and its hand-written `onMethodCall`
+  dispatch is gone, along with the `METHOD_CHANNEL_NAME` constant nothing outside the class read.
+  No public API change.
+
+  **None of the eight methods is `@async`**, and that is measured rather than assumed: every
+  `ProfileStore` and `Profile` method this channel calls returns directly (read from the androidx
+  1.17.0 sources). `Profile` does have callback-shaped methods — `prefetchUrlAsync` — but this
+  channel calls none of them, so Pigeon's own `try`/`catch` around each synchronous handler is the
+  only error path involved and the `replyingOnThrow` helper has nothing to wrap.
+
+  `deleteProfile` still fails with `PlatformException(code: "ProfileStoreManager")` for all three
+  refusals — a living WebView holds the profile, the profile was loaded into memory this run, or the
+  name is the default profile — exactly as before. **No behaviour change, but it is now an explicit
+  one.** androidx raises two different exception classes for those refusals
+  (`IllegalStateException` and `IllegalArgumentException`) and Pigeon's `wrapError` derives the code
+  from `javaClass.simpleName` for anything that is not a `FlutterError`, so the host re-throws both
+  as `FlutterError("ProfileStoreManager", …)`. Letting them propagate would have replaced one stable
+  code with two exception-class names; that is now pinned by a device test asserting **both**
+  refusals carry the same code, because a single-refusal test reports `"IllegalStateException"`
+  under the broken version and reads as a rename rather than a contract break.
+
+  `addCustomHeader`, `clearCustomHeader` and `clearAllCustomHeaders` are now `void` on the wire.
+  The hand-written handler replied a constant `true` for each — including when the feature was
+  missing or the named profile did not exist, in which case nothing had been added or cleared — and
+  the Dart side, which declares `Future<void>`, discarded it. Dropping it removes a value that never
+  meant anything; making these honestly answerable is a platform-interface change, not a transport
+  one, and is filed rather than done here.
+
+  `getAllProfileNames` loses its cast from an untyped platform `List` and its `?? <String>[]`, and
+  `hasCustomHeader` loses its `?? false`: the schema types both non-null and the host already
+  answers an empty list / `false` for an unresolvable profile. `getCustomHeaders` still selects the
+  androidx overload **on the host side** rather than filtering in Dart, because the platform matches
+  header names case-insensitively and values case-sensitively.
+
+- **The `webstoragemanager` channel is Pigeon-generated**, the ninth migrated.
+  `AndroidWebStorageManager` drops `ChannelController` and holds the generated
+  `WebStorageManagerHostApi`; `MyWebStorage` implements it and its hand-written `onMethodCall`
+  dispatch is gone. `MyWebStorage.webStorageManager` and its `init()` were public statics nothing
+  outside the class called, and are now private. No public API change.
+
+  **Five of the seven methods are `@async`** — everything completing through a `ValueCallback` or a
+  `Runnable`. `deleteAllData` and `deleteOrigin` wrap `void` platform calls and answer inline.
+
+  `getOrigins` now builds a typed `WebStorageOriginData` instead of a `hashMapOf` the Dart side read
+  back by key, so `origin`/`quota`/`usage` are non-null on the wire. The raw-`Map` cast the platform
+  signature forces (`getOrigins(ValueCallback<Map>)`) remains, but the class-level
+  `@Suppress("UNCHECKED_CAST")` is now **scoped to that one function**.
+
+  `deleteBrowsingDataForSite` still fails with `PlatformException(code: "MyWebStorage")` for a site
+  it cannot parse, exactly as before — **no behaviour change**. An earlier draft of this entry said
+  the code would become the exception's class name via Pigeon's `wrapError`; that was wrong and the
+  migration briefly shipped the bug it implied. Pigeon wraps a **synchronous** host method in
+  `try { … } catch (Throwable) { wrapError(…) }`, but an **`@async`** one is generated as a bare
+  `api.method(args) { result -> … }` with no `try`/`catch`: a synchronous throw escapes the handler,
+  no reply is sent, and the caller gets `PlatformException(channel-error, "Unable to establish
+  connection on channel…")`. The Kotlin now delivers the failure through the callback instead.
+
+- **The `cookiemanager` channel is Pigeon-generated**, the eighth migrated and the largest so far at
+  **twelve methods**. `AndroidCookieManager` drops `ChannelController` and holds the generated
+  `CookieManagerHostApi`; `MyCookieManager` implements it and its hand-written `onMethodCall`
+  dispatch is gone, along with `InternalCookieManager`. `MyCookieManager.cookieManager`, its
+  `init()` and `getCookieExpirationDate` were public statics that nothing outside the class ever
+  called, and are now private. No public API change.
+
+  **It is the first schema to mix synchronous and `@async` host methods.** Five are `@async` —
+  `setCookie`, `setCookies`, `deleteCookie`, `deleteAllCookies`, `removeSessionCookies` — because
+  each completes through a `ValueCallback`. `deleteCookies` is **not**, despite its name: it expires
+  each cookie with a null callback and answers `true` synchronously, so its reply means "the
+  expiring writes were issued", exactly as before.
+
+  **`expiresDate` now crosses as a typed `int` in both directions.** It previously travelled as a
+  decimal **String** (`expiresDate?.toString()` in Dart, `.toLong()` in Kotlin), and the plural
+  `setCookies` had to hand-build its per-cookie map to match that spelling, because the generated
+  `CookieToSet.toMap()` sent an `int` and would have produced a silently-null expiry on the plural
+  path only. Both writes now take the same `CookieToSetData`, so one spelling is enforced by the
+  generated signatures and the hand-written map is deleted.
+
+  **`isSessionOnly` is no longer on the wire.** The Kotlin seeded it into every returned cookie as a
+  literal null and never assigned it on either branch, so Android has always answered null for it.
+  `Cookie.isSessionOnly` is still null for Android callers; one always-null key per cookie is gone.
+
+  One behaviour note: `flush` previously read `invokeMethod<bool>(…) ?? false`, so a null reply —
+  including *no handler at all* — was reported as `false`. It is typed non-nullable now, so that
+  case raises a `PlatformException` instead of being folded into the same answer a resolvable-store
+  failure gives. `hasCookies`, `isAcceptCookieEnabled` and `isFileSchemeCookiesAllowed` stay `bool?`
+  and keep their meaningful null.
+
+- **The two `web_message` channels are Pigeon-generated** — `WebMessageChannel` and
+  `WebMessageListener` — the seventh migration and the **first per-instance channels** since the
+  pilot. Each instance addresses its own generated channels through a `messageChannelSuffix` (the
+  channel id, and `<id>_<jsObjectName>` for a listener), replacing the hand-built channel names.
+  Both `*ChannelDelegate` classes are folded into their owners and deleted, along with
+  `InternalWebMessageChannel`'s `MethodChannel` accessor; `WebMessageCompatExt.toMap()` went with
+  them and `WebMessageListener`'s class-level `@Suppress("UNCHECKED_CAST")` is now scoped to the
+  one function that still needs it. No public API change.
+
+  **`WebMessage.data` now crosses as two typed fields.** It is declared `dynamic` and holds either
+  a `String` or a `Uint8List` keyed by `type`; the old wire carried it untyped and the Kotlin side
+  recovered it with `data as ByteArray`. The schema declares `stringData` and `arrayBufferData`
+  separately, so array buffers travel as a real `ByteArray` and the cast is gone. `type` stays on
+  the wire because it is the only thing distinguishing a `STRING` message whose data is **null**
+  from an absent payload.
+
+  Neither channel is `@async`: every host method completes inline. `setWebMessageCallback`
+  registers an androidx callback, but that feeds the `onMessage` *event* rather than signalling
+  completion of the call.
+
+  One behaviour note: exceptions thrown inside these handlers were previously caught and reported
+  as `result.error(LOG_TAG, …)`; they now propagate to Pigeon's `wrapError`, so the
+  `PlatformException.code` becomes the exception's class name rather than the constant
+  `"WebMessageChannel"` / `"WebMessageListener"`. Breaking only for code matching on that code.
+
+- **The `credential_database` channel is Pigeon-generated**, the sixth migrated and the first with
+  **structured return values**. `AndroidHttpAuthCredentialDatabase` drops `ChannelController` and
+  holds the generated `CredentialDatabaseHostApi`; `CredentialDatabaseHandler` implements it, and
+  `InternalHttpAuthCredentialDatabase` is gone with the hand-written handler. `credentialDatabase`
+  and `init()` were public mutable statics nothing outside the class used, and are private now.
+  The NPE this migration replaced is listed under **Fixed**.
+
+  **Nine always-null keys per reply are gone.** `URLProtectionSpace.toMap()` sent five iOS-only
+  fields (`authenticationMethod`, `distinguishedNames`, `receivesCredentialSecurely`, `isProxy`,
+  `proxyType`) as literal nulls, and `URLCredential.toMap()` sent two more (`certificates`,
+  `persistence`). A further two — `sslCertificate` and `sslError` — are real on Android but can
+  never be populated on this channel: the credential database's DAO builds every row through the
+  five-argument `URLProtectionSpace(id, host, protocol, realm, port)` constructor, which nulls
+  both. The generated types name only the four fields the database stores, and the Dart side
+  rebuilds the public objects with the rest at their defaults — the same values that arrived before.
+
+  No method is `@async`: every call goes to a synchronous SQLite DAO.
+
+- **The `tracingcontroller` channel is Pigeon-generated**, the fifth migrated.
+  `AndroidTracingController` drops `ChannelController` and holds the generated
+  `TracingControllerHostApi`; `TracingControllerManager` implements it directly, so
+  `TracingControllerChannelDelegate` is folded in and deleted, along with `TracingSettings.kt`
+  (its `Map<String, Any?>` parse step is replaced by a typed object and its `getRealSettings` had
+  no caller) and `InternalTracingController` on the Dart side. Both class-level
+  `@Suppress("UNCHECKED_CAST")` annotations go with the casts they covered. No public API change.
+
+  **`TracingSettings.categories` is now two typed lists on the wire.** It is declared
+  `List<dynamic>` and holds `String`s and `TracingCategory`s, because androidx has two distinct
+  overloads — `TracingConfig.Builder.addCategories(String...)` for name patterns and
+  `addCategories(int...)` for the predefined `CATEGORIES_*` constants. The old wire flattened both
+  into one heterogeneous list which the Kotlin side sorted out with `is String` / `is Int` checks,
+  **silently dropping any element that matched neither** — and `null` was such an element, which the
+  platform interface's own serialiser can produce. Sending `categoryNames` and
+  `predefinedCategories` separately makes that unrepresentable and removes the runtime type tests.
+
+  No method is `@async`: all three androidx calls return synchronously. `stop` takes an `Executor`
+  but returns `boolean` immediately — the executor is only where the trace is later written — so
+  `stop` returning true still does **not** mean the trace has been flushed to disk. That contract
+  is unchanged; poll `isTracing()` for completion.
+
+- **The `webviewfeature` channel is Pigeon-generated**, the fourth migrated.
+  `AndroidWebViewFeature` drops `ChannelController` and holds the generated
+  `WebViewFeatureHostApi`; `WebViewFeatureManager` implements it instead of dispatching on
+  method-name strings, and `InternalWebViewFeature` is gone with the hand-written handler. Neither
+  method is `@async` — both androidx entry points return `boolean` directly, checked against the
+  1.17.0 sources rather than assumed. The hang this migration fixed is listed under **Fixed**.
+
+  Also gone: a Kotlin `feature!!` on a value the Dart side types `String?`. All 60 `WebViewFeature`
+  constants carry a non-null native value so it could not fire, but the Dart side now answers
+  `false` for a null rather than sending one.
+
+- **The `proxy_controller` channel is Pigeon-generated**, the third migrated after
+  `find_interaction` and `process_global_config`. `AndroidProxyController` drops `ChannelController`
+  and holds the generated `ProxyHostApi`; `ProxyManager` implements it instead of dispatching on
+  method-name strings. No public API change — `setProxyOverride` and `clearProxyOverride` keep their
+  signatures and behaviour.
+
+  Three things fall out of the typed wire:
+
+  - **Each proxy rule now sends two fields instead of nine.** `ProxyRule` declares seven iOS-only
+    fields (`allowFailover`, `username`, `password`, `excludedDomains`, `matchDomains`, `relayHop1`,
+    `relayHop2`) and its `toMap()` emitted all of them unconditionally, so every rule carried seven
+    values the Android side never read. It could not have read them: `ProxySettings.parse` cast the
+    incoming list to `List<Map<String, String>>` and `ProxyRuleExt.fromMap` took a
+    `Map<String, String>`, while the payload held bools, lists and nested maps — a cast that was
+    false at runtime and survived only because Kotlin erases generics. The schema names just `url`
+    and `schemeFilter`, and the cast is gone with it.
+  - **`ProxySettings.kt` and `ProxyRuleExt.kt` are deleted**, left with no callers once the
+    `Map<String, Any?>` parse step went; the class-level `@Suppress("UNCHECKED_CAST")` on both
+    `ProxyManager` and `ProxySettings` went with them.
+  - `ProxyManager`'s `proxyController` field and `init()` were public mutable statics that nothing
+    outside the class ever touched; both are private now.
+
+  Both methods are declared `@async`, because the androidx calls are: `setProxyOverride` and
+  `clearProxyOverride` take an `Executor` plus a completion callback, and a synchronous Pigeon
+  method would have to return before that callback could run — so `await` would have resolved while
+  the proxy was not yet in effect.
+
+- **`InAppWebViewClient` and `InAppWebViewClientCompat` no longer carry two copies of the same
+  code.** The two exist because `androidx.webkit.WebViewClientCompat` cannot be used on a Chromium
+  WebView below 73 (crbug 925887), and neither can extend the other — `WebViewClientCompat` already
+  extends `android.webkit.WebViewClient`, and Kotlin has single inheritance. A type-name-normalising
+  `diff` of the two 742/783-line files reduced to **6 hunks / 67 lines**, so every fix in the area
+  had to be made twice, and §97's own note missed the second copy. The shared callback bodies —
+  `onShouldOverrideUrlLoading`, `shouldInterceptRequest`, `onReceivedHttpAuthRequest`,
+  `onReceivedSslError`, `onReceivedClientCertRequest`, `onFormResubmission`, **438 lines verified
+  byte-identical** — now live in a new `InAppWebViewClientCommon`, which also holds the per-WebView
+  `HttpAuthState`. Each shared method that needs `super` takes a single `() -> Unit`; `super` is
+  bound to the owning class and cannot move. Where `super` is called first and unconditionally the
+  override calls it directly and the shared method takes no lambda; where the two clients differ
+  only in *which platform type* a value is read from (`onReceivedError`'s code and description,
+  `onSafeBrowsingHit`'s three response actions), that read is passed in as a lazy lambda so it still
+  happens only on the paths that used to reach it. **No behaviour change**, and each client keeps
+  its own log tag. What stays per-class is the platform-bound half of three callbacks —
+  `onReceivedError` and `onSafeBrowsingHit` (Compat feature-gates its types) and
+  `onPageCommitVisible` (the two signatures disagree on nullability). **1,525 → 1,157 lines**, with
+  the only lines still present in both clients being the override signatures themselves. Verified by
+  running the integration suite **once per client** on Android 17, the fallback forced with a
+  temporary probe and each run's client confirmed in `logcat`: Compat **136 / 2 / 0**, fallback
+  **135 / 2 / 1** (`flingScroll`, the documented flake, 3/3 alone)
+- **ktlint 1.8** formatting (`npm run format:kotlin`) plus `allWarningsAsErrors` behind an opt-in
+  `inappwebview.strictKotlin` flag — opt-in on purpose, since the module compiles inside the
+  consumer's build and an unconditional `-Werror` would break their app over a future Kotlin warning.
+  Five ktlint naming rules are disabled with the reason inline: `enum-entry-name-case` wanted to
+  rename the 77 `WebViewChannelDelegateMethods` entries that **are** the channel wire strings
+- **Deleted two unreachable methods on `WebMessageListener`** — `assertOriginRulesValid` and
+  `initJsInstance` (~95 lines). Nothing called either: Android registers listeners through
+  `WebViewCompat.addWebMessageListener`, which validates the rules and matches origins inside the
+  WebView. Both were also broken, which is why they went rather than being fixed —
+  `assertOriginRulesValid` threw on *every* non-wildcard host rule (`host.indexOf("*")` is `-1` for
+  `example.com`, and the guard tested `distance != 0`), and `initJsInstance` emitted JavaScript
+  calling `window.<bridge>._isOriginAllowed`, which is defined nowhere in this module. Neither is
+  unit-testable on the JVM — both need `android.net.Uri` — so a fix could not have been evidenced.
+  `isOriginAllowed` and `Util.hostMatchesWildcardRule` are **kept**: also unreachable here, but
+  unit-tested and deliberately maintained as the Kotlin spelling of a rule that is live on iOS
+- **Android lint: 0 findings** (from 27), with three documented suppressions
+- **The module's first native unit tests** — 23 across 4 test classes, no device or Robolectric
+  needed (~4s). They found two real bugs on their first run
+- 60 Dart-side unit tests, covering the channel argument maps of every method added here — the
+  package previously shipped a single empty placeholder test file
+
 ## 1.2.0-beta.3
 
 - Updated flutter_inappwebview_platform_interface version to ^1.4.0-beta.3

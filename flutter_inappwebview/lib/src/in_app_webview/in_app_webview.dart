@@ -4,20 +4,18 @@ import 'dart:collection';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
-import 'package:flutter_inappwebview_platform_interface/flutter_inappwebview_platform_interface.dart';
+import 'package:nosferatu500_inappwebview_platform_interface/nosferatu500_inappwebview_platform_interface.dart';
 
 import '../find_interaction/find_interaction_controller.dart';
 import '../pull_to_refresh/main.dart';
 import '../pull_to_refresh/pull_to_refresh_controller.dart';
-import '../webview_environment/webview_environment.dart';
 import 'headless_in_app_webview.dart';
 import 'in_app_webview_controller.dart';
 
-///{@macro flutter_inappwebview_platform_interface.PlatformInAppWebViewWidget}
+///{@macro nosferatu500_inappwebview_platform_interface.PlatformInAppWebViewWidget}
 ///
-///{@macro flutter_inappwebview_platform_interface.PlatformWebViewCreationParams.supported_platforms}
+///{@macro nosferatu500_inappwebview_platform_interface.PlatformWebViewCreationParams.supported_platforms}
 class InAppWebView extends StatefulWidget {
   /// Constructs a [InAppWebView].
   ///
@@ -32,14 +30,14 @@ class InAppWebView extends StatefulWidget {
        );
 
   /// Constructs a [InAppWebView] from a specific platform implementation.
-  InAppWebView.fromPlatform({super.key, required this.platform});
+  const InAppWebView.fromPlatform({super.key, required this.platform});
 
   /// Implementation of [PlatformInAppWebView] for the current platform.
   final PlatformInAppWebViewWidget platform;
 
-  ///{@macro flutter_inappwebview_platform_interface.PlatformInAppWebViewWidget}
+  ///{@macro nosferatu500_inappwebview_platform_interface.PlatformInAppWebViewWidget}
   ///
-  ///{@macro flutter_inappwebview_platform_interface.PlatformWebViewCreationParams.supported_platforms}
+  ///{@macro nosferatu500_inappwebview_platform_interface.PlatformWebViewCreationParams.supported_platforms}
   InAppWebView({
     Key? key,
     Set<Factory<OneSequenceGestureRecognizer>>? gestureRecognizers,
@@ -48,7 +46,6 @@ class InAppWebView extends StatefulWidget {
     InAppWebViewKeepAlive? keepAlive,
     bool? preventGestureDelay,
     TextDirection? layoutDirection,
-    WebViewEnvironment? webViewEnvironment,
     InAppWebViewInitialData? initialData,
     String? initialFile,
     InAppWebViewSettings? initialSettings,
@@ -58,11 +55,49 @@ class InAppWebView extends StatefulWidget {
     FindInteractionController? findInteractionController,
     ContextMenu? contextMenu,
     void Function(InAppWebViewController controller, WebUri? url)?
-    onContentLoading,
-    void Function(InAppWebViewController controller, WebUri? url)?
-    onDOMContentLoaded,
-    void Function(InAppWebViewController controller, WebUri? url)?
     onPageCommitVisible,
+    void Function(
+      InAppWebViewController controller,
+      WebViewNavigation navigation,
+    )?
+    onNavigationStarted,
+    void Function(
+      InAppWebViewController controller,
+      WebViewNavigation navigation,
+    )?
+    onNavigationRedirected,
+    void Function(
+      InAppWebViewController controller,
+      WebViewNavigation navigation,
+    )?
+    onNavigationCompleted,
+    void Function(InAppWebViewController controller, WebViewPage page)?
+    onPageLoadEvent,
+    void Function(InAppWebViewController controller, WebViewPage page)?
+    onPageDomContentLoadedEvent,
+    void Function(InAppWebViewController controller, WebViewPage page)?
+    onPageDeleted,
+    void Function(
+      InAppWebViewController controller,
+      WebViewPage page,
+      int durationMillis,
+    )?
+    onFirstContentfulPaintMillis,
+    void Function(
+      InAppWebViewController controller,
+      WebViewPage page,
+      int durationMillis,
+    )?
+    onLargestContentfulPaintMillis,
+    void Function(
+      InAppWebViewController controller,
+      WebViewPage page,
+      String markName,
+      int markTimeMillis,
+    )?
+    onPerformanceMarkMillis,
+    FutureOr<List<WebUri>?> Function(InAppWebViewController controller)?
+    onRequestVisitedHistory,
     void Function(InAppWebViewController controller, String? title)?
     onTitleChanged,
     FutureOr<AjaxRequestAction?> Function(
@@ -88,7 +123,7 @@ class InAppWebView extends StatefulWidget {
     void Function(InAppWebViewController controller)? onCloseWindow,
     void Function(InAppWebViewController controller)? onWindowFocus,
     void Function(InAppWebViewController controller)? onWindowBlur,
-    FutureOr<DownloadStartResponse?> Function(
+    FutureOr<void> Function(
       InAppWebViewController controller,
       DownloadStartRequest downloadStartRequest,
     )?
@@ -134,11 +169,7 @@ class InAppWebView extends StatefulWidget {
       InAppWebViewHitTestResult hitTestResult,
     )?
     onLongPressHitTestResult,
-    FutureOr<bool?> Function(
-      InAppWebViewController controller,
-      WebUri? url,
-      PlatformPrintJobController? printJobController,
-    )?
+    FutureOr<bool?> Function(InAppWebViewController controller, WebUri? url)?
     onPrintRequest,
     void Function(InAppWebViewController controller, int progress)?
     onProgressChanged,
@@ -226,11 +257,6 @@ class InAppWebView extends StatefulWidget {
       PermissionRequest permissionRequest,
     )?
     onPermissionRequest,
-    void Function(
-      InAppWebViewController controller,
-      FaviconChangedRequest faviconChangedRequest,
-    )?
-    onFaviconChanged,
     void Function(InAppWebViewController controller, LoginRequest loginRequest)?
     onReceivedLoginRequest,
     void Function(
@@ -290,52 +316,26 @@ class InAppWebView extends StatefulWidget {
       MediaCaptureState? newState,
     )?
     onMicrophoneCaptureStateChanged,
+    FutureOr<ShouldGoToBackForwardListItemAction?> Function(
+      InAppWebViewController controller,
+      WebHistoryItem backForwardListItem,
+      bool willUseInstantBack,
+    )?
+    shouldGoToBackForwardListItem,
+    void Function(InAppWebViewController controller, bool active)?
+    onWritingToolsActiveChanged,
     void Function(
       InAppWebViewController controller,
       Size oldContentSize,
       Size newContentSize,
     )?
     onContentSizeChanged,
-    void Function(
-      InAppWebViewController controller,
-      ProcessFailedDetail detail,
-    )?
-    onProcessFailed,
-    FutureOr<NotificationReceivedResponse?> Function(
-      InAppWebViewController controller,
-      NotificationReceivedRequest request,
-    )?
-    onNotificationReceived,
-    FutureOr<SaveAsUIShowingResponse?> Function(
-      InAppWebViewController controller,
-      SaveAsUIShowingRequest request,
-    )?
-    onSaveAsUIShowing,
-    FutureOr<SaveFileSecurityCheckStartingResponse?> Function(
-      InAppWebViewController controller,
-      SaveFileSecurityCheckStartingRequest request,
-    )?
-    onSaveFileSecurityCheckStarting,
-    FutureOr<ScreenCaptureStartingResponse?> Function(
-      InAppWebViewController controller,
-      ScreenCaptureStartingRequest request,
-    )?
-    onScreenCaptureStarting,
-    void Function(
-      InAppWebViewController controller,
-      AcceleratorKeyPressedDetail detail,
-    )?
-    onAcceleratorKeyPressed,
     FutureOr<ShowFileChooserResponse?> Function(
       InAppWebViewController controller,
       ShowFileChooserRequest request,
     )?
     onShowFileChooser,
-    FutureOr<LaunchingExternalUriSchemeResponse?> Function(
-      InAppWebViewController controller,
-      LaunchingExternalUriSchemeRequest request,
-    )?
-    onLaunchingExternalUriScheme,
+    onInsertInputSuggestion,
   }) : this.fromPlatformCreationParams(
          key: key,
          params: PlatformInAppWebViewWidgetCreationParams(
@@ -353,7 +353,6 @@ class InAppWebView extends StatefulWidget {
            findInteractionController: findInteractionController?.platform,
            contextMenu: contextMenu,
            layoutDirection: layoutDirection,
-           webViewEnvironment: webViewEnvironment?.platform,
            onWebViewCreated: onWebViewCreated != null
                ? (controller) => onWebViewCreated.call(controller)
                : null,
@@ -452,8 +451,7 @@ class InAppWebView extends StatefulWidget {
                      onUpdateVisitedHistory.call(controller, url, isReload)
                : null,
            onPrintRequest: onPrintRequest != null
-               ? (controller, url, printJobController) =>
-                     onPrintRequest.call(controller, url, printJobController)
+               ? (controller, url) => onPrintRequest.call(controller, url)
                : null,
            onLongPressHitTestResult: onLongPressHitTestResult != null
                ? (controller, hitTestResult) =>
@@ -465,14 +463,59 @@ class InAppWebView extends StatefulWidget {
            onExitFullscreen: onExitFullscreen != null
                ? (controller) => onExitFullscreen.call(controller)
                : null,
-           onContentLoading: onContentLoading != null
-               ? (controller, url) => onContentLoading.call(controller, url)
-               : null,
-           onDOMContentLoaded: onDOMContentLoaded != null
-               ? (controller, url) => onDOMContentLoaded.call(controller, url)
-               : null,
            onPageCommitVisible: onPageCommitVisible != null
                ? (controller, url) => onPageCommitVisible.call(controller, url)
+               : null,
+           onNavigationStarted: onNavigationStarted != null
+               ? (controller, navigation) =>
+                     onNavigationStarted.call(controller, navigation)
+               : null,
+           onNavigationRedirected: onNavigationRedirected != null
+               ? (controller, navigation) =>
+                     onNavigationRedirected.call(controller, navigation)
+               : null,
+           onNavigationCompleted: onNavigationCompleted != null
+               ? (controller, navigation) =>
+                     onNavigationCompleted.call(controller, navigation)
+               : null,
+           onPageLoadEvent: onPageLoadEvent != null
+               ? (controller, page) => onPageLoadEvent.call(controller, page)
+               : null,
+           onPageDomContentLoadedEvent: onPageDomContentLoadedEvent != null
+               ? (controller, page) =>
+                     onPageDomContentLoadedEvent.call(controller, page)
+               : null,
+           onPageDeleted: onPageDeleted != null
+               ? (controller, page) => onPageDeleted.call(controller, page)
+               : null,
+           onFirstContentfulPaintMillis: onFirstContentfulPaintMillis != null
+               ? (controller, page, durationMillis) =>
+                     onFirstContentfulPaintMillis.call(
+                       controller,
+                       page,
+                       durationMillis,
+                     )
+               : null,
+           onLargestContentfulPaintMillis:
+               onLargestContentfulPaintMillis != null
+               ? (controller, page, durationMillis) =>
+                     onLargestContentfulPaintMillis.call(
+                       controller,
+                       page,
+                       durationMillis,
+                     )
+               : null,
+           onPerformanceMarkMillis: onPerformanceMarkMillis != null
+               ? (controller, page, markName, markTimeMillis) =>
+                     onPerformanceMarkMillis.call(
+                       controller,
+                       page,
+                       markName,
+                       markTimeMillis,
+                     )
+               : null,
+           onRequestVisitedHistory: onRequestVisitedHistory != null
+               ? (controller) => onRequestVisitedHistory.call(controller)
                : null,
            onTitleChanged: onTitleChanged != null
                ? (controller, title) => onTitleChanged.call(controller, title)
@@ -528,10 +571,6 @@ class InAppWebView extends StatefulWidget {
            onFormResubmission: onFormResubmission != null
                ? (controller, url) => onFormResubmission.call(controller, url)
                : null,
-           onFaviconChanged: onFaviconChanged != null
-               ? (controller, request) =>
-                     onFaviconChanged.call(controller, request)
-               : null,
            onReceivedTouchIconUrl: onReceivedTouchIconUrl != null
                ? (controller, url, precomposed) =>
                      onReceivedTouchIconUrl.call(controller, url, precomposed)
@@ -584,6 +623,18 @@ class InAppWebView extends StatefulWidget {
                        newState,
                      )
                : null,
+           shouldGoToBackForwardListItem: shouldGoToBackForwardListItem != null
+               ? (controller, backForwardListItem, willUseInstantBack) =>
+                     shouldGoToBackForwardListItem.call(
+                       controller,
+                       backForwardListItem,
+                       willUseInstantBack,
+                     )
+               : null,
+           onWritingToolsActiveChanged: onWritingToolsActiveChanged != null
+               ? (controller, active) =>
+                     onWritingToolsActiveChanged.call(controller, active)
+               : null,
            onContentSizeChanged: onContentSizeChanged != null
                ? (controller, oldContentSize, newContentSize) =>
                      onContentSizeChanged.call(
@@ -592,38 +643,13 @@ class InAppWebView extends StatefulWidget {
                        newContentSize,
                      )
                : null,
-           onProcessFailed: onProcessFailed != null
-               ? (controller, detail) =>
-                     onProcessFailed.call(controller, detail)
-               : null,
-           onNotificationReceived: onNotificationReceived != null
-               ? (controller, request) =>
-                     onNotificationReceived.call(controller, request)
-               : null,
-           onSaveAsUIShowing: onSaveAsUIShowing != null
-               ? (controller, request) =>
-                     onSaveAsUIShowing.call(controller, request)
-               : null,
-           onSaveFileSecurityCheckStarting:
-               onSaveFileSecurityCheckStarting != null
-               ? (controller, request) =>
-                     onSaveFileSecurityCheckStarting.call(controller, request)
-               : null,
-           onScreenCaptureStarting: onScreenCaptureStarting != null
-               ? (controller, request) =>
-                     onScreenCaptureStarting.call(controller, request)
-               : null,
-           onAcceleratorKeyPressed: onAcceleratorKeyPressed != null
-               ? (controller, detail) =>
-                     onAcceleratorKeyPressed.call(controller, detail)
-               : null,
            onShowFileChooser: onShowFileChooser != null
                ? (controller, request) =>
                      onShowFileChooser.call(controller, request)
                : null,
-           onLaunchingExternalUriScheme: onLaunchingExternalUriScheme != null
-               ? (controller, request) =>
-                     onLaunchingExternalUriScheme.call(controller, request)
+           onInsertInputSuggestion: onInsertInputSuggestion != null
+               ? (controller, inputSuggestion) =>
+                     onInsertInputSuggestion.call(controller, inputSuggestion)
                : null,
            gestureRecognizers: gestureRecognizers,
            headlessWebView: headlessWebView?.platform,
@@ -632,13 +658,13 @@ class InAppWebView extends StatefulWidget {
        );
 
   @override
-  _InAppWebViewState createState() => _InAppWebViewState();
+  State<InAppWebView> createState() => _InAppWebViewState();
 
-  ///{@macro flutter_inappwebview_platform_interface.PlatformInAppWebViewWidgetCreationParams.isClassSupported}
+  ///{@macro nosferatu500_inappwebview_platform_interface.PlatformInAppWebViewWidgetCreationParams.isClassSupported}
   static bool isClassSupported({TargetPlatform? platform}) =>
       PlatformInAppWebViewWidget.static().isClassSupported(platform: platform);
 
-  ///{@macro flutter_inappwebview_platform_interface.PlatformInAppWebViewWidgetCreationParams.isPropertySupported}
+  ///{@macro nosferatu500_inappwebview_platform_interface.PlatformInAppWebViewWidgetCreationParams.isPropertySupported}
   static bool isPropertySupported(
     dynamic property, {
     TargetPlatform? platform,
@@ -652,6 +678,12 @@ class _InAppWebViewState extends State<InAppWebView> {
   @override
   Widget build(BuildContext context) {
     return widget.platform.build(context);
+  }
+
+  @override
+  void didUpdateWidget(InAppWebView oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    widget.platform.didUpdateWidget(oldWidget.platform);
   }
 
   @override

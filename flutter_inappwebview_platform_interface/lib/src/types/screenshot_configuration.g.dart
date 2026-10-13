@@ -14,7 +14,6 @@ class ScreenshotConfiguration {
   ///
   ///**Officially Supported Platforms/Implementations**:
   ///- iOS WKWebView 13.0+
-  ///- macOS WKWebView 10.15+
   bool afterScreenUpdates;
 
   ///The compression format of the captured image.
@@ -23,8 +22,6 @@ class ScreenshotConfiguration {
   ///**Officially Supported Platforms/Implementations**:
   ///- Android WebView
   ///- iOS WKWebView
-  ///- macOS WKWebView
-  ///- Windows WebView2
   CompressFormat compressFormat;
 
   ///Hint to the compressor, `0-100`. The value is interpreted differently depending on the [CompressFormat].
@@ -33,8 +30,6 @@ class ScreenshotConfiguration {
   ///**Officially Supported Platforms/Implementations**:
   ///- Android WebView
   ///- iOS WKWebView
-  ///- macOS WKWebView
-  ///- Windows WebView2
   int quality;
 
   ///The portion of your web view to capture, specified as a rectangle in the view’s coordinate system.
@@ -44,8 +39,6 @@ class ScreenshotConfiguration {
   ///**Officially Supported Platforms/Implementations**:
   ///- Android WebView
   ///- iOS WKWebView
-  ///- macOS WKWebView
-  ///- Windows WebView2
   InAppWebViewRect? rect;
 
   ///The width of the captured image, in points.
@@ -57,7 +50,6 @@ class ScreenshotConfiguration {
   ///**Officially Supported Platforms/Implementations**:
   ///- Android WebView
   ///- iOS WKWebView
-  ///- macOS WKWebView
   double? snapshotWidth;
   ScreenshotConfiguration({
     this.rect,

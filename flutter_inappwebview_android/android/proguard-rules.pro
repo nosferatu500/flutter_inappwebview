@@ -20,13 +20,13 @@
     public void *(android.webkit.WebView, java.lang.String);
 }
 
--keepclassmembers class com.pichillilorenzo.flutter_inappwebview_android.webview.JavaScriptBridgeInterface {
+-keepclassmembers class dev.nosferatu500.inappwebview.webview.JavaScriptBridgeInterface {
      <fields>;
      <methods>;
      public *;
      private *;
 }
 
--keep class com.pichillilorenzo.flutter_inappwebview_android.** { *; }
+-keep class dev.nosferatu500.inappwebview.** { *; }
 
 -dontwarn android.window.BackEvent

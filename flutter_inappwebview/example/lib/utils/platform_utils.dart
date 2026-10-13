@@ -31,25 +31,17 @@ class PlatformUtils {
   }
 
   /// Gets the current platform as a [SupportedPlatform] enum value.
-  /// Returns null if the current platform is not recognized.
+  /// Returns null anywhere this fork does not build — which is everywhere
+  /// except Android and iOS.
   static SupportedPlatform? getCurrentPlatform() {
     if (kIsWeb) {
-      return SupportedPlatform.web;
+      return null;
     }
     if (Platform.isAndroid) {
       return SupportedPlatform.android;
     }
     if (Platform.isIOS) {
       return SupportedPlatform.ios;
-    }
-    if (Platform.isMacOS) {
-      return SupportedPlatform.macos;
-    }
-    if (Platform.isWindows) {
-      return SupportedPlatform.windows;
-    }
-    if (Platform.isLinux) {
-      return SupportedPlatform.linux;
     }
     return null;
   }
@@ -59,7 +51,7 @@ class PlatformUtils {
   /// package_info_plus or similar to get actual version info.
   static String getFlutterVersion() {
     return FlutterVersion.version != null
-        ? FlutterVersion.version! + ' (' + (FlutterVersion.channel ?? '') + ')'
+        ? '${FlutterVersion.version!} (${FlutterVersion.channel ?? ''})'
         : 'Flutter SDK';
   }
 

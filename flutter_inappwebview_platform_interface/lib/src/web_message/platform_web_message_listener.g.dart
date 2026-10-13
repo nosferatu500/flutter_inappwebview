@@ -8,14 +8,11 @@ part of 'platform_web_message_listener.dart';
 
 extension _PlatformWebMessageListenerCreationParamsClassSupported
     on PlatformWebMessageListenerCreationParams {
-  ///{@template flutter_inappwebview_platform_interface.PlatformWebMessageListenerCreationParams.supported_platforms}
+  ///{@template nosferatu500_inappwebview_platform_interface.PlatformWebMessageListenerCreationParams.supported_platforms}
   ///
   ///**Officially Supported Platforms/Implementations**:
   ///- Android WebView
   ///- iOS WKWebView
-  ///- macOS WKWebView
-  ///- Linux WPE WebKit
-  ///- Windows WebView2
   ///
   ///Use the [PlatformWebMessageListenerCreationParams.isClassSupported] method to check if this class is supported at runtime.
   ///{@endtemplate}
@@ -24,9 +21,6 @@ extension _PlatformWebMessageListenerCreationParamsClassSupported
         [
           TargetPlatform.android,
           TargetPlatform.iOS,
-          TargetPlatform.macOS,
-          TargetPlatform.linux,
-          TargetPlatform.windows,
         ].contains(platform ?? defaultTargetPlatform);
   }
 }
@@ -35,29 +29,34 @@ extension _PlatformWebMessageListenerCreationParamsClassSupported
 enum PlatformWebMessageListenerCreationParamsProperty {
   ///Can be used to check if the [PlatformWebMessageListenerCreationParams.allowedOriginRules] property is supported at runtime.
   ///
-  ///{@template flutter_inappwebview_platform_interface.PlatformWebMessageListenerCreationParams.allowedOriginRules.supported_platforms}
+  ///{@template nosferatu500_inappwebview_platform_interface.PlatformWebMessageListenerCreationParams.allowedOriginRules.supported_platforms}
   ///
   ///**Officially Supported Platforms/Implementations**:
   ///- Android WebView
   ///- iOS WKWebView
-  ///- macOS WKWebView
-  ///- Linux WPE WebKit
-  ///- Windows WebView2
   ///
   ///Use the [PlatformWebMessageListenerCreationParams.isPropertySupported] method to check if this property is supported at runtime.
   ///{@endtemplate}
   allowedOriginRules,
 
+  ///Can be used to check if the [PlatformWebMessageListenerCreationParams.contentWorld] property is supported at runtime.
+  ///
+  ///{@template nosferatu500_inappwebview_platform_interface.PlatformWebMessageListenerCreationParams.contentWorld.supported_platforms}
+  ///
+  ///**Officially Supported Platforms/Implementations**:
+  ///- iOS WKWebView ([Official API - WKUserContentController.addScriptMessageHandler](https://developer.apple.com/documentation/webkit/wkusercontentcontroller/3585113-addscriptmessagehandler))
+  ///
+  ///Use the [PlatformWebMessageListenerCreationParams.isPropertySupported] method to check if this property is supported at runtime.
+  ///{@endtemplate}
+  contentWorld,
+
   ///Can be used to check if the [PlatformWebMessageListenerCreationParams.jsObjectName] property is supported at runtime.
   ///
-  ///{@template flutter_inappwebview_platform_interface.PlatformWebMessageListenerCreationParams.jsObjectName.supported_platforms}
+  ///{@template nosferatu500_inappwebview_platform_interface.PlatformWebMessageListenerCreationParams.jsObjectName.supported_platforms}
   ///
   ///**Officially Supported Platforms/Implementations**:
   ///- Android WebView
   ///- iOS WKWebView
-  ///- macOS WKWebView
-  ///- Linux WPE WebKit
-  ///- Windows WebView2
   ///
   ///Use the [PlatformWebMessageListenerCreationParams.isPropertySupported] method to check if this property is supported at runtime.
   ///{@endtemplate}
@@ -65,14 +64,11 @@ enum PlatformWebMessageListenerCreationParamsProperty {
 
   ///Can be used to check if the [PlatformWebMessageListenerCreationParams.onPostMessage] property is supported at runtime.
   ///
-  ///{@template flutter_inappwebview_platform_interface.PlatformWebMessageListenerCreationParams.onPostMessage.supported_platforms}
+  ///{@template nosferatu500_inappwebview_platform_interface.PlatformWebMessageListenerCreationParams.onPostMessage.supported_platforms}
   ///
   ///**Officially Supported Platforms/Implementations**:
   ///- Android WebView ([Official API - WebViewCompat.WebMessageListener.onPostMessage](https://developer.android.com/reference/androidx/webkit/WebViewCompat.WebMessageListener#onPostMessage(android.webkit.WebView,%20androidx.webkit.WebMessageCompat,%20android.net.Uri,%20boolean,%20androidx.webkit.JavaScriptReplyProxy)))
   ///- iOS WKWebView
-  ///- macOS WKWebView
-  ///- Linux WPE WebKit
-  ///- Windows WebView2
   ///
   ///**Parameters - Officially Supported Platforms/Implementations**:
   ///- [message]: all platforms
@@ -97,27 +93,21 @@ extension _PlatformWebMessageListenerCreationParamsPropertySupported
             [
               TargetPlatform.android,
               TargetPlatform.iOS,
-              TargetPlatform.macOS,
-              TargetPlatform.linux,
-              TargetPlatform.windows,
             ].contains(platform ?? defaultTargetPlatform);
+      case PlatformWebMessageListenerCreationParamsProperty.contentWorld:
+        return ((kIsWeb && platform != null) || !kIsWeb) &&
+            [TargetPlatform.iOS].contains(platform ?? defaultTargetPlatform);
       case PlatformWebMessageListenerCreationParamsProperty.jsObjectName:
         return ((kIsWeb && platform != null) || !kIsWeb) &&
             [
               TargetPlatform.android,
               TargetPlatform.iOS,
-              TargetPlatform.macOS,
-              TargetPlatform.linux,
-              TargetPlatform.windows,
             ].contains(platform ?? defaultTargetPlatform);
       case PlatformWebMessageListenerCreationParamsProperty.onPostMessage:
         return ((kIsWeb && platform != null) || !kIsWeb) &&
             [
               TargetPlatform.android,
               TargetPlatform.iOS,
-              TargetPlatform.macOS,
-              TargetPlatform.linux,
-              TargetPlatform.windows,
             ].contains(platform ?? defaultTargetPlatform);
     }
   }
@@ -125,14 +115,11 @@ extension _PlatformWebMessageListenerCreationParamsPropertySupported
 
 extension _PlatformWebMessageListenerClassSupported
     on PlatformWebMessageListener {
-  ///{@template flutter_inappwebview_platform_interface.PlatformWebMessageListener.supported_platforms}
+  ///{@template nosferatu500_inappwebview_platform_interface.PlatformWebMessageListener.supported_platforms}
   ///
   ///**Officially Supported Platforms/Implementations**:
   ///- Android WebView
   ///- iOS WKWebView
-  ///- macOS WKWebView
-  ///- Linux WPE WebKit
-  ///- Windows WebView2
   ///
   ///Use the [PlatformWebMessageListener.isClassSupported] method to check if this class is supported at runtime.
   ///{@endtemplate}
@@ -141,9 +128,6 @@ extension _PlatformWebMessageListenerClassSupported
         [
           TargetPlatform.android,
           TargetPlatform.iOS,
-          TargetPlatform.macOS,
-          TargetPlatform.linux,
-          TargetPlatform.windows,
         ].contains(platform ?? defaultTargetPlatform);
   }
 }
@@ -152,14 +136,11 @@ extension _PlatformWebMessageListenerClassSupported
 enum PlatformWebMessageListenerMethod {
   ///Can be used to check if the [PlatformWebMessageListener.dispose] method is supported at runtime.
   ///
-  ///{@template flutter_inappwebview_platform_interface.PlatformWebMessageListener.dispose.supported_platforms}
+  ///{@template nosferatu500_inappwebview_platform_interface.PlatformWebMessageListener.dispose.supported_platforms}
   ///
   ///**Officially Supported Platforms/Implementations**:
   ///- Android WebView
   ///- iOS WKWebView
-  ///- macOS WKWebView
-  ///- Linux WPE WebKit
-  ///- Windows WebView2
   ///
   ///Use the [PlatformWebMessageListener.isMethodSupported] method to check if this method is supported at runtime.
   ///{@endtemplate}
@@ -178,9 +159,6 @@ extension _PlatformWebMessageListenerMethodSupported
             [
               TargetPlatform.android,
               TargetPlatform.iOS,
-              TargetPlatform.macOS,
-              TargetPlatform.linux,
-              TargetPlatform.windows,
             ].contains(platform ?? defaultTargetPlatform);
     }
   }

@@ -1,0 +1,47 @@
+include: package:flutter_lints/flutter.yaml
+
+# The `linter: rules:` block that used to live here set every value to `ignore`,
+# which is only meaningful under `analyzer: errors:`. That made this file
+# invalid, which silently disabled *all* flutter_lints rules and broke pub.dev's
+# static analysis (upstream issue #2758).
+#
+# With the file valid again, flutter_lints surfaces pre-existing style
+# violations across the whole codebase. They are opted out explicitly below so
+# `flutter analyze` stays actionable; re-enable them one at a time (most are
+# auto-fixable via `dart fix --apply`). Rules that catch real defects -- such as
+# unrelated_type_equality_checks -- are deliberately left enabled.
+linter:
+  rules:
+    # Opt-in, not in flutter_lints (§247).
+    avoid_void_async: true
+    close_sinks: true
+    no_adjacent_strings_in_list: true
+    # Opt-in, not in flutter_lints: a Future dropped in a non-async function (§246).
+    discarded_futures: true
+    # Opt-in, not in flutter_lints: a Future neither awaited nor marked unawaited (§245).
+    unawaited_futures: true
+    # Opt-in guards, not in flutter_lints; each had 0 findings when added (§244).
+    always_declare_return_types: true
+    avoid_js_rounded_ints: true
+    avoid_type_to_string: true
+    cancel_subscriptions: true
+    conditional_uri_does_not_exist: true
+    deprecated_consistency: true
+    literal_only_boolean_expressions: true
+    no_self_assignments: true
+    only_throw_errors: true
+    prefer_void_to_null: true
+    test_types_in_equals: true
+    throw_in_finally: true
+    unnecessary_statements: true
+    use_late_for_private_fields_and_variables: true
+    use_named_constants: true
+    use_to_and_as_if_applicable: true
+    # Opt-in: not in flutter_lints, and no longer an analyzer default (§227).
+    deprecated_member_use_from_same_package: true
+    non_constant_identifier_names: false
+# Additional information about this file can be found at
+# https://dart.dev/guides/language/analysis-options
+analyzer:
+  errors:
+    constant_identifier_names: ignore

@@ -20,11 +20,11 @@ void openAndClose() {
         exitAnimations: [
           AndroidResource.anim(
             name: "abc_slide_in_top",
-            defPackage: "com.pichillilorenzo.flutter_inappwebviewexample",
+            defPackage: "dev.nosferatu500.inappwebview.example",
           ),
           AndroidResource.anim(
             name: "abc_slide_out_top",
-            defPackage: "com.pichillilorenzo.flutter_inappwebviewexample",
+            defPackage: "dev.nosferatu500.inappwebview.example",
           ),
         ],
         keepAliveEnabled: true,
@@ -39,7 +39,7 @@ void openAndClose() {
         activityButton: ActivityButton(
           templateImage: UIImage(systemName: "sun.max"),
           extensionIdentifier:
-              "com.pichillilorenzo.flutterinappwebview-ios-example5.test",
+              "dev.nosferatu500.inappwebview-ios-example5.test",
         ),
       ),
     );

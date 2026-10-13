@@ -2,11 +2,12 @@ import 'dart:async';
 import 'dart:collection';
 
 import 'package:flutter/foundation.dart';
-import 'package:flutter/services.dart';
-import 'package:flutter_inappwebview_platform_interface/flutter_inappwebview_platform_interface.dart';
+import 'package:nosferatu500_inappwebview_platform_interface/nosferatu500_inappwebview_platform_interface.dart';
 
 import '../find_interaction/find_interaction_controller.dart';
 import '../in_app_webview/in_app_webview_controller.dart';
+import '../pigeons/in_app_browser.g.dart';
+import '../pigeons/in_app_browser_manager.g.dart';
 import '../pull_to_refresh/pull_to_refresh_controller.dart';
 
 /// Object specifying creation parameters for creating a [AndroidInAppBrowser].
@@ -17,10 +18,10 @@ import '../pull_to_refresh/pull_to_refresh_controller.dart';
 class AndroidInAppBrowserCreationParams
     extends PlatformInAppBrowserCreationParams {
   /// Creates a new [AndroidInAppBrowserCreationParams] instance.
-  AndroidInAppBrowserCreationParams({
+  const AndroidInAppBrowserCreationParams({
     super.contextMenu,
-    this.pullToRefreshController,
-    this.findInteractionController,
+    AndroidPullToRefreshController? super.pullToRefreshController,
+    AndroidFindInteractionController? super.findInteractionController,
     super.initialUserScripts,
     super.windowId,
   });
@@ -43,13 +44,40 @@ class AndroidInAppBrowserCreationParams
   }
 
   @override
-  final AndroidFindInteractionController? findInteractionController;
+  AndroidFindInteractionController? get findInteractionController =>
+      super.findInteractionController as AndroidFindInteractionController?;
 
   @override
-  final AndroidPullToRefreshController? pullToRefreshController;
+  AndroidPullToRefreshController? get pullToRefreshController =>
+      super.pullToRefreshController as AndroidPullToRefreshController?;
 }
 
-///{@macro flutter_inappwebview_platform_interface.PlatformInAppBrowser}
+/// Receives [InAppBrowserFlutterApi] events and forwards them to the browser.
+///
+/// A separate class rather than `implements` on [AndroidInAppBrowser]: the generated event names
+/// match the platform interface's callbacks, and one class cannot be both (§14).
+class _InAppBrowserFlutterApiImpl implements InAppBrowserFlutterApi {
+  _InAppBrowserFlutterApiImpl(this._browser);
+
+  final AndroidInAppBrowser _browser;
+
+  @override
+  void onBrowserCreated() => _browser._onBrowserCreated();
+
+  @override
+  void onMenuItemClicked(int id) => _browser._onMenuItemClicked(id);
+
+  @override
+  void onExit() => _browser._onExit();
+}
+
+///{@macro nosferatu500_inappwebview_platform_interface.PlatformInAppBrowser}
+///
+/// Transport is Pigeon only: the browser's own methods and events ([InAppBrowserHostApi] /
+/// [InAppBrowserFlutterApi], suffixed by [id], §195, its settings pair since §199), and its
+/// WebView's ([webViewController]'s, suffixed `inappbrowser_<id>`). The `inappbrowser_$id`
+/// MethodChannel that carried the WebView's surface is gone since §217. [ChannelController] stays in
+/// the type, which is public, and no channel is set on it any more.
 class AndroidInAppBrowser extends PlatformInAppBrowser with ChannelController {
   @override
   final String id = IdGenerator.generate();
@@ -78,9 +106,9 @@ class AndroidInAppBrowser extends PlatformInAppBrowser with ChannelController {
   AndroidInAppBrowserCreationParams get _androidParams =>
       params as AndroidInAppBrowserCreationParams;
 
-  static const MethodChannel _staticChannel = MethodChannel(
-    'com.pichillilorenzo/flutter_inappbrowser',
-  );
+  /// The manager's channel, over Pigeon (§197). `open`'s map-valued fields stay maps (§194, B).
+  static final InAppBrowserManagerHostApi _managerApi =
+      InAppBrowserManagerHostApi();
 
   ContextMenu? _contextMenu;
 
@@ -90,6 +118,7 @@ class AndroidInAppBrowser extends PlatformInAppBrowser with ChannelController {
   final Map<int, InAppBrowserMenuItem> _menuItems = HashMap();
   bool _isOpened = false;
   AndroidInAppWebViewController? _webViewController;
+  InAppBrowserHostApi? _hostApi;
 
   @override
   AndroidInAppWebViewController? get webViewController {
@@ -97,13 +126,15 @@ class AndroidInAppBrowser extends PlatformInAppBrowser with ChannelController {
   }
 
   void _init() {
-    channel = MethodChannel('com.pichillilorenzo/flutter_inappbrowser_$id');
-    handler = _handleMethod;
-    initMethodCallHandler();
+    _hostApi = InAppBrowserHostApi(messageChannelSuffix: id);
+    InAppBrowserFlutterApi.setUp(
+      _InAppBrowserFlutterApiImpl(this),
+      messageChannelSuffix: id,
+    );
 
     _webViewController = AndroidInAppWebViewController.fromInAppBrowser(
       AndroidInAppWebViewControllerCreationParams(id: id),
-      channel!,
+      null,
       this,
       initialUserScripts,
     );
@@ -121,35 +152,39 @@ class AndroidInAppBrowser extends PlatformInAppBrowser with ChannelController {
     );
   }
 
-  Future<dynamic> _handleMethod(MethodCall call) async {
-    switch (call.method) {
-      case "onBrowserCreated":
-        _debugLog(call.method, call.arguments);
-        eventHandler?.onBrowserCreated();
-        break;
-      case "onMenuItemClicked":
-        _debugLog(call.method, call.arguments);
-        int id = call.arguments["id"].toInt();
-        if (_menuItems[id] != null) {
-          if (_menuItems[id]?.onClick != null) {
-            _menuItems[id]?.onClick!();
-          }
-        }
-        break;
-      case "onExit":
-        _debugLog(call.method, call.arguments);
-        _isOpened = false;
-        final onExit = eventHandler?.onExit;
-        dispose();
-        onExit?.call();
-        break;
-      default:
-        return _webViewController?.handleMethod(call);
+  void _onBrowserCreated() {
+    _debugLog("onBrowserCreated", <String, dynamic>{});
+    eventHandler?.onBrowserCreated();
+  }
+
+  void _onMenuItemClicked(int id) {
+    _debugLog("onMenuItemClicked", <String, dynamic>{"id": id});
+    if (_menuItems[id] != null) {
+      if (_menuItems[id]?.onClick != null) {
+        _menuItems[id]?.onClick!();
+      }
     }
   }
 
-  Map<String, dynamic> _prepareOpenRequest({
+  void _onExit() {
+    _debugLog("onExit", <String, dynamic>{});
+    _isOpened = false;
+    final onExit = eventHandler?.onExit;
+    dispose();
+    onExit?.call();
+  }
+
+  /// Marks the browser opened, wires its channels, and builds the request. Exactly one of
+  /// [urlRequest], [assetFilePath] and [data] is given, by the three `open…` methods.
+  InAppBrowserOpenRequestData _prepareOpenRequest({
     InAppBrowserClassSettings? settings,
+    URLRequest? urlRequest,
+    String? assetFilePath,
+    String? data,
+    String? mimeType,
+    String? encoding,
+    String? baseUrl,
+    String? historyUrl,
   }) {
     assert(!_isOpened, 'The browser is already opened.');
     _isOpened = true;
@@ -167,18 +202,23 @@ class AndroidInAppBrowser extends PlatformInAppBrowser with ChannelController {
       menuItemList.add(value.toMap());
     });
 
-    Map<String, dynamic> args = <String, dynamic>{};
-    args.putIfAbsent('id', () => id);
-    args.putIfAbsent('settings', () => initialSettings);
-    args.putIfAbsent('contextMenu', () => contextMenu?.toMap() ?? {});
-    args.putIfAbsent('windowId', () => windowId);
-    args.putIfAbsent(
-      'initialUserScripts',
-      () => initialUserScripts?.map((e) => e.toMap()).toList() ?? [],
+    return InAppBrowserOpenRequestData(
+      id: id,
+      urlRequest: urlRequest?.toMap(),
+      assetFilePath: assetFilePath,
+      data: data,
+      mimeType: mimeType,
+      encoding: encoding,
+      baseUrl: baseUrl,
+      historyUrl: historyUrl,
+      settings: initialSettings,
+      contextMenu: contextMenu?.toMap() ?? {},
+      windowId: windowId,
+      initialUserScripts:
+          initialUserScripts?.map((e) => e.toMap()).toList() ?? [],
+      pullToRefreshSettings: pullToRefreshSettings,
+      menuItems: menuItemList,
     );
-    args.putIfAbsent('pullToRefreshSettings', () => pullToRefreshSettings);
-    args.putIfAbsent('menuItems', () => menuItemList);
-    return args;
   }
 
   @override
@@ -188,9 +228,9 @@ class AndroidInAppBrowser extends PlatformInAppBrowser with ChannelController {
   }) async {
     assert(urlRequest.url != null && urlRequest.url.toString().isNotEmpty);
 
-    Map<String, dynamic> args = _prepareOpenRequest(settings: settings);
-    args.putIfAbsent('urlRequest', () => urlRequest.toMap());
-    await _staticChannel.invokeMethod('open', args);
+    await _managerApi.open(
+      _prepareOpenRequest(settings: settings, urlRequest: urlRequest),
+    );
   }
 
   @override
@@ -200,9 +240,9 @@ class AndroidInAppBrowser extends PlatformInAppBrowser with ChannelController {
   }) async {
     assert(assetFilePath.isNotEmpty);
 
-    Map<String, dynamic> args = _prepareOpenRequest(settings: settings);
-    args.putIfAbsent('assetFilePath', () => assetFilePath);
-    await _staticChannel.invokeMethod('open', args);
+    await _managerApi.open(
+      _prepareOpenRequest(settings: settings, assetFilePath: assetFilePath),
+    );
   }
 
   @override
@@ -214,25 +254,23 @@ class AndroidInAppBrowser extends PlatformInAppBrowser with ChannelController {
     WebUri? historyUrl,
     InAppBrowserClassSettings? settings,
   }) async {
-    Map<String, dynamic> args = _prepareOpenRequest(settings: settings);
-    args.putIfAbsent('data', () => data);
-    args.putIfAbsent('mimeType', () => mimeType);
-    args.putIfAbsent('encoding', () => encoding);
-    args.putIfAbsent('baseUrl', () => baseUrl?.toString() ?? "about:blank");
-    args.putIfAbsent(
-      'historyUrl',
-      () => historyUrl?.toString() ?? "about:blank",
+    await _managerApi.open(
+      _prepareOpenRequest(
+        settings: settings,
+        data: data,
+        mimeType: mimeType,
+        encoding: encoding,
+        baseUrl: baseUrl?.toString() ?? "about:blank",
+        historyUrl: historyUrl?.toString() ?? "about:blank",
+      ),
     );
-    await _staticChannel.invokeMethod('open', args);
   }
 
   @override
   Future<void> openWithSystemBrowser({required WebUri url}) async {
     assert(url.toString().isNotEmpty);
 
-    Map<String, dynamic> args = <String, dynamic>{};
-    args.putIfAbsent('url', () => url.toString());
-    return await _staticChannel.invokeMethod('openWithSystemBrowser', args);
+    await _managerApi.openWithSystemBrowser(url.toString());
   }
 
   @override
@@ -273,32 +311,28 @@ class AndroidInAppBrowser extends PlatformInAppBrowser with ChannelController {
   Future<void> show() async {
     assert(_isOpened, 'The browser is not opened.');
 
-    Map<String, dynamic> args = <String, dynamic>{};
-    await channel?.invokeMethod('show', args);
+    await _hostApi?.show();
   }
 
   @override
   Future<void> hide() async {
     assert(_isOpened, 'The browser is not opened.');
 
-    Map<String, dynamic> args = <String, dynamic>{};
-    await channel?.invokeMethod('hide', args);
+    await _hostApi?.hide();
   }
 
   @override
   Future<void> close() async {
     assert(_isOpened, 'The browser is not opened.');
 
-    Map<String, dynamic> args = <String, dynamic>{};
-    await channel?.invokeMethod('close', args);
+    await _hostApi?.close();
   }
 
   @override
   Future<bool> isHidden() async {
     assert(_isOpened, 'The browser is not opened.');
 
-    Map<String, dynamic> args = <String, dynamic>{};
-    return await channel?.invokeMethod<bool>('isHidden', args) ?? false;
+    return await _hostApi?.isHidden() ?? false;
   }
 
   @override
@@ -307,29 +341,16 @@ class AndroidInAppBrowser extends PlatformInAppBrowser with ChannelController {
   }) async {
     assert(_isOpened, 'The browser is not opened.');
 
-    Map<String, dynamic> args = <String, dynamic>{};
-    args.putIfAbsent('settings', () => settings.toMap());
-    await channel?.invokeMethod('setSettings', args);
+    await _hostApi?.setSettings(settings.toMap());
   }
 
   @override
   Future<InAppBrowserClassSettings?> getSettings() async {
     assert(_isOpened, 'The browser is not opened.');
 
-    Map<String, dynamic> args = <String, dynamic>{};
-
-    Map<dynamic, dynamic>? settings = await channel?.invokeMethod(
-      'getSettings',
-      args,
-    );
-    if (settings != null) {
-      settings = settings.cast<String, dynamic>();
-      return InAppBrowserClassSettings.fromMap(
-        settings as Map<String, dynamic>,
-      );
-    }
-
-    return null;
+    final settings = await _hostApi?.getSettings();
+    if (settings == null) return null;
+    return InAppBrowserClassSettings.fromMap(settings.cast<String, dynamic>());
   }
 
   @override
@@ -341,7 +362,9 @@ class AndroidInAppBrowser extends PlatformInAppBrowser with ChannelController {
   @mustCallSuper
   void dispose() {
     super.dispose();
-    disposeChannel();
+    // An event handler left registered would outlive the browser it forwards to (§184).
+    InAppBrowserFlutterApi.setUp(null, messageChannelSuffix: id);
+    _hostApi = null;
     _webViewController?.dispose();
     _webViewController = null;
     pullToRefreshController?.dispose();

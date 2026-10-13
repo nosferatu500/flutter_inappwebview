@@ -19,6 +19,15 @@ const auth = require('basic-auth');
 const app = express();
 const appHttps = express();
 const appAuthBasic = express();
+// A *second* protected origin, on its own port and realm.
+//
+// It exists because the first one is single-use per process: once a test authenticates against
+// 8081, Chromium pre-authenticates that origin for the rest of the run and
+// `onReceivedHttpAuthRequest` never fires for it again. Any test that needs to observe a challenge
+// -- a failure count, or a credential offered to the wrong protection space -- therefore has to run
+// somewhere no earlier test has already unlocked. Keep it that way: **do not authenticate
+// successfully against 8084 in a test that other tests depend on.**
+const appAuthBasic2 = express();
 const fs = require('fs')
 const path = require('path')
 const bodyParser = require('body-parser');
@@ -132,6 +141,46 @@ appAuthBasic.get('/test-index', (req, res) => {
 appAuthBasic.listen(8081);
 
 
+// Second protected origin -- see the note next to `appAuthBasic2` above.
+// Same credentials, DIFFERENT realm, so it is a distinct protection space from 8081 in every
+// dimension a `URLProtectionSpace` carries except the host.
+appAuthBasic2.use((req, res, next) => {
+  let user = auth(req)
+
+  if (user === undefined || user['name'] !== 'USERNAME2' || user['pass'] !== 'PASSWORD2') {
+    res.statusCode = 401
+    res.setHeader('WWW-Authenticate', 'Basic realm="Node2"')
+    res.send(`
+        <html>
+          <head>
+          </head>
+          <body>
+            <h1>Unauthorized</h1>
+          </body>
+        </html>
+      `);
+    res.end()
+  } else {
+    next()
+  }
+});
+
+appAuthBasic2.get("/", (req, res) => {
+  res.send(`
+    <html>
+      <head>
+      </head>
+      <body>
+        <h1>Authorized2</h1>
+      </body>
+    </html>
+  `);
+  res.end()
+});
+
+appAuthBasic2.listen(8084);
+
+
 app.use(cors());
 
 app.use(bodyParser.urlencoded({extended: false}));
@@ -169,6 +218,99 @@ app.get("/echo-headers", (req, res) => {
 
 app.get('/test-index', (req, res) => {
     res.sendFile(__dirname + '/public/test-index.html');
+})
+
+// Two links with an explicit `:visited` colour, so a test can ask the page what colour each one
+// renders as. Used to check whether the answer given to `WebChromeClient.getVisitedHistory` has any
+// effect a page can observe.
+app.get("/test-visited-links", (req, res) => {
+  res.send(`
+    <html>
+      <head>
+        <style>
+          a { color: rgb(0, 0, 255); }
+          a:visited { color: rgb(255, 0, 0); }
+        </style>
+      </head>
+      <body>
+        <a id="reported" href="/test-visited-target">reported as visited</a>
+        <a id="unreported" href="/test-never-visited">not reported</a>
+      </body>
+    </html>
+  `);
+  res.end()
+})
+
+// A page whose only content is an iframe from a DIFFERENT origin. Same server, same port, but
+// `localhost` is a different host from the LAN address the test loads the parent by, which is all
+// "cross-origin" means -- so the child cannot touch `window.top` and the old callback-id bridge
+// could not deliver a reply to it.
+app.get("/test-cross-origin-iframe-parent", (req, res) => {
+  res.send(`
+    <html>
+      <head>
+      </head>
+      <body>
+        <p>PARENT</p>
+        <iframe id="child" src="http://localhost:8082/test-cross-origin-iframe-child" style="width:300px;height:200px"></iframe>
+      </body>
+    </html>
+  `);
+  res.end()
+})
+
+// The child calls a handler and reports what its promise produced -- through a second handler,
+// because it cannot talk to its parent either. Note it does NOT wait for
+// `flutterInAppWebViewPlatformReady`: on iOS that event is dispatched with `evaluateJavaScript`,
+// which reaches the main frame only, while the bridge script itself is injected at document start
+// into every frame.
+app.get("/test-cross-origin-iframe-child", (req, res) => {
+  res.send(`
+    <html>
+      <head>
+      </head>
+      <body>
+        <p>CHILD</p>
+        <script>
+          (function() {
+            var bridge = window.flutter_inappwebview;
+            if (bridge == null || bridge.callHandler == null) { return; }
+            bridge.callHandler('iframeEcho', 42).then(function(value) {
+              var json = JSON.stringify(value);
+              bridge.callHandler('reportIframeReply', {
+                type: typeof value,
+                json: json === undefined ? '<undefined>' : json
+              });
+            });
+          })();
+        </script>
+      </body>
+    </html>
+  `);
+  res.end()
+})
+
+// Two hops, so `onNavigationRedirected` has to fire twice for one navigation rather than once.
+// A single hop cannot tell "reports every redirect" apart from "reports the last one".
+app.get("/test-redirect", (req, res) => {
+  res.redirect(302, "/test-redirect-2")
+})
+
+app.get("/test-redirect-2", (req, res) => {
+  res.redirect(302, "/test-redirect-target")
+})
+
+app.get("/test-redirect-target", (req, res) => {
+  res.send(`
+    <html>
+      <head>
+      </head>
+      <body>
+        <p>REDIRECT TARGET</p>
+      </body>
+    </html>
+  `);
+  res.end()
 })
 
 app.post("/test-post", (req, res) => {

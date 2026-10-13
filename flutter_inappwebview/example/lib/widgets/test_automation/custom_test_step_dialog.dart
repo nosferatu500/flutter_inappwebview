@@ -165,7 +165,7 @@ class _CustomTestStepDialogState extends State<CustomTestStepDialog> {
 
               // Category dropdown
               DropdownButtonFormField<TestCategory>(
-                value: _selectedCategory,
+                initialValue: _selectedCategory,
                 decoration: const InputDecoration(
                   labelText: 'Category',
                   border: OutlineInputBorder(),
@@ -194,7 +194,7 @@ class _CustomTestStepDialogState extends State<CustomTestStepDialog> {
               ),
               const SizedBox(height: 8),
               DropdownButtonFormField<CustomTestActionType>(
-                value: _selectedActionType,
+                initialValue: _selectedActionType,
                 decoration: const InputDecoration(border: OutlineInputBorder()),
                 items: CustomTestActionType.values.map((type) {
                   return DropdownMenuItem(
@@ -220,7 +220,7 @@ class _CustomTestStepDialogState extends State<CustomTestStepDialog> {
               ),
               const SizedBox(height: 8),
               DropdownButtonFormField<ExpectedResultType>(
-                value: _expectedResultType,
+                initialValue: _expectedResultType,
                 decoration: const InputDecoration(
                   labelText: 'Validation Type',
                   border: OutlineInputBorder(),
@@ -491,7 +491,7 @@ class _CustomTestStepDialogState extends State<CustomTestStepDialog> {
     return [
       // Navigation event selector
       DropdownButtonFormField<NavigationEventType>(
-        value: _selectedNavigationEvent,
+        initialValue: _selectedNavigationEvent,
         decoration: const InputDecoration(
           labelText: 'Navigation Event',
           border: OutlineInputBorder(),
@@ -518,7 +518,7 @@ class _CustomTestStepDialogState extends State<CustomTestStepDialog> {
             Expanded(
               flex: 2,
               child: DropdownButtonFormField<String>(
-                value: _progressComparison,
+                initialValue: _progressComparison,
                 decoration: const InputDecoration(
                   labelText: 'Condition',
                   border: OutlineInputBorder(),

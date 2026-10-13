@@ -148,7 +148,7 @@ void webMessage() {
               await port1.setWebMessageCallback((message) async {
                 await port1.postMessage(
                   WebMessage(
-                    data: utf8.encode(utf8.decode(message!.data) + " and back"),
+                    data: utf8.encode("${utf8.decode(message!.data)} and back"),
                     type: WebMessageType.ARRAY_BUFFER,
                   ),
                 );
@@ -190,12 +190,11 @@ void webMessage() {
               await controller.addWebMessageListener(
                 WebMessageListener(
                   jsObjectName: "myTestObj",
-                  allowedOriginRules: Set.from(["https://*.example.com"]),
+                  allowedOriginRules: {"https://*.example.com"},
                   onPostMessage:
                       (message, sourceOrigin, isMainFrame, replyProxy) {
                         if (isMainFrame &&
-                            (sourceOrigin.toString() + '/') ==
-                                TEST_URL_EXAMPLE.toString()) {
+                            ('$sourceOrigin/') == TEST_URL_EXAMPLE.toString()) {
                           replyProxy.postMessage(
                             WebMessage(data: message!.data + " and back"),
                           );
@@ -251,16 +250,15 @@ void webMessage() {
               await controller.addWebMessageListener(
                 WebMessageListener(
                   jsObjectName: "myTestObj",
-                  allowedOriginRules: Set.from(["https://*.example.com"]),
+                  allowedOriginRules: {"https://*.example.com"},
                   onPostMessage:
                       (message, sourceOrigin, isMainFrame, replyProxy) {
                         if (isMainFrame &&
-                            (sourceOrigin.toString() + '/') ==
-                                TEST_URL_EXAMPLE.toString()) {
+                            ('$sourceOrigin/') == TEST_URL_EXAMPLE.toString()) {
                           replyProxy.postMessage(
                             WebMessage(
                               data: utf8.encode(
-                                utf8.decode(message!.data) + " and back",
+                                "${utf8.decode(message!.data)} and back",
                               ),
                               type: WebMessageType.ARRAY_BUFFER,
                             ),
@@ -318,5 +316,181 @@ void webMessage() {
       final String message = await webMessageCompleter.future;
       expect(message, 'JavaScript To Native and back');
     });
+    skippableTestWidgets('WebMessageListener wildcard rule is end-anchored', (
+      WidgetTester tester,
+    ) async {
+      // The page origin is `foo.example.com.evil.test`: a host that *contains* `.example.com` but
+      // whose registrable domain belongs to somebody else. The rule `https://*.example.com` must
+      // not reach it. Before the fix the check was `host.indexOf(suffix) >= 0`, so it did.
+      //
+      // A `baseUrl` is what makes this fixture-free and DNS-free — the document takes the origin
+      // of the base URL without anything being fetched, so the attacker host does not have to
+      // exist. It is also the exact real-world shape, which a reachable host could not have been.
+      const attackerOrigin = 'https://foo.example.com.evil.test/';
+
+      final Completer<InAppWebViewController> controllerCompleter =
+          Completer<InAppWebViewController>();
+      final Completer<void> pageLoaded = Completer<void>();
+
+      await tester.pumpWidget(
+        Directionality(
+          textDirection: TextDirection.ltr,
+          child: InAppWebView(
+            key: GlobalKey(),
+            onWebViewCreated: (controller) async {
+              await controller.addWebMessageListener(
+                WebMessageListener(
+                  jsObjectName: "myUnanchoredObj",
+                  allowedOriginRules: {"https://*.example.com"},
+                  onPostMessage:
+                      (message, sourceOrigin, isMainFrame, replyProxy) {},
+                ),
+              );
+              // The control. Without it a broken injection path — a JS syntax error, a listener
+              // never registered, the page never loading — would satisfy the assertion below for
+              // entirely the wrong reason.
+              await controller.addWebMessageListener(
+                WebMessageListener(
+                  jsObjectName: "myAnchoredObj",
+                  allowedOriginRules: {"https://*.evil.test"},
+                  onPostMessage:
+                      (message, sourceOrigin, isMainFrame, replyProxy) {},
+                ),
+              );
+              controllerCompleter.complete(controller);
+            },
+            onLoadStop: (controller, url) async {
+              if (!pageLoaded.isCompleted) {
+                pageLoaded.complete();
+              }
+            },
+          ),
+        ),
+      );
+      final controller = await controllerCompleter.future;
+      await controller.loadData(
+        data: "<html><body>anchored</body></html>",
+        baseUrl: WebUri(attackerOrigin),
+      );
+      await pageLoaded.future;
+
+      final hostname = await controller.evaluateJavascript(
+        source: "window.location.hostname",
+      );
+      final unanchored = await controller.evaluateJavascript(
+        source: "typeof window.myUnanchoredObj",
+      );
+      final anchored = await controller.evaluateJavascript(
+        source: "typeof window.myAnchoredObj",
+      );
+
+      // If the base URL did not carry its origin to the document, every assertion below is
+      // meaningless — say so instead of reporting a pass.
+      expect(hostname, 'foo.example.com.evil.test');
+      expect(
+        anchored,
+        'object',
+        reason: 'the control listener must be installed',
+      );
+      expect(
+        unanchored,
+        'undefined',
+        reason:
+            'https://*.example.com must not match foo.example.com.evil.test',
+      );
+    });
+
+    skippableTestWidgets(
+      'WebMessageListener contentWorld isolates the injected object',
+      (WidgetTester tester) async {
+        // Two listeners, added at the same moment and differing only in their content world.
+        // Both halves are load-bearing: the page-world one proves the injection path works at
+        // all, so a `undefined` from the isolated one means isolation rather than a listener
+        // that was never installed. A single-sided test passes against an implementation that
+        // ignores `contentWorld` entirely — that is exactly mutant A below.
+        const worldName = 'myIsolatedWorld';
+
+        final Completer<InAppWebViewController> controllerCompleter =
+            Completer<InAppWebViewController>();
+        final Completer<void> pageLoaded = Completer<void>();
+
+        await tester.pumpWidget(
+          Directionality(
+            textDirection: TextDirection.ltr,
+            child: InAppWebView(
+              key: GlobalKey(),
+              onWebViewCreated: (controller) async {
+                await controller.addWebMessageListener(
+                  WebMessageListener(
+                    jsObjectName: "myIsolatedObj",
+                    contentWorld: ContentWorld.world(name: worldName),
+                    onPostMessage:
+                        (message, sourceOrigin, isMainFrame, replyProxy) {},
+                  ),
+                );
+                await controller.addWebMessageListener(
+                  WebMessageListener(
+                    jsObjectName: "myPageObj",
+                    onPostMessage:
+                        (message, sourceOrigin, isMainFrame, replyProxy) {},
+                  ),
+                );
+                controllerCompleter.complete(controller);
+              },
+              onLoadStop: (controller, url) async {
+                if (!pageLoaded.isCompleted) {
+                  pageLoaded.complete();
+                }
+              },
+            ),
+          ),
+        );
+        final controller = await controllerCompleter.future;
+        await controller.loadUrl(urlRequest: URLRequest(url: TEST_URL_EXAMPLE));
+        await pageLoaded.future;
+
+        // Read both names from both worlds. Four answers, and only one arrangement of them is
+        // consistent with the worlds actually being separate.
+        Future<Object?> readFromPage(String name) =>
+            controller.evaluateJavascript(source: "typeof window.$name");
+        Future<Object?> readFromWorld(String name) =>
+            controller.evaluateJavascript(
+              source: "typeof window.$name",
+              contentWorld: ContentWorld.world(name: worldName),
+            );
+
+        expect(
+          await readFromPage('myPageObj'),
+          'object',
+          reason:
+              'the page-world control must be installed, or nothing below means anything',
+        );
+        expect(
+          await readFromPage('myIsolatedObj'),
+          'undefined',
+          reason:
+              'a listener asked for an isolated world must not be visible to page scripts',
+        );
+        expect(
+          await readFromWorld('myIsolatedObj'),
+          'object',
+          reason:
+              'the isolated listener must be reachable from its own content world',
+        );
+        expect(
+          await readFromWorld('myPageObj'),
+          'undefined',
+          reason: 'a page-world listener must not leak into the isolated world',
+        );
+      },
+      // iOS-only by design. Android's `ContentWorld` is an `<iframe>` emulation that
+      // `androidx`'s isolated worlds are not part of; see the dartdoc on
+      // `PlatformWebMessageListenerCreationParams.contentWorld`.
+      skip:
+          shouldSkip ||
+          !WebMessageListener.isPropertySupported(
+            PlatformWebMessageListenerCreationParamsProperty.contentWorld,
+          ),
+    );
   }, skip: shouldSkip);
 }

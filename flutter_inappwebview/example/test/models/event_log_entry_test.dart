@@ -90,8 +90,9 @@ void main() {
         ),
       ];
 
-      final navigationEntries =
-          entries.where((e) => e.eventType == EventType.navigation).toList();
+      final navigationEntries = entries
+          .where((e) => e.eventType == EventType.navigation)
+          .toList();
 
       expect(navigationEntries.length, 2);
       expect(navigationEntries[0].message, 'Nav 1');

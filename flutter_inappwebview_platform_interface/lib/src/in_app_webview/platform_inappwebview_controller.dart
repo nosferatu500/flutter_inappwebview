@@ -4,7 +4,7 @@ import 'dart:core';
 
 import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_inappwebview_internal_annotations/flutter_inappwebview_internal_annotations.dart';
+import 'package:nosferatu500_inappwebview_internal_annotations/nosferatu500_inappwebview_internal_annotations.dart';
 import 'package:plugin_platform_interface/plugin_platform_interface.dart';
 
 import '../context_menu/main.dart';
@@ -56,42 +56,29 @@ class PlatformInAppWebViewControllerCreationParams {
     this.webviewParams,
   });
 
-  ///{@macro flutter_inappwebview_platform_interface.PlatformInAppWebViewController.id}
+  ///{@macro nosferatu500_inappwebview_platform_interface.PlatformInAppWebViewController.id}
   final dynamic id;
 
-  ///{@macro flutter_inappwebview_platform_interface.PlatformInAppWebViewController.webviewParams}
+  ///{@macro nosferatu500_inappwebview_platform_interface.PlatformInAppWebViewController.webviewParams}
   final PlatformWebViewCreationParams? webviewParams;
 }
 
-///{@template flutter_inappwebview_platform_interface.PlatformInAppWebViewController}
+///{@template nosferatu500_inappwebview_platform_interface.PlatformInAppWebViewController}
 ///Controls a WebView, such as an [InAppWebView] widget instance, a [HeadlessInAppWebView] instance or [PlatformInAppBrowser] WebView instance.
 ///
 ///If you are using the [InAppWebView] widget, an [PlatformInAppWebViewController] instance can be obtained by setting the [InAppWebView.onWebViewCreated]
 ///callback. Instead, if you are using an [PlatformInAppBrowser] instance, you can get it through the [PlatformInAppBrowser.webViewController] attribute.
 ///{@endtemplate}
 ///
-///{@macro flutter_inappwebview_platform_interface.PlatformInAppWebViewController.supported_platforms}
-@SupportedPlatforms(
-  platforms: [
-    AndroidPlatform(),
-    IOSPlatform(),
-    MacOSPlatform(),
-    WebPlatform(requiresSameOrigin: false),
-    WindowsPlatform(),
-    LinuxPlatform(),
-  ],
-)
+///{@macro nosferatu500_inappwebview_platform_interface.PlatformInAppWebViewController.supported_platforms}
+@SupportedPlatforms(platforms: [AndroidPlatform(), IOSPlatform()])
 abstract class PlatformInAppWebViewController extends PlatformInterface
     implements Disposable {
   ///Debug settings used by [PlatformInAppWebViewWidget], [PlatformHeadlessInAppWebView] and [PlatformInAppBrowser].
-  ///The default value excludes the [PlatformWebViewCreationParams.onScrollChanged], [PlatformWebViewCreationParams.onOverScrolled] and [PlatformWebViewCreationParams.onFaviconChanged] events.
+  ///The default value excludes the [PlatformWebViewCreationParams.onScrollChanged] and [PlatformWebViewCreationParams.onOverScrolled] events.
   static DebugLoggingSettings debugLoggingSettings = DebugLoggingSettings(
     maxLogMessageLength: 1000,
-    excludeFilter: [
-      RegExp(r"onScrollChanged"),
-      RegExp(r"onOverScrolled"),
-      RegExp(r"onFaviconChanged"),
-    ],
+    excludeFilter: [RegExp(r"onScrollChanged"), RegExp(r"onOverScrolled")],
   );
 
   /// Creates a new [PlatformInAppWebViewController]
@@ -100,7 +87,7 @@ abstract class PlatformInAppWebViewController extends PlatformInterface
   ) {
     assert(
       InAppWebViewPlatform.instance != null,
-      'A platform implementation for `flutter_inappwebview` has not been set. Please '
+      'A platform implementation for `nosferatu500_inappwebview` has not been set. Please '
       'ensure that an implementation of `InAppWebViewPlatform` has been set to '
       '`InAppWebViewPlatform.instance` before use. For unit testing, '
       '`InAppWebViewPlatform.instance` can be set with your own test implementation.',
@@ -117,7 +104,7 @@ abstract class PlatformInAppWebViewController extends PlatformInterface
   factory PlatformInAppWebViewController.static() {
     assert(
       InAppWebViewPlatform.instance != null,
-      'A platform implementation for `flutter_inappwebview` has not been set. Please '
+      'A platform implementation for `nosferatu500_inappwebview` has not been set. Please '
       'ensure that an implementation of `InAppWebViewPlatform` has been set to '
       '`InAppWebViewPlatform.instance` before use. For unit testing, '
       '`InAppWebViewPlatform.instance` can be set with your own test implementation.',
@@ -142,40 +129,32 @@ abstract class PlatformInAppWebViewController extends PlatformInterface
   /// The parameters used to initialize the [PlatformInAppWebViewController].
   final PlatformInAppWebViewControllerCreationParams params;
 
-  ///{@template flutter_inappwebview_platform_interface.PlatformInAppWebViewController.id}
+  ///{@template nosferatu500_inappwebview_platform_interface.PlatformInAppWebViewController.id}
   /// WebView ID.
   ///{@endtemplate}
   dynamic get id => params.id;
 
-  ///{@template flutter_inappwebview_platform_interface.PlatformInAppWebViewController.webviewParams}
+  ///{@template nosferatu500_inappwebview_platform_interface.PlatformInAppWebViewController.webviewParams}
   /// WebView params.
   ///{@endtemplate}
   PlatformWebViewCreationParams? get webviewParams => params.webviewParams;
 
-  ///{@template flutter_inappwebview_platform_interface.PlatformInAppWebViewController.webStorage}
+  ///{@template nosferatu500_inappwebview_platform_interface.PlatformInAppWebViewController.webStorage}
   ///Provides access to the JavaScript [Web Storage API](https://developer.mozilla.org/en-US/docs/Web/API/Web_Storage_API): `window.sessionStorage` and `window.localStorage`.
   ///{@endtemplate}
   ///
-  ///{@macro flutter_inappwebview_platform_interface.PlatformInAppWebViewController.webStorage.supported_platforms}
-  @SupportedPlatforms(
-    platforms: [
-      AndroidPlatform(),
-      IOSPlatform(),
-      MacOSPlatform(),
-      WebPlatform(),
-      WindowsPlatform(),
-    ],
-  )
+  ///{@macro nosferatu500_inappwebview_platform_interface.PlatformInAppWebViewController.webStorage.supported_platforms}
+  @SupportedPlatforms(platforms: [AndroidPlatform(), IOSPlatform()])
   PlatformWebStorage get webStorage => throw UnimplementedError(
     '${PlatformInAppWebViewControllerProperty.webStorage.name} is not implemented on the current platform',
   );
 
-  ///{@template flutter_inappwebview_platform_interface.PlatformInAppWebViewController.getUrl}
+  ///{@template nosferatu500_inappwebview_platform_interface.PlatformInAppWebViewController.getUrl}
   ///Gets the URL for the current page.
   ///This is not always the same as the URL passed to [PlatformWebViewCreationParams.onLoadStart] because although the load for that URL has begun, the current page may not have changed.
   ///{@endtemplate}
   ///
-  ///{@macro flutter_inappwebview_platform_interface.PlatformInAppWebViewController.getUrl.supported_platforms}
+  ///{@macro nosferatu500_inappwebview_platform_interface.PlatformInAppWebViewController.getUrl.supported_platforms}
   @SupportedPlatforms(
     platforms: [
       AndroidPlatform(
@@ -188,25 +167,6 @@ abstract class PlatformInAppWebViewController extends PlatformInterface
         apiUrl:
             'https://developer.apple.com/documentation/webkit/wkwebview/1415005-url',
       ),
-      MacOSPlatform(
-        apiName: 'WKWebView.url',
-        apiUrl:
-            'https://developer.apple.com/documentation/webkit/wkwebview/1415005-url',
-      ),
-      WebPlatform(
-        note:
-            "If `window.location.href` isn't accessible inside the iframe, it will return the current value of the `iframe.src` attribute.",
-      ),
-      WindowsPlatform(
-        apiName: 'ICoreWebView2.get_Source',
-        apiUrl:
-            'https://learn.microsoft.com/en-us/microsoft-edge/webview2/reference/win32/icorewebview2?view=webview2-1.0.2210.55#get_source',
-      ),
-      LinuxPlatform(
-        apiName: 'webkit_web_view_get_uri',
-        apiUrl:
-            'https://wpewebkit.org/reference/stable/wpe-webkit-2.0/method.WebView.get_uri.html',
-      ),
     ],
   )
   Future<WebUri?> getUrl() {
@@ -215,11 +175,11 @@ abstract class PlatformInAppWebViewController extends PlatformInterface
     );
   }
 
-  ///{@template flutter_inappwebview_platform_interface.PlatformInAppWebViewController.getTitle}
+  ///{@template nosferatu500_inappwebview_platform_interface.PlatformInAppWebViewController.getTitle}
   ///Gets the title for the current page.
   ///{@endtemplate}
   ///
-  ///{@macro flutter_inappwebview_platform_interface.PlatformInAppWebViewController.getTitle.supported_platforms}
+  ///{@macro nosferatu500_inappwebview_platform_interface.PlatformInAppWebViewController.getTitle.supported_platforms}
   @SupportedPlatforms(
     platforms: [
       AndroidPlatform(
@@ -232,22 +192,6 @@ abstract class PlatformInAppWebViewController extends PlatformInterface
         apiUrl:
             'https://developer.apple.com/documentation/webkit/wkwebview/1415015-title',
       ),
-      MacOSPlatform(
-        apiName: 'WKWebView.title',
-        apiUrl:
-            'https://developer.apple.com/documentation/webkit/wkwebview/1415015-title',
-      ),
-      WebPlatform(),
-      WindowsPlatform(
-        apiName: 'ICoreWebView2.get_DocumentTitle',
-        apiUrl:
-            'https://learn.microsoft.com/en-us/microsoft-edge/webview2/reference/win32/icorewebview2?view=webview2-1.0.2210.55#get_documenttitle',
-      ),
-      LinuxPlatform(
-        apiName: 'webkit_web_view_get_title',
-        apiUrl:
-            'https://wpewebkit.org/reference/stable/wpe-webkit-2.0/method.WebView.get_title.html',
-      ),
     ],
   )
   Future<String?> getTitle() {
@@ -256,71 +200,11 @@ abstract class PlatformInAppWebViewController extends PlatformInterface
     );
   }
 
-  ///{@template flutter_inappwebview_platform_interface.PlatformInAppWebViewController.getFrameId}
-  ///Gets the ID of the main frame.
-  ///{@endtemplate}
-  ///
-  ///{@macro flutter_inappwebview_platform_interface.PlatformInAppWebViewController.getFrameId.supported_platforms}
-  @SupportedPlatforms(
-    platforms: [
-      WindowsPlatform(
-        apiName: 'ICoreWebView2_20.get_FrameId',
-        apiUrl:
-            'https://learn.microsoft.com/en-us/microsoft-edge/webview2/reference/win32/icorewebview2_20?view=webview2-1.0.2849.39#get_frameid',
-      ),
-    ],
-  )
-  Future<int?> getFrameId() {
-    throw UnimplementedError(
-      '${PlatformInAppWebViewControllerMethod.getFrameId.name} is not implemented on the current platform',
-    );
-  }
-
-  ///{@template flutter_inappwebview_platform_interface.PlatformInAppWebViewController.getMemoryUsageTargetLevel}
-  ///Gets the WebView memory usage target level.
-  ///{@endtemplate}
-  ///
-  ///{@macro flutter_inappwebview_platform_interface.PlatformInAppWebViewController.getMemoryUsageTargetLevel.supported_platforms}
-  @SupportedPlatforms(
-    platforms: [
-      WindowsPlatform(
-        apiName: 'ICoreWebView2_19.get_MemoryUsageTargetLevel',
-        apiUrl:
-            'https://learn.microsoft.com/en-us/microsoft-edge/webview2/reference/win32/icorewebview2_19?view=webview2-1.0.2849.39#get_memoryusagetargetlevel',
-      ),
-    ],
-  )
-  Future<MemoryUsageTargetLevel?> getMemoryUsageTargetLevel() {
-    throw UnimplementedError(
-      '${PlatformInAppWebViewControllerMethod.getMemoryUsageTargetLevel.name} is not implemented on the current platform',
-    );
-  }
-
-  ///{@template flutter_inappwebview_platform_interface.PlatformInAppWebViewController.setMemoryUsageTargetLevel}
-  ///Sets the WebView memory usage target level.
-  ///{@endtemplate}
-  ///
-  ///{@macro flutter_inappwebview_platform_interface.PlatformInAppWebViewController.setMemoryUsageTargetLevel.supported_platforms}
-  @SupportedPlatforms(
-    platforms: [
-      WindowsPlatform(
-        apiName: 'ICoreWebView2_19.put_MemoryUsageTargetLevel',
-        apiUrl:
-            'https://learn.microsoft.com/en-us/microsoft-edge/webview2/reference/win32/icorewebview2_19?view=webview2-1.0.2849.39#put_memoryusagetargetlevel',
-      ),
-    ],
-  )
-  Future<void> setMemoryUsageTargetLevel(MemoryUsageTargetLevel level) {
-    throw UnimplementedError(
-      '${PlatformInAppWebViewControllerMethod.setMemoryUsageTargetLevel.name} is not implemented on the current platform',
-    );
-  }
-
-  ///{@template flutter_inappwebview_platform_interface.PlatformInAppWebViewController.getProgress}
+  ///{@template nosferatu500_inappwebview_platform_interface.PlatformInAppWebViewController.getProgress}
   ///Gets the progress for the current page. The progress value is between 0 and 100.
   ///{@endtemplate}
   ///
-  ///{@macro flutter_inappwebview_platform_interface.PlatformInAppWebViewController.getProgress.supported_platforms}
+  ///{@macro nosferatu500_inappwebview_platform_interface.PlatformInAppWebViewController.getProgress.supported_platforms}
   @SupportedPlatforms(
     platforms: [
       AndroidPlatform(
@@ -333,20 +217,6 @@ abstract class PlatformInAppWebViewController extends PlatformInterface
         apiUrl:
             'https://developer.apple.com/documentation/webkit/wkwebview/1415007-estimatedprogress',
       ),
-      MacOSPlatform(
-        apiName: 'WKWebView.estimatedProgress',
-        apiUrl:
-            'https://developer.apple.com/documentation/webkit/wkwebview/1415007-estimatedprogress',
-      ),
-      LinuxPlatform(
-        apiName: 'webkit_web_view_get_estimated_load_progress',
-        apiUrl:
-            'https://wpewebkit.org/reference/stable/wpe-webkit-2.0/method.WebView.get_estimated_load_progress.html',
-      ),
-      WindowsPlatform(
-        note:
-            'Progress is tracked through navigation events: NavigationStarting (0), ContentLoading (33), DOMContentLoaded (66), NavigationCompleted (100).',
-      ),
     ],
   )
   Future<int?> getProgress() {
@@ -355,7 +225,7 @@ abstract class PlatformInAppWebViewController extends PlatformInterface
     );
   }
 
-  ///{@template flutter_inappwebview_platform_interface.PlatformInAppWebViewController.getHtml}
+  ///{@template nosferatu500_inappwebview_platform_interface.PlatformInAppWebViewController.getHtml}
   ///Gets the content html of the page. It first tries to get the content through javascript.
   ///If this doesn't work, it tries to get the content reading the file:
   ///- checking if it is an asset (`file:///`) or
@@ -364,70 +234,27 @@ abstract class PlatformInAppWebViewController extends PlatformInterface
   ///Returns `null` if it was unable to get it.
   ///{@endtemplate}
   ///
-  ///{@macro flutter_inappwebview_platform_interface.PlatformInAppWebViewController.getHtml.supported_platforms}
-  @SupportedPlatforms(
-    platforms: [
-      AndroidPlatform(),
-      IOSPlatform(),
-      LinuxPlatform(note: 'This method is implemented using JavaScript.'),
-      MacOSPlatform(),
-      WebPlatform(),
-      WindowsPlatform(),
-    ],
-  )
+  ///{@macro nosferatu500_inappwebview_platform_interface.PlatformInAppWebViewController.getHtml.supported_platforms}
+  @SupportedPlatforms(platforms: [AndroidPlatform(), IOSPlatform()])
   Future<String?> getHtml() {
     throw UnimplementedError(
       '${PlatformInAppWebViewControllerMethod.getHtml.name} is not implemented on the current platform',
     );
   }
 
-  ///{@template flutter_inappwebview_platform_interface.PlatformInAppWebViewController.getFavicons}
+  ///{@template nosferatu500_inappwebview_platform_interface.PlatformInAppWebViewController.getFavicons}
   ///Gets the list of all favicons for the current page.
   ///{@endtemplate}
   ///
-  ///{@macro flutter_inappwebview_platform_interface.PlatformInAppWebViewController.getFavicons.supported_platforms}
-  @SupportedPlatforms(
-    platforms: [
-      AndroidPlatform(),
-      IOSPlatform(),
-      MacOSPlatform(),
-      WebPlatform(),
-      WindowsPlatform(),
-      LinuxPlatform(),
-    ],
-  )
+  ///{@macro nosferatu500_inappwebview_platform_interface.PlatformInAppWebViewController.getFavicons.supported_platforms}
+  @SupportedPlatforms(platforms: [AndroidPlatform(), IOSPlatform()])
   Future<List<Favicon>> getFavicons() {
     throw UnimplementedError(
       '${PlatformInAppWebViewControllerMethod.getFavicons.name} is not implemented on the current platform',
     );
   }
 
-  ///{@template flutter_inappwebview_platform_interface.PlatformInAppWebViewController.getFavicon}
-  ///Gets the favicon bytes for the given favicon [url].
-  ///
-  ///[faviconImageFormat] specifies the favicon image format to return.
-  ///{@endtemplate}
-  ///
-  ///{@macro flutter_inappwebview_platform_interface.PlatformInAppWebViewController.getFavicon.supported_platforms}
-  @SupportedPlatforms(
-    platforms: [
-      WindowsPlatform(
-        apiName: 'ICoreWebView2_15.GetFavicon',
-        apiUrl:
-            'https://learn.microsoft.com/en-us/microsoft-edge/webview2/reference/win32/icorewebview2_15?view=webview2-1.0.2849.39#getfavicon',
-      ),
-    ],
-  )
-  Future<Uint8List?> getFavicon({
-    required WebUri url,
-    FaviconImageFormat faviconImageFormat = FaviconImageFormat.PNG,
-  }) {
-    throw UnimplementedError(
-      '${PlatformInAppWebViewControllerMethod.getFavicon.name} is not implemented on the current platform',
-    );
-  }
-
-  ///{@template flutter_inappwebview_platform_interface.PlatformInAppWebViewController.loadUrl}
+  ///{@template nosferatu500_inappwebview_platform_interface.PlatformInAppWebViewController.loadUrl}
   ///Loads the given [urlRequest].
   ///
   ///- [allowingReadAccessTo], used in combination with [urlRequest] (using the `file://` scheme),
@@ -435,9 +262,32 @@ abstract class PlatformInAppWebViewController extends PlatformInterface
   ///This URL must be a file-based URL (using the `file://` scheme).
   ///Specify the same value as the URL parameter to prevent WebView from reading any other content.
   ///Specify a directory to give WebView permission to read additional files in the specified directory.
+  ///
+  ///**On iOS, passing [allowingReadAccessTo] discards the rest of [urlRequest].** Only its
+  ///[URLRequest.url] survives: WebKit loads the page with `loadFileURL:allowingReadAccessToURL:`,
+  ///which accepts a URL and nothing else. Measured on iOS 17.5 and 26.5 with a request carrying a
+  ///custom header and `timeoutInterval: 42`, observed at `shouldOverrideUrlLoading`:
+  ///
+  ///| call | header | `timeoutInterval` |
+  ///|---|---|---|
+  ///| any `http://` url | kept | `42` |
+  ///| `file://` url, no [allowingReadAccessTo] | kept | `42` |
+  ///| `file://` url **with** [allowingReadAccessTo] | **dropped** | **replaced** |
+  ///
+  ///So the same Dart call behaves two different ways depending on an argument that is otherwise
+  ///only about filesystem scope, and a `file://` URL is not itself the reason — the middle row keeps
+  ///everything. **There is no way to have both**: iOS 15's
+  ///`loadFileRequest:allowingReadAccessToURL:` takes an `NSURLRequest` and was measured to produce a
+  ///byte-identical navigation to `loadFileURL:`, so WebKit reads only the URL out of that too. If
+  ///you need headers on a local page, serve it over `http://` (see `InAppLocalhostServer` or
+  ///`WebViewAssetLoader`) rather than scoping a `file://` load.
+  ///
+  ///**Not measured on Android**, where the obvious probe does not transfer:
+  ///`shouldOverrideUrlLoading` is not called there for a `loadUrl` the app itself issued.
+  ///[allowingReadAccessTo] is iOS-only in any case.
   ///{@endtemplate}
   ///
-  ///{@macro flutter_inappwebview_platform_interface.PlatformInAppWebViewController.loadUrl.supported_platforms}
+  ///{@macro nosferatu500_inappwebview_platform_interface.PlatformInAppWebViewController.loadUrl.supported_platforms}
   @SupportedPlatforms(
     platforms: [
       AndroidPlatform(
@@ -452,34 +302,13 @@ abstract class PlatformInAppWebViewController extends PlatformInterface
         apiUrl:
             'https://developer.apple.com/documentation/webkit/wkwebview/1414954-load',
         note:
-            'If [allowingReadAccessTo] is used, [Official API - WKWebView.loadFileURL](https://developer.apple.com/documentation/webkit/wkwebview/1414973-loadfileurl)',
-      ),
-      MacOSPlatform(
-        apiName: 'WKWebView.load',
-        apiUrl:
-            'https://developer.apple.com/documentation/webkit/wkwebview/1414954-load',
-        note:
-            'If [allowingReadAccessTo] is used, [Official API - WKWebView.loadFileURL](https://developer.apple.com/documentation/webkit/wkwebview/1414973-loadfileurl)',
-      ),
-      WebPlatform(
-        note:
-            'If method is "GET" and headers are empty, it will change the `src` of the iframe. For all other cases it will try to create an XMLHttpRequest and load the result inside the iframe.',
-      ),
-      WindowsPlatform(
-        apiName: 'ICoreWebView2_2.NavigateWithWebResourceRequest',
-        apiUrl:
-            'https://learn.microsoft.com/en-us/microsoft-edge/webview2/reference/win32/icorewebview2_2?view=webview2-1.0.2210.55#navigatewithwebresourcerequest',
-      ),
-      LinuxPlatform(
-        apiName: 'webkit_web_view_load_uri',
-        apiUrl:
-            'https://wpewebkit.org/reference/stable/wpe-webkit-2.0/method.WebView.load_uri.html',
+            'If [allowingReadAccessTo] is used, [Official API - WKWebView.loadFileURL](https://developer.apple.com/documentation/webkit/wkwebview/1414973-loadfileurl), which takes only a URL - so custom headers and `timeoutInterval` are discarded, while the same call without [allowingReadAccessTo] keeps them (measured on iOS 17.5 and 26.5).',
       ),
     ],
   )
   Future<void> loadUrl({
     required URLRequest urlRequest,
-    @SupportedPlatforms(platforms: [IOSPlatform(), MacOSPlatform()])
+    @SupportedPlatforms(platforms: [IOSPlatform()])
     WebUri? allowingReadAccessTo,
   }) {
     throw UnimplementedError(
@@ -487,7 +316,7 @@ abstract class PlatformInAppWebViewController extends PlatformInterface
     );
   }
 
-  ///{@template flutter_inappwebview_platform_interface.PlatformInAppWebViewController.postUrl}
+  ///{@template nosferatu500_inappwebview_platform_interface.PlatformInAppWebViewController.postUrl}
   ///Loads the given [url] with [postData] (x-www-form-urlencoded) using `POST` method into this WebView.
   ///
   ///Example:
@@ -497,7 +326,7 @@ abstract class PlatformInAppWebViewController extends PlatformInterface
   ///```
   ///{@endtemplate}
   ///
-  ///{@macro flutter_inappwebview_platform_interface.PlatformInAppWebViewController.postUrl.supported_platforms}
+  ///{@macro nosferatu500_inappwebview_platform_interface.PlatformInAppWebViewController.postUrl.supported_platforms}
   @SupportedPlatforms(
     platforms: [
       AndroidPlatform(
@@ -506,16 +335,6 @@ abstract class PlatformInAppWebViewController extends PlatformInterface
             'https://developer.android.com/reference/android/webkit/WebView#postUrl(java.lang.String,%20byte[])',
       ),
       IOSPlatform(),
-      MacOSPlatform(),
-      WebPlatform(
-        note:
-            'It will try to create an XMLHttpRequest and load the result inside the iframe.',
-      ),
-      WindowsPlatform(),
-      LinuxPlatform(
-        note:
-            'Uses JavaScript to create an XMLHttpRequest and load the result.',
-      ),
     ],
   )
   Future<void> postUrl({required WebUri url, required Uint8List postData}) {
@@ -524,7 +343,7 @@ abstract class PlatformInAppWebViewController extends PlatformInterface
     );
   }
 
-  ///{@template flutter_inappwebview_platform_interface.PlatformInAppWebViewController.loadData}
+  ///{@template nosferatu500_inappwebview_platform_interface.PlatformInAppWebViewController.loadData}
   ///Loads the given [data] into this WebView, using [baseUrl] as the base URL for the content.
   ///
   ///- [mimeType] argument specifies the format of the data. The default value is `"text/html"`.
@@ -537,7 +356,7 @@ abstract class PlatformInAppWebViewController extends PlatformInterface
   ///Specify a directory to give WebView permission to read additional files in the specified directory.
   ///{@endtemplate}
   ///
-  ///{@macro flutter_inappwebview_platform_interface.PlatformInAppWebViewController.loadData.supported_platforms}
+  ///{@macro nosferatu500_inappwebview_platform_interface.PlatformInAppWebViewController.loadData.supported_platforms}
   @SupportedPlatforms(
     platforms: [
       AndroidPlatform(
@@ -552,47 +371,18 @@ abstract class PlatformInAppWebViewController extends PlatformInterface
         note:
             'or [Official API - WKWebView.load](https://developer.apple.com/documentation/webkit/wkwebview/1415011-load)',
       ),
-      MacOSPlatform(
-        apiName: 'WKWebView.loadHTMLString',
-        apiUrl:
-            'https://developer.apple.com/documentation/webkit/wkwebview/1415004-loadhtmlstring',
-        note:
-            'or [Official API - WKWebView.load](https://developer.apple.com/documentation/webkit/wkwebview/1415011-load)',
-      ),
-      WebPlatform(),
-      WindowsPlatform(
-        apiName: 'ICoreWebView2.NavigateToString',
-        apiUrl:
-            'https://learn.microsoft.com/en-us/microsoft-edge/webview2/reference/win32/icorewebview2?view=webview2-1.0.2210.55#navigatetostring',
-      ),
-      LinuxPlatform(
-        apiName: 'webkit_web_view_load_html',
-        apiUrl:
-            'https://wpewebkit.org/reference/stable/wpe-webkit-2.0/method.WebView.load_html.html',
-      ),
     ],
   )
   Future<void> loadData({
     required String data,
-    @SupportedPlatforms(
-      platforms: [
-        AndroidPlatform(),
-        IOSPlatform(),
-        MacOSPlatform(),
-        WebPlatform(),
-      ],
-    )
+    @SupportedPlatforms(platforms: [AndroidPlatform(), IOSPlatform()])
     String mimeType = "text/html",
-    @SupportedPlatforms(
-      platforms: [AndroidPlatform(), IOSPlatform(), MacOSPlatform()],
-    )
+    @SupportedPlatforms(platforms: [AndroidPlatform(), IOSPlatform()])
     String encoding = "utf8",
-    @SupportedPlatforms(
-      platforms: [AndroidPlatform(), IOSPlatform(), MacOSPlatform()],
-    )
+    @SupportedPlatforms(platforms: [AndroidPlatform(), IOSPlatform()])
     WebUri? baseUrl,
     @SupportedPlatforms(platforms: [AndroidPlatform()]) WebUri? historyUrl,
-    @SupportedPlatforms(platforms: [IOSPlatform(), MacOSPlatform()])
+    @SupportedPlatforms(platforms: [IOSPlatform()])
     WebUri? allowingReadAccessTo,
   }) {
     throw UnimplementedError(
@@ -600,7 +390,7 @@ abstract class PlatformInAppWebViewController extends PlatformInterface
     );
   }
 
-  ///{@template flutter_inappwebview_platform_interface.PlatformInAppWebViewController.loadFile}
+  ///{@template nosferatu500_inappwebview_platform_interface.PlatformInAppWebViewController.loadFile}
   ///Loads the given [assetFilePath].
   ///
   ///To be able to load your local files (assets, js, css, etc.), you need to add them in the `assets` section of the `pubspec.yaml` file, otherwise they cannot be found!
@@ -632,7 +422,7 @@ abstract class PlatformInAppWebViewController extends PlatformInterface
   ///```
   ///{@endtemplate}
   ///
-  ///{@macro flutter_inappwebview_platform_interface.PlatformInAppWebViewController.loadFile.supported_platforms}
+  ///{@macro nosferatu500_inappwebview_platform_interface.PlatformInAppWebViewController.loadFile.supported_platforms}
   @SupportedPlatforms(
     platforms: [
       AndroidPlatform(
@@ -645,22 +435,6 @@ abstract class PlatformInAppWebViewController extends PlatformInterface
         apiUrl:
             'https://developer.apple.com/documentation/webkit/wkwebview/1414954-load',
       ),
-      MacOSPlatform(
-        apiName: 'WKWebView.load',
-        apiUrl:
-            'https://developer.apple.com/documentation/webkit/wkwebview/1414954-load',
-      ),
-      WebPlatform(),
-      WindowsPlatform(
-        apiName: 'ICoreWebView2.Navigate',
-        apiUrl:
-            'https://learn.microsoft.com/en-us/microsoft-edge/webview2/reference/win32/icorewebview2?view=webview2-1.0.2210.55#navigate',
-      ),
-      LinuxPlatform(
-        apiName: 'webkit_web_view_load_uri',
-        apiUrl:
-            'https://wpewebkit.org/reference/stable/wpe-webkit-2.0/method.WebView.load_uri.html',
-      ),
     ],
   )
   Future<void> loadFile({required String assetFilePath}) {
@@ -669,11 +443,11 @@ abstract class PlatformInAppWebViewController extends PlatformInterface
     );
   }
 
-  ///{@template flutter_inappwebview_platform_interface.PlatformInAppWebViewController.reload}
+  ///{@template nosferatu500_inappwebview_platform_interface.PlatformInAppWebViewController.reload}
   ///Reloads the WebView.
   ///{@endtemplate}
   ///
-  ///{@macro flutter_inappwebview_platform_interface.PlatformInAppWebViewController.reload.supported_platforms}
+  ///{@macro nosferatu500_inappwebview_platform_interface.PlatformInAppWebViewController.reload.supported_platforms}
   @SupportedPlatforms(
     platforms: [
       AndroidPlatform(
@@ -686,28 +460,6 @@ abstract class PlatformInAppWebViewController extends PlatformInterface
         apiUrl:
             'https://developer.apple.com/documentation/webkit/wkwebview/1414969-reload',
       ),
-      MacOSPlatform(
-        apiName: 'WKWebView.reload',
-        apiUrl:
-            'https://developer.apple.com/documentation/webkit/wkwebview/1414969-reload',
-      ),
-      WebPlatform(
-        apiName: 'Location.reload',
-        apiUrl:
-            'https://developer.mozilla.org/en-US/docs/Web/API/Location/reload',
-        note:
-            'if `window.location.reload()` is not accessible inside the iframe, it will reload using the iframe `src` attribute.',
-      ),
-      WindowsPlatform(
-        apiName: 'ICoreWebView2.Reload',
-        apiUrl:
-            'https://learn.microsoft.com/en-us/microsoft-edge/webview2/reference/win32/icorewebview2?view=webview2-1.0.2210.55#reload',
-      ),
-      LinuxPlatform(
-        apiName: 'webkit_web_view_reload',
-        apiUrl:
-            'https://wpewebkit.org/reference/stable/wpe-webkit-2.0/method.WebView.reload.html',
-      ),
     ],
   )
   Future<void> reload() {
@@ -716,11 +468,11 @@ abstract class PlatformInAppWebViewController extends PlatformInterface
     );
   }
 
-  ///{@template flutter_inappwebview_platform_interface.PlatformInAppWebViewController.goBack}
+  ///{@template nosferatu500_inappwebview_platform_interface.PlatformInAppWebViewController.goBack}
   ///Goes back in the history of the WebView.
   ///{@endtemplate}
   ///
-  ///{@macro flutter_inappwebview_platform_interface.PlatformInAppWebViewController.goBack.supported_platforms}
+  ///{@macro nosferatu500_inappwebview_platform_interface.PlatformInAppWebViewController.goBack.supported_platforms}
   @SupportedPlatforms(
     platforms: [
       AndroidPlatform(
@@ -733,25 +485,6 @@ abstract class PlatformInAppWebViewController extends PlatformInterface
         apiUrl:
             'https://developer.apple.com/documentation/webkit/wkwebview/1414952-goback',
       ),
-      MacOSPlatform(
-        apiName: 'WKWebView.goBack',
-        apiUrl:
-            'https://developer.apple.com/documentation/webkit/wkwebview/1414952-goback',
-      ),
-      WebPlatform(
-        apiName: 'History.back',
-        apiUrl: 'https://developer.mozilla.org/en-US/docs/Web/API/History/back',
-      ),
-      WindowsPlatform(
-        apiName: 'ICoreWebView2.GoBack',
-        apiUrl:
-            'https://learn.microsoft.com/en-us/microsoft-edge/webview2/reference/win32/icorewebview2?view=webview2-1.0.2210.55#goback',
-      ),
-      LinuxPlatform(
-        apiName: 'webkit_web_view_go_back',
-        apiUrl:
-            'https://wpewebkit.org/reference/stable/wpe-webkit-2.0/method.WebView.go_back.html',
-      ),
     ],
   )
   Future<void> goBack() {
@@ -760,11 +493,11 @@ abstract class PlatformInAppWebViewController extends PlatformInterface
     );
   }
 
-  ///{@template flutter_inappwebview_platform_interface.PlatformInAppWebViewController.canGoBack}
+  ///{@template nosferatu500_inappwebview_platform_interface.PlatformInAppWebViewController.canGoBack}
   ///Returns a boolean value indicating whether the WebView can move backward.
   ///{@endtemplate}
   ///
-  ///{@macro flutter_inappwebview_platform_interface.PlatformInAppWebViewController.canGoBack.supported_platforms}
+  ///{@macro nosferatu500_inappwebview_platform_interface.PlatformInAppWebViewController.canGoBack.supported_platforms}
   @SupportedPlatforms(
     platforms: [
       AndroidPlatform(
@@ -777,21 +510,6 @@ abstract class PlatformInAppWebViewController extends PlatformInterface
         apiUrl:
             'https://developer.apple.com/documentation/webkit/wkwebview/1414966-cangoback',
       ),
-      MacOSPlatform(
-        apiName: 'WKWebView.canGoBack',
-        apiUrl:
-            'https://developer.apple.com/documentation/webkit/wkwebview/1414966-cangoback',
-      ),
-      WindowsPlatform(
-        apiName: 'ICoreWebView2.get_CanGoBack',
-        apiUrl:
-            'https://learn.microsoft.com/en-us/microsoft-edge/webview2/reference/win32/icorewebview2?view=webview2-1.0.2210.55#get_cangoback',
-      ),
-      LinuxPlatform(
-        apiName: 'webkit_web_view_can_go_back',
-        apiUrl:
-            'https://wpewebkit.org/reference/stable/wpe-webkit-2.0/method.WebView.can_go_back.html',
-      ),
     ],
   )
   Future<bool> canGoBack() {
@@ -800,11 +518,11 @@ abstract class PlatformInAppWebViewController extends PlatformInterface
     );
   }
 
-  ///{@template flutter_inappwebview_platform_interface.PlatformInAppWebViewController.goForward}
+  ///{@template nosferatu500_inappwebview_platform_interface.PlatformInAppWebViewController.goForward}
   ///Goes forward in the history of the WebView.
   ///{@endtemplate}
   ///
-  ///{@macro flutter_inappwebview_platform_interface.PlatformInAppWebViewController.goForward.supported_platforms}
+  ///{@macro nosferatu500_inappwebview_platform_interface.PlatformInAppWebViewController.goForward.supported_platforms}
   @SupportedPlatforms(
     platforms: [
       AndroidPlatform(
@@ -817,26 +535,6 @@ abstract class PlatformInAppWebViewController extends PlatformInterface
         apiUrl:
             'https://developer.apple.com/documentation/webkit/wkwebview/1414993-goforward',
       ),
-      MacOSPlatform(
-        apiName: 'WKWebView.goForward',
-        apiUrl:
-            'https://developer.apple.com/documentation/webkit/wkwebview/1414993-goforward',
-      ),
-      WebPlatform(
-        apiName: 'History.forward',
-        apiUrl:
-            'https://developer.mozilla.org/en-US/docs/Web/API/History/forward',
-      ),
-      WindowsPlatform(
-        apiName: 'ICoreWebView2.GoForward',
-        apiUrl:
-            'https://learn.microsoft.com/en-us/microsoft-edge/webview2/reference/win32/icorewebview2?view=webview2-1.0.2210.55#goforward',
-      ),
-      LinuxPlatform(
-        apiName: 'webkit_web_view_go_forward',
-        apiUrl:
-            'https://wpewebkit.org/reference/stable/wpe-webkit-2.0/method.WebView.go_forward.html',
-      ),
     ],
   )
   Future<void> goForward() {
@@ -845,11 +543,11 @@ abstract class PlatformInAppWebViewController extends PlatformInterface
     );
   }
 
-  ///{@template flutter_inappwebview_platform_interface.PlatformInAppWebViewController.canGoForward}
+  ///{@template nosferatu500_inappwebview_platform_interface.PlatformInAppWebViewController.canGoForward}
   ///Returns a boolean value indicating whether the WebView can move forward.
   ///{@endtemplate}
   ///
-  ///{@macro flutter_inappwebview_platform_interface.PlatformInAppWebViewController.canGoForward.supported_platforms}
+  ///{@macro nosferatu500_inappwebview_platform_interface.PlatformInAppWebViewController.canGoForward.supported_platforms}
   @SupportedPlatforms(
     platforms: [
       AndroidPlatform(
@@ -862,21 +560,6 @@ abstract class PlatformInAppWebViewController extends PlatformInterface
         apiUrl:
             'https://developer.apple.com/documentation/webkit/wkwebview/1414962-cangoforward',
       ),
-      MacOSPlatform(
-        apiName: 'WKWebView.canGoForward',
-        apiUrl:
-            'https://developer.apple.com/documentation/webkit/wkwebview/1414962-cangoforward',
-      ),
-      WindowsPlatform(
-        apiName: 'ICoreWebView2.get_CanGoForward',
-        apiUrl:
-            'https://learn.microsoft.com/en-us/microsoft-edge/webview2/reference/win32/icorewebview2?view=webview2-1.0.2210.55#get_cangoforward',
-      ),
-      LinuxPlatform(
-        apiName: 'webkit_web_view_can_go_forward',
-        apiUrl:
-            'https://wpewebkit.org/reference/stable/wpe-webkit-2.0/method.WebView.can_go_forward.html',
-      ),
     ],
   )
   Future<bool> canGoForward() {
@@ -885,11 +568,11 @@ abstract class PlatformInAppWebViewController extends PlatformInterface
     );
   }
 
-  ///{@template flutter_inappwebview_platform_interface.PlatformInAppWebViewController.goBackOrForward}
+  ///{@template nosferatu500_inappwebview_platform_interface.PlatformInAppWebViewController.goBackOrForward}
   ///Goes to the history item that is the number of [steps] away from the current item. Steps is negative if backward and positive if forward.
   ///{@endtemplate}
   ///
-  ///{@macro flutter_inappwebview_platform_interface.PlatformInAppWebViewController.goBackOrForward.supported_platforms}
+  ///{@macro nosferatu500_inappwebview_platform_interface.PlatformInAppWebViewController.goBackOrForward.supported_platforms}
   @SupportedPlatforms(
     platforms: [
       AndroidPlatform(
@@ -902,17 +585,6 @@ abstract class PlatformInAppWebViewController extends PlatformInterface
         apiUrl:
             'https://developer.apple.com/documentation/webkit/wkwebview/1414991-go',
       ),
-      MacOSPlatform(
-        apiName: 'WKWebView.go',
-        apiUrl:
-            'https://developer.apple.com/documentation/webkit/wkwebview/1414991-go',
-      ),
-      WebPlatform(
-        apiName: 'History.go',
-        apiUrl: 'https://developer.mozilla.org/en-US/docs/Web/API/History/go',
-      ),
-      WindowsPlatform(),
-      LinuxPlatform(),
     ],
   )
   Future<void> goBackOrForward({required int steps}) {
@@ -921,12 +593,12 @@ abstract class PlatformInAppWebViewController extends PlatformInterface
     );
   }
 
-  ///{@template flutter_inappwebview_platform_interface.PlatformInAppWebViewController.canGoBackOrForward}
+  ///{@template nosferatu500_inappwebview_platform_interface.PlatformInAppWebViewController.canGoBackOrForward}
   ///Returns a boolean value indicating whether the WebView can go back or forward the given number of [steps].
   ///Steps is negative if backward and positive if forward.
   ///{@endtemplate}
   ///
-  ///{@macro flutter_inappwebview_platform_interface.PlatformInAppWebViewController.canGoBackOrForward.supported_platforms}
+  ///{@macro nosferatu500_inappwebview_platform_interface.PlatformInAppWebViewController.canGoBackOrForward.supported_platforms}
   @SupportedPlatforms(
     platforms: [
       AndroidPlatform(
@@ -935,9 +607,6 @@ abstract class PlatformInAppWebViewController extends PlatformInterface
             'https://developer.android.com/reference/android/webkit/WebView#canGoBackOrForward(int)',
       ),
       IOSPlatform(),
-      MacOSPlatform(),
-      LinuxPlatform(),
-      WindowsPlatform(),
     ],
   )
   Future<bool> canGoBackOrForward({required int steps}) {
@@ -946,56 +615,35 @@ abstract class PlatformInAppWebViewController extends PlatformInterface
     );
   }
 
-  ///{@template flutter_inappwebview_platform_interface.PlatformInAppWebViewController.goTo}
+  ///{@template nosferatu500_inappwebview_platform_interface.PlatformInAppWebViewController.goTo}
   ///Navigates to a [WebHistoryItem] from the back-forward [WebHistory.list] and sets it as the current item.
   ///{@endtemplate}
   ///
-  ///{@macro flutter_inappwebview_platform_interface.PlatformInAppWebViewController.goTo.supported_platforms}
-  @SupportedPlatforms(
-    platforms: [
-      AndroidPlatform(),
-      IOSPlatform(),
-      MacOSPlatform(),
-      WebPlatform(),
-      WindowsPlatform(),
-    ],
-  )
+  ///{@macro nosferatu500_inappwebview_platform_interface.PlatformInAppWebViewController.goTo.supported_platforms}
+  @SupportedPlatforms(platforms: [AndroidPlatform(), IOSPlatform()])
   Future<void> goTo({required WebHistoryItem historyItem}) {
     throw UnimplementedError(
       '${PlatformInAppWebViewControllerMethod.goTo.name} is not implemented on the current platform',
     );
   }
 
-  ///{@template flutter_inappwebview_platform_interface.PlatformInAppWebViewController.isLoading}
+  ///{@template nosferatu500_inappwebview_platform_interface.PlatformInAppWebViewController.isLoading}
   ///Check if the WebView instance is in a loading state.
   ///{@endtemplate}
   ///
-  ///{@macro flutter_inappwebview_platform_interface.PlatformInAppWebViewController.isLoading.supported_platforms}
-  @SupportedPlatforms(
-    platforms: [
-      AndroidPlatform(),
-      IOSPlatform(),
-      LinuxPlatform(
-        apiName: 'webkit_web_view_is_loading',
-        apiUrl:
-            'https://wpewebkit.org/reference/stable/wpe-webkit-2.0/method.WebView.is_loading.html',
-      ),
-      MacOSPlatform(),
-      WebPlatform(requiresSameOrigin: false),
-      WindowsPlatform(),
-    ],
-  )
+  ///{@macro nosferatu500_inappwebview_platform_interface.PlatformInAppWebViewController.isLoading.supported_platforms}
+  @SupportedPlatforms(platforms: [AndroidPlatform(), IOSPlatform()])
   Future<bool> isLoading() {
     throw UnimplementedError(
       '${PlatformInAppWebViewControllerMethod.isLoading.name} is not implemented on the current platform',
     );
   }
 
-  ///{@template flutter_inappwebview_platform_interface.PlatformInAppWebViewController.stopLoading}
+  ///{@template nosferatu500_inappwebview_platform_interface.PlatformInAppWebViewController.stopLoading}
   ///Stops the WebView from loading.
   ///{@endtemplate}
   ///
-  ///{@macro flutter_inappwebview_platform_interface.PlatformInAppWebViewController.stopLoading.supported_platforms}
+  ///{@macro nosferatu500_inappwebview_platform_interface.PlatformInAppWebViewController.stopLoading.supported_platforms}
   @SupportedPlatforms(
     platforms: [
       AndroidPlatform(
@@ -1008,25 +656,6 @@ abstract class PlatformInAppWebViewController extends PlatformInterface
         apiUrl:
             'https://developer.apple.com/documentation/webkit/wkwebview/1414981-stoploading',
       ),
-      MacOSPlatform(
-        apiName: 'WKWebView.stopLoading',
-        apiUrl:
-            'https://developer.apple.com/documentation/webkit/wkwebview/1414981-stoploading',
-      ),
-      WebPlatform(
-        apiName: 'Window.stop',
-        apiUrl: 'https://developer.mozilla.org/en-US/docs/Web/API/Window/stop',
-      ),
-      WindowsPlatform(
-        apiName: 'ICoreWebView2.Stop',
-        apiUrl:
-            'https://learn.microsoft.com/en-us/microsoft-edge/webview2/reference/win32/icorewebview2?view=webview2-1.0.2210.55#stop',
-      ),
-      LinuxPlatform(
-        apiName: 'webkit_web_view_stop_loading',
-        apiUrl:
-            'https://wpewebkit.org/reference/stable/wpe-webkit-2.0/method.WebView.stop_loading.html',
-      ),
     ],
   )
   Future<void> stopLoading() {
@@ -1035,7 +664,7 @@ abstract class PlatformInAppWebViewController extends PlatformInterface
     );
   }
 
-  ///{@template flutter_inappwebview_platform_interface.PlatformInAppWebViewController.evaluateJavascript}
+  ///{@template nosferatu500_inappwebview_platform_interface.PlatformInAppWebViewController.evaluateJavascript}
   ///Evaluates JavaScript [source] code into the WebView and returns the result of the evaluation.
   ///
   ///[contentWorld], on iOS, it represents the namespace in which to evaluate the JavaScript [source] code.
@@ -1048,9 +677,15 @@ abstract class PlatformInAppWebViewController extends PlatformInterface
   ///because, in these events, the `WebView` is not ready to handle it yet.
   ///Instead, you should call this method, for example, inside the [PlatformWebViewCreationParams.onLoadStop] event or in any other events
   ///where you know the page is ready "enough".
+  ///
+  ///**NOTE for Android**: in a [contentWorld] that can't be created on the page (one whose
+  ///`Content-Security-Policy` blocks inline scripts, or a document with no `body`), the result is
+  ///`null` at once, as for a JavaScript error in a content world, and the reason is logged to the
+  ///page's console. A content-world result still pending when the page navigates away, or the
+  ///`WebView` is disposed, is also `null`.
   ///{@endtemplate}
   ///
-  ///{@macro flutter_inappwebview_platform_interface.PlatformInAppWebViewController.evaluateJavascript.supported_platforms}
+  ///{@macro nosferatu500_inappwebview_platform_interface.PlatformInAppWebViewController.evaluateJavascript.supported_platforms}
   @SupportedPlatforms(
     platforms: [
       AndroidPlatform(
@@ -1063,22 +698,6 @@ abstract class PlatformInAppWebViewController extends PlatformInterface
         apiUrl:
             'https://developer.apple.com/documentation/webkit/wkwebview/3656442-evaluatejavascript',
       ),
-      MacOSPlatform(
-        apiName: 'WKWebView.evaluateJavaScript',
-        apiUrl:
-            'https://developer.apple.com/documentation/webkit/wkwebview/3656442-evaluatejavascript',
-      ),
-      WebPlatform(
-        apiName: 'Window.eval',
-        apiUrl:
-            'https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/eval',
-      ),
-      WindowsPlatform(),
-      LinuxPlatform(
-        apiName: 'webkit_web_view_evaluate_javascript',
-        apiUrl:
-            'https://wpewebkit.org/reference/stable/wpe-webkit-2.0/method.WebView.evaluate_javascript.html',
-      ),
     ],
   )
   Future<dynamic> evaluateJavascript({
@@ -1087,8 +706,6 @@ abstract class PlatformInAppWebViewController extends PlatformInterface
       platforms: [
         AndroidPlatform(),
         IOSPlatform(available: '14.0'),
-        MacOSPlatform(available: '11.0'),
-        WindowsPlatform(),
       ],
     )
     ContentWorld? contentWorld,
@@ -1098,7 +715,7 @@ abstract class PlatformInAppWebViewController extends PlatformInterface
     );
   }
 
-  ///{@template flutter_inappwebview_platform_interface.PlatformInAppWebViewController.injectJavascriptFileFromUrl}
+  ///{@template nosferatu500_inappwebview_platform_interface.PlatformInAppWebViewController.injectJavascriptFileFromUrl}
   ///Injects an external JavaScript file into the WebView from a defined url.
   ///
   ///[scriptHtmlTagAttributes] represents the possible the `<script>` HTML attributes to be set.
@@ -1109,16 +726,8 @@ abstract class PlatformInAppWebViewController extends PlatformInterface
   ///where you know the page is ready "enough".
   ///{@endtemplate}
   ///
-  ///{@macro flutter_inappwebview_platform_interface.PlatformInAppWebViewController.injectJavascriptFileFromUrl.supported_platforms}
-  @SupportedPlatforms(
-    platforms: [
-      AndroidPlatform(),
-      IOSPlatform(),
-      LinuxPlatform(note: 'This method is implemented using JavaScript.'),
-      MacOSPlatform(),
-      WebPlatform(),
-    ],
-  )
+  ///{@macro nosferatu500_inappwebview_platform_interface.PlatformInAppWebViewController.injectJavascriptFileFromUrl.supported_platforms}
+  @SupportedPlatforms(platforms: [AndroidPlatform(), IOSPlatform()])
   Future<void> injectJavascriptFileFromUrl({
     required WebUri urlFile,
     ScriptHtmlTagAttributes? scriptHtmlTagAttributes,
@@ -1128,7 +737,7 @@ abstract class PlatformInAppWebViewController extends PlatformInterface
     );
   }
 
-  ///{@template flutter_inappwebview_platform_interface.PlatformInAppWebViewController.injectJavascriptFileFromAsset}
+  ///{@template nosferatu500_inappwebview_platform_interface.PlatformInAppWebViewController.injectJavascriptFileFromAsset}
   ///Evaluates the content of a JavaScript file into the WebView from the flutter assets directory.
   ///
   ///**NOTE**: This method shouldn't be called in the [PlatformWebViewCreationParams.onWebViewCreated] or [PlatformWebViewCreationParams.onLoadStart] events,
@@ -1137,16 +746,8 @@ abstract class PlatformInAppWebViewController extends PlatformInterface
   ///where you know the page is ready "enough".
   ///{@endtemplate}
   ///
-  ///{@macro flutter_inappwebview_platform_interface.PlatformInAppWebViewController.injectJavascriptFileFromAsset.supported_platforms}
-  @SupportedPlatforms(
-    platforms: [
-      AndroidPlatform(),
-      IOSPlatform(),
-      MacOSPlatform(),
-      WebPlatform(),
-      WindowsPlatform(),
-    ],
-  )
+  ///{@macro nosferatu500_inappwebview_platform_interface.PlatformInAppWebViewController.injectJavascriptFileFromAsset.supported_platforms}
+  @SupportedPlatforms(platforms: [AndroidPlatform(), IOSPlatform()])
   Future<dynamic> injectJavascriptFileFromAsset({
     required String assetFilePath,
   }) {
@@ -1155,7 +756,7 @@ abstract class PlatformInAppWebViewController extends PlatformInterface
     );
   }
 
-  ///{@template flutter_inappwebview_platform_interface.PlatformInAppWebViewController.injectCSSCode}
+  ///{@template nosferatu500_inappwebview_platform_interface.PlatformInAppWebViewController.injectCSSCode}
   ///Injects CSS into the WebView.
   ///
   ///**NOTE**: This method shouldn't be called in the [PlatformWebViewCreationParams.onWebViewCreated] or [PlatformWebViewCreationParams.onLoadStart] events,
@@ -1164,24 +765,15 @@ abstract class PlatformInAppWebViewController extends PlatformInterface
   ///where you know the page is ready "enough".
   ///{@endtemplate}
   ///
-  ///{@macro flutter_inappwebview_platform_interface.PlatformInAppWebViewController.injectCSSCode.supported_platforms}
-  @SupportedPlatforms(
-    platforms: [
-      AndroidPlatform(),
-      IOSPlatform(),
-      LinuxPlatform(note: 'This method is implemented using JavaScript.'),
-      MacOSPlatform(),
-      WebPlatform(),
-      WindowsPlatform(note: 'This method is implemented using JavaScript.'),
-    ],
-  )
+  ///{@macro nosferatu500_inappwebview_platform_interface.PlatformInAppWebViewController.injectCSSCode.supported_platforms}
+  @SupportedPlatforms(platforms: [AndroidPlatform(), IOSPlatform()])
   Future<void> injectCSSCode({required String source}) {
     throw UnimplementedError(
       '${PlatformInAppWebViewControllerMethod.injectCSSCode.name} is not implemented on the current platform',
     );
   }
 
-  ///{@template flutter_inappwebview_platform_interface.PlatformInAppWebViewController.injectCSSFileFromUrl}
+  ///{@template nosferatu500_inappwebview_platform_interface.PlatformInAppWebViewController.injectCSSFileFromUrl}
   ///Injects an external CSS file into the WebView from a defined url.
   ///
   ///[cssLinkHtmlTagAttributes] represents the possible CSS stylesheet `<link>` HTML attributes to be set.
@@ -1192,17 +784,8 @@ abstract class PlatformInAppWebViewController extends PlatformInterface
   ///where you know the page is ready "enough".
   ///{@endtemplate}
   ///
-  ///{@macro flutter_inappwebview_platform_interface.PlatformInAppWebViewController.injectCSSFileFromUrl.supported_platforms}
-  @SupportedPlatforms(
-    platforms: [
-      AndroidPlatform(),
-      IOSPlatform(),
-      LinuxPlatform(note: 'This method is implemented using JavaScript.'),
-      MacOSPlatform(),
-      WebPlatform(),
-      WindowsPlatform(note: 'This method is implemented using JavaScript.'),
-    ],
-  )
+  ///{@macro nosferatu500_inappwebview_platform_interface.PlatformInAppWebViewController.injectCSSFileFromUrl.supported_platforms}
+  @SupportedPlatforms(platforms: [AndroidPlatform(), IOSPlatform()])
   Future<void> injectCSSFileFromUrl({
     required WebUri urlFile,
     CSSLinkHtmlTagAttributes? cssLinkHtmlTagAttributes,
@@ -1212,7 +795,7 @@ abstract class PlatformInAppWebViewController extends PlatformInterface
     );
   }
 
-  ///{@template flutter_inappwebview_platform_interface.PlatformInAppWebViewController.injectCSSFileFromAsset}
+  ///{@template nosferatu500_inappwebview_platform_interface.PlatformInAppWebViewController.injectCSSFileFromAsset}
   ///Injects a CSS file into the WebView from the flutter assets directory.
   ///
   ///**NOTE**: This method shouldn't be called in the [PlatformWebViewCreationParams.onWebViewCreated] or [PlatformWebViewCreationParams.onLoadStart] events,
@@ -1221,22 +804,15 @@ abstract class PlatformInAppWebViewController extends PlatformInterface
   ///where you know the page is ready "enough".
   ///{@endtemplate}
   ///
-  ///{@macro flutter_inappwebview_platform_interface.PlatformInAppWebViewController.injectCSSFileFromAsset.supported_platforms}
-  @SupportedPlatforms(
-    platforms: [
-      AndroidPlatform(),
-      IOSPlatform(),
-      MacOSPlatform(),
-      WebPlatform(),
-    ],
-  )
+  ///{@macro nosferatu500_inappwebview_platform_interface.PlatformInAppWebViewController.injectCSSFileFromAsset.supported_platforms}
+  @SupportedPlatforms(platforms: [AndroidPlatform(), IOSPlatform()])
   Future<void> injectCSSFileFromAsset({required String assetFilePath}) {
     throw UnimplementedError(
       '${PlatformInAppWebViewControllerMethod.injectCSSFileFromAsset.name} is not implemented on the current platform',
     );
   }
 
-  ///{@template flutter_inappwebview_platform_interface.PlatformInAppWebViewController.addJavaScriptHandler}
+  ///{@template nosferatu500_inappwebview_platform_interface.PlatformInAppWebViewController.addJavaScriptHandler}
   ///Adds a JavaScript message handler [callback] ([JavaScriptHandlerFunction]) that listen to post messages sent from JavaScript by the handler with name [handlerName].
   ///Forbidden [handlerName]s are represented by [kJavaScriptHandlerForbiddenNames], they are used internally by this plugin.
   ///
@@ -1287,21 +863,25 @@ abstract class PlatformInAppWebViewController extends PlatformInterface
   ///
   ///There could be forbidden names for JavaScript handlers depending on the implementation platform.
   ///
+  ///**Calling from an iframe.** The bridge is injected into subframes as well as the main frame
+  ///(see [InAppWebViewSettings.pluginScriptsForMainFrameOnly]), but the
+  ///`flutterInAppWebViewPlatformReady` event is **only dispatched in the main frame**, so code
+  ///inside an iframe must not wait for it — the bridge object is already there when the frame's
+  ///scripts run, since it is injected at document start.
+  ///
+  ///On iOS the returned promise belongs to the frame that called `callHandler`, so a
+  ///**cross-origin** iframe receives the handler's result like any other caller. On Android a
+  ///cross-origin iframe's promise resolves immediately with `undefined` instead: the result is
+  ///discarded, although the Dart handler still runs and still receives the arguments. Prefer
+  ///[PlatformWebMessageListener] when a cross-origin frame needs an answer back on both platforms.
+  ///
   ///**NOTE**: This method should be called, for example, in the [PlatformWebViewCreationParams.onWebViewCreated] or [PlatformWebViewCreationParams.onLoadStart] events or, at least,
   ///before you know that your JavaScript code will call the `window.flutter_inappwebview.callHandler` method,
   ///otherwise you won't be able to intercept the JavaScript message.
   ///{@endtemplate}
   ///
-  ///{@macro flutter_inappwebview_platform_interface.PlatformInAppWebViewController.addJavaScriptHandler.supported_platforms}
-  @SupportedPlatforms(
-    platforms: [
-      AndroidPlatform(),
-      IOSPlatform(),
-      MacOSPlatform(),
-      WebPlatform(),
-      WindowsPlatform(),
-    ],
-  )
+  ///{@macro nosferatu500_inappwebview_platform_interface.PlatformInAppWebViewController.addJavaScriptHandler.supported_platforms}
+  @SupportedPlatforms(platforms: [AndroidPlatform(), IOSPlatform()])
   void addJavaScriptHandler({
     required String handlerName,
     required Function callback,
@@ -1311,55 +891,39 @@ abstract class PlatformInAppWebViewController extends PlatformInterface
     );
   }
 
-  ///{@template flutter_inappwebview_platform_interface.PlatformInAppWebViewController.removeJavaScriptHandler}
+  ///{@template nosferatu500_inappwebview_platform_interface.PlatformInAppWebViewController.removeJavaScriptHandler}
   ///Removes a JavaScript message handler previously added with the [addJavaScriptHandler] associated to [handlerName] key.
   ///Returns the value associated with [handlerName] before it was removed.
   ///Returns `null` if [handlerName] was not found.
   ///{@endtemplate}
   ///
-  ///{@macro flutter_inappwebview_platform_interface.PlatformInAppWebViewController.removeJavaScriptHandler.supported_platforms}
-  @SupportedPlatforms(
-    platforms: [
-      AndroidPlatform(),
-      IOSPlatform(),
-      MacOSPlatform(),
-      WebPlatform(),
-      WindowsPlatform(),
-    ],
-  )
+  ///{@macro nosferatu500_inappwebview_platform_interface.PlatformInAppWebViewController.removeJavaScriptHandler.supported_platforms}
+  @SupportedPlatforms(platforms: [AndroidPlatform(), IOSPlatform()])
   Function? removeJavaScriptHandler({required String handlerName}) {
     throw UnimplementedError(
       '${PlatformInAppWebViewControllerMethod.removeJavaScriptHandler.name} is not implemented on the current platform',
     );
   }
 
-  ///{@template flutter_inappwebview_platform_interface.PlatformInAppWebViewController.hasJavaScriptHandler}
+  ///{@template nosferatu500_inappwebview_platform_interface.PlatformInAppWebViewController.hasJavaScriptHandler}
   ///Returns `true` if a JavaScript handler with [handlerName] already exists, otherwise `false`.
   ///{@endtemplate}
   ///
-  ///{@macro flutter_inappwebview_platform_interface.PlatformInAppWebViewController.hasJavaScriptHandler.supported_platforms}
-  @SupportedPlatforms(
-    platforms: [
-      AndroidPlatform(),
-      IOSPlatform(),
-      MacOSPlatform(),
-      WebPlatform(),
-      WindowsPlatform(),
-    ],
-  )
+  ///{@macro nosferatu500_inappwebview_platform_interface.PlatformInAppWebViewController.hasJavaScriptHandler.supported_platforms}
+  @SupportedPlatforms(platforms: [AndroidPlatform(), IOSPlatform()])
   bool hasJavaScriptHandler({required String handlerName}) {
     throw UnimplementedError(
       '${PlatformInAppWebViewControllerMethod.hasJavaScriptHandler.name} is not implemented on the current platform',
     );
   }
 
-  ///{@template flutter_inappwebview_platform_interface.PlatformInAppWebViewController.takeScreenshot}
+  ///{@template nosferatu500_inappwebview_platform_interface.PlatformInAppWebViewController.takeScreenshot}
   ///Takes a screenshot of the WebView's visible viewport and returns a [Uint8List]. Returns `null` if it wasn't be able to take it.
   ///
   ///[screenshotConfiguration] represents the configuration data to use when generating an image from a web view’s contents.
   ///{@endtemplate}
   ///
-  ///{@macro flutter_inappwebview_platform_interface.PlatformInAppWebViewController.takeScreenshot.supported_platforms}
+  ///{@macro nosferatu500_inappwebview_platform_interface.PlatformInAppWebViewController.takeScreenshot.supported_platforms}
   @SupportedPlatforms(
     platforms: [
       AndroidPlatform(
@@ -1372,14 +936,6 @@ abstract class PlatformInAppWebViewController extends PlatformInterface
             'https://developer.apple.com/documentation/webkit/wkwebview/2873260-takesnapshot',
         available: '11.0',
       ),
-      MacOSPlatform(
-        apiName: 'WKWebView.takeSnapshot',
-        apiUrl:
-            'https://developer.apple.com/documentation/webkit/wkwebview/2873260-takesnapshot',
-        available: '10.13',
-      ),
-      WindowsPlatform(),
-      LinuxPlatform(),
     ],
   )
   Future<Uint8List?> takeScreenshot({
@@ -1390,56 +946,38 @@ abstract class PlatformInAppWebViewController extends PlatformInterface
     );
   }
 
-  ///{@template flutter_inappwebview_platform_interface.PlatformInAppWebViewController.setSettings}
+  ///{@template nosferatu500_inappwebview_platform_interface.PlatformInAppWebViewController.setSettings}
   ///Sets the WebView settings with the new [settings] and evaluates them.
   ///{@endtemplate}
   ///
-  ///{@macro flutter_inappwebview_platform_interface.PlatformInAppWebViewController.setSettings.supported_platforms}
-  @SupportedPlatforms(
-    platforms: [
-      AndroidPlatform(),
-      IOSPlatform(),
-      LinuxPlatform(),
-      MacOSPlatform(),
-      WebPlatform(),
-      WindowsPlatform(),
-    ],
-  )
+  ///{@macro nosferatu500_inappwebview_platform_interface.PlatformInAppWebViewController.setSettings.supported_platforms}
+  @SupportedPlatforms(platforms: [AndroidPlatform(), IOSPlatform()])
   Future<void> setSettings({required InAppWebViewSettings settings}) {
     throw UnimplementedError(
       '${PlatformInAppWebViewControllerMethod.setSettings.name} is not implemented on the current platform',
     );
   }
 
-  ///{@template flutter_inappwebview_platform_interface.PlatformInAppWebViewController.getSettings}
+  ///{@template nosferatu500_inappwebview_platform_interface.PlatformInAppWebViewController.getSettings}
   ///Gets the current WebView settings. Returns `null` if it wasn't able to get them.
   ///{@endtemplate}
   ///
-  ///{@macro flutter_inappwebview_platform_interface.PlatformInAppWebViewController.getSettings.supported_platforms}
-  @SupportedPlatforms(
-    platforms: [
-      AndroidPlatform(),
-      IOSPlatform(),
-      LinuxPlatform(),
-      MacOSPlatform(),
-      WebPlatform(),
-      WindowsPlatform(),
-    ],
-  )
+  ///{@macro nosferatu500_inappwebview_platform_interface.PlatformInAppWebViewController.getSettings.supported_platforms}
+  @SupportedPlatforms(platforms: [AndroidPlatform(), IOSPlatform()])
   Future<InAppWebViewSettings?> getSettings() {
     throw UnimplementedError(
       '${PlatformInAppWebViewControllerMethod.getSettings.name} is not implemented on the current platform',
     );
   }
 
-  ///{@template flutter_inappwebview_platform_interface.PlatformInAppWebViewController.getCopyBackForwardList}
+  ///{@template nosferatu500_inappwebview_platform_interface.PlatformInAppWebViewController.getCopyBackForwardList}
   ///Gets the WebHistory for this WebView. This contains the back/forward list for use in querying each item in the history stack.
   ///This contains only a snapshot of the current state.
   ///Multiple calls to this method may return different objects.
   ///The object returned from this method will not be updated to reflect any new state.
   ///{@endtemplate}
   ///
-  ///{@macro flutter_inappwebview_platform_interface.PlatformInAppWebViewController.getCopyBackForwardList.supported_platforms}
+  ///{@macro nosferatu500_inappwebview_platform_interface.PlatformInAppWebViewController.getCopyBackForwardList.supported_platforms}
   @SupportedPlatforms(
     platforms: [
       AndroidPlatform(
@@ -1452,13 +990,6 @@ abstract class PlatformInAppWebViewController extends PlatformInterface
         apiUrl:
             'https://developer.apple.com/documentation/webkit/wkwebview/1414977-backforwardlist',
       ),
-      MacOSPlatform(
-        apiName: 'WKWebView.backForwardList',
-        apiUrl:
-            'https://developer.apple.com/documentation/webkit/wkwebview/1414977-backforwardlist',
-      ),
-      WindowsPlatform(),
-      LinuxPlatform(),
     ],
   )
   Future<WebHistory?> getCopyBackForwardList() {
@@ -1467,7 +998,7 @@ abstract class PlatformInAppWebViewController extends PlatformInterface
     );
   }
 
-  ///{@template flutter_inappwebview_platform_interface.PlatformInAppWebViewController.scrollTo}
+  ///{@template nosferatu500_inappwebview_platform_interface.PlatformInAppWebViewController.scrollTo}
   ///Scrolls the WebView to the position.
   ///
   ///[x] represents the x position to scroll to.
@@ -1477,7 +1008,7 @@ abstract class PlatformInAppWebViewController extends PlatformInterface
   ///[animated] `true` to animate the scroll transition, `false` to make the scoll transition immediate.
   ///{@endtemplate}
   ///
-  ///{@macro flutter_inappwebview_platform_interface.PlatformInAppWebViewController.scrollTo.supported_platforms}
+  ///{@macro nosferatu500_inappwebview_platform_interface.PlatformInAppWebViewController.scrollTo.supported_platforms}
   @SupportedPlatforms(
     platforms: [
       AndroidPlatform(
@@ -1490,14 +1021,6 @@ abstract class PlatformInAppWebViewController extends PlatformInterface
         apiUrl:
             'https://developer.apple.com/documentation/uikit/uiscrollview/1619400-setcontentoffset',
       ),
-      MacOSPlatform(note: 'This method is implemented using JavaScript.'),
-      LinuxPlatform(),
-      WebPlatform(
-        apiName: 'Window.scrollTo',
-        apiUrl:
-            'https://developer.mozilla.org/en-US/docs/Web/API/Window/scrollTo',
-      ),
-      WindowsPlatform(note: 'This method is implemented using JavaScript.'),
     ],
   )
   Future<void> scrollTo({
@@ -1510,7 +1033,7 @@ abstract class PlatformInAppWebViewController extends PlatformInterface
     );
   }
 
-  ///{@template flutter_inappwebview_platform_interface.PlatformInAppWebViewController.scrollBy}
+  ///{@template nosferatu500_inappwebview_platform_interface.PlatformInAppWebViewController.scrollBy}
   ///Moves the scrolled position of the WebView.
   ///
   ///[x] represents the amount of pixels to scroll by horizontally.
@@ -1520,7 +1043,7 @@ abstract class PlatformInAppWebViewController extends PlatformInterface
   ///[animated] `true` to animate the scroll transition, `false` to make the scoll transition immediate.
   ///{@endtemplate}
   ///
-  ///{@macro flutter_inappwebview_platform_interface.PlatformInAppWebViewController.scrollBy.supported_platforms}
+  ///{@macro nosferatu500_inappwebview_platform_interface.PlatformInAppWebViewController.scrollBy.supported_platforms}
   @SupportedPlatforms(
     platforms: [
       AndroidPlatform(
@@ -1533,14 +1056,6 @@ abstract class PlatformInAppWebViewController extends PlatformInterface
         apiUrl:
             'https://developer.apple.com/documentation/uikit/uiscrollview/1619400-setcontentoffset',
       ),
-      MacOSPlatform(note: 'This method is implemented using JavaScript.'),
-      LinuxPlatform(),
-      WebPlatform(
-        apiName: 'Window.scrollBy',
-        apiUrl:
-            'https://developer.mozilla.org/en-US/docs/Web/API/Window/scrollBy',
-      ),
-      WindowsPlatform(note: 'This method is implemented using JavaScript.'),
     ],
   )
   Future<void> scrollBy({
@@ -1553,12 +1068,12 @@ abstract class PlatformInAppWebViewController extends PlatformInterface
     );
   }
 
-  ///{@template flutter_inappwebview_platform_interface.PlatformInAppWebViewController.pauseTimers}
+  ///{@template nosferatu500_inappwebview_platform_interface.PlatformInAppWebViewController.pauseTimers}
   ///On Android native WebView, it pauses all layout, parsing, and JavaScript timers for all WebViews.
   ///This is a global requests, not restricted to just this WebView. This can be useful if the application has been paused.
   ///{@endtemplate}
   ///
-  ///{@macro flutter_inappwebview_platform_interface.PlatformInAppWebViewController.pauseTimers.supported_platforms}
+  ///{@macro nosferatu500_inappwebview_platform_interface.PlatformInAppWebViewController.pauseTimers.supported_platforms}
   @SupportedPlatforms(
     platforms: [
       AndroidPlatform(
@@ -1570,10 +1085,6 @@ abstract class PlatformInAppWebViewController extends PlatformInterface
         note:
             'This method is implemented using JavaScript and it is restricted to just this WebView.',
       ),
-      MacOSPlatform(
-        note:
-            'This method is implemented using JavaScript and it is restricted to just this WebView.',
-      ),
     ],
   )
   Future<void> pauseTimers() {
@@ -1582,11 +1093,11 @@ abstract class PlatformInAppWebViewController extends PlatformInterface
     );
   }
 
-  ///{@template flutter_inappwebview_platform_interface.PlatformInAppWebViewController.resumeTimers}
+  ///{@template nosferatu500_inappwebview_platform_interface.PlatformInAppWebViewController.resumeTimers}
   ///On Android, it resumes all layout, parsing, and JavaScript timers for all WebViews. This will resume dispatching all timers.
   ///{@endtemplate}
   ///
-  ///{@macro flutter_inappwebview_platform_interface.PlatformInAppWebViewController.resumeTimers.supported_platforms}
+  ///{@macro nosferatu500_inappwebview_platform_interface.PlatformInAppWebViewController.resumeTimers.supported_platforms}
   @SupportedPlatforms(
     platforms: [
       AndroidPlatform(
@@ -1598,10 +1109,6 @@ abstract class PlatformInAppWebViewController extends PlatformInterface
         note:
             'This method is implemented using JavaScript and it is restricted to just this WebView.',
       ),
-      MacOSPlatform(
-        note:
-            'This method is implemented using JavaScript and it is restricted to just this WebView.',
-      ),
     ],
   )
   Future<void> resumeTimers() {
@@ -1610,14 +1117,14 @@ abstract class PlatformInAppWebViewController extends PlatformInterface
     );
   }
 
-  ///{@template flutter_inappwebview_platform_interface.PlatformInAppWebViewController.printCurrentPage}
+  ///{@template nosferatu500_inappwebview_platform_interface.PlatformInAppWebViewController.printCurrentPage}
   ///Prints the current page.
   ///
   ///To obtain the [PlatformPrintJobController], use [settings] argument with [PrintJobSettings.handledByClient] to `true`.
   ///Otherwise this method will return `null` and the [PlatformPrintJobController] will be handled and disposed automatically by the system.
   ///{@endtemplate}
   ///
-  ///{@macro flutter_inappwebview_platform_interface.PlatformInAppWebViewController.printCurrentPage.supported_platforms}
+  ///{@macro nosferatu500_inappwebview_platform_interface.PlatformInAppWebViewController.printCurrentPage.supported_platforms}
   @SupportedPlatforms(
     platforms: [
       AndroidPlatform(
@@ -1630,23 +1137,6 @@ abstract class PlatformInAppWebViewController extends PlatformInterface
         apiUrl:
             'https://developer.apple.com/documentation/uikit/uiprintinteractioncontroller/1618149-present',
       ),
-      MacOSPlatform(
-        apiName: 'WKWebView.printOperation',
-        apiUrl:
-            'https://developer.apple.com/documentation/webkit/wkwebview/3516861-printoperation',
-        note:
-            'If macOS version is less than 11.0, it will use [Official API - NSView.printView](https://developer.apple.com/documentation/appkit/nsview/1483705-printview).',
-      ),
-      WebPlatform(
-        apiName: 'Window.print',
-        apiUrl: 'https://developer.mozilla.org/en-US/docs/Web/API/Window/print',
-        note: '[PlatformPrintJobController] is always `null`.',
-      ),
-      WindowsPlatform(
-        apiName: 'ICoreWebView2_16.Print',
-        apiUrl:
-            'https://learn.microsoft.com/en-us/microsoft-edge/webview2/reference/win32/icorewebview2_16?view=webview2-1.0.2849.39#print',
-      ),
     ],
   )
   Future<PlatformPrintJobController?> printCurrentPage({
@@ -1657,11 +1147,11 @@ abstract class PlatformInAppWebViewController extends PlatformInterface
     );
   }
 
-  ///{@template flutter_inappwebview_platform_interface.PlatformInAppWebViewController.getContentHeight}
+  ///{@template nosferatu500_inappwebview_platform_interface.PlatformInAppWebViewController.getContentHeight}
   ///Gets the height of the HTML content.
   ///{@endtemplate}
   ///
-  ///{@macro flutter_inappwebview_platform_interface.PlatformInAppWebViewController.getContentHeight.supported_platforms}
+  ///{@macro nosferatu500_inappwebview_platform_interface.PlatformInAppWebViewController.getContentHeight.supported_platforms}
   @SupportedPlatforms(
     platforms: [
       AndroidPlatform(
@@ -1674,14 +1164,6 @@ abstract class PlatformInAppWebViewController extends PlatformInterface
         apiUrl:
             'https://developer.apple.com/documentation/uikit/uiscrollview/1619399-contentsize',
       ),
-      MacOSPlatform(note: 'This method is implemented using JavaScript.'),
-      WebPlatform(
-        apiName: 'Document.documentElement.scrollHeight',
-        apiUrl:
-            'https://developer.mozilla.org/en-US/docs/Web/API/Element/scrollHeight',
-      ),
-      LinuxPlatform(),
-      WindowsPlatform(note: 'This method is implemented using JavaScript.'),
     ],
   )
   Future<int?> getContentHeight() {
@@ -1690,11 +1172,11 @@ abstract class PlatformInAppWebViewController extends PlatformInterface
     );
   }
 
-  ///{@template flutter_inappwebview_platform_interface.PlatformInAppWebViewController.getContentWidth}
+  ///{@template nosferatu500_inappwebview_platform_interface.PlatformInAppWebViewController.getContentWidth}
   ///Gets the width of the HTML content.
   ///{@endtemplate}
   ///
-  ///{@macro flutter_inappwebview_platform_interface.PlatformInAppWebViewController.getContentWidth.supported_platforms}
+  ///{@macro nosferatu500_inappwebview_platform_interface.PlatformInAppWebViewController.getContentWidth.supported_platforms}
   @SupportedPlatforms(
     platforms: [
       AndroidPlatform(note: 'This method is implemented using JavaScript.'),
@@ -1703,14 +1185,6 @@ abstract class PlatformInAppWebViewController extends PlatformInterface
         apiUrl:
             'https://developer.apple.com/documentation/uikit/uiscrollview/1619399-contentsize',
       ),
-      MacOSPlatform(note: 'This method is implemented using JavaScript.'),
-      WebPlatform(
-        apiName: 'Document.documentElement.scrollWidth',
-        apiUrl:
-            'https://developer.mozilla.org/en-US/docs/Web/API/Element/scrollWidth',
-      ),
-      LinuxPlatform(),
-      WindowsPlatform(note: 'This method is implemented using JavaScript.'),
     ],
   )
   Future<int?> getContentWidth() {
@@ -1719,7 +1193,7 @@ abstract class PlatformInAppWebViewController extends PlatformInterface
     );
   }
 
-  ///{@template flutter_inappwebview_platform_interface.PlatformInAppWebViewController.zoomBy}
+  ///{@template nosferatu500_inappwebview_platform_interface.PlatformInAppWebViewController.zoomBy}
   ///Performs a zoom operation in this WebView.
   ///
   ///[zoomFactor] represents the zoom factor to apply. On Android, the zoom factor will be clamped to the Webview's zoom limits and, also, this value must be in the range 0.01 (excluded) to 100.0 (included).
@@ -1727,7 +1201,7 @@ abstract class PlatformInAppWebViewController extends PlatformInterface
   ///[animated] `true` to animate the transition to the new scale, `false` to make the transition immediate.
   ///{@endtemplate}
   ///
-  ///{@macro flutter_inappwebview_platform_interface.PlatformInAppWebViewController.zoomBy.supported_platforms}
+  ///{@macro nosferatu500_inappwebview_platform_interface.PlatformInAppWebViewController.zoomBy.supported_platforms}
   @SupportedPlatforms(
     platforms: [
       AndroidPlatform(
@@ -1741,11 +1215,6 @@ abstract class PlatformInAppWebViewController extends PlatformInterface
         apiUrl:
             'https://developer.apple.com/documentation/uikit/uiscrollview/1619412-setzoomscale',
       ),
-      LinuxPlatform(
-        apiName: 'webkit_web_view_set_zoom_level',
-        apiUrl:
-            'https://wpewebkit.org/reference/stable/wpe-webkit-2.0/method.WebView.set_zoom_level.html',
-      ),
     ],
   )
   Future<void> zoomBy({
@@ -1757,13 +1226,13 @@ abstract class PlatformInAppWebViewController extends PlatformInterface
     );
   }
 
-  ///{@template flutter_inappwebview_platform_interface.PlatformInAppWebViewController.getOriginalUrl}
+  ///{@template nosferatu500_inappwebview_platform_interface.PlatformInAppWebViewController.getOriginalUrl}
   ///Gets the URL that was originally requested for the current page.
   ///This is not always the same as the URL passed to [InAppWebView.onLoadStart] because although the load for that URL has begun,
   ///the current page may not have changed. Also, there may have been redirects resulting in a different URL to that originally requested.
   ///{@endtemplate}
   ///
-  ///{@macro flutter_inappwebview_platform_interface.PlatformInAppWebViewController.getOriginalUrl.supported_platforms}
+  ///{@macro nosferatu500_inappwebview_platform_interface.PlatformInAppWebViewController.getOriginalUrl.supported_platforms}
   @SupportedPlatforms(
     platforms: [
       AndroidPlatform(
@@ -1772,21 +1241,6 @@ abstract class PlatformInAppWebViewController extends PlatformInterface
             'https://developer.android.com/reference/android/webkit/WebView#getOriginalUrl()',
       ),
       IOSPlatform(),
-      LinuxPlatform(
-        apiName: 'webkit_web_view_get_uri',
-        apiUrl:
-            'https://wpewebkit.org/reference/stable/wpe-webkit-2.0/method.WebView.get_uri.html',
-        note:
-            'Returns the current URL. WPE WebKit does not distinguish between original and current URL.',
-      ),
-      MacOSPlatform(),
-      WebPlatform(
-        note: 'It will return the current value of the `iframe.src` attribute.',
-      ),
-      WindowsPlatform(
-        note:
-            'Returns the current URL. WebView2 does not distinguish between original and current URL.',
-      ),
     ],
   )
   Future<WebUri?> getOriginalUrl() {
@@ -1795,11 +1249,11 @@ abstract class PlatformInAppWebViewController extends PlatformInterface
     );
   }
 
-  ///{@template flutter_inappwebview_platform_interface.PlatformInAppWebViewController.getZoomScale}
+  ///{@template nosferatu500_inappwebview_platform_interface.PlatformInAppWebViewController.getZoomScale}
   ///Gets the current zoom scale of the WebView.
   ///{@endtemplate}
   ///
-  ///{@macro flutter_inappwebview_platform_interface.PlatformInAppWebViewController.getZoomScale.supported_platforms}
+  ///{@macro nosferatu500_inappwebview_platform_interface.PlatformInAppWebViewController.getZoomScale.supported_platforms}
   @SupportedPlatforms(
     platforms: [
       AndroidPlatform(),
@@ -1807,16 +1261,6 @@ abstract class PlatformInAppWebViewController extends PlatformInterface
         apiName: 'UIScrollView.zoomScale',
         apiUrl:
             'https://developer.apple.com/documentation/uikit/uiscrollview/1619419-zoomscale',
-      ),
-      LinuxPlatform(
-        apiName: 'webkit_web_view_get_zoom_level',
-        apiUrl:
-            'https://wpewebkit.org/reference/stable/wpe-webkit-2.0/method.WebView.get_zoom_level.html',
-      ),
-      WindowsPlatform(
-        apiName: 'ICoreWebView2Controller.get_ZoomFactor',
-        apiUrl:
-            'https://learn.microsoft.com/en-us/microsoft-edge/webview2/reference/win32/icorewebview2controller?view=webview2-1.0.2849.39#get_zoomfactor',
       ),
     ],
   )
@@ -1826,18 +1270,15 @@ abstract class PlatformInAppWebViewController extends PlatformInterface
     );
   }
 
-  ///{@template flutter_inappwebview_platform_interface.PlatformInAppWebViewController.getSelectedText}
+  ///{@template nosferatu500_inappwebview_platform_interface.PlatformInAppWebViewController.getSelectedText}
   ///Gets the selected text.
   ///{@endtemplate}
   ///
-  ///{@macro flutter_inappwebview_platform_interface.PlatformInAppWebViewController.getSelectedText.supported_platforms}
+  ///{@macro nosferatu500_inappwebview_platform_interface.PlatformInAppWebViewController.getSelectedText.supported_platforms}
   @SupportedPlatforms(
     platforms: [
       AndroidPlatform(note: 'This method is implemented using JavaScript.'),
       IOSPlatform(note: 'This method is implemented using JavaScript.'),
-      LinuxPlatform(note: 'This method is implemented using JavaScript.'),
-      MacOSPlatform(note: 'This method is implemented using JavaScript.'),
-      WebPlatform(note: 'This method is implemented using JavaScript.'),
     ],
   )
   Future<String?> getSelectedText() {
@@ -1846,11 +1287,11 @@ abstract class PlatformInAppWebViewController extends PlatformInterface
     );
   }
 
-  ///{@template flutter_inappwebview_platform_interface.PlatformInAppWebViewController.getHitTestResult}
+  ///{@template nosferatu500_inappwebview_platform_interface.PlatformInAppWebViewController.getHitTestResult}
   ///Gets the hit result for hitting an HTML elements.
   ///{@endtemplate}
   ///
-  ///{@macro flutter_inappwebview_platform_interface.PlatformInAppWebViewController.getHitTestResult.supported_platforms}
+  ///{@macro nosferatu500_inappwebview_platform_interface.PlatformInAppWebViewController.getHitTestResult.supported_platforms}
   @SupportedPlatforms(
     platforms: [
       AndroidPlatform(
@@ -1859,13 +1300,6 @@ abstract class PlatformInAppWebViewController extends PlatformInterface
             'https://developer.android.com/reference/android/webkit/WebView#getHitTestResult()',
       ),
       IOSPlatform(note: 'This method is implemented using JavaScript.'),
-      LinuxPlatform(
-        apiName: 'WebKitHitTestResult',
-        apiUrl:
-            'https://webkitgtk.org/reference/webkit2gtk/stable/WebKitHitTestResult.html',
-        note:
-            'This method uses native WebKitHitTestResult from the mouse-target-changed signal.',
-      ),
     ],
   )
   Future<InAppWebViewHitTestResult?> getHitTestResult() {
@@ -1874,7 +1308,7 @@ abstract class PlatformInAppWebViewController extends PlatformInterface
     );
   }
 
-  ///{@template flutter_inappwebview_platform_interface.PlatformInAppWebViewController.requestFocus}
+  ///{@template nosferatu500_inappwebview_platform_interface.PlatformInAppWebViewController.requestFocus}
   ///Call this method when you want to try the WebView to be the first responder.
   ///
   ///On Android, call this to try to give focus to the WebView and
@@ -1885,7 +1319,7 @@ abstract class PlatformInAppWebViewController extends PlatformInterface
   ///Returns `true` whether this WebView actually took focus; otherwise, `false`.
   ///{@endtemplate}
   ///
-  ///{@macro flutter_inappwebview_platform_interface.PlatformInAppWebViewController.requestFocus.supported_platforms}
+  ///{@macro nosferatu500_inappwebview_platform_interface.PlatformInAppWebViewController.requestFocus.supported_platforms}
   @SupportedPlatforms(
     platforms: [
       AndroidPlatform(
@@ -1897,17 +1331,6 @@ abstract class PlatformInAppWebViewController extends PlatformInterface
         apiName: 'UIResponder.becomeFirstResponder',
         apiUrl:
             'https://developer.apple.com/documentation/uikit/uiresponder/1621113-becomefirstresponder',
-      ),
-      MacOSPlatform(
-        apiName: 'NSWindow.makeFirstResponder',
-        apiUrl:
-            'https://developer.apple.com/documentation/appkit/nswindow/1419366-makefirstresponder',
-      ),
-      LinuxPlatform(
-        apiName: 'wpe_view_backend_add_activity_state',
-        apiUrl:
-            'https://wpewebkit.org/reference/stable/wpe-platform-2.0/func.view_backend_add_activity_state.html',
-        note: 'Adds focused state to WPE backend',
       ),
     ],
   )
@@ -1922,11 +1345,11 @@ abstract class PlatformInAppWebViewController extends PlatformInterface
     );
   }
 
-  ///{@template flutter_inappwebview_platform_interface.PlatformInAppWebViewController.clearFocus}
+  ///{@template nosferatu500_inappwebview_platform_interface.PlatformInAppWebViewController.clearFocus}
   ///Clears the current focus. On iOS and Android native WebView, it will clear also, for example, the current text selection.
   ///{@endtemplate}
   ///
-  ///{@macro flutter_inappwebview_platform_interface.PlatformInAppWebViewController.clearFocus.supported_platforms}
+  ///{@macro nosferatu500_inappwebview_platform_interface.PlatformInAppWebViewController.clearFocus.supported_platforms}
   @SupportedPlatforms(
     platforms: [
       AndroidPlatform(
@@ -1939,18 +1362,6 @@ abstract class PlatformInAppWebViewController extends PlatformInterface
         apiUrl:
             'https://developer.apple.com/documentation/uikit/uiresponder/1621097-resignfirstresponder',
       ),
-      MacOSPlatform(
-        apiName: 'NSWindow.makeFirstResponder',
-        apiUrl:
-            'https://developer.apple.com/documentation/appkit/nswindow/1419366-makefirstresponder',
-      ),
-      LinuxPlatform(
-        apiName: 'wpe_view_backend_remove_activity_state',
-        apiUrl:
-            'https://wpewebkit.org/reference/stable/wpe-platform-2.0/func.view_backend_remove_activity_state.html',
-        note:
-            'Removes focused state from WPE backend and blurs active element via JavaScript',
-      ),
     ],
   )
   Future<void> clearFocus() {
@@ -1959,11 +1370,11 @@ abstract class PlatformInAppWebViewController extends PlatformInterface
     );
   }
 
-  ///{@template flutter_inappwebview_platform_interface.PlatformInAppWebViewController.setInputMethodEnabled}
+  ///{@template nosferatu500_inappwebview_platform_interface.PlatformInAppWebViewController.setInputMethodEnabled}
   ///Enables/Disables the input method (system-supplied keyboard) whilst interacting with the webview.
   ///{@endtemplate}
   ///
-  ///{@macro flutter_inappwebview_platform_interface.PlatformInAppWebViewController.setInputMethodEnabled.supported_platforms}
+  ///{@macro nosferatu500_inappwebview_platform_interface.PlatformInAppWebViewController.setInputMethodEnabled.supported_platforms}
   @SupportedPlatforms(
     platforms: [
       IOSPlatform(
@@ -1979,11 +1390,11 @@ abstract class PlatformInAppWebViewController extends PlatformInterface
     );
   }
 
-  ///{@template flutter_inappwebview_platform_interface.PlatformInAppWebViewController.showInputMethod}
+  ///{@template nosferatu500_inappwebview_platform_interface.PlatformInAppWebViewController.showInputMethod}
   ///Explicitly request that the current input method's soft input area be shown to the user, if needed.
   ///{@endtemplate}
   ///
-  ///{@macro flutter_inappwebview_platform_interface.PlatformInAppWebViewController.showInputMethod.supported_platforms}
+  ///{@macro nosferatu500_inappwebview_platform_interface.PlatformInAppWebViewController.showInputMethod.supported_platforms}
   @SupportedPlatforms(
     platforms: [
       AndroidPlatform(
@@ -1999,11 +1410,216 @@ abstract class PlatformInAppWebViewController extends PlatformInterface
     );
   }
 
-  ///{@template flutter_inappwebview_platform_interface.PlatformInAppWebViewController.hideInputMethod}
+  ///{@template nosferatu500_inappwebview_platform_interface.PlatformInAppWebViewController.setAudioMuted}
+  ///Mutes or unmutes all audio output from this WebView.
+  ///
+  ///Muting is a property of the WebView itself, so it survives navigation and applies to every
+  ///media element and Web Audio context in the page, including ones created later.
+  ///
+  ///Check [isAudioMuted] to read the current state.
+  ///{@endtemplate}
+  ///
+  ///{@macro nosferatu500_inappwebview_platform_interface.PlatformInAppWebViewController.setAudioMuted.supported_platforms}
+  @SupportedPlatforms(
+    platforms: [
+      AndroidPlatform(
+        apiName: 'WebViewCompat.setAudioMuted',
+        apiUrl:
+            'https://developer.android.com/reference/androidx/webkit/WebViewCompat#setAudioMuted(android.webkit.WebView,boolean)',
+        note:
+            'Requires [WebViewFeature.MUTE_AUDIO]. Does nothing if the feature is not supported.',
+      ),
+    ],
+  )
+  Future<void> setAudioMuted(bool muted) {
+    throw UnimplementedError(
+      '${PlatformInAppWebViewControllerMethod.setAudioMuted.name} is not implemented on the current platform',
+    );
+  }
+
+  ///{@template nosferatu500_inappwebview_platform_interface.PlatformInAppWebViewController.isAudioMuted}
+  ///Returns whether audio output from this WebView is currently muted.
+  ///
+  ///Returns `false` when [WebViewFeature.MUTE_AUDIO] is not supported, since audio cannot have
+  ///been muted through [setAudioMuted] in that case.
+  ///{@endtemplate}
+  ///
+  ///{@macro nosferatu500_inappwebview_platform_interface.PlatformInAppWebViewController.isAudioMuted.supported_platforms}
+  @SupportedPlatforms(
+    platforms: [
+      AndroidPlatform(
+        apiName: 'WebViewCompat.isAudioMuted',
+        apiUrl:
+            'https://developer.android.com/reference/androidx/webkit/WebViewCompat#isAudioMuted(android.webkit.WebView)',
+        note: 'Requires [WebViewFeature.MUTE_AUDIO].',
+      ),
+    ],
+  )
+  Future<bool> isAudioMuted() {
+    throw UnimplementedError(
+      '${PlatformInAppWebViewControllerMethod.isAudioMuted.name} is not implemented on the current platform',
+    );
+  }
+
+  ///{@template nosferatu500_inappwebview_platform_interface.PlatformInAppWebViewController.prerenderUrl}
+  ///Asks this WebView to prerender [url], so that a later navigation to it is instant.
+  ///
+  ///The page is loaded and rendered in the background, ahead of any navigation. If this WebView
+  ///later navigates to the same url, the prerendered result is activated instead of being fetched
+  ///again; if it never does, the WebView discards it.
+  ///
+  ///This is a hint, not a guarantee, and it costs memory and network for a page the user may never
+  ///visit — so it is worth doing for a destination you have good reason to expect, such as the
+  ///target of a link the user is hovering or the next step of a flow they have started.
+  ///
+  ///Returns `true` if the prerender was **requested**, and `false` when
+  ///[WebViewFeature.PRERENDER_WITH_URL] is not supported. It does not wait for the prerender to
+  ///finish, be used, or fail.
+  ///
+  ///**Outcomes are not reported back.** The platform reports activation and failure through a
+  ///callback, but activation can happen long after this call or never at all, so surfacing it as a
+  ///`Future` would leave one uncompleted for the lifetime of the WebView. Both outcomes are logged
+  ///natively instead. A prerender that fails simply means the eventual navigation loads normally.
+  ///
+  ///It cannot be cancelled.
+  ///{@endtemplate}
+  ///
+  ///{@macro nosferatu500_inappwebview_platform_interface.PlatformInAppWebViewController.prerenderUrl.supported_platforms}
+  @SupportedPlatforms(
+    platforms: [
+      AndroidPlatform(
+        apiName: 'WebViewCompat.prerenderUrlAsync',
+        apiUrl:
+            'https://developer.android.com/reference/androidx/webkit/WebViewCompat#prerenderUrlAsync(android.webkit.WebView,java.lang.String,android.os.CancellationSignal,java.util.concurrent.Executor,androidx.webkit.PrerenderOperationCallback)',
+        note:
+            'Requires [WebViewFeature.PRERENDER_WITH_URL]. Returns `false` and prerenders nothing if the feature is not supported.',
+      ),
+    ],
+  )
+  Future<bool> prerenderUrl(WebUri url) {
+    throw UnimplementedError(
+      '${PlatformInAppWebViewControllerMethod.prerenderUrl.name} is not implemented on the current platform',
+    );
+  }
+
+  ///{@template nosferatu500_inappwebview_platform_interface.PlatformInAppWebViewController.flingScroll}
+  ///Starts a fling — a scroll that is thrown with an initial velocity and then decelerates on its
+  ///own, the way a flick of the finger does.
+  ///
+  ///[velocityX] and [velocityY] are the initial velocity in **pixels per second**, in the same
+  ///raw device pixels [scrollTo] and [scrollBy] use, with the same sign convention: positive
+  ///values fling the content towards its end (right and down).
+  ///
+  ///This is a third thing, distinct from the two the plugin already has:
+  ///
+  ///- [scrollTo] goes to an absolute position;
+  ///- [scrollBy] moves by a fixed amount — with `animated: true` over a fixed 300ms;
+  ///- this one only sets a *velocity*. Where it stops is decided by the platform's deceleration
+  ///  and by where the content ends, so the distance is not something the caller specifies or can
+  ///  predict.
+  ///
+  ///Use it to reproduce a flick rather than to reach a known position — for a known position,
+  ///[scrollTo] is both simpler and exact.
+  ///
+  ///The fling is clamped to the scrollable range, so an over-large velocity stops at the edge
+  ///rather than overscrolling indefinitely, and a velocity on an unscrollable axis does nothing.
+  ///
+  ///**The platform documents no units.** `WebView.flingScroll` carries no javadoc in AOSP at all;
+  ///pixels per second is what its implementation does, and it is what matches this plugin's other
+  ///scroll methods, which also pass raw pixels straight through without density conversion.
+  ///{@endtemplate}
+  ///
+  ///{@macro nosferatu500_inappwebview_platform_interface.PlatformInAppWebViewController.flingScroll.supported_platforms}
+  @SupportedPlatforms(
+    platforms: [
+      AndroidPlatform(
+        apiName: 'WebView.flingScroll',
+        apiUrl:
+            'https://developer.android.com/reference/android/webkit/WebView#flingScroll(int,%20int)',
+      ),
+    ],
+  )
+  Future<void> flingScroll({required int velocityX, required int velocityY}) {
+    throw UnimplementedError(
+      '${PlatformInAppWebViewControllerMethod.flingScroll.name} is not implemented on the current platform',
+    );
+  }
+
+  ///{@template nosferatu500_inappwebview_platform_interface.PlatformInAppWebViewController.documentHasImages}
+  ///Returns whether the currently loaded document references any image at all.
+  ///
+  ///It is a question about the **document**, not about rendering or loading: an `<img>` whose
+  ///source is broken or still downloading still counts as a reference. Nothing is reported about
+  ///how many there are or where they point.
+  ///
+  ///Returns `false` if this controller no longer has a WebView, matching
+  ///[canGoBack] and the other boolean reads on this class — a disposed controller has no document,
+  ///so there is nothing for it to reference.
+  ///{@endtemplate}
+  ///
+  ///{@macro nosferatu500_inappwebview_platform_interface.PlatformInAppWebViewController.documentHasImages.supported_platforms}
+  @SupportedPlatforms(
+    platforms: [
+      AndroidPlatform(
+        apiName: 'WebView.documentHasImages',
+        apiUrl:
+            'https://developer.android.com/reference/android/webkit/WebView#documentHasImages(android.os.Message)',
+        note:
+            'The platform answers by dispatching an `android.os.Message` rather than returning a value; this API awaits it.',
+      ),
+    ],
+  )
+  Future<bool> documentHasImages() {
+    throw UnimplementedError(
+      '${PlatformInAppWebViewControllerMethod.documentHasImages.name} is not implemented on the current platform',
+    );
+  }
+
+  ///{@template nosferatu500_inappwebview_platform_interface.PlatformInAppWebViewController.postVisualStateCallback}
+  ///Completes once the DOM **as it exists at the moment of this call** has been drawn to the
+  ///screen.
+  ///
+  ///This is the "do not reveal it until it is actually painted" primitive: load or mutate content
+  ///while the WebView is hidden, `await` this, and only then show it — which avoids the blank or
+  ///half-drawn frame that showing it on [PlatformWebViewCreationParams.onLoadStop] can produce.
+  ///
+  ///It is **not** [PlatformWebViewCreationParams.onPageCommitVisible], which the plugin also
+  ///reports. That event is engine-driven and fires once per navigation, at the first paint after a
+  ///commit. This is caller-driven and answers about *now*, so it can be used after a DOM change
+  ///that involved no navigation at all.
+  ///
+  ///Later DOM changes are not covered — the guarantee is about the state captured when the call was
+  ///made, not about anything drawn afterwards.
+  ///
+  ///**It can fail to complete.** The platform never invokes the callback if the WebView is
+  ///destroyed first, and there is no native timeout, so a caller that must not block forever should
+  ///apply its own with `Future.timeout`. The plugin deliberately does not impose one, because any
+  ///value it picked would be wrong for a page heavy enough to matter.
+  ///{@endtemplate}
+  ///
+  ///{@macro nosferatu500_inappwebview_platform_interface.PlatformInAppWebViewController.postVisualStateCallback.supported_platforms}
+  @SupportedPlatforms(
+    platforms: [
+      AndroidPlatform(
+        apiName: 'WebView.postVisualStateCallback',
+        apiUrl:
+            'https://developer.android.com/reference/android/webkit/WebView#postVisualStateCallback(long,%20android.webkit.WebView.VisualStateCallback)',
+        note:
+            'The platform takes a `requestId` to correlate its callback; this API omits it because the returned `Future` already correlates the reply with the call.',
+      ),
+    ],
+  )
+  Future<void> postVisualStateCallback() {
+    throw UnimplementedError(
+      '${PlatformInAppWebViewControllerMethod.postVisualStateCallback.name} is not implemented on the current platform',
+    );
+  }
+
+  ///{@template nosferatu500_inappwebview_platform_interface.PlatformInAppWebViewController.hideInputMethod}
   ///Request to hide the soft input view from the context of the view that is currently accepting input.
   ///{@endtemplate}
   ///
-  ///{@macro flutter_inappwebview_platform_interface.PlatformInAppWebViewController.hideInputMethod.supported_platforms}
+  ///{@macro nosferatu500_inappwebview_platform_interface.PlatformInAppWebViewController.hideInputMethod.supported_platforms}
   @SupportedPlatforms(
     platforms: [
       AndroidPlatform(
@@ -2024,11 +1640,11 @@ abstract class PlatformInAppWebViewController extends PlatformInterface
     );
   }
 
-  ///{@template flutter_inappwebview_platform_interface.PlatformInAppWebViewController.setContextMenu}
+  ///{@template nosferatu500_inappwebview_platform_interface.PlatformInAppWebViewController.setContextMenu}
   ///Sets or updates the WebView context menu to be used next time it will appear.
   ///{@endtemplate}
   ///
-  ///{@macro flutter_inappwebview_platform_interface.PlatformInAppWebViewController.setContextMenu.supported_platforms}
+  ///{@macro nosferatu500_inappwebview_platform_interface.PlatformInAppWebViewController.setContextMenu.supported_platforms}
   @SupportedPlatforms(platforms: [AndroidPlatform(), IOSPlatform()])
   Future<void> setContextMenu(ContextMenu? contextMenu) {
     throw UnimplementedError(
@@ -2036,11 +1652,11 @@ abstract class PlatformInAppWebViewController extends PlatformInterface
     );
   }
 
-  ///{@template flutter_inappwebview_platform_interface.PlatformInAppWebViewController.requestFocusNodeHref}
+  ///{@template nosferatu500_inappwebview_platform_interface.PlatformInAppWebViewController.requestFocusNodeHref}
   ///Requests the anchor or image element URL at the last tapped point.
   ///{@endtemplate}
   ///
-  ///{@macro flutter_inappwebview_platform_interface.PlatformInAppWebViewController.requestFocusNodeHref.supported_platforms}
+  ///{@macro nosferatu500_inappwebview_platform_interface.PlatformInAppWebViewController.requestFocusNodeHref.supported_platforms}
   @SupportedPlatforms(
     platforms: [
       AndroidPlatform(
@@ -2057,11 +1673,11 @@ abstract class PlatformInAppWebViewController extends PlatformInterface
     );
   }
 
-  ///{@template flutter_inappwebview_platform_interface.PlatformInAppWebViewController.requestImageRef}
+  ///{@template nosferatu500_inappwebview_platform_interface.PlatformInAppWebViewController.requestImageRef}
   ///Requests the URL of the image last touched by the user.
   ///{@endtemplate}
   ///
-  ///{@macro flutter_inappwebview_platform_interface.PlatformInAppWebViewController.requestImageRef.supported_platforms}
+  ///{@macro nosferatu500_inappwebview_platform_interface.PlatformInAppWebViewController.requestImageRef.supported_platforms}
   @SupportedPlatforms(
     platforms: [
       AndroidPlatform(
@@ -2078,19 +1694,15 @@ abstract class PlatformInAppWebViewController extends PlatformInterface
     );
   }
 
-  ///{@template flutter_inappwebview_platform_interface.PlatformInAppWebViewController.getMetaTags}
+  ///{@template nosferatu500_inappwebview_platform_interface.PlatformInAppWebViewController.getMetaTags}
   ///Returns the list of `<meta>` tags of the current WebView.
   ///{@endtemplate}
   ///
-  ///{@macro flutter_inappwebview_platform_interface.PlatformInAppWebViewController.getMetaTags.supported_platforms}
+  ///{@macro nosferatu500_inappwebview_platform_interface.PlatformInAppWebViewController.getMetaTags.supported_platforms}
   @SupportedPlatforms(
     platforms: [
       AndroidPlatform(note: 'This method is implemented using JavaScript.'),
       IOSPlatform(note: 'This method is implemented using JavaScript.'),
-      LinuxPlatform(note: 'This method is implemented using JavaScript.'),
-      MacOSPlatform(note: 'This method is implemented using JavaScript.'),
-      WebPlatform(note: 'This method is implemented using JavaScript.'),
-      WindowsPlatform(note: 'This method is implemented using JavaScript.'),
     ],
   )
   Future<List<MetaTag>> getMetaTags() {
@@ -2099,12 +1711,12 @@ abstract class PlatformInAppWebViewController extends PlatformInterface
     );
   }
 
-  ///{@template flutter_inappwebview_platform_interface.PlatformInAppWebViewController.getMetaThemeColor}
+  ///{@template nosferatu500_inappwebview_platform_interface.PlatformInAppWebViewController.getMetaThemeColor}
   ///Returns an instance of [Color] representing the `content` value of the
   ///`<meta name="theme-color" content="">` tag of the current WebView, if available, otherwise `null`.
   ///{@endtemplate}
   ///
-  ///{@macro flutter_inappwebview_platform_interface.PlatformInAppWebViewController.getMetaThemeColor.supported_platforms}
+  ///{@macro nosferatu500_inappwebview_platform_interface.PlatformInAppWebViewController.getMetaThemeColor.supported_platforms}
   @SupportedPlatforms(
     platforms: [
       AndroidPlatform(note: 'This method is implemented using JavaScript.'),
@@ -2114,19 +1726,6 @@ abstract class PlatformInAppWebViewController extends PlatformInterface
             'https://developer.apple.com/documentation/webkit/wkwebview/3794258-themecolor',
         note: 'On iOS < 15.0, this method is implemented using JavaScript.',
       ),
-      LinuxPlatform(
-        apiName: 'webkit_web_view_get_theme_color',
-        apiUrl:
-            'https://wpewebkit.org/reference/stable/wpe-webkit-2.0/method.WebView.get_theme_color.html',
-      ),
-      MacOSPlatform(
-        apiName: 'WKWebView.themeColor',
-        apiUrl:
-            'https://developer.apple.com/documentation/webkit/wkwebview/3794258-themecolor',
-        note: 'On iOS < 12.0, this method is implemented using JavaScript.',
-      ),
-      WebPlatform(note: 'This method is implemented using JavaScript.'),
-      WindowsPlatform(note: 'This method is implemented using JavaScript.'),
     ],
   )
   Future<Color?> getMetaThemeColor() {
@@ -2135,31 +1734,25 @@ abstract class PlatformInAppWebViewController extends PlatformInterface
     );
   }
 
-  ///{@template flutter_inappwebview_platform_interface.PlatformInAppWebViewController.getScrollX}
+  ///{@template nosferatu500_inappwebview_platform_interface.PlatformInAppWebViewController.getScrollX}
   ///Returns the scrolled left position of the current WebView.
   ///{@endtemplate}
   ///
-  ///{@macro flutter_inappwebview_platform_interface.PlatformInAppWebViewController.getScrollX.supported_platforms}
+  ///{@macro nosferatu500_inappwebview_platform_interface.PlatformInAppWebViewController.getScrollX.supported_platforms}
   @SupportedPlatforms(
     platforms: [
       AndroidPlatform(
         apiName: 'View.getScrollX',
         apiUrl:
             'https://developer.android.com/reference/android/view/View#getScrollX()',
+        note:
+            'Straight after [PlatformInAppWebViewController.scrollTo] or [PlatformInAppWebViewController.scrollBy] this can still return the previous position for a moment, because the renderer applies the scroll asynchronously.',
       ),
       IOSPlatform(
         apiName: 'UIScrollView.contentOffset',
         apiUrl:
             'https://developer.apple.com/documentation/uikit/uiscrollview/1619404-contentoffset',
       ),
-      MacOSPlatform(note: 'This method is implemented using JavaScript.'),
-      LinuxPlatform(),
-      WebPlatform(
-        apiName: 'Window.scrollX',
-        apiUrl:
-            'https://developer.mozilla.org/en-US/docs/Web/API/Window/scrollX',
-      ),
-      WindowsPlatform(note: 'This method is implemented using JavaScript.'),
     ],
   )
   Future<int?> getScrollX() {
@@ -2168,31 +1761,25 @@ abstract class PlatformInAppWebViewController extends PlatformInterface
     );
   }
 
-  ///{@template flutter_inappwebview_platform_interface.PlatformInAppWebViewController.getScrollY}
+  ///{@template nosferatu500_inappwebview_platform_interface.PlatformInAppWebViewController.getScrollY}
   ///Returns the scrolled top position of the current WebView.
   ///{@endtemplate}
   ///
-  ///{@macro flutter_inappwebview_platform_interface.PlatformInAppWebViewController.getScrollY.supported_platforms}
+  ///{@macro nosferatu500_inappwebview_platform_interface.PlatformInAppWebViewController.getScrollY.supported_platforms}
   @SupportedPlatforms(
     platforms: [
       AndroidPlatform(
         apiName: 'View.getScrollY',
         apiUrl:
             'https://developer.android.com/reference/android/view/View#getScrollY()',
+        note:
+            'Straight after [PlatformInAppWebViewController.scrollTo] or [PlatformInAppWebViewController.scrollBy] this can still return the previous position for a moment, because the renderer applies the scroll asynchronously.',
       ),
       IOSPlatform(
         apiName: 'UIScrollView.contentOffset',
         apiUrl:
             'https://developer.apple.com/documentation/uikit/uiscrollview/1619404-contentoffset',
       ),
-      MacOSPlatform(note: 'This method is implemented using JavaScript.'),
-      LinuxPlatform(),
-      WebPlatform(
-        apiName: 'Window.scrollY',
-        apiUrl:
-            'https://developer.mozilla.org/en-US/docs/Web/API/Window/scrollY',
-      ),
-      WindowsPlatform(note: 'This method is implemented using JavaScript.'),
     ],
   )
   Future<int?> getScrollY() {
@@ -2201,11 +1788,11 @@ abstract class PlatformInAppWebViewController extends PlatformInterface
     );
   }
 
-  ///{@template flutter_inappwebview_platform_interface.PlatformInAppWebViewController.getCertificate}
+  ///{@template nosferatu500_inappwebview_platform_interface.PlatformInAppWebViewController.getCertificate}
   ///Gets the SSL certificate for the main top-level page or null if there is no certificate (the site is not secure).
   ///{@endtemplate}
   ///
-  ///{@macro flutter_inappwebview_platform_interface.PlatformInAppWebViewController.getCertificate.supported_platforms}
+  ///{@macro nosferatu500_inappwebview_platform_interface.PlatformInAppWebViewController.getCertificate.supported_platforms}
   @SupportedPlatforms(
     platforms: [
       AndroidPlatform(
@@ -2213,13 +1800,9 @@ abstract class PlatformInAppWebViewController extends PlatformInterface
         apiUrl:
             'https://developer.android.com/reference/android/webkit/WebView#getCertificate()',
       ),
-      IOSPlatform(),
-      MacOSPlatform(),
-      WindowsPlatform(),
-      LinuxPlatform(
-        apiName: 'webkit_web_view_get_tls_info',
-        apiUrl:
-            'https://wpewebkit.org/reference/stable/wpe-webkit-2.0/method.WebView.get_tls_info.html',
+      IOSPlatform(
+        note:
+            'WebKit has no equivalent API, so this is the certificate the plugin recorded during a `NSURLAuthenticationMethodServerTrust` challenge for the page\'s host. **WebKit issues that challenge only once per host per process**: a second WebView loading the same host is not challenged at all, so the certificate is process-wide and can predate the current page load, this WebView, and even the WebView that is asking. It is `null` until the process has been challenged for that host at least once — which, for the very first load of a host, may be after `onLoadStop`.',
       ),
     ],
   )
@@ -2229,11 +1812,11 @@ abstract class PlatformInAppWebViewController extends PlatformInterface
     );
   }
 
-  ///{@template flutter_inappwebview_platform_interface.PlatformInAppWebViewController.addUserScript}
+  ///{@template nosferatu500_inappwebview_platform_interface.PlatformInAppWebViewController.addUserScript}
   ///Injects the specified [userScript] into the webpage’s content.
   ///{@endtemplate}
   ///
-  ///{@macro flutter_inappwebview_platform_interface.PlatformInAppWebViewController.addUserScript.supported_platforms}
+  ///{@macro nosferatu500_inappwebview_platform_interface.PlatformInAppWebViewController.addUserScript.supported_platforms}
   @SupportedPlatforms(
     platforms: [
       AndroidPlatform(),
@@ -2244,20 +1827,6 @@ abstract class PlatformInAppWebViewController extends PlatformInterface
         note:
             "This method will throw an error if the [PlatformWebViewCreationParams.windowId] has been set. There isn't any way to add/remove user scripts specific to window WebViews. This is a limitation of the native WebKit APIs.",
       ),
-      LinuxPlatform(
-        apiName: 'webkit_user_content_manager_add_script',
-        apiUrl:
-            'https://wpewebkit.org/reference/stable/wpe-webkit-2.0/method.UserContentManager.add_script.html',
-      ),
-      MacOSPlatform(
-        apiName: 'WKUserContentController.addUserScript',
-        apiUrl:
-            'https://developer.apple.com/documentation/webkit/wkusercontentcontroller/1537448-adduserscript',
-        note:
-            "This method will throw an error if the [PlatformWebViewCreationParams.windowId] has been set. There isn't any way to add/remove user scripts specific to window WebViews. This is a limitation of the native WebKit APIs.",
-      ),
-      WebPlatform(),
-      WindowsPlatform(),
     ],
   )
   Future<void> addUserScript({required UserScript userScript}) {
@@ -2266,11 +1835,11 @@ abstract class PlatformInAppWebViewController extends PlatformInterface
     );
   }
 
-  ///{@template flutter_inappwebview_platform_interface.PlatformInAppWebViewController.addUserScripts}
+  ///{@template nosferatu500_inappwebview_platform_interface.PlatformInAppWebViewController.addUserScripts}
   ///Injects the [userScripts] into the webpage’s content.
   ///{@endtemplate}
   ///
-  ///{@macro flutter_inappwebview_platform_interface.PlatformInAppWebViewController.addUserScripts.supported_platforms}
+  ///{@macro nosferatu500_inappwebview_platform_interface.PlatformInAppWebViewController.addUserScripts.supported_platforms}
   @SupportedPlatforms(
     platforms: [
       AndroidPlatform(),
@@ -2278,13 +1847,6 @@ abstract class PlatformInAppWebViewController extends PlatformInterface
         note:
             "This method will throw an error if the [PlatformWebViewCreationParams.windowId] has been set. There isn't any way to add/remove user scripts specific to window WebViews. This is a limitation of the native WebKit APIs.",
       ),
-      LinuxPlatform(),
-      MacOSPlatform(
-        note:
-            "This method will throw an error if the [PlatformWebViewCreationParams.windowId] has been set. There isn't any way to add/remove user scripts specific to window WebViews. This is a limitation of the native WebKit APIs.",
-      ),
-      WebPlatform(),
-      WindowsPlatform(),
     ],
   )
   Future<void> addUserScripts({required List<UserScript> userScripts}) {
@@ -2293,13 +1855,13 @@ abstract class PlatformInAppWebViewController extends PlatformInterface
     );
   }
 
-  ///{@template flutter_inappwebview_platform_interface.PlatformInAppWebViewController.removeUserScript}
+  ///{@template nosferatu500_inappwebview_platform_interface.PlatformInAppWebViewController.removeUserScript}
   ///Removes the specified [userScript] from the webpage’s content.
   ///User scripts already loaded into the webpage's content cannot be removed. This will have effect only on the next page load.
   ///Returns `true` if [userScript] was in the list, `false` otherwise.
   ///{@endtemplate}
   ///
-  ///{@macro flutter_inappwebview_platform_interface.PlatformInAppWebViewController.removeUserScript.supported_platforms}
+  ///{@macro nosferatu500_inappwebview_platform_interface.PlatformInAppWebViewController.removeUserScript.supported_platforms}
   @SupportedPlatforms(
     platforms: [
       AndroidPlatform(),
@@ -2307,13 +1869,6 @@ abstract class PlatformInAppWebViewController extends PlatformInterface
         note:
             "This method will throw an error if the [PlatformWebViewCreationParams.windowId] has been set. There isn't any way to add/remove user scripts specific to window WebViews. This is a limitation of the native WebKit APIs.",
       ),
-      LinuxPlatform(),
-      MacOSPlatform(
-        note:
-            "This method will throw an error if the [PlatformWebViewCreationParams.windowId] has been set. There isn't any way to add/remove user scripts specific to window WebViews. This is a limitation of the native WebKit APIs.",
-      ),
-      WebPlatform(),
-      WindowsPlatform(),
     ],
   )
   Future<bool> removeUserScript({required UserScript userScript}) {
@@ -2322,12 +1877,12 @@ abstract class PlatformInAppWebViewController extends PlatformInterface
     );
   }
 
-  ///{@template flutter_inappwebview_platform_interface.PlatformInAppWebViewController.removeUserScriptsByGroupName}
+  ///{@template nosferatu500_inappwebview_platform_interface.PlatformInAppWebViewController.removeUserScriptsByGroupName}
   ///Removes all the [UserScript]s with [groupName] as group name from the webpage’s content.
   ///User scripts already loaded into the webpage's content cannot be removed. This will have effect only on the next page load.
   ///{@endtemplate}
   ///
-  ///{@macro flutter_inappwebview_platform_interface.PlatformInAppWebViewController.removeUserScriptsByGroupName.supported_platforms}
+  ///{@macro nosferatu500_inappwebview_platform_interface.PlatformInAppWebViewController.removeUserScriptsByGroupName.supported_platforms}
   @SupportedPlatforms(
     platforms: [
       AndroidPlatform(),
@@ -2335,13 +1890,6 @@ abstract class PlatformInAppWebViewController extends PlatformInterface
         note:
             "This method will throw an error if the [PlatformWebViewCreationParams.windowId] has been set. There isn't any way to add/remove user scripts specific to window WebViews. This is a limitation of the native WebKit APIs.",
       ),
-      LinuxPlatform(),
-      MacOSPlatform(
-        note:
-            "This method will throw an error if the [PlatformWebViewCreationParams.windowId] has been set. There isn't any way to add/remove user scripts specific to window WebViews. This is a limitation of the native WebKit APIs.",
-      ),
-      WebPlatform(),
-      WindowsPlatform(),
     ],
   )
   Future<void> removeUserScriptsByGroupName({required String groupName}) {
@@ -2350,12 +1898,12 @@ abstract class PlatformInAppWebViewController extends PlatformInterface
     );
   }
 
-  ///{@template flutter_inappwebview_platform_interface.PlatformInAppWebViewController.removeUserScripts}
+  ///{@template nosferatu500_inappwebview_platform_interface.PlatformInAppWebViewController.removeUserScripts}
   ///Removes the [userScripts] from the webpage’s content.
   ///User scripts already loaded into the webpage's content cannot be removed. This will have effect only on the next page load.
   ///{@endtemplate}
   ///
-  ///{@macro flutter_inappwebview_platform_interface.PlatformInAppWebViewController.removeUserScripts.supported_platforms}
+  ///{@macro nosferatu500_inappwebview_platform_interface.PlatformInAppWebViewController.removeUserScripts.supported_platforms}
   @SupportedPlatforms(
     platforms: [
       AndroidPlatform(),
@@ -2363,13 +1911,6 @@ abstract class PlatformInAppWebViewController extends PlatformInterface
         note:
             "This method will throw an error if the [PlatformWebViewCreationParams.windowId] has been set. There isn't any way to add/remove user scripts specific to window WebViews. This is a limitation of the native WebKit APIs.",
       ),
-      LinuxPlatform(),
-      MacOSPlatform(
-        note:
-            "This method will throw an error if the [PlatformWebViewCreationParams.windowId] has been set. There isn't any way to add/remove user scripts specific to window WebViews. This is a limitation of the native WebKit APIs.",
-      ),
-      WebPlatform(),
-      WindowsPlatform(),
     ],
   )
   Future<void> removeUserScripts({required List<UserScript> userScripts}) {
@@ -2378,11 +1919,11 @@ abstract class PlatformInAppWebViewController extends PlatformInterface
     );
   }
 
-  ///{@template flutter_inappwebview_platform_interface.PlatformInAppWebViewController.removeAllUserScripts}
+  ///{@template nosferatu500_inappwebview_platform_interface.PlatformInAppWebViewController.removeAllUserScripts}
   ///Removes all the user scripts from the webpage’s content.
   ///{@endtemplate}
   ///
-  ///{@macro flutter_inappwebview_platform_interface.PlatformInAppWebViewController.removeAllUserScripts.supported_platforms}
+  ///{@macro nosferatu500_inappwebview_platform_interface.PlatformInAppWebViewController.removeAllUserScripts.supported_platforms}
   @SupportedPlatforms(
     platforms: [
       AndroidPlatform(),
@@ -2393,20 +1934,6 @@ abstract class PlatformInAppWebViewController extends PlatformInterface
         note:
             "This method will throw an error if the [PlatformWebViewCreationParams.windowId] has been set. There isn't any way to add/remove user scripts specific to window WebViews. This is a limitation of the native WebKit APIs.",
       ),
-      LinuxPlatform(
-        apiName: 'webkit_user_content_manager_remove_all_scripts',
-        apiUrl:
-            'https://wpewebkit.org/reference/stable/wpe-webkit-2.0/method.UserContentManager.remove_all_scripts.html',
-      ),
-      MacOSPlatform(
-        apiName: 'WKUserContentController.removeAllUserScripts',
-        apiUrl:
-            'https://developer.apple.com/documentation/webkit/wkusercontentcontroller/1536540-removealluserscripts',
-        note:
-            "This method will throw an error if the [PlatformWebViewCreationParams.windowId] has been set. There isn't any way to add/remove user scripts specific to window WebViews. This is a limitation of the native WebKit APIs.",
-      ),
-      WebPlatform(),
-      WindowsPlatform(),
     ],
   )
   Future<void> removeAllUserScripts() {
@@ -2415,27 +1942,19 @@ abstract class PlatformInAppWebViewController extends PlatformInterface
     );
   }
 
-  ///{@template flutter_inappwebview_platform_interface.PlatformInAppWebViewController.hasUserScript}
+  ///{@template nosferatu500_inappwebview_platform_interface.PlatformInAppWebViewController.hasUserScript}
   ///Returns `true` if the [userScript] has been already added, otherwise `false`.
   ///{@endtemplate}
   ///
-  ///{@macro flutter_inappwebview_platform_interface.PlatformInAppWebViewController.hasUserScript.supported_platforms}
-  @SupportedPlatforms(
-    platforms: [
-      AndroidPlatform(),
-      IOSPlatform(),
-      MacOSPlatform(),
-      WebPlatform(),
-      WindowsPlatform(),
-    ],
-  )
+  ///{@macro nosferatu500_inappwebview_platform_interface.PlatformInAppWebViewController.hasUserScript.supported_platforms}
+  @SupportedPlatforms(platforms: [AndroidPlatform(), IOSPlatform()])
   bool hasUserScript({required UserScript userScript}) {
     throw UnimplementedError(
       '${PlatformInAppWebViewControllerMethod.hasUserScript.name} is not implemented on the current platform',
     );
   }
 
-  ///{@template flutter_inappwebview_platform_interface.PlatformInAppWebViewController.callAsyncJavaScript}
+  ///{@template nosferatu500_inappwebview_platform_interface.PlatformInAppWebViewController.callAsyncJavaScript}
   ///Executes the specified string as an asynchronous JavaScript function.
   ///
   ///[functionBody] is the JavaScript string to use as the function body.
@@ -2459,9 +1978,14 @@ abstract class PlatformInAppWebViewController extends PlatformInterface
   ///because, in these events, the `WebView` is not ready to handle it yet.
   ///Instead, you should call this method, for example, inside the [PlatformWebViewCreationParams.onLoadStop] event or in any other events
   ///where you know the page is ready "enough".
+  ///
+  ///**NOTE for Android**: if the page navigates away, or the `WebView` is disposed, before the
+  ///function settles, the result arrives at once with a `null` value and an `error` that says so.
+  ///In a [contentWorld] that can't be created on the page (one whose `Content-Security-Policy`
+  ///blocks inline scripts, or a document with no `body`), the `error` says that instead.
   ///{@endtemplate}
   ///
-  ///{@macro flutter_inappwebview_platform_interface.PlatformInAppWebViewController.callAsyncJavaScript.supported_platforms}
+  ///{@macro nosferatu500_inappwebview_platform_interface.PlatformInAppWebViewController.callAsyncJavaScript.supported_platforms}
   @SupportedPlatforms(
     platforms: [
       AndroidPlatform(available: '21'),
@@ -2470,21 +1994,6 @@ abstract class PlatformInAppWebViewController extends PlatformInterface
         apiUrl:
             'https://developer.apple.com/documentation/webkit/wkwebview/3656441-callasyncjavascript',
         available: '14.3',
-      ),
-      MacOSPlatform(
-        apiName: 'WKWebView.callAsyncJavaScript',
-        apiUrl:
-            'https://developer.apple.com/documentation/webkit/wkwebview/3656441-callasyncjavascript',
-        available: '11.0',
-      ),
-      WindowsPlatform(),
-      LinuxPlatform(
-        apiName: 'webkit_web_view_call_async_javascript_function',
-        apiUrl:
-            'https://webkitgtk.org/reference/webkit2gtk/stable/method.WebView.call_async_javascript_function.html',
-        available: '2.40',
-        note:
-            'Uses WPE WebKit call_async_javascript_function API which handles JavaScript Promises automatically.',
       ),
     ],
   )
@@ -2498,7 +2007,7 @@ abstract class PlatformInAppWebViewController extends PlatformInterface
     );
   }
 
-  ///{@template flutter_inappwebview_platform_interface.PlatformInAppWebViewController.saveWebArchive}
+  ///{@template nosferatu500_inappwebview_platform_interface.PlatformInAppWebViewController.saveWebArchive}
   ///Saves the current WebView as a web archive.
   ///Returns the file path under which the web archive file was saved, or `null` if saving the file failed.
   ///
@@ -2508,7 +2017,7 @@ abstract class PlatformInAppWebViewController extends PlatformInterface
   ///If `true`, [filePath] is assumed to be a directory in which a filename will be chosen according to the URL of the current page.
   ///{@endtemplate}
   ///
-  ///{@macro flutter_inappwebview_platform_interface.PlatformInAppWebViewController.saveWebArchive.supported_platforms}
+  ///{@macro nosferatu500_inappwebview_platform_interface.PlatformInAppWebViewController.saveWebArchive.supported_platforms}
   @SupportedPlatforms(
     platforms: [
       AndroidPlatform(
@@ -2523,18 +2032,6 @@ abstract class PlatformInAppWebViewController extends PlatformInterface
         note:
             'If [autoname] is `false`, the [filePath] must ends with the [WebArchiveFormat.WEBARCHIVE] file extension.',
       ),
-      LinuxPlatform(
-        apiName: 'webkit_web_view_save_to_file',
-        apiUrl:
-            'https://wpewebkit.org/reference/stable/wpe-webkit-2.0/method.WebView.save_to_file.html',
-        note:
-            'If [autoname] is `false`, the [filePath] must ends with the [WebArchiveFormat.MHT] file extension.',
-      ),
-      MacOSPlatform(
-        available: '11.0',
-        note:
-            'If [autoname] is `false`, the [filePath] must ends with the [WebArchiveFormat.WEBARCHIVE] file extension.',
-      ),
     ],
   )
   Future<String?> saveWebArchive({
@@ -2546,31 +2043,11 @@ abstract class PlatformInAppWebViewController extends PlatformInterface
     );
   }
 
-  ///{@template flutter_inappwebview_platform_interface.PlatformInAppWebViewController.showSaveAsUI}
-  ///Shows the Save As UI for the current document.
-  ///{@endtemplate}
-  ///
-  ///{@macro flutter_inappwebview_platform_interface.PlatformInAppWebViewController.showSaveAsUI.supported_platforms}
-  @SupportedPlatforms(
-    platforms: [
-      WindowsPlatform(
-        apiName: 'ICoreWebView2_25.ShowSaveAsUI',
-        apiUrl:
-            'https://learn.microsoft.com/en-us/microsoft-edge/webview2/reference/win32/icorewebview2_25?view=webview2-1.0.2849.39#showsaveasui',
-      ),
-    ],
-  )
-  Future<SaveAsUIResult?> showSaveAsUI() {
-    throw UnimplementedError(
-      '${PlatformInAppWebViewControllerMethod.showSaveAsUI.name} is not implemented on the current platform',
-    );
-  }
-
-  ///{@template flutter_inappwebview_platform_interface.PlatformInAppWebViewController.isSecureContext}
+  ///{@template nosferatu500_inappwebview_platform_interface.PlatformInAppWebViewController.isSecureContext}
   ///Indicates whether the webpage context is capable of using features that require [secure contexts](https://developer.mozilla.org/en-US/docs/Web/Security/Secure_Contexts).
   ///{@endtemplate}
   ///
-  ///{@macro flutter_inappwebview_platform_interface.PlatformInAppWebViewController.isSecureContext.supported_platforms}
+  ///{@macro nosferatu500_inappwebview_platform_interface.PlatformInAppWebViewController.isSecureContext.supported_platforms}
   @SupportedPlatforms(
     platforms: [
       AndroidPlatform(
@@ -2578,14 +2055,6 @@ abstract class PlatformInAppWebViewController extends PlatformInterface
         note: 'This method is implemented using JavaScript.',
       ),
       IOSPlatform(note: 'This method is implemented using JavaScript.'),
-      LinuxPlatform(note: 'This method is implemented using JavaScript.'),
-      MacOSPlatform(note: 'This method is implemented using JavaScript.'),
-      WebPlatform(
-        apiName: 'Window.isSecureContext',
-        apiUrl:
-            'https://developer.mozilla.org/en-US/docs/Web/API/Window/isSecureContext',
-      ),
-      WindowsPlatform(note: 'This method is implemented using JavaScript.'),
     ],
   )
   Future<bool> isSecureContext() {
@@ -2594,7 +2063,7 @@ abstract class PlatformInAppWebViewController extends PlatformInterface
     );
   }
 
-  ///{@template flutter_inappwebview_platform_interface.PlatformInAppWebViewController.createWebMessageChannel}
+  ///{@template nosferatu500_inappwebview_platform_interface.PlatformInAppWebViewController.createWebMessageChannel}
   ///Creates a message channel to communicate with JavaScript and returns the message channel with ports that represent the endpoints of this message channel.
   ///The HTML5 message channel functionality is described [here](https://html.spec.whatwg.org/multipage/comms.html#messagechannel).
   ///
@@ -2603,7 +2072,7 @@ abstract class PlatformInAppWebViewController extends PlatformInterface
   ///This method should be called when the page is loaded, for example, when the [PlatformWebViewCreationParams.onLoadStop] is fired, otherwise the [PlatformWebMessageChannel] won't work.
   ///{@endtemplate}
   ///
-  ///{@macro flutter_inappwebview_platform_interface.PlatformInAppWebViewController.createWebMessageChannel.supported_platforms}
+  ///{@macro nosferatu500_inappwebview_platform_interface.PlatformInAppWebViewController.createWebMessageChannel.supported_platforms}
   @SupportedPlatforms(
     platforms: [
       AndroidPlatform(
@@ -2614,9 +2083,6 @@ abstract class PlatformInAppWebViewController extends PlatformInterface
             'This method should only be called if [WebViewFeature.isFeatureSupported] returns `true` for [WebViewFeature.CREATE_WEB_MESSAGE_CHANNEL].',
       ),
       IOSPlatform(note: 'This method is implemented using JavaScript.'),
-      MacOSPlatform(note: 'This method is implemented using JavaScript.'),
-      LinuxPlatform(note: 'Implemented via JavaScript MessageChannel API.'),
-      WindowsPlatform(note: 'Implemented via JavaScript MessageChannel API.'),
     ],
   )
   Future<PlatformWebMessageChannel?> createWebMessageChannel() {
@@ -2625,14 +2091,14 @@ abstract class PlatformInAppWebViewController extends PlatformInterface
     );
   }
 
-  ///{@template flutter_inappwebview_platform_interface.PlatformInAppWebViewController.postWebMessage}
+  ///{@template nosferatu500_inappwebview_platform_interface.PlatformInAppWebViewController.postWebMessage}
   ///Post a message to main frame. The embedded application can restrict the messages to a certain target origin.
   ///See [HTML5 spec](https://html.spec.whatwg.org/multipage/comms.html#posting-messages) for how target origin can be used.
   ///
   ///A target origin can be set as a wildcard ("*"). However this is not recommended.
   ///{@endtemplate}
   ///
-  ///{@macro flutter_inappwebview_platform_interface.PlatformInAppWebViewController.postWebMessage.supported_platforms}
+  ///{@macro nosferatu500_inappwebview_platform_interface.PlatformInAppWebViewController.postWebMessage.supported_platforms}
   @SupportedPlatforms(
     platforms: [
       AndroidPlatform(
@@ -2643,9 +2109,6 @@ abstract class PlatformInAppWebViewController extends PlatformInterface
             'This method should only be called if [WebViewFeature.isFeatureSupported] returns `true` for [WebViewFeature.POST_WEB_MESSAGE].',
       ),
       IOSPlatform(note: 'This method is implemented using JavaScript.'),
-      MacOSPlatform(note: 'This method is implemented using JavaScript.'),
-      LinuxPlatform(note: 'Implemented via JavaScript MessageChannel API.'),
-      WindowsPlatform(note: 'Implemented via JavaScript MessageChannel API.'),
     ],
   )
   Future<void> postWebMessage({
@@ -2657,7 +2120,7 @@ abstract class PlatformInAppWebViewController extends PlatformInterface
     );
   }
 
-  ///{@template flutter_inappwebview_platform_interface.PlatformInAppWebViewController.addWebMessageListener}
+  ///{@template nosferatu500_inappwebview_platform_interface.PlatformInAppWebViewController.addWebMessageListener}
   ///Adds a [PlatformWebMessageListener] to the WebView and injects a JavaScript object into each frame that the [PlatformWebMessageListener] will listen on.
   ///
   ///The injected JavaScript object will be named [PlatformWebMessageListener.jsObjectName] in the global scope.
@@ -2813,7 +2276,7 @@ abstract class PlatformInAppWebViewController extends PlatformInterface
   ///```
   ///{@endtemplate}
   ///
-  ///{@macro flutter_inappwebview_platform_interface.PlatformInAppWebViewController.addWebMessageListener.supported_platforms}
+  ///{@macro nosferatu500_inappwebview_platform_interface.PlatformInAppWebViewController.addWebMessageListener.supported_platforms}
   @SupportedPlatforms(
     platforms: [
       AndroidPlatform(
@@ -2824,14 +2287,6 @@ abstract class PlatformInAppWebViewController extends PlatformInterface
             'This method should only be called if [WebViewFeature.isFeatureSupported] returns `true` for [WebViewFeature.WEB_MESSAGE_LISTENER].',
       ),
       IOSPlatform(note: 'This method is implemented using JavaScript.'),
-      LinuxPlatform(
-        note: 'This method is implemented using JavaScript.',
-        apiName: 'webkit_user_content_manager_add_script',
-        apiUrl:
-            'https://webkitgtk.org/reference/webkit2gtk/stable/method.UserContentManager.add_script.html',
-      ),
-      MacOSPlatform(note: 'This method is implemented using JavaScript.'),
-      WindowsPlatform(note: 'This method is implemented using JavaScript.'),
     ],
   )
   Future<void> addWebMessageListener(
@@ -2842,81 +2297,53 @@ abstract class PlatformInAppWebViewController extends PlatformInterface
     );
   }
 
-  ///{@template flutter_inappwebview_platform_interface.PlatformInAppWebViewController.hasWebMessageListener}
+  ///{@template nosferatu500_inappwebview_platform_interface.PlatformInAppWebViewController.hasWebMessageListener}
   ///Returns `true` if the [webMessageListener] has been already added, otherwise `false`.
   ///{@endtemplate}
   ///
-  ///{@macro flutter_inappwebview_platform_interface.PlatformInAppWebViewController.hasWebMessageListener.supported_platforms}
-  @SupportedPlatforms(
-    platforms: [
-      AndroidPlatform(),
-      IOSPlatform(),
-      LinuxPlatform(),
-      MacOSPlatform(),
-    ],
-  )
+  ///{@macro nosferatu500_inappwebview_platform_interface.PlatformInAppWebViewController.hasWebMessageListener.supported_platforms}
+  @SupportedPlatforms(platforms: [AndroidPlatform(), IOSPlatform()])
   bool hasWebMessageListener(PlatformWebMessageListener webMessageListener) {
     throw UnimplementedError(
       '${PlatformInAppWebViewControllerMethod.hasWebMessageListener.name} is not implemented on the current platform',
     );
   }
 
-  ///{@template flutter_inappwebview_platform_interface.PlatformInAppWebViewController.canScrollVertically}
+  ///{@template nosferatu500_inappwebview_platform_interface.PlatformInAppWebViewController.canScrollVertically}
   ///Returns `true` if the webpage can scroll vertically, otherwise `false`.
   ///{@endtemplate}
   ///
-  ///{@macro flutter_inappwebview_platform_interface.PlatformInAppWebViewController.canScrollVertically.supported_platforms}
-  @SupportedPlatforms(
-    platforms: [
-      AndroidPlatform(),
-      IOSPlatform(),
-      LinuxPlatform(note: 'This method is implemented using JavaScript.'),
-      MacOSPlatform(note: 'This method is implemented using JavaScript.'),
-      WebPlatform(),
-    ],
-  )
+  ///{@macro nosferatu500_inappwebview_platform_interface.PlatformInAppWebViewController.canScrollVertically.supported_platforms}
+  @SupportedPlatforms(platforms: [AndroidPlatform(), IOSPlatform()])
   Future<bool> canScrollVertically() {
     throw UnimplementedError(
       '${PlatformInAppWebViewControllerMethod.canScrollVertically.name} is not implemented on the current platform',
     );
   }
 
-  ///{@template flutter_inappwebview_platform_interface.PlatformInAppWebViewController.canScrollHorizontally}
+  ///{@template nosferatu500_inappwebview_platform_interface.PlatformInAppWebViewController.canScrollHorizontally}
   ///Returns `true` if the webpage can scroll horizontally, otherwise `false`.
   ///{@endtemplate}
   ///
-  ///{@macro flutter_inappwebview_platform_interface.PlatformInAppWebViewController.canScrollHorizontally.supported_platforms}
-  @SupportedPlatforms(
-    platforms: [
-      AndroidPlatform(),
-      IOSPlatform(),
-      LinuxPlatform(note: 'This method is implemented using JavaScript.'),
-      MacOSPlatform(note: 'This method is implemented using JavaScript.'),
-      WebPlatform(),
-    ],
-  )
+  ///{@macro nosferatu500_inappwebview_platform_interface.PlatformInAppWebViewController.canScrollHorizontally.supported_platforms}
+  @SupportedPlatforms(platforms: [AndroidPlatform(), IOSPlatform()])
   Future<bool> canScrollHorizontally() {
     throw UnimplementedError(
       '${PlatformInAppWebViewControllerMethod.canScrollHorizontally.name} is not implemented on the current platform',
     );
   }
 
-  ///{@template flutter_inappwebview_platform_interface.PlatformInAppWebViewController.clearSslPreferences}
+  ///{@template nosferatu500_inappwebview_platform_interface.PlatformInAppWebViewController.clearSslPreferences}
   ///Clears the SSL preferences table stored in response to proceeding with SSL certificate errors.
   ///{@endtemplate}
   ///
-  ///{@macro flutter_inappwebview_platform_interface.PlatformInAppWebViewController.clearSslPreferences.supported_platforms}
+  ///{@macro nosferatu500_inappwebview_platform_interface.PlatformInAppWebViewController.clearSslPreferences.supported_platforms}
   @SupportedPlatforms(
     platforms: [
       AndroidPlatform(
         apiName: 'WebView.clearSslPreferences',
         apiUrl:
             'https://developer.android.com/reference/android/webkit/WebView#clearSslPreferences()',
-      ),
-      WindowsPlatform(
-        apiName: 'ICoreWebView2_3.ClearServerCertificateErrorActions',
-        apiUrl:
-            'https://learn.microsoft.com/en-us/microsoft-edge/webview2/reference/win32/icorewebview2_14?view=webview2-1.0.2792.45#clearservercertificateerroractions',
       ),
     ],
   )
@@ -2926,23 +2353,18 @@ abstract class PlatformInAppWebViewController extends PlatformInterface
     );
   }
 
-  ///{@template flutter_inappwebview_platform_interface.PlatformInAppWebViewController.pause}
+  ///{@template nosferatu500_inappwebview_platform_interface.PlatformInAppWebViewController.pause}
   ///Does a best-effort attempt to pause any processing that can be paused safely, such as animations and geolocation. Note that this call does not pause JavaScript.
   ///To pause JavaScript globally, use [PlatformInAppWebViewController.pauseTimers]. To resume WebView, call [resume].
   ///{@endtemplate}
   ///
-  ///{@macro flutter_inappwebview_platform_interface.PlatformInAppWebViewController.pause.supported_platforms}
+  ///{@macro nosferatu500_inappwebview_platform_interface.PlatformInAppWebViewController.pause.supported_platforms}
   @SupportedPlatforms(
     platforms: [
       AndroidPlatform(
         apiName: 'WebView.onPause',
         apiUrl:
             'https://developer.android.com/reference/android/webkit/WebView#onPause()',
-      ),
-      WindowsPlatform(
-        apiName: 'ICoreWebView2_3.TrySuspend',
-        apiUrl:
-            'https://learn.microsoft.com/en-us/microsoft-edge/webview2/reference/win32/icorewebview2_3?view=webview2-1.0.2792.45#trysuspend',
       ),
     ],
   )
@@ -2952,22 +2374,17 @@ abstract class PlatformInAppWebViewController extends PlatformInterface
     );
   }
 
-  ///{@template flutter_inappwebview_platform_interface.PlatformInAppWebViewController.resume}
+  ///{@template nosferatu500_inappwebview_platform_interface.PlatformInAppWebViewController.resume}
   ///Resumes a WebView after a previous call to [pause].
   ///{@endtemplate}
   ///
-  ///{@macro flutter_inappwebview_platform_interface.PlatformInAppWebViewController.resume.supported_platforms}
+  ///{@macro nosferatu500_inappwebview_platform_interface.PlatformInAppWebViewController.resume.supported_platforms}
   @SupportedPlatforms(
     platforms: [
       AndroidPlatform(
         apiName: 'WebView.onResume',
         apiUrl:
             'https://developer.android.com/reference/android/webkit/WebView#onResume()',
-      ),
-      WindowsPlatform(
-        apiName: 'ICoreWebView2_3.Resume',
-        apiUrl:
-            'https://learn.microsoft.com/en-us/microsoft-edge/webview2/reference/win32/icorewebview2_3?view=webview2-1.0.2792.45#resume',
       ),
     ],
   )
@@ -2977,14 +2394,14 @@ abstract class PlatformInAppWebViewController extends PlatformInterface
     );
   }
 
-  ///{@template flutter_inappwebview_platform_interface.PlatformInAppWebViewController.pageDown}
+  ///{@template nosferatu500_inappwebview_platform_interface.PlatformInAppWebViewController.pageDown}
   ///Scrolls the contents of this WebView down by half the page size.
   ///Returns `true` if the page was scrolled.
   ///
   ///[bottom] `true` to jump to bottom of page.
   ///{@endtemplate}
   ///
-  ///{@macro flutter_inappwebview_platform_interface.PlatformInAppWebViewController.pageDown.supported_platforms}
+  ///{@macro nosferatu500_inappwebview_platform_interface.PlatformInAppWebViewController.pageDown.supported_platforms}
   @SupportedPlatforms(
     platforms: [
       AndroidPlatform(
@@ -3000,14 +2417,14 @@ abstract class PlatformInAppWebViewController extends PlatformInterface
     );
   }
 
-  ///{@template flutter_inappwebview_platform_interface.PlatformInAppWebViewController.pageUp}
+  ///{@template nosferatu500_inappwebview_platform_interface.PlatformInAppWebViewController.pageUp}
   ///Scrolls the contents of this WebView up by half the view size.
   ///Returns `true` if the page was scrolled.
   ///
   ///[top] `true` to jump to the top of the page.
   ///{@endtemplate}
   ///
-  ///{@macro flutter_inappwebview_platform_interface.PlatformInAppWebViewController.pageUp.supported_platforms}
+  ///{@macro nosferatu500_inappwebview_platform_interface.PlatformInAppWebViewController.pageUp.supported_platforms}
   @SupportedPlatforms(
     platforms: [
       AndroidPlatform(
@@ -3023,12 +2440,12 @@ abstract class PlatformInAppWebViewController extends PlatformInterface
     );
   }
 
-  ///{@template flutter_inappwebview_platform_interface.PlatformInAppWebViewController.zoomIn}
+  ///{@template nosferatu500_inappwebview_platform_interface.PlatformInAppWebViewController.zoomIn}
   ///Performs zoom in in this WebView.
   ///Returns `true` if zoom in succeeds, `false` if no zoom changes.
   ///{@endtemplate}
   ///
-  ///{@macro flutter_inappwebview_platform_interface.PlatformInAppWebViewController.zoomIn.supported_platforms}
+  ///{@macro nosferatu500_inappwebview_platform_interface.PlatformInAppWebViewController.zoomIn.supported_platforms}
   @SupportedPlatforms(
     platforms: [
       AndroidPlatform(
@@ -3044,12 +2461,12 @@ abstract class PlatformInAppWebViewController extends PlatformInterface
     );
   }
 
-  ///{@template flutter_inappwebview_platform_interface.PlatformInAppWebViewController.zoomOut}
+  ///{@template nosferatu500_inappwebview_platform_interface.PlatformInAppWebViewController.zoomOut}
   ///Performs zoom out in this WebView.
   ///Returns `true` if zoom out succeeds, `false` if no zoom changes.
   ///{@endtemplate}
   ///
-  ///{@macro flutter_inappwebview_platform_interface.PlatformInAppWebViewController.zoomOut.supported_platforms}
+  ///{@macro nosferatu500_inappwebview_platform_interface.PlatformInAppWebViewController.zoomOut.supported_platforms}
   @SupportedPlatforms(
     platforms: [
       AndroidPlatform(
@@ -3065,11 +2482,11 @@ abstract class PlatformInAppWebViewController extends PlatformInterface
     );
   }
 
-  ///{@template flutter_inappwebview_platform_interface.PlatformInAppWebViewController.clearHistory}
+  ///{@template nosferatu500_inappwebview_platform_interface.PlatformInAppWebViewController.clearHistory}
   ///Clears the internal back/forward list.
   ///{@endtemplate}
   ///
-  ///{@macro flutter_inappwebview_platform_interface.PlatformInAppWebViewController.clearHistory.supported_platforms}
+  ///{@macro nosferatu500_inappwebview_platform_interface.PlatformInAppWebViewController.clearHistory.supported_platforms}
   @SupportedPlatforms(
     platforms: [
       AndroidPlatform(
@@ -3085,13 +2502,13 @@ abstract class PlatformInAppWebViewController extends PlatformInterface
     );
   }
 
-  ///{@template flutter_inappwebview_platform_interface.PlatformInAppWebViewController.clearFormData}
+  ///{@template nosferatu500_inappwebview_platform_interface.PlatformInAppWebViewController.clearFormData}
   ///Removes the autocomplete popup from the currently focused form field, if present.
   ///Note this only affects the display of the autocomplete popup,
   ///it does not remove any saved form data from this WebView's store.
   ///{@endtemplate}
   ///
-  ///{@macro flutter_inappwebview_platform_interface.PlatformInAppWebViewController.clearFormData.supported_platforms}
+  ///{@macro nosferatu500_inappwebview_platform_interface.PlatformInAppWebViewController.clearFormData.supported_platforms}
   @SupportedPlatforms(
     platforms: [
       AndroidPlatform(
@@ -3107,27 +2524,17 @@ abstract class PlatformInAppWebViewController extends PlatformInterface
     );
   }
 
-  ///{@template flutter_inappwebview_platform_interface.PlatformInAppWebViewController.reloadFromOrigin}
+  ///{@template nosferatu500_inappwebview_platform_interface.PlatformInAppWebViewController.reloadFromOrigin}
   ///Reloads the current page, performing end-to-end revalidation using cache-validating conditionals if possible.
   ///{@endtemplate}
   ///
-  ///{@macro flutter_inappwebview_platform_interface.PlatformInAppWebViewController.reloadFromOrigin.supported_platforms}
+  ///{@macro nosferatu500_inappwebview_platform_interface.PlatformInAppWebViewController.reloadFromOrigin.supported_platforms}
   @SupportedPlatforms(
     platforms: [
       IOSPlatform(
         apiName: 'WKWebView.reloadFromOrigin',
         apiUrl:
             'https://developer.apple.com/documentation/webkit/wkwebview/1414956-reloadfromorigin',
-      ),
-      MacOSPlatform(
-        apiName: 'WKWebView.reloadFromOrigin',
-        apiUrl:
-            'https://developer.apple.com/documentation/webkit/wkwebview/1414956-reloadfromorigin',
-      ),
-      LinuxPlatform(
-        apiName: 'webkit_web_view_reload_bypass_cache',
-        apiUrl:
-            'https://wpewebkit.org/reference/stable/wpe-webkit-2.0/method.WebView.reload_bypass_cache.html',
       ),
     ],
   )
@@ -3137,14 +2544,14 @@ abstract class PlatformInAppWebViewController extends PlatformInterface
     );
   }
 
-  ///{@template flutter_inappwebview_platform_interface.PlatformInAppWebViewController.createPdf}
+  ///{@template nosferatu500_inappwebview_platform_interface.PlatformInAppWebViewController.createPdf}
   ///Generates PDF data from the web view’s contents asynchronously.
   ///Returns `null` if a problem occurred.
   ///
   ///[pdfConfiguration] represents the object that specifies the portion of the web view to capture as PDF data.
   ///{@endtemplate}
   ///
-  ///{@macro flutter_inappwebview_platform_interface.PlatformInAppWebViewController.createPdf.supported_platforms}
+  ///{@macro nosferatu500_inappwebview_platform_interface.PlatformInAppWebViewController.createPdf.supported_platforms}
   @SupportedPlatforms(
     platforms: [
       IOSPlatform(
@@ -3152,17 +2559,6 @@ abstract class PlatformInAppWebViewController extends PlatformInterface
         apiUrl:
             'https://developer.apple.com/documentation/webkit/wkwebview/3650490-createpdf',
         available: '14.0',
-      ),
-      MacOSPlatform(
-        apiName: 'WKWebView.createPdf',
-        apiUrl:
-            'https://developer.apple.com/documentation/webkit/wkwebview/3650490-createpdf',
-        available: '11.0',
-      ),
-      WindowsPlatform(
-        apiName: 'ICoreWebView2_16.PrintToPdfStream',
-        apiUrl:
-            'https://learn.microsoft.com/en-us/microsoft-edge/webview2/reference/win32/icorewebview2_16#printtopdfstream',
       ),
     ],
   )
@@ -3172,12 +2568,12 @@ abstract class PlatformInAppWebViewController extends PlatformInterface
     );
   }
 
-  ///{@template flutter_inappwebview_platform_interface.PlatformInAppWebViewController.createWebArchiveData}
+  ///{@template nosferatu500_inappwebview_platform_interface.PlatformInAppWebViewController.createWebArchiveData}
   ///Creates a web archive of the web view’s current contents asynchronously.
   ///Returns `null` if a problem occurred.
   ///{@endtemplate}
   ///
-  ///{@macro flutter_inappwebview_platform_interface.PlatformInAppWebViewController.createWebArchiveData.supported_platforms}
+  ///{@macro nosferatu500_inappwebview_platform_interface.PlatformInAppWebViewController.createWebArchiveData.supported_platforms}
   @SupportedPlatforms(
     platforms: [
       IOSPlatform(
@@ -3185,12 +2581,6 @@ abstract class PlatformInAppWebViewController extends PlatformInterface
         apiUrl:
             'https://developer.apple.com/documentation/webkit/wkwebview/3650491-createwebarchivedata',
         available: '14.0',
-      ),
-      MacOSPlatform(
-        apiName: 'WKWebView.createWebArchiveData',
-        apiUrl:
-            'https://developer.apple.com/documentation/webkit/wkwebview/3650491-createwebarchivedata',
-        available: '11.0',
       ),
     ],
   )
@@ -3200,19 +2590,14 @@ abstract class PlatformInAppWebViewController extends PlatformInterface
     );
   }
 
-  ///{@template flutter_inappwebview_platform_interface.PlatformInAppWebViewController.hasOnlySecureContent}
+  ///{@template nosferatu500_inappwebview_platform_interface.PlatformInAppWebViewController.hasOnlySecureContent}
   ///A Boolean value indicating whether all resources on the page have been loaded over securely encrypted connections.
   ///{@endtemplate}
   ///
-  ///{@macro flutter_inappwebview_platform_interface.PlatformInAppWebViewController.hasOnlySecureContent.supported_platforms}
+  ///{@macro nosferatu500_inappwebview_platform_interface.PlatformInAppWebViewController.hasOnlySecureContent.supported_platforms}
   @SupportedPlatforms(
     platforms: [
       IOSPlatform(
-        apiName: 'WKWebView.hasOnlySecureContent',
-        apiUrl:
-            'https://developer.apple.com/documentation/webkit/wkwebview/1415002-hasonlysecurecontent',
-      ),
-      MacOSPlatform(
         apiName: 'WKWebView.hasOnlySecureContent',
         apiUrl:
             'https://developer.apple.com/documentation/webkit/wkwebview/1415002-hasonlysecurecontent',
@@ -3225,11 +2610,116 @@ abstract class PlatformInAppWebViewController extends PlatformInterface
     );
   }
 
-  ///{@template flutter_inappwebview_platform_interface.PlatformInAppWebViewController.pauseAllMediaPlayback}
+  ///{@template nosferatu500_inappwebview_platform_interface.PlatformInAppWebViewController.isBlockedByScreenTime}
+  ///Returns whether Screen Time restrictions are currently blocking the content of this WebView.
+  ///
+  ///Returns `null` when the platform cannot answer — on any platform other than iOS, and on iOS
+  ///versions below 26.0, where the underlying property does not exist. That is deliberately
+  ///distinct from `false`, which means *the platform was asked and the content is not blocked*.
+  ///
+  ///**NOTE for iOS**: there is **no change notification** for this value. WebKit does not document
+  ///`WKWebView.isBlockedByScreenTime` as KVO-compliant and this plugin exposes no event for it, so
+  ///the value has to be read when it matters — after
+  ///[PlatformWebViewCreationParams.onLoadStop], for example. It is also per-*content*, not
+  ///per-WebView: the same WebView answers `true` for a blocked page and `false` after navigating
+  ///to an allowed one.
+  ///
+  ///**NOTE for iOS**: this reports blocking, it does not cause it. Whether WebKit also draws its
+  ///own explanation over the WebView is controlled by
+  ///[InAppWebViewSettings.showsSystemScreenTimeBlockingView], which is a creation-time setting.
+  ///{@endtemplate}
+  ///
+  ///{@macro nosferatu500_inappwebview_platform_interface.PlatformInAppWebViewController.isBlockedByScreenTime.supported_platforms}
+  @SupportedPlatforms(
+    platforms: [
+      IOSPlatform(
+        apiName: 'WKWebView.isBlockedByScreenTime',
+        apiUrl:
+            'https://developer.apple.com/documentation/webkit/wkwebview/isblockedbyscreentime',
+        available: '26.0',
+        note:
+            'Returns `null` below iOS 26.0. No change notification exists — read it when it matters.',
+      ),
+    ],
+  )
+  Future<bool?> isBlockedByScreenTime() {
+    throw UnimplementedError(
+      '${PlatformInAppWebViewControllerMethod.isBlockedByScreenTime.name} is not implemented on the current platform',
+    );
+  }
+
+  ///{@template nosferatu500_inappwebview_platform_interface.PlatformInAppWebViewController.setConversationContext}
+  ///Gives the system keyboard the conversation the user is replying to, so it can offer **Smart
+  ///Replies** while they type into a web text field.
+  ///
+  ///[conversationContext] is the thread: its messages, who sent them, and who the participants are.
+  ///Pass an empty [ConversationContext] to stop offering suggestions.
+  ///
+  ///**NOTE for iOS**: set it **before the keyboard appears.** WebKit's documentation is explicit —
+  ///the keyboard reads the context when it comes up — so a context set while the keyboard is
+  ///already open takes effect on its *next* appearance, not immediately. Call this again whenever
+  ///the conversation changes.
+  ///
+  ///**NOTE for iOS**: this is a `WKWebView` property, not a configuration one, so it applies to a
+  ///running WebView and does not need it recreated.
+  ///
+  ///**NOTE for iOS**: an entry missing any of `text`, `senderIdentifier`, `sentDate` or
+  ///`entryIdentifier` is **dropped** rather than sent half-built — the native type declares all four
+  ///non-null, and a message with no sender or date would mis-attribute or reorder the thread the
+  ///keyboard reasons about.
+  ///{@endtemplate}
+  ///
+  ///{@macro nosferatu500_inappwebview_platform_interface.PlatformInAppWebViewController.setConversationContext.supported_platforms}
+  @SupportedPlatforms(
+    platforms: [
+      IOSPlatform(
+        apiName: 'WKWebView.conversationContext',
+        apiUrl:
+            'https://developer.apple.com/documentation/webkit/wkwebview/conversationcontext',
+        available: '26.0',
+        note:
+            'Read by the keyboard when it appears, so set it beforehand. Entries missing a required field are dropped.',
+      ),
+    ],
+  )
+  Future<void> setConversationContext({
+    required ConversationContext conversationContext,
+  }) {
+    throw UnimplementedError(
+      '${PlatformInAppWebViewControllerMethod.setConversationContext.name} is not implemented on the current platform',
+    );
+  }
+
+  ///{@template nosferatu500_inappwebview_platform_interface.PlatformInAppWebViewController.getConversationContext}
+  ///Returns the conversation currently handed to the keyboard, or `null` when the platform cannot
+  ///answer — every platform but iOS, and iOS below 26.0.
+  ///
+  ///This reads back what was last given to
+  ///[PlatformInAppWebViewController.setConversationContext]; the WebView never populates it itself.
+  ///{@endtemplate}
+  ///
+  ///{@macro nosferatu500_inappwebview_platform_interface.PlatformInAppWebViewController.getConversationContext.supported_platforms}
+  @SupportedPlatforms(
+    platforms: [
+      IOSPlatform(
+        apiName: 'WKWebView.conversationContext',
+        apiUrl:
+            'https://developer.apple.com/documentation/webkit/wkwebview/conversationcontext',
+        available: '26.0',
+      ),
+    ],
+  )
+  Future<ConversationContext?> getConversationContext() {
+    throw UnimplementedError(
+      '${PlatformInAppWebViewControllerMethod.getConversationContext.name} is not implemented on the current platform',
+    );
+  }
+
+  ///{@template nosferatu500_inappwebview_platform_interface.PlatformInAppWebViewController.pauseAllMediaPlayback}
   ///Pauses playback of all media in the web view.
   ///{@endtemplate}
   ///
-  ///{@macro flutter_inappwebview_platform_interface.PlatformInAppWebViewController.pauseAllMediaPlayback.supported_platforms}
+  ///{@macro nosferatu500_inappwebview_platform_interface.PlatformInAppWebViewController.pauseAllMediaPlayback.supported_platforms}
   @SupportedPlatforms(
     platforms: [
       IOSPlatform(
@@ -3237,18 +2727,6 @@ abstract class PlatformInAppWebViewController extends PlatformInterface
         apiUrl:
             'https://developer.apple.com/documentation/webkit/wkwebview/3752240-pauseallmediaplayback',
         available: '15.0',
-      ),
-      MacOSPlatform(
-        apiName: 'WKWebView.pauseAllMediaPlayback',
-        apiUrl:
-            'https://developer.apple.com/documentation/webkit/wkwebview/3752240-pauseallmediaplayback',
-        available: '12.0',
-      ),
-      LinuxPlatform(
-        apiName: 'JavaScript HTMLMediaElement.pause()',
-        apiUrl:
-            'https://developer.mozilla.org/en-US/docs/Web/API/HTMLMediaElement/pause',
-        note: 'Uses JavaScript to pause all audio and video elements',
       ),
     ],
   )
@@ -3258,14 +2736,14 @@ abstract class PlatformInAppWebViewController extends PlatformInterface
     );
   }
 
-  ///{@template flutter_inappwebview_platform_interface.PlatformInAppWebViewController.setAllMediaPlaybackSuspended}
+  ///{@template nosferatu500_inappwebview_platform_interface.PlatformInAppWebViewController.setAllMediaPlaybackSuspended}
   ///Changes whether the webpage is suspending playback of all media in the page.
   ///Pass `true` to pause all media the web view is playing. Neither the user nor the webpage can resume playback until you call this method again with `false`.
   ///
   ///[suspended] represents a [bool] value that indicates whether the webpage should suspend media playback.
   ///{@endtemplate}
   ///
-  ///{@macro flutter_inappwebview_platform_interface.PlatformInAppWebViewController.setAllMediaPlaybackSuspended.supported_platforms}
+  ///{@macro nosferatu500_inappwebview_platform_interface.PlatformInAppWebViewController.setAllMediaPlaybackSuspended.supported_platforms}
   @SupportedPlatforms(
     platforms: [
       IOSPlatform(
@@ -3273,18 +2751,6 @@ abstract class PlatformInAppWebViewController extends PlatformInterface
         apiUrl:
             'https://developer.apple.com/documentation/webkit/wkwebview/3752242-setallmediaplaybacksuspended',
         available: '15.0',
-      ),
-      MacOSPlatform(
-        apiName: 'WKWebView.setAllMediaPlaybackSuspended',
-        apiUrl:
-            'https://developer.apple.com/documentation/webkit/wkwebview/3752242-setallmediaplaybacksuspended',
-        available: '12.0',
-      ),
-      LinuxPlatform(
-        apiName: 'JavaScript HTMLMediaElement.pause()/play()',
-        apiUrl:
-            'https://developer.mozilla.org/en-US/docs/Web/API/HTMLMediaElement',
-        note: 'Uses JavaScript to suspend/resume all media elements',
       ),
     ],
   )
@@ -3294,11 +2760,11 @@ abstract class PlatformInAppWebViewController extends PlatformInterface
     );
   }
 
-  ///{@template flutter_inappwebview_platform_interface.PlatformInAppWebViewController.closeAllMediaPresentations}
+  ///{@template nosferatu500_inappwebview_platform_interface.PlatformInAppWebViewController.closeAllMediaPresentations}
   ///Closes all media the web view is presenting, including picture-in-picture video and fullscreen video.
   ///{@endtemplate}
   ///
-  ///{@macro flutter_inappwebview_platform_interface.PlatformInAppWebViewController.closeAllMediaPresentations.supported_platforms}
+  ///{@macro nosferatu500_inappwebview_platform_interface.PlatformInAppWebViewController.closeAllMediaPresentations.supported_platforms}
   @SupportedPlatforms(
     platforms: [
       IOSPlatform(
@@ -3306,18 +2772,6 @@ abstract class PlatformInAppWebViewController extends PlatformInterface
         apiUrl:
             'https://developer.apple.com/documentation/webkit/wkwebview/3752235-closeallmediapresentations',
         available: '14.5',
-      ),
-      MacOSPlatform(
-        apiName: 'WKWebView.closeAllMediaPresentations',
-        apiUrl:
-            'https://developer.apple.com/documentation/webkit/wkwebview/3752235-closeallmediapresentations',
-        available: '11.3',
-      ),
-      LinuxPlatform(
-        apiName: 'JavaScript Document.exitFullscreen()/exitPictureInPicture()',
-        apiUrl:
-            'https://developer.mozilla.org/en-US/docs/Web/API/Document/exitFullscreen',
-        note: 'Uses JavaScript to exit fullscreen and picture-in-picture modes',
       ),
     ],
   )
@@ -3327,13 +2781,13 @@ abstract class PlatformInAppWebViewController extends PlatformInterface
     );
   }
 
-  ///{@template flutter_inappwebview_platform_interface.PlatformInAppWebViewController.requestMediaPlaybackState}
+  ///{@template nosferatu500_inappwebview_platform_interface.PlatformInAppWebViewController.requestMediaPlaybackState}
   ///Requests the playback status of media in the web view.
   ///Returns a [MediaPlaybackState] that indicates whether the media in the web view is playing, paused, or suspended.
   ///If there’s no media in the web view to play, this method provides [MediaPlaybackState.NONE].
   ///{@endtemplate}
   ///
-  ///{@macro flutter_inappwebview_platform_interface.PlatformInAppWebViewController.requestMediaPlaybackState.supported_platforms}
+  ///{@macro nosferatu500_inappwebview_platform_interface.PlatformInAppWebViewController.requestMediaPlaybackState.supported_platforms}
   @SupportedPlatforms(
     platforms: [
       IOSPlatform(
@@ -3341,18 +2795,6 @@ abstract class PlatformInAppWebViewController extends PlatformInterface
         apiUrl:
             'https://developer.apple.com/documentation/webkit/wkwebview/3752241-requestmediaplaybackstate',
         available: '15.0',
-      ),
-      MacOSPlatform(
-        apiName: 'WKWebView.requestMediaPlaybackState',
-        apiUrl:
-            'https://developer.apple.com/documentation/webkit/wkwebview/3752241-requestmediaplaybackstate',
-        available: '12.0',
-      ),
-      LinuxPlatform(
-        apiName: 'JavaScript HTMLMediaElement.paused',
-        apiUrl:
-            'https://developer.mozilla.org/en-US/docs/Web/API/HTMLMediaElement/paused',
-        note: 'Uses JavaScript to query media playback state',
       ),
     ],
   )
@@ -3362,190 +2804,23 @@ abstract class PlatformInAppWebViewController extends PlatformInterface
     );
   }
 
-  ///{@template flutter_inappwebview_platform_interface.PlatformInAppWebViewController.isInFullscreen}
+  ///{@template nosferatu500_inappwebview_platform_interface.PlatformInAppWebViewController.isInFullscreen}
   ///Returns `true` if the `WebView` is in fullscreen mode, otherwise `false`.
   ///{@endtemplate}
   ///
-  ///{@macro flutter_inappwebview_platform_interface.PlatformInAppWebViewController.isInFullscreen.supported_platforms}
-  @SupportedPlatforms(
-    platforms: [
-      AndroidPlatform(),
-      IOSPlatform(),
-      MacOSPlatform(),
-      LinuxPlatform(),
-    ],
-  )
+  ///{@macro nosferatu500_inappwebview_platform_interface.PlatformInAppWebViewController.isInFullscreen.supported_platforms}
+  @SupportedPlatforms(platforms: [AndroidPlatform(), IOSPlatform()])
   Future<bool> isInFullscreen() {
     throw UnimplementedError(
       '${PlatformInAppWebViewControllerMethod.isInFullscreen.name} is not implemented on the current platform',
     );
   }
 
-  ///{@template flutter_inappwebview_platform_interface.PlatformInAppWebViewController.requestEnterFullscreen}
-  ///Requests the WebView to enter fullscreen mode.
-  ///This dispatches a fullscreen request to the WPE backend.
-  ///{@endtemplate}
-  ///
-  ///{@macro flutter_inappwebview_platform_interface.PlatformInAppWebViewController.requestEnterFullscreen.supported_platforms}
-  @SupportedPlatforms(platforms: [LinuxPlatform()])
-  Future<void> requestEnterFullscreen() {
-    throw UnimplementedError(
-      '${PlatformInAppWebViewControllerMethod.requestEnterFullscreen.name} is not implemented on the current platform',
-    );
-  }
-
-  ///{@template flutter_inappwebview_platform_interface.PlatformInAppWebViewController.requestExitFullscreen}
-  ///Requests the WebView to exit fullscreen mode.
-  ///This dispatches an exit fullscreen request to the WPE backend.
-  ///{@endtemplate}
-  ///
-  ///{@macro flutter_inappwebview_platform_interface.PlatformInAppWebViewController.requestExitFullscreen.supported_platforms}
-  @SupportedPlatforms(platforms: [LinuxPlatform()])
-  Future<void> requestExitFullscreen() {
-    throw UnimplementedError(
-      '${PlatformInAppWebViewControllerMethod.requestExitFullscreen.name} is not implemented on the current platform',
-    );
-  }
-
-  ///{@template flutter_inappwebview_platform_interface.PlatformInAppWebViewController.setVisible}
-  ///Sets the visibility state of the WebView.
-  ///When set to `false`, the WebView is marked as hidden which may reduce resource usage.
-  ///{@endtemplate}
-  ///
-  ///{@macro flutter_inappwebview_platform_interface.PlatformInAppWebViewController.setVisible.supported_platforms}
-  @SupportedPlatforms(platforms: [LinuxPlatform()])
-  Future<void> setVisible({required bool visible}) {
-    throw UnimplementedError(
-      '${PlatformInAppWebViewControllerMethod.setVisible.name} is not implemented on the current platform',
-    );
-  }
-
-  ///{@template flutter_inappwebview_platform_interface.PlatformInAppWebViewController.setTargetRefreshRate}
-  ///Sets the target refresh rate for the WebView in Hz.
-  ///A value of 0 means the default rate.
-  ///{@endtemplate}
-  ///
-  ///{@macro flutter_inappwebview_platform_interface.PlatformInAppWebViewController.setTargetRefreshRate.supported_platforms}
-  @SupportedPlatforms(platforms: [LinuxPlatform()])
-  Future<void> setTargetRefreshRate({required int rate}) {
-    throw UnimplementedError(
-      '${PlatformInAppWebViewControllerMethod.setTargetRefreshRate.name} is not implemented on the current platform',
-    );
-  }
-
-  ///{@template flutter_inappwebview_platform_interface.PlatformInAppWebViewController.getTargetRefreshRate}
-  ///Gets the current target refresh rate for the WebView in Hz.
-  ///{@endtemplate}
-  ///
-  ///{@macro flutter_inappwebview_platform_interface.PlatformInAppWebViewController.getTargetRefreshRate.supported_platforms}
-  @SupportedPlatforms(platforms: [LinuxPlatform()])
-  Future<int> getTargetRefreshRate() {
-    throw UnimplementedError(
-      '${PlatformInAppWebViewControllerMethod.getTargetRefreshRate.name} is not implemented on the current platform',
-    );
-  }
-
-  ///{@template flutter_inappwebview_platform_interface.PlatformInAppWebViewController.getScreenScale}
-  ///Gets the device pixel ratio (scale factor) of the screen where the WebView is displayed.
-  ///
-  ///The scale factor represents the ratio between physical pixels and logical pixels.
-  ///For example, on a HiDPI display, this might return 2.0.
-  ///{@endtemplate}
-  ///
-  ///{@macro flutter_inappwebview_platform_interface.PlatformInAppWebViewController.getScreenScale.supported_platforms}
-  @SupportedPlatforms(
-    platforms: [
-      LinuxPlatform(
-        apiName: 'wpe_screen_get_scale',
-        apiUrl:
-            'https://wpewebkit.org/reference/stable/wpe-platform-1.0/method.Screen.get_scale.html',
-      ),
-    ],
-  )
-  Future<double> getScreenScale() {
-    throw UnimplementedError(
-      '${PlatformInAppWebViewControllerMethod.getScreenScale.name} is not implemented on the current platform',
-    );
-  }
-
-  ///{@template flutter_inappwebview_platform_interface.PlatformInAppWebViewController.setScreenScale}
-  ///Sets the device pixel ratio (scale factor) for the screen where the WebView is displayed.
-  ///
-  ///The scale factor represents the ratio between physical pixels and logical pixels.
-  ///Setting this affects how content is rendered on HiDPI displays.
-  ///{@endtemplate}
-  ///
-  ///{@macro flutter_inappwebview_platform_interface.PlatformInAppWebViewController.setScreenScale.supported_platforms}
-  @SupportedPlatforms(
-    platforms: [
-      LinuxPlatform(
-        apiName: 'wpe_screen_set_scale',
-        apiUrl:
-            'https://wpewebkit.org/reference/stable/wpe-platform-1.0/method.Screen.set_scale.html',
-      ),
-    ],
-  )
-  Future<void> setScreenScale({required double scale}) {
-    throw UnimplementedError(
-      '${PlatformInAppWebViewControllerMethod.setScreenScale.name} is not implemented on the current platform',
-    );
-  }
-
-  ///{@template flutter_inappwebview_platform_interface.PlatformInAppWebViewController.isVisible}
-  ///Returns whether the WebView is currently visible.
-  ///
-  ///On Linux, this checks the WPE view visibility state.
-  ///For the legacy FDO backend, this returns the last known visibility state.
-  ///{@endtemplate}
-  ///
-  ///{@macro flutter_inappwebview_platform_interface.PlatformInAppWebViewController.isVisible.supported_platforms}
-  @SupportedPlatforms(
-    platforms: [
-      LinuxPlatform(
-        apiName: 'wpe_view_get_visible',
-        apiUrl:
-            'https://wpewebkit.org/reference/stable/wpe-platform-1.0/method.View.get_visible.html',
-      ),
-    ],
-  )
-  Future<bool> isVisible() {
-    throw UnimplementedError(
-      '${PlatformInAppWebViewControllerMethod.isVisible.name} is not implemented on the current platform',
-    );
-  }
-
-  ///{@template flutter_inappwebview_platform_interface.PlatformInAppWebViewController.requestPointerLock}
-  ///Requests pointer lock for the WebView.
-  ///Pointer lock is useful for games and immersive applications.
-  ///Returns `true` if the request was granted, `false` otherwise.
-  ///{@endtemplate}
-  ///
-  ///{@macro flutter_inappwebview_platform_interface.PlatformInAppWebViewController.requestPointerLock.supported_platforms}
-  @SupportedPlatforms(platforms: [LinuxPlatform()])
-  Future<bool> requestPointerLock() {
-    throw UnimplementedError(
-      '${PlatformInAppWebViewControllerMethod.requestPointerLock.name} is not implemented on the current platform',
-    );
-  }
-
-  ///{@template flutter_inappwebview_platform_interface.PlatformInAppWebViewController.requestPointerUnlock}
-  ///Releases the pointer lock for the WebView.
-  ///Returns `true` if the unlock was successful, `false` otherwise.
-  ///{@endtemplate}
-  ///
-  ///{@macro flutter_inappwebview_platform_interface.PlatformInAppWebViewController.requestPointerUnlock.supported_platforms}
-  @SupportedPlatforms(platforms: [LinuxPlatform()])
-  Future<bool> requestPointerUnlock() {
-    throw UnimplementedError(
-      '${PlatformInAppWebViewControllerMethod.requestPointerUnlock.name} is not implemented on the current platform',
-    );
-  }
-
-  ///{@template flutter_inappwebview_platform_interface.PlatformInAppWebViewController.getCameraCaptureState}
+  ///{@template nosferatu500_inappwebview_platform_interface.PlatformInAppWebViewController.getCameraCaptureState}
   ///Returns a [MediaCaptureState] that indicates whether the webpage is using the camera to capture images or video.
   ///{@endtemplate}
   ///
-  ///{@macro flutter_inappwebview_platform_interface.PlatformInAppWebViewController.getCameraCaptureState.supported_platforms}
+  ///{@macro nosferatu500_inappwebview_platform_interface.PlatformInAppWebViewController.getCameraCaptureState.supported_platforms}
   @SupportedPlatforms(
     platforms: [
       IOSPlatform(
@@ -3553,18 +2828,6 @@ abstract class PlatformInAppWebViewController extends PlatformInterface
         apiUrl:
             'https://developer.apple.com/documentation/webkit/wkwebview/3763093-cameracapturestate',
         available: '15.0',
-      ),
-      LinuxPlatform(
-        apiName: 'webkit_web_view_get_camera_capture_state',
-        apiUrl:
-            'https://wpewebkit.org/reference/stable/wpe-webkit-2.0/method.WebView.get_camera_capture_state.html',
-        available: '2.34',
-      ),
-      MacOSPlatform(
-        apiName: 'WKWebView.cameraCaptureState',
-        apiUrl:
-            'https://developer.apple.com/documentation/webkit/wkwebview/3763093-cameracapturestate',
-        available: '12.0',
       ),
     ],
   )
@@ -3574,11 +2837,11 @@ abstract class PlatformInAppWebViewController extends PlatformInterface
     );
   }
 
-  ///{@template flutter_inappwebview_platform_interface.PlatformInAppWebViewController.setCameraCaptureState}
+  ///{@template nosferatu500_inappwebview_platform_interface.PlatformInAppWebViewController.setCameraCaptureState}
   ///Changes whether the webpage is using the camera to capture images or video.
   ///{@endtemplate}
   ///
-  ///{@macro flutter_inappwebview_platform_interface.PlatformInAppWebViewController.setCameraCaptureState.supported_platforms}
+  ///{@macro nosferatu500_inappwebview_platform_interface.PlatformInAppWebViewController.setCameraCaptureState.supported_platforms}
   @SupportedPlatforms(
     platforms: [
       IOSPlatform(
@@ -3586,20 +2849,6 @@ abstract class PlatformInAppWebViewController extends PlatformInterface
         apiUrl:
             'https://developer.apple.com/documentation/webkit/wkwebview/3763097-setcameracapturestate',
         available: '15.0',
-      ),
-      LinuxPlatform(
-        apiName: 'webkit_web_view_set_camera_capture_state',
-        apiUrl:
-            'https://wpewebkit.org/reference/stable/wpe-webkit-2.0/method.WebView.set_camera_capture_state.html',
-        available: '2.34',
-        note:
-            'Once state is set to NONE, it cannot be changed back. The page can request capture again using the mediaDevices API.',
-      ),
-      MacOSPlatform(
-        apiName: 'WKWebView.setCameraCaptureState',
-        apiUrl:
-            'https://developer.apple.com/documentation/webkit/wkwebview/3763097-setcameracapturestate',
-        available: '12.0',
       ),
     ],
   )
@@ -3609,11 +2858,11 @@ abstract class PlatformInAppWebViewController extends PlatformInterface
     );
   }
 
-  ///{@template flutter_inappwebview_platform_interface.PlatformInAppWebViewController.getMicrophoneCaptureState}
+  ///{@template nosferatu500_inappwebview_platform_interface.PlatformInAppWebViewController.getMicrophoneCaptureState}
   ///Returns a [MediaCaptureState] that indicates whether the webpage is using the microphone to capture audio.
   ///{@endtemplate}
   ///
-  ///{@macro flutter_inappwebview_platform_interface.PlatformInAppWebViewController.getMicrophoneCaptureState.supported_platforms}
+  ///{@macro nosferatu500_inappwebview_platform_interface.PlatformInAppWebViewController.getMicrophoneCaptureState.supported_platforms}
   @SupportedPlatforms(
     platforms: [
       IOSPlatform(
@@ -3621,18 +2870,6 @@ abstract class PlatformInAppWebViewController extends PlatformInterface
         apiUrl:
             'https://developer.apple.com/documentation/webkit/wkwebview/3763096-microphonecapturestate',
         available: '15.0',
-      ),
-      LinuxPlatform(
-        apiName: 'webkit_web_view_get_microphone_capture_state',
-        apiUrl:
-            'https://wpewebkit.org/reference/stable/wpe-webkit-2.0/method.WebView.get_microphone_capture_state.html',
-        available: '2.34',
-      ),
-      MacOSPlatform(
-        apiName: 'WKWebView.microphoneCaptureState',
-        apiUrl:
-            'https://developer.apple.com/documentation/webkit/wkwebview/3763096-microphonecapturestate',
-        available: '12.0',
       ),
     ],
   )
@@ -3642,11 +2879,11 @@ abstract class PlatformInAppWebViewController extends PlatformInterface
     );
   }
 
-  ///{@template flutter_inappwebview_platform_interface.PlatformInAppWebViewController.setMicrophoneCaptureState}
+  ///{@template nosferatu500_inappwebview_platform_interface.PlatformInAppWebViewController.setMicrophoneCaptureState}
   ///Changes whether the webpage is using the microphone to capture audio.
   ///{@endtemplate}
   ///
-  ///{@macro flutter_inappwebview_platform_interface.PlatformInAppWebViewController.setMicrophoneCaptureState.supported_platforms}
+  ///{@macro nosferatu500_inappwebview_platform_interface.PlatformInAppWebViewController.setMicrophoneCaptureState.supported_platforms}
   @SupportedPlatforms(
     platforms: [
       IOSPlatform(
@@ -3654,20 +2891,6 @@ abstract class PlatformInAppWebViewController extends PlatformInterface
         apiUrl:
             'https://developer.apple.com/documentation/webkit/wkwebview/3763098-setmicrophonecapturestate',
         available: '15.0',
-      ),
-      LinuxPlatform(
-        apiName: 'webkit_web_view_set_microphone_capture_state',
-        apiUrl:
-            'https://wpewebkit.org/reference/stable/wpe-webkit-2.0/method.WebView.set_microphone_capture_state.html',
-        available: '2.34',
-        note:
-            'Once state is set to NONE, it cannot be changed back. The page can request capture again using the mediaDevices API.',
-      ),
-      MacOSPlatform(
-        apiName: 'WKWebView.setMicrophoneCaptureState',
-        apiUrl:
-            'https://developer.apple.com/documentation/webkit/wkwebview/3763098-setmicrophonecapturestate',
-        available: '12.0',
       ),
     ],
   )
@@ -3677,107 +2900,7 @@ abstract class PlatformInAppWebViewController extends PlatformInterface
     );
   }
 
-  ///{@template flutter_inappwebview_platform_interface.PlatformInAppWebViewController.isPlayingAudio}
-  ///Returns whether the webpage is playing audio.
-  ///
-  ///Returns `true` if the page is playing audio, `false` otherwise.
-  ///This is useful for providing visual feedback when a page is producing sound.
-  ///{@endtemplate}
-  ///
-  ///{@macro flutter_inappwebview_platform_interface.PlatformInAppWebViewController.isPlayingAudio.supported_platforms}
-  @SupportedPlatforms(
-    platforms: [
-      LinuxPlatform(
-        apiName: 'webkit_web_view_is_playing_audio',
-        apiUrl:
-            'https://wpewebkit.org/reference/stable/wpe-webkit-2.0/method.WebView.is_playing_audio.html',
-        available: '2.8',
-      ),
-    ],
-  )
-  Future<bool> isPlayingAudio() {
-    throw UnimplementedError(
-      '${PlatformInAppWebViewControllerMethod.isPlayingAudio.name} is not implemented on the current platform',
-    );
-  }
-
-  ///{@template flutter_inappwebview_platform_interface.PlatformInAppWebViewController.isMuted}
-  ///Returns whether the webpage audio is muted.
-  ///
-  ///Returns `true` if the page audio is muted, `false` otherwise.
-  ///{@endtemplate}
-  ///
-  ///{@macro flutter_inappwebview_platform_interface.PlatformInAppWebViewController.isMuted.supported_platforms}
-  @SupportedPlatforms(
-    platforms: [
-      LinuxPlatform(
-        apiName: 'webkit_web_view_get_is_muted',
-        apiUrl:
-            'https://wpewebkit.org/reference/stable/wpe-webkit-2.0/method.WebView.get_is_muted.html',
-        available: '2.30',
-      ),
-    ],
-  )
-  Future<bool> isMuted() {
-    throw UnimplementedError(
-      '${PlatformInAppWebViewControllerMethod.isMuted.name} is not implemented on the current platform',
-    );
-  }
-
-  ///{@template flutter_inappwebview_platform_interface.PlatformInAppWebViewController.setMuted}
-  ///Sets the mute state of the webpage.
-  ///
-  ///When [muted] is `true`, the webpage audio will be muted.
-  ///When [muted] is `false`, the webpage audio will be unmuted.
-  ///{@endtemplate}
-  ///
-  ///{@macro flutter_inappwebview_platform_interface.PlatformInAppWebViewController.setMuted.supported_platforms}
-  @SupportedPlatforms(
-    platforms: [
-      LinuxPlatform(
-        apiName: 'webkit_web_view_set_is_muted',
-        apiUrl:
-            'https://wpewebkit.org/reference/stable/wpe-webkit-2.0/method.WebView.set_is_muted.html',
-        available: '2.30',
-      ),
-    ],
-  )
-  Future<void> setMuted({required bool muted}) {
-    throw UnimplementedError(
-      '${PlatformInAppWebViewControllerMethod.setMuted.name} is not implemented on the current platform',
-    );
-  }
-
-  ///{@template flutter_inappwebview_platform_interface.PlatformInAppWebViewController.terminateWebProcess}
-  ///Terminates the web process associated to the WebView.
-  ///
-  ///When the web process is terminated using this method, the
-  ///[PlatformWebViewCreationParams.onRenderProcessGone] callback is invoked
-  ///with the reason set to indicate the process was terminated by the API.
-  ///
-  ///**Note**: This is a destructive operation that will crash the web content.
-  ///Use this only when you need to forcefully kill an unresponsive or
-  ///misbehaving web process.
-  ///{@endtemplate}
-  ///
-  ///{@macro flutter_inappwebview_platform_interface.PlatformInAppWebViewController.terminateWebProcess.supported_platforms}
-  @SupportedPlatforms(
-    platforms: [
-      LinuxPlatform(
-        apiName: 'webkit_web_view_terminate_web_process',
-        apiUrl:
-            'https://wpewebkit.org/reference/stable/wpe-webkit-2.0/method.WebView.terminate_web_process.html',
-        available: '2.34',
-      ),
-    ],
-  )
-  Future<void> terminateWebProcess() {
-    throw UnimplementedError(
-      '${PlatformInAppWebViewControllerMethod.terminateWebProcess.name} is not implemented on the current platform',
-    );
-  }
-
-  ///{@template flutter_inappwebview_platform_interface.PlatformInAppWebViewController.loadSimulatedRequest}
+  ///{@template nosferatu500_inappwebview_platform_interface.PlatformInAppWebViewController.loadSimulatedRequest}
   ///Loads the web content from the data you provide as if the data were the response to the request.
   ///If [urlResponse] is `null`, it loads the web content from the data as an utf8 encoded HTML string as the response to the request.
   ///
@@ -3797,7 +2920,7 @@ abstract class PlatformInAppWebViewController extends PlatformInterface
   ///```
   ///{@endtemplate}
   ///
-  ///{@macro flutter_inappwebview_platform_interface.PlatformInAppWebViewController.loadSimulatedRequest.supported_platforms}
+  ///{@macro nosferatu500_inappwebview_platform_interface.PlatformInAppWebViewController.loadSimulatedRequest.supported_platforms}
   @SupportedPlatforms(
     platforms: [
       IOSPlatform(
@@ -3805,14 +2928,6 @@ abstract class PlatformInAppWebViewController extends PlatformInterface
         apiUrl:
             'https://developer.apple.com/documentation/webkit/wkwebview/3763094-loadsimulatedrequest',
         available: '15.0',
-        note:
-            'or [Official API - WKWebView.loadSimulatedRequest(_:responseHTML:)](https://developer.apple.com/documentation/webkit/wkwebview/3763095-loadsimulatedrequest)',
-      ),
-      MacOSPlatform(
-        apiName: 'WKWebView.loadSimulatedRequest(_:response:responseData:)',
-        apiUrl:
-            'https://developer.apple.com/documentation/webkit/wkwebview/3763094-loadsimulatedrequest',
-        available: '12.0',
         note:
             'or [Official API - WKWebView.loadSimulatedRequest(_:responseHTML:)](https://developer.apple.com/documentation/webkit/wkwebview/3763095-loadsimulatedrequest)',
       ),
@@ -3828,156 +2943,84 @@ abstract class PlatformInAppWebViewController extends PlatformInterface
     );
   }
 
-  ///{@template flutter_inappwebview_platform_interface.PlatformInAppWebViewController.openDevTools}
-  ///Opens the DevTools window for the current document in the WebView.
-  ///Does nothing if run when the DevTools window is already open.
-  ///{@endtemplate}
-  ///
-  ///{@macro flutter_inappwebview_platform_interface.PlatformInAppWebViewController.openDevTools.supported_platforms}
-  @SupportedPlatforms(
-    platforms: [
-      WindowsPlatform(
-        apiName: 'ICoreWebView2.OpenDevToolsWindow',
-        apiUrl:
-            'https://learn.microsoft.com/en-us/microsoft-edge/webview2/reference/win32/icorewebview2?view=webview2-1.0.2210.55#opendevtoolswindow',
-      ),
-    ],
-  )
-  Future<void> openDevTools() {
-    throw UnimplementedError(
-      '${PlatformInAppWebViewControllerMethod.openDevTools.name} is not implemented on the current platform',
-    );
-  }
-
-  ///{@template flutter_inappwebview_platform_interface.PlatformInAppWebViewController.callDevToolsProtocolMethod}
-  ///Runs an asynchronous `DevToolsProtocol` method.
-  ///
-  ///For more information about available methods, navigate to [DevTools Protocol Viewer](https://chromedevtools.github.io/devtools-protocol/tot).
-  ///The [methodName] parameter is the full name of the method in the `{domain}.{method}` format.
-  ///The [parameters] will be a JSON formatted string containing the parameters for the corresponding method.
-  ///This function throws an error if the [methodName] is unknown or the [parameters] has an error.
-  ///In the case of such an error, the [parameters] parameter of the
-  ///handler will include information about the error.
-  ///Note even though WebView dispatches the CDP messages in the order called,
-  ///CDP method calls may be processed out of order.
-  ///If you require CDP methods to run in a particular order, you should wait for
-  ///the previous method's completed handler to run before calling the next method.
-  ///{@endtemplate}
-  ///
-  ///{@macro flutter_inappwebview_platform_interface.PlatformInAppWebViewController.callDevToolsProtocolMethod.supported_platforms}
-  @SupportedPlatforms(
-    platforms: [
-      WindowsPlatform(
-        apiName: 'ICoreWebView2.CallDevToolsProtocolMethod',
-        apiUrl:
-            'https://learn.microsoft.com/en-us/microsoft-edge/webview2/reference/win32/icorewebview2?view=webview2-1.0.2210.55#calldevtoolsprotocolmethod',
-      ),
-    ],
-  )
-  Future<dynamic> callDevToolsProtocolMethod({
-    required String methodName,
-    Map<String, dynamic>? parameters,
-  }) {
-    throw UnimplementedError(
-      '${PlatformInAppWebViewControllerMethod.callDevToolsProtocolMethod.name} is not implemented on the current platform',
-    );
-  }
-
-  ///{@template flutter_inappwebview_platform_interface.PlatformInAppWebViewController.addDevToolsProtocolEventListener}
-  ///Subscribe to a `DevToolsProtocol` event.
-  ///{@endtemplate}
-  ///
-  ///{@macro flutter_inappwebview_platform_interface.PlatformInAppWebViewController.addDevToolsProtocolEventListener.supported_platforms}
-  @SupportedPlatforms(
-    platforms: [
-      WindowsPlatform(
-        apiName:
-            'ICoreWebView2DevToolsProtocolEventReceiver.add_DevToolsProtocolEventReceived',
-        apiUrl:
-            'https://learn.microsoft.com/en-us/microsoft-edge/webview2/reference/win32/icorewebview2devtoolsprotocoleventreceiver?view=webview2-1.0.2210.55#add_devtoolsprotocoleventreceived',
-      ),
-    ],
-  )
-  Future<void> addDevToolsProtocolEventListener({
-    required String eventName,
-    required Function(dynamic data) callback,
-  }) {
-    throw UnimplementedError(
-      '${PlatformInAppWebViewControllerMethod.addDevToolsProtocolEventListener.name} is not implemented on the current platform',
-    );
-  }
-
-  ///{@template flutter_inappwebview_platform_interface.PlatformInAppWebViewController.removeDevToolsProtocolEventListener}
-  ///Remove an event handler previously added with [addDevToolsProtocolEventListener].
-  ///{@endtemplate}
-  ///
-  ///{@macro flutter_inappwebview_platform_interface.PlatformInAppWebViewController.removeDevToolsProtocolEventListener.supported_platforms}
-  @SupportedPlatforms(
-    platforms: [
-      WindowsPlatform(
-        apiName:
-            'ICoreWebView2DevToolsProtocolEventReceiver.remove_DevToolsProtocolEventReceived',
-        apiUrl:
-            'https://learn.microsoft.com/en-us/microsoft-edge/webview2/reference/win32/icorewebview2devtoolsprotocoleventreceiver?view=webview2-1.0.2210.55#remove_devtoolsprotocoleventreceived',
-      ),
-    ],
-  )
-  Future<void> removeDevToolsProtocolEventListener({
-    required String eventName,
-  }) {
-    throw UnimplementedError(
-      '${PlatformInAppWebViewControllerMethod.removeDevToolsProtocolEventListener.name} is not implemented on the current platform',
-    );
-  }
-
-  ///{@template flutter_inappwebview_platform_interface.PlatformInAppWebViewController.isInterfaceSupported}
-  ///Returns `true` if the WebView supports the specified [interface], otherwise `false`.
-  ///{@endtemplate}
-  ///
-  ///{@macro flutter_inappwebview_platform_interface.PlatformInAppWebViewController.isInterfaceSupported.supported_platforms}
-  @SupportedPlatforms(platforms: [WindowsPlatform()])
-  Future<bool> isInterfaceSupported(WebViewInterface interface) async {
-    throw UnimplementedError(
-      '${PlatformInAppWebViewControllerMethod.isInterfaceSupported.name} is not implemented on the current platform',
-    );
-  }
-
-  ///{@template flutter_inappwebview_platform_interface.PlatformInAppWebViewController.saveState}
+  ///{@template nosferatu500_inappwebview_platform_interface.PlatformInAppWebViewController.saveState}
   ///Returns the current state of interaction in a web view so that you can restore
   ///that state later to another web view using the [restoreState] method.
+  ///
+  ///Returns `null` if no state could be saved.
+  ///
+  ///### The returned state is unbounded unless you bound it (Android)
+  ///
+  ///With no arguments this is the platform's own `WebView.saveState`, which has **no size limit**:
+  ///it serialises every back/forward entry, and a long session can run to megabytes. Measured on
+  ///Android 13 and Android 17 (WebView 151 / 149), a 9-entry history of large `data:` URLs produced
+  ///a **2.0 MB** state, growing linearly with no ceiling and never failing. That matters if the
+  ///bytes are then handed to something with a limit of its own — an Android `Bundle` crossing a
+  ///Binder transaction is capped at about 1 MB.
+  ///
+  ///[maxSize] and [includeForwardState] bound it, and are **Android-only** and gated on
+  ///[WebViewFeature.SAVE_STATE]:
+  ///
+  ///- [maxSize] — the maximum size in bytes. History entries furthest from the current one are
+  ///  dropped until the state fits. **If not even the current entry fits, nothing is saved and this
+  ///  returns `null`** — it does not return a smaller state, and it does not throw. Measured: a
+  ///  9-entry / 2.0 MB history saved with `maxSize: 1000000` kept the current entry plus the two
+  ///  behind it, and with `maxSize: 200000` — below one entry's own size — returned `null`.
+  ///
+  ///  **[maxSize] is not a hard cap on the returned array.** It bounds the WebView's own serialized
+  ///  state; the bytes returned here are that state inside a marshalled `Bundle`, so the result can
+  ///  be a few dozen bytes larger than [maxSize] — measured at 602900 bytes for a requested 602860.
+  ///  Subtract a margin if you are feeding a hard limit of your own.
+  ///- [includeForwardState] — whether to keep entries reachable only by going *forward*
+  ///  ([PlatformInAppWebViewController.goForward]). Apps with no forward affordance can drop them.
+  ///  Defaults to including them.
+  ///
+  ///Back history is kept in preference to forward history: with [maxSize] set, forward entries are
+  ///dropped first even when [includeForwardState] is `true`.
+  ///
+  ///Passing either argument where [WebViewFeature.SAVE_STATE] is unsupported returns `null` rather
+  ///than falling back to an unconstrained state, so a caller that asked for a bound never silently
+  ///receives an unbounded one. **Check [WebViewFeature.isFeatureSupported] first**, or call with
+  ///neither argument, which works on every version.
+  ///
+  ///Passing neither argument is byte-for-byte the platform's own `WebView.saveState` — verified on
+  ///both Android versions above, where the two paths returned identical lengths.
   ///{@endtemplate}
   ///
-  ///{@macro flutter_inappwebview_platform_interface.PlatformInAppWebViewController.saveState.supported_platforms}
+  ///{@macro nosferatu500_inappwebview_platform_interface.PlatformInAppWebViewController.saveState.supported_platforms}
   @SupportedPlatforms(
     platforms: [
       AndroidPlatform(
         apiName: 'WebView.saveState',
         apiUrl:
             'https://developer.android.com/reference/android/webkit/WebView#saveState(android.os.Bundle)',
-        note: 'This method doesn\'t store the display data for this WebView.',
+        note:
+            'This method doesn\'t store the display data for this WebView. '
+            'When `maxSize` or `includeForwardState` is given, `WebViewCompat.saveState` is used '
+            'instead and `WebViewFeature.SAVE_STATE` must be supported, otherwise `null` is returned.',
       ),
       IOSPlatform(
         apiName: 'WKWebView.interactionState',
         apiUrl:
             'https://developer.apple.com/documentation/webkit/wkwebview/3752236-interactionstate',
         available: '15.0',
+        note:
+            'The `maxSize` and `includeForwardState` arguments are ignored: '
+            '`interactionState` exposes no equivalent control.',
       ),
-      MacOSPlatform(
-        apiName: 'WKWebView.interactionState',
-        apiUrl:
-            'https://developer.apple.com/documentation/webkit/wkwebview/3752236-interactionstate',
-        available: '12.0',
-      ),
-      LinuxPlatform(),
     ],
   )
-  Future<Uint8List?> saveState() {
+  Future<Uint8List?> saveState({
+    @SupportedPlatforms(platforms: [AndroidPlatform()]) int? maxSize,
+    @SupportedPlatforms(platforms: [AndroidPlatform()])
+    bool? includeForwardState,
+  }) {
     throw UnimplementedError(
       '${PlatformInAppWebViewControllerMethod.saveState.name} is not implemented on the current platform',
     );
   }
 
-  ///{@template flutter_inappwebview_platform_interface.PlatformInAppWebViewController.restoreState}
+  ///{@template nosferatu500_inappwebview_platform_interface.PlatformInAppWebViewController.restoreState}
   ///Restores the state of this WebView from the given [state] returned by the [saveState] method.
   ///If it is called after this WebView has had a chance to build state (load pages, create a back/forward list, etc.),
   ///there may be undesirable side-effects.
@@ -3985,7 +3028,7 @@ abstract class PlatformInAppWebViewController extends PlatformInterface
   ///Returns `true` if the state was restored successfully, otherwise `false`.
   ///{@endtemplate}
   ///
-  ///{@macro flutter_inappwebview_platform_interface.PlatformInAppWebViewController.restoreState.supported_platforms}
+  ///{@macro nosferatu500_inappwebview_platform_interface.PlatformInAppWebViewController.restoreState.supported_platforms}
   @SupportedPlatforms(
     platforms: [
       AndroidPlatform(
@@ -4000,13 +3043,6 @@ abstract class PlatformInAppWebViewController extends PlatformInterface
             'https://developer.apple.com/documentation/webkit/wkwebview/3752236-interactionstate',
         available: '15.0',
       ),
-      MacOSPlatform(
-        apiName: 'WKWebView.interactionState',
-        apiUrl:
-            'https://developer.apple.com/documentation/webkit/wkwebview/3752236-interactionstate',
-        available: '12.0',
-      ),
-      LinuxPlatform(),
     ],
   )
   Future<bool> restoreState(Uint8List state) {
@@ -4015,43 +3051,23 @@ abstract class PlatformInAppWebViewController extends PlatformInterface
     );
   }
 
-  ///{@template flutter_inappwebview_platform_interface.PlatformInAppWebViewController.getIFrameId}
-  ///Returns the iframe `id` attribute used on the Web platform.
-  ///{@endtemplate}
-  ///
-  ///{@macro flutter_inappwebview_platform_interface.PlatformInAppWebViewController.getIFrameId.supported_platforms}
-  @SupportedPlatforms(platforms: [WebPlatform()])
-  Future<String?> getIFrameId() {
-    throw UnimplementedError(
-      '${PlatformInAppWebViewControllerMethod.getIFrameId.name} is not implemented on the current platform',
-    );
-  }
-
-  ///{@template flutter_inappwebview_platform_interface.PlatformInAppWebViewController.getViewId}
+  ///{@template nosferatu500_inappwebview_platform_interface.PlatformInAppWebViewController.getViewId}
   ///View ID used internally.
   ///{@endtemplate}
   ///
-  ///{@macro flutter_inappwebview_platform_interface.PlatformInAppWebViewController.getViewId.supported_platforms}
-  @SupportedPlatforms(
-    platforms: [
-      AndroidPlatform(),
-      IOSPlatform(),
-      MacOSPlatform(),
-      WebPlatform(),
-      WindowsPlatform(),
-    ],
-  )
+  ///{@macro nosferatu500_inappwebview_platform_interface.PlatformInAppWebViewController.getViewId.supported_platforms}
+  @SupportedPlatforms(platforms: [AndroidPlatform(), IOSPlatform()])
   dynamic getViewId() {
     throw UnimplementedError(
       '${PlatformInAppWebViewControllerMethod.getViewId.name} is not implemented on the current platform',
     );
   }
 
-  ///{@template flutter_inappwebview_platform_interface.PlatformInAppWebViewController.getDefaultUserAgent}
+  ///{@template nosferatu500_inappwebview_platform_interface.PlatformInAppWebViewController.getDefaultUserAgent}
   ///Gets the default user agent.
   ///{@endtemplate}
   ///
-  ///{@macro flutter_inappwebview_platform_interface.PlatformInAppWebViewController.getDefaultUserAgent.supported_platforms}
+  ///{@macro nosferatu500_inappwebview_platform_interface.PlatformInAppWebViewController.getDefaultUserAgent.supported_platforms}
   @SupportedPlatforms(
     platforms: [
       AndroidPlatform(
@@ -4060,12 +3076,6 @@ abstract class PlatformInAppWebViewController extends PlatformInterface
             'https://developer.android.com/reference/android/webkit/WebSettings#getDefaultUserAgent(android.content.Context)',
       ),
       IOSPlatform(),
-      MacOSPlatform(),
-      WebPlatform(
-        apiName: 'Navigator.userAgent',
-        apiUrl:
-            'https://developer.mozilla.org/en-US/docs/Web/API/Navigator/userAgent',
-      ),
     ],
   )
   Future<String> getDefaultUserAgent() {
@@ -4074,13 +3084,13 @@ abstract class PlatformInAppWebViewController extends PlatformInterface
     );
   }
 
-  ///{@template flutter_inappwebview_platform_interface.PlatformInAppWebViewController.clearClientCertPreferences}
+  ///{@template nosferatu500_inappwebview_platform_interface.PlatformInAppWebViewController.clearClientCertPreferences}
   ///Clears the client certificate preferences stored in response to proceeding/cancelling client cert requests.
   ///Note that WebView automatically clears these preferences when the system keychain is updated.
   ///The preferences are shared by all the WebViews that are created by the embedder application.
   ///{@endtemplate}
   ///
-  ///{@macro flutter_inappwebview_platform_interface.PlatformInAppWebViewController.clearClientCertPreferences.supported_platforms}
+  ///{@macro nosferatu500_inappwebview_platform_interface.PlatformInAppWebViewController.clearClientCertPreferences.supported_platforms}
   @SupportedPlatforms(
     platforms: [
       AndroidPlatform(
@@ -4097,11 +3107,11 @@ abstract class PlatformInAppWebViewController extends PlatformInterface
     );
   }
 
-  ///{@template flutter_inappwebview_platform_interface.PlatformInAppWebViewController.getSafeBrowsingPrivacyPolicyUrl}
+  ///{@template nosferatu500_inappwebview_platform_interface.PlatformInAppWebViewController.getSafeBrowsingPrivacyPolicyUrl}
   ///Returns a URL pointing to the privacy policy for Safe Browsing reporting.
   ///{@endtemplate}
   ///
-  ///{@macro flutter_inappwebview_platform_interface.PlatformInAppWebViewController.getSafeBrowsingPrivacyPolicyUrl.supported_platforms}
+  ///{@macro nosferatu500_inappwebview_platform_interface.PlatformInAppWebViewController.getSafeBrowsingPrivacyPolicyUrl.supported_platforms}
   @SupportedPlatforms(
     platforms: [
       AndroidPlatform(
@@ -4119,7 +3129,7 @@ abstract class PlatformInAppWebViewController extends PlatformInterface
     );
   }
 
-  ///{@template flutter_inappwebview_platform_interface.PlatformInAppWebViewController.setSafeBrowsingAllowlist}
+  ///{@template nosferatu500_inappwebview_platform_interface.PlatformInAppWebViewController.setSafeBrowsingAllowlist}
   ///Sets the list of hosts (domain names/IP addresses) that are exempt from SafeBrowsing checks. The list is global for all the WebViews.
   ///
   /// Each rule should take one of these:
@@ -4135,7 +3145,7 @@ abstract class PlatformInAppWebViewController extends PlatformInterface
   ///[hosts] represents the list of hosts. This value must never be `null`.
   ///{@endtemplate}
   ///
-  ///{@macro flutter_inappwebview_platform_interface.PlatformInAppWebViewController.setSafeBrowsingAllowlist.supported_platforms}
+  ///{@macro nosferatu500_inappwebview_platform_interface.PlatformInAppWebViewController.setSafeBrowsingAllowlist.supported_platforms}
   @SupportedPlatforms(
     platforms: [
       AndroidPlatform(
@@ -4153,7 +3163,7 @@ abstract class PlatformInAppWebViewController extends PlatformInterface
     );
   }
 
-  ///{@template flutter_inappwebview_platform_interface.PlatformInAppWebViewController.getCurrentWebViewPackage}
+  ///{@template nosferatu500_inappwebview_platform_interface.PlatformInAppWebViewController.getCurrentWebViewPackage}
   ///If WebView has already been loaded into the current process this method will return the package that was used to load it.
   ///Otherwise, the package that would be used if the WebView was loaded right now will be returned;
   ///this does not cause WebView to be loaded, so this information may become outdated at any time.
@@ -4163,7 +3173,7 @@ abstract class PlatformInAppWebViewController extends PlatformInterface
   ///The next time the app starts and loads WebView it will use the new WebView package instead.
   ///{@endtemplate}
   ///
-  ///{@macro flutter_inappwebview_platform_interface.PlatformInAppWebViewController.getCurrentWebViewPackage.supported_platforms}
+  ///{@macro nosferatu500_inappwebview_platform_interface.PlatformInAppWebViewController.getCurrentWebViewPackage.supported_platforms}
   @SupportedPlatforms(
     platforms: [
       AndroidPlatform(
@@ -4180,7 +3190,7 @@ abstract class PlatformInAppWebViewController extends PlatformInterface
     );
   }
 
-  ///{@template flutter_inappwebview_platform_interface.PlatformInAppWebViewController.setWebContentsDebuggingEnabled}
+  ///{@template nosferatu500_inappwebview_platform_interface.PlatformInAppWebViewController.setWebContentsDebuggingEnabled}
   ///Enables debugging of web contents (HTML / CSS / JavaScript) loaded into any WebViews of this application.
   ///This flag can be enabled in order to facilitate debugging of web layouts and JavaScript code running inside WebViews.
   ///Please refer to WebView documentation for the debugging guide. The default is `false`.
@@ -4188,7 +3198,7 @@ abstract class PlatformInAppWebViewController extends PlatformInterface
   ///[debuggingEnabled] whether to enable web contents debugging.
   ///{@endtemplate}
   ///
-  ///{@macro flutter_inappwebview_platform_interface.PlatformInAppWebViewController.setWebContentsDebuggingEnabled.supported_platforms}
+  ///{@macro nosferatu500_inappwebview_platform_interface.PlatformInAppWebViewController.setWebContentsDebuggingEnabled.supported_platforms}
   @SupportedPlatforms(
     platforms: [
       AndroidPlatform(
@@ -4204,7 +3214,7 @@ abstract class PlatformInAppWebViewController extends PlatformInterface
     );
   }
 
-  ///{@template flutter_inappwebview_platform_interface.PlatformInAppWebViewController.getVariationsHeader}
+  ///{@template nosferatu500_inappwebview_platform_interface.PlatformInAppWebViewController.getVariationsHeader}
   ///Gets the WebView variations encoded to be used as the X-Client-Data HTTP header.
   ///
   ///The app is responsible for adding the X-Client-Data header to any request
@@ -4215,7 +3225,7 @@ abstract class PlatformInAppWebViewController extends PlatformInterface
   ///The string may be empty if the header is not available.
   ///{@endtemplate}
   ///
-  ///{@macro flutter_inappwebview_platform_interface.PlatformInAppWebViewController.getVariationsHeader.supported_platforms}
+  ///{@macro nosferatu500_inappwebview_platform_interface.PlatformInAppWebViewController.getVariationsHeader.supported_platforms}
   @SupportedPlatforms(
     platforms: [
       AndroidPlatform(
@@ -4233,7 +3243,7 @@ abstract class PlatformInAppWebViewController extends PlatformInterface
     );
   }
 
-  ///{@template flutter_inappwebview_platform_interface.PlatformInAppWebViewController.isMultiProcessEnabled}
+  ///{@template nosferatu500_inappwebview_platform_interface.PlatformInAppWebViewController.isMultiProcessEnabled}
   ///Returns `true` if WebView is running in multi process mode.
   ///
   ///In Android O and above, WebView may run in "multiprocess" mode.
@@ -4243,7 +3253,7 @@ abstract class PlatformInAppWebViewController extends PlatformInterface
   ///but is not shared with other application processes.
   ///{@endtemplate}
   ///
-  ///{@macro flutter_inappwebview_platform_interface.PlatformInAppWebViewController.isMultiProcessEnabled.supported_platforms}
+  ///{@macro nosferatu500_inappwebview_platform_interface.PlatformInAppWebViewController.isMultiProcessEnabled.supported_platforms}
   @SupportedPlatforms(
     platforms: [
       AndroidPlatform(
@@ -4261,7 +3271,46 @@ abstract class PlatformInAppWebViewController extends PlatformInterface
     );
   }
 
-  ///{@template flutter_inappwebview_platform_interface.PlatformInAppWebViewController.disableWebView}
+  ///{@template nosferatu500_inappwebview_platform_interface.PlatformInAppWebViewController.setDefaultTrafficStatsTag}
+  ///Sets the default `TrafficStats` tag used to account for the socket traffic caused by WebView.
+  ///
+  ///The tag is **global to the app**: it applies to every request made by the WebView library in
+  ///this process, not only to the WebView this controller belongs to. When no tag has been set,
+  ///Android accounts for WebView's socket traffic as if the tag were `0`.
+  ///
+  ///Setting a tag stops sockets from being shared with requests carrying a different tag, so
+  ///multiplexed protocols (HTTP/2, QUIC) only reuse a connection between requests with the same
+  ///tag. Changing the tag therefore costs connection reuse — set it once, early, rather than
+  ///switching it per navigation.
+  ///
+  ///[tag] is a 32-bit value. Tags from `0xFFFFFF00` to `0xFFFFFFFF` — equivalently `-256` to `-1`,
+  ///the same bit patterns read as a signed 32-bit int — are reserved for system services such as
+  ///`DownloadManager` and must not be used.
+  ///
+  ///Returns `true` if the tag was applied, or `false` when
+  ///[WebViewFeature.DEFAULT_TRAFFICSTATS_TAGGING] is not supported by the current WebView
+  ///provider, in which case nothing happened and WebView's traffic stays accounted as tag `0`.
+  ///{@endtemplate}
+  ///
+  ///{@macro nosferatu500_inappwebview_platform_interface.PlatformInAppWebViewController.setDefaultTrafficStatsTag.supported_platforms}
+  @SupportedPlatforms(
+    platforms: [
+      AndroidPlatform(
+        apiName: 'WebViewCompat.setDefaultTrafficStatsTag',
+        apiUrl:
+            'https://developer.android.com/reference/androidx/webkit/WebViewCompat#setDefaultTrafficStatsTag(int)',
+        note:
+            'Requires [WebViewFeature.DEFAULT_TRAFFICSTATS_TAGGING]. Returns `false` and does nothing if the feature is not supported.',
+      ),
+    ],
+  )
+  Future<bool> setDefaultTrafficStatsTag(int tag) {
+    throw UnimplementedError(
+      '${PlatformInAppWebViewControllerMethod.setDefaultTrafficStatsTag.name} is not implemented on the current platform',
+    );
+  }
+
+  ///{@template nosferatu500_inappwebview_platform_interface.PlatformInAppWebViewController.disableWebView}
   ///Indicate that the current process does not intend to use WebView,
   ///and that an exception should be thrown if a WebView is created or any other
   ///methods in the `android.webkit` package are used.
@@ -4272,7 +3321,7 @@ abstract class PlatformInAppWebViewController extends PlatformInterface
   ///and to prevent potential data directory conflicts (see [ProcessGlobalConfigSettings.dataDirectorySuffix]).
   ///{@endtemplate}
   ///
-  ///{@macro flutter_inappwebview_platform_interface.PlatformInAppWebViewController.disableWebView.supported_platforms}
+  ///{@macro nosferatu500_inappwebview_platform_interface.PlatformInAppWebViewController.disableWebView.supported_platforms}
   @SupportedPlatforms(
     platforms: [
       AndroidPlatform(
@@ -4289,13 +3338,13 @@ abstract class PlatformInAppWebViewController extends PlatformInterface
     );
   }
 
-  ///{@template flutter_inappwebview_platform_interface.PlatformInAppWebViewController.handlesURLScheme}
+  ///{@template nosferatu500_inappwebview_platform_interface.PlatformInAppWebViewController.handlesURLScheme}
   ///Returns a Boolean value that indicates whether WebKit natively supports resources with the specified URL scheme.
   ///
   ///[urlScheme] represents the URL scheme associated with the resource.
   ///{@endtemplate}
   ///
-  ///{@macro flutter_inappwebview_platform_interface.PlatformInAppWebViewController.handlesURLScheme.supported_platforms}
+  ///{@macro nosferatu500_inappwebview_platform_interface.PlatformInAppWebViewController.handlesURLScheme.supported_platforms}
   @SupportedPlatforms(
     platforms: [
       IOSPlatform(
@@ -4303,16 +3352,6 @@ abstract class PlatformInAppWebViewController extends PlatformInterface
         apiUrl:
             'https://developer.apple.com/documentation/webkit/wkwebview/2875370-handlesurlscheme',
         available: '11.0',
-      ),
-      MacOSPlatform(
-        apiName: 'WKWebView.handlesURLScheme',
-        apiUrl:
-            'https://developer.apple.com/documentation/webkit/wkwebview/2875370-handlesurlscheme',
-        available: '10.13',
-      ),
-      LinuxPlatform(
-        note:
-            'Returns true for built-in schemes (http, https, file, ftp, data, blob, about, javascript).',
       ),
     ],
   )
@@ -4322,48 +3361,39 @@ abstract class PlatformInAppWebViewController extends PlatformInterface
     );
   }
 
-  ///{@template flutter_inappwebview_platform_interface.PlatformInAppWebViewController.disposeKeepAlive}
+  ///{@template nosferatu500_inappwebview_platform_interface.PlatformInAppWebViewController.disposeKeepAlive}
   ///Disposes the WebView that is using the [keepAlive] instance for the keep alive feature.
   ///{@endtemplate}
   ///
-  ///{@macro flutter_inappwebview_platform_interface.PlatformInAppWebViewController.disposeKeepAlive.supported_platforms}
-  @SupportedPlatforms(
-    platforms: [
-      AndroidPlatform(),
-      IOSPlatform(),
-      MacOSPlatform(),
-      WindowsPlatform(),
-      LinuxPlatform(),
-    ],
-  )
+  ///{@macro nosferatu500_inappwebview_platform_interface.PlatformInAppWebViewController.disposeKeepAlive.supported_platforms}
+  @SupportedPlatforms(platforms: [AndroidPlatform(), IOSPlatform()])
   Future<void> disposeKeepAlive(InAppWebViewKeepAlive keepAlive) {
     throw UnimplementedError(
       '${PlatformInAppWebViewControllerMethod.disposeKeepAlive.name} is not implemented on the current platform',
     );
   }
 
-  ///{@template flutter_inappwebview_platform_interface.PlatformInAppWebViewController.clearAllCache}
+  ///{@template nosferatu500_inappwebview_platform_interface.PlatformInAppWebViewController.clearAllCache}
   ///Clears the resource cache. Note that the cache is per-application, so this will clear the cache for all WebViews used.
   ///
   ///[includeDiskFiles] if `false`, only the RAM cache is cleared. The default value is `true`.
+  ///
+  ///On Android this is the HTTP resource cache only: cookies, `localStorage`, IndexedDB, Cache
+  ///Storage, the origin-private file system and service worker registrations are kept (measured on
+  ///Android 17, WebView 153, with [includeDiskFiles] `true`). `WebStorageManager.deleteBrowsingData`
+  ///clears all of that and the cache together. It isn't used here, because it needs
+  ///`WebViewFeature.DELETE_BROWSING_DATA` and clears far more than this method promises.
   ///{@endtemplate}
   ///
-  ///{@macro flutter_inappwebview_platform_interface.PlatformInAppWebViewController.clearAllCache.supported_platforms}
-  @SupportedPlatforms(
-    platforms: [
-      AndroidPlatform(),
-      IOSPlatform(),
-      MacOSPlatform(),
-      LinuxPlatform(),
-    ],
-  )
+  ///{@macro nosferatu500_inappwebview_platform_interface.PlatformInAppWebViewController.clearAllCache.supported_platforms}
+  @SupportedPlatforms(platforms: [AndroidPlatform(), IOSPlatform()])
   Future<void> clearAllCache({bool includeDiskFiles = true}) {
     throw UnimplementedError(
       '${PlatformInAppWebViewControllerMethod.clearAllCache.name} is not implemented on the current platform',
     );
   }
 
-  ///{@template flutter_inappwebview_platform_interface.PlatformInAppWebViewController.enableSlowWholeDocumentDraw}
+  ///{@template nosferatu500_inappwebview_platform_interface.PlatformInAppWebViewController.enableSlowWholeDocumentDraw}
   ///For apps targeting the L release, WebView has a new default behavior that reduces memory footprint and increases
   ///performance by intelligently choosing the portion of the HTML document that needs to be drawn.
   ///These optimizations are transparent to the developers.
@@ -4372,7 +3402,7 @@ abstract class PlatformInAppWebViewController extends PlatformInterface
   ///Enabling drawing the entire HTML document has a significant performance cost.
   ///{@endtemplate}
   ///
-  ///{@macro flutter_inappwebview_platform_interface.PlatformInAppWebViewController.enableSlowWholeDocumentDraw.supported_platforms}
+  ///{@macro nosferatu500_inappwebview_platform_interface.PlatformInAppWebViewController.enableSlowWholeDocumentDraw.supported_platforms}
   @SupportedPlatforms(
     platforms: [
       AndroidPlatform(
@@ -4390,7 +3420,7 @@ abstract class PlatformInAppWebViewController extends PlatformInterface
     );
   }
 
-  ///{@template flutter_inappwebview_platform_interface.PlatformInAppWebViewController.setJavaScriptBridgeName}
+  ///{@template nosferatu500_inappwebview_platform_interface.PlatformInAppWebViewController.setJavaScriptBridgeName}
   ///Sets the name of the JavaScript Bridge object that will be used to interact with the WebView.
   ///This method should be called before any WebViews are created or when there are no WebViews.
   ///Calling this method after a WebView has been created will not change
@@ -4402,85 +3432,49 @@ abstract class PlatformInAppWebViewController extends PlatformInterface
   ///The default name used by this plugin is `flutter_inappwebview`.
   ///{@endtemplate}
   ///
-  ///{@macro flutter_inappwebview_platform_interface.PlatformInAppWebViewController.setJavaScriptBridgeName.supported_platforms}
-  @SupportedPlatforms(
-    platforms: [
-      AndroidPlatform(),
-      IOSPlatform(),
-      MacOSPlatform(),
-      WebPlatform(),
-      WindowsPlatform(),
-      LinuxPlatform(),
-    ],
-  )
+  ///{@macro nosferatu500_inappwebview_platform_interface.PlatformInAppWebViewController.setJavaScriptBridgeName.supported_platforms}
+  @SupportedPlatforms(platforms: [AndroidPlatform(), IOSPlatform()])
   Future<void> setJavaScriptBridgeName(String bridgeName) {
     throw UnimplementedError(
       '${PlatformInAppWebViewControllerMethod.setJavaScriptBridgeName.name} is not implemented on the current platform',
     );
   }
 
-  ///{@template flutter_inappwebview_platform_interface.PlatformInAppWebViewController.getJavaScriptBridgeName}
+  ///{@template nosferatu500_inappwebview_platform_interface.PlatformInAppWebViewController.getJavaScriptBridgeName}
   ///Gets the name of the JavaScript Bridge object that is used to interact with the WebView.
   ///Use [setJavaScriptBridgeName] to set a custom name.
   ///The default name used by this plugin is `flutter_inappwebview`.
   ///{@endtemplate}
   ///
-  ///{@macro flutter_inappwebview_platform_interface.PlatformInAppWebViewController.getJavaScriptBridgeName.supported_platforms}
-  @SupportedPlatforms(
-    platforms: [
-      AndroidPlatform(),
-      IOSPlatform(),
-      MacOSPlatform(),
-      WebPlatform(),
-      WindowsPlatform(),
-      LinuxPlatform(),
-    ],
-  )
+  ///{@macro nosferatu500_inappwebview_platform_interface.PlatformInAppWebViewController.getJavaScriptBridgeName.supported_platforms}
+  @SupportedPlatforms(platforms: [AndroidPlatform(), IOSPlatform()])
   Future<String> getJavaScriptBridgeName() {
     throw UnimplementedError(
       '${PlatformInAppWebViewControllerMethod.getJavaScriptBridgeName.name} is not implemented on the current platform',
     );
   }
 
-  ///{@template flutter_inappwebview_platform_interface.PlatformInAppWebViewController.tRexRunnerHtml}
+  ///{@template nosferatu500_inappwebview_platform_interface.PlatformInAppWebViewController.tRexRunnerHtml}
   ///Gets the html (with javascript) of the Chromium's t-rex runner game. Used in combination with [tRexRunnerCss].
   ///{@endtemplate}
   ///
-  ///{@macro flutter_inappwebview_platform_interface.PlatformInAppWebViewController.tRexRunnerHtml.supported_platforms}
-  @SupportedPlatforms(
-    platforms: [
-      AndroidPlatform(),
-      IOSPlatform(),
-      MacOSPlatform(),
-      WebPlatform(),
-      WindowsPlatform(),
-      LinuxPlatform(),
-    ],
-  )
+  ///{@macro nosferatu500_inappwebview_platform_interface.PlatformInAppWebViewController.tRexRunnerHtml.supported_platforms}
+  @SupportedPlatforms(platforms: [AndroidPlatform(), IOSPlatform()])
   Future<String> get tRexRunnerHtml => throw UnimplementedError(
     '${PlatformInAppWebViewControllerProperty.tRexRunnerHtml.name} is not implemented on the current platform',
   );
 
-  ///{@template flutter_inappwebview_platform_interface.PlatformInAppWebViewController.tRexRunnerCss}
+  ///{@template nosferatu500_inappwebview_platform_interface.PlatformInAppWebViewController.tRexRunnerCss}
   ///Gets the css of the Chromium's t-rex runner game. Used in combination with [tRexRunnerHtml].ì
   ///{@endtemplate}
   ///
-  ///{@macro flutter_inappwebview_platform_interface.PlatformInAppWebViewController.tRexRunnerCss.supported_platforms}
-  @SupportedPlatforms(
-    platforms: [
-      AndroidPlatform(),
-      IOSPlatform(),
-      MacOSPlatform(),
-      WebPlatform(),
-      WindowsPlatform(),
-      LinuxPlatform(),
-    ],
-  )
+  ///{@macro nosferatu500_inappwebview_platform_interface.PlatformInAppWebViewController.tRexRunnerCss.supported_platforms}
+  @SupportedPlatforms(platforms: [AndroidPlatform(), IOSPlatform()])
   Future<String> get tRexRunnerCss => throw UnimplementedError(
     '${PlatformInAppWebViewControllerProperty.tRexRunnerCss.name} is not implemented on the current platform',
   );
 
-  ///{@template flutter_inappwebview_platform_interface.PlatformInAppWebViewController.isClassSupported}
+  ///{@template nosferatu500_inappwebview_platform_interface.PlatformInAppWebViewController.isClassSupported}
   ///Check if the current class is supported by the [defaultTargetPlatform] or a specific [platform].
   ///{@endtemplate}
   bool isClassSupported({TargetPlatform? platform}) =>
@@ -4488,7 +3482,7 @@ abstract class PlatformInAppWebViewController extends PlatformInterface
         platform: platform,
       );
 
-  ///{@template flutter_inappwebview_platform_interface.PlatformInAppWebViewController.isPropertySupported}
+  ///{@template nosferatu500_inappwebview_platform_interface.PlatformInAppWebViewController.isPropertySupported}
   ///Check if the given [property] is supported by the [defaultTargetPlatform] or a specific [platform].
   ///{@endtemplate}
   bool isPropertySupported(
@@ -4499,7 +3493,7 @@ abstract class PlatformInAppWebViewController extends PlatformInterface
     platform: platform,
   );
 
-  ///{@template flutter_inappwebview_platform_interface.PlatformInAppWebViewController.isMethodSupported}
+  ///{@template nosferatu500_inappwebview_platform_interface.PlatformInAppWebViewController.isMethodSupported}
   ///Check if the given [method] is supported by the [defaultTargetPlatform] or a specific [platform].
   ///{@endtemplate}
   bool isMethodSupported(
@@ -4510,21 +3504,13 @@ abstract class PlatformInAppWebViewController extends PlatformInterface
     platform: platform,
   );
 
-  ///{@template flutter_inappwebview_platform_interface.PlatformInAppWebViewController.dispose}
+  ///{@template nosferatu500_inappwebview_platform_interface.PlatformInAppWebViewController.dispose}
   ///Disposes the controller.
   ///{@endtemplate}
   ///
-  ///{@macro flutter_inappwebview_platform_interface.PlatformInAppWebViewController.dispose.supported_platforms}
+  ///{@macro nosferatu500_inappwebview_platform_interface.PlatformInAppWebViewController.dispose.supported_platforms}
   @override
-  @SupportedPlatforms(
-    platforms: [
-      AndroidPlatform(),
-      IOSPlatform(),
-      MacOSPlatform(),
-      WebPlatform(),
-      WindowsPlatform(),
-    ],
-  )
+  @SupportedPlatforms(platforms: [AndroidPlatform(), IOSPlatform()])
   void dispose({bool isKeepAlive = false}) {
     throw UnimplementedError(
       '${PlatformInAppWebViewControllerMethod.dispose.name} is not implemented on the current platform',

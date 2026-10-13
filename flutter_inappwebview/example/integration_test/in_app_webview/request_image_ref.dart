@@ -15,12 +15,13 @@ void requestImageRef() {
         textDirection: TextDirection.ltr,
         child: InAppWebView(
           key: GlobalKey(),
-          initialUrlRequest: URLRequest(url: TEST_CROSS_PLATFORM_URL_1),
+          // Shared with requestFocusNodeHref, see request_focus_node_href.dart.
+          initialData: InAppWebViewInitialData(data: _hitTestPage),
           onWebViewCreated: (controller) {
             controllerCompleter.complete(controller);
           },
           onLoadStop: (controller, url) {
-            pageLoaded.complete();
+            if (!pageLoaded.isCompleted) pageLoaded.complete();
           },
         ),
       ),
@@ -29,6 +30,22 @@ void requestImageRef() {
     final InAppWebViewController controller = await controllerCompleter.future;
     await pageLoaded.future;
 
-    await expectLater(controller.requestImageRef(), completes);
+    if (defaultTargetPlatform != TargetPlatform.android) {
+      await expectLater(controller.requestImageRef(), completes);
+      return;
+    }
+
+    // Before this, the test only checked that the call completed. Values measured on API 37.
+    final size = tester.getSize(find.byType(InAppWebView));
+
+    await _tapTwice(tester, Offset(size.width / 2, size.height / 4));
+    expect(
+      (await controller.requestImageRef())?.url,
+      isNull,
+      reason: 'a link without an image has no image to report',
+    );
+
+    await _tapTwice(tester, Offset(size.width / 2, size.height * 3 / 4));
+    expect((await controller.requestImageRef())?.url?.toString(), _onePixelPng);
   }, skip: shouldSkip);
 }

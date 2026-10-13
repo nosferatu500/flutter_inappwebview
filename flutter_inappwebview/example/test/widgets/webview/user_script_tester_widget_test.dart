@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:flutter_inappwebview/flutter_inappwebview.dart';
+import 'package:nosferatu500_inappwebview/nosferatu500_inappwebview.dart';
 import 'package:flutter_inappwebview_example/widgets/webview/user_script_tester_widget.dart';
 
 void main() {
@@ -271,7 +271,7 @@ void main() {
             body: UserScriptTesterWidget(
               onAddScript: (script) async {},
               onRemoveScript: (script) async {},
-              scripts: [],
+              scripts: const [],
             ),
           ),
         ),

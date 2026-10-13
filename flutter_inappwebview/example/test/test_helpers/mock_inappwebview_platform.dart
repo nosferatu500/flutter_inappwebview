@@ -1,6 +1,5 @@
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_inappwebview_platform_interface/flutter_inappwebview_platform_interface.dart';
+import 'package:nosferatu500_inappwebview_platform_interface/nosferatu500_inappwebview_platform_interface.dart';
 import 'package:plugin_platform_interface/plugin_platform_interface.dart';
 
 /// A mock InAppWebViewPlatform for testing purposes.
@@ -35,7 +34,7 @@ class MockInAppWebViewPlatform extends InAppWebViewPlatform
   @override
   PlatformCookieManager createPlatformCookieManagerStatic() {
     return MockPlatformCookieManagerStatic(
-      PlatformCookieManagerCreationParams(),
+      const PlatformCookieManagerCreationParams(),
     );
   }
 
@@ -111,20 +110,6 @@ class MockInAppWebViewPlatform extends InAppWebViewPlatform
   }
 
   @override
-  PlatformWebViewEnvironment createPlatformWebViewEnvironment(
-    PlatformWebViewEnvironmentCreationParams params,
-  ) {
-    return MockPlatformWebViewEnvironment(params);
-  }
-
-  @override
-  PlatformWebViewEnvironment createPlatformWebViewEnvironmentStatic() {
-    return MockPlatformWebViewEnvironment(
-      const PlatformWebViewEnvironmentCreationParams(),
-    );
-  }
-
-  @override
   PlatformProcessGlobalConfig createPlatformProcessGlobalConfig(
     PlatformProcessGlobalConfigCreationParams params,
   ) {
@@ -135,6 +120,32 @@ class MockInAppWebViewPlatform extends InAppWebViewPlatform
   PlatformProcessGlobalConfig createPlatformProcessGlobalConfigStatic() {
     return MockPlatformProcessGlobalConfig(
       const PlatformProcessGlobalConfigCreationParams(),
+    );
+  }
+
+  @override
+  PlatformProfileStore createPlatformProfileStore(
+    PlatformProfileStoreCreationParams params,
+  ) {
+    return MockPlatformProfileStore(params);
+  }
+
+  @override
+  PlatformProfileStore createPlatformProfileStoreStatic() {
+    return MockPlatformProfileStore(const PlatformProfileStoreCreationParams());
+  }
+
+  @override
+  PlatformGeolocationPermissions createPlatformGeolocationPermissions(
+    PlatformGeolocationPermissionsCreationParams params,
+  ) {
+    return MockPlatformGeolocationPermissions(params);
+  }
+
+  @override
+  PlatformGeolocationPermissions createPlatformGeolocationPermissionsStatic() {
+    return MockPlatformGeolocationPermissions(
+      const PlatformGeolocationPermissionsCreationParams(),
     );
   }
 
@@ -497,28 +508,29 @@ class MockPlatformServiceWorkerController
   }) => true;
 
   @override
-  Future<bool> getAllowContentAccess() async => true;
+  Future<bool> getAllowContentAccess({String? profileName}) async => true;
 
   @override
-  Future<bool> getAllowFileAccess() async => true;
+  Future<bool> getAllowFileAccess({String? profileName}) async => true;
 
   @override
-  Future<bool> getBlockNetworkLoads() async => false;
+  Future<bool> getBlockNetworkLoads({String? profileName}) async => false;
 
   @override
-  Future<CacheMode?> getCacheMode() async => CacheMode.LOAD_DEFAULT;
+  Future<CacheMode?> getCacheMode({String? profileName}) async =>
+      CacheMode.LOAD_DEFAULT;
 
   @override
-  Future<void> setAllowContentAccess(bool value) async {}
+  Future<void> setAllowContentAccess(bool value, {String? profileName}) async {}
 
   @override
-  Future<void> setAllowFileAccess(bool value) async {}
+  Future<void> setAllowFileAccess(bool value, {String? profileName}) async {}
 
   @override
-  Future<void> setBlockNetworkLoads(bool value) async {}
+  Future<void> setBlockNetworkLoads(bool value, {String? profileName}) async {}
 
   @override
-  Future<void> setCacheMode(CacheMode? mode) async {}
+  Future<void> setCacheMode(CacheMode? mode, {String? profileName}) async {}
 
   @override
   ServiceWorkerClient? get serviceWorkerClient => null;
@@ -558,25 +570,6 @@ class MockPlatformTracingController extends PlatformTracingController
   Future<bool> stop({String? filePath}) async => true;
 }
 
-class MockPlatformWebViewEnvironment extends PlatformWebViewEnvironment
-    with MockPlatformInterfaceMixin {
-  MockPlatformWebViewEnvironment(super.params) : super.implementation();
-
-  @override
-  bool isMethodSupported(
-    PlatformWebViewEnvironmentMethod method, {
-    TargetPlatform? platform,
-  }) => true;
-
-  @override
-  Future<String?> getAvailableVersion({
-    String? browserExecutableFolder,
-  }) async => null;
-
-  // Not declared by PlatformWebViewEnvironment - no @override.
-  Future<List<BrowserProcessInfo>> getBrowserProcessInfo() async => [];
-}
-
 class MockPlatformProcessGlobalConfig extends PlatformProcessGlobalConfig
     with MockPlatformInterfaceMixin {
   MockPlatformProcessGlobalConfig(super.params) : super.implementation();
@@ -589,6 +582,59 @@ class MockPlatformProcessGlobalConfig extends PlatformProcessGlobalConfig
 
   // Not declared by PlatformProcessGlobalConfig - no @override.
   Future<void> setDataDirectorySuffix({required String suffix}) async {}
+}
+
+class MockPlatformProfileStore extends PlatformProfileStore
+    with MockPlatformInterfaceMixin {
+  MockPlatformProfileStore(super.params) : super.implementation();
+
+  @override
+  bool isMethodSupported(
+    PlatformProfileStoreMethod method, {
+    TargetPlatform? platform,
+  }) => true;
+
+  @override
+  Future<List<String>> getAllProfileNames() async => <String>[
+    PlatformProfileStore.defaultProfileName,
+  ];
+
+  @override
+  Future<String?> getOrCreateProfile({required String name}) async => name;
+
+  @override
+  Future<bool> deleteProfile({required String name}) async => true;
+}
+
+class MockPlatformGeolocationPermissions extends PlatformGeolocationPermissions
+    with MockPlatformInterfaceMixin {
+  MockPlatformGeolocationPermissions(super.params) : super.implementation();
+
+  @override
+  bool isMethodSupported(
+    PlatformGeolocationPermissionsMethod method, {
+    TargetPlatform? platform,
+  }) => true;
+
+  @override
+  Future<bool> allow({required String origin, String? profileName}) async =>
+      true;
+
+  @override
+  Future<bool> clear({required String origin, String? profileName}) async =>
+      true;
+
+  @override
+  Future<bool> clearAll({String? profileName}) async => true;
+
+  @override
+  Future<bool?> getAllowed({
+    required String origin,
+    String? profileName,
+  }) async => true;
+
+  @override
+  Future<List<String>> getOrigins({String? profileName}) async => <String>[];
 }
 
 class MockPlatformFindInteractionController
@@ -801,11 +847,6 @@ class MockPlatformInAppBrowser extends PlatformInAppBrowser
 
   @override
   bool isOpened() => true;
-
-  @override
-  void dispose() {
-    super.dispose();
-  }
 }
 
 class MockPlatformChromeSafariBrowser extends PlatformChromeSafariBrowser

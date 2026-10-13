@@ -1,3 +1,1647 @@
+## 7.0.0
+
+**A hard fork of `flutter_inappwebview` 6.2.0-beta.3, for Android and iOS only.** Everything below is
+relative to 6.2.0-beta.3: 131 commits that dropped four platforms, rewrote the Android module in
+Kotlin under a new namespace, moved the iOS module to Swift 6 language mode, removed **every**
+deprecated API upstream carried (840 `@Deprecated` annotations in these packages — 1111 counting the
+four platform packages that are also gone; **0 remain**), added 32 platform APIs, and fixed a list of
+bugs that includes four on iOS which were silently swallowing events.
+
+### Requirements — all breaking
+
+| | 6.2.0-beta.3 | 7.0.0 |
+|---|---|---|
+| Flutter | `>=3.32.0` | **`>=3.44.0`** |
+| Dart | `^3.8.0` | **`^3.12.0`** |
+| Supported platforms | 6 | **2 — Android, iOS** |
+| Android `minSdk` | 19 | **30** (Android 11) |
+| **Android `compileSdk` your app must use** | (Flutter default) | **37** — `androidx.core` 1.19.0 requires it and AGP *fails* rather than warns |
+| Android Gradle Plugin | 8 | **9** |
+| Android implementation language | Java | **Kotlin** |
+| iOS deployment target | 12.0 | **15.0** |
+| iOS Swift language mode | 5.0 | **6.0** |
+| **Xcode needed to build the iOS module** | 15 | **26** (Swift 6.2+) |
+| iOS integration | CocoaPods | **Swift Package Manager only** |
+
+- **The Xcode 26 floor is the most disruptive item after `minSdk 30`, and it is not obvious from the
+  version numbers.** It comes from `isolated deinit` (SE-0371), used at 32 sites so that
+  `deinit { dispose() }` is legal under Swift 6. That language feature needs a Swift 6.2+ compiler.
+  Flutter 3.44 itself only requires Xcode 15, so this plugin demands a newer toolchain than Flutter
+  does: **a consumer on Xcode 16 cannot build it at all.** The iOS *deployment target* is unaffected
+  and stays at 15.0.
+- **`minSdk 30` is well above Flutter's own floor of 24** and forces every consuming app to raise its
+  own `minSdk`. AGP rejects an app below its library's floor.
+- **macOS, Windows, Linux and Web are gone.** The `flutter_inappwebview_macos`, `_windows`, `_linux`
+  and `_web` packages no longer exist and are no longer resolved.
+- **The iOS module is integrated through Swift Package Manager only: CocoaPods support is removed**
+  (no podspec). Swift Package Manager is on by default in Flutter 3.44, this release's floor, and an
+  app can still use CocoaPods for its other plugins. An app that turned Swift Package Manager off
+  (`flutter config --no-enable-swift-package-manager`, or `enable-swift-package-manager: false` under
+  `flutter: config:` in its pubspec) has to turn it back on, or the plugin has no way into the build.
+
+### BREAKING: the packages are renamed
+
+| 6.2.0-beta.3 | 7.0.0 |
+|---|---|
+| `flutter_inappwebview` | **`nosferatu500_inappwebview`** |
+| `flutter_inappwebview_platform_interface` | `nosferatu500_inappwebview_platform_interface` |
+| `flutter_inappwebview_android` | `nosferatu500_inappwebview_android` |
+| `flutter_inappwebview_ios` | `nosferatu500_inappwebview_ios` |
+| `flutter_inappwebview_internal_annotations` | `nosferatu500_inappwebview_internal_annotations` |
+
+Depend on `nosferatu500_inappwebview` and import
+`package:nosferatu500_inappwebview/nosferatu500_inappwebview.dart` (was
+`package:flutter_inappwebview/flutter_inappwebview.dart`). Class, method and setting names don't
+change. The JavaScript bridge web pages call keeps its name, `window.flutter_inappwebview`, so page
+code needs no change. On iOS the Swift package, target and module are `nosferatu500_inappwebview_ios`
+(product `nosferatu500-inappwebview-ios`).
+
+### BREAKING: the Android namespace and every method/event channel name changed
+
+- Android namespace / Gradle `group`: `com.pichillilorenzo.flutter_inappwebview_android` →
+  **`dev.nosferatu500.inappwebview`**
+- Every method/event channel name: `com.pichillilorenzo/…` →
+  **`dev.nosferatu500.inappwebview/…`**
+
+This is invisible to anyone using the public Dart API, and it is what allows this fork to be
+installed **alongside** upstream. It **breaks any app that talks to the plugin's platform channels
+directly**.
+
+- The Android FileProvider's `<provider>` block changed in all three of its parts, and apps declare
+  that block themselves: `android:name` is now
+  `dev.nosferatu500.inappwebview.InAppWebViewFileProvider`, the authority is
+  `${applicationId}.dev.nosferatu500.inappwebview.fileprovider` (was
+  `${applicationId}.flutter_inappwebview_android.fileprovider`), and the `meta-data` resource is
+  `@xml/inappwebview_provider_paths` (`@xml/provider_paths` no longer exists here). The provider also
+  no longer grants the entire external-storage root — see *Fixed*. **A stale authority fails
+  silently**: `<input type="file" capture>` produces nothing, with no Dart error, because
+  `getUriForFile`'s exception is caught and logged natively.
+
+### Removed — the deprecated API, all of it
+
+Upstream shipped 1111 `@Deprecated` annotations; none is left. Nothing below has a runtime
+replacement that did not already exist in 6.x, so every migration is a rename.
+
+**The whole `*Options` API** — use the matching `*Settings` class and `initialSettings` /
+`getSettings` / `setSettings`:
+
+`InAppWebViewOptions`, `InAppWebViewGroupOptions`, `AndroidInAppWebViewOptions`,
+`IOSInAppWebViewOptions` → `InAppWebViewSettings` · `InAppBrowserOptions`,
+`InAppBrowserClassOptions`, `AndroidInAppBrowserOptions`, `IOSInAppBrowserOptions` →
+`InAppBrowserClassSettings` / `InAppBrowserSettings` · `ChromeSafariBrowserOptions`,
+`ChromeSafariBrowserClassOptions`, `AndroidChromeCustomTabsOptions`, `IOSSafariOptions` →
+`ChromeSafariBrowserSettings` · `ContextMenuOptions` → `ContextMenuSettings` ·
+`PullToRefreshOptions` → `PullToRefreshSettings` · and the `WebViewOptions`, `BrowserOptions`,
+`AndroidOptions`, `IosOptions` marker interfaces. Also removed: the `initialOptions` parameter,
+`getOptions()` / `setOptions()` on `InAppWebViewController` and `InAppBrowser`,
+`ContextMenu.options` and `PullToRefreshController.options`.
+
+**The `Android*` / `IOS*` duplicate types** — use the unprefixed type:
+
+`AndroidActionModeMenuItem` → `ActionModeMenuItem` · `AndroidCacheMode` → `CacheMode` ·
+`AndroidLayoutAlgorithm` → `LayoutAlgorithm` · `AndroidLayoutInDisplayCutoutMode` →
+`LayoutInDisplayCutoutMode` · `AndroidMixedContentMode` → `MixedContentMode` ·
+`AndroidOverScrollMode` → `OverScrollMode` · `AndroidPullToRefreshSize` → `PullToRefreshSize` ·
+`AndroidScrollBarStyle` → `ScrollBarStyle` · `AndroidVerticalScrollbarPosition` →
+`VerticalScrollbarPosition` · `AndroidWebStorageOrigin` → `WebStorageOrigin` ·
+`AndroidWebViewPackageInfo` → `WebViewPackageInfo` · `AndroidServiceWorkerClient` →
+`ServiceWorkerClient` · `AndroidWebViewFeature` → `WebViewFeature` · `AndroidSslError` /
+`IOSSslError` → `SslErrorType` · `IOSNSAttributedString` → `AttributedString` ·
+`IOSNSAttributedStringTextEffectStyle` → `AttributedStringTextEffectStyle` · `IOSNSUnderlineStyle` →
+`UnderlineStyle` · `IOSNSURLProtectionSpaceAuthenticationMethod` →
+`URLProtectionSpaceAuthenticationMethod` · `IOSNSURLProtectionSpaceProxyType` →
+`URLProtectionSpaceProxyType` · `IOSNavigationResponseAction` → `NavigationResponseAction` ·
+`IOSSafariDismissButtonStyle` → `DismissButtonStyle` · `IOSShouldAllowDeprecatedTLSAction` →
+`ShouldAllowDeprecatedTLSAction` · `IOSUIModalPresentationStyle` → `ModalPresentationStyle` ·
+`IOSUIModalTransitionStyle` → `ModalTransitionStyle` ·
+`IOSUIScrollViewContentInsetAdjustmentBehavior` → `ScrollViewContentInsetAdjustmentBehavior` ·
+`IOSUIScrollViewDecelerationRate` → `ScrollViewDecelerationRate` · `IOSURLCredentialPersistence` →
+`URLCredentialPersistence` · `IOSURLRequestCachePolicy` → `URLRequestCachePolicy` ·
+`IOSURLRequestNetworkServiceType` → `URLRequestNetworkServiceType` · `IOSURLResponse` →
+`URLResponse` · `IOSWKDataDetectorTypes` → `DataDetectorTypes` · `IOSWKFrameInfo` → `FrameInfo` ·
+`IOSWKNavigationResponse` → `NavigationResponse` · `IOSWKNavigationType` → `NavigationType` ·
+`IOSWKPDFConfiguration` → `PDFConfiguration` · `IOSWKSecurityOrigin` → `SecurityOrigin` ·
+`IOSWKSelectionGranularity` → none (removed with its setting, below) · `IOSWKWebsiteDataRecord` →
+`WebsiteDataRecord` · `IOSWKWebsiteDataType` → `WebsiteDataType` · `IOSWKWindowFeatures` →
+`WindowFeatures` · `PermissionRequestResponse` → `PermissionResponse` ·
+`PermissionRequestResponseAction` → `PermissionResponseAction` · `JavaScriptHandlerCallback` →
+`JavaScriptHandlerFunction`
+
+Together with the deprecated `.android` / `.ios` accessors and the shim classes behind them:
+`InAppWebViewController.android` / `.ios`, `CookieManager.ios`, `WebStorageManager.android` /
+`.ios`, and `AndroidServiceWorkerController` / `AndroidServiceWorkerClient`.
+
+**Event aliases** — use the unprefixed event:
+
+`androidOnFormResubmission`, `androidOnGeolocationPermissionsHidePrompt`,
+`androidOnGeolocationPermissionsShowPrompt`, `androidOnJsBeforeUnload`,
+`androidOnPermissionRequest`, `androidOnReceivedLoginRequest`,
+`androidOnReceivedTouchIconUrl`, `androidOnRenderProcessGone`, `androidOnRenderProcessResponsive`,
+`androidOnRenderProcessUnresponsive`, `androidOnSafeBrowsingHit`, `androidShouldInterceptRequest`,
+`iosOnDidReceiveServerRedirectForProvisionalNavigation`, `iosOnNavigationResponse`,
+`iosOnWebContentProcessDidTerminate`, `iosShouldAllowDeprecatedTLS`. Plus the renamed events:
+`androidOnScaleChanged` → `onZoomScaleChanged` · `onLoadError` → `onReceivedError` ·
+`onLoadHttpError` → `onReceivedHttpError` · `onDownloadStart` / `onDownloadStartRequest` →
+`onDownloadStarting` · `onLoadResourceCustomScheme` → `onLoadResourceWithCustomScheme` · `onPrint` →
+`onPrintRequest` · `onFindResultReceived` → `FindInteractionController.onFindResultReceived`
+
+**`androidOnReceivedIcon` / `onReceivedIcon` have no replacement event.** They were deprecated in
+favour of `onFaviconChanged`, which this release **also removes** because the underlying Android
+callback is no longer dispatched — see *Removed — `onFaviconChanged`* below. Use
+`InAppWebViewController.getFavicons()` instead of any of the three.
+
+**Field / parameter aliases** — use the unprefixed field:
+
+`URLRequest.iosAllowsCellularAccess`, `.iosAllowsConstrainedNetworkAccess`,
+`.iosAllowsExpensiveNetworkAccess`, `.iosCachePolicy`, `.iosHttpShouldHandleCookies`,
+`.iosHttpShouldUsePipelining`, `.iosMainDocumentURL`, `.iosNetworkServiceType`,
+`.iosTimeoutInterval` · `NavigationAction.androidHasGesture`, `.androidIsRedirect`,
+`.iosSourceFrame`, `.iosTargetFrame`, `.iosWKNavigationType` ·
+`CreateWindowAction.androidIsDialog`, `.iosWindowFeatures` ·
+`URLProtectionSpace.iosAuthenticationMethod`, `.iosDistinguishedNames`, `.iosProxyType`,
+`.iosReceivesCredentialSecurely` · `URLCredential.iosCertificates`, `.iosPersistence` ·
+`ClientCertChallenge.androidKeyTypes`, `.androidPrincipals` · `ClientCertResponse.androidKeyStoreType` ·
+`HttpAuthenticationChallenge.iosError`, `.iosFailureResponse` ·
+`JsAlertRequest.iosIsMainFrame`, `JsConfirmRequest.iosIsMainFrame`, `JsPromptRequest.iosIsMainFrame` ·
+`ScreenshotConfiguration.iosAfterScreenUpdates` · `UserScript.iosForMainFrameOnly` ·
+`InAppWebViewInitialData.androidHistoryUrl` · `ContextMenuItem.androidId` / `.iosId` ·
+`SslError.androidError` / `.iosError` ·
+`TrustedWebActivityImmersiveDisplayMode.layoutInDisplayCutoutMode` · and on the controller methods
+themselves, the `iosWKPdfConfiguration` → `pdfConfiguration`, `iosAnimated` → `animated` and
+`iosAllowingReadAccessTo` → `allowingReadAccessTo` parameters
+
+**Methods** — use the replacement:
+
+`InAppWebViewController.findAllAsync` / `.findNext` / `.clearMatches` →
+`FindInteractionController.findAll` / `.findNext` / `.clearMatches` · `.clearCache()` →
+`.clearAllCache()` · `.getScale()` → `.getZoomScale()` · `.setSafeBrowsingWhitelist()` →
+`.setSafeBrowsingAllowlist()` · `.getTRexRunnerHtml()` / `.getTRexRunnerCss()` → the `tRexRunnerHtml`
+/ `tRexRunnerCss` getters · `PullToRefreshController.setSize()` → `.setIndicatorSize()` ·
+`.setAttributedTitle()` → `.setStyledTitle()`
+
+**Settings fields and feature flags, removed outright** — these were no-ops or dead capabilities on
+every supported platform, not renames:
+
+- `InAppWebViewSettings.saveFormData` — provably a no-op at `minSdk 30`
+- `InAppWebViewSettings.forceDark` / `.forceDarkStrategy` (+ the `ForceDark`, `AndroidForceDark`
+  and `ForceDarkStrategy` enums and `WebViewFeature.FORCE_DARK` / `.FORCE_DARK_STRATEGY`) — use
+  `algorithmicDarkeningAllowed`; a no-op at `targetSdk >= 33`
+- `InAppWebViewSettings.requestedWithHeaderOriginAllowList` (+
+  `WebViewFeature.REQUESTED_WITH_HEADER_ALLOW_LIST`) — androidx **cancelled** the header removal the
+  allow-list existed for, so it does nothing
+- `InAppWebViewSettings.clearCache` / `.clearSessionCache` — use
+  `InAppWebViewController.clearAllCache()`
+- `InAppWebViewSettings.selectionGranularity` (+ the `SelectionGranularity` type) — iOS-only, and
+  WebKit has ignored `WKWebViewConfiguration.selectionGranularity` since iOS 11 (Apple: "selection
+  granularity is always `character`"), below the 15.0 floor
+- `LayoutAlgorithm.NARROW_COLUMNS` — surveying found it was **never settable** (a `switch` with no
+  `break`s); the fall-through was fixed at the same time
+- `WebViewFeature.SAFE_BROWSING_WHITELIST` → `SAFE_BROWSING_ALLOWLIST`;
+  `WebViewFeature.START_SAFE_BROWSING` and `InAppWebViewController.startSafeBrowsing()` — a real
+  capability drop: androidx deprecated it and the fallback branch went with it
+
+### Removed — the macOS / Windows / Linux / Web API
+
+Everything in this section existed *solely* to serve a dropped platform: on Android and iOS it threw
+`UnimplementedError`, was ignored, or could never be produced. **No behaviour changed on Android or
+iOS.**
+
+**Types** — WebView2 / WPE environment (Windows, Linux): `WebViewEnvironment`,
+`PlatformWebViewEnvironment`, `WebViewEnvironmentSettings`, `EnvironmentChannelSearchKind`,
+`EnvironmentReleaseChannels`, `EnvironmentScrollbarStyle`, `CustomSchemeRegistration`,
+`BrowserProcessExitedDetail`, `BrowserProcessInfo`, `BrowserProcessInfosChangedDetail`,
+`ProcessFailedDetail`, `ProcessFailedKind`, `ProcessFailedReason`, `FrameKind`, `CacheModel` ·
+WebView2 notifications (Windows): `WebNotificationController`,
+`PlatformWebNotificationController`, `WebNotification`, `NotificationReceivedRequest`,
+`NotificationReceivedResponse`, `WebNotificationCloseHandler` · download policy (Windows, Linux):
+`DownloadStartResponse`, `DownloadStartResponseAction` · printing (macOS): `PrintJobDisposition`,
+`PrintJobPageOrder`, `PrintJobPaginationMode` · browser window (macOS, Windows): `WindowType`,
+`WindowStyleMask`, `WindowTitlebarSeparatorStyle`
+
+**Events** (Windows-only): `onAcceleratorKeyPressed`, `onContentLoading`, `onDOMContentLoaded`,
+`onLaunchingExternalUriScheme`, `onNotificationReceived`, `onProcessFailed`, `onSaveAsUIShowing`,
+`onSaveFileSecurityCheckStarting`, `onScreenCaptureStarting`; and `InAppBrowser.onMainWindowWillClose`
+(macOS)
+
+**`InAppWebViewController` methods** (25): `addDevToolsProtocolEventListener`,
+`callDevToolsProtocolMethod`, `getFavicon`, `getFrameId`, `getIFrameId`,
+`getMemoryUsageTargetLevel`, `getScreenScale`, `getTargetRefreshRate`, `isInterfaceSupported`,
+`isMuted`, `isPlayingAudio`, `isVisible`, `openDevTools`, `removeDevToolsProtocolEventListener`,
+`requestEnterFullscreen`, `requestExitFullscreen`, `requestPointerLock`, `requestPointerUnlock`,
+`setMemoryUsageTargetLevel`, `setMuted`, `setScreenScale`, `setTargetRefreshRate`, `setVisible`,
+`showSaveAsUI`, `terminateWebProcess`. **`getFavicons` is not affected**
+
+**`InAppWebViewSettings` properties** (54): `allowModalDialogs`, `allowTopNavigationToDataUrls`,
+`browserAcceleratorKeysEnabled`, `corsAllowlist`, `cursorBlinkTime`, `darkMode`,
+`disableAnimations`, `disableWebSecurity`, `doubleClickDistance`, `doubleClickTime`,
+`dragThreshold`, `drawCompositingIndicators`, `enable2DCanvasAcceleration`, `enableCaretBrowsing`,
+`enableEncryptedMedia`, `enableJavaScriptMarkup`, `enableMedia`, `enableMediaCapabilities`,
+`enableMockCaptureDevices`, `enablePageCache`, `enableResizableTextAreas`, `enableSmoothScrolling`,
+`enableSpatialNavigation`, `enableTabsToLinks`, `enableWebRTC`,
+`enableWriteConsoleMessagesToStdout`, `fontAntialias`, `fontDPI`, `fontHintingStyle`,
+`fontSubpixelLayout`, `generalAutofillEnabled`, `handleAcceleratorKeyPressed`,
+`hiddenPdfToolbarItems`, `iframeAllow`, `iframeAllowFullscreen`, `iframeAriaHidden`, `iframeCsp`,
+`iframeName`, `iframeReferrerPolicy`, `iframeRole`, `iframeSandbox`, `itpEnabled`,
+`javaScriptCanAccessClipboard`, `keyRepeatDelay`, `keyRepeatInterval`,
+`mediaContentTypesRequiringHardwareSupport`, `nonClientRegionSupportEnabled`,
+`passwordAutosaveEnabled`, `pictographFontFamily`, `pinchZoomEnabled`, `reputationCheckingRequired`,
+`scrollMultiplier`, `statusBarEnabled`, `webRTCUdpPortsRange`
+
+**`InAppBrowserSettings` properties** (macOS, 5): `windowAlphaValue`, `windowFrame`,
+`windowStyleMask`, `windowTitlebarSeparatorStyle`, `windowType`
+
+**`PrintJobSettings` properties** (macOS, 41): `canSpawnSeparateThread`, `collate`, `copies`,
+`detailedErrorReporting`, `faxNumber`, `firstPage`, `footerUri`, `headerAndFooter`, `headerTitle`,
+`horizontalPagination`, `isHorizontallyCentered`, `isVerticallyCentered`, `jobDisposition`,
+`jobSavingURL`, `lastPage`, `mustCollate`, `pageHeight`, `pageOrder`, `pageRanges`, `pageWidth`,
+`pagesAcross`, `pagesDown`, `pagesPerSide`, `paperName`, `printDialogKind`, `printerName`,
+`scalingFactor`, `shouldPrintBackgrounds`, `shouldPrintHeaderAndFooter`, `shouldPrintSelectionOnly`,
+`showUI`, `showsPageRange`, `showsPageSetupAccessory`, `showsPaperSize`, `showsPreview`,
+`showsPrintPanel`, `showsPrintSelection`, `showsProgressPanel`, `showsScaling`, `time`,
+`verticalPagination`
+
+**`PrintJobAttributes` properties** (macOS, 17): `detailedErrorReporting`, `faxNumber`,
+`headerAndFooter`, `horizontalPagination`, `isHorizontallyCentered`, `isSelectionOnly`,
+`isVerticallyCentered`, `jobDisposition`, `jobSavingURL`, `localizedPaperName`, `mustCollate`,
+`pagesAcross`, `pagesDown`, `paperName`, `scalingFactor`, `time`, `verticalPagination`
+
+**Single fields** — `PrintJobInfo.pageOrder`, `Printer.name` / `.type` / `.languageLevel`,
+`PDFConfiguration.settings`
+
+**Enum constants** — `PermissionResourceType` (Windows, 9): `AUTOPLAY`, `CLIPBOARD_READ`,
+`FILE_READ_WRITE`, `GEOLOCATION`, `LOCAL_FONTS`, `MULTIPLE_AUTOMATIC_DOWNLOADS`, `NOTIFICATIONS`,
+`OTHER_SENSORS`, `WINDOW_MANAGEMENT`. Its Windows-only `UNKNOWN` went with them and **came back**
+as a platform-independent catch-all — see Fixed · `WebResourceErrorType` (Windows 6, Linux 11):
+`CANNOT_SHOW_MIME_TYPE`, `CANNOT_SHOW_URI`, `CANNOT_USE_RESTRICTED_PORT`, `CONNECTION_ABORTED`,
+`DOWNLOAD_CANCELLED_BY_USER`, `DOWNLOAD_DESTINATION_FAILED`, `DOWNLOAD_NETWORK_FAILED`,
+`FRAME_LOAD_INTERRUPTED_BY_POLICY_CHANGE`, `POLICY_FAILED`, `REDIRECT_FAILED`, `RESET`,
+`SERVER_CERTIFICATE_BAD_IDENTITY`, `SERVER_CERTIFICATE_REVOKED`, `SERVER_UNREACHABLE`,
+`TLS_CERTIFICATE_GENERIC_ERROR`, `UNEXPECTED_ERROR`, `VALID_PROXY_AUTHENTICATION_REQUIRED` ·
+`SslErrorType` (Windows, 2): `COMMON_NAME_IS_INCORRECT`, `REVOKED`
+
+**Other members** — the `webViewEnvironment` parameter of `InAppWebView`, `HeadlessInAppWebView`,
+`InAppBrowser` and `CookieManager.instance()` · `CookieManager.isPropertySupported` ·
+`FindInteractionController.setFindOptions` (Windows) · `WebHistoryItem.entryId` (Windows) ·
+`FrameInfo.frameId` / `.kind` / `.name` (Windows) ·
+`ClientCertChallenge.allowedCertificateAuthorities` / `.isProxy` / `.mutuallyTrustedCertificates`,
+`ClientCertResponse.selectedCertificate`
+
+**Changed signature** — `onDownloadStarting` now returns `FutureOr<void>` instead of
+`FutureOr<DownloadStartResponse?>`. The event is Android + iOS and still fires; only its
+Windows-only response type is gone, and neither native implementation ever read the returned value.
+Existing handlers keep compiling.
+
+**Also removed — seven event parameters that outlived their events.** The nine Windows events above
+left `PlatformWebViewCreationParams`, but seven of them stayed on as constructor parameters of
+`InAppWebView` and `HeadlessInAppWebView`, with nowhere left to forward them to: a caller passing
+`onSaveAsUIShowing:` compiled and was **silently ignored**. They are gone from both widgets —
+`onAcceleratorKeyPressed`, `onContentLoading`, `onDOMContentLoaded`, `onLaunchingExternalUriScheme`,
+`onSaveAsUIShowing`, `onSaveFileSecurityCheckStarting`, `onScreenCaptureStarting` — so passing one is
+now a compile error instead of a no-op.
+
+**Also removed — 25 types with no remaining user.** Their payload types
+(`AcceleratorKeyPressedDetail`, `LaunchingExternalUriSchemeRequest` / `…Response`,
+`SaveAsUIShowingRequest` / `…Response`, `SaveFileSecurityCheckStartingRequest` / `…Response`,
+`ScreenCaptureStartingRequest` / `…Response`) and, with those, `PhysicalKeyStatus` (a Win32 LPARAM)
+and `SaveAsKind` · plus 14 whose last user left with the dropped-platform members:
+`BrowserProcessExitKind`, `BrowserProcessKind`, `FaviconImageFormat`, `FindOptions`,
+`FontHintingStyle`, `FontSubpixelLayout`, `MemoryUsageTargetLevel`, `PdfToolbarItems`,
+`PrintJobDialogKind`, `SaveAsUIResult`, `TextDirectionKind`, `WebResourceContext`,
+`WebResourceRequestSourceKind`, `WebViewInterface`. `BrowserProcessExitKind` and
+`BrowserProcessKind` had already lost every constant and were empty shells. **`ProxyRelayHop` was
+in the same "zero references" list and is deliberately kept** — it is iOS API that the Swift side
+reads, and it is unreachable only because `ProxyRule` has never carried `relayHop1` / `relayHop2`.
+
+**Also removed — the `webViewController` parameter on all six `CookieManager` methods**
+(`setCookie`, `setCookies`, `getCookies`, `getCookie`, `deleteCookie`, `deleteCookies`).
+**BREAKING, and it never did anything.** It existed for a JavaScript cookie fallback used below
+iOS 11.0; the guard selecting that fallback compared the system version against `"10.13"` while the
+deployment target is iOS **15.0**, so no supported OS could reach it — and on Android the parameter
+was declared but never read. Roughly 300 lines of unreachable machinery went with it, including the
+headless-WebView cookie path. Passing it is now a compile error instead of a silent no-op, and there
+is no replacement because there was no effect to replace. Its dartdoc — five `note:` blocks
+describing the pre-11.0 JavaScript behaviour — is gone too.
+
+**Also removed — `Util.isMacOS`, `Util.isWindows`, `Util.isLinux` and `Util.isFuchsia`**, the last
+of the dropped platforms' helpers. `Util` is re-exported from this package, so the names disappear
+from the public surface, but each only ever reported "am I running on a platform this fork has no
+implementation for" and so could only answer `false`. `Util.isWeb`, `Util.isAndroid` and
+`Util.isIOS` are kept. Their one internal caller was `ClientCertResponse`'s constructor assert
+(`action == PROCEED && !Util.isWindows`), whose second operand had been dead since the platforms
+were dropped; it now reads `action == PROCEED`, with identical behaviour on Android and iOS.
+
+### Changed — `onPrintRequest` is now asked *before* the print job starts, and can suppress it
+
+**BREAKING, on both platforms.** Returning `true` from `onPrintRequest` now means the OS print
+dialog is **never raised**. It previously meant only "I will own the `PrintJobController`" — both
+natives called `printCurrentPage()` *first* and asked Dart afterwards, so the dialog was already up
+whatever you returned, and the return value merely decided who disposed the tracking object.
+
+That made the return value unable to do the one thing its name implies. It is also unrecoverable:
+nothing in this plugin can dismiss a dialog once it is up — on Android `PrintJob.cancel()` is a
+no-op while the job is in `CREATED` state, which is exactly the state it is in while the dialog is
+open. Asking Dart first is the only point at which printing can be declined.
+
+**The third parameter is gone.** The signature is now
+`FutureOr<bool?> Function(InAppWebViewController controller, WebUri? url)` — there is no print job
+when the event fires, so there was no `PrintJobController` left to pass and it would have been
+permanently `null`. `InAppBrowser.onPrintRequest(WebUri? url)` loses it too.
+
+**Migration.** Handlers that ignored the third parameter only need it deleted from their signature:
+
+```dart
+// before
+onPrintRequest: (controller, url, printJobController) async => false,
+// after
+onPrintRequest: (controller, url) async => false,
+```
+
+Handlers that *used* the controller should return `true` and start the job themselves — this also
+gives you a job you actually control, instead of one that was already running:
+
+```dart
+onPrintRequest: (controller, url) async {
+  final printJob = await controller.printCurrentPage(
+    settings: PrintJobSettings(handledByClient: true),
+  );
+  // ... printJob.dispose() when done
+  return true;
+}
+```
+
+Returning `false`, returning `null`, and registering no handler at all are unchanged: the page is
+printed and the platform's print dialog appears. `InAppWebViewController.printCurrentPage()` is also
+unchanged — it is an explicit request to print, so it always raises the dialog.
+
+Verified on device, both directions: on Android 17 / API 37 and Android 13 / API 33, returning `true`
+leaves no `com.android.printspooler` process at all, while returning `false` — and registering no
+handler — spawns it. iOS 26.5 and 17.5 pass the same test.
+
+### Removed — `onFaviconChanged`, an event that can no longer fire
+
+**BREAKING.** `onFaviconChanged` and its `FaviconChangedRequest` payload are removed from
+`InAppWebView`, `HeadlessInAppWebView` and `InAppBrowser`. It was Android-only, and on a modern
+Android WebView the framework callback behind it — `WebChromeClient.onReceivedIcon` — is no longer
+dispatched, because the `WebIconDatabase` that fed it has been inert since API 19.
+
+Measured on API 33 and API 37, each step ruling out the previous explanation: on API 37
+`WebViewFeature.DOWNLOAD_FAVICONS_ENABLED` is not even supported; on API 33 it *is* supported,
+`downloadFaviconsEnabled: true` reads back `true`, and the WebView genuinely fetches `favicon.ico`
+(visible through `onLoadResource`) — and `onReceivedIcon` still never arrives. `onReceivedTitle` from
+the same `WebChromeClient` works throughout, so the client is installed and this is not a wiring
+problem. The event was already unsupported on iOS, so it fired on no supported platform.
+
+**Migration:** use `InAppWebViewController.getFavicons()`, which parses the document's own
+`<link rel="icon">` tags and works on both platforms. Note that it is a pull, not an event — call it
+from `onLoadStop` rather than waiting to be told.
+
+`InAppWebViewSettings.downloadFaviconsEnabled` is **kept**: it still controls whether the WebView
+issues the favicon request at all, which is a real per-page network cost. Its documentation no longer
+claims to gate an event.
+
+### Added — Android
+
+Twelve `androidx.webkit` features, each behind its own `WebViewFeature` flag, plus eight
+`android.webkit` APIs the plugin had never exposed. Every one is Android-only and reports "not
+implemented on the current platform" on iOS.
+
+- **`WebViewFeature.MUTE_AUDIO`** — `InAppWebViewController.setAudioMuted()` / `.isAudioMuted()`
+- **`WebViewFeature.PAYMENT_REQUEST`** — `InAppWebViewSettings.paymentRequestEnabled`
+  (closes upstream #2660, supersedes #2722)
+- **`WebViewFeature.WEB_AUTHENTICATION`** — passkeys, via
+  `InAppWebViewSettings.webAuthenticationSupport` + the `WebAuthenticationSupport` enum
+  (what upstream #2743 wanted)
+- **`WebViewFeature.DOWNLOAD_FAVICONS_ENABLED`** — `InAppWebViewSettings.downloadFaviconsEnabled`,
+  which also gates the existing `onReceivedIcon`
+- **`WebViewFeature.BACK_FORWARD_CACHE`** — `InAppWebViewSettings.backForwardCacheEnabled`
+- **`WebViewFeature.ATTRIBUTION_REGISTRATION_BEHAVIOR`** —
+  `InAppWebViewSettings.attributionRegistrationBehavior` + the `AttributionRegistrationBehavior` enum
+- **`WebViewFeature.WEBVIEW_MEDIA_INTEGRITY_API_STATUS`** —
+  `InAppWebViewSettings.webViewMediaIntegrityApiStatus` with per-origin overrides
+  (`WebViewMediaIntegrityApiStatusConfig`, `…OverrideRule`, `WebViewMediaIntegrityApiStatus`)
+- **`WebViewFeature.USER_AGENT_METADATA`** (+ `…_FORM_FACTORS`) — User-Agent Client Hints, via
+  `InAppWebViewSettings.userAgentMetadata`, `UserAgentMetadata`, `UserAgentBrandVersion`,
+  `UserAgentFormFactor`
+- **`WebViewFeature.DEFAULT_TRAFFICSTATS_TAGGING`** —
+  `InAppWebViewController.setDefaultTrafficStatsTag()`
+- **`WebViewFeature.DELETE_BROWSING_DATA`** — `WebStorageManager.deleteBrowsingData()` /
+  `.deleteBrowsingDataForSite()`
+- **`WebViewFeature.MULTI_PROFILE`** — a whole new `ProfileStore` controller surface plus
+  `InAppWebViewSettings.profileName`, and the plugin's own storage APIs are now profile-aware:
+  cookies, web storage, service-worker settings and geolocation all act on the profile the WebView
+  is actually using. `setServiceWorkerClient` remains default-profile only
+- **`WebViewFeature.PRERENDER_WITH_URL`** — `InAppWebViewController.prerenderUrl(WebUri)`
+- **`GeolocationPermissions`** — a new controller surface (`allow`, `clear`, `clearAll`,
+  `getAllowed`, `getOrigins`), profile-aware from the start.
+  **Note that `getOrigins()` returns origins normalised with a trailing `/`**: an origin stored as
+  `https://example.com` reads back as `https://example.com/`. All four other methods accept either
+  form, so listing the origins and acting on each one works — but comparing the list against a
+  string you passed to `allow()` by equality will not match. Measured on Android 17; the dartdoc on
+  `getOrigins` and `allow` now says so
+- **`CookieManager`** — `setAcceptCookie()`, `isAcceptCookieEnabled()`, `hasCookies()`,
+  `isFileSchemeCookiesAllowed()`
+- **`InAppWebViewController`** — `postVisualStateCallback()`, `documentHasImages()`,
+  `flingScroll()`
+- **`InAppWebViewSettings.syncCallbackTimeoutMillis`** — how long the WebView waits for your Dart
+  handler to answer `shouldInterceptRequest` or `onLoadResourceWithCustomScheme` before loading the
+  resource anyway. This was a fixed 10 seconds; a handler that proxies the request through Dart HTTP
+  over a slow link can now be given longer, at the cost of a WebView thread parked for that long.
+  `0` or less keeps the 10s default, so a mistaken `0` cannot switch interception off
+
+### Added — iOS
+
+Fourteen WebKit APIs read out of the iOS 26.5 SDK, plus one feature that was half-built upstream.
+
+- **`ProxyRule.relayHop1` / `.relayHop2`** (iOS 17.0+) — route a proxy rule through a chain of
+  secure relays (RFC 9298) instead of connecting to the proxy endpoint directly. `ProxyRelayHop`
+  was already a public, exported type and the Swift already read these two map keys, but no Dart
+  field ever produced them, so the feature was unreachable from the moment it was written. With a
+  hop set, the configuration is built from the chain rather than from `url` — `url` is still
+  required and must still parse, because the native parses it before it reads the hops. Two hops
+  mean the first relay cannot see the destination and the second cannot see the client
+- **`NavigationAction.modifierFlags` / `.buttonNumber`** (+ the `ModifierFlag` and `ButtonMask`
+  enums) — which keys and mouse button triggered a navigation
+- **`NavigationAction.isContentRuleListRedirect`** — whether a content rule list redirected it
+- **`onShowFileChooser` now fires on iOS** (18.4+), gated on
+  `InAppWebViewSettings.useOnShowFileChooser` — the iOS half of upstream #2146
+- **`InAppWebViewSettings.writingToolsBehavior`** (+ `WritingToolsBehavior`)
+- **`InAppWebViewSettings.preferredHTTPSNavigationPolicy`** (+ `UpgradeToHTTPSPolicy`) — applied to
+  the *live* per-navigation preferences, so it responds to `setSettings`
+- **`InAppWebViewSettings.securityRestrictionMode`** (+ `SecurityRestrictionMode`)
+- **`InAppWebViewSettings.lockdownModeEnabled`**
+- **`InAppWebViewSettings.supportsAdaptiveImageGlyph`**
+- **`InAppWebViewController.isBlockedByScreenTime()`** (iOS 26.0+) — whether Screen Time
+  restrictions are blocking this WebView's current content. Returns `bool?`, and the `null` is load
+  bearing: it means *this OS cannot answer*, which is not the same as `false`. There is **no change
+  notification** — WebKit does not document the property as KVO-compliant and no event is exposed,
+  so read it where it matters (after `onLoadStop`, say). It is per-*content*, not per-WebView
+- **`InAppWebViewSettings.showsSystemScreenTimeBlockingView`** (iOS 26.0+) — whether WebKit draws
+  its own overlay over blocked content. Defaults to `true`, matching WebKit. Setting it `false`
+  does **not** unblock anything; it only stops WebKit explaining why, so pair it with
+  `isBlockedByScreenTime()` or the user sees a blank WebView. Creation-time only, like the other
+  configuration-backed settings
+- **`InAppWebViewSettings.obscuredContentInsets`** (iOS 26.0+) — edge insets that shrink the page's
+  **layout viewport** because your app draws chrome over those areas (a translucent nav bar, a
+  floating toolbar). The page still paints edge to edge; per WebKit's documentation what changes is
+  where `position: fixed` and `position: sticky` elements land. **The precise page-visible effect is
+  not characterised by this plugin** — an attempt to measure it gave inconsistent results, so do not
+  assume a relationship to `env(safe-area-inset-*)`; measure it for the layout you ship. All four
+  values must be non-negative. It is a `WKWebView` property rather than a configuration one, so —
+  alone among the iOS 26.0 additions — it **does** respond to `setSettings` on a running WebView.
+
+  **It is not a fix for the keyboard `contentInset` behaviour** and does not replace the plugin's
+  `keyboardWillShow`/`keyboardWillHide` handling: it exists only from iOS 26.0, so every supported
+  version below that (15, 16, 17, 18) is unchanged. Treat it as new capability for app-drawn
+  overlay chrome.
+- **`InAppWebViewController.setConversationContext()` / `.getConversationContext()`** (iOS 26.0+),
+  with the new `ConversationContext`, `ConversationEntry` and `PersonNameComponents` types — hand the
+  system keyboard the mail or messaging thread the user is replying to, and it offers **Smart
+  Replies** while they type into a web text field. The conversation is your app's, not the page's:
+  the WebView cannot infer it. **Set it before the keyboard appears** — WebKit reads the context when
+  the keyboard comes up, so a context set while it is already open takes effect on the next
+  appearance. An entry missing any of `text`, `senderIdentifier`, `sentDate` or `entryIdentifier` is
+  **dropped** rather than sent half-built, because the native type declares all four non-null and a
+  message with no sender or date would mis-attribute the thread. `getConversationContext()` returns
+  `null` below iOS 26.0, distinct from an empty context
+- **`onInsertInputSuggestion`** (iOS 26.0+), with the new `InputSuggestion` type and the
+  `InAppWebViewSettings.useOnInsertInputSuggestion` gate — the other half of Smart Reply: the
+  keyboard tells you which suggestion the user picked, so you can put it into the page. **The payload
+  is deliberately thin, and that is the API rather than an omission**: `UIInputSuggestion` declares
+  no properties at all, and its only subclass carries a single `smartReply` string, so a suggestion
+  that is not a Smart Reply arrives with every field `null`.
+
+  **Opting in makes your app responsible for inserting the text.** The setting hides the
+  `WKUIDelegate` selector entirely while it is off, the same mechanism as `useOnShowFileChooser` but
+  for a different reason: WebKit documents what it does when the open-panel method is unimplemented
+  and documents **nothing** for this one, while calling the parameter *"the web view where the input
+  suggestion should be inserted"*. Rather than guess, the plugin leaves WebKit's own handling in
+  place until an app asks for the event. Supplying the handler infers the setting automatically, as
+  with `onShowFileChooser`
+- **`CookieManager.setAcceptCookie()` / `.isAcceptCookieEnabled()` now work on iOS too** (iOS
+  17.0+), from `WKHTTPCookieStore.setCookiePolicy` / `getCookiePolicy`. They shipped Android-only
+  earlier in this release; the same two methods now answer on both platforms with the same
+  contract, so the cookie master switch is no longer an Android-only concept.
+
+  **The two platforms agree, and that was measured rather than assumed.** On iOS 26.5, exactly as on
+  Android 13: the default is "accepting"; turning it off deletes nothing and hides nothing —
+  `getCookies()` keeps returning what is already stored; and a programmatic `setCookie()` **is still
+  not blocked**, nor is `deleteCookie()`. The switch governs the WebView's own network traffic, not
+  the app's reads and writes. The shared integration test runs unchanged on both.
+
+  Two platform differences that are real: the scope — process-wide on Android, but on iOS it belongs
+  to the **default data store's** cookie store, so an incognito WebView is unaffected — and the
+  floor. **Below iOS 17.0 `setAcceptCookie()` returns `false` and `isAcceptCookieEnabled()` returns
+  `null`**, meaning *not applied* and *could not be read*, never "cookies are rejected". That is
+  asserted on an iOS 16.4 simulator, because a guard that collapses `null` to `false` is invisible
+  on any simulator at or above the floor. Setting the policy is also **not** a cookie change: it does
+  not notify a `CookieStoreObserver`
+- **`CookieManager.setCookieStoreObserver()`** (iOS **11.0+**, so every supported version), with the
+  new `CookieStoreObserver` type — be told when the cookie store changes instead of polling
+  `getAllCookies()` on a timer. Fires for the plugin's own `setCookie` / `deleteCookie` /
+  `deleteAllCookies` as well as for cookies the page writes — measured on iOS 17.5 and 26.5, where
+  one `setCookie` fires it once, **three in a row fire it three times (nothing is coalesced)**, and
+  a pure read such as `getAllCookies()` fires it not at all. A callback that re-reads the store
+  therefore will not loop; a callback that writes to it will.
+
+  **The notification carries no payload**, matching the platform: it says *that* the store changed,
+  not what changed, so read the store from inside the callback if you need the new state. It
+  observes the **default** cookie store only — a WebView on a non-persistent (incognito) data store
+  has its own. And there is **one observer per app**, not one per `CookieManager`: the store is
+  process-wide, so setting a second observer replaces the first rather than adding a listener. Pass
+  `null` to stop; the plugin only registers with WebKit while an observer is set
+- **`shouldGoToBackForwardListItem`** (iOS 26.0+), with the new `ShouldGoToBackForwardListItemAction`
+  type and the `InAppWebViewSettings.useShouldGoToBackForwardListItem` gate — veto a back or forward
+  navigation before it happens. It reports the `WebHistoryItem` being navigated to (with its `offset`
+  from the current entry, so `-1` is one step back) and `willUseInstantBack`, WebKit's new flag for a
+  target page still suspended in memory.
+
+  **The veto only binds navigations the page starts, and that is measured rather than assumed.** On
+  iOS 26.5, `history.back()` answered `CANCEL` does not happen; `InAppWebViewController.goBack()`
+  answered `CANCEL` **happens anyway** — the event still fires and the answer still reaches WebKit,
+  it is simply not honoured. Reasonable once said out loud, since your app asked for that
+  navigation; not stated either way by the platform. Both halves are pinned by an integration test.
+  This is the only way to veto a back/forward navigation a page starts — `shouldOverrideUrlLoading`
+  never sees them.
+
+  **A resumed page produces no page load**, so when `willUseInstantBack` is `true` neither
+  `onLoadStart` nor `onLoadStop` fires and this event may be your only notice; read `getUrl()` rather
+  than waiting for a load event. **Off by default** because every back/forward navigation waits for
+  your answer, which is latency on a user-visible path; supplying the handler turns the setting on
+  automatically
+- **`onWritingToolsActiveChanged`** (iOS 18.0+), from `WKWebView.writingToolsActive` — fired when
+  the system Writing Tools UI starts or stops operating on text in the page (Rewrite, Proofread,
+  Summarize). Use it to get out of the way while it runs: pause your own editing UI, suspend
+  autosave, stop reloading content the user is having rewritten.
+
+  **It is an event rather than a getter because the platform property is read-only and documented
+  KVO-compliant** — the state changes without your app asking, so a getter would have to be polled.
+  The value starts `false` and no event is sent for that, so a handler — which can only be installed
+  when the WebView is created — cannot miss a transition and has nothing to read back first. The
+  event does not say *which* tool ran or what it changed; WebKit exposes neither. What Writing Tools
+  is allowed to do is `InAppWebViewSettings.writingToolsBehavior`, the other half of this API.
+- **`onNavigationStarted` / `onNavigationRedirected` / `onNavigationCompleted`** (Android), from
+  `androidx.webkit.NavigationListener`, with the new **`WebViewNavigation`** type and
+  **`InAppWebViewSettings.useNavigationListener`**. Supplying any of the three handlers turns the
+  setting on for you.
+
+  **`WebViewNavigation.statusCode` is the single biggest thing here: it is the only way to see the
+  HTTP status code of a navigation that succeeded.** `onReceivedHttpError` fires only for error
+  responses, so a `200` used to be indistinguishable from no response at all. It is `null` until the
+  navigation commits, rather than a `0` you could mistake for a real answer.
+
+  These events also see navigations no other event in this plugin reports — fragment jumps and
+  `history.pushState`, back/forward traversals, reloads — and classify each one
+  (`isBack`, `isForward`, `isReload`, `isRestore`, `isSameDocument`, `wasInitiatedByPage`,
+  `didCommit`, `didCommitErrorPage`). `onNavigationRedirected` reports **every** redirect, unlike
+  `NavigationAction.isRedirect`, which only ever saw the ones `shouldOverrideUrlLoading` was offered
+  the chance to override.
+
+  **These observe; they cannot veto** — that is still `shouldOverrideUrlLoading`. And
+  `onNavigationCompleted` is not a replacement for `onLoadStop`: it fires when the *navigation* is
+  finished, which is before the document's subresources are. "Completed" includes navigations that
+  were cancelled, superseded or turned into a download, so read `didCommit` before assuming
+  anything loaded.
+
+  Use **`WebViewNavigation.id`** to tie the three events of one navigation together. It is
+  synthesised by the plugin rather than taken from the platform — Android identifies a navigation by
+  object identity, which cannot cross a method channel — so it is unique within one `WebView`,
+  released once that navigation completes, and must not be persisted or compared across `WebView`s.
+
+  Requires `WebViewFeature.NAVIGATION_LISTENER`; where that is unsupported the events simply never
+  fire. `WebViewNavigation.webResourceError` needs a second, finer check,
+  `WebViewFeature.NAVIGATION_GET_WEB_RESOURCE_ERROR` — without it every other field still arrives
+- **`onPageLoadEvent` / `onPageDomContentLoadedEvent` / `onPageDeleted` /
+  `onFirstContentfulPaintMillis` / `onLargestContentfulPaintMillis` / `onPerformanceMarkMillis`**
+  (Android), the rest of the same `androidx.webkit.NavigationListener`, with the new
+  **`WebViewPage`** type and **`InAppWebViewSettings.useOnPerformanceMarkMillis`**.
+
+  Three of these do something the plugin simply could not do before. **`onPageDomContentLoadedEvent`
+  gives you `DOMContentLoaded` without injecting a script into the page** — no user script, no
+  bridge call, and nothing for a strict Content-Security-Policy to block. **`onPageDeleted` is the
+  only way to see back/forward-cache eviction**: `InAppWebViewSettings.backForwardCacheEnabled` lets
+  a page be kept alive after you navigate away, and until now there was no way to know whether a
+  given page was still cached or had been discarded. And **`onFirstContentfulPaintMillis` /
+  `onLargestContentfulPaintMillis` are Web Vitals straight from the engine**, with no
+  `PerformanceObserver` of your own to install.
+
+  A **page is not a navigation**. Several navigations can share one page — a `pushState` does not
+  create a new document — and a cached page outlives the navigation that created it. Match
+  `WebViewPage.id` against `WebViewNavigation.pageId` to tie the two together. Note that
+  `onLargestContentfulPaintMillis` can fire **more than once** for one page, because LCP is defined
+  against the largest element painted so far and the engine revises it as bigger content arrives;
+  take the latest value rather than the first. The two paint events report a *duration*, while
+  `onPerformanceMarkMillis` reports a *time* — the platform's own distinction, kept in the parameter
+  names.
+
+  **`onPerformanceMarkMillis` needs its own opt-in and is the only one that does.** A page calls
+  `performance.mark()` as often as it likes, and an instrumented one makes hundreds of calls while
+  loading; every other event here is bounded at about one per page. So supplying a handler for any
+  of the other eight turns on `useNavigationListener` but deliberately **not**
+  `useOnPerformanceMarkMillis` — listening for `DOMContentLoaded` cannot silently sign you up for a
+  message per mark. Supplying a handler for this event turns on both
+- **`onRequestVisitedHistory`** (Android), from `WebChromeClient.getVisitedHistory` — the `WebView`
+  asking your app which URLs the user has already visited, so the page can style its `:visited`
+  links. Return `FutureOr<List<WebUri>?>`.
+
+  **Nothing else in this plugin can answer this**, and that is why it matters: the engine has no way
+  to know what the user visited elsewhere in your app — another screen, another `WebView`, your own
+  bookmark store — so without an answer every link in every page renders as unvisited.
+
+  Three return values, three different meanings. A **list** is what you consider visited. **`null`
+  keeps the platform default**, which is to tell the engine nothing at all — identical to not
+  implementing the event. An **empty list** is a real answer: nothing has been visited.
+
+  It fires **once per `WebView`** and is *not* re-asked as you navigate, so treat it as "what had
+  been visited when this `WebView` started". Both facts are measured, not assumed.
+
+  **On privacy:** history sniffing through `:visited` is the classic attack on exactly this API, and
+  the engine's mitigation was measured here — a link you report as visited and a link you do not
+  **both** read back as unvisited through `getComputedStyle`, so answering does not hand your user's
+  history to any page that asks. The mitigation is the engine's rather than this plugin's, so still
+  answer with URLs the page has a legitimate claim to know about, typically its own origin. The same
+  mitigation means you cannot verify the effect from Dart: the only observable part is that the
+  request arrived
+- **`saveState` gained `maxSize` and `includeForwardState`** (Android), from
+  `WebViewCompat.saveState`, with `WebViewFeature.SAVE_STATE` to feature-detect them. Existing calls
+  are unaffected — with neither argument the method behaves exactly as before.
+
+  `saveState()` has always returned **as much state as the session had**, with no limit: a 9-entry
+  history of large pages measured at **2.0 MB** on both test devices, growing linearly. If you
+  persist that — into `RestorationMixin`, an Android `Bundle`, a database row — the size is now
+  yours to choose. `includeForwardState: false` additionally drops the entries the user can only
+  reach by going *forward*, which an app with no forward button never needs.
+
+  Read the two `null` cases before relying on them: a `maxSize` too small for even the current page
+  saves **nothing** (not a smaller state), and passing either argument on a WebView without
+  `SAVE_STATE` also returns `null` rather than quietly handing back an unbounded state. `maxSize` is
+  a bound on the WebView's own state and not a hard cap on the array you get, which can run a few
+  dozen bytes over it.
+
+- **Cookies during request interception** (Android), from `androidx.webkit`'s `COOKIE_INTERCEPT`:
+  `InAppWebViewSettings.includeCookiesOnShouldInterceptRequest` turns it on, and it does two things
+  at once.
+
+  Your `shouldInterceptRequest` handler now receives the **`Cookie` header** the WebView would have
+  sent, in `request.headers` — which you could not get any other way, since `CookieManager` answers
+  about a url rather than about a request and can hand you the wrong set. And the response you
+  return may carry **`WebResourceResponse.cookies`**, a list of `Set-Cookie` values applied as
+  though the real server had sent them. It is a list rather than a header because `headers` is a
+  `Map`, so it can only hold one `Set-Cookie`.
+
+  ```dart
+  InAppWebViewSettings(
+    useShouldInterceptRequest: true,
+    includeCookiesOnShouldInterceptRequest: true,
+  )
+  // ...
+  shouldInterceptRequest: (controller, request) async => WebResourceResponse(
+    contentType: 'text/html',
+    data: bytes,
+    cookies: ['session=abc; Path=/; HttpOnly', 'theme=dark; Max-Age=3600'],
+  ),
+  ```
+
+  **The trap is that `cookies` is silently ignored when the setting is off** — no exception, no log
+  line. Check `WebViewFeature.COOKIE_INTERCEPT` and set the flag. Leaving the setting `null` keeps
+  whatever the WebView has, which was measured to be off.
+
+- **`ServiceWorkerController.setIncludeCookiesOnShouldInterceptRequestEnabled`** and its getter
+  (Android) — the Service Worker half of the same `COOKIE_INTERCEPT` flag described above. It is a
+  **separate switch** from the `WebView` setting: turning one on does nothing for the other.
+
+  ```dart
+  if (await WebViewFeature.isFeatureSupported(WebViewFeature.COOKIE_INTERCEPT)) {
+    await ServiceWorkerController.setIncludeCookiesOnShouldInterceptRequestEnabled(true);
+  }
+  ```
+
+  The getter returns `bool?` rather than `bool`. `null` means the switch could not be read at all —
+  either the installed WebView lacks the feature, or you passed a `profileName`, for which this
+  setting **does not exist** and never will: it is an `androidx`-only API and named profiles are
+  reachable only through the older framework class.
+
+- **Custom request headers per browsing profile** (Android), from `androidx.webkit`'s
+  `CUSTOM_REQUEST_HEADERS`. Attach a header to a profile and it rides every request that profile
+  makes to a matching origin:
+
+  ```dart
+  await ProfileStore.instance().addCustomHeader(
+    CustomHeader(
+      name: 'X-Tenant',
+      value: 'acme',
+      originRules: {'https://*.acme.example'},
+    ),
+  );
+  ```
+
+  **This is not `URLRequest.headers`.** That applies to one load; this applies to *every* request the
+  profile makes to a matching origin — subresources, prefetches and service-worker requests included
+  (`WebSocket` excluded) — until you clear it. It is process-and-profile state, so clear it when you
+  are done: `clearCustomHeader('X-Tenant')` or `clearAllCustomHeaders()`.
+
+  `originRules` takes the same format as `addWebMessageListener`, e.g. `{'*'}` for every origin. A
+  header whose rules match nothing is silently never sent. Read them back with `getCustomHeaders()`,
+  optionally filtered by `headerName` and `headerValue`, and check one with `hasCustomHeader()`.
+  All five take an optional `profileName`; omit it for the default profile.
+
+  Needs both `WebViewFeature.CUSTOM_REQUEST_HEADERS` and `WebViewFeature.MULTI_PROFILE` — the
+  latter is what makes any profile reachable at all.
+
+- **`CookieManager.setCookies`** (Android and iOS) — write many cookies in **one** platform round
+  trip, with the new `CookieToSet` type:
+
+  ```dart
+  final results = await CookieManager.instance().setCookies(
+    cookies: [
+      CookieToSet(url: WebUri('https://a.example'), name: 'session', value: 'abc'),
+      CookieToSet(url: WebUri('https://b.example'), name: 'theme', value: 'dark'),
+    ],
+  );
+  ```
+
+  Every entry carries its own `url`, so one call can span several origins. The result has one
+  entry per input cookie, **in the order given**.
+
+  **This is a speed change, and the numbers say where the speed comes from.** Measured on
+  iOS 26.5, 100 cookies cost **84 ms** through 100 `setCookie` calls and **~12–16 ms** through one
+  `setCookies` call — roughly **94% of the difference is per-call channel overhead**, not the
+  cookie store. That is why this is implemented on both platforms rather than only where a native
+  batch API exists: on iOS 26.0+ it uses `WKHTTPCookieStore.setCookies:`, and everywhere else the
+  native side loops, which measured within a few milliseconds of the batch call.
+
+  **`false` does not mean the same thing on both platforms**, and this is the asymmetry `setCookie`
+  already had. On Android it is the platform's own per-cookie answer. On iOS it means only that the
+  cookie could not be *constructed*: WebKit's `setCookie:` and `setCookies:` both have a `void`
+  completion handler and never report whether the store accepted anything.
+
+  `CookieToSet` is a separate type from `Cookie` on purpose — a cookie being written has a `url`
+  and a `maxAge`, a cookie being read has neither and reports `isSessionOnly` instead.
+
+- **`WebMessageListener.contentWorld`** (iOS) — put the injected JavaScript object in an isolated
+  content world, where page scripts cannot see it or tamper with it:
+
+  ```dart
+  await controller.addWebMessageListener(
+    WebMessageListener(
+      jsObjectName: 'myBridge',
+      contentWorld: ContentWorld.world(name: 'myBridgeWorld'),
+      onPostMessage: (message, sourceOrigin, isMainFrame, replyProxy) {},
+    ),
+  );
+  // Only code naming the same world sees it; from the page, `myBridge` is `undefined`.
+  await controller.evaluateJavascript(
+    source: "myBridge.postMessage('hi')",
+    contentWorld: ContentWorld.world(name: 'myBridgeWorld'),
+  );
+  ```
+
+  Defaults to the page world, which is what every earlier release did, so existing listeners are
+  unaffected. The DOM is shared as normal — only the JavaScript scope differs.
+
+  **iOS only, and deliberately so.** On Android `ContentWorld` is the plugin's `<iframe>`
+  emulation, shared by `evaluateJavascript` and `UserScript`; `androidx`'s real isolated worlds
+  (`WebViewFeature.JS_INJECTION_IN_FRAME_AND_WORLD`, also new below) are a separate mechanism with
+  no way to evaluate code in one on demand, so a listener placed in one would be unreachable from
+  Dart. Android ignores the value. Check `WebMessageListener.isPropertySupported(...contentWorld)`
+  rather than assuming.
+
+- **`WebViewFeature.JS_INJECTION_IN_FRAME_AND_WORLD`** (Android) — the feature constant for
+  `androidx.webkit`'s real isolated JavaScript worlds. **No plugin API uses it yet**; it is exposed
+  so you can detect what the installed WebView can do. Measured `true` on API 33 / WebView 151 and
+  API 37 / WebView 149.
+
+- **`DownloadStartRequest.isUserInitiated` / `.originatingFrame`** — from `WKDownload`
+
+`WebsiteDataType.WKWebsiteDataTypeScreenTime` is the third member of that family and has shipped
+since the `WebsiteDataType.ALL` fix below. It stays **deliberately out of `ALL`** — see that entry.
+
+### Fixed
+
+**Android — `ProfileStore.hasCustomHeader()` says when it couldn't look: it returns `Future<bool?>`**
+(signature change). `null` means the profile can't be reached: `CUSTOM_REQUEST_HEADERS` or
+`MULTI_PROFILE` is unsupported, or no profile has that name. It answered `false`, which "no such
+header" also answers, so a mistyped profile name read as "the header isn't set". `false` now always
+means no such header. `getCustomHeaders()` keeps answering an empty set for an unreachable profile,
+and its docs now say so. Code that uses the answer as a `bool` needs a null check.
+
+**Android — `WebStorageManager.getQuotaForOrigin()` and `.getUsageForOrigin()` say when they read
+nothing: they return `Future<int?>`** (signature change). `null` means the storage couldn't be
+resolved: a `profileName` that doesn't exist, or any `profileName` without `MULTI_PROFILE`. They
+answered `0`, which a real origin's usage can also be, so a mistyped profile name read as "no
+storage". Code that uses the number needs a null check; `?? 0` keeps the old behaviour.
+
+**Android — `ProfileStore.addCustomHeader()`, `.clearCustomHeader()` and `.clearAllCustomHeaders()`
+say whether they reached the profile: they return `Future<bool>`** (signature change). `false`
+means `CUSTOM_REQUEST_HEADERS` or `MULTI_PROFILE` is unsupported, or no profile has that name, and
+nothing was done. Before, those cases were silent, so a header added to a mistyped profile name was
+simply lost. `true` from `clearCustomHeader` means the profile was reached, not that a header
+matched. Code that `await`s and ignores the result needs no change.
+
+**Android — `WebStorageManager.deleteAllData()` and `.deleteOrigin()` say whether they did anything:
+they return `Future<bool>`** (signature change). `false` means the storage couldn't be resolved: a
+`profileName` that doesn't exist, or any `profileName` without `MULTI_PROFILE`. In that case nothing
+was deleted. The platform computed this answer and the plugin threw it away, so clearing a named
+profile's storage could silently do nothing. `true` means the deletion was handed to the storage,
+not that the data is already gone. Code that `await`s and ignores the result needs no change.
+
+**Android — a `WebViewAssetLoader` path handler can now be released: `PathHandler.dispose()`.**
+Every handler an app created stayed registered for the engine's life, even after no WebView used
+it, and nothing could release it: the public type had no `dispose`, and
+the platform one threw a `LateInitializationError` after unregistering. The plugin doesn't release
+a handler itself, because one can serve several WebViews and be passed to `setSettings` again. Call
+`dispose()` once nothing uses it. It is safe to repeat, and afterwards the handler's path fails to
+load like a URL nothing serves. A device test pins both halves.
+
+**Android — `ChromeSafariBrowser.open` with `isSingleInstance`, `isTrustedWebActivity` or
+`noHistory` set to `null` threw a `PlatformException` instead of opening.** A null now means the
+setting's default (`false`). A device test opens with each one and checks, from the request Chrome
+makes, that a null `isTrustedWebActivity` opens a plain Custom Tab. iOS already ignored null
+settings.
+
+**`shouldOverrideUrlLoading` answers mean the same on both platforms, and `null` no longer
+blocks** (behaviour change). Measured before:
+- a `null` answer cancelled the navigation on both platforms;
+- a handler that threw allowed it on Android and cancelled it on iOS;
+- `useShouldOverrideUrlLoading: true` with no handler cancelled the navigation on Android, and on
+  iOS every navigation, the first load included.
+
+Now `null` and a missing handler are no decision, and the navigation loads. A handler that throws
+cancels on both: the callback is often an allow-list, and a bug in it must not let every navigation
+through. The error is printed. `ALLOW` and `CANCEL` are unchanged. Device tests pin all three on
+both platforms.
+
+**iOS — `setProxyOverride` with a proxy rule it can't parse now throws and keeps the current
+proxy**, as Android already did: it used to drop the rule silently, and with every rule dropped,
+traffic went direct. A device test pins it.
+
+**iOS — `setSettings` with `contentBlockers` that WebKit can't compile now throws and keeps the
+previous rules**: it used to drop every rule silently, so pages loaded unblocked while `getSettings`
+reported the failed rule. It now throws a `PlatformException` (code `contentBlockers`); the call's
+other settings are still applied. A device test pins it.
+
+**Android — an `InAppWebView` rebuilt before its view existed kept the first build's controller**:
+`onWebViewCreated` and the first events went to the first build's callbacks, and removing the
+widget didn't dispose the controller. It now follows the widget in the tree, as on iOS. A device
+test pins it on both platforms.
+
+**iOS — `onUpdateVisitedHistory` fired when a load was requested, not when it happened**: before the
+page had started, and even for a load `shouldOverrideUrlLoading` refused (reported as the refused URL,
+then again as the page it stayed on). It now fires when the load commits, and for a reload, as on
+Android; `pushState`, `replaceState` and fragment changes still report at once. Two device tests pin
+it on both platforms.
+
+**`WebViewFeature.isFeatureSupported` and `isStartupFeatureSupported` are documented to throw on each
+other's features** (a `PlatformException`, not `false`; measured on Android). A new device test pins
+it.
+
+**iOS — `PullToRefreshController.beginRefreshing()` was lost when called before the WebView was on
+screen**: UIKit ignores it then. It is now applied when the WebView appears, as on Android.
+
+**iOS — a popup's `setSettings` could skip a setting it had inherited from its opener**: a popup
+inheriting `javaScriptCanOpenWindowsAutomatically: true` kept it after `setSettings(false)`, because
+the request was compared with the popup's stored default instead of the live value.
+
+**iOS — `contentBlockers` that WebKit can't compile left a blank WebView and no sign of why**
+(an `InAppBrowser` didn't even send `onBrowserCreated`; a popup loaded without the rules). **A
+behaviour change**: the WebView now loads nothing and sends `onReceivedError` for the page, its
+description starting `contentBlockers could not be compiled` and naming WebKit's reason.
+
+**iOS — a WebView unmounted in the frame that mounted it kept running** until a later frame
+composited another platform view: its widget never learned the engine's view id to dispose it by.
+It now disposes by a token of its own.
+
+**A rebuilt `InAppWebView` kept calling the first build's callbacks** (both platforms): after a
+parent rebuild passed new callbacks, events still went to the first build's closures, and one the
+rebuild added never ran. Events now go to the latest callbacks. A callback that switches on a
+native `use*` setting when present at creation (`shouldOverrideUrlLoading`, `onLoadResource`,
+`onDownloadStarting`, the Ajax and fetch interceptors, …) still needs to be there at creation.
+
+**iOS — `onLoadStart`, `onPageCommitVisible` and `onLoadStop` could report the URL of a later
+`loadUrl`**: an event of the previous page delivered after `loadUrl` was called carried the new
+URL, so a page that finished after `loadUrl(B)` arrived as B's `onLoadStop` before B had started.
+Each event now reports its own navigation's URL, as on Android.
+
+**iOS — `onEnterFullscreen` was missed for the first native video fullscreen in the app**: the
+player's window has no scene, and the plugin required it to be in the WebView's.
+
+**iOS — a popup applied its opener's `contentBlockers` and ignored its own** (Android already
+used the popup's own). **Breaking** for an iOS app that relied on a popup inheriting them: a
+popup now applies its own `contentBlockers` and none of its opener's, on both platforms.
+
+**Android — an `AT_DOCUMENT_END` user script in a content world ran while the page was still
+loading**, before the page had even finished parsing, instead of when the same script in the page
+world runs (at `load`). It now runs at the same point.
+
+**iOS — a WebView removed before it was ever drawn stayed alive, its page running**, until some
+later frame drew another platform view (by the engine's code, for good if none did). Flutter's
+engine releases a platform view only while drawing a frame that has, or just had, one. Removing an
+`InAppWebView` now disposes and releases its native WebView at once, except with `keepAlive`.
+
+**iOS — the app could crash when a WebView was removed during an authentication challenge**
+(HTTP auth, server trust, client certificate or deprecated TLS). A background step kept the last
+reference to part of the WebView and released it off the main thread, where it traps.
+
+**An `InAppWebView` rebuilt by its parent was never disposed.** A rebuild above the widget (a
+`setState` that builds a new `InAppWebView`) left its controller with the first widget object, so
+removing the widget later disposed nothing: its JavaScript handlers, and everything else the
+controller's `dispose` releases, stayed alive. Measured on Android and iOS. The controller now
+moves to each new widget object and is disposed with the widget.
+
+**iOS — a pending `callAsyncJavaScript` could wait indefinitely after the page navigated away.**
+It now answers at once with an `error`, as on Android.
+
+**iOS — a popup `InAppBrowser` destroyed its opener, and closing the popup crashed the app.**
+Once a browser opened from `onCreateWindow` had appeared over the browser that opened it, the
+opener was closed (`onExit`) although nothing had closed it, and dismissing the popup crashed.
+The opener now stays open.
+
+**Android — `onNavigationStarted` / `onNavigationRedirected` could report a later state.** A
+start could already carry the final url of a redirect, and a redirect hop could already say the
+navigation had committed with status 200. Each event now describes the navigation as it was at
+that moment.
+
+**Android — `callAsyncJavaScript` and content-world `evaluateJavascript` could hang forever** on a
+page whose Content-Security-Policy blocks inline scripts, on a document with no `body`, or when the
+page navigated away (or the WebView was disposed) before answering. They now answer at once:
+`callAsyncJavaScript` with an `error` that says why, a content-world `evaluateJavascript` with
+`null`.
+
+**Android — a user script in a content world never ran unless `forMainFrameOnly` was `false`.**
+With the default (`true`), a script in any world other than `ContentWorld.PAGE` didn't run at all.
+It now runs in the main frame, as on iOS. The "NOTE for Android" on `UserScript.contentWorld` that
+described this as a limitation is gone.
+
+**Android — a page's events could carry a different page id from its navigation's `pageId`.**
+After a garbage collection the plugin numbered the same document again, so `onPageLoadEvent`,
+`onPageDomContentLoadedEvent` and the Web Vitals events stopped matching
+`WebViewNavigation.pageId`. Ids now stay the same for a page's whole life.
+
+**iOS — a popup WebView never ran its own `initialUserScripts`, and ran its opener's instead** (a
+`windowId` WebView from `onCreateWindow`). WebKit gives the popup its opener's script controller.
+A popup now has its own and runs its own scripts, as on Android. **Behaviour change:** it no longer
+runs its opener's user scripts. `supportZoom`, `useOnLoadResource`, `useShouldInterceptAjaxRequest`,
+`useShouldInterceptFetchRequest` and `enableViewportScale` now come from the popup's own settings.
+It keeps its opener's content blockers.
+
+**Android — a popup WebView's own `initialUserScripts` were unreliable** (a `windowId` WebView from
+`onCreateWindow`): a fast first page in an on-screen popup had none of them, and a headless popup
+had them on no page at all. They're now registered after the window handover and also evaluated
+into the popup's first page, guarded so none runs twice.
+
+**iOS — `ProfileStore.isClassSupported()` and `GeolocationPermissions.isClassSupported()` threw
+instead of answering `false`** (and so did `isMethodSupported` on both). Both classes are
+Android-only, and the iOS package had no stub for them. They now answer `false` on iOS, like every
+other Android-only class.
+
+**`InAppLocalhostServer` printed every served response's headers in release builds.** Five lines of
+the server's own response headers went to the log per file served (measured in a profile build on
+Android). It's now debug-only, like the server's other messages; debug output is unchanged.
+
+**Android — `HeadlessInAppWebView`'s `onShowFileChooser` was never called** (since 6.2.0-beta.3,
+where the event was added). Android's headless params didn't take the field, so the handler was
+dropped and `useOnShowFileChooser` wasn't inferred; a file input opened the system picker without
+asking. It's now passed on, and the setting is inferred as it is for `InAppWebView`. A new device
+test in the example's headless group reads the inferred setting.
+
+**iOS — `InAppBrowser`'s toolbars were drawn with pre-iOS-13 API and looked broken on iOS 26.** The
+top bar left the status-bar area unpainted (a black strip above it), the three spacers in the bottom
+toolbar collapsed into one, and with the top bar visible the URL field and close button overlapped
+the page's own header. The bars are now configured through `UIBarAppearance`, which is what has
+driven bar backgrounds since iOS 13, and the web view is laid out against the safe area when the top
+bar is shown. `toolbarTopBackgroundColor`, `toolbarTopTranslucent`, `toolbarBottomBackgroundColor`
+and `toolbarBottomTranslucent` all take effect again, and `getSettings()` reports what the bars are
+actually using rather than the legacy properties it used to read. A translucent bar with no explicit
+colour is now genuinely transparent — the page shows through it edge to edge — and the back/forward
+buttons are SF Symbols instead of oversized `‹` / `›` text.
+
+**iOS — the page could not be scrolled to the bottom after the on-screen keyboard had been
+dismissed** (upstream `#1947`; upstream PR `#2860` fixes the same defect). While the keyboard is up
+the plugin installs a negative `contentInset` to cancel the enlarged safe area; when the keyboard
+went away it reset only its internal latch and left the inset behind, so the compensation
+over-corrected by the height of the home-indicator safe area and the last ~34 points of the page
+became unreachable, rubber-banding instead of scrolling. Nothing recovered it unless the WebView
+happened to be resized — and the code path exists precisely for apps that set
+`resizeToAvoidBottomInset: false`, where it is not. Measured on iOS 26.5:
+`adjustedContentInset.bottom` settled at `-34` and stayed there; it now settles at `0`. **iOS 17.2+
+only** — below that the plugin never installs the keyboard observers, so the behaviour there is
+unchanged. Unrelated to `InAppWebViewSettings.obscuredContentInsets`, which is iOS 26.0+ and does not
+replace this path.
+
+**Android — `WebMessageListener`'s `allowedOriginRules` could admit an origin it was not written
+for.** The allow-list's IPv6 comparison ran through `InetAddress.canonicalHostName`, a reverse DNS
+lookup, so it compared *hostnames* rather than addresses: a rule of `[::1]` and a page origin of
+`127.0.0.1` both canonicalise to `"localhost"` on a typical machine and matched. A second bug meant
+the IPv6 path ran for **every** origin, not just IPv6 ones, so each check could cost a forward and a
+reverse DNS lookup on the calling thread and told the resolver which host the WebView was visiting.
+Both helpers are now purely syntactic and never touch the network. **This is a tightening** — if you
+relied on two different origins matching because they shared a canonical name, they no longer do.
+
+**Android — a registered `ServiceWorkerClient` stopped being consulted once a second
+`ServiceWorkerController` existed.** Every controller attaches its method-call handler to the same
+method channel, and the last one constructed owns every incoming call — while the client was held
+per instance. `ServiceWorkerController()` builds a new controller each time it is called, so one
+extra construction anywhere in an app silently orphaned the client passed to
+`setServiceWorkerClient`: `shouldInterceptRequest` stopped firing, service worker requests went
+through unintercepted, and nothing raised an error. The client is now process-wide, matching the
+platform — `ServiceWorkerControllerCompat.getInstance()` is a singleton with a single native client
+registration. **Note the consequence**: `serviceWorkerClient` reads the same value from every
+`ServiceWorkerController`, and setting it through any of them replaces it for all. That was already
+true of the *native* registration; only the Dart side disagreed.
+
+**iOS — declining `onCreateWindow` leaked the child WebView.** Returning `false` (or not handling
+the event) tells the plugin to drop the `window.open` child and load the URL in the opener. The
+child was dropped by the plugin but not by WebKit, which kept calling its delegate afterwards; those
+late callbacks were queued for a window that would never be created, so their WebKit completion
+handlers were never called, the navigation was never decided, and the `WKWebView` was never
+released. Every declined `window.open` cost one leaked WebView for the life of the process. Nothing
+about the API changes — apps that already return `false` simply stop leaking.
+
+**Two long-standing iOS behaviours are now written down as permanent decisions rather than left to
+look like unfinished work.**
+
+`onDownloadStarting` is a notification, not a hook — it cannot start, alter or veto a download, and
+the plugin will never download the file for you. On Android the WebView never downloads it anyway;
+on **iOS the plugin actively cancels** the `WKDownload` by dropping its delegate, and it does so
+**whether or not `InAppWebViewSettings.useOnDownloadStart` is `true`**. With that setting `false`
+— its default unless the event is implemented — a download link therefore appears to do nothing at
+all, with no event and no error. Because the download never proceeds there is no native progress,
+completion or failure to surface, and none is planned. Fetch `downloadStartRequest.url` yourself,
+remembering that your request shares none of the WebView's cookies, `User-Agent` or auth headers.
+
+The **iOS find-in-page JavaScript is deliberate and permanent**, not a missing native port. WebKit's
+`findString:withConfiguration:` hands back a `WKFindResult` with a single property, `matchFound`, so
+it cannot produce `activeMatchOrdinal`, `numberOfMatches` or `isDoneCounting`, and it selects one
+match where `findAll` promises every match highlighted. The plugin already uses the native find
+where a counting API exists — `UIFindInteraction` on iOS 16+, via
+`InAppWebViewSettings.isFindInteractionEnabled`.
+
+**iOS — HTTP auth credentials were shared between WebViews, and could reach the wrong host.** The
+queue of saved credentials that `HttpAuthResponseAction.USE_SAVED_HTTP_AUTH_CREDENTIALS` walks was
+process-global: two WebViews authenticating at once consumed each other's credentials, and any
+WebView finishing or failing a load emptied the queue mid-challenge. It is now per WebView, and a
+queue filled for one protection space is discarded rather than popped for another — so a password
+saved for one host can no longer be offered to a different one. `getCertificate` also documents that
+on iOS it reports a **process-wide** certificate recorded during a server-trust challenge, which
+WebKit issues only once per host per process.
+
+**iOS — 14 settings are applied only when the WebView is created, and now say so.** Changing any
+of them with `setSettings` on a running WebView has never had an effect, and the plugin no longer
+pretends otherwise: `WKWebView.configuration` returns a fresh copy on every access — measured, not
+inferred — so writing to it is discarded. The list is `mediaPlaybackRequiresUserGesture`,
+`allowsInlineMediaPlayback`, `suppressesIncrementalRendering`,
+`ignoresViewportScaleLimits`, `dataDetectorTypes`, `allowsAirPlayForMediaPlayback`,
+`allowsPictureInPictureMediaPlayback`, `applicationNameForUserAgent`,
+`allowUniversalAccessFromFileURLs`, `limitsNavigationsToAppBoundDomains`,
+`upgradeKnownHostsToHTTPS`, `incognito`, `cacheEnabled` and `sharedCookiesEnabled`. (A fifteenth,
+`selectionGranularity`, has since been removed: see above.) Each one's dartdoc says so, and two name the live alternative: use `userAgent` instead of
+`applicationNameForUserAgent`, and `preferredHTTPSNavigationPolicy` instead of
+`upgradeKnownHostsToHTTPS`. **To change one of these, recreate the WebView** — as the example app
+does, by keying the widget on its settings revision. Everything else keeps responding to
+`setSettings` as before, including all of `preferences`-backed settings such as `minimumFontSize`,
+`isTextInteractionEnabled` and `shouldPrintBackgrounds`.
+
+**iOS — `onReceivedClientCertRequest` returning `PROCEED` can silently send no certificate, and
+this is now documented.** If the PKCS#12 file cannot be loaded, iOS falls back to
+`performDefaultHandling`: the navigation continues **without** a client certificate and the server
+sees an unauthenticated request. Nothing reaches Dart — no error, no exception — so the only symptom
+is the `401`/`403` that arrives at `onReceivedHttpError`.
+
+The case that catches people out is **iOS 17.x**, where `SecPKCS12Import` cannot read containers
+encrypted with `PBES2 / PBKDF2 / AES-256-CBC` — the *default* for `openssl pkcs12 -export` under
+OpenSSL 3 — and reports the failure as *"The user name or passphrase you entered is not correct"*
+for a file whose passphrase is correct. The same certificate works on iOS 26. Run
+`openssl pkcs12 -info -nokeys -noout -in cert.pfx`; if it says `PBES2, PBKDF2, AES-256-CBC`,
+re-export with `-legacy` to support iOS 17.x, accepting that flag's weaker encryption. No plugin
+code can work around it. (This is why the suite's own `SSL request` test fails on iOS 17.5 and
+passes on 26.5 — it is a platform floor, not a defect.)
+
+**iOS — `WebsiteDataType.ALL` did not mean all, so clearing website data left data behind.**
+The set held only the ten `WKWebsiteDataType*` constants that existed in iOS 9–11.3; the iOS 26.5
+SDK declares fifteen. `WebStorageManager.removeDataFor` / `.removeDataModifiedSince` with
+`WebsiteDataType.ALL` — the documented way to wipe a site's storage — silently left behind the
+origin-private file system (`WKWebsiteDataTypeFileSystem`, iOS 16+), DRM key storage
+(`WKWebsiteDataTypeMediaKeys`), search field history
+(`WKWebsiteDataTypeSearchFieldRecentSearches`) and the deviceId hash salt
+(`WKWebsiteDataTypeHashSalt`, all iOS 17+). All four are now constants and are in `ALL`. Nothing in
+the API reported the gap, which matters because this is the call an app makes to honour a
+"delete my data" request.
+
+`WKWebsiteDataTypeScreenTime` (iOS 26+) is also added as a constant but is **deliberately kept out
+of `ALL`**: passing it to `removeDataModifiedSince` terminates the app on iOS 26.5 from inside
+WebKit, and an uncaught Objective-C exception there cannot be caught in Dart. Its dartdoc carries
+the measurement. If you pass a hand-built set rather than `ALL`, do not add it.
+
+**iOS — four bugs that silently swallowed events, all found by running the integration suite on a
+simulator for the first time:**
+
+- **Ten `WKUIDelegate` / `WKNavigationDelegate` methods were never called at all.** The Swift 6
+  migration left them declaring plain `@escaping (…) -> Void` handlers where the SDK declares
+  `WK_SWIFT_UI_ACTOR` (`@MainActor @Sendable`), so Swift never inferred `@objc`, no selector was
+  exported, and WebKit fell through to its built-in defaults — **with zero compiler diagnostics.**
+  The consequences were user-visible: `onJsAlert` / `onJsConfirm` / `onJsPrompt` never fired (so
+  JavaScript `confirm()` always returned `false` and `prompt()` always `null`),
+  **`shouldOverrideUrlLoading` could not block a navigation** (`NavigationActionPolicy.CANCEL` was
+  ignored), `onNavigationResponse`, `onPermissionRequest`, `shouldAllowDeprecatedTLS`,
+  `onReceivedServerTrustAuthRequest` / `onReceivedHttpAuthRequest` /
+  `onReceivedClientCertRequest` and the device orientation/motion permission request were all dead.
+  **11 integration tests went green on this one fix.**
+- **`callHandler` from a cross-origin iframe silently returned `undefined` on iOS.** The injected
+  bridge kept its `{resolve, reject}` table on `window.top`, which **throws** in a cross-origin
+  frame; the `catch` called `resolve()` with no argument, so the promise settled immediately and
+  empty while the Dart handler was still running. iOS now uses `WKScriptMessageHandlerWithReply`,
+  where the promise belongs to the frame that called. **Android still behaves the old way**, and
+  `addJavaScriptHandler`'s documentation now says so — use a `WebMessageListener` when a
+  cross-origin frame needs an answer on both platforms
+- **A throwing JavaScript handler hung the caller forever.** The error path built the rejection by
+  interpolating the message into a single-quoted JS string literal escaping only `'`, so any message
+  containing a newline — routine for `Exception` — produced invalid JavaScript, the
+  `evaluateJavaScript` failed, and the promise stayed **pending for the lifetime of the page**:
+  `await window.flutter_inappwebview.callHandler(...)` never settled
+- **`onPrintRequest` killed the app on iOS 26.** `UIPrintInteractionControllerDelegate` is declared
+  `NS_SWIFT_UI_ACTOR`, but UIKit calls it from a background thread, so Swift 6's executor check
+  trapped and took the process down
+- **A DNS failure threw inside the plugin on iOS 26, so `onReceivedError` never reached app code.**
+  iOS 26 returns `NSError -1006` where 17.x returned -1003; `-1006` was unmapped and the generated
+  `fromMap` force-unwrapped the lookup. Both codes now resolve to `WebResourceErrorType.HOST_LOOKUP`
+  (matching Android's single `ERROR_HOST_LOOKUP`), and the code generator now falls back to an
+  enum's own catch-all constant instead of emitting a bare `!`
+- **`onEnterFullscreen` never fired for fullscreen video on iOS 26**, and `onExitFullscreen` with it.
+  The plugin detects fullscreen media from `UIWindow.didBecomeVisibleNotification` and checks the
+  window's size; on iOS 26 that notification arrives **before the window is laid out**, with a zero
+  frame, so a window that was about to be fullscreen was rejected. The size check now re-runs once
+  the window has been laid out. iOS 17.x was unaffected
+- **A leaked `WKURLSchemeTask`** in the custom-scheme handler
+- **`InAppWebViewSettings.allowingReadAccessTo` is documented as *not* a security boundary**, where
+  it previously told you to set it "to prevent WebView from reading any other content". Measured on
+  iOS 17.5 and 26.5: a `file://` page loads a sibling directory's script even with the scope narrowed
+  to a directory that excludes it, and the plugin was verified to pass the right URL to WebKit. If a
+  local page must not reach a file, do not put that file where the page can name it
+- **`findAll` found nothing when the search text contained an apostrophe or a backslash**, wherever
+  `InAppWebViewSettings.isFindInteractionEnabled` is `false`. The term was interpolated into
+  JavaScript source unescaped, so `it's` made the script invalid and it failed silently — from Dart,
+  indistinguishable from a page with no matches. The remaining 20 hand-escaped interpolation sites
+  went through the same helper in the same pass; **none of those was a measured defect**, but one
+  changes behaviour: `UserScript.allowedOriginRules` are compiled with `new RegExp` and the old
+  escaping ate backslashes, so `https://.*\.example\.com` was silently compiled as
+  `https://.*.example.com` — a wider match than written
+
+**Android:**
+
+- **`HeadlessInAppWebView.setSize` / `getSize` did not round-trip on Android.** The size is in
+  logical pixels; Android layout params are `Int` physical pixels, and the conversion **truncated**
+  in one direction and divided back in the other, so `Size(600, 800)` came back as
+  `Size(599.795, 800)` at density 390 and a non-integer size lost precision at every density. The
+  round-trip is now exact. `getSize` also reported a `-1` ("match the screen") axis as a *physical*
+  pixel count — `Size(1080, 2400)` for a screen 411.4 logical pixels wide — and now answers in
+  logical pixels like every other value in the API. iOS was already correct
+- **`CookieManager.flush()`'s `Future` never completed.** The native side never replied on the
+  channel, so `await flush()` hung forever. Unrelated to the return-type change below — this was a
+  missing reply, not a missing value
+- **`CookieManager.flush()` now returns `Future<bool>` instead of `Future<void>`**, matching
+  `setCookie` / `deleteCookie` / `deleteCookies` / `deleteAllCookies` / `removeSessionCookies`.
+  The native side already computed the answer — `false` when the cookie store cannot be resolved,
+  meaning **nothing was written** — and Dart discarded it, which also made this class's own
+  documentation false: it promises that a profile-scoped call "reports failure", which a `void`
+  cannot do. Source-compatible for callers (`await manager.flush();` is unchanged, and
+  `Future<bool>` still satisfies a `Future<void>` variable); breaking only for an external
+  implementation of `PlatformCookieManager`
+- **A blocking callback could hang the WebView forever.** The four synchronous callbacks
+  (`shouldInterceptRequest`, `onLoadResourceWithCustomScheme`, a custom `WebViewAssetLoader`
+  `PathHandler.handle`, and `ServiceWorkerClient.shouldInterceptRequest`) waited on a latch that was
+  not always released; the wait is now always released and bounded (10s). The first two can since be
+  retuned through `InAppWebViewSettings.syncCallbackTimeoutMillis`
+- **The bundled `FileProvider` granted access to the entire external-storage root.** It is now
+  scoped, and ships its own `@xml/inappwebview_provider_paths` (upstream #2874 / #2873)
+- **Six bugs carried through the Java → Kotlin translation**, fixed once the diff was readable:
+  `MediaSizeExt` unit conversion, `HeadlessInAppWebView.setSize`, `mayLaunchUrl`, `getRealSettings`,
+  a boxed-value comparison in `setSettings`, and `JsBeforeUnloadResponse.toString()`
+- **AGP 9 / ProGuard** compatibility (upstream #2852, #2765, #2761)
+
+**Both platforms / tooling:**
+
+- **`WebResourceErrorType.HOST_LOOKUP` threw when read on Android.** The constant accepts a second
+  inbound native code on iOS, and the generated closure for that returned an untyped `const []` on
+  every other platform, which failed the cast in its own initialiser:
+  `type 'List<dynamic>' is not a subtype of type 'List<int?>'`. Any Android code touching the
+  constant crashed — including `onReceivedError` handlers comparing against it. Fixed in the
+  generator, with a regression test
+- **An unmapped permission resource killed `onPermissionRequest` on both platforms.**
+  `PermissionRequest` / `PermissionResponse` force-unwrapped the `PermissionResourceType` lookup, so
+  a single `PermissionRequest.RESOURCE_*` string Android adds, or a `WKMediaCaptureType` raw value
+  Apple adds, threw inside the channel handler and the event never reached app code — the app just
+  never sees the prompt. `PermissionResourceType.UNKNOWN` is the fallback again; unlike the constant
+  of that name this fork removed, it is **not** platform-annotated, describes no platform API, and
+  exists only for this purpose. Treat it as "deny unless you know better" — the example does
+- The code generator emitted broken code for `Map<String, SomeEnum>` fields (both directions), and
+  emitted a bare `!` on every non-nullable enum lookup — both fixed, with regression tests
+- Every mirrored `WebViewFeature` constant is now pinned against the real `androidx.webkit` AAR by a
+  test: six of the declared flags are `@Deprecated` tombstones that `isFeatureSupported` **throws**
+  for, and five others have a *value* that differs from their name
+- `analysis_options.yaml` (upstream #2758), 16 KB page size (#2703 — determined not applicable: the
+  plugin ships no native code of its own)
+- **`WebMessageListener.allowedOriginRules`' wildcard admitted origins it did not name.** The match
+  was an unanchored substring test, so `https://*.example.com` also admitted
+  `foo.example.com.evil.test` — the suffix occurs in the middle of a host whose registrable domain
+  belongs to somebody else. It is now anchored at the end of the host: `*.example.com` matches
+  `foo.example.com` and neither bare `example.com` nor `foo.example.com.evil.test`. **A pure
+  tightening** — nothing that matched before matches now — so the only rules affected are ones that
+  were admitting more than they said. On iOS this is the check that decides whether the listener's
+  JavaScript object exists, and it is the only gate on the Dart → page direction, so an app could
+  `postMessage` into a page its allow-list never named; on Android the WebView does the matching
+  natively and was never affected. The dotless spelling `*example.com` is deliberately unchanged
+- **A saved password could be sent to the wrong host, on both platforms.** The `USE_SAVED_HTTP_AUTH_CREDENTIALS`
+  queue is filled by matching host + scheme + realm + port, but nothing re-checked that when handing
+  a credential out, so a queue filled for host A could be popped for host B — reachable from a single
+  page with authenticated subresources on a second origin. Fixed on iOS in 7.0.0's earlier
+  `credentialsProposed` work and now on Android. On Android the same state was additionally
+  **process-global**, shared by every WebView in the app: one WebView's `onPageFinished` emptied
+  another's queue mid-challenge, and one WebView's failures were reported to another's handler as
+  `HttpAuthenticationChallenge.previousFailureCount`. Both are now per-WebView
+- **`HttpAuthenticationChallenge.previousFailureCount` counted from 1 on Android and 0 on iOS; it
+  now counts from 0 on both.** The value is the number of attempts that have *already* failed, so
+  three challenges for one protection space report `0, 1, 2` everywhere. Android is what changed —
+  it incremented before dispatching the challenge, where iOS forwards the count WebKit supplies —
+  which makes this **breaking for Android code that tested the value against a literal**, the usual
+  reason being "give up after N attempts". Such code was already wrong on one platform or the
+  other; it can now use a literal safely. If you carry a workaround for the offset, remove it
+- **iOS: a WebView released off the main thread could crash the app.** The crash surfaced in
+  `WebViewChannelDelegate`'s deinit and presented as the app dying with no Dart error and no
+  exception. Its trigger was a channel callback holding a strong reference to the WebView, which the
+  Flutter engine could release on a background thread; the three authentication-challenge callbacks
+  now hold it weakly. Nothing in the public API changes
+- **Android: changing `InAppWebViewSettings.webViewAssetLoader` through `setSettings` never took
+  effect.** The native side rebuilt the loader from the settings being replaced rather than the
+  incoming ones, so the old path handlers kept serving; with a `CustomPathHandler` the new handler's
+  Dart method channel was left with nothing listening on the native end. Unrelated `setSettings`
+  calls also disposed and recreated every custom path handler's channel delegate, which they no
+  longer do
+- 48 dead availability checks removed on iOS — all of them at or below the new 15.0 floor — along
+  with the below-iOS-14 `callAsyncJavaScript` path and the dead `SFAuthenticationSession` branches;
+  and the dead ~300-line `InputAwareWebView` path deleted on Android
+
+### Internal
+
+- **Version 7.0.0 in the pubspec, which said 6.2.0-beta.3 under this CHANGELOG's 7.0.0 heading.** The
+  platform interface, Android and iOS constraints are `^7.0.0` (were `^1.4.0-beta.3`,
+  `^1.2.0-beta.3`, `^1.2.0-beta.3`), and so is the example's platform interface dev dependency; all
+  five packages ship at 7.0.0, the annotations package included.
+
+- **On iOS, the device tests' dropped frame is fixed where it happens; the 2 s watchdog stays as a
+  backstop on both platforms.** After a frame the live test binding skipped, the test helper now
+  asks the engine for the next frame itself. When the binding already asked, the engine treats the
+  two requests as one. When a pump started inside that frame, the binding asks for nothing, and this
+  request is what ends the hang. It was first caught in the act: in 15 runs of the popup tests on
+  iOS, both watchdog rescues came right after such a frame. With the change, 15 more runs had no
+  rescue and no extra frames. A forced repro of the hang, without a WebView, waited 2 to 2.4 s for
+  the watchdog in 5 of 6 cases on iOS and Android before; now all 6 wait one frame (13 to 19 ms).
+  Android doesn't get it: there, the same request made frames come later after skipped frames
+  (176 gaps over 200 ms in a full `in_app_webview` run against 19 without), for a reason not yet
+  known, so Android keeps the watchdog alone
+- **Android device tests pin what each clearing method keeps.** One test per method: an origin gets
+  a cookie, `localStorage`, IndexedDB, Cache Storage, OPFS data and a service worker, then the method
+  runs and a fresh WebView reads back what's left. The expected results are the ones the docs state:
+  - `clearAllCache` keeps all six;
+  - `deleteAllCookies` removes only the cookie;
+  - `deleteAllData` removes `localStorage`, IndexedDB and OPFS;
+  - `deleteBrowsingData` removes all six.
+
+  The tests passed on Android 17 and on Android 13 (WebView 151), where these results hadn't been
+  measured before. Until now nothing checked that `deleteAllData` deletes anything: a native mutant
+  that skipped the call passed every test
+- **An Android device test pins what `WebStorageManager` counts and what `deleteOrigin` clears.**
+  An origin using IndexedDB and Cache Storage is listed by `getOrigins` with both counted in its
+  usage. `deleteOrigin` then clears the IndexedDB and keeps the Cache Storage, so the origin stays
+  listed. This is also the missing positive control for the existing "`localStorage` alone isn't
+  listed" test, whose comment and the usage test's name no longer blame Web SQL. The example app's
+  storage labels say what the methods clear
+- **Device tests cover what `onReceivedError` reports for a load that can't connect.** A refused
+  connection is reported on both platforms as `CANNOT_CONNECT_TO_HOST`. For port 1, which the
+  engines refuse to use, Android reports `UNKNOWN` (`net::ERR_UNSAFE_PORT`) while iOS loads
+  `about:blank` with no error. That iOS behaviour is WebKit's (a bare `WKWebView` does the same),
+  and the test pins it so a WebKit change shows up. An earlier note that iOS reported nothing for
+  an unreachable host had tried port 1: a closed port or an unknown host is reported on iOS too.
+  `onReceivedError`'s doc now says so
+- **The device tests' dropped frame is a hang in Flutter's test binding, and apps don't get it.**
+  Measured in a plain app first: over 630 cycles of mounting and removing WebViews and popups on
+  Android and iOS, no frame stalled for a second. A control that withheld one frame froze the app
+  until the probe asked the engine again, except on Android right at a view's creation, where the
+  view's metrics update asks the engine itself. Then reproduced without a WebView: when a pump
+  starts between `onBeginFrame` and `onDrawFrame` of a frame the live test binding skipped, the
+  binding completes it without drawing and asks for no next frame, so the following pump waits
+  forever. The watchdog's documentation now says so; the watchdog is unchanged
+- **Every device test is protected from a dropped frame, not only the converted ones.** A watchdog
+  installed for the whole run asks the engine for a frame when a pump has had none for 2 s,
+  and prints that it did; it replaces the per-pump rescue. Measured: no false alarm in a full
+  `in_app_webview` group on Android or iOS, and on its own it carried 15 of 15 popup-test runs through
+  6 dropped frames
+- **The all-groups test entry point (`webview_flutter_test.dart`) runs to the end on Android.**
+  `printCurrentPage` raises a print dialog nothing can dismiss, and it took every later group down
+  with it; it now skips there (it still runs in its own group). Measured: all groups ran, 342 passed
+  in 928 s. The one failure that run found was a `WebStorageManager.getOrigins` test that assumed no
+  earlier test had used storage; it now checks only the origin it writes to
+- **An Android device test covers a WebView removed in the frame after it was added**, in both
+  rendering modes: its page stops and its controller is disposed. Measured first: by ordinary timing
+  the view is always created before that frame completes (6 / 6); the literal same-frame case can't
+  run on Android, where Flutter's own debug assertion fires first
+- **Device tests no longer lose a whole run to a dropped frame.** As a WebView is mounted (a popup,
+  so far) or removed, a test's pump sometimes never gets a frame (measured: frames enabled, one
+  scheduled, the platform thread answering; the test binding's own hang, found later); every later test then failed on the test binding's
+  asserts. A pump that has had no frame for 2 s now asks the engine again, which brought it each
+  time, and prints that it did. All the `WebView Windows` tests run under one per-test deadline,
+  and a deadline failure reports the scheduler's state
+- **The popup and rebuild device tests name the step they hang in.** A shared `TestDeadline`
+  (50 s, under the 60 s test timeout) bounds each wait and pump in the `WebView Windows` popup tests
+  and the three "controller is disposed with its widget" tests, so a hang fails with its step and
+  state instead of an anonymous timeout. The first measured runs named one: frames pumped right
+  after mounting a popup, which then never came (2 of 5 group runs). `window.open() with target
+  _blank opens in same window` records its loads instead of waiting on a broadcast stream, which
+  misses one that came before the wait
+- **A device test covers the Android keyboard workaround without Hybrid Composition:** the
+  keyboard stays up on an input, and a tap outside dismisses it. It needs a docked soft keyboard,
+  which the test emulators (hardware keyboard) don't show by default, so there it skips; its
+  comment says how to get one on API 33 and API 37
+- **The example's `LaunchScreen.storyboard` no longer warns "older than the deployment target".**
+  Its `<deployment version="4352">` is gone, as `WebView.storyboard`'s was. Measured with Xcode
+  26.6's `ibtool`: the warning comes for any `version` below 5376, whatever the minimum deployment
+  target (15.0, 17.0 and 26.0 tried), and never without the attribute, so the message doesn't
+  compare against the deployment target at all
+- **The example's support screen showed 26 wrong parameter lists; they are fixed and gated.**
+  Only return types and `static` were checked against the facade before. Measured: 15 left out
+  optional parameters without a `...` (`profileName`, `isKeepAlive`, `maxSize`, …), 7 named a
+  parameter that is positional or used a wrong name (`hasWebMessageListener({required String
+  jsObjectName})` for `hasWebMessageListener(WebMessageListener webMessageListener)`), 2 had a
+  wrong type, and 2 abbreviated ones named a parameter that doesn't exist or mistyped one.
+  `support_checker_signature_test` now checks every parameter list: exactly when written out,
+  and each named parameter when abbreviated with `...`
+- **`a malformed proxy rule fails as a named error` no longer fails on iOS**: it tests androidx's
+  validation and the Pigeon error path, and on iOS it called the Android-only
+  `WebViewFeature.isFeatureSupported` first (`UnimplementedError`). It runs on Android only now.
+  On iOS the same six inputs were measured: `setProxyOverride` returns normally and drops the rules
+  it can't parse
+- **New device test `a popup WebView's content blockers apply to its first page`** (both
+  platforms): the popup's own `BLOCK` rule on its first document must stop it (an error, no
+  `onLoadStop`). On iOS that pins the wait before a popup's first navigation until its own rule
+  list is compiled: released early, the page loaded, which the `CSS_DISPLAY_NONE` tests could not
+  see
+- **New device test `a popup browser runs its own user scripts, not its opener's`** (in_app_browser
+  group, both platforms): a `windowId` `InAppBrowser` opened from its opener's `window.open` runs
+  its own document-start `initialUserScripts`, not the opener's, and has `window.opener`. On iOS
+  this was pinned only by a throwaway probe since the fix that gave a popup its own script
+  controller, because closing a popup browser crashed until the opener-disposal fix. Undoing either
+  half of that fix fails it on iOS
+- **New device test `loadUrl does not relabel the previous page's events`** (both platforms):
+  page A blocks its web process for 1.5 s after it commits, `loadUrl(B)` is called from A's
+  `onPageCommitVisible`, and the first event naming B must be B's own `onLoadStart`, with one
+  `onLoadStop` for B. It failed on iOS before the fix above
+- **The iOS `saveState` test's lost history entry is explained.** On iOS, `onLoadStop` for one
+  navigation can arrive carrying the URL of a `loadUrl` issued after it. In the iOS group, the
+  initial `about:blank`'s `onLoadStop` arrived as page 1's, page 1 not yet started, and page 2 then
+  replaced page 1 (2 of 60 tries in the group). The test already waits for each page to reach the
+  back/forward list before loading the next, which measured 5 of 5 correct through the same race;
+  its comment now gives the cause. Comment only; the plugin fix is filed separately
+- **Two iOS device tests that sometimes timed out in group runs now fail at the step that hangs.**
+  `shouldGoToBackForwardListItem can veto a back navigation` subscribed to `onLoadStop` for its
+  first page only after `onWebViewCreated`, so a fast local load could finish first and the test
+  waited until its 60 s timeout; measured, adding 3 s before that subscription timed it out. It now
+  records every `onLoadStop` from creation and waits at most 20 s. `exit fullscreen event` and
+  `Video plays fullscreen when allowsInlineMediaPlayback is false` (which had no time limit at all
+  and once held a run for 17 minutes) wait at most 15 s for the page and for `onEnterFullscreen`,
+  and fail with the video's state: paused, ready state, current time, whether it is displaying
+  fullscreen, and its error.
+- **The popup device test `a popup WebView keeps its opener's content blockers and uses its own
+  settings` is now two tests:** `a popup WebView applies its own content blockers, not its
+  opener's` (Android and iOS; it failed on iOS before the fix) and `a popup WebView uses its own
+  settings` (iOS). Their shared popup helper fails within 20 s naming the step that didn't come
+  (the opener's `onCreateWindow`, or the popup's load).
+- **New device test, `a document-end script in a content world runs when one in the page world
+  does`** (Android and iOS): both scripts record the page's `readyState` into its `<html>` element,
+  on a page whose image Android holds back 2 s.
+- **The iOS device test `can open new window and go back` uses two local fixture pages, and
+  waits with a limit.** It failed on every run. Logged: with https://flutter.dev/ and
+  https://github.com/flutter, the back navigation committed and was then cancelled a few ms later
+  (`-999`, so no `onLoadStop`) in 5 of 6 runs, while the same steps between two plain fixture
+  pages finished in 5 of 5: the live sites' own scripts. Each wait now gives up after 20 s and
+  names the `onLoadStop` URLs that did arrive, instead of hanging until the 1-minute test timeout.
+- **New device test, `a pending callAsyncJavaScript answers when a WebView that was never
+  composited is disposed`** (Android and iOS): the dispose case without a drawn frame, which on
+  iOS waited for the engine's release before the WebView was disposed explicitly.
+- **New tests for disposal after a rebuild.** Device (Android and iOS): `the controller is disposed
+  with its widget`, then the same after a parent rebuild, and after a rebuild that keeps one
+  platform widget object (`InAppWebView.fromPlatform`). Host: the facade hands the old platform
+  widget to the new one on a rebuild, before `dispose`.
+- **The device test `a pending callAsyncJavaScript answers when the WebView is disposed` now runs
+  on iOS too.** It was Android-only because an unmounted iOS widget's WebView looked like it was
+  never disposed. Measured, that came from the test itself: with no pointer activity the test
+  binding draws only the frames a test pumps, so the platform view was never composited, and the engine keeps a never-composited
+  view until a later frame composites another one. The test now pumps one frame before unmounting.
+  Then the WebView is disposed within milliseconds and the pending call is answered.
+- **New `InAppBrowser` device test, `a popup browser leaves its opener open`** (Android and iOS):
+  a popup browser over its opener, with the opener checked alive after the popup has appeared and
+  after it closes.
+- **The `Programmatic Scroll` device test polls for the scroll position instead of reading it
+  once.** On Android a read straight after `scrollTo` / `scrollBy` can briefly return the previous
+  position, because the renderer applies the scroll asynchronously. Measured on API 37: 2 reads in
+  120 calls, each correct 25 ms later and steady afterwards. That was this test's intermittent
+  failure. It now waits up to 2 s for the expected position and still fails if it never arrives.
+- **The `saveState` device tests now check each history entry as they build it.** In one iOS run
+  the WebView's history had lost page 1 before the state was saved, although page 1 had finished
+  loading. The restore test then failed two steps later with only a count. The history builder now
+  waits for every page to appear in the back/forward list, in order, before loading the next. If
+  one never does, it fails at that step and prints the list. The cause on iOS isn't known yet.
+- **The popup user-script device test now runs on iOS too**, and checks that the opener's own
+  user script does not run in the popup. A new iOS-only test checks that a popup keeps its opener's
+  content blockers and applies its own `supportZoom: false`.
+- **Two device tests pin how Android gives a popup WebView its user scripts.** A WebView created
+  for a `windowId` doesn't receive the scripts added at creation, so the plugin registers them at
+  the popup's first page start and evaluates them into that first page. One test covers a popup
+  shown beside its parent (a document-start script and a document-end one in a content world), one
+  a headless popup; both check the first page, run counts, and the page after a reload.
+- **The `flingScroll` device test no longer flings straight after `onLoadStop`.** Measured on API 37,
+  20 flings each in one run: 7 lost right after the load, 0 after pumping frames first. The test
+  now pumps frames before it flings. This was the longest-standing flake in the Android suite.
+- **The `initialUserScripts` device test names the step that hangs.** It had timed out at the
+  group's 60 s twice with an empty stack. Each of its nine awaits now has its own bound (30 s for
+  the page load, 20 s otherwise) and fails with the step's name.
+- **The `getDefaultUserAgent` device test no longer expects `Android` on iOS.** It now checks for
+  `AppleWebKit` there (and no `Android`), and keeps `Android` for Android. It had failed on iOS
+  since it was tightened, unnoticed because the iOS group couldn't load.
+- **The `save credentials` device test now uses its own answer.** It ran after a test that unlocks
+  the fixture's protected origin, so the page loaded without a challenge and its credential was
+  never used. It now visits the same server under another host name (`10.0.2.2` on the Android
+  emulator, `127.0.0.1` on the iOS simulator), which starts locked. It asserts that a challenge
+  fired, that the page is authorized, and on Android that `permanentPersistence` stored the
+  credential.
+- **A device test now checks that `removeUserScript` removes the right script.** It removes the
+  middle of three document-start scripts, one of them initial, and checks the other two still run.
+  The existing test removed the only such script, which sits at index 0 whatever index is sent, so
+  it passed against an Android implementation that always removed the first script.
+- **A device test now checks that `layoutAlgorithm` reaches the Android WebView**, at creation and
+  through `setSettings`, in both directions. It covers the fix for the `switch` fall-through that
+  turned every value into `TEXT_AUTOSIZING`, which had never run on a device. On Android
+  `getSettings` reports the WebView's own `WebSettings.layoutAlgorithm`, so the test reads what the
+  platform applied.
+- **Three opt-in lint rules are enabled** here and in the example: `avoid_void_async`,
+  `close_sinks`, `no_adjacent_strings_in_list`. The example's findings: two test-runner handlers
+  (`_runSelectedTests`, `_rerunFailedTests`) now return `Future<void>`; a test's
+  `onMessageChannelReady` override, which never awaits, is no longer `async`; and the `onLoadStart`
+  test now closes its `starts` controller after cancelling the iterator reading it.
+  `missing_whitespace_between_adjacent_strings` was measured and not enabled: all 67 findings were
+  HTML and JavaScript test fixtures deliberately built from adjacent literals, with no word-to-word
+  join among them.
+- **The `discarded_futures` lint is enabled here** (not in the example). It had no findings in this
+  package.
+- **The `unawaited_futures` lint is enabled** here and in the example (it's not in flutter_lints).
+  The example's 26 findings: 24 deliberate fire-and-forget calls are now marked `unawaited(...)`
+  (stream closes at a test's end, `tester.pump()`s left unawaited on purpose so a load event isn't
+  missed, UI refreshes). Two were real test bugs: the http-auth tests saved a credential with
+  `setHttpAuthCredential` without awaiting it before relying on it, so the negative test could pass
+  without the credential ever being saved. Both now `await`.
+- **Sixteen opt-in lint rules are enabled here and in the example** (none ships in flutter_lints),
+  each with 0 findings today, as guards: `always_declare_return_types`, `avoid_js_rounded_ints`,
+  `avoid_type_to_string`, `cancel_subscriptions`, `conditional_uri_does_not_exist`,
+  `deprecated_consistency`, `literal_only_boolean_expressions`, `no_self_assignments`,
+  `only_throw_errors`, `prefer_void_to_null`, `test_types_in_equals`, `throw_in_finally`,
+  `unnecessary_statements`, `use_late_for_private_fields_and_variables`, `use_named_constants`,
+  `use_to_and_as_if_applicable`. No code changed.
+- **The `deprecated_member_use` warning is enabled** in all five packages, and the example's 118
+  uses of deprecated Flutter APIs are migrated (the packages themselves had none). Most are
+  equivalent by Flutter's own source: `withOpacity(o)` becomes `withAlpha((255 * o).round())`, its
+  exact body (not `withValues`, which would store an unrounded alpha and so a different `Color`);
+  `Color.value` becomes `toARGB32()`; `.red`/`.green`/`.blue` become their documented formula;
+  `DropdownButtonFormField`'s `value` becomes `initialValue`, which it already forwarded to;
+  `MaterialState` becomes `WidgetState`; and the tests' `tester.binding.window…TestValue` becomes
+  `tester.view…`. Two needed real changes, each pinned by a new widget test. The WebView-type radios
+  now sit under a `RadioGroup`. The custom steps list uses `onReorderItem`, whose index is already
+  adjusted, so `TestConfigurationManager.reorderCustomSteps` no longer adjusts it a second time.
+- **The example's `prefer_const_constructors` lint is enabled.** flutter_lints doesn't ship it, so
+  the old `false` was dead; it is now opted in with `true`. Its 185 findings were fixed by `dart
+  fix` (167 fixes in 34 files; a `const` parent covers its children's findings), plus 6
+  `unnecessary_const` the fixes created. Every file differs from before only by `const`/`final`
+  keywords and formatting. No `const` collection is mutated, and every newly canonicalized value in
+  the integration tests (`Duration`, `Size`, one `PrintJobResolution` that is only serialized) is
+  identity-insensitive.
+- **The example's `depend_on_referenced_packages` lint is enabled.** Its test mock imports
+  `flutter_inappwebview_platform_interface` and `plugin_platform_interface`, which the example only
+  had transitively. Both are now `dev_dependencies`, with the constraints the packages that already
+  depend on them use (`^1.4.0-beta.3`, `^2.1.8`). Resolution is unchanged: the same versions, and
+  platform_interface is still overridden to the local path.
+- **The `library_private_types_in_public_api` lint is enabled** here and in the example.
+  `InAppWebView.createState()` is declared to return `State<InAppWebView>` instead of the private
+  `_InAppWebViewState`. It returns the same object, and that class adds no public members beyond
+  `State`'s own (`build`, `dispose`), so callers see the same surface. The example's
+  `MyApp.createState()` gets the same change.
+- **The example's Controllers screen loses a loading flag that was never set.** `_isLoading` had no
+  assignment anywhere, so its app-bar `AppBarLoadingIndicator` always rendered `SizedBox.shrink()`.
+  The field, that one use and its import are deleted, and the screen looks the same. The four other
+  screens that use the indicator do set their flags, and keep them.
+- **Ten small lint rules are enabled in the example, in one item:** `avoid_init_to_null`,
+  `prefer_collection_literals`, `prefer_contains`, `prefer_final_fields`,
+  `unnecessary_nullable_for_final_variable_declarations`, `unnecessary_overrides`,
+  `unnecessary_this`, `use_super_parameters`, `void_checks`, and (opted in, since flutter_lints
+  doesn't ship it) `prefer_const_literals_to_create_immutables`. Their 18 findings are fixed: 17 by
+  `dart fix`, plus `void_checks` by hand (a `Completer<void>` was completed with `true`). The fixes
+  caused two more, also fixed: an untyped `var icon;` is now `dynamic icon;`, the type `var icon =
+  null` had, and `dart:collection` became unused. No value changes anywhere.
+- **The `avoid_return_types_on_setters` lint is enabled.** `PrintJobController.onComplete`'s setter
+  loses its `void`, which setters always return. No code changed.
+- **The `prefer_const_constructors_in_immutables` lint is enabled.** Its one finding here:
+  `InAppWebView.fromPlatform` is now a `const` constructor. Calls without `const` behave exactly as
+  before; callers may now also write `const`.
+- **The example's `prefer_interpolation_to_compose_strings` lint is enabled**, and its 16 findings
+  fixed by `dart fix` (15 fixes in 8 files; two findings were one `+` chain). Every rewritten `+`
+  joined `String`s, and an interpolated `String` is itself, so no string's value changes. Where the
+  fix dropped a `.toString()`, interpolation calls it anyway. The one rewrite in app code,
+  `PlatformUtils.getFlutterVersion`, gained a test that pins its `<version> (<channel>)` shape.
+- **The example's `prefer_const_declarations` lint is enabled.** flutter_lints doesn't ship it, so
+  the old `false` turned off something that was already off; it is now opted in with `true`. `dart
+  fix` made 20 changes in 17 files, two more than the 18 findings: making
+  `TEST_WEBVIEW_ASSET_LOADER_DOMAIN` const let two strings that interpolate it become const too.
+  Each changed line differs from its old self only by `final` → `const`, and every value is the
+  same.
+- **The example's `unnecessary_new` lint is enabled**, and its 19 `new` keywords removed, all in
+  integration tests (13 files). Each changed line differs from its old self only by that keyword,
+  which Dart has treated as optional since 2.0.
+- **The example's `unnecessary_brace_in_string_interps` lint is enabled**, and its 58 findings fixed
+  with `dart fix --code=unnecessary_brace_in_string_interps` (10 files). Every changed line is its
+  old self with `${name}` written as `$name` where nothing follows that could extend the name; no
+  string's value changes.
+- **The `unnecessary_import` warning is enabled** here and in the example, and its 14 redundant
+  imports are removed (5 in `lib`, 9 in the example). Each was fully covered by another import in
+  the same file, mostly `dart:typed_data` or `dart:ui` alongside a Flutter library that re-exports
+  them. No code changed.
+- **The `deprecated_member_use_from_same_package` lint is enabled here and in the example.** It is
+  not in `flutter_lints` and is no longer on by default, so until now nothing reported a use of the
+  package's own deprecated API. It has no findings today; it will flag any deprecation this fork
+  adds that its own code still uses.
+- **Dead analysis options removed** here and in the example. `prefer_initializing_formals: false`
+  disabled a rule with no findings; it is on again, and still finds nothing.
+  `deprecated_member_use_from_same_package` is no longer an analyzer diagnostic that's on by
+  default, so its `ignore` was inert (measured: a deprecated use from the same package is not
+  reported unless the rule is enabled as a lint). The line is gone from both.
+- **The `unnecessary_cast` warning is enabled** in this package and its example. It had no
+  findings in either.
+- **The example's `avoid_print` lint is enabled.** Its six `print`s are integration-test output
+  (three Custom Tabs toolbar callbacks, three "SKIPPING …" lines from the `skippable*` helpers) and
+  each carries an ignore. No code changed.
+- **The `overridden_fields` lint is enabled**, and its six findings here fixed. `LocalStorage`,
+  `SessionStorage` and the four path handlers redeclared the base class's `platform` field with a
+  narrower type. Both fields held the same object, so this was harmless; each is now a getter that
+  narrows the base's one field, and the `fromPlatform` constructors keep their signatures. A new
+  test in the example's suite pins every getter, including the read the path handler's base
+  constructor makes to set `eventHandler`.
+- **The example app's `use_build_context_synchronously` lint is enabled**, and its nine findings
+  fixed. The settings editor's save, load, delete and import dialogs used the dialog's own context
+  after an `await`, guarded only by the screen's `mounted`; each guard now checks that context too,
+  so a dialog dismissed during the await is skipped instead of popped through a dead context. The
+  test runner reads its providers before awaiting `SharedPreferences`. Three new widget tests walk
+  each dialog's normal path.
+- **`lib/src/in_app_webview/_static_channel.dart` is deleted.** It declared a `MethodChannel` for
+  `inappwebview_manager` that nothing imported or exported (orphaned since §188 moved that channel
+  to Pigeon on Android). The iOS package keeps its own live copy.
+- **Unused dependencies removed** — nothing that affects consumers, since none of them were
+  reachable from the published API. The example drops `flutter_downloader` and `url_launcher`
+  (neither imported anywhere in it), the android and ios packages drop a dev-only
+  `plugin_platform_interface` they never referenced, and `flutter_inappwebview` drops `flutter_driver`
+  (the example declares its own), plus `build_runner`/`generators` and a `build.yaml` for a package
+  that has no annotations and generates no `.g.dart` at all. `flutter_downloader`'s
+  `AndroidManifest.xml` `<provider>` and its paths file went with it — the file's own comment had
+  flagged both as dead configuration.
+- **The Android module is 100% Kotlin** (158 files translated) with ktlint 1.8 formatting and an
+  opt-in `allWarningsAsErrors`; Android lint is at **0 findings**
+- **The iOS module builds in Swift 6 language mode** with complete concurrency checking, 0 errors
+  and 0 warnings (see the `nosferatu500_inappwebview_ios` 7.0.0 entry for how that's measured)
+- **Pigeon** is wired up and the `find_interaction` channel is migrated end to end as a proof; the
+  other ~409 messages still use `MethodChannel`
+- **412 unit tests** (from 276) — including the Android module's first native tests, which found two
+  bugs on their first run — and the integration suite now runs on iOS as well as Android. Every API
+  added here is pinned by a test and demonstrated in the example app
+
+### Migration
+
+1. Replace the `flutter_inappwebview` dependency with `nosferatu500_inappwebview`, and every
+   `package:flutter_inappwebview/flutter_inappwebview.dart` import with
+   `package:nosferatu500_inappwebview/nosferatu500_inappwebview.dart`.
+2. Rename every `*Options` type and parameter to its `*Settings` equivalent, and
+   `getOptions`/`setOptions` to `getSettings`/`setSettings`.
+3. Drop the `Android` / `IOS` prefix from the duplicate types, events, fields and methods listed
+   above. Every replacement already existed in 6.x.
+4. Raise `minSdk` to 30 and your iOS deployment target to 15.0; build the iOS module with
+   **Xcode 26 or newer**. Keep Swift Package Manager enabled (Flutter's default): the iOS module
+   has no podspec any more, and if your Podfile only existed for this plugin, `pod deintegrate` it
+   away.
+5. Delete any macOS / Windows / Linux / Web-only API — there is nothing to migrate to. `switch`
+   chains over `WebResourceErrorType`, `SslErrorType` and `PermissionResourceType` may name
+   constants that no longer exist; these are constant classes rather than Dart `enum`s, so the
+   analyzer reports the missing name but never an exhaustiveness error.
+6. If you declared the plugin's FileProvider, replace the whole `<provider>` block with the one in
+   the `InAppWebViewFileProvider` KDoc: `android:name` →
+   `dev.nosferatu500.inappwebview.InAppWebViewFileProvider`, `android:authorities` →
+   `${applicationId}.dev.nosferatu500.inappwebview.fileprovider`, and the `meta-data` resource →
+   `@xml/inappwebview_provider_paths`. Missing the authority is silent — `<input type="file"
+   capture>` simply stops producing a file, with no Dart error.
+7. If anything in your app talks to the plugin's platform channels directly, update the channel
+   names to the `dev.nosferatu500.inappwebview/…` prefix.
+
 ## 6.2.0-beta.3
 
 - Added Linux support

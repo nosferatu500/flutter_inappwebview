@@ -25,13 +25,15 @@ class WebResourceError {
     }
     final instance = WebResourceError(
       description: map['description'],
-      type: switch (enumMethod ?? EnumMethod.nativeValue) {
-        EnumMethod.nativeValue => WebResourceErrorType.fromNativeValue(
-          map['type'],
-        ),
-        EnumMethod.value => WebResourceErrorType.fromValue(map['type']),
-        EnumMethod.name => WebResourceErrorType.byName(map['type']),
-      }!,
+      type:
+          switch (enumMethod ?? EnumMethod.nativeValue) {
+            EnumMethod.nativeValue => WebResourceErrorType.fromNativeValue(
+              map['type'],
+            ),
+            EnumMethod.value => WebResourceErrorType.fromValue(map['type']),
+            EnumMethod.name => WebResourceErrorType.byName(map['type']),
+          } ??
+          WebResourceErrorType.UNKNOWN,
     );
     return instance;
   }

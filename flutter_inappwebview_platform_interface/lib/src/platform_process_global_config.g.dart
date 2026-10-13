@@ -6,11 +6,11 @@ part of 'platform_process_global_config.dart';
 // ExchangeableObjectGenerator
 // **************************************************************************
 
-///{@template flutter_inappwebview_platform_interface.ProcessGlobalConfigSettings}
+///{@template nosferatu500_inappwebview_platform_interface.ProcessGlobalConfigSettings}
 ///Class that represents the settings used to configure the [PlatformProcessGlobalConfig].
 ///{@endtemplate}
 ///
-///{@macro flutter_inappwebview_platform_interface.ProcessGlobalConfigSettings.supported_platforms}
+///{@macro nosferatu500_inappwebview_platform_interface.ProcessGlobalConfigSettings.supported_platforms}
 ///
 ///**Officially Supported Platforms/Implementations**:
 ///- Android WebView ([Official API - ProcessGlobalConfig.apply](https://developer.android.com/reference/androidx/webkit/ProcessGlobalConfig#apply(androidx.webkit.ProcessGlobalConfig)))
@@ -35,7 +35,7 @@ class ProcessGlobalConfigSettings {
   ///on WebView are in the same process, to avoid needing multiple data directories.
   ///The [PlatformInAppWebViewController.disableWebView] method can be used to ensure that the other processes do not use WebView by accident in this case.
   ///
-  ///{@macro flutter_inappwebview_platform_interface.ProcessGlobalConfigSettings.dataDirectorySuffix.supported_platforms}
+  ///{@macro nosferatu500_inappwebview_platform_interface.ProcessGlobalConfigSettings.dataDirectorySuffix.supported_platforms}
   ///
   ///**Officially Supported Platforms/Implementations**:
   ///- Android WebView:
@@ -60,7 +60,7 @@ class ProcessGlobalConfigSettings {
   ///If they do not already exist, `WebView` will attempt to create them during initialization, along with any missing parent directories.
   ///In such a case, the directory in which `WebView` creates missing directories must be readable and writable by the current process.
   ///
-  ///{@macro flutter_inappwebview_platform_interface.ProcessGlobalConfigSettings.directoryBasePaths.supported_platforms}
+  ///{@macro nosferatu500_inappwebview_platform_interface.ProcessGlobalConfigSettings.directoryBasePaths.supported_platforms}
   ///
   ///**Officially Supported Platforms/Implementations**:
   ///- Android WebView:
@@ -93,7 +93,7 @@ class ProcessGlobalConfigSettings {
     return instance;
   }
 
-  ///{@template flutter_inappwebview_platform_interface.ProcessGlobalConfigSettings.isClassSupported}
+  ///{@template nosferatu500_inappwebview_platform_interface.ProcessGlobalConfigSettings.isClassSupported}
   ///Check if the current class is supported by the [defaultTargetPlatform] or a specific [platform].
   ///{@endtemplate}
   static bool isClassSupported({TargetPlatform? platform}) =>
@@ -101,7 +101,7 @@ class ProcessGlobalConfigSettings {
         platform: platform,
       );
 
-  ///{@template flutter_inappwebview_platform_interface.ProcessGlobalConfigSettings.isPropertySupported}
+  ///{@template nosferatu500_inappwebview_platform_interface.ProcessGlobalConfigSettings.isPropertySupported}
   ///Check if the current class is supported by the [defaultTargetPlatform] or a specific [platform].
   ///{@endtemplate}
   static bool isPropertySupported(
@@ -192,7 +192,7 @@ class ProcessGlobalConfigDirectoryBasePaths {
 
 extension _PlatformProcessGlobalConfigCreationParamsClassSupported
     on PlatformProcessGlobalConfigCreationParams {
-  ///{@template flutter_inappwebview_platform_interface.PlatformProcessGlobalConfigCreationParams.supported_platforms}
+  ///{@template nosferatu500_inappwebview_platform_interface.PlatformProcessGlobalConfigCreationParams.supported_platforms}
   ///
   ///**Officially Supported Platforms/Implementations**:
   ///- Android WebView
@@ -207,13 +207,15 @@ extension _PlatformProcessGlobalConfigCreationParamsClassSupported
 
 extension _PlatformProcessGlobalConfigClassSupported
     on PlatformProcessGlobalConfig {
-  ///{@template flutter_inappwebview_platform_interface.PlatformProcessGlobalConfig.supported_platforms}
+  ///{@template nosferatu500_inappwebview_platform_interface.PlatformProcessGlobalConfig.supported_platforms}
   ///
   ///**Officially Supported Platforms/Implementations**:
   ///- Android WebView ([Official API - ProcessGlobalConfig](https://developer.android.com/reference/androidx/webkit/ProcessGlobalConfig))
   ///
   ///Use the [PlatformProcessGlobalConfig.isClassSupported] method to check if this class is supported at runtime.
   ///{@endtemplate}
+  // Unused: [PlatformProcessGlobalConfig.isClassSupported] answers through its creation params. Kept for the doc template above.
+  // ignore: unused_element
   static bool isClassSupported({TargetPlatform? platform}) {
     return ((kIsWeb && platform != null) || !kIsWeb) &&
         [TargetPlatform.android].contains(platform ?? defaultTargetPlatform);
@@ -224,7 +226,7 @@ extension _PlatformProcessGlobalConfigClassSupported
 enum PlatformProcessGlobalConfigMethod {
   ///Can be used to check if the [PlatformProcessGlobalConfig.apply] method is supported at runtime.
   ///
-  ///{@template flutter_inappwebview_platform_interface.PlatformProcessGlobalConfig.apply.supported_platforms}
+  ///{@template nosferatu500_inappwebview_platform_interface.PlatformProcessGlobalConfig.apply.supported_platforms}
   ///
   ///**Officially Supported Platforms/Implementations**:
   ///- Android WebView ([Official API - ProcessGlobalConfig.apply](https://developer.android.com/reference/androidx/webkit/ProcessGlobalConfig#apply(androidx.webkit.ProcessGlobalConfig)))
@@ -255,7 +257,7 @@ extension _PlatformProcessGlobalConfigMethodSupported
 
 extension _ProcessGlobalConfigSettingsClassSupported
     on ProcessGlobalConfigSettings {
-  ///{@template flutter_inappwebview_platform_interface.ProcessGlobalConfigSettings.supported_platforms}
+  ///{@template nosferatu500_inappwebview_platform_interface.ProcessGlobalConfigSettings.supported_platforms}
   ///
   ///**Officially Supported Platforms/Implementations**:
   ///- Android WebView ([Official API - ProcessGlobalConfig.apply](https://developer.android.com/reference/androidx/webkit/ProcessGlobalConfig#apply(androidx.webkit.ProcessGlobalConfig)))
@@ -272,7 +274,7 @@ extension _ProcessGlobalConfigSettingsClassSupported
 enum ProcessGlobalConfigSettingsProperty {
   ///Can be used to check if the [ProcessGlobalConfigSettings.dataDirectorySuffix] property is supported at runtime.
   ///
-  ///{@template flutter_inappwebview_platform_interface.ProcessGlobalConfigSettings.dataDirectorySuffix.supported_platforms}
+  ///{@template nosferatu500_inappwebview_platform_interface.ProcessGlobalConfigSettings.dataDirectorySuffix.supported_platforms}
   ///
   ///**Officially Supported Platforms/Implementations**:
   ///- Android WebView:
@@ -284,7 +286,7 @@ enum ProcessGlobalConfigSettingsProperty {
 
   ///Can be used to check if the [ProcessGlobalConfigSettings.directoryBasePaths] property is supported at runtime.
   ///
-  ///{@template flutter_inappwebview_platform_interface.ProcessGlobalConfigSettings.directoryBasePaths.supported_platforms}
+  ///{@template nosferatu500_inappwebview_platform_interface.ProcessGlobalConfigSettings.directoryBasePaths.supported_platforms}
   ///
   ///**Officially Supported Platforms/Implementations**:
   ///- Android WebView:

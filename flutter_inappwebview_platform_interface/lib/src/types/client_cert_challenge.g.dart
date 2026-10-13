@@ -9,30 +9,11 @@ part of 'client_cert_challenge.dart';
 ///Class that represents the challenge of the [PlatformWebViewCreationParams.onReceivedClientCertRequest] event.
 ///It provides all the information about the challenge.
 class ClientCertChallenge extends URLAuthenticationChallenge {
-  ///The collection contains Base64 encoding of DER encoded distinguished names
-  ///of certificate authorities allowed by the server.
-  ///
-  ///**Officially Supported Platforms/Implementations**:
-  ///- Windows WebView2
-  List<String>? allowedCertificateAuthorities;
-
-  ///If the server that issued this request is an http proxy.
-  ///
-  ///**Officially Supported Platforms/Implementations**:
-  ///- Windows WebView2
-  bool? isProxy;
-
   ///Returns the acceptable types of asymmetric keys.
   ///
   ///**Officially Supported Platforms/Implementations**:
   ///- Android WebView 21+ ([Official API - ClientCertRequest.getKeyTypes](https://developer.android.com/reference/android/webkit/ClientCertRequest#getKeyTypes()))
   List<String>? keyTypes;
-
-  ///The collection contains mutually trusted CA certificates.
-  ///
-  ///**Officially Supported Platforms/Implementations**:
-  ///- Windows WebView2
-  List<SslCertificate>? mutuallyTrustedCertificates;
 
   ///The acceptable certificate issuers for the certificate matching the private key.
   ///
@@ -40,10 +21,7 @@ class ClientCertChallenge extends URLAuthenticationChallenge {
   ///- Android WebView 21+ ([Official API - ClientCertRequest.getPrincipals](https://developer.android.com/reference/android/webkit/ClientCertRequest#getPrincipals()))
   List<String>? principals;
   ClientCertChallenge({
-    this.allowedCertificateAuthorities,
-    this.isProxy,
     this.keyTypes,
-    this.mutuallyTrustedCertificates,
     this.principals,
     required super.protectionSpace,
   });
@@ -61,25 +39,8 @@ class ClientCertChallenge extends URLAuthenticationChallenge {
         map['protectionSpace']?.cast<String, dynamic>(),
         enumMethod: enumMethod,
       )!,
-      allowedCertificateAuthorities:
-          map['allowedCertificateAuthorities'] != null
-          ? List<String>.from(
-              map['allowedCertificateAuthorities']!.cast<String>(),
-            )
-          : null,
-      isProxy: map['isProxy'],
       keyTypes: map['keyTypes'] != null
           ? List<String>.from(map['keyTypes']!.cast<String>())
-          : null,
-      mutuallyTrustedCertificates: map['mutuallyTrustedCertificates'] != null
-          ? List<SslCertificate>.from(
-              map['mutuallyTrustedCertificates'].map(
-                (e) => SslCertificate.fromMap(
-                  e?.cast<String, dynamic>(),
-                  enumMethod: enumMethod,
-                )!,
-              ),
-            )
           : null,
       principals: map['principals'] != null
           ? List<String>.from(map['principals']!.cast<String>())
@@ -93,12 +54,7 @@ class ClientCertChallenge extends URLAuthenticationChallenge {
   Map<String, dynamic> toMap({EnumMethod? enumMethod}) {
     return {
       "protectionSpace": protectionSpace.toMap(enumMethod: enumMethod),
-      "allowedCertificateAuthorities": allowedCertificateAuthorities,
-      "isProxy": isProxy,
       "keyTypes": keyTypes,
-      "mutuallyTrustedCertificates": mutuallyTrustedCertificates
-          ?.map((e) => e.toMap(enumMethod: enumMethod))
-          .toList(),
       "principals": principals,
     };
   }
@@ -111,6 +67,6 @@ class ClientCertChallenge extends URLAuthenticationChallenge {
 
   @override
   String toString() {
-    return 'ClientCertChallenge{protectionSpace: $protectionSpace, allowedCertificateAuthorities: $allowedCertificateAuthorities, isProxy: $isProxy, keyTypes: $keyTypes, mutuallyTrustedCertificates: $mutuallyTrustedCertificates, principals: $principals}';
+    return 'ClientCertChallenge{protectionSpace: $protectionSpace, keyTypes: $keyTypes, principals: $principals}';
   }
 }

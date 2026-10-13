@@ -71,14 +71,17 @@ void main() {
         '1',
         response: '{"success": true}',
         statusCode: 200,
-        duration: Duration(milliseconds: 150),
+        duration: const Duration(milliseconds: 150),
       );
 
       expect(monitor.requests.length, 1);
       expect(monitor.requests.first.id, '1');
       expect(monitor.requests.first.statusCode, 200);
       expect(monitor.requests.first.response, '{"success": true}');
-      expect(monitor.requests.first.duration, Duration(milliseconds: 150));
+      expect(
+        monitor.requests.first.duration,
+        const Duration(milliseconds: 150),
+      );
     });
 
     test('updateRequest does nothing for non-existent request', () {

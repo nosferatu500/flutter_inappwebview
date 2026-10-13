@@ -1,0 +1,296 @@
+//
+//  Util.swift
+//  flutter_inappwebview
+//
+//  Created by Lorenzo Pichilli on 12/02/21.
+//
+
+import Foundation
+import WebKit
+
+/// The **eleventh** piece of mutable global state in this package, and the one the Swift 6
+/// inventory (§42) missed, found in §43: the inventory was built with `grep 'static var'`, and this
+/// is a bare top-level `var`, so it never appeared. Written from `InAppWebView`'s touch handling and
+/// read back when a long press resolves — both main-thread paths.
+@MainActor
+var SharedLastTouchPointTimestamp: [InAppWebView: Int64] = [:]
+
+public class Util {
+    /// `@MainActor` only because it reads `plugin.registrar`; the plugin is main-actor isolated.
+    /// Deliberately annotated per-method rather than on `Util`, which is otherwise a bag of pure
+    /// helpers that have no business being isolated.
+    @MainActor
+    public static func getUrlAsset(plugin: InAppWebViewFlutterPlugin, assetFilePath: String) throws -> URL {
+        let key = plugin.registrar.lookupKey(forAsset: assetFilePath)
+        guard let assetURL = Bundle.main.url(forResource: key, withExtension: nil) else {
+            throw NSError(domain: assetFilePath + " asset file cannot be found!", code: 0)
+        }
+        return assetURL
+    }
+    
+    /// `@MainActor` for the same reason as `getUrlAsset`.
+    @MainActor
+    public static func getAbsPathAsset(plugin: InAppWebViewFlutterPlugin, assetFilePath: String) throws -> String {
+        let key = plugin.registrar.lookupKey(forAsset: assetFilePath)
+        guard let assetAbsPath = Bundle.main.path(forResource: key, ofType: nil) else {
+            throw NSError(domain: assetFilePath + " asset file cannot be found!", code: 0)
+        }
+        return assetAbsPath
+    }
+    
+    public static func convertToDictionary(text: String) -> [String: Any]? {
+        if let data = text.data(using: .utf8) {
+            do {
+                return try JSONSerialization.jsonObject(with: data, options: []) as? [String: Any]
+            } catch {
+                print(error.localizedDescription)
+            }
+        }
+        return nil
+    }
+
+    /// Renders `string` as a JavaScript string literal, **including its surrounding quotes**, for
+    /// safe interpolation into a script built as text.
+    ///
+    /// Escaping is delegated to `JSONSerialization` rather than hand-rolled: a JSON string literal
+    /// is also a valid JavaScript string literal, and it handles every case the widespread
+    /// `replacingOccurrences(of: "'", with: "\\'")` idiom in this package misses. **Newlines are the
+    /// one that mattered**: a `\n` in an interpolated value produces a syntactically invalid script,
+    /// the whole `evaluateJavaScript` fails silently, and anything the script was supposed to do
+    /// never happens. §65 measured that as a JS handler's rejection never firing, so
+    /// `await callHandler(...)` hung for the lifetime of the page.
+    ///
+    /// U+2028 / U+2029 are legal inside JSON strings and, since ES2019, inside JavaScript string
+    /// literals too — so escaping them is not strictly required here. It costs nothing and keeps the
+    /// result valid if it is ever embedded somewhere stricter, which is the kind of assumption this
+    /// helper exists to stop relying on.
+    public static func jsStringLiteral(_ string: String) -> String {
+        guard let data = try? JSONSerialization.data(withJSONObject: string,
+                                                    options: [.fragmentsAllowed]),
+              let literal = String(data: data, encoding: .utf8) else {
+            // Unreachable for any String, but an empty literal keeps the surrounding script valid,
+            // which is the whole point of this function.
+            return "\"\""
+        }
+        return literal
+            .replacingOccurrences(of: "\u{2028}", with: "\\u2028")
+            .replacingOccurrences(of: "\u{2029}", with: "\\u2029")
+    }
+
+    public static func JSONStringify(value: Any, prettyPrinted: Bool = false) -> String {
+        let options: JSONSerialization.WritingOptions = prettyPrinted ? .prettyPrinted : .init(rawValue: 0)
+        if JSONSerialization.isValidJSONObject(value) {
+            let data = try? JSONSerialization.data(withJSONObject: value, options: options)
+            if data != nil {
+                if let string = String(data: data!, encoding: .utf8) {
+                    return string
+                }
+            }
+        }
+        return ""
+    }
+    
+    @MainActor
+    public static func getContentWorld(name: String) -> WKContentWorld {
+        switch name {
+        case "defaultClient":
+            return WKContentWorld.defaultClient
+        case "page":
+            return WKContentWorld.page
+        default:
+            return WKContentWorld.world(name: name)
+        }
+    }
+    
+    public static func getDataDetectorType(type: String) -> WKDataDetectorTypes {
+        switch type {
+            case "NONE":
+                return WKDataDetectorTypes.init(rawValue: 0)
+            case "PHONE_NUMBER":
+                return .phoneNumber
+            case "LINK":
+                return .link
+            case "ADDRESS":
+                return .address
+            case "CALENDAR_EVENT":
+                return .calendarEvent
+            case "TRACKING_NUMBER":
+                return .trackingNumber
+            case "FLIGHT_NUMBER":
+                return .flightNumber
+            case "LOOKUP_SUGGESTION":
+                return .lookupSuggestion
+            case "SPOTLIGHT_SUGGESTION":
+                // The SDK defines the deprecated `spotlightSuggestion` as `lookupSuggestion`: one bit.
+                return .lookupSuggestion
+            case "ALL":
+                return .all
+            default:
+                return WKDataDetectorTypes.init(rawValue: 0)
+        }
+    }
+    
+    public static func getDataDetectorTypeString(type: WKDataDetectorTypes) -> [String] {
+        var dataDetectorTypeString: [String] = []
+        if type.contains(.all) {
+            dataDetectorTypeString.append("ALL")
+        } else {
+            if type.contains(.phoneNumber) {
+                dataDetectorTypeString.append("PHONE_NUMBER")
+            }
+            if type.contains(.link) {
+                dataDetectorTypeString.append("LINK")
+            }
+            if type.contains(.address) {
+                dataDetectorTypeString.append("ADDRESS")
+            }
+            if type.contains(.calendarEvent) {
+                dataDetectorTypeString.append("CALENDAR_EVENT")
+            }
+            if type.contains(.trackingNumber) {
+                dataDetectorTypeString.append("TRACKING_NUMBER")
+            }
+            if type.contains(.flightNumber) {
+                dataDetectorTypeString.append("FLIGHT_NUMBER")
+            }
+            if type.contains(.lookupSuggestion) {
+                dataDetectorTypeString.append("LOOKUP_SUGGESTION")
+            }
+            // Same bit as `lookupSuggestion` (the SDK aliases it), so both names are reported, as before.
+            if type.contains(.lookupSuggestion) {
+                dataDetectorTypeString.append("SPOTLIGHT_SUGGESTION")
+            }
+        }
+        if dataDetectorTypeString.count == 0 {
+            dataDetectorTypeString = ["NONE"]
+        }
+        return dataDetectorTypeString
+    }
+
+    /// Decomposes a `UIKeyModifierFlags` bit mask into the Dart `ModifierFlag` names.
+    ///
+    /// An empty array is a meaningful result — "no modifier was held" — and is distinct from the
+    /// `nil` the caller sends below iOS 18.4, which means "this platform did not report it". Unlike
+    /// `getDataDetectorTypeString` there is deliberately **no `"NONE"` sentinel**: `NONE` exists in
+    /// `DataDetectorTypes` because it is a real settable value there, whereas an empty modifier set
+    /// is just an empty set.
+    public static func getModifierFlagsString(flags: UIKeyModifierFlags) -> [String] {
+        var result: [String] = []
+        if flags.contains(.alphaShift) { result.append("ALPHA_SHIFT") }
+        if flags.contains(.shift) { result.append("SHIFT") }
+        if flags.contains(.control) { result.append("CONTROL") }
+        if flags.contains(.alternate) { result.append("ALTERNATE") }
+        if flags.contains(.command) { result.append("COMMAND") }
+        if flags.contains(.numericPad) { result.append("NUMERIC_PAD") }
+        return result
+    }
+
+    /// Decomposes a `UIEvent.ButtonMask` bit mask into the Dart `ButtonMask` names.
+    ///
+    /// The mask is `1 << (buttonNumber - 1)`, so `.primary` is bit 0 and `.secondary` is bit 1 —
+    /// it is **not** a button index, despite the WebKit property being named `buttonNumber`.
+    /// Buttons beyond the secondary have no `UIEvent.ButtonMask` constant and are not reported.
+    public static func getButtonMaskString(mask: UIEvent.ButtonMask) -> [String] {
+        var result: [String] = []
+        if mask.contains(.primary) { result.append("PRIMARY") }
+        if mask.contains(.secondary) { result.append("SECONDARY") }
+        return result
+    }
+
+
+    public static func getDecelerationRate(type: String) -> UIScrollView.DecelerationRate {
+        switch type {
+            case "NORMAL":
+                return .normal
+            case "FAST":
+                return .fast
+            default:
+                return .normal
+        }
+    }
+    
+    public static func getDecelerationRateString(type: UIScrollView.DecelerationRate) -> String {
+        switch type {
+            case .normal:
+                return "NORMAL"
+            case .fast:
+                return "FAST"
+            default:
+                return "NORMAL"
+        }
+    }
+    
+    public static func isIPv4(address: String) -> Bool {
+        var sin = sockaddr_in()
+        return address.withCString({ cstring in inet_pton(AF_INET, cstring, &sin.sin_addr) }) == 1
+    }
+
+    public static func isIPv6(address: String) -> Bool {
+        var sin6 = sockaddr_in6()
+        return address.withCString({ cstring in inet_pton(AF_INET6, cstring, &sin6.sin6_addr) }) == 1
+    }
+
+    public static func isIpAddress(address: String) -> Bool {
+        return Util.isIPv6(address: address) || Util.isIPv4(address: address)
+    }
+    
+    public static func normalizeIPv6(address: String) throws -> String {
+        if !Util.isIPv6(address: address) {
+            throw NSError(domain: "Invalid address: \(address)", code: 0)
+        }
+        var ipString = address
+        // replace ipv4 address if any
+        let ipv4Regex = try! NSRegularExpression(pattern: "(.*:)([0-9]+\\.[0-9]+\\.[0-9]+\\.[0-9]+$)")
+        if let match = ipv4Regex.firstMatch(in: address, options: [], range: NSRange(location: 0, length: address.utf16.count)) {
+            if let ipv6PartRange = Range(match.range(at: 1), in: address) {
+                ipString = String(address[ipv6PartRange])
+            }
+            if let ipv4Range = Range(match.range(at: 2), in: address) {
+                let ipv4 = address[ipv4Range]
+                let ipv4Split = ipv4.split(separator: ".")
+                var ipv4Converted = Array(repeating: "0000", count: 4)
+                for i in 0...3 {
+                    let byte = Int(ipv4Split[i])!
+                    let hex = ("0" + String(byte, radix: 16))
+                    var offset = hex.count - 3
+                    offset = offset < 0 ? 0 : offset
+                    let fromIndex = hex.index(hex.startIndex, offsetBy: offset)
+                    let toIndex = hex.index(hex.startIndex, offsetBy: hex.count - 1)
+                    let indexRange = Range<String.Index>(uncheckedBounds: (lower: fromIndex, upper: toIndex))
+                    ipv4Converted[i] = String(hex[indexRange])
+                }
+                ipString += ipv4Converted[0] + ipv4Converted[1] + ":" + ipv4Converted[2] + ipv4Converted[3]
+            }
+        }
+        
+        // take care of leading and trailing ::
+        let regex = try! NSRegularExpression(pattern: "^:|:$")
+        ipString = regex.stringByReplacingMatches(in: ipString, options: [], range: NSRange(location: 0, length: ipString.count), withTemplate: "")
+        
+        let ipv6 = ipString.split(separator: ":", omittingEmptySubsequences: false)
+        var fullIPv6 = Array(repeating: "0000", count: ipv6.count)
+        
+        for (i, hex) in ipv6.enumerated() {
+            if !hex.isEmpty {
+                // normalize leading zeros
+                let hexString = String("0000" + hex)
+                var offset = hexString.count - 5
+                offset = offset < 0 ? 0 : offset
+                let fromIndex = hexString.index(hexString.startIndex, offsetBy: offset)
+                let toIndex = hexString.index(hexString.startIndex, offsetBy: hexString.count - 1)
+                let indexRange = Range<String.Index>(uncheckedBounds: (lower: fromIndex, upper: toIndex))
+                fullIPv6[i] = String(hexString[indexRange])
+            } else {
+                // normalize grouped zeros ::
+                var zeros: [String] = []
+                for _ in ipv6.count...8 {
+                    zeros.append("0000")
+                }
+                fullIPv6[i] = zeros.joined(separator: ":")
+            }
+        }
+        
+        return fullIPv6.joined(separator: ":")
+    }
+
+}

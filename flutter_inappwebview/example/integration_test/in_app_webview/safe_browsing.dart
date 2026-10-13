@@ -6,8 +6,15 @@ void safeBrowsing() {
   );
 
   skippableGroup('safe browsing', () {
+    // The URL alone does not show the answer was used: the platform's own interstitial also ends
+    // in `onLoadStop` for this URL. Measured on API 37 (§215): with no answer the hit is reported
+    // twice, each followed by an UNSAFE_RESOURCE error, and the page has no title. PROCEED loads
+    // the match page itself, titled "Safe Browsing", with no error.
     skippableTestWidgets('onSafeBrowsingHit', (WidgetTester tester) async {
       final Completer<String> pageLoaded = Completer<String>();
+      final Completer<InAppWebViewController> controllerCompleter =
+          Completer<InAppWebViewController>();
+      final errors = <String>[];
       await InAppWebViewController.clearAllCache();
 
       await tester.pumpWidget(
@@ -23,8 +30,14 @@ void safeBrowsing() {
               javaScriptEnabled: false,
               safeBrowsingEnabled: true,
             ),
+            onWebViewCreated: (controller) {
+              controllerCompleter.complete(controller);
+            },
             onLoadStop: (controller, url) {
-              pageLoaded.complete(url!.toString());
+              if (!pageLoaded.isCompleted) pageLoaded.complete(url!.toString());
+            },
+            onReceivedError: (controller, request, error) {
+              errors.add('${error.type}');
             },
             onSafeBrowsingHit: (controller, url, threatType) async {
               return SafeBrowsingResponse(
@@ -38,6 +51,12 @@ void safeBrowsing() {
 
       final String url = await pageLoaded.future;
       expect(url, TEST_CHROME_SAFE_BROWSING_MALWARE.toString());
+
+      if (defaultTargetPlatform == TargetPlatform.android) {
+        final controller = await controllerCompleter.future;
+        expect(await controller.getTitle(), 'Safe Browsing');
+        expect(errors, isEmpty);
+      }
     });
 
     skippableTest('getSafeBrowsingPrivacyPolicyUrl', () async {

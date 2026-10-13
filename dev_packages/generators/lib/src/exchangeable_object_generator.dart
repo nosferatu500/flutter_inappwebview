@@ -3,13 +3,21 @@ import 'package:analyzer/dart/element/element.dart';
 import 'package:analyzer/dart/element/type.dart';
 import 'package:build/build.dart';
 import 'package:collection/collection.dart';
-import 'package:flutter_inappwebview_internal_annotations/flutter_inappwebview_internal_annotations.dart';
+import 'package:nosferatu500_inappwebview_internal_annotations/nosferatu500_inappwebview_internal_annotations.dart';
 import 'package:source_gen/source_gen.dart';
 
 import 'model_visitor.dart';
 import 'util.dart';
 
-const _annotationsPackage = 'flutter_inappwebview_internal_annotations';
+const _annotationsPackage = 'nosferatu500_inappwebview_internal_annotations';
+
+/// Constant names accepted as an enum's stand-in for an unmapped native value.
+///
+/// Matched by **name**, because the annotations carry no "this is the fallback" marker and
+/// cannot gain one: `flutter_inappwebview_internal_annotations` is published, 238 shipped
+/// sources import it, and a consuming app resolves it from pub.dev — so new annotation
+/// surface breaks every consumer build until that package is republished (trap 14).
+const _catchAllCandidates = ['UNKNOWN', 'UNSPECIFIED', 'NOT_SPECIFIED'];
 
 final _coreChecker = TypeChecker.typeNamedLiterally(
   'ExchangeableObject',
@@ -760,6 +768,10 @@ class ExchangeableObjectGenerator
     // remove class reference terminating with "_"
     final classNameReference = fieldTypeElement?.name?.replaceFirst("_", "");
     final isNullable = Util.typeIsNullable(elementType);
+    // The map expression this call started from (e.g. `map['level']`). `value` is rewritten
+    // as the expression is built up, so the bare-`!` warning below would otherwise have no
+    // way to say *which* field it is talking about -- this function is not given the name.
+    final sourceExpression = value;
     final displayString = Util.typeDisplayStringWithoutNullability(elementType);
     if (displayString == "Uri") {
       if (!isNullable) {
@@ -822,7 +834,33 @@ class ExchangeableObjectGenerator
       }
     } else if (elementType.isDartCoreMap) {
       final genericTypes = Util.getGenericTypes(elementType);
-      return "$value${isNullable ? '?' : ''}.cast<${genericTypes.elementAt(0)}, ${genericTypes.elementAt(1)}>()";
+      final keyType = genericTypes.elementAt(0);
+      final valueType = genericTypes.elementAt(1);
+      final keyTypeReplaced = keyType.toString().replaceAll("_", "");
+      final valueTypeReplaced = valueType.toString().replaceAll("_", "");
+      if (!Util.isDartCoreType(valueType)) {
+        // The value is an exchangeable type (enum or object), so each entry needs the same
+        // conversion a List<T> element gets. Without this the emitted code was a bare
+        // `.cast<K, V>()`, which for an enum casts the raw native value straight to the enum
+        // type and throws at runtime.
+        //
+        // `($value as Map)` and the explicit `.map<MapEntry<K, V>>` type argument are both
+        // load-bearing, and neither is cosmetic. `$value` is `map['key']`, i.e. **dynamic**, so
+        // `.entries.map(...)` is a *dynamic* dispatch: the closure's return type is not used and the
+        // result is a `MappedIterable<..., dynamic>`. `Map.fromEntries` accepts that statically and
+        // then throws at runtime with
+        // `type 'EfficientLengthMappedIterable<MapEntry<String, Map<String, dynamic>>, dynamic>' is
+        // not a subtype of type 'Iterable<MapEntry<String, V>>'`. Casting to `Map` first makes the
+        // whole chain statically typed, and the explicit type argument fixes the element type.
+        return (isNullable ? '$value != null ? ' : '') +
+            "Map<$keyTypeReplaced, $valueTypeReplaced>.fromEntries(" +
+            "($value as Map).entries.map<MapEntry<$keyTypeReplaced, $valueTypeReplaced>>(" +
+            "(e) => MapEntry(e.key as $keyTypeReplaced, " +
+            getFromMapValue('e.value', valueType) +
+            ")))" +
+            (isNullable ? ' : null' : '');
+      }
+      return "$value${isNullable ? '?' : ''}.cast<$keyTypeReplaced, $valueTypeReplaced>()";
     } else if (fieldTypeElement != null && hasFromMapMethod(fieldTypeElement)) {
       final hasNullableFromMap = hasNullableFromMapFactory(fieldTypeElement);
       return classNameReference! +
@@ -879,7 +917,35 @@ class ExchangeableObjectGenerator
           }
         }
         if (!isNullable) {
-          value += '!';
+          // A non-nullable enum field used to emit a bare `!`, so any native value the Dart
+          // enum did not map threw `Null check operator used on a null value` inside the
+          // channel handler -- the callback then never reached app code at all. Platforms
+          // add codes over time (iOS 26 started returning NSError -1006 for a DNS failure),
+          // so degrade to the enum's own UNKNOWN constant where it has one, and only fall
+          // back to `!` for enums with no such catch-all.
+          final unknownConstant = _findCatchAllConstant(fieldTypeElement);
+          if (unknownConstant == null) {
+            // Warn rather than fail. Every one of these sites was audited and found
+            // unreachable (see DEPRECATION_CLEANUP.md §86/§136), so breaking the build would
+            // be wrong -- but the emission was previously *silent*, which is how a deleted
+            // catch-all re-armed the bug with no gate noticing. Listing them on every
+            // regeneration makes a new site, or a lost fallback, visible at the moment it
+            // appears rather than at the moment a platform returns an unmapped value.
+            final nearMiss = _nearMissCatchAllConstant(fieldTypeElement);
+            log.warning(
+              'Non-nullable enum field decoded from $sourceExpression as '
+              '$classNameReference has no catch-all constant, so a bare `!` is emitted. '
+              'An unmapped native value will throw inside the channel handler and the '
+              'callback will never reach app code.'
+              '${nearMiss != null ? ' NOTE: $classNameReference declares `$nearMiss`, which '
+                        'reads like a catch-all but is not one of '
+                        '${_catchAllCandidates.join(", ")} -- the match is by name, so this '
+                        'constant is NOT used. Rename it or extend the candidate list.' : ''}',
+            );
+          }
+          value += unknownConstant != null
+              ? ' ?? $classNameReference.$unknownConstant'
+              : '!';
         }
         return value;
       }
@@ -918,6 +984,19 @@ class ExchangeableObjectGenerator
             ? "$fieldName${(isNullable ? '?' : '')}.toList()"
             : fieldName;
       }
+    } else if (elementType.isDartCoreMap) {
+      final valueType = Util.getGenericTypes(elementType).elementAt(1);
+      if (!Util.isDartCoreType(valueType)) {
+        // Mirrors the List branch above. Previously there was no Map branch here at all, so a
+        // map of exchangeable values fell through to the final `else` and was emitted bare —
+        // handing enum/object instances to StandardMessageCodec, which cannot encode them.
+        return fieldName +
+            (isNullable ? '?' : '') +
+            '.map((k, v) => MapEntry(k, ' +
+            getToMapValue('v', valueType) +
+            '))';
+      }
+      return fieldName;
     } else if (fieldTypeElement != null && hasToMapMethod(fieldTypeElement)) {
       return fieldName +
           (Util.typeIsNullable(elementType) ? '?' : '') +
@@ -1073,6 +1152,57 @@ class ExchangeableObjectGenerator
     }
 
     return false;
+  }
+
+  /// Name of a constant on [element] that can stand in for an unmapped native value,
+  /// or `null` if the enum has no catch-all.
+  ///
+  /// Exists so a non-nullable enum field degrades instead of throwing when a platform
+  /// reports a value this enum does not know -- see the call site in [getFromMapValue].
+  /// Matched by name because that is what the source enums declare; the annotations carry
+  /// no "this is the fallback" marker.
+  String? _findCatchAllConstant(Element? element) {
+    if (element is! ClassElement) {
+      return null;
+    }
+    for (final candidate in _catchAllCandidates) {
+      final matched = element.fields.any(
+        (f) => f.isStatic && f.name == candidate,
+      );
+      if (matched) {
+        return candidate;
+      }
+    }
+    return null;
+  }
+
+  /// Name of a constant that *reads* like a catch-all but is not one of
+  /// [_catchAllCandidates], or `null` if there is none.
+  ///
+  /// Matching by name has two failure modes, not one. The known one is deletion — §73
+  /// removed a catch-all and the generator silently reverted to `!`. The other is a
+  /// **near miss**: `InAppWebViewHitTestResultType.UNKNOWN_TYPE` and
+  /// `PrintJobMediaSize.UNKNOWN_PORTRAIT` are catch-alls in every sense except the
+  /// spelling, so this method would not find them. Neither is reachable today (both are
+  /// nullable fields, so no `!` is emitted), which is exactly why it needs saying out
+  /// loud the first time one of them lands on a non-nullable field.
+  String? _nearMissCatchAllConstant(Element? element) {
+    if (element is! ClassElement) {
+      return null;
+    }
+    for (final field in element.fields) {
+      final name = field.name;
+      if (!field.isStatic || name == null) {
+        continue;
+      }
+      if (_catchAllCandidates.contains(name)) {
+        continue;
+      }
+      if (_catchAllCandidates.any((c) => name.contains(c))) {
+        return name;
+      }
+    }
+    return null;
   }
 
   bool hasFromNativeValueMethod(Element element) {

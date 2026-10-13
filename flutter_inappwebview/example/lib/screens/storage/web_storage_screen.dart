@@ -1,5 +1,6 @@
+import 'dart:async';
 import 'package:flutter/material.dart';
-import 'package:flutter_inappwebview/flutter_inappwebview.dart';
+import 'package:nosferatu500_inappwebview/nosferatu500_inappwebview.dart';
 import 'package:flutter_inappwebview_example/widgets/common/app_drawer.dart';
 import 'package:flutter_inappwebview_example/widgets/common/appbar_loading_indicator.dart';
 import 'package:flutter_inappwebview_example/widgets/common/empty_state.dart';
@@ -301,7 +302,7 @@ class _WebStorageScreenState extends State<WebStorageScreen>
       );
       return;
     }
-    _removeItem(key);
+    unawaited(_removeItem(key));
   }
 
   Future<void> _clear() async {
@@ -487,7 +488,7 @@ class _WebStorageScreenState extends State<WebStorageScreen>
       );
       return;
     }
-    _key(index);
+    unawaited(_key(index));
   }
 
   Future<void> _promptGetItem() async {
@@ -508,7 +509,7 @@ class _WebStorageScreenState extends State<WebStorageScreen>
       );
       return;
     }
-    _getItem(key);
+    unawaited(_getItem(key));
   }
 
   Widget _buildMethodHistory(String methodName, {String? title}) {
@@ -650,7 +651,7 @@ class _WebStorageScreenState extends State<WebStorageScreen>
                 ),
                 Container(
                   decoration: BoxDecoration(
-                    color: Colors.black.withOpacity(0.7),
+                    color: Colors.black.withAlpha((255 * 0.7).round()),
                     borderRadius: BorderRadius.circular(4),
                   ),
                   padding: const EdgeInsets.symmetric(
@@ -923,13 +924,16 @@ class _WebStorageScreenState extends State<WebStorageScreen>
 
     setState(() => _isLoading = true);
     try {
-      await _webStorageManager.deleteAllData();
-      setState(() => _webStorageOrigins = []);
+      final deleted = await _webStorageManager.deleteAllData();
       _recordMethodResult(
         _managerMethodKey(PlatformWebStorageManagerMethod.deleteAllData),
-        'All web storage data deleted',
-        isError: false,
+        deleted
+            ? 'Deletion requested (Cache Storage, service workers and cookies are kept)'
+            : 'Storage not found: nothing deleted',
+        isError: !deleted,
       );
+      // Not cleared locally: origins that keep Cache Storage or a service worker stay listed.
+      await _getOrigins();
     } catch (e) {
       _recordMethodResult(
         _managerMethodKey(PlatformWebStorageManagerMethod.deleteAllData),
@@ -944,11 +948,13 @@ class _WebStorageScreenState extends State<WebStorageScreen>
   Future<void> _deleteOrigin(String origin) async {
     setState(() => _isLoading = true);
     try {
-      await _webStorageManager.deleteOrigin(origin: origin);
+      final deleted = await _webStorageManager.deleteOrigin(origin: origin);
       _recordMethodResult(
         _managerMethodKey(PlatformWebStorageManagerMethod.deleteOrigin),
-        'Deleted origin: $origin',
-        isError: false,
+        deleted
+            ? 'Deletion requested for $origin'
+            : 'Storage not found: nothing deleted for $origin',
+        isError: !deleted,
       );
       await _getOrigins();
     } catch (e) {
@@ -983,6 +989,87 @@ class _WebStorageScreenState extends State<WebStorageScreen>
     await _deleteOrigin(origin);
   }
 
+  Future<void> _deleteBrowsingData() async {
+    final confirmed = await _showConfirmDialog(
+      'Delete Browsing Data',
+      'Delete cookies, storage and cache for every site in this profile?',
+    );
+    if (!confirmed) return;
+
+    setState(() => _isLoading = true);
+    try {
+      // Android only, and gated on WebViewFeature.DELETE_BROWSING_DATA: a device without the
+      // feature returns false and deletes nothing rather than throwing.
+      final deleted = await _webStorageManager.deleteBrowsingData();
+      _recordMethodResult(
+        _managerMethodKey(PlatformWebStorageManagerMethod.deleteBrowsingData),
+        deleted
+            ? 'Browsing data deleted'
+            : 'Nothing deleted — DELETE_BROWSING_DATA is unsupported here',
+        isError: false,
+      );
+    } catch (e) {
+      _recordMethodResult(
+        _managerMethodKey(PlatformWebStorageManagerMethod.deleteBrowsingData),
+        'Error deleting browsing data: $e',
+        isError: true,
+      );
+    } finally {
+      if (mounted) setState(() => _isLoading = false);
+    }
+  }
+
+  Future<void> _promptDeleteBrowsingDataForSite() async {
+    final params = await showParameterDialog(
+      context: context,
+      title: 'Delete Browsing Data for Site',
+      parameters: {'site': 'example.com'},
+      requiredPaths: ['site'],
+    );
+
+    if (params == null) return;
+    final site = params['site']?.toString() ?? '';
+    if (site.isEmpty) {
+      _recordMethodResult(
+        _managerMethodKey(
+          PlatformWebStorageManagerMethod.deleteBrowsingDataForSite,
+        ),
+        'Please enter a site',
+        isError: true,
+      );
+      return;
+    }
+
+    setState(() => _isLoading = true);
+    try {
+      // Takes a *site*, not an origin: androidx resolves it to the registrable domain and clears
+      // every scheme and subdomain under it. The returned string is the domain it actually used,
+      // and null means the feature is unsupported.
+      final domain = await _webStorageManager.deleteBrowsingDataForSite(
+        site: site,
+      );
+      _recordMethodResult(
+        _managerMethodKey(
+          PlatformWebStorageManagerMethod.deleteBrowsingDataForSite,
+        ),
+        domain != null
+            ? 'Browsing data deleted for $domain'
+            : 'Nothing deleted — DELETE_BROWSING_DATA is unsupported here',
+        isError: false,
+      );
+    } catch (e) {
+      _recordMethodResult(
+        _managerMethodKey(
+          PlatformWebStorageManagerMethod.deleteBrowsingDataForSite,
+        ),
+        'Error deleting browsing data for site: $e',
+        isError: true,
+      );
+    } finally {
+      if (mounted) setState(() => _isLoading = false);
+    }
+  }
+
   Future<void> _getQuotaForOrigin() async {
     final params = await showParameterDialog(
       context: context,
@@ -1007,8 +1094,10 @@ class _WebStorageScreenState extends State<WebStorageScreen>
       final quota = await _webStorageManager.getQuotaForOrigin(origin: origin);
       _recordMethodResult(
         _managerMethodKey(PlatformWebStorageManagerMethod.getQuotaForOrigin),
-        'Quota for "$origin": $quota bytes',
-        isError: false,
+        quota == null
+            ? 'Storage not found: no quota read'
+            : 'Quota for "$origin": $quota bytes',
+        isError: quota == null,
         value: quota,
       );
     } catch (e) {
@@ -1046,8 +1135,10 @@ class _WebStorageScreenState extends State<WebStorageScreen>
       final usage = await _webStorageManager.getUsageForOrigin(origin: origin);
       _recordMethodResult(
         _managerMethodKey(PlatformWebStorageManagerMethod.getUsageForOrigin),
-        'Usage for "$origin": $usage bytes',
-        isError: false,
+        usage == null
+            ? 'Storage not found: no usage read'
+            : 'Usage for "$origin": $usage bytes',
+        isError: usage == null,
         value: usage,
       );
     } catch (e) {
@@ -1181,7 +1272,7 @@ class _WebStorageScreenState extends State<WebStorageScreen>
         const SizedBox(height: 16),
         _buildManagerMethodSection(
           PlatformWebStorageManagerMethod.getOrigins.name,
-          'Get origins using Application Cache or Web SQL Database',
+          'Get origins using IndexedDB, Cache Storage, OPFS or service workers',
           _getManagerMethodPlatforms(
             PlatformWebStorageManagerMethod.getOrigins.name,
           ),
@@ -1189,7 +1280,7 @@ class _WebStorageScreenState extends State<WebStorageScreen>
         ),
         _buildManagerMethodSection(
           PlatformWebStorageManagerMethod.deleteAllData.name,
-          'Clear all storage (App Cache, Web SQL, HTML5 Storage)',
+          'Clear IndexedDB, OPFS and localStorage for every origin',
           _getManagerMethodPlatforms(
             PlatformWebStorageManagerMethod.deleteAllData.name,
           ),
@@ -1197,11 +1288,27 @@ class _WebStorageScreenState extends State<WebStorageScreen>
         ),
         _buildManagerMethodSection(
           PlatformWebStorageManagerMethod.deleteOrigin.name,
-          'Clear storage for a specific origin',
+          'Clear IndexedDB and OPFS for one origin',
           _getManagerMethodPlatforms(
             PlatformWebStorageManagerMethod.deleteOrigin.name,
           ),
           _promptDeleteOrigin,
+        ),
+        _buildManagerMethodSection(
+          PlatformWebStorageManagerMethod.deleteBrowsingData.name,
+          'Clear cookies, storage and cache for every site (androidx)',
+          _getManagerMethodPlatforms(
+            PlatformWebStorageManagerMethod.deleteBrowsingData.name,
+          ),
+          _deleteBrowsingData,
+        ),
+        _buildManagerMethodSection(
+          PlatformWebStorageManagerMethod.deleteBrowsingDataForSite.name,
+          'Clear data for one site — every scheme and subdomain under it',
+          _getManagerMethodPlatforms(
+            PlatformWebStorageManagerMethod.deleteBrowsingDataForSite.name,
+          ),
+          _promptDeleteBrowsingDataForSite,
         ),
         _buildManagerMethodSection(
           PlatformWebStorageManagerMethod.getQuotaForOrigin.name,

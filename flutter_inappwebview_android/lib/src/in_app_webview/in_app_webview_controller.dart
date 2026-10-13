@@ -6,13 +6,15 @@ import 'dart:io';
 
 import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_inappwebview_platform_interface/flutter_inappwebview_platform_interface.dart';
+import 'package:nosferatu500_inappwebview_platform_interface/nosferatu500_inappwebview_platform_interface.dart';
 
 import '../in_app_browser/in_app_browser.dart';
 import '../print_job/main.dart';
 import '../web_message/main.dart';
 import '../web_storage/web_storage.dart';
-import '_static_channel.dart';
+import '../pigeons/in_app_webview.g.dart';
+import '../pigeons/in_app_webview_manager.g.dart';
+import '../web_resource_data.dart';
 import 'headless_in_app_webview.dart';
 
 /// Object specifying creation parameters for creating a [AndroidInAppWebViewController].
@@ -42,13 +44,401 @@ class AndroidInAppWebViewControllerCreationParams
   }
 }
 
+/// Receives every [InAppWebViewFlutterApi] event (fire-and-forget since W4, §214; value-returning
+/// since W5, §216) and dispatches each one through the controller's `_handleMethod`, rebuilt as the
+/// exact [MethodCall] the MethodChannel used to deliver: the same method name, and the arguments
+/// Kotlin used to send, key for key. A value-returning event answers what `_handleMethod` returns,
+/// which is what the MethodChannel replied.
+///
+/// So every event keeps its one definition in `_handleMethod` (the widget or browser routing, the
+/// `fromMap` parsing, the debug log), and the unit tests that drive `handleMethod` directly stay
+/// valid. Each method returns the dispatch's Future, which Pigeon awaits: a throw becomes an error
+/// reply, as on the MethodChannel, instead of an unhandled error.
+class _InAppWebViewFlutterApiImpl implements InAppWebViewFlutterApi {
+  _InAppWebViewFlutterApiImpl(this._controller);
+
+  final AndroidInAppWebViewController _controller;
+
+  Future<void> _dispatch(String method, Object? arguments) async {
+    await _controller._handleMethod(MethodCall(method, arguments));
+  }
+
+  @override
+  Future<void> onLoadStart(String? url) =>
+      _dispatch('onLoadStart', {'url': url});
+
+  @override
+  Future<void> onLoadStop(String? url) => _dispatch('onLoadStop', {'url': url});
+
+  @override
+  Future<void> onReceivedError(
+    Map<String?, Object?> request,
+    Map<String?, Object?> error,
+  ) => _dispatch('onReceivedError', {'request': request, 'error': error});
+
+  @override
+  Future<void> onReceivedHttpError(
+    Map<String?, Object?> request,
+    Map<String?, Object?> errorResponse,
+  ) => _dispatch('onReceivedHttpError', {
+    'request': request,
+    'errorResponse': errorResponse,
+  });
+
+  @override
+  Future<void> onProgressChanged(int progress) =>
+      _dispatch('onProgressChanged', {'progress': progress});
+
+  @override
+  Future<void> onConsoleMessage(String? message, int messageLevel) => _dispatch(
+    'onConsoleMessage',
+    {'message': message, 'messageLevel': messageLevel},
+  );
+
+  @override
+  Future<void> onScrollChanged(int x, int y) =>
+      _dispatch('onScrollChanged', {'x': x, 'y': y});
+
+  @override
+  Future<void> onOverScrolled(int x, int y, bool clampedX, bool clampedY) =>
+      _dispatch('onOverScrolled', {
+        'x': x,
+        'y': y,
+        'clampedX': clampedX,
+        'clampedY': clampedY,
+      });
+
+  // Kotlin sent `DownloadStartRequest.toMap()` itself as the arguments.
+  @override
+  Future<void> onDownloadStarting(Map<String?, Object?> downloadStartRequest) =>
+      _dispatch('onDownloadStarting', downloadStartRequest);
+
+  @override
+  Future<void> onCloseWindow() => _dispatch('onCloseWindow', {});
+
+  @override
+  Future<void> onTitleChanged(String? title) =>
+      _dispatch('onTitleChanged', {'title': title});
+
+  @override
+  Future<void> onGeolocationPermissionsHidePrompt() =>
+      _dispatch('onGeolocationPermissionsHidePrompt', {});
+
+  @override
+  Future<void> onReceivedTouchIconUrl(String? url, bool precomposed) =>
+      _dispatch('onReceivedTouchIconUrl', {
+        'url': url,
+        'precomposed': precomposed,
+      });
+
+  @override
+  Future<void> onPermissionRequestCanceled(
+    String? origin,
+    List<String?>? resources,
+  ) => _dispatch('onPermissionRequestCanceled', {
+    'origin': origin,
+    'resources': resources,
+  });
+
+  @override
+  Future<void> onUpdateVisitedHistory(String? url, bool isReload) =>
+      _dispatch('onUpdateVisitedHistory', {'url': url, 'isReload': isReload});
+
+  @override
+  Future<void> onZoomScaleChanged(double oldScale, double newScale) =>
+      _dispatch('onZoomScaleChanged', {
+        'oldScale': oldScale,
+        'newScale': newScale,
+      });
+
+  @override
+  Future<void> onPageCommitVisible(String? url) =>
+      _dispatch('onPageCommitVisible', {'url': url});
+
+  // Kotlin sent `HitTestResult.toMap()` itself (or null) as the arguments.
+  @override
+  Future<void> onLongPressHitTestResult(Map<String?, Object?>? hitTestResult) =>
+      _dispatch('onLongPressHitTestResult', hitTestResult);
+
+  // Kotlin sent `HitTestResult.toMap()` itself (or null) as the arguments.
+  @override
+  Future<void> onCreateContextMenu(Map<String?, Object?>? hitTestResult) =>
+      _dispatch('onCreateContextMenu', hitTestResult);
+
+  @override
+  Future<void> onHideContextMenu() => _dispatch('onHideContextMenu', {});
+
+  @override
+  Future<void> onContextMenuActionItemClicked(int id, String? title) =>
+      _dispatch('onContextMenuActionItemClicked', {'id': id, 'title': title});
+
+  @override
+  Future<void> onEnterFullscreen() => _dispatch('onEnterFullscreen', {});
+
+  @override
+  Future<void> onExitFullscreen() => _dispatch('onExitFullscreen', {});
+
+  @override
+  Future<void> onRequestFocus() => _dispatch('onRequestFocus', {});
+
+  @override
+  Future<void> onRenderProcessGone(bool didCrash, int rendererPriorityAtExit) =>
+      _dispatch('onRenderProcessGone', {
+        'didCrash': didCrash,
+        'rendererPriorityAtExit': rendererPriorityAtExit,
+      });
+
+  @override
+  Future<void> onReceivedLoginRequest(
+    String? realm,
+    String? account,
+    String? args,
+  ) => _dispatch('onReceivedLoginRequest', {
+    'realm': realm,
+    'account': account,
+    'args': args,
+  });
+
+  @override
+  Future<void> onNavigationStarted(Map<String?, Object?> navigation) =>
+      _dispatch('onNavigationStarted', {'navigation': navigation});
+
+  @override
+  Future<void> onNavigationRedirected(Map<String?, Object?> navigation) =>
+      _dispatch('onNavigationRedirected', {'navigation': navigation});
+
+  @override
+  Future<void> onNavigationCompleted(Map<String?, Object?> navigation) =>
+      _dispatch('onNavigationCompleted', {'navigation': navigation});
+
+  @override
+  Future<void> onPageLoadEvent(Map<String?, Object?> page) =>
+      _dispatch('onPageLoadEvent', {'page': page});
+
+  @override
+  Future<void> onPageDomContentLoadedEvent(Map<String?, Object?> page) =>
+      _dispatch('onPageDomContentLoadedEvent', {'page': page});
+
+  @override
+  Future<void> onPageDeleted(Map<String?, Object?> page) =>
+      _dispatch('onPageDeleted', {'page': page});
+
+  @override
+  Future<void> onFirstContentfulPaintMillis(
+    Map<String?, Object?> page,
+    int durationMillis,
+  ) => _dispatch('onFirstContentfulPaintMillis', {
+    'page': page,
+    'durationMillis': durationMillis,
+  });
+
+  @override
+  Future<void> onLargestContentfulPaintMillis(
+    Map<String?, Object?> page,
+    int durationMillis,
+  ) => _dispatch('onLargestContentfulPaintMillis', {
+    'page': page,
+    'durationMillis': durationMillis,
+  });
+
+  @override
+  Future<void> onPerformanceMarkMillis(
+    Map<String?, Object?> page,
+    String markName,
+    int markTimeMillis,
+  ) => _dispatch('onPerformanceMarkMillis', {
+    'page': page,
+    'markName': markName,
+    'markTimeMillis': markTimeMillis,
+  });
+
+  // W5 (§216): the events whose answer the platform acts on. Each returns what `_handleMethod`
+  // returns, which is what the MethodChannel used to reply: null when the app set no callback.
+
+  Future<dynamic> _ask(String method, Object? arguments) =>
+      _controller._handleMethod(MethodCall(method, arguments));
+
+  @override
+  Future<Map<String?, Object?>?> onJsAlert(
+    String? url,
+    String? message,
+    bool? isMainFrame,
+  ) async =>
+      await _ask('onJsAlert', {
+            'url': url,
+            'message': message,
+            'isMainFrame': isMainFrame,
+          })
+          as Map<String?, Object?>?;
+
+  @override
+  Future<Map<String?, Object?>?> onJsConfirm(
+    String? url,
+    String? message,
+    bool? isMainFrame,
+  ) async =>
+      await _ask('onJsConfirm', {
+            'url': url,
+            'message': message,
+            'isMainFrame': isMainFrame,
+          })
+          as Map<String?, Object?>?;
+
+  @override
+  Future<Map<String?, Object?>?> onJsPrompt(
+    String? url,
+    String? message,
+    String? defaultValue,
+    bool? isMainFrame,
+  ) async =>
+      await _ask('onJsPrompt', {
+            'url': url,
+            'message': message,
+            'defaultValue': defaultValue,
+            'isMainFrame': isMainFrame,
+          })
+          as Map<String?, Object?>?;
+
+  @override
+  Future<Map<String?, Object?>?> onJsBeforeUnload(
+    String? url,
+    String? message,
+  ) async =>
+      await _ask('onJsBeforeUnload', {'url': url, 'message': message})
+          as Map<String?, Object?>?;
+
+  // Kotlin sent `CreateWindowAction.toMap()` itself as the arguments.
+  @override
+  Future<bool?> onCreateWindow(
+    Map<String?, Object?> createWindowAction,
+  ) async => await _ask('onCreateWindow', createWindowAction) as bool?;
+
+  @override
+  Future<Map<String?, Object?>?> onGeolocationPermissionsShowPrompt(
+    String? origin,
+  ) async =>
+      await _ask('onGeolocationPermissionsShowPrompt', {'origin': origin})
+          as Map<String?, Object?>?;
+
+  @override
+  Future<Map<String?, Object?>?> onPermissionRequest(
+    String? origin,
+    List<String?>? resources,
+    Object? frame,
+  ) async =>
+      await _ask('onPermissionRequest', {
+            'origin': origin,
+            'resources': resources,
+            'frame': frame,
+          })
+          as Map<String?, Object?>?;
+
+  // Kotlin sent `NavigationAction.toMap()` itself as the arguments.
+  @override
+  Future<int?> shouldOverrideUrlLoading(
+    Map<String?, Object?> navigationAction,
+  ) async => await _ask('shouldOverrideUrlLoading', navigationAction) as int?;
+
+  // Kotlin sent each challenge's `toMap()` itself as the arguments.
+  @override
+  Future<Map<String?, Object?>?> onReceivedHttpAuthRequest(
+    Map<String?, Object?> challenge,
+  ) async =>
+      await _ask('onReceivedHttpAuthRequest', challenge)
+          as Map<String?, Object?>?;
+
+  @override
+  Future<Map<String?, Object?>?> onReceivedServerTrustAuthRequest(
+    Map<String?, Object?> challenge,
+  ) async =>
+      await _ask('onReceivedServerTrustAuthRequest', challenge)
+          as Map<String?, Object?>?;
+
+  @override
+  Future<Map<String?, Object?>?> onReceivedClientCertRequest(
+    Map<String?, Object?> challenge,
+  ) async =>
+      await _ask('onReceivedClientCertRequest', challenge)
+          as Map<String?, Object?>?;
+
+  @override
+  Future<Map<String?, Object?>?> onSafeBrowsingHit(
+    String? url,
+    int threatType,
+  ) async =>
+      await _ask('onSafeBrowsingHit', {'url': url, 'threatType': threatType})
+          as Map<String?, Object?>?;
+
+  @override
+  Future<int?> onFormResubmission(String? url) async =>
+      await _ask('onFormResubmission', {'url': url}) as int?;
+
+  @override
+  Future<int?> onRenderProcessUnresponsive(String? url) async =>
+      await _ask('onRenderProcessUnresponsive', {'url': url}) as int?;
+
+  @override
+  Future<int?> onRenderProcessResponsive(String? url) async =>
+      await _ask('onRenderProcessResponsive', {'url': url}) as int?;
+
+  @override
+  Future<String?> onCallJsHandler(
+    String? handlerName,
+    Map<String?, Object?> data,
+  ) async =>
+      await _ask('onCallJsHandler', {'handlerName': handlerName, 'data': data})
+          as String?;
+
+  @override
+  Future<bool?> onPrintRequest(String? url) async =>
+      await _ask('onPrintRequest', {'url': url}) as bool?;
+
+  @override
+  Future<List<String?>?> onRequestVisitedHistory() async =>
+      await _ask('onRequestVisitedHistory', {}) as List<String?>?;
+
+  // Kotlin sent `ShowFileChooserRequest.toMap()` itself as the arguments.
+  @override
+  Future<Map<String?, Object?>?> onShowFileChooser(
+    Map<String?, Object?> request,
+  ) async => await _ask('onShowFileChooser', request) as Map<String?, Object?>?;
+
+  // The two blocking waits. Kotlin sent `WebResourceRequestExt.toMap()` as the arguments of the
+  // first and under `request` for the second, so the typed request is turned back into that map.
+
+  @override
+  Future<WebResourceResponseData?> shouldInterceptRequest(
+    WebResourceRequestData request,
+  ) async {
+    final response =
+        await _ask('shouldInterceptRequest', request.toMethodChannelMap())
+            as Map<String, dynamic>?;
+    return WebResourceResponse.fromMap(response)?.toPigeon();
+  }
+
+  @override
+  Future<Map<String?, Object?>?> onLoadResourceWithCustomScheme(
+    WebResourceRequestData request,
+  ) async =>
+      await _ask('onLoadResourceWithCustomScheme', {
+            'request': request.toMethodChannelMap(),
+          })
+          as Map<String?, Object?>?;
+}
+
 ///Controls a WebView, such as an [InAppWebView] widget instance, a [AndroidHeadlessInAppWebView] instance or [AndroidInAppBrowser] WebView instance.
 ///
 ///If you are using the [InAppWebView] widget, an [InAppWebViewController] instance can be obtained by setting the [InAppWebView.onWebViewCreated]
 ///callback. Instead, if you are using an [AndroidInAppBrowser] instance, you can get it through the [AndroidInAppBrowser.webViewController] attribute.
+///
+///Its transport is Pigeon only since §217 ([InAppWebViewHostApi], [InAppWebViewFlutterApi]).
+///[ChannelController] stays in the type, which is public, and no channel is set on it any more, as
+///for `AndroidPathHandler` (§205).
 class AndroidInAppWebViewController extends PlatformInAppWebViewController
     with ChannelController {
-  static final MethodChannel _staticChannel = IN_APP_WEBVIEW_STATIC_CHANNEL;
+  /// Process-wide statics (§188). Replaces the hand-written `inappwebview_manager` channel.
+  static final InAppWebViewManagerHostApi _managerHostApi =
+      InAppWebViewManagerHostApi();
 
   // List of properties to be saved and restored for keep alive feature
   Map<String, Function> _javaScriptHandlersMap = HashMap<String, Function>();
@@ -67,10 +457,44 @@ class AndroidInAppWebViewController extends PlatformInAppWebViewController
 
   AndroidInAppBrowser? _inAppBrowser;
 
+  /// The per-WebView host methods (§207 on; all of them since W3, §212). Its suffix is [channel]'s
+  /// name tail, `inappwebview_$id` or `inappbrowser_$id`, as on the Kotlin side. Null after
+  /// [dispose], as [channel] is. Since W5 (§216) nothing travels on [channel]; it goes next.
+  InAppWebViewHostApi? _hostApi;
+
+  /// The suffix both Pigeon APIs use, kept so [dispose] can unregister [InAppWebViewFlutterApi],
+  /// where every event arrives: fire-and-forget since W4 (§214), value-returning since W5 (§216).
+  late final String _pigeonSuffix;
+
+  void _setUpPigeon(String suffix) {
+    _pigeonSuffix = suffix;
+    _hostApi = InAppWebViewHostApi(messageChannelSuffix: suffix);
+    InAppWebViewFlutterApi.setUp(
+      _InAppWebViewFlutterApiImpl(this),
+      messageChannelSuffix: suffix,
+    );
+  }
+
   PlatformInAppBrowserEvents? get _inAppBrowserEventHandler =>
       _inAppBrowser?.eventHandler;
 
   dynamic _controllerFromPlatform;
+
+  PlatformWebViewCreationParams? _rebuiltWebViewParams;
+
+  /// The params whose callbacks receive this WebView's events: the creating widget's, until a
+  /// rebuild hands over its own through [updateWebViewParams].
+  @override
+  PlatformWebViewCreationParams? get webviewParams =>
+      _rebuiltWebViewParams ?? super.webviewParams;
+
+  /// Called by [AndroidInAppWebViewWidget] when a rebuild moves this controller to a new widget,
+  /// so events go to that widget's callbacks. Before, they kept going to the first widget's
+  /// (measured, §282). What was read from the params at creation (the initial page, settings, user
+  /// scripts, and the `use*` settings switched on because a callback was present) is not redone.
+  void updateWebViewParams(PlatformWebViewCreationParams webviewParams) {
+    _rebuiltWebViewParams = webviewParams;
+  }
 
   @override
   late AndroidWebStorage webStorage;
@@ -84,9 +508,7 @@ class AndroidInAppWebViewController extends PlatformInAppWebViewController
                 params,
               ),
       ) {
-    channel = MethodChannel('com.pichillilorenzo/flutter_inappwebview_$id');
-    handler = handleMethod;
-    initMethodCallHandler();
+    _setUpPigeon('inappwebview_$id');
 
     final initialUserScripts = webviewParams?.initialUserScripts;
     if (initialUserScripts != null) {
@@ -116,9 +538,14 @@ class AndroidInAppWebViewController extends PlatformInAppWebViewController
     return _staticValue;
   }
 
+  /// [channel] is ignored since §217: the browser's WebView talks only over Pigeon, suffixed
+  /// `inappbrowser_<id>`. It stays in the signature (now nullable, so callers can pass null) to keep
+  /// this public constructor source-compatible.
   AndroidInAppWebViewController.fromInAppBrowser(
     PlatformInAppWebViewControllerCreationParams params,
-    MethodChannel channel,
+    // Kept for source compatibility; see above.
+    // ignore: avoid_unused_constructor_parameters
+    MethodChannel? channel,
     AndroidInAppBrowser inAppBrowser,
     UnmodifiableListView<UserScript>? initialUserScripts,
   ) : super.implementation(
@@ -128,7 +555,7 @@ class AndroidInAppWebViewController extends PlatformInAppWebViewController
                 params,
               ),
       ) {
-    this.channel = channel;
+    _setUpPigeon('inappbrowser_$id');
     _inAppBrowser = inAppBrowser;
 
     if (initialUserScripts != null) {
@@ -305,16 +732,29 @@ class AndroidInAppWebViewController extends PlatformInAppWebViewController
             arguments,
           )!;
 
-          if (webviewParams != null &&
-              webviewParams!.shouldOverrideUrlLoading != null) {
-            return (await webviewParams!.shouldOverrideUrlLoading!(
-              _controllerFromPlatform,
+          // No answer (null) is no decision, which the platform takes as ALLOW; a handler that
+          // throws cancels instead (D1, §309): the callback is often an allow-list, and a bug in it
+          // must not let every navigation through. The error is printed, as the channel prints its
+          // handlers' other errors.
+          try {
+            if (webviewParams != null &&
+                webviewParams!.shouldOverrideUrlLoading != null) {
+              return (await webviewParams!.shouldOverrideUrlLoading!(
+                _controllerFromPlatform,
+                navigationAction,
+              ))?.toNativeValue();
+            }
+            return (await _inAppBrowserEventHandler!.shouldOverrideUrlLoading(
               navigationAction,
             ))?.toNativeValue();
+          } catch (e, stackTrace) {
+            // ignore: avoid_print
+            print(
+              'shouldOverrideUrlLoading threw, so the navigation is cancelled: '
+              '$e\n$stackTrace',
+            );
+            return NavigationActionPolicy.CANCEL.toNativeValue();
           }
-          return (await _inAppBrowserEventHandler!.shouldOverrideUrlLoading(
-            navigationAction,
-          ))?.toNativeValue();
         }
         break;
       case "onConsoleMessage":
@@ -357,14 +797,16 @@ class AndroidInAppWebViewController extends PlatformInAppWebViewController
               DownloadStartRequest.fromMap(arguments)!;
 
           if (webviewParams != null) {
-            return (await webviewParams!.onDownloadStarting!(
+            await webviewParams!.onDownloadStarting!(
               _controllerFromPlatform,
               downloadStartRequest,
-            ))?.toMap();
+            );
+            return null;
           } else {
-            return (await _inAppBrowserEventHandler!.onDownloadStarting(
+            await _inAppBrowserEventHandler!.onDownloadStarting(
               downloadStartRequest,
-            ))?.toMap();
+            );
+            return null;
           }
         }
         break;
@@ -567,23 +1009,6 @@ class AndroidInAppWebViewController extends PlatformInAppWebViewController
             );
           } else {
             _inAppBrowserEventHandler!.onZoomScaleChanged(oldScale, newScale);
-          }
-        }
-        break;
-      case "onFaviconChanged":
-        if ((webviewParams != null &&
-                webviewParams!.onFaviconChanged != null) ||
-            _inAppBrowserEventHandler != null) {
-          Map<String, dynamic> arguments = call.arguments
-              .cast<String, dynamic>();
-          FaviconChangedRequest request = FaviconChangedRequest.fromMap(
-            arguments,
-          )!;
-
-          if (webviewParams != null) {
-            webviewParams!.onFaviconChanged!(_controllerFromPlatform, request);
-          } else {
-            _inAppBrowserEventHandler!.onFaviconChanged(request);
           }
         }
         break;
@@ -894,6 +1319,129 @@ class AndroidInAppWebViewController extends PlatformInAppWebViewController
           }
         }
         break;
+      case "onNavigationStarted":
+      case "onNavigationRedirected":
+      case "onNavigationCompleted":
+        // The three share one body: identical payload, identical shape, and the only difference is
+        // which handler receives it.
+        final navigationHandler = switch (call.method) {
+          "onNavigationStarted" => webviewParams?.onNavigationStarted,
+          "onNavigationRedirected" => webviewParams?.onNavigationRedirected,
+          _ => webviewParams?.onNavigationCompleted,
+        };
+        if (navigationHandler != null || _inAppBrowserEventHandler != null) {
+          final navigation = WebViewNavigation.fromMap(
+            call.arguments["navigation"]?.cast<String, dynamic>(),
+          );
+          if (navigation != null) {
+            if (navigationHandler != null) {
+              navigationHandler(_controllerFromPlatform, navigation);
+            } else {
+              switch (call.method) {
+                case "onNavigationStarted":
+                  _inAppBrowserEventHandler!.onNavigationStarted(navigation);
+                  break;
+                case "onNavigationRedirected":
+                  _inAppBrowserEventHandler!.onNavigationRedirected(navigation);
+                  break;
+                default:
+                  _inAppBrowserEventHandler!.onNavigationCompleted(navigation);
+                  break;
+              }
+            }
+          }
+        }
+        break;
+      case "onPageLoadEvent":
+      case "onPageDomContentLoadedEvent":
+      case "onPageDeleted":
+        // Same payload and same shape for all three; only the destination differs.
+        final pageHandler = switch (call.method) {
+          "onPageLoadEvent" => webviewParams?.onPageLoadEvent,
+          "onPageDomContentLoadedEvent" =>
+            webviewParams?.onPageDomContentLoadedEvent,
+          _ => webviewParams?.onPageDeleted,
+        };
+        if (pageHandler != null || _inAppBrowserEventHandler != null) {
+          final page = WebViewPage.fromMap(
+            call.arguments["page"]?.cast<String, dynamic>(),
+          );
+          if (page != null) {
+            if (pageHandler != null) {
+              pageHandler(_controllerFromPlatform, page);
+            } else {
+              switch (call.method) {
+                case "onPageLoadEvent":
+                  _inAppBrowserEventHandler!.onPageLoadEvent(page);
+                  break;
+                case "onPageDomContentLoadedEvent":
+                  _inAppBrowserEventHandler!.onPageDomContentLoadedEvent(page);
+                  break;
+                default:
+                  _inAppBrowserEventHandler!.onPageDeleted(page);
+                  break;
+              }
+            }
+          }
+        }
+        break;
+      case "onFirstContentfulPaintMillis":
+      case "onLargestContentfulPaintMillis":
+        // Both carry a duration under the same key, so they share a body too.
+        final isFirst = call.method == "onFirstContentfulPaintMillis";
+        final paintHandler = isFirst
+            ? webviewParams?.onFirstContentfulPaintMillis
+            : webviewParams?.onLargestContentfulPaintMillis;
+        if (paintHandler != null || _inAppBrowserEventHandler != null) {
+          final page = WebViewPage.fromMap(
+            call.arguments["page"]?.cast<String, dynamic>(),
+          );
+          final int durationMillis = call.arguments["durationMillis"];
+          if (page != null) {
+            if (paintHandler != null) {
+              paintHandler(_controllerFromPlatform, page, durationMillis);
+            } else if (isFirst) {
+              _inAppBrowserEventHandler!.onFirstContentfulPaintMillis(
+                page,
+                durationMillis,
+              );
+            } else {
+              _inAppBrowserEventHandler!.onLargestContentfulPaintMillis(
+                page,
+                durationMillis,
+              );
+            }
+          }
+        }
+        break;
+      case "onPerformanceMarkMillis":
+        if ((webviewParams != null &&
+                webviewParams!.onPerformanceMarkMillis != null) ||
+            _inAppBrowserEventHandler != null) {
+          final page = WebViewPage.fromMap(
+            call.arguments["page"]?.cast<String, dynamic>(),
+          );
+          final String markName = call.arguments["markName"];
+          final int markTimeMillis = call.arguments["markTimeMillis"];
+          if (page != null) {
+            if (webviewParams != null &&
+                webviewParams!.onPerformanceMarkMillis != null) {
+              webviewParams!.onPerformanceMarkMillis!(
+                _controllerFromPlatform,
+                page,
+                markName,
+                markTimeMillis,
+              );
+            } else {
+              _inAppBrowserEventHandler!.onPerformanceMarkMillis(
+                page,
+                markName,
+                markTimeMillis,
+              );
+            }
+          }
+        }
+        break;
       case "onDidReceiveServerRedirectForProvisionalNavigation":
         if (webviewParams != null &&
             webviewParams!.onDidReceiveServerRedirectForProvisionalNavigation !=
@@ -1087,25 +1635,15 @@ class AndroidInAppWebViewController extends PlatformInAppWebViewController
         if ((webviewParams != null && webviewParams!.onPrintRequest != null) ||
             _inAppBrowserEventHandler != null) {
           String? url = call.arguments["url"];
-          String? printJobId = call.arguments["printJobId"];
           WebUri? uri = url != null ? WebUri(url) : null;
-          AndroidPrintJobController? printJob = printJobId != null
-              ? AndroidPrintJobController(
-                  AndroidPrintJobControllerCreationParams(id: printJobId),
-                )
-              : null;
 
           if (webviewParams != null) {
             return await webviewParams!.onPrintRequest!(
               _controllerFromPlatform,
               uri,
-              printJob,
             );
           } else {
-            return await _inAppBrowserEventHandler!.onPrintRequest(
-              uri,
-              printJob,
-            );
+            return await _inAppBrowserEventHandler!.onPrintRequest(uri);
           }
         }
         break;
@@ -1203,6 +1741,23 @@ class AndroidInAppWebViewController extends PlatformInAppWebViewController
           }
         }
         break;
+      case "onRequestVisitedHistory":
+        if ((webviewParams != null &&
+                webviewParams!.onRequestVisitedHistory != null) ||
+            _inAppBrowserEventHandler != null) {
+          // `WebUri` cannot cross the channel, and the platform wants a `String[]`. A null result
+          // stays null rather than becoming `[]`: Kotlin treats the two differently, null meaning
+          // "keep the platform default" and `[]` meaning "nothing has been visited".
+          final List<WebUri>? urls =
+              webviewParams != null &&
+                  webviewParams!.onRequestVisitedHistory != null
+              ? await webviewParams!.onRequestVisitedHistory!(
+                  _controllerFromPlatform,
+                )
+              : await _inAppBrowserEventHandler!.onRequestVisitedHistory();
+          return urls?.map((url) => url.toString()).toList();
+        }
+        break;
       case "onShowFileChooser":
         if ((webviewParams != null &&
                 webviewParams!.onShowFileChooser != null) ||
@@ -1276,7 +1831,7 @@ class AndroidInAppWebViewController extends PlatformInAppWebViewController
               if (webviewParams != null &&
                   webviewParams!.shouldInterceptAjaxRequest != null) {
                 return jsonEncode(
-                  await params.webviewParams!.shouldInterceptAjaxRequest!(
+                  await webviewParams!.shouldInterceptAjaxRequest!(
                     _controllerFromPlatform,
                     request,
                   ),
@@ -1427,21 +1982,18 @@ class AndroidInAppWebViewController extends PlatformInAppWebViewController
 
   @override
   Future<WebUri?> getUrl() async {
-    Map<String, dynamic> args = <String, dynamic>{};
-    String? url = await channel?.invokeMethod<String?>('getUrl', args);
+    String? url = await _hostApi?.getUrl();
     return url != null ? WebUri(url) : null;
   }
 
   @override
   Future<String?> getTitle() async {
-    Map<String, dynamic> args = <String, dynamic>{};
-    return await channel?.invokeMethod<String?>('getTitle', args);
+    return await _hostApi?.getTitle();
   }
 
   @override
   Future<int?> getProgress() async {
-    Map<String, dynamic> args = <String, dynamic>{};
-    return await channel?.invokeMethod<int?>('getProgress', args);
+    return await _hostApi?.getProgress();
   }
 
   @override
@@ -1467,7 +2019,9 @@ class AndroidInAppWebViewController extends PlatformInAppWebViewController
       try {
         var bytes = await rootBundle.load(assetPath);
         html = utf8.decode(bytes.buffer.asUint8List());
-      } catch (e) {}
+      } catch (e) {
+        // Not a readable bundled asset: html stays null, as when the HTTP fetch below fails.
+      }
     } else {
       try {
         HttpClient client = HttpClient();
@@ -1695,13 +2249,8 @@ class AndroidInAppWebViewController extends PlatformInAppWebViewController
       allowingReadAccessTo == null || allowingReadAccessTo.isScheme("file"),
     );
 
-    Map<String, dynamic> args = <String, dynamic>{};
-    args.putIfAbsent('urlRequest', () => urlRequest.toMap());
-    args.putIfAbsent(
-      'allowingReadAccessTo',
-      () => allowingReadAccessTo?.toString(),
-    );
-    await channel?.invokeMethod('loadUrl', args);
+    // `allowingReadAccessTo` is iOS's; the Android side never read it (§212).
+    await _hostApi?.loadUrl(urlRequest.toMap());
   }
 
   @override
@@ -1710,10 +2259,7 @@ class AndroidInAppWebViewController extends PlatformInAppWebViewController
     required Uint8List postData,
   }) async {
     assert(url.toString().isNotEmpty);
-    Map<String, dynamic> args = <String, dynamic>{};
-    args.putIfAbsent('url', () => url.toString());
-    args.putIfAbsent('postData', () => postData);
-    await channel?.invokeMethod('postUrl', args);
+    await _hostApi?.postUrl(url.toString(), postData);
   }
 
   @override
@@ -1729,73 +2275,55 @@ class AndroidInAppWebViewController extends PlatformInAppWebViewController
       allowingReadAccessTo == null || allowingReadAccessTo.isScheme("file"),
     );
 
-    Map<String, dynamic> args = <String, dynamic>{};
-    args.putIfAbsent('data', () => data);
-    args.putIfAbsent('mimeType', () => mimeType);
-    args.putIfAbsent('encoding', () => encoding);
-    args.putIfAbsent('baseUrl', () => baseUrl?.toString() ?? "about:blank");
-    args.putIfAbsent(
-      'historyUrl',
-      () => historyUrl?.toString() ?? "about:blank",
+    // `allowingReadAccessTo` is iOS's: the Android side never read it, so it is not sent (§207).
+    await _hostApi?.loadData(
+      data,
+      mimeType,
+      encoding,
+      baseUrl?.toString() ?? "about:blank",
+      historyUrl?.toString() ?? "about:blank",
     );
-    args.putIfAbsent(
-      'allowingReadAccessTo',
-      () => allowingReadAccessTo?.toString(),
-    );
-    await channel?.invokeMethod('loadData', args);
   }
 
   @override
   Future<void> loadFile({required String assetFilePath}) async {
     assert(assetFilePath.isNotEmpty);
-    Map<String, dynamic> args = <String, dynamic>{};
-    args.putIfAbsent('assetFilePath', () => assetFilePath);
-    await channel?.invokeMethod('loadFile', args);
+    await _hostApi?.loadFile(assetFilePath);
   }
 
   @override
   Future<void> reload() async {
-    Map<String, dynamic> args = <String, dynamic>{};
-    await channel?.invokeMethod('reload', args);
+    await _hostApi?.reload();
   }
 
   @override
   Future<void> goBack() async {
-    Map<String, dynamic> args = <String, dynamic>{};
-    await channel?.invokeMethod('goBack', args);
+    await _hostApi?.goBack();
   }
 
   @override
   Future<bool> canGoBack() async {
-    Map<String, dynamic> args = <String, dynamic>{};
-    return await channel?.invokeMethod<bool>('canGoBack', args) ?? false;
+    return await _hostApi?.canGoBack() ?? false;
   }
 
   @override
   Future<void> goForward() async {
-    Map<String, dynamic> args = <String, dynamic>{};
-    await channel?.invokeMethod('goForward', args);
+    await _hostApi?.goForward();
   }
 
   @override
   Future<bool> canGoForward() async {
-    Map<String, dynamic> args = <String, dynamic>{};
-    return await channel?.invokeMethod<bool>('canGoForward', args) ?? false;
+    return await _hostApi?.canGoForward() ?? false;
   }
 
   @override
   Future<void> goBackOrForward({required int steps}) async {
-    Map<String, dynamic> args = <String, dynamic>{};
-    args.putIfAbsent('steps', () => steps);
-    await channel?.invokeMethod('goBackOrForward', args);
+    await _hostApi?.goBackOrForward(steps);
   }
 
   @override
   Future<bool> canGoBackOrForward({required int steps}) async {
-    Map<String, dynamic> args = <String, dynamic>{};
-    args.putIfAbsent('steps', () => steps);
-    return await channel?.invokeMethod<bool>('canGoBackOrForward', args) ??
-        false;
+    return await _hostApi?.canGoBackOrForward(steps) ?? false;
   }
 
   @override
@@ -1808,14 +2336,12 @@ class AndroidInAppWebViewController extends PlatformInAppWebViewController
 
   @override
   Future<bool> isLoading() async {
-    Map<String, dynamic> args = <String, dynamic>{};
-    return await channel?.invokeMethod<bool>('isLoading', args) ?? false;
+    return await _hostApi?.isLoading() ?? false;
   }
 
   @override
   Future<void> stopLoading() async {
-    Map<String, dynamic> args = <String, dynamic>{};
-    await channel?.invokeMethod('stopLoading', args);
+    await _hostApi?.stopLoading();
   }
 
   @override
@@ -1823,16 +2349,18 @@ class AndroidInAppWebViewController extends PlatformInAppWebViewController
     required String source,
     ContentWorld? contentWorld,
   }) async {
-    Map<String, dynamic> args = <String, dynamic>{};
-    args.putIfAbsent('source', () => source);
-    args.putIfAbsent('contentWorld', () => contentWorld?.toMap());
-    var data = await channel?.invokeMethod('evaluateJavascript', args);
+    dynamic data = await _hostApi?.evaluateJavascript(
+      source,
+      contentWorld?.toMap(),
+    );
     if (data != null) {
       try {
         // try to json decode the data coming from JavaScript
         // otherwise return it as it is.
         data = json.decode(data);
-      } catch (e) {}
+      } catch (e) {
+        // Not JSON: the value is returned as it came.
+      }
     }
     return data;
   }
@@ -1847,13 +2375,10 @@ class AndroidInAppWebViewController extends PlatformInAppWebViewController
     if (scriptHtmlTagAttributes != null && id != null) {
       _injectedScriptsFromURL[id] = scriptHtmlTagAttributes;
     }
-    Map<String, dynamic> args = <String, dynamic>{};
-    args.putIfAbsent('urlFile', () => urlFile.toString());
-    args.putIfAbsent(
-      'scriptHtmlTagAttributes',
-      () => scriptHtmlTagAttributes?.toMap(),
+    await _hostApi?.injectJavascriptFileFromUrl(
+      urlFile.toString(),
+      scriptHtmlTagAttributes?.toMap(),
     );
-    await channel?.invokeMethod('injectJavascriptFileFromUrl', args);
   }
 
   @override
@@ -1866,9 +2391,7 @@ class AndroidInAppWebViewController extends PlatformInAppWebViewController
 
   @override
   Future<void> injectCSSCode({required String source}) async {
-    Map<String, dynamic> args = <String, dynamic>{};
-    args.putIfAbsent('source', () => source);
-    await channel?.invokeMethod('injectCSSCode', args);
+    await _hostApi?.injectCSSCode(source);
   }
 
   @override
@@ -1877,13 +2400,10 @@ class AndroidInAppWebViewController extends PlatformInAppWebViewController
     CSSLinkHtmlTagAttributes? cssLinkHtmlTagAttributes,
   }) async {
     assert(urlFile.toString().isNotEmpty);
-    Map<String, dynamic> args = <String, dynamic>{};
-    args.putIfAbsent('urlFile', () => urlFile.toString());
-    args.putIfAbsent(
-      'cssLinkHtmlTagAttributes',
-      () => cssLinkHtmlTagAttributes?.toMap(),
+    await _hostApi?.injectCSSFileFromUrl(
+      urlFile.toString(),
+      cssLinkHtmlTagAttributes?.toMap(),
     );
-    await channel?.invokeMethod('injectCSSFileFromUrl', args);
   }
 
   @override
@@ -1918,33 +2438,19 @@ class AndroidInAppWebViewController extends PlatformInAppWebViewController
   Future<Uint8List?> takeScreenshot({
     ScreenshotConfiguration? screenshotConfiguration,
   }) async {
-    Map<String, dynamic> args = <String, dynamic>{};
-    args.putIfAbsent(
-      'screenshotConfiguration',
-      () => screenshotConfiguration?.toMap(),
-    );
-    return await channel?.invokeMethod<Uint8List?>('takeScreenshot', args);
+    return await _hostApi?.takeScreenshot(screenshotConfiguration?.toMap());
   }
 
   @override
   Future<void> setSettings({required InAppWebViewSettings settings}) async {
-    Map<String, dynamic> args = <String, dynamic>{};
-
-    args.putIfAbsent('settings', () => settings.toMap());
-    await channel?.invokeMethod('setSettings', args);
+    await _hostApi?.setSettings(settings.toMap());
   }
 
   @override
   Future<InAppWebViewSettings?> getSettings() async {
-    Map<String, dynamic> args = <String, dynamic>{};
-
-    Map<dynamic, dynamic>? settings = await channel?.invokeMethod(
-      'getSettings',
-      args,
-    );
+    final settings = await _hostApi?.getSettings();
     if (settings != null) {
-      settings = settings.cast<String, dynamic>();
-      return InAppWebViewSettings.fromMap(settings as Map<String, dynamic>);
+      return InAppWebViewSettings.fromMap(settings.cast<String, dynamic>());
     }
 
     return null;
@@ -1952,11 +2458,8 @@ class AndroidInAppWebViewController extends PlatformInAppWebViewController
 
   @override
   Future<WebHistory?> getCopyBackForwardList() async {
-    Map<String, dynamic> args = <String, dynamic>{};
-    Map<String, dynamic>? result = (await channel?.invokeMethod(
-      'getCopyBackForwardList',
-      args,
-    ))?.cast<String, dynamic>();
+    final result = (await _hostApi?.getCopyBackForwardList())
+        ?.cast<String, dynamic>();
     return WebHistory.fromMap(result);
   }
 
@@ -1966,11 +2469,7 @@ class AndroidInAppWebViewController extends PlatformInAppWebViewController
     required int y,
     bool animated = false,
   }) async {
-    Map<String, dynamic> args = <String, dynamic>{};
-    args.putIfAbsent('x', () => x);
-    args.putIfAbsent('y', () => y);
-    args.putIfAbsent('animated', () => animated);
-    await channel?.invokeMethod('scrollTo', args);
+    await _hostApi?.scrollTo(x, y, animated);
   }
 
   @override
@@ -1979,35 +2478,24 @@ class AndroidInAppWebViewController extends PlatformInAppWebViewController
     required int y,
     bool animated = false,
   }) async {
-    Map<String, dynamic> args = <String, dynamic>{};
-    args.putIfAbsent('x', () => x);
-    args.putIfAbsent('y', () => y);
-    args.putIfAbsent('animated', () => animated);
-    await channel?.invokeMethod('scrollBy', args);
+    await _hostApi?.scrollBy(x, y, animated);
   }
 
   @override
   Future<void> pauseTimers() async {
-    Map<String, dynamic> args = <String, dynamic>{};
-    await channel?.invokeMethod('pauseTimers', args);
+    await _hostApi?.pauseTimers();
   }
 
   @override
   Future<void> resumeTimers() async {
-    Map<String, dynamic> args = <String, dynamic>{};
-    await channel?.invokeMethod('resumeTimers', args);
+    await _hostApi?.resumeTimers();
   }
 
   @override
   Future<AndroidPrintJobController?> printCurrentPage({
     PrintJobSettings? settings,
   }) async {
-    Map<String, dynamic> args = <String, dynamic>{};
-    args.putIfAbsent("settings", () => settings?.toMap());
-    String? jobId = await channel?.invokeMethod<String?>(
-      'printCurrentPage',
-      args,
-    );
+    final jobId = await _hostApi?.printCurrentPage(settings?.toMap());
     if (jobId != null) {
       return AndroidPrintJobController(
         PlatformPrintJobControllerCreationParams(id: jobId),
@@ -2018,8 +2506,7 @@ class AndroidInAppWebViewController extends PlatformInAppWebViewController
 
   @override
   Future<int?> getContentHeight() async {
-    Map<String, dynamic> args = <String, dynamic>{};
-    var height = await channel?.invokeMethod('getContentHeight', args);
+    int? height = await _hostApi?.getContentHeight();
     if (height == null || height == 0) {
       // try to use javascript
       var scrollHeight = await evaluateJavascript(
@@ -2034,8 +2521,7 @@ class AndroidInAppWebViewController extends PlatformInAppWebViewController
 
   @override
   Future<int?> getContentWidth() async {
-    Map<String, dynamic> args = <String, dynamic>{};
-    var height = await channel?.invokeMethod('getContentWidth', args);
+    int? height = await _hostApi?.getContentWidth();
     if (height == null || height == 0) {
       // try to use javascript
       var scrollHeight = await evaluateJavascript(
@@ -2055,50 +2541,39 @@ class AndroidInAppWebViewController extends PlatformInAppWebViewController
   }) async {
     assert(zoomFactor > 0.01 && zoomFactor <= 100.0);
 
-    Map<String, dynamic> args = <String, dynamic>{};
-    args.putIfAbsent('zoomFactor', () => zoomFactor);
-    args.putIfAbsent('animated', () => animated);
-    return await channel?.invokeMethod('zoomBy', args);
+    // `animated` is iOS's; the Android side never read it (§212).
+    await _hostApi?.zoomBy(zoomFactor);
   }
 
   @override
   Future<WebUri?> getOriginalUrl() async {
-    Map<String, dynamic> args = <String, dynamic>{};
-    String? url = await channel?.invokeMethod<String?>('getOriginalUrl', args);
+    String? url = await _hostApi?.getOriginalUrl();
     return url != null ? WebUri(url) : null;
   }
 
   @override
   Future<double?> getZoomScale() async {
-    Map<String, dynamic> args = <String, dynamic>{};
-    return await channel?.invokeMethod<double?>('getZoomScale', args);
+    return await _hostApi?.getZoomScale();
   }
 
   @override
   Future<String?> getSelectedText() async {
-    Map<String, dynamic> args = <String, dynamic>{};
-    return await channel?.invokeMethod<String?>('getSelectedText', args);
+    return await _hostApi?.getSelectedText();
   }
 
   @override
   Future<InAppWebViewHitTestResult?> getHitTestResult() async {
-    Map<String, dynamic> args = <String, dynamic>{};
-    Map<dynamic, dynamic>? hitTestResultMap = await channel?.invokeMethod(
-      'getHitTestResult',
-      args,
-    );
+    final hitTestResultMap = await _hostApi?.getHitTestResult();
 
     if (hitTestResultMap == null) {
       return null;
     }
 
-    hitTestResultMap = hitTestResultMap.cast<String, dynamic>();
-
     InAppWebViewHitTestResultType? type =
         InAppWebViewHitTestResultType.fromNativeValue(
-          hitTestResultMap["type"]?.toInt(),
+          (hitTestResultMap["type"] as num?)?.toInt(),
         );
-    String? extra = hitTestResultMap["extra"];
+    String? extra = hitTestResultMap["extra"] as String?;
     return InAppWebViewHitTestResult(type: type, extra: extra);
   }
 
@@ -2107,67 +2582,66 @@ class AndroidInAppWebViewController extends PlatformInAppWebViewController
     FocusDirection? direction,
     InAppWebViewRect? previouslyFocusedRect,
   }) async {
-    Map<String, dynamic> args = <String, dynamic>{};
-    args.putIfAbsent("direction", () => direction?.toNativeValue());
-    args.putIfAbsent(
-      "previouslyFocusedRect",
-      () => previouslyFocusedRect?.toMap(),
+    return await _hostApi?.requestFocus(
+      direction?.toNativeValue(),
+      previouslyFocusedRect?.toMap(),
     );
-    return await channel?.invokeMethod<bool>('requestFocus', args);
   }
 
   @override
   Future<void> clearFocus() async {
-    Map<String, dynamic> args = <String, dynamic>{};
-    return await channel?.invokeMethod('clearFocus', args);
+    await _hostApi?.clearFocus();
   }
 
   @override
   Future<void> showInputMethod() async {
-    Map<String, dynamic> args = <String, dynamic>{};
-    return await channel?.invokeMethod('showInputMethod', args);
+    await _hostApi?.showInputMethod();
+  }
+
+  @override
+  Future<void> setAudioMuted(bool muted) async {
+    await _hostApi?.setAudioMuted(muted);
+  }
+
+  @override
+  Future<bool> isAudioMuted() async {
+    return await _hostApi?.isAudioMuted() ?? false;
+  }
+
+  @override
+  Future<bool> prerenderUrl(WebUri url) async {
+    return await _hostApi?.prerenderUrl(url.toString()) ?? false;
   }
 
   @override
   Future<void> hideInputMethod() async {
-    Map<String, dynamic> args = <String, dynamic>{};
-    return await channel?.invokeMethod('hideInputMethod', args);
+    await _hostApi?.hideInputMethod();
   }
 
   @override
   Future<void> setContextMenu(ContextMenu? contextMenu) async {
-    Map<String, dynamic> args = <String, dynamic>{};
-    args.putIfAbsent("contextMenu", () => contextMenu?.toMap());
-    await channel?.invokeMethod('setContextMenu', args);
+    await _hostApi?.setContextMenu(contextMenu?.toMap());
     _inAppBrowser?.setContextMenu(contextMenu);
   }
 
   @override
   Future<RequestFocusNodeHrefResult?> requestFocusNodeHref() async {
-    Map<String, dynamic> args = <String, dynamic>{};
-    Map<dynamic, dynamic>? result = await channel?.invokeMethod(
-      'requestFocusNodeHref',
-      args,
-    );
+    final result = await _hostApi?.requestFocusNodeHref();
     return result != null
         ? RequestFocusNodeHrefResult(
-            url: result['url'] != null ? WebUri(result['url']) : null,
-            title: result['title'],
-            src: result['src'],
+            url: result['url'] != null ? WebUri(result['url'] as String) : null,
+            title: result['title'] as String?,
+            src: result['src'] as String?,
           )
         : null;
   }
 
   @override
   Future<RequestImageRefResult?> requestImageRef() async {
-    Map<String, dynamic> args = <String, dynamic>{};
-    Map<dynamic, dynamic>? result = await channel?.invokeMethod(
-      'requestImageRef',
-      args,
-    );
+    final result = await _hostApi?.requestImageRef();
     return result != null
         ? RequestImageRefResult(
-            url: result['url'] != null ? WebUri(result['url']) : null,
+            url: result['url'] != null ? WebUri(result['url'] as String) : null,
           )
         : null;
   }
@@ -2246,17 +2720,9 @@ class AndroidInAppWebViewController extends PlatformInAppWebViewController
   Future<Color?> getMetaThemeColor() async {
     Color? themeColor;
 
-    try {
-      Map<String, dynamic> args = <String, dynamic>{};
-      themeColor = UtilColor.fromStringRepresentation(
-        await channel?.invokeMethod('getMetaThemeColor', args),
-      );
-      return themeColor;
-    } catch (e) {
-      // not implemented
-    }
-
-    // try using javascript
+    // Android WebView has no theme-color API, so the meta tag is read with JavaScript. The Kotlin
+    // side never handled a `getMetaThemeColor` message: a request for it always failed, was
+    // swallowed, and fell through to this same code.
     var metaTags = await getMetaTags();
     MetaTag? metaTagThemeColor;
 
@@ -2282,34 +2748,27 @@ class AndroidInAppWebViewController extends PlatformInAppWebViewController
 
   @override
   Future<int?> getScrollX() async {
-    Map<String, dynamic> args = <String, dynamic>{};
-    return await channel?.invokeMethod<int?>('getScrollX', args);
+    return await _hostApi?.getScrollX();
   }
 
   @override
   Future<int?> getScrollY() async {
-    Map<String, dynamic> args = <String, dynamic>{};
-    return await channel?.invokeMethod<int?>('getScrollY', args);
+    return await _hostApi?.getScrollY();
   }
 
   @override
   Future<SslCertificate?> getCertificate() async {
-    Map<String, dynamic> args = <String, dynamic>{};
-    Map<String, dynamic>? sslCertificateMap = (await channel?.invokeMethod(
-      'getCertificate',
-      args,
-    ))?.cast<String, dynamic>();
+    final sslCertificateMap = (await _hostApi?.getCertificate())
+        ?.cast<String, dynamic>();
     return SslCertificate.fromMap(sslCertificateMap);
   }
 
   @override
   Future<void> addUserScript({required UserScript userScript}) async {
-    Map<String, dynamic> args = <String, dynamic>{};
-    args.putIfAbsent('userScript', () => userScript.toMap());
     if (!(_userScripts[userScript.injectionTime]?.contains(userScript) ??
         false)) {
       _userScripts[userScript.injectionTime]?.add(userScript);
-      await channel?.invokeMethod('addUserScript', args);
+      await _hostApi?.addUserScript(userScript.toMap());
     }
   }
 
@@ -2328,10 +2787,7 @@ class AndroidInAppWebViewController extends PlatformInAppWebViewController
     }
 
     _userScripts[userScript.injectionTime]?.remove(userScript);
-    Map<String, dynamic> args = <String, dynamic>{};
-    args.putIfAbsent('userScript', () => userScript.toMap());
-    args.putIfAbsent('index', () => index);
-    await channel?.invokeMethod('removeUserScript', args);
+    await _hostApi?.removeUserScript(index, userScript.toMap());
 
     return true;
   }
@@ -2356,9 +2812,7 @@ class AndroidInAppWebViewController extends PlatformInAppWebViewController
       }
     }
 
-    Map<String, dynamic> args = <String, dynamic>{};
-    args.putIfAbsent('groupName', () => groupName);
-    await channel?.invokeMethod('removeUserScriptsByGroupName', args);
+    await _hostApi?.removeUserScriptsByGroupName(groupName);
   }
 
   @override
@@ -2375,8 +2829,7 @@ class AndroidInAppWebViewController extends PlatformInAppWebViewController
     _userScripts[UserScriptInjectionTime.AT_DOCUMENT_START]?.clear();
     _userScripts[UserScriptInjectionTime.AT_DOCUMENT_END]?.clear();
 
-    Map<String, dynamic> args = <String, dynamic>{};
-    await channel?.invokeMethod('removeAllUserScripts', args);
+    await _hostApi?.removeAllUserScripts();
   }
 
   @override
@@ -2391,15 +2844,15 @@ class AndroidInAppWebViewController extends PlatformInAppWebViewController
     Map<String, dynamic> arguments = const <String, dynamic>{},
     ContentWorld? contentWorld,
   }) async {
-    Map<String, dynamic> args = <String, dynamic>{};
-    args.putIfAbsent('functionBody', () => functionBody);
-    args.putIfAbsent('arguments', () => arguments);
-    args.putIfAbsent('contentWorld', () => contentWorld?.toMap());
-    var data = await channel?.invokeMethod('callAsyncJavaScript', args);
-    if (data == null) {
+    final String? answer = await _hostApi?.callAsyncJavaScript(
+      functionBody,
+      arguments,
+      contentWorld?.toMap(),
+    );
+    if (answer == null) {
       return null;
     }
-    data = json.decode(data);
+    final data = json.decode(answer);
     return CallAsyncJavaScriptResult(
       value: data["value"],
       error: data["error"],
@@ -2418,25 +2871,18 @@ class AndroidInAppWebViewController extends PlatformInAppWebViewController
       );
     }
 
-    Map<String, dynamic> args = <String, dynamic>{};
-    args.putIfAbsent("filePath", () => filePath);
-    args.putIfAbsent("autoname", () => autoname);
-    return await channel?.invokeMethod<String?>('saveWebArchive', args);
+    return await _hostApi?.saveWebArchive(filePath, autoname);
   }
 
   @override
   Future<bool> isSecureContext() async {
-    Map<String, dynamic> args = <String, dynamic>{};
-    return await channel?.invokeMethod<bool>('isSecureContext', args) ?? false;
+    return await _hostApi?.isSecureContext() ?? false;
   }
 
   @override
   Future<AndroidWebMessageChannel?> createWebMessageChannel() async {
-    Map<String, dynamic> args = <String, dynamic>{};
-    Map<String, dynamic>? result = (await channel?.invokeMethod(
-      'createWebMessageChannel',
-      args,
-    ))?.cast<String, dynamic>();
+    final result = (await _hostApi?.createWebMessageChannel())
+        ?.cast<String, dynamic>();
     final webMessageChannel = AndroidWebMessageChannel.static().fromMap(result);
     if (webMessageChannel != null) {
       _webMessageChannels.add(webMessageChannel);
@@ -2450,10 +2896,7 @@ class AndroidInAppWebViewController extends PlatformInAppWebViewController
     WebUri? targetOrigin,
   }) async {
     targetOrigin ??= WebUri('');
-    Map<String, dynamic> args = <String, dynamic>{};
-    args.putIfAbsent('message', () => message.toMap());
-    args.putIfAbsent('targetOrigin', () => targetOrigin.toString());
-    await channel?.invokeMethod('postWebMessage', args);
+    await _hostApi?.postWebMessage(message.toMap(), targetOrigin.toString());
   }
 
   @override
@@ -2473,9 +2916,7 @@ class AndroidInAppWebViewController extends PlatformInAppWebViewController
     _webMessageListeners.add(webMessageListener as AndroidWebMessageListener);
     _webMessageListenerObjNames.add(webMessageListener.params.jsObjectName);
 
-    Map<String, dynamic> args = <String, dynamic>{};
-    args.putIfAbsent('webMessageListener', () => webMessageListener.toMap());
-    await channel?.invokeMethod('addWebMessageListener', args);
+    await _hostApi?.addWebMessageListener(webMessageListener.toMap());
   }
 
   @override
@@ -2488,194 +2929,187 @@ class AndroidInAppWebViewController extends PlatformInAppWebViewController
 
   @override
   Future<bool> canScrollVertically() async {
-    Map<String, dynamic> args = <String, dynamic>{};
-    return await channel?.invokeMethod<bool>('canScrollVertically', args) ??
-        false;
+    return await _hostApi?.canScrollVertically() ?? false;
   }
 
   @override
   Future<bool> canScrollHorizontally() async {
-    Map<String, dynamic> args = <String, dynamic>{};
-    return await channel?.invokeMethod<bool>('canScrollHorizontally', args) ??
-        false;
+    return await _hostApi?.canScrollHorizontally() ?? false;
   }
 
   @override
   Future<void> clearSslPreferences() async {
-    Map<String, dynamic> args = <String, dynamic>{};
-    await channel?.invokeMethod('clearSslPreferences', args);
+    await _hostApi?.clearSslPreferences();
   }
 
   @override
   Future<void> pause() async {
-    Map<String, dynamic> args = <String, dynamic>{};
-    await channel?.invokeMethod('pause', args);
+    await _hostApi?.pause();
   }
 
   @override
   Future<void> resume() async {
-    Map<String, dynamic> args = <String, dynamic>{};
-    await channel?.invokeMethod('resume', args);
+    await _hostApi?.resume();
+  }
+
+  @override
+  Future<void> flingScroll({
+    required int velocityX,
+    required int velocityY,
+  }) async {
+    await _hostApi?.flingScroll(velocityX, velocityY);
+  }
+
+  @override
+  Future<bool> documentHasImages() async {
+    return await _hostApi?.documentHasImages() ?? false;
+  }
+
+  @override
+  Future<void> postVisualStateCallback() async {
+    // The native requestId is not exposed: this Future is the correlation, and the Kotlin side
+    // supplies an id of its own purely so a logcat trace can tell requests apart.
+    await _hostApi?.postVisualStateCallback();
   }
 
   @override
   Future<bool> pageDown({required bool bottom}) async {
-    Map<String, dynamic> args = <String, dynamic>{};
-    args.putIfAbsent("bottom", () => bottom);
-    return await channel?.invokeMethod<bool>('pageDown', args) ?? false;
+    return await _hostApi?.pageDown(bottom) ?? false;
   }
 
   @override
   Future<bool> pageUp({required bool top}) async {
-    Map<String, dynamic> args = <String, dynamic>{};
-    args.putIfAbsent("top", () => top);
-    return await channel?.invokeMethod<bool>('pageUp', args) ?? false;
+    return await _hostApi?.pageUp(top) ?? false;
   }
 
   @override
   Future<bool> zoomIn() async {
-    Map<String, dynamic> args = <String, dynamic>{};
-    return await channel?.invokeMethod<bool>('zoomIn', args) ?? false;
+    return await _hostApi?.zoomIn() ?? false;
   }
 
   @override
   Future<bool> zoomOut() async {
-    Map<String, dynamic> args = <String, dynamic>{};
-    return await channel?.invokeMethod<bool>('zoomOut', args) ?? false;
+    return await _hostApi?.zoomOut() ?? false;
   }
 
   @override
   Future<void> clearHistory() async {
-    Map<String, dynamic> args = <String, dynamic>{};
-    return await channel?.invokeMethod('clearHistory', args);
+    await _hostApi?.clearHistory();
   }
 
   @override
   Future<bool> isInFullscreen() async {
-    Map<String, dynamic> args = <String, dynamic>{};
-    return await channel?.invokeMethod<bool>('isInFullscreen', args) ?? false;
+    return await _hostApi?.isInFullscreen() ?? false;
   }
 
   @override
   Future<void> clearFormData() async {
-    Map<String, dynamic> args = <String, dynamic>{};
-    return await channel?.invokeMethod('clearFormData', args);
+    await _hostApi?.clearFormData();
   }
 
   @override
-  Future<Uint8List?> saveState() async {
-    Map<String, dynamic> args = <String, dynamic>{};
-    return await channel?.invokeMethod<Uint8List?>('saveState', args);
+  Future<Uint8List?> saveState({
+    int? maxSize,
+    bool? includeForwardState,
+  }) async {
+    // Sent as null when absent rather than defaulted here: the Kotlin side distinguishes
+    // "no constraint asked for" (framework WebView.saveState, no feature needed) from
+    // "constrained" (WebViewCompat.saveState, gated on SAVE_STATE), and only null can say the
+    // former. A default of Int.MAX_VALUE / true would look identical to an explicit request.
+    return await _hostApi?.saveState(maxSize, includeForwardState);
   }
 
   @override
   Future<bool> restoreState(Uint8List? state) async {
-    Map<String, dynamic> args = <String, dynamic>{};
-    args.putIfAbsent('state', () => state);
-    return await channel?.invokeMethod<bool>('restoreState', args) ?? false;
+    return await _hostApi?.restoreState(state) ?? false;
   }
+
+  // --- process-wide statics ---------------------------------------------------------------------
+  //
+  // Transport is Pigeon-generated (`InAppWebViewManagerHostApi`) since §188, not the hand-written
+  // `inappwebview_manager` channel. Every `bool` a setter answers is discarded, as it always was.
 
   @override
   Future<String> getDefaultUserAgent() async {
-    Map<String, dynamic> args = <String, dynamic>{};
-    return await _staticChannel.invokeMethod<String>(
-          'getDefaultUserAgent',
-          args,
-        ) ??
-        '';
+    // `?? ''` kept: the platform answers null only when the plugin has gone away, and the public
+    // return type is non-nullable.
+    return await _managerHostApi.getDefaultUserAgent() ?? '';
   }
 
   @override
   Future<void> clearClientCertPreferences() async {
-    Map<String, dynamic> args = <String, dynamic>{};
-    await _staticChannel.invokeMethod('clearClientCertPreferences', args);
+    await _managerHostApi.clearClientCertPreferences();
   }
 
   @override
   Future<WebUri?> getSafeBrowsingPrivacyPolicyUrl() async {
-    Map<String, dynamic> args = <String, dynamic>{};
-    String? url = await _staticChannel.invokeMethod(
-      'getSafeBrowsingPrivacyPolicyUrl',
-      args,
-    );
+    final url = await _managerHostApi.getSafeBrowsingPrivacyPolicyUrl();
     return url != null ? WebUri(url) : null;
   }
 
   @override
-  Future<bool> setSafeBrowsingAllowlist({required List<String> hosts}) async {
-    Map<String, dynamic> args = <String, dynamic>{};
-    args.putIfAbsent('hosts', () => hosts);
-    return await _staticChannel.invokeMethod<bool>(
-          'setSafeBrowsingAllowlist',
-          args,
-        ) ??
-        false;
+  Future<bool> setSafeBrowsingAllowlist({required List<String> hosts}) {
+    return _managerHostApi.setSafeBrowsingAllowlist(hosts);
   }
 
   @override
   Future<WebViewPackageInfo?> getCurrentWebViewPackage() async {
-    Map<String, dynamic> args = <String, dynamic>{};
-    Map<String, dynamic>? packageInfo = (await _staticChannel.invokeMethod(
-      'getCurrentWebViewPackage',
-      args,
-    ))?.cast<String, dynamic>();
-    return WebViewPackageInfo.fromMap(packageInfo);
+    final info = await _managerHostApi.getCurrentWebViewPackage();
+    if (info == null) {
+      return null;
+    }
+    return WebViewPackageInfo(
+      versionName: info.versionName,
+      packageName: info.packageName,
+    );
   }
 
   @override
   Future<void> setWebContentsDebuggingEnabled(bool debuggingEnabled) async {
-    Map<String, dynamic> args = <String, dynamic>{};
-    args.putIfAbsent('debuggingEnabled', () => debuggingEnabled);
-    return await _staticChannel.invokeMethod(
-      'setWebContentsDebuggingEnabled',
-      args,
-    );
+    await _managerHostApi.setWebContentsDebuggingEnabled(debuggingEnabled);
   }
 
   @override
-  Future<String?> getVariationsHeader() async {
-    Map<String, dynamic> args = <String, dynamic>{};
-    return await _staticChannel.invokeMethod<String?>(
-      'getVariationsHeader',
-      args,
-    );
+  Future<String?> getVariationsHeader() {
+    return _managerHostApi.getVariationsHeader();
   }
 
   @override
-  Future<bool> isMultiProcessEnabled() async {
-    Map<String, dynamic> args = <String, dynamic>{};
-    return await _staticChannel.invokeMethod<bool>(
-          'isMultiProcessEnabled',
-          args,
-        ) ??
-        false;
+  Future<bool> isMultiProcessEnabled() {
+    return _managerHostApi.isMultiProcessEnabled();
+  }
+
+  @override
+  Future<bool> setDefaultTrafficStatsTag(int tag) {
+    // The native side takes a 32-bit int. Both the signed range and the unsigned form the
+    // androidx javadoc itself uses (0xFFFFFF00 …) are accepted — the Kotlin side keeps the low 32
+    // bits — while anything wider would silently change tag, so it is rejected here.
+    assert(
+      tag >= -0x80000000 && tag <= 0xFFFFFFFF,
+      'tag must fit in a 32-bit integer.',
+    );
+    return _managerHostApi.setDefaultTrafficStatsTag(tag);
   }
 
   @override
   Future<void> disableWebView() async {
-    Map<String, dynamic> args = <String, dynamic>{};
-    await _staticChannel.invokeMethod('disableWebView', args);
+    await _managerHostApi.disableWebView();
   }
 
   @override
   Future<void> disposeKeepAlive(InAppWebViewKeepAlive keepAlive) async {
-    Map<String, dynamic> args = <String, dynamic>{};
-    args.putIfAbsent('keepAliveId', () => keepAlive.id);
-    await _staticChannel.invokeMethod('disposeKeepAlive', args);
+    await _managerHostApi.disposeKeepAlive(keepAlive.id);
     _keepAliveMap[keepAlive] = null;
   }
 
   @override
   Future<void> clearAllCache({bool includeDiskFiles = true}) async {
-    Map<String, dynamic> args = <String, dynamic>{};
-    args.putIfAbsent('includeDiskFiles', () => includeDiskFiles);
-    await _staticChannel.invokeMethod('clearAllCache', args);
+    await _managerHostApi.clearAllCache(includeDiskFiles);
   }
 
   @override
   Future<void> enableSlowWholeDocumentDraw() async {
-    Map<String, dynamic> args = <String, dynamic>{};
-    await _staticChannel.invokeMethod('enableSlowWholeDocumentDraw', args);
+    await _managerHostApi.enableSlowWholeDocumentDraw();
   }
 
   @override
@@ -2684,29 +3118,23 @@ class AndroidInAppWebViewController extends PlatformInAppWebViewController
       RegExp(r'^[a-zA-Z_]\w*$').hasMatch(bridgeName),
       'bridgeName must be a non-empty string with only alphanumeric and underscore characters. It can\'t start with a number.',
     );
-    Map<String, dynamic> args = <String, dynamic>{};
-    args.putIfAbsent('bridgeName', () => bridgeName);
-    await _staticChannel.invokeMethod('setJavaScriptBridgeName', args);
+    await _managerHostApi.setJavaScriptBridgeName(bridgeName);
   }
 
   @override
-  Future<String> getJavaScriptBridgeName() async {
-    Map<String, dynamic> args = <String, dynamic>{};
-    return await _staticChannel.invokeMethod<String>(
-          'getJavaScriptBridgeName',
-          args,
-        ) ??
-        '';
+  Future<String> getJavaScriptBridgeName() {
+    // No `?? ''` any more: the host method is typed non-null, and the Kotlin side always answers.
+    return _managerHostApi.getJavaScriptBridgeName();
   }
 
   @override
   Future<String> get tRexRunnerHtml async => await rootBundle.loadString(
-    'packages/flutter_inappwebview/assets/t_rex_runner/t-rex.html',
+    'packages/nosferatu500_inappwebview/assets/t_rex_runner/t-rex.html',
   );
 
   @override
   Future<String> get tRexRunnerCss async => await rootBundle.loadString(
-    'packages/flutter_inappwebview/assets/t_rex_runner/t-rex.css',
+    'packages/nosferatu500_inappwebview/assets/t_rex_runner/t-rex.css',
   );
 
   @override
@@ -2716,7 +3144,13 @@ class AndroidInAppWebViewController extends PlatformInAppWebViewController
 
   @override
   void dispose({bool isKeepAlive = false}) {
-    disposeChannel(removeMethodCallHandler: !isKeepAlive);
+    // A keep-alive WebView keeps its event handler registered (its Kotlin side outlives this
+    // controller), and the next controller for the same keep-alive id registers over it under the
+    // same suffix, as it kept its MethodChannel handler before §217.
+    if (!isKeepAlive) {
+      InAppWebViewFlutterApi.setUp(null, messageChannelSuffix: _pigeonSuffix);
+    }
+    _hostApi = null;
     _inAppBrowser = null;
     webStorage.dispose();
     if (!isKeepAlive) {

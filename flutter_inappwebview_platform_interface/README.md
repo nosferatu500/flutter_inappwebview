@@ -1,14 +1,14 @@
 # flutter\_inappwebview\_platform\_interface
 
-A common platform interface for the [`flutter_inappwebview`](https://pub.dev/packages/flutter_inappwebview) plugin.
+A common platform interface for the [`nosferatu500_inappwebview`](https://pub.dev/packages/nosferatu500_inappwebview) plugin.
 
-This interface allows platform-specific implementations of the `flutter_inappwebview`
+This interface allows platform-specific implementations of the `nosferatu500_inappwebview`
 plugin, as well as the plugin itself, to ensure they are supporting the
 same interface.
 
 # Usage
 
-To implement a new platform-specific implementation of `flutter_inappwebview`, extend
+To implement a new platform-specific implementation of `nosferatu500_inappwebview`, extend
 [`InAppWebViewPlatform`](lib/src/inappwebview_platform.dart) with an implementation that performs the
 platform-specific behavior, and when you register your plugin, set the default
 `InAppWebViewPlatform` by calling

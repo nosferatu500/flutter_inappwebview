@@ -10,27 +10,37 @@ part of 'print_job_color_mode.dart';
 class PrintJobColorMode {
   final int _value;
   final dynamic _nativeValue;
-  const PrintJobColorMode._internal(this._value, this._nativeValue);
+
+  /// Native values accepted *in addition* to [_nativeValue] when resolving from a
+  /// native value. Inbound only -- [toNativeValue] still returns [_nativeValue].
+  // ignore: unused_field
+  final List<dynamic> _alsoAcceptsNativeValues;
+  const PrintJobColorMode._internal(
+    this._value,
+    this._nativeValue, [
+    this._alsoAcceptsNativeValues = const [],
+  ]);
   // ignore: unused_element
   factory PrintJobColorMode._internalMultiPlatform(
     int value,
-    Function nativeValue,
-  ) => PrintJobColorMode._internal(value, nativeValue());
+    Function nativeValue, [
+    Function? alsoAcceptsNativeValues,
+  ]) => PrintJobColorMode._internal(
+    value,
+    nativeValue(),
+    alsoAcceptsNativeValues != null
+        ? alsoAcceptsNativeValues() as List<dynamic>
+        : const [],
+  );
 
   ///Color color scheme, for example many colors are used.
   ///
   ///**Officially Supported Platforms/Implementations**:
   ///- Android WebView
-  ///- macOS WKWebView
-  ///- Windows WebView2
   static final COLOR = PrintJobColorMode._internalMultiPlatform(2, () {
     switch (defaultTargetPlatform) {
       case TargetPlatform.android:
         return 2;
-      case TargetPlatform.macOS:
-        return 'RGB';
-      case TargetPlatform.windows:
-        return 1;
       default:
         break;
     }
@@ -41,13 +51,10 @@ class PrintJobColorMode {
   ///
   ///**Officially Supported Platforms/Implementations**:
   ///- Android WebView
-  ///- Windows WebView2
   static final DEFAULT = PrintJobColorMode._internalMultiPlatform(0, () {
     switch (defaultTargetPlatform) {
       case TargetPlatform.android:
         return 0;
-      case TargetPlatform.windows:
-        return 0;
       default:
         break;
     }
@@ -58,16 +65,10 @@ class PrintJobColorMode {
   ///
   ///**Officially Supported Platforms/Implementations**:
   ///- Android WebView
-  ///- macOS WKWebView
-  ///- Windows WebView2
   static final MONOCHROME = PrintJobColorMode._internalMultiPlatform(1, () {
     switch (defaultTargetPlatform) {
       case TargetPlatform.android:
         return 1;
-      case TargetPlatform.macOS:
-        return 'Gray';
-      case TargetPlatform.windows:
-        return 2;
       default:
         break;
     }
@@ -96,6 +97,10 @@ class PrintJobColorMode {
   }
 
   ///Gets a possible [PrintJobColorMode] instance from a native value.
+  ///
+  ///Falls back to constants that declare [value] among their additionally accepted
+  ///native values, so a platform reporting more than one code for the same condition
+  ///still resolves instead of returning `null`.
   static PrintJobColorMode? fromNativeValue(dynamic value) {
     if (value != null) {
       try {
@@ -103,7 +108,13 @@ class PrintJobColorMode {
           (element) => element.toNativeValue() == value,
         );
       } catch (e) {
-        return null;
+        try {
+          return PrintJobColorMode.values.firstWhere(
+            (element) => element._alsoAcceptsNativeValues.contains(value),
+          );
+        } catch (e) {
+          return null;
+        }
       }
     }
     return null;
@@ -163,7 +174,7 @@ class PrintJobColorMode {
   int get hashCode => _value.hashCode;
 
   @override
-  bool operator ==(value) => value == _value;
+  bool operator ==(other) => other == _value;
 
   ///Checks if the value is supported by the [defaultTargetPlatform].
   bool isSupported() {

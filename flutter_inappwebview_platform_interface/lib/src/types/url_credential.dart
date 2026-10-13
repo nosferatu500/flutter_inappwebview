@@ -1,5 +1,5 @@
 import 'dart:typed_data';
-import 'package:flutter_inappwebview_internal_annotations/flutter_inappwebview_internal_annotations.dart';
+import 'package:nosferatu500_inappwebview_internal_annotations/nosferatu500_inappwebview_internal_annotations.dart';
 
 import '../x509_certificate/x509_certificate.dart';
 import 'url_credential_persistence.dart';
@@ -16,9 +16,12 @@ List<X509Certificate>? _certificatesDeserializer(
     certificates = <X509Certificate>[];
     for (var data in (value.cast<Uint8List>() as List<Uint8List>)) {
       try {
-        certificates!.add(X509Certificate.fromData(data: data));
+        certificates.add(X509Certificate.fromData(data: data));
       } catch (e, stacktrace) {
+        // Undecodable: skip this certificate and keep the rest.
+        // ignore: avoid_print
         print(e);
+        // ignore: avoid_print
         print(stacktrace);
       }
     }
@@ -38,11 +41,11 @@ class URLCredential_ {
 
   ///The intermediate certificates of the credential, if it is a client certificate credential.
   @ExchangeableObjectProperty(deserializer: _certificatesDeserializer)
-  @SupportedPlatforms(platforms: [IOSPlatform(), MacOSPlatform()])
+  @SupportedPlatforms(platforms: [IOSPlatform()])
   List<X509Certificate>? certificates;
 
   ///The credential’s persistence setting.
-  @SupportedPlatforms(platforms: [IOSPlatform(), MacOSPlatform()])
+  @SupportedPlatforms(platforms: [IOSPlatform()])
   URLCredentialPersistence_? persistence;
 
   URLCredential_({

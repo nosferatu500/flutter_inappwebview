@@ -8,13 +8,11 @@ part of 'platform_http_auth_credentials_database.dart';
 
 extension _PlatformHttpAuthCredentialDatabaseCreationParamsClassSupported
     on PlatformHttpAuthCredentialDatabaseCreationParams {
-  ///{@template flutter_inappwebview_platform_interface.PlatformHttpAuthCredentialDatabaseCreationParams.supported_platforms}
+  ///{@template nosferatu500_inappwebview_platform_interface.PlatformHttpAuthCredentialDatabaseCreationParams.supported_platforms}
   ///
   ///**Officially Supported Platforms/Implementations**:
   ///- Android WebView
   ///- iOS WKWebView
-  ///- macOS WKWebView
-  ///- Linux WPE WebKit
   ///
   ///Use the [PlatformHttpAuthCredentialDatabaseCreationParams.isClassSupported] method to check if this class is supported at runtime.
   ///{@endtemplate}
@@ -23,35 +21,29 @@ extension _PlatformHttpAuthCredentialDatabaseCreationParamsClassSupported
         [
           TargetPlatform.android,
           TargetPlatform.iOS,
-          TargetPlatform.macOS,
-          TargetPlatform.linux,
         ].contains(platform ?? defaultTargetPlatform);
   }
 }
 
 extension _PlatformHttpAuthCredentialDatabaseClassSupported
     on PlatformHttpAuthCredentialDatabase {
-  ///{@template flutter_inappwebview_platform_interface.PlatformHttpAuthCredentialDatabase.supported_platforms}
+  ///{@template nosferatu500_inappwebview_platform_interface.PlatformHttpAuthCredentialDatabase.supported_platforms}
   ///
   ///**Officially Supported Platforms/Implementations**:
   ///- Android WebView:
   ///    - It has a custom implementation using `android.database.sqlite.SQLiteDatabase` because [WebViewDatabase](https://developer.android.com/reference/android/webkit/WebViewDatabase) doesn't offer the same functionalities as iOS/macOS `URLCredentialStorage`.
   ///- iOS WKWebView:
   ///    - It is implemented using the [URLCredentialStorage](https://developer.apple.com/documentation/foundation/urlcredentialstorage) class.
-  ///- macOS WKWebView:
-  ///    - It is implemented using the [URLCredentialStorage](https://developer.apple.com/documentation/foundation/urlcredentialstorage) class.
-  ///- Linux WPE WebKit:
-  ///    - Implemented using libsecret for secure credential storage in the system keyring (gnome-keyring, KDE Wallet, etc.).
   ///
   ///Use the [PlatformHttpAuthCredentialDatabase.isClassSupported] method to check if this class is supported at runtime.
   ///{@endtemplate}
+  // Unused: [PlatformHttpAuthCredentialDatabase.isClassSupported] answers through its creation params. Kept for the doc template above.
+  // ignore: unused_element
   static bool isClassSupported({TargetPlatform? platform}) {
     return ((kIsWeb && platform != null) || !kIsWeb) &&
         [
           TargetPlatform.android,
           TargetPlatform.iOS,
-          TargetPlatform.macOS,
-          TargetPlatform.linux,
         ].contains(platform ?? defaultTargetPlatform);
   }
 }
@@ -60,13 +52,11 @@ extension _PlatformHttpAuthCredentialDatabaseClassSupported
 enum PlatformHttpAuthCredentialDatabaseMethod {
   ///Can be used to check if the [PlatformHttpAuthCredentialDatabase.clearAllAuthCredentials] method is supported at runtime.
   ///
-  ///{@template flutter_inappwebview_platform_interface.PlatformHttpAuthCredentialDatabase.clearAllAuthCredentials.supported_platforms}
+  ///{@template nosferatu500_inappwebview_platform_interface.PlatformHttpAuthCredentialDatabase.clearAllAuthCredentials.supported_platforms}
   ///
   ///**Officially Supported Platforms/Implementations**:
   ///- Android WebView
   ///- iOS WKWebView
-  ///- macOS WKWebView
-  ///- Linux WPE WebKit
   ///
   ///Use the [PlatformHttpAuthCredentialDatabase.isMethodSupported] method to check if this method is supported at runtime.
   ///{@endtemplate}
@@ -74,14 +64,11 @@ enum PlatformHttpAuthCredentialDatabaseMethod {
 
   ///Can be used to check if the [PlatformHttpAuthCredentialDatabase.getAllAuthCredentials] method is supported at runtime.
   ///
-  ///{@template flutter_inappwebview_platform_interface.PlatformHttpAuthCredentialDatabase.getAllAuthCredentials.supported_platforms}
+  ///{@template nosferatu500_inappwebview_platform_interface.PlatformHttpAuthCredentialDatabase.getAllAuthCredentials.supported_platforms}
   ///
   ///**Officially Supported Platforms/Implementations**:
   ///- Android WebView
   ///- iOS WKWebView ([Official API - URLCredentialStorage.allCredentials](https://developer.apple.com/documentation/foundation/urlcredentialstorage/1413859-allcredentials))
-  ///- macOS WKWebView ([Official API - URLCredentialStorage.allCredentials](https://developer.apple.com/documentation/foundation/urlcredentialstorage/1413859-allcredentials))
-  ///- Linux WPE WebKit:
-  ///    - Implemented using libsecret for secure storage.
   ///
   ///Use the [PlatformHttpAuthCredentialDatabase.isMethodSupported] method to check if this method is supported at runtime.
   ///{@endtemplate}
@@ -89,13 +76,11 @@ enum PlatformHttpAuthCredentialDatabaseMethod {
 
   ///Can be used to check if the [PlatformHttpAuthCredentialDatabase.getHttpAuthCredentials] method is supported at runtime.
   ///
-  ///{@template flutter_inappwebview_platform_interface.PlatformHttpAuthCredentialDatabase.getHttpAuthCredentials.supported_platforms}
+  ///{@template nosferatu500_inappwebview_platform_interface.PlatformHttpAuthCredentialDatabase.getHttpAuthCredentials.supported_platforms}
   ///
   ///**Officially Supported Platforms/Implementations**:
   ///- Android WebView
   ///- iOS WKWebView
-  ///- macOS WKWebView
-  ///- Linux WPE WebKit
   ///
   ///**Parameters - Officially Supported Platforms/Implementations**:
   ///- [protectionSpace]: all platforms
@@ -106,14 +91,11 @@ enum PlatformHttpAuthCredentialDatabaseMethod {
 
   ///Can be used to check if the [PlatformHttpAuthCredentialDatabase.removeHttpAuthCredential] method is supported at runtime.
   ///
-  ///{@template flutter_inappwebview_platform_interface.PlatformHttpAuthCredentialDatabase.removeHttpAuthCredential.supported_platforms}
+  ///{@template nosferatu500_inappwebview_platform_interface.PlatformHttpAuthCredentialDatabase.removeHttpAuthCredential.supported_platforms}
   ///
   ///**Officially Supported Platforms/Implementations**:
   ///- Android WebView
   ///- iOS WKWebView ([Official API - URLCredentialStorage.remove](https://developer.apple.com/documentation/foundation/urlcredentialstorage/1408664-remove))
-  ///- macOS WKWebView ([Official API - URLCredentialStorage.remove](https://developer.apple.com/documentation/foundation/urlcredentialstorage/1408664-remove))
-  ///- Linux WPE WebKit:
-  ///    - Implemented using libsecret for secure storage.
   ///
   ///**Parameters - Officially Supported Platforms/Implementations**:
   ///- [protectionSpace]: all platforms
@@ -125,13 +107,11 @@ enum PlatformHttpAuthCredentialDatabaseMethod {
 
   ///Can be used to check if the [PlatformHttpAuthCredentialDatabase.removeHttpAuthCredentials] method is supported at runtime.
   ///
-  ///{@template flutter_inappwebview_platform_interface.PlatformHttpAuthCredentialDatabase.removeHttpAuthCredentials.supported_platforms}
+  ///{@template nosferatu500_inappwebview_platform_interface.PlatformHttpAuthCredentialDatabase.removeHttpAuthCredentials.supported_platforms}
   ///
   ///**Officially Supported Platforms/Implementations**:
   ///- Android WebView
   ///- iOS WKWebView
-  ///- macOS WKWebView
-  ///- Linux WPE WebKit
   ///
   ///**Parameters - Officially Supported Platforms/Implementations**:
   ///- [protectionSpace]: all platforms
@@ -142,14 +122,11 @@ enum PlatformHttpAuthCredentialDatabaseMethod {
 
   ///Can be used to check if the [PlatformHttpAuthCredentialDatabase.setHttpAuthCredential] method is supported at runtime.
   ///
-  ///{@template flutter_inappwebview_platform_interface.PlatformHttpAuthCredentialDatabase.setHttpAuthCredential.supported_platforms}
+  ///{@template nosferatu500_inappwebview_platform_interface.PlatformHttpAuthCredentialDatabase.setHttpAuthCredential.supported_platforms}
   ///
   ///**Officially Supported Platforms/Implementations**:
   ///- Android WebView
   ///- iOS WKWebView ([Official API - URLCredentialStorage.set](https://developer.apple.com/documentation/foundation/urlcredentialstorage/1407227-set))
-  ///- macOS WKWebView ([Official API - URLCredentialStorage.set](https://developer.apple.com/documentation/foundation/urlcredentialstorage/1407227-set))
-  ///- Linux WPE WebKit:
-  ///    - Implemented using libsecret for secure storage.
   ///
   ///**Parameters - Officially Supported Platforms/Implementations**:
   ///- [protectionSpace]: all platforms
@@ -172,48 +149,36 @@ extension _PlatformHttpAuthCredentialDatabaseMethodSupported
             [
               TargetPlatform.android,
               TargetPlatform.iOS,
-              TargetPlatform.macOS,
-              TargetPlatform.linux,
             ].contains(platform ?? defaultTargetPlatform);
       case PlatformHttpAuthCredentialDatabaseMethod.getAllAuthCredentials:
         return ((kIsWeb && platform != null) || !kIsWeb) &&
             [
               TargetPlatform.android,
               TargetPlatform.iOS,
-              TargetPlatform.macOS,
-              TargetPlatform.linux,
             ].contains(platform ?? defaultTargetPlatform);
       case PlatformHttpAuthCredentialDatabaseMethod.getHttpAuthCredentials:
         return ((kIsWeb && platform != null) || !kIsWeb) &&
             [
               TargetPlatform.android,
               TargetPlatform.iOS,
-              TargetPlatform.macOS,
-              TargetPlatform.linux,
             ].contains(platform ?? defaultTargetPlatform);
       case PlatformHttpAuthCredentialDatabaseMethod.removeHttpAuthCredential:
         return ((kIsWeb && platform != null) || !kIsWeb) &&
             [
               TargetPlatform.android,
               TargetPlatform.iOS,
-              TargetPlatform.macOS,
-              TargetPlatform.linux,
             ].contains(platform ?? defaultTargetPlatform);
       case PlatformHttpAuthCredentialDatabaseMethod.removeHttpAuthCredentials:
         return ((kIsWeb && platform != null) || !kIsWeb) &&
             [
               TargetPlatform.android,
               TargetPlatform.iOS,
-              TargetPlatform.macOS,
-              TargetPlatform.linux,
             ].contains(platform ?? defaultTargetPlatform);
       case PlatformHttpAuthCredentialDatabaseMethod.setHttpAuthCredential:
         return ((kIsWeb && platform != null) || !kIsWeb) &&
             [
               TargetPlatform.android,
               TargetPlatform.iOS,
-              TargetPlatform.macOS,
-              TargetPlatform.linux,
             ].contains(platform ?? defaultTargetPlatform);
     }
   }

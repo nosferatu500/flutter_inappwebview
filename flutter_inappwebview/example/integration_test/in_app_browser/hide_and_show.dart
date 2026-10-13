@@ -4,7 +4,7 @@ void hideAndShow() {
   final shouldSkip = !InAppBrowser.isClassSupported();
 
   skippableTest('hide and show', () async {
-    var inAppBrowser = new MyInAppBrowser();
+    var inAppBrowser = MyInAppBrowser();
     await inAppBrowser.openUrlRequest(
       urlRequest: URLRequest(url: TEST_URL_1),
       settings: InAppBrowserClassSettings(

@@ -5,7 +5,7 @@ void getTitle() {
     PlatformInAppWebViewControllerMethod.getTitle,
   );
 
-  final String getTitleTest = '''
+  const String getTitleTest = '''
         <!DOCTYPE html><html>
         <head><title>Some title</title>
         </head>

@@ -1,10 +1,14 @@
-import 'package:flutter_inappwebview_internal_annotations/flutter_inappwebview_internal_annotations.dart';
+import 'package:nosferatu500_inappwebview_internal_annotations/nosferatu500_inappwebview_internal_annotations.dart';
 
 import 'navigation_action.dart';
 import 'window_features.dart';
 import 'url_request.dart';
 import 'frame_info.dart';
 import 'navigation_type.dart';
+// Inherited from NavigationAction_: the generated part references these types, and a part cannot
+// carry its own imports, so every type used by a *superclass* field has to be imported here too.
+import 'modifier_flag.dart';
+import 'button_mask.dart';
 import '../in_app_webview/platform_webview.dart';
 import 'enum_method.dart';
 
@@ -27,16 +31,6 @@ class CreateWindowAction_ extends NavigationAction_ {
         apiName: "WKWindowFeatures",
         apiUrl:
             "https://developer.apple.com/documentation/webkit/wkwindowfeatures",
-      ),
-      MacOSPlatform(
-        apiName: "WKWindowFeatures",
-        apiUrl:
-            "https://developer.apple.com/documentation/webkit/wkwindowfeatures",
-      ),
-      WindowsPlatform(
-        apiName: "ICoreWebView2WindowFeatures",
-        apiUrl:
-            "https://learn.microsoft.com/en-us/microsoft-edge/webview2/reference/win32/icorewebview2windowfeatures?view=webview2-1.0.2210.55",
       ),
     ],
   )

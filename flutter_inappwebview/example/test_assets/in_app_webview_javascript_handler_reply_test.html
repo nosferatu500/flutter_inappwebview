@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+        <meta http-equiv="X-UA-Compatible" content="ie=edge">
+        <title>InAppWebViewJavaScriptHandlerReplyTest</title>
+    </head>
+    <body>
+        <h1>InAppWebViewJavaScriptHandlerReplyTest</h1>
+        <script>
+            // Reports the JS-visible shape of each handler result, not just its value: `typeof`
+            // separates `null` (an "object") from `undefined`, which is the distinction the iOS
+            // reply-handler port could most easily have lost -- a Swift `nil` reply resolves the
+            // promise with `undefined`, while the interpolated `resolve(null)` it replaced produced
+            // `null`. `JSON.stringify` of `undefined` is itself `undefined`, hence the marker.
+            function describe(value) {
+                var json = JSON.stringify(value);
+                return {
+                    type: typeof value,
+                    json: json === undefined ? '<undefined>' : json
+                };
+            }
+
+            window.addEventListener("flutterInAppWebViewPlatformReady", function(event) {
+                // `replyUnregistered` has no Dart handler on purpose: that is the only path that
+                // reaches the native side's "response was not a decodable JSON string" fallback,
+                // since a registered handler always answers with `jsonEncode(...)`.
+                var names = ['replyNull', 'replyInt', 'replyString', 'replyBool', 'replyList', 'replyMap', 'replyNothing', 'replyUnregistered'];
+                var results = {};
+                var chain = Promise.resolve();
+                names.forEach(function(name) {
+                    chain = chain.then(function() {
+                        return window.flutter_inappwebview.callHandler(name).then(function(value) {
+                            results[name] = describe(value);
+                        });
+                    });
+                });
+                chain.then(function() {
+                    window.flutter_inappwebview.callHandler('reportReplies', results);
+                });
+            });
+        </script>
+    </body>
+</html>

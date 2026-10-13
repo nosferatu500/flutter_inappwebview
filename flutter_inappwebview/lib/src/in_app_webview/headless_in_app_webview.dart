@@ -2,20 +2,19 @@ import 'dart:async';
 import 'dart:collection';
 
 import 'package:flutter/services.dart';
-import 'package:flutter_inappwebview_platform_interface/flutter_inappwebview_platform_interface.dart';
+import 'package:nosferatu500_inappwebview_platform_interface/nosferatu500_inappwebview_platform_interface.dart';
 
 import '../find_interaction/find_interaction_controller.dart';
 import '../pull_to_refresh/pull_to_refresh_controller.dart';
-import '../webview_environment/webview_environment.dart';
 import 'in_app_webview_controller.dart';
 
-///{@macro flutter_inappwebview_platform_interface.PlatformHeadlessInAppWebView}
+///{@macro nosferatu500_inappwebview_platform_interface.PlatformHeadlessInAppWebView}
 ///
-///{@macro flutter_inappwebview_platform_interface.PlatformHeadlessInAppWebView.supported_platforms}
+///{@macro nosferatu500_inappwebview_platform_interface.PlatformHeadlessInAppWebView.supported_platforms}
 class HeadlessInAppWebView {
   /// Constructs a [HeadlessInAppWebView].
   ///
-  ///{@macro flutter_inappwebview_platform_interface.PlatformHeadlessInAppWebView}
+  ///{@macro nosferatu500_inappwebview_platform_interface.PlatformHeadlessInAppWebView}
   HeadlessInAppWebView.fromPlatformCreationParams({
     required PlatformHeadlessInAppWebViewCreationParams params,
   }) : this.fromPlatform(platform: PlatformHeadlessInAppWebView(params));
@@ -26,14 +25,14 @@ class HeadlessInAppWebView {
   /// Implementation of [PlatformHeadlessInAppWebView] for the current platform.
   final PlatformHeadlessInAppWebView platform;
 
-  ///{@macro flutter_inappwebview_platform_interface.PlatformHeadlessInAppWebView.id}
+  ///{@macro nosferatu500_inappwebview_platform_interface.PlatformHeadlessInAppWebView.id}
   ///
-  ///{@macro flutter_inappwebview_platform_interface.PlatformHeadlessInAppWebView.id.supported_platforms}
+  ///{@macro nosferatu500_inappwebview_platform_interface.PlatformHeadlessInAppWebView.id.supported_platforms}
   String get id => platform.id;
 
-  ///{@macro flutter_inappwebview_platform_interface.PlatformHeadlessInAppWebView.webViewController}
+  ///{@macro nosferatu500_inappwebview_platform_interface.PlatformHeadlessInAppWebView.webViewController}
   ///
-  ///{@macro flutter_inappwebview_platform_interface.PlatformHeadlessInAppWebView.webViewController.supported_platforms}
+  ///{@macro nosferatu500_inappwebview_platform_interface.PlatformHeadlessInAppWebView.webViewController.supported_platforms}
   InAppWebViewController? get webViewController {
     final webViewControllerPlatform = platform.webViewController;
     if (webViewControllerPlatform == null) {
@@ -44,16 +43,15 @@ class HeadlessInAppWebView {
     );
   }
 
-  ///{@macro flutter_inappwebview_platform_interface.PlatformHeadlessInAppWebView}
+  ///{@macro nosferatu500_inappwebview_platform_interface.PlatformHeadlessInAppWebView}
   ///
-  ///{@macro flutter_inappwebview_platform_interface.PlatformHeadlessInAppWebView.supported_platforms}
+  ///{@macro nosferatu500_inappwebview_platform_interface.PlatformHeadlessInAppWebView.supported_platforms}
   HeadlessInAppWebView({
     Size initialSize = const Size(-1, -1),
     int? windowId,
     HeadlessInAppWebView? headlessWebView,
     InAppWebViewKeepAlive? keepAlive,
     bool? preventGestureDelay,
-    WebViewEnvironment? webViewEnvironment,
     InAppWebViewInitialData? initialData,
     String? initialFile,
     InAppWebViewSettings? initialSettings,
@@ -63,11 +61,49 @@ class HeadlessInAppWebView {
     FindInteractionController? findInteractionController,
     ContextMenu? contextMenu,
     void Function(InAppWebViewController controller, WebUri? url)?
-    onContentLoading,
-    void Function(InAppWebViewController controller, WebUri? url)?
-    onDOMContentLoaded,
-    void Function(InAppWebViewController controller, WebUri? url)?
     onPageCommitVisible,
+    void Function(
+      InAppWebViewController controller,
+      WebViewNavigation navigation,
+    )?
+    onNavigationStarted,
+    void Function(
+      InAppWebViewController controller,
+      WebViewNavigation navigation,
+    )?
+    onNavigationRedirected,
+    void Function(
+      InAppWebViewController controller,
+      WebViewNavigation navigation,
+    )?
+    onNavigationCompleted,
+    void Function(InAppWebViewController controller, WebViewPage page)?
+    onPageLoadEvent,
+    void Function(InAppWebViewController controller, WebViewPage page)?
+    onPageDomContentLoadedEvent,
+    void Function(InAppWebViewController controller, WebViewPage page)?
+    onPageDeleted,
+    void Function(
+      InAppWebViewController controller,
+      WebViewPage page,
+      int durationMillis,
+    )?
+    onFirstContentfulPaintMillis,
+    void Function(
+      InAppWebViewController controller,
+      WebViewPage page,
+      int durationMillis,
+    )?
+    onLargestContentfulPaintMillis,
+    void Function(
+      InAppWebViewController controller,
+      WebViewPage page,
+      String markName,
+      int markTimeMillis,
+    )?
+    onPerformanceMarkMillis,
+    FutureOr<List<WebUri>?> Function(InAppWebViewController controller)?
+    onRequestVisitedHistory,
     void Function(InAppWebViewController controller, String? title)?
     onTitleChanged,
     FutureOr<AjaxRequestAction?> Function(
@@ -93,7 +129,7 @@ class HeadlessInAppWebView {
     void Function(InAppWebViewController controller)? onCloseWindow,
     void Function(InAppWebViewController controller)? onWindowFocus,
     void Function(InAppWebViewController controller)? onWindowBlur,
-    FutureOr<DownloadStartResponse?> Function(
+    FutureOr<void> Function(
       InAppWebViewController controller,
       DownloadStartRequest downloadStartRequest,
     )?
@@ -139,11 +175,7 @@ class HeadlessInAppWebView {
       InAppWebViewHitTestResult hitTestResult,
     )?
     onLongPressHitTestResult,
-    FutureOr<bool?> Function(
-      InAppWebViewController controller,
-      WebUri? url,
-      PlatformPrintJobController? printJobController,
-    )?
+    FutureOr<bool?> Function(InAppWebViewController controller, WebUri? url)?
     onPrintRequest,
     void Function(InAppWebViewController controller, int progress)?
     onProgressChanged,
@@ -231,11 +263,6 @@ class HeadlessInAppWebView {
       PermissionRequest permissionRequest,
     )?
     onPermissionRequest,
-    void Function(
-      InAppWebViewController controller,
-      FaviconChangedRequest faviconChangedRequest,
-    )?
-    onFaviconChanged,
     void Function(InAppWebViewController controller, LoginRequest loginRequest)?
     onReceivedLoginRequest,
     void Function(
@@ -295,52 +322,26 @@ class HeadlessInAppWebView {
       MediaCaptureState? newState,
     )?
     onMicrophoneCaptureStateChanged,
+    FutureOr<ShouldGoToBackForwardListItemAction?> Function(
+      InAppWebViewController controller,
+      WebHistoryItem backForwardListItem,
+      bool willUseInstantBack,
+    )?
+    shouldGoToBackForwardListItem,
+    void Function(InAppWebViewController controller, bool active)?
+    onWritingToolsActiveChanged,
     void Function(
       InAppWebViewController controller,
       Size oldContentSize,
       Size newContentSize,
     )?
     onContentSizeChanged,
-    void Function(
-      InAppWebViewController controller,
-      ProcessFailedDetail detail,
-    )?
-    onProcessFailed,
-    FutureOr<NotificationReceivedResponse?> Function(
-      InAppWebViewController controller,
-      NotificationReceivedRequest request,
-    )?
-    onNotificationReceived,
-    FutureOr<SaveAsUIShowingResponse?> Function(
-      InAppWebViewController controller,
-      SaveAsUIShowingRequest request,
-    )?
-    onSaveAsUIShowing,
-    FutureOr<SaveFileSecurityCheckStartingResponse?> Function(
-      InAppWebViewController controller,
-      SaveFileSecurityCheckStartingRequest request,
-    )?
-    onSaveFileSecurityCheckStarting,
-    FutureOr<ScreenCaptureStartingResponse?> Function(
-      InAppWebViewController controller,
-      ScreenCaptureStartingRequest request,
-    )?
-    onScreenCaptureStarting,
-    void Function(
-      InAppWebViewController controller,
-      AcceleratorKeyPressedDetail detail,
-    )?
-    onAcceleratorKeyPressed,
     FutureOr<ShowFileChooserResponse?> Function(
       InAppWebViewController controller,
       ShowFileChooserRequest request,
     )?
     onShowFileChooser,
-    FutureOr<LaunchingExternalUriSchemeResponse?> Function(
-      InAppWebViewController controller,
-      LaunchingExternalUriSchemeRequest request,
-    )?
-    onLaunchingExternalUriScheme,
+    onInsertInputSuggestion,
   }) : this.fromPlatformCreationParams(
          params: PlatformHeadlessInAppWebViewCreationParams(
            controllerFromPlatform:
@@ -356,7 +357,6 @@ class HeadlessInAppWebView {
            pullToRefreshController: pullToRefreshController?.platform,
            findInteractionController: findInteractionController?.platform,
            contextMenu: contextMenu,
-           webViewEnvironment: webViewEnvironment?.platform,
            onWebViewCreated: onWebViewCreated != null
                ? (controller) => onWebViewCreated.call(controller)
                : null,
@@ -455,8 +455,7 @@ class HeadlessInAppWebView {
                      onUpdateVisitedHistory.call(controller, url, isReload)
                : null,
            onPrintRequest: onPrintRequest != null
-               ? (controller, url, printJobController) =>
-                     onPrintRequest.call(controller, url, printJobController)
+               ? (controller, url) => onPrintRequest.call(controller, url)
                : null,
            onLongPressHitTestResult: onLongPressHitTestResult != null
                ? (controller, hitTestResult) =>
@@ -468,14 +467,59 @@ class HeadlessInAppWebView {
            onExitFullscreen: onExitFullscreen != null
                ? (controller) => onExitFullscreen.call(controller)
                : null,
-           onContentLoading: onContentLoading != null
-               ? (controller, url) => onContentLoading.call(controller, url)
-               : null,
-           onDOMContentLoaded: onDOMContentLoaded != null
-               ? (controller, url) => onDOMContentLoaded.call(controller, url)
-               : null,
            onPageCommitVisible: onPageCommitVisible != null
                ? (controller, url) => onPageCommitVisible.call(controller, url)
+               : null,
+           onNavigationStarted: onNavigationStarted != null
+               ? (controller, navigation) =>
+                     onNavigationStarted.call(controller, navigation)
+               : null,
+           onNavigationRedirected: onNavigationRedirected != null
+               ? (controller, navigation) =>
+                     onNavigationRedirected.call(controller, navigation)
+               : null,
+           onNavigationCompleted: onNavigationCompleted != null
+               ? (controller, navigation) =>
+                     onNavigationCompleted.call(controller, navigation)
+               : null,
+           onPageLoadEvent: onPageLoadEvent != null
+               ? (controller, page) => onPageLoadEvent.call(controller, page)
+               : null,
+           onPageDomContentLoadedEvent: onPageDomContentLoadedEvent != null
+               ? (controller, page) =>
+                     onPageDomContentLoadedEvent.call(controller, page)
+               : null,
+           onPageDeleted: onPageDeleted != null
+               ? (controller, page) => onPageDeleted.call(controller, page)
+               : null,
+           onFirstContentfulPaintMillis: onFirstContentfulPaintMillis != null
+               ? (controller, page, durationMillis) =>
+                     onFirstContentfulPaintMillis.call(
+                       controller,
+                       page,
+                       durationMillis,
+                     )
+               : null,
+           onLargestContentfulPaintMillis:
+               onLargestContentfulPaintMillis != null
+               ? (controller, page, durationMillis) =>
+                     onLargestContentfulPaintMillis.call(
+                       controller,
+                       page,
+                       durationMillis,
+                     )
+               : null,
+           onPerformanceMarkMillis: onPerformanceMarkMillis != null
+               ? (controller, page, markName, markTimeMillis) =>
+                     onPerformanceMarkMillis.call(
+                       controller,
+                       page,
+                       markName,
+                       markTimeMillis,
+                     )
+               : null,
+           onRequestVisitedHistory: onRequestVisitedHistory != null
+               ? (controller) => onRequestVisitedHistory.call(controller)
                : null,
            onTitleChanged: onTitleChanged != null
                ? (controller, title) => onTitleChanged.call(controller, title)
@@ -531,10 +575,6 @@ class HeadlessInAppWebView {
            onFormResubmission: onFormResubmission != null
                ? (controller, url) => onFormResubmission.call(controller, url)
                : null,
-           onFaviconChanged: onFaviconChanged != null
-               ? (controller, request) =>
-                     onFaviconChanged.call(controller, request)
-               : null,
            onReceivedTouchIconUrl: onReceivedTouchIconUrl != null
                ? (controller, url, precomposed) =>
                      onReceivedTouchIconUrl.call(controller, url, precomposed)
@@ -587,6 +627,18 @@ class HeadlessInAppWebView {
                        newState,
                      )
                : null,
+           shouldGoToBackForwardListItem: shouldGoToBackForwardListItem != null
+               ? (controller, backForwardListItem, willUseInstantBack) =>
+                     shouldGoToBackForwardListItem.call(
+                       controller,
+                       backForwardListItem,
+                       willUseInstantBack,
+                     )
+               : null,
+           onWritingToolsActiveChanged: onWritingToolsActiveChanged != null
+               ? (controller, active) =>
+                     onWritingToolsActiveChanged.call(controller, active)
+               : null,
            onContentSizeChanged: onContentSizeChanged != null
                ? (controller, oldContentSize, newContentSize) =>
                      onContentSizeChanged.call(
@@ -595,74 +647,49 @@ class HeadlessInAppWebView {
                        newContentSize,
                      )
                : null,
-           onProcessFailed: onProcessFailed != null
-               ? (controller, detail) =>
-                     onProcessFailed.call(controller, detail)
-               : null,
-           onNotificationReceived: onNotificationReceived != null
-               ? (controller, request) =>
-                     onNotificationReceived.call(controller, request)
-               : null,
-           onSaveAsUIShowing: onSaveAsUIShowing != null
-               ? (controller, request) =>
-                     onSaveAsUIShowing.call(controller, request)
-               : null,
-           onSaveFileSecurityCheckStarting:
-               onSaveFileSecurityCheckStarting != null
-               ? (controller, request) =>
-                     onSaveFileSecurityCheckStarting.call(controller, request)
-               : null,
-           onScreenCaptureStarting: onScreenCaptureStarting != null
-               ? (controller, request) =>
-                     onScreenCaptureStarting.call(controller, request)
-               : null,
-           onAcceleratorKeyPressed: onAcceleratorKeyPressed != null
-               ? (controller, detail) =>
-                     onAcceleratorKeyPressed.call(controller, detail)
-               : null,
            onShowFileChooser: onShowFileChooser != null
                ? (controller, request) =>
                      onShowFileChooser.call(controller, request)
                : null,
-           onLaunchingExternalUriScheme: onLaunchingExternalUriScheme != null
-               ? (controller, request) =>
-                     onLaunchingExternalUriScheme.call(controller, request)
+           onInsertInputSuggestion: onInsertInputSuggestion != null
+               ? (controller, inputSuggestion) =>
+                     onInsertInputSuggestion.call(controller, inputSuggestion)
                : null,
          ),
        );
 
-  ///{@macro flutter_inappwebview_platform_interface.PlatformHeadlessInAppWebView.run}
+  ///{@macro nosferatu500_inappwebview_platform_interface.PlatformHeadlessInAppWebView.run}
   ///
-  ///{@macro flutter_inappwebview_platform_interface.PlatformHeadlessInAppWebView.run.supported_platforms}
+  ///{@macro nosferatu500_inappwebview_platform_interface.PlatformHeadlessInAppWebView.run.supported_platforms}
   Future<void> run() => platform.run();
 
-  ///{@macro flutter_inappwebview_platform_interface.PlatformHeadlessInAppWebView.isRunning}
+  ///{@macro nosferatu500_inappwebview_platform_interface.PlatformHeadlessInAppWebView.isRunning}
   ///
-  ///{@macro flutter_inappwebview_platform_interface.PlatformHeadlessInAppWebView.isRunning.supported_platforms}
+  ///{@macro nosferatu500_inappwebview_platform_interface.PlatformHeadlessInAppWebView.isRunning.supported_platforms}
   bool isRunning() => platform.isRunning();
 
-  ///{@macro flutter_inappwebview_platform_interface.PlatformHeadlessInAppWebView.setSize}
+  ///{@macro nosferatu500_inappwebview_platform_interface.PlatformHeadlessInAppWebView.setSize}
   ///
-  ///{@macro flutter_inappwebview_platform_interface.PlatformHeadlessInAppWebView.setSize.supported_platforms}
+  ///{@macro nosferatu500_inappwebview_platform_interface.PlatformHeadlessInAppWebView.setSize.supported_platforms}
   Future<void> setSize(Size size) => platform.setSize(size);
 
-  ///{@macro flutter_inappwebview_platform_interface.PlatformHeadlessInAppWebView.getSize}
+  ///{@macro nosferatu500_inappwebview_platform_interface.PlatformHeadlessInAppWebView.getSize}
   ///
-  ///{@macro flutter_inappwebview_platform_interface.PlatformHeadlessInAppWebView.getSize.supported_platforms}
+  ///{@macro nosferatu500_inappwebview_platform_interface.PlatformHeadlessInAppWebView.getSize.supported_platforms}
   Future<Size?> getSize() => platform.getSize();
 
-  ///{@macro flutter_inappwebview_platform_interface.PlatformHeadlessInAppWebView.dispose}
+  ///{@macro nosferatu500_inappwebview_platform_interface.PlatformHeadlessInAppWebView.dispose}
   ///
-  ///{@macro flutter_inappwebview_platform_interface.PlatformHeadlessInAppWebView.dispose.supported_platforms}
+  ///{@macro nosferatu500_inappwebview_platform_interface.PlatformHeadlessInAppWebView.dispose.supported_platforms}
   Future<void> dispose() => platform.dispose();
 
-  ///{@macro flutter_inappwebview_platform_interface.PlatformHeadlessInAppWebViewCreationParams.isClassSupported}
+  ///{@macro nosferatu500_inappwebview_platform_interface.PlatformHeadlessInAppWebViewCreationParams.isClassSupported}
   static bool isClassSupported({TargetPlatform? platform}) =>
       PlatformHeadlessInAppWebView.static().isClassSupported(
         platform: platform,
       );
 
-  ///{@macro flutter_inappwebview_platform_interface.PlatformHeadlessInAppWebViewCreationParams.isPropertySupported}
+  ///{@macro nosferatu500_inappwebview_platform_interface.PlatformHeadlessInAppWebViewCreationParams.isPropertySupported}
   static bool isPropertySupported(
     PlatformHeadlessInAppWebViewCreationParamsProperty property, {
     TargetPlatform? platform,
@@ -671,7 +698,7 @@ class HeadlessInAppWebView {
     platform: platform,
   );
 
-  ///{@macro flutter_inappwebview_platform_interface.PlatformHeadlessInAppWebViewCreationParams.isMethodSupported}
+  ///{@macro nosferatu500_inappwebview_platform_interface.PlatformHeadlessInAppWebViewCreationParams.isMethodSupported}
   static bool isMethodSupported(
     PlatformHeadlessInAppWebViewMethod method, {
     TargetPlatform? platform,

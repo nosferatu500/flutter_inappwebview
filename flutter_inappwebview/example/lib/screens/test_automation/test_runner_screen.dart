@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter/foundation.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -47,16 +46,16 @@ class _TestRunnerScreenState extends State<TestRunnerScreen> {
     if (_configLoaded) return;
     _configLoaded = true;
 
-    final prefs = await SharedPreferences.getInstance();
+    // Read the providers before the first await, while this State is certainly mounted.
     final configManager = context.read<TestConfigurationManager>();
+    final runner = context.read<TestRunner>();
+    final prefs = await SharedPreferences.getInstance();
     if (!_configManagerInitialized) {
       await configManager.init();
       _configManagerInitialized = true;
     }
     final lastConfigJson = prefs.getString(_lastConfigKey);
     final lastWebViewType = prefs.getString(_lastWebViewTypeKey);
-
-    final runner = context.read<TestRunner>();
 
     if (lastWebViewType != null) {
       final webViewType = TestWebViewType.values.firstWhere(
@@ -106,8 +105,9 @@ class _TestRunnerScreenState extends State<TestRunnerScreen> {
   }
 
   Future<void> _saveLastConfiguration() async {
-    final prefs = await SharedPreferences.getInstance();
+    // Read the provider before the await, while this State is certainly mounted.
     final runner = context.read<TestRunner>();
+    final prefs = await SharedPreferences.getInstance();
     final config = _currentConfiguration;
     if (config == null || config.id == 'default_config') {
       await prefs.remove(_lastConfigKey);
@@ -730,7 +730,7 @@ class _TestRunnerScreenState extends State<TestRunnerScreen> {
               ? Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Row(children: const [Text('Filter: '), SizedBox(width: 8)]),
+                    const Row(children: [Text('Filter: '), SizedBox(width: 8)]),
                     const SizedBox(height: 8),
                     filterContent,
                   ],
@@ -816,7 +816,7 @@ class _TestRunnerScreenState extends State<TestRunnerScreen> {
       trailing: Container(
         padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
         decoration: BoxDecoration(
-          color: color.withOpacity(0.1),
+          color: color.withAlpha((255 * 0.1).round()),
           borderRadius: BorderRadius.circular(4),
         ),
         child: Text(
@@ -895,9 +895,11 @@ class _TestRunnerScreenState extends State<TestRunnerScreen> {
         return Container(
           padding: const EdgeInsets.all(12),
           decoration: BoxDecoration(
-            color: statusColor.withOpacity(0.1),
+            color: statusColor.withAlpha((255 * 0.1).round()),
             border: Border(
-              top: BorderSide(color: statusColor.withOpacity(0.3)),
+              top: BorderSide(
+                color: statusColor.withAlpha((255 * 0.3).round()),
+              ),
             ),
           ),
           child: Row(
@@ -950,9 +952,9 @@ class _TestRunnerScreenState extends State<TestRunnerScreen> {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
       decoration: BoxDecoration(
-        color: color.withOpacity(0.1),
+        color: color.withAlpha((255 * 0.1).round()),
         borderRadius: BorderRadius.circular(16),
-        border: Border.all(color: color.withOpacity(0.3)),
+        border: Border.all(color: color.withAlpha((255 * 0.3).round())),
       ),
       child: Row(
         mainAxisSize: MainAxisSize.min,
@@ -1010,7 +1012,7 @@ class _TestRunnerScreenState extends State<TestRunnerScreen> {
     }
   }
 
-  void _runSelectedTests() async {
+  Future<void> _runSelectedTests() async {
     final runner = context.read<TestRunner>();
     final config = _currentConfiguration ?? TestConfiguration.defaultConfig();
 
@@ -1029,7 +1031,7 @@ class _TestRunnerScreenState extends State<TestRunnerScreen> {
     }
   }
 
-  void _rerunFailedTests() async {
+  Future<void> _rerunFailedTests() async {
     final runner = context.read<TestRunner>();
 
     try {

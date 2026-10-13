@@ -1,5 +1,7 @@
-import 'package:flutter_inappwebview/flutter_inappwebview.dart';
+import 'package:nosferatu500_inappwebview/nosferatu500_inappwebview.dart';
 import 'package:integration_test/integration_test.dart';
+
+import 'util.dart';
 
 import 'process_global_config/main.dart' as process_global_config_tests;
 import 'in_app_webview/main.dart' as in_app_webview_tests;
@@ -14,6 +16,14 @@ import 'chrome_safari_browser/main.dart' as chrome_safari_browser_tests;
 import 'in_app_localhost_server/main.dart' as in_app_localhost_server_tests;
 import 'tracing_controller/main.dart' as tracing_controller_tests;
 import 'support_methods/main.dart' as support_methods_tests;
+import 'web_storage_manager/main.dart' as web_storage_manager_tests;
+import 'geolocation_permissions/main.dart' as geolocation_permissions_tests;
+import 'pull_to_refresh_controller/main.dart'
+    as pull_to_refresh_controller_tests;
+import 'print_job_controller/main.dart' as print_job_controller_tests;
+// `process_isolated/` is deliberately NOT imported. Each file there changes irreversible
+// process-wide WebView state (`disableWebView`, `enableSlowWholeDocumentDraw`) and must run as its
+// own `flutter test` process; imported here, it would break or alter every group after it (§187).
 
 void main() {
   IntegrationTestWidgetsFlutterBinding.ensureInitialized();
@@ -35,6 +45,9 @@ void main() {
   PlatformFindInteractionController.debugLoggingSettings.maxLogMessageLength =
       7000;
 
+  // Before any group registers its tests: skips are decided at registration (§304).
+  runningAllGroups = true;
+
   process_global_config_tests.main();
   in_app_webview_tests.main();
   find_interaction_controller_tests.main();
@@ -47,4 +60,13 @@ void main() {
   chrome_safari_browser_tests.main();
   in_app_localhost_server_tests.main();
   support_methods_tests.main();
+  web_storage_manager_tests.main();
+  geolocation_permissions_tests.main();
+  pull_to_refresh_controller_tests.main();
+
+  // MUST BE LAST, and must stay last. This group raises the OS print dialog (see
+  // `print_job_controller/controller_lifecycle.dart`) and nothing can dismiss it, so any group
+  // scheduled after it would run its widget tests against a UI it cannot reach and time out at 60s
+  // each — the same reason `printCurrentPage` is pinned last inside `in_app_webview`.
+  print_job_controller_tests.main();
 }

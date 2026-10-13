@@ -1,0 +1,77 @@
+// §309 measurement, never committed: what each platform does with each kind of
+// shouldOverrideUrlLoading answer.
+import 'dart:async';
+
+import 'package:flutter/widgets.dart';
+import 'package:flutter_inappwebview/flutter_inappwebview.dart';
+import 'package:flutter_test/flutter_test.dart';
+import 'package:integration_test/integration_test.dart';
+
+import 'env.dart';
+import 'util.dart';
+
+typedef Handler =
+    Future<NavigationActionPolicy?> Function(
+      InAppWebViewController,
+      NavigationAction,
+    );
+
+void main() {
+  IntegrationTestWidgetsFlutterBinding.ensureInitialized();
+  final start = 'http://${environment["NODE_SERVER_IP"]}:8082/';
+  final target = 'http://${environment["NODE_SERVER_IP"]}:8082/test-index';
+  final asked = <String>[];
+  Handler answer(NavigationActionPolicy? Function() a) => (c, action) async {
+    asked.add(action.request.url.toString());
+    return action.request.url.toString() == target ? a() : NavigationActionPolicy.ALLOW;
+  };
+  final cases = <String, Handler?>{
+    'control: ALLOW': answer(() => NavigationActionPolicy.ALLOW),
+    'control: CANCEL': answer(() => NavigationActionPolicy.CANCEL),
+    'null answer': answer(() => null),
+    'handler throws': (c, action) async {
+      asked.add(action.request.url.toString());
+      if (action.request.url.toString() == target) throw StateError('zz');
+      return NavigationActionPolicy.ALLOW;
+    },
+    'no handler, useShouldOverrideUrlLoading true': null,
+  };
+  cases.forEach((name, handler) {
+    skippableTestWidgets(name, (tester) async {
+      asked.clear();
+      final deadline = TestDeadline();
+      final loads = <String>[];
+      final created = Completer<InAppWebViewController>();
+      await deadline.frame(
+        'mounting',
+        tester.pumpWidget(
+          Directionality(
+            textDirection: TextDirection.ltr,
+            child: InAppWebView(
+              key: GlobalKey(),
+              initialUrlRequest: URLRequest(url: WebUri(start)),
+              initialSettings: InAppWebViewSettings(
+                useShouldOverrideUrlLoading: true,
+              ),
+              onWebViewCreated: created.complete,
+              shouldOverrideUrlLoading: handler,
+              onLoadStop: (c, url) => loads.add(url.toString()),
+            ),
+          ),
+        ),
+      );
+      final c = await deadline.step('created', created.future);
+      await deadline.until('the first page', () => loads.contains(start));
+      await deadline.step(
+        'navigating',
+        c.evaluateJavascript(source: 'location.href = "$target";'),
+      );
+      await Future<void>.delayed(const Duration(seconds: 4));
+      // ignore: avoid_print
+      print(
+        'ZZSOU $name | asked for target ${asked.contains(target)} | loads $loads | '
+        'getUrl ${await deadline.step('getUrl', c.getUrl())}',
+      );
+    });
+  });
+}

@@ -25,7 +25,6 @@ class UIImage {
   ///
   ///**Officially Supported Platforms/Implementations**:
   ///- iOS WKWebView 13.0+
-  ///- macOS WKWebView 11.0+
   String? systemName;
   UIImage({this.name, this.systemName, this.data}) {
     assert(name != null || systemName != null || data != null);

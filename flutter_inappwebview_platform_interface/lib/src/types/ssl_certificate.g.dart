@@ -42,8 +42,7 @@ class SslCertificate {
     try {
       x509Certificate = X509Certificate.fromData(data: map["x509Certificate"]);
     } catch (e, stacktrace) {
-      print(e);
-      print(stacktrace);
+      _printDecodeError(e, stacktrace);
     }
     SslCertificateDName? issuedBy = SslCertificateDName.fromMap(
       map["issuedBy"]?.cast<String, dynamic>(),

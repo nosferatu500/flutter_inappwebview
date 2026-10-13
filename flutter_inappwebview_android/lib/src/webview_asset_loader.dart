@@ -1,6 +1,8 @@
 import 'package:flutter/foundation.dart';
-import 'package:flutter/services.dart';
-import 'package:flutter_inappwebview_platform_interface/flutter_inappwebview_platform_interface.dart';
+import 'package:nosferatu500_inappwebview_platform_interface/nosferatu500_inappwebview_platform_interface.dart';
+
+import 'pigeons/in_app_webview.g.dart';
+import 'web_resource_data.dart';
 
 /// Object specifying creation parameters for creating a [AndroidPathHandler].
 ///
@@ -25,34 +27,44 @@ class AndroidPathHandlerCreationParams
   }
 }
 
-///{@macro flutter_inappwebview_platform_interface.PlatformPathHandler}
+/// Receives [CustomPathHandlerFlutterApi] events and forwards them to the handler.
+///
+/// A separate class rather than `implements` on [AndroidPathHandler]: the generated `handle` has
+/// the name of the public [PlatformPathHandlerEvents.handle], with wire types (§14).
+class _CustomPathHandlerFlutterApiImpl implements CustomPathHandlerFlutterApi {
+  _CustomPathHandlerFlutterApiImpl(this._handler);
+
+  final AndroidPathHandler _handler;
+
+  /// Typed since W5 (§216); it was the response's `toMap()`.
+  @override
+  Future<WebResourceResponseData?> handle(String path) async =>
+      (await _handler.eventHandler?.handle(path))?.toPigeon();
+}
+
+///{@macro nosferatu500_inappwebview_platform_interface.PlatformPathHandler}
+///
+/// Transport is Pigeon-generated since §205 ([CustomPathHandlerFlutterApi], suffixed by the
+/// handler's id). Only the custom type has a platform end, but every type registers, as each opened
+/// a `MethodChannel` before. [ChannelController] stays in the type, which is public, and no channel
+/// is set on it any more.
 abstract mixin class AndroidPathHandler
     implements ChannelController, PlatformPathHandler {
   final String _id = IdGenerator.generate();
 
+  /// Not `final`: [dispose] clears it, and as `late final` that second write threw (§205, D3 §311).
   @override
-  late final PlatformPathHandlerEvents? eventHandler;
+  PlatformPathHandlerEvents? eventHandler;
 
   @override
   late final String path;
 
   void _init(PlatformPathHandlerCreationParams params) {
     path = params.path;
-    channel = MethodChannel(
-      'com.pichillilorenzo/flutter_inappwebview_custompathhandler_$_id',
+    CustomPathHandlerFlutterApi.setUp(
+      _CustomPathHandlerFlutterApiImpl(this),
+      messageChannelSuffix: _id,
     );
-    handler = _handleMethod;
-    initMethodCallHandler();
-  }
-
-  Future<dynamic> _handleMethod(MethodCall call) async {
-    switch (call.method) {
-      case "handle":
-        String path = call.arguments["path"];
-        return (await eventHandler?.handle(path))?.toMap();
-      default:
-        throw UnimplementedError("Unimplemented ${call.method} method");
-    }
   }
 
   @override
@@ -70,9 +82,12 @@ abstract mixin class AndroidPathHandler
     return 'AndroidPathHandler{path: $path, type: $type}';
   }
 
+  /// Called by the app through `PathHandler.dispose` (D3, §311): the plugin can't, since one handler
+  /// can serve several WebViews. Safe to repeat: both steps are.
   @override
   void dispose() {
-    disposeChannel();
+    // An event handler left registered would outlive the handler it forwards to (§184).
+    CustomPathHandlerFlutterApi.setUp(null, messageChannelSuffix: _id);
     eventHandler = null;
   }
 }
@@ -100,7 +115,7 @@ class AndroidAssetsPathHandlerCreationParams
   }
 }
 
-///{@macro flutter_inappwebview_platform_interface.PlatformAssetsPathHandler}
+///{@macro nosferatu500_inappwebview_platform_interface.PlatformAssetsPathHandler}
 class AndroidAssetsPathHandler extends PlatformAssetsPathHandler
     with AndroidPathHandler, ChannelController {
   /// Constructs a [AndroidAssetsPathHandler].
@@ -150,7 +165,7 @@ class AndroidResourcesPathHandlerCreationParams
   }
 }
 
-///{@macro flutter_inappwebview_platform_interface.PlatformResourcesPathHandler}
+///{@macro nosferatu500_inappwebview_platform_interface.PlatformResourcesPathHandler}
 class AndroidResourcesPathHandler extends PlatformResourcesPathHandler
     with AndroidPathHandler, ChannelController {
   /// Constructs a [AndroidResourcesPathHandler].
@@ -201,7 +216,7 @@ class AndroidInternalStoragePathHandlerCreationParams
   }
 }
 
-///{@macro flutter_inappwebview_platform_interface.PlatformInternalStoragePathHandler}
+///{@macro nosferatu500_inappwebview_platform_interface.PlatformInternalStoragePathHandler}
 class AndroidInternalStoragePathHandler
     extends PlatformInternalStoragePathHandler
     with AndroidPathHandler, ChannelController {
@@ -266,7 +281,7 @@ class AndroidCustomPathHandlerCreationParams
   }
 }
 
-///{@macro flutter_inappwebview_platform_interface.PlatformCustomPathHandler}
+///{@macro nosferatu500_inappwebview_platform_interface.PlatformCustomPathHandler}
 class AndroidCustomPathHandler extends PlatformCustomPathHandler
     with AndroidPathHandler, ChannelController {
   /// Constructs a [AndroidCustomPathHandler].

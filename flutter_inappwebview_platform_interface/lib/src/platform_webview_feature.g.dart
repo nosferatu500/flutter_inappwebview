@@ -6,16 +6,32 @@ part of 'platform_webview_feature.dart';
 // ExchangeableEnumGenerator
 // **************************************************************************
 
-///{@macro flutter_inappwebview_platform_interface.PlatformWebViewFeature}
+///{@macro nosferatu500_inappwebview_platform_interface.PlatformWebViewFeature}
 class WebViewFeature {
   final String _value;
   final String? _nativeValue;
-  const WebViewFeature._internal(this._value, this._nativeValue);
+
+  /// Native values accepted *in addition* to [_nativeValue] when resolving from a
+  /// native value. Inbound only -- [toNativeValue] still returns [_nativeValue].
+  // ignore: unused_field
+  final List<String?> _alsoAcceptsNativeValues;
+  const WebViewFeature._internal(
+    this._value,
+    this._nativeValue, [
+    this._alsoAcceptsNativeValues = const [],
+  ]);
   // ignore: unused_element
   factory WebViewFeature._internalMultiPlatform(
     String value,
-    Function nativeValue,
-  ) => WebViewFeature._internal(value, nativeValue());
+    Function nativeValue, [
+    Function? alsoAcceptsNativeValues,
+  ]) => WebViewFeature._internal(
+    value,
+    nativeValue(),
+    alsoAcceptsNativeValues != null
+        ? alsoAcceptsNativeValues() as List<String?>
+        : const [],
+  );
 
   ///Feature for [isFeatureSupported]. This feature covers [InAppWebViewSettings.algorithmicDarkeningAllowed].
   static const ALGORITHMIC_DARKENING = WebViewFeature._internal(
@@ -23,10 +39,60 @@ class WebViewFeature {
     'ALGORITHMIC_DARKENING',
   );
 
+  ///Feature for [isFeatureSupported]. This feature covers [InAppWebViewSettings.attributionRegistrationBehavior].
+  static const ATTRIBUTION_REGISTRATION_BEHAVIOR = WebViewFeature._internal(
+    'ATTRIBUTION_REGISTRATION_BEHAVIOR',
+    'ATTRIBUTION_REGISTRATION_BEHAVIOR',
+  );
+
+  ///Feature for [isFeatureSupported]. This feature covers [InAppWebViewSettings.backForwardCacheEnabled].
+  static const BACK_FORWARD_CACHE = WebViewFeature._internal(
+    'BACK_FORWARD_CACHE',
+    'BACK_FORWARD_CACHE',
+  );
+
+  ///Feature for [isFeatureSupported]. This feature covers
+  ///[InAppWebViewSettings.includeCookiesOnShouldInterceptRequest],
+  ///[WebResourceResponse.cookies], and the service-worker switch
+  ///[PlatformServiceWorkerController.setIncludeCookiesOnShouldInterceptRequestEnabled].
+  ///
+  ///One flag covers both directions of the intercept — the `Cookie` header on the way in and
+  ///`Set-Cookie` values on the way out — and both the WebView and the service-worker switches.
+  static const COOKIE_INTERCEPT = WebViewFeature._internal(
+    'COOKIE_INTERCEPT',
+    'COOKIE_INTERCEPT',
+  );
+
   ///Feature for [isFeatureSupported]. This feature covers [InAppWebViewController.createWebMessageChannel].
   static const CREATE_WEB_MESSAGE_CHANNEL = WebViewFeature._internal(
     'CREATE_WEB_MESSAGE_CHANNEL',
     'CREATE_WEB_MESSAGE_CHANNEL',
+  );
+
+  ///Feature for [isFeatureSupported]. This feature covers the custom-request-header family on
+  ///[PlatformProfileStore]: [PlatformProfileStore.addCustomHeader],
+  ///[PlatformProfileStore.hasCustomHeader], [PlatformProfileStore.getCustomHeaders],
+  ///[PlatformProfileStore.clearCustomHeader] and [PlatformProfileStore.clearAllCustomHeaders].
+  ///
+  ///Note these also need [MULTI_PROFILE], which is what makes a profile reachable at all.
+  static const CUSTOM_REQUEST_HEADERS = WebViewFeature._internal(
+    'CUSTOM_REQUEST_HEADERS',
+    'CUSTOM_REQUEST_HEADERS',
+  );
+
+  ///Feature for [isFeatureSupported]. This feature covers
+  ///[PlatformInAppWebViewController.setDefaultTrafficStatsTag].
+  static const DEFAULT_TRAFFICSTATS_TAGGING = WebViewFeature._internal(
+    'DEFAULT_TRAFFICSTATS_TAGGING',
+    'DEFAULT_TRAFFICSTATS_TAGGING',
+  );
+
+  ///Feature for [isFeatureSupported]. This feature covers
+  ///[PlatformWebStorageManager.deleteBrowsingData] and
+  ///[PlatformWebStorageManager.deleteBrowsingDataForSite].
+  static const DELETE_BROWSING_DATA = WebViewFeature._internal(
+    'DELETE_BROWSING_DATA',
+    'DELETE_BROWSING_DATA',
   );
 
   ///Feature for [isFeatureSupported]. This feature covers [InAppWebViewSettings.disabledActionModeMenuItems].
@@ -39,6 +105,12 @@ class WebViewFeature {
   static const DOCUMENT_START_SCRIPT = WebViewFeature._internal(
     'DOCUMENT_START_SCRIPT',
     'DOCUMENT_START_SCRIPT',
+  );
+
+  ///Feature for [isFeatureSupported]. This feature covers [InAppWebViewSettings.downloadFaviconsEnabled].
+  static const DOWNLOAD_FAVICONS_ENABLED = WebViewFeature._internal(
+    'DOWNLOAD_FAVICONS_ENABLED',
+    'DOWNLOAD_FAVICONS_ENABLED',
   );
 
   ///Feature for [isFeatureSupported]. This feature covers [InAppWebViewSettings.enterpriseAuthenticationAppLinkPolicyEnabled].
@@ -78,10 +150,71 @@ class WebViewFeature {
     'GET_WEB_VIEW_RENDERER',
   );
 
+  ///Feature for [isFeatureSupported]. `androidx.webkit`'s real isolated JavaScript worlds:
+  ///`WebViewCompat.addJavaScriptOnEvent`, the world-taking overloads of
+  ///`addWebMessageListener` / `removeWebMessageListener`, `getExecutionWorld` and
+  ///`JavaScriptReplyProxy.executeJavaScript`.
+  ///
+  ///**No API in this plugin uses it yet, and this constant is exposed so you can see that
+  ///coming.** Android's [ContentWorld] is a `<iframe>` emulation shared by
+  ///[PlatformInAppWebViewController.evaluateJavascript] and [UserScript]; `androidx`'s worlds are
+  ///a different mechanism, and `androidx` offers no way to evaluate arbitrary code in one on
+  ///demand — only injection-time scripts and `JavaScriptReplyProxy.executeJavaScript`, which runs
+  ///in the frame and world that sent a message. Moving one of the three onto real worlds without
+  ///the others would make them silently disagree about what a world is, so the migration is all
+  ///or nothing and has not been done.
+  ///
+  ///Measured `true` on API 33 / WebView 151 and API 37 / WebView 149.
+  static const JS_INJECTION_IN_FRAME_AND_WORLD = WebViewFeature._internal(
+    'JS_INJECTION_IN_FRAME_AND_WORLD',
+    'JS_INJECTION_IN_FRAME_AND_WORLD',
+  );
+
   ///
   static const MULTI_PROCESS = WebViewFeature._internal(
     'MULTI_PROCESS',
     'MULTI_PROCESS',
+  );
+
+  ///Feature for [isFeatureSupported]. This feature covers [PlatformProfileStore] and
+  ///[InAppWebViewSettings.profileName].
+  static const MULTI_PROFILE = WebViewFeature._internal(
+    'MULTI_PROFILE',
+    'MULTI_PROFILE',
+  );
+
+  ///Feature for [isFeatureSupported]. This feature covers
+  ///[PlatformInAppWebViewController.setAudioMuted] and
+  ///[PlatformInAppWebViewController.isAudioMuted].
+  static const MUTE_AUDIO = WebViewFeature._internal(
+    'MUTE_AUDIO',
+    'MUTE_AUDIO',
+  );
+
+  ///Feature for [isFeatureSupported]. This feature covers
+  ///[WebViewNavigation.webResourceError] alone.
+  ///
+  ///This is a second, finer gate **inside** [NAVIGATION_LISTENER]: where it is unsupported the
+  ///navigation events still fire and every other field of [WebViewNavigation] is still reported,
+  ///but [WebViewNavigation.webResourceError] is always `null`.
+  static const NAVIGATION_GET_WEB_RESOURCE_ERROR = WebViewFeature._internal(
+    'NAVIGATION_GET_WEB_RESOURCE_ERROR',
+    'NAVIGATION_GET_WEB_RESOURCE_ERROR',
+  );
+
+  ///Feature for [isFeatureSupported]. This feature covers
+  ///[PlatformWebViewCreationParams.onNavigationStarted],
+  ///[PlatformWebViewCreationParams.onNavigationRedirected] and
+  ///[PlatformWebViewCreationParams.onNavigationCompleted], and is what
+  ///[InAppWebViewSettings.useNavigationListener] needs in order to have any effect.
+  ///
+  ///Note that six neighbouring `NAVIGATION_*` constants in `androidx.webkit` are **tombstones** —
+  ///still declared for source compatibility, but `@Deprecated` and no longer registered, so passing
+  ///one to `isFeatureSupported` throws rather than returning `false`. This constant and
+  ///[NAVIGATION_GET_WEB_RESOURCE_ERROR] are the only two of the family that are real.
+  static const NAVIGATION_LISTENER = WebViewFeature._internal(
+    'NAVIGATION_LISTENER',
+    'NAVIGATION_LISTENER',
   );
 
   ///Feature for [isFeatureSupported]. This feature covers [InAppWebViewSettings.offscreenPreRaster].
@@ -90,10 +223,25 @@ class WebViewFeature {
     'OFF_SCREEN_PRERASTER',
   );
 
+  ///Feature for [isFeatureSupported]. This feature covers [InAppWebViewSettings.paymentRequestEnabled].
+  static const PAYMENT_REQUEST = WebViewFeature._internal(
+    'PAYMENT_REQUEST',
+    'PAYMENT_REQUEST',
+  );
+
   ///Feature for [isFeatureSupported]. This feature covers [InAppWebViewController.postWebMessage].
   static const POST_WEB_MESSAGE = WebViewFeature._internal(
     'POST_WEB_MESSAGE',
     'POST_WEB_MESSAGE',
+  );
+
+  ///Feature for [isFeatureSupported]. This feature covers
+  ///[PlatformInAppWebViewController.prerenderUrl].
+  ///
+  ///Note the native value is `PRERENDER_URL_V2`, not the name of this constant.
+  static const PRERENDER_WITH_URL = WebViewFeature._internal(
+    'PRERENDER_URL_V2',
+    'PRERENDER_URL_V2',
   );
 
   ///Feature for [isFeatureSupported]. This feature covers [ProxyController.setProxyOverride] and [ProxyController.clearProxyOverride].
@@ -163,6 +311,18 @@ class WebViewFeature {
         'SAFE_BROWSING_RESPONSE_SHOW_INTERSTITIAL',
       );
 
+  ///Feature for [isFeatureSupported]. This feature covers the `maxSize` and `includeForwardState`
+  ///arguments of [PlatformInAppWebViewController.saveState], and **only** those arguments.
+  ///
+  ///[PlatformInAppWebViewController.saveState] itself works everywhere: called with neither
+  ///argument it uses the framework `WebView.saveState`, which needs no feature. Where this feature
+  ///is unsupported, passing either argument makes the call return `null` rather than quietly
+  ///returning an unconstrained state.
+  static const SAVE_STATE = WebViewFeature._internal(
+    'SAVE_STATE',
+    'SAVE_STATE',
+  );
+
   ///Feature for [isFeatureSupported]. This feature covers [ServiceWorkerController].
   static const SERVICE_WORKER_BASIC_USAGE = WebViewFeature._internal(
     'SERVICE_WORKER_BASIC_USAGE',
@@ -226,10 +386,35 @@ class WebViewFeature {
     'TRACING_CONTROLLER_BASIC_USAGE',
   );
 
+  ///Feature for [isFeatureSupported]. This feature covers [InAppWebViewSettings.userAgentMetadata].
+  static const USER_AGENT_METADATA = WebViewFeature._internal(
+    'USER_AGENT_METADATA',
+    'USER_AGENT_METADATA',
+  );
+
+  ///Feature for [isFeatureSupported]. This feature covers [UserAgentMetadata.formFactors],
+  ///and is separate from [WebViewFeature.USER_AGENT_METADATA].
+  static const USER_AGENT_METADATA_FORM_FACTORS = WebViewFeature._internal(
+    'USER_AGENT_METADATA_FORM_FACTORS',
+    'USER_AGENT_METADATA_FORM_FACTORS',
+  );
+
   ///
   static const VISUAL_STATE_CALLBACK = WebViewFeature._internal(
     'VISUAL_STATE_CALLBACK',
     'VISUAL_STATE_CALLBACK',
+  );
+
+  ///Feature for [isFeatureSupported]. This feature covers [InAppWebViewSettings.webViewMediaIntegrityApiStatus].
+  static const WEBVIEW_MEDIA_INTEGRITY_API_STATUS = WebViewFeature._internal(
+    'WEBVIEW_MEDIA_INTEGRITY_API_STATUS',
+    'WEBVIEW_MEDIA_INTEGRITY_API_STATUS',
+  );
+
+  ///Feature for [isFeatureSupported]. This feature covers [InAppWebViewSettings.webAuthenticationSupport].
+  static const WEB_AUTHENTICATION = WebViewFeature._internal(
+    'WEB_AUTHENTICATION',
+    'WEB_AUTHENTICATION',
   );
 
   ///Feature for [isFeatureSupported]. This feature covers [WebMessagePort.postMessage] with `ArrayBuffer` type,
@@ -302,18 +487,32 @@ class WebViewFeature {
   ///Set of all values of [WebViewFeature].
   static final Set<WebViewFeature> values = {
     WebViewFeature.ALGORITHMIC_DARKENING,
+    WebViewFeature.ATTRIBUTION_REGISTRATION_BEHAVIOR,
+    WebViewFeature.BACK_FORWARD_CACHE,
+    WebViewFeature.COOKIE_INTERCEPT,
     WebViewFeature.CREATE_WEB_MESSAGE_CHANNEL,
+    WebViewFeature.CUSTOM_REQUEST_HEADERS,
+    WebViewFeature.DEFAULT_TRAFFICSTATS_TAGGING,
+    WebViewFeature.DELETE_BROWSING_DATA,
     WebViewFeature.DISABLED_ACTION_MODE_MENU_ITEMS,
     WebViewFeature.DOCUMENT_START_SCRIPT,
+    WebViewFeature.DOWNLOAD_FAVICONS_ENABLED,
     WebViewFeature.ENTERPRISE_AUTHENTICATION_APP_LINK_POLICY,
     WebViewFeature.GET_COOKIE_INFO,
     WebViewFeature.GET_VARIATIONS_HEADER,
     WebViewFeature.GET_WEB_CHROME_CLIENT,
     WebViewFeature.GET_WEB_VIEW_CLIENT,
     WebViewFeature.GET_WEB_VIEW_RENDERER,
+    WebViewFeature.JS_INJECTION_IN_FRAME_AND_WORLD,
     WebViewFeature.MULTI_PROCESS,
+    WebViewFeature.MULTI_PROFILE,
+    WebViewFeature.MUTE_AUDIO,
+    WebViewFeature.NAVIGATION_GET_WEB_RESOURCE_ERROR,
+    WebViewFeature.NAVIGATION_LISTENER,
     WebViewFeature.OFF_SCREEN_PRERASTER,
+    WebViewFeature.PAYMENT_REQUEST,
     WebViewFeature.POST_WEB_MESSAGE,
+    WebViewFeature.PRERENDER_WITH_URL,
     WebViewFeature.PROXY_OVERRIDE,
     WebViewFeature.PROXY_OVERRIDE_REVERSE_BYPASS,
     WebViewFeature.RECEIVE_HTTP_ERROR,
@@ -325,6 +524,7 @@ class WebViewFeature {
     WebViewFeature.SAFE_BROWSING_RESPONSE_BACK_TO_SAFETY,
     WebViewFeature.SAFE_BROWSING_RESPONSE_PROCEED,
     WebViewFeature.SAFE_BROWSING_RESPONSE_SHOW_INTERSTITIAL,
+    WebViewFeature.SAVE_STATE,
     WebViewFeature.SERVICE_WORKER_BASIC_USAGE,
     WebViewFeature.SERVICE_WORKER_BLOCK_NETWORK_LOADS,
     WebViewFeature.SERVICE_WORKER_CACHE_MODE,
@@ -335,7 +535,11 @@ class WebViewFeature {
     WebViewFeature.STARTUP_FEATURE_SET_DATA_DIRECTORY_SUFFIX,
     WebViewFeature.STARTUP_FEATURE_SET_DIRECTORY_BASE_PATHS,
     WebViewFeature.TRACING_CONTROLLER_BASIC_USAGE,
+    WebViewFeature.USER_AGENT_METADATA,
+    WebViewFeature.USER_AGENT_METADATA_FORM_FACTORS,
     WebViewFeature.VISUAL_STATE_CALLBACK,
+    WebViewFeature.WEBVIEW_MEDIA_INTEGRITY_API_STATUS,
+    WebViewFeature.WEB_AUTHENTICATION,
     WebViewFeature.WEB_MESSAGE_ARRAY_BUFFER,
     WebViewFeature.WEB_MESSAGE_CALLBACK_ON_MESSAGE,
     WebViewFeature.WEB_MESSAGE_LISTENER,
@@ -364,6 +568,10 @@ class WebViewFeature {
   }
 
   ///Gets a possible [WebViewFeature] instance from a native value.
+  ///
+  ///Falls back to constants that declare [value] among their additionally accepted
+  ///native values, so a platform reporting more than one code for the same condition
+  ///still resolves instead of returning `null`.
   static WebViewFeature? fromNativeValue(String? value) {
     if (value != null) {
       try {
@@ -371,7 +579,13 @@ class WebViewFeature {
           (element) => element.toNativeValue() == value,
         );
       } catch (e) {
-        return null;
+        try {
+          return WebViewFeature.values.firstWhere(
+            (element) => element._alsoAcceptsNativeValues.contains(value),
+          );
+        } catch (e) {
+          return null;
+        }
       }
     }
     return null;
@@ -407,11 +621,11 @@ class WebViewFeature {
     for (final value in WebViewFeature.values) value.name(): value,
   };
 
-  ///{@macro flutter_inappwebview_platform_interface.PlatformWebViewFeature.isFeatureSupported}
+  ///{@macro nosferatu500_inappwebview_platform_interface.PlatformWebViewFeature.isFeatureSupported}
   static Future<bool> isFeatureSupported(WebViewFeature feature) =>
       PlatformWebViewFeature.static().isFeatureSupported(feature);
 
-  ///{@macro flutter_inappwebview_platform_interface.PlatformWebViewFeature.isStartupFeatureSupported}
+  ///{@macro nosferatu500_inappwebview_platform_interface.PlatformWebViewFeature.isStartupFeatureSupported}
   static Future<bool> isStartupFeatureSupported(
     WebViewFeature startupFeature,
   ) =>
@@ -428,12 +642,26 @@ class WebViewFeature {
     switch (_value) {
       case 'ALGORITHMIC_DARKENING':
         return 'ALGORITHMIC_DARKENING';
+      case 'ATTRIBUTION_REGISTRATION_BEHAVIOR':
+        return 'ATTRIBUTION_REGISTRATION_BEHAVIOR';
+      case 'BACK_FORWARD_CACHE':
+        return 'BACK_FORWARD_CACHE';
+      case 'COOKIE_INTERCEPT':
+        return 'COOKIE_INTERCEPT';
       case 'CREATE_WEB_MESSAGE_CHANNEL':
         return 'CREATE_WEB_MESSAGE_CHANNEL';
+      case 'CUSTOM_REQUEST_HEADERS':
+        return 'CUSTOM_REQUEST_HEADERS';
+      case 'DEFAULT_TRAFFICSTATS_TAGGING':
+        return 'DEFAULT_TRAFFICSTATS_TAGGING';
+      case 'DELETE_BROWSING_DATA':
+        return 'DELETE_BROWSING_DATA';
       case 'DISABLED_ACTION_MODE_MENU_ITEMS':
         return 'DISABLED_ACTION_MODE_MENU_ITEMS';
       case 'DOCUMENT_START_SCRIPT':
         return 'DOCUMENT_START_SCRIPT';
+      case 'DOWNLOAD_FAVICONS_ENABLED':
+        return 'DOWNLOAD_FAVICONS_ENABLED';
       case 'ENTERPRISE_AUTHENTICATION_APP_LINK_POLICY':
         return 'ENTERPRISE_AUTHENTICATION_APP_LINK_POLICY';
       case 'GET_COOKIE_INFO':
@@ -446,12 +674,26 @@ class WebViewFeature {
         return 'GET_WEB_VIEW_CLIENT';
       case 'GET_WEB_VIEW_RENDERER':
         return 'GET_WEB_VIEW_RENDERER';
+      case 'JS_INJECTION_IN_FRAME_AND_WORLD':
+        return 'JS_INJECTION_IN_FRAME_AND_WORLD';
       case 'MULTI_PROCESS':
         return 'MULTI_PROCESS';
+      case 'MULTI_PROFILE':
+        return 'MULTI_PROFILE';
+      case 'MUTE_AUDIO':
+        return 'MUTE_AUDIO';
+      case 'NAVIGATION_GET_WEB_RESOURCE_ERROR':
+        return 'NAVIGATION_GET_WEB_RESOURCE_ERROR';
+      case 'NAVIGATION_LISTENER':
+        return 'NAVIGATION_LISTENER';
       case 'OFF_SCREEN_PRERASTER':
         return 'OFF_SCREEN_PRERASTER';
+      case 'PAYMENT_REQUEST':
+        return 'PAYMENT_REQUEST';
       case 'POST_WEB_MESSAGE':
         return 'POST_WEB_MESSAGE';
+      case 'PRERENDER_URL_V2':
+        return 'PRERENDER_WITH_URL';
       case 'PROXY_OVERRIDE':
         return 'PROXY_OVERRIDE';
       case 'PROXY_OVERRIDE_REVERSE_BYPASS':
@@ -474,6 +716,8 @@ class WebViewFeature {
         return 'SAFE_BROWSING_RESPONSE_PROCEED';
       case 'SAFE_BROWSING_RESPONSE_SHOW_INTERSTITIAL':
         return 'SAFE_BROWSING_RESPONSE_SHOW_INTERSTITIAL';
+      case 'SAVE_STATE':
+        return 'SAVE_STATE';
       case 'SERVICE_WORKER_BASIC_USAGE':
         return 'SERVICE_WORKER_BASIC_USAGE';
       case 'SERVICE_WORKER_BLOCK_NETWORK_LOADS':
@@ -494,8 +738,16 @@ class WebViewFeature {
         return 'STARTUP_FEATURE_SET_DIRECTORY_BASE_PATHS';
       case 'TRACING_CONTROLLER_BASIC_USAGE':
         return 'TRACING_CONTROLLER_BASIC_USAGE';
+      case 'USER_AGENT_METADATA':
+        return 'USER_AGENT_METADATA';
+      case 'USER_AGENT_METADATA_FORM_FACTORS':
+        return 'USER_AGENT_METADATA_FORM_FACTORS';
       case 'VISUAL_STATE_CALLBACK':
         return 'VISUAL_STATE_CALLBACK';
+      case 'WEBVIEW_MEDIA_INTEGRITY_API_STATUS':
+        return 'WEBVIEW_MEDIA_INTEGRITY_API_STATUS';
+      case 'WEB_AUTHENTICATION':
+        return 'WEB_AUTHENTICATION';
       case 'WEB_MESSAGE_ARRAY_BUFFER':
         return 'WEB_MESSAGE_ARRAY_BUFFER';
       case 'WEB_MESSAGE_CALLBACK_ON_MESSAGE':
@@ -526,7 +778,7 @@ class WebViewFeature {
   int get hashCode => _value.hashCode;
 
   @override
-  bool operator ==(value) => value == _value;
+  bool operator ==(other) => other == _value;
 
   ///Checks if the value is supported by the [defaultTargetPlatform].
   bool isSupported() {
@@ -545,7 +797,7 @@ class WebViewFeature {
 
 extension _PlatformWebViewFeatureCreationParamsClassSupported
     on PlatformWebViewFeatureCreationParams {
-  ///{@template flutter_inappwebview_platform_interface.PlatformWebViewFeatureCreationParams.supported_platforms}
+  ///{@template nosferatu500_inappwebview_platform_interface.PlatformWebViewFeatureCreationParams.supported_platforms}
   ///
   ///**Officially Supported Platforms/Implementations**:
   ///- Android WebView
@@ -559,13 +811,15 @@ extension _PlatformWebViewFeatureCreationParamsClassSupported
 }
 
 extension _PlatformWebViewFeatureClassSupported on PlatformWebViewFeature {
-  ///{@template flutter_inappwebview_platform_interface.PlatformWebViewFeature.supported_platforms}
+  ///{@template nosferatu500_inappwebview_platform_interface.PlatformWebViewFeature.supported_platforms}
   ///
   ///**Officially Supported Platforms/Implementations**:
   ///- Android WebView
   ///
   ///Use the [PlatformWebViewFeature.isClassSupported] method to check if this class is supported at runtime.
   ///{@endtemplate}
+  // Unused: [PlatformWebViewFeature.isClassSupported] answers through its creation params. Kept for the doc template above.
+  // ignore: unused_element
   static bool isClassSupported({TargetPlatform? platform}) {
     return ((kIsWeb && platform != null) || !kIsWeb) &&
         [TargetPlatform.android].contains(platform ?? defaultTargetPlatform);
@@ -576,7 +830,7 @@ extension _PlatformWebViewFeatureClassSupported on PlatformWebViewFeature {
 enum PlatformWebViewFeatureMethod {
   ///Can be used to check if the [PlatformWebViewFeature.isFeatureSupported] method is supported at runtime.
   ///
-  ///{@template flutter_inappwebview_platform_interface.PlatformWebViewFeature.isFeatureSupported.supported_platforms}
+  ///{@template nosferatu500_inappwebview_platform_interface.PlatformWebViewFeature.isFeatureSupported.supported_platforms}
   ///
   ///**Officially Supported Platforms/Implementations**:
   ///- Android WebView ([Official API - WebViewFeature.isFeatureSupported](https://developer.android.com/reference/androidx/webkit/WebViewFeature#isFeatureSupported(java.lang.String)))
@@ -590,7 +844,7 @@ enum PlatformWebViewFeatureMethod {
 
   ///Can be used to check if the [PlatformWebViewFeature.isStartupFeatureSupported] method is supported at runtime.
   ///
-  ///{@template flutter_inappwebview_platform_interface.PlatformWebViewFeature.isStartupFeatureSupported.supported_platforms}
+  ///{@template nosferatu500_inappwebview_platform_interface.PlatformWebViewFeature.isStartupFeatureSupported.supported_platforms}
   ///
   ///**Officially Supported Platforms/Implementations**:
   ///- Android WebView ([Official API - WebViewFeature.isStartupFeatureSupported](https://developer.android.com/reference/androidx/webkit/WebViewFeature#isStartupFeatureSupported(android.content.Context,java.lang.String)))

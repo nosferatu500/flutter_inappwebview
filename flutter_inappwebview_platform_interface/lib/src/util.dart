@@ -1,6 +1,5 @@
 import 'dart:math';
 import 'dart:developer' as developer;
-import 'dart:typed_data';
 
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -17,18 +16,6 @@ class Util {
 
   static bool get isIOS =>
       !isWeb && defaultTargetPlatform == TargetPlatform.iOS;
-
-  static bool get isMacOS =>
-      !isWeb && defaultTargetPlatform == TargetPlatform.macOS;
-
-  static bool get isWindows =>
-      !isWeb && defaultTargetPlatform == TargetPlatform.windows;
-
-  static bool get isLinux =>
-      !isWeb && defaultTargetPlatform == TargetPlatform.linux;
-
-  static bool get isFuchsia =>
-      !isWeb && defaultTargetPlatform == TargetPlatform.fuchsia;
 }
 
 class IdGenerator {
@@ -588,6 +575,8 @@ void debugLog({
     if (!debugLoggingSettings.usePrint) {
       developer.log(message, name: className);
     } else {
+      // The caller chose print over developer.log (DebugLoggingSettings.usePrint).
+      // ignore: avoid_print
       print('[$className] $message');
     }
   }
@@ -645,7 +634,11 @@ extension InternalChannelController on ChannelController {
       try {
         return await handler!(call);
       } on Error catch (e) {
+        // An Error from the handler is logged and answered as null, i.e. success, not as an error
+        // reply. Rethrowing it is a candidate (§223).
+        // ignore: avoid_print
         print(e);
+        // ignore: avoid_print
         print(e.stackTrace);
       }
     });

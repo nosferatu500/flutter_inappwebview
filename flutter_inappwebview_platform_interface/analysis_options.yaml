@@ -12,21 +12,37 @@ include: package:flutter_lints/flutter.yaml
 # unrelated_type_equality_checks -- are deliberately left enabled.
 linter:
   rules:
-    avoid_print: false
-    avoid_renaming_method_parameters: false
+    # Opt-in, not in flutter_lints (§247).
+    avoid_void_async: true
+    close_sinks: true
+    no_adjacent_strings_in_list: true
+    # Opt-in, not in flutter_lints: a Future dropped in a non-async function (§246).
+    discarded_futures: true
+    # Opt-in, not in flutter_lints: a Future neither awaited nor marked unawaited (§245).
+    unawaited_futures: true
+    # Opt-in guards, not in flutter_lints; each had 0 findings when added (§244).
+    always_declare_return_types: true
+    avoid_js_rounded_ints: true
+    avoid_type_to_string: true
+    cancel_subscriptions: true
+    conditional_uri_does_not_exist: true
+    deprecated_consistency: true
+    literal_only_boolean_expressions: true
+    no_self_assignments: true
+    only_throw_errors: true
+    prefer_void_to_null: true
+    test_types_in_equals: true
+    throw_in_finally: true
+    unnecessary_statements: true
+    use_late_for_private_fields_and_variables: true
+    use_named_constants: true
+    use_to_and_as_if_applicable: true
+    # Opt-in: not in flutter_lints, and no longer an analyzer default (§227).
+    deprecated_member_use_from_same_package: true
     camel_case_types: false
-    empty_catches: false
     non_constant_identifier_names: false
 # Additional information about this file can be found at
 # https://dart.dev/guides/language/analysis-options
 analyzer:
   errors:
     constant_identifier_names: ignore
-    deprecated_member_use: ignore
-    deprecated_member_use_from_same_package: ignore
-    unnecessary_cast: ignore
-    unnecessary_import: ignore
-    unnecessary_non_null_assertion: ignore
-    unused_element: ignore
-    unused_element_parameter: ignore
-    dead_null_aware_expression: ignore

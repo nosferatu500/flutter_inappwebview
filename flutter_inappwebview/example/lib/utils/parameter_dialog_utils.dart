@@ -22,7 +22,7 @@ class ParameterDialogUtils {
       return DateTime.fromMillisecondsSinceEpoch(value.millisecondsSinceEpoch);
     }
     if (value is Color) {
-      return Color(value.value);
+      return Color(value.toARGB32());
     }
     return value;
   }
@@ -35,7 +35,7 @@ class ParameterDialogUtils {
     if (normalized.startsWith('base64:')) {
       base64Payload = normalized.substring('base64:'.length).trim();
     } else if (normalized.startsWith('data:')) {
-      final base64Marker = ';base64,';
+      const base64Marker = ';base64,';
       final markerIndex = normalized.indexOf(base64Marker);
       if (markerIndex != -1) {
         base64Payload = normalized.substring(markerIndex + base64Marker.length);

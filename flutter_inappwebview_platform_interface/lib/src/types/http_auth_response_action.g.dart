@@ -10,29 +10,39 @@ part of 'http_auth_response_action.dart';
 class HttpAuthResponseAction {
   final int _value;
   final int? _nativeValue;
-  const HttpAuthResponseAction._internal(this._value, this._nativeValue);
+
+  /// Native values accepted *in addition* to [_nativeValue] when resolving from a
+  /// native value. Inbound only -- [toNativeValue] still returns [_nativeValue].
+  // ignore: unused_field
+  final List<int?> _alsoAcceptsNativeValues;
+  const HttpAuthResponseAction._internal(
+    this._value,
+    this._nativeValue, [
+    this._alsoAcceptsNativeValues = const [],
+  ]);
   // ignore: unused_element
   factory HttpAuthResponseAction._internalMultiPlatform(
     int value,
-    Function nativeValue,
-  ) => HttpAuthResponseAction._internal(value, nativeValue());
+    Function nativeValue, [
+    Function? alsoAcceptsNativeValues,
+  ]) => HttpAuthResponseAction._internal(
+    value,
+    nativeValue(),
+    alsoAcceptsNativeValues != null
+        ? alsoAcceptsNativeValues() as List<int?>
+        : const [],
+  );
 
   ///Instructs the WebView to cancel the authentication request.
   ///
   ///**Officially Supported Platforms/Implementations**:
   ///- Android WebView
   ///- iOS WKWebView
-  ///- macOS WKWebView
-  ///- Windows WebView2
   static final CANCEL = HttpAuthResponseAction._internalMultiPlatform(0, () {
     switch (defaultTargetPlatform) {
       case TargetPlatform.android:
         return 0;
       case TargetPlatform.iOS:
-        return 0;
-      case TargetPlatform.macOS:
-        return 0;
-      case TargetPlatform.windows:
         return 0;
       default:
         break;
@@ -45,17 +55,11 @@ class HttpAuthResponseAction {
   ///**Officially Supported Platforms/Implementations**:
   ///- Android WebView
   ///- iOS WKWebView
-  ///- macOS WKWebView
-  ///- Windows WebView2
   static final PROCEED = HttpAuthResponseAction._internalMultiPlatform(1, () {
     switch (defaultTargetPlatform) {
       case TargetPlatform.android:
         return 1;
       case TargetPlatform.iOS:
-        return 1;
-      case TargetPlatform.macOS:
-        return 1;
-      case TargetPlatform.windows:
         return 1;
       default:
         break;
@@ -68,15 +72,12 @@ class HttpAuthResponseAction {
   ///**Officially Supported Platforms/Implementations**:
   ///- Android WebView
   ///- iOS WKWebView
-  ///- macOS WKWebView
   static final USE_SAVED_HTTP_AUTH_CREDENTIALS =
       HttpAuthResponseAction._internalMultiPlatform(2, () {
         switch (defaultTargetPlatform) {
           case TargetPlatform.android:
             return 2;
           case TargetPlatform.iOS:
-            return 2;
-          case TargetPlatform.macOS:
             return 2;
           default:
             break;
@@ -106,6 +107,10 @@ class HttpAuthResponseAction {
   }
 
   ///Gets a possible [HttpAuthResponseAction] instance from a native value.
+  ///
+  ///Falls back to constants that declare [value] among their additionally accepted
+  ///native values, so a platform reporting more than one code for the same condition
+  ///still resolves instead of returning `null`.
   static HttpAuthResponseAction? fromNativeValue(int? value) {
     if (value != null) {
       try {
@@ -113,7 +118,13 @@ class HttpAuthResponseAction {
           (element) => element.toNativeValue() == value,
         );
       } catch (e) {
-        return null;
+        try {
+          return HttpAuthResponseAction.values.firstWhere(
+            (element) => element._alsoAcceptsNativeValues.contains(value),
+          );
+        } catch (e) {
+          return null;
+        }
       }
     }
     return null;
@@ -173,7 +184,7 @@ class HttpAuthResponseAction {
   int get hashCode => _value.hashCode;
 
   @override
-  bool operator ==(value) => value == _value;
+  bool operator ==(other) => other == _value;
 
   ///Checks if the value is supported by the [defaultTargetPlatform].
   bool isSupported() {

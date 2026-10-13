@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_inappwebview/flutter_inappwebview.dart';
+import 'package:nosferatu500_inappwebview/nosferatu500_inappwebview.dart';
 import 'package:flutter_inappwebview_example/widgets/common/app_drawer.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter_inappwebview_example/providers/event_log_provider.dart';
@@ -8,8 +8,6 @@ import 'package:flutter_inappwebview_example/utils/support_checker.dart';
 import 'package:flutter_inappwebview_example/widgets/common/support_badge.dart';
 import 'package:flutter_inappwebview_example/widgets/common/parameter_dialog.dart';
 import 'package:flutter_inappwebview_example/widgets/common/method_result_history.dart';
-import 'package:flutter_inappwebview_example/providers/settings_manager.dart';
-import 'package:flutter_inappwebview_example/widgets/common/profile_selector_card.dart';
 import 'package:flutter_inappwebview_example/utils/responsive_utils.dart';
 import 'package:flutter_inappwebview_example/widgets/common/responsive_row.dart';
 
@@ -27,6 +25,9 @@ class _ServiceControllersScreenState extends State<ServiceControllersScreen> {
 
   // ServiceWorkerController state
   bool _allowContentAccess = true;
+  // Starts false because the platform default was measured off; the getter can also answer null
+  // (feature unsupported, or a named profile), which the row below reports as its own state.
+  bool _includeCookiesOnShouldInterceptRequest = false;
   bool _allowFileAccess = true;
   bool _blockNetworkLoads = false;
   CacheMode? _cacheMode = CacheMode.LOAD_DEFAULT;
@@ -40,13 +41,12 @@ class _ServiceControllersScreenState extends State<ServiceControllersScreen> {
   );
   final TextEditingController _bypassListController = TextEditingController();
 
+  /// iOS 17+ only. When set, `ProxyRule.relayHop1` makes the rule reach the proxy through an
+  /// HTTP/3 relay (RFC 9298) instead of connecting to the endpoint in `url` directly.
+  final TextEditingController _relayHop1Controller = TextEditingController();
+
   // TracingController state
   bool _isTracing = false;
-
-  // WebViewEnvironment state
-  String? _availableVersion;
-  List<BrowserProcessInfo> _processInfos = [];
-  int _lastEnvironmentRevision = -1;
 
   // ProcessGlobalConfig state
   final TextEditingController _dataDirSuffixController = TextEditingController(
@@ -91,15 +91,6 @@ class _ServiceControllersScreenState extends State<ServiceControllersScreen> {
     );
   }
 
-  Set<SupportedPlatform> _webViewEnvironmentPlatforms(
-    PlatformWebViewEnvironmentMethod method,
-  ) {
-    return SupportCheckHelper.supportedPlatformsForMethod(
-      method: method,
-      checker: WebViewEnvironment.isMethodSupported,
-    );
-  }
-
   Set<SupportedPlatform> _processGlobalConfigPlatforms(
     PlatformProcessGlobalConfigMethod method,
   ) {
@@ -109,26 +100,32 @@ class _ServiceControllersScreenState extends State<ServiceControllersScreen> {
     );
   }
 
+  Set<SupportedPlatform> _profileStorePlatforms(
+    PlatformProfileStoreMethod method,
+  ) {
+    return SupportCheckHelper.supportedPlatformsForMethod(
+      method: method,
+      checker: ProfileStore.isMethodSupported,
+    );
+  }
+
+  Set<SupportedPlatform> _geolocationPermissionsPlatforms(
+    PlatformGeolocationPermissionsMethod method,
+  ) {
+    return SupportCheckHelper.supportedPlatformsForMethod(
+      method: method,
+      checker: GeolocationPermissions.isMethodSupported,
+    );
+  }
+
   @override
   void dispose() {
     _proxyHostController.dispose();
     _proxyPortController.dispose();
     _bypassListController.dispose();
+    _relayHop1Controller.dispose();
     _dataDirSuffixController.dispose();
     super.dispose();
-  }
-
-  @override
-  void didChangeDependencies() {
-    super.didChangeDependencies();
-    final settingsManager = context.watch<SettingsManager>();
-    if (_lastEnvironmentRevision != settingsManager.environmentRevision) {
-      _lastEnvironmentRevision = settingsManager.environmentRevision;
-      setState(() {
-        _processInfos = [];
-        _availableVersion = null;
-      });
-    }
   }
 
   void _logEvent(EventType type, String message, {Map<String, dynamic>? data}) {
@@ -213,6 +210,61 @@ class _ServiceControllersScreenState extends State<ServiceControllersScreen> {
   }
 
   // ServiceWorkerController methods
+  Future<void> _getIncludeCookiesOnShouldInterceptRequest() async {
+    setState(() => _isLoading = true);
+    try {
+      final value =
+          await ServiceWorkerController.getIncludeCookiesOnShouldInterceptRequestEnabled();
+      setState(() => _includeCookiesOnShouldInterceptRequest = value ?? false);
+      _recordMethodResult(
+        PlatformServiceWorkerControllerMethod
+            .getIncludeCookiesOnShouldInterceptRequestEnabled
+            .name,
+        value == null
+            ? 'Unavailable (null): COOKIE_INTERCEPT unsupported, or a named profile'
+            : 'Cookies on intercepted requests: $value',
+        isError: false,
+      );
+    } catch (e) {
+      _recordMethodResult(
+        PlatformServiceWorkerControllerMethod
+            .getIncludeCookiesOnShouldInterceptRequestEnabled
+            .name,
+        'Error: $e',
+        isError: true,
+      );
+    } finally {
+      setState(() => _isLoading = false);
+    }
+  }
+
+  Future<void> _setIncludeCookiesOnShouldInterceptRequest(bool value) async {
+    setState(() => _isLoading = true);
+    try {
+      await ServiceWorkerController.setIncludeCookiesOnShouldInterceptRequestEnabled(
+        value,
+      );
+      setState(() => _includeCookiesOnShouldInterceptRequest = value);
+      _recordMethodResult(
+        PlatformServiceWorkerControllerMethod
+            .setIncludeCookiesOnShouldInterceptRequestEnabled
+            .name,
+        'Cookies on intercepted requests set to: $value',
+        isError: false,
+      );
+    } catch (e) {
+      _recordMethodResult(
+        PlatformServiceWorkerControllerMethod
+            .setIncludeCookiesOnShouldInterceptRequestEnabled
+            .name,
+        'Error: $e',
+        isError: true,
+      );
+    } finally {
+      setState(() => _isLoading = false);
+    }
+  }
+
   Future<void> _getAllowContentAccess() async {
     setState(() => _isLoading = true);
     try {
@@ -394,6 +446,7 @@ class _ServiceControllersScreenState extends State<ServiceControllersScreen> {
             .map((e) => e.trim())
             .where((e) => e.isNotEmpty)
             .toList(),
+        'relayHop1Http3Endpoint': _relayHop1Controller.text.trim(),
       },
       requiredPaths: ['host', 'port'],
     );
@@ -408,15 +461,29 @@ class _ServiceControllersScreenState extends State<ServiceControllersScreen> {
             .toList() ??
         [];
 
+    final relayHop1Endpoint =
+        params['relayHop1Http3Endpoint']?.toString().trim() ?? '';
+
     _proxyHostController.text = host;
     _proxyPortController.text = port.toString();
     _bypassListController.text = bypassList.join(', ');
+    _relayHop1Controller.text = relayHop1Endpoint;
 
     setState(() => _isLoading = true);
     try {
       await ProxyController.instance().setProxyOverride(
         settings: ProxySettings(
-          proxyRules: [ProxyRule(url: '$host:$port')],
+          proxyRules: [
+            ProxyRule(
+              url: '$host:$port',
+              // iOS 17+ only, and ignored on Android. With a relay hop set, the configuration is
+              // built from the relay chain rather than from `url` -- but `url` is still required
+              // and must still parse, or the whole rule is dropped before the hops are read.
+              relayHop1: relayHop1Endpoint.isNotEmpty
+                  ? ProxyRelayHop(http3RelayEndpoint: relayHop1Endpoint)
+                  : null,
+            ),
+          ],
           bypassRules: bypassList,
         ),
       );
@@ -551,174 +618,6 @@ class _ServiceControllersScreenState extends State<ServiceControllersScreen> {
     }
   }
 
-  // WebViewEnvironment methods
-  Future<void> _createWebViewEnvironment() async {
-    setState(() => _isLoading = true);
-    try {
-      await context.read<SettingsManager>().recreateEnvironment();
-      _recordMethodResult(
-        PlatformWebViewEnvironmentMethod.create.name,
-        '$WebViewEnvironment created',
-        isError: false,
-      );
-      _logEvent(EventType.ui, '$WebViewEnvironment created');
-    } catch (e) {
-      _recordMethodResult(
-        PlatformWebViewEnvironmentMethod.create.name,
-        'Error: $e',
-        isError: true,
-      );
-    } finally {
-      setState(() => _isLoading = false);
-    }
-  }
-
-  Future<void> _getAvailableVersion() async {
-    setState(() => _isLoading = true);
-    try {
-      final version = await WebViewEnvironment.getAvailableVersion();
-      setState(() => _availableVersion = version);
-      _recordMethodResult(
-        PlatformWebViewEnvironmentMethod.getAvailableVersion.name,
-        'Available version: $version',
-        isError: false,
-      );
-    } catch (e) {
-      _recordMethodResult(
-        PlatformWebViewEnvironmentMethod.getAvailableVersion.name,
-        'Error: $e',
-        isError: true,
-      );
-    } finally {
-      setState(() => _isLoading = false);
-    }
-  }
-
-  Future<void> _compareBrowserVersions() async {
-    final params = await showParameterDialog(
-      context: context,
-      title: 'Compare Browser Versions',
-      parameters: {'version1': '100.0.0.0', 'version2': '99.0.0.0'},
-      requiredPaths: ['version1', 'version2'],
-    );
-
-    if (params == null) return;
-    final version1 = params['version1']?.toString() ?? '';
-    final version2 = params['version2']?.toString() ?? '';
-    if (version1.isEmpty || version2.isEmpty) {
-      _recordMethodResult(
-        PlatformWebViewEnvironmentMethod.compareBrowserVersions.name,
-        'Both versions are required',
-        isError: true,
-      );
-      return;
-    }
-
-    setState(() => _isLoading = true);
-    try {
-      final result = await WebViewEnvironment.compareBrowserVersions(
-        version1: version1,
-        version2: version2,
-      );
-      _recordMethodResult(
-        PlatformWebViewEnvironmentMethod.compareBrowserVersions.name,
-        'Compare versions: $result (positive = v1 > v2, negative = v1 < v2)',
-        isError: false,
-      );
-    } catch (e) {
-      _recordMethodResult(
-        PlatformWebViewEnvironmentMethod.compareBrowserVersions.name,
-        'Error: $e',
-        isError: true,
-      );
-    } finally {
-      setState(() => _isLoading = false);
-    }
-  }
-
-  Future<void> _getProcessInfos() async {
-    final environment = context.read<SettingsManager>().webViewEnvironment;
-    if (environment == null) {
-      _recordMethodResult(
-        PlatformWebViewEnvironmentMethod.getProcessInfos.name,
-        'Create or select $WebViewEnvironment first',
-        isError: true,
-      );
-      return;
-    }
-
-    setState(() => _isLoading = true);
-    try {
-      final infos = await environment.getProcessInfos();
-      setState(() => _processInfos = infos);
-      _recordMethodResult(
-        PlatformWebViewEnvironmentMethod.getProcessInfos.name,
-        'Found ${infos.length} processes',
-        isError: false,
-      );
-    } catch (e) {
-      _recordMethodResult(
-        PlatformWebViewEnvironmentMethod.getProcessInfos.name,
-        'Error: $e',
-        isError: true,
-      );
-    } finally {
-      setState(() => _isLoading = false);
-    }
-  }
-
-  Future<void> _getFailureReportFolderPath() async {
-    final environment = context.read<SettingsManager>().webViewEnvironment;
-    if (environment == null) {
-      _recordMethodResult(
-        PlatformWebViewEnvironmentMethod.getFailureReportFolderPath.name,
-        'Create or select $WebViewEnvironment first',
-        isError: true,
-      );
-      return;
-    }
-
-    setState(() => _isLoading = true);
-    try {
-      final path = await environment.getFailureReportFolderPath();
-      _recordMethodResult(
-        PlatformWebViewEnvironmentMethod.getFailureReportFolderPath.name,
-        'Failure report folder: $path',
-        isError: false,
-      );
-    } catch (e) {
-      _recordMethodResult(
-        PlatformWebViewEnvironmentMethod.getFailureReportFolderPath.name,
-        'Error: $e',
-        isError: true,
-      );
-    } finally {
-      setState(() => _isLoading = false);
-    }
-  }
-
-  Future<void> _disposeWebViewEnvironment() async {
-    setState(() => _isLoading = true);
-    try {
-      await context.read<SettingsManager>().disposeEnvironment();
-      setState(() => _processInfos = []);
-      _recordMethodResult(
-        PlatformWebViewEnvironmentMethod.dispose.name,
-        '$WebViewEnvironment disposed',
-        isError: false,
-      );
-    } catch (e) {
-      _recordMethodResult(
-        PlatformWebViewEnvironmentMethod.dispose.name,
-        'Error: $e',
-        isError: true,
-      );
-    } finally {
-      setState(() => _isLoading = false);
-    }
-  }
-
-  // ProcessGlobalConfig methods
   Future<void> _applyProcessGlobalConfig() async {
     final params = await showParameterDialog(
       context: context,
@@ -796,10 +695,6 @@ class _ServiceControllersScreenState extends State<ServiceControllersScreen> {
       body: ListView(
         padding: const EdgeInsets.all(16),
         children: [
-          ProfileSelectorCard(
-            onEditSettingsProfile: () =>
-                Navigator.pushNamed(context, '/settings'),
-          ),
           const SizedBox(height: 16),
           _buildServiceWorkerSection(),
           const SizedBox(height: 16),
@@ -807,9 +702,12 @@ class _ServiceControllersScreenState extends State<ServiceControllersScreen> {
           const SizedBox(height: 16),
           _buildTracingControllerSection(),
           const SizedBox(height: 16),
-          _buildWebViewEnvironmentSection(),
           const SizedBox(height: 16),
           _buildProcessGlobalConfigSection(),
+          const SizedBox(height: 16),
+          _buildProfileStoreSection(),
+          const SizedBox(height: 16),
+          _buildGeolocationPermissionsSection(),
           const SizedBox(height: 16),
           _buildEventLog(),
         ],
@@ -826,9 +724,17 @@ class _ServiceControllersScreenState extends State<ServiceControllersScreen> {
       child: ExpansionTile(
         title: Row(
           children: [
-            Text(
-              '$ServiceWorkerController',
-              style: const TextStyle(fontWeight: FontWeight.bold),
+            // The controller name was unflexed, so at 360dp the longer ones overflowed this
+            // row by up to 148px. The badges beside it already sit in a horizontal scroll
+            // view, so they tolerate being squeezed; the name ellipsizes instead. Applied to
+            // all six controller cards, including ProfileStore, whose name is merely short
+            // enough not to overflow today.
+            Flexible(
+              child: Text(
+                '$ServiceWorkerController',
+                style: const TextStyle(fontWeight: FontWeight.bold),
+                overflow: TextOverflow.ellipsis,
+              ),
             ),
             const SizedBox(width: 8),
             Expanded(
@@ -848,6 +754,28 @@ class _ServiceControllersScreenState extends State<ServiceControllersScreen> {
             child: Column(
               children: [
                 // Boolean settings
+                _buildSwitchRow(
+                  'Cookies on intercepted requests',
+                  _includeCookiesOnShouldInterceptRequest,
+                  (value) => _setIncludeCookiesOnShouldInterceptRequest(value),
+                  _getIncludeCookiesOnShouldInterceptRequest,
+                  _mergePlatforms(
+                    _serviceWorkerPlatforms(
+                      PlatformServiceWorkerControllerMethod
+                          .getIncludeCookiesOnShouldInterceptRequestEnabled,
+                    ),
+                    _serviceWorkerPlatforms(
+                      PlatformServiceWorkerControllerMethod
+                          .setIncludeCookiesOnShouldInterceptRequestEnabled,
+                    ),
+                  ),
+                  getMethodName: PlatformServiceWorkerControllerMethod
+                      .getIncludeCookiesOnShouldInterceptRequestEnabled
+                      .name,
+                  setMethodName: PlatformServiceWorkerControllerMethod
+                      .setIncludeCookiesOnShouldInterceptRequestEnabled
+                      .name,
+                ),
                 _buildSwitchRow(
                   'Allow Content Access',
                   _allowContentAccess,
@@ -1037,9 +965,17 @@ class _ServiceControllersScreenState extends State<ServiceControllersScreen> {
       child: ExpansionTile(
         title: Row(
           children: [
-            Text(
-              '$ProxyController',
-              style: const TextStyle(fontWeight: FontWeight.bold),
+            // The controller name was unflexed, so at 360dp the longer ones overflowed this
+            // row by up to 148px. The badges beside it already sit in a horizontal scroll
+            // view, so they tolerate being squeezed; the name ellipsizes instead. Applied to
+            // all six controller cards, including ProfileStore, whose name is merely short
+            // enough not to overflow today.
+            Flexible(
+              child: Text(
+                '$ProxyController',
+                style: const TextStyle(fontWeight: FontWeight.bold),
+                overflow: TextOverflow.ellipsis,
+              ),
             ),
             const SizedBox(width: 8),
             Expanded(
@@ -1107,6 +1043,18 @@ class _ServiceControllersScreenState extends State<ServiceControllersScreen> {
                   ),
                 ),
                 const SizedBox(height: 12),
+                TextField(
+                  controller: _relayHop1Controller,
+                  decoration: const InputDecoration(
+                    labelText: 'Relay hop 1 — HTTP/3 endpoint (iOS 17+)',
+                    hintText: 'https://relay.example.com/h3',
+                    helperText:
+                        'ProxyRule.relayHop1. Leave empty for a direct proxy connection.',
+                    border: OutlineInputBorder(),
+                    isDense: true,
+                  ),
+                ),
+                const SizedBox(height: 12),
                 LayoutBuilder(
                   builder: (context, constraints) {
                     final isMobile = ResponsiveBreakpoints.isMobileWidth(
@@ -1159,9 +1107,17 @@ class _ServiceControllersScreenState extends State<ServiceControllersScreen> {
       child: ExpansionTile(
         title: Row(
           children: [
-            Text(
-              '$TracingController',
-              style: const TextStyle(fontWeight: FontWeight.bold),
+            // The controller name was unflexed, so at 360dp the longer ones overflowed this
+            // row by up to 148px. The badges beside it already sit in a horizontal scroll
+            // view, so they tolerate being squeezed; the name ellipsizes instead. Applied to
+            // all six controller cards, including ProfileStore, whose name is merely short
+            // enough not to overflow today.
+            Flexible(
+              child: Text(
+                '$TracingController',
+                style: const TextStyle(fontWeight: FontWeight.bold),
+                overflow: TextOverflow.ellipsis,
+              ),
             ),
             const SizedBox(width: 8),
             Expanded(
@@ -1261,250 +1217,346 @@ class _ServiceControllersScreenState extends State<ServiceControllersScreen> {
     );
   }
 
-  Widget _buildWebViewEnvironmentSection() {
-    final settingsManager = context.watch<SettingsManager>();
-    final environment = settingsManager.webViewEnvironment;
-    final supportedPlatforms = SupportChecker.getSupportedPlatformsForClass(
-      '$WebViewEnvironment',
+  // ProfileStore methods (androidx MULTI_PROFILE)
+  //
+  // The custom-header family below is androidx CUSTOM_REQUEST_HEADERS. These headers are profile
+  // state that outlives this screen: once added they ride every matching request the profile makes
+  // until cleared, so the demo always offers a way to clear them again.
+  Future<void> _addCustomHeader() async {
+    final params = await showParameterDialog(
+      context: context,
+      title: 'Add Custom Request Header',
+      parameters: {'name': 'X-Tenant', 'value': 'acme', 'originRules': '*'},
+      requiredPaths: ['name', 'value', 'originRules'],
     );
-
-    return Card(
-      child: ExpansionTile(
-        title: Row(
-          children: [
-            Text(
-              '$WebViewEnvironment',
-              style: const TextStyle(fontWeight: FontWeight.bold),
-            ),
-            const SizedBox(width: 8),
-            Expanded(
-              child: SingleChildScrollView(
-                scrollDirection: Axis.horizontal,
-                child: SupportBadgesRow(
-                  supportedPlatforms: supportedPlatforms,
-                  compact: true,
-                ),
-              ),
-            ),
-          ],
+    if (params == null) return;
+    setState(() => _isLoading = true);
+    try {
+      final added = await ProfileStore.instance().addCustomHeader(
+        CustomHeader(
+          name: params['name']?.toString() ?? '',
+          value: params['value']?.toString() ?? '',
+          // Comma-separated in the dialog; the API takes a set of origin rules in the same format
+          // as addWebMessageListener, e.g. "https://*.example.com" or "*".
+          originRules: (params['originRules']?.toString() ?? '')
+              .split(',')
+              .map((e) => e.trim())
+              .where((e) => e.isNotEmpty)
+              .toSet(),
         ),
-        children: [
-          Padding(
-            padding: const EdgeInsets.all(16),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                // Environment status
-                Container(
-                  padding: const EdgeInsets.all(12),
-                  decoration: BoxDecoration(
-                    color: environment != null
-                        ? Colors.green.shade50
-                        : Colors.grey.shade100,
-                    borderRadius: BorderRadius.circular(8),
-                  ),
-                  child: Row(
-                    children: [
-                      Icon(
-                        environment != null ? Icons.check_circle : Icons.cancel,
-                        color: environment != null ? Colors.green : Colors.grey,
-                        size: 24,
-                      ),
-                      const SizedBox(width: 8),
-                      Expanded(
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                              environment != null
-                                  ? 'Environment Active'
-                                  : 'No Environment',
-                              style: const TextStyle(
-                                fontWeight: FontWeight.bold,
-                              ),
-                            ),
-                            if (environment != null)
-                              Text(
-                                'ID: ${environment.id}',
-                                style: TextStyle(
-                                  fontSize: 12,
-                                  color: Colors.grey.shade600,
-                                ),
-                              ),
-                            if (_availableVersion != null)
-                              Text(
-                                'Version: $_availableVersion',
-                                style: TextStyle(
-                                  fontSize: 12,
-                                  color: Colors.grey.shade600,
-                                ),
-                              ),
-                          ],
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-                const SizedBox(height: 12),
+      );
+      _recordMethodResult(
+        PlatformProfileStoreMethod.addCustomHeader.name,
+        added
+            ? 'Added ${params['name']}: ${params['value']}'
+            : 'Profile not reachable (feature missing or no such profile): nothing done',
+        isError: !added,
+      );
+    } catch (e) {
+      _recordMethodResult(
+        PlatformProfileStoreMethod.addCustomHeader.name,
+        'Error: $e',
+        isError: true,
+      );
+    } finally {
+      setState(() => _isLoading = false);
+    }
+  }
 
-                // Create/Dispose buttons
-                LayoutBuilder(
-                  builder: (context, constraints) {
-                    final isMobile = ResponsiveBreakpoints.isMobileWidth(
-                      constraints.maxWidth,
-                    );
-                    final createButton = _buildMethodButton(
-                      'Create',
-                      environment == null ? _createWebViewEnvironment : null,
-                      supportedPlatforms: _webViewEnvironmentPlatforms(
-                        PlatformWebViewEnvironmentMethod.create,
-                      ),
-                      methodName: PlatformWebViewEnvironmentMethod.create.name,
-                    );
-                    final disposeButton = _buildMethodButton(
-                      'Dispose',
-                      environment != null ? _disposeWebViewEnvironment : null,
-                      supportedPlatforms: _webViewEnvironmentPlatforms(
-                        PlatformWebViewEnvironmentMethod.dispose,
-                      ),
-                      methodName: PlatformWebViewEnvironmentMethod.dispose.name,
-                    );
+  Future<void> _getCustomHeaders() async {
+    setState(() => _isLoading = true);
+    try {
+      final headers = await ProfileStore.instance().getCustomHeaders();
+      _recordMethodResult(
+        PlatformProfileStoreMethod.getCustomHeaders.name,
+        headers.isEmpty
+            ? 'No custom headers'
+            : headers
+                  .map((h) => '${h.name}: ${h.value} -> ${h.originRules}')
+                  .join('\n'),
+        isError: false,
+      );
+    } catch (e) {
+      _recordMethodResult(
+        PlatformProfileStoreMethod.getCustomHeaders.name,
+        'Error: $e',
+        isError: true,
+      );
+    } finally {
+      setState(() => _isLoading = false);
+    }
+  }
 
-                    return ResponsiveRow(
-                      spacing: 8,
-                      runSpacing: 8,
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        isMobile ? createButton : Expanded(child: createButton),
-                        isMobile
-                            ? disposeButton
-                            : Expanded(child: disposeButton),
-                      ],
-                    );
-                  },
-                ),
-                const SizedBox(height: 8),
-
-                // Static methods
-                LayoutBuilder(
-                  builder: (context, constraints) {
-                    final isMobile = ResponsiveBreakpoints.isMobileWidth(
-                      constraints.maxWidth,
-                    );
-                    final versionButton = _buildMethodButton(
-                      'Get Version',
-                      _getAvailableVersion,
-                      supportedPlatforms: _webViewEnvironmentPlatforms(
-                        PlatformWebViewEnvironmentMethod.getAvailableVersion,
-                      ),
-                      methodName: PlatformWebViewEnvironmentMethod
-                          .getAvailableVersion
-                          .name,
-                    );
-                    final compareButton = _buildMethodButton(
-                      'Compare Versions',
-                      _compareBrowserVersions,
-                      supportedPlatforms: _webViewEnvironmentPlatforms(
-                        PlatformWebViewEnvironmentMethod.compareBrowserVersions,
-                      ),
-                      methodName: PlatformWebViewEnvironmentMethod
-                          .compareBrowserVersions
-                          .name,
-                    );
-
-                    return ResponsiveRow(
-                      spacing: 8,
-                      runSpacing: 8,
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        isMobile
-                            ? versionButton
-                            : Expanded(child: versionButton),
-                        isMobile
-                            ? compareButton
-                            : Expanded(child: compareButton),
-                      ],
-                    );
-                  },
-                ),
-                const SizedBox(height: 8),
-
-                // Instance methods
-                LayoutBuilder(
-                  builder: (context, constraints) {
-                    final isMobile = ResponsiveBreakpoints.isMobileWidth(
-                      constraints.maxWidth,
-                    );
-                    final processesButton = _buildMethodButton(
-                      'Get Processes',
-                      environment != null ? _getProcessInfos : null,
-                      supportedPlatforms: _webViewEnvironmentPlatforms(
-                        PlatformWebViewEnvironmentMethod.getProcessInfos,
-                      ),
-                      methodName:
-                          PlatformWebViewEnvironmentMethod.getProcessInfos.name,
-                    );
-                    final failureButton = _buildMethodButton(
-                      'Failure Folder',
-                      environment != null ? _getFailureReportFolderPath : null,
-                      supportedPlatforms: _webViewEnvironmentPlatforms(
-                        PlatformWebViewEnvironmentMethod
-                            .getFailureReportFolderPath,
-                      ),
-                      methodName: PlatformWebViewEnvironmentMethod
-                          .getFailureReportFolderPath
-                          .name,
-                    );
-
-                    return ResponsiveRow(
-                      spacing: 8,
-                      runSpacing: 8,
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        isMobile
-                            ? processesButton
-                            : Expanded(child: processesButton),
-                        isMobile
-                            ? failureButton
-                            : Expanded(child: failureButton),
-                      ],
-                    );
-                  },
-                ),
-
-                // Process list
-                if (_processInfos.isNotEmpty) ...[
-                  const SizedBox(height: 12),
-                  const Text(
-                    'Process Infos:',
-                    style: TextStyle(fontWeight: FontWeight.bold),
-                  ),
-                  const SizedBox(height: 8),
-                  Container(
-                    height: 100,
-                    decoration: BoxDecoration(
-                      color: Colors.grey.shade100,
-                      borderRadius: BorderRadius.circular(4),
-                    ),
-                    child: ListView.builder(
-                      itemCount: _processInfos.length,
-                      itemBuilder: (context, index) {
-                        final info = _processInfos[index];
-                        return ListTile(
-                          dense: true,
-                          title: Text('Process ${index + 1}'),
-                          subtitle: Text('Kind: ${info.kind.name()}'),
-                        );
-                      },
-                    ),
-                  ),
-                ],
-              ],
-            ),
-          ),
-        ],
-      ),
+  Future<void> _hasCustomHeader() async {
+    final params = await showParameterDialog(
+      context: context,
+      title: 'Has Custom Header',
+      parameters: {'name': 'X-Tenant'},
+      requiredPaths: ['name'],
     );
+    if (params == null) return;
+    final name = params['name']?.toString() ?? '';
+    setState(() => _isLoading = true);
+    try {
+      final has = await ProfileStore.instance().hasCustomHeader(name);
+      _recordMethodResult(
+        PlatformProfileStoreMethod.hasCustomHeader.name,
+        has == null
+            ? 'Profile not reachable (feature missing or no such profile)'
+            : '$name: $has',
+        isError: has == null,
+      );
+    } catch (e) {
+      _recordMethodResult(
+        PlatformProfileStoreMethod.hasCustomHeader.name,
+        'Error: $e',
+        isError: true,
+      );
+    } finally {
+      setState(() => _isLoading = false);
+    }
+  }
+
+  Future<void> _clearCustomHeader() async {
+    final params = await showParameterDialog(
+      context: context,
+      title: 'Clear Custom Header',
+      parameters: {'name': 'X-Tenant', 'value': ''},
+      requiredPaths: ['name'],
+    );
+    if (params == null) return;
+    final name = params['name']?.toString() ?? '';
+    final value = params['value']?.toString() ?? '';
+    setState(() => _isLoading = true);
+    try {
+      // An empty value means "clear every value under this name" — the one-argument androidx
+      // overload — rather than "clear the header whose value is the empty string".
+      final reached = await ProfileStore.instance().clearCustomHeader(
+        name,
+        headerValue: value.isEmpty ? null : value,
+      );
+      _recordMethodResult(
+        PlatformProfileStoreMethod.clearCustomHeader.name,
+        !reached
+            ? 'Profile not reachable (feature missing or no such profile): nothing done'
+            : value.isEmpty
+            ? 'Cleared all values of $name'
+            : 'Cleared $name: $value',
+        isError: !reached,
+      );
+    } catch (e) {
+      _recordMethodResult(
+        PlatformProfileStoreMethod.clearCustomHeader.name,
+        'Error: $e',
+        isError: true,
+      );
+    } finally {
+      setState(() => _isLoading = false);
+    }
+  }
+
+  Future<void> _clearAllCustomHeaders() async {
+    setState(() => _isLoading = true);
+    try {
+      final reached = await ProfileStore.instance().clearAllCustomHeaders();
+      _recordMethodResult(
+        PlatformProfileStoreMethod.clearAllCustomHeaders.name,
+        reached
+            ? 'All custom headers cleared'
+            : 'Profile not reachable (feature missing or no such profile): nothing done',
+        isError: !reached,
+      );
+    } catch (e) {
+      _recordMethodResult(
+        PlatformProfileStoreMethod.clearAllCustomHeaders.name,
+        'Error: $e',
+        isError: true,
+      );
+    } finally {
+      setState(() => _isLoading = false);
+    }
+  }
+
+  Future<void> _getAllProfileNames() async {
+    setState(() => _isLoading = true);
+    try {
+      final names = await ProfileStore.instance().getAllProfileNames();
+      _recordMethodResult(
+        PlatformProfileStoreMethod.getAllProfileNames.name,
+        names.isEmpty ? 'No profiles' : names.join(', '),
+        isError: false,
+        value: names,
+      );
+    } catch (e) {
+      _recordMethodResult(
+        PlatformProfileStoreMethod.getAllProfileNames.name,
+        'Error: $e',
+        isError: true,
+      );
+    } finally {
+      setState(() => _isLoading = false);
+    }
+  }
+
+  Future<void> _getOrCreateProfile() async {
+    final params = await showParameterDialog(
+      context: context,
+      title: 'Get or Create Profile',
+      parameters: {'name': 'signed_in'},
+      requiredPaths: ['name'],
+    );
+    if (params == null) return;
+    final name = params['name']?.toString() ?? '';
+
+    setState(() => _isLoading = true);
+    try {
+      final created = await ProfileStore.instance().getOrCreateProfile(
+        name: name,
+      );
+      _recordMethodResult(
+        PlatformProfileStoreMethod.getOrCreateProfile.name,
+        // null is "could not create", which is a different answer from an empty name.
+        created ?? 'Could not create a profile named "$name"',
+        isError: false,
+        value: created,
+      );
+      // Set InAppWebViewSettings.profileName to this name to put a WebView on it — cookies, web
+      // storage and geolocation then all act on that profile rather than the default one.
+      _logEvent(EventType.storage, 'Profile "$name" is available');
+    } catch (e) {
+      _recordMethodResult(
+        PlatformProfileStoreMethod.getOrCreateProfile.name,
+        'Error: $e',
+        isError: true,
+      );
+    } finally {
+      setState(() => _isLoading = false);
+    }
+  }
+
+  Future<void> _deleteProfile() async {
+    final params = await showParameterDialog(
+      context: context,
+      title: 'Delete Profile',
+      parameters: {'name': 'signed_in'},
+      requiredPaths: ['name'],
+    );
+    if (params == null) return;
+    final name = params['name']?.toString() ?? '';
+
+    setState(() => _isLoading = true);
+    try {
+      final deleted = await ProfileStore.instance().deleteProfile(name: name);
+      _recordMethodResult(
+        PlatformProfileStoreMethod.deleteProfile.name,
+        deleted
+            ? 'Profile "$name" deleted'
+            // false covers both "no such profile" and "a WebView is still using it".
+            : 'Not deleted — either no such profile, or it is still in use',
+        isError: false,
+        value: deleted,
+      );
+    } catch (e) {
+      _recordMethodResult(
+        PlatformProfileStoreMethod.deleteProfile.name,
+        'Error: $e',
+        isError: true,
+      );
+    } finally {
+      setState(() => _isLoading = false);
+    }
+  }
+
+  // GeolocationPermissions methods
+  Future<void> _getGeolocationOrigins() async {
+    setState(() => _isLoading = true);
+    try {
+      final origins = await GeolocationPermissions.instance().getOrigins();
+      _recordMethodResult(
+        PlatformGeolocationPermissionsMethod.getOrigins.name,
+        origins.isEmpty ? 'No stored origins' : origins.join(', '),
+        isError: false,
+        value: origins,
+      );
+    } catch (e) {
+      _recordMethodResult(
+        PlatformGeolocationPermissionsMethod.getOrigins.name,
+        'Error: $e',
+        isError: true,
+      );
+    } finally {
+      setState(() => _isLoading = false);
+    }
+  }
+
+  Future<void> _geolocationOriginAction(
+    PlatformGeolocationPermissionsMethod method,
+  ) async {
+    final params = await showParameterDialog(
+      context: context,
+      title: method.name,
+      parameters: {'origin': 'https://example.com', 'profileName': ''},
+      requiredPaths: ['origin'],
+    );
+    if (params == null) return;
+    final origin = params['origin']?.toString() ?? '';
+    final profileName = params['profileName']?.toString();
+
+    setState(() => _isLoading = true);
+    try {
+      final permissions = GeolocationPermissions.instance();
+      // Every call is profile-aware: leaving profileName empty means the default profile, which is
+      // what a WebView without InAppWebViewSettings.profileName uses.
+      final scoped = (profileName == null || profileName.isEmpty)
+          ? null
+          : profileName;
+      final Object? result = switch (method) {
+        PlatformGeolocationPermissionsMethod.allow => await permissions.allow(
+          origin: origin,
+          profileName: scoped,
+        ),
+        PlatformGeolocationPermissionsMethod.clear => await permissions.clear(
+          origin: origin,
+          profileName: scoped,
+        ),
+        // getAllowed is `bool?`: null means "nothing stored for this origin", which is neither
+        // allowed nor denied.
+        _ => await permissions.getAllowed(origin: origin, profileName: scoped),
+      };
+      _recordMethodResult(
+        method.name,
+        result == null
+            ? 'No stored decision for $origin'
+            : '$origin -> $result',
+        isError: false,
+        value: result,
+      );
+    } catch (e) {
+      _recordMethodResult(method.name, 'Error: $e', isError: true);
+    } finally {
+      setState(() => _isLoading = false);
+    }
+  }
+
+  Future<void> _clearAllGeolocationPermissions() async {
+    setState(() => _isLoading = true);
+    try {
+      final cleared = await GeolocationPermissions.instance().clearAll();
+      _recordMethodResult(
+        PlatformGeolocationPermissionsMethod.clearAll.name,
+        cleared ? 'All stored decisions cleared' : 'Nothing was cleared',
+        isError: false,
+        value: cleared,
+      );
+    } catch (e) {
+      _recordMethodResult(
+        PlatformGeolocationPermissionsMethod.clearAll.name,
+        'Error: $e',
+        isError: true,
+      );
+    } finally {
+      setState(() => _isLoading = false);
+    }
   }
 
   Widget _buildProcessGlobalConfigSection() {
@@ -1516,9 +1568,17 @@ class _ServiceControllersScreenState extends State<ServiceControllersScreen> {
       child: ExpansionTile(
         title: Row(
           children: [
-            Text(
-              '$ProcessGlobalConfig',
-              style: const TextStyle(fontWeight: FontWeight.bold),
+            // The controller name was unflexed, so at 360dp the longer ones overflowed this
+            // row by up to 148px. The badges beside it already sit in a horizontal scroll
+            // view, so they tolerate being squeezed; the name ellipsizes instead. Applied to
+            // all six controller cards, including ProfileStore, whose name is merely short
+            // enough not to overflow today.
+            Flexible(
+              child: Text(
+                '$ProcessGlobalConfig',
+                style: const TextStyle(fontWeight: FontWeight.bold),
+                overflow: TextOverflow.ellipsis,
+              ),
             ),
             const SizedBox(width: 8),
             Expanded(
@@ -1590,6 +1650,250 @@ class _ServiceControllersScreenState extends State<ServiceControllersScreen> {
                     ),
                     methodName: PlatformProcessGlobalConfigMethod.apply.name,
                   ),
+                ),
+              ],
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildProfileStoreSection() {
+    final supportedPlatforms = SupportChecker.getSupportedPlatformsForClass(
+      '$ProfileStore',
+    );
+
+    return Card(
+      child: ExpansionTile(
+        title: Row(
+          children: [
+            // The controller name was unflexed, so at 360dp the longer ones overflowed this
+            // row by up to 148px. The badges beside it already sit in a horizontal scroll
+            // view, so they tolerate being squeezed; the name ellipsizes instead. Applied to
+            // all six controller cards, including ProfileStore, whose name is merely short
+            // enough not to overflow today.
+            Flexible(
+              child: Text(
+                '$ProfileStore',
+                style: const TextStyle(fontWeight: FontWeight.bold),
+                overflow: TextOverflow.ellipsis,
+              ),
+            ),
+            const SizedBox(width: 8),
+            Expanded(
+              child: SingleChildScrollView(
+                scrollDirection: Axis.horizontal,
+                child: SupportBadgesRow(
+                  supportedPlatforms: supportedPlatforms,
+                  compact: true,
+                ),
+              ),
+            ),
+          ],
+        ),
+        children: [
+          Padding(
+            padding: const EdgeInsets.all(16),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                const Text(
+                  'androidx MULTI_PROFILE: each profile has its own cookies, storage, cache and '
+                  'geolocation decisions. Put a WebView on one with '
+                  'InAppWebViewSettings.profileName.',
+                  style: TextStyle(fontSize: 12),
+                ),
+                const SizedBox(height: 12),
+                ResponsiveRow(
+                  spacing: 8,
+                  runSpacing: 8,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    _buildMethodButton(
+                      'Get All Profile Names',
+                      _getAllProfileNames,
+                      supportedPlatforms: _profileStorePlatforms(
+                        PlatformProfileStoreMethod.getAllProfileNames,
+                      ),
+                      methodName:
+                          PlatformProfileStoreMethod.getAllProfileNames.name,
+                    ),
+                    _buildMethodButton(
+                      'Get or Create Profile',
+                      _getOrCreateProfile,
+                      supportedPlatforms: _profileStorePlatforms(
+                        PlatformProfileStoreMethod.getOrCreateProfile,
+                      ),
+                      methodName:
+                          PlatformProfileStoreMethod.getOrCreateProfile.name,
+                    ),
+                    _buildMethodButton(
+                      'Delete Profile',
+                      _deleteProfile,
+                      supportedPlatforms: _profileStorePlatforms(
+                        PlatformProfileStoreMethod.deleteProfile,
+                      ),
+                      methodName: PlatformProfileStoreMethod.deleteProfile.name,
+                    ),
+                    _buildMethodButton(
+                      'Add Custom Header',
+                      _addCustomHeader,
+                      supportedPlatforms: _profileStorePlatforms(
+                        PlatformProfileStoreMethod.addCustomHeader,
+                      ),
+                      methodName:
+                          PlatformProfileStoreMethod.addCustomHeader.name,
+                    ),
+                    _buildMethodButton(
+                      'Get Custom Headers',
+                      _getCustomHeaders,
+                      supportedPlatforms: _profileStorePlatforms(
+                        PlatformProfileStoreMethod.getCustomHeaders,
+                      ),
+                      methodName:
+                          PlatformProfileStoreMethod.getCustomHeaders.name,
+                    ),
+                    _buildMethodButton(
+                      'Has Custom Header',
+                      _hasCustomHeader,
+                      supportedPlatforms: _profileStorePlatforms(
+                        PlatformProfileStoreMethod.hasCustomHeader,
+                      ),
+                      methodName:
+                          PlatformProfileStoreMethod.hasCustomHeader.name,
+                    ),
+                    _buildMethodButton(
+                      'Clear Custom Header',
+                      _clearCustomHeader,
+                      supportedPlatforms: _profileStorePlatforms(
+                        PlatformProfileStoreMethod.clearCustomHeader,
+                      ),
+                      methodName:
+                          PlatformProfileStoreMethod.clearCustomHeader.name,
+                    ),
+                    _buildMethodButton(
+                      'Clear All Custom Headers',
+                      _clearAllCustomHeaders,
+                      supportedPlatforms: _profileStorePlatforms(
+                        PlatformProfileStoreMethod.clearAllCustomHeaders,
+                      ),
+                      methodName:
+                          PlatformProfileStoreMethod.clearAllCustomHeaders.name,
+                    ),
+                  ],
+                ),
+              ],
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildGeolocationPermissionsSection() {
+    final supportedPlatforms = SupportChecker.getSupportedPlatformsForClass(
+      '$GeolocationPermissions',
+    );
+
+    return Card(
+      child: ExpansionTile(
+        title: Row(
+          children: [
+            // The controller name was unflexed, so at 360dp the longer ones overflowed this
+            // row by up to 148px. The badges beside it already sit in a horizontal scroll
+            // view, so they tolerate being squeezed; the name ellipsizes instead. Applied to
+            // all six controller cards, including ProfileStore, whose name is merely short
+            // enough not to overflow today.
+            Flexible(
+              child: Text(
+                '$GeolocationPermissions',
+                style: const TextStyle(fontWeight: FontWeight.bold),
+                overflow: TextOverflow.ellipsis,
+              ),
+            ),
+            const SizedBox(width: 8),
+            Expanded(
+              child: SingleChildScrollView(
+                scrollDirection: Axis.horizontal,
+                child: SupportBadgesRow(
+                  supportedPlatforms: supportedPlatforms,
+                  compact: true,
+                ),
+              ),
+            ),
+          ],
+        ),
+        children: [
+          Padding(
+            padding: const EdgeInsets.all(16),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                const Text(
+                  'The stored per-origin answers to onGeolocationPermissionsShowPrompt. Every '
+                  'method takes an optional profileName; leaving it empty acts on the default '
+                  'profile.',
+                  style: TextStyle(fontSize: 12),
+                ),
+                const SizedBox(height: 12),
+                ResponsiveRow(
+                  spacing: 8,
+                  runSpacing: 8,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    _buildMethodButton(
+                      'Get Origins',
+                      _getGeolocationOrigins,
+                      supportedPlatforms: _geolocationPermissionsPlatforms(
+                        PlatformGeolocationPermissionsMethod.getOrigins,
+                      ),
+                      methodName:
+                          PlatformGeolocationPermissionsMethod.getOrigins.name,
+                    ),
+                    _buildMethodButton(
+                      'Get Allowed',
+                      () => _geolocationOriginAction(
+                        PlatformGeolocationPermissionsMethod.getAllowed,
+                      ),
+                      supportedPlatforms: _geolocationPermissionsPlatforms(
+                        PlatformGeolocationPermissionsMethod.getAllowed,
+                      ),
+                      methodName:
+                          PlatformGeolocationPermissionsMethod.getAllowed.name,
+                    ),
+                    _buildMethodButton(
+                      'Allow Origin',
+                      () => _geolocationOriginAction(
+                        PlatformGeolocationPermissionsMethod.allow,
+                      ),
+                      supportedPlatforms: _geolocationPermissionsPlatforms(
+                        PlatformGeolocationPermissionsMethod.allow,
+                      ),
+                      methodName:
+                          PlatformGeolocationPermissionsMethod.allow.name,
+                    ),
+                    _buildMethodButton(
+                      'Clear Origin',
+                      () => _geolocationOriginAction(
+                        PlatformGeolocationPermissionsMethod.clear,
+                      ),
+                      supportedPlatforms: _geolocationPermissionsPlatforms(
+                        PlatformGeolocationPermissionsMethod.clear,
+                      ),
+                      methodName:
+                          PlatformGeolocationPermissionsMethod.clear.name,
+                    ),
+                    _buildMethodButton(
+                      'Clear All',
+                      _clearAllGeolocationPermissions,
+                      supportedPlatforms: _geolocationPermissionsPlatforms(
+                        PlatformGeolocationPermissionsMethod.clearAll,
+                      ),
+                      methodName:
+                          PlatformGeolocationPermissionsMethod.clearAll.name,
+                    ),
+                  ],
                 ),
               ],
             ),

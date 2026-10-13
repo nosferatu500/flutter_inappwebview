@@ -1,0 +1,295 @@
+import 'dart:async';
+
+import 'package:flutter/services.dart';
+import 'package:nosferatu500_inappwebview_android/nosferatu500_inappwebview_android.dart';
+import 'package:nosferatu500_inappwebview_android/src/pigeons/in_app_browser.g.dart';
+import 'package:nosferatu500_inappwebview_android/src/pigeons/in_app_browser_manager.g.dart';
+import 'package:nosferatu500_inappwebview_android/src/pigeons/in_app_webview.g.dart';
+import 'package:nosferatu500_inappwebview_platform_interface/nosferatu500_inappwebview_platform_interface.dart';
+import 'package:flutter_test/flutter_test.dart';
+
+/// Runtime coverage for the in-app browser's own per-instance channel (§195), the eighteenth
+/// migrated to Pigeon. Same shape and rationale as `pigeon_headless_webview_boundary_test.dart`:
+/// every message goes through the **real generated codec** on the real generated channel names.
+/// It cannot prove the Kotlin half agrees; both are generated from one schema and ship together.
+///
+/// It matters more here than for most channels, because one event has **no device coverage at
+/// all**: `onMenuItemClicked` is raised by a tap on the browser Activity's native toolbar, which
+/// nothing in the Dart API can press (§195). This file is the only thing that runs its Dart half.
+void main() {
+  TestWidgetsFlutterBinding.ensureInitialized();
+
+  const codec = InAppBrowserHostApi.pigeonChannelCodec;
+  // The manager's `open`, Pigeon since §197. Answering it is what lets `openUrlRequest` complete.
+  const managerOpen =
+      'dev.flutter.pigeon.nosferatu500_inappwebview_android.InAppBrowserManagerHostApi.open';
+
+  late AndroidInAppBrowser browser;
+  late _RecordingEvents events;
+  final sent = <String>[];
+  final received = <String, Object?>{};
+  final clicked = <int>[];
+
+  // The browser's MethodChannel, which its WebView controller still uses.
+  String methodChannel() =>
+      'dev.nosferatu500.inappwebview/inappbrowser_${browser.id}';
+
+  String hostChannel(String method) =>
+      'dev.flutter.pigeon.nosferatu500_inappwebview_android.InAppBrowserHostApi'
+      '.$method.${browser.id}';
+
+  String flutterChannel(String method) =>
+      'dev.flutter.pigeon.nosferatu500_inappwebview_android.InAppBrowserFlutterApi'
+      '.$method.${browser.id}';
+
+  /// Answers one HostApi method with [result], recording that it was called and what it was sent.
+  /// Pigeon's success envelope is a one-element list.
+  void stubHost(String method, Object? result) {
+    TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
+        .setMockMessageHandler(hostChannel(method), (message) async {
+          sent.add(method);
+          received[method] = codec.decodeMessage(message);
+          return codec.encodeMessage(<Object?>[result]);
+        });
+  }
+
+  /// Delivers an event and returns the raw reply: an encoded envelope when a handler is
+  /// registered, null when none is (§183, §184).
+  Future<ByteData?> deliver(String method, List<Object?> args) {
+    final reply = Completer<ByteData?>();
+    unawaited(
+      TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
+          .handlePlatformMessage(
+            flutterChannel(method),
+            codec.encodeMessage(args),
+            reply.complete,
+          ),
+    );
+    return reply.future;
+  }
+
+  setUp(() async {
+    sent.clear();
+    received.clear();
+    clicked.clear();
+    TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
+        .setMockMessageHandler(
+          managerOpen,
+          (message) async => InAppBrowserManagerHostApi.pigeonChannelCodec
+              .encodeMessage(<Object?>[true]),
+        );
+
+    browser = AndroidInAppBrowser(AndroidInAppBrowserCreationParams());
+    events = _RecordingEvents();
+    browser.eventHandler = events;
+    // Two items, so a wrong id reaching the wrong item is distinguishable.
+    for (final id in [3, 8]) {
+      browser.addMenuItem(
+        InAppBrowserMenuItem(
+          id: id,
+          title: 'Item $id',
+          onClick: () => clicked.add(id),
+        ),
+      );
+    }
+    await browser.openUrlRequest(
+      urlRequest: URLRequest(url: WebUri('https://example.com')),
+    );
+  });
+
+  tearDown(() {
+    for (final m in [
+      'show',
+      'hide',
+      'close',
+      'isHidden',
+      'setSettings',
+      'getSettings',
+    ]) {
+      TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
+          .setMockMessageHandler(hostChannel(m), null);
+    }
+    TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
+        .setMockMessageHandler(managerOpen, null);
+    TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
+        .setMockMethodCallHandler(MethodChannel(methodChannel()), null);
+  });
+
+  group(
+    'Dart -> Kotlin (HostApi), on the channel suffixed by the browser id',
+    () {
+      test('show, hide and close each reach their own method', () async {
+        for (final m in ['show', 'hide', 'close']) {
+          stubHost(m, true);
+        }
+        await browser.show();
+        await browser.hide();
+        await browser.close();
+        expect(sent, ['show', 'hide', 'close']);
+      });
+
+      test('isHidden returns what the platform answered, both ways', () async {
+        stubHost('isHidden', true);
+        expect(await browser.isHidden(), isTrue);
+        stubHost('isHidden', false);
+        expect(await browser.isHidden(), isFalse);
+      });
+
+      test('setSettings sends the whole settings map, as a map', () async {
+        stubHost('setSettings', true);
+        final settings = InAppBrowserClassSettings(
+          webViewSettings: InAppWebViewSettings(minimumFontSize: 31),
+          browserSettings: InAppBrowserSettings(
+            toolbarTopBackgroundColor: const Color(0xFF7B1FA2),
+          ),
+        );
+        await browser.setSettings(settings: settings);
+        expect(sent, ['setSettings']);
+        // Decision B (§194): the map `parse(Map)` reads, key for key, browser and WebView together.
+        expect(received['setSettings'], [settings.toMap()]);
+      });
+
+      test(
+        'getSettings reads both halves of what the platform answered',
+        () async {
+          stubHost(
+            'getSettings',
+            InAppBrowserClassSettings(
+              webViewSettings: InAppWebViewSettings(minimumFontSize: 31),
+              browserSettings: InAppBrowserSettings(hideToolbarTop: true),
+            ).toMap(),
+          );
+          final settings = await browser.getSettings();
+          expect(sent, ['getSettings']);
+          expect(settings?.webViewSettings.minimumFontSize, 31);
+          expect(settings?.browserSettings.hideToolbarTop, isTrue);
+        },
+      );
+    },
+  );
+
+  group('the split with the MethodChannel (§199)', () {
+    late List<String> channelCalls;
+
+    setUp(() {
+      channelCalls = [];
+      TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
+          .setMockMethodCallHandler(MethodChannel(methodChannel()), (
+            call,
+          ) async {
+            channelCalls.add(call.method);
+            return call.method == 'getSettings'
+                ? InAppWebViewSettings(minimumFontSize: 27).toMap()
+                : true;
+          });
+      stubHost('setSettings', true);
+      stubHost('getSettings', InAppBrowserClassSettings().toMap());
+    });
+
+    test(
+      'the browser settings pair is Pigeon and not the MethodChannel',
+      () async {
+        await browser.setSettings(settings: InAppBrowserClassSettings());
+        await browser.getSettings();
+        expect(sent, ['setSettings', 'getSettings']);
+        expect(channelCalls, isEmpty);
+      },
+    );
+
+    // Since §212 the WebView's pair is Pigeon too, but on the WebView's HostApi under suffix
+    // `inappbrowser_<id>`, not on the browser's. The split this group pins is still a split.
+    test(
+      "the WebView controller settings pair goes to the WebView's HostApi, not the browser's",
+      () async {
+        String webViewHost(String method) =>
+            'dev.flutter.pigeon.nosferatu500_inappwebview_android.InAppWebViewHostApi'
+            '.$method.inappbrowser_${browser.id}';
+        const webViewCodec = InAppWebViewHostApi.pigeonChannelCodec;
+        final webViewSent = <String>[];
+        for (final method in ['setSettings', 'getSettings']) {
+          TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
+              .setMockMessageHandler(webViewHost(method), (message) async {
+                webViewSent.add(method);
+                return webViewCodec.encodeMessage(<Object?>[
+                  method == 'getSettings'
+                      ? InAppWebViewSettings(minimumFontSize: 27).toMap()
+                      : true,
+                ]);
+              });
+        }
+        addTearDown(() {
+          for (final method in ['setSettings', 'getSettings']) {
+            TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
+                .setMockMessageHandler(webViewHost(method), null);
+          }
+        });
+
+        final controller = browser.webViewController!;
+        await controller.setSettings(settings: InAppWebViewSettings());
+        expect((await controller.getSettings())?.minimumFontSize, 27);
+        expect(webViewSent, ['setSettings', 'getSettings']);
+        expect(channelCalls, isEmpty);
+        expect(sent, isEmpty);
+      },
+    );
+  });
+
+  group('Kotlin -> Dart (FlutterApi events)', () {
+    test('onBrowserCreated reaches the event handler', () async {
+      expect(await deliver('onBrowserCreated', <Object?>[]), isNotNull);
+      expect(events.created, 1);
+    });
+
+    test('onMenuItemClicked runs the matching item and no other', () async {
+      // Both ids, in the opposite order to insertion. Delivering only one let a mutant that always
+      // ran "the first item" pass, because the item map is a HashMap and its first key happened to
+      // be the delivered one (§195).
+      await deliver('onMenuItemClicked', <Object?>[8]);
+      await deliver('onMenuItemClicked', <Object?>[3]);
+      expect(clicked, [8, 3]);
+    });
+
+    test('onMenuItemClicked with an unknown id runs nothing', () async {
+      await deliver('onMenuItemClicked', <Object?>[42]);
+      expect(clicked, isEmpty);
+    });
+
+    test('onExit closes the browser and then tells the handler', () async {
+      expect(browser.isOpened(), isTrue);
+      await deliver('onExit', <Object?>[]);
+      expect(browser.isOpened(), isFalse);
+      expect(browser.webViewController, isNull);
+      expect(
+        events.exited,
+        1,
+        reason:
+            'captured before dispose() nulls the event handler, then called',
+      );
+    });
+  });
+
+  group('after onExit', () {
+    test('the event handlers for this suffix are unregistered', () async {
+      // Positive control first: without it, a null below could just mean the channel name is
+      // wrong.
+      expect(await deliver('onBrowserCreated', <Object?>[]), isNotNull);
+
+      await deliver('onExit', <Object?>[]);
+
+      expect(await deliver('onBrowserCreated', <Object?>[]), isNull);
+      expect(await deliver('onMenuItemClicked', <Object?>[3]), isNull);
+      expect(clicked, isEmpty);
+    });
+  });
+}
+
+class _RecordingEvents extends PlatformInAppBrowserEvents {
+  var created = 0;
+  var exited = 0;
+
+  @override
+  void onBrowserCreated() => created++;
+
+  @override
+  void onExit() => exited++;
+}

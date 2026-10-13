@@ -1,7 +1,7 @@
 import 'dart:convert';
 import 'dart:typed_data';
 import 'package:flutter/material.dart';
-import 'package:flutter_inappwebview/flutter_inappwebview.dart';
+import 'package:nosferatu500_inappwebview/nosferatu500_inappwebview.dart';
 import 'package:flutter_inappwebview_example/widgets/common/parameter_dialog.dart';
 
 List<T> _safeEnumValues<T>(Iterable<T> Function() getter) {
@@ -365,6 +365,22 @@ class ControllerMethodsRegistry {
           execute: (controller, params) async {
             await controller.reloadFromOrigin();
             return 'Page reloaded from origin';
+          },
+        ),
+        ControllerMethodEntry(
+          description:
+              'Prerenders a URL so a later navigation to it is instant',
+          methodEnum: PlatformInAppWebViewControllerMethod.prerenderUrl,
+          parameters: {'url': 'https://flutter.dev/'},
+          requiredParameters: ['url'],
+          execute: (controller, params) async {
+            final url = params['url']?.toString() ?? '';
+            // Best-effort: false means the platform declined (unsupported provider, or the
+            // profile cannot host a prerender) and the navigation will just load normally.
+            final started = await controller.prerenderUrl(WebUri(url));
+            return started
+                ? 'prerendering $url'
+                : 'the platform declined to prerender $url';
           },
         ),
         ControllerMethodEntry(
@@ -784,6 +800,36 @@ class ControllerMethodsRegistry {
             return await controller.getContentWidth();
           },
         ),
+        ControllerMethodEntry(
+          description: 'Flings the scroll downwards at 4000 px/s',
+          methodEnum: PlatformInAppWebViewControllerMethod.flingScroll,
+          execute: (controller, params) async {
+            // A fixed velocity rather than a parameter dialog: the useful demo is "does it coast
+            // and decelerate", and where it lands is up to the platform, not the caller.
+            await controller.flingScroll(velocityX: 0, velocityY: 4000);
+            return 'flung downwards at 4000 px/s';
+          },
+        ),
+        ControllerMethodEntry(
+          description: 'Does the document reference any image?',
+          methodEnum: PlatformInAppWebViewControllerMethod.documentHasImages,
+          execute: (controller, params) async {
+            return await controller.documentHasImages();
+          },
+        ),
+        ControllerMethodEntry(
+          description: 'Waits until the current DOM has been painted',
+          methodEnum:
+              PlatformInAppWebViewControllerMethod.postVisualStateCallback,
+          execute: (controller, params) async {
+            // The platform never fires the callback if the WebView is destroyed first and offers
+            // no timeout of its own, so the demo bounds it rather than hanging the screen.
+            await controller.postVisualStateCallback().timeout(
+              const Duration(seconds: 15),
+            );
+            return 'the current DOM has been drawn';
+          },
+        ),
       ],
     );
   }
@@ -861,6 +907,85 @@ class ControllerMethodsRegistry {
           execute: (controller, params) async {
             await controller.clearFocus();
             return 'Focus cleared';
+          },
+        ),
+        // The object-valued settings cannot be edited from the generic settings editor (it only
+        // knows bools, numbers, strings and enums), so they are demonstrated here by applying them
+        // through setSettings. One entry, because the registry keys a method by its methodEnum and
+        // two entries would collide on `setSettings`.
+        ControllerMethodEntry(
+          description:
+              'Applies the object-valued settings: User-Agent Client Hints '
+              '(userAgentMetadata), the Media Integrity API config, and '
+              'obscuredContentInsets',
+          methodEnum: PlatformInAppWebViewControllerMethod.setSettings,
+          parameters: {
+            'brand': 'ExampleBrowser',
+            'majorVersion': '1',
+            'trustedOrigin': 'https://*.example.com',
+            'obscuredTop': '44',
+            'obscuredBottom': '0',
+          },
+          execute: (controller, params) async {
+            final brand = params['brand']?.toString() ?? 'ExampleBrowser';
+            final majorVersion = params['majorVersion']?.toString() ?? '1';
+            final trustedOrigin =
+                params['trustedOrigin']?.toString() ?? 'https://*.example.com';
+            // Non-negative on every side is WebKit's requirement and an assert in the
+            // InAppWebViewSettings constructor, so a bad value here would throw rather than
+            // silently misbehave.
+            final obscuredTop =
+                double.tryParse(
+                  params['obscuredTop']?.toString() ?? '',
+                )?.abs() ??
+                44.0;
+            final obscuredBottom =
+                double.tryParse(
+                  params['obscuredBottom']?.toString() ?? '',
+                )?.abs() ??
+                0.0;
+
+            await controller.setSettings(
+              settings: InAppWebViewSettings(
+                // Every UserAgentMetadata field is optional: whatever stays null keeps the
+                // WebView's own value, so a caller can override just the brand list without
+                // inventing a platform or a bitness.
+                userAgentMetadata: UserAgentMetadata(
+                  brandVersionList: [
+                    UserAgentBrandVersion(
+                      brand: brand,
+                      majorVersion: majorVersion,
+                      fullVersion: '$majorVersion.0.0.0',
+                    ),
+                  ],
+                  mobile: true,
+                  formFactors: [UserAgentFormFactor.MOBILE],
+                ),
+                // defaultStatus applies to every origin no rule matches — here the app keeps its
+                // identity hidden everywhere except the one media provider it trusts.
+                webViewMediaIntegrityApiStatus:
+                    WebViewMediaIntegrityApiStatusConfig(
+                      defaultStatus: WebViewMediaIntegrityApiStatus
+                          .ENABLED_WITHOUT_APP_IDENTITY,
+                      overrideRules: [
+                        WebViewMediaIntegrityApiStatusOverrideRule(
+                          origin: trustedOrigin,
+                          status: WebViewMediaIntegrityApiStatus.ENABLED,
+                        ),
+                      ],
+                    ),
+                // iOS 26+ only, and the one setting in this group that is applied live: it is a
+                // WKWebView property, not a configuration one, so setSettings really changes it.
+                // A top inset is the realistic case — an app-drawn translucent nav bar.
+                obscuredContentInsets: EdgeInsets.only(
+                  top: obscuredTop,
+                  bottom: obscuredBottom,
+                ),
+              ),
+            );
+            return 'Client Hints announce $brand $majorVersion; '
+                'app identity granted to $trustedOrigin only; '
+                'obscured insets top=$obscuredTop bottom=$obscuredBottom';
           },
         ),
       ],
@@ -1077,26 +1202,23 @@ class ControllerMethodsRegistry {
           },
         ),
         ControllerMethodEntry(
-          description: 'Checks if playing audio',
-          methodEnum: PlatformInAppWebViewControllerMethod.isPlayingAudio,
-          execute: (controller, params) async {
-            return await controller.isPlayingAudio();
-          },
-        ),
-        ControllerMethodEntry(
-          description: 'Checks if muted',
-          methodEnum: PlatformInAppWebViewControllerMethod.isMuted,
-          execute: (controller, params) async {
-            return await controller.isMuted();
-          },
-        ),
-        ControllerMethodEntry(
-          description: 'Sets mute state',
-          methodEnum: PlatformInAppWebViewControllerMethod.setMuted,
+          description: 'Mutes or unmutes every audio stream in this WebView',
+          methodEnum: PlatformInAppWebViewControllerMethod.setAudioMuted,
           parameters: {'muted': true},
+          requiredParameters: ['muted'],
           execute: (controller, params) async {
-            await controller.setMuted(muted: params['muted'] as bool? ?? true);
-            return 'Muted';
+            final muted = params['muted'] as bool? ?? true;
+            await controller.setAudioMuted(muted);
+            return muted ? 'muted' : 'unmuted';
+          },
+        ),
+        ControllerMethodEntry(
+          description: 'Is this WebView muted?',
+          methodEnum: PlatformInAppWebViewControllerMethod.isAudioMuted,
+          execute: (controller, params) async {
+            // Non-nullable bool: on a WebView provider without MUTE_AUDIO this reads false, so
+            // check WebViewFeature.isFeatureSupported(MUTE_AUDIO) to tell that from "audible".
+            return await controller.isAudioMuted();
           },
         ),
       ],
@@ -1153,6 +1275,68 @@ class ControllerMethodsRegistry {
             return await controller.hasOnlySecureContent();
           },
         ),
+        ControllerMethodEntry(
+          description:
+              'Checks if Screen Time is blocking the content — null below iOS 26',
+          methodEnum:
+              PlatformInAppWebViewControllerMethod.isBlockedByScreenTime,
+          execute: (controller, params) async {
+            return await controller.isBlockedByScreenTime();
+          },
+        ),
+        // Object-valued, so it cannot go in the settings editor either — but unlike the
+        // `setSettings` group this is a controller method of its own, so it gets its own entry.
+        ControllerMethodEntry(
+          description:
+              'Gives the keyboard a conversation so it can offer Smart Replies '
+              'in web text fields (iOS 26+)',
+          methodEnum:
+              PlatformInAppWebViewControllerMethod.setConversationContext,
+          parameters: {
+            'threadIdentifier': 'demo-thread-1',
+            'lastMessage': 'Are we still on for lunch tomorrow?',
+            'senderName': 'Alex',
+          },
+          execute: (controller, params) async {
+            final threadIdentifier =
+                params['threadIdentifier']?.toString() ?? 'demo-thread-1';
+            final lastMessage =
+                params['lastMessage']?.toString() ??
+                'Are we still on for lunch tomorrow?';
+            final senderName = params['senderName']?.toString() ?? 'Alex';
+
+            await controller.setConversationContext(
+              conversationContext: ConversationContext(
+                threadIdentifier: threadIdentifier,
+                // "me" is in selfIdentifiers, so the keyboard drafts a reply *to* the other
+                // participant rather than treating the last message as our own.
+                selfIdentifiers: {'me'},
+                responsePrimaryRecipientIdentifiers: {'them'},
+                participantNameByIdentifier: {
+                  'them': PersonNameComponents(givenName: senderName),
+                },
+                entries: [
+                  ConversationEntry(
+                    text: lastMessage,
+                    senderIdentifier: 'them',
+                    sentDate: DateTime.now(),
+                    entryIdentifier: '$threadIdentifier-1',
+                    primaryRecipientIdentifiers: {'me'},
+                  ),
+                ],
+              ),
+            );
+            return 'Smart Reply context set for "$lastMessage" from $senderName';
+          },
+        ),
+        ControllerMethodEntry(
+          description: 'Reads back the conversation given to the keyboard',
+          methodEnum:
+              PlatformInAppWebViewControllerMethod.getConversationContext,
+          execute: (controller, params) async {
+            return (await controller.getConversationContext())?.toString();
+          },
+        ),
       ],
     );
   }
@@ -1165,13 +1349,30 @@ class ControllerMethodsRegistry {
       categoryType: ControllerMethodCategoryType.saveRestore,
       methods: [
         ControllerMethodEntry(
-          description: 'Saves WebView state',
+          // The entry id derives from methodEnum, so the bounded form cannot have a registry row of
+          // its own without colliding. It is demonstrated here instead, next to the unbounded one,
+          // which is also the only way to see the size difference the arguments buy.
+          description:
+              'Saves WebView state (unbounded, then capped and without forward history)',
           methodEnum: PlatformInAppWebViewControllerMethod.saveState,
           execute: (controller, params) async {
             final state = await controller.saveState();
-            return state != null
-                ? 'State saved: ${state.length} bytes'
-                : 'Save failed';
+            final full = state != null
+                ? '${state.length} bytes'
+                : 'save failed';
+
+            if (!await WebViewFeature.isFeatureSupported(
+              WebViewFeature.SAVE_STATE,
+            )) {
+              return 'State saved: $full (SAVE_STATE unsupported, so maxSize / '
+                  'includeForwardState would return null here)';
+            }
+            final bounded = await controller.saveState(
+              maxSize: 512 * 1024,
+              includeForwardState: false,
+            );
+            return 'State saved: $full; capped to 512 KB without forward '
+                'history: ${bounded != null ? '${bounded.length} bytes' : 'null (not even the current entry fits)'}';
           },
         ),
         ControllerMethodEntry(
@@ -1201,11 +1402,20 @@ class ControllerMethodsRegistry {
           },
         ),
         ControllerMethodEntry(
-          description: 'Opens DevTools',
-          methodEnum: PlatformInAppWebViewControllerMethod.openDevTools,
+          description:
+              'Tags every WebView socket for TrafficStats accounting '
+              '(process-global, not per-WebView)',
+          methodEnum:
+              PlatformInAppWebViewControllerMethod.setDefaultTrafficStatsTag,
+          parameters: {'tag': 0x1000},
+          requiredParameters: ['tag'],
           execute: (controller, params) async {
-            await controller.openDevTools();
-            return 'DevTools opened';
+            // Must fit in a 32-bit int: TrafficStats takes a Java int, and the standard codec
+            // would promote anything wider to an int64 and fail natively.
+            final tag = (params['tag'] as num?)?.toInt() ?? 0;
+            // A static on the controller, not an instance method — it tags the whole process, so
+            // the WebView this screen is driving is irrelevant to the call.
+            return await InAppWebViewController.setDefaultTrafficStatsTag(tag);
           },
         ),
       ],

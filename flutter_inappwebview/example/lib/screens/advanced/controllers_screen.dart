@@ -1,15 +1,12 @@
-import 'dart:io';
-
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_inappwebview/flutter_inappwebview.dart';
+import 'package:nosferatu500_inappwebview/nosferatu500_inappwebview.dart';
 import 'package:flutter_inappwebview_example/widgets/common/app_drawer.dart';
-import 'package:flutter_inappwebview_example/widgets/common/appbar_loading_indicator.dart';
 import 'package:flutter_inappwebview_example/widgets/common/event_log_card.dart';
 import 'package:flutter_inappwebview_example/widgets/common/resize_handle.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter_inappwebview_example/providers/event_log_provider.dart';
 import 'package:flutter_inappwebview_example/models/event_log_entry.dart';
+import 'package:flutter_inappwebview_example/utils/platform_utils.dart';
 import 'package:flutter_inappwebview_example/utils/support_checker.dart';
 import 'package:flutter_inappwebview_example/widgets/common/support_badge.dart';
 import 'package:flutter_inappwebview_example/widgets/common/parameter_dialog.dart';
@@ -31,7 +28,6 @@ class _ControllersScreenState extends State<ControllersScreen> {
   FindInteractionController? _findInteractionController;
   PullToRefreshController? _pullToRefreshController;
   bool _webViewReady = false;
-  bool _isLoading = false;
   double _webViewHeight = 180;
   static const double _minWebViewHeight = 120;
   static const double _minContentHeight = 260;
@@ -54,15 +50,7 @@ class _ControllersScreenState extends State<ControllersScreen> {
   final Map<String, int> _selectedHistoryIndex = {};
   static const int _maxHistoryEntries = 3;
 
-  SupportedPlatform? get _currentPlatform {
-    if (kIsWeb) return SupportedPlatform.web;
-    if (Platform.isAndroid) return SupportedPlatform.android;
-    if (Platform.isIOS) return SupportedPlatform.ios;
-    if (Platform.isMacOS) return SupportedPlatform.macos;
-    if (Platform.isWindows) return SupportedPlatform.windows;
-    if (Platform.isLinux) return SupportedPlatform.linux;
-    return null;
-  }
+  SupportedPlatform? get _currentPlatform => PlatformUtils.getCurrentPlatform();
 
   Set<SupportedPlatform> _getFindSupportedPlatforms(
     PlatformFindInteractionControllerMethod method,
@@ -565,7 +553,6 @@ class _ControllersScreenState extends State<ControllersScreen> {
       appBar: AppBar(
         title: const Text('Controllers'),
         actions: [
-          AppBarLoadingIndicator(isLoading: _isLoading),
           IconButton(
             icon: const Icon(Icons.clear_all),
             tooltip: 'Clear Events',
@@ -578,7 +565,7 @@ class _ControllersScreenState extends State<ControllersScreen> {
       drawer: AppDrawer(),
       body: LayoutBuilder(
         builder: (context, constraints) {
-          final minRequiredHeight =
+          const minRequiredHeight =
               _minWebViewHeight +
               _minContentHeight +
               _dividerHeight +
@@ -694,7 +681,7 @@ class _ControllersScreenState extends State<ControllersScreen> {
             child: Container(
               padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
               decoration: BoxDecoration(
-                color: Colors.black.withOpacity(0.7),
+                color: Colors.black.withAlpha((255 * 0.7).round()),
                 borderRadius: BorderRadius.circular(4),
               ),
               child: Text(
@@ -1214,8 +1201,9 @@ class _ControllersScreenState extends State<ControllersScreen> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  '$PrintJobController is obtained from onPrintRequest callback when printing.',
-                  style: TextStyle(fontSize: 12, color: Colors.grey),
+                  '$PrintJobController is obtained from printCurrentPage() with '
+                  'PrintJobSettings(handledByClient: true).',
+                  style: const TextStyle(fontSize: 12, color: Colors.grey),
                 ),
                 const SizedBox(height: 12),
                 ElevatedButton.icon(

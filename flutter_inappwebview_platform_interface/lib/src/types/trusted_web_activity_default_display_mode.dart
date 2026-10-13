@@ -1,4 +1,4 @@
-import 'package:flutter_inappwebview_internal_annotations/flutter_inappwebview_internal_annotations.dart';
+import 'package:nosferatu500_inappwebview_internal_annotations/nosferatu500_inappwebview_internal_annotations.dart';
 
 import 'enum_method.dart';
 import 'trusted_web_activity_display_mode.dart';
@@ -13,7 +13,8 @@ class TrustedWebActivityDefaultDisplayMode_
   static final _type = "DEFAULT_MODE";
 
   @ExchangeableObjectMethod(toMapMergeWith: true)
-  // ignore: unused_element
+  // Generator input only: the generated copy is the one `toMap` calls, with `enumMethod`.
+  // ignore: unused_element, unused_element_parameter
   Map<String, dynamic> _toMapMergeWith({EnumMethod? enumMethod}) {
     return {"type": _type};
   }

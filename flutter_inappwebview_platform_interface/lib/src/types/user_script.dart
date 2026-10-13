@@ -1,4 +1,4 @@
-import 'package:flutter_inappwebview_internal_annotations/flutter_inappwebview_internal_annotations.dart';
+import 'package:nosferatu500_inappwebview_internal_annotations/nosferatu500_inappwebview_internal_annotations.dart';
 
 import 'enum_method.dart';
 import 'user_script_injection_time.dart';
@@ -22,14 +22,7 @@ class UserScript_ {
   ///A Boolean value that indicates whether to inject the script into the main frame.
   ///Specify `true` to inject the script only into the main frame, or false to inject it into all frames.
   ///The default value is `true`.
-  @SupportedPlatforms(
-    platforms: [
-      AndroidPlatform(),
-      IOSPlatform(),
-      MacOSPlatform(),
-      WindowsPlatform(),
-    ],
-  )
+  @SupportedPlatforms(platforms: [AndroidPlatform(), IOSPlatform()])
   bool forMainFrameOnly;
 
   ///A set of matching rules for the allowed origins.
@@ -40,22 +33,11 @@ class UserScript_ {
   ///
   ///**NOTE for iOS, macOS, Windows**: each origin pattern will be used as a
   ///Regular Expression Pattern that will be used on JavaScript side using [RegExp](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/RegExp).
-  @SupportedPlatforms(
-    platforms: [
-      AndroidPlatform(),
-      IOSPlatform(),
-      MacOSPlatform(),
-      WindowsPlatform(),
-    ],
-  )
+  @SupportedPlatforms(platforms: [AndroidPlatform(), IOSPlatform()])
   late Set<String> allowedOriginRules;
 
   ///A scope of execution in which to evaluate the script to prevent conflicts between different scripts.
   ///For more information about content worlds, see [ContentWorld].
-  ///
-  ///**NOTE for Android**: because of how a Content World is implemented on Android, if [forMainFrameOnly] is `true`,
-  ///the [source] inside a specific Content World that is not [ContentWorld.PAGE] will not be executed.
-  ///See [ContentWorld] for more details.
   late ContentWorld contentWorld;
 
   @ExchangeableObjectConstructor()

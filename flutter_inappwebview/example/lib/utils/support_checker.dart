@@ -1,15 +1,18 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_inappwebview/flutter_inappwebview.dart';
+import 'package:nosferatu500_inappwebview/nosferatu500_inappwebview.dart';
 
 /// Represents a platform for API support checking.
+///
+/// This fork builds for Android and iOS only — §9 dropped macOS, Windows and
+/// Linux, and Web was never implemented. The enum deliberately has no constant
+/// for them: a constant here becomes a column in the support matrix, and every
+/// such column misreported. macOS/Windows/Linux were constant-false (measured:
+/// 0 of 159 `InAppWebViewSettings` properties on each), which is merely noise,
+/// but Web was actively wrong — see [SupportCheckHelper].
 enum SupportedPlatform {
   android,
-  ios,
-  macos,
-  web,
-  windows,
-  linux;
+  ios;
 
   String get displayName {
     switch (this) {
@@ -17,14 +20,6 @@ enum SupportedPlatform {
         return 'Android';
       case SupportedPlatform.ios:
         return 'iOS';
-      case SupportedPlatform.macos:
-        return 'macOS';
-      case SupportedPlatform.web:
-        return 'Web';
-      case SupportedPlatform.windows:
-        return 'Windows';
-      case SupportedPlatform.linux:
-        return 'Linux';
     }
   }
 
@@ -34,14 +29,6 @@ enum SupportedPlatform {
         return Icons.android;
       case SupportedPlatform.ios:
         return Icons.phone_iphone;
-      case SupportedPlatform.macos:
-        return Icons.laptop_mac;
-      case SupportedPlatform.web:
-        return Icons.language;
-      case SupportedPlatform.windows:
-        return Icons.desktop_windows;
-      case SupportedPlatform.linux:
-        return Icons.computer;
     }
   }
 
@@ -51,39 +38,38 @@ enum SupportedPlatform {
         return Colors.green.shade600;
       case SupportedPlatform.ios:
         return Colors.grey.shade700;
-      case SupportedPlatform.macos:
-        return Colors.blueGrey.shade600;
-      case SupportedPlatform.web:
-        return Colors.blue.shade600;
-      case SupportedPlatform.windows:
-        return Colors.lightBlue.shade600;
-      case SupportedPlatform.linux:
-        return Colors.orange.shade700;
     }
   }
 
-  TargetPlatform? get targetPlatform {
+  /// Every [SupportedPlatform] maps to a real [TargetPlatform].
+  ///
+  /// This is deliberately **non-nullable**. The generated support checks read
+  /// `platform ?? defaultTargetPlatform`, so forwarding `null` does not mean
+  /// "no platform" — it means "whatever device is running right now". A
+  /// nullable mapping here is what let the old `web` constant report the host's
+  /// support as Web's.
+  TargetPlatform get targetPlatform {
     switch (this) {
       case SupportedPlatform.android:
         return TargetPlatform.android;
       case SupportedPlatform.ios:
         return TargetPlatform.iOS;
-      case SupportedPlatform.macos:
-        return TargetPlatform.macOS;
-      case SupportedPlatform.windows:
-        return TargetPlatform.windows;
-      case SupportedPlatform.linux:
-        return TargetPlatform.linux;
-      case SupportedPlatform.web:
-        return null; // Web doesn't have a TargetPlatform
     }
   }
 }
 
 /// Helper utilities for support checks across platforms.
+///
+/// Every helper forwards an explicit, non-null [TargetPlatform]. Passing `null`
+/// to a generated `is*Supported` check does **not** mean "unsupported": the
+/// generated code evaluates `platform ?? defaultTargetPlatform`, so a `null`
+/// silently answers for the host device. That is how the removed `Web` column
+/// came to mirror whatever platform the example was running on — measured at
+/// 108 of 159 settings properties on an Android host and 89 on an iOS host,
+/// identical to the Android and iOS columns respectively.
 class SupportCheckHelper {
-  /// Maps [SupportedPlatform] to a [TargetPlatform] when possible.
-  static TargetPlatform? targetPlatformFor(SupportedPlatform platform) {
+  /// Maps [SupportedPlatform] to its [TargetPlatform].
+  static TargetPlatform targetPlatformFor(SupportedPlatform platform) {
     return platform.targetPlatform;
   }
 
@@ -92,9 +78,6 @@ class SupportCheckHelper {
     required SupportedPlatform platform,
     required bool Function({TargetPlatform? platform}) checker,
   }) {
-    if (platform == SupportedPlatform.web) {
-      return checker(platform: null);
-    }
     return checker(platform: targetPlatformFor(platform));
   }
 
@@ -104,9 +87,6 @@ class SupportCheckHelper {
     required T method,
     required bool Function(T method, {TargetPlatform? platform}) checker,
   }) {
-    if (platform == SupportedPlatform.web) {
-      return checker(method, platform: null);
-    }
     return checker(method, platform: targetPlatformFor(platform));
   }
 
@@ -117,9 +97,6 @@ class SupportCheckHelper {
     required bool Function(dynamic property, {TargetPlatform? platform})
     checker,
   }) {
-    if (platform == SupportedPlatform.web) {
-      return checker(property, platform: null);
-    }
     return checker(property, platform: targetPlatformFor(platform));
   }
 
@@ -274,44 +251,6 @@ typedef _PropertySupportResolver =
 
 /// Utility class that provides comprehensive API support information.
 class SupportChecker {
-  // All supported platforms
-  static const allPlatforms = {
-    SupportedPlatform.android,
-    SupportedPlatform.ios,
-    SupportedPlatform.macos,
-    SupportedPlatform.web,
-    SupportedPlatform.windows,
-    SupportedPlatform.linux,
-  };
-
-  // Mobile platforms
-  static const mobilePlatforms = {
-    SupportedPlatform.android,
-    SupportedPlatform.ios,
-  };
-
-  // Native platforms (non-web)
-  static const nativePlatforms = {
-    SupportedPlatform.android,
-    SupportedPlatform.ios,
-    SupportedPlatform.macos,
-    SupportedPlatform.windows,
-    SupportedPlatform.linux,
-  };
-
-  // Desktop platforms
-  static const desktopPlatforms = {
-    SupportedPlatform.macos,
-    SupportedPlatform.windows,
-    SupportedPlatform.linux,
-  };
-
-  // Apple platforms
-  static const applePlatforms = {
-    SupportedPlatform.ios,
-    SupportedPlatform.macos,
-  };
-
   static String _enumName(Object? value) {
     if (value is Enum) return value.name;
     return value.toString().split('.').last;
@@ -326,6 +265,17 @@ class SupportChecker {
     ..._methodSupportResolvers.keys,
     ..._eventSupportResolvers.keys,
   };
+
+  /// Classes whose *methods* can be resolved. [registeredClassNames] unions all three maps, so it
+  /// cannot tell a class that only has a method resolver from one that only has an event resolver —
+  /// which is exactly the gap that let every event on six classes report "supported nowhere" while
+  /// those classes looked registered.
+  static Set<String> get methodResolverClassNames =>
+      _methodSupportResolvers.keys.toSet();
+
+  /// Classes whose *events* can be resolved. See [methodResolverClassNames].
+  static Set<String> get eventResolverClassNames =>
+      _eventSupportResolvers.keys.toSet();
 
   static _MethodSupportResolver _buildMethodResolver<T>({
     required List<T> values,
@@ -387,7 +337,6 @@ class SupportChecker {
     classNameOf(TracingController): TracingController.isClassSupported,
     classNameOf(HttpAuthCredentialDatabase):
         HttpAuthCredentialDatabase.isClassSupported,
-    classNameOf(WebViewEnvironment): WebViewEnvironment.isClassSupported,
     classNameOf(ProcessGlobalConfig): ProcessGlobalConfig.isClassSupported,
     classNameOf(WebMessageChannel): WebMessageChannel.isClassSupported,
   };
@@ -449,10 +398,6 @@ class SupportChecker {
       values: PlatformHttpAuthCredentialDatabaseMethod.values,
       checker: HttpAuthCredentialDatabase.isMethodSupported,
     ),
-    classNameOf(WebViewEnvironment): _buildMethodResolver(
-      values: PlatformWebViewEnvironmentMethod.values,
-      checker: WebViewEnvironment.isMethodSupported,
-    ),
     classNameOf(ProcessGlobalConfig): _buildMethodResolver(
       values: PlatformProcessGlobalConfigMethod.values,
       checker: ProcessGlobalConfig.isMethodSupported,
@@ -476,6 +421,45 @@ class SupportChecker {
             platform: platform,
           ),
     ),
+    // The browsers answer for their events through `isEventMethodSupported`, which takes a
+    // *method* enum rather than a property one. `_MethodSupportResolver` and
+    // `_PropertySupportResolver` are the same function type, so a method resolver fits here.
+    classNameOf(InAppBrowser): _buildMethodResolver(
+      values: PlatformInAppBrowserEventsMethod.values,
+      checker: InAppBrowser.isEventMethodSupported,
+    ),
+    classNameOf(ChromeSafariBrowser): _buildMethodResolver(
+      values: PlatformChromeSafariBrowserEventsMethod.values,
+      checker: ChromeSafariBrowser.isEventMethodSupported,
+    ),
+    classNameOf(PullToRefreshController): _buildPropertyResolver(
+      values: PlatformPullToRefreshControllerCreationParamsProperty.values,
+      checker: (property, {platform}) =>
+          PullToRefreshController.isPropertySupported(
+            property as PlatformPullToRefreshControllerCreationParamsProperty,
+            platform: platform,
+          ),
+    ),
+    // These two take `dynamic` and dispatch on the runtime type, so the events enum
+    // (`Platform*Property`) and the creation-params one both reach the right generated check.
+    classNameOf(PrintJobController): _buildPropertyResolver(
+      values: PlatformPrintJobControllerProperty.values,
+      checker: PrintJobController.isPropertySupported,
+    ),
+    classNameOf(WebAuthenticationSession): _buildPropertyResolver(
+      values: PlatformWebAuthenticationSessionProperty.values,
+      checker: WebAuthenticationSession.isPropertySupported,
+    ),
+    // The service worker's one event belongs to `ServiceWorkerClient`, not to the controller, so
+    // the checker comes off that class even though the entry is listed under the controller.
+    classNameOf(ServiceWorkerController): _buildPropertyResolver(
+      values: ServiceWorkerClientProperty.values,
+      checker: (property, {platform}) =>
+          ServiceWorkerClient.isPropertySupported(
+            property as ServiceWorkerClientProperty,
+            platform: platform,
+          ),
+    ),
   };
 
   /// Get all API definitions organized by class.
@@ -496,7 +480,6 @@ class SupportChecker {
       _getProxyControllerDefinition(),
       _getTracingControllerDefinition(),
       _getHttpAuthCredentialDatabaseDefinition(),
-      _getWebViewEnvironmentDefinition(),
       _getProcessGlobalConfigDefinition(),
       _getWebMessageChannelDefinition(),
     ];
@@ -680,19 +663,14 @@ class SupportChecker {
     );
   }
 
+  /// The running platform, or `null` where the fork does not build.
   static SupportedPlatform? _getCurrentPlatform() {
-    if (kIsWeb) return SupportedPlatform.web;
+    if (kIsWeb) return null;
     switch (defaultTargetPlatform) {
       case TargetPlatform.android:
         return SupportedPlatform.android;
       case TargetPlatform.iOS:
         return SupportedPlatform.ios;
-      case TargetPlatform.macOS:
-        return SupportedPlatform.macos;
-      case TargetPlatform.windows:
-        return SupportedPlatform.windows;
-      case TargetPlatform.linux:
-        return SupportedPlatform.linux;
       default:
         return null;
     }
@@ -706,13 +684,14 @@ class SupportChecker {
     final className = classNameOf(InAppWebViewController);
     return ApiClassDefinition(
       className: className,
-      description: 'Controls an ${InAppWebView} instance.',
+      description: 'Controls an $InAppWebView instance.',
       isClassSupported: () => InAppWebViewController.isClassSupported(),
       methods: [
         // Navigation methods
         ApiMethodDefinition(
           name: PlatformInAppWebViewControllerMethod.loadUrl.name,
-          signature: 'Future<void> loadUrl({required URLRequest urlRequest})',
+          signature:
+              'Future<void> loadUrl({required URLRequest urlRequest, WebUri? allowingReadAccessTo})',
           description: 'Loads the given URL with optional headers.',
           className: className,
           category: 'Navigation',
@@ -881,7 +860,7 @@ class SupportChecker {
         ApiMethodDefinition(
           name: PlatformInAppWebViewControllerMethod.getHitTestResult.name,
           signature:
-              'Future<${InAppWebViewHitTestResult}?> ${PlatformInAppWebViewControllerMethod.getHitTestResult.name}()',
+              'Future<$InAppWebViewHitTestResult?> ${PlatformInAppWebViewControllerMethod.getHitTestResult.name}()',
           description: 'Gets a hit test result for the last tap.',
           className: className,
           category: 'Page Info',
@@ -912,6 +891,13 @@ class SupportChecker {
               PlatformInAppWebViewControllerMethod.getCopyBackForwardList.name,
           signature: 'Future<WebHistory?> getCopyBackForwardList()',
           description: 'Gets a copy of the back/forward list.',
+          className: className,
+          category: 'Page Info',
+        ),
+        ApiMethodDefinition(
+          name: PlatformInAppWebViewControllerMethod.documentHasImages.name,
+          signature: 'Future<bool> documentHasImages()',
+          description: 'Returns whether the current document contains images.',
           className: className,
           category: 'Page Info',
         ),
@@ -1014,10 +1000,26 @@ class SupportChecker {
           category: 'User Scripts',
         ),
         ApiMethodDefinition(
+          name: PlatformInAppWebViewControllerMethod.addUserScripts.name,
+          signature:
+              'Future<void> addUserScripts({required List<UserScript> userScripts})',
+          description: 'Adds several user scripts to the WebView.',
+          className: className,
+          category: 'User Scripts',
+        ),
+        ApiMethodDefinition(
           name: PlatformInAppWebViewControllerMethod.removeUserScript.name,
           signature:
               'Future<bool> removeUserScript({required UserScript userScript})',
           description: 'Removes a user script.',
+          className: className,
+          category: 'User Scripts',
+        ),
+        ApiMethodDefinition(
+          name: PlatformInAppWebViewControllerMethod.removeUserScripts.name,
+          signature:
+              'Future<void> removeUserScripts({required List<UserScript> userScripts})',
+          description: 'Removes several user scripts.',
           className: className,
           category: 'User Scripts',
         ),
@@ -1113,6 +1115,14 @@ class SupportChecker {
           category: 'Scrolling',
         ),
         ApiMethodDefinition(
+          name: PlatformInAppWebViewControllerMethod.flingScroll.name,
+          signature:
+              'Future<void> flingScroll({required int velocityX, required int velocityY})',
+          description: 'Flings the scroll view at the given velocity.',
+          className: className,
+          category: 'Scrolling',
+        ),
+        ApiMethodDefinition(
           name: PlatformInAppWebViewControllerMethod.pageUp.name,
           signature: 'Future<bool> pageUp({required bool top})',
           description: 'Scrolls up by half or full page.',
@@ -1154,7 +1164,7 @@ class SupportChecker {
         ApiMethodDefinition(
           name: PlatformInAppWebViewControllerMethod.setSettings.name,
           signature:
-              'Future<void> ${PlatformInAppWebViewControllerMethod.setSettings.name}({required ${InAppWebViewSettings} settings})',
+              'Future<void> ${PlatformInAppWebViewControllerMethod.setSettings.name}({required $InAppWebViewSettings settings})',
           description: 'Updates the WebView settings.',
           className: className,
           category: 'Settings',
@@ -1162,7 +1172,7 @@ class SupportChecker {
         ApiMethodDefinition(
           name: PlatformInAppWebViewControllerMethod.getSettings.name,
           signature:
-              'Future<${InAppWebViewSettings}?> ${PlatformInAppWebViewControllerMethod.getSettings.name}()',
+              'Future<$InAppWebViewSettings?> ${PlatformInAppWebViewControllerMethod.getSettings.name}()',
           description: 'Gets the current WebView settings.',
           className: className,
           category: 'Settings',
@@ -1176,7 +1186,8 @@ class SupportChecker {
         ),
         ApiMethodDefinition(
           name: PlatformInAppWebViewControllerMethod.requestFocus.name,
-          signature: 'Future<void> requestFocus()',
+          signature:
+              'Future<bool?> requestFocus({FocusDirection? direction, InAppWebViewRect? previouslyFocusedRect})',
           description: 'Requests focus for the WebView.',
           className: className,
           category: 'Settings',
@@ -1201,7 +1212,7 @@ class SupportChecker {
         ApiMethodDefinition(
           name: PlatformInAppWebViewControllerMethod.printCurrentPage.name,
           signature:
-              'Future<${PrintJobController}?> ${PlatformInAppWebViewControllerMethod.printCurrentPage.name}({${PrintJobSettings}? settings})',
+              'Future<$PrintJobController?> ${PlatformInAppWebViewControllerMethod.printCurrentPage.name}({$PrintJobSettings? settings})',
           description: 'Prints the current page.',
           className: className,
           category: 'Screenshot',
@@ -1209,7 +1220,7 @@ class SupportChecker {
         ApiMethodDefinition(
           name: PlatformInAppWebViewControllerMethod.createPdf.name,
           signature:
-              'Future<Uint8List?> createPdf({PdfConfiguration? pdfConfiguration})',
+              'Future<Uint8List?> createPdf({PDFConfiguration? pdfConfiguration})',
           description: 'Creates a PDF from the current page.',
           className: className,
           category: 'Screenshot',
@@ -1273,7 +1284,7 @@ class SupportChecker {
           name:
               PlatformInAppWebViewControllerMethod.createWebMessageChannel.name,
           signature:
-              'Future<${WebMessageChannel}?> ${PlatformInAppWebViewControllerMethod.createWebMessageChannel.name}()',
+              'Future<$WebMessageChannel?> ${PlatformInAppWebViewControllerMethod.createWebMessageChannel.name}()',
           description: 'Creates a message channel for communication.',
           className: className,
           category: 'Web Messaging',
@@ -1281,7 +1292,7 @@ class SupportChecker {
         ApiMethodDefinition(
           name: PlatformInAppWebViewControllerMethod.postWebMessage.name,
           signature:
-              'Future<void> ${PlatformInAppWebViewControllerMethod.postWebMessage.name}({required ${WebMessage} message, ...})',
+              'Future<void> ${PlatformInAppWebViewControllerMethod.postWebMessage.name}({required $WebMessage message, ...})',
           description: 'Posts a message to the WebView.',
           className: className,
           category: 'Web Messaging',
@@ -1289,7 +1300,7 @@ class SupportChecker {
         ApiMethodDefinition(
           name: PlatformInAppWebViewControllerMethod.addWebMessageListener.name,
           signature:
-              'Future<void> ${PlatformInAppWebViewControllerMethod.addWebMessageListener.name}(${WebMessageListener} webMessageListener)',
+              'Future<void> ${PlatformInAppWebViewControllerMethod.addWebMessageListener.name}($WebMessageListener webMessageListener)',
           description: 'Adds a listener for web messages.',
           className: className,
           category: 'Web Messaging',
@@ -1297,7 +1308,7 @@ class SupportChecker {
         ApiMethodDefinition(
           name: PlatformInAppWebViewControllerMethod.hasWebMessageListener.name,
           signature:
-              'bool hasWebMessageListener({required String jsObjectName})',
+              'bool hasWebMessageListener(WebMessageListener webMessageListener)',
           description: 'Checks if a web message listener exists.',
           className: className,
           category: 'Web Messaging',
@@ -1306,7 +1317,7 @@ class SupportChecker {
         // Media methods
         ApiMethodDefinition(
           name: PlatformInAppWebViewControllerMethod.isInFullscreen.name,
-          signature: 'Future<bool?> isInFullscreen()',
+          signature: 'Future<bool> isInFullscreen()',
           description: 'Returns whether the WebView is in fullscreen mode.',
           className: className,
           category: 'Media',
@@ -1347,23 +1358,16 @@ class SupportChecker {
           category: 'Media',
         ),
         ApiMethodDefinition(
-          name: PlatformInAppWebViewControllerMethod.isPlayingAudio.name,
-          signature: 'Future<bool?> isPlayingAudio()',
-          description: 'Checks if audio is currently playing.',
+          name: PlatformInAppWebViewControllerMethod.setAudioMuted.name,
+          signature: 'Future<void> setAudioMuted(bool muted)',
+          description: 'Mutes or unmutes all audio in the WebView.',
           className: className,
           category: 'Media',
         ),
         ApiMethodDefinition(
-          name: PlatformInAppWebViewControllerMethod.isMuted.name,
-          signature: 'Future<bool?> isMuted()',
-          description: 'Checks if audio is muted.',
-          className: className,
-          category: 'Media',
-        ),
-        ApiMethodDefinition(
-          name: PlatformInAppWebViewControllerMethod.setMuted.name,
-          signature: 'Future<void> setMuted({required bool muted})',
-          description: 'Sets the muted state.',
+          name: PlatformInAppWebViewControllerMethod.isAudioMuted.name,
+          signature: 'Future<bool> isAudioMuted()',
+          description: 'Returns whether the WebView audio is muted.',
           className: className,
           category: 'Media',
         ),
@@ -1424,7 +1428,7 @@ class SupportChecker {
         ApiMethodDefinition(
           name: PlatformInAppWebViewControllerMethod.saveWebArchive.name,
           signature:
-              'Future<String?> saveWebArchive({required String basename, ...})',
+              'Future<String?> saveWebArchive({required String filePath, bool autoname = false})',
           description: 'Saves the current page as a web archive.',
           className: className,
           category: 'Android',
@@ -1446,15 +1450,62 @@ class SupportChecker {
         ),
         ApiMethodDefinition(
           name: PlatformInAppWebViewControllerMethod.saveState.name,
-          signature: 'Future<Uint8List?> saveState()',
+          signature:
+              'Future<Uint8List?> saveState({int? maxSize, bool? includeForwardState})',
           description: 'Saves the WebView state to a bundle.',
           className: className,
           category: 'Android',
         ),
         ApiMethodDefinition(
           name: PlatformInAppWebViewControllerMethod.restoreState.name,
-          signature: 'Future<void> restoreState({required Uint8List state})',
+          signature: 'Future<bool> restoreState(Uint8List state)',
           description: 'Restores the WebView state from a bundle.',
+          className: className,
+          category: 'Android',
+        ),
+        ApiMethodDefinition(
+          name:
+              PlatformInAppWebViewControllerMethod.postVisualStateCallback.name,
+          signature: 'Future<void> postVisualStateCallback()',
+          description:
+              'Requests an onRenderProcessResponsive-style visual state callback.',
+          className: className,
+          category: 'Android',
+        ),
+        ApiMethodDefinition(
+          name: PlatformInAppWebViewControllerMethod.prerenderUrl.name,
+          signature: 'Future<bool> prerenderUrl(WebUri url)',
+          description: 'Speculatively prerenders a URL in this WebView.',
+          className: className,
+          category: 'Android',
+        ),
+        ApiMethodDefinition(
+          name: PlatformInAppWebViewControllerMethod
+              .setDefaultTrafficStatsTag
+              .name,
+          signature: 'static Future<bool> setDefaultTrafficStatsTag(int tag)',
+          description: 'Tags this WebView\'s traffic for TrafficStats.',
+          className: className,
+          category: 'Android',
+        ),
+        ApiMethodDefinition(
+          name: PlatformInAppWebViewControllerMethod.showInputMethod.name,
+          signature: 'Future<void> showInputMethod()',
+          description: 'Shows the soft keyboard.',
+          className: className,
+          category: 'Android',
+        ),
+        ApiMethodDefinition(
+          name: PlatformInAppWebViewControllerMethod.hideInputMethod.name,
+          signature: 'Future<void> hideInputMethod()',
+          description: 'Hides the soft keyboard.',
+          className: className,
+          category: 'Android',
+        ),
+        ApiMethodDefinition(
+          name: PlatformInAppWebViewControllerMethod.setInputMethodEnabled.name,
+          signature: 'Future<void> setInputMethodEnabled(bool enabled)',
+          description: 'Enables or disables the soft keyboard.',
           className: className,
           category: 'Android',
         ),
@@ -1468,72 +1519,42 @@ class SupportChecker {
           category: 'iOS/macOS',
         ),
         ApiMethodDefinition(
-          name: PlatformInAppWebViewControllerMethod.terminateWebProcess.name,
-          signature: 'Future<void> terminateWebProcess()',
-          description: 'Terminates the web content process.',
+          name: PlatformInAppWebViewControllerMethod.isBlockedByScreenTime.name,
+          signature: 'Future<bool?> isBlockedByScreenTime()',
+          description: 'Whether Screen Time is blocking the current page.',
           className: className,
           category: 'iOS/macOS',
         ),
-
-        // Windows-specific methods
         ApiMethodDefinition(
-          name: PlatformInAppWebViewControllerMethod.openDevTools.name,
-          signature: 'Future<void> openDevTools()',
-          description: 'Opens the browser DevTools.',
-          className: className,
-          category: 'Windows',
-        ),
-        ApiMethodDefinition(
-          name: PlatformInAppWebViewControllerMethod
-              .callDevToolsProtocolMethod
-              .name,
+          name:
+              PlatformInAppWebViewControllerMethod.setConversationContext.name,
           signature:
-              'Future<dynamic> callDevToolsProtocolMethod({required String methodName, ...})',
-          description: 'Calls a DevTools Protocol method.',
+              'Future<void> setConversationContext({required ConversationContext conversationContext})',
+          description:
+              'Gives the keyboard a conversation to base Smart Replies on.',
           className: className,
-          category: 'Windows',
+          category: 'iOS/macOS',
         ),
         ApiMethodDefinition(
-          name: PlatformInAppWebViewControllerMethod
-              .addDevToolsProtocolEventListener
-              .name,
-          signature:
-              'Future<void> addDevToolsProtocolEventListener({required String eventName, ...})',
-          description: 'Adds a DevTools Protocol event listener.',
+          name:
+              PlatformInAppWebViewControllerMethod.getConversationContext.name,
+          signature: 'Future<ConversationContext?> getConversationContext()',
+          description: 'Reads back the conversation given to the keyboard.',
           className: className,
-          category: 'Windows',
-        ),
-        ApiMethodDefinition(
-          name: PlatformInAppWebViewControllerMethod
-              .removeDevToolsProtocolEventListener
-              .name,
-          signature:
-              'Future<void> removeDevToolsProtocolEventListener({required String eventName})',
-          description: 'Removes a DevTools Protocol event listener.',
-          className: className,
-          category: 'Windows',
-        ),
-
-        // Web-specific methods
-        ApiMethodDefinition(
-          name: PlatformInAppWebViewControllerMethod.getIFrameId.name,
-          signature: 'Future<String?> getIFrameId()',
-          description: 'Gets the iframe ID on web platform.',
-          className: className,
-          category: 'Web',
+          category: 'iOS/macOS',
         ),
 
         // Other methods
         ApiMethodDefinition(
           name: PlatformInAppWebViewControllerMethod.getViewId.name,
-          signature: 'int getViewId()',
+          signature: 'dynamic getViewId()',
           description: 'Gets the view ID of the WebView.',
           className: className,
           category: 'Other',
         ),
         ApiMethodDefinition(
           name: PlatformInAppWebViewControllerMethod.dispose.name,
-          signature: 'void dispose()',
+          signature: 'void dispose({bool isKeepAlive = false})',
           description: 'Disposes the controller and releases resources.',
           className: className,
           category: 'Other',
@@ -1636,7 +1657,7 @@ class SupportChecker {
         ApiMethodDefinition(
           name: PlatformInAppWebViewControllerMethod.disposeKeepAlive.name,
           signature:
-              'static Future<void> disposeKeepAlive(${InAppWebViewKeepAlive} keepAlive)',
+              'static Future<void> disposeKeepAlive($InAppWebViewKeepAlive keepAlive)',
           description: 'Disposes a keep-alive instance.',
           className: className,
           isStatic: true,
@@ -1688,7 +1709,7 @@ class SupportChecker {
     final className = eventClassNameOf(InAppWebView);
     return ApiClassDefinition(
       className: className,
-      description: 'Events fired by ${InAppWebView}.',
+      description: 'Events fired by $InAppWebView.',
       events: [
         // Core events
         ApiEventDefinition(
@@ -1758,6 +1779,94 @@ class SupportChecker {
           className: className,
           category: 'Navigation',
         ),
+        ApiEventDefinition(
+          name: PlatformWebViewCreationParamsProperty.onNavigationStarted.name,
+          description:
+              'Called when a navigation starts (Android, NAVIGATION_LISTENER).',
+          className: className,
+          category: 'Navigation',
+        ),
+        ApiEventDefinition(
+          name:
+              PlatformWebViewCreationParamsProperty.onNavigationRedirected.name,
+          description:
+              'Called when a navigation is redirected (Android, NAVIGATION_LISTENER).',
+          className: className,
+          category: 'Navigation',
+        ),
+        ApiEventDefinition(
+          name:
+              PlatformWebViewCreationParamsProperty.onNavigationCompleted.name,
+          description:
+              'Called when a navigation finishes, carrying its HTTP status code '
+              '(Android, NAVIGATION_LISTENER).',
+          className: className,
+          category: 'Navigation',
+        ),
+        ApiEventDefinition(
+          name: PlatformWebViewCreationParamsProperty.onPageLoadEvent.name,
+          description:
+              "Called when a page's load event has run (Android, NAVIGATION_LISTENER).",
+          className: className,
+          category: 'Navigation',
+        ),
+        ApiEventDefinition(
+          name: PlatformWebViewCreationParamsProperty
+              .onPageDomContentLoadedEvent
+              .name,
+          description:
+              'Called on DOMContentLoaded, without injecting JavaScript '
+              '(Android, NAVIGATION_LISTENER).',
+          className: className,
+          category: 'Navigation',
+        ),
+        ApiEventDefinition(
+          name: PlatformWebViewCreationParamsProperty.onPageDeleted.name,
+          description:
+              'Called when a page is destroyed — the only way to observe back/forward '
+              'cache eviction (Android, NAVIGATION_LISTENER).',
+          className: className,
+          category: 'Navigation',
+        ),
+        ApiEventDefinition(
+          name: PlatformWebViewCreationParamsProperty
+              .onFirstContentfulPaintMillis
+              .name,
+          description:
+              'Reports First Contentful Paint from the engine (Android, NAVIGATION_LISTENER).',
+          className: className,
+          category: 'Navigation',
+        ),
+        ApiEventDefinition(
+          name: PlatformWebViewCreationParamsProperty
+              .onLargestContentfulPaintMillis
+              .name,
+          description:
+              'Reports Largest Contentful Paint; can fire repeatedly per page '
+              '(Android, NAVIGATION_LISTENER).',
+          className: className,
+          category: 'Navigation',
+        ),
+        ApiEventDefinition(
+          name: PlatformWebViewCreationParamsProperty
+              .onPerformanceMarkMillis
+              .name,
+          description:
+              'Reports every performance.mark(); needs its own opt-in setting '
+              '(Android, NAVIGATION_LISTENER).',
+          className: className,
+          category: 'Navigation',
+        ),
+        ApiEventDefinition(
+          name: PlatformWebViewCreationParamsProperty
+              .onRequestVisitedHistory
+              .name,
+          description:
+              'The engine asks which URLs to treat as visited, for `:visited` link '
+              'styling. Fires once per WebView (Android).',
+          className: className,
+          category: 'Navigation',
+        ),
 
         // Window events
         ApiEventDefinition(
@@ -1781,6 +1890,13 @@ class SupportChecker {
         ApiEventDefinition(
           name: PlatformWebViewCreationParamsProperty.onWindowBlur.name,
           description: 'Called when the window loses focus.',
+          className: className,
+          category: 'Window',
+        ),
+        ApiEventDefinition(
+          name: PlatformWebViewCreationParamsProperty.onRequestFocus.name,
+          description:
+              'Called when another WebView requests this one be displayed and focused.',
           className: className,
           category: 'Window',
         ),
@@ -1833,6 +1949,14 @@ class SupportChecker {
               .onReceivedClientCertRequest
               .name,
           description: 'Called when a client certificate is requested.',
+          className: className,
+          category: 'Authentication',
+        ),
+        ApiEventDefinition(
+          name:
+              PlatformWebViewCreationParamsProperty.onReceivedLoginRequest.name,
+          description:
+              'Called when a request to automatically log in the user has been processed.',
           className: className,
           category: 'Authentication',
         ),
@@ -2005,14 +2129,14 @@ class SupportChecker {
           className: className,
           category: 'Form',
         ),
+        ApiEventDefinition(
+          name: PlatformWebViewCreationParamsProperty.onShowFileChooser.name,
+          description: 'Called to show a file chooser for an HTML file input.',
+          className: className,
+          category: 'Form',
+        ),
 
         // Icon events
-        ApiEventDefinition(
-          name: PlatformWebViewCreationParamsProperty.onFaviconChanged.name,
-          description: 'Called when the favicon for the current page changes.',
-          className: className,
-          category: 'Icon',
-        ),
         ApiEventDefinition(
           name:
               PlatformWebViewCreationParamsProperty.onReceivedTouchIconUrl.name,
@@ -2054,13 +2178,30 @@ class SupportChecker {
           className: className,
           category: 'iOS/macOS',
         ),
-
-        // Windows events
         ApiEventDefinition(
-          name: PlatformWebViewCreationParamsProperty.onProcessFailed.name,
-          description: 'Called when a process failure occurs.',
+          name: PlatformWebViewCreationParamsProperty
+              .shouldGoToBackForwardListItem
+              .name,
+          description: 'Called to allow or cancel a back/forward navigation.',
           className: className,
-          category: 'Windows',
+          category: 'iOS/macOS',
+        ),
+        ApiEventDefinition(
+          name: PlatformWebViewCreationParamsProperty
+              .onWritingToolsActiveChanged
+              .name,
+          description: 'Called when Writing Tools becomes active or inactive.',
+          className: className,
+          category: 'iOS/macOS',
+        ),
+        ApiEventDefinition(
+          name: PlatformWebViewCreationParamsProperty
+              .onInsertInputSuggestion
+              .name,
+          description:
+              'Called when the keyboard delivers a Smart Reply the user selected.',
+          className: className,
+          category: 'iOS/macOS',
         ),
 
         // Other events
@@ -2124,7 +2265,7 @@ class SupportChecker {
         ),
         ApiMethodDefinition(
           name: PlatformHeadlessInAppWebViewMethod.isRunning.name,
-          signature: 'Future<bool> isRunning()',
+          signature: 'bool isRunning()',
           description: 'Checks if the WebView is running.',
           className: className,
         ),
@@ -2212,14 +2353,14 @@ class SupportChecker {
         ApiMethodDefinition(
           name: PlatformInAppBrowserMethod.setSettings.name,
           signature:
-              'Future<void> ${PlatformInAppBrowserMethod.setSettings.name}({required ${InAppBrowserClassSettings} settings})',
+              'Future<void> ${PlatformInAppBrowserMethod.setSettings.name}({required $InAppBrowserClassSettings settings})',
           description: 'Sets the browser settings.',
           className: className,
         ),
         ApiMethodDefinition(
           name: PlatformInAppBrowserMethod.getSettings.name,
           signature:
-              'Future<${InAppBrowserClassSettings}?> ${PlatformInAppBrowserMethod.getSettings.name}()',
+              'Future<$InAppBrowserClassSettings?> ${PlatformInAppBrowserMethod.getSettings.name}()',
           description: 'Gets the browser settings.',
           className: className,
         ),
@@ -2227,6 +2368,49 @@ class SupportChecker {
           name: PlatformInAppBrowserMethod.isOpened.name,
           signature: 'bool isOpened()',
           description: 'Checks if the browser is opened.',
+          className: className,
+        ),
+        ApiMethodDefinition(
+          name: PlatformInAppBrowserMethod.addMenuItem.name,
+          signature: 'void addMenuItem(InAppBrowserMenuItem menuItem)',
+          description: 'Adds a menu item to the browser menu.',
+          className: className,
+        ),
+        ApiMethodDefinition(
+          name: PlatformInAppBrowserMethod.addMenuItems.name,
+          signature: 'void addMenuItems(List<InAppBrowserMenuItem> menuItems)',
+          description: 'Adds several menu items to the browser menu.',
+          className: className,
+        ),
+        ApiMethodDefinition(
+          name: PlatformInAppBrowserMethod.removeMenuItem.name,
+          signature: 'bool removeMenuItem(InAppBrowserMenuItem menuItem)',
+          description: 'Removes a menu item.',
+          className: className,
+        ),
+        ApiMethodDefinition(
+          name: PlatformInAppBrowserMethod.removeMenuItems.name,
+          signature:
+              'void removeMenuItems(List<InAppBrowserMenuItem> menuItems)',
+          description: 'Removes several menu items.',
+          className: className,
+        ),
+        ApiMethodDefinition(
+          name: PlatformInAppBrowserMethod.removeAllMenuItem.name,
+          signature: 'void removeAllMenuItem()',
+          description: 'Removes every menu item.',
+          className: className,
+        ),
+        ApiMethodDefinition(
+          name: PlatformInAppBrowserMethod.hasMenuItem.name,
+          signature: 'bool hasMenuItem(InAppBrowserMenuItem menuItem)',
+          description: 'Checks whether a menu item is registered.',
+          className: className,
+        ),
+        ApiMethodDefinition(
+          name: PlatformInAppBrowserMethod.dispose.name,
+          signature: 'void dispose()',
+          description: 'Disposes the browser and releases resources.',
           className: className,
         ),
       ],
@@ -2239,11 +2423,6 @@ class SupportChecker {
         ApiEventDefinition(
           name: PlatformInAppBrowserEventsMethod.onExit.name,
           description: 'Called when the browser exits.',
-          className: className,
-        ),
-        ApiEventDefinition(
-          name: PlatformInAppBrowserEventsMethod.onMainWindowWillClose.name,
-          description: 'Called when the main window will close.',
           className: className,
         ),
       ],
@@ -2327,7 +2506,7 @@ class SupportChecker {
         ApiMethodDefinition(
           name: PlatformChromeSafariBrowserMethod.prewarmConnections.name,
           signature:
-              'static Future<PrewarmingToken?> prewarmConnections({required List<WebUri> urls})',
+              'static Future<PrewarmingToken?> prewarmConnections(List<WebUri> URLs)',
           description: 'Prewarms connections.',
           className: className,
           isStatic: true,
@@ -2336,7 +2515,7 @@ class SupportChecker {
           name:
               PlatformChromeSafariBrowserMethod.invalidatePrewarmingToken.name,
           signature:
-              'static Future<void> invalidatePrewarmingToken({required PrewarmingToken prewarmingToken})',
+              'static Future<void> invalidatePrewarmingToken(PrewarmingToken prewarmingToken)',
           description: 'Invalidates a prewarming token.',
           className: className,
           isStatic: true,
@@ -2344,7 +2523,7 @@ class SupportChecker {
         ApiMethodDefinition(
           name: PlatformChromeSafariBrowserMethod.setActionButton.name,
           signature:
-              'Future<void> ${PlatformChromeSafariBrowserMethod.setActionButton.name}(${ChromeSafariBrowserActionButton} actionButton)',
+              'void ${PlatformChromeSafariBrowserMethod.setActionButton.name}($ChromeSafariBrowserActionButton actionButton)',
           description: 'Sets an action button.',
           className: className,
         ),
@@ -2358,14 +2537,14 @@ class SupportChecker {
         ApiMethodDefinition(
           name: PlatformChromeSafariBrowserMethod.setSecondaryToolbar.name,
           signature:
-              'Future<void> ${PlatformChromeSafariBrowserMethod.setSecondaryToolbar.name}(${ChromeSafariBrowserSecondaryToolbar} secondaryToolbar)',
+              'void ${PlatformChromeSafariBrowserMethod.setSecondaryToolbar.name}($ChromeSafariBrowserSecondaryToolbar secondaryToolbar)',
           description: 'Sets a secondary toolbar.',
           className: className,
         ),
         ApiMethodDefinition(
           name: PlatformChromeSafariBrowserMethod.updateSecondaryToolbar.name,
           signature:
-              'Future<void> ${PlatformChromeSafariBrowserMethod.updateSecondaryToolbar.name}(${ChromeSafariBrowserSecondaryToolbar} secondaryToolbar)',
+              'Future<void> ${PlatformChromeSafariBrowserMethod.updateSecondaryToolbar.name}($ChromeSafariBrowserSecondaryToolbar secondaryToolbar)',
           description: 'Updates the secondary toolbar.',
           className: className,
         ),
@@ -2380,7 +2559,7 @@ class SupportChecker {
         ApiMethodDefinition(
           name: PlatformChromeSafariBrowserMethod.postMessage.name,
           signature:
-              'Future<CustomTabsPostMessageResultType> postMessage({required String message})',
+              'Future<CustomTabsPostMessageResultType> postMessage(String message)',
           description: 'Posts a message.',
           className: className,
         ),
@@ -2390,6 +2569,25 @@ class SupportChecker {
               .name,
           signature: 'Future<bool> isEngagementSignalsApiAvailable()',
           description: 'Checks if engagement signals API is available.',
+          className: className,
+        ),
+        ApiMethodDefinition(
+          name: PlatformChromeSafariBrowserMethod.addMenuItem.name,
+          signature: 'void addMenuItem(ChromeSafariBrowserMenuItem menuItem)',
+          description: 'Adds a menu item to the browser menu.',
+          className: className,
+        ),
+        ApiMethodDefinition(
+          name: PlatformChromeSafariBrowserMethod.addMenuItems.name,
+          signature:
+              'void addMenuItems(List<ChromeSafariBrowserMenuItem> menuItems)',
+          description: 'Adds several menu items to the browser menu.',
+          className: className,
+        ),
+        ApiMethodDefinition(
+          name: PlatformChromeSafariBrowserMethod.dispose.name,
+          signature: 'void dispose()',
+          description: 'Disposes the browser and releases resources.',
           className: className,
         ),
       ],
@@ -2492,46 +2690,88 @@ class SupportChecker {
         ),
         ApiMethodDefinition(
           name: PlatformCookieManagerMethod.getCookies.name,
-          signature: 'Future<List<Cookie>> getCookies({required WebUri url})',
+          signature:
+              'Future<List<Cookie>> getCookies({required WebUri url, String? profileName})',
           description: 'Gets all cookies for a URL.',
           className: className,
         ),
         ApiMethodDefinition(
           name: PlatformCookieManagerMethod.getCookie.name,
           signature:
-              'Future<Cookie?> getCookie({required WebUri url, required String name})',
+              'Future<Cookie?> getCookie({required WebUri url, required String name, String? profileName})',
           description: 'Gets a specific cookie.',
+          className: className,
+        ),
+        ApiMethodDefinition(
+          name: PlatformCookieManagerMethod.setCookies.name,
+          signature:
+              'Future<List<bool>> setCookies({required List<CookieToSet> cookies, String? profileName})',
+          description: 'Sets several cookies in one call.',
           className: className,
         ),
         ApiMethodDefinition(
           name: PlatformCookieManagerMethod.deleteCookie.name,
           signature:
-              'Future<void> deleteCookie({required WebUri url, required String name, ...})',
+              'Future<bool> deleteCookie({required WebUri url, required String name, ...})',
           description: 'Deletes a cookie.',
           className: className,
         ),
         ApiMethodDefinition(
           name: PlatformCookieManagerMethod.deleteCookies.name,
           signature:
-              'Future<void> deleteCookies({required WebUri url, String? domain, String? path})',
+              'Future<bool> deleteCookies({required WebUri url, String path = "/", String? domain, String? profileName})',
           description: 'Deletes cookies for a URL.',
           className: className,
         ),
         ApiMethodDefinition(
           name: PlatformCookieManagerMethod.deleteAllCookies.name,
-          signature: 'Future<void> deleteAllCookies()',
+          signature: 'Future<bool> deleteAllCookies({String? profileName})',
           description: 'Deletes all cookies.',
           className: className,
         ),
         ApiMethodDefinition(
+          name: PlatformCookieManagerMethod.hasCookies.name,
+          signature: 'Future<bool?> hasCookies({String? profileName})',
+          description: 'Returns whether any cookie is stored.',
+          className: className,
+        ),
+        ApiMethodDefinition(
+          name: PlatformCookieManagerMethod.setAcceptCookie.name,
+          signature:
+              'Future<bool> setAcceptCookie(bool accept, {String? profileName})',
+          description: 'Enables or disables cookie acceptance.',
+          className: className,
+        ),
+        ApiMethodDefinition(
+          name: PlatformCookieManagerMethod.isAcceptCookieEnabled.name,
+          signature:
+              'Future<bool?> isAcceptCookieEnabled({String? profileName})',
+          description: 'Returns whether cookies are accepted.',
+          className: className,
+        ),
+        ApiMethodDefinition(
+          name: PlatformCookieManagerMethod.isFileSchemeCookiesAllowed.name,
+          signature: 'static Future<bool?> isFileSchemeCookiesAllowed()',
+          description: 'Returns whether file:// URLs may set cookies.',
+          className: className,
+          isStatic: true,
+        ),
+        ApiMethodDefinition(
+          name: PlatformCookieManagerMethod.setCookieStoreObserver.name,
+          signature:
+              'Future<void> setCookieStoreObserver(CookieStoreObserver? observer)',
+          description: 'Observes changes to the cookie store.',
+          className: className,
+        ),
+        ApiMethodDefinition(
           name: PlatformCookieManagerMethod.removeSessionCookies.name,
-          signature: 'Future<bool> removeSessionCookies()',
+          signature: 'Future<bool> removeSessionCookies({String? profileName})',
           description: 'Removes all session cookies.',
           className: className,
         ),
         ApiMethodDefinition(
           name: PlatformCookieManagerMethod.flush.name,
-          signature: 'Future<void> flush()',
+          signature: 'Future<bool> flush({String? profileName})',
           description: 'Flushes cookies to persistent storage.',
           className: className,
         ),
@@ -2549,7 +2789,7 @@ class SupportChecker {
     final className = classNameOf(WebStorage);
     return ApiClassDefinition(
       className: className,
-      description: 'Manages ${LocalStorage} and ${SessionStorage}.',
+      description: 'Manages $LocalStorage and $SessionStorage.',
       isClassSupported: () => WebStorage.isClassSupported(),
       methods: [
         ApiMethodDefinition(
@@ -2580,7 +2820,7 @@ class SupportChecker {
         ApiMethodDefinition(
           name: PlatformLocalStorageMethod.getItems.name,
           signature:
-              'Future<List<${WebStorageItem}>> ${PlatformLocalStorageMethod.getItems.name}()',
+              'Future<List<$WebStorageItem>> ${PlatformLocalStorageMethod.getItems.name}()',
           description: 'Gets all items.',
           className: className,
         ),
@@ -2594,6 +2834,12 @@ class SupportChecker {
           name: PlatformLocalStorageMethod.key.name,
           signature: 'Future<String> key({required int index})',
           description: 'Gets the key at an index.',
+          className: className,
+        ),
+        ApiMethodDefinition(
+          name: PlatformLocalStorageMethod.dispose.name,
+          signature: 'void dispose()',
+          description: 'Disposes the storage and releases resources.',
           className: className,
         ),
       ],
@@ -2667,8 +2913,14 @@ class SupportChecker {
           className: className,
         ),
         ApiMethodDefinition(
+          name: PlatformFindInteractionControllerMethod.updateResultCount.name,
+          signature: 'Future<void> updateResultCount()',
+          description: 'Refreshes the result count shown by the find UI.',
+          className: className,
+        ),
+        ApiMethodDefinition(
           name: PlatformFindInteractionControllerMethod.dispose.name,
-          signature: 'void dispose()',
+          signature: 'void dispose({bool isKeepAlive = false})',
           description: 'Disposes the controller.',
           className: className,
         ),
@@ -2739,14 +2991,13 @@ class SupportChecker {
               .setDistanceToTriggerSync
               .name,
           signature:
-              'Future<void> setDistanceToTriggerSync(double distanceToTrigger)',
+              'Future<void> setDistanceToTriggerSync(int distanceToTriggerSync)',
           description: 'Sets the distance to trigger refresh.',
           className: className,
         ),
         ApiMethodDefinition(
           name: PlatformPullToRefreshControllerMethod.setSlingshotDistance.name,
-          signature:
-              'Future<void> setSlingshotDistance(double slingshotDistance)',
+          signature: 'Future<void> setSlingshotDistance(int slingshotDistance)',
           description: 'Sets the slingshot distance.',
           className: className,
         ),
@@ -2754,7 +3005,7 @@ class SupportChecker {
           name: PlatformPullToRefreshControllerMethod
               .getDefaultSlingshotDistance
               .name,
-          signature: 'Future<double> getDefaultSlingshotDistance()',
+          signature: 'Future<int> getDefaultSlingshotDistance()',
           description: 'Gets the default slingshot distance.',
           className: className,
         ),
@@ -2765,8 +3016,15 @@ class SupportChecker {
           className: className,
         ),
         ApiMethodDefinition(
+          name: PlatformPullToRefreshControllerMethod.setStyledTitle.name,
+          signature:
+              'Future<void> setStyledTitle(AttributedString attributedTitle)',
+          description: 'Sets the refresh control title as styled text.',
+          className: className,
+        ),
+        ApiMethodDefinition(
           name: PlatformPullToRefreshControllerMethod.dispose.name,
-          signature: 'void dispose()',
+          signature: 'void dispose({bool isKeepAlive = false})',
           description: 'Disposes the controller.',
           className: className,
         ),
@@ -2814,6 +3072,12 @@ class SupportChecker {
           description: 'Gets the print job info.',
           className: className,
         ),
+        ApiMethodDefinition(
+          name: PlatformPrintJobControllerMethod.dispose.name,
+          signature: 'void dispose()',
+          description: 'Disposes the print job and releases resources.',
+          className: className,
+        ),
       ],
       events: [
         ApiEventDefinition(
@@ -2835,7 +3099,7 @@ class SupportChecker {
         ApiMethodDefinition(
           name: PlatformWebAuthenticationSessionMethod.create.name,
           signature:
-              'static Future<${WebAuthenticationSession}> ${PlatformWebAuthenticationSessionMethod.create.name}({...})',
+              'static Future<$WebAuthenticationSession> ${PlatformWebAuthenticationSessionMethod.create.name}({...})',
           description: 'Creates a new authentication session.',
           className: className,
           isStatic: true,
@@ -2848,7 +3112,7 @@ class SupportChecker {
         ),
         ApiMethodDefinition(
           name: PlatformWebAuthenticationSessionMethod.start.name,
-          signature: 'Future<void> start()',
+          signature: 'Future<bool> start()',
           description: 'Starts the authentication session.',
           className: className,
         ),
@@ -2900,40 +3164,84 @@ class SupportChecker {
         ApiMethodDefinition(
           name:
               PlatformServiceWorkerControllerMethod.getAllowContentAccess.name,
-          signature: 'Future<bool> getAllowContentAccess()',
+          signature:
+              'static Future<bool> getAllowContentAccess({String? profileName})',
           description: 'Gets allow content access setting.',
           className: className,
         ),
         ApiMethodDefinition(
           name:
               PlatformServiceWorkerControllerMethod.setAllowContentAccess.name,
-          signature: 'Future<void> setAllowContentAccess(bool allow)',
+          signature:
+              'static Future<void> setAllowContentAccess(bool allow, {String? profileName})',
           description: 'Sets allow content access setting.',
           className: className,
         ),
         ApiMethodDefinition(
           name: PlatformServiceWorkerControllerMethod.getAllowFileAccess.name,
-          signature: 'Future<bool> getAllowFileAccess()',
+          signature:
+              'static Future<bool> getAllowFileAccess({String? profileName})',
           description: 'Gets allow file access setting.',
           className: className,
         ),
         ApiMethodDefinition(
           name: PlatformServiceWorkerControllerMethod.setAllowFileAccess.name,
-          signature: 'Future<void> setAllowFileAccess(bool allow)',
+          signature:
+              'static Future<void> setAllowFileAccess(bool allow, {String? profileName})',
           description: 'Sets allow file access setting.',
           className: className,
         ),
         ApiMethodDefinition(
           name: PlatformServiceWorkerControllerMethod.getBlockNetworkLoads.name,
-          signature: 'Future<bool> getBlockNetworkLoads()',
+          signature:
+              'static Future<bool> getBlockNetworkLoads({String? profileName})',
           description: 'Gets block network loads setting.',
           className: className,
         ),
         ApiMethodDefinition(
           name: PlatformServiceWorkerControllerMethod.setBlockNetworkLoads.name,
-          signature: 'Future<void> setBlockNetworkLoads(bool block)',
+          signature:
+              'static Future<void> setBlockNetworkLoads(bool flag, {String? profileName})',
           description: 'Sets block network loads setting.',
           className: className,
+        ),
+        ApiMethodDefinition(
+          name: PlatformServiceWorkerControllerMethod.getCacheMode.name,
+          signature:
+              'static Future<CacheMode?> getCacheMode({String? profileName})',
+          description: 'Gets the service worker cache mode.',
+          className: className,
+          isStatic: true,
+        ),
+        ApiMethodDefinition(
+          name: PlatformServiceWorkerControllerMethod.setCacheMode.name,
+          signature:
+              'static Future<void> setCacheMode(CacheMode mode, {String? profileName})',
+          description: 'Sets the service worker cache mode.',
+          className: className,
+          isStatic: true,
+        ),
+        ApiMethodDefinition(
+          name: PlatformServiceWorkerControllerMethod
+              .getIncludeCookiesOnShouldInterceptRequestEnabled
+              .name,
+          signature:
+              'static Future<bool?> getIncludeCookiesOnShouldInterceptRequestEnabled({String? profileName})',
+          description:
+              'Whether intercepted service worker requests carry cookies.',
+          className: className,
+          isStatic: true,
+        ),
+        ApiMethodDefinition(
+          name: PlatformServiceWorkerControllerMethod
+              .setIncludeCookiesOnShouldInterceptRequestEnabled
+              .name,
+          signature:
+              'static Future<void> setIncludeCookiesOnShouldInterceptRequestEnabled(bool enabled, {String? profileName})',
+          description:
+              'Sets whether intercepted service worker requests carry cookies.',
+          className: className,
+          isStatic: true,
         ),
       ],
       events: [
@@ -3060,71 +3368,6 @@ class SupportChecker {
     );
   }
 
-  static ApiClassDefinition _getWebViewEnvironmentDefinition() {
-    final className = classNameOf(WebViewEnvironment);
-    return ApiClassDefinition(
-      className: className,
-      description: 'WebView2 environment for Windows.',
-      isClassSupported: () => WebViewEnvironment.isClassSupported(),
-      methods: [
-        ApiMethodDefinition(
-          name: PlatformWebViewEnvironmentMethod.create.name,
-          signature:
-              'static Future<${WebViewEnvironment}> ${PlatformWebViewEnvironmentMethod.create.name}({...})',
-          description: 'Creates a WebView environment.',
-          className: className,
-          isStatic: true,
-        ),
-        ApiMethodDefinition(
-          name: PlatformWebViewEnvironmentMethod.getAvailableVersion.name,
-          signature:
-              'static Future<String?> getAvailableVersion({String? browserExecutableFolder})',
-          description: 'Gets the available WebView2 version.',
-          className: className,
-          isStatic: true,
-        ),
-        ApiMethodDefinition(
-          name: PlatformWebViewEnvironmentMethod.getProcessInfos.name,
-          signature: 'Future<List<BrowserProcessInfo>> getProcessInfos()',
-          description: 'Gets running process information.',
-          className: className,
-        ),
-        ApiMethodDefinition(
-          name: PlatformWebViewEnvironmentMethod.compareBrowserVersions.name,
-          signature: 'static Future<int> compareBrowserVersions({...})',
-          description: 'Compares browser versions.',
-          className: className,
-          isStatic: true,
-        ),
-        ApiMethodDefinition(
-          name: PlatformWebViewEnvironmentMethod.dispose.name,
-          signature: 'Future<void> dispose()',
-          description: 'Disposes the environment.',
-          className: className,
-        ),
-      ],
-      events: [
-        ApiEventDefinition(
-          name: PlatformWebViewEnvironmentProperty.onBrowserProcessExited.name,
-          description: 'Called when the browser process exits.',
-          className: className,
-        ),
-        ApiEventDefinition(
-          name: PlatformWebViewEnvironmentProperty.onProcessInfosChanged.name,
-          description: 'Called when process info changes.',
-          className: className,
-        ),
-        ApiEventDefinition(
-          name: PlatformWebViewEnvironmentProperty
-              .onNewBrowserVersionAvailable
-              .name,
-          description: 'Called when a new browser version is available.',
-          className: className,
-        ),
-      ],
-    );
-  }
-
   static ApiClassDefinition _getProcessGlobalConfigDefinition() {
     final className = classNameOf(ProcessGlobalConfig);
     return ApiClassDefinition(
@@ -3135,7 +3378,7 @@ class SupportChecker {
         ApiMethodDefinition(
           name: PlatformProcessGlobalConfigMethod.apply.name,
           signature:
-              'Future<void> ${PlatformProcessGlobalConfigMethod.apply.name}({required ${ProcessGlobalConfigSettings} settings})',
+              'Future<void> ${PlatformProcessGlobalConfigMethod.apply.name}({required $ProcessGlobalConfigSettings settings})',
           description: 'Applies global configuration settings.',
           className: className,
         ),

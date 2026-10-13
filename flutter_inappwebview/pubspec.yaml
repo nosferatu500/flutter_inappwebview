@@ -1,11 +1,9 @@
-name: flutter_inappwebview
+name: nosferatu500_inappwebview
 description: A Flutter plugin that allows you to add an inline webview, to use an headless webview, and to open an in-app browser window.
-version: 6.2.0-beta.3
-homepage: https://inappwebview.dev/
-repository: https://github.com/pichillilorenzo/flutter_inappwebview
-issue_tracker: https://github.com/pichillilorenzo/flutter_inappwebview/issues
-funding:
-  - https://inappwebview.dev/donate/
+version: 7.0.0
+homepage: https://github.com/nosferatu500/flutter_inappwebview
+repository: https://github.com/nosferatu500/flutter_inappwebview
+issue_tracker: https://github.com/nosferatu500/flutter_inappwebview/issues
 topics:
   - html
   - webview
@@ -20,30 +18,17 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
-  flutter_inappwebview_platform_interface: ^1.4.0-beta.3
+  nosferatu500_inappwebview_platform_interface: ^7.0.0
     # path: ../flutter_inappwebview_platform_interface
-  flutter_inappwebview_android: ^1.2.0-beta.3
+  nosferatu500_inappwebview_android: ^7.0.0
     # path: ../flutter_inappwebview_android
-  flutter_inappwebview_ios: ^1.2.0-beta.3
-    # path: ../flutter_inappwebview_ios
-  flutter_inappwebview_macos: ^1.2.0-beta.3
-    # path: ../flutter_inappwebview_macos
-  flutter_inappwebview_web: ^1.2.0-beta.3
-    # path: ../flutter_inappwebview_web
-  flutter_inappwebview_windows: ^0.7.0-beta.3
-    # path: ../flutter_inappwebview_windows
-  flutter_inappwebview_linux: ^0.1.0-beta.1
-    # path: ../flutter_inappwebview_linux
+  nosferatu500_inappwebview_ios: ^7.0.0
+    # path: ../nosferatu500_inappwebview_ios
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
-  flutter_driver:
-    sdk: flutter
   flutter_lints: ^6.0.0
-  build_runner: ^2.4.12
-  generators:
-    path: ../dev_packages/generators
 
 # For information on the generic Dart part of this file, see the
 # following page: https://www.dartlang.org/tools/pub/pubspec
@@ -53,21 +38,13 @@ flutter:
   plugin:
     platforms:
       android:
-        default_package: flutter_inappwebview_android
+        default_package: nosferatu500_inappwebview_android
       ios:
-        default_package: flutter_inappwebview_ios
-      macos:
-        default_package: flutter_inappwebview_macos
-      web:
-        default_package: flutter_inappwebview_web
-      windows:
-        default_package: flutter_inappwebview_windows
-      linux:
-        default_package: flutter_inappwebview_linux
+        default_package: nosferatu500_inappwebview_ios
 
   assets:
-    - packages/flutter_inappwebview/assets/t_rex_runner/t-rex.html
-    - packages/flutter_inappwebview/assets/t_rex_runner/t-rex.css
+    - packages/nosferatu500_inappwebview/assets/t_rex_runner/t-rex.html
+    - packages/nosferatu500_inappwebview/assets/t_rex_runner/t-rex.css
   # To add assets to your plugin package, add an assets section, like this:
   # assets:
   #  - images/a_dot_burr.jpeg
@@ -108,17 +85,11 @@ false_secrets:
 # invisible to its siblings. pub ignores dependency_overrides in consuming
 # projects, so this affects this repo only.
 dependency_overrides:
-  flutter_inappwebview_platform_interface:
+  nosferatu500_inappwebview_internal_annotations:
+    path: ../dev_packages/flutter_inappwebview_internal_annotations
+  nosferatu500_inappwebview_platform_interface:
     path: ../flutter_inappwebview_platform_interface
-  flutter_inappwebview_android:
+  nosferatu500_inappwebview_android:
     path: ../flutter_inappwebview_android
-  flutter_inappwebview_ios:
-    path: ../flutter_inappwebview_ios
-  flutter_inappwebview_macos:
-    path: ../flutter_inappwebview_macos
-  flutter_inappwebview_web:
-    path: ../flutter_inappwebview_web
-  flutter_inappwebview_windows:
-    path: ../flutter_inappwebview_windows
-  flutter_inappwebview_linux:
-    path: ../flutter_inappwebview_linux
+  nosferatu500_inappwebview_ios:
+    path: ../nosferatu500_inappwebview_ios

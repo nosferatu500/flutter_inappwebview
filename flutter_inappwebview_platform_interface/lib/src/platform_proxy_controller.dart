@@ -1,7 +1,7 @@
 import 'dart:async';
 
 import 'package:flutter/foundation.dart';
-import 'package:flutter_inappwebview_internal_annotations/flutter_inappwebview_internal_annotations.dart';
+import 'package:nosferatu500_inappwebview_internal_annotations/nosferatu500_inappwebview_internal_annotations.dart';
 import 'package:plugin_platform_interface/plugin_platform_interface.dart';
 
 import 'inappwebview_platform.dart';
@@ -11,28 +11,21 @@ import 'types/proxy_rule.dart';
 
 part 'platform_proxy_controller.g.dart';
 
-///{@template flutter_inappwebview_platform_interface.PlatformProxyControllerCreationParams}
+///{@template nosferatu500_inappwebview_platform_interface.PlatformProxyControllerCreationParams}
 /// Object specifying creation parameters for creating a [PlatformProxyController].
 ///
 /// Platform specific implementations can add additional fields by extending
 /// this class.
 ///{@endtemplate}
 ///
-///{@macro flutter_inappwebview_platform_interface.PlatformProxyControllerCreationParams.supported_platforms}
-@SupportedPlatforms(
-  platforms: [
-    AndroidPlatform(),
-    IOSPlatform(),
-    MacOSPlatform(),
-    LinuxPlatform(),
-  ],
-)
+///{@macro nosferatu500_inappwebview_platform_interface.PlatformProxyControllerCreationParams.supported_platforms}
+@SupportedPlatforms(platforms: [AndroidPlatform(), IOSPlatform()])
 @immutable
 class PlatformProxyControllerCreationParams {
   /// Used by the platform implementation to create a new [PlatformProxyController].
   const PlatformProxyControllerCreationParams();
 
-  ///{@template flutter_inappwebview_platform_interface.PlatformProxyControllerCreationParams.isClassSupported}
+  ///{@template nosferatu500_inappwebview_platform_interface.PlatformProxyControllerCreationParams.isClassSupported}
   ///Check if the current class is supported by the [defaultTargetPlatform] or a specific [platform].
   ///{@endtemplate}
   bool isClassSupported({TargetPlatform? platform}) =>
@@ -41,7 +34,7 @@ class PlatformProxyControllerCreationParams {
       );
 }
 
-///{@template flutter_inappwebview_platform_interface.PlatformProxyController}
+///{@template nosferatu500_inappwebview_platform_interface.PlatformProxyController}
 ///Manages setting and clearing a process-specific override for the WebView system-wide proxy settings that govern network requests made by `WebView`.
 ///
 ///`WebView` may make network requests in order to fetch content that is not otherwise read from the file system or provided directly by application code.
@@ -51,7 +44,7 @@ class PlatformProxyControllerCreationParams {
 ///this API may be used to explicitly specify the proxy rules that govern WebView initiated network requests.
 ///{@endtemplate}
 ///
-///{@macro flutter_inappwebview_platform_interface.PlatformProxyController.supported_platforms}
+///{@macro nosferatu500_inappwebview_platform_interface.PlatformProxyController.supported_platforms}
 @SupportedPlatforms(
   platforms: [
     AndroidPlatform(
@@ -65,17 +58,6 @@ class PlatformProxyControllerCreationParams {
           'https://developer.apple.com/documentation/webkit/wkwebsitedatastore/4264546-proxyconfigurations',
       available: '17.0',
     ),
-    MacOSPlatform(
-      apiName: 'WKWebsiteDataStore.proxyConfigurations',
-      apiUrl:
-          'https://developer.apple.com/documentation/webkit/wkwebsitedatastore/4264546-proxyconfigurations',
-      available: '14.0',
-    ),
-    LinuxPlatform(
-      apiName: 'WebKitNetworkProxySettings',
-      apiUrl:
-          'https://wpewebkit.org/reference/stable/wpe-webkit-2.0/struct.NetworkProxySettings.html',
-    ),
   ],
 )
 abstract class PlatformProxyController extends PlatformInterface {
@@ -85,7 +67,7 @@ abstract class PlatformProxyController extends PlatformInterface {
   ) {
     assert(
       InAppWebViewPlatform.instance != null,
-      'A platform implementation for `flutter_inappwebview` has not been set. Please '
+      'A platform implementation for `nosferatu500_inappwebview` has not been set. Please '
       'ensure that an implementation of `InAppWebViewPlatform` has been set to '
       '`WebViewPlatform.instance` before use. For unit testing, '
       '`WebViewPlatform.instance` can be set with your own test implementation.',
@@ -101,7 +83,7 @@ abstract class PlatformProxyController extends PlatformInterface {
   factory PlatformProxyController.static() {
     assert(
       InAppWebViewPlatform.instance != null,
-      'A platform implementation for `flutter_inappwebview` has not been set. Please '
+      'A platform implementation for `nosferatu500_inappwebview` has not been set. Please '
       'ensure that an implementation of `InAppWebViewPlatform` has been set to '
       '`InAppWebViewPlatform.instance` before use. For unit testing, '
       '`InAppWebViewPlatform.instance` can be set with your own test implementation.',
@@ -126,14 +108,33 @@ abstract class PlatformProxyController extends PlatformInterface {
   /// The parameters used to initialize the [PlatformProxyController].
   final PlatformProxyControllerCreationParams params;
 
-  ///{@template flutter_inappwebview_platform_interface.PlatformProxyController.setProxyOverride}
+  ///{@template nosferatu500_inappwebview_platform_interface.PlatformProxyController.setProxyOverride}
   ///Sets [ProxySettings] which will be used by all `WebView`s in the app.
   ///URLs that match patterns in the bypass list will not be directed to any proxy.
   ///Instead, the request will be made directly to the origin specified by the URL.
   ///Network connections are not guaranteed to immediately use the new proxy setting; wait for the method to return before loading a page.
+  ///
+  ///**iOS below 26 does not route cleartext `http://` through the proxy.** Measured with an
+  ///identical configuration on both simulators: on iOS 26.5 an `http://` page load arrives at the
+  ///proxy, while on iOS 17.5 it goes straight to the origin server as though no proxy were set.
+  ///`https://` is proxied on both. This is a WebKit behaviour, not a configuration gap — iOS maps
+  ///[ProxySettings] onto `WKWebsiteDataStore.proxyConfigurations` using Network.framework's
+  ///`ProxyConfiguration(httpCONNECTProxy:)`, which is the only HTTP proxy form the framework
+  ///offers (the other is SOCKSv5), and iOS 17 declines to send cleartext requests through a
+  ///CONNECT tunnel. There is no plugin-side workaround; **use `https://` if the traffic must be
+  ///proxied on iOS below 26**. Only 17.5 and 26.5 were measured, so the version that starts
+  ///routing cleartext lies somewhere in 18–26 and is not established.
+  ///
+  ///A proxy rule the platform can't parse makes the call throw a `PlatformException` with code
+  ///`ProxyManager`; on iOS the setting already in force is kept. The platforms don't reject the same
+  ///URLs (Android accepts `"not a url"`, iOS doesn't).
+  ///
+  ///Also measured on iOS 26.5: a local-network address (`192.168.x.x`) was not sent through the
+  ///proxy, and a host the app had already reached kept its old route after the setting changed,
+  ///while hosts it hadn't reached used the new one.
   ///{@endtemplate}
   ///
-  ///{@macro flutter_inappwebview_platform_interface.PlatformProxyController.setProxyOverride.supported_platforms}
+  ///{@macro nosferatu500_inappwebview_platform_interface.PlatformProxyController.setProxyOverride.supported_platforms}
   @SupportedPlatforms(
     platforms: [
       AndroidPlatform(
@@ -147,17 +148,6 @@ abstract class PlatformProxyController extends PlatformInterface {
             'https://developer.apple.com/documentation/webkit/wkwebsitedatastore/4264546-proxyconfigurations',
         available: '17.0',
       ),
-      MacOSPlatform(
-        apiName: 'WKWebsiteDataStore.proxyConfigurations',
-        apiUrl:
-            'https://developer.apple.com/documentation/webkit/wkwebsitedatastore/4264546-proxyconfigurations',
-        available: '14.0',
-      ),
-      LinuxPlatform(
-        apiName: 'webkit_network_session_set_proxy_settings',
-        apiUrl:
-            'https://wpewebkit.org/reference/stable/wpe-webkit-2.0/method.NetworkSession.set_proxy_settings.html',
-      ),
     ],
   )
   Future<void> setProxyOverride({required ProxySettings settings}) {
@@ -166,13 +156,13 @@ abstract class PlatformProxyController extends PlatformInterface {
     );
   }
 
-  ///{@template flutter_inappwebview_platform_interface.PlatformProxyController.clearProxyOverride}
+  ///{@template nosferatu500_inappwebview_platform_interface.PlatformProxyController.clearProxyOverride}
   ///Clears the proxy settings.
   ///Network connections are not guaranteed to immediately use the new proxy setting;
   ///wait for the method to return before loading a page.
   ///{@endtemplate}
   ///
-  ///{@macro flutter_inappwebview_platform_interface.PlatformProxyController.clearProxyOverride.supported_platforms}
+  ///{@macro nosferatu500_inappwebview_platform_interface.PlatformProxyController.clearProxyOverride.supported_platforms}
   @SupportedPlatforms(
     platforms: [
       AndroidPlatform(
@@ -186,17 +176,6 @@ abstract class PlatformProxyController extends PlatformInterface {
             'https://developer.apple.com/documentation/webkit/wkwebsitedatastore/4264546-proxyconfigurations',
         available: '17.0',
       ),
-      MacOSPlatform(
-        apiName: 'WKWebsiteDataStore.proxyConfigurations',
-        apiUrl:
-            'https://developer.apple.com/documentation/webkit/wkwebsitedatastore/4264546-proxyconfigurations',
-        available: '14.0',
-      ),
-      LinuxPlatform(
-        apiName: 'webkit_network_session_set_proxy_settings',
-        apiUrl:
-            'https://wpewebkit.org/reference/stable/wpe-webkit-2.0/method.NetworkSession.set_proxy_settings.html',
-      ),
     ],
   )
   Future<void> clearProxyOverride() {
@@ -205,11 +184,11 @@ abstract class PlatformProxyController extends PlatformInterface {
     );
   }
 
-  ///{@macro flutter_inappwebview_platform_interface.PlatformProxyControllerCreationParams.isClassSupported}
+  ///{@macro nosferatu500_inappwebview_platform_interface.PlatformProxyControllerCreationParams.isClassSupported}
   bool isClassSupported({TargetPlatform? platform}) =>
       params.isClassSupported(platform: platform);
 
-  ///{@template flutter_inappwebview_platform_interface.PlatformProxyController.isMethodSupported}
+  ///{@template nosferatu500_inappwebview_platform_interface.PlatformProxyController.isMethodSupported}
   ///Check if the given [method] is supported by the [defaultTargetPlatform] or a specific [platform].
   ///{@endtemplate}
   bool isMethodSupported(
@@ -221,11 +200,11 @@ abstract class PlatformProxyController extends PlatformInterface {
   );
 }
 
-///{@template flutter_inappwebview_platform_interface.ProxySettings}
+///{@template nosferatu500_inappwebview_platform_interface.ProxySettings}
 ///Class that represents the settings used to configure the [PlatformProxyController].
 ///{@endtemplate}
 ///
-///{@macro flutter_inappwebview_platform_interface.ProxySettings.supported_platforms}
+///{@macro nosferatu500_inappwebview_platform_interface.ProxySettings.supported_platforms}
 @SupportedPlatforms(
   platforms: [
     AndroidPlatform(
@@ -239,17 +218,6 @@ abstract class PlatformProxyController extends PlatformInterface {
           'https://developer.apple.com/documentation/network/proxyconfiguration',
       available: '17.0',
     ),
-    MacOSPlatform(
-      apiName: 'ProxyConfiguration',
-      apiUrl:
-          'https://developer.apple.com/documentation/network/proxyconfiguration',
-      available: '14.0',
-    ),
-    LinuxPlatform(
-      apiName: 'WebKitNetworkProxySettings',
-      apiUrl:
-          'https://wpewebkit.org/reference/stable/wpe-webkit-2.0/struct.NetworkProxySettings.html',
-    ),
   ],
 )
 @ExchangeableObject(copyMethod: true)
@@ -259,18 +227,7 @@ class ProxySettings_ {
   ///A bypass rule describes URLs that should skip proxy override settings and make a direct connection instead. These can be URLs or IP addresses. Wildcards are accepted.
   ///For instance, the rule "*example.com" would mean that requests to "http://example.com" and "www.example.com" would not be directed to any proxy,
   ///instead, would be made directly to the origin specified by the URL.
-  @SupportedPlatforms(
-    platforms: [
-      AndroidPlatform(),
-      LinuxPlatform(
-        apiName: 'webkit_network_proxy_settings_new (ignore_hosts)',
-        apiUrl:
-            'https://wpewebkit.org/reference/stable/wpe-webkit-2.0/ctor.NetworkProxySettings.new.html',
-        note:
-            'Mapped to ignore_hosts; bypass rules are passed as host patterns to WebKitNetworkProxySettings.',
-      ),
-    ],
-  )
+  @SupportedPlatforms(platforms: [AndroidPlatform()])
   List<String> bypassRules;
 
   ///List of scheme filters.
@@ -287,14 +244,7 @@ class ProxySettings_ {
   ///Port number is optional and defaults to `80` for `HTTP`, `443` for `HTTPS` and `1080` for `SOCKS`.
   ///
   ///The correct syntax for hosts is defined by [RFC 3986](https://tools.ietf.org/html/rfc3986#section-3.2.2).
-  @SupportedPlatforms(
-    platforms: [
-      AndroidPlatform(),
-      IOSPlatform(),
-      MacOSPlatform(),
-      LinuxPlatform(),
-    ],
-  )
+  @SupportedPlatforms(platforms: [AndroidPlatform(), IOSPlatform()])
   List<ProxyRule_> proxyRules;
 
   ///Hostnames without a period in them (and that are not IP literals) will skip proxy settings and be connected to directly instead. Examples: `"abc"`, `"local"`, `"some-domain"`.
@@ -336,13 +286,13 @@ class ProxySettings_ {
     this.reverseBypassEnabled = false,
   });
 
-  ///{@template flutter_inappwebview_platform_interface.ProxySettings.isClassSupported}
+  ///{@template nosferatu500_inappwebview_platform_interface.ProxySettings.isClassSupported}
   ///Check if the current class is supported by the [defaultTargetPlatform] or a specific [platform].
   ///{@endtemplate}
   static bool isClassSupported({TargetPlatform? platform}) =>
       _ProxySettingsClassSupported.isClassSupported(platform: platform);
 
-  ///{@template flutter_inappwebview_platform_interface.ProxySettings.isPropertySupported}
+  ///{@template nosferatu500_inappwebview_platform_interface.ProxySettings.isPropertySupported}
   ///Check if the current class is supported by the [defaultTargetPlatform] or a specific [platform].
   ///{@endtemplate}
   static bool isPropertySupported(

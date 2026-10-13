@@ -1,26 +1,26 @@
 import 'dart:async';
 import 'package:flutter/foundation.dart';
 import 'package:plugin_platform_interface/plugin_platform_interface.dart';
-import 'package:flutter_inappwebview_internal_annotations/flutter_inappwebview_internal_annotations.dart';
+import 'package:nosferatu500_inappwebview_internal_annotations/nosferatu500_inappwebview_internal_annotations.dart';
 import 'inappwebview_platform.dart';
 
 part 'platform_webview_feature.g.dart';
 
-///{@template flutter_inappwebview_platform_interface.PlatformWebViewFeatureCreationParams}
+///{@template nosferatu500_inappwebview_platform_interface.PlatformWebViewFeatureCreationParams}
 /// Object specifying creation parameters for creating a [PlatformWebViewFeature].
 ///
 /// Platform specific implementations can add additional fields by extending
 /// this class.
 ///{@endtemplate}
 ///
-///{@macro flutter_inappwebview_platform_interface.PlatformWebViewFeatureCreationParams.supported_platforms}
+///{@macro nosferatu500_inappwebview_platform_interface.PlatformWebViewFeatureCreationParams.supported_platforms}
 @SupportedPlatforms(platforms: [AndroidPlatform()])
 @immutable
 class PlatformWebViewFeatureCreationParams {
   /// Used by the platform implementation to create a new [PlatformWebViewFeature].
   const PlatformWebViewFeatureCreationParams();
 
-  ///{@template flutter_inappwebview_platform_interface.PlatformWebViewFeatureCreationParams.isClassSupported}
+  ///{@template nosferatu500_inappwebview_platform_interface.PlatformWebViewFeatureCreationParams.isClassSupported}
   ///Check if the current class is supported by the [defaultTargetPlatform] or a specific [platform].
   ///{@endtemplate}
   bool isClassSupported({TargetPlatform? platform}) =>
@@ -29,18 +29,18 @@ class PlatformWebViewFeatureCreationParams {
       );
 }
 
-///{@template flutter_inappwebview_platform_interface.PlatformWebViewFeature}
+///{@template nosferatu500_inappwebview_platform_interface.PlatformWebViewFeature}
 ///Class that represents an Android-specific utility class for checking which WebView Support Library features are supported on the device.
 ///{@endtemplate}
 ///
-///{@macro flutter_inappwebview_platform_interface.PlatformWebViewFeature.supported_platforms}
+///{@macro nosferatu500_inappwebview_platform_interface.PlatformWebViewFeature.supported_platforms}
 @SupportedPlatforms(platforms: [AndroidPlatform()])
 abstract class PlatformWebViewFeature extends PlatformInterface {
   /// Creates a new [PlatformWebViewFeature]
   factory PlatformWebViewFeature(PlatformWebViewFeatureCreationParams params) {
     assert(
       InAppWebViewPlatform.instance != null,
-      'A platform implementation for `flutter_inappwebview` has not been set. Please '
+      'A platform implementation for `nosferatu500_inappwebview` has not been set. Please '
       'ensure that an implementation of `InAppWebViewPlatform` has been set to '
       '`WebViewPlatform.instance` before use. For unit testing, '
       '`WebViewPlatform.instance` can be set with your own test implementation.',
@@ -55,7 +55,7 @@ abstract class PlatformWebViewFeature extends PlatformInterface {
   factory PlatformWebViewFeature.static() {
     assert(
       InAppWebViewPlatform.instance != null,
-      'A platform implementation for `flutter_inappwebview` has not been set. Please '
+      'A platform implementation for `nosferatu500_inappwebview` has not been set. Please '
       'ensure that an implementation of `InAppWebViewPlatform` has been set to '
       '`WebViewPlatform.instance` before use. For unit testing, '
       '`WebViewPlatform.instance` can be set with your own test implementation.',
@@ -80,21 +80,22 @@ abstract class PlatformWebViewFeature extends PlatformInterface {
   /// The parameters used to initialize the [PlatformWebViewFeature].
   final PlatformWebViewFeatureCreationParams params;
 
-  ///{@template flutter_inappwebview_platform_interface.PlatformWebViewFeature.isFeatureSupported}
+  ///{@template nosferatu500_inappwebview_platform_interface.PlatformWebViewFeature.isFeatureSupported}
   ///Return whether a feature is supported at run-time. On devices running Android version `Build.VERSION_CODES.LOLLIPOP` and higher,
   ///this will check whether a feature is supported, depending on the combination of the desired feature, the Android version of device,
   ///and the WebView APK on the device. If running on a device with a lower API level, this will always return `false`.
   ///
-  ///**Note**: This method is different from [isStartupFeatureSupported] and this
-  ///method only accepts certain features.
-  ///Please verify that the correct feature checking method is used for a particular feature.
+  ///**Note**: This method is different from [isStartupFeatureSupported], and the two check separate
+  ///lists. Given a startup feature (`STARTUP_FEATURE_*`) this method doesn't return `false`, it
+  ///throws a `PlatformException` (Android: code `RuntimeException`, message
+  ///`java.lang.RuntimeException: Unknown feature <name>`).
   ///
   ///**Note**: If this method returns `false`, it is not safe to invoke the methods
   ///requiring the desired feature.
   ///Furthermore, if this method returns `false` for a particular feature, any callback guarded by that feature will not be invoked.
   ///{@endtemplate}
   ///
-  ///{@macro flutter_inappwebview_platform_interface.PlatformWebViewFeature.isFeatureSupported.supported_platforms}
+  ///{@macro nosferatu500_inappwebview_platform_interface.PlatformWebViewFeature.isFeatureSupported.supported_platforms}
   @SupportedPlatforms(
     platforms: [
       AndroidPlatform(
@@ -110,7 +111,7 @@ abstract class PlatformWebViewFeature extends PlatformInterface {
     );
   }
 
-  ///{@template flutter_inappwebview_platform_interface.PlatformWebViewFeature.isStartupFeatureSupported}
+  ///{@template nosferatu500_inappwebview_platform_interface.PlatformWebViewFeature.isStartupFeatureSupported}
   ///Return whether a startup feature is supported at run-time.
   ///On devices running Android version `Build.VERSION_CODES.LOLLIPOP` and higher,
   ///this will check whether a startup feature is supported,
@@ -118,15 +119,17 @@ abstract class PlatformWebViewFeature extends PlatformInterface {
   ///the Android version of device, and the WebView APK on the device.
   ///If running on a device with a lower API level, this will always return `false`.
   ///
-  ///**Note**: This method is different from [isFeatureSupported] and this method only accepts startup features.
-  ///Please verify that the correct feature checking method is used for a particular feature.
+  ///**Note**: This method is different from [isFeatureSupported], and the two check separate lists.
+  ///It only accepts the startup features (`STARTUP_FEATURE_*`): given any other feature it doesn't
+  ///return `false`, it throws a `PlatformException` (Android: code `RuntimeException`, message
+  ///`java.lang.RuntimeException: Unknown feature <name>`).
   ///
   ///**Note**: If this method returns `false`, it is not safe to invoke the methods requiring the desired feature.
   ///Furthermore, if this method returns `false` for a particular feature,
   ///any callback guarded by that feature will not be invoked.
   ///{@endtemplate}
   ///
-  ///{@macro flutter_inappwebview_platform_interface.PlatformWebViewFeature.isStartupFeatureSupported.supported_platforms}
+  ///{@macro nosferatu500_inappwebview_platform_interface.PlatformWebViewFeature.isStartupFeatureSupported.supported_platforms}
   @SupportedPlatforms(
     platforms: [
       AndroidPlatform(
@@ -142,11 +145,11 @@ abstract class PlatformWebViewFeature extends PlatformInterface {
     );
   }
 
-  ///{@macro flutter_inappwebview_platform_interface.PlatformWebViewFeatureCreationParams.isClassSupported}
+  ///{@macro nosferatu500_inappwebview_platform_interface.PlatformWebViewFeatureCreationParams.isClassSupported}
   bool isClassSupported({TargetPlatform? platform}) =>
       params.isClassSupported(platform: platform);
 
-  ///{@template flutter_inappwebview_platform_interface.PlatformWebViewFeature.isMethodSupported}
+  ///{@template nosferatu500_inappwebview_platform_interface.PlatformWebViewFeature.isMethodSupported}
   ///Check if the given [method] is supported by the [defaultTargetPlatform] or a specific [platform].
   ///{@endtemplate}
   bool isMethodSupported(
@@ -158,7 +161,7 @@ abstract class PlatformWebViewFeature extends PlatformInterface {
   );
 }
 
-///{@macro flutter_inappwebview_platform_interface.PlatformWebViewFeature}
+///{@macro nosferatu500_inappwebview_platform_interface.PlatformWebViewFeature}
 @ExchangeableEnum()
 class WebViewFeature_ {
   // ignore: unused_field
@@ -359,6 +362,146 @@ class WebViewFeature_ {
     "ALGORITHMIC_DARKENING",
   );
 
+  ///Feature for [isFeatureSupported]. This feature covers
+  ///[PlatformInAppWebViewController.setAudioMuted] and
+  ///[PlatformInAppWebViewController.isAudioMuted].
+  static const MUTE_AUDIO = WebViewFeature_._internal("MUTE_AUDIO");
+
+  ///Feature for [isFeatureSupported]. This feature covers [InAppWebViewSettings.paymentRequestEnabled].
+  static const PAYMENT_REQUEST = WebViewFeature_._internal("PAYMENT_REQUEST");
+
+  ///Feature for [isFeatureSupported]. This feature covers [InAppWebViewSettings.webAuthenticationSupport].
+  static const WEB_AUTHENTICATION = WebViewFeature_._internal(
+    "WEB_AUTHENTICATION",
+  );
+
+  ///Feature for [isFeatureSupported]. This feature covers [InAppWebViewSettings.downloadFaviconsEnabled].
+  static const DOWNLOAD_FAVICONS_ENABLED = WebViewFeature_._internal(
+    "DOWNLOAD_FAVICONS_ENABLED",
+  );
+
+  ///Feature for [isFeatureSupported]. This feature covers [InAppWebViewSettings.backForwardCacheEnabled].
+  static const BACK_FORWARD_CACHE = WebViewFeature_._internal(
+    "BACK_FORWARD_CACHE",
+  );
+
+  ///Feature for [isFeatureSupported]. This feature covers [InAppWebViewSettings.attributionRegistrationBehavior].
+  static const ATTRIBUTION_REGISTRATION_BEHAVIOR = WebViewFeature_._internal(
+    "ATTRIBUTION_REGISTRATION_BEHAVIOR",
+  );
+
+  ///Feature for [isFeatureSupported]. This feature covers [InAppWebViewSettings.webViewMediaIntegrityApiStatus].
+  static const WEBVIEW_MEDIA_INTEGRITY_API_STATUS = WebViewFeature_._internal(
+    "WEBVIEW_MEDIA_INTEGRITY_API_STATUS",
+  );
+
+  ///Feature for [isFeatureSupported]. This feature covers [InAppWebViewSettings.userAgentMetadata].
+  static const USER_AGENT_METADATA = WebViewFeature_._internal(
+    "USER_AGENT_METADATA",
+  );
+
+  ///Feature for [isFeatureSupported]. This feature covers [UserAgentMetadata.formFactors],
+  ///and is separate from [WebViewFeature.USER_AGENT_METADATA].
+  static const USER_AGENT_METADATA_FORM_FACTORS = WebViewFeature_._internal(
+    "USER_AGENT_METADATA_FORM_FACTORS",
+  );
+
+  ///Feature for [isFeatureSupported]. This feature covers
+  ///[PlatformInAppWebViewController.prerenderUrl].
+  ///
+  ///Note the native value is `PRERENDER_URL_V2`, not the name of this constant.
+  static const PRERENDER_WITH_URL = WebViewFeature_._internal(
+    "PRERENDER_URL_V2",
+  );
+
+  ///Feature for [isFeatureSupported]. This feature covers
+  ///[PlatformWebViewCreationParams.onNavigationStarted],
+  ///[PlatformWebViewCreationParams.onNavigationRedirected] and
+  ///[PlatformWebViewCreationParams.onNavigationCompleted], and is what
+  ///[InAppWebViewSettings.useNavigationListener] needs in order to have any effect.
+  ///
+  ///Note that six neighbouring `NAVIGATION_*` constants in `androidx.webkit` are **tombstones** —
+  ///still declared for source compatibility, but `@Deprecated` and no longer registered, so passing
+  ///one to `isFeatureSupported` throws rather than returning `false`. This constant and
+  ///[NAVIGATION_GET_WEB_RESOURCE_ERROR] are the only two of the family that are real.
+  static const NAVIGATION_LISTENER = WebViewFeature_._internal(
+    "NAVIGATION_LISTENER",
+  );
+
+  ///Feature for [isFeatureSupported]. This feature covers
+  ///[WebViewNavigation.webResourceError] alone.
+  ///
+  ///This is a second, finer gate **inside** [NAVIGATION_LISTENER]: where it is unsupported the
+  ///navigation events still fire and every other field of [WebViewNavigation] is still reported,
+  ///but [WebViewNavigation.webResourceError] is always `null`.
+  static const NAVIGATION_GET_WEB_RESOURCE_ERROR = WebViewFeature_._internal(
+    "NAVIGATION_GET_WEB_RESOURCE_ERROR",
+  );
+
+  ///Feature for [isFeatureSupported]. This feature covers the custom-request-header family on
+  ///[PlatformProfileStore]: [PlatformProfileStore.addCustomHeader],
+  ///[PlatformProfileStore.hasCustomHeader], [PlatformProfileStore.getCustomHeaders],
+  ///[PlatformProfileStore.clearCustomHeader] and [PlatformProfileStore.clearAllCustomHeaders].
+  ///
+  ///Note these also need [MULTI_PROFILE], which is what makes a profile reachable at all.
+  static const CUSTOM_REQUEST_HEADERS = WebViewFeature_._internal(
+    "CUSTOM_REQUEST_HEADERS",
+  );
+
+  ///Feature for [isFeatureSupported]. `androidx.webkit`'s real isolated JavaScript worlds:
+  ///`WebViewCompat.addJavaScriptOnEvent`, the world-taking overloads of
+  ///`addWebMessageListener` / `removeWebMessageListener`, `getExecutionWorld` and
+  ///`JavaScriptReplyProxy.executeJavaScript`.
+  ///
+  ///**No API in this plugin uses it yet, and this constant is exposed so you can see that
+  ///coming.** Android's [ContentWorld] is a `<iframe>` emulation shared by
+  ///[PlatformInAppWebViewController.evaluateJavascript] and [UserScript]; `androidx`'s worlds are
+  ///a different mechanism, and `androidx` offers no way to evaluate arbitrary code in one on
+  ///demand — only injection-time scripts and `JavaScriptReplyProxy.executeJavaScript`, which runs
+  ///in the frame and world that sent a message. Moving one of the three onto real worlds without
+  ///the others would make them silently disagree about what a world is, so the migration is all
+  ///or nothing and has not been done.
+  ///
+  ///Measured `true` on API 33 / WebView 151 and API 37 / WebView 149.
+  static const JS_INJECTION_IN_FRAME_AND_WORLD = WebViewFeature_._internal(
+    "JS_INJECTION_IN_FRAME_AND_WORLD",
+  );
+
+  ///Feature for [isFeatureSupported]. This feature covers
+  ///[InAppWebViewSettings.includeCookiesOnShouldInterceptRequest],
+  ///[WebResourceResponse.cookies], and the service-worker switch
+  ///[PlatformServiceWorkerController.setIncludeCookiesOnShouldInterceptRequestEnabled].
+  ///
+  ///One flag covers both directions of the intercept — the `Cookie` header on the way in and
+  ///`Set-Cookie` values on the way out — and both the WebView and the service-worker switches.
+  static const COOKIE_INTERCEPT = WebViewFeature_._internal("COOKIE_INTERCEPT");
+
+  ///Feature for [isFeatureSupported]. This feature covers the `maxSize` and `includeForwardState`
+  ///arguments of [PlatformInAppWebViewController.saveState], and **only** those arguments.
+  ///
+  ///[PlatformInAppWebViewController.saveState] itself works everywhere: called with neither
+  ///argument it uses the framework `WebView.saveState`, which needs no feature. Where this feature
+  ///is unsupported, passing either argument makes the call return `null` rather than quietly
+  ///returning an unconstrained state.
+  static const SAVE_STATE = WebViewFeature_._internal("SAVE_STATE");
+
+  ///Feature for [isFeatureSupported]. This feature covers [PlatformProfileStore] and
+  ///[InAppWebViewSettings.profileName].
+  static const MULTI_PROFILE = WebViewFeature_._internal("MULTI_PROFILE");
+
+  ///Feature for [isFeatureSupported]. This feature covers
+  ///[PlatformWebStorageManager.deleteBrowsingData] and
+  ///[PlatformWebStorageManager.deleteBrowsingDataForSite].
+  static const DELETE_BROWSING_DATA = WebViewFeature_._internal(
+    "DELETE_BROWSING_DATA",
+  );
+
+  ///Feature for [isFeatureSupported]. This feature covers
+  ///[PlatformInAppWebViewController.setDefaultTrafficStatsTag].
+  static const DEFAULT_TRAFFICSTATS_TAGGING = WebViewFeature_._internal(
+    "DEFAULT_TRAFFICSTATS_TAGGING",
+  );
+
   ///Feature for [isFeatureSupported]. This feature covers [InAppWebViewSettings.enterpriseAuthenticationAppLinkPolicyEnabled].
   static const ENTERPRISE_AUTHENTICATION_APP_LINK_POLICY =
       WebViewFeature_._internal("ENTERPRISE_AUTHENTICATION_APP_LINK_POLICY");
@@ -385,11 +528,11 @@ class WebViewFeature_ {
   static const STARTUP_FEATURE_SET_DIRECTORY_BASE_PATHS =
       WebViewFeature_._internal("STARTUP_FEATURE_SET_DIRECTORY_BASE_PATHS");
 
-  ///{@macro flutter_inappwebview_platform_interface.PlatformWebViewFeature.isFeatureSupported}
+  ///{@macro nosferatu500_inappwebview_platform_interface.PlatformWebViewFeature.isFeatureSupported}
   static Future<bool> isFeatureSupported(WebViewFeature feature) =>
       PlatformWebViewFeature.static().isFeatureSupported(feature);
 
-  ///{@macro flutter_inappwebview_platform_interface.PlatformWebViewFeature.isStartupFeatureSupported}
+  ///{@macro nosferatu500_inappwebview_platform_interface.PlatformWebViewFeature.isStartupFeatureSupported}
   static Future<bool> isStartupFeatureSupported(
     WebViewFeature startupFeature,
   ) =>

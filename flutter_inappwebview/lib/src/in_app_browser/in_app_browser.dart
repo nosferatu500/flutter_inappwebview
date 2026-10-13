@@ -1,33 +1,30 @@
 import 'dart:async';
 import 'dart:collection';
-import 'dart:ui';
 
 import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_inappwebview_platform_interface/flutter_inappwebview_platform_interface.dart';
+import 'package:nosferatu500_inappwebview_platform_interface/nosferatu500_inappwebview_platform_interface.dart';
 
 import '../find_interaction/find_interaction_controller.dart';
 import '../pull_to_refresh/main.dart';
 
 import '../in_app_webview/in_app_webview_controller.dart';
-import '../webview_environment/webview_environment.dart';
 
-///{@macro flutter_inappwebview_platform_interface.PlatformInAppBrowser}
+///{@macro nosferatu500_inappwebview_platform_interface.PlatformInAppBrowser}
 ///
-///{@macro flutter_inappwebview_platform_interface.PlatformInAppBrowser.supported_platforms}
+///{@macro nosferatu500_inappwebview_platform_interface.PlatformInAppBrowser.supported_platforms}
 class InAppBrowser implements PlatformInAppBrowserEvents {
   ///Constructs a [InAppBrowser].
   ///
-  ///{@macro flutter_inappwebview_platform_interface.PlatformInAppBrowser}
+  ///{@macro nosferatu500_inappwebview_platform_interface.PlatformInAppBrowser}
   ///
-  ///{@macro flutter_inappwebview_platform_interface.PlatformInAppBrowser.supported_platforms}
+  ///{@macro nosferatu500_inappwebview_platform_interface.PlatformInAppBrowser.supported_platforms}
   InAppBrowser({
     ContextMenu? contextMenu,
     PullToRefreshController? pullToRefreshController,
     FindInteractionController? findInteractionController,
     UnmodifiableListView<UserScript>? initialUserScripts,
     int? windowId,
-    WebViewEnvironment? webViewEnvironment,
   }) : this.fromPlatformCreationParams(
          PlatformInAppBrowserCreationParams(
            contextMenu: contextMenu,
@@ -35,7 +32,6 @@ class InAppBrowser implements PlatformInAppBrowserEvents {
            findInteractionController: findInteractionController?.platform,
            initialUserScripts: initialUserScripts,
            windowId: windowId,
-           webViewEnvironment: webViewEnvironment?.platform,
          ),
        );
 
@@ -54,19 +50,19 @@ class InAppBrowser implements PlatformInAppBrowserEvents {
   /// Implementation of [PlatformInAppBrowser] for the current platform.
   final PlatformInAppBrowser platform;
 
-  ///{@macro flutter_inappwebview_platform_interface.PlatformInAppBrowser.id}
+  ///{@macro nosferatu500_inappwebview_platform_interface.PlatformInAppBrowser.id}
   ///
-  ///{@macro flutter_inappwebview_platform_interface.PlatformInAppBrowser.id.supported_platforms}
+  ///{@macro nosferatu500_inappwebview_platform_interface.PlatformInAppBrowser.id.supported_platforms}
   String get id => platform.id;
 
-  ///{@macro flutter_inappwebview_platform_interface.PlatformWebViewCreationParams.contextMenu}
+  ///{@macro nosferatu500_inappwebview_platform_interface.PlatformWebViewCreationParams.contextMenu}
   ///
-  ///{@macro flutter_inappwebview_platform_interface.PlatformInAppBrowser.contextMenu.supported_platforms}
+  ///{@macro nosferatu500_inappwebview_platform_interface.PlatformInAppBrowser.contextMenu.supported_platforms}
   ContextMenu? get contextMenu => platform.contextMenu;
 
-  ///{@macro flutter_inappwebview_platform_interface.PlatformWebViewCreationParams.pullToRefreshController}
+  ///{@macro nosferatu500_inappwebview_platform_interface.PlatformWebViewCreationParams.pullToRefreshController}
   ///
-  ///{@macro flutter_inappwebview_platform_interface.PlatformInAppBrowser.pullToRefreshController.supported_platforms}
+  ///{@macro nosferatu500_inappwebview_platform_interface.PlatformInAppBrowser.pullToRefreshController.supported_platforms}
   PullToRefreshController? get pullToRefreshController {
     final pullToRefreshControllerPlatform = platform.pullToRefreshController;
     if (pullToRefreshControllerPlatform == null) {
@@ -77,9 +73,9 @@ class InAppBrowser implements PlatformInAppBrowserEvents {
     );
   }
 
-  ///{@macro flutter_inappwebview_platform_interface.PlatformWebViewCreationParams.findInteractionController}
+  ///{@macro nosferatu500_inappwebview_platform_interface.PlatformWebViewCreationParams.findInteractionController}
   ///
-  ///{@macro flutter_inappwebview_platform_interface.PlatformInAppBrowser.findInteractionController.supported_platforms}
+  ///{@macro nosferatu500_inappwebview_platform_interface.PlatformInAppBrowser.findInteractionController.supported_platforms}
   FindInteractionController? get findInteractionController {
     final findInteractionControllerPlatform =
         platform.findInteractionController;
@@ -91,20 +87,20 @@ class InAppBrowser implements PlatformInAppBrowserEvents {
     );
   }
 
-  ///{@macro flutter_inappwebview_platform_interface.PlatformWebViewCreationParams.initialUserScripts}
+  ///{@macro nosferatu500_inappwebview_platform_interface.PlatformWebViewCreationParams.initialUserScripts}
   ///
-  ///{@macro flutter_inappwebview_platform_interface.PlatformInAppBrowser.initialUserScripts.supported_platforms}
+  ///{@macro nosferatu500_inappwebview_platform_interface.PlatformInAppBrowser.initialUserScripts.supported_platforms}
   UnmodifiableListView<UserScript>? get initialUserScripts =>
       platform.initialUserScripts;
 
-  ///{@macro flutter_inappwebview_platform_interface.PlatformWebViewCreationParams.windowId}
+  ///{@macro nosferatu500_inappwebview_platform_interface.PlatformWebViewCreationParams.windowId}
   ///
-  ///{@macro flutter_inappwebview_platform_interface.PlatformInAppBrowser.windowId.supported_platforms}
+  ///{@macro nosferatu500_inappwebview_platform_interface.PlatformInAppBrowser.windowId.supported_platforms}
   int? get windowId => platform.windowId;
 
-  ///{@macro flutter_inappwebview_platform_interface.PlatformInAppBrowser.webViewController}
+  ///{@macro nosferatu500_inappwebview_platform_interface.PlatformInAppBrowser.webViewController}
   ///
-  ///{@macro flutter_inappwebview_platform_interface.PlatformInAppBrowser.webViewController.supported_platforms}
+  ///{@macro nosferatu500_inappwebview_platform_interface.PlatformInAppBrowser.webViewController.supported_platforms}
   InAppWebViewController? get webViewController {
     final webViewControllerPlatform = platform.webViewController;
     if (webViewControllerPlatform == null) {
@@ -115,9 +111,9 @@ class InAppBrowser implements PlatformInAppBrowserEvents {
     );
   }
 
-  ///{@macro flutter_inappwebview_platform_interface.PlatformInAppBrowser.openUrlRequest}
+  ///{@macro nosferatu500_inappwebview_platform_interface.PlatformInAppBrowser.openUrlRequest}
   ///
-  ///{@macro flutter_inappwebview_platform_interface.PlatformInAppBrowser.openUrlRequest.supported_platforms}
+  ///{@macro nosferatu500_inappwebview_platform_interface.PlatformInAppBrowser.openUrlRequest.supported_platforms}
   Future<void> openUrlRequest({
     required URLRequest urlRequest,
     InAppBrowserClassSettings? settings,
@@ -126,9 +122,9 @@ class InAppBrowser implements PlatformInAppBrowserEvents {
     return platform.openUrlRequest(urlRequest: urlRequest, settings: settings);
   }
 
-  ///{@macro flutter_inappwebview_platform_interface.PlatformInAppBrowser.openFile}
+  ///{@macro nosferatu500_inappwebview_platform_interface.PlatformInAppBrowser.openFile}
   ///
-  ///{@macro flutter_inappwebview_platform_interface.PlatformInAppBrowser.openFile.supported_platforms}
+  ///{@macro nosferatu500_inappwebview_platform_interface.PlatformInAppBrowser.openFile.supported_platforms}
   Future<void> openFile({
     required String assetFilePath,
     InAppBrowserClassSettings? settings,
@@ -137,9 +133,9 @@ class InAppBrowser implements PlatformInAppBrowserEvents {
     return platform.openFile(assetFilePath: assetFilePath, settings: settings);
   }
 
-  ///{@macro flutter_inappwebview_platform_interface.PlatformInAppBrowser.openData}
+  ///{@macro nosferatu500_inappwebview_platform_interface.PlatformInAppBrowser.openData}
   ///
-  ///{@macro flutter_inappwebview_platform_interface.PlatformInAppBrowser.openData.supported_platforms}
+  ///{@macro nosferatu500_inappwebview_platform_interface.PlatformInAppBrowser.openData.supported_platforms}
   Future<void> openData({
     required String data,
     String mimeType = "text/html",
@@ -159,86 +155,86 @@ class InAppBrowser implements PlatformInAppBrowserEvents {
     );
   }
 
-  ///{@macro flutter_inappwebview_platform_interface.PlatformInAppBrowser.openWithSystemBrowser}
+  ///{@macro nosferatu500_inappwebview_platform_interface.PlatformInAppBrowser.openWithSystemBrowser}
   ///
-  ///{@macro flutter_inappwebview_platform_interface.PlatformInAppBrowser.openWithSystemBrowser.supported_platforms}
+  ///{@macro nosferatu500_inappwebview_platform_interface.PlatformInAppBrowser.openWithSystemBrowser.supported_platforms}
   static Future<void> openWithSystemBrowser({required WebUri url}) =>
       PlatformInAppBrowser.static().openWithSystemBrowser(url: url);
 
-  ///{@macro flutter_inappwebview_platform_interface.PlatformInAppBrowser.addMenuItem}
+  ///{@macro nosferatu500_inappwebview_platform_interface.PlatformInAppBrowser.addMenuItem}
   ///
-  ///{@macro flutter_inappwebview_platform_interface.PlatformInAppBrowser.addMenuItem.supported_platforms}
+  ///{@macro nosferatu500_inappwebview_platform_interface.PlatformInAppBrowser.addMenuItem.supported_platforms}
   void addMenuItem(InAppBrowserMenuItem menuItem) =>
       platform.addMenuItem(menuItem);
 
-  ///{@macro flutter_inappwebview_platform_interface.PlatformInAppBrowser.addMenuItems}
+  ///{@macro nosferatu500_inappwebview_platform_interface.PlatformInAppBrowser.addMenuItems}
   ///
-  ///{@macro flutter_inappwebview_platform_interface.PlatformInAppBrowser.addMenuItems.supported_platforms}
+  ///{@macro nosferatu500_inappwebview_platform_interface.PlatformInAppBrowser.addMenuItems.supported_platforms}
   void addMenuItems(List<InAppBrowserMenuItem> menuItems) =>
       platform.addMenuItems(menuItems);
 
-  ///{@macro flutter_inappwebview_platform_interface.PlatformInAppBrowser.removeMenuItem}
+  ///{@macro nosferatu500_inappwebview_platform_interface.PlatformInAppBrowser.removeMenuItem}
   ///
-  ///{@macro flutter_inappwebview_platform_interface.PlatformInAppBrowser.removeMenuItem.supported_platforms}
+  ///{@macro nosferatu500_inappwebview_platform_interface.PlatformInAppBrowser.removeMenuItem.supported_platforms}
   bool removeMenuItem(InAppBrowserMenuItem menuItem) =>
       platform.removeMenuItem(menuItem);
 
-  ///{@macro flutter_inappwebview_platform_interface.PlatformInAppBrowser.removeMenuItems}
+  ///{@macro nosferatu500_inappwebview_platform_interface.PlatformInAppBrowser.removeMenuItems}
   ///
-  ///{@macro flutter_inappwebview_platform_interface.PlatformInAppBrowser.removeMenuItems.supported_platforms}
+  ///{@macro nosferatu500_inappwebview_platform_interface.PlatformInAppBrowser.removeMenuItems.supported_platforms}
   void removeMenuItems(List<InAppBrowserMenuItem> menuItems) =>
       platform.removeMenuItems(menuItems);
 
-  ///{@macro flutter_inappwebview_platform_interface.PlatformInAppBrowser.removeAllMenuItem}
+  ///{@macro nosferatu500_inappwebview_platform_interface.PlatformInAppBrowser.removeAllMenuItem}
   ///
-  ///{@macro flutter_inappwebview_platform_interface.PlatformInAppBrowser.removeAllMenuItem.supported_platforms}
+  ///{@macro nosferatu500_inappwebview_platform_interface.PlatformInAppBrowser.removeAllMenuItem.supported_platforms}
   void removeAllMenuItem() => platform.removeAllMenuItem();
 
-  ///{@macro flutter_inappwebview_platform_interface.PlatformInAppBrowser.hasMenuItem}
+  ///{@macro nosferatu500_inappwebview_platform_interface.PlatformInAppBrowser.hasMenuItem}
   ///
-  ///{@macro flutter_inappwebview_platform_interface.PlatformInAppBrowser.hasMenuItem.supported_platforms}
+  ///{@macro nosferatu500_inappwebview_platform_interface.PlatformInAppBrowser.hasMenuItem.supported_platforms}
   bool hasMenuItem(InAppBrowserMenuItem menuItem) =>
       platform.hasMenuItem(menuItem);
 
-  ///{@macro flutter_inappwebview_platform_interface.PlatformInAppBrowser.show}
+  ///{@macro nosferatu500_inappwebview_platform_interface.PlatformInAppBrowser.show}
   ///
-  ///{@macro flutter_inappwebview_platform_interface.PlatformInAppBrowser.show.supported_platforms}
+  ///{@macro nosferatu500_inappwebview_platform_interface.PlatformInAppBrowser.show.supported_platforms}
   Future<void> show() => platform.show();
 
-  ///{@macro flutter_inappwebview_platform_interface.PlatformInAppBrowser.hide}
+  ///{@macro nosferatu500_inappwebview_platform_interface.PlatformInAppBrowser.hide}
   ///
-  ///{@macro flutter_inappwebview_platform_interface.PlatformInAppBrowser.hide.supported_platforms}
+  ///{@macro nosferatu500_inappwebview_platform_interface.PlatformInAppBrowser.hide.supported_platforms}
   Future<void> hide() => platform.hide();
 
-  ///{@macro flutter_inappwebview_platform_interface.PlatformInAppBrowser.close}
+  ///{@macro nosferatu500_inappwebview_platform_interface.PlatformInAppBrowser.close}
   ///
-  ///{@macro flutter_inappwebview_platform_interface.PlatformInAppBrowser.close.supported_platforms}
+  ///{@macro nosferatu500_inappwebview_platform_interface.PlatformInAppBrowser.close.supported_platforms}
   Future<void> close() => platform.close();
 
-  ///{@macro flutter_inappwebview_platform_interface.PlatformInAppBrowser.isHidden}
+  ///{@macro nosferatu500_inappwebview_platform_interface.PlatformInAppBrowser.isHidden}
   ///
-  ///{@macro flutter_inappwebview_platform_interface.PlatformInAppBrowser.isHidden.supported_platforms}
+  ///{@macro nosferatu500_inappwebview_platform_interface.PlatformInAppBrowser.isHidden.supported_platforms}
   Future<bool> isHidden() => platform.isHidden();
 
-  ///{@macro flutter_inappwebview_platform_interface.PlatformInAppBrowser.setSettings}
+  ///{@macro nosferatu500_inappwebview_platform_interface.PlatformInAppBrowser.setSettings}
   ///
-  ///{@macro flutter_inappwebview_platform_interface.PlatformInAppBrowser.setSettings.supported_platforms}
+  ///{@macro nosferatu500_inappwebview_platform_interface.PlatformInAppBrowser.setSettings.supported_platforms}
   Future<void> setSettings({required InAppBrowserClassSettings settings}) =>
       platform.setSettings(settings: settings);
 
-  ///{@macro flutter_inappwebview_platform_interface.PlatformInAppBrowser.getSettings}
+  ///{@macro nosferatu500_inappwebview_platform_interface.PlatformInAppBrowser.getSettings}
   ///
-  ///{@macro flutter_inappwebview_platform_interface.PlatformInAppBrowser.getSettings.supported_platforms}
+  ///{@macro nosferatu500_inappwebview_platform_interface.PlatformInAppBrowser.getSettings.supported_platforms}
   Future<InAppBrowserClassSettings?> getSettings() => platform.getSettings();
 
-  ///{@macro flutter_inappwebview_platform_interface.PlatformInAppBrowser.isOpened}
+  ///{@macro nosferatu500_inappwebview_platform_interface.PlatformInAppBrowser.isOpened}
   ///
-  ///{@macro flutter_inappwebview_platform_interface.PlatformInAppBrowser.isOpened.supported_platforms}
+  ///{@macro nosferatu500_inappwebview_platform_interface.PlatformInAppBrowser.isOpened.supported_platforms}
   bool isOpened() => platform.isOpened();
 
-  ///{@macro flutter_inappwebview_platform_interface.PlatformInAppBrowser.dispose}
+  ///{@macro nosferatu500_inappwebview_platform_interface.PlatformInAppBrowser.dispose}
   ///
-  ///{@macro flutter_inappwebview_platform_interface.PlatformInAppBrowser.dispose.supported_platforms}
+  ///{@macro nosferatu500_inappwebview_platform_interface.PlatformInAppBrowser.dispose.supported_platforms}
   @mustCallSuper
   void dispose() => platform.dispose();
 
@@ -281,7 +277,7 @@ class InAppBrowser implements PlatformInAppBrowserEvents {
   void onDidReceiveServerRedirectForProvisionalNavigation() {}
 
   @override
-  FutureOr<DownloadStartResponse?>? onDownloadStarting(
+  FutureOr<void>? onDownloadStarting(
     DownloadStartRequest downloadStartRequest,
   ) {
     return null;
@@ -295,12 +291,6 @@ class InAppBrowser implements PlatformInAppBrowserEvents {
 
   @override
   void onExitFullscreen() {}
-
-  @override
-  void onContentLoading(WebUri? url) {}
-
-  @override
-  void onDOMContentLoaded(WebUri? url) {}
 
   @override
   FutureOr<FormResubmissionAction?>? onFormResubmission(WebUri? url) {
@@ -377,6 +367,42 @@ class InAppBrowser implements PlatformInAppBrowserEvents {
   void onPageCommitVisible(WebUri? url) {}
 
   @override
+  void onNavigationStarted(WebViewNavigation navigation) {}
+
+  @override
+  void onNavigationRedirected(WebViewNavigation navigation) {}
+
+  @override
+  void onNavigationCompleted(WebViewNavigation navigation) {}
+
+  @override
+  void onPageLoadEvent(WebViewPage page) {}
+
+  @override
+  void onPageDomContentLoadedEvent(WebViewPage page) {}
+
+  @override
+  void onPageDeleted(WebViewPage page) {}
+
+  @override
+  void onFirstContentfulPaintMillis(WebViewPage page, int durationMillis) {}
+
+  @override
+  void onLargestContentfulPaintMillis(WebViewPage page, int durationMillis) {}
+
+  @override
+  void onPerformanceMarkMillis(
+    WebViewPage page,
+    String markName,
+    int markTimeMillis,
+  ) {}
+
+  @override
+  FutureOr<List<WebUri>?> onRequestVisitedHistory() {
+    return null;
+  }
+
+  @override
   FutureOr<PermissionResponse?>? onPermissionRequest(
     PermissionRequest permissionRequest,
   ) {
@@ -387,10 +413,7 @@ class InAppBrowser implements PlatformInAppBrowserEvents {
   void onPermissionRequestCanceled(PermissionRequest permissionRequest) {}
 
   @override
-  FutureOr<bool?>? onPrintRequest(
-    WebUri? url,
-    PlatformPrintJobController? printJobController,
-  ) {
+  FutureOr<bool?>? onPrintRequest(WebUri? url) {
     return null;
   }
 
@@ -421,9 +444,6 @@ class InAppBrowser implements PlatformInAppBrowserEvents {
   ) {}
 
   @override
-  void onFaviconChanged(FaviconChangedRequest faviconChangedRequest) {}
-
-  @override
   void onReceivedLoginRequest(LoginRequest loginRequest) {}
 
   @override
@@ -435,42 +455,6 @@ class InAppBrowser implements PlatformInAppBrowserEvents {
 
   @override
   void onReceivedTouchIconUrl(WebUri url, bool precomposed) {}
-
-  @override
-  FutureOr<NotificationReceivedResponse?>? onNotificationReceived(
-    NotificationReceivedRequest request,
-  ) {
-    return null;
-  }
-
-  @override
-  FutureOr<SaveAsUIShowingResponse?>? onSaveAsUIShowing(
-    SaveAsUIShowingRequest request,
-  ) {
-    return null;
-  }
-
-  @override
-  FutureOr<SaveFileSecurityCheckStartingResponse?>?
-  onSaveFileSecurityCheckStarting(
-    SaveFileSecurityCheckStartingRequest request,
-  ) {
-    return null;
-  }
-
-  @override
-  FutureOr<ScreenCaptureStartingResponse?>? onScreenCaptureStarting(
-    ScreenCaptureStartingRequest request,
-  ) {
-    return null;
-  }
-
-  @override
-  FutureOr<LaunchingExternalUriSchemeResponse?>? onLaunchingExternalUriScheme(
-    LaunchingExternalUriSchemeRequest request,
-  ) {
-    return null;
-  }
 
   @override
   void onRenderProcessGone(RenderProcessGoneDetail detail) {}
@@ -555,26 +539,31 @@ class InAppBrowser implements PlatformInAppBrowserEvents {
   }
 
   @override
-  void onMainWindowWillClose() {}
-
-  @override
-  void onProcessFailed(ProcessFailedDetail detail) {}
-
-  @override
-  void onAcceleratorKeyPressed(AcceleratorKeyPressedDetail detail) {}
-
-  @override
   FutureOr<ShowFileChooserResponse?> onShowFileChooser(
     ShowFileChooserRequest request,
   ) {
     return null;
   }
 
-  ///{@macro flutter_inappwebview_platform_interface.PlatformInAppBrowser.isClassSupported}
+  @override
+  void onInsertInputSuggestion(InputSuggestion inputSuggestion) {}
+
+  @override
+  void onWritingToolsActiveChanged(bool active) {}
+
+  @override
+  FutureOr<ShouldGoToBackForwardListItemAction?>? shouldGoToBackForwardListItem(
+    WebHistoryItem backForwardListItem,
+    bool willUseInstantBack,
+  ) {
+    return null;
+  }
+
+  ///{@macro nosferatu500_inappwebview_platform_interface.PlatformInAppBrowser.isClassSupported}
   static bool isClassSupported({TargetPlatform? platform}) =>
       PlatformInAppBrowser.static().isClassSupported(platform: platform);
 
-  ///{@macro flutter_inappwebview_platform_interface.PlatformInAppBrowser.isPropertySupported}
+  ///{@macro nosferatu500_inappwebview_platform_interface.PlatformInAppBrowser.isPropertySupported}
   static bool isPropertySupported(
     PlatformInAppBrowserProperty property, {
     TargetPlatform? platform,
@@ -583,7 +572,7 @@ class InAppBrowser implements PlatformInAppBrowserEvents {
     platform: platform,
   );
 
-  ///{@macro flutter_inappwebview_platform_interface.PlatformInAppBrowser.isMethodSupported}
+  ///{@macro nosferatu500_inappwebview_platform_interface.PlatformInAppBrowser.isMethodSupported}
   static bool isMethodSupported(
     PlatformInAppBrowserMethod property, {
     TargetPlatform? platform,
@@ -592,7 +581,7 @@ class InAppBrowser implements PlatformInAppBrowserEvents {
     platform: platform,
   );
 
-  ///{@macro flutter_inappwebview_platform_interface.PlatformInAppBrowserEvents.isMethodSupported}
+  ///{@macro nosferatu500_inappwebview_platform_interface.PlatformInAppBrowserEvents.isMethodSupported}
   static bool isEventMethodSupported(
     PlatformInAppBrowserEventsMethod method, {
     TargetPlatform? platform,

@@ -1,5 +1,5 @@
 import 'dart:typed_data';
-import 'package:flutter_inappwebview_internal_annotations/flutter_inappwebview_internal_annotations.dart';
+import 'package:nosferatu500_inappwebview_internal_annotations/nosferatu500_inappwebview_internal_annotations.dart';
 
 import '../x509_certificate/x509_certificate.dart';
 import 'url_protection_space_proxy_type.dart';
@@ -19,9 +19,12 @@ List<X509Certificate>? _distinguishedNamesDeserializer(
     distinguishedNames = <X509Certificate>[];
     for (var data in (value.cast<Uint8List>() as List<Uint8List>)) {
       try {
-        distinguishedNames!.add(X509Certificate.fromData(data: data));
+        distinguishedNames.add(X509Certificate.fromData(data: data));
       } catch (e, stacktrace) {
+        // Undecodable: skip this certificate and keep the rest.
+        // ignore: avoid_print
         print(e);
+        // ignore: avoid_print
         print(stacktrace);
       }
     }
@@ -60,11 +63,6 @@ class URLProtectionSpace_ {
         apiUrl:
             "https://developer.apple.com/documentation/foundation/urlprotectionspace/1415028-authenticationmethod",
       ),
-      MacOSPlatform(
-        apiName: "URLProtectionSpace.authenticationMethod",
-        apiUrl:
-            "https://developer.apple.com/documentation/foundation/urlprotectionspace/1415028-authenticationmethod",
-      ),
     ],
   )
   URLProtectionSpaceAuthenticationMethod_? authenticationMethod;
@@ -76,11 +74,6 @@ class URLProtectionSpace_ {
   @SupportedPlatforms(
     platforms: [
       IOSPlatform(
-        apiName: "URLProtectionSpace.distinguishedNames",
-        apiUrl:
-            "https://developer.apple.com/documentation/foundation/urlprotectionspace/1417061-distinguishednames",
-      ),
-      MacOSPlatform(
         apiName: "URLProtectionSpace.distinguishedNames",
         apiUrl:
             "https://developer.apple.com/documentation/foundation/urlprotectionspace/1417061-distinguishednames",
@@ -98,11 +91,6 @@ class URLProtectionSpace_ {
         apiUrl:
             "https://developer.apple.com/documentation/foundation/urlprotectionspace/1415176-receivescredentialsecurely",
       ),
-      MacOSPlatform(
-        apiName: "URLProtectionSpace.receivesCredentialSecurely",
-        apiUrl:
-            "https://developer.apple.com/documentation/foundation/urlprotectionspace/1415176-receivescredentialsecurely",
-      ),
     ],
   )
   bool? receivesCredentialSecurely;
@@ -113,11 +101,6 @@ class URLProtectionSpace_ {
   @SupportedPlatforms(
     platforms: [
       IOSPlatform(
-        apiName: "URLProtectionSpace.proxyType",
-        apiUrl:
-            "https://developer.apple.com/documentation/foundation/urlprotectionspace/1411924-proxytype",
-      ),
-      MacOSPlatform(
         apiName: "URLProtectionSpace.proxyType",
         apiUrl:
             "https://developer.apple.com/documentation/foundation/urlprotectionspace/1411924-proxytype",

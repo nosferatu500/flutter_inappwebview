@@ -24,12 +24,12 @@ void sslRequest() {
             pageLoaded.complete();
           },
           onReceivedServerTrustAuthRequest: (controller, challenge) async {
-            return new ServerTrustAuthResponse(
+            return ServerTrustAuthResponse(
               action: ServerTrustAuthResponseAction.PROCEED,
             );
           },
           onReceivedClientCertRequest: (controller, challenge) async {
-            return new ClientCertResponse(
+            return ClientCertResponse(
               certificatePath: "test_assets/certificate.pfx",
               certificatePassword: "password",
               keyStoreType: "PKCS12",

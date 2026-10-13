@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_inappwebview/flutter_inappwebview.dart';
+import 'package:nosferatu500_inappwebview/nosferatu500_inappwebview.dart';
 import 'package:flutter_inappwebview_example/widgets/common/app_drawer.dart';
 import 'package:flutter_inappwebview_example/widgets/common/appbar_loading_indicator.dart';
 import 'package:flutter_inappwebview_example/widgets/common/empty_state.dart';
@@ -34,6 +34,17 @@ class _CookieManagerScreenState extends State<CookieManagerScreen> {
 
   // Search state
   String _searchQuery = '';
+
+  // The master switch is a toggle rather than a one-way button on purpose: turning cookie
+  // acceptance off and leaving no way back would break every other method on this screen.
+  // Seeded with the platform default rather than read at startup, which would cost a channel call.
+  bool _acceptCookie = true;
+
+  // The cookie-store observer is a toggle for the same reason: it is registered against the
+  // process-wide store, so leaving it on with no way off would keep notifying after this screen
+  // is gone.
+  bool _observingCookieStore = false;
+  int _cookieChangeCount = 0;
 
   final Map<String, List<MethodResultEntry>> _methodHistory = {};
   final Map<String, int> _selectedHistoryIndex = {};
@@ -202,6 +213,62 @@ class _CookieManagerScreenState extends State<CookieManagerScreen> {
       _recordMethodResult(
         PlatformCookieManagerMethod.setCookie.name,
         'Error setting cookie: $e',
+        isError: true,
+      );
+    } finally {
+      setState(() => _isLoading = false);
+    }
+  }
+
+  /// Writes several cookies in one platform round trip.
+  ///
+  /// The names are generated rather than prompted for because the point being demonstrated is the
+  /// batch, not the individual values: one call replaces N, and the per-cookie answers come back
+  /// in the order they were given.
+  Future<void> _setCookies() async {
+    final params = await showParameterDialog(
+      context: context,
+      title: PlatformCookieManagerMethod.setCookies.name,
+      parameters: {'url': _urlController.text.trim(), 'count': 5},
+      requiredPaths: ['url'],
+    );
+
+    if (params == null) return;
+
+    final url = params['url']?.toString() ?? '';
+    if (url.isEmpty) {
+      _recordMethodResult(
+        PlatformCookieManagerMethod.setCookies.name,
+        'Please enter a URL',
+        isError: true,
+      );
+      return;
+    }
+    final count = (params['count'] as num?)?.toInt() ?? 5;
+
+    setState(() => _isLoading = true);
+    try {
+      final results = await _cookieManager.setCookies(
+        cookies: [
+          for (var i = 0; i < count; i++)
+            CookieToSet(
+              url: WebUri(url),
+              name: 'batchCookie$i',
+              value: 'value$i',
+            ),
+        ],
+      );
+      final succeeded = results.where((ok) => ok).length;
+      _recordMethodResult(
+        PlatformCookieManagerMethod.setCookies.name,
+        '$succeeded of ${results.length} cookies set in one call',
+        isError: succeeded != results.length,
+      );
+      await _getCookies();
+    } catch (e) {
+      _recordMethodResult(
+        PlatformCookieManagerMethod.setCookies.name,
+        'Error setting cookies: $e',
         isError: true,
       );
     } finally {
@@ -511,16 +578,164 @@ class _CookieManagerScreenState extends State<CookieManagerScreen> {
   Future<void> _flush() async {
     setState(() => _isLoading = true);
     try {
-      await _cookieManager.flush();
+      final flushed = await _cookieManager.flush();
       _recordMethodResult(
         PlatformCookieManagerMethod.flush.name,
-        'Cookies flushed to persistent storage',
-        isError: false,
+        flushed
+            ? 'Cookies flushed to persistent storage'
+            : 'Nothing was flushed: the cookie store could not be resolved '
+                  '(unknown profile, or no MULTI_PROFILE support)',
+        isError: !flushed,
       );
     } catch (e) {
       _recordMethodResult(
         PlatformCookieManagerMethod.flush.name,
         'Error flushing cookies: $e',
+        isError: true,
+      );
+    } finally {
+      setState(() => _isLoading = false);
+    }
+  }
+
+  Future<void> _isFileSchemeCookiesAllowed() async {
+    setState(() => _isLoading = true);
+    try {
+      // Static on the facade, not an instance call: the value is process-global.
+      final result = await CookieManager.isFileSchemeCookiesAllowed();
+      _recordMethodResult(
+        PlatformCookieManagerMethod.isFileSchemeCookiesAllowed.name,
+        result == null
+            ? 'Unknown -- no WebView provider could be resolved'
+            : 'file:// cookies are ${result ? 'allowed' : 'not allowed'} '
+                  '(read-only; the platform setter is deprecated)',
+        isError: result == null,
+        value: result,
+      );
+    } catch (e) {
+      _recordMethodResult(
+        PlatformCookieManagerMethod.isFileSchemeCookiesAllowed.name,
+        'Error reading file-scheme cookie policy: $e',
+        isError: true,
+      );
+    } finally {
+      setState(() => _isLoading = false);
+    }
+  }
+
+  Future<void> _hasCookies() async {
+    setState(() => _isLoading = true);
+    try {
+      final result = await _cookieManager.hasCookies();
+      _recordMethodResult(
+        PlatformCookieManagerMethod.hasCookies.name,
+        // null is not "empty" -- it means the store could not be read at all.
+        result == null
+            ? 'Unknown -- the cookie store was not resolvable'
+            : result
+            ? 'The store holds at least one cookie'
+            : 'The store is empty',
+        isError: result == null,
+        value: result,
+      );
+    } catch (e) {
+      _recordMethodResult(
+        PlatformCookieManagerMethod.hasCookies.name,
+        'Error checking for cookies: $e',
+        isError: true,
+      );
+    } finally {
+      setState(() => _isLoading = false);
+    }
+  }
+
+  Future<void> _toggleAcceptCookie() async {
+    final accept = !_acceptCookie;
+    setState(() => _isLoading = true);
+    try {
+      final result = await _cookieManager.setAcceptCookie(accept);
+      if (result) {
+        _acceptCookie = accept;
+      }
+      _recordMethodResult(
+        PlatformCookieManagerMethod.setAcceptCookie.name,
+        result
+            ? 'Cookie acceptance turned ${accept ? 'on' : 'off'}'
+            // false is "not applied", never "cookies are now rejected". Two different causes:
+            // an unresolvable cookie store on Android, no cookie policy at all below iOS 17.0.
+            : 'Could not apply it -- no cookie store to switch, or iOS below 17.0',
+        isError: !result,
+      );
+    } catch (e) {
+      _recordMethodResult(
+        PlatformCookieManagerMethod.setAcceptCookie.name,
+        'Error setting cookie acceptance: $e',
+        isError: true,
+      );
+    } finally {
+      setState(() => _isLoading = false);
+    }
+  }
+
+  Future<void> _isAcceptCookieEnabled() async {
+    setState(() => _isLoading = true);
+    try {
+      final result = await _cookieManager.isAcceptCookieEnabled();
+      _recordMethodResult(
+        PlatformCookieManagerMethod.isAcceptCookieEnabled.name,
+        // null is not "off" -- it means nothing could be read at all: an unresolvable cookie
+        // store on Android, or an iOS below 17.0 that has no cookie policy.
+        result == null
+            ? 'Unknown -- no cookie store to read, or iOS below 17.0'
+            : 'Cookies are ${result ? 'accepted' : 'rejected'}',
+        isError: result == null,
+        value: result,
+      );
+    } catch (e) {
+      _recordMethodResult(
+        PlatformCookieManagerMethod.isAcceptCookieEnabled.name,
+        'Error reading cookie acceptance: $e',
+        isError: true,
+      );
+    } finally {
+      setState(() => _isLoading = false);
+    }
+  }
+
+  Future<void> _toggleCookieStoreObserver() async {
+    final observe = !_observingCookieStore;
+    setState(() => _isLoading = true);
+    try {
+      await _cookieManager.setCookieStoreObserver(
+        observe
+            ? CookieStoreObserver(
+                // No payload: the platform says the store changed, not what changed. Anything
+                // more specific has to be read back, which is what the button below does.
+                onCookiesChanged: () {
+                  _cookieChangeCount++;
+                  _recordMethodResult(
+                    PlatformCookieManagerMethod.setCookieStoreObserver.name,
+                    'onCookiesChanged #$_cookieChangeCount -- run '
+                    '"${PlatformCookieManagerMethod.getAllCookies.name}" to see the new state',
+                    isError: false,
+                    value: _cookieChangeCount,
+                  );
+                },
+              )
+            : null,
+      );
+      setState(() => _observingCookieStore = observe);
+      _recordMethodResult(
+        PlatformCookieManagerMethod.setCookieStoreObserver.name,
+        observe
+            ? 'Observing the cookie store -- set or delete a cookie to see it fire'
+            : 'Stopped observing the cookie store',
+        isError: false,
+      );
+    } catch (e) {
+      _recordMethodResult(
+        PlatformCookieManagerMethod.setCookieStoreObserver.name,
+        'Error setting the cookie store observer: $e',
         isError: true,
       );
     } finally {
@@ -664,6 +879,11 @@ class _CookieManagerScreenState extends State<CookieManagerScreen> {
                   _setCookie,
                 ),
                 _buildMethodSection(
+                  PlatformCookieManagerMethod.setCookies,
+                  'Set several cookies in one platform round trip',
+                  _setCookies,
+                ),
+                _buildMethodSection(
                   PlatformCookieManagerMethod.getCookies,
                   'Get all cookies for the given URL',
                   _getCookies,
@@ -702,6 +922,36 @@ class _CookieManagerScreenState extends State<CookieManagerScreen> {
                   PlatformCookieManagerMethod.flush,
                   'Flush cookies to persistent storage',
                   _flush,
+                ),
+                _buildMethodSection(
+                  PlatformCookieManagerMethod.hasCookies,
+                  'Is there any cookie at all? (store-wide, no URL)',
+                  _hasCookies,
+                ),
+                _buildMethodSection(
+                  PlatformCookieManagerMethod.isFileSchemeCookiesAllowed,
+                  'Are file:// cookies allowed? (process-global, read-only)',
+                  _isFileSchemeCookiesAllowed,
+                ),
+                _buildMethodSection(
+                  PlatformCookieManagerMethod.setAcceptCookie,
+                  _acceptCookie
+                      ? 'Stop accepting cookies (master switch; deletes nothing)'
+                      : 'Start accepting cookies again (master switch)',
+                  _toggleAcceptCookie,
+                ),
+                _buildMethodSection(
+                  PlatformCookieManagerMethod.isAcceptCookieEnabled,
+                  'Read whether cookies are being accepted',
+                  _isAcceptCookieEnabled,
+                ),
+                _buildMethodSection(
+                  PlatformCookieManagerMethod.setCookieStoreObserver,
+                  _observingCookieStore
+                      ? 'Stop observing cookie store changes '
+                            '($_cookieChangeCount so far)'
+                      : 'Get notified when the cookie store changes (no payload)',
+                  _toggleCookieStoreObserver,
                 ),
                 const SizedBox(height: 16),
                 _buildCookiesList(),
@@ -1122,6 +1372,11 @@ class _CookieManagerScreenState extends State<CookieManagerScreen> {
 
   @override
   void dispose() {
+    // The observer outlives this screen otherwise: it is registered against the process-wide
+    // cookie store, not against this State.
+    if (_observingCookieStore) {
+      _cookieManager.setCookieStoreObserver(null);
+    }
     _urlController.dispose();
     _searchController.dispose();
     super.dispose();

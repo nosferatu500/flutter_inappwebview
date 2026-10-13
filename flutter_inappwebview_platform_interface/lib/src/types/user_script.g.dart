@@ -20,16 +20,10 @@ class UserScript {
   ///**Officially Supported Platforms/Implementations**:
   ///- Android WebView
   ///- iOS WKWebView
-  ///- macOS WKWebView
-  ///- Windows WebView2
   late Set<String> allowedOriginRules;
 
   ///A scope of execution in which to evaluate the script to prevent conflicts between different scripts.
   ///For more information about content worlds, see [ContentWorld].
-  ///
-  ///**NOTE for Android**: because of how a Content World is implemented on Android, if [forMainFrameOnly] is `true`,
-  ///the [source] inside a specific Content World that is not [ContentWorld.PAGE] will not be executed.
-  ///See [ContentWorld] for more details.
   late ContentWorld contentWorld;
 
   ///A Boolean value that indicates whether to inject the script into the main frame.
@@ -39,8 +33,6 @@ class UserScript {
   ///**Officially Supported Platforms/Implementations**:
   ///- Android WebView
   ///- iOS WKWebView
-  ///- macOS WKWebView
-  ///- Windows WebView2
   bool forMainFrameOnly;
 
   ///The script’s group name.

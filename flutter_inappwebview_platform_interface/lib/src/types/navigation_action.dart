@@ -1,8 +1,10 @@
-import 'package:flutter_inappwebview_internal_annotations/flutter_inappwebview_internal_annotations.dart';
+import 'package:nosferatu500_inappwebview_internal_annotations/nosferatu500_inappwebview_internal_annotations.dart';
 
 import 'url_request.dart';
 import 'navigation_type.dart';
 import 'frame_info.dart';
+import 'modifier_flag.dart';
+import 'button_mask.dart';
 import 'enum_method.dart';
 
 part 'navigation_action.g.dart';
@@ -37,10 +39,6 @@ class NavigationAction_ {
             "https://developer.android.com/reference/android/webkit/WebResourceRequest#hasGesture()",
         note: "On Android < 21, this is always `false`",
       ),
-      WindowsPlatform(
-        note:
-            "Available only if the request is associated to the [PlatformWebViewCreationParams.onCreateWindow] event",
-      ),
     ],
   )
   bool? hasGesture;
@@ -57,7 +55,6 @@ class NavigationAction_ {
         apiUrl:
             "https://developer.android.com/reference/android/webkit/WebResourceRequest#isRedirect()",
       ),
-      WindowsPlatform(),
     ],
   )
   bool? isRedirect;
@@ -70,12 +67,6 @@ class NavigationAction_ {
         apiUrl:
             "https://developer.apple.com/documentation/webkit/wknavigationaction/1401914-navigationtype",
       ),
-      MacOSPlatform(
-        apiName: "WKNavigationAction.navigationType",
-        apiUrl:
-            "https://developer.apple.com/documentation/webkit/wknavigationaction/1401914-navigationtype",
-      ),
-      WindowsPlatform(),
     ],
   )
   NavigationType_? navigationType;
@@ -88,11 +79,6 @@ class NavigationAction_ {
         apiUrl:
             "https://developer.apple.com/documentation/webkit/wknavigationaction/1401926-sourceframe",
       ),
-      MacOSPlatform(
-        apiName: "WKNavigationAction.sourceFrame",
-        apiUrl:
-            "https://developer.apple.com/documentation/webkit/wknavigationaction/1401926-sourceframe",
-      ),
     ],
   )
   FrameInfo_? sourceFrame;
@@ -101,11 +87,6 @@ class NavigationAction_ {
   @SupportedPlatforms(
     platforms: [
       IOSPlatform(
-        apiName: "WKNavigationAction.targetFrame",
-        apiUrl:
-            "https://developer.apple.com/documentation/webkit/wknavigationaction/1401918-targetframe",
-      ),
-      MacOSPlatform(
         apiName: "WKNavigationAction.targetFrame",
         apiUrl:
             "https://developer.apple.com/documentation/webkit/wknavigationaction/1401918-targetframe",
@@ -123,15 +104,75 @@ class NavigationAction_ {
         apiUrl:
             "https://developer.apple.com/documentation/webkit/wknavigationaction/3727357-shouldperformdownload",
       ),
-      MacOSPlatform(
-        available: "11.3",
-        apiName: "WKNavigationAction.shouldPerformDownload",
-        apiUrl:
-            "https://developer.apple.com/documentation/webkit/wknavigationaction/3727357-shouldperformdownload",
-      ),
     ],
   )
   bool? shouldPerformDownload;
+
+  ///Whether the navigation is a redirect produced by a content rule list rather than by the
+  ///page or the server.
+  ///
+  ///The only rule-list action this plugin can express today is
+  ///[ContentBlockerActionType.MAKE_HTTPS] in [InAppWebViewSettings.contentBlockers], so on iOS
+  ///this is effectively "the `http` → `https` upgrade one of my own rules performed".
+  ///
+  ///This is **not** [isRedirect], which reports a *server-side* redirect and is Android/Windows
+  ///only. A content rule list redirect never reaches the network at the original URL, so no
+  ///server was involved.
+  ///
+  ///`false` means the platform reported the value and the navigation was not rule-list driven;
+  ///`null` means it did not report the value at all, which is the case below iOS 26.0. The
+  ///distinction matters for a caller that vetoes or logs unexpected navigations: a rule-list
+  ///redirect was caused by the app's own configuration, not by the content.
+  @SupportedPlatforms(
+    platforms: [
+      IOSPlatform(
+        available: "26.0",
+        apiName: "WKNavigationAction.isContentRuleListRedirect",
+        apiUrl:
+            "https://developer.apple.com/documentation/webkit/wknavigationaction/iscontentrulelistredirect",
+      ),
+    ],
+  )
+  bool? isContentRuleListRedirect;
+
+  ///The modifier keys that were held down when the navigation was triggered,
+  ///for example `[ModifierFlag.COMMAND]` for a command-click.
+  ///
+  ///This is a set because the underlying `UIKeyModifierFlags` is a bit mask and more than one
+  ///modifier can be held at once. An empty list means no modifier was held; `null` means the
+  ///platform did not report the value at all, which is the case below iOS 18.4.
+  ///
+  ///A common use is distinguishing an ordinary link activation from a command-click, which on
+  ///Apple platforms conventionally means "open in a new tab".
+  @SupportedPlatforms(
+    platforms: [
+      IOSPlatform(
+        available: "18.4",
+        apiName: "WKNavigationAction.modifierFlags",
+        apiUrl:
+            "https://developer.apple.com/documentation/webkit/wknavigationaction/modifierflags",
+      ),
+    ],
+  )
+  List<ModifierFlag_>? modifierFlags;
+
+  ///The pointing-device buttons that were pressed when the navigation was triggered.
+  ///
+  ///Despite the name, which is inherited from the WebKit property, this is **not** a button
+  ///index — the native `UIEventButtonMask` is a bit mask defined as `1 << (buttonNumber - 1)`.
+  ///It is exposed as a set of named buttons so the distinction cannot be got wrong.
+  ///`null` means the platform did not report the value at all, which is the case below iOS 18.4.
+  @SupportedPlatforms(
+    platforms: [
+      IOSPlatform(
+        available: "18.4",
+        apiName: "WKNavigationAction.buttonNumber",
+        apiUrl:
+            "https://developer.apple.com/documentation/webkit/wknavigationaction/buttonnumber",
+      ),
+    ],
+  )
+  List<ButtonMask_>? buttonNumber;
 
   NavigationAction_({
     required this.request,
@@ -142,5 +183,8 @@ class NavigationAction_ {
     this.sourceFrame,
     this.targetFrame,
     this.shouldPerformDownload,
+    this.isContentRuleListRedirect,
+    this.modifierFlags,
+    this.buttonNumber,
   });
 }

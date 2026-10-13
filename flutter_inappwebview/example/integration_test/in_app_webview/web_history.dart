@@ -10,6 +10,24 @@ void webHistory() {
       PlatformInAppWebViewControllerMethod.getCopyBackForwardList,
     );
 
+    // Two plain documents from the project's own node server, deliberately NOT
+    // `https://flutter.dev/` and `https://github.com/flutter`, which this test used to drive.
+    //
+    // Both of those cancel their own back/forward navigations — the plugin reports
+    // `onReceivedError` with `WebResourceErrorType.CANCELLED` (`NSURLErrorCancelled`, -999) and
+    // WebKit never calls `didFinishNavigation`, so no `onLoadStop` arrives and the test waited out
+    // its 60s timeout. It is the *pages*, not `goBack`: measured on iOS 17.5 and 26.5, the same
+    // sequence over these two static pages passes, and so does a cross-origin pair
+    // (`https://www.example.com/` ↔ this server). The back-forward list itself was always right —
+    // `currentIndex`, `canGoBack` and `canGoForward` all moved correctly even when the load was
+    // cancelled.
+    //
+    // This adds the node server to this test's requirements; it had none before.
+    final historyUrlA = WebUri('http://${environment["NODE_SERVER_IP"]}:8082/');
+    final historyUrlB = WebUri(
+      'http://${environment["NODE_SERVER_IP"]}:8082/test-index',
+    );
+
     skippableTestWidgets('get history list and go back/forward', (
       WidgetTester tester,
     ) async {
@@ -18,12 +36,28 @@ void webHistory() {
       final StreamController<String> pageLoads =
           StreamController<String>.broadcast();
 
+      Future<String> waitForUrl(String expectedUrl) async {
+        await for (final url in pageLoads.stream) {
+          if (url == expectedUrl) {
+            return url;
+          }
+        }
+        throw Exception('Stream closed without receiving $expectedUrl');
+      }
+
+      // Subscribe BEFORE the widget exists, for the same reason as every later step: the stream is
+      // broadcast, so a load that finishes before anyone listens is dropped and the wait never ends.
+      // This first step used to subscribe after `pumpWidget`, and lost that race about half the
+      // time once plugin start-up timing shifted (§198). Measured with a probe:
+      // "initial load arrived before subscribing: [http://<node>:8082/]", then a 60 s timeout.
+      final initialLoad = waitForUrl(historyUrlA.toString());
+
       await tester.pumpWidget(
         Directionality(
           textDirection: TextDirection.ltr,
           child: InAppWebView(
             key: GlobalKey(),
-            initialUrlRequest: URLRequest(url: TEST_CROSS_PLATFORM_URL_1),
+            initialUrlRequest: URLRequest(url: historyUrlA),
             onWebViewCreated: (controller) {
               controllerCompleter.complete(controller);
             },
@@ -39,99 +73,75 @@ void webHistory() {
 
       await tester.pump();
 
-      Future<String> waitForUrl(String expectedUrl) async {
-        await for (final url in pageLoads.stream) {
-          if (url == expectedUrl) {
-            return url;
-          }
-        }
-        throw Exception('Stream closed without receiving $expectedUrl');
-      }
-
       // Wait for initial page load
-      var url = await waitForUrl(TEST_CROSS_PLATFORM_URL_1.toString());
+      var url = await initialLoad;
       var webHistory = await controller.getCopyBackForwardList();
-      expect(url, TEST_CROSS_PLATFORM_URL_1.toString());
+      expect(url, historyUrlA.toString());
       expect(webHistory!.currentIndex, 0);
       expect(webHistory.list!.length, 1);
-      expect(
-        webHistory.list![0].url.toString(),
-        TEST_CROSS_PLATFORM_URL_1.toString(),
-      );
+      expect(webHistory.list![0].url.toString(), historyUrlA.toString());
 
       // Start listening BEFORE navigation to avoid race condition
-      var loadFuture = waitForUrl(TEST_URL_1.toString());
-      await controller.loadUrl(urlRequest: URLRequest(url: TEST_URL_1));
+      var loadFuture = waitForUrl(historyUrlB.toString());
+      await controller.loadUrl(urlRequest: URLRequest(url: historyUrlB));
       url = await loadFuture;
       webHistory = await controller.getCopyBackForwardList();
-      expect(url, TEST_URL_1.toString());
+      expect(url, historyUrlB.toString());
       expect(await controller.canGoBack(), true);
       expect(await controller.canGoForward(), false);
       expect(await controller.canGoBackOrForward(steps: -1), true);
       expect(await controller.canGoBackOrForward(steps: 1), false);
       expect(webHistory!.currentIndex, 1);
       expect(webHistory.list!.length, 2);
-      expect(
-        webHistory.list![0].url.toString(),
-        TEST_CROSS_PLATFORM_URL_1.toString(),
-      );
-      expect(webHistory.list![1].url.toString(), TEST_URL_1.toString());
+      expect(webHistory.list![0].url.toString(), historyUrlA.toString());
+      expect(webHistory.list![1].url.toString(), historyUrlB.toString());
 
-      loadFuture = waitForUrl(TEST_CROSS_PLATFORM_URL_1.toString());
+      loadFuture = waitForUrl(historyUrlA.toString());
       await controller.goBack();
       url = await loadFuture;
       webHistory = await controller.getCopyBackForwardList();
-      expect(url, TEST_CROSS_PLATFORM_URL_1.toString());
+      expect(url, historyUrlA.toString());
       expect(await controller.canGoBack(), false);
       expect(await controller.canGoForward(), true);
       expect(await controller.canGoBackOrForward(steps: -1), false);
       expect(await controller.canGoBackOrForward(steps: 1), true);
       expect(webHistory!.currentIndex, 0);
       expect(webHistory.list!.length, 2);
-      expect(
-        webHistory.list![0].url.toString(),
-        TEST_CROSS_PLATFORM_URL_1.toString(),
-      );
-      expect(webHistory.list![1].url.toString(), TEST_URL_1.toString());
+      expect(webHistory.list![0].url.toString(), historyUrlA.toString());
+      expect(webHistory.list![1].url.toString(), historyUrlB.toString());
 
-      loadFuture = waitForUrl(TEST_URL_1.toString());
+      loadFuture = waitForUrl(historyUrlB.toString());
       await controller.goForward();
       url = await loadFuture;
       webHistory = await controller.getCopyBackForwardList();
-      expect(url, TEST_URL_1.toString());
+      expect(url, historyUrlB.toString());
       expect(await controller.canGoBack(), true);
       expect(await controller.canGoForward(), false);
       expect(await controller.canGoBackOrForward(steps: -1), true);
       expect(await controller.canGoBackOrForward(steps: 1), false);
       expect(webHistory!.currentIndex, 1);
       expect(webHistory.list!.length, 2);
-      expect(
-        webHistory.list![0].url.toString(),
-        TEST_CROSS_PLATFORM_URL_1.toString(),
-      );
-      expect(webHistory.list![1].url.toString(), TEST_URL_1.toString());
+      expect(webHistory.list![0].url.toString(), historyUrlA.toString());
+      expect(webHistory.list![1].url.toString(), historyUrlB.toString());
 
-      loadFuture = waitForUrl(TEST_CROSS_PLATFORM_URL_1.toString());
+      loadFuture = waitForUrl(historyUrlA.toString());
       await controller.goTo(historyItem: webHistory.list![0]);
       url = await loadFuture;
       webHistory = await controller.getCopyBackForwardList();
-      expect(url, TEST_CROSS_PLATFORM_URL_1.toString());
+      expect(url, historyUrlA.toString());
       expect(await controller.canGoBack(), false);
       expect(await controller.canGoForward(), true);
       expect(await controller.canGoBackOrForward(steps: -1), false);
       expect(await controller.canGoBackOrForward(steps: 1), true);
       expect(webHistory!.currentIndex, 0);
       expect(webHistory.list!.length, 2);
-      expect(
-        webHistory.list![0].url.toString(),
-        TEST_CROSS_PLATFORM_URL_1.toString(),
-      );
-      expect(webHistory.list![1].url.toString(), TEST_URL_1.toString());
+      expect(webHistory.list![0].url.toString(), historyUrlA.toString());
+      expect(webHistory.list![1].url.toString(), historyUrlB.toString());
 
-      pageLoads.close();
+      unawaited(pageLoads.close());
     }, skip: shouldSkipTest1);
 
-    final shouldSkipTest2 = !kIsWeb;
+    const shouldSkipTest2 = !kIsWeb;
 
     skippableTestWidgets('go back/forward on web platform', (
       WidgetTester tester,
@@ -171,22 +181,22 @@ void webHistory() {
       url = await pageLoads.stream.first;
       expect(url, TEST_WEB_PLATFORM_URL_2.toString());
 
-      await Future.delayed(Duration(seconds: 1));
+      await Future.delayed(const Duration(seconds: 1));
       await controller.goBack();
       url = await pageLoads.stream.first;
       expect(url, TEST_WEB_PLATFORM_URL_1.toString());
 
-      await Future.delayed(Duration(seconds: 1));
+      await Future.delayed(const Duration(seconds: 1));
       await controller.goForward();
       url = await pageLoads.stream.first;
       expect(url, TEST_WEB_PLATFORM_URL_2.toString());
 
-      await Future.delayed(Duration(seconds: 1));
+      await Future.delayed(const Duration(seconds: 1));
       await controller.goBackOrForward(steps: -1);
       url = await pageLoads.stream.first;
       expect(url, TEST_WEB_PLATFORM_URL_1.toString());
 
-      pageLoads.close();
+      unawaited(pageLoads.close());
     }, skip: shouldSkipTest2);
 
     final shouldSkipTest3 = !InAppWebViewController.isMethodSupported(
@@ -229,7 +239,7 @@ void webHistory() {
       webHistory = await controller.getCopyBackForwardList();
       expect(webHistory!.list!.length, 1);
 
-      pageLoads.close();
+      unawaited(pageLoads.close());
     }, skip: shouldSkipTest3);
   }, skip: shouldSkip);
 }

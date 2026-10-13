@@ -3,3 +3,6 @@ targets:
     sources:
       exclude:
         - example/**.dart
+        # Pigeon output. Owned by `dart run pigeon --input pigeons/<name>.dart`, not by
+        # build_runner -- excluded so the two generators can never contest the same .g.dart.
+        - lib/src/pigeons/**

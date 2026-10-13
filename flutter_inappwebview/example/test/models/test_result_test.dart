@@ -20,10 +20,10 @@ void main() {
     });
 
     test('toMap should serialize to JSON correctly', () {
-      final testResult = TestResult(
+      const testResult = TestResult(
         passed: false,
         message: 'Test failed',
-        duration: const Duration(milliseconds: 250),
+        duration: Duration(milliseconds: 250),
         data: {'error': 'timeout'},
       );
 
@@ -36,22 +36,22 @@ void main() {
     });
 
     test('duration formatting should work correctly', () {
-      final testResult1 = TestResult(
+      const testResult1 = TestResult(
         passed: true,
         message: 'Test',
-        duration: const Duration(milliseconds: 50),
+        duration: Duration(milliseconds: 50),
       );
 
-      final testResult2 = TestResult(
+      const testResult2 = TestResult(
         passed: true,
         message: 'Test',
-        duration: const Duration(milliseconds: 1500),
+        duration: Duration(milliseconds: 1500),
       );
 
-      final testResult3 = TestResult(
+      const testResult3 = TestResult(
         passed: true,
         message: 'Test',
-        duration: const Duration(seconds: 65),
+        duration: Duration(seconds: 65),
       );
 
       expect(testResult1.durationFormatted, '50ms');
@@ -60,10 +60,10 @@ void main() {
     });
 
     test('null data should be handled correctly', () {
-      final testResult = TestResult(
+      const testResult = TestResult(
         passed: true,
         message: 'Test passed',
-        duration: const Duration(milliseconds: 100),
+        duration: Duration(milliseconds: 100),
       );
 
       final map = testResult.toMap();

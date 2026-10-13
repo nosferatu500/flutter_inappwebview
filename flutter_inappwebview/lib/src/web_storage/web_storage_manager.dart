@@ -1,13 +1,13 @@
 import 'dart:async';
 
 import 'package:flutter/foundation.dart';
-import 'package:flutter_inappwebview_platform_interface/flutter_inappwebview_platform_interface.dart';
+import 'package:nosferatu500_inappwebview_platform_interface/nosferatu500_inappwebview_platform_interface.dart';
 
-///{@macro flutter_inappwebview_platform_interface.PlatformWebStorageManager}
+///{@macro nosferatu500_inappwebview_platform_interface.PlatformWebStorageManager}
 ///
-///{@macro flutter_inappwebview_platform_interface.PlatformWebStorageManager.supported_platforms}
+///{@macro nosferatu500_inappwebview_platform_interface.PlatformWebStorageManager.supported_platforms}
 class WebStorageManager {
-  ///{@macro flutter_inappwebview_platform_interface.PlatformWebStorageManager}
+  ///{@macro nosferatu500_inappwebview_platform_interface.PlatformWebStorageManager}
   WebStorageManager()
     : this.fromPlatformCreationParams(
         const PlatformWebStorageManagerCreationParams(),
@@ -47,52 +47,73 @@ class WebStorageManager {
     return _instance!;
   }
 
-  ///{@macro flutter_inappwebview_platform_interface.PlatformWebStorageManager.getOrigins}
+  ///{@macro nosferatu500_inappwebview_platform_interface.PlatformWebStorageManager.getOrigins}
   ///
-  ///{@macro flutter_inappwebview_platform_interface.PlatformWebStorageManager.getOrigins.supported_platforms}
-  Future<List<WebStorageOrigin>> getOrigins() => platform.getOrigins();
+  ///{@macro nosferatu500_inappwebview_platform_interface.PlatformWebStorageManager.getOrigins.supported_platforms}
+  Future<List<WebStorageOrigin>> getOrigins({String? profileName}) =>
+      platform.getOrigins(profileName: profileName);
 
-  ///{@macro flutter_inappwebview_platform_interface.PlatformWebStorageManager.deleteAllData}
+  ///{@macro nosferatu500_inappwebview_platform_interface.PlatformWebStorageManager.deleteAllData}
   ///
-  ///{@macro flutter_inappwebview_platform_interface.PlatformWebStorageManager.deleteAllData.supported_platforms}
-  Future<void> deleteAllData() => platform.deleteAllData();
+  ///{@macro nosferatu500_inappwebview_platform_interface.PlatformWebStorageManager.deleteAllData.supported_platforms}
+  Future<bool> deleteAllData({String? profileName}) =>
+      platform.deleteAllData(profileName: profileName);
 
-  ///{@macro flutter_inappwebview_platform_interface.PlatformWebStorageManager.deleteOrigin}
+  ///{@macro nosferatu500_inappwebview_platform_interface.PlatformWebStorageManager.deleteOrigin}
   ///
-  ///{@macro flutter_inappwebview_platform_interface.PlatformWebStorageManager.deleteOrigin.supported_platforms}
-  Future<void> deleteOrigin({required String origin}) =>
-      platform.deleteOrigin(origin: origin);
+  ///{@macro nosferatu500_inappwebview_platform_interface.PlatformWebStorageManager.deleteOrigin.supported_platforms}
+  Future<bool> deleteOrigin({required String origin, String? profileName}) =>
+      platform.deleteOrigin(origin: origin, profileName: profileName);
 
-  ///{@macro flutter_inappwebview_platform_interface.PlatformWebStorageManager.getQuotaForOrigin}
+  ///{@macro nosferatu500_inappwebview_platform_interface.PlatformWebStorageManager.deleteBrowsingData}
   ///
-  ///{@macro flutter_inappwebview_platform_interface.PlatformWebStorageManager.getQuotaForOrigin.supported_platforms}
-  Future<int> getQuotaForOrigin({required String origin}) =>
-      platform.getQuotaForOrigin(origin: origin);
+  ///{@macro nosferatu500_inappwebview_platform_interface.PlatformWebStorageManager.deleteBrowsingData.supported_platforms}
+  Future<bool> deleteBrowsingData({String? profileName}) =>
+      platform.deleteBrowsingData(profileName: profileName);
 
-  ///{@macro flutter_inappwebview_platform_interface.PlatformWebStorageManager.getUsageForOrigin}
+  ///{@macro nosferatu500_inappwebview_platform_interface.PlatformWebStorageManager.deleteBrowsingDataForSite}
   ///
-  ///{@macro flutter_inappwebview_platform_interface.PlatformWebStorageManager.getUsageForOrigin.supported_platforms}
-  Future<int> getUsageForOrigin({required String origin}) =>
-      platform.getUsageForOrigin(origin: origin);
+  ///{@macro nosferatu500_inappwebview_platform_interface.PlatformWebStorageManager.deleteBrowsingDataForSite.supported_platforms}
+  Future<String?> deleteBrowsingDataForSite({
+    required String site,
+    String? profileName,
+  }) =>
+      platform.deleteBrowsingDataForSite(site: site, profileName: profileName);
 
-  ///{@macro flutter_inappwebview_platform_interface.PlatformWebStorageManager.fetchDataRecords}
+  ///{@macro nosferatu500_inappwebview_platform_interface.PlatformWebStorageManager.getQuotaForOrigin}
   ///
-  ///{@macro flutter_inappwebview_platform_interface.PlatformWebStorageManager.fetchDataRecords.supported_platforms}
+  ///{@macro nosferatu500_inappwebview_platform_interface.PlatformWebStorageManager.getQuotaForOrigin.supported_platforms}
+  Future<int?> getQuotaForOrigin({
+    required String origin,
+    String? profileName,
+  }) => platform.getQuotaForOrigin(origin: origin, profileName: profileName);
+
+  ///{@macro nosferatu500_inappwebview_platform_interface.PlatformWebStorageManager.getUsageForOrigin}
+  ///
+  ///{@macro nosferatu500_inappwebview_platform_interface.PlatformWebStorageManager.getUsageForOrigin.supported_platforms}
+  Future<int?> getUsageForOrigin({
+    required String origin,
+    String? profileName,
+  }) => platform.getUsageForOrigin(origin: origin, profileName: profileName);
+
+  ///{@macro nosferatu500_inappwebview_platform_interface.PlatformWebStorageManager.fetchDataRecords}
+  ///
+  ///{@macro nosferatu500_inappwebview_platform_interface.PlatformWebStorageManager.fetchDataRecords.supported_platforms}
   Future<List<WebsiteDataRecord>> fetchDataRecords({
     required Set<WebsiteDataType> dataTypes,
   }) => platform.fetchDataRecords(dataTypes: dataTypes);
 
-  ///{@macro flutter_inappwebview_platform_interface.PlatformWebStorageManager.removeDataFor}
+  ///{@macro nosferatu500_inappwebview_platform_interface.PlatformWebStorageManager.removeDataFor}
   ///
-  ///{@macro flutter_inappwebview_platform_interface.PlatformWebStorageManager.removeDataFor.supported_platforms}
+  ///{@macro nosferatu500_inappwebview_platform_interface.PlatformWebStorageManager.removeDataFor.supported_platforms}
   Future<void> removeDataFor({
     required Set<WebsiteDataType> dataTypes,
     required List<WebsiteDataRecord> dataRecords,
   }) => platform.removeDataFor(dataTypes: dataTypes, dataRecords: dataRecords);
 
-  ///{@macro flutter_inappwebview_platform_interface.PlatformWebStorageManager.removeDataModifiedSince}
+  ///{@macro nosferatu500_inappwebview_platform_interface.PlatformWebStorageManager.removeDataModifiedSince}
   ///
-  ///{@macro flutter_inappwebview_platform_interface.PlatformWebStorageManager.removeDataModifiedSince.supported_platforms}
+  ///{@macro nosferatu500_inappwebview_platform_interface.PlatformWebStorageManager.removeDataModifiedSince.supported_platforms}
   Future<void> removeDataModifiedSince({
     required Set<WebsiteDataType> dataTypes,
     required DateTime date,

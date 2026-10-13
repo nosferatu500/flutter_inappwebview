@@ -13,18 +13,27 @@ class ClientCertResponse {
 
   ///The certificate password.
   ///
-  ///**Officially Supported Platforms/Implementations**:
-  ///- Android WebView
-  ///- iOS WKWebView
-  ///- macOS WKWebView
-  String? certificatePassword;
-
-  ///The file path of the certificate to use.
+  ///**A "passphrase is not correct" error from iOS does not reliably mean the password is wrong.**
+  ///`SecPKCS12Import` reports `errSecAuthFailed` for a container it cannot parse at all, which on
+  ///iOS 17.x includes any file using OpenSSL 3's default `PBES2 / AES-256-CBC` encryption. Check
+  ///the container's algorithms before changing this value —
+  ///[PlatformWebViewCreationParams.onReceivedClientCertRequest] has the command.
   ///
   ///**Officially Supported Platforms/Implementations**:
   ///- Android WebView
   ///- iOS WKWebView
-  ///- macOS WKWebView
+  String? certificatePassword;
+
+  ///The file path of the certificate to use.
+  ///
+  ///On iOS this is read as a PKCS#12 container via `SecPKCS12Import`. **If it cannot be loaded the
+  ///request silently continues without a client certificate** — see
+  ///[PlatformWebViewCreationParams.onReceivedClientCertRequest] for the failure mode and for the
+  ///iOS 17.x limitation that rejects OpenSSL 3's default encryption.
+  ///
+  ///**Officially Supported Platforms/Implementations**:
+  ///- Android WebView
+  ///- iOS WKWebView
   String certificatePath;
 
   ///An Android-specific property used by Java [KeyStore](https://developer.android.com/reference/java/security/KeyStore) class to get the instance.
@@ -32,20 +41,13 @@ class ClientCertResponse {
   ///**Officially Supported Platforms/Implementations**:
   ///- Android WebView
   String? keyStoreType;
-
-  ///The index of the selected certificate.
-  ///
-  ///**Officially Supported Platforms/Implementations**:
-  ///- Windows WebView2
-  int selectedCertificate;
   ClientCertResponse({
     this.certificatePath = "",
     this.certificatePassword = "",
     this.keyStoreType = "PKCS12",
-    this.selectedCertificate = -1,
     this.action = ClientCertResponseAction.CANCEL,
   }) {
-    if (action == ClientCertResponseAction.PROCEED && !Util.isWindows) {
+    if (action == ClientCertResponseAction.PROCEED) {
       assert(certificatePath.isNotEmpty);
     }
     if (Util.isAndroid) assert(keyStoreType != null);
@@ -72,9 +74,6 @@ class ClientCertResponse {
       instance.certificatePath = map['certificatePath'];
     }
     instance.keyStoreType = map['keyStoreType'];
-    if (map['selectedCertificate'] != null) {
-      instance.selectedCertificate = map['selectedCertificate'];
-    }
     return instance;
   }
 
@@ -89,7 +88,6 @@ class ClientCertResponse {
       "certificatePassword": certificatePassword,
       "certificatePath": certificatePath,
       "keyStoreType": keyStoreType,
-      "selectedCertificate": selectedCertificate,
     };
   }
 
@@ -100,6 +98,6 @@ class ClientCertResponse {
 
   @override
   String toString() {
-    return 'ClientCertResponse{action: $action, certificatePassword: $certificatePassword, certificatePath: $certificatePath, keyStoreType: $keyStoreType, selectedCertificate: $selectedCertificate}';
+    return 'ClientCertResponse{action: $action, certificatePassword: $certificatePassword, certificatePath: $certificatePath, keyStoreType: $keyStoreType}';
   }
 }

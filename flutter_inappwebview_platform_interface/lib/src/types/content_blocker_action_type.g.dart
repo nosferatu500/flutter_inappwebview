@@ -10,20 +10,34 @@ part of 'content_blocker_action_type.dart';
 class ContentBlockerActionType {
   final String _value;
   final String? _nativeValue;
-  const ContentBlockerActionType._internal(this._value, this._nativeValue);
+
+  /// Native values accepted *in addition* to [_nativeValue] when resolving from a
+  /// native value. Inbound only -- [toNativeValue] still returns [_nativeValue].
+  // ignore: unused_field
+  final List<String?> _alsoAcceptsNativeValues;
+  const ContentBlockerActionType._internal(
+    this._value,
+    this._nativeValue, [
+    this._alsoAcceptsNativeValues = const [],
+  ]);
   // ignore: unused_element
   factory ContentBlockerActionType._internalMultiPlatform(
     String value,
-    Function nativeValue,
-  ) => ContentBlockerActionType._internal(value, nativeValue());
+    Function nativeValue, [
+    Function? alsoAcceptsNativeValues,
+  ]) => ContentBlockerActionType._internal(
+    value,
+    nativeValue(),
+    alsoAcceptsNativeValues != null
+        ? alsoAcceptsNativeValues() as List<String?>
+        : const [],
+  );
 
   ///Stops loading of the resource. If the resource was cached, the cache is ignored.
   ///
   ///**Officially Supported Platforms/Implementations**:
   ///- Android WebView
   ///- iOS WKWebView
-  ///- macOS WKWebView
-  ///- Linux WPE WebKit
   static final BLOCK = ContentBlockerActionType._internalMultiPlatform(
     'block',
     () {
@@ -31,10 +45,6 @@ class ContentBlockerActionType {
         case TargetPlatform.android:
           return 'block';
         case TargetPlatform.iOS:
-          return 'block';
-        case TargetPlatform.macOS:
-          return 'block';
-        case TargetPlatform.linux:
           return 'block';
         default:
           break;
@@ -49,17 +59,11 @@ class ContentBlockerActionType {
   ///
   ///**Officially Supported Platforms/Implementations**:
   ///- iOS WKWebView
-  ///- macOS WKWebView
-  ///- Linux WPE WebKit
   static final BLOCK_COOKIES = ContentBlockerActionType._internalMultiPlatform(
     'block-cookies',
     () {
       switch (defaultTargetPlatform) {
         case TargetPlatform.iOS:
-          return 'block-cookies';
-        case TargetPlatform.macOS:
-          return 'block-cookies';
-        case TargetPlatform.linux:
           return 'block-cookies';
         default:
           break;
@@ -77,18 +81,12 @@ class ContentBlockerActionType {
   ///**Officially Supported Platforms/Implementations**:
   ///- Android WebView
   ///- iOS WKWebView
-  ///- macOS WKWebView
-  ///- Linux WPE WebKit
   static final CSS_DISPLAY_NONE =
       ContentBlockerActionType._internalMultiPlatform('css-display-none', () {
         switch (defaultTargetPlatform) {
           case TargetPlatform.android:
             return 'css-display-none';
           case TargetPlatform.iOS:
-            return 'css-display-none';
-          case TargetPlatform.macOS:
-            return 'css-display-none';
-          case TargetPlatform.linux:
             return 'css-display-none';
           default:
             break;
@@ -100,18 +98,12 @@ class ContentBlockerActionType {
   ///
   ///**Officially Supported Platforms/Implementations**:
   ///- iOS WKWebView
-  ///- macOS WKWebView
-  ///- Linux WPE WebKit
   static final IGNORE_PREVIOUS_RULES =
       ContentBlockerActionType._internalMultiPlatform(
         'ignore-previous-rules',
         () {
           switch (defaultTargetPlatform) {
             case TargetPlatform.iOS:
-              return 'ignore-previous-rules';
-            case TargetPlatform.macOS:
-              return 'ignore-previous-rules';
-            case TargetPlatform.linux:
               return 'ignore-previous-rules';
             default:
               break;
@@ -126,8 +118,6 @@ class ContentBlockerActionType {
   ///**Officially Supported Platforms/Implementations**:
   ///- Android WebView
   ///- iOS WKWebView
-  ///- macOS WKWebView
-  ///- Linux WPE WebKit
   static final MAKE_HTTPS = ContentBlockerActionType._internalMultiPlatform(
     'make-https',
     () {
@@ -135,10 +125,6 @@ class ContentBlockerActionType {
         case TargetPlatform.android:
           return 'make-https';
         case TargetPlatform.iOS:
-          return 'make-https';
-        case TargetPlatform.macOS:
-          return 'make-https';
-        case TargetPlatform.linux:
           return 'make-https';
         default:
           break;
@@ -171,6 +157,10 @@ class ContentBlockerActionType {
   }
 
   ///Gets a possible [ContentBlockerActionType] instance from a native value.
+  ///
+  ///Falls back to constants that declare [value] among their additionally accepted
+  ///native values, so a platform reporting more than one code for the same condition
+  ///still resolves instead of returning `null`.
   static ContentBlockerActionType? fromNativeValue(String? value) {
     if (value != null) {
       try {
@@ -178,7 +168,13 @@ class ContentBlockerActionType {
           (element) => element.toNativeValue() == value,
         );
       } catch (e) {
-        return null;
+        try {
+          return ContentBlockerActionType.values.firstWhere(
+            (element) => element._alsoAcceptsNativeValues.contains(value),
+          );
+        } catch (e) {
+          return null;
+        }
       }
     }
     return null;
@@ -243,7 +239,7 @@ class ContentBlockerActionType {
   int get hashCode => _value.hashCode;
 
   @override
-  bool operator ==(value) => value == _value;
+  bool operator ==(other) => other == _value;
 
   ///Checks if the value is supported by the [defaultTargetPlatform].
   bool isSupported() {

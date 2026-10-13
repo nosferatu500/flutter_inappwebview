@@ -1,4 +1,4 @@
-import 'package:flutter_inappwebview_internal_annotations/flutter_inappwebview_internal_annotations.dart';
+import 'package:nosferatu500_inappwebview_internal_annotations/nosferatu500_inappwebview_internal_annotations.dart';
 
 import 'url_credential.dart';
 import 'url_response.dart';
@@ -14,6 +14,19 @@ part 'http_authentication_challenge.g.dart';
 @ExchangeableObject()
 class HttpAuthenticationChallenge_ extends URLAuthenticationChallenge_ {
   ///A count of previous failed authentication attempts.
+  ///
+  ///Scoped to this WebView and this protection space: a challenge from a different host, scheme,
+  ///realm or port starts its own count, and so does another WebView. It resets when the page
+  ///finishes or fails loading, and when you answer [HttpAuthResponseAction.CANCEL].
+  ///
+  ///**The first challenge for a protection space reports `0`** — the value counts attempts that
+  ///have *already* failed, and on the first one nothing has. Three challenges for the same space
+  ///report `0`, `1`, `2`, on every platform. "Give up after N attempts" is the usual reason to
+  ///read this, so it is safe to compare against a literal.
+  ///
+  ///**This changed on Android in 7.0.0.** Before it, Android counted the challenges themselves and
+  ///reported `1` for the first, one ahead of iOS. If you carry a workaround for that offset,
+  ///remove it.
   int previousFailureCount;
 
   ///The proposed credential for this challenge.

@@ -10,12 +10,28 @@ part of 'print_job_duplex_mode.dart';
 class PrintJobDuplexMode {
   final String _value;
   final int? _nativeValue;
-  const PrintJobDuplexMode._internal(this._value, this._nativeValue);
+
+  /// Native values accepted *in addition* to [_nativeValue] when resolving from a
+  /// native value. Inbound only -- [toNativeValue] still returns [_nativeValue].
+  // ignore: unused_field
+  final List<int?> _alsoAcceptsNativeValues;
+  const PrintJobDuplexMode._internal(
+    this._value,
+    this._nativeValue, [
+    this._alsoAcceptsNativeValues = const [],
+  ]);
   // ignore: unused_element
   factory PrintJobDuplexMode._internalMultiPlatform(
     String value,
-    Function nativeValue,
-  ) => PrintJobDuplexMode._internal(value, nativeValue());
+    Function nativeValue, [
+    Function? alsoAcceptsNativeValues,
+  ]) => PrintJobDuplexMode._internal(
+    value,
+    nativeValue(),
+    alsoAcceptsNativeValues != null
+        ? alsoAcceptsNativeValues() as List<int?>
+        : const [],
+  );
 
   ///Duplex printing that flips the back page along the long edge of the paper.
   ///Pages are turned sideways along the long edge - like a book.
@@ -23,8 +39,6 @@ class PrintJobDuplexMode {
   ///**Officially Supported Platforms/Implementations**:
   ///- Android WebView
   ///- iOS WKWebView
-  ///- macOS WKWebView
-  ///- Windows WebView2
   static final LONG_EDGE = PrintJobDuplexMode._internalMultiPlatform(
     'LONG_EDGE',
     () {
@@ -33,10 +47,6 @@ class PrintJobDuplexMode {
           return 2;
         case TargetPlatform.iOS:
           return 1;
-        case TargetPlatform.macOS:
-          return 2;
-        case TargetPlatform.windows:
-          return 2;
         default:
           break;
       }
@@ -49,18 +59,12 @@ class PrintJobDuplexMode {
   ///**Officially Supported Platforms/Implementations**:
   ///- Android WebView
   ///- iOS WKWebView
-  ///- macOS WKWebView
-  ///- Windows WebView2
   static final NONE = PrintJobDuplexMode._internalMultiPlatform('NONE', () {
     switch (defaultTargetPlatform) {
       case TargetPlatform.android:
         return 1;
       case TargetPlatform.iOS:
         return 0;
-      case TargetPlatform.macOS:
-        return 1;
-      case TargetPlatform.windows:
-        return 1;
       default:
         break;
     }
@@ -73,8 +77,6 @@ class PrintJobDuplexMode {
   ///**Officially Supported Platforms/Implementations**:
   ///- Android WebView
   ///- iOS WKWebView
-  ///- macOS WKWebView
-  ///- Windows WebView2
   static final SHORT_EDGE = PrintJobDuplexMode._internalMultiPlatform(
     'SHORT_EDGE',
     () {
@@ -83,10 +85,6 @@ class PrintJobDuplexMode {
           return 4;
         case TargetPlatform.iOS:
           return 2;
-        case TargetPlatform.macOS:
-          return 3;
-        case TargetPlatform.windows:
-          return 3;
         default:
           break;
       }
@@ -116,6 +114,10 @@ class PrintJobDuplexMode {
   }
 
   ///Gets a possible [PrintJobDuplexMode] instance from a native value.
+  ///
+  ///Falls back to constants that declare [value] among their additionally accepted
+  ///native values, so a platform reporting more than one code for the same condition
+  ///still resolves instead of returning `null`.
   static PrintJobDuplexMode? fromNativeValue(int? value) {
     if (value != null) {
       try {
@@ -123,7 +125,13 @@ class PrintJobDuplexMode {
           (element) => element.toNativeValue() == value,
         );
       } catch (e) {
-        return null;
+        try {
+          return PrintJobDuplexMode.values.firstWhere(
+            (element) => element._alsoAcceptsNativeValues.contains(value),
+          );
+        } catch (e) {
+          return null;
+        }
       }
     }
     return null;
@@ -183,7 +191,7 @@ class PrintJobDuplexMode {
   int get hashCode => _value.hashCode;
 
   @override
-  bool operator ==(value) => value == _value;
+  bool operator ==(other) => other == _value;
 
   ///Checks if the value is supported by the [defaultTargetPlatform].
   bool isSupported() {
