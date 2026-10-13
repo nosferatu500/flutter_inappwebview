@@ -4405,24 +4405,20 @@ extension _InAppWebViewSettingsPropertySupported on InAppWebViewSettings {
             [TargetPlatform.iOS].contains(platform ?? defaultTargetPlatform);
       case InAppWebViewSettingsProperty.algorithmicDarkeningAllowed:
         return ((kIsWeb && platform != null) || !kIsWeb) &&
-            [
-              TargetPlatform.android,
-            ].contains(platform ?? defaultTargetPlatform);
+            [TargetPlatform.android]
+                .contains(platform ?? defaultTargetPlatform);
       case InAppWebViewSettingsProperty.allowBackgroundAudioPlaying:
         return ((kIsWeb && platform != null) || !kIsWeb) &&
-            [
-              TargetPlatform.android,
-            ].contains(platform ?? defaultTargetPlatform);
+            [TargetPlatform.android]
+                .contains(platform ?? defaultTargetPlatform);
       case InAppWebViewSettingsProperty.allowContentAccess:
         return ((kIsWeb && platform != null) || !kIsWeb) &&
-            [
-              TargetPlatform.android,
-            ].contains(platform ?? defaultTargetPlatform);
+            [TargetPlatform.android]
+                .contains(platform ?? defaultTargetPlatform);
       case InAppWebViewSettingsProperty.allowFileAccess:
         return ((kIsWeb && platform != null) || !kIsWeb) &&
-            [
-              TargetPlatform.android,
-            ].contains(platform ?? defaultTargetPlatform);
+            [TargetPlatform.android]
+                .contains(platform ?? defaultTargetPlatform);
       case InAppWebViewSettingsProperty.allowFileAccessFromFileURLs:
         return ((kIsWeb && platform != null) || !kIsWeb) &&
             [
@@ -4467,9 +4463,8 @@ extension _InAppWebViewSettingsPropertySupported on InAppWebViewSettings {
             [TargetPlatform.iOS].contains(platform ?? defaultTargetPlatform);
       case InAppWebViewSettingsProperty.appCachePath:
         return ((kIsWeb && platform != null) || !kIsWeb) &&
-            [
-              TargetPlatform.android,
-            ].contains(platform ?? defaultTargetPlatform);
+            [TargetPlatform.android]
+                .contains(platform ?? defaultTargetPlatform);
       case InAppWebViewSettingsProperty.applePayAPIEnabled:
         return ((kIsWeb && platform != null) || !kIsWeb) &&
             [TargetPlatform.iOS].contains(platform ?? defaultTargetPlatform);
@@ -4481,33 +4476,28 @@ extension _InAppWebViewSettingsPropertySupported on InAppWebViewSettings {
             ].contains(platform ?? defaultTargetPlatform);
       case InAppWebViewSettingsProperty.attributionRegistrationBehavior:
         return ((kIsWeb && platform != null) || !kIsWeb) &&
-            [
-              TargetPlatform.android,
-            ].contains(platform ?? defaultTargetPlatform);
+            [TargetPlatform.android]
+                .contains(platform ?? defaultTargetPlatform);
       case InAppWebViewSettingsProperty
           .automaticallyAdjustsScrollIndicatorInsets:
         return ((kIsWeb && platform != null) || !kIsWeb) &&
             [TargetPlatform.iOS].contains(platform ?? defaultTargetPlatform);
       case InAppWebViewSettingsProperty.backForwardCacheEnabled:
         return ((kIsWeb && platform != null) || !kIsWeb) &&
-            [
-              TargetPlatform.android,
-            ].contains(platform ?? defaultTargetPlatform);
+            [TargetPlatform.android]
+                .contains(platform ?? defaultTargetPlatform);
       case InAppWebViewSettingsProperty.blockNetworkImage:
         return ((kIsWeb && platform != null) || !kIsWeb) &&
-            [
-              TargetPlatform.android,
-            ].contains(platform ?? defaultTargetPlatform);
+            [TargetPlatform.android]
+                .contains(platform ?? defaultTargetPlatform);
       case InAppWebViewSettingsProperty.blockNetworkLoads:
         return ((kIsWeb && platform != null) || !kIsWeb) &&
-            [
-              TargetPlatform.android,
-            ].contains(platform ?? defaultTargetPlatform);
+            [TargetPlatform.android]
+                .contains(platform ?? defaultTargetPlatform);
       case InAppWebViewSettingsProperty.builtInZoomControls:
         return ((kIsWeb && platform != null) || !kIsWeb) &&
-            [
-              TargetPlatform.android,
-            ].contains(platform ?? defaultTargetPlatform);
+            [TargetPlatform.android]
+                .contains(platform ?? defaultTargetPlatform);
       case InAppWebViewSettingsProperty.cacheEnabled:
         return ((kIsWeb && platform != null) || !kIsWeb) &&
             [
@@ -4516,9 +4506,8 @@ extension _InAppWebViewSettingsPropertySupported on InAppWebViewSettings {
             ].contains(platform ?? defaultTargetPlatform);
       case InAppWebViewSettingsProperty.cacheMode:
         return ((kIsWeb && platform != null) || !kIsWeb) &&
-            [
-              TargetPlatform.android,
-            ].contains(platform ?? defaultTargetPlatform);
+            [TargetPlatform.android]
+                .contains(platform ?? defaultTargetPlatform);
       case InAppWebViewSettingsProperty.contentBlockers:
         return ((kIsWeb && platform != null) || !kIsWeb) &&
             [
@@ -4530,40 +4519,34 @@ extension _InAppWebViewSettingsPropertySupported on InAppWebViewSettings {
             [TargetPlatform.iOS].contains(platform ?? defaultTargetPlatform);
       case InAppWebViewSettingsProperty.cursiveFontFamily:
         return ((kIsWeb && platform != null) || !kIsWeb) &&
-            [
-              TargetPlatform.android,
-            ].contains(platform ?? defaultTargetPlatform);
+            [TargetPlatform.android]
+                .contains(platform ?? defaultTargetPlatform);
       case InAppWebViewSettingsProperty.dataDetectorTypes:
         return ((kIsWeb && platform != null) || !kIsWeb) &&
             [TargetPlatform.iOS].contains(platform ?? defaultTargetPlatform);
       case InAppWebViewSettingsProperty.databaseEnabled:
         return ((kIsWeb && platform != null) || !kIsWeb) &&
-            [
-              TargetPlatform.android,
-            ].contains(platform ?? defaultTargetPlatform);
+            [TargetPlatform.android]
+                .contains(platform ?? defaultTargetPlatform);
       case InAppWebViewSettingsProperty.decelerationRate:
         return ((kIsWeb && platform != null) || !kIsWeb) &&
             [TargetPlatform.iOS].contains(platform ?? defaultTargetPlatform);
       case InAppWebViewSettingsProperty.defaultFixedFontSize:
         return ((kIsWeb && platform != null) || !kIsWeb) &&
-            [
-              TargetPlatform.android,
-            ].contains(platform ?? defaultTargetPlatform);
+            [TargetPlatform.android]
+                .contains(platform ?? defaultTargetPlatform);
       case InAppWebViewSettingsProperty.defaultFontSize:
         return ((kIsWeb && platform != null) || !kIsWeb) &&
-            [
-              TargetPlatform.android,
-            ].contains(platform ?? defaultTargetPlatform);
+            [TargetPlatform.android]
+                .contains(platform ?? defaultTargetPlatform);
       case InAppWebViewSettingsProperty.defaultTextEncodingName:
         return ((kIsWeb && platform != null) || !kIsWeb) &&
-            [
-              TargetPlatform.android,
-            ].contains(platform ?? defaultTargetPlatform);
+            [TargetPlatform.android]
+                .contains(platform ?? defaultTargetPlatform);
       case InAppWebViewSettingsProperty.defaultVideoPoster:
         return ((kIsWeb && platform != null) || !kIsWeb) &&
-            [
-              TargetPlatform.android,
-            ].contains(platform ?? defaultTargetPlatform);
+            [TargetPlatform.android]
+                .contains(platform ?? defaultTargetPlatform);
       case InAppWebViewSettingsProperty.disableContextMenu:
         return ((kIsWeb && platform != null) || !kIsWeb) &&
             [
@@ -4572,9 +4555,8 @@ extension _InAppWebViewSettingsPropertySupported on InAppWebViewSettings {
             ].contains(platform ?? defaultTargetPlatform);
       case InAppWebViewSettingsProperty.disableDefaultErrorPage:
         return ((kIsWeb && platform != null) || !kIsWeb) &&
-            [
-              TargetPlatform.android,
-            ].contains(platform ?? defaultTargetPlatform);
+            [TargetPlatform.android]
+                .contains(platform ?? defaultTargetPlatform);
       case InAppWebViewSettingsProperty.disableHorizontalScroll:
         return ((kIsWeb && platform != null) || !kIsWeb) &&
             [
@@ -4595,56 +4577,47 @@ extension _InAppWebViewSettingsPropertySupported on InAppWebViewSettings {
             ].contains(platform ?? defaultTargetPlatform);
       case InAppWebViewSettingsProperty.disabledActionModeMenuItems:
         return ((kIsWeb && platform != null) || !kIsWeb) &&
-            [
-              TargetPlatform.android,
-            ].contains(platform ?? defaultTargetPlatform);
+            [TargetPlatform.android]
+                .contains(platform ?? defaultTargetPlatform);
       case InAppWebViewSettingsProperty.disallowOverScroll:
         return ((kIsWeb && platform != null) || !kIsWeb) &&
             [TargetPlatform.iOS].contains(platform ?? defaultTargetPlatform);
       case InAppWebViewSettingsProperty.displayZoomControls:
         return ((kIsWeb && platform != null) || !kIsWeb) &&
-            [
-              TargetPlatform.android,
-            ].contains(platform ?? defaultTargetPlatform);
+            [TargetPlatform.android]
+                .contains(platform ?? defaultTargetPlatform);
       case InAppWebViewSettingsProperty.domStorageEnabled:
         return ((kIsWeb && platform != null) || !kIsWeb) &&
-            [
-              TargetPlatform.android,
-            ].contains(platform ?? defaultTargetPlatform);
+            [TargetPlatform.android]
+                .contains(platform ?? defaultTargetPlatform);
       case InAppWebViewSettingsProperty.downloadFaviconsEnabled:
         return ((kIsWeb && platform != null) || !kIsWeb) &&
-            [
-              TargetPlatform.android,
-            ].contains(platform ?? defaultTargetPlatform);
+            [TargetPlatform.android]
+                .contains(platform ?? defaultTargetPlatform);
       case InAppWebViewSettingsProperty.enableViewportScale:
         return ((kIsWeb && platform != null) || !kIsWeb) &&
             [TargetPlatform.iOS].contains(platform ?? defaultTargetPlatform);
       case InAppWebViewSettingsProperty
           .enterpriseAuthenticationAppLinkPolicyEnabled:
         return ((kIsWeb && platform != null) || !kIsWeb) &&
-            [
-              TargetPlatform.android,
-            ].contains(platform ?? defaultTargetPlatform);
+            [TargetPlatform.android]
+                .contains(platform ?? defaultTargetPlatform);
       case InAppWebViewSettingsProperty.fantasyFontFamily:
         return ((kIsWeb && platform != null) || !kIsWeb) &&
-            [
-              TargetPlatform.android,
-            ].contains(platform ?? defaultTargetPlatform);
+            [TargetPlatform.android]
+                .contains(platform ?? defaultTargetPlatform);
       case InAppWebViewSettingsProperty.fixedFontFamily:
         return ((kIsWeb && platform != null) || !kIsWeb) &&
-            [
-              TargetPlatform.android,
-            ].contains(platform ?? defaultTargetPlatform);
+            [TargetPlatform.android]
+                .contains(platform ?? defaultTargetPlatform);
       case InAppWebViewSettingsProperty.geolocationEnabled:
         return ((kIsWeb && platform != null) || !kIsWeb) &&
-            [
-              TargetPlatform.android,
-            ].contains(platform ?? defaultTargetPlatform);
+            [TargetPlatform.android]
+                .contains(platform ?? defaultTargetPlatform);
       case InAppWebViewSettingsProperty.hardwareAcceleration:
         return ((kIsWeb && platform != null) || !kIsWeb) &&
-            [
-              TargetPlatform.android,
-            ].contains(platform ?? defaultTargetPlatform);
+            [TargetPlatform.android]
+                .contains(platform ?? defaultTargetPlatform);
       case InAppWebViewSettingsProperty.horizontalScrollBarEnabled:
         return ((kIsWeb && platform != null) || !kIsWeb) &&
             [
@@ -4653,22 +4626,19 @@ extension _InAppWebViewSettingsPropertySupported on InAppWebViewSettings {
             ].contains(platform ?? defaultTargetPlatform);
       case InAppWebViewSettingsProperty.horizontalScrollbarThumbColor:
         return ((kIsWeb && platform != null) || !kIsWeb) &&
-            [
-              TargetPlatform.android,
-            ].contains(platform ?? defaultTargetPlatform);
+            [TargetPlatform.android]
+                .contains(platform ?? defaultTargetPlatform);
       case InAppWebViewSettingsProperty.horizontalScrollbarTrackColor:
         return ((kIsWeb && platform != null) || !kIsWeb) &&
-            [
-              TargetPlatform.android,
-            ].contains(platform ?? defaultTargetPlatform);
+            [TargetPlatform.android]
+                .contains(platform ?? defaultTargetPlatform);
       case InAppWebViewSettingsProperty.ignoresViewportScaleLimits:
         return ((kIsWeb && platform != null) || !kIsWeb) &&
             [TargetPlatform.iOS].contains(platform ?? defaultTargetPlatform);
       case InAppWebViewSettingsProperty.includeCookiesOnShouldInterceptRequest:
         return ((kIsWeb && platform != null) || !kIsWeb) &&
-            [
-              TargetPlatform.android,
-            ].contains(platform ?? defaultTargetPlatform);
+            [TargetPlatform.android]
+                .contains(platform ?? defaultTargetPlatform);
       case InAppWebViewSettingsProperty.incognito:
         return ((kIsWeb && platform != null) || !kIsWeb) &&
             [
@@ -4677,9 +4647,8 @@ extension _InAppWebViewSettingsPropertySupported on InAppWebViewSettings {
             ].contains(platform ?? defaultTargetPlatform);
       case InAppWebViewSettingsProperty.initialScale:
         return ((kIsWeb && platform != null) || !kIsWeb) &&
-            [
-              TargetPlatform.android,
-            ].contains(platform ?? defaultTargetPlatform);
+            [TargetPlatform.android]
+                .contains(platform ?? defaultTargetPlatform);
       case InAppWebViewSettingsProperty.interceptOnlyAsyncAjaxRequests:
         return ((kIsWeb && platform != null) || !kIsWeb) &&
             [
@@ -4760,22 +4729,19 @@ extension _InAppWebViewSettingsPropertySupported on InAppWebViewSettings {
             ].contains(platform ?? defaultTargetPlatform);
       case InAppWebViewSettingsProperty.layoutAlgorithm:
         return ((kIsWeb && platform != null) || !kIsWeb) &&
-            [
-              TargetPlatform.android,
-            ].contains(platform ?? defaultTargetPlatform);
+            [TargetPlatform.android]
+                .contains(platform ?? defaultTargetPlatform);
       case InAppWebViewSettingsProperty.limitsNavigationsToAppBoundDomains:
         return ((kIsWeb && platform != null) || !kIsWeb) &&
             [TargetPlatform.iOS].contains(platform ?? defaultTargetPlatform);
       case InAppWebViewSettingsProperty.loadWithOverviewMode:
         return ((kIsWeb && platform != null) || !kIsWeb) &&
-            [
-              TargetPlatform.android,
-            ].contains(platform ?? defaultTargetPlatform);
+            [TargetPlatform.android]
+                .contains(platform ?? defaultTargetPlatform);
       case InAppWebViewSettingsProperty.loadsImagesAutomatically:
         return ((kIsWeb && platform != null) || !kIsWeb) &&
-            [
-              TargetPlatform.android,
-            ].contains(platform ?? defaultTargetPlatform);
+            [TargetPlatform.android]
+                .contains(platform ?? defaultTargetPlatform);
       case InAppWebViewSettingsProperty.lockdownModeEnabled:
         return ((kIsWeb && platform != null) || !kIsWeb) &&
             [TargetPlatform.iOS].contains(platform ?? defaultTargetPlatform);
@@ -4802,9 +4768,8 @@ extension _InAppWebViewSettingsPropertySupported on InAppWebViewSettings {
             ].contains(platform ?? defaultTargetPlatform);
       case InAppWebViewSettingsProperty.minimumLogicalFontSize:
         return ((kIsWeb && platform != null) || !kIsWeb) &&
-            [
-              TargetPlatform.android,
-            ].contains(platform ?? defaultTargetPlatform);
+            [TargetPlatform.android]
+                .contains(platform ?? defaultTargetPlatform);
       case InAppWebViewSettingsProperty.minimumViewportInset:
         return ((kIsWeb && platform != null) || !kIsWeb) &&
             [TargetPlatform.iOS].contains(platform ?? defaultTargetPlatform);
@@ -4813,40 +4778,34 @@ extension _InAppWebViewSettingsPropertySupported on InAppWebViewSettings {
             [TargetPlatform.iOS].contains(platform ?? defaultTargetPlatform);
       case InAppWebViewSettingsProperty.mixedContentMode:
         return ((kIsWeb && platform != null) || !kIsWeb) &&
-            [
-              TargetPlatform.android,
-            ].contains(platform ?? defaultTargetPlatform);
+            [TargetPlatform.android]
+                .contains(platform ?? defaultTargetPlatform);
       case InAppWebViewSettingsProperty.needInitialFocus:
         return ((kIsWeb && platform != null) || !kIsWeb) &&
-            [
-              TargetPlatform.android,
-            ].contains(platform ?? defaultTargetPlatform);
+            [TargetPlatform.android]
+                .contains(platform ?? defaultTargetPlatform);
       case InAppWebViewSettingsProperty.networkAvailable:
         return ((kIsWeb && platform != null) || !kIsWeb) &&
-            [
-              TargetPlatform.android,
-            ].contains(platform ?? defaultTargetPlatform);
+            [TargetPlatform.android]
+                .contains(platform ?? defaultTargetPlatform);
       case InAppWebViewSettingsProperty.obscuredContentInsets:
         return ((kIsWeb && platform != null) || !kIsWeb) &&
             [TargetPlatform.iOS].contains(platform ?? defaultTargetPlatform);
       case InAppWebViewSettingsProperty.offscreenPreRaster:
         return ((kIsWeb && platform != null) || !kIsWeb) &&
-            [
-              TargetPlatform.android,
-            ].contains(platform ?? defaultTargetPlatform);
+            [TargetPlatform.android]
+                .contains(platform ?? defaultTargetPlatform);
       case InAppWebViewSettingsProperty.overScrollMode:
         return ((kIsWeb && platform != null) || !kIsWeb) &&
-            [
-              TargetPlatform.android,
-            ].contains(platform ?? defaultTargetPlatform);
+            [TargetPlatform.android]
+                .contains(platform ?? defaultTargetPlatform);
       case InAppWebViewSettingsProperty.pageZoom:
         return ((kIsWeb && platform != null) || !kIsWeb) &&
             [TargetPlatform.iOS].contains(platform ?? defaultTargetPlatform);
       case InAppWebViewSettingsProperty.paymentRequestEnabled:
         return ((kIsWeb && platform != null) || !kIsWeb) &&
-            [
-              TargetPlatform.android,
-            ].contains(platform ?? defaultTargetPlatform);
+            [TargetPlatform.android]
+                .contains(platform ?? defaultTargetPlatform);
       case InAppWebViewSettingsProperty.pluginScriptsForMainFrameOnly:
         return ((kIsWeb && platform != null) || !kIsWeb) &&
             [
@@ -4870,24 +4829,20 @@ extension _InAppWebViewSettingsPropertySupported on InAppWebViewSettings {
             [TargetPlatform.iOS].contains(platform ?? defaultTargetPlatform);
       case InAppWebViewSettingsProperty.profileName:
         return ((kIsWeb && platform != null) || !kIsWeb) &&
-            [
-              TargetPlatform.android,
-            ].contains(platform ?? defaultTargetPlatform);
+            [TargetPlatform.android]
+                .contains(platform ?? defaultTargetPlatform);
       case InAppWebViewSettingsProperty.regexToAllowSyncUrlLoading:
         return ((kIsWeb && platform != null) || !kIsWeb) &&
-            [
-              TargetPlatform.android,
-            ].contains(platform ?? defaultTargetPlatform);
+            [TargetPlatform.android]
+                .contains(platform ?? defaultTargetPlatform);
       case InAppWebViewSettingsProperty.regexToCancelSubFramesLoading:
         return ((kIsWeb && platform != null) || !kIsWeb) &&
-            [
-              TargetPlatform.android,
-            ].contains(platform ?? defaultTargetPlatform);
+            [TargetPlatform.android]
+                .contains(platform ?? defaultTargetPlatform);
       case InAppWebViewSettingsProperty.rendererPriorityPolicy:
         return ((kIsWeb && platform != null) || !kIsWeb) &&
-            [
-              TargetPlatform.android,
-            ].contains(platform ?? defaultTargetPlatform);
+            [TargetPlatform.android]
+                .contains(platform ?? defaultTargetPlatform);
       case InAppWebViewSettingsProperty.resourceCustomSchemes:
         return ((kIsWeb && platform != null) || !kIsWeb) &&
             [
@@ -4896,34 +4851,28 @@ extension _InAppWebViewSettingsPropertySupported on InAppWebViewSettings {
             ].contains(platform ?? defaultTargetPlatform);
       case InAppWebViewSettingsProperty.safeBrowsingEnabled:
         return ((kIsWeb && platform != null) || !kIsWeb) &&
-            [
-              TargetPlatform.android,
-            ].contains(platform ?? defaultTargetPlatform);
+            [TargetPlatform.android]
+                .contains(platform ?? defaultTargetPlatform);
       case InAppWebViewSettingsProperty.sansSerifFontFamily:
         return ((kIsWeb && platform != null) || !kIsWeb) &&
-            [
-              TargetPlatform.android,
-            ].contains(platform ?? defaultTargetPlatform);
+            [TargetPlatform.android]
+                .contains(platform ?? defaultTargetPlatform);
       case InAppWebViewSettingsProperty.scrollBarDefaultDelayBeforeFade:
         return ((kIsWeb && platform != null) || !kIsWeb) &&
-            [
-              TargetPlatform.android,
-            ].contains(platform ?? defaultTargetPlatform);
+            [TargetPlatform.android]
+                .contains(platform ?? defaultTargetPlatform);
       case InAppWebViewSettingsProperty.scrollBarFadeDuration:
         return ((kIsWeb && platform != null) || !kIsWeb) &&
-            [
-              TargetPlatform.android,
-            ].contains(platform ?? defaultTargetPlatform);
+            [TargetPlatform.android]
+                .contains(platform ?? defaultTargetPlatform);
       case InAppWebViewSettingsProperty.scrollBarStyle:
         return ((kIsWeb && platform != null) || !kIsWeb) &&
-            [
-              TargetPlatform.android,
-            ].contains(platform ?? defaultTargetPlatform);
+            [TargetPlatform.android]
+                .contains(platform ?? defaultTargetPlatform);
       case InAppWebViewSettingsProperty.scrollbarFadingEnabled:
         return ((kIsWeb && platform != null) || !kIsWeb) &&
-            [
-              TargetPlatform.android,
-            ].contains(platform ?? defaultTargetPlatform);
+            [TargetPlatform.android]
+                .contains(platform ?? defaultTargetPlatform);
       case InAppWebViewSettingsProperty.scrollsToTop:
         return ((kIsWeb && platform != null) || !kIsWeb) &&
             [TargetPlatform.iOS].contains(platform ?? defaultTargetPlatform);
@@ -4932,9 +4881,8 @@ extension _InAppWebViewSettingsPropertySupported on InAppWebViewSettings {
             [TargetPlatform.iOS].contains(platform ?? defaultTargetPlatform);
       case InAppWebViewSettingsProperty.serifFontFamily:
         return ((kIsWeb && platform != null) || !kIsWeb) &&
-            [
-              TargetPlatform.android,
-            ].contains(platform ?? defaultTargetPlatform);
+            [TargetPlatform.android]
+                .contains(platform ?? defaultTargetPlatform);
       case InAppWebViewSettingsProperty.sharedCookiesEnabled:
         return ((kIsWeb && platform != null) || !kIsWeb) &&
             [TargetPlatform.iOS].contains(platform ?? defaultTargetPlatform);
@@ -4946,14 +4894,12 @@ extension _InAppWebViewSettingsPropertySupported on InAppWebViewSettings {
             [TargetPlatform.iOS].contains(platform ?? defaultTargetPlatform);
       case InAppWebViewSettingsProperty.standardFontFamily:
         return ((kIsWeb && platform != null) || !kIsWeb) &&
-            [
-              TargetPlatform.android,
-            ].contains(platform ?? defaultTargetPlatform);
+            [TargetPlatform.android]
+                .contains(platform ?? defaultTargetPlatform);
       case InAppWebViewSettingsProperty.supportMultipleWindows:
         return ((kIsWeb && platform != null) || !kIsWeb) &&
-            [
-              TargetPlatform.android,
-            ].contains(platform ?? defaultTargetPlatform);
+            [TargetPlatform.android]
+                .contains(platform ?? defaultTargetPlatform);
       case InAppWebViewSettingsProperty.supportZoom:
         return ((kIsWeb && platform != null) || !kIsWeb) &&
             [
@@ -4968,19 +4914,16 @@ extension _InAppWebViewSettingsPropertySupported on InAppWebViewSettings {
             [TargetPlatform.iOS].contains(platform ?? defaultTargetPlatform);
       case InAppWebViewSettingsProperty.syncCallbackTimeoutMillis:
         return ((kIsWeb && platform != null) || !kIsWeb) &&
-            [
-              TargetPlatform.android,
-            ].contains(platform ?? defaultTargetPlatform);
+            [TargetPlatform.android]
+                .contains(platform ?? defaultTargetPlatform);
       case InAppWebViewSettingsProperty.textZoom:
         return ((kIsWeb && platform != null) || !kIsWeb) &&
-            [
-              TargetPlatform.android,
-            ].contains(platform ?? defaultTargetPlatform);
+            [TargetPlatform.android]
+                .contains(platform ?? defaultTargetPlatform);
       case InAppWebViewSettingsProperty.thirdPartyCookiesEnabled:
         return ((kIsWeb && platform != null) || !kIsWeb) &&
-            [
-              TargetPlatform.android,
-            ].contains(platform ?? defaultTargetPlatform);
+            [TargetPlatform.android]
+                .contains(platform ?? defaultTargetPlatform);
       case InAppWebViewSettingsProperty.transparentBackground:
         return ((kIsWeb && platform != null) || !kIsWeb) &&
             [
@@ -4995,14 +4938,12 @@ extension _InAppWebViewSettingsPropertySupported on InAppWebViewSettings {
             [TargetPlatform.iOS].contains(platform ?? defaultTargetPlatform);
       case InAppWebViewSettingsProperty.useHybridComposition:
         return ((kIsWeb && platform != null) || !kIsWeb) &&
-            [
-              TargetPlatform.android,
-            ].contains(platform ?? defaultTargetPlatform);
+            [TargetPlatform.android]
+                .contains(platform ?? defaultTargetPlatform);
       case InAppWebViewSettingsProperty.useNavigationListener:
         return ((kIsWeb && platform != null) || !kIsWeb) &&
-            [
-              TargetPlatform.android,
-            ].contains(platform ?? defaultTargetPlatform);
+            [TargetPlatform.android]
+                .contains(platform ?? defaultTargetPlatform);
       case InAppWebViewSettingsProperty.useOnAjaxProgress:
         return ((kIsWeb && platform != null) || !kIsWeb) &&
             [
@@ -5035,14 +4976,12 @@ extension _InAppWebViewSettingsPropertySupported on InAppWebViewSettings {
             [TargetPlatform.iOS].contains(platform ?? defaultTargetPlatform);
       case InAppWebViewSettingsProperty.useOnPerformanceMarkMillis:
         return ((kIsWeb && platform != null) || !kIsWeb) &&
-            [
-              TargetPlatform.android,
-            ].contains(platform ?? defaultTargetPlatform);
+            [TargetPlatform.android]
+                .contains(platform ?? defaultTargetPlatform);
       case InAppWebViewSettingsProperty.useOnRenderProcessGone:
         return ((kIsWeb && platform != null) || !kIsWeb) &&
-            [
-              TargetPlatform.android,
-            ].contains(platform ?? defaultTargetPlatform);
+            [TargetPlatform.android]
+                .contains(platform ?? defaultTargetPlatform);
       case InAppWebViewSettingsProperty.useOnShowFileChooser:
         return ((kIsWeb && platform != null) || !kIsWeb) &&
             [
@@ -5066,9 +5005,8 @@ extension _InAppWebViewSettingsPropertySupported on InAppWebViewSettings {
             ].contains(platform ?? defaultTargetPlatform);
       case InAppWebViewSettingsProperty.useShouldInterceptRequest:
         return ((kIsWeb && platform != null) || !kIsWeb) &&
-            [
-              TargetPlatform.android,
-            ].contains(platform ?? defaultTargetPlatform);
+            [TargetPlatform.android]
+                .contains(platform ?? defaultTargetPlatform);
       case InAppWebViewSettingsProperty.useShouldOverrideUrlLoading:
         return ((kIsWeb && platform != null) || !kIsWeb) &&
             [
@@ -5077,9 +5015,8 @@ extension _InAppWebViewSettingsPropertySupported on InAppWebViewSettings {
             ].contains(platform ?? defaultTargetPlatform);
       case InAppWebViewSettingsProperty.useWideViewPort:
         return ((kIsWeb && platform != null) || !kIsWeb) &&
-            [
-              TargetPlatform.android,
-            ].contains(platform ?? defaultTargetPlatform);
+            [TargetPlatform.android]
+                .contains(platform ?? defaultTargetPlatform);
       case InAppWebViewSettingsProperty.userAgent:
         return ((kIsWeb && platform != null) || !kIsWeb) &&
             [
@@ -5088,9 +5025,8 @@ extension _InAppWebViewSettingsPropertySupported on InAppWebViewSettings {
             ].contains(platform ?? defaultTargetPlatform);
       case InAppWebViewSettingsProperty.userAgentMetadata:
         return ((kIsWeb && platform != null) || !kIsWeb) &&
-            [
-              TargetPlatform.android,
-            ].contains(platform ?? defaultTargetPlatform);
+            [TargetPlatform.android]
+                .contains(platform ?? defaultTargetPlatform);
       case InAppWebViewSettingsProperty.verticalScrollBarEnabled:
         return ((kIsWeb && platform != null) || !kIsWeb) &&
             [
@@ -5099,34 +5035,28 @@ extension _InAppWebViewSettingsPropertySupported on InAppWebViewSettings {
             ].contains(platform ?? defaultTargetPlatform);
       case InAppWebViewSettingsProperty.verticalScrollbarPosition:
         return ((kIsWeb && platform != null) || !kIsWeb) &&
-            [
-              TargetPlatform.android,
-            ].contains(platform ?? defaultTargetPlatform);
+            [TargetPlatform.android]
+                .contains(platform ?? defaultTargetPlatform);
       case InAppWebViewSettingsProperty.verticalScrollbarThumbColor:
         return ((kIsWeb && platform != null) || !kIsWeb) &&
-            [
-              TargetPlatform.android,
-            ].contains(platform ?? defaultTargetPlatform);
+            [TargetPlatform.android]
+                .contains(platform ?? defaultTargetPlatform);
       case InAppWebViewSettingsProperty.verticalScrollbarTrackColor:
         return ((kIsWeb && platform != null) || !kIsWeb) &&
-            [
-              TargetPlatform.android,
-            ].contains(platform ?? defaultTargetPlatform);
+            [TargetPlatform.android]
+                .contains(platform ?? defaultTargetPlatform);
       case InAppWebViewSettingsProperty.webAuthenticationSupport:
         return ((kIsWeb && platform != null) || !kIsWeb) &&
-            [
-              TargetPlatform.android,
-            ].contains(platform ?? defaultTargetPlatform);
+            [TargetPlatform.android]
+                .contains(platform ?? defaultTargetPlatform);
       case InAppWebViewSettingsProperty.webViewAssetLoader:
         return ((kIsWeb && platform != null) || !kIsWeb) &&
-            [
-              TargetPlatform.android,
-            ].contains(platform ?? defaultTargetPlatform);
+            [TargetPlatform.android]
+                .contains(platform ?? defaultTargetPlatform);
       case InAppWebViewSettingsProperty.webViewMediaIntegrityApiStatus:
         return ((kIsWeb && platform != null) || !kIsWeb) &&
-            [
-              TargetPlatform.android,
-            ].contains(platform ?? defaultTargetPlatform);
+            [TargetPlatform.android]
+                .contains(platform ?? defaultTargetPlatform);
       case InAppWebViewSettingsProperty.writingToolsBehavior:
         return ((kIsWeb && platform != null) || !kIsWeb) &&
             [TargetPlatform.iOS].contains(platform ?? defaultTargetPlatform);

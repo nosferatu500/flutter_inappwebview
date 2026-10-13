@@ -248,9 +248,8 @@ extension _PlatformProcessGlobalConfigMethodSupported
     switch (method) {
       case PlatformProcessGlobalConfigMethod.apply:
         return ((kIsWeb && platform != null) || !kIsWeb) &&
-            [
-              TargetPlatform.android,
-            ].contains(platform ?? defaultTargetPlatform);
+            [TargetPlatform.android]
+                .contains(platform ?? defaultTargetPlatform);
     }
   }
 }
@@ -306,14 +305,12 @@ extension _ProcessGlobalConfigSettingsPropertySupported
     switch (property) {
       case ProcessGlobalConfigSettingsProperty.dataDirectorySuffix:
         return ((kIsWeb && platform != null) || !kIsWeb) &&
-            [
-              TargetPlatform.android,
-            ].contains(platform ?? defaultTargetPlatform);
+            [TargetPlatform.android]
+                .contains(platform ?? defaultTargetPlatform);
       case ProcessGlobalConfigSettingsProperty.directoryBasePaths:
         return ((kIsWeb && platform != null) || !kIsWeb) &&
-            [
-              TargetPlatform.android,
-            ].contains(platform ?? defaultTargetPlatform);
+            [TargetPlatform.android]
+                .contains(platform ?? defaultTargetPlatform);
     }
   }
 }

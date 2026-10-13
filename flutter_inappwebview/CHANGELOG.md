@@ -1,3 +1,25 @@
+## 7.1.0
+
+### Requirements
+
+- **Flutter 3.47 / Dart 3.13 or newer** (was 3.44 / 3.12): `flutter: ">=3.47.0"`, `sdk: ^3.13.0`.
+  An app on an older Flutter keeps resolving 7.0.0; pub doesn't offer it 7.1.0.
+- **The app needs the Kotlin Gradle Plugin 2.2.20 or newer on its build classpath.** That is
+  Flutter 3.47's own minimum, not this plugin's: its Gradle plugin refuses anything older
+  ("Your project's Kotlin version (2.2.10) is lower than Flutter's minimum supported version of
+  2.2.20") and warns below 2.3.20. AGP 9.3.0 through 9.4.1 bring only 2.2.10, so an app that
+  relies on AGP's built-in Kotlin has to declare it, as Flutter 3.47.7's app template does:
+  `id("org.jetbrains.kotlin.android") version "2.4.0" apply false` in `settings.gradle(.kts)`.
+
+### Internal
+
+- **The repo builds and tests on Flutter 3.47.7** (`.fvmrc`; was 3.44.9). `flutter pub get` on 3.47
+  adds `analyzer: exclude:` entries (`build/**`, plus the platform folders that exist) to each Flutter
+  package's `analysis_options.yaml`; that is flutter_tools' `AnalysisOptionsMigration`, which re-adds
+  them on every `pub get`, so they are kept. The excluded `android/` and `ios/` folders hold no Dart.
+- The example app declares KGP 2.4.0 on its build classpath (`apply false`), for the reason above;
+  AGP stays 9.3.1.
+
 ## 7.0.0
 
 **A hard fork of `flutter_inappwebview` 6.2.0-beta.3, for Android and iOS only.** Everything below is

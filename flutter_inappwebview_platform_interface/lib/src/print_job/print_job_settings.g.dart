@@ -556,9 +556,8 @@ extension _PrintJobSettingsPropertySupported on PrintJobSettings {
             [TargetPlatform.iOS].contains(platform ?? defaultTargetPlatform);
       case PrintJobSettingsProperty.colorMode:
         return ((kIsWeb && platform != null) || !kIsWeb) &&
-            [
-              TargetPlatform.android,
-            ].contains(platform ?? defaultTargetPlatform);
+            [TargetPlatform.android]
+                .contains(platform ?? defaultTargetPlatform);
       case PrintJobSettingsProperty.duplexMode:
         return ((kIsWeb && platform != null) || !kIsWeb) &&
             [
@@ -597,9 +596,8 @@ extension _PrintJobSettingsPropertySupported on PrintJobSettings {
             [TargetPlatform.iOS].contains(platform ?? defaultTargetPlatform);
       case PrintJobSettingsProperty.mediaSize:
         return ((kIsWeb && platform != null) || !kIsWeb) &&
-            [
-              TargetPlatform.android,
-            ].contains(platform ?? defaultTargetPlatform);
+            [TargetPlatform.android]
+                .contains(platform ?? defaultTargetPlatform);
       case PrintJobSettingsProperty.numberOfPages:
         return ((kIsWeb && platform != null) || !kIsWeb) &&
             [TargetPlatform.iOS].contains(platform ?? defaultTargetPlatform);
@@ -614,9 +612,8 @@ extension _PrintJobSettingsPropertySupported on PrintJobSettings {
             [TargetPlatform.iOS].contains(platform ?? defaultTargetPlatform);
       case PrintJobSettingsProperty.resolution:
         return ((kIsWeb && platform != null) || !kIsWeb) &&
-            [
-              TargetPlatform.android,
-            ].contains(platform ?? defaultTargetPlatform);
+            [TargetPlatform.android]
+                .contains(platform ?? defaultTargetPlatform);
       case PrintJobSettingsProperty.showsNumberOfCopies:
         return ((kIsWeb && platform != null) || !kIsWeb) &&
             [TargetPlatform.iOS].contains(platform ?? defaultTargetPlatform);

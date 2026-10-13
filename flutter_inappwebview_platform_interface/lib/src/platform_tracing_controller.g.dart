@@ -203,19 +203,16 @@ extension _PlatformTracingControllerMethodSupported
     switch (method) {
       case PlatformTracingControllerMethod.isTracing:
         return ((kIsWeb && platform != null) || !kIsWeb) &&
-            [
-              TargetPlatform.android,
-            ].contains(platform ?? defaultTargetPlatform);
+            [TargetPlatform.android]
+                .contains(platform ?? defaultTargetPlatform);
       case PlatformTracingControllerMethod.start:
         return ((kIsWeb && platform != null) || !kIsWeb) &&
-            [
-              TargetPlatform.android,
-            ].contains(platform ?? defaultTargetPlatform);
+            [TargetPlatform.android]
+                .contains(platform ?? defaultTargetPlatform);
       case PlatformTracingControllerMethod.stop:
         return ((kIsWeb && platform != null) || !kIsWeb) &&
-            [
-              TargetPlatform.android,
-            ].contains(platform ?? defaultTargetPlatform);
+            [TargetPlatform.android]
+                .contains(platform ?? defaultTargetPlatform);
     }
   }
 }
@@ -256,9 +253,8 @@ extension _TracingSettingsPropertySupported on TracingSettings {
     switch (property) {
       case TracingSettingsProperty.tracingMode:
         return ((kIsWeb && platform != null) || !kIsWeb) &&
-            [
-              TargetPlatform.android,
-            ].contains(platform ?? defaultTargetPlatform);
+            [TargetPlatform.android]
+                .contains(platform ?? defaultTargetPlatform);
     }
   }
 }

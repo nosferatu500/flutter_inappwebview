@@ -865,14 +865,12 @@ extension _PlatformWebViewFeatureMethodSupported on PlatformWebViewFeature {
     switch (method) {
       case PlatformWebViewFeatureMethod.isFeatureSupported:
         return ((kIsWeb && platform != null) || !kIsWeb) &&
-            [
-              TargetPlatform.android,
-            ].contains(platform ?? defaultTargetPlatform);
+            [TargetPlatform.android]
+                .contains(platform ?? defaultTargetPlatform);
       case PlatformWebViewFeatureMethod.isStartupFeatureSupported:
         return ((kIsWeb && platform != null) || !kIsWeb) &&
-            [
-              TargetPlatform.android,
-            ].contains(platform ?? defaultTargetPlatform);
+            [TargetPlatform.android]
+                .contains(platform ?? defaultTargetPlatform);
     }
   }
 }

@@ -37,7 +37,7 @@ version, the prerelease **`6.2.0-beta.3` (February 2026)** — upstream's last *
 `6.1.5` — and the comparison below is against that. The public Dart API is recognisably the same;
 what changed is the scope, the two native implementations, and what the plugin still carries.
 
-|                        | upstream `6.2.0-beta.3`                      | this fork `7.0.0`                                                    |
+|                        | upstream `6.2.0-beta.3`                      | this fork `7.1.0`                                                    |
 | ---------------------- | -------------------------------------------- | -------------------------------------------------------------------- |
 | Platforms              | 6 — Android, iOS, macOS, Windows, Linux, Web | **2 — Android, iOS**                                                 |
 | Android implementation | Java                                         | **100% Kotlin**, all 157 sources translated                          |
@@ -45,7 +45,7 @@ what changed is the scope, the two native implementations, and what the plugin s
 | Deprecated API         | 1111 `@Deprecated` (all 6 packages)          | **0** — every deprecated class, event, field and method gone         |
 | Android `minSdk` / AGP | 19 / 8                                       | **30 / 9**                                                           |
 | iOS deployment target  | 12.0                                         | **15.0**                                                             |
-| Flutter / Dart floor   | 3.32 / `^3.8.0`                              | **3.44 / `^3.12.0`**                                                 |
+| Flutter / Dart floor   | 3.32 / `^3.8.0`                              | **3.47 / `^3.13.0`**                                                 |
 | Unit tests             | 276, all in the example app                  | **412**, incl. the Android module's first native tests               |
 | Android lint           | 27 findings                                  | **0**                                                                |
 | New platform APIs      | —                                            | **50+** — see the table below                                        |
@@ -205,9 +205,9 @@ Send a submission request to the [Submit App](https://inappwebview.dev/submit-ap
 
 ## Requirements
 
-- Dart sdk: "^3.12.0"
-- Flutter: ">=3.44.0"
-- Android: `minSdk >= 30`, [AGP](https://developer.android.com/build/releases/gradle-plugin) version `>= 9.0.0` (AGP 8 and lower are not supported), Gradle `>= 9.1.0`, JDK `>= 17` (use [Android Studio - Android Gradle plugin Upgrade Assistant](https://developer.android.com/build/agp-upgrade-assistant) for help)
+- Dart sdk: "^3.13.0"
+- Flutter: ">=3.47.0"
+- Android: `minSdk >= 30`, [AGP](https://developer.android.com/build/releases/gradle-plugin) version `>= 9.0.0` (AGP 8 and lower are not supported), Gradle `>= 9.1.0`, JDK `>= 17`, Kotlin Gradle Plugin `>= 2.2.20` on the app's build classpath (Flutter 3.47's own minimum; AGP 9.3.0 through 9.4.1 bring 2.2.10, so declare it, as Flutter 3.47's app template does: `id("org.jetbrains.kotlin.android") version "2.4.0" apply false` in `settings.gradle(.kts)`) (use [Android Studio - Android Gradle plugin Upgrade Assistant](https://developer.android.com/build/agp-upgrade-assistant) for help)
 - iOS 15.0+, **Xcode version `>= 26`** — the iOS module uses `isolated deinit` (SE-0371) and needs a Swift 6.2+ compiler, which is a newer toolchain than Flutter itself requires
 
 ## Installation

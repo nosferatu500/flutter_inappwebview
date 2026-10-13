@@ -1,3 +1,7 @@
+## 7.1.0
+
+- **Dart 3.12 or newer** (`sdk: ^3.12.0`; was `>=3.7.0 <4.0.0`). No code change.
+
 ## 7.0.0
 
 - **BREAKING: the package is renamed `nosferatu500_inappwebview_internal_annotations`** (was

@@ -1076,7 +1076,7 @@ class WebViewChannelDelegate(
     val messageExt = WebMessageCompatExt.fromMap(normalize(message))!!
     val compatPorts = mutableListOf<WebMessagePortCompat>()
     messageExt.ports?.forEach { portExt ->
-      val webMessageChannel = webView.getWebMessageChannels()?.get(portExt.webMessageChannelId)
+      val webMessageChannel = webView.getWebMessageChannels().get(portExt.webMessageChannelId)
       if (webMessageChannel != null) {
         compatPorts.add(webMessageChannel.compatPorts[portExt.index])
       }

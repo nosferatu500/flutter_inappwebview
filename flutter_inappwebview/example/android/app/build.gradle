@@ -33,7 +33,7 @@ android {
         targetCompatibility = JavaVersion.VERSION_17
     }
 
-    // Not flutter.compileSdkVersion (36 on Flutter 3.44): permission_handler 13
+    // Not flutter.compileSdkVersion (still 36 on Flutter 3.47): permission_handler 13
     // publishes AAR metadata requiring consumers to compile against API 37+.
     // flutter.compileSdkVersion (API 36)
     compileSdk = 37
@@ -44,8 +44,7 @@ android {
         applicationId "dev.nosferatu500.inappwebview.example"
         // flutter.minSdkVersion (API 24)
         minSdk = 30
-        // flutter.targetSdkVersion (API 36)
-        targetSdk = 36
+        targetSdk = flutter.targetSdkVersion
         versionCode flutterVersionCode.toInteger()
         versionName flutterVersionName
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"

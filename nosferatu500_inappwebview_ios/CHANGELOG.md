@@ -1,3 +1,17 @@
+## 7.1.0
+
+### Requirements
+
+- **Flutter 3.47 / Dart 3.13 or newer** (was 3.44 / 3.12): `flutter: ">=3.47.0"`, `sdk: ^3.13.0`.
+  An app on an older Flutter keeps resolving 7.0.0; pub doesn't offer it 7.1.0.
+
+### Internal
+
+- **The repo builds and tests on Flutter 3.47.7** (`.fvmrc`; was 3.44.9). `flutter pub get` on 3.47
+  adds `analyzer: exclude:` entries (`build/**`, plus the platform folders that exist) to each Flutter
+  package's `analysis_options.yaml`; that is flutter_tools' `AnalysisOptionsMigration`, which re-adds
+  them on every `pub get`, so they are kept. The excluded `android/` and `ios/` folders hold no Dart.
+
 ## 7.0.0
 
 The iOS half of a hard fork of 6.2.0-beta.3 / `1.2.0-beta.3`. The `nosferatu500_inappwebview` 7.0.0 entry

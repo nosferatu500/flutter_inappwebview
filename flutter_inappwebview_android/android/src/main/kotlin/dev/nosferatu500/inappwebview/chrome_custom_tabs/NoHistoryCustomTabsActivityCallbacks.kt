@@ -24,7 +24,9 @@ class NoHistoryCustomTabsActivityCallbacks(plugin: InAppWebViewFlutterPlugin) : 
       override fun onActivityStarted(activity: Activity) {}
 
       override fun onActivityResumed(activity: Activity) {
-        val manager = plugin?.chromeSafariBrowserManager
+        // The property, not the constructor parameter of the same name: that one is non-null and
+        // would keep this callback using (and holding) the plugin after dispose() nulls it.
+        val manager = this@NoHistoryCustomTabsActivityCallbacks.plugin?.chromeSafariBrowserManager
         if (activity is FlutterActivity && manager != null) {
           for (browserId in noHistoryBrowserIDs.values.toList()) {
             if (browserId != null) {

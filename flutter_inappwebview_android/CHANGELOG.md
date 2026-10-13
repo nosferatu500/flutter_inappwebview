@@ -1,3 +1,37 @@
+## 7.1.0
+
+### Requirements
+
+- **Flutter 3.47 / Dart 3.13 or newer** (was 3.44 / 3.12): `flutter: ">=3.47.0"`, `sdk: ^3.13.0`.
+  An app on an older Flutter keeps resolving 7.0.0; pub doesn't offer it 7.1.0.
+- **The app needs the Kotlin Gradle Plugin 2.2.20 or newer on its build classpath.** That is
+  Flutter 3.47's own minimum, not this plugin's: its Gradle plugin refuses anything older
+  ("Your project's Kotlin version (2.2.10) is lower than Flutter's minimum supported version of
+  2.2.20") and warns below 2.3.20. AGP 9.3.0 through 9.4.1 bring only 2.2.10, so an app that
+  relies on AGP's built-in Kotlin has to declare it, as Flutter 3.47.7's app template does:
+  `id("org.jetbrains.kotlin.android") version "2.4.0" apply false` in `settings.gradle(.kts)`.
+
+### Internal
+
+- **The repo builds and tests on Flutter 3.47.7** (`.fvmrc`; was 3.44.9). `flutter pub get` on 3.47
+  adds `analyzer: exclude:` entries (`build/**`, plus the platform folders that exist) to each Flutter
+  package's `analysis_options.yaml`; that is flutter_tools' `AnalysisOptionsMigration`, which re-adds
+  them on every `pub get`, so they are kept. The excluded `android/` and `ios/` folders hold no Dart.
+- The example app declares KGP 2.4.0 on its build classpath (`apply false`), for the reason above;
+  AGP stays 9.3.1. `compileSdk` stays 37: Flutter 3.47.7's default is still 36.
+- **Kotlin 2.4.0 reports 5 new warnings in this module, now fixed** (the examples compile it with
+  warnings as errors; apps never do). Four are redundant code: a cast after an `is` check in
+  `Util.JSONStringify`, `toString()` on `PrintJobInfo.getLabel()`'s `@NonNull String`, and two
+  `?.` on `getWebMessageChannels()`, which `InAppWebView` declares non-null. **The fifth was a Java →
+  Kotlin translation bug.** `NoHistoryCustomTabsActivityCallbacks` builds its lifecycle callbacks in
+  a property initializer, where the constructor parameter `plugin` hides the `plugin` property, so
+  the callbacks captured the non-null parameter: after `dispose()` nulled the property, they still
+  held the plugin and would still close browsers through it. They now read the property. By reading,
+  it doesn't show in the normal lifecycle: the plugin unregisters these callbacks when it detaches
+  from the activity, before it disposes them. A new JVM test checks that, after `dispose()`, the
+  callbacks hold no reference to the plugin; it fails on the old code with "the callbacks still hold
+  the plugin in [$plugin]".
+
 ## 7.0.0
 
 The Android half of a hard fork of 6.2.0-beta.3 / `1.2.0-beta.3`. The `nosferatu500_inappwebview` 7.0.0

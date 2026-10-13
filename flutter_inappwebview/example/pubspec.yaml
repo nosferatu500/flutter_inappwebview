@@ -12,8 +12,8 @@ version: 1.0.0+1
 publish_to: none
 
 environment:
-  sdk: ^3.12.0
-  flutter: ">=3.44.0"
+  sdk: ^3.13.0
+  flutter: ">=3.47.0"
 
 dependencies:
   flutter:
@@ -58,7 +58,7 @@ dev_dependencies:
 #      path: packages/integration_test
   flutter_lints: ^6.0.0
   # Imported by test/test_helpers/mock_inappwebview_platform.dart.
-  nosferatu500_inappwebview_platform_interface: ^7.0.0
+  nosferatu500_inappwebview_platform_interface: ^7.1.0
   plugin_platform_interface: ^2.1.8
 
 # For information on the generic Dart part of this file, see the

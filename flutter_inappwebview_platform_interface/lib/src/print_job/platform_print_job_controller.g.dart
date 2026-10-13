@@ -187,9 +187,8 @@ extension _PlatformPrintJobControllerMethodSupported
     switch (method) {
       case PlatformPrintJobControllerMethod.cancel:
         return ((kIsWeb && platform != null) || !kIsWeb) &&
-            [
-              TargetPlatform.android,
-            ].contains(platform ?? defaultTargetPlatform);
+            [TargetPlatform.android]
+                .contains(platform ?? defaultTargetPlatform);
       case PlatformPrintJobControllerMethod.dismiss:
         return ((kIsWeb && platform != null) || !kIsWeb) &&
             [TargetPlatform.iOS].contains(platform ?? defaultTargetPlatform);
@@ -207,9 +206,8 @@ extension _PlatformPrintJobControllerMethodSupported
             ].contains(platform ?? defaultTargetPlatform);
       case PlatformPrintJobControllerMethod.restart:
         return ((kIsWeb && platform != null) || !kIsWeb) &&
-            [
-              TargetPlatform.android,
-            ].contains(platform ?? defaultTargetPlatform);
+            [TargetPlatform.android]
+                .contains(platform ?? defaultTargetPlatform);
     }
   }
 }

@@ -22,9 +22,13 @@ plugins {
     // Resolved here so the root build.gradle can apply it to the file_picker
     // module alone; see the comment there.
     id "com.android.built-in-kotlin" version '9.3.1' apply false
-    // org.jetbrains.kotlin.android is intentionally absent: it is incompatible
-    // with the AGP 9 DSL, and this app has no Kotlin sources. AGP 9 provides
-    // built-in Kotlin support if it is ever needed.
+    // The Kotlin Gradle Plugin, on the build classpath only: `apply false`, so no module gets it
+    // from here. Flutter 3.47's Gradle plugin refuses a KGP older than 2.2.20 (and warns below
+    // 2.3.20), and the one AGP 9.3.1 brings is 2.2.10. 2.4.0 is what Flutter 3.47.7's own app
+    // template declares. Applying org.jetbrains.kotlin.android to a module is still wrong: it is
+    // incompatible with the AGP 9 DSL, and this app has no Kotlin sources. AGP 9
+    // provides built-in Kotlin support if it is ever needed.
+    id "org.jetbrains.kotlin.android" version "2.4.0" apply false
 }
 
 include ":app"

@@ -381,14 +381,12 @@ extension _PlatformChromeSafariBrowserMethodSupported
             ].contains(platform ?? defaultTargetPlatform);
       case PlatformChromeSafariBrowserMethod.getMaxToolbarItems:
         return ((kIsWeb && platform != null) || !kIsWeb) &&
-            [
-              TargetPlatform.android,
-            ].contains(platform ?? defaultTargetPlatform);
+            [TargetPlatform.android]
+                .contains(platform ?? defaultTargetPlatform);
       case PlatformChromeSafariBrowserMethod.getPackageName:
         return ((kIsWeb && platform != null) || !kIsWeb) &&
-            [
-              TargetPlatform.android,
-            ].contains(platform ?? defaultTargetPlatform);
+            [TargetPlatform.android]
+                .contains(platform ?? defaultTargetPlatform);
       case PlatformChromeSafariBrowserMethod.invalidatePrewarmingToken:
         return ((kIsWeb && platform != null) || !kIsWeb) &&
             [TargetPlatform.iOS].contains(platform ?? defaultTargetPlatform);
@@ -400,9 +398,8 @@ extension _PlatformChromeSafariBrowserMethodSupported
             ].contains(platform ?? defaultTargetPlatform);
       case PlatformChromeSafariBrowserMethod.isEngagementSignalsApiAvailable:
         return ((kIsWeb && platform != null) || !kIsWeb) &&
-            [
-              TargetPlatform.android,
-            ].contains(platform ?? defaultTargetPlatform);
+            [TargetPlatform.android]
+                .contains(platform ?? defaultTargetPlatform);
       case PlatformChromeSafariBrowserMethod.isOpened:
         return ((kIsWeb && platform != null) || !kIsWeb) &&
             [
@@ -411,14 +408,12 @@ extension _PlatformChromeSafariBrowserMethodSupported
             ].contains(platform ?? defaultTargetPlatform);
       case PlatformChromeSafariBrowserMethod.launchUrl:
         return ((kIsWeb && platform != null) || !kIsWeb) &&
-            [
-              TargetPlatform.android,
-            ].contains(platform ?? defaultTargetPlatform);
+            [TargetPlatform.android]
+                .contains(platform ?? defaultTargetPlatform);
       case PlatformChromeSafariBrowserMethod.mayLaunchUrl:
         return ((kIsWeb && platform != null) || !kIsWeb) &&
-            [
-              TargetPlatform.android,
-            ].contains(platform ?? defaultTargetPlatform);
+            [TargetPlatform.android]
+                .contains(platform ?? defaultTargetPlatform);
       case PlatformChromeSafariBrowserMethod.open:
         return ((kIsWeb && platform != null) || !kIsWeb) &&
             [
@@ -427,42 +422,35 @@ extension _PlatformChromeSafariBrowserMethodSupported
             ].contains(platform ?? defaultTargetPlatform);
       case PlatformChromeSafariBrowserMethod.postMessage:
         return ((kIsWeb && platform != null) || !kIsWeb) &&
-            [
-              TargetPlatform.android,
-            ].contains(platform ?? defaultTargetPlatform);
+            [TargetPlatform.android]
+                .contains(platform ?? defaultTargetPlatform);
       case PlatformChromeSafariBrowserMethod.prewarmConnections:
         return ((kIsWeb && platform != null) || !kIsWeb) &&
             [TargetPlatform.iOS].contains(platform ?? defaultTargetPlatform);
       case PlatformChromeSafariBrowserMethod.requestPostMessageChannel:
         return ((kIsWeb && platform != null) || !kIsWeb) &&
-            [
-              TargetPlatform.android,
-            ].contains(platform ?? defaultTargetPlatform);
+            [TargetPlatform.android]
+                .contains(platform ?? defaultTargetPlatform);
       case PlatformChromeSafariBrowserMethod.setActionButton:
         return ((kIsWeb && platform != null) || !kIsWeb) &&
-            [
-              TargetPlatform.android,
-            ].contains(platform ?? defaultTargetPlatform);
+            [TargetPlatform.android]
+                .contains(platform ?? defaultTargetPlatform);
       case PlatformChromeSafariBrowserMethod.setSecondaryToolbar:
         return ((kIsWeb && platform != null) || !kIsWeb) &&
-            [
-              TargetPlatform.android,
-            ].contains(platform ?? defaultTargetPlatform);
+            [TargetPlatform.android]
+                .contains(platform ?? defaultTargetPlatform);
       case PlatformChromeSafariBrowserMethod.updateActionButton:
         return ((kIsWeb && platform != null) || !kIsWeb) &&
-            [
-              TargetPlatform.android,
-            ].contains(platform ?? defaultTargetPlatform);
+            [TargetPlatform.android]
+                .contains(platform ?? defaultTargetPlatform);
       case PlatformChromeSafariBrowserMethod.updateSecondaryToolbar:
         return ((kIsWeb && platform != null) || !kIsWeb) &&
-            [
-              TargetPlatform.android,
-            ].contains(platform ?? defaultTargetPlatform);
+            [TargetPlatform.android]
+                .contains(platform ?? defaultTargetPlatform);
       case PlatformChromeSafariBrowserMethod.validateRelationship:
         return ((kIsWeb && platform != null) || !kIsWeb) &&
-            [
-              TargetPlatform.android,
-            ].contains(platform ?? defaultTargetPlatform);
+            [TargetPlatform.android]
+                .contains(platform ?? defaultTargetPlatform);
     }
   }
 }
@@ -665,22 +653,19 @@ extension _PlatformChromeSafariBrowserEventsMethodSupported
       case PlatformChromeSafariBrowserEventsMethod
           .onGreatestScrollPercentageIncreased:
         return ((kIsWeb && platform != null) || !kIsWeb) &&
-            [
-              TargetPlatform.android,
-            ].contains(platform ?? defaultTargetPlatform);
+            [TargetPlatform.android]
+                .contains(platform ?? defaultTargetPlatform);
       case PlatformChromeSafariBrowserEventsMethod.onInitialLoadDidRedirect:
         return ((kIsWeb && platform != null) || !kIsWeb) &&
             [TargetPlatform.iOS].contains(platform ?? defaultTargetPlatform);
       case PlatformChromeSafariBrowserEventsMethod.onMessageChannelReady:
         return ((kIsWeb && platform != null) || !kIsWeb) &&
-            [
-              TargetPlatform.android,
-            ].contains(platform ?? defaultTargetPlatform);
+            [TargetPlatform.android]
+                .contains(platform ?? defaultTargetPlatform);
       case PlatformChromeSafariBrowserEventsMethod.onNavigationEvent:
         return ((kIsWeb && platform != null) || !kIsWeb) &&
-            [
-              TargetPlatform.android,
-            ].contains(platform ?? defaultTargetPlatform);
+            [TargetPlatform.android]
+                .contains(platform ?? defaultTargetPlatform);
       case PlatformChromeSafariBrowserEventsMethod.onOpened:
         return ((kIsWeb && platform != null) || !kIsWeb) &&
             [
@@ -689,30 +674,25 @@ extension _PlatformChromeSafariBrowserEventsMethodSupported
             ].contains(platform ?? defaultTargetPlatform);
       case PlatformChromeSafariBrowserEventsMethod.onPostMessage:
         return ((kIsWeb && platform != null) || !kIsWeb) &&
-            [
-              TargetPlatform.android,
-            ].contains(platform ?? defaultTargetPlatform);
+            [TargetPlatform.android]
+                .contains(platform ?? defaultTargetPlatform);
       case PlatformChromeSafariBrowserEventsMethod
           .onRelationshipValidationResult:
         return ((kIsWeb && platform != null) || !kIsWeb) &&
-            [
-              TargetPlatform.android,
-            ].contains(platform ?? defaultTargetPlatform);
+            [TargetPlatform.android]
+                .contains(platform ?? defaultTargetPlatform);
       case PlatformChromeSafariBrowserEventsMethod.onServiceConnected:
         return ((kIsWeb && platform != null) || !kIsWeb) &&
-            [
-              TargetPlatform.android,
-            ].contains(platform ?? defaultTargetPlatform);
+            [TargetPlatform.android]
+                .contains(platform ?? defaultTargetPlatform);
       case PlatformChromeSafariBrowserEventsMethod.onSessionEnded:
         return ((kIsWeb && platform != null) || !kIsWeb) &&
-            [
-              TargetPlatform.android,
-            ].contains(platform ?? defaultTargetPlatform);
+            [TargetPlatform.android]
+                .contains(platform ?? defaultTargetPlatform);
       case PlatformChromeSafariBrowserEventsMethod.onVerticalScrollEvent:
         return ((kIsWeb && platform != null) || !kIsWeb) &&
-            [
-              TargetPlatform.android,
-            ].contains(platform ?? defaultTargetPlatform);
+            [TargetPlatform.android]
+                .contains(platform ?? defaultTargetPlatform);
       case PlatformChromeSafariBrowserEventsMethod.onWillOpenInBrowser:
         return ((kIsWeb && platform != null) || !kIsWeb) &&
             [TargetPlatform.iOS].contains(platform ?? defaultTargetPlatform);

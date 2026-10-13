@@ -32,7 +32,7 @@ class PrintJobInfoExt {
       printJobInfoExt.copies = info.copies
       printJobInfoExt.numberOfPages = info.pages?.size
       printJobInfoExt.creationTime = info.creationTime
-      printJobInfoExt.label = info.label.toString()
+      printJobInfoExt.label = info.label
       printJobInfoExt.printerId = info.printerId?.localId
       printJobInfoExt.attributes = PrintAttributesExt.fromPrintAttributes(info.attributes)
       return printJobInfoExt

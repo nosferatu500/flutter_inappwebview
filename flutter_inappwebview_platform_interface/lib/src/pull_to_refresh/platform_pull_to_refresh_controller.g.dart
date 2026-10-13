@@ -300,9 +300,8 @@ extension _PlatformPullToRefreshControllerMethodSupported
             ].contains(platform ?? defaultTargetPlatform);
       case PlatformPullToRefreshControllerMethod.getDefaultSlingshotDistance:
         return ((kIsWeb && platform != null) || !kIsWeb) &&
-            [
-              TargetPlatform.android,
-            ].contains(platform ?? defaultTargetPlatform);
+            [TargetPlatform.android]
+                .contains(platform ?? defaultTargetPlatform);
       case PlatformPullToRefreshControllerMethod.isEnabled:
         return ((kIsWeb && platform != null) || !kIsWeb) &&
             [
@@ -329,9 +328,8 @@ extension _PlatformPullToRefreshControllerMethodSupported
             ].contains(platform ?? defaultTargetPlatform);
       case PlatformPullToRefreshControllerMethod.setDistanceToTriggerSync:
         return ((kIsWeb && platform != null) || !kIsWeb) &&
-            [
-              TargetPlatform.android,
-            ].contains(platform ?? defaultTargetPlatform);
+            [TargetPlatform.android]
+                .contains(platform ?? defaultTargetPlatform);
       case PlatformPullToRefreshControllerMethod.setEnabled:
         return ((kIsWeb && platform != null) || !kIsWeb) &&
             [
@@ -340,14 +338,12 @@ extension _PlatformPullToRefreshControllerMethodSupported
             ].contains(platform ?? defaultTargetPlatform);
       case PlatformPullToRefreshControllerMethod.setIndicatorSize:
         return ((kIsWeb && platform != null) || !kIsWeb) &&
-            [
-              TargetPlatform.android,
-            ].contains(platform ?? defaultTargetPlatform);
+            [TargetPlatform.android]
+                .contains(platform ?? defaultTargetPlatform);
       case PlatformPullToRefreshControllerMethod.setSlingshotDistance:
         return ((kIsWeb && platform != null) || !kIsWeb) &&
-            [
-              TargetPlatform.android,
-            ].contains(platform ?? defaultTargetPlatform);
+            [TargetPlatform.android]
+                .contains(platform ?? defaultTargetPlatform);
       case PlatformPullToRefreshControllerMethod.setStyledTitle:
         return ((kIsWeb && platform != null) || !kIsWeb) &&
             [TargetPlatform.iOS].contains(platform ?? defaultTargetPlatform);

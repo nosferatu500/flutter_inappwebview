@@ -371,19 +371,16 @@ extension _ProxySettingsPropertySupported on ProxySettings {
     switch (property) {
       case ProxySettingsProperty.bypassRules:
         return ((kIsWeb && platform != null) || !kIsWeb) &&
-            [
-              TargetPlatform.android,
-            ].contains(platform ?? defaultTargetPlatform);
+            [TargetPlatform.android]
+                .contains(platform ?? defaultTargetPlatform);
       case ProxySettingsProperty.bypassSimpleHostnames:
         return ((kIsWeb && platform != null) || !kIsWeb) &&
-            [
-              TargetPlatform.android,
-            ].contains(platform ?? defaultTargetPlatform);
+            [TargetPlatform.android]
+                .contains(platform ?? defaultTargetPlatform);
       case ProxySettingsProperty.directs:
         return ((kIsWeb && platform != null) || !kIsWeb) &&
-            [
-              TargetPlatform.android,
-            ].contains(platform ?? defaultTargetPlatform);
+            [TargetPlatform.android]
+                .contains(platform ?? defaultTargetPlatform);
       case ProxySettingsProperty.proxyRules:
         return ((kIsWeb && platform != null) || !kIsWeb) &&
             [
@@ -392,14 +389,12 @@ extension _ProxySettingsPropertySupported on ProxySettings {
             ].contains(platform ?? defaultTargetPlatform);
       case ProxySettingsProperty.removeImplicitRules:
         return ((kIsWeb && platform != null) || !kIsWeb) &&
-            [
-              TargetPlatform.android,
-            ].contains(platform ?? defaultTargetPlatform);
+            [TargetPlatform.android]
+                .contains(platform ?? defaultTargetPlatform);
       case ProxySettingsProperty.reverseBypassEnabled:
         return ((kIsWeb && platform != null) || !kIsWeb) &&
-            [
-              TargetPlatform.android,
-            ].contains(platform ?? defaultTargetPlatform);
+            [TargetPlatform.android]
+                .contains(platform ?? defaultTargetPlatform);
     }
   }
 }

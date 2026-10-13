@@ -263,7 +263,7 @@ object Util {
   fun JSONStringify(value: Any?): String = when (value) {
     null -> "null"
     is Map<*, *> -> JSONObject(value as Map<String, Any?>).toString()
-    is List<*> -> JSONArray(value as List<Any?>).toString()
+    is List<*> -> JSONArray(value).toString()
     is String -> JSONObject.quote(value)
     // wrap() returns null for a value it cannot represent. The Java threw NPE here; !! keeps
     // that behaviour rather than silently producing the string "null".

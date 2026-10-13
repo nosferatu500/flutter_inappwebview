@@ -331,9 +331,8 @@ extension _PlatformCookieManagerMethodSupported on PlatformCookieManager {
             ].contains(platform ?? defaultTargetPlatform);
       case PlatformCookieManagerMethod.flush:
         return ((kIsWeb && platform != null) || !kIsWeb) &&
-            [
-              TargetPlatform.android,
-            ].contains(platform ?? defaultTargetPlatform);
+            [TargetPlatform.android]
+                .contains(platform ?? defaultTargetPlatform);
       case PlatformCookieManagerMethod.getAllCookies:
         return ((kIsWeb && platform != null) || !kIsWeb) &&
             [TargetPlatform.iOS].contains(platform ?? defaultTargetPlatform);
@@ -351,9 +350,8 @@ extension _PlatformCookieManagerMethodSupported on PlatformCookieManager {
             ].contains(platform ?? defaultTargetPlatform);
       case PlatformCookieManagerMethod.hasCookies:
         return ((kIsWeb && platform != null) || !kIsWeb) &&
-            [
-              TargetPlatform.android,
-            ].contains(platform ?? defaultTargetPlatform);
+            [TargetPlatform.android]
+                .contains(platform ?? defaultTargetPlatform);
       case PlatformCookieManagerMethod.isAcceptCookieEnabled:
         return ((kIsWeb && platform != null) || !kIsWeb) &&
             [
@@ -362,14 +360,12 @@ extension _PlatformCookieManagerMethodSupported on PlatformCookieManager {
             ].contains(platform ?? defaultTargetPlatform);
       case PlatformCookieManagerMethod.isFileSchemeCookiesAllowed:
         return ((kIsWeb && platform != null) || !kIsWeb) &&
-            [
-              TargetPlatform.android,
-            ].contains(platform ?? defaultTargetPlatform);
+            [TargetPlatform.android]
+                .contains(platform ?? defaultTargetPlatform);
       case PlatformCookieManagerMethod.removeSessionCookies:
         return ((kIsWeb && platform != null) || !kIsWeb) &&
-            [
-              TargetPlatform.android,
-            ].contains(platform ?? defaultTargetPlatform);
+            [TargetPlatform.android]
+                .contains(platform ?? defaultTargetPlatform);
       case PlatformCookieManagerMethod.setAcceptCookie:
         return ((kIsWeb && platform != null) || !kIsWeb) &&
             [
