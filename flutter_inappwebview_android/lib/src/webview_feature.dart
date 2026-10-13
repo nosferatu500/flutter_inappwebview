@@ -1,6 +1,6 @@
 import 'dart:async';
 import 'package:flutter/foundation.dart';
-import 'package:flutter_inappwebview_platform_interface/flutter_inappwebview_platform_interface.dart';
+import 'package:nosferatu500_inappwebview_platform_interface/nosferatu500_inappwebview_platform_interface.dart';
 
 import 'pigeons/webview_feature.g.dart';
 
@@ -27,7 +27,7 @@ class AndroidWebViewFeatureCreationParams
   }
 }
 
-///{@macro flutter_inappwebview_platform_interface.PlatformWebViewFeature}
+///{@macro nosferatu500_inappwebview_platform_interface.PlatformWebViewFeature}
 ///
 /// Transport is Pigeon-generated ([WebViewFeatureHostApi]) rather than a hand-written
 /// `MethodChannel`; the fourth channel migrated, after find_interaction (§14),

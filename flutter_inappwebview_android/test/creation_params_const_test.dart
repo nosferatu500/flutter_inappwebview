@@ -1,5 +1,5 @@
-import 'package:flutter_inappwebview_android/flutter_inappwebview_android.dart';
-import 'package:flutter_inappwebview_platform_interface/flutter_inappwebview_platform_interface.dart';
+import 'package:nosferatu500_inappwebview_android/nosferatu500_inappwebview_android.dart';
+import 'package:nosferatu500_inappwebview_platform_interface/nosferatu500_inappwebview_platform_interface.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 /// Pins that these creation params can be built in a `const` context (§235,

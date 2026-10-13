@@ -1,7 +1,7 @@
 import 'dart:ui';
 
 import 'package:flutter/foundation.dart';
-import 'package:flutter_inappwebview_internal_annotations/flutter_inappwebview_internal_annotations.dart';
+import 'package:nosferatu500_inappwebview_internal_annotations/nosferatu500_inappwebview_internal_annotations.dart';
 
 import '../types/modal_presentation_style.dart';
 import '../types/modal_transition_style.dart';
@@ -67,7 +67,7 @@ class InAppBrowserClassSettings {
   }
 }
 
-///{@template flutter_inappwebview_platform_interface.InAppWebViewSettings}
+///{@template nosferatu500_inappwebview_platform_interface.InAppWebViewSettings}
 ///This class represents all [InAppBrowser] settings available.
 ///{@endtemplate}
 @ExchangeableObject(copyMethod: true)

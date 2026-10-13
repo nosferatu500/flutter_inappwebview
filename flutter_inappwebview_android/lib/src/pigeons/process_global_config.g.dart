@@ -274,7 +274,7 @@ class ProcessGlobalConfigHostApi {
   /// later wants to surface it; collapsing it to `void` would throw that away silently.
   Future<bool> apply(ProcessGlobalConfigSettingsData settings) async {
     final pigeonVar_channelName =
-        'dev.flutter.pigeon.flutter_inappwebview_android.ProcessGlobalConfigHostApi.apply$pigeonVar_messageChannelSuffix';
+        'dev.flutter.pigeon.nosferatu500_inappwebview_android.ProcessGlobalConfigHostApi.apply$pigeonVar_messageChannelSuffix';
     final pigeonVar_channel = BasicMessageChannel<Object?>(
       pigeonVar_channelName,
       pigeonChannelCodec,

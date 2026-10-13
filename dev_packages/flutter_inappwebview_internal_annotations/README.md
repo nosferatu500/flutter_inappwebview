@@ -1,1 +1,1 @@
-Internal annotations used by the generator of [flutter_inappwebview](https://github.com/pichillilorenzo/flutter_inappwebview) plugin.
+Internal annotations used by the generator of the [nosferatu500_inappwebview](https://github.com/nosferatu500/flutter_inappwebview) plugin.

@@ -370,7 +370,7 @@ interface ProfileStoreHostApi {
     fun setUp(binaryMessenger: BinaryMessenger, api: ProfileStoreHostApi?, messageChannelSuffix: String = "") {
       val separatedMessageChannelSuffix = if (messageChannelSuffix.isNotEmpty()) ".$messageChannelSuffix" else ""
       run {
-        val channel = BasicMessageChannel<Any?>(binaryMessenger, "dev.flutter.pigeon.flutter_inappwebview_android.ProfileStoreHostApi.getAllProfileNames$separatedMessageChannelSuffix", codec)
+        val channel = BasicMessageChannel<Any?>(binaryMessenger, "dev.flutter.pigeon.nosferatu500_inappwebview_android.ProfileStoreHostApi.getAllProfileNames$separatedMessageChannelSuffix", codec)
         if (api != null) {
           channel.setMessageHandler { _, reply ->
             val wrapped: List<Any?> = try {
@@ -385,7 +385,7 @@ interface ProfileStoreHostApi {
         }
       }
       run {
-        val channel = BasicMessageChannel<Any?>(binaryMessenger, "dev.flutter.pigeon.flutter_inappwebview_android.ProfileStoreHostApi.getOrCreateProfile$separatedMessageChannelSuffix", codec)
+        val channel = BasicMessageChannel<Any?>(binaryMessenger, "dev.flutter.pigeon.nosferatu500_inappwebview_android.ProfileStoreHostApi.getOrCreateProfile$separatedMessageChannelSuffix", codec)
         if (api != null) {
           channel.setMessageHandler { message, reply ->
             val args = message as List<Any?>
@@ -402,7 +402,7 @@ interface ProfileStoreHostApi {
         }
       }
       run {
-        val channel = BasicMessageChannel<Any?>(binaryMessenger, "dev.flutter.pigeon.flutter_inappwebview_android.ProfileStoreHostApi.deleteProfile$separatedMessageChannelSuffix", codec)
+        val channel = BasicMessageChannel<Any?>(binaryMessenger, "dev.flutter.pigeon.nosferatu500_inappwebview_android.ProfileStoreHostApi.deleteProfile$separatedMessageChannelSuffix", codec)
         if (api != null) {
           channel.setMessageHandler { message, reply ->
             val args = message as List<Any?>
@@ -419,7 +419,7 @@ interface ProfileStoreHostApi {
         }
       }
       run {
-        val channel = BasicMessageChannel<Any?>(binaryMessenger, "dev.flutter.pigeon.flutter_inappwebview_android.ProfileStoreHostApi.addCustomHeader$separatedMessageChannelSuffix", codec)
+        val channel = BasicMessageChannel<Any?>(binaryMessenger, "dev.flutter.pigeon.nosferatu500_inappwebview_android.ProfileStoreHostApi.addCustomHeader$separatedMessageChannelSuffix", codec)
         if (api != null) {
           channel.setMessageHandler { message, reply ->
             val args = message as List<Any?>
@@ -437,7 +437,7 @@ interface ProfileStoreHostApi {
         }
       }
       run {
-        val channel = BasicMessageChannel<Any?>(binaryMessenger, "dev.flutter.pigeon.flutter_inappwebview_android.ProfileStoreHostApi.hasCustomHeader$separatedMessageChannelSuffix", codec)
+        val channel = BasicMessageChannel<Any?>(binaryMessenger, "dev.flutter.pigeon.nosferatu500_inappwebview_android.ProfileStoreHostApi.hasCustomHeader$separatedMessageChannelSuffix", codec)
         if (api != null) {
           channel.setMessageHandler { message, reply ->
             val args = message as List<Any?>
@@ -455,7 +455,7 @@ interface ProfileStoreHostApi {
         }
       }
       run {
-        val channel = BasicMessageChannel<Any?>(binaryMessenger, "dev.flutter.pigeon.flutter_inappwebview_android.ProfileStoreHostApi.getCustomHeaders$separatedMessageChannelSuffix", codec)
+        val channel = BasicMessageChannel<Any?>(binaryMessenger, "dev.flutter.pigeon.nosferatu500_inappwebview_android.ProfileStoreHostApi.getCustomHeaders$separatedMessageChannelSuffix", codec)
         if (api != null) {
           channel.setMessageHandler { message, reply ->
             val args = message as List<Any?>
@@ -474,7 +474,7 @@ interface ProfileStoreHostApi {
         }
       }
       run {
-        val channel = BasicMessageChannel<Any?>(binaryMessenger, "dev.flutter.pigeon.flutter_inappwebview_android.ProfileStoreHostApi.clearCustomHeader$separatedMessageChannelSuffix", codec)
+        val channel = BasicMessageChannel<Any?>(binaryMessenger, "dev.flutter.pigeon.nosferatu500_inappwebview_android.ProfileStoreHostApi.clearCustomHeader$separatedMessageChannelSuffix", codec)
         if (api != null) {
           channel.setMessageHandler { message, reply ->
             val args = message as List<Any?>
@@ -493,7 +493,7 @@ interface ProfileStoreHostApi {
         }
       }
       run {
-        val channel = BasicMessageChannel<Any?>(binaryMessenger, "dev.flutter.pigeon.flutter_inappwebview_android.ProfileStoreHostApi.clearAllCustomHeaders$separatedMessageChannelSuffix", codec)
+        val channel = BasicMessageChannel<Any?>(binaryMessenger, "dev.flutter.pigeon.nosferatu500_inappwebview_android.ProfileStoreHostApi.clearAllCustomHeaders$separatedMessageChannelSuffix", codec)
         if (api != null) {
           channel.setMessageHandler { message, reply ->
             val args = message as List<Any?>

@@ -1,6 +1,6 @@
-import 'package:flutter_inappwebview_android/flutter_inappwebview_android.dart';
-import 'package:flutter_inappwebview_android/src/pigeons/web_storage_manager.g.dart';
-import 'package:flutter_inappwebview_platform_interface/flutter_inappwebview_platform_interface.dart';
+import 'package:nosferatu500_inappwebview_android/nosferatu500_inappwebview_android.dart';
+import 'package:nosferatu500_inappwebview_android/src/pigeons/web_storage_manager.g.dart';
+import 'package:nosferatu500_inappwebview_platform_interface/nosferatu500_inappwebview_platform_interface.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 /// Guards the `profileName` argument on the web-storage channel.
@@ -22,7 +22,7 @@ void main() {
 
   const codec = WebStorageManagerHostApi.pigeonChannelCodec;
   const prefix =
-      'dev.flutter.pigeon.flutter_inappwebview_android.WebStorageManagerHostApi.';
+      'dev.flutter.pigeon.nosferatu500_inappwebview_android.WebStorageManagerHostApi.';
 
   // Every method, with the reply shape its caller accepts.
   const channels = <String, Object?>{

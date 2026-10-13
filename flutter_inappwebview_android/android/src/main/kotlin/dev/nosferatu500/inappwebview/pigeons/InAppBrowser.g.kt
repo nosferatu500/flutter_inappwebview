@@ -81,7 +81,7 @@ interface InAppBrowserHostApi {
     fun setUp(binaryMessenger: BinaryMessenger, api: InAppBrowserHostApi?, messageChannelSuffix: String = "") {
       val separatedMessageChannelSuffix = if (messageChannelSuffix.isNotEmpty()) ".$messageChannelSuffix" else ""
       run {
-        val channel = BasicMessageChannel<Any?>(binaryMessenger, "dev.flutter.pigeon.flutter_inappwebview_android.InAppBrowserHostApi.show$separatedMessageChannelSuffix", codec)
+        val channel = BasicMessageChannel<Any?>(binaryMessenger, "dev.flutter.pigeon.nosferatu500_inappwebview_android.InAppBrowserHostApi.show$separatedMessageChannelSuffix", codec)
         if (api != null) {
           channel.setMessageHandler { _, reply ->
             val wrapped: List<Any?> = try {
@@ -96,7 +96,7 @@ interface InAppBrowserHostApi {
         }
       }
       run {
-        val channel = BasicMessageChannel<Any?>(binaryMessenger, "dev.flutter.pigeon.flutter_inappwebview_android.InAppBrowserHostApi.hide$separatedMessageChannelSuffix", codec)
+        val channel = BasicMessageChannel<Any?>(binaryMessenger, "dev.flutter.pigeon.nosferatu500_inappwebview_android.InAppBrowserHostApi.hide$separatedMessageChannelSuffix", codec)
         if (api != null) {
           channel.setMessageHandler { _, reply ->
             val wrapped: List<Any?> = try {
@@ -111,7 +111,7 @@ interface InAppBrowserHostApi {
         }
       }
       run {
-        val channel = BasicMessageChannel<Any?>(binaryMessenger, "dev.flutter.pigeon.flutter_inappwebview_android.InAppBrowserHostApi.close$separatedMessageChannelSuffix", codec)
+        val channel = BasicMessageChannel<Any?>(binaryMessenger, "dev.flutter.pigeon.nosferatu500_inappwebview_android.InAppBrowserHostApi.close$separatedMessageChannelSuffix", codec)
         if (api != null) {
           channel.setMessageHandler { _, reply ->
             val wrapped: List<Any?> = try {
@@ -126,7 +126,7 @@ interface InAppBrowserHostApi {
         }
       }
       run {
-        val channel = BasicMessageChannel<Any?>(binaryMessenger, "dev.flutter.pigeon.flutter_inappwebview_android.InAppBrowserHostApi.isHidden$separatedMessageChannelSuffix", codec)
+        val channel = BasicMessageChannel<Any?>(binaryMessenger, "dev.flutter.pigeon.nosferatu500_inappwebview_android.InAppBrowserHostApi.isHidden$separatedMessageChannelSuffix", codec)
         if (api != null) {
           channel.setMessageHandler { _, reply ->
             val wrapped: List<Any?> = try {
@@ -141,7 +141,7 @@ interface InAppBrowserHostApi {
         }
       }
       run {
-        val channel = BasicMessageChannel<Any?>(binaryMessenger, "dev.flutter.pigeon.flutter_inappwebview_android.InAppBrowserHostApi.setSettings$separatedMessageChannelSuffix", codec)
+        val channel = BasicMessageChannel<Any?>(binaryMessenger, "dev.flutter.pigeon.nosferatu500_inappwebview_android.InAppBrowserHostApi.setSettings$separatedMessageChannelSuffix", codec)
         if (api != null) {
           channel.setMessageHandler { message, reply ->
             val args = message as List<Any?>
@@ -158,7 +158,7 @@ interface InAppBrowserHostApi {
         }
       }
       run {
-        val channel = BasicMessageChannel<Any?>(binaryMessenger, "dev.flutter.pigeon.flutter_inappwebview_android.InAppBrowserHostApi.getSettings$separatedMessageChannelSuffix", codec)
+        val channel = BasicMessageChannel<Any?>(binaryMessenger, "dev.flutter.pigeon.nosferatu500_inappwebview_android.InAppBrowserHostApi.getSettings$separatedMessageChannelSuffix", codec)
         if (api != null) {
           channel.setMessageHandler { _, reply ->
             val wrapped: List<Any?> = try {
@@ -190,7 +190,7 @@ class InAppBrowserFlutterApi(private val binaryMessenger: BinaryMessenger, priva
   fun onBrowserCreated(callback: (Result<Unit>) -> Unit)
 {
     val separatedMessageChannelSuffix = if (messageChannelSuffix.isNotEmpty()) ".$messageChannelSuffix" else ""
-    val channelName = "dev.flutter.pigeon.flutter_inappwebview_android.InAppBrowserFlutterApi.onBrowserCreated$separatedMessageChannelSuffix"
+    val channelName = "dev.flutter.pigeon.nosferatu500_inappwebview_android.InAppBrowserFlutterApi.onBrowserCreated$separatedMessageChannelSuffix"
     val channel = BasicMessageChannel<Any?>(binaryMessenger, channelName, codec)
     channel.send(null) {
       if (it is List<*>) {
@@ -207,7 +207,7 @@ class InAppBrowserFlutterApi(private val binaryMessenger: BinaryMessenger, priva
   fun onMenuItemClicked(idArg: Long, callback: (Result<Unit>) -> Unit)
 {
     val separatedMessageChannelSuffix = if (messageChannelSuffix.isNotEmpty()) ".$messageChannelSuffix" else ""
-    val channelName = "dev.flutter.pigeon.flutter_inappwebview_android.InAppBrowserFlutterApi.onMenuItemClicked$separatedMessageChannelSuffix"
+    val channelName = "dev.flutter.pigeon.nosferatu500_inappwebview_android.InAppBrowserFlutterApi.onMenuItemClicked$separatedMessageChannelSuffix"
     val channel = BasicMessageChannel<Any?>(binaryMessenger, channelName, codec)
     channel.send(listOf(idArg)) {
       if (it is List<*>) {
@@ -224,7 +224,7 @@ class InAppBrowserFlutterApi(private val binaryMessenger: BinaryMessenger, priva
   fun onExit(callback: (Result<Unit>) -> Unit)
 {
     val separatedMessageChannelSuffix = if (messageChannelSuffix.isNotEmpty()) ".$messageChannelSuffix" else ""
-    val channelName = "dev.flutter.pigeon.flutter_inappwebview_android.InAppBrowserFlutterApi.onExit$separatedMessageChannelSuffix"
+    val channelName = "dev.flutter.pigeon.nosferatu500_inappwebview_android.InAppBrowserFlutterApi.onExit$separatedMessageChannelSuffix"
     val channel = BasicMessageChannel<Any?>(binaryMessenger, channelName, codec)
     channel.send(null) {
       if (it is List<*>) {

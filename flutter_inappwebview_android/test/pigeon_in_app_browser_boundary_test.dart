@@ -1,11 +1,11 @@
 import 'dart:async';
 
 import 'package:flutter/services.dart';
-import 'package:flutter_inappwebview_android/flutter_inappwebview_android.dart';
-import 'package:flutter_inappwebview_android/src/pigeons/in_app_browser.g.dart';
-import 'package:flutter_inappwebview_android/src/pigeons/in_app_browser_manager.g.dart';
-import 'package:flutter_inappwebview_android/src/pigeons/in_app_webview.g.dart';
-import 'package:flutter_inappwebview_platform_interface/flutter_inappwebview_platform_interface.dart';
+import 'package:nosferatu500_inappwebview_android/nosferatu500_inappwebview_android.dart';
+import 'package:nosferatu500_inappwebview_android/src/pigeons/in_app_browser.g.dart';
+import 'package:nosferatu500_inappwebview_android/src/pigeons/in_app_browser_manager.g.dart';
+import 'package:nosferatu500_inappwebview_android/src/pigeons/in_app_webview.g.dart';
+import 'package:nosferatu500_inappwebview_platform_interface/nosferatu500_inappwebview_platform_interface.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 /// Runtime coverage for the in-app browser's own per-instance channel (§195), the eighteenth
@@ -22,7 +22,7 @@ void main() {
   const codec = InAppBrowserHostApi.pigeonChannelCodec;
   // The manager's `open`, Pigeon since §197. Answering it is what lets `openUrlRequest` complete.
   const managerOpen =
-      'dev.flutter.pigeon.flutter_inappwebview_android.InAppBrowserManagerHostApi.open';
+      'dev.flutter.pigeon.nosferatu500_inappwebview_android.InAppBrowserManagerHostApi.open';
 
   late AndroidInAppBrowser browser;
   late _RecordingEvents events;
@@ -35,11 +35,11 @@ void main() {
       'dev.nosferatu500.inappwebview/inappbrowser_${browser.id}';
 
   String hostChannel(String method) =>
-      'dev.flutter.pigeon.flutter_inappwebview_android.InAppBrowserHostApi'
+      'dev.flutter.pigeon.nosferatu500_inappwebview_android.InAppBrowserHostApi'
       '.$method.${browser.id}';
 
   String flutterChannel(String method) =>
-      'dev.flutter.pigeon.flutter_inappwebview_android.InAppBrowserFlutterApi'
+      'dev.flutter.pigeon.nosferatu500_inappwebview_android.InAppBrowserFlutterApi'
       '.$method.${browser.id}';
 
   /// Answers one HostApi method with [result], recording that it was called and what it was sent.
@@ -202,7 +202,7 @@ void main() {
       "the WebView controller settings pair goes to the WebView's HostApi, not the browser's",
       () async {
         String webViewHost(String method) =>
-            'dev.flutter.pigeon.flutter_inappwebview_android.InAppWebViewHostApi'
+            'dev.flutter.pigeon.nosferatu500_inappwebview_android.InAppWebViewHostApi'
             '.$method.inappbrowser_${browser.id}';
         const webViewCodec = InAppWebViewHostApi.pigeonChannelCodec;
         final webViewSent = <String>[];

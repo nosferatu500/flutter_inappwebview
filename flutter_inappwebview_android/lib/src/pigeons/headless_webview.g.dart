@@ -217,7 +217,7 @@ class HeadlessWebViewHostApi {
   /// 🚨 Do **not** rename the delegate's teardown to match this — see the file header.
   Future<bool> dispose() async {
     final pigeonVar_channelName =
-        'dev.flutter.pigeon.flutter_inappwebview_android.HeadlessWebViewHostApi.dispose$pigeonVar_messageChannelSuffix';
+        'dev.flutter.pigeon.nosferatu500_inappwebview_android.HeadlessWebViewHostApi.dispose$pigeonVar_messageChannelSuffix';
     final pigeonVar_channel = BasicMessageChannel<Object?>(
       pigeonVar_channelName,
       pigeonChannelCodec,
@@ -241,7 +241,7 @@ class HeadlessWebViewHostApi {
   /// unrepresentable: the size either arrives well-formed or the codec rejects the call.
   Future<bool> setSize(Size2DData size) async {
     final pigeonVar_channelName =
-        'dev.flutter.pigeon.flutter_inappwebview_android.HeadlessWebViewHostApi.setSize$pigeonVar_messageChannelSuffix';
+        'dev.flutter.pigeon.nosferatu500_inappwebview_android.HeadlessWebViewHostApi.setSize$pigeonVar_messageChannelSuffix';
     final pigeonVar_channel = BasicMessageChannel<Object?>(
       pigeonVar_channelName,
       pigeonChannelCodec,
@@ -263,7 +263,7 @@ class HeadlessWebViewHostApi {
   /// The current size in logical pixels, or null if the webview has gone away.
   Future<Size2DData?> getSize() async {
     final pigeonVar_channelName =
-        'dev.flutter.pigeon.flutter_inappwebview_android.HeadlessWebViewHostApi.getSize$pigeonVar_messageChannelSuffix';
+        'dev.flutter.pigeon.nosferatu500_inappwebview_android.HeadlessWebViewHostApi.getSize$pigeonVar_messageChannelSuffix';
     final pigeonVar_channel = BasicMessageChannel<Object?>(
       pigeonVar_channelName,
       pigeonChannelCodec,
@@ -302,7 +302,7 @@ abstract class HeadlessWebViewFlutterApi {
         : '';
     {
       final pigeonVar_channel = BasicMessageChannel<Object?>(
-        'dev.flutter.pigeon.flutter_inappwebview_android.HeadlessWebViewFlutterApi.onWebViewCreated$messageChannelSuffix',
+        'dev.flutter.pigeon.nosferatu500_inappwebview_android.HeadlessWebViewFlutterApi.onWebViewCreated$messageChannelSuffix',
         pigeonChannelCodec,
         binaryMessenger: binaryMessenger,
       );
@@ -355,7 +355,7 @@ class HeadlessInAppWebViewManagerHostApi {
     Size2DData initialSize,
   ) async {
     final pigeonVar_channelName =
-        'dev.flutter.pigeon.flutter_inappwebview_android.HeadlessInAppWebViewManagerHostApi.run$pigeonVar_messageChannelSuffix';
+        'dev.flutter.pigeon.nosferatu500_inappwebview_android.HeadlessInAppWebViewManagerHostApi.run$pigeonVar_messageChannelSuffix';
     final pigeonVar_channel = BasicMessageChannel<Object?>(
       pigeonVar_channelName,
       pigeonChannelCodec,

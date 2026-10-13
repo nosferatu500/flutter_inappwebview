@@ -1,12 +1,12 @@
 import 'package:flutter/foundation.dart';
-import 'package:flutter_inappwebview_platform_interface/flutter_inappwebview_platform_interface.dart';
+import 'package:nosferatu500_inappwebview_platform_interface/nosferatu500_inappwebview_platform_interface.dart';
 import 'web_message_port.dart';
 
-///{@macro flutter_inappwebview_platform_interface.PlatformWebMessageChannel}
+///{@macro nosferatu500_inappwebview_platform_interface.PlatformWebMessageChannel}
 ///
-///{@macro flutter_inappwebview_platform_interface.PlatformWebMessageChannel.supported_platforms}
+///{@macro nosferatu500_inappwebview_platform_interface.PlatformWebMessageChannel.supported_platforms}
 class WebMessageChannel {
-  ///{@macro flutter_inappwebview_platform_interface.PlatformWebMessageChannel}
+  ///{@macro nosferatu500_inappwebview_platform_interface.PlatformWebMessageChannel}
   WebMessageChannel({
     required String id,
     required WebMessagePort port1,
@@ -40,11 +40,11 @@ class WebMessageChannel {
     );
   }
 
-  ///{@macro flutter_inappwebview_platform_interface.PlatformWebMessageChannelCreationParams.isClassSupported}
+  ///{@macro nosferatu500_inappwebview_platform_interface.PlatformWebMessageChannelCreationParams.isClassSupported}
   static bool isClassSupported({TargetPlatform? platform}) =>
       PlatformWebMessageChannel.static().isClassSupported(platform: platform);
 
-  ///{@macro flutter_inappwebview_platform_interface.PlatformWebMessageChannel.isPropertySupported}
+  ///{@macro nosferatu500_inappwebview_platform_interface.PlatformWebMessageChannel.isPropertySupported}
   static bool isPropertySupported(
     PlatformWebMessageChannelCreationParamsProperty property, {
     TargetPlatform? platform,
@@ -53,7 +53,7 @@ class WebMessageChannel {
     platform: platform,
   );
 
-  ///{@macro flutter_inappwebview_platform_interface.PlatformWebMessageChannel.isMethodSupported}
+  ///{@macro nosferatu500_inappwebview_platform_interface.PlatformWebMessageChannel.isMethodSupported}
   static bool isMethodSupported(
     PlatformWebMessageChannelMethod method, {
     TargetPlatform? platform,
@@ -71,26 +71,26 @@ class WebMessageChannel {
     return WebMessageChannel.fromPlatform(platform: platform);
   }
 
-  ///{@macro flutter_inappwebview_platform_interface.PlatformWebMessageChannel.id}
+  ///{@macro nosferatu500_inappwebview_platform_interface.PlatformWebMessageChannel.id}
   ///
-  ///{@macro flutter_inappwebview_platform_interface.PlatformWebMessageChannel.id.supported_platforms}
+  ///{@macro nosferatu500_inappwebview_platform_interface.PlatformWebMessageChannel.id.supported_platforms}
   String get id => platform.id;
 
-  ///{@macro flutter_inappwebview_platform_interface.PlatformWebMessageChannel.port1}
+  ///{@macro nosferatu500_inappwebview_platform_interface.PlatformWebMessageChannel.port1}
   ///
-  ///{@macro flutter_inappwebview_platform_interface.PlatformWebMessageChannel.port1.supported_platforms}
+  ///{@macro nosferatu500_inappwebview_platform_interface.PlatformWebMessageChannel.port1.supported_platforms}
   WebMessagePort get port1 =>
       WebMessagePort.fromPlatform(platform: platform.port1);
 
-  ///{@macro flutter_inappwebview_platform_interface.PlatformWebMessageChannel.port2}
+  ///{@macro nosferatu500_inappwebview_platform_interface.PlatformWebMessageChannel.port2}
   ///
-  ///{@macro flutter_inappwebview_platform_interface.PlatformWebMessageChannel.port2.supported_platforms}
+  ///{@macro nosferatu500_inappwebview_platform_interface.PlatformWebMessageChannel.port2.supported_platforms}
   WebMessagePort get port2 =>
       WebMessagePort.fromPlatform(platform: platform.port2);
 
-  ///{@macro flutter_inappwebview_platform_interface.PlatformWebMessageChannel.dispose}
+  ///{@macro nosferatu500_inappwebview_platform_interface.PlatformWebMessageChannel.dispose}
   ///
-  ///{@macro flutter_inappwebview_platform_interface.PlatformWebMessageChannel.dispose.supported_platforms}
+  ///{@macro nosferatu500_inappwebview_platform_interface.PlatformWebMessageChannel.dispose.supported_platforms}
   void dispose() => platform.dispose();
 
   @override

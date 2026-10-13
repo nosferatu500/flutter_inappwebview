@@ -1,10 +1,13 @@
 ## 7.0.0
 
-The Android half of a hard fork of 6.2.0-beta.3 / `1.2.0-beta.3`. The `flutter_inappwebview` 7.0.0
+The Android half of a hard fork of 6.2.0-beta.3 / `1.2.0-beta.3`. The `nosferatu500_inappwebview` 7.0.0
 entry carries the full user-facing list; this entry is what changed in this package.
 
 ### Requirements and packaging — all breaking
 
+- **The package is renamed `nosferatu500_inappwebview_android`** (was `flutter_inappwebview_android`),
+  and so is its Gradle project. Its Pigeon channels are now
+  `dev.flutter.pigeon.nosferatu500_inappwebview_android.…`, regenerated on both sides
 - **`minSdk` 19 → 30** (Android 11). Well above Flutter's own floor of 24; AGP rejects an app below
   its library's floor, so every consuming app must raise its `minSdk`
 - **Android Gradle Plugin 9 required.** The module declares no AGP classpath of its own and uses the

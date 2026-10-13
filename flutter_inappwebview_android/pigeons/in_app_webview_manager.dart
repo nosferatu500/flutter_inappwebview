@@ -63,7 +63,7 @@ import 'package:pigeon/pigeon.dart';
       // other schema in this package must opt out here. See §157.
       includeErrorClass: false,
     ),
-    dartPackageName: 'flutter_inappwebview_android',
+    dartPackageName: 'nosferatu500_inappwebview_android',
   ),
 )
 /// Mirrors the two fields the Kotlin side reads off `PackageInfo`, which is also all the public

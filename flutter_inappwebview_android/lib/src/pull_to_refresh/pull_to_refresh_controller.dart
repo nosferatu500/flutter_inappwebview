@@ -1,6 +1,6 @@
 import 'dart:ui';
 
-import 'package:flutter_inappwebview_platform_interface/flutter_inappwebview_platform_interface.dart';
+import 'package:nosferatu500_inappwebview_platform_interface/nosferatu500_inappwebview_platform_interface.dart';
 
 import '../pigeons/pull_to_refresh.g.dart';
 
@@ -50,7 +50,7 @@ class _PullToRefreshFlutterApiImpl implements PullToRefreshFlutterApi {
   }
 }
 
-///{@macro flutter_inappwebview_platform_interface.PlatformPullToRefreshController}
+///{@macro nosferatu500_inappwebview_platform_interface.PlatformPullToRefreshController}
 ///
 /// Transport is Pigeon-generated ([PullToRefreshHostApi] / [PullToRefreshFlutterApi]) rather than a
 /// hand-written `MethodChannel`. The public API is unchanged.

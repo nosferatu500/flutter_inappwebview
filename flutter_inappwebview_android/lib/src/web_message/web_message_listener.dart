@@ -1,5 +1,5 @@
 import 'package:flutter/foundation.dart';
-import 'package:flutter_inappwebview_platform_interface/flutter_inappwebview_platform_interface.dart';
+import 'package:nosferatu500_inappwebview_platform_interface/nosferatu500_inappwebview_platform_interface.dart';
 
 import '../pigeons/web_message.g.dart';
 import 'web_message_converters.dart';
@@ -62,7 +62,7 @@ class _WebMessageListenerFlutterApiImpl
   ) => _listener._onPostMessageFromPlatform(message, sourceOrigin, isMainFrame);
 }
 
-///{@macro flutter_inappwebview_platform_interface.PlatformWebMessageListener}
+///{@macro nosferatu500_inappwebview_platform_interface.PlatformWebMessageListener}
 class AndroidWebMessageListener extends PlatformWebMessageListener {
   /// Constructs a [AndroidWebMessageListener].
   AndroidWebMessageListener(PlatformWebMessageListenerCreationParams params)
@@ -186,7 +186,7 @@ class AndroidJavaScriptReplyProxyCreationParams
   }
 }
 
-///{@macro flutter_inappwebview_platform_interface.JavaScriptReplyProxy}
+///{@macro nosferatu500_inappwebview_platform_interface.JavaScriptReplyProxy}
 class AndroidJavaScriptReplyProxy extends PlatformJavaScriptReplyProxy {
   /// Constructs a [AndroidWebMessageListener].
   AndroidJavaScriptReplyProxy(PlatformJavaScriptReplyProxyCreationParams params)

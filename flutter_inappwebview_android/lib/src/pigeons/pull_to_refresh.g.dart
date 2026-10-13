@@ -90,7 +90,7 @@ class PullToRefreshHostApi {
 
   Future<bool> setEnabled(bool enabled) async {
     final pigeonVar_channelName =
-        'dev.flutter.pigeon.flutter_inappwebview_android.PullToRefreshHostApi.setEnabled$pigeonVar_messageChannelSuffix';
+        'dev.flutter.pigeon.nosferatu500_inappwebview_android.PullToRefreshHostApi.setEnabled$pigeonVar_messageChannelSuffix';
     final pigeonVar_channel = BasicMessageChannel<Object?>(
       pigeonVar_channelName,
       pigeonChannelCodec,
@@ -112,7 +112,7 @@ class PullToRefreshHostApi {
   /// `false` also when the layout has gone away — indistinguishable from "disabled", as before.
   Future<bool> isEnabled() async {
     final pigeonVar_channelName =
-        'dev.flutter.pigeon.flutter_inappwebview_android.PullToRefreshHostApi.isEnabled$pigeonVar_messageChannelSuffix';
+        'dev.flutter.pigeon.nosferatu500_inappwebview_android.PullToRefreshHostApi.isEnabled$pigeonVar_messageChannelSuffix';
     final pigeonVar_channel = BasicMessageChannel<Object?>(
       pigeonVar_channelName,
       pigeonChannelCodec,
@@ -133,7 +133,7 @@ class PullToRefreshHostApi {
   /// this way does **not** fire `onRefresh`; §181 pins that.
   Future<bool> setRefreshing(bool refreshing) async {
     final pigeonVar_channelName =
-        'dev.flutter.pigeon.flutter_inappwebview_android.PullToRefreshHostApi.setRefreshing$pigeonVar_messageChannelSuffix';
+        'dev.flutter.pigeon.nosferatu500_inappwebview_android.PullToRefreshHostApi.setRefreshing$pigeonVar_messageChannelSuffix';
     final pigeonVar_channel = BasicMessageChannel<Object?>(
       pigeonVar_channelName,
       pigeonChannelCodec,
@@ -154,7 +154,7 @@ class PullToRefreshHostApi {
 
   Future<bool> isRefreshing() async {
     final pigeonVar_channelName =
-        'dev.flutter.pigeon.flutter_inappwebview_android.PullToRefreshHostApi.isRefreshing$pigeonVar_messageChannelSuffix';
+        'dev.flutter.pigeon.nosferatu500_inappwebview_android.PullToRefreshHostApi.isRefreshing$pigeonVar_messageChannelSuffix';
     final pigeonVar_channel = BasicMessageChannel<Object?>(
       pigeonVar_channelName,
       pigeonChannelCodec,
@@ -174,7 +174,7 @@ class PullToRefreshHostApi {
   /// A `#AARRGGBB` string, parsed by `Color.parseColor` on the platform side exactly as before.
   Future<bool> setColor(String color) async {
     final pigeonVar_channelName =
-        'dev.flutter.pigeon.flutter_inappwebview_android.PullToRefreshHostApi.setColor$pigeonVar_messageChannelSuffix';
+        'dev.flutter.pigeon.nosferatu500_inappwebview_android.PullToRefreshHostApi.setColor$pigeonVar_messageChannelSuffix';
     final pigeonVar_channel = BasicMessageChannel<Object?>(
       pigeonVar_channelName,
       pigeonChannelCodec,
@@ -196,7 +196,7 @@ class PullToRefreshHostApi {
   /// See [setColor].
   Future<bool> setBackgroundColor(String color) async {
     final pigeonVar_channelName =
-        'dev.flutter.pigeon.flutter_inappwebview_android.PullToRefreshHostApi.setBackgroundColor$pigeonVar_messageChannelSuffix';
+        'dev.flutter.pigeon.nosferatu500_inappwebview_android.PullToRefreshHostApi.setBackgroundColor$pigeonVar_messageChannelSuffix';
     final pigeonVar_channel = BasicMessageChannel<Object?>(
       pigeonVar_channelName,
       pigeonChannelCodec,
@@ -217,7 +217,7 @@ class PullToRefreshHostApi {
 
   Future<bool> setDistanceToTriggerSync(int distanceToTriggerSync) async {
     final pigeonVar_channelName =
-        'dev.flutter.pigeon.flutter_inappwebview_android.PullToRefreshHostApi.setDistanceToTriggerSync$pigeonVar_messageChannelSuffix';
+        'dev.flutter.pigeon.nosferatu500_inappwebview_android.PullToRefreshHostApi.setDistanceToTriggerSync$pigeonVar_messageChannelSuffix';
     final pigeonVar_channel = BasicMessageChannel<Object?>(
       pigeonVar_channelName,
       pigeonChannelCodec,
@@ -238,7 +238,7 @@ class PullToRefreshHostApi {
 
   Future<bool> setSlingshotDistance(int slingshotDistance) async {
     final pigeonVar_channelName =
-        'dev.flutter.pigeon.flutter_inappwebview_android.PullToRefreshHostApi.setSlingshotDistance$pigeonVar_messageChannelSuffix';
+        'dev.flutter.pigeon.nosferatu500_inappwebview_android.PullToRefreshHostApi.setSlingshotDistance$pigeonVar_messageChannelSuffix';
     final pigeonVar_channel = BasicMessageChannel<Object?>(
       pigeonVar_channelName,
       pigeonChannelCodec,
@@ -261,7 +261,7 @@ class PullToRefreshHostApi {
   /// the default", not a distance (§181, read out of the AAR).
   Future<int> getDefaultSlingshotDistance() async {
     final pigeonVar_channelName =
-        'dev.flutter.pigeon.flutter_inappwebview_android.PullToRefreshHostApi.getDefaultSlingshotDistance$pigeonVar_messageChannelSuffix';
+        'dev.flutter.pigeon.nosferatu500_inappwebview_android.PullToRefreshHostApi.getDefaultSlingshotDistance$pigeonVar_messageChannelSuffix';
     final pigeonVar_channel = BasicMessageChannel<Object?>(
       pigeonVar_channelName,
       pigeonChannelCodec,
@@ -282,7 +282,7 @@ class PullToRefreshHostApi {
   /// `@IntDef` on the platform side (checklist item 4).
   Future<bool> setSize(int size) async {
     final pigeonVar_channelName =
-        'dev.flutter.pigeon.flutter_inappwebview_android.PullToRefreshHostApi.setSize$pigeonVar_messageChannelSuffix';
+        'dev.flutter.pigeon.nosferatu500_inappwebview_android.PullToRefreshHostApi.setSize$pigeonVar_messageChannelSuffix';
     final pigeonVar_channel = BasicMessageChannel<Object?>(
       pigeonVar_channelName,
       pigeonChannelCodec,
@@ -318,7 +318,7 @@ abstract class PullToRefreshFlutterApi {
         : '';
     {
       final pigeonVar_channel = BasicMessageChannel<Object?>(
-        'dev.flutter.pigeon.flutter_inappwebview_android.PullToRefreshFlutterApi.onRefresh$messageChannelSuffix',
+        'dev.flutter.pigeon.nosferatu500_inappwebview_android.PullToRefreshFlutterApi.onRefresh$messageChannelSuffix',
         pigeonChannelCodec,
         binaryMessenger: binaryMessenger,
       );

@@ -4,12 +4,12 @@ import 'package:analyzer/dart/element/type.dart';
 import 'package:analyzer/dart/constant/value.dart';
 import 'package:build/build.dart';
 import 'package:collection/collection.dart';
-import 'package:flutter_inappwebview_internal_annotations/flutter_inappwebview_internal_annotations.dart';
+import 'package:nosferatu500_inappwebview_internal_annotations/nosferatu500_inappwebview_internal_annotations.dart';
 
 import 'model_visitor.dart';
 import 'util.dart';
 
-const _annotationsPackage = 'flutter_inappwebview_internal_annotations';
+const _annotationsPackage = 'nosferatu500_inappwebview_internal_annotations';
 
 final _coreCheckerDeprecated = TypeChecker.typeNamedLiterally(
   'Deprecated',

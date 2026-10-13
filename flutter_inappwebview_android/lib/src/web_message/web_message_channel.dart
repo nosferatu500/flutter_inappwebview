@@ -1,5 +1,5 @@
 import 'package:flutter/foundation.dart';
-import 'package:flutter_inappwebview_platform_interface/flutter_inappwebview_platform_interface.dart';
+import 'package:nosferatu500_inappwebview_platform_interface/nosferatu500_inappwebview_platform_interface.dart';
 
 import '../pigeons/web_message.g.dart';
 import 'web_message_converters.dart';
@@ -39,7 +39,7 @@ class AndroidWebMessageChannelCreationParams
   }
 }
 
-///{@macro flutter_inappwebview_platform_interface.PlatformWebMessageChannel}
+///{@macro nosferatu500_inappwebview_platform_interface.PlatformWebMessageChannel}
 class AndroidWebMessageChannel extends PlatformWebMessageChannel
     implements WebMessageChannelFlutterApi {
   /// Constructs a [AndroidWebMessageChannel].

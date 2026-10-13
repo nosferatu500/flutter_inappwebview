@@ -1,7 +1,7 @@
 import 'package:flutter/foundation.dart';
-import 'package:flutter_inappwebview_android/flutter_inappwebview_android.dart';
-import 'package:flutter_inappwebview_android/src/pigeons/cookie_manager.g.dart';
-import 'package:flutter_inappwebview_platform_interface/flutter_inappwebview_platform_interface.dart';
+import 'package:nosferatu500_inappwebview_android/nosferatu500_inappwebview_android.dart';
+import 'package:nosferatu500_inappwebview_android/src/pigeons/cookie_manager.g.dart';
+import 'package:nosferatu500_inappwebview_platform_interface/nosferatu500_inappwebview_platform_interface.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 /// Guards the wire shape of `CookieManager.hasCookies`.
@@ -21,7 +21,7 @@ void main() {
 
   const codec = CookieManagerHostApi.pigeonChannelCodec;
   const hasCookiesChannel =
-      'dev.flutter.pigeon.flutter_inappwebview_android.CookieManagerHostApi.hasCookies';
+      'dev.flutter.pigeon.nosferatu500_inappwebview_android.CookieManagerHostApi.hasCookies';
 
   late AndroidCookieManager cookieManager;
   final Map<String, List<Object?>?> received = {};

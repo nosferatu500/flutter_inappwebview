@@ -51,7 +51,7 @@ import 'package:pigeon/pigeon.dart';
       // other schema in this package must opt out here. See §157.
       includeErrorClass: false,
     ),
-    dartPackageName: 'flutter_inappwebview_android',
+    dartPackageName: 'nosferatu500_inappwebview_android',
   ),
 )
 /// One cookie **read back** from the store, mirroring the platform interface's `Cookie`.

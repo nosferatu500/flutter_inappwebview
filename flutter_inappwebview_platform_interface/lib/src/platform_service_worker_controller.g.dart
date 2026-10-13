@@ -8,7 +8,7 @@ part of 'platform_service_worker_controller.dart';
 
 extension _PlatformServiceWorkerControllerCreationParamsClassSupported
     on PlatformServiceWorkerControllerCreationParams {
-  ///{@template flutter_inappwebview_platform_interface.PlatformServiceWorkerControllerCreationParams.supported_platforms}
+  ///{@template nosferatu500_inappwebview_platform_interface.PlatformServiceWorkerControllerCreationParams.supported_platforms}
   ///
   ///**Officially Supported Platforms/Implementations**:
   ///- Android WebView
@@ -23,7 +23,7 @@ extension _PlatformServiceWorkerControllerCreationParamsClassSupported
 
 extension _PlatformServiceWorkerControllerClassSupported
     on PlatformServiceWorkerController {
-  ///{@template flutter_inappwebview_platform_interface.PlatformServiceWorkerController.supported_platforms}
+  ///{@template nosferatu500_inappwebview_platform_interface.PlatformServiceWorkerController.supported_platforms}
   ///
   ///**Officially Supported Platforms/Implementations**:
   ///- Android WebView ([Official API - ServiceWorkerControllerCompat](https://developer.android.com/reference/androidx/webkit/ServiceWorkerControllerCompat))
@@ -42,7 +42,7 @@ extension _PlatformServiceWorkerControllerClassSupported
 enum PlatformServiceWorkerControllerMethod {
   ///Can be used to check if the [PlatformServiceWorkerController.getAllowContentAccess] method is supported at runtime.
   ///
-  ///{@template flutter_inappwebview_platform_interface.PlatformServiceWorkerController.getAllowContentAccess.supported_platforms}
+  ///{@template nosferatu500_inappwebview_platform_interface.PlatformServiceWorkerController.getAllowContentAccess.supported_platforms}
   ///
   ///**Officially Supported Platforms/Implementations**:
   ///- Android WebView ([Official API - ServiceWorkerWebSettingsCompat.getAllowContentAccess](https://developer.android.com/reference/androidx/webkit/ServiceWorkerWebSettingsCompat#getAllowContentAccess()))
@@ -57,7 +57,7 @@ enum PlatformServiceWorkerControllerMethod {
 
   ///Can be used to check if the [PlatformServiceWorkerController.getAllowFileAccess] method is supported at runtime.
   ///
-  ///{@template flutter_inappwebview_platform_interface.PlatformServiceWorkerController.getAllowFileAccess.supported_platforms}
+  ///{@template nosferatu500_inappwebview_platform_interface.PlatformServiceWorkerController.getAllowFileAccess.supported_platforms}
   ///
   ///**Officially Supported Platforms/Implementations**:
   ///- Android WebView ([Official API - ServiceWorkerWebSettingsCompat.getAllowFileAccess](https://developer.android.com/reference/androidx/webkit/ServiceWorkerWebSettingsCompat#getAllowFileAccess()))
@@ -72,7 +72,7 @@ enum PlatformServiceWorkerControllerMethod {
 
   ///Can be used to check if the [PlatformServiceWorkerController.getBlockNetworkLoads] method is supported at runtime.
   ///
-  ///{@template flutter_inappwebview_platform_interface.PlatformServiceWorkerController.getBlockNetworkLoads.supported_platforms}
+  ///{@template nosferatu500_inappwebview_platform_interface.PlatformServiceWorkerController.getBlockNetworkLoads.supported_platforms}
   ///
   ///**Officially Supported Platforms/Implementations**:
   ///- Android WebView ([Official API - ServiceWorkerWebSettingsCompat.getBlockNetworkLoads](https://developer.android.com/reference/androidx/webkit/ServiceWorkerWebSettingsCompat#getBlockNetworkLoads()))
@@ -87,7 +87,7 @@ enum PlatformServiceWorkerControllerMethod {
 
   ///Can be used to check if the [PlatformServiceWorkerController.getCacheMode] method is supported at runtime.
   ///
-  ///{@template flutter_inappwebview_platform_interface.PlatformServiceWorkerController.getCacheMode.supported_platforms}
+  ///{@template nosferatu500_inappwebview_platform_interface.PlatformServiceWorkerController.getCacheMode.supported_platforms}
   ///
   ///**Officially Supported Platforms/Implementations**:
   ///- Android WebView ([Official API - ServiceWorkerWebSettingsCompat.getCacheMode](https://developer.android.com/reference/androidx/webkit/ServiceWorkerWebSettingsCompat#getCacheMode()))
@@ -102,7 +102,7 @@ enum PlatformServiceWorkerControllerMethod {
 
   ///Can be used to check if the [PlatformServiceWorkerController.getIncludeCookiesOnShouldInterceptRequestEnabled] method is supported at runtime.
   ///
-  ///{@template flutter_inappwebview_platform_interface.PlatformServiceWorkerController.getIncludeCookiesOnShouldInterceptRequestEnabled.supported_platforms}
+  ///{@template nosferatu500_inappwebview_platform_interface.PlatformServiceWorkerController.getIncludeCookiesOnShouldInterceptRequestEnabled.supported_platforms}
   ///
   ///**Officially Supported Platforms/Implementations**:
   ///- Android WebView ([Official API - ServiceWorkerWebSettingsCompat.isIncludeCookiesOnShouldInterceptRequestEnabled](https://developer.android.com/reference/androidx/webkit/ServiceWorkerWebSettingsCompat#isIncludeCookiesOnShouldInterceptRequestEnabled())):
@@ -118,7 +118,7 @@ enum PlatformServiceWorkerControllerMethod {
 
   ///Can be used to check if the [PlatformServiceWorkerController.setAllowContentAccess] method is supported at runtime.
   ///
-  ///{@template flutter_inappwebview_platform_interface.PlatformServiceWorkerController.setAllowContentAccess.supported_platforms}
+  ///{@template nosferatu500_inappwebview_platform_interface.PlatformServiceWorkerController.setAllowContentAccess.supported_platforms}
   ///
   ///**Officially Supported Platforms/Implementations**:
   ///- Android WebView ([Official API - ServiceWorkerWebSettingsCompat.setAllowContentAccess](https://developer.android.com/reference/androidx/webkit/ServiceWorkerWebSettingsCompat#setAllowContentAccess(boolean)))
@@ -134,7 +134,7 @@ enum PlatformServiceWorkerControllerMethod {
 
   ///Can be used to check if the [PlatformServiceWorkerController.setAllowFileAccess] method is supported at runtime.
   ///
-  ///{@template flutter_inappwebview_platform_interface.PlatformServiceWorkerController.setAllowFileAccess.supported_platforms}
+  ///{@template nosferatu500_inappwebview_platform_interface.PlatformServiceWorkerController.setAllowFileAccess.supported_platforms}
   ///
   ///**Officially Supported Platforms/Implementations**:
   ///- Android WebView ([Official API - ServiceWorkerWebSettingsCompat.setAllowFileAccess](https://developer.android.com/reference/androidx/webkit/ServiceWorkerWebSettingsCompat#setAllowFileAccess(boolean)))
@@ -150,7 +150,7 @@ enum PlatformServiceWorkerControllerMethod {
 
   ///Can be used to check if the [PlatformServiceWorkerController.setBlockNetworkLoads] method is supported at runtime.
   ///
-  ///{@template flutter_inappwebview_platform_interface.PlatformServiceWorkerController.setBlockNetworkLoads.supported_platforms}
+  ///{@template nosferatu500_inappwebview_platform_interface.PlatformServiceWorkerController.setBlockNetworkLoads.supported_platforms}
   ///
   ///**Officially Supported Platforms/Implementations**:
   ///- Android WebView ([Official API - ServiceWorkerWebSettingsCompat.setBlockNetworkLoads](https://developer.android.com/reference/androidx/webkit/ServiceWorkerWebSettingsCompat#setBlockNetworkLoads(boolean)))
@@ -166,7 +166,7 @@ enum PlatformServiceWorkerControllerMethod {
 
   ///Can be used to check if the [PlatformServiceWorkerController.setCacheMode] method is supported at runtime.
   ///
-  ///{@template flutter_inappwebview_platform_interface.PlatformServiceWorkerController.setCacheMode.supported_platforms}
+  ///{@template nosferatu500_inappwebview_platform_interface.PlatformServiceWorkerController.setCacheMode.supported_platforms}
   ///
   ///**Officially Supported Platforms/Implementations**:
   ///- Android WebView ([Official API - ServiceWorkerWebSettingsCompat.setCacheMode](https://developer.android.com/reference/androidx/webkit/ServiceWorkerWebSettingsCompat#setCacheMode(int)))
@@ -182,7 +182,7 @@ enum PlatformServiceWorkerControllerMethod {
 
   ///Can be used to check if the [PlatformServiceWorkerController.setIncludeCookiesOnShouldInterceptRequestEnabled] method is supported at runtime.
   ///
-  ///{@template flutter_inappwebview_platform_interface.PlatformServiceWorkerController.setIncludeCookiesOnShouldInterceptRequestEnabled.supported_platforms}
+  ///{@template nosferatu500_inappwebview_platform_interface.PlatformServiceWorkerController.setIncludeCookiesOnShouldInterceptRequestEnabled.supported_platforms}
   ///
   ///**Officially Supported Platforms/Implementations**:
   ///- Android WebView ([Official API - ServiceWorkerWebSettingsCompat.setIncludeCookiesOnShouldInterceptRequestEnabled](https://developer.android.com/reference/androidx/webkit/ServiceWorkerWebSettingsCompat#setIncludeCookiesOnShouldInterceptRequestEnabled(boolean))):
@@ -199,7 +199,7 @@ enum PlatformServiceWorkerControllerMethod {
 
   ///Can be used to check if the [PlatformServiceWorkerController.setServiceWorkerClient] method is supported at runtime.
   ///
-  ///{@template flutter_inappwebview_platform_interface.PlatformServiceWorkerController.setServiceWorkerClient.supported_platforms}
+  ///{@template nosferatu500_inappwebview_platform_interface.PlatformServiceWorkerController.setServiceWorkerClient.supported_platforms}
   ///
   ///**Officially Supported Platforms/Implementations**:
   ///- Android WebView ([Official API - ServiceWorkerControllerCompat.setServiceWorkerClient](https://developer.android.com/reference/androidx/webkit/ServiceWorkerControllerCompat#setServiceWorkerClient(androidx.webkit.ServiceWorkerClientCompat)))
@@ -281,7 +281,7 @@ extension _PlatformServiceWorkerControllerMethodSupported
 }
 
 extension _ServiceWorkerClientClassSupported on ServiceWorkerClient {
-  ///{@template flutter_inappwebview_platform_interface.ServiceWorkerClient.supported_platforms}
+  ///{@template nosferatu500_inappwebview_platform_interface.ServiceWorkerClient.supported_platforms}
   ///
   ///**Officially Supported Platforms/Implementations**:
   ///- Android WebView ([Official API - ServiceWorkerClientCompat](https://developer.android.com/reference/androidx/webkit/ServiceWorkerClientCompat))
@@ -298,7 +298,7 @@ extension _ServiceWorkerClientClassSupported on ServiceWorkerClient {
 enum ServiceWorkerClientProperty {
   ///Can be used to check if the [ServiceWorkerClient.shouldInterceptRequest] property is supported at runtime.
   ///
-  ///{@template flutter_inappwebview_platform_interface.ServiceWorkerClient.shouldInterceptRequest.supported_platforms}
+  ///{@template nosferatu500_inappwebview_platform_interface.ServiceWorkerClient.shouldInterceptRequest.supported_platforms}
   ///
   ///**Officially Supported Platforms/Implementations**:
   ///- Android WebView ([Official API - ServiceWorkerClientCompat.shouldInterceptRequest](https://developer.android.com/reference/androidx/webkit/ServiceWorkerClientCompat#shouldInterceptRequest(android.webkit.WebResourceRequest)))

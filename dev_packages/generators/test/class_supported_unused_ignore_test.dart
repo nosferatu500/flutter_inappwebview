@@ -16,7 +16,7 @@ Future<String> _generate(String model) async {
     {
       // Matched by package (`TypeChecker.typeNamedLiterally(..., inPackage: ...)`), so the
       // annotations are supplied under the real package name, in the shapes the generator reads.
-      'flutter_inappwebview_internal_annotations|lib/flutter_inappwebview_internal_annotations.dart':
+      'nosferatu500_inappwebview_internal_annotations|lib/nosferatu500_inappwebview_internal_annotations.dart':
           '''
 abstract class Platform {
   final String? available;
@@ -86,7 +86,7 @@ void main() {
     'the ignore goes on exactly the extension its library never calls',
     () async {
       final output = await _generate('''
-import 'package:flutter_inappwebview_internal_annotations/flutter_inappwebview_internal_annotations.dart';
+import 'package:nosferatu500_inappwebview_internal_annotations/nosferatu500_inappwebview_internal_annotations.dart';
 
 @SupportedPlatforms(platforms: [AndroidPlatform()])
 class Calls {

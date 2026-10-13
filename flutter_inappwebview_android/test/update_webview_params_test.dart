@@ -1,8 +1,8 @@
 import 'dart:typed_data';
 
 import 'package:flutter/services.dart';
-import 'package:flutter_inappwebview_android/flutter_inappwebview_android.dart';
-import 'package:flutter_inappwebview_android/src/pigeons/in_app_webview.g.dart';
+import 'package:nosferatu500_inappwebview_android/nosferatu500_inappwebview_android.dart';
+import 'package:nosferatu500_inappwebview_android/src/pigeons/in_app_webview.g.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 /// `AndroidInAppWebViewController.updateWebViewParams` (§282): once a rebuild has handed the
@@ -18,13 +18,15 @@ void main() {
   final messenger =
       TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger;
 
-  Future<ByteData?> deliver(String method, List<Object?> args) =>
-      messenger.handlePlatformMessage(
-        'dev.flutter.pigeon.flutter_inappwebview_android.InAppWebViewFlutterApi'
-        '.$method.inappwebview_21',
-        codec.encodeMessage(args),
-        (_) {},
-      );
+  Future<ByteData?> deliver(
+    String method,
+    List<Object?> args,
+  ) => messenger.handlePlatformMessage(
+    'dev.flutter.pigeon.nosferatu500_inappwebview_android.InAppWebViewFlutterApi'
+    '.$method.inappwebview_21',
+    codec.encodeMessage(args),
+    (_) {},
+  );
 
   test('events go to the params a rebuild handed over', () async {
     final got = <String>[];

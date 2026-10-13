@@ -1,6 +1,6 @@
 import 'package:flutter/foundation.dart';
-import 'package:flutter_inappwebview_internal_annotations/flutter_inappwebview_internal_annotations.dart';
-import 'package:flutter_inappwebview_platform_interface/src/types/disposable.dart';
+import 'package:nosferatu500_inappwebview_internal_annotations/nosferatu500_inappwebview_internal_annotations.dart';
+import 'package:nosferatu500_inappwebview_platform_interface/src/types/disposable.dart';
 import 'package:plugin_platform_interface/plugin_platform_interface.dart';
 import '../inappwebview_platform.dart';
 import 'platform_web_message_port.dart';
@@ -8,14 +8,14 @@ import 'platform_web_message_port.dart';
 // ignore: uri_has_not_been_generated
 part 'platform_web_message_channel.g.dart';
 
-///{@template flutter_inappwebview_platform_interface.PlatformWebMessageChannelCreationParams}
+///{@template nosferatu500_inappwebview_platform_interface.PlatformWebMessageChannelCreationParams}
 /// Object specifying creation parameters for creating a [PlatformWebMessageChannel].
 ///
 /// Platform specific implementations can add additional fields by extending
 /// this class.
 ///{@endtemplate}
 ///
-///{@macro flutter_inappwebview_platform_interface.PlatformWebMessageChannelCreationParams.supported_platforms}
+///{@macro nosferatu500_inappwebview_platform_interface.PlatformWebMessageChannelCreationParams.supported_platforms}
 @SupportedPlatforms(platforms: [AndroidPlatform(), IOSPlatform()])
 @immutable
 class PlatformWebMessageChannelCreationParams {
@@ -26,31 +26,31 @@ class PlatformWebMessageChannelCreationParams {
     required this.port2,
   });
 
-  ///{@template flutter_inappwebview_platform_interface.PlatformWebMessageChannelCreationParams.id}
+  ///{@template nosferatu500_inappwebview_platform_interface.PlatformWebMessageChannelCreationParams.id}
   ///Message Channel ID used internally.
   ///{@endtemplate}
   ///
-  ///{@macro flutter_inappwebview_platform_interface.PlatformWebMessageChannelCreationParams.id.supported_platforms}
+  ///{@macro nosferatu500_inappwebview_platform_interface.PlatformWebMessageChannelCreationParams.id.supported_platforms}
   @SupportedPlatforms(platforms: [AndroidPlatform(), IOSPlatform()])
   final String id;
 
-  ///{@template flutter_inappwebview_platform_interface.PlatformWebMessageChannelCreationParams.port1}
+  ///{@template nosferatu500_inappwebview_platform_interface.PlatformWebMessageChannelCreationParams.port1}
   ///The first [PlatformWebMessagePort] object of the channel.
   ///{@endtemplate}
   ///
-  ///{@macro flutter_inappwebview_platform_interface.PlatformWebMessageChannelCreationParams.port1.supported_platforms}
+  ///{@macro nosferatu500_inappwebview_platform_interface.PlatformWebMessageChannelCreationParams.port1.supported_platforms}
   @SupportedPlatforms(platforms: [AndroidPlatform(), IOSPlatform()])
   final PlatformWebMessagePort port1;
 
-  ///{@template flutter_inappwebview_platform_interface.PlatformWebMessageChannelCreationParams.port2}
+  ///{@template nosferatu500_inappwebview_platform_interface.PlatformWebMessageChannelCreationParams.port2}
   ///The second [PlatformWebMessagePort] object of the channel.
   ///{@endtemplate}
   ///
-  ///{@macro flutter_inappwebview_platform_interface.PlatformWebMessageChannelCreationParams.port2.supported_platforms}
+  ///{@macro nosferatu500_inappwebview_platform_interface.PlatformWebMessageChannelCreationParams.port2.supported_platforms}
   @SupportedPlatforms(platforms: [AndroidPlatform(), IOSPlatform()])
   final PlatformWebMessagePort port2;
 
-  ///{@template flutter_inappwebview_platform_interface.PlatformWebMessageChannelCreationParams.isClassSupported}
+  ///{@template nosferatu500_inappwebview_platform_interface.PlatformWebMessageChannelCreationParams.isClassSupported}
   ///Check if the current class is supported by the [defaultTargetPlatform] or a specific [platform].
   ///{@endtemplate}
   bool isClassSupported({TargetPlatform? platform}) =>
@@ -58,7 +58,7 @@ class PlatformWebMessageChannelCreationParams {
         platform: platform,
       );
 
-  ///{@template flutter_inappwebview_platform_interface.PlatformWebMessageChannelCreationParams.isPropertySupported}
+  ///{@template nosferatu500_inappwebview_platform_interface.PlatformWebMessageChannelCreationParams.isPropertySupported}
   ///Check if the given [property] is supported by the [defaultTargetPlatform] or a specific [platform].
   ///{@endtemplate}
   bool isPropertySupported(
@@ -76,11 +76,11 @@ class PlatformWebMessageChannelCreationParams {
   }
 }
 
-///{@template flutter_inappwebview_platform_interface.PlatformWebMessageChannel}
+///{@template nosferatu500_inappwebview_platform_interface.PlatformWebMessageChannel}
 ///The representation of the [HTML5 message channels](https://html.spec.whatwg.org/multipage/web-messaging.html#message-channels).
 ///{@endtemplate}
 ///
-///{@macro flutter_inappwebview_platform_interface.PlatformWebMessageChannel.supported_platforms}
+///{@macro nosferatu500_inappwebview_platform_interface.PlatformWebMessageChannel.supported_platforms}
 @SupportedPlatforms(platforms: [AndroidPlatform(), IOSPlatform()])
 abstract class PlatformWebMessageChannel extends PlatformInterface
     implements Disposable {
@@ -90,7 +90,7 @@ abstract class PlatformWebMessageChannel extends PlatformInterface
   ) {
     assert(
       InAppWebViewPlatform.instance != null,
-      'A platform implementation for `flutter_inappwebview` has not been set. Please '
+      'A platform implementation for `nosferatu500_inappwebview` has not been set. Please '
       'ensure that an implementation of `InAppWebViewPlatform` has been set to '
       '`InAppWebViewPlatform.instance` before use. For unit testing, '
       '`InAppWebViewPlatform.instance` can be set with your own test implementation.',
@@ -106,7 +106,7 @@ abstract class PlatformWebMessageChannel extends PlatformInterface
   factory PlatformWebMessageChannel.static() {
     assert(
       InAppWebViewPlatform.instance != null,
-      'A platform implementation for `flutter_inappwebview` has not been set. Please '
+      'A platform implementation for `nosferatu500_inappwebview` has not been set. Please '
       'ensure that an implementation of `InAppWebViewPlatform` has been set to '
       '`InAppWebViewPlatform.instance` before use. For unit testing, '
       '`InAppWebViewPlatform.instance` can be set with your own test implementation.',
@@ -129,19 +129,19 @@ abstract class PlatformWebMessageChannel extends PlatformInterface
   /// The parameters used to initialize the [PlatformWebMessageChannel].
   final PlatformWebMessageChannelCreationParams params;
 
-  ///{@macro flutter_inappwebview_platform_interface.PlatformWebMessageChannelCreationParams.id}
+  ///{@macro nosferatu500_inappwebview_platform_interface.PlatformWebMessageChannelCreationParams.id}
   ///
-  ///{@macro flutter_inappwebview_platform_interface.PlatformWebMessageChannelCreationParams.id.supported_platforms}
+  ///{@macro nosferatu500_inappwebview_platform_interface.PlatformWebMessageChannelCreationParams.id.supported_platforms}
   String get id => params.id;
 
-  ///{@macro flutter_inappwebview_platform_interface.PlatformWebMessageChannelCreationParams.port1}
+  ///{@macro nosferatu500_inappwebview_platform_interface.PlatformWebMessageChannelCreationParams.port1}
   ///
-  ///{@macro flutter_inappwebview_platform_interface.PlatformWebMessageChannelCreationParams.port1.supported_platforms}
+  ///{@macro nosferatu500_inappwebview_platform_interface.PlatformWebMessageChannelCreationParams.port1.supported_platforms}
   PlatformWebMessagePort get port1 => params.port1;
 
-  ///{@macro flutter_inappwebview_platform_interface.PlatformWebMessageChannelCreationParams.port2}
+  ///{@macro nosferatu500_inappwebview_platform_interface.PlatformWebMessageChannelCreationParams.port2}
   ///
-  ///{@macro flutter_inappwebview_platform_interface.PlatformWebMessageChannelCreationParams.port2.supported_platforms}
+  ///{@macro nosferatu500_inappwebview_platform_interface.PlatformWebMessageChannelCreationParams.port2.supported_platforms}
   PlatformWebMessagePort get port2 => params.port2;
 
   PlatformWebMessageChannel? fromMap(Map<String, dynamic>? map) {
@@ -150,11 +150,11 @@ abstract class PlatformWebMessageChannel extends PlatformInterface
     );
   }
 
-  ///{@template flutter_inappwebview_platform_interface.PlatformWebMessageChannel.dispose}
+  ///{@template nosferatu500_inappwebview_platform_interface.PlatformWebMessageChannel.dispose}
   ///Disposes the web message channel.
   ///{@endtemplate}
   ///
-  ///{@macro flutter_inappwebview_platform_interface.PlatformWebMessageChannel.dispose.supported_platforms}
+  ///{@macro nosferatu500_inappwebview_platform_interface.PlatformWebMessageChannel.dispose.supported_platforms}
   @SupportedPlatforms(platforms: [AndroidPlatform(), IOSPlatform()])
   @override
   void dispose() {
@@ -163,13 +163,13 @@ abstract class PlatformWebMessageChannel extends PlatformInterface
     );
   }
 
-  ///{@macro flutter_inappwebview_platform_interface.PlatformWebMessageChannelCreationParams.isClassSupported}
+  ///{@macro nosferatu500_inappwebview_platform_interface.PlatformWebMessageChannelCreationParams.isClassSupported}
   bool isClassSupported({TargetPlatform? platform}) =>
       _PlatformWebMessageChannelClassSupported.isClassSupported(
         platform: platform,
       );
 
-  ///{@template flutter_inappwebview_platform_interface.PlatformWebMessageChannel.isPropertySupported}
+  ///{@template nosferatu500_inappwebview_platform_interface.PlatformWebMessageChannel.isPropertySupported}
   ///Check if the given [property] is supported by the [defaultTargetPlatform] or a specific [platform].
   ///{@endtemplate}
   bool isPropertySupported(
@@ -177,7 +177,7 @@ abstract class PlatformWebMessageChannel extends PlatformInterface
     TargetPlatform? platform,
   }) => params.isPropertySupported(property, platform: platform);
 
-  ///{@template flutter_inappwebview_platform_interface.PlatformWebMessageChannel.isMethodSupported}
+  ///{@template nosferatu500_inappwebview_platform_interface.PlatformWebMessageChannel.isMethodSupported}
   ///Check if the given [method] is supported by the [defaultTargetPlatform] or a specific [platform].
   ///{@endtemplate}
   bool isMethodSupported(

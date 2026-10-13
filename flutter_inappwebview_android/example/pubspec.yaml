@@ -1,5 +1,5 @@
 name: flutter_inappwebview_android_example
-description: Demonstrates how to use the flutter_inappwebview_android plugin.
+description: Demonstrates how to use the nosferatu500_inappwebview_android plugin.
 # The following line prevents the package from being accidentally published to
 # pub.dev using `flutter pub publish`. This is preferred for private packages.
 publish_to: 'none' # Remove this line if you wish to publish to pub.dev
@@ -18,7 +18,7 @@ dependencies:
   flutter:
     sdk: flutter
 
-  flutter_inappwebview_android:
+  nosferatu500_inappwebview_android:
     # When depending on this package from a real application you should use:
     #   flutter_inappwebview_android: ^x.y.z
     # See https://dart.dev/tools/pub/dependencies#version-constraints
@@ -33,9 +33,11 @@ dependencies:
   # Use with the CupertinoIcons class for iOS style icons.
   cupertino_icons: ^1.0.2
 
-  flutter_inappwebview_platform_interface: any
+  nosferatu500_inappwebview_platform_interface: any
 dependency_overrides:
-  flutter_inappwebview_platform_interface:
+  nosferatu500_inappwebview_internal_annotations:
+    path: ../../dev_packages/flutter_inappwebview_internal_annotations
+  nosferatu500_inappwebview_platform_interface:
     path: ../../flutter_inappwebview_platform_interface
 
 dev_dependencies:

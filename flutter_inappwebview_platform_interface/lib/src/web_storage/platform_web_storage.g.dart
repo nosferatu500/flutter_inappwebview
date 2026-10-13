@@ -8,7 +8,7 @@ part of 'platform_web_storage.dart';
 
 extension _PlatformWebStorageCreationParamsClassSupported
     on PlatformWebStorageCreationParams {
-  ///{@template flutter_inappwebview_platform_interface.PlatformWebStorageCreationParams.supported_platforms}
+  ///{@template nosferatu500_inappwebview_platform_interface.PlatformWebStorageCreationParams.supported_platforms}
   ///
   ///**Officially Supported Platforms/Implementations**:
   ///- Android WebView
@@ -29,7 +29,7 @@ extension _PlatformWebStorageCreationParamsClassSupported
 enum PlatformWebStorageCreationParamsProperty {
   ///Can be used to check if the [PlatformWebStorageCreationParams.localStorage] property is supported at runtime.
   ///
-  ///{@template flutter_inappwebview_platform_interface.PlatformWebStorageCreationParams.localStorage.supported_platforms}
+  ///{@template nosferatu500_inappwebview_platform_interface.PlatformWebStorageCreationParams.localStorage.supported_platforms}
   ///
   ///**Officially Supported Platforms/Implementations**:
   ///- Android WebView
@@ -41,7 +41,7 @@ enum PlatformWebStorageCreationParamsProperty {
 
   ///Can be used to check if the [PlatformWebStorageCreationParams.sessionStorage] property is supported at runtime.
   ///
-  ///{@template flutter_inappwebview_platform_interface.PlatformWebStorageCreationParams.sessionStorage.supported_platforms}
+  ///{@template nosferatu500_inappwebview_platform_interface.PlatformWebStorageCreationParams.sessionStorage.supported_platforms}
   ///
   ///**Officially Supported Platforms/Implementations**:
   ///- Android WebView
@@ -76,7 +76,7 @@ extension _PlatformWebStorageCreationParamsPropertySupported
 }
 
 extension _PlatformWebStorageClassSupported on PlatformWebStorage {
-  ///{@template flutter_inappwebview_platform_interface.PlatformWebStorage.supported_platforms}
+  ///{@template nosferatu500_inappwebview_platform_interface.PlatformWebStorage.supported_platforms}
   ///
   ///**Officially Supported Platforms/Implementations**:
   ///- Android WebView
@@ -97,7 +97,7 @@ extension _PlatformWebStorageClassSupported on PlatformWebStorage {
 enum PlatformWebStorageProperty {
   ///Can be used to check if the [PlatformWebStorage.localStorage] property is supported at runtime.
   ///
-  ///{@template flutter_inappwebview_platform_interface.PlatformWebStorage.localStorage.supported_platforms}
+  ///{@template nosferatu500_inappwebview_platform_interface.PlatformWebStorage.localStorage.supported_platforms}
   ///
   ///**Officially Supported Platforms/Implementations**:
   ///- Android WebView
@@ -109,7 +109,7 @@ enum PlatformWebStorageProperty {
 
   ///Can be used to check if the [PlatformWebStorage.sessionStorage] property is supported at runtime.
   ///
-  ///{@template flutter_inappwebview_platform_interface.PlatformWebStorage.sessionStorage.supported_platforms}
+  ///{@template nosferatu500_inappwebview_platform_interface.PlatformWebStorage.sessionStorage.supported_platforms}
   ///
   ///**Officially Supported Platforms/Implementations**:
   ///- Android WebView
@@ -146,7 +146,7 @@ extension _PlatformWebStoragePropertySupported on PlatformWebStorage {
 enum PlatformWebStorageMethod {
   ///Can be used to check if the [PlatformWebStorage.dispose] method is supported at runtime.
   ///
-  ///{@template flutter_inappwebview_platform_interface.PlatformWebStorage.dispose.supported_platforms}
+  ///{@template nosferatu500_inappwebview_platform_interface.PlatformWebStorage.dispose.supported_platforms}
   ///
   ///**Officially Supported Platforms/Implementations**:
   ///- Android WebView
@@ -175,7 +175,7 @@ extension _PlatformWebStorageMethodSupported on PlatformWebStorage {
 
 extension _PlatformStorageCreationParamsClassSupported
     on PlatformStorageCreationParams {
-  ///{@template flutter_inappwebview_platform_interface.PlatformStorageCreationParams.supported_platforms}
+  ///{@template nosferatu500_inappwebview_platform_interface.PlatformStorageCreationParams.supported_platforms}
   ///
   ///**Officially Supported Platforms/Implementations**:
   ///- Android WebView
@@ -196,7 +196,7 @@ extension _PlatformStorageCreationParamsClassSupported
 enum PlatformStorageCreationParamsProperty {
   ///Can be used to check if the [PlatformStorageCreationParams.controller] property is supported at runtime.
   ///
-  ///{@template flutter_inappwebview_platform_interface.PlatformStorageCreationParams.controller.supported_platforms}
+  ///{@template nosferatu500_inappwebview_platform_interface.PlatformStorageCreationParams.controller.supported_platforms}
   ///
   ///**Officially Supported Platforms/Implementations**:
   ///- Android WebView
@@ -208,7 +208,7 @@ enum PlatformStorageCreationParamsProperty {
 
   ///Can be used to check if the [PlatformStorageCreationParams.webStorageType] property is supported at runtime.
   ///
-  ///{@template flutter_inappwebview_platform_interface.PlatformStorageCreationParams.webStorageType.supported_platforms}
+  ///{@template nosferatu500_inappwebview_platform_interface.PlatformStorageCreationParams.webStorageType.supported_platforms}
   ///
   ///**Officially Supported Platforms/Implementations**:
   ///- Android WebView
@@ -244,7 +244,7 @@ extension _PlatformStorageCreationParamsPropertySupported
 
 extension _PlatformLocalStorageCreationParamsClassSupported
     on PlatformLocalStorageCreationParams {
-  ///{@template flutter_inappwebview_platform_interface.PlatformLocalStorageCreationParams.supported_platforms}
+  ///{@template nosferatu500_inappwebview_platform_interface.PlatformLocalStorageCreationParams.supported_platforms}
   ///
   ///**Officially Supported Platforms/Implementations**:
   ///- Android WebView
@@ -262,7 +262,7 @@ extension _PlatformLocalStorageCreationParamsClassSupported
 }
 
 extension _PlatformLocalStorageClassSupported on PlatformLocalStorage {
-  ///{@template flutter_inappwebview_platform_interface.PlatformLocalStorage.supported_platforms}
+  ///{@template nosferatu500_inappwebview_platform_interface.PlatformLocalStorage.supported_platforms}
   ///
   ///**Officially Supported Platforms/Implementations**:
   ///- Android WebView
@@ -283,7 +283,7 @@ extension _PlatformLocalStorageClassSupported on PlatformLocalStorage {
 enum PlatformLocalStorageMethod {
   ///Can be used to check if the [PlatformLocalStorage.clear] method is supported at runtime.
   ///
-  ///{@template flutter_inappwebview_platform_interface.PlatformLocalStorage.clear.supported_platforms}
+  ///{@template nosferatu500_inappwebview_platform_interface.PlatformLocalStorage.clear.supported_platforms}
   ///
   ///**Officially Supported Platforms/Implementations**:
   ///- Android WebView
@@ -295,7 +295,7 @@ enum PlatformLocalStorageMethod {
 
   ///Can be used to check if the [PlatformLocalStorage.dispose] method is supported at runtime.
   ///
-  ///{@template flutter_inappwebview_platform_interface.PlatformLocalStorage.dispose.supported_platforms}
+  ///{@template nosferatu500_inappwebview_platform_interface.PlatformLocalStorage.dispose.supported_platforms}
   ///
   ///**Officially Supported Platforms/Implementations**:
   ///- Android WebView
@@ -307,7 +307,7 @@ enum PlatformLocalStorageMethod {
 
   ///Can be used to check if the [PlatformLocalStorage.getItem] method is supported at runtime.
   ///
-  ///{@template flutter_inappwebview_platform_interface.PlatformLocalStorage.getItem.supported_platforms}
+  ///{@template nosferatu500_inappwebview_platform_interface.PlatformLocalStorage.getItem.supported_platforms}
   ///
   ///**Officially Supported Platforms/Implementations**:
   ///- Android WebView
@@ -322,7 +322,7 @@ enum PlatformLocalStorageMethod {
 
   ///Can be used to check if the [PlatformLocalStorage.getItems] method is supported at runtime.
   ///
-  ///{@template flutter_inappwebview_platform_interface.PlatformLocalStorage.getItems.supported_platforms}
+  ///{@template nosferatu500_inappwebview_platform_interface.PlatformLocalStorage.getItems.supported_platforms}
   ///
   ///**Officially Supported Platforms/Implementations**:
   ///- Android WebView
@@ -334,7 +334,7 @@ enum PlatformLocalStorageMethod {
 
   ///Can be used to check if the [PlatformLocalStorage.key] method is supported at runtime.
   ///
-  ///{@template flutter_inappwebview_platform_interface.PlatformLocalStorage.key.supported_platforms}
+  ///{@template nosferatu500_inappwebview_platform_interface.PlatformLocalStorage.key.supported_platforms}
   ///
   ///**Officially Supported Platforms/Implementations**:
   ///- Android WebView
@@ -349,7 +349,7 @@ enum PlatformLocalStorageMethod {
 
   ///Can be used to check if the [PlatformLocalStorage.length] method is supported at runtime.
   ///
-  ///{@template flutter_inappwebview_platform_interface.PlatformLocalStorage.length.supported_platforms}
+  ///{@template nosferatu500_inappwebview_platform_interface.PlatformLocalStorage.length.supported_platforms}
   ///
   ///**Officially Supported Platforms/Implementations**:
   ///- Android WebView
@@ -361,7 +361,7 @@ enum PlatformLocalStorageMethod {
 
   ///Can be used to check if the [PlatformLocalStorage.removeItem] method is supported at runtime.
   ///
-  ///{@template flutter_inappwebview_platform_interface.PlatformLocalStorage.removeItem.supported_platforms}
+  ///{@template nosferatu500_inappwebview_platform_interface.PlatformLocalStorage.removeItem.supported_platforms}
   ///
   ///**Officially Supported Platforms/Implementations**:
   ///- Android WebView
@@ -376,7 +376,7 @@ enum PlatformLocalStorageMethod {
 
   ///Can be used to check if the [PlatformLocalStorage.setItem] method is supported at runtime.
   ///
-  ///{@template flutter_inappwebview_platform_interface.PlatformLocalStorage.setItem.supported_platforms}
+  ///{@template nosferatu500_inappwebview_platform_interface.PlatformLocalStorage.setItem.supported_platforms}
   ///
   ///**Officially Supported Platforms/Implementations**:
   ///- Android WebView
@@ -451,7 +451,7 @@ extension _PlatformLocalStorageMethodSupported on PlatformLocalStorage {
 
 extension _PlatformSessionStorageCreationParamsClassSupported
     on PlatformSessionStorageCreationParams {
-  ///{@template flutter_inappwebview_platform_interface.PlatformSessionStorageCreationParams.supported_platforms}
+  ///{@template nosferatu500_inappwebview_platform_interface.PlatformSessionStorageCreationParams.supported_platforms}
   ///
   ///**Officially Supported Platforms/Implementations**:
   ///- Android WebView
@@ -469,7 +469,7 @@ extension _PlatformSessionStorageCreationParamsClassSupported
 }
 
 extension _PlatformSessionStorageClassSupported on PlatformSessionStorage {
-  ///{@template flutter_inappwebview_platform_interface.PlatformSessionStorage.supported_platforms}
+  ///{@template nosferatu500_inappwebview_platform_interface.PlatformSessionStorage.supported_platforms}
   ///
   ///**Officially Supported Platforms/Implementations**:
   ///- Android WebView
@@ -490,7 +490,7 @@ extension _PlatformSessionStorageClassSupported on PlatformSessionStorage {
 enum PlatformSessionStorageMethod {
   ///Can be used to check if the [PlatformSessionStorage.clear] method is supported at runtime.
   ///
-  ///{@template flutter_inappwebview_platform_interface.PlatformSessionStorage.clear.supported_platforms}
+  ///{@template nosferatu500_inappwebview_platform_interface.PlatformSessionStorage.clear.supported_platforms}
   ///
   ///**Officially Supported Platforms/Implementations**:
   ///- Android WebView
@@ -502,7 +502,7 @@ enum PlatformSessionStorageMethod {
 
   ///Can be used to check if the [PlatformSessionStorage.dispose] method is supported at runtime.
   ///
-  ///{@template flutter_inappwebview_platform_interface.PlatformSessionStorage.dispose.supported_platforms}
+  ///{@template nosferatu500_inappwebview_platform_interface.PlatformSessionStorage.dispose.supported_platforms}
   ///
   ///**Officially Supported Platforms/Implementations**:
   ///- Android WebView
@@ -514,7 +514,7 @@ enum PlatformSessionStorageMethod {
 
   ///Can be used to check if the [PlatformSessionStorage.getItem] method is supported at runtime.
   ///
-  ///{@template flutter_inappwebview_platform_interface.PlatformSessionStorage.getItem.supported_platforms}
+  ///{@template nosferatu500_inappwebview_platform_interface.PlatformSessionStorage.getItem.supported_platforms}
   ///
   ///**Officially Supported Platforms/Implementations**:
   ///- Android WebView
@@ -529,7 +529,7 @@ enum PlatformSessionStorageMethod {
 
   ///Can be used to check if the [PlatformSessionStorage.getItems] method is supported at runtime.
   ///
-  ///{@template flutter_inappwebview_platform_interface.PlatformSessionStorage.getItems.supported_platforms}
+  ///{@template nosferatu500_inappwebview_platform_interface.PlatformSessionStorage.getItems.supported_platforms}
   ///
   ///**Officially Supported Platforms/Implementations**:
   ///- Android WebView
@@ -541,7 +541,7 @@ enum PlatformSessionStorageMethod {
 
   ///Can be used to check if the [PlatformSessionStorage.key] method is supported at runtime.
   ///
-  ///{@template flutter_inappwebview_platform_interface.PlatformSessionStorage.key.supported_platforms}
+  ///{@template nosferatu500_inappwebview_platform_interface.PlatformSessionStorage.key.supported_platforms}
   ///
   ///**Officially Supported Platforms/Implementations**:
   ///- Android WebView
@@ -556,7 +556,7 @@ enum PlatformSessionStorageMethod {
 
   ///Can be used to check if the [PlatformSessionStorage.length] method is supported at runtime.
   ///
-  ///{@template flutter_inappwebview_platform_interface.PlatformSessionStorage.length.supported_platforms}
+  ///{@template nosferatu500_inappwebview_platform_interface.PlatformSessionStorage.length.supported_platforms}
   ///
   ///**Officially Supported Platforms/Implementations**:
   ///- Android WebView
@@ -568,7 +568,7 @@ enum PlatformSessionStorageMethod {
 
   ///Can be used to check if the [PlatformSessionStorage.removeItem] method is supported at runtime.
   ///
-  ///{@template flutter_inappwebview_platform_interface.PlatformSessionStorage.removeItem.supported_platforms}
+  ///{@template nosferatu500_inappwebview_platform_interface.PlatformSessionStorage.removeItem.supported_platforms}
   ///
   ///**Officially Supported Platforms/Implementations**:
   ///- Android WebView
@@ -583,7 +583,7 @@ enum PlatformSessionStorageMethod {
 
   ///Can be used to check if the [PlatformSessionStorage.setItem] method is supported at runtime.
   ///
-  ///{@template flutter_inappwebview_platform_interface.PlatformSessionStorage.setItem.supported_platforms}
+  ///{@template nosferatu500_inappwebview_platform_interface.PlatformSessionStorage.setItem.supported_platforms}
   ///
   ///**Officially Supported Platforms/Implementations**:
   ///- Android WebView

@@ -8,7 +8,7 @@ part of 'platform_web_message_channel.dart';
 
 extension _PlatformWebMessageChannelCreationParamsClassSupported
     on PlatformWebMessageChannelCreationParams {
-  ///{@template flutter_inappwebview_platform_interface.PlatformWebMessageChannelCreationParams.supported_platforms}
+  ///{@template nosferatu500_inappwebview_platform_interface.PlatformWebMessageChannelCreationParams.supported_platforms}
   ///
   ///**Officially Supported Platforms/Implementations**:
   ///- Android WebView
@@ -29,7 +29,7 @@ extension _PlatformWebMessageChannelCreationParamsClassSupported
 enum PlatformWebMessageChannelCreationParamsProperty {
   ///Can be used to check if the [PlatformWebMessageChannelCreationParams.id] property is supported at runtime.
   ///
-  ///{@template flutter_inappwebview_platform_interface.PlatformWebMessageChannelCreationParams.id.supported_platforms}
+  ///{@template nosferatu500_inappwebview_platform_interface.PlatformWebMessageChannelCreationParams.id.supported_platforms}
   ///
   ///**Officially Supported Platforms/Implementations**:
   ///- Android WebView
@@ -41,7 +41,7 @@ enum PlatformWebMessageChannelCreationParamsProperty {
 
   ///Can be used to check if the [PlatformWebMessageChannelCreationParams.port1] property is supported at runtime.
   ///
-  ///{@template flutter_inappwebview_platform_interface.PlatformWebMessageChannelCreationParams.port1.supported_platforms}
+  ///{@template nosferatu500_inappwebview_platform_interface.PlatformWebMessageChannelCreationParams.port1.supported_platforms}
   ///
   ///**Officially Supported Platforms/Implementations**:
   ///- Android WebView
@@ -53,7 +53,7 @@ enum PlatformWebMessageChannelCreationParamsProperty {
 
   ///Can be used to check if the [PlatformWebMessageChannelCreationParams.port2] property is supported at runtime.
   ///
-  ///{@template flutter_inappwebview_platform_interface.PlatformWebMessageChannelCreationParams.port2.supported_platforms}
+  ///{@template nosferatu500_inappwebview_platform_interface.PlatformWebMessageChannelCreationParams.port2.supported_platforms}
   ///
   ///**Officially Supported Platforms/Implementations**:
   ///- Android WebView
@@ -95,7 +95,7 @@ extension _PlatformWebMessageChannelCreationParamsPropertySupported
 
 extension _PlatformWebMessageChannelClassSupported
     on PlatformWebMessageChannel {
-  ///{@template flutter_inappwebview_platform_interface.PlatformWebMessageChannel.supported_platforms}
+  ///{@template nosferatu500_inappwebview_platform_interface.PlatformWebMessageChannel.supported_platforms}
   ///
   ///**Officially Supported Platforms/Implementations**:
   ///- Android WebView
@@ -116,7 +116,7 @@ extension _PlatformWebMessageChannelClassSupported
 enum PlatformWebMessageChannelMethod {
   ///Can be used to check if the [PlatformWebMessageChannel.dispose] method is supported at runtime.
   ///
-  ///{@template flutter_inappwebview_platform_interface.PlatformWebMessageChannel.dispose.supported_platforms}
+  ///{@template nosferatu500_inappwebview_platform_interface.PlatformWebMessageChannel.dispose.supported_platforms}
   ///
   ///**Officially Supported Platforms/Implementations**:
   ///- Android WebView

@@ -1,5 +1,5 @@
-import 'package:flutter_inappwebview_android/flutter_inappwebview_android.dart';
-import 'package:flutter_inappwebview_android/src/pigeons/in_app_webview_manager.g.dart';
+import 'package:nosferatu500_inappwebview_android/nosferatu500_inappwebview_android.dart';
+import 'package:nosferatu500_inappwebview_android/src/pigeons/in_app_webview_manager.g.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 /// Boundary coverage for the in-app-webview manager API (§188): the hand-written conversions at the
@@ -13,7 +13,7 @@ void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
 
   const base =
-      'dev.flutter.pigeon.flutter_inappwebview_android.InAppWebViewManagerHostApi';
+      'dev.flutter.pigeon.nosferatu500_inappwebview_android.InAppWebViewManagerHostApi';
   const codec = InAppWebViewManagerHostApi.pigeonChannelCodec;
   final messenger =
       TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger;

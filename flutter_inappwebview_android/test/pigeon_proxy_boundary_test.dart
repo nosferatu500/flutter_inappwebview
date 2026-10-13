@@ -1,7 +1,7 @@
 import 'package:flutter/services.dart';
-import 'package:flutter_inappwebview_android/flutter_inappwebview_android.dart';
-import 'package:flutter_inappwebview_android/src/pigeons/proxy.g.dart';
-import 'package:flutter_inappwebview_platform_interface/flutter_inappwebview_platform_interface.dart';
+import 'package:nosferatu500_inappwebview_android/nosferatu500_inappwebview_android.dart';
+import 'package:nosferatu500_inappwebview_android/src/pigeons/proxy.g.dart';
+import 'package:nosferatu500_inappwebview_platform_interface/nosferatu500_inappwebview_platform_interface.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 /// Boundary coverage for the third channel migrated to Pigeon (§160, `proxy`), in the shape §156
@@ -23,9 +23,9 @@ void main() {
 
   // No messageChannelSuffix: androidx's ProxyController is a process-wide singleton.
   const setChannel =
-      'dev.flutter.pigeon.flutter_inappwebview_android.ProxyHostApi.setProxyOverride';
+      'dev.flutter.pigeon.nosferatu500_inappwebview_android.ProxyHostApi.setProxyOverride';
   const clearChannel =
-      'dev.flutter.pigeon.flutter_inappwebview_android.ProxyHostApi.clearProxyOverride';
+      'dev.flutter.pigeon.nosferatu500_inappwebview_android.ProxyHostApi.clearProxyOverride';
 
   late AndroidProxyController proxy;
   Object? sent;

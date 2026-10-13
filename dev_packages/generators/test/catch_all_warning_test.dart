@@ -26,7 +26,7 @@ Future<({String output, List<String> warnings})> _generate(String model) async {
   final result = await testBuilder(
     SharedPartBuilder([ExchangeableObjectGenerator()], 'exchangeable_object'),
     {
-      'flutter_inappwebview_internal_annotations|lib/flutter_inappwebview_internal_annotations.dart':
+      'nosferatu500_inappwebview_internal_annotations|lib/nosferatu500_inappwebview_internal_annotations.dart':
           '''
 class ExchangeableObject {
   final bool toMapMethod;
@@ -110,7 +110,7 @@ void main() {
   group('bare `!` warning on non-nullable enum fields', () {
     test('an enum with no catch-all emits `!` and warns', () async {
       final r = await _generate('''
-import 'package:flutter_inappwebview_internal_annotations/flutter_inappwebview_internal_annotations.dart';
+import 'package:nosferatu500_inappwebview_internal_annotations/nosferatu500_inappwebview_internal_annotations.dart';
 import 'bare.dart';
 
 @ExchangeableObject()
@@ -143,7 +143,7 @@ class Model_ {
       // The negative control. Without it a warning that fired unconditionally would pass the
       // test above while telling the reader nothing.
       final r = await _generate('''
-import 'package:flutter_inappwebview_internal_annotations/flutter_inappwebview_internal_annotations.dart';
+import 'package:nosferatu500_inappwebview_internal_annotations/nosferatu500_inappwebview_internal_annotations.dart';
 import 'known.dart';
 
 @ExchangeableObject()
@@ -165,7 +165,7 @@ class Model_ {
       // cannot see it and silently emits `!`. This is the failure mode that needs no deletion
       // to occur — it is one constant name away at all times.
       final r = await _generate('''
-import 'package:flutter_inappwebview_internal_annotations/flutter_inappwebview_internal_annotations.dart';
+import 'package:nosferatu500_inappwebview_internal_annotations/nosferatu500_inappwebview_internal_annotations.dart';
 import 'nearmiss.dart';
 
 @ExchangeableObject()

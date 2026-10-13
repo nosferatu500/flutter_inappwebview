@@ -90,7 +90,7 @@ class InAppBrowserHostApi {
   /// Brings the browser Activity to the front. Always `true`.
   Future<bool> show() async {
     final pigeonVar_channelName =
-        'dev.flutter.pigeon.flutter_inappwebview_android.InAppBrowserHostApi.show$pigeonVar_messageChannelSuffix';
+        'dev.flutter.pigeon.nosferatu500_inappwebview_android.InAppBrowserHostApi.show$pigeonVar_messageChannelSuffix';
     final pigeonVar_channel = BasicMessageChannel<Object?>(
       pigeonVar_channelName,
       pigeonChannelCodec,
@@ -111,7 +111,7 @@ class InAppBrowserHostApi {
   /// the browser does not know which Activity opened it.
   Future<bool> hide() async {
     final pigeonVar_channelName =
-        'dev.flutter.pigeon.flutter_inappwebview_android.InAppBrowserHostApi.hide$pigeonVar_messageChannelSuffix';
+        'dev.flutter.pigeon.nosferatu500_inappwebview_android.InAppBrowserHostApi.hide$pigeonVar_messageChannelSuffix';
     final pigeonVar_channel = BasicMessageChannel<Object?>(
       pigeonVar_channelName,
       pigeonChannelCodec,
@@ -131,7 +131,7 @@ class InAppBrowserHostApi {
   /// Sends `onExit`, disposes the Activity, then answers `true`, in that order.
   Future<bool> close() async {
     final pigeonVar_channelName =
-        'dev.flutter.pigeon.flutter_inappwebview_android.InAppBrowserHostApi.close$pigeonVar_messageChannelSuffix';
+        'dev.flutter.pigeon.nosferatu500_inappwebview_android.InAppBrowserHostApi.close$pigeonVar_messageChannelSuffix';
     final pigeonVar_channel = BasicMessageChannel<Object?>(
       pigeonVar_channelName,
       pigeonChannelCodec,
@@ -150,7 +150,7 @@ class InAppBrowserHostApi {
 
   Future<bool> isHidden() async {
     final pigeonVar_channelName =
-        'dev.flutter.pigeon.flutter_inappwebview_android.InAppBrowserHostApi.isHidden$pigeonVar_messageChannelSuffix';
+        'dev.flutter.pigeon.nosferatu500_inappwebview_android.InAppBrowserHostApi.isHidden$pigeonVar_messageChannelSuffix';
     final pigeonVar_channel = BasicMessageChannel<Object?>(
       pigeonVar_channelName,
       pigeonChannelCodec,
@@ -171,7 +171,7 @@ class InAppBrowserHostApi {
   /// browser's settings and its WebView's arrive together in the one map. Always `true`.
   Future<bool> setSettings(Map<String?, Object?> settings) async {
     final pigeonVar_channelName =
-        'dev.flutter.pigeon.flutter_inappwebview_android.InAppBrowserHostApi.setSettings$pigeonVar_messageChannelSuffix';
+        'dev.flutter.pigeon.nosferatu500_inappwebview_android.InAppBrowserHostApi.setSettings$pigeonVar_messageChannelSuffix';
     final pigeonVar_channel = BasicMessageChannel<Object?>(
       pigeonVar_channelName,
       pigeonChannelCodec,
@@ -193,7 +193,7 @@ class InAppBrowserHostApi {
   /// The browser's settings merged with its WebView's, for `InAppBrowserClassSettings.fromMap`.
   Future<Map<String?, Object?>> getSettings() async {
     final pigeonVar_channelName =
-        'dev.flutter.pigeon.flutter_inappwebview_android.InAppBrowserHostApi.getSettings$pigeonVar_messageChannelSuffix';
+        'dev.flutter.pigeon.nosferatu500_inappwebview_android.InAppBrowserHostApi.getSettings$pigeonVar_messageChannelSuffix';
     final pigeonVar_channel = BasicMessageChannel<Object?>(
       pigeonVar_channelName,
       pigeonChannelCodec,
@@ -232,7 +232,7 @@ abstract class InAppBrowserFlutterApi {
         : '';
     {
       final pigeonVar_channel = BasicMessageChannel<Object?>(
-        'dev.flutter.pigeon.flutter_inappwebview_android.InAppBrowserFlutterApi.onBrowserCreated$messageChannelSuffix',
+        'dev.flutter.pigeon.nosferatu500_inappwebview_android.InAppBrowserFlutterApi.onBrowserCreated$messageChannelSuffix',
         pigeonChannelCodec,
         binaryMessenger: binaryMessenger,
       );
@@ -255,7 +255,7 @@ abstract class InAppBrowserFlutterApi {
     }
     {
       final pigeonVar_channel = BasicMessageChannel<Object?>(
-        'dev.flutter.pigeon.flutter_inappwebview_android.InAppBrowserFlutterApi.onMenuItemClicked$messageChannelSuffix',
+        'dev.flutter.pigeon.nosferatu500_inappwebview_android.InAppBrowserFlutterApi.onMenuItemClicked$messageChannelSuffix',
         pigeonChannelCodec,
         binaryMessenger: binaryMessenger,
       );
@@ -280,7 +280,7 @@ abstract class InAppBrowserFlutterApi {
     }
     {
       final pigeonVar_channel = BasicMessageChannel<Object?>(
-        'dev.flutter.pigeon.flutter_inappwebview_android.InAppBrowserFlutterApi.onExit$messageChannelSuffix',
+        'dev.flutter.pigeon.nosferatu500_inappwebview_android.InAppBrowserFlutterApi.onExit$messageChannelSuffix',
         pigeonChannelCodec,
         binaryMessenger: binaryMessenger,
       );

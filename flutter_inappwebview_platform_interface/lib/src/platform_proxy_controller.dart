@@ -1,7 +1,7 @@
 import 'dart:async';
 
 import 'package:flutter/foundation.dart';
-import 'package:flutter_inappwebview_internal_annotations/flutter_inappwebview_internal_annotations.dart';
+import 'package:nosferatu500_inappwebview_internal_annotations/nosferatu500_inappwebview_internal_annotations.dart';
 import 'package:plugin_platform_interface/plugin_platform_interface.dart';
 
 import 'inappwebview_platform.dart';
@@ -11,21 +11,21 @@ import 'types/proxy_rule.dart';
 
 part 'platform_proxy_controller.g.dart';
 
-///{@template flutter_inappwebview_platform_interface.PlatformProxyControllerCreationParams}
+///{@template nosferatu500_inappwebview_platform_interface.PlatformProxyControllerCreationParams}
 /// Object specifying creation parameters for creating a [PlatformProxyController].
 ///
 /// Platform specific implementations can add additional fields by extending
 /// this class.
 ///{@endtemplate}
 ///
-///{@macro flutter_inappwebview_platform_interface.PlatformProxyControllerCreationParams.supported_platforms}
+///{@macro nosferatu500_inappwebview_platform_interface.PlatformProxyControllerCreationParams.supported_platforms}
 @SupportedPlatforms(platforms: [AndroidPlatform(), IOSPlatform()])
 @immutable
 class PlatformProxyControllerCreationParams {
   /// Used by the platform implementation to create a new [PlatformProxyController].
   const PlatformProxyControllerCreationParams();
 
-  ///{@template flutter_inappwebview_platform_interface.PlatformProxyControllerCreationParams.isClassSupported}
+  ///{@template nosferatu500_inappwebview_platform_interface.PlatformProxyControllerCreationParams.isClassSupported}
   ///Check if the current class is supported by the [defaultTargetPlatform] or a specific [platform].
   ///{@endtemplate}
   bool isClassSupported({TargetPlatform? platform}) =>
@@ -34,7 +34,7 @@ class PlatformProxyControllerCreationParams {
       );
 }
 
-///{@template flutter_inappwebview_platform_interface.PlatformProxyController}
+///{@template nosferatu500_inappwebview_platform_interface.PlatformProxyController}
 ///Manages setting and clearing a process-specific override for the WebView system-wide proxy settings that govern network requests made by `WebView`.
 ///
 ///`WebView` may make network requests in order to fetch content that is not otherwise read from the file system or provided directly by application code.
@@ -44,7 +44,7 @@ class PlatformProxyControllerCreationParams {
 ///this API may be used to explicitly specify the proxy rules that govern WebView initiated network requests.
 ///{@endtemplate}
 ///
-///{@macro flutter_inappwebview_platform_interface.PlatformProxyController.supported_platforms}
+///{@macro nosferatu500_inappwebview_platform_interface.PlatformProxyController.supported_platforms}
 @SupportedPlatforms(
   platforms: [
     AndroidPlatform(
@@ -67,7 +67,7 @@ abstract class PlatformProxyController extends PlatformInterface {
   ) {
     assert(
       InAppWebViewPlatform.instance != null,
-      'A platform implementation for `flutter_inappwebview` has not been set. Please '
+      'A platform implementation for `nosferatu500_inappwebview` has not been set. Please '
       'ensure that an implementation of `InAppWebViewPlatform` has been set to '
       '`WebViewPlatform.instance` before use. For unit testing, '
       '`WebViewPlatform.instance` can be set with your own test implementation.',
@@ -83,7 +83,7 @@ abstract class PlatformProxyController extends PlatformInterface {
   factory PlatformProxyController.static() {
     assert(
       InAppWebViewPlatform.instance != null,
-      'A platform implementation for `flutter_inappwebview` has not been set. Please '
+      'A platform implementation for `nosferatu500_inappwebview` has not been set. Please '
       'ensure that an implementation of `InAppWebViewPlatform` has been set to '
       '`InAppWebViewPlatform.instance` before use. For unit testing, '
       '`InAppWebViewPlatform.instance` can be set with your own test implementation.',
@@ -108,7 +108,7 @@ abstract class PlatformProxyController extends PlatformInterface {
   /// The parameters used to initialize the [PlatformProxyController].
   final PlatformProxyControllerCreationParams params;
 
-  ///{@template flutter_inappwebview_platform_interface.PlatformProxyController.setProxyOverride}
+  ///{@template nosferatu500_inappwebview_platform_interface.PlatformProxyController.setProxyOverride}
   ///Sets [ProxySettings] which will be used by all `WebView`s in the app.
   ///URLs that match patterns in the bypass list will not be directed to any proxy.
   ///Instead, the request will be made directly to the origin specified by the URL.
@@ -134,7 +134,7 @@ abstract class PlatformProxyController extends PlatformInterface {
   ///while hosts it hadn't reached used the new one.
   ///{@endtemplate}
   ///
-  ///{@macro flutter_inappwebview_platform_interface.PlatformProxyController.setProxyOverride.supported_platforms}
+  ///{@macro nosferatu500_inappwebview_platform_interface.PlatformProxyController.setProxyOverride.supported_platforms}
   @SupportedPlatforms(
     platforms: [
       AndroidPlatform(
@@ -156,13 +156,13 @@ abstract class PlatformProxyController extends PlatformInterface {
     );
   }
 
-  ///{@template flutter_inappwebview_platform_interface.PlatformProxyController.clearProxyOverride}
+  ///{@template nosferatu500_inappwebview_platform_interface.PlatformProxyController.clearProxyOverride}
   ///Clears the proxy settings.
   ///Network connections are not guaranteed to immediately use the new proxy setting;
   ///wait for the method to return before loading a page.
   ///{@endtemplate}
   ///
-  ///{@macro flutter_inappwebview_platform_interface.PlatformProxyController.clearProxyOverride.supported_platforms}
+  ///{@macro nosferatu500_inappwebview_platform_interface.PlatformProxyController.clearProxyOverride.supported_platforms}
   @SupportedPlatforms(
     platforms: [
       AndroidPlatform(
@@ -184,11 +184,11 @@ abstract class PlatformProxyController extends PlatformInterface {
     );
   }
 
-  ///{@macro flutter_inappwebview_platform_interface.PlatformProxyControllerCreationParams.isClassSupported}
+  ///{@macro nosferatu500_inappwebview_platform_interface.PlatformProxyControllerCreationParams.isClassSupported}
   bool isClassSupported({TargetPlatform? platform}) =>
       params.isClassSupported(platform: platform);
 
-  ///{@template flutter_inappwebview_platform_interface.PlatformProxyController.isMethodSupported}
+  ///{@template nosferatu500_inappwebview_platform_interface.PlatformProxyController.isMethodSupported}
   ///Check if the given [method] is supported by the [defaultTargetPlatform] or a specific [platform].
   ///{@endtemplate}
   bool isMethodSupported(
@@ -200,11 +200,11 @@ abstract class PlatformProxyController extends PlatformInterface {
   );
 }
 
-///{@template flutter_inappwebview_platform_interface.ProxySettings}
+///{@template nosferatu500_inappwebview_platform_interface.ProxySettings}
 ///Class that represents the settings used to configure the [PlatformProxyController].
 ///{@endtemplate}
 ///
-///{@macro flutter_inappwebview_platform_interface.ProxySettings.supported_platforms}
+///{@macro nosferatu500_inappwebview_platform_interface.ProxySettings.supported_platforms}
 @SupportedPlatforms(
   platforms: [
     AndroidPlatform(
@@ -286,13 +286,13 @@ class ProxySettings_ {
     this.reverseBypassEnabled = false,
   });
 
-  ///{@template flutter_inappwebview_platform_interface.ProxySettings.isClassSupported}
+  ///{@template nosferatu500_inappwebview_platform_interface.ProxySettings.isClassSupported}
   ///Check if the current class is supported by the [defaultTargetPlatform] or a specific [platform].
   ///{@endtemplate}
   static bool isClassSupported({TargetPlatform? platform}) =>
       _ProxySettingsClassSupported.isClassSupported(platform: platform);
 
-  ///{@template flutter_inappwebview_platform_interface.ProxySettings.isPropertySupported}
+  ///{@template nosferatu500_inappwebview_platform_interface.ProxySettings.isPropertySupported}
   ///Check if the current class is supported by the [defaultTargetPlatform] or a specific [platform].
   ///{@endtemplate}
   static bool isPropertySupported(

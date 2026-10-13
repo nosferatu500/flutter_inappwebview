@@ -1,6 +1,6 @@
 # flutter\_inappwebview\_android
 
-The Android WebView implementation of [`flutter_inappwebview`](https://pub.dev/packages/flutter_inappwebview).
+The Android WebView implementation of [`nosferatu500_inappwebview`](https://pub.dev/packages/nosferatu500_inappwebview).
 
 ## Requirements
 
@@ -14,7 +14,7 @@ The Android WebView implementation of [`flutter_inappwebview`](https://pub.dev/p
 ## Usage
 
 This package is [endorsed](https://flutter.dev/docs/development/packages-and-plugins/developing-packages#endorsed-federated-plugin),
-which means you can simply use `flutter_inappwebview`
+which means you can simply use `nosferatu500_inappwebview`
 normally. This package will be automatically included in your app when you do,
 so you do not need to add it to your `pubspec.yaml`.
 

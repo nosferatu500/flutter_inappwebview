@@ -333,7 +333,7 @@ class InAppWebViewHostApi {
 
   Future<String?> getUrl() async {
     final pigeonVar_channelName =
-        'dev.flutter.pigeon.flutter_inappwebview_android.InAppWebViewHostApi.getUrl$pigeonVar_messageChannelSuffix';
+        'dev.flutter.pigeon.nosferatu500_inappwebview_android.InAppWebViewHostApi.getUrl$pigeonVar_messageChannelSuffix';
     final pigeonVar_channel = BasicMessageChannel<Object?>(
       pigeonVar_channelName,
       pigeonChannelCodec,
@@ -352,7 +352,7 @@ class InAppWebViewHostApi {
 
   Future<String?> getTitle() async {
     final pigeonVar_channelName =
-        'dev.flutter.pigeon.flutter_inappwebview_android.InAppWebViewHostApi.getTitle$pigeonVar_messageChannelSuffix';
+        'dev.flutter.pigeon.nosferatu500_inappwebview_android.InAppWebViewHostApi.getTitle$pigeonVar_messageChannelSuffix';
     final pigeonVar_channel = BasicMessageChannel<Object?>(
       pigeonVar_channelName,
       pigeonChannelCodec,
@@ -371,7 +371,7 @@ class InAppWebViewHostApi {
 
   Future<int?> getProgress() async {
     final pigeonVar_channelName =
-        'dev.flutter.pigeon.flutter_inappwebview_android.InAppWebViewHostApi.getProgress$pigeonVar_messageChannelSuffix';
+        'dev.flutter.pigeon.nosferatu500_inappwebview_android.InAppWebViewHostApi.getProgress$pigeonVar_messageChannelSuffix';
     final pigeonVar_channel = BasicMessageChannel<Object?>(
       pigeonVar_channelName,
       pigeonChannelCodec,
@@ -390,7 +390,7 @@ class InAppWebViewHostApi {
 
   Future<String?> getOriginalUrl() async {
     final pigeonVar_channelName =
-        'dev.flutter.pigeon.flutter_inappwebview_android.InAppWebViewHostApi.getOriginalUrl$pigeonVar_messageChannelSuffix';
+        'dev.flutter.pigeon.nosferatu500_inappwebview_android.InAppWebViewHostApi.getOriginalUrl$pigeonVar_messageChannelSuffix';
     final pigeonVar_channel = BasicMessageChannel<Object?>(
       pigeonVar_channelName,
       pigeonChannelCodec,
@@ -409,7 +409,7 @@ class InAppWebViewHostApi {
 
   Future<bool> postUrl(String url, Uint8List postData) async {
     final pigeonVar_channelName =
-        'dev.flutter.pigeon.flutter_inappwebview_android.InAppWebViewHostApi.postUrl$pigeonVar_messageChannelSuffix';
+        'dev.flutter.pigeon.nosferatu500_inappwebview_android.InAppWebViewHostApi.postUrl$pigeonVar_messageChannelSuffix';
     final pigeonVar_channel = BasicMessageChannel<Object?>(
       pigeonVar_channelName,
       pigeonChannelCodec,
@@ -436,7 +436,7 @@ class InAppWebViewHostApi {
     String? historyUrl,
   ) async {
     final pigeonVar_channelName =
-        'dev.flutter.pigeon.flutter_inappwebview_android.InAppWebViewHostApi.loadData$pigeonVar_messageChannelSuffix';
+        'dev.flutter.pigeon.nosferatu500_inappwebview_android.InAppWebViewHostApi.loadData$pigeonVar_messageChannelSuffix';
     final pigeonVar_channel = BasicMessageChannel<Object?>(
       pigeonVar_channelName,
       pigeonChannelCodec,
@@ -459,7 +459,7 @@ class InAppWebViewHostApi {
   /// the code and message `result.error` used.
   Future<bool> loadFile(String assetFilePath) async {
     final pigeonVar_channelName =
-        'dev.flutter.pigeon.flutter_inappwebview_android.InAppWebViewHostApi.loadFile$pigeonVar_messageChannelSuffix';
+        'dev.flutter.pigeon.nosferatu500_inappwebview_android.InAppWebViewHostApi.loadFile$pigeonVar_messageChannelSuffix';
     final pigeonVar_channel = BasicMessageChannel<Object?>(
       pigeonVar_channelName,
       pigeonChannelCodec,
@@ -480,7 +480,7 @@ class InAppWebViewHostApi {
 
   Future<bool> reload() async {
     final pigeonVar_channelName =
-        'dev.flutter.pigeon.flutter_inappwebview_android.InAppWebViewHostApi.reload$pigeonVar_messageChannelSuffix';
+        'dev.flutter.pigeon.nosferatu500_inappwebview_android.InAppWebViewHostApi.reload$pigeonVar_messageChannelSuffix';
     final pigeonVar_channel = BasicMessageChannel<Object?>(
       pigeonVar_channelName,
       pigeonChannelCodec,
@@ -499,7 +499,7 @@ class InAppWebViewHostApi {
 
   Future<bool> goBack() async {
     final pigeonVar_channelName =
-        'dev.flutter.pigeon.flutter_inappwebview_android.InAppWebViewHostApi.goBack$pigeonVar_messageChannelSuffix';
+        'dev.flutter.pigeon.nosferatu500_inappwebview_android.InAppWebViewHostApi.goBack$pigeonVar_messageChannelSuffix';
     final pigeonVar_channel = BasicMessageChannel<Object?>(
       pigeonVar_channelName,
       pigeonChannelCodec,
@@ -518,7 +518,7 @@ class InAppWebViewHostApi {
 
   Future<bool> canGoBack() async {
     final pigeonVar_channelName =
-        'dev.flutter.pigeon.flutter_inappwebview_android.InAppWebViewHostApi.canGoBack$pigeonVar_messageChannelSuffix';
+        'dev.flutter.pigeon.nosferatu500_inappwebview_android.InAppWebViewHostApi.canGoBack$pigeonVar_messageChannelSuffix';
     final pigeonVar_channel = BasicMessageChannel<Object?>(
       pigeonVar_channelName,
       pigeonChannelCodec,
@@ -537,7 +537,7 @@ class InAppWebViewHostApi {
 
   Future<bool> goForward() async {
     final pigeonVar_channelName =
-        'dev.flutter.pigeon.flutter_inappwebview_android.InAppWebViewHostApi.goForward$pigeonVar_messageChannelSuffix';
+        'dev.flutter.pigeon.nosferatu500_inappwebview_android.InAppWebViewHostApi.goForward$pigeonVar_messageChannelSuffix';
     final pigeonVar_channel = BasicMessageChannel<Object?>(
       pigeonVar_channelName,
       pigeonChannelCodec,
@@ -556,7 +556,7 @@ class InAppWebViewHostApi {
 
   Future<bool> canGoForward() async {
     final pigeonVar_channelName =
-        'dev.flutter.pigeon.flutter_inappwebview_android.InAppWebViewHostApi.canGoForward$pigeonVar_messageChannelSuffix';
+        'dev.flutter.pigeon.nosferatu500_inappwebview_android.InAppWebViewHostApi.canGoForward$pigeonVar_messageChannelSuffix';
     final pigeonVar_channel = BasicMessageChannel<Object?>(
       pigeonVar_channelName,
       pigeonChannelCodec,
@@ -575,7 +575,7 @@ class InAppWebViewHostApi {
 
   Future<bool> goBackOrForward(int steps) async {
     final pigeonVar_channelName =
-        'dev.flutter.pigeon.flutter_inappwebview_android.InAppWebViewHostApi.goBackOrForward$pigeonVar_messageChannelSuffix';
+        'dev.flutter.pigeon.nosferatu500_inappwebview_android.InAppWebViewHostApi.goBackOrForward$pigeonVar_messageChannelSuffix';
     final pigeonVar_channel = BasicMessageChannel<Object?>(
       pigeonVar_channelName,
       pigeonChannelCodec,
@@ -596,7 +596,7 @@ class InAppWebViewHostApi {
 
   Future<bool> canGoBackOrForward(int steps) async {
     final pigeonVar_channelName =
-        'dev.flutter.pigeon.flutter_inappwebview_android.InAppWebViewHostApi.canGoBackOrForward$pigeonVar_messageChannelSuffix';
+        'dev.flutter.pigeon.nosferatu500_inappwebview_android.InAppWebViewHostApi.canGoBackOrForward$pigeonVar_messageChannelSuffix';
     final pigeonVar_channel = BasicMessageChannel<Object?>(
       pigeonVar_channelName,
       pigeonChannelCodec,
@@ -617,7 +617,7 @@ class InAppWebViewHostApi {
 
   Future<bool> stopLoading() async {
     final pigeonVar_channelName =
-        'dev.flutter.pigeon.flutter_inappwebview_android.InAppWebViewHostApi.stopLoading$pigeonVar_messageChannelSuffix';
+        'dev.flutter.pigeon.nosferatu500_inappwebview_android.InAppWebViewHostApi.stopLoading$pigeonVar_messageChannelSuffix';
     final pigeonVar_channel = BasicMessageChannel<Object?>(
       pigeonVar_channelName,
       pigeonChannelCodec,
@@ -636,7 +636,7 @@ class InAppWebViewHostApi {
 
   Future<bool> isLoading() async {
     final pigeonVar_channelName =
-        'dev.flutter.pigeon.flutter_inappwebview_android.InAppWebViewHostApi.isLoading$pigeonVar_messageChannelSuffix';
+        'dev.flutter.pigeon.nosferatu500_inappwebview_android.InAppWebViewHostApi.isLoading$pigeonVar_messageChannelSuffix';
     final pigeonVar_channel = BasicMessageChannel<Object?>(
       pigeonVar_channelName,
       pigeonChannelCodec,
@@ -655,7 +655,7 @@ class InAppWebViewHostApi {
 
   Future<bool> clearHistory() async {
     final pigeonVar_channelName =
-        'dev.flutter.pigeon.flutter_inappwebview_android.InAppWebViewHostApi.clearHistory$pigeonVar_messageChannelSuffix';
+        'dev.flutter.pigeon.nosferatu500_inappwebview_android.InAppWebViewHostApi.clearHistory$pigeonVar_messageChannelSuffix';
     final pigeonVar_channel = BasicMessageChannel<Object?>(
       pigeonVar_channelName,
       pigeonChannelCodec,
@@ -674,7 +674,7 @@ class InAppWebViewHostApi {
 
   Future<bool> clearSslPreferences() async {
     final pigeonVar_channelName =
-        'dev.flutter.pigeon.flutter_inappwebview_android.InAppWebViewHostApi.clearSslPreferences$pigeonVar_messageChannelSuffix';
+        'dev.flutter.pigeon.nosferatu500_inappwebview_android.InAppWebViewHostApi.clearSslPreferences$pigeonVar_messageChannelSuffix';
     final pigeonVar_channel = BasicMessageChannel<Object?>(
       pigeonVar_channelName,
       pigeonChannelCodec,
@@ -693,7 +693,7 @@ class InAppWebViewHostApi {
 
   Future<bool> clearFormData() async {
     final pigeonVar_channelName =
-        'dev.flutter.pigeon.flutter_inappwebview_android.InAppWebViewHostApi.clearFormData$pigeonVar_messageChannelSuffix';
+        'dev.flutter.pigeon.nosferatu500_inappwebview_android.InAppWebViewHostApi.clearFormData$pigeonVar_messageChannelSuffix';
     final pigeonVar_channel = BasicMessageChannel<Object?>(
       pigeonVar_channelName,
       pigeonChannelCodec,
@@ -712,7 +712,7 @@ class InAppWebViewHostApi {
 
   Future<bool> pause() async {
     final pigeonVar_channelName =
-        'dev.flutter.pigeon.flutter_inappwebview_android.InAppWebViewHostApi.pause$pigeonVar_messageChannelSuffix';
+        'dev.flutter.pigeon.nosferatu500_inappwebview_android.InAppWebViewHostApi.pause$pigeonVar_messageChannelSuffix';
     final pigeonVar_channel = BasicMessageChannel<Object?>(
       pigeonVar_channelName,
       pigeonChannelCodec,
@@ -731,7 +731,7 @@ class InAppWebViewHostApi {
 
   Future<bool> resume() async {
     final pigeonVar_channelName =
-        'dev.flutter.pigeon.flutter_inappwebview_android.InAppWebViewHostApi.resume$pigeonVar_messageChannelSuffix';
+        'dev.flutter.pigeon.nosferatu500_inappwebview_android.InAppWebViewHostApi.resume$pigeonVar_messageChannelSuffix';
     final pigeonVar_channel = BasicMessageChannel<Object?>(
       pigeonVar_channelName,
       pigeonChannelCodec,
@@ -750,7 +750,7 @@ class InAppWebViewHostApi {
 
   Future<bool> pauseTimers() async {
     final pigeonVar_channelName =
-        'dev.flutter.pigeon.flutter_inappwebview_android.InAppWebViewHostApi.pauseTimers$pigeonVar_messageChannelSuffix';
+        'dev.flutter.pigeon.nosferatu500_inappwebview_android.InAppWebViewHostApi.pauseTimers$pigeonVar_messageChannelSuffix';
     final pigeonVar_channel = BasicMessageChannel<Object?>(
       pigeonVar_channelName,
       pigeonChannelCodec,
@@ -769,7 +769,7 @@ class InAppWebViewHostApi {
 
   Future<bool> resumeTimers() async {
     final pigeonVar_channelName =
-        'dev.flutter.pigeon.flutter_inappwebview_android.InAppWebViewHostApi.resumeTimers$pigeonVar_messageChannelSuffix';
+        'dev.flutter.pigeon.nosferatu500_inappwebview_android.InAppWebViewHostApi.resumeTimers$pigeonVar_messageChannelSuffix';
     final pigeonVar_channel = BasicMessageChannel<Object?>(
       pigeonVar_channelName,
       pigeonChannelCodec,
@@ -788,7 +788,7 @@ class InAppWebViewHostApi {
 
   Future<bool> prerenderUrl(String url) async {
     final pigeonVar_channelName =
-        'dev.flutter.pigeon.flutter_inappwebview_android.InAppWebViewHostApi.prerenderUrl$pigeonVar_messageChannelSuffix';
+        'dev.flutter.pigeon.nosferatu500_inappwebview_android.InAppWebViewHostApi.prerenderUrl$pigeonVar_messageChannelSuffix';
     final pigeonVar_channel = BasicMessageChannel<Object?>(
       pigeonVar_channelName,
       pigeonChannelCodec,
@@ -809,7 +809,7 @@ class InAppWebViewHostApi {
 
   Future<int?> getContentHeight() async {
     final pigeonVar_channelName =
-        'dev.flutter.pigeon.flutter_inappwebview_android.InAppWebViewHostApi.getContentHeight$pigeonVar_messageChannelSuffix';
+        'dev.flutter.pigeon.nosferatu500_inappwebview_android.InAppWebViewHostApi.getContentHeight$pigeonVar_messageChannelSuffix';
     final pigeonVar_channel = BasicMessageChannel<Object?>(
       pigeonVar_channelName,
       pigeonChannelCodec,
@@ -833,7 +833,7 @@ class InAppWebViewHostApi {
     Map<String?, Object?>? contentWorld,
   ) async {
     final pigeonVar_channelName =
-        'dev.flutter.pigeon.flutter_inappwebview_android.InAppWebViewHostApi.evaluateJavascript$pigeonVar_messageChannelSuffix';
+        'dev.flutter.pigeon.nosferatu500_inappwebview_android.InAppWebViewHostApi.evaluateJavascript$pigeonVar_messageChannelSuffix';
     final pigeonVar_channel = BasicMessageChannel<Object?>(
       pigeonVar_channelName,
       pigeonChannelCodec,
@@ -859,7 +859,7 @@ class InAppWebViewHostApi {
     Map<String?, Object?>? contentWorld,
   ) async {
     final pigeonVar_channelName =
-        'dev.flutter.pigeon.flutter_inappwebview_android.InAppWebViewHostApi.callAsyncJavaScript$pigeonVar_messageChannelSuffix';
+        'dev.flutter.pigeon.nosferatu500_inappwebview_android.InAppWebViewHostApi.callAsyncJavaScript$pigeonVar_messageChannelSuffix';
     final pigeonVar_channel = BasicMessageChannel<Object?>(
       pigeonVar_channelName,
       pigeonChannelCodec,
@@ -884,7 +884,7 @@ class InAppWebViewHostApi {
     Map<String?, Object?>? screenshotConfiguration,
   ) async {
     final pigeonVar_channelName =
-        'dev.flutter.pigeon.flutter_inappwebview_android.InAppWebViewHostApi.takeScreenshot$pigeonVar_messageChannelSuffix';
+        'dev.flutter.pigeon.nosferatu500_inappwebview_android.InAppWebViewHostApi.takeScreenshot$pigeonVar_messageChannelSuffix';
     final pigeonVar_channel = BasicMessageChannel<Object?>(
       pigeonVar_channelName,
       pigeonChannelCodec,
@@ -905,7 +905,7 @@ class InAppWebViewHostApi {
 
   Future<int?> getContentWidth() async {
     final pigeonVar_channelName =
-        'dev.flutter.pigeon.flutter_inappwebview_android.InAppWebViewHostApi.getContentWidth$pigeonVar_messageChannelSuffix';
+        'dev.flutter.pigeon.nosferatu500_inappwebview_android.InAppWebViewHostApi.getContentWidth$pigeonVar_messageChannelSuffix';
     final pigeonVar_channel = BasicMessageChannel<Object?>(
       pigeonVar_channelName,
       pigeonChannelCodec,
@@ -924,7 +924,7 @@ class InAppWebViewHostApi {
 
   Future<String?> getSelectedText() async {
     final pigeonVar_channelName =
-        'dev.flutter.pigeon.flutter_inappwebview_android.InAppWebViewHostApi.getSelectedText$pigeonVar_messageChannelSuffix';
+        'dev.flutter.pigeon.nosferatu500_inappwebview_android.InAppWebViewHostApi.getSelectedText$pigeonVar_messageChannelSuffix';
     final pigeonVar_channel = BasicMessageChannel<Object?>(
       pigeonVar_channelName,
       pigeonChannelCodec,
@@ -944,7 +944,7 @@ class InAppWebViewHostApi {
   /// The saved file's path, or null when WebView couldn't save.
   Future<String?> saveWebArchive(String filePath, bool autoname) async {
     final pigeonVar_channelName =
-        'dev.flutter.pigeon.flutter_inappwebview_android.InAppWebViewHostApi.saveWebArchive$pigeonVar_messageChannelSuffix';
+        'dev.flutter.pigeon.nosferatu500_inappwebview_android.InAppWebViewHostApi.saveWebArchive$pigeonVar_messageChannelSuffix';
     final pigeonVar_channel = BasicMessageChannel<Object?>(
       pigeonVar_channelName,
       pigeonChannelCodec,
@@ -965,7 +965,7 @@ class InAppWebViewHostApi {
 
   Future<bool> isSecureContext() async {
     final pigeonVar_channelName =
-        'dev.flutter.pigeon.flutter_inappwebview_android.InAppWebViewHostApi.isSecureContext$pigeonVar_messageChannelSuffix';
+        'dev.flutter.pigeon.nosferatu500_inappwebview_android.InAppWebViewHostApi.isSecureContext$pigeonVar_messageChannelSuffix';
     final pigeonVar_channel = BasicMessageChannel<Object?>(
       pigeonVar_channelName,
       pigeonChannelCodec,
@@ -985,7 +985,7 @@ class InAppWebViewHostApi {
   /// Answers once the next frame is on screen: that is the feature.
   Future<void> postVisualStateCallback() async {
     final pigeonVar_channelName =
-        'dev.flutter.pigeon.flutter_inappwebview_android.InAppWebViewHostApi.postVisualStateCallback$pigeonVar_messageChannelSuffix';
+        'dev.flutter.pigeon.nosferatu500_inappwebview_android.InAppWebViewHostApi.postVisualStateCallback$pigeonVar_messageChannelSuffix';
     final pigeonVar_channel = BasicMessageChannel<Object?>(
       pigeonVar_channelName,
       pigeonChannelCodec,
@@ -1003,7 +1003,7 @@ class InAppWebViewHostApi {
 
   Future<bool> documentHasImages() async {
     final pigeonVar_channelName =
-        'dev.flutter.pigeon.flutter_inappwebview_android.InAppWebViewHostApi.documentHasImages$pigeonVar_messageChannelSuffix';
+        'dev.flutter.pigeon.nosferatu500_inappwebview_android.InAppWebViewHostApi.documentHasImages$pigeonVar_messageChannelSuffix';
     final pigeonVar_channel = BasicMessageChannel<Object?>(
       pigeonVar_channelName,
       pigeonChannelCodec,
@@ -1022,7 +1022,7 @@ class InAppWebViewHostApi {
 
   Future<bool> loadUrl(Map<String?, Object?> urlRequest) async {
     final pigeonVar_channelName =
-        'dev.flutter.pigeon.flutter_inappwebview_android.InAppWebViewHostApi.loadUrl$pigeonVar_messageChannelSuffix';
+        'dev.flutter.pigeon.nosferatu500_inappwebview_android.InAppWebViewHostApi.loadUrl$pigeonVar_messageChannelSuffix';
     final pigeonVar_channel = BasicMessageChannel<Object?>(
       pigeonVar_channelName,
       pigeonChannelCodec,
@@ -1046,7 +1046,7 @@ class InAppWebViewHostApi {
     Map<String?, Object?>? scriptHtmlTagAttributes,
   ) async {
     final pigeonVar_channelName =
-        'dev.flutter.pigeon.flutter_inappwebview_android.InAppWebViewHostApi.injectJavascriptFileFromUrl$pigeonVar_messageChannelSuffix';
+        'dev.flutter.pigeon.nosferatu500_inappwebview_android.InAppWebViewHostApi.injectJavascriptFileFromUrl$pigeonVar_messageChannelSuffix';
     final pigeonVar_channel = BasicMessageChannel<Object?>(
       pigeonVar_channelName,
       pigeonChannelCodec,
@@ -1067,7 +1067,7 @@ class InAppWebViewHostApi {
 
   Future<bool> injectCSSCode(String source) async {
     final pigeonVar_channelName =
-        'dev.flutter.pigeon.flutter_inappwebview_android.InAppWebViewHostApi.injectCSSCode$pigeonVar_messageChannelSuffix';
+        'dev.flutter.pigeon.nosferatu500_inappwebview_android.InAppWebViewHostApi.injectCSSCode$pigeonVar_messageChannelSuffix';
     final pigeonVar_channel = BasicMessageChannel<Object?>(
       pigeonVar_channelName,
       pigeonChannelCodec,
@@ -1091,7 +1091,7 @@ class InAppWebViewHostApi {
     Map<String?, Object?>? cssLinkHtmlTagAttributes,
   ) async {
     final pigeonVar_channelName =
-        'dev.flutter.pigeon.flutter_inappwebview_android.InAppWebViewHostApi.injectCSSFileFromUrl$pigeonVar_messageChannelSuffix';
+        'dev.flutter.pigeon.nosferatu500_inappwebview_android.InAppWebViewHostApi.injectCSSFileFromUrl$pigeonVar_messageChannelSuffix';
     final pigeonVar_channel = BasicMessageChannel<Object?>(
       pigeonVar_channelName,
       pigeonChannelCodec,
@@ -1113,7 +1113,7 @@ class InAppWebViewHostApi {
   /// `InAppWebViewSettings.toMap()`, parsed by `InAppWebViewSettings.parse` (decision B, §194).
   Future<bool> setSettings(Map<String?, Object?> settings) async {
     final pigeonVar_channelName =
-        'dev.flutter.pigeon.flutter_inappwebview_android.InAppWebViewHostApi.setSettings$pigeonVar_messageChannelSuffix';
+        'dev.flutter.pigeon.nosferatu500_inappwebview_android.InAppWebViewHostApi.setSettings$pigeonVar_messageChannelSuffix';
     final pigeonVar_channel = BasicMessageChannel<Object?>(
       pigeonVar_channelName,
       pigeonChannelCodec,
@@ -1134,7 +1134,7 @@ class InAppWebViewHostApi {
 
   Future<Map<String?, Object?>?> getSettings() async {
     final pigeonVar_channelName =
-        'dev.flutter.pigeon.flutter_inappwebview_android.InAppWebViewHostApi.getSettings$pigeonVar_messageChannelSuffix';
+        'dev.flutter.pigeon.nosferatu500_inappwebview_android.InAppWebViewHostApi.getSettings$pigeonVar_messageChannelSuffix';
     final pigeonVar_channel = BasicMessageChannel<Object?>(
       pigeonVar_channelName,
       pigeonChannelCodec,
@@ -1154,7 +1154,7 @@ class InAppWebViewHostApi {
 
   Future<Map<String?, Object?>?> getCopyBackForwardList() async {
     final pigeonVar_channelName =
-        'dev.flutter.pigeon.flutter_inappwebview_android.InAppWebViewHostApi.getCopyBackForwardList$pigeonVar_messageChannelSuffix';
+        'dev.flutter.pigeon.nosferatu500_inappwebview_android.InAppWebViewHostApi.getCopyBackForwardList$pigeonVar_messageChannelSuffix';
     final pigeonVar_channel = BasicMessageChannel<Object?>(
       pigeonVar_channelName,
       pigeonChannelCodec,
@@ -1174,7 +1174,7 @@ class InAppWebViewHostApi {
 
   Future<bool> scrollTo(int x, int y, bool animated) async {
     final pigeonVar_channelName =
-        'dev.flutter.pigeon.flutter_inappwebview_android.InAppWebViewHostApi.scrollTo$pigeonVar_messageChannelSuffix';
+        'dev.flutter.pigeon.nosferatu500_inappwebview_android.InAppWebViewHostApi.scrollTo$pigeonVar_messageChannelSuffix';
     final pigeonVar_channel = BasicMessageChannel<Object?>(
       pigeonVar_channelName,
       pigeonChannelCodec,
@@ -1195,7 +1195,7 @@ class InAppWebViewHostApi {
 
   Future<bool> scrollBy(int x, int y, bool animated) async {
     final pigeonVar_channelName =
-        'dev.flutter.pigeon.flutter_inappwebview_android.InAppWebViewHostApi.scrollBy$pigeonVar_messageChannelSuffix';
+        'dev.flutter.pigeon.nosferatu500_inappwebview_android.InAppWebViewHostApi.scrollBy$pigeonVar_messageChannelSuffix';
     final pigeonVar_channel = BasicMessageChannel<Object?>(
       pigeonVar_channelName,
       pigeonChannelCodec,
@@ -1217,7 +1217,7 @@ class InAppWebViewHostApi {
   /// The new job's id when `handledByClient`, otherwise null.
   Future<String?> printCurrentPage(Map<String?, Object?>? settings) async {
     final pigeonVar_channelName =
-        'dev.flutter.pigeon.flutter_inappwebview_android.InAppWebViewHostApi.printCurrentPage$pigeonVar_messageChannelSuffix';
+        'dev.flutter.pigeon.nosferatu500_inappwebview_android.InAppWebViewHostApi.printCurrentPage$pigeonVar_messageChannelSuffix';
     final pigeonVar_channel = BasicMessageChannel<Object?>(
       pigeonVar_channelName,
       pigeonChannelCodec,
@@ -1238,7 +1238,7 @@ class InAppWebViewHostApi {
 
   Future<bool> zoomBy(double zoomFactor) async {
     final pigeonVar_channelName =
-        'dev.flutter.pigeon.flutter_inappwebview_android.InAppWebViewHostApi.zoomBy$pigeonVar_messageChannelSuffix';
+        'dev.flutter.pigeon.nosferatu500_inappwebview_android.InAppWebViewHostApi.zoomBy$pigeonVar_messageChannelSuffix';
     final pigeonVar_channel = BasicMessageChannel<Object?>(
       pigeonVar_channelName,
       pigeonChannelCodec,
@@ -1259,7 +1259,7 @@ class InAppWebViewHostApi {
 
   Future<double?> getZoomScale() async {
     final pigeonVar_channelName =
-        'dev.flutter.pigeon.flutter_inappwebview_android.InAppWebViewHostApi.getZoomScale$pigeonVar_messageChannelSuffix';
+        'dev.flutter.pigeon.nosferatu500_inappwebview_android.InAppWebViewHostApi.getZoomScale$pigeonVar_messageChannelSuffix';
     final pigeonVar_channel = BasicMessageChannel<Object?>(
       pigeonVar_channelName,
       pigeonChannelCodec,
@@ -1278,7 +1278,7 @@ class InAppWebViewHostApi {
 
   Future<Map<String?, Object?>?> getHitTestResult() async {
     final pigeonVar_channelName =
-        'dev.flutter.pigeon.flutter_inappwebview_android.InAppWebViewHostApi.getHitTestResult$pigeonVar_messageChannelSuffix';
+        'dev.flutter.pigeon.nosferatu500_inappwebview_android.InAppWebViewHostApi.getHitTestResult$pigeonVar_messageChannelSuffix';
     final pigeonVar_channel = BasicMessageChannel<Object?>(
       pigeonVar_channelName,
       pigeonChannelCodec,
@@ -1298,7 +1298,7 @@ class InAppWebViewHostApi {
 
   Future<bool> pageDown(bool bottom) async {
     final pigeonVar_channelName =
-        'dev.flutter.pigeon.flutter_inappwebview_android.InAppWebViewHostApi.pageDown$pigeonVar_messageChannelSuffix';
+        'dev.flutter.pigeon.nosferatu500_inappwebview_android.InAppWebViewHostApi.pageDown$pigeonVar_messageChannelSuffix';
     final pigeonVar_channel = BasicMessageChannel<Object?>(
       pigeonVar_channelName,
       pigeonChannelCodec,
@@ -1319,7 +1319,7 @@ class InAppWebViewHostApi {
 
   Future<bool> pageUp(bool top) async {
     final pigeonVar_channelName =
-        'dev.flutter.pigeon.flutter_inappwebview_android.InAppWebViewHostApi.pageUp$pigeonVar_messageChannelSuffix';
+        'dev.flutter.pigeon.nosferatu500_inappwebview_android.InAppWebViewHostApi.pageUp$pigeonVar_messageChannelSuffix';
     final pigeonVar_channel = BasicMessageChannel<Object?>(
       pigeonVar_channelName,
       pigeonChannelCodec,
@@ -1340,7 +1340,7 @@ class InAppWebViewHostApi {
 
   Future<bool> zoomIn() async {
     final pigeonVar_channelName =
-        'dev.flutter.pigeon.flutter_inappwebview_android.InAppWebViewHostApi.zoomIn$pigeonVar_messageChannelSuffix';
+        'dev.flutter.pigeon.nosferatu500_inappwebview_android.InAppWebViewHostApi.zoomIn$pigeonVar_messageChannelSuffix';
     final pigeonVar_channel = BasicMessageChannel<Object?>(
       pigeonVar_channelName,
       pigeonChannelCodec,
@@ -1359,7 +1359,7 @@ class InAppWebViewHostApi {
 
   Future<bool> zoomOut() async {
     final pigeonVar_channelName =
-        'dev.flutter.pigeon.flutter_inappwebview_android.InAppWebViewHostApi.zoomOut$pigeonVar_messageChannelSuffix';
+        'dev.flutter.pigeon.nosferatu500_inappwebview_android.InAppWebViewHostApi.zoomOut$pigeonVar_messageChannelSuffix';
     final pigeonVar_channel = BasicMessageChannel<Object?>(
       pigeonVar_channelName,
       pigeonChannelCodec,
@@ -1378,7 +1378,7 @@ class InAppWebViewHostApi {
 
   Future<bool> clearFocus() async {
     final pigeonVar_channelName =
-        'dev.flutter.pigeon.flutter_inappwebview_android.InAppWebViewHostApi.clearFocus$pigeonVar_messageChannelSuffix';
+        'dev.flutter.pigeon.nosferatu500_inappwebview_android.InAppWebViewHostApi.clearFocus$pigeonVar_messageChannelSuffix';
     final pigeonVar_channel = BasicMessageChannel<Object?>(
       pigeonVar_channelName,
       pigeonChannelCodec,
@@ -1400,7 +1400,7 @@ class InAppWebViewHostApi {
     Map<String?, Object?>? previouslyFocusedRect,
   ) async {
     final pigeonVar_channelName =
-        'dev.flutter.pigeon.flutter_inappwebview_android.InAppWebViewHostApi.requestFocus$pigeonVar_messageChannelSuffix';
+        'dev.flutter.pigeon.nosferatu500_inappwebview_android.InAppWebViewHostApi.requestFocus$pigeonVar_messageChannelSuffix';
     final pigeonVar_channel = BasicMessageChannel<Object?>(
       pigeonVar_channelName,
       pigeonChannelCodec,
@@ -1421,7 +1421,7 @@ class InAppWebViewHostApi {
 
   Future<bool> setContextMenu(Map<String?, Object?>? contextMenu) async {
     final pigeonVar_channelName =
-        'dev.flutter.pigeon.flutter_inappwebview_android.InAppWebViewHostApi.setContextMenu$pigeonVar_messageChannelSuffix';
+        'dev.flutter.pigeon.nosferatu500_inappwebview_android.InAppWebViewHostApi.setContextMenu$pigeonVar_messageChannelSuffix';
     final pigeonVar_channel = BasicMessageChannel<Object?>(
       pigeonVar_channelName,
       pigeonChannelCodec,
@@ -1442,7 +1442,7 @@ class InAppWebViewHostApi {
 
   Future<Map<String?, Object?>?> requestFocusNodeHref() async {
     final pigeonVar_channelName =
-        'dev.flutter.pigeon.flutter_inappwebview_android.InAppWebViewHostApi.requestFocusNodeHref$pigeonVar_messageChannelSuffix';
+        'dev.flutter.pigeon.nosferatu500_inappwebview_android.InAppWebViewHostApi.requestFocusNodeHref$pigeonVar_messageChannelSuffix';
     final pigeonVar_channel = BasicMessageChannel<Object?>(
       pigeonVar_channelName,
       pigeonChannelCodec,
@@ -1462,7 +1462,7 @@ class InAppWebViewHostApi {
 
   Future<Map<String?, Object?>?> requestImageRef() async {
     final pigeonVar_channelName =
-        'dev.flutter.pigeon.flutter_inappwebview_android.InAppWebViewHostApi.requestImageRef$pigeonVar_messageChannelSuffix';
+        'dev.flutter.pigeon.nosferatu500_inappwebview_android.InAppWebViewHostApi.requestImageRef$pigeonVar_messageChannelSuffix';
     final pigeonVar_channel = BasicMessageChannel<Object?>(
       pigeonVar_channelName,
       pigeonChannelCodec,
@@ -1482,7 +1482,7 @@ class InAppWebViewHostApi {
 
   Future<int?> getScrollX() async {
     final pigeonVar_channelName =
-        'dev.flutter.pigeon.flutter_inappwebview_android.InAppWebViewHostApi.getScrollX$pigeonVar_messageChannelSuffix';
+        'dev.flutter.pigeon.nosferatu500_inappwebview_android.InAppWebViewHostApi.getScrollX$pigeonVar_messageChannelSuffix';
     final pigeonVar_channel = BasicMessageChannel<Object?>(
       pigeonVar_channelName,
       pigeonChannelCodec,
@@ -1501,7 +1501,7 @@ class InAppWebViewHostApi {
 
   Future<int?> getScrollY() async {
     final pigeonVar_channelName =
-        'dev.flutter.pigeon.flutter_inappwebview_android.InAppWebViewHostApi.getScrollY$pigeonVar_messageChannelSuffix';
+        'dev.flutter.pigeon.nosferatu500_inappwebview_android.InAppWebViewHostApi.getScrollY$pigeonVar_messageChannelSuffix';
     final pigeonVar_channel = BasicMessageChannel<Object?>(
       pigeonVar_channelName,
       pigeonChannelCodec,
@@ -1520,7 +1520,7 @@ class InAppWebViewHostApi {
 
   Future<Map<String?, Object?>?> getCertificate() async {
     final pigeonVar_channelName =
-        'dev.flutter.pigeon.flutter_inappwebview_android.InAppWebViewHostApi.getCertificate$pigeonVar_messageChannelSuffix';
+        'dev.flutter.pigeon.nosferatu500_inappwebview_android.InAppWebViewHostApi.getCertificate$pigeonVar_messageChannelSuffix';
     final pigeonVar_channel = BasicMessageChannel<Object?>(
       pigeonVar_channelName,
       pigeonChannelCodec,
@@ -1540,7 +1540,7 @@ class InAppWebViewHostApi {
 
   Future<bool> addUserScript(Map<String?, Object?> userScript) async {
     final pigeonVar_channelName =
-        'dev.flutter.pigeon.flutter_inappwebview_android.InAppWebViewHostApi.addUserScript$pigeonVar_messageChannelSuffix';
+        'dev.flutter.pigeon.nosferatu500_inappwebview_android.InAppWebViewHostApi.addUserScript$pigeonVar_messageChannelSuffix';
     final pigeonVar_channel = BasicMessageChannel<Object?>(
       pigeonVar_channelName,
       pigeonChannelCodec,
@@ -1564,7 +1564,7 @@ class InAppWebViewHostApi {
     Map<String?, Object?> userScript,
   ) async {
     final pigeonVar_channelName =
-        'dev.flutter.pigeon.flutter_inappwebview_android.InAppWebViewHostApi.removeUserScript$pigeonVar_messageChannelSuffix';
+        'dev.flutter.pigeon.nosferatu500_inappwebview_android.InAppWebViewHostApi.removeUserScript$pigeonVar_messageChannelSuffix';
     final pigeonVar_channel = BasicMessageChannel<Object?>(
       pigeonVar_channelName,
       pigeonChannelCodec,
@@ -1585,7 +1585,7 @@ class InAppWebViewHostApi {
 
   Future<bool> removeUserScriptsByGroupName(String groupName) async {
     final pigeonVar_channelName =
-        'dev.flutter.pigeon.flutter_inappwebview_android.InAppWebViewHostApi.removeUserScriptsByGroupName$pigeonVar_messageChannelSuffix';
+        'dev.flutter.pigeon.nosferatu500_inappwebview_android.InAppWebViewHostApi.removeUserScriptsByGroupName$pigeonVar_messageChannelSuffix';
     final pigeonVar_channel = BasicMessageChannel<Object?>(
       pigeonVar_channelName,
       pigeonChannelCodec,
@@ -1606,7 +1606,7 @@ class InAppWebViewHostApi {
 
   Future<bool> removeAllUserScripts() async {
     final pigeonVar_channelName =
-        'dev.flutter.pigeon.flutter_inappwebview_android.InAppWebViewHostApi.removeAllUserScripts$pigeonVar_messageChannelSuffix';
+        'dev.flutter.pigeon.nosferatu500_inappwebview_android.InAppWebViewHostApi.removeAllUserScripts$pigeonVar_messageChannelSuffix';
     final pigeonVar_channel = BasicMessageChannel<Object?>(
       pigeonVar_channelName,
       pigeonChannelCodec,
@@ -1625,7 +1625,7 @@ class InAppWebViewHostApi {
 
   Future<Map<String?, Object?>?> createWebMessageChannel() async {
     final pigeonVar_channelName =
-        'dev.flutter.pigeon.flutter_inappwebview_android.InAppWebViewHostApi.createWebMessageChannel$pigeonVar_messageChannelSuffix';
+        'dev.flutter.pigeon.nosferatu500_inappwebview_android.InAppWebViewHostApi.createWebMessageChannel$pigeonVar_messageChannelSuffix';
     final pigeonVar_channel = BasicMessageChannel<Object?>(
       pigeonVar_channelName,
       pigeonChannelCodec,
@@ -1649,7 +1649,7 @@ class InAppWebViewHostApi {
     String targetOrigin,
   ) async {
     final pigeonVar_channelName =
-        'dev.flutter.pigeon.flutter_inappwebview_android.InAppWebViewHostApi.postWebMessage$pigeonVar_messageChannelSuffix';
+        'dev.flutter.pigeon.nosferatu500_inappwebview_android.InAppWebViewHostApi.postWebMessage$pigeonVar_messageChannelSuffix';
     final pigeonVar_channel = BasicMessageChannel<Object?>(
       pigeonVar_channelName,
       pigeonChannelCodec,
@@ -1673,7 +1673,7 @@ class InAppWebViewHostApi {
     Map<String?, Object?> webMessageListener,
   ) async {
     final pigeonVar_channelName =
-        'dev.flutter.pigeon.flutter_inappwebview_android.InAppWebViewHostApi.addWebMessageListener$pigeonVar_messageChannelSuffix';
+        'dev.flutter.pigeon.nosferatu500_inappwebview_android.InAppWebViewHostApi.addWebMessageListener$pigeonVar_messageChannelSuffix';
     final pigeonVar_channel = BasicMessageChannel<Object?>(
       pigeonVar_channelName,
       pigeonChannelCodec,
@@ -1694,7 +1694,7 @@ class InAppWebViewHostApi {
 
   Future<bool> canScrollVertically() async {
     final pigeonVar_channelName =
-        'dev.flutter.pigeon.flutter_inappwebview_android.InAppWebViewHostApi.canScrollVertically$pigeonVar_messageChannelSuffix';
+        'dev.flutter.pigeon.nosferatu500_inappwebview_android.InAppWebViewHostApi.canScrollVertically$pigeonVar_messageChannelSuffix';
     final pigeonVar_channel = BasicMessageChannel<Object?>(
       pigeonVar_channelName,
       pigeonChannelCodec,
@@ -1713,7 +1713,7 @@ class InAppWebViewHostApi {
 
   Future<bool> canScrollHorizontally() async {
     final pigeonVar_channelName =
-        'dev.flutter.pigeon.flutter_inappwebview_android.InAppWebViewHostApi.canScrollHorizontally$pigeonVar_messageChannelSuffix';
+        'dev.flutter.pigeon.nosferatu500_inappwebview_android.InAppWebViewHostApi.canScrollHorizontally$pigeonVar_messageChannelSuffix';
     final pigeonVar_channel = BasicMessageChannel<Object?>(
       pigeonVar_channelName,
       pigeonChannelCodec,
@@ -1732,7 +1732,7 @@ class InAppWebViewHostApi {
 
   Future<bool> isInFullscreen() async {
     final pigeonVar_channelName =
-        'dev.flutter.pigeon.flutter_inappwebview_android.InAppWebViewHostApi.isInFullscreen$pigeonVar_messageChannelSuffix';
+        'dev.flutter.pigeon.nosferatu500_inappwebview_android.InAppWebViewHostApi.isInFullscreen$pigeonVar_messageChannelSuffix';
     final pigeonVar_channel = BasicMessageChannel<Object?>(
       pigeonVar_channelName,
       pigeonChannelCodec,
@@ -1751,7 +1751,7 @@ class InAppWebViewHostApi {
 
   Future<bool> hideInputMethod() async {
     final pigeonVar_channelName =
-        'dev.flutter.pigeon.flutter_inappwebview_android.InAppWebViewHostApi.hideInputMethod$pigeonVar_messageChannelSuffix';
+        'dev.flutter.pigeon.nosferatu500_inappwebview_android.InAppWebViewHostApi.hideInputMethod$pigeonVar_messageChannelSuffix';
     final pigeonVar_channel = BasicMessageChannel<Object?>(
       pigeonVar_channelName,
       pigeonChannelCodec,
@@ -1770,7 +1770,7 @@ class InAppWebViewHostApi {
 
   Future<bool> showInputMethod() async {
     final pigeonVar_channelName =
-        'dev.flutter.pigeon.flutter_inappwebview_android.InAppWebViewHostApi.showInputMethod$pigeonVar_messageChannelSuffix';
+        'dev.flutter.pigeon.nosferatu500_inappwebview_android.InAppWebViewHostApi.showInputMethod$pigeonVar_messageChannelSuffix';
     final pigeonVar_channel = BasicMessageChannel<Object?>(
       pigeonVar_channelName,
       pigeonChannelCodec,
@@ -1790,7 +1790,7 @@ class InAppWebViewHostApi {
   /// Null bounds mean "no constraint": the framework `WebView.saveState`, no feature needed (§124).
   Future<Uint8List?> saveState(int? maxSize, bool? includeForwardState) async {
     final pigeonVar_channelName =
-        'dev.flutter.pigeon.flutter_inappwebview_android.InAppWebViewHostApi.saveState$pigeonVar_messageChannelSuffix';
+        'dev.flutter.pigeon.nosferatu500_inappwebview_android.InAppWebViewHostApi.saveState$pigeonVar_messageChannelSuffix';
     final pigeonVar_channel = BasicMessageChannel<Object?>(
       pigeonVar_channelName,
       pigeonChannelCodec,
@@ -1812,7 +1812,7 @@ class InAppWebViewHostApi {
   /// A null `state` throws, as it did on the MethodChannel.
   Future<bool> restoreState(Uint8List? state) async {
     final pigeonVar_channelName =
-        'dev.flutter.pigeon.flutter_inappwebview_android.InAppWebViewHostApi.restoreState$pigeonVar_messageChannelSuffix';
+        'dev.flutter.pigeon.nosferatu500_inappwebview_android.InAppWebViewHostApi.restoreState$pigeonVar_messageChannelSuffix';
     final pigeonVar_channel = BasicMessageChannel<Object?>(
       pigeonVar_channelName,
       pigeonChannelCodec,
@@ -1833,7 +1833,7 @@ class InAppWebViewHostApi {
 
   Future<bool> setAudioMuted(bool muted) async {
     final pigeonVar_channelName =
-        'dev.flutter.pigeon.flutter_inappwebview_android.InAppWebViewHostApi.setAudioMuted$pigeonVar_messageChannelSuffix';
+        'dev.flutter.pigeon.nosferatu500_inappwebview_android.InAppWebViewHostApi.setAudioMuted$pigeonVar_messageChannelSuffix';
     final pigeonVar_channel = BasicMessageChannel<Object?>(
       pigeonVar_channelName,
       pigeonChannelCodec,
@@ -1854,7 +1854,7 @@ class InAppWebViewHostApi {
 
   Future<bool> isAudioMuted() async {
     final pigeonVar_channelName =
-        'dev.flutter.pigeon.flutter_inappwebview_android.InAppWebViewHostApi.isAudioMuted$pigeonVar_messageChannelSuffix';
+        'dev.flutter.pigeon.nosferatu500_inappwebview_android.InAppWebViewHostApi.isAudioMuted$pigeonVar_messageChannelSuffix';
     final pigeonVar_channel = BasicMessageChannel<Object?>(
       pigeonVar_channelName,
       pigeonChannelCodec,
@@ -1873,7 +1873,7 @@ class InAppWebViewHostApi {
 
   Future<bool> flingScroll(int velocityX, int velocityY) async {
     final pigeonVar_channelName =
-        'dev.flutter.pigeon.flutter_inappwebview_android.InAppWebViewHostApi.flingScroll$pigeonVar_messageChannelSuffix';
+        'dev.flutter.pigeon.nosferatu500_inappwebview_android.InAppWebViewHostApi.flingScroll$pigeonVar_messageChannelSuffix';
     final pigeonVar_channel = BasicMessageChannel<Object?>(
       pigeonVar_channelName,
       pigeonChannelCodec,
@@ -2105,7 +2105,7 @@ abstract class InAppWebViewFlutterApi {
         : '';
     {
       final pigeonVar_channel = BasicMessageChannel<Object?>(
-        'dev.flutter.pigeon.flutter_inappwebview_android.InAppWebViewFlutterApi.onLoadStart$messageChannelSuffix',
+        'dev.flutter.pigeon.nosferatu500_inappwebview_android.InAppWebViewFlutterApi.onLoadStart$messageChannelSuffix',
         pigeonChannelCodec,
         binaryMessenger: binaryMessenger,
       );
@@ -2130,7 +2130,7 @@ abstract class InAppWebViewFlutterApi {
     }
     {
       final pigeonVar_channel = BasicMessageChannel<Object?>(
-        'dev.flutter.pigeon.flutter_inappwebview_android.InAppWebViewFlutterApi.onLoadStop$messageChannelSuffix',
+        'dev.flutter.pigeon.nosferatu500_inappwebview_android.InAppWebViewFlutterApi.onLoadStop$messageChannelSuffix',
         pigeonChannelCodec,
         binaryMessenger: binaryMessenger,
       );
@@ -2155,7 +2155,7 @@ abstract class InAppWebViewFlutterApi {
     }
     {
       final pigeonVar_channel = BasicMessageChannel<Object?>(
-        'dev.flutter.pigeon.flutter_inappwebview_android.InAppWebViewFlutterApi.onReceivedError$messageChannelSuffix',
+        'dev.flutter.pigeon.nosferatu500_inappwebview_android.InAppWebViewFlutterApi.onReceivedError$messageChannelSuffix',
         pigeonChannelCodec,
         binaryMessenger: binaryMessenger,
       );
@@ -2183,7 +2183,7 @@ abstract class InAppWebViewFlutterApi {
     }
     {
       final pigeonVar_channel = BasicMessageChannel<Object?>(
-        'dev.flutter.pigeon.flutter_inappwebview_android.InAppWebViewFlutterApi.onReceivedHttpError$messageChannelSuffix',
+        'dev.flutter.pigeon.nosferatu500_inappwebview_android.InAppWebViewFlutterApi.onReceivedHttpError$messageChannelSuffix',
         pigeonChannelCodec,
         binaryMessenger: binaryMessenger,
       );
@@ -2211,7 +2211,7 @@ abstract class InAppWebViewFlutterApi {
     }
     {
       final pigeonVar_channel = BasicMessageChannel<Object?>(
-        'dev.flutter.pigeon.flutter_inappwebview_android.InAppWebViewFlutterApi.onProgressChanged$messageChannelSuffix',
+        'dev.flutter.pigeon.nosferatu500_inappwebview_android.InAppWebViewFlutterApi.onProgressChanged$messageChannelSuffix',
         pigeonChannelCodec,
         binaryMessenger: binaryMessenger,
       );
@@ -2236,7 +2236,7 @@ abstract class InAppWebViewFlutterApi {
     }
     {
       final pigeonVar_channel = BasicMessageChannel<Object?>(
-        'dev.flutter.pigeon.flutter_inappwebview_android.InAppWebViewFlutterApi.onConsoleMessage$messageChannelSuffix',
+        'dev.flutter.pigeon.nosferatu500_inappwebview_android.InAppWebViewFlutterApi.onConsoleMessage$messageChannelSuffix',
         pigeonChannelCodec,
         binaryMessenger: binaryMessenger,
       );
@@ -2262,7 +2262,7 @@ abstract class InAppWebViewFlutterApi {
     }
     {
       final pigeonVar_channel = BasicMessageChannel<Object?>(
-        'dev.flutter.pigeon.flutter_inappwebview_android.InAppWebViewFlutterApi.onScrollChanged$messageChannelSuffix',
+        'dev.flutter.pigeon.nosferatu500_inappwebview_android.InAppWebViewFlutterApi.onScrollChanged$messageChannelSuffix',
         pigeonChannelCodec,
         binaryMessenger: binaryMessenger,
       );
@@ -2288,7 +2288,7 @@ abstract class InAppWebViewFlutterApi {
     }
     {
       final pigeonVar_channel = BasicMessageChannel<Object?>(
-        'dev.flutter.pigeon.flutter_inappwebview_android.InAppWebViewFlutterApi.onOverScrolled$messageChannelSuffix',
+        'dev.flutter.pigeon.nosferatu500_inappwebview_android.InAppWebViewFlutterApi.onOverScrolled$messageChannelSuffix',
         pigeonChannelCodec,
         binaryMessenger: binaryMessenger,
       );
@@ -2316,7 +2316,7 @@ abstract class InAppWebViewFlutterApi {
     }
     {
       final pigeonVar_channel = BasicMessageChannel<Object?>(
-        'dev.flutter.pigeon.flutter_inappwebview_android.InAppWebViewFlutterApi.onDownloadStarting$messageChannelSuffix',
+        'dev.flutter.pigeon.nosferatu500_inappwebview_android.InAppWebViewFlutterApi.onDownloadStarting$messageChannelSuffix',
         pigeonChannelCodec,
         binaryMessenger: binaryMessenger,
       );
@@ -2342,7 +2342,7 @@ abstract class InAppWebViewFlutterApi {
     }
     {
       final pigeonVar_channel = BasicMessageChannel<Object?>(
-        'dev.flutter.pigeon.flutter_inappwebview_android.InAppWebViewFlutterApi.onCloseWindow$messageChannelSuffix',
+        'dev.flutter.pigeon.nosferatu500_inappwebview_android.InAppWebViewFlutterApi.onCloseWindow$messageChannelSuffix',
         pigeonChannelCodec,
         binaryMessenger: binaryMessenger,
       );
@@ -2365,7 +2365,7 @@ abstract class InAppWebViewFlutterApi {
     }
     {
       final pigeonVar_channel = BasicMessageChannel<Object?>(
-        'dev.flutter.pigeon.flutter_inappwebview_android.InAppWebViewFlutterApi.onTitleChanged$messageChannelSuffix',
+        'dev.flutter.pigeon.nosferatu500_inappwebview_android.InAppWebViewFlutterApi.onTitleChanged$messageChannelSuffix',
         pigeonChannelCodec,
         binaryMessenger: binaryMessenger,
       );
@@ -2390,7 +2390,7 @@ abstract class InAppWebViewFlutterApi {
     }
     {
       final pigeonVar_channel = BasicMessageChannel<Object?>(
-        'dev.flutter.pigeon.flutter_inappwebview_android.InAppWebViewFlutterApi.onGeolocationPermissionsHidePrompt$messageChannelSuffix',
+        'dev.flutter.pigeon.nosferatu500_inappwebview_android.InAppWebViewFlutterApi.onGeolocationPermissionsHidePrompt$messageChannelSuffix',
         pigeonChannelCodec,
         binaryMessenger: binaryMessenger,
       );
@@ -2413,7 +2413,7 @@ abstract class InAppWebViewFlutterApi {
     }
     {
       final pigeonVar_channel = BasicMessageChannel<Object?>(
-        'dev.flutter.pigeon.flutter_inappwebview_android.InAppWebViewFlutterApi.onReceivedTouchIconUrl$messageChannelSuffix',
+        'dev.flutter.pigeon.nosferatu500_inappwebview_android.InAppWebViewFlutterApi.onReceivedTouchIconUrl$messageChannelSuffix',
         pigeonChannelCodec,
         binaryMessenger: binaryMessenger,
       );
@@ -2439,7 +2439,7 @@ abstract class InAppWebViewFlutterApi {
     }
     {
       final pigeonVar_channel = BasicMessageChannel<Object?>(
-        'dev.flutter.pigeon.flutter_inappwebview_android.InAppWebViewFlutterApi.onPermissionRequestCanceled$messageChannelSuffix',
+        'dev.flutter.pigeon.nosferatu500_inappwebview_android.InAppWebViewFlutterApi.onPermissionRequestCanceled$messageChannelSuffix',
         pigeonChannelCodec,
         binaryMessenger: binaryMessenger,
       );
@@ -2466,7 +2466,7 @@ abstract class InAppWebViewFlutterApi {
     }
     {
       final pigeonVar_channel = BasicMessageChannel<Object?>(
-        'dev.flutter.pigeon.flutter_inappwebview_android.InAppWebViewFlutterApi.onUpdateVisitedHistory$messageChannelSuffix',
+        'dev.flutter.pigeon.nosferatu500_inappwebview_android.InAppWebViewFlutterApi.onUpdateVisitedHistory$messageChannelSuffix',
         pigeonChannelCodec,
         binaryMessenger: binaryMessenger,
       );
@@ -2492,7 +2492,7 @@ abstract class InAppWebViewFlutterApi {
     }
     {
       final pigeonVar_channel = BasicMessageChannel<Object?>(
-        'dev.flutter.pigeon.flutter_inappwebview_android.InAppWebViewFlutterApi.onZoomScaleChanged$messageChannelSuffix',
+        'dev.flutter.pigeon.nosferatu500_inappwebview_android.InAppWebViewFlutterApi.onZoomScaleChanged$messageChannelSuffix',
         pigeonChannelCodec,
         binaryMessenger: binaryMessenger,
       );
@@ -2518,7 +2518,7 @@ abstract class InAppWebViewFlutterApi {
     }
     {
       final pigeonVar_channel = BasicMessageChannel<Object?>(
-        'dev.flutter.pigeon.flutter_inappwebview_android.InAppWebViewFlutterApi.onPageCommitVisible$messageChannelSuffix',
+        'dev.flutter.pigeon.nosferatu500_inappwebview_android.InAppWebViewFlutterApi.onPageCommitVisible$messageChannelSuffix',
         pigeonChannelCodec,
         binaryMessenger: binaryMessenger,
       );
@@ -2543,7 +2543,7 @@ abstract class InAppWebViewFlutterApi {
     }
     {
       final pigeonVar_channel = BasicMessageChannel<Object?>(
-        'dev.flutter.pigeon.flutter_inappwebview_android.InAppWebViewFlutterApi.onLongPressHitTestResult$messageChannelSuffix',
+        'dev.flutter.pigeon.nosferatu500_inappwebview_android.InAppWebViewFlutterApi.onLongPressHitTestResult$messageChannelSuffix',
         pigeonChannelCodec,
         binaryMessenger: binaryMessenger,
       );
@@ -2569,7 +2569,7 @@ abstract class InAppWebViewFlutterApi {
     }
     {
       final pigeonVar_channel = BasicMessageChannel<Object?>(
-        'dev.flutter.pigeon.flutter_inappwebview_android.InAppWebViewFlutterApi.onCreateContextMenu$messageChannelSuffix',
+        'dev.flutter.pigeon.nosferatu500_inappwebview_android.InAppWebViewFlutterApi.onCreateContextMenu$messageChannelSuffix',
         pigeonChannelCodec,
         binaryMessenger: binaryMessenger,
       );
@@ -2595,7 +2595,7 @@ abstract class InAppWebViewFlutterApi {
     }
     {
       final pigeonVar_channel = BasicMessageChannel<Object?>(
-        'dev.flutter.pigeon.flutter_inappwebview_android.InAppWebViewFlutterApi.onHideContextMenu$messageChannelSuffix',
+        'dev.flutter.pigeon.nosferatu500_inappwebview_android.InAppWebViewFlutterApi.onHideContextMenu$messageChannelSuffix',
         pigeonChannelCodec,
         binaryMessenger: binaryMessenger,
       );
@@ -2618,7 +2618,7 @@ abstract class InAppWebViewFlutterApi {
     }
     {
       final pigeonVar_channel = BasicMessageChannel<Object?>(
-        'dev.flutter.pigeon.flutter_inappwebview_android.InAppWebViewFlutterApi.onContextMenuActionItemClicked$messageChannelSuffix',
+        'dev.flutter.pigeon.nosferatu500_inappwebview_android.InAppWebViewFlutterApi.onContextMenuActionItemClicked$messageChannelSuffix',
         pigeonChannelCodec,
         binaryMessenger: binaryMessenger,
       );
@@ -2644,7 +2644,7 @@ abstract class InAppWebViewFlutterApi {
     }
     {
       final pigeonVar_channel = BasicMessageChannel<Object?>(
-        'dev.flutter.pigeon.flutter_inappwebview_android.InAppWebViewFlutterApi.onEnterFullscreen$messageChannelSuffix',
+        'dev.flutter.pigeon.nosferatu500_inappwebview_android.InAppWebViewFlutterApi.onEnterFullscreen$messageChannelSuffix',
         pigeonChannelCodec,
         binaryMessenger: binaryMessenger,
       );
@@ -2667,7 +2667,7 @@ abstract class InAppWebViewFlutterApi {
     }
     {
       final pigeonVar_channel = BasicMessageChannel<Object?>(
-        'dev.flutter.pigeon.flutter_inappwebview_android.InAppWebViewFlutterApi.onExitFullscreen$messageChannelSuffix',
+        'dev.flutter.pigeon.nosferatu500_inappwebview_android.InAppWebViewFlutterApi.onExitFullscreen$messageChannelSuffix',
         pigeonChannelCodec,
         binaryMessenger: binaryMessenger,
       );
@@ -2690,7 +2690,7 @@ abstract class InAppWebViewFlutterApi {
     }
     {
       final pigeonVar_channel = BasicMessageChannel<Object?>(
-        'dev.flutter.pigeon.flutter_inappwebview_android.InAppWebViewFlutterApi.onRequestFocus$messageChannelSuffix',
+        'dev.flutter.pigeon.nosferatu500_inappwebview_android.InAppWebViewFlutterApi.onRequestFocus$messageChannelSuffix',
         pigeonChannelCodec,
         binaryMessenger: binaryMessenger,
       );
@@ -2713,7 +2713,7 @@ abstract class InAppWebViewFlutterApi {
     }
     {
       final pigeonVar_channel = BasicMessageChannel<Object?>(
-        'dev.flutter.pigeon.flutter_inappwebview_android.InAppWebViewFlutterApi.onRenderProcessGone$messageChannelSuffix',
+        'dev.flutter.pigeon.nosferatu500_inappwebview_android.InAppWebViewFlutterApi.onRenderProcessGone$messageChannelSuffix',
         pigeonChannelCodec,
         binaryMessenger: binaryMessenger,
       );
@@ -2742,7 +2742,7 @@ abstract class InAppWebViewFlutterApi {
     }
     {
       final pigeonVar_channel = BasicMessageChannel<Object?>(
-        'dev.flutter.pigeon.flutter_inappwebview_android.InAppWebViewFlutterApi.onReceivedLoginRequest$messageChannelSuffix',
+        'dev.flutter.pigeon.nosferatu500_inappwebview_android.InAppWebViewFlutterApi.onReceivedLoginRequest$messageChannelSuffix',
         pigeonChannelCodec,
         binaryMessenger: binaryMessenger,
       );
@@ -2769,7 +2769,7 @@ abstract class InAppWebViewFlutterApi {
     }
     {
       final pigeonVar_channel = BasicMessageChannel<Object?>(
-        'dev.flutter.pigeon.flutter_inappwebview_android.InAppWebViewFlutterApi.onNavigationStarted$messageChannelSuffix',
+        'dev.flutter.pigeon.nosferatu500_inappwebview_android.InAppWebViewFlutterApi.onNavigationStarted$messageChannelSuffix',
         pigeonChannelCodec,
         binaryMessenger: binaryMessenger,
       );
@@ -2795,7 +2795,7 @@ abstract class InAppWebViewFlutterApi {
     }
     {
       final pigeonVar_channel = BasicMessageChannel<Object?>(
-        'dev.flutter.pigeon.flutter_inappwebview_android.InAppWebViewFlutterApi.onNavigationRedirected$messageChannelSuffix',
+        'dev.flutter.pigeon.nosferatu500_inappwebview_android.InAppWebViewFlutterApi.onNavigationRedirected$messageChannelSuffix',
         pigeonChannelCodec,
         binaryMessenger: binaryMessenger,
       );
@@ -2821,7 +2821,7 @@ abstract class InAppWebViewFlutterApi {
     }
     {
       final pigeonVar_channel = BasicMessageChannel<Object?>(
-        'dev.flutter.pigeon.flutter_inappwebview_android.InAppWebViewFlutterApi.onNavigationCompleted$messageChannelSuffix',
+        'dev.flutter.pigeon.nosferatu500_inappwebview_android.InAppWebViewFlutterApi.onNavigationCompleted$messageChannelSuffix',
         pigeonChannelCodec,
         binaryMessenger: binaryMessenger,
       );
@@ -2847,7 +2847,7 @@ abstract class InAppWebViewFlutterApi {
     }
     {
       final pigeonVar_channel = BasicMessageChannel<Object?>(
-        'dev.flutter.pigeon.flutter_inappwebview_android.InAppWebViewFlutterApi.onPageLoadEvent$messageChannelSuffix',
+        'dev.flutter.pigeon.nosferatu500_inappwebview_android.InAppWebViewFlutterApi.onPageLoadEvent$messageChannelSuffix',
         pigeonChannelCodec,
         binaryMessenger: binaryMessenger,
       );
@@ -2873,7 +2873,7 @@ abstract class InAppWebViewFlutterApi {
     }
     {
       final pigeonVar_channel = BasicMessageChannel<Object?>(
-        'dev.flutter.pigeon.flutter_inappwebview_android.InAppWebViewFlutterApi.onPageDomContentLoadedEvent$messageChannelSuffix',
+        'dev.flutter.pigeon.nosferatu500_inappwebview_android.InAppWebViewFlutterApi.onPageDomContentLoadedEvent$messageChannelSuffix',
         pigeonChannelCodec,
         binaryMessenger: binaryMessenger,
       );
@@ -2899,7 +2899,7 @@ abstract class InAppWebViewFlutterApi {
     }
     {
       final pigeonVar_channel = BasicMessageChannel<Object?>(
-        'dev.flutter.pigeon.flutter_inappwebview_android.InAppWebViewFlutterApi.onPageDeleted$messageChannelSuffix',
+        'dev.flutter.pigeon.nosferatu500_inappwebview_android.InAppWebViewFlutterApi.onPageDeleted$messageChannelSuffix',
         pigeonChannelCodec,
         binaryMessenger: binaryMessenger,
       );
@@ -2925,7 +2925,7 @@ abstract class InAppWebViewFlutterApi {
     }
     {
       final pigeonVar_channel = BasicMessageChannel<Object?>(
-        'dev.flutter.pigeon.flutter_inappwebview_android.InAppWebViewFlutterApi.onFirstContentfulPaintMillis$messageChannelSuffix',
+        'dev.flutter.pigeon.nosferatu500_inappwebview_android.InAppWebViewFlutterApi.onFirstContentfulPaintMillis$messageChannelSuffix',
         pigeonChannelCodec,
         binaryMessenger: binaryMessenger,
       );
@@ -2955,7 +2955,7 @@ abstract class InAppWebViewFlutterApi {
     }
     {
       final pigeonVar_channel = BasicMessageChannel<Object?>(
-        'dev.flutter.pigeon.flutter_inappwebview_android.InAppWebViewFlutterApi.onLargestContentfulPaintMillis$messageChannelSuffix',
+        'dev.flutter.pigeon.nosferatu500_inappwebview_android.InAppWebViewFlutterApi.onLargestContentfulPaintMillis$messageChannelSuffix',
         pigeonChannelCodec,
         binaryMessenger: binaryMessenger,
       );
@@ -2985,7 +2985,7 @@ abstract class InAppWebViewFlutterApi {
     }
     {
       final pigeonVar_channel = BasicMessageChannel<Object?>(
-        'dev.flutter.pigeon.flutter_inappwebview_android.InAppWebViewFlutterApi.onPerformanceMarkMillis$messageChannelSuffix',
+        'dev.flutter.pigeon.nosferatu500_inappwebview_android.InAppWebViewFlutterApi.onPerformanceMarkMillis$messageChannelSuffix',
         pigeonChannelCodec,
         binaryMessenger: binaryMessenger,
       );
@@ -3017,7 +3017,7 @@ abstract class InAppWebViewFlutterApi {
     }
     {
       final pigeonVar_channel = BasicMessageChannel<Object?>(
-        'dev.flutter.pigeon.flutter_inappwebview_android.InAppWebViewFlutterApi.onJsAlert$messageChannelSuffix',
+        'dev.flutter.pigeon.nosferatu500_inappwebview_android.InAppWebViewFlutterApi.onJsAlert$messageChannelSuffix',
         pigeonChannelCodec,
         binaryMessenger: binaryMessenger,
       );
@@ -3048,7 +3048,7 @@ abstract class InAppWebViewFlutterApi {
     }
     {
       final pigeonVar_channel = BasicMessageChannel<Object?>(
-        'dev.flutter.pigeon.flutter_inappwebview_android.InAppWebViewFlutterApi.onJsConfirm$messageChannelSuffix',
+        'dev.flutter.pigeon.nosferatu500_inappwebview_android.InAppWebViewFlutterApi.onJsConfirm$messageChannelSuffix',
         pigeonChannelCodec,
         binaryMessenger: binaryMessenger,
       );
@@ -3079,7 +3079,7 @@ abstract class InAppWebViewFlutterApi {
     }
     {
       final pigeonVar_channel = BasicMessageChannel<Object?>(
-        'dev.flutter.pigeon.flutter_inappwebview_android.InAppWebViewFlutterApi.onJsPrompt$messageChannelSuffix',
+        'dev.flutter.pigeon.nosferatu500_inappwebview_android.InAppWebViewFlutterApi.onJsPrompt$messageChannelSuffix',
         pigeonChannelCodec,
         binaryMessenger: binaryMessenger,
       );
@@ -3112,7 +3112,7 @@ abstract class InAppWebViewFlutterApi {
     }
     {
       final pigeonVar_channel = BasicMessageChannel<Object?>(
-        'dev.flutter.pigeon.flutter_inappwebview_android.InAppWebViewFlutterApi.onJsBeforeUnload$messageChannelSuffix',
+        'dev.flutter.pigeon.nosferatu500_inappwebview_android.InAppWebViewFlutterApi.onJsBeforeUnload$messageChannelSuffix',
         pigeonChannelCodec,
         binaryMessenger: binaryMessenger,
       );
@@ -3141,7 +3141,7 @@ abstract class InAppWebViewFlutterApi {
     }
     {
       final pigeonVar_channel = BasicMessageChannel<Object?>(
-        'dev.flutter.pigeon.flutter_inappwebview_android.InAppWebViewFlutterApi.onCreateWindow$messageChannelSuffix',
+        'dev.flutter.pigeon.nosferatu500_inappwebview_android.InAppWebViewFlutterApi.onCreateWindow$messageChannelSuffix',
         pigeonChannelCodec,
         binaryMessenger: binaryMessenger,
       );
@@ -3169,7 +3169,7 @@ abstract class InAppWebViewFlutterApi {
     }
     {
       final pigeonVar_channel = BasicMessageChannel<Object?>(
-        'dev.flutter.pigeon.flutter_inappwebview_android.InAppWebViewFlutterApi.onGeolocationPermissionsShowPrompt$messageChannelSuffix',
+        'dev.flutter.pigeon.nosferatu500_inappwebview_android.InAppWebViewFlutterApi.onGeolocationPermissionsShowPrompt$messageChannelSuffix',
         pigeonChannelCodec,
         binaryMessenger: binaryMessenger,
       );
@@ -3195,7 +3195,7 @@ abstract class InAppWebViewFlutterApi {
     }
     {
       final pigeonVar_channel = BasicMessageChannel<Object?>(
-        'dev.flutter.pigeon.flutter_inappwebview_android.InAppWebViewFlutterApi.onPermissionRequest$messageChannelSuffix',
+        'dev.flutter.pigeon.nosferatu500_inappwebview_android.InAppWebViewFlutterApi.onPermissionRequest$messageChannelSuffix',
         pigeonChannelCodec,
         binaryMessenger: binaryMessenger,
       );
@@ -3227,7 +3227,7 @@ abstract class InAppWebViewFlutterApi {
     }
     {
       final pigeonVar_channel = BasicMessageChannel<Object?>(
-        'dev.flutter.pigeon.flutter_inappwebview_android.InAppWebViewFlutterApi.shouldOverrideUrlLoading$messageChannelSuffix',
+        'dev.flutter.pigeon.nosferatu500_inappwebview_android.InAppWebViewFlutterApi.shouldOverrideUrlLoading$messageChannelSuffix',
         pigeonChannelCodec,
         binaryMessenger: binaryMessenger,
       );
@@ -3255,7 +3255,7 @@ abstract class InAppWebViewFlutterApi {
     }
     {
       final pigeonVar_channel = BasicMessageChannel<Object?>(
-        'dev.flutter.pigeon.flutter_inappwebview_android.InAppWebViewFlutterApi.onReceivedHttpAuthRequest$messageChannelSuffix',
+        'dev.flutter.pigeon.nosferatu500_inappwebview_android.InAppWebViewFlutterApi.onReceivedHttpAuthRequest$messageChannelSuffix',
         pigeonChannelCodec,
         binaryMessenger: binaryMessenger,
       );
@@ -3282,7 +3282,7 @@ abstract class InAppWebViewFlutterApi {
     }
     {
       final pigeonVar_channel = BasicMessageChannel<Object?>(
-        'dev.flutter.pigeon.flutter_inappwebview_android.InAppWebViewFlutterApi.onReceivedServerTrustAuthRequest$messageChannelSuffix',
+        'dev.flutter.pigeon.nosferatu500_inappwebview_android.InAppWebViewFlutterApi.onReceivedServerTrustAuthRequest$messageChannelSuffix',
         pigeonChannelCodec,
         binaryMessenger: binaryMessenger,
       );
@@ -3309,7 +3309,7 @@ abstract class InAppWebViewFlutterApi {
     }
     {
       final pigeonVar_channel = BasicMessageChannel<Object?>(
-        'dev.flutter.pigeon.flutter_inappwebview_android.InAppWebViewFlutterApi.onReceivedClientCertRequest$messageChannelSuffix',
+        'dev.flutter.pigeon.nosferatu500_inappwebview_android.InAppWebViewFlutterApi.onReceivedClientCertRequest$messageChannelSuffix',
         pigeonChannelCodec,
         binaryMessenger: binaryMessenger,
       );
@@ -3336,7 +3336,7 @@ abstract class InAppWebViewFlutterApi {
     }
     {
       final pigeonVar_channel = BasicMessageChannel<Object?>(
-        'dev.flutter.pigeon.flutter_inappwebview_android.InAppWebViewFlutterApi.onSafeBrowsingHit$messageChannelSuffix',
+        'dev.flutter.pigeon.nosferatu500_inappwebview_android.InAppWebViewFlutterApi.onSafeBrowsingHit$messageChannelSuffix',
         pigeonChannelCodec,
         binaryMessenger: binaryMessenger,
       );
@@ -3365,7 +3365,7 @@ abstract class InAppWebViewFlutterApi {
     }
     {
       final pigeonVar_channel = BasicMessageChannel<Object?>(
-        'dev.flutter.pigeon.flutter_inappwebview_android.InAppWebViewFlutterApi.onFormResubmission$messageChannelSuffix',
+        'dev.flutter.pigeon.nosferatu500_inappwebview_android.InAppWebViewFlutterApi.onFormResubmission$messageChannelSuffix',
         pigeonChannelCodec,
         binaryMessenger: binaryMessenger,
       );
@@ -3390,7 +3390,7 @@ abstract class InAppWebViewFlutterApi {
     }
     {
       final pigeonVar_channel = BasicMessageChannel<Object?>(
-        'dev.flutter.pigeon.flutter_inappwebview_android.InAppWebViewFlutterApi.onRenderProcessUnresponsive$messageChannelSuffix',
+        'dev.flutter.pigeon.nosferatu500_inappwebview_android.InAppWebViewFlutterApi.onRenderProcessUnresponsive$messageChannelSuffix',
         pigeonChannelCodec,
         binaryMessenger: binaryMessenger,
       );
@@ -3415,7 +3415,7 @@ abstract class InAppWebViewFlutterApi {
     }
     {
       final pigeonVar_channel = BasicMessageChannel<Object?>(
-        'dev.flutter.pigeon.flutter_inappwebview_android.InAppWebViewFlutterApi.onRenderProcessResponsive$messageChannelSuffix',
+        'dev.flutter.pigeon.nosferatu500_inappwebview_android.InAppWebViewFlutterApi.onRenderProcessResponsive$messageChannelSuffix',
         pigeonChannelCodec,
         binaryMessenger: binaryMessenger,
       );
@@ -3440,7 +3440,7 @@ abstract class InAppWebViewFlutterApi {
     }
     {
       final pigeonVar_channel = BasicMessageChannel<Object?>(
-        'dev.flutter.pigeon.flutter_inappwebview_android.InAppWebViewFlutterApi.onCallJsHandler$messageChannelSuffix',
+        'dev.flutter.pigeon.nosferatu500_inappwebview_android.InAppWebViewFlutterApi.onCallJsHandler$messageChannelSuffix',
         pigeonChannelCodec,
         binaryMessenger: binaryMessenger,
       );
@@ -3470,7 +3470,7 @@ abstract class InAppWebViewFlutterApi {
     }
     {
       final pigeonVar_channel = BasicMessageChannel<Object?>(
-        'dev.flutter.pigeon.flutter_inappwebview_android.InAppWebViewFlutterApi.onPrintRequest$messageChannelSuffix',
+        'dev.flutter.pigeon.nosferatu500_inappwebview_android.InAppWebViewFlutterApi.onPrintRequest$messageChannelSuffix',
         pigeonChannelCodec,
         binaryMessenger: binaryMessenger,
       );
@@ -3495,7 +3495,7 @@ abstract class InAppWebViewFlutterApi {
     }
     {
       final pigeonVar_channel = BasicMessageChannel<Object?>(
-        'dev.flutter.pigeon.flutter_inappwebview_android.InAppWebViewFlutterApi.onRequestVisitedHistory$messageChannelSuffix',
+        'dev.flutter.pigeon.nosferatu500_inappwebview_android.InAppWebViewFlutterApi.onRequestVisitedHistory$messageChannelSuffix',
         pigeonChannelCodec,
         binaryMessenger: binaryMessenger,
       );
@@ -3518,7 +3518,7 @@ abstract class InAppWebViewFlutterApi {
     }
     {
       final pigeonVar_channel = BasicMessageChannel<Object?>(
-        'dev.flutter.pigeon.flutter_inappwebview_android.InAppWebViewFlutterApi.onShowFileChooser$messageChannelSuffix',
+        'dev.flutter.pigeon.nosferatu500_inappwebview_android.InAppWebViewFlutterApi.onShowFileChooser$messageChannelSuffix',
         pigeonChannelCodec,
         binaryMessenger: binaryMessenger,
       );
@@ -3546,7 +3546,7 @@ abstract class InAppWebViewFlutterApi {
     }
     {
       final pigeonVar_channel = BasicMessageChannel<Object?>(
-        'dev.flutter.pigeon.flutter_inappwebview_android.InAppWebViewFlutterApi.shouldInterceptRequest$messageChannelSuffix',
+        'dev.flutter.pigeon.nosferatu500_inappwebview_android.InAppWebViewFlutterApi.shouldInterceptRequest$messageChannelSuffix',
         pigeonChannelCodec,
         binaryMessenger: binaryMessenger,
       );
@@ -3573,7 +3573,7 @@ abstract class InAppWebViewFlutterApi {
     }
     {
       final pigeonVar_channel = BasicMessageChannel<Object?>(
-        'dev.flutter.pigeon.flutter_inappwebview_android.InAppWebViewFlutterApi.onLoadResourceWithCustomScheme$messageChannelSuffix',
+        'dev.flutter.pigeon.nosferatu500_inappwebview_android.InAppWebViewFlutterApi.onLoadResourceWithCustomScheme$messageChannelSuffix',
         pigeonChannelCodec,
         binaryMessenger: binaryMessenger,
       );
@@ -3625,7 +3625,7 @@ class ServiceWorkerHostApi {
   /// `false` only when the native manager has gone away.
   Future<bool> setServiceWorkerClient(bool isNull) async {
     final pigeonVar_channelName =
-        'dev.flutter.pigeon.flutter_inappwebview_android.ServiceWorkerHostApi.setServiceWorkerClient$pigeonVar_messageChannelSuffix';
+        'dev.flutter.pigeon.nosferatu500_inappwebview_android.ServiceWorkerHostApi.setServiceWorkerClient$pigeonVar_messageChannelSuffix';
     final pigeonVar_channel = BasicMessageChannel<Object?>(
       pigeonVar_channelName,
       pigeonChannelCodec,
@@ -3647,7 +3647,7 @@ class ServiceWorkerHostApi {
   /// `false` also when the settings are unreachable, as before — unlike the cookie-intercept getter.
   Future<bool> getAllowContentAccess(String? profileName) async {
     final pigeonVar_channelName =
-        'dev.flutter.pigeon.flutter_inappwebview_android.ServiceWorkerHostApi.getAllowContentAccess$pigeonVar_messageChannelSuffix';
+        'dev.flutter.pigeon.nosferatu500_inappwebview_android.ServiceWorkerHostApi.getAllowContentAccess$pigeonVar_messageChannelSuffix';
     final pigeonVar_channel = BasicMessageChannel<Object?>(
       pigeonVar_channelName,
       pigeonChannelCodec,
@@ -3668,7 +3668,7 @@ class ServiceWorkerHostApi {
 
   Future<bool> getAllowFileAccess(String? profileName) async {
     final pigeonVar_channelName =
-        'dev.flutter.pigeon.flutter_inappwebview_android.ServiceWorkerHostApi.getAllowFileAccess$pigeonVar_messageChannelSuffix';
+        'dev.flutter.pigeon.nosferatu500_inappwebview_android.ServiceWorkerHostApi.getAllowFileAccess$pigeonVar_messageChannelSuffix';
     final pigeonVar_channel = BasicMessageChannel<Object?>(
       pigeonVar_channelName,
       pigeonChannelCodec,
@@ -3689,7 +3689,7 @@ class ServiceWorkerHostApi {
 
   Future<bool> getBlockNetworkLoads(String? profileName) async {
     final pigeonVar_channelName =
-        'dev.flutter.pigeon.flutter_inappwebview_android.ServiceWorkerHostApi.getBlockNetworkLoads$pigeonVar_messageChannelSuffix';
+        'dev.flutter.pigeon.nosferatu500_inappwebview_android.ServiceWorkerHostApi.getBlockNetworkLoads$pigeonVar_messageChannelSuffix';
     final pigeonVar_channel = BasicMessageChannel<Object?>(
       pigeonVar_channelName,
       pigeonChannelCodec,
@@ -3710,7 +3710,7 @@ class ServiceWorkerHostApi {
 
   Future<int?> getCacheMode(String? profileName) async {
     final pigeonVar_channelName =
-        'dev.flutter.pigeon.flutter_inappwebview_android.ServiceWorkerHostApi.getCacheMode$pigeonVar_messageChannelSuffix';
+        'dev.flutter.pigeon.nosferatu500_inappwebview_android.ServiceWorkerHostApi.getCacheMode$pigeonVar_messageChannelSuffix';
     final pigeonVar_channel = BasicMessageChannel<Object?>(
       pigeonVar_channelName,
       pigeonChannelCodec,
@@ -3735,7 +3735,7 @@ class ServiceWorkerHostApi {
     String? profileName,
   ) async {
     final pigeonVar_channelName =
-        'dev.flutter.pigeon.flutter_inappwebview_android.ServiceWorkerHostApi.getIncludeCookiesOnShouldInterceptRequestEnabled$pigeonVar_messageChannelSuffix';
+        'dev.flutter.pigeon.nosferatu500_inappwebview_android.ServiceWorkerHostApi.getIncludeCookiesOnShouldInterceptRequestEnabled$pigeonVar_messageChannelSuffix';
     final pigeonVar_channel = BasicMessageChannel<Object?>(
       pigeonVar_channelName,
       pigeonChannelCodec,
@@ -3756,7 +3756,7 @@ class ServiceWorkerHostApi {
 
   Future<bool> setAllowContentAccess(bool allow, String? profileName) async {
     final pigeonVar_channelName =
-        'dev.flutter.pigeon.flutter_inappwebview_android.ServiceWorkerHostApi.setAllowContentAccess$pigeonVar_messageChannelSuffix';
+        'dev.flutter.pigeon.nosferatu500_inappwebview_android.ServiceWorkerHostApi.setAllowContentAccess$pigeonVar_messageChannelSuffix';
     final pigeonVar_channel = BasicMessageChannel<Object?>(
       pigeonVar_channelName,
       pigeonChannelCodec,
@@ -3777,7 +3777,7 @@ class ServiceWorkerHostApi {
 
   Future<bool> setAllowFileAccess(bool allow, String? profileName) async {
     final pigeonVar_channelName =
-        'dev.flutter.pigeon.flutter_inappwebview_android.ServiceWorkerHostApi.setAllowFileAccess$pigeonVar_messageChannelSuffix';
+        'dev.flutter.pigeon.nosferatu500_inappwebview_android.ServiceWorkerHostApi.setAllowFileAccess$pigeonVar_messageChannelSuffix';
     final pigeonVar_channel = BasicMessageChannel<Object?>(
       pigeonVar_channelName,
       pigeonChannelCodec,
@@ -3798,7 +3798,7 @@ class ServiceWorkerHostApi {
 
   Future<bool> setBlockNetworkLoads(bool flag, String? profileName) async {
     final pigeonVar_channelName =
-        'dev.flutter.pigeon.flutter_inappwebview_android.ServiceWorkerHostApi.setBlockNetworkLoads$pigeonVar_messageChannelSuffix';
+        'dev.flutter.pigeon.nosferatu500_inappwebview_android.ServiceWorkerHostApi.setBlockNetworkLoads$pigeonVar_messageChannelSuffix';
     final pigeonVar_channel = BasicMessageChannel<Object?>(
       pigeonVar_channelName,
       pigeonChannelCodec,
@@ -3820,7 +3820,7 @@ class ServiceWorkerHostApi {
   /// A native `WebSettings` cache-mode constant, narrowed into an `@IntDef` (checklist item 4).
   Future<bool> setCacheMode(int mode, String? profileName) async {
     final pigeonVar_channelName =
-        'dev.flutter.pigeon.flutter_inappwebview_android.ServiceWorkerHostApi.setCacheMode$pigeonVar_messageChannelSuffix';
+        'dev.flutter.pigeon.nosferatu500_inappwebview_android.ServiceWorkerHostApi.setCacheMode$pigeonVar_messageChannelSuffix';
     final pigeonVar_channel = BasicMessageChannel<Object?>(
       pigeonVar_channelName,
       pigeonChannelCodec,
@@ -3844,7 +3844,7 @@ class ServiceWorkerHostApi {
     String? profileName,
   ) async {
     final pigeonVar_channelName =
-        'dev.flutter.pigeon.flutter_inappwebview_android.ServiceWorkerHostApi.setIncludeCookiesOnShouldInterceptRequestEnabled$pigeonVar_messageChannelSuffix';
+        'dev.flutter.pigeon.nosferatu500_inappwebview_android.ServiceWorkerHostApi.setIncludeCookiesOnShouldInterceptRequestEnabled$pigeonVar_messageChannelSuffix';
     final pigeonVar_channel = BasicMessageChannel<Object?>(
       pigeonVar_channelName,
       pigeonChannelCodec,
@@ -3887,7 +3887,7 @@ abstract class ServiceWorkerFlutterApi {
         : '';
     {
       final pigeonVar_channel = BasicMessageChannel<Object?>(
-        'dev.flutter.pigeon.flutter_inappwebview_android.ServiceWorkerFlutterApi.shouldInterceptRequest$messageChannelSuffix',
+        'dev.flutter.pigeon.nosferatu500_inappwebview_android.ServiceWorkerFlutterApi.shouldInterceptRequest$messageChannelSuffix',
         pigeonChannelCodec,
         binaryMessenger: binaryMessenger,
       );
@@ -3934,7 +3934,7 @@ abstract class CustomPathHandlerFlutterApi {
         : '';
     {
       final pigeonVar_channel = BasicMessageChannel<Object?>(
-        'dev.flutter.pigeon.flutter_inappwebview_android.CustomPathHandlerFlutterApi.handle$messageChannelSuffix',
+        'dev.flutter.pigeon.nosferatu500_inappwebview_android.CustomPathHandlerFlutterApi.handle$messageChannelSuffix',
         pigeonChannelCodec,
         binaryMessenger: binaryMessenger,
       );

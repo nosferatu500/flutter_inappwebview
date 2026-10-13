@@ -285,7 +285,7 @@ class ChromeCustomTabsHostApi {
     List<String>? otherLikelyURLs,
   ) async {
     final pigeonVar_channelName =
-        'dev.flutter.pigeon.flutter_inappwebview_android.ChromeCustomTabsHostApi.launchUrl$pigeonVar_messageChannelSuffix';
+        'dev.flutter.pigeon.nosferatu500_inappwebview_android.ChromeCustomTabsHostApi.launchUrl$pigeonVar_messageChannelSuffix';
     final pigeonVar_channel = BasicMessageChannel<Object?>(
       pigeonVar_channelName,
       pigeonChannelCodec,
@@ -307,7 +307,7 @@ class ChromeCustomTabsHostApi {
   /// Asks Chrome to pre-warm [url]. Answers Chrome's own answer, or `false` with no activity.
   Future<bool> mayLaunchUrl(String? url, List<String>? otherLikelyURLs) async {
     final pigeonVar_channelName =
-        'dev.flutter.pigeon.flutter_inappwebview_android.ChromeCustomTabsHostApi.mayLaunchUrl$pigeonVar_messageChannelSuffix';
+        'dev.flutter.pigeon.nosferatu500_inappwebview_android.ChromeCustomTabsHostApi.mayLaunchUrl$pigeonVar_messageChannelSuffix';
     final pigeonVar_channel = BasicMessageChannel<Object?>(
       pigeonVar_channelName,
       pigeonChannelCodec,
@@ -332,7 +332,7 @@ class ChromeCustomTabsHostApi {
   /// `ByteArray` through the standard codec.
   Future<bool> updateActionButton(Uint8List icon, String description) async {
     final pigeonVar_channelName =
-        'dev.flutter.pigeon.flutter_inappwebview_android.ChromeCustomTabsHostApi.updateActionButton$pigeonVar_messageChannelSuffix';
+        'dev.flutter.pigeon.nosferatu500_inappwebview_android.ChromeCustomTabsHostApi.updateActionButton$pigeonVar_messageChannelSuffix';
     final pigeonVar_channel = BasicMessageChannel<Object?>(
       pigeonVar_channelName,
       pigeonChannelCodec,
@@ -368,7 +368,7 @@ class ChromeCustomTabsHostApi {
   /// `inappwebview.dev` delegates to the upstream package, so the test covering this is skipped.
   Future<bool> validateRelationship(int relation, String origin) async {
     final pigeonVar_channelName =
-        'dev.flutter.pigeon.flutter_inappwebview_android.ChromeCustomTabsHostApi.validateRelationship$pigeonVar_messageChannelSuffix';
+        'dev.flutter.pigeon.nosferatu500_inappwebview_android.ChromeCustomTabsHostApi.validateRelationship$pigeonVar_messageChannelSuffix';
     final pigeonVar_channel = BasicMessageChannel<Object?>(
       pigeonVar_channelName,
       pigeonChannelCodec,
@@ -392,7 +392,7 @@ class ChromeCustomTabsHostApi {
     CustomTabsSecondaryToolbarData secondaryToolbar,
   ) async {
     final pigeonVar_channelName =
-        'dev.flutter.pigeon.flutter_inappwebview_android.ChromeCustomTabsHostApi.updateSecondaryToolbar$pigeonVar_messageChannelSuffix';
+        'dev.flutter.pigeon.nosferatu500_inappwebview_android.ChromeCustomTabsHostApi.updateSecondaryToolbar$pigeonVar_messageChannelSuffix';
     final pigeonVar_channel = BasicMessageChannel<Object?>(
       pigeonVar_channelName,
       pigeonChannelCodec,
@@ -425,7 +425,7 @@ class ChromeCustomTabsHostApi {
     String? targetOrigin,
   ) async {
     final pigeonVar_channelName =
-        'dev.flutter.pigeon.flutter_inappwebview_android.ChromeCustomTabsHostApi.requestPostMessageChannel$pigeonVar_messageChannelSuffix';
+        'dev.flutter.pigeon.nosferatu500_inappwebview_android.ChromeCustomTabsHostApi.requestPostMessageChannel$pigeonVar_messageChannelSuffix';
     final pigeonVar_channel = BasicMessageChannel<Object?>(
       pigeonVar_channelName,
       pigeonChannelCodec,
@@ -451,7 +451,7 @@ class ChromeCustomTabsHostApi {
   /// `bool`. Preserved exactly; the Dart side maps it to `CustomTabsPostMessageResultType`.
   Future<int> postMessage(String message) async {
     final pigeonVar_channelName =
-        'dev.flutter.pigeon.flutter_inappwebview_android.ChromeCustomTabsHostApi.postMessage$pigeonVar_messageChannelSuffix';
+        'dev.flutter.pigeon.nosferatu500_inappwebview_android.ChromeCustomTabsHostApi.postMessage$pigeonVar_messageChannelSuffix';
     final pigeonVar_channel = BasicMessageChannel<Object?>(
       pigeonVar_channelName,
       pigeonChannelCodec,
@@ -477,7 +477,7 @@ class ChromeCustomTabsHostApi {
   /// propagate: turning "unsupported" into a `PlatformException` would be a behaviour change.
   Future<bool> isEngagementSignalsApiAvailable() async {
     final pigeonVar_channelName =
-        'dev.flutter.pigeon.flutter_inappwebview_android.ChromeCustomTabsHostApi.isEngagementSignalsApiAvailable$pigeonVar_messageChannelSuffix';
+        'dev.flutter.pigeon.nosferatu500_inappwebview_android.ChromeCustomTabsHostApi.isEngagementSignalsApiAvailable$pigeonVar_messageChannelSuffix';
     final pigeonVar_channel = BasicMessageChannel<Object?>(
       pigeonVar_channelName,
       pigeonChannelCodec,
@@ -497,7 +497,7 @@ class ChromeCustomTabsHostApi {
   /// Closes the Custom Tab and brings the host activity back. Answers `false` when already gone.
   Future<bool> close() async {
     final pigeonVar_channelName =
-        'dev.flutter.pigeon.flutter_inappwebview_android.ChromeCustomTabsHostApi.close$pigeonVar_messageChannelSuffix';
+        'dev.flutter.pigeon.nosferatu500_inappwebview_android.ChromeCustomTabsHostApi.close$pigeonVar_messageChannelSuffix';
     final pigeonVar_channel = BasicMessageChannel<Object?>(
       pigeonVar_channelName,
       pigeonChannelCodec,
@@ -597,7 +597,7 @@ abstract class ChromeCustomTabsFlutterApi {
         : '';
     {
       final pigeonVar_channel = BasicMessageChannel<Object?>(
-        'dev.flutter.pigeon.flutter_inappwebview_android.ChromeCustomTabsFlutterApi.onServiceConnected$messageChannelSuffix',
+        'dev.flutter.pigeon.nosferatu500_inappwebview_android.ChromeCustomTabsFlutterApi.onServiceConnected$messageChannelSuffix',
         pigeonChannelCodec,
         binaryMessenger: binaryMessenger,
       );
@@ -620,7 +620,7 @@ abstract class ChromeCustomTabsFlutterApi {
     }
     {
       final pigeonVar_channel = BasicMessageChannel<Object?>(
-        'dev.flutter.pigeon.flutter_inappwebview_android.ChromeCustomTabsFlutterApi.onOpened$messageChannelSuffix',
+        'dev.flutter.pigeon.nosferatu500_inappwebview_android.ChromeCustomTabsFlutterApi.onOpened$messageChannelSuffix',
         pigeonChannelCodec,
         binaryMessenger: binaryMessenger,
       );
@@ -643,7 +643,7 @@ abstract class ChromeCustomTabsFlutterApi {
     }
     {
       final pigeonVar_channel = BasicMessageChannel<Object?>(
-        'dev.flutter.pigeon.flutter_inappwebview_android.ChromeCustomTabsFlutterApi.onCompletedInitialLoad$messageChannelSuffix',
+        'dev.flutter.pigeon.nosferatu500_inappwebview_android.ChromeCustomTabsFlutterApi.onCompletedInitialLoad$messageChannelSuffix',
         pigeonChannelCodec,
         binaryMessenger: binaryMessenger,
       );
@@ -666,7 +666,7 @@ abstract class ChromeCustomTabsFlutterApi {
     }
     {
       final pigeonVar_channel = BasicMessageChannel<Object?>(
-        'dev.flutter.pigeon.flutter_inappwebview_android.ChromeCustomTabsFlutterApi.onNavigationEvent$messageChannelSuffix',
+        'dev.flutter.pigeon.nosferatu500_inappwebview_android.ChromeCustomTabsFlutterApi.onNavigationEvent$messageChannelSuffix',
         pigeonChannelCodec,
         binaryMessenger: binaryMessenger,
       );
@@ -691,7 +691,7 @@ abstract class ChromeCustomTabsFlutterApi {
     }
     {
       final pigeonVar_channel = BasicMessageChannel<Object?>(
-        'dev.flutter.pigeon.flutter_inappwebview_android.ChromeCustomTabsFlutterApi.onClosed$messageChannelSuffix',
+        'dev.flutter.pigeon.nosferatu500_inappwebview_android.ChromeCustomTabsFlutterApi.onClosed$messageChannelSuffix',
         pigeonChannelCodec,
         binaryMessenger: binaryMessenger,
       );
@@ -714,7 +714,7 @@ abstract class ChromeCustomTabsFlutterApi {
     }
     {
       final pigeonVar_channel = BasicMessageChannel<Object?>(
-        'dev.flutter.pigeon.flutter_inappwebview_android.ChromeCustomTabsFlutterApi.onItemActionPerform$messageChannelSuffix',
+        'dev.flutter.pigeon.nosferatu500_inappwebview_android.ChromeCustomTabsFlutterApi.onItemActionPerform$messageChannelSuffix',
         pigeonChannelCodec,
         binaryMessenger: binaryMessenger,
       );
@@ -741,7 +741,7 @@ abstract class ChromeCustomTabsFlutterApi {
     }
     {
       final pigeonVar_channel = BasicMessageChannel<Object?>(
-        'dev.flutter.pigeon.flutter_inappwebview_android.ChromeCustomTabsFlutterApi.onSecondaryItemActionPerform$messageChannelSuffix',
+        'dev.flutter.pigeon.nosferatu500_inappwebview_android.ChromeCustomTabsFlutterApi.onSecondaryItemActionPerform$messageChannelSuffix',
         pigeonChannelCodec,
         binaryMessenger: binaryMessenger,
       );
@@ -767,7 +767,7 @@ abstract class ChromeCustomTabsFlutterApi {
     }
     {
       final pigeonVar_channel = BasicMessageChannel<Object?>(
-        'dev.flutter.pigeon.flutter_inappwebview_android.ChromeCustomTabsFlutterApi.onRelationshipValidationResult$messageChannelSuffix',
+        'dev.flutter.pigeon.nosferatu500_inappwebview_android.ChromeCustomTabsFlutterApi.onRelationshipValidationResult$messageChannelSuffix',
         pigeonChannelCodec,
         binaryMessenger: binaryMessenger,
       );
@@ -798,7 +798,7 @@ abstract class ChromeCustomTabsFlutterApi {
     }
     {
       final pigeonVar_channel = BasicMessageChannel<Object?>(
-        'dev.flutter.pigeon.flutter_inappwebview_android.ChromeCustomTabsFlutterApi.onMessageChannelReady$messageChannelSuffix',
+        'dev.flutter.pigeon.nosferatu500_inappwebview_android.ChromeCustomTabsFlutterApi.onMessageChannelReady$messageChannelSuffix',
         pigeonChannelCodec,
         binaryMessenger: binaryMessenger,
       );
@@ -821,7 +821,7 @@ abstract class ChromeCustomTabsFlutterApi {
     }
     {
       final pigeonVar_channel = BasicMessageChannel<Object?>(
-        'dev.flutter.pigeon.flutter_inappwebview_android.ChromeCustomTabsFlutterApi.onPostMessage$messageChannelSuffix',
+        'dev.flutter.pigeon.nosferatu500_inappwebview_android.ChromeCustomTabsFlutterApi.onPostMessage$messageChannelSuffix',
         pigeonChannelCodec,
         binaryMessenger: binaryMessenger,
       );
@@ -846,7 +846,7 @@ abstract class ChromeCustomTabsFlutterApi {
     }
     {
       final pigeonVar_channel = BasicMessageChannel<Object?>(
-        'dev.flutter.pigeon.flutter_inappwebview_android.ChromeCustomTabsFlutterApi.onVerticalScrollEvent$messageChannelSuffix',
+        'dev.flutter.pigeon.nosferatu500_inappwebview_android.ChromeCustomTabsFlutterApi.onVerticalScrollEvent$messageChannelSuffix',
         pigeonChannelCodec,
         binaryMessenger: binaryMessenger,
       );
@@ -871,7 +871,7 @@ abstract class ChromeCustomTabsFlutterApi {
     }
     {
       final pigeonVar_channel = BasicMessageChannel<Object?>(
-        'dev.flutter.pigeon.flutter_inappwebview_android.ChromeCustomTabsFlutterApi.onGreatestScrollPercentageIncreased$messageChannelSuffix',
+        'dev.flutter.pigeon.nosferatu500_inappwebview_android.ChromeCustomTabsFlutterApi.onGreatestScrollPercentageIncreased$messageChannelSuffix',
         pigeonChannelCodec,
         binaryMessenger: binaryMessenger,
       );
@@ -896,7 +896,7 @@ abstract class ChromeCustomTabsFlutterApi {
     }
     {
       final pigeonVar_channel = BasicMessageChannel<Object?>(
-        'dev.flutter.pigeon.flutter_inappwebview_android.ChromeCustomTabsFlutterApi.onSessionEnded$messageChannelSuffix',
+        'dev.flutter.pigeon.nosferatu500_inappwebview_android.ChromeCustomTabsFlutterApi.onSessionEnded$messageChannelSuffix',
         pigeonChannelCodec,
         binaryMessenger: binaryMessenger,
       );

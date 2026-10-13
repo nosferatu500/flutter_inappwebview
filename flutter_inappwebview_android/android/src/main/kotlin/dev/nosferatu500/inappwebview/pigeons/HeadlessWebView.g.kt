@@ -290,7 +290,7 @@ interface HeadlessWebViewHostApi {
     fun setUp(binaryMessenger: BinaryMessenger, api: HeadlessWebViewHostApi?, messageChannelSuffix: String = "") {
       val separatedMessageChannelSuffix = if (messageChannelSuffix.isNotEmpty()) ".$messageChannelSuffix" else ""
       run {
-        val channel = BasicMessageChannel<Any?>(binaryMessenger, "dev.flutter.pigeon.flutter_inappwebview_android.HeadlessWebViewHostApi.dispose$separatedMessageChannelSuffix", codec)
+        val channel = BasicMessageChannel<Any?>(binaryMessenger, "dev.flutter.pigeon.nosferatu500_inappwebview_android.HeadlessWebViewHostApi.dispose$separatedMessageChannelSuffix", codec)
         if (api != null) {
           channel.setMessageHandler { _, reply ->
             val wrapped: List<Any?> = try {
@@ -305,7 +305,7 @@ interface HeadlessWebViewHostApi {
         }
       }
       run {
-        val channel = BasicMessageChannel<Any?>(binaryMessenger, "dev.flutter.pigeon.flutter_inappwebview_android.HeadlessWebViewHostApi.setSize$separatedMessageChannelSuffix", codec)
+        val channel = BasicMessageChannel<Any?>(binaryMessenger, "dev.flutter.pigeon.nosferatu500_inappwebview_android.HeadlessWebViewHostApi.setSize$separatedMessageChannelSuffix", codec)
         if (api != null) {
           channel.setMessageHandler { message, reply ->
             val args = message as List<Any?>
@@ -322,7 +322,7 @@ interface HeadlessWebViewHostApi {
         }
       }
       run {
-        val channel = BasicMessageChannel<Any?>(binaryMessenger, "dev.flutter.pigeon.flutter_inappwebview_android.HeadlessWebViewHostApi.getSize$separatedMessageChannelSuffix", codec)
+        val channel = BasicMessageChannel<Any?>(binaryMessenger, "dev.flutter.pigeon.nosferatu500_inappwebview_android.HeadlessWebViewHostApi.getSize$separatedMessageChannelSuffix", codec)
         if (api != null) {
           channel.setMessageHandler { _, reply ->
             val wrapped: List<Any?> = try {
@@ -358,7 +358,7 @@ class HeadlessWebViewFlutterApi(private val binaryMessenger: BinaryMessenger, pr
   fun onWebViewCreated(callback: (Result<Unit>) -> Unit)
 {
     val separatedMessageChannelSuffix = if (messageChannelSuffix.isNotEmpty()) ".$messageChannelSuffix" else ""
-    val channelName = "dev.flutter.pigeon.flutter_inappwebview_android.HeadlessWebViewFlutterApi.onWebViewCreated$separatedMessageChannelSuffix"
+    val channelName = "dev.flutter.pigeon.nosferatu500_inappwebview_android.HeadlessWebViewFlutterApi.onWebViewCreated$separatedMessageChannelSuffix"
     val channel = BasicMessageChannel<Any?>(binaryMessenger, channelName, codec)
     channel.send(null) {
       if (it is List<*>) {
@@ -398,7 +398,7 @@ interface HeadlessInAppWebViewManagerHostApi {
     fun setUp(binaryMessenger: BinaryMessenger, api: HeadlessInAppWebViewManagerHostApi?, messageChannelSuffix: String = "") {
       val separatedMessageChannelSuffix = if (messageChannelSuffix.isNotEmpty()) ".$messageChannelSuffix" else ""
       run {
-        val channel = BasicMessageChannel<Any?>(binaryMessenger, "dev.flutter.pigeon.flutter_inappwebview_android.HeadlessInAppWebViewManagerHostApi.run$separatedMessageChannelSuffix", codec)
+        val channel = BasicMessageChannel<Any?>(binaryMessenger, "dev.flutter.pigeon.nosferatu500_inappwebview_android.HeadlessInAppWebViewManagerHostApi.run$separatedMessageChannelSuffix", codec)
         if (api != null) {
           channel.setMessageHandler { message, reply ->
             val args = message as List<Any?>

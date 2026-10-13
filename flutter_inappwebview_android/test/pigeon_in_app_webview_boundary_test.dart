@@ -1,7 +1,7 @@
 import 'package:flutter/services.dart';
-import 'package:flutter_inappwebview_android/flutter_inappwebview_android.dart';
-import 'package:flutter_inappwebview_android/src/pigeons/in_app_webview.g.dart';
-import 'package:flutter_inappwebview_platform_interface/flutter_inappwebview_platform_interface.dart';
+import 'package:nosferatu500_inappwebview_android/nosferatu500_inappwebview_android.dart';
+import 'package:nosferatu500_inappwebview_android/src/pigeons/in_app_webview.g.dart';
+import 'package:nosferatu500_inappwebview_platform_interface/nosferatu500_inappwebview_platform_interface.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 /// Runtime coverage for the per-WebView channel's Pigeon slices on `InAppWebViewHostApi`: W1
@@ -15,7 +15,7 @@ void main() {
 
   const codec = InAppWebViewHostApi.pigeonChannelCodec;
   const prefix =
-      'dev.flutter.pigeon.flutter_inappwebview_android.InAppWebViewHostApi';
+      'dev.flutter.pigeon.nosferatu500_inappwebview_android.InAppWebViewHostApi';
   final messenger =
       TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger;
 

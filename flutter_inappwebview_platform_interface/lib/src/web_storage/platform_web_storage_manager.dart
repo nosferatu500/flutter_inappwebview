@@ -1,7 +1,7 @@
 import 'dart:async';
 
 import 'package:flutter/foundation.dart';
-import 'package:flutter_inappwebview_internal_annotations/flutter_inappwebview_internal_annotations.dart';
+import 'package:nosferatu500_inappwebview_internal_annotations/nosferatu500_inappwebview_internal_annotations.dart';
 import 'package:plugin_platform_interface/plugin_platform_interface.dart';
 
 import '../inappwebview_platform.dart';
@@ -9,14 +9,14 @@ import '../types/main.dart';
 
 part 'platform_web_storage_manager.g.dart';
 
-///{@template flutter_inappwebview_platform_interface.PlatformWebStorageManagerCreationParams}
+///{@template nosferatu500_inappwebview_platform_interface.PlatformWebStorageManagerCreationParams}
 /// Object specifying creation parameters for creating a [PlatformWebStorageManager].
 ///
 /// Platform specific implementations can add additional fields by extending
 /// this class.
 ///{@endtemplate}
 ///
-///{@macro flutter_inappwebview_platform_interface.PlatformWebStorageManagerCreationParams.supported_platforms}
+///{@macro nosferatu500_inappwebview_platform_interface.PlatformWebStorageManagerCreationParams.supported_platforms}
 @SupportedPlatforms(
   platforms: [
     AndroidPlatform(),
@@ -28,7 +28,7 @@ class PlatformWebStorageManagerCreationParams {
   /// Used by the platform implementation to create a new [PlatformWebStorageManager].
   const PlatformWebStorageManagerCreationParams();
 
-  ///{@template flutter_inappwebview_platform_interface.PlatformWebStorageManagerCreationParams.isClassSupported}
+  ///{@template nosferatu500_inappwebview_platform_interface.PlatformWebStorageManagerCreationParams.isClassSupported}
   ///Check if the current class is supported by the [defaultTargetPlatform] or a specific [platform].
   ///{@endtemplate}
   bool isClassSupported({TargetPlatform? platform}) =>
@@ -37,7 +37,7 @@ class PlatformWebStorageManagerCreationParams {
       );
 }
 
-///{@template flutter_inappwebview_platform_interface.PlatformWebStorageManager}
+///{@template nosferatu500_inappwebview_platform_interface.PlatformWebStorageManager}
 ///Class that implements a singleton object (shared instance) which manages the web storage used by WebView instances.
 ///
 ///Every method here operates on the default profile's storage unless a `profileName` is given. On
@@ -55,7 +55,7 @@ class PlatformWebStorageManagerCreationParams {
 ///back to the default profile. Use [PlatformProfileStore] to create profiles.
 ///{@endtemplate}
 ///
-///{@macro flutter_inappwebview_platform_interface.PlatformWebStorageManager.supported_platforms}
+///{@macro nosferatu500_inappwebview_platform_interface.PlatformWebStorageManager.supported_platforms}
 @SupportedPlatforms(
   platforms: [
     AndroidPlatform(
@@ -78,7 +78,7 @@ abstract class PlatformWebStorageManager extends PlatformInterface {
   ) {
     assert(
       InAppWebViewPlatform.instance != null,
-      'A platform implementation for `flutter_inappwebview` has not been set. Please '
+      'A platform implementation for `nosferatu500_inappwebview` has not been set. Please '
       'ensure that an implementation of `InAppWebViewPlatform` has been set to '
       '`WebViewPlatform.instance` before use. For unit testing, '
       '`WebViewPlatform.instance` can be set with your own test implementation.',
@@ -94,7 +94,7 @@ abstract class PlatformWebStorageManager extends PlatformInterface {
   factory PlatformWebStorageManager.static() {
     assert(
       InAppWebViewPlatform.instance != null,
-      'A platform implementation for `flutter_inappwebview` has not been set. Please '
+      'A platform implementation for `nosferatu500_inappwebview` has not been set. Please '
       'ensure that an implementation of `InAppWebViewPlatform` has been set to '
       '`WebViewPlatform.instance` before use. For unit testing, '
       '`WebViewPlatform.instance` can be set with your own test implementation.',
@@ -118,7 +118,7 @@ abstract class PlatformWebStorageManager extends PlatformInterface {
   /// The parameters used to initialize the [PlatformWebStorageManager].
   final PlatformWebStorageManagerCreationParams params;
 
-  ///{@template flutter_inappwebview_platform_interface.PlatformWebStorageManager.getOrigins}
+  ///{@template nosferatu500_inappwebview_platform_interface.PlatformWebStorageManager.getOrigins}
   ///Gets the origins that hold quota-managed storage, each with its usage and quota.
   ///
   ///On Android an origin is listed once it uses IndexedDB, Cache Storage, the origin-private file
@@ -129,7 +129,7 @@ abstract class PlatformWebStorageManager extends PlatformInterface {
   ///current WebViews no longer have.
   ///{@endtemplate}
   ///
-  ///{@macro flutter_inappwebview_platform_interface.PlatformWebStorageManager.getOrigins.supported_platforms}
+  ///{@macro nosferatu500_inappwebview_platform_interface.PlatformWebStorageManager.getOrigins.supported_platforms}
   @SupportedPlatforms(
     platforms: [
       AndroidPlatform(
@@ -147,7 +147,7 @@ abstract class PlatformWebStorageManager extends PlatformInterface {
     );
   }
 
-  ///{@template flutter_inappwebview_platform_interface.PlatformWebStorageManager.deleteAllData}
+  ///{@template nosferatu500_inappwebview_platform_interface.PlatformWebStorageManager.deleteAllData}
   ///Clears every origin's IndexedDB, origin-private file system and `localStorage` data.
   ///
   ///Not everything [getOrigins] counts: on Android, Cache Storage, service worker registrations and
@@ -160,7 +160,7 @@ abstract class PlatformWebStorageManager extends PlatformInterface {
   ///[deleteOrigin].
   ///{@endtemplate}
   ///
-  ///{@macro flutter_inappwebview_platform_interface.PlatformWebStorageManager.deleteAllData.supported_platforms}
+  ///{@macro nosferatu500_inappwebview_platform_interface.PlatformWebStorageManager.deleteAllData.supported_platforms}
   @SupportedPlatforms(
     platforms: [
       AndroidPlatform(
@@ -178,7 +178,7 @@ abstract class PlatformWebStorageManager extends PlatformInterface {
     );
   }
 
-  ///{@template flutter_inappwebview_platform_interface.PlatformWebStorageManager.deleteOrigin}
+  ///{@template nosferatu500_inappwebview_platform_interface.PlatformWebStorageManager.deleteOrigin}
   ///Clears the IndexedDB and origin-private file system data of the given [origin], specified
   ///using its string representation (with or without a trailing `/`).
   ///
@@ -197,7 +197,7 @@ abstract class PlatformWebStorageManager extends PlatformInterface {
   ///[WebViewFeature.MULTI_PROFILE] is missing), in which case nothing was deleted.
   ///{@endtemplate}
   ///
-  ///{@macro flutter_inappwebview_platform_interface.PlatformWebStorageManager.deleteOrigin.supported_platforms}
+  ///{@macro nosferatu500_inappwebview_platform_interface.PlatformWebStorageManager.deleteOrigin.supported_platforms}
   @SupportedPlatforms(
     platforms: [
       AndroidPlatform(
@@ -216,7 +216,7 @@ abstract class PlatformWebStorageManager extends PlatformInterface {
     );
   }
 
-  ///{@template flutter_inappwebview_platform_interface.PlatformWebStorageManager.deleteBrowsingData}
+  ///{@template nosferatu500_inappwebview_platform_interface.PlatformWebStorageManager.deleteBrowsingData}
   ///Deletes all the data stored by websites.
   ///
   ///This is stronger than each of the narrower clearing methods, which keep what they don't name.
@@ -238,7 +238,7 @@ abstract class PlatformWebStorageManager extends PlatformInterface {
   ///[WebViewFeature.DELETE_BROWSING_DATA] is not supported, in which case nothing was deleted.
   ///{@endtemplate}
   ///
-  ///{@macro flutter_inappwebview_platform_interface.PlatformWebStorageManager.deleteBrowsingData.supported_platforms}
+  ///{@macro nosferatu500_inappwebview_platform_interface.PlatformWebStorageManager.deleteBrowsingData.supported_platforms}
   @SupportedPlatforms(
     platforms: [
       AndroidPlatform(
@@ -258,7 +258,7 @@ abstract class PlatformWebStorageManager extends PlatformInterface {
     );
   }
 
-  ///{@template flutter_inappwebview_platform_interface.PlatformWebStorageManager.deleteBrowsingDataForSite}
+  ///{@template nosferatu500_inappwebview_platform_interface.PlatformWebStorageManager.deleteBrowsingDataForSite}
   ///Deletes the data stored by websites for the given [site].
   ///
   ///[site] can be a domain name or a full URL. Deletion happens at the
@@ -277,7 +277,7 @@ abstract class PlatformWebStorageManager extends PlatformInterface {
   ///Throws a `PlatformException` if [site] cannot be parsed as a domain name.
   ///{@endtemplate}
   ///
-  ///{@macro flutter_inappwebview_platform_interface.PlatformWebStorageManager.deleteBrowsingDataForSite.supported_platforms}
+  ///{@macro nosferatu500_inappwebview_platform_interface.PlatformWebStorageManager.deleteBrowsingDataForSite.supported_platforms}
   @SupportedPlatforms(
     platforms: [
       AndroidPlatform(
@@ -298,7 +298,7 @@ abstract class PlatformWebStorageManager extends PlatformInterface {
     );
   }
 
-  ///{@template flutter_inappwebview_platform_interface.PlatformWebStorageManager.getQuotaForOrigin}
+  ///{@template nosferatu500_inappwebview_platform_interface.PlatformWebStorageManager.getQuotaForOrigin}
   ///Gets the storage quota for the given [origin], in bytes. The origin is specified using its
   ///string representation.
   ///
@@ -310,7 +310,7 @@ abstract class PlatformWebStorageManager extends PlatformInterface {
   ///`profileName` while [WebViewFeature.MULTI_PROFILE] is missing), so a real `0` means `0`.
   ///{@endtemplate}
   ///
-  ///{@macro flutter_inappwebview_platform_interface.PlatformWebStorageManager.getQuotaForOrigin.supported_platforms}
+  ///{@macro nosferatu500_inappwebview_platform_interface.PlatformWebStorageManager.getQuotaForOrigin.supported_platforms}
   @SupportedPlatforms(
     platforms: [
       AndroidPlatform(
@@ -329,7 +329,7 @@ abstract class PlatformWebStorageManager extends PlatformInterface {
     );
   }
 
-  ///{@template flutter_inappwebview_platform_interface.PlatformWebStorageManager.getUsageForOrigin}
+  ///{@template nosferatu500_inappwebview_platform_interface.PlatformWebStorageManager.getUsageForOrigin}
   ///Gets the amount of storage the given [origin] currently uses, in bytes. The origin is specified
   ///using its string representation.
   ///
@@ -341,7 +341,7 @@ abstract class PlatformWebStorageManager extends PlatformInterface {
   ///`profileName` while [WebViewFeature.MULTI_PROFILE] is missing), so a real `0` means `0`.
   ///{@endtemplate}
   ///
-  ///{@macro flutter_inappwebview_platform_interface.PlatformWebStorageManager.getUsageForOrigin.supported_platforms}
+  ///{@macro nosferatu500_inappwebview_platform_interface.PlatformWebStorageManager.getUsageForOrigin.supported_platforms}
   @SupportedPlatforms(
     platforms: [
       AndroidPlatform(
@@ -360,13 +360,13 @@ abstract class PlatformWebStorageManager extends PlatformInterface {
     );
   }
 
-  ///{@template flutter_inappwebview_platform_interface.PlatformWebStorageManager.fetchDataRecords}
+  ///{@template nosferatu500_inappwebview_platform_interface.PlatformWebStorageManager.fetchDataRecords}
   ///Fetches data records containing the given website data types.
   ///
   ///[dataTypes] represents the website data types to fetch records for.
   ///{@endtemplate}
   ///
-  ///{@macro flutter_inappwebview_platform_interface.PlatformWebStorageManager.fetchDataRecords.supported_platforms}
+  ///{@macro nosferatu500_inappwebview_platform_interface.PlatformWebStorageManager.fetchDataRecords.supported_platforms}
   @SupportedPlatforms(
     platforms: [
       IOSPlatform(
@@ -385,7 +385,7 @@ abstract class PlatformWebStorageManager extends PlatformInterface {
     );
   }
 
-  ///{@template flutter_inappwebview_platform_interface.PlatformWebStorageManager.removeDataFor}
+  ///{@template nosferatu500_inappwebview_platform_interface.PlatformWebStorageManager.removeDataFor}
   ///Removes website data of the given types for the given data records.
   ///
   ///[dataTypes] represents the website data types that should be removed.
@@ -393,7 +393,7 @@ abstract class PlatformWebStorageManager extends PlatformInterface {
   ///[dataRecords] represents the website data records to delete website data for.
   ///{@endtemplate}
   ///
-  ///{@macro flutter_inappwebview_platform_interface.PlatformWebStorageManager.removeDataFor.supported_platforms}
+  ///{@macro nosferatu500_inappwebview_platform_interface.PlatformWebStorageManager.removeDataFor.supported_platforms}
   @SupportedPlatforms(
     platforms: [
       IOSPlatform(
@@ -413,7 +413,7 @@ abstract class PlatformWebStorageManager extends PlatformInterface {
     );
   }
 
-  ///{@template flutter_inappwebview_platform_interface.PlatformWebStorageManager.removeDataModifiedSince}
+  ///{@template nosferatu500_inappwebview_platform_interface.PlatformWebStorageManager.removeDataModifiedSince}
   ///Removes all website data of the given types that has been modified since the given date.
   ///
   ///[dataTypes] represents the website data types that should be removed.
@@ -421,7 +421,7 @@ abstract class PlatformWebStorageManager extends PlatformInterface {
   ///[date] represents a date. All website data modified after this date will be removed.
   ///{@endtemplate}
   ///
-  ///{@macro flutter_inappwebview_platform_interface.PlatformWebStorageManager.removeDataModifiedSince.supported_platforms}
+  ///{@macro nosferatu500_inappwebview_platform_interface.PlatformWebStorageManager.removeDataModifiedSince.supported_platforms}
   @SupportedPlatforms(
     platforms: [
       IOSPlatform(
@@ -441,7 +441,7 @@ abstract class PlatformWebStorageManager extends PlatformInterface {
     );
   }
 
-  ///{@template flutter_inappwebview_platform_interface.PlatformWebStorageManager.isClassSupported}
+  ///{@template nosferatu500_inappwebview_platform_interface.PlatformWebStorageManager.isClassSupported}
   ///Check if the current class is supported by the [defaultTargetPlatform] or a specific [platform].
   ///{@endtemplate}
   bool isClassSupported({TargetPlatform? platform}) =>
@@ -449,7 +449,7 @@ abstract class PlatformWebStorageManager extends PlatformInterface {
         platform: platform,
       );
 
-  ///{@template flutter_inappwebview_platform_interface.PlatformWebStorageManager.isMethodSupported}
+  ///{@template nosferatu500_inappwebview_platform_interface.PlatformWebStorageManager.isMethodSupported}
   ///Check if the given [method] is supported by the [defaultTargetPlatform] or a specific [platform].
   ///{@endtemplate}
   bool isMethodSupported(

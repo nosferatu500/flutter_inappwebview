@@ -1,6 +1,6 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_inappwebview_platform_interface/flutter_inappwebview_platform_interface.dart';
+import 'package:nosferatu500_inappwebview_platform_interface/nosferatu500_inappwebview_platform_interface.dart';
 
 import '../find_interaction/find_interaction_controller.dart';
 import '../pigeons/headless_webview.g.dart';
@@ -216,7 +216,7 @@ class _HeadlessWebViewFlutterApiImpl implements HeadlessWebViewFlutterApi {
   }
 }
 
-///{@macro flutter_inappwebview_platform_interface.PlatformHeadlessInAppWebView}
+///{@macro nosferatu500_inappwebview_platform_interface.PlatformHeadlessInAppWebView}
 ///
 /// Transport for the per-instance channel is Pigeon-generated ([HeadlessWebViewHostApi] /
 /// [HeadlessWebViewFlutterApi]) rather than a hand-written `MethodChannel`, and so, since §203, is

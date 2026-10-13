@@ -4,9 +4,9 @@ import 'package:flutter/services.dart';
 // `init` lives on the internal extension, and the event callback can only be
 // supplied through creation params, so the test drives the controller exactly
 // the way `InAppWebViewController` does at runtime.
-import 'package:flutter_inappwebview_android/src/find_interaction/find_interaction_controller.dart';
-import 'package:flutter_inappwebview_android/src/pigeons/find_interaction.g.dart';
-import 'package:flutter_inappwebview_platform_interface/flutter_inappwebview_platform_interface.dart';
+import 'package:nosferatu500_inappwebview_android/src/find_interaction/find_interaction_controller.dart';
+import 'package:nosferatu500_inappwebview_android/src/pigeons/find_interaction.g.dart';
+import 'package:nosferatu500_inappwebview_platform_interface/nosferatu500_inappwebview_platform_interface.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 /// Runtime coverage for the **only** channel migrated to Pigeon so far (§14,
@@ -40,11 +40,11 @@ void main() {
   const codec = FindInteractionHostApi.pigeonChannelCodec;
 
   String hostChannel(String method) =>
-      'dev.flutter.pigeon.flutter_inappwebview_android.FindInteractionHostApi'
+      'dev.flutter.pigeon.nosferatu500_inappwebview_android.FindInteractionHostApi'
       '.$method.$suffix';
 
   String flutterChannel(String method) =>
-      'dev.flutter.pigeon.flutter_inappwebview_android.FindInteractionFlutterApi'
+      'dev.flutter.pigeon.nosferatu500_inappwebview_android.FindInteractionFlutterApi'
       '.$method.$suffix';
 
   late AndroidFindInteractionController controller;

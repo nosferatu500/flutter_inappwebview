@@ -1,7 +1,7 @@
 import 'dart:async';
 
 import 'package:flutter/foundation.dart';
-import 'package:flutter_inappwebview_internal_annotations/flutter_inappwebview_internal_annotations.dart';
+import 'package:nosferatu500_inappwebview_internal_annotations/nosferatu500_inappwebview_internal_annotations.dart';
 import 'package:plugin_platform_interface/plugin_platform_interface.dart';
 
 import 'inappwebview_platform.dart';
@@ -10,21 +10,21 @@ import 'types/main.dart';
 
 part 'platform_service_worker_controller.g.dart';
 
-///{@template flutter_inappwebview_platform_interface.PlatformServiceWorkerControllerCreationParams}
+///{@template nosferatu500_inappwebview_platform_interface.PlatformServiceWorkerControllerCreationParams}
 /// Object specifying creation parameters for creating a [PlatformServiceWorkerController].
 ///
 /// Platform specific implementations can add additional fields by extending
 /// this class.
 ///{@endtemplate}
 ///
-///{@macro flutter_inappwebview_platform_interface.PlatformServiceWorkerControllerCreationParams.supported_platforms}
+///{@macro nosferatu500_inappwebview_platform_interface.PlatformServiceWorkerControllerCreationParams.supported_platforms}
 @SupportedPlatforms(platforms: [AndroidPlatform()])
 @immutable
 class PlatformServiceWorkerControllerCreationParams {
   /// Used by the platform implementation to create a new [PlatformServiceWorkerController].
   const PlatformServiceWorkerControllerCreationParams();
 
-  ///{@template flutter_inappwebview_platform_interface.PlatformServiceWorkerControllerCreationParams.isClassSupported}
+  ///{@template nosferatu500_inappwebview_platform_interface.PlatformServiceWorkerControllerCreationParams.isClassSupported}
   ///Check if the current class is supported by the [defaultTargetPlatform] or a specific [platform].
   ///{@endtemplate}
   bool isClassSupported({TargetPlatform? platform}) =>
@@ -33,7 +33,7 @@ class PlatformServiceWorkerControllerCreationParams {
       );
 }
 
-///{@template flutter_inappwebview_platform_interface.PlatformServiceWorkerController}
+///{@template nosferatu500_inappwebview_platform_interface.PlatformServiceWorkerController}
 ///Class that manages Service Workers used by `WebView`.
 ///
 ///The settings methods operate on the default profile unless a `profileName` is given. On Android,
@@ -52,7 +52,7 @@ class PlatformServiceWorkerControllerCreationParams {
 ///`profileName` would mean changing that event's public signature, which is a separate decision.
 ///{@endtemplate}
 ///
-///{@macro flutter_inappwebview_platform_interface.PlatformServiceWorkerControllerCreationParams.supported_platforms}
+///{@macro nosferatu500_inappwebview_platform_interface.PlatformServiceWorkerControllerCreationParams.supported_platforms}
 @SupportedPlatforms(
   platforms: [
     AndroidPlatform(
@@ -69,7 +69,7 @@ abstract class PlatformServiceWorkerController extends PlatformInterface {
   ) {
     assert(
       InAppWebViewPlatform.instance != null,
-      'A platform implementation for `flutter_inappwebview` has not been set. Please '
+      'A platform implementation for `nosferatu500_inappwebview` has not been set. Please '
       'ensure that an implementation of `InAppWebViewPlatform` has been set to '
       '`WebViewPlatform.instance` before use. For unit testing, '
       '`WebViewPlatform.instance` can be set with your own test implementation.',
@@ -86,7 +86,7 @@ abstract class PlatformServiceWorkerController extends PlatformInterface {
   factory PlatformServiceWorkerController.static() {
     assert(
       InAppWebViewPlatform.instance != null,
-      'A platform implementation for `flutter_inappwebview` has not been set. Please '
+      'A platform implementation for `nosferatu500_inappwebview` has not been set. Please '
       'ensure that an implementation of `InAppWebViewPlatform` has been set to '
       '`WebViewPlatform.instance` before use. For unit testing, '
       '`WebViewPlatform.instance` can be set with your own test implementation.',
@@ -112,17 +112,17 @@ abstract class PlatformServiceWorkerController extends PlatformInterface {
   /// The parameters used to initialize the [PlatformServiceWorkerController].
   final PlatformServiceWorkerControllerCreationParams params;
 
-  ///{@template flutter_inappwebview_platform_interface.PlatformServiceWorkerController.serviceWorkerClient}
+  ///{@template nosferatu500_inappwebview_platform_interface.PlatformServiceWorkerController.serviceWorkerClient}
   ///Service Worker client.
   ///{@endtemplate}
   ServiceWorkerClient? get serviceWorkerClient;
 
-  ///{@template flutter_inappwebview_platform_interface.PlatformServiceWorkerController.setServiceWorkerClient}
+  ///{@template nosferatu500_inappwebview_platform_interface.PlatformServiceWorkerController.setServiceWorkerClient}
   ///Sets the client to capture service worker related callbacks.
   ///A [ServiceWorkerClient] should be set before any service workers are active, e.g. a safe place is before any WebView instances are created or pages loaded.
   ///{@endtemplate}
   ///
-  ///{@macro flutter_inappwebview_platform_interface.PlatformServiceWorkerController.setServiceWorkerClient.supported_platforms}
+  ///{@macro nosferatu500_inappwebview_platform_interface.PlatformServiceWorkerController.setServiceWorkerClient.supported_platforms}
   @SupportedPlatforms(
     platforms: [
       AndroidPlatform(
@@ -138,12 +138,12 @@ abstract class PlatformServiceWorkerController extends PlatformInterface {
     );
   }
 
-  ///{@template flutter_inappwebview_platform_interface.PlatformServiceWorkerController.getAllowContentAccess}
+  ///{@template nosferatu500_inappwebview_platform_interface.PlatformServiceWorkerController.getAllowContentAccess}
   ///Gets whether Service Workers support content URL access.
   ///This method should only be called if [WebViewFeature.isFeatureSupported] returns `true` for [WebViewFeature.SERVICE_WORKER_CONTENT_ACCESS].
   ///{@endtemplate}
   ///
-  ///{@macro flutter_inappwebview_platform_interface.PlatformServiceWorkerController.getAllowContentAccess.supported_platforms}
+  ///{@macro nosferatu500_inappwebview_platform_interface.PlatformServiceWorkerController.getAllowContentAccess.supported_platforms}
   @SupportedPlatforms(
     platforms: [
       AndroidPlatform(
@@ -161,12 +161,12 @@ abstract class PlatformServiceWorkerController extends PlatformInterface {
     );
   }
 
-  ///{@template flutter_inappwebview_platform_interface.PlatformServiceWorkerController.getAllowFileAccess}
+  ///{@template nosferatu500_inappwebview_platform_interface.PlatformServiceWorkerController.getAllowFileAccess}
   ///Gets whether Service Workers support file access.
   ///This method should only be called if [WebViewFeature.isFeatureSupported] returns `true` for [WebViewFeature.SERVICE_WORKER_FILE_ACCESS].
   ///{@endtemplate}
   ///
-  ///{@macro flutter_inappwebview_platform_interface.PlatformServiceWorkerController.getAllowFileAccess.supported_platforms}
+  ///{@macro nosferatu500_inappwebview_platform_interface.PlatformServiceWorkerController.getAllowFileAccess.supported_platforms}
   @SupportedPlatforms(
     platforms: [
       AndroidPlatform(
@@ -184,12 +184,12 @@ abstract class PlatformServiceWorkerController extends PlatformInterface {
     );
   }
 
-  ///{@template flutter_inappwebview_platform_interface.PlatformServiceWorkerController.getBlockNetworkLoads}
+  ///{@template nosferatu500_inappwebview_platform_interface.PlatformServiceWorkerController.getBlockNetworkLoads}
   ///Gets whether Service Workers are prohibited from loading any resources from the network.
   ///This method should only be called if [WebViewFeature.isFeatureSupported] returns `true` for [WebViewFeature.SERVICE_WORKER_BLOCK_NETWORK_LOADS].
   ///{@endtemplate}
   ///
-  ///{@macro flutter_inappwebview_platform_interface.PlatformServiceWorkerController.getBlockNetworkLoads.supported_platforms}
+  ///{@macro nosferatu500_inappwebview_platform_interface.PlatformServiceWorkerController.getBlockNetworkLoads.supported_platforms}
   @SupportedPlatforms(
     platforms: [
       AndroidPlatform(
@@ -207,12 +207,12 @@ abstract class PlatformServiceWorkerController extends PlatformInterface {
     );
   }
 
-  ///{@template flutter_inappwebview_platform_interface.PlatformServiceWorkerController.getCacheMode}
+  ///{@template nosferatu500_inappwebview_platform_interface.PlatformServiceWorkerController.getCacheMode}
   ///Gets the current setting for overriding the cache mode.
   ///This method should only be called if [WebViewFeature.isFeatureSupported] returns `true` for [WebViewFeature.SERVICE_WORKER_CACHE_MODE].
   ///{@endtemplate}
   ///
-  ///{@macro flutter_inappwebview_platform_interface.PlatformServiceWorkerController.getCacheMode.supported_platforms}
+  ///{@macro nosferatu500_inappwebview_platform_interface.PlatformServiceWorkerController.getCacheMode.supported_platforms}
   @SupportedPlatforms(
     platforms: [
       AndroidPlatform(
@@ -230,7 +230,7 @@ abstract class PlatformServiceWorkerController extends PlatformInterface {
     );
   }
 
-  ///{@template flutter_inappwebview_platform_interface.PlatformServiceWorkerController.getIncludeCookiesOnShouldInterceptRequestEnabled}
+  ///{@template nosferatu500_inappwebview_platform_interface.PlatformServiceWorkerController.getIncludeCookiesOnShouldInterceptRequestEnabled}
   ///Gets whether requests intercepted for a Service Worker carry the `Cookie` header, and whether
   ///[WebResourceResponse.cookies] on the response is honoured.
   ///
@@ -252,7 +252,7 @@ abstract class PlatformServiceWorkerController extends PlatformInterface {
   ///become two.
   ///{@endtemplate}
   ///
-  ///{@macro flutter_inappwebview_platform_interface.PlatformServiceWorkerController.getIncludeCookiesOnShouldInterceptRequestEnabled.supported_platforms}
+  ///{@macro nosferatu500_inappwebview_platform_interface.PlatformServiceWorkerController.getIncludeCookiesOnShouldInterceptRequestEnabled.supported_platforms}
   @SupportedPlatforms(
     platforms: [
       AndroidPlatform(
@@ -274,7 +274,7 @@ abstract class PlatformServiceWorkerController extends PlatformInterface {
     );
   }
 
-  ///{@template flutter_inappwebview_platform_interface.PlatformServiceWorkerController.setIncludeCookiesOnShouldInterceptRequestEnabled}
+  ///{@template nosferatu500_inappwebview_platform_interface.PlatformServiceWorkerController.setIncludeCookiesOnShouldInterceptRequestEnabled}
   ///Enables or disables cookie access for requests intercepted on behalf of a Service Worker.
   ///
   ///Turning this on does two things at once, exactly as
@@ -291,7 +291,7 @@ abstract class PlatformServiceWorkerController extends PlatformInterface {
   ///for the default profile only.
   ///{@endtemplate}
   ///
-  ///{@macro flutter_inappwebview_platform_interface.PlatformServiceWorkerController.setIncludeCookiesOnShouldInterceptRequestEnabled.supported_platforms}
+  ///{@macro nosferatu500_inappwebview_platform_interface.PlatformServiceWorkerController.setIncludeCookiesOnShouldInterceptRequestEnabled.supported_platforms}
   @SupportedPlatforms(
     platforms: [
       AndroidPlatform(
@@ -314,12 +314,12 @@ abstract class PlatformServiceWorkerController extends PlatformInterface {
     );
   }
 
-  ///{@template flutter_inappwebview_platform_interface.PlatformServiceWorkerController.setAllowContentAccess}
+  ///{@template nosferatu500_inappwebview_platform_interface.PlatformServiceWorkerController.setAllowContentAccess}
   ///Enables or disables content URL access from Service Workers.
   ///This method should only be called if [WebViewFeature.isFeatureSupported] returns `true` for [WebViewFeature.SERVICE_WORKER_CONTENT_ACCESS].
   ///{@endtemplate}
   ///
-  ///{@macro flutter_inappwebview_platform_interface.PlatformServiceWorkerController.setAllowContentAccess.supported_platforms}
+  ///{@macro nosferatu500_inappwebview_platform_interface.PlatformServiceWorkerController.setAllowContentAccess.supported_platforms}
   @SupportedPlatforms(
     platforms: [
       AndroidPlatform(
@@ -338,12 +338,12 @@ abstract class PlatformServiceWorkerController extends PlatformInterface {
     );
   }
 
-  ///{@template flutter_inappwebview_platform_interface.PlatformServiceWorkerController.setAllowFileAccess}
+  ///{@template nosferatu500_inappwebview_platform_interface.PlatformServiceWorkerController.setAllowFileAccess}
   ///Enables or disables file access within Service Workers.
   ///This method should only be called if [WebViewFeature.isFeatureSupported] returns `true` for [WebViewFeature.SERVICE_WORKER_FILE_ACCESS].
   ///{@endtemplate}
   ///
-  ///{@macro flutter_inappwebview_platform_interface.PlatformServiceWorkerController.setAllowFileAccess.supported_platforms}
+  ///{@macro nosferatu500_inappwebview_platform_interface.PlatformServiceWorkerController.setAllowFileAccess.supported_platforms}
   @SupportedPlatforms(
     platforms: [
       AndroidPlatform(
@@ -362,12 +362,12 @@ abstract class PlatformServiceWorkerController extends PlatformInterface {
     );
   }
 
-  ///{@template flutter_inappwebview_platform_interface.PlatformServiceWorkerController.setBlockNetworkLoads}
+  ///{@template nosferatu500_inappwebview_platform_interface.PlatformServiceWorkerController.setBlockNetworkLoads}
   ///Sets whether Service Workers should not load resources from the network.
   ///This method should only be called if [WebViewFeature.isFeatureSupported] returns `true` for [WebViewFeature.SERVICE_WORKER_BLOCK_NETWORK_LOADS].
   ///{@endtemplate}
   ///
-  ///{@macro flutter_inappwebview_platform_interface.PlatformServiceWorkerController.setBlockNetworkLoads.supported_platforms}
+  ///{@macro nosferatu500_inappwebview_platform_interface.PlatformServiceWorkerController.setBlockNetworkLoads.supported_platforms}
   @SupportedPlatforms(
     platforms: [
       AndroidPlatform(
@@ -386,12 +386,12 @@ abstract class PlatformServiceWorkerController extends PlatformInterface {
     );
   }
 
-  ///{@template flutter_inappwebview_platform_interface.PlatformServiceWorkerController.setCacheMode}
+  ///{@template nosferatu500_inappwebview_platform_interface.PlatformServiceWorkerController.setCacheMode}
   ///Overrides the way the cache is used.
   ///This method should only be called if [WebViewFeature.isFeatureSupported] returns `true` for [WebViewFeature.SERVICE_WORKER_CACHE_MODE].
   ///{@endtemplate}
   ///
-  ///{@macro flutter_inappwebview_platform_interface.PlatformServiceWorkerController.setCacheMode.supported_platforms}
+  ///{@macro nosferatu500_inappwebview_platform_interface.PlatformServiceWorkerController.setCacheMode.supported_platforms}
   @SupportedPlatforms(
     platforms: [
       AndroidPlatform(
@@ -410,11 +410,11 @@ abstract class PlatformServiceWorkerController extends PlatformInterface {
     );
   }
 
-  ///{@macro flutter_inappwebview_platform_interface.PlatformServiceWorkerControllerCreationParams.isClassSupported}
+  ///{@macro nosferatu500_inappwebview_platform_interface.PlatformServiceWorkerControllerCreationParams.isClassSupported}
   bool isClassSupported({TargetPlatform? platform}) =>
       params.isClassSupported(platform: platform);
 
-  ///{@template flutter_inappwebview_platform_interface.PlatformServiceWorkerController.isMethodSupported}
+  ///{@template nosferatu500_inappwebview_platform_interface.PlatformServiceWorkerController.isMethodSupported}
   ///Check if the given [method] is supported by the [defaultTargetPlatform] or a specific [platform].
   ///{@endtemplate}
   bool isMethodSupported(
@@ -426,11 +426,11 @@ abstract class PlatformServiceWorkerController extends PlatformInterface {
   );
 }
 
-///{@template flutter_inappwebview_platform_interface.ServiceWorkerClient}
+///{@template nosferatu500_inappwebview_platform_interface.ServiceWorkerClient}
 ///Class used by clients to capture Service Worker related callbacks.
 ///{@endtemplate}
 ///
-///{@macro flutter_inappwebview_platform_interface.ServiceWorkerClient.supported_platforms}
+///{@macro nosferatu500_inappwebview_platform_interface.ServiceWorkerClient.supported_platforms}
 @SupportedPlatforms(
   platforms: [
     AndroidPlatform(
@@ -441,7 +441,7 @@ abstract class PlatformServiceWorkerController extends PlatformInterface {
   ],
 )
 class ServiceWorkerClient {
-  ///{@template flutter_inappwebview_platform_interface.ServiceWorkerClient.shouldInterceptRequest}
+  ///{@template nosferatu500_inappwebview_platform_interface.ServiceWorkerClient.shouldInterceptRequest}
   ///Notify the host application of a resource request and allow the application to return the data.
   ///If the return value is `null`, the Service Worker will continue to load the resource as usual.
   ///Otherwise, the return response and data will be used.
@@ -452,7 +452,7 @@ class ServiceWorkerClient {
   ///[request] represents an object containing the details of the request.
   ///{@endtemplate}
   ///
-  ///{@macro flutter_inappwebview_platform_interface.ServiceWorkerClient.shouldInterceptRequest.supported_platforms}
+  ///{@macro nosferatu500_inappwebview_platform_interface.ServiceWorkerClient.shouldInterceptRequest.supported_platforms}
   @SupportedPlatforms(
     platforms: [
       AndroidPlatform(
@@ -467,13 +467,13 @@ class ServiceWorkerClient {
 
   ServiceWorkerClient({this.shouldInterceptRequest});
 
-  ///{@template flutter_inappwebview_platform_interface.ServiceWorkerClient.isClassSupported}
+  ///{@template nosferatu500_inappwebview_platform_interface.ServiceWorkerClient.isClassSupported}
   ///Check if the current class is supported by the [defaultTargetPlatform] or a specific [platform].
   ///{@endtemplate}
   static bool isClassSupported({TargetPlatform? platform}) =>
       _ServiceWorkerClientClassSupported.isClassSupported(platform: platform);
 
-  ///{@template flutter_inappwebview_platform_interface.ServiceWorkerClient.isPropertySupported}
+  ///{@template nosferatu500_inappwebview_platform_interface.ServiceWorkerClient.isPropertySupported}
   ///Check if the given [method] is supported by the [defaultTargetPlatform] or a specific [platform].
   ///{@endtemplate}
   static bool isPropertySupported(

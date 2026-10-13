@@ -1,8 +1,8 @@
 import 'dart:convert';
 
 import 'package:flutter/services.dart';
-import 'package:flutter_inappwebview_android/flutter_inappwebview_android.dart';
-import 'package:flutter_inappwebview_android/src/pigeons/in_app_webview.g.dart';
+import 'package:nosferatu500_inappwebview_android/nosferatu500_inappwebview_android.dart';
+import 'package:nosferatu500_inappwebview_android/src/pigeons/in_app_webview.g.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 /// Pins `getMetaThemeColor` to its only working path on Android: reading the `theme-color` meta
@@ -26,7 +26,7 @@ void main() {
     'dev.nosferatu500.inappwebview/inappwebview_11',
   );
   const evaluateJavascript =
-      'dev.flutter.pigeon.flutter_inappwebview_android.InAppWebViewHostApi.'
+      'dev.flutter.pigeon.nosferatu500_inappwebview_android.InAppWebViewHostApi.'
       'evaluateJavascript.inappwebview_11';
   const codec = InAppWebViewHostApi.pigeonChannelCodec;
 

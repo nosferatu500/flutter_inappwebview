@@ -1,7 +1,7 @@
 import 'dart:async';
 
 import 'package:flutter/foundation.dart';
-import 'package:flutter_inappwebview_internal_annotations/flutter_inappwebview_internal_annotations.dart';
+import 'package:nosferatu500_inappwebview_internal_annotations/nosferatu500_inappwebview_internal_annotations.dart';
 import 'package:plugin_platform_interface/plugin_platform_interface.dart';
 
 import 'inappwebview_platform.dart';
@@ -10,21 +10,21 @@ import 'types/custom_header.dart';
 
 part 'platform_profile_store.g.dart';
 
-///{@template flutter_inappwebview_platform_interface.PlatformProfileStoreCreationParams}
+///{@template nosferatu500_inappwebview_platform_interface.PlatformProfileStoreCreationParams}
 /// Object specifying creation parameters for creating a [PlatformProfileStore].
 ///
 /// Platform specific implementations can add additional fields by extending
 /// this class.
 ///{@endtemplate}
 ///
-///{@macro flutter_inappwebview_platform_interface.PlatformProfileStoreCreationParams.supported_platforms}
+///{@macro nosferatu500_inappwebview_platform_interface.PlatformProfileStoreCreationParams.supported_platforms}
 @SupportedPlatforms(platforms: [AndroidPlatform()])
 @immutable
 class PlatformProfileStoreCreationParams {
   /// Used by the platform implementation to create a new [PlatformProfileStore].
   const PlatformProfileStoreCreationParams();
 
-  ///{@template flutter_inappwebview_platform_interface.PlatformProfileStoreCreationParams.isClassSupported}
+  ///{@template nosferatu500_inappwebview_platform_interface.PlatformProfileStoreCreationParams.isClassSupported}
   ///Check if the current class is supported by the [defaultTargetPlatform] or a specific [platform].
   ///{@endtemplate}
   bool isClassSupported({TargetPlatform? platform}) =>
@@ -33,7 +33,7 @@ class PlatformProfileStoreCreationParams {
       );
 }
 
-///{@template flutter_inappwebview_platform_interface.PlatformProfileStore}
+///{@template nosferatu500_inappwebview_platform_interface.PlatformProfileStore}
 ///Manages the creation and deletion of WebView browsing profiles.
 ///
 ///A profile is one browsing session: it owns its own cookies, its own web storage, its own
@@ -49,7 +49,7 @@ class PlatformProfileStoreCreationParams {
 ///cannot be deleted.
 ///{@endtemplate}
 ///
-///{@macro flutter_inappwebview_platform_interface.PlatformProfileStore.supported_platforms}
+///{@macro nosferatu500_inappwebview_platform_interface.PlatformProfileStore.supported_platforms}
 @SupportedPlatforms(
   platforms: [
     AndroidPlatform(
@@ -66,7 +66,7 @@ abstract class PlatformProfileStore extends PlatformInterface {
   factory PlatformProfileStore(PlatformProfileStoreCreationParams params) {
     assert(
       InAppWebViewPlatform.instance != null,
-      'A platform implementation for `flutter_inappwebview` has not been set. Please '
+      'A platform implementation for `nosferatu500_inappwebview` has not been set. Please '
       'ensure that an implementation of `InAppWebViewPlatform` has been set to '
       '`WebViewPlatform.instance` before use. For unit testing, '
       '`WebViewPlatform.instance` can be set with your own test implementation.',
@@ -81,7 +81,7 @@ abstract class PlatformProfileStore extends PlatformInterface {
   factory PlatformProfileStore.static() {
     assert(
       InAppWebViewPlatform.instance != null,
-      'A platform implementation for `flutter_inappwebview` has not been set. Please '
+      'A platform implementation for `nosferatu500_inappwebview` has not been set. Please '
       'ensure that an implementation of `InAppWebViewPlatform` has been set to '
       '`InAppWebViewPlatform.instance` before use. For unit testing, '
       '`InAppWebViewPlatform.instance` can be set with your own test implementation.',
@@ -106,7 +106,7 @@ abstract class PlatformProfileStore extends PlatformInterface {
   /// The parameters used to initialize the [PlatformProfileStore].
   final PlatformProfileStoreCreationParams params;
 
-  ///{@template flutter_inappwebview_platform_interface.PlatformProfileStore.defaultProfileName}
+  ///{@template nosferatu500_inappwebview_platform_interface.PlatformProfileStore.defaultProfileName}
   ///The name of the profile every WebView uses unless [InAppWebViewSettings.profileName] says
   ///otherwise.
   ///
@@ -115,7 +115,7 @@ abstract class PlatformProfileStore extends PlatformInterface {
   ///{@endtemplate}
   static const String defaultProfileName = 'Default';
 
-  ///{@template flutter_inappwebview_platform_interface.PlatformProfileStore.getAllProfileNames}
+  ///{@template nosferatu500_inappwebview_platform_interface.PlatformProfileStore.getAllProfileNames}
   ///Returns the names of every profile that currently exists, including [defaultProfileName].
   ///
   ///This is also the right way to test whether a profile exists. The native API has a lookup that
@@ -126,7 +126,7 @@ abstract class PlatformProfileStore extends PlatformInterface {
   ///Returns an empty list when [WebViewFeature.MULTI_PROFILE] is not supported.
   ///{@endtemplate}
   ///
-  ///{@macro flutter_inappwebview_platform_interface.PlatformProfileStore.getAllProfileNames.supported_platforms}
+  ///{@macro nosferatu500_inappwebview_platform_interface.PlatformProfileStore.getAllProfileNames.supported_platforms}
   @SupportedPlatforms(
     platforms: [
       AndroidPlatform(
@@ -144,7 +144,7 @@ abstract class PlatformProfileStore extends PlatformInterface {
     );
   }
 
-  ///{@template flutter_inappwebview_platform_interface.PlatformProfileStore.getOrCreateProfile}
+  ///{@template nosferatu500_inappwebview_platform_interface.PlatformProfileStore.getOrCreateProfile}
   ///Creates the profile called [name] if it does not exist yet, and returns its name.
   ///
   ///The returned name is the profile's own name as the platform reports it, so it can be handed
@@ -160,7 +160,7 @@ abstract class PlatformProfileStore extends PlatformInterface {
   ///was created.
   ///{@endtemplate}
   ///
-  ///{@macro flutter_inappwebview_platform_interface.PlatformProfileStore.getOrCreateProfile.supported_platforms}
+  ///{@macro nosferatu500_inappwebview_platform_interface.PlatformProfileStore.getOrCreateProfile.supported_platforms}
   @SupportedPlatforms(
     platforms: [
       AndroidPlatform(
@@ -178,7 +178,7 @@ abstract class PlatformProfileStore extends PlatformInterface {
     );
   }
 
-  ///{@template flutter_inappwebview_platform_interface.PlatformProfileStore.deleteProfile}
+  ///{@template nosferatu500_inappwebview_platform_interface.PlatformProfileStore.deleteProfile}
   ///Deletes the profile called [name] and the data it owns.
   ///
   ///Returns `true` if the profile existed and its data is being deleted, `false` if there was no
@@ -196,7 +196,7 @@ abstract class PlatformProfileStore extends PlatformInterface {
   ///- [name] is [defaultProfileName], which can never be deleted.
   ///{@endtemplate}
   ///
-  ///{@macro flutter_inappwebview_platform_interface.PlatformProfileStore.deleteProfile.supported_platforms}
+  ///{@macro nosferatu500_inappwebview_platform_interface.PlatformProfileStore.deleteProfile.supported_platforms}
   @SupportedPlatforms(
     platforms: [
       AndroidPlatform(
@@ -214,7 +214,7 @@ abstract class PlatformProfileStore extends PlatformInterface {
     );
   }
 
-  ///{@template flutter_inappwebview_platform_interface.PlatformProfileStore.addCustomHeader}
+  ///{@template nosferatu500_inappwebview_platform_interface.PlatformProfileStore.addCustomHeader}
   ///Adds a [CustomHeader] sent on every request this profile makes to an origin matching the
   ///header's [CustomHeader.originRules].
   ///
@@ -231,7 +231,7 @@ abstract class PlatformProfileStore extends PlatformInterface {
   ///profile has that [profileName]. `true` otherwise.
   ///{@endtemplate}
   ///
-  ///{@macro flutter_inappwebview_platform_interface.PlatformProfileStore.addCustomHeader.supported_platforms}
+  ///{@macro nosferatu500_inappwebview_platform_interface.PlatformProfileStore.addCustomHeader.supported_platforms}
   @SupportedPlatforms(
     platforms: [
       AndroidPlatform(
@@ -253,7 +253,7 @@ abstract class PlatformProfileStore extends PlatformInterface {
     );
   }
 
-  ///{@template flutter_inappwebview_platform_interface.PlatformProfileStore.hasCustomHeader}
+  ///{@template nosferatu500_inappwebview_platform_interface.PlatformProfileStore.hasCustomHeader}
   ///Whether this profile has any custom header with the given [headerName], **case-insensitively**.
   ///
   ///Returns `null` when the profile can't be reached:
@@ -261,7 +261,7 @@ abstract class PlatformProfileStore extends PlatformInterface {
   ///profile has that [profileName], so `false` always means no such header.
   ///{@endtemplate}
   ///
-  ///{@macro flutter_inappwebview_platform_interface.PlatformProfileStore.hasCustomHeader.supported_platforms}
+  ///{@macro nosferatu500_inappwebview_platform_interface.PlatformProfileStore.hasCustomHeader.supported_platforms}
   @SupportedPlatforms(
     platforms: [
       AndroidPlatform(
@@ -283,7 +283,7 @@ abstract class PlatformProfileStore extends PlatformInterface {
     );
   }
 
-  ///{@template flutter_inappwebview_platform_interface.PlatformProfileStore.getCustomHeaders}
+  ///{@template nosferatu500_inappwebview_platform_interface.PlatformProfileStore.getCustomHeaders}
   ///All custom headers set on this profile.
   ///
   ///Pass [headerName] to keep only headers with that name (case-insensitive), and [headerValue]
@@ -296,7 +296,7 @@ abstract class PlatformProfileStore extends PlatformInterface {
   ///returns `null` in that case, so use it to tell them apart.
   ///{@endtemplate}
   ///
-  ///{@macro flutter_inappwebview_platform_interface.PlatformProfileStore.getCustomHeaders.supported_platforms}
+  ///{@macro nosferatu500_inappwebview_platform_interface.PlatformProfileStore.getCustomHeaders.supported_platforms}
   @SupportedPlatforms(
     platforms: [
       AndroidPlatform(
@@ -319,7 +319,7 @@ abstract class PlatformProfileStore extends PlatformInterface {
     );
   }
 
-  ///{@template flutter_inappwebview_platform_interface.PlatformProfileStore.clearCustomHeader}
+  ///{@template nosferatu500_inappwebview_platform_interface.PlatformProfileStore.clearCustomHeader}
   ///Removes custom headers with the given [headerName] (case-insensitive).
   ///
   ///Pass [headerValue] to remove only the header with that exact value (case-sensitive), leaving
@@ -330,7 +330,7 @@ abstract class PlatformProfileStore extends PlatformInterface {
   ///nothing matches it is a no-op that still returns `true`.
   ///{@endtemplate}
   ///
-  ///{@macro flutter_inappwebview_platform_interface.PlatformProfileStore.clearCustomHeader.supported_platforms}
+  ///{@macro nosferatu500_inappwebview_platform_interface.PlatformProfileStore.clearCustomHeader.supported_platforms}
   @SupportedPlatforms(
     platforms: [
       AndroidPlatform(
@@ -353,14 +353,14 @@ abstract class PlatformProfileStore extends PlatformInterface {
     );
   }
 
-  ///{@template flutter_inappwebview_platform_interface.PlatformProfileStore.clearAllCustomHeaders}
+  ///{@template nosferatu500_inappwebview_platform_interface.PlatformProfileStore.clearAllCustomHeaders}
   ///Removes every custom header from this profile.
   ///
   ///Returns `false`, having removed nothing, when the profile can't be reached (as for
   ///[addCustomHeader]). `true` otherwise.
   ///{@endtemplate}
   ///
-  ///{@macro flutter_inappwebview_platform_interface.PlatformProfileStore.clearAllCustomHeaders.supported_platforms}
+  ///{@macro nosferatu500_inappwebview_platform_interface.PlatformProfileStore.clearAllCustomHeaders.supported_platforms}
   @SupportedPlatforms(
     platforms: [
       AndroidPlatform(
@@ -381,11 +381,11 @@ abstract class PlatformProfileStore extends PlatformInterface {
     );
   }
 
-  ///{@macro flutter_inappwebview_platform_interface.PlatformProfileStoreCreationParams.isClassSupported}
+  ///{@macro nosferatu500_inappwebview_platform_interface.PlatformProfileStoreCreationParams.isClassSupported}
   bool isClassSupported({TargetPlatform? platform}) =>
       params.isClassSupported(platform: platform);
 
-  ///{@template flutter_inappwebview_platform_interface.PlatformProfileStore.isMethodSupported}
+  ///{@template nosferatu500_inappwebview_platform_interface.PlatformProfileStore.isMethodSupported}
   ///Check if the given [method] is supported by the [defaultTargetPlatform] or a specific [platform].
   ///{@endtemplate}
   bool isMethodSupported(

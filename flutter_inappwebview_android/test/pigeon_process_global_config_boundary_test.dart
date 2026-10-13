@@ -1,7 +1,7 @@
 import 'package:flutter/services.dart';
-import 'package:flutter_inappwebview_android/flutter_inappwebview_android.dart';
-import 'package:flutter_inappwebview_android/src/pigeons/process_global_config.g.dart';
-import 'package:flutter_inappwebview_platform_interface/flutter_inappwebview_platform_interface.dart';
+import 'package:nosferatu500_inappwebview_android/nosferatu500_inappwebview_android.dart';
+import 'package:nosferatu500_inappwebview_android/src/pigeons/process_global_config.g.dart';
+import 'package:nosferatu500_inappwebview_platform_interface/nosferatu500_inappwebview_platform_interface.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 /// Boundary coverage for the second channel migrated to Pigeon (§157,
@@ -23,7 +23,7 @@ void main() {
 
   // No messageChannelSuffix: ProcessGlobalConfig.apply is process-global.
   const applyChannel =
-      'dev.flutter.pigeon.flutter_inappwebview_android.ProcessGlobalConfigHostApi.apply';
+      'dev.flutter.pigeon.nosferatu500_inappwebview_android.ProcessGlobalConfigHostApi.apply';
 
   late AndroidProcessGlobalConfig config;
   Object? sent;

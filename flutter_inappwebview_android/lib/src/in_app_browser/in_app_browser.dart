@@ -2,7 +2,7 @@ import 'dart:async';
 import 'dart:collection';
 
 import 'package:flutter/foundation.dart';
-import 'package:flutter_inappwebview_platform_interface/flutter_inappwebview_platform_interface.dart';
+import 'package:nosferatu500_inappwebview_platform_interface/nosferatu500_inappwebview_platform_interface.dart';
 
 import '../find_interaction/find_interaction_controller.dart';
 import '../in_app_webview/in_app_webview_controller.dart';
@@ -71,7 +71,7 @@ class _InAppBrowserFlutterApiImpl implements InAppBrowserFlutterApi {
   void onExit() => _browser._onExit();
 }
 
-///{@macro flutter_inappwebview_platform_interface.PlatformInAppBrowser}
+///{@macro nosferatu500_inappwebview_platform_interface.PlatformInAppBrowser}
 ///
 /// Transport is Pigeon only: the browser's own methods and events ([InAppBrowserHostApi] /
 /// [InAppBrowserFlutterApi], suffixed by [id], §195, its settings pair since §199), and its

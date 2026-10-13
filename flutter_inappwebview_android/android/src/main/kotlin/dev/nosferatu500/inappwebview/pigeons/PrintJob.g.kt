@@ -630,7 +630,7 @@ interface PrintJobControllerHostApi {
     fun setUp(binaryMessenger: BinaryMessenger, api: PrintJobControllerHostApi?, messageChannelSuffix: String = "") {
       val separatedMessageChannelSuffix = if (messageChannelSuffix.isNotEmpty()) ".$messageChannelSuffix" else ""
       run {
-        val channel = BasicMessageChannel<Any?>(binaryMessenger, "dev.flutter.pigeon.flutter_inappwebview_android.PrintJobControllerHostApi.cancel$separatedMessageChannelSuffix", codec)
+        val channel = BasicMessageChannel<Any?>(binaryMessenger, "dev.flutter.pigeon.nosferatu500_inappwebview_android.PrintJobControllerHostApi.cancel$separatedMessageChannelSuffix", codec)
         if (api != null) {
           channel.setMessageHandler { _, reply ->
             val wrapped: List<Any?> = try {
@@ -645,7 +645,7 @@ interface PrintJobControllerHostApi {
         }
       }
       run {
-        val channel = BasicMessageChannel<Any?>(binaryMessenger, "dev.flutter.pigeon.flutter_inappwebview_android.PrintJobControllerHostApi.restart$separatedMessageChannelSuffix", codec)
+        val channel = BasicMessageChannel<Any?>(binaryMessenger, "dev.flutter.pigeon.nosferatu500_inappwebview_android.PrintJobControllerHostApi.restart$separatedMessageChannelSuffix", codec)
         if (api != null) {
           channel.setMessageHandler { _, reply ->
             val wrapped: List<Any?> = try {
@@ -660,7 +660,7 @@ interface PrintJobControllerHostApi {
         }
       }
       run {
-        val channel = BasicMessageChannel<Any?>(binaryMessenger, "dev.flutter.pigeon.flutter_inappwebview_android.PrintJobControllerHostApi.getInfo$separatedMessageChannelSuffix", codec)
+        val channel = BasicMessageChannel<Any?>(binaryMessenger, "dev.flutter.pigeon.nosferatu500_inappwebview_android.PrintJobControllerHostApi.getInfo$separatedMessageChannelSuffix", codec)
         if (api != null) {
           channel.setMessageHandler { _, reply ->
             val wrapped: List<Any?> = try {
@@ -675,7 +675,7 @@ interface PrintJobControllerHostApi {
         }
       }
       run {
-        val channel = BasicMessageChannel<Any?>(binaryMessenger, "dev.flutter.pigeon.flutter_inappwebview_android.PrintJobControllerHostApi.dispose$separatedMessageChannelSuffix", codec)
+        val channel = BasicMessageChannel<Any?>(binaryMessenger, "dev.flutter.pigeon.nosferatu500_inappwebview_android.PrintJobControllerHostApi.dispose$separatedMessageChannelSuffix", codec)
         if (api != null) {
           channel.setMessageHandler { _, reply ->
             val wrapped: List<Any?> = try {
@@ -724,7 +724,7 @@ class PrintJobControllerFlutterApi(private val binaryMessenger: BinaryMessenger,
   fun onComplete(completedArg: Boolean, errorArg: String?, callback: (Result<Unit>) -> Unit)
 {
     val separatedMessageChannelSuffix = if (messageChannelSuffix.isNotEmpty()) ".$messageChannelSuffix" else ""
-    val channelName = "dev.flutter.pigeon.flutter_inappwebview_android.PrintJobControllerFlutterApi.onComplete$separatedMessageChannelSuffix"
+    val channelName = "dev.flutter.pigeon.nosferatu500_inappwebview_android.PrintJobControllerFlutterApi.onComplete$separatedMessageChannelSuffix"
     val channel = BasicMessageChannel<Any?>(binaryMessenger, channelName, codec)
     channel.send(listOf(completedArg, errorArg)) {
       if (it is List<*>) {

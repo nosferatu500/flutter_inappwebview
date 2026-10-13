@@ -1,11 +1,9 @@
-name: flutter_inappwebview
+name: nosferatu500_inappwebview
 description: A Flutter plugin that allows you to add an inline webview, to use an headless webview, and to open an in-app browser window.
 version: 6.2.0-beta.3
-homepage: https://inappwebview.dev/
-repository: https://github.com/pichillilorenzo/flutter_inappwebview
-issue_tracker: https://github.com/pichillilorenzo/flutter_inappwebview/issues
-funding:
-  - https://inappwebview.dev/donate/
+homepage: https://github.com/nosferatu500/flutter_inappwebview
+repository: https://github.com/nosferatu500/flutter_inappwebview
+issue_tracker: https://github.com/nosferatu500/flutter_inappwebview/issues
 topics:
   - html
   - webview
@@ -20,12 +18,12 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
-  flutter_inappwebview_platform_interface: ^1.4.0-beta.3
+  nosferatu500_inappwebview_platform_interface: ^1.4.0-beta.3
     # path: ../flutter_inappwebview_platform_interface
-  flutter_inappwebview_android: ^1.2.0-beta.3
+  nosferatu500_inappwebview_android: ^1.2.0-beta.3
     # path: ../flutter_inappwebview_android
-  flutter_inappwebview_ios: ^1.2.0-beta.3
-    # path: ../flutter_inappwebview_ios
+  nosferatu500_inappwebview_ios: ^1.2.0-beta.3
+    # path: ../nosferatu500_inappwebview_ios
 
 dev_dependencies:
   flutter_test:
@@ -40,13 +38,13 @@ flutter:
   plugin:
     platforms:
       android:
-        default_package: flutter_inappwebview_android
+        default_package: nosferatu500_inappwebview_android
       ios:
-        default_package: flutter_inappwebview_ios
+        default_package: nosferatu500_inappwebview_ios
 
   assets:
-    - packages/flutter_inappwebview/assets/t_rex_runner/t-rex.html
-    - packages/flutter_inappwebview/assets/t_rex_runner/t-rex.css
+    - packages/nosferatu500_inappwebview/assets/t_rex_runner/t-rex.html
+    - packages/nosferatu500_inappwebview/assets/t_rex_runner/t-rex.css
   # To add assets to your plugin package, add an assets section, like this:
   # assets:
   #  - images/a_dot_burr.jpeg
@@ -87,9 +85,11 @@ false_secrets:
 # invisible to its siblings. pub ignores dependency_overrides in consuming
 # projects, so this affects this repo only.
 dependency_overrides:
-  flutter_inappwebview_platform_interface:
+  nosferatu500_inappwebview_internal_annotations:
+    path: ../dev_packages/flutter_inappwebview_internal_annotations
+  nosferatu500_inappwebview_platform_interface:
     path: ../flutter_inappwebview_platform_interface
-  flutter_inappwebview_android:
+  nosferatu500_inappwebview_android:
     path: ../flutter_inappwebview_android
-  flutter_inappwebview_ios:
-    path: ../flutter_inappwebview_ios
+  nosferatu500_inappwebview_ios:
+    path: ../nosferatu500_inappwebview_ios

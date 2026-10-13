@@ -315,7 +315,7 @@ class WebMessageChannelHostApi {
   /// hand-written channel's behaviour, preserved deliberately; changing it is a separate decision.
   Future<bool> setWebMessageCallback(int index) async {
     final pigeonVar_channelName =
-        'dev.flutter.pigeon.flutter_inappwebview_android.WebMessageChannelHostApi.setWebMessageCallback$pigeonVar_messageChannelSuffix';
+        'dev.flutter.pigeon.nosferatu500_inappwebview_android.WebMessageChannelHostApi.setWebMessageCallback$pigeonVar_messageChannelSuffix';
     final pigeonVar_channel = BasicMessageChannel<Object?>(
       pigeonVar_channelName,
       pigeonChannelCodec,
@@ -339,7 +339,7 @@ class WebMessageChannelHostApi {
   /// Same `true`-when-unsupported caveat as [setWebMessageCallback].
   Future<bool> postMessage(int index, WebMessageData message) async {
     final pigeonVar_channelName =
-        'dev.flutter.pigeon.flutter_inappwebview_android.WebMessageChannelHostApi.postMessage$pigeonVar_messageChannelSuffix';
+        'dev.flutter.pigeon.nosferatu500_inappwebview_android.WebMessageChannelHostApi.postMessage$pigeonVar_messageChannelSuffix';
     final pigeonVar_channel = BasicMessageChannel<Object?>(
       pigeonVar_channelName,
       pigeonChannelCodec,
@@ -361,7 +361,7 @@ class WebMessageChannelHostApi {
   /// Closes the port at [index]. Same caveat again.
   Future<bool> close(int index) async {
     final pigeonVar_channelName =
-        'dev.flutter.pigeon.flutter_inappwebview_android.WebMessageChannelHostApi.close$pigeonVar_messageChannelSuffix';
+        'dev.flutter.pigeon.nosferatu500_inappwebview_android.WebMessageChannelHostApi.close$pigeonVar_messageChannelSuffix';
     final pigeonVar_channel = BasicMessageChannel<Object?>(
       pigeonVar_channelName,
       pigeonChannelCodec,
@@ -399,7 +399,7 @@ abstract class WebMessageChannelFlutterApi {
         : '';
     {
       final pigeonVar_channel = BasicMessageChannel<Object?>(
-        'dev.flutter.pigeon.flutter_inappwebview_android.WebMessageChannelFlutterApi.onMessage$messageChannelSuffix',
+        'dev.flutter.pigeon.nosferatu500_inappwebview_android.WebMessageChannelFlutterApi.onMessage$messageChannelSuffix',
         pigeonChannelCodec,
         binaryMessenger: binaryMessenger,
       );
@@ -451,7 +451,7 @@ class WebMessageListenerHostApi {
   /// or `WEB_MESSAGE_LISTENER` was unsupported. Preserved.
   Future<bool> postMessage(WebMessageData message) async {
     final pigeonVar_channelName =
-        'dev.flutter.pigeon.flutter_inappwebview_android.WebMessageListenerHostApi.postMessage$pigeonVar_messageChannelSuffix';
+        'dev.flutter.pigeon.nosferatu500_inappwebview_android.WebMessageListenerHostApi.postMessage$pigeonVar_messageChannelSuffix';
     final pigeonVar_channel = BasicMessageChannel<Object?>(
       pigeonVar_channelName,
       pigeonChannelCodec,
@@ -491,7 +491,7 @@ abstract class WebMessageListenerFlutterApi {
         : '';
     {
       final pigeonVar_channel = BasicMessageChannel<Object?>(
-        'dev.flutter.pigeon.flutter_inappwebview_android.WebMessageListenerFlutterApi.onPostMessage$messageChannelSuffix',
+        'dev.flutter.pigeon.nosferatu500_inappwebview_android.WebMessageListenerFlutterApi.onPostMessage$messageChannelSuffix',
         pigeonChannelCodec,
         binaryMessenger: binaryMessenger,
       );

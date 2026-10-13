@@ -6,7 +6,7 @@ part of 'platform_webview_feature.dart';
 // ExchangeableEnumGenerator
 // **************************************************************************
 
-///{@macro flutter_inappwebview_platform_interface.PlatformWebViewFeature}
+///{@macro nosferatu500_inappwebview_platform_interface.PlatformWebViewFeature}
 class WebViewFeature {
   final String _value;
   final String? _nativeValue;
@@ -621,11 +621,11 @@ class WebViewFeature {
     for (final value in WebViewFeature.values) value.name(): value,
   };
 
-  ///{@macro flutter_inappwebview_platform_interface.PlatformWebViewFeature.isFeatureSupported}
+  ///{@macro nosferatu500_inappwebview_platform_interface.PlatformWebViewFeature.isFeatureSupported}
   static Future<bool> isFeatureSupported(WebViewFeature feature) =>
       PlatformWebViewFeature.static().isFeatureSupported(feature);
 
-  ///{@macro flutter_inappwebview_platform_interface.PlatformWebViewFeature.isStartupFeatureSupported}
+  ///{@macro nosferatu500_inappwebview_platform_interface.PlatformWebViewFeature.isStartupFeatureSupported}
   static Future<bool> isStartupFeatureSupported(
     WebViewFeature startupFeature,
   ) =>
@@ -797,7 +797,7 @@ class WebViewFeature {
 
 extension _PlatformWebViewFeatureCreationParamsClassSupported
     on PlatformWebViewFeatureCreationParams {
-  ///{@template flutter_inappwebview_platform_interface.PlatformWebViewFeatureCreationParams.supported_platforms}
+  ///{@template nosferatu500_inappwebview_platform_interface.PlatformWebViewFeatureCreationParams.supported_platforms}
   ///
   ///**Officially Supported Platforms/Implementations**:
   ///- Android WebView
@@ -811,7 +811,7 @@ extension _PlatformWebViewFeatureCreationParamsClassSupported
 }
 
 extension _PlatformWebViewFeatureClassSupported on PlatformWebViewFeature {
-  ///{@template flutter_inappwebview_platform_interface.PlatformWebViewFeature.supported_platforms}
+  ///{@template nosferatu500_inappwebview_platform_interface.PlatformWebViewFeature.supported_platforms}
   ///
   ///**Officially Supported Platforms/Implementations**:
   ///- Android WebView
@@ -830,7 +830,7 @@ extension _PlatformWebViewFeatureClassSupported on PlatformWebViewFeature {
 enum PlatformWebViewFeatureMethod {
   ///Can be used to check if the [PlatformWebViewFeature.isFeatureSupported] method is supported at runtime.
   ///
-  ///{@template flutter_inappwebview_platform_interface.PlatformWebViewFeature.isFeatureSupported.supported_platforms}
+  ///{@template nosferatu500_inappwebview_platform_interface.PlatformWebViewFeature.isFeatureSupported.supported_platforms}
   ///
   ///**Officially Supported Platforms/Implementations**:
   ///- Android WebView ([Official API - WebViewFeature.isFeatureSupported](https://developer.android.com/reference/androidx/webkit/WebViewFeature#isFeatureSupported(java.lang.String)))
@@ -844,7 +844,7 @@ enum PlatformWebViewFeatureMethod {
 
   ///Can be used to check if the [PlatformWebViewFeature.isStartupFeatureSupported] method is supported at runtime.
   ///
-  ///{@template flutter_inappwebview_platform_interface.PlatformWebViewFeature.isStartupFeatureSupported.supported_platforms}
+  ///{@template nosferatu500_inappwebview_platform_interface.PlatformWebViewFeature.isStartupFeatureSupported.supported_platforms}
   ///
   ///**Officially Supported Platforms/Implementations**:
   ///- Android WebView ([Official API - WebViewFeature.isStartupFeatureSupported](https://developer.android.com/reference/androidx/webkit/WebViewFeature#isStartupFeatureSupported(android.content.Context,java.lang.String)))

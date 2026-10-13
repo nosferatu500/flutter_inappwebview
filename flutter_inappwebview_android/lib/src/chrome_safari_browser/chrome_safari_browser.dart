@@ -2,7 +2,7 @@ import 'dart:async';
 import 'dart:collection';
 
 import 'package:flutter/foundation.dart';
-import 'package:flutter_inappwebview_platform_interface/flutter_inappwebview_platform_interface.dart';
+import 'package:nosferatu500_inappwebview_platform_interface/nosferatu500_inappwebview_platform_interface.dart';
 
 import '../pigeons/chrome_custom_tabs.g.dart';
 import '../pigeons/chrome_safari_browser_manager.g.dart';
@@ -28,7 +28,7 @@ class AndroidChromeSafariBrowserCreationParams
   }
 }
 
-///{@macro flutter_inappwebview_platform_interface.PlatformChromeSafariBrowser}
+///{@macro nosferatu500_inappwebview_platform_interface.PlatformChromeSafariBrowser}
 /// Receives [ChromeCustomTabsFlutterApi] events and forwards them to the browser.
 ///
 /// 🚨 **A separate class, and here the collision §14 predicted is unavoidable rather than merely

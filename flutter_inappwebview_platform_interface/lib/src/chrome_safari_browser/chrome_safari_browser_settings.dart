@@ -1,7 +1,7 @@
 import 'dart:ui';
 
 import 'package:flutter/foundation.dart';
-import 'package:flutter_inappwebview_internal_annotations/flutter_inappwebview_internal_annotations.dart';
+import 'package:nosferatu500_inappwebview_internal_annotations/nosferatu500_inappwebview_internal_annotations.dart';
 
 import '../types/activity_button.dart';
 import '../types/android_resource.dart';
@@ -36,11 +36,11 @@ TrustedWebActivityDisplayMode? _deserializeDisplayMode(
   }
 }
 
-///{@template flutter_inappwebview_platform_interface.ChromeSafariBrowserSettings}
+///{@template nosferatu500_inappwebview_platform_interface.ChromeSafariBrowserSettings}
 ///Class that represents the settings that can be used for an [ChromeSafariBrowser] window.
 ///{@endtemplate}
 ///
-///{@macro flutter_inappwebview_platform_interface.ChromeSafariBrowserSettings.supported_platforms}
+///{@macro nosferatu500_inappwebview_platform_interface.ChromeSafariBrowserSettings.supported_platforms}
 @SupportedPlatforms(
   platforms: [
     AndroidPlatform(name: 'Android Chrome Custom Tabs'),

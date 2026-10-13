@@ -8,7 +8,7 @@ part of 'platform_webview.dart';
 
 extension _PlatformWebViewCreationParamsClassSupported
     on PlatformWebViewCreationParams {
-  ///{@template flutter_inappwebview_platform_interface.PlatformWebViewCreationParams.supported_platforms}
+  ///{@template nosferatu500_inappwebview_platform_interface.PlatformWebViewCreationParams.supported_platforms}
   ///
   ///**Officially Supported Platforms/Implementations**:
   ///- Android WebView
@@ -29,7 +29,7 @@ extension _PlatformWebViewCreationParamsClassSupported
 enum PlatformWebViewCreationParamsProperty {
   ///Can be used to check if the [PlatformWebViewCreationParams.contextMenu] property is supported at runtime.
   ///
-  ///{@template flutter_inappwebview_platform_interface.PlatformWebViewCreationParams.contextMenu.supported_platforms}
+  ///{@template nosferatu500_inappwebview_platform_interface.PlatformWebViewCreationParams.contextMenu.supported_platforms}
   ///
   ///**Officially Supported Platforms/Implementations**:
   ///- Android WebView
@@ -41,7 +41,7 @@ enum PlatformWebViewCreationParamsProperty {
 
   ///Can be used to check if the [PlatformWebViewCreationParams.findInteractionController] property is supported at runtime.
   ///
-  ///{@template flutter_inappwebview_platform_interface.PlatformWebViewCreationParams.findInteractionController.supported_platforms}
+  ///{@template nosferatu500_inappwebview_platform_interface.PlatformWebViewCreationParams.findInteractionController.supported_platforms}
   ///
   ///**Officially Supported Platforms/Implementations**:
   ///- Android WebView
@@ -53,7 +53,7 @@ enum PlatformWebViewCreationParamsProperty {
 
   ///Can be used to check if the [PlatformWebViewCreationParams.initialData] property is supported at runtime.
   ///
-  ///{@template flutter_inappwebview_platform_interface.PlatformWebViewCreationParams.initialData.supported_platforms}
+  ///{@template nosferatu500_inappwebview_platform_interface.PlatformWebViewCreationParams.initialData.supported_platforms}
   ///
   ///**Officially Supported Platforms/Implementations**:
   ///- Android WebView
@@ -65,7 +65,7 @@ enum PlatformWebViewCreationParamsProperty {
 
   ///Can be used to check if the [PlatformWebViewCreationParams.initialFile] property is supported at runtime.
   ///
-  ///{@template flutter_inappwebview_platform_interface.PlatformWebViewCreationParams.initialFile.supported_platforms}
+  ///{@template nosferatu500_inappwebview_platform_interface.PlatformWebViewCreationParams.initialFile.supported_platforms}
   ///
   ///**Officially Supported Platforms/Implementations**:
   ///- Android WebView
@@ -77,7 +77,7 @@ enum PlatformWebViewCreationParamsProperty {
 
   ///Can be used to check if the [PlatformWebViewCreationParams.initialSettings] property is supported at runtime.
   ///
-  ///{@template flutter_inappwebview_platform_interface.PlatformWebViewCreationParams.initialSettings.supported_platforms}
+  ///{@template nosferatu500_inappwebview_platform_interface.PlatformWebViewCreationParams.initialSettings.supported_platforms}
   ///
   ///**Officially Supported Platforms/Implementations**:
   ///- Android WebView
@@ -89,7 +89,7 @@ enum PlatformWebViewCreationParamsProperty {
 
   ///Can be used to check if the [PlatformWebViewCreationParams.initialUrlRequest] property is supported at runtime.
   ///
-  ///{@template flutter_inappwebview_platform_interface.PlatformWebViewCreationParams.initialUrlRequest.supported_platforms}
+  ///{@template nosferatu500_inappwebview_platform_interface.PlatformWebViewCreationParams.initialUrlRequest.supported_platforms}
   ///
   ///**Officially Supported Platforms/Implementations**:
   ///- Android WebView:
@@ -102,7 +102,7 @@ enum PlatformWebViewCreationParamsProperty {
 
   ///Can be used to check if the [PlatformWebViewCreationParams.initialUserScripts] property is supported at runtime.
   ///
-  ///{@template flutter_inappwebview_platform_interface.PlatformWebViewCreationParams.initialUserScripts.supported_platforms}
+  ///{@template nosferatu500_inappwebview_platform_interface.PlatformWebViewCreationParams.initialUserScripts.supported_platforms}
   ///
   ///**Officially Supported Platforms/Implementations**:
   ///- Android WebView
@@ -115,7 +115,7 @@ enum PlatformWebViewCreationParamsProperty {
 
   ///Can be used to check if the [PlatformWebViewCreationParams.onAjaxProgress] property is supported at runtime.
   ///
-  ///{@template flutter_inappwebview_platform_interface.PlatformWebViewCreationParams.onAjaxProgress.supported_platforms}
+  ///{@template nosferatu500_inappwebview_platform_interface.PlatformWebViewCreationParams.onAjaxProgress.supported_platforms}
   ///
   ///**Officially Supported Platforms/Implementations**:
   ///- Android WebView:
@@ -131,7 +131,7 @@ enum PlatformWebViewCreationParamsProperty {
 
   ///Can be used to check if the [PlatformWebViewCreationParams.onAjaxReadyStateChange] property is supported at runtime.
   ///
-  ///{@template flutter_inappwebview_platform_interface.PlatformWebViewCreationParams.onAjaxReadyStateChange.supported_platforms}
+  ///{@template nosferatu500_inappwebview_platform_interface.PlatformWebViewCreationParams.onAjaxReadyStateChange.supported_platforms}
   ///
   ///**Officially Supported Platforms/Implementations**:
   ///- Android WebView:
@@ -147,7 +147,7 @@ enum PlatformWebViewCreationParamsProperty {
 
   ///Can be used to check if the [PlatformWebViewCreationParams.onCameraCaptureStateChanged] property is supported at runtime.
   ///
-  ///{@template flutter_inappwebview_platform_interface.PlatformWebViewCreationParams.onCameraCaptureStateChanged.supported_platforms}
+  ///{@template nosferatu500_inappwebview_platform_interface.PlatformWebViewCreationParams.onCameraCaptureStateChanged.supported_platforms}
   ///
   ///**Officially Supported Platforms/Implementations**:
   ///- iOS WKWebView 15.0+
@@ -162,7 +162,7 @@ enum PlatformWebViewCreationParamsProperty {
 
   ///Can be used to check if the [PlatformWebViewCreationParams.onCloseWindow] property is supported at runtime.
   ///
-  ///{@template flutter_inappwebview_platform_interface.PlatformWebViewCreationParams.onCloseWindow.supported_platforms}
+  ///{@template nosferatu500_inappwebview_platform_interface.PlatformWebViewCreationParams.onCloseWindow.supported_platforms}
   ///
   ///**Officially Supported Platforms/Implementations**:
   ///- Android WebView ([Official API - WebChromeClient.onCloseWindow](https://developer.android.com/reference/android/webkit/WebChromeClient#onCloseWindow(android.webkit.WebView)))
@@ -174,7 +174,7 @@ enum PlatformWebViewCreationParamsProperty {
 
   ///Can be used to check if the [PlatformWebViewCreationParams.onConsoleMessage] property is supported at runtime.
   ///
-  ///{@template flutter_inappwebview_platform_interface.PlatformWebViewCreationParams.onConsoleMessage.supported_platforms}
+  ///{@template nosferatu500_inappwebview_platform_interface.PlatformWebViewCreationParams.onConsoleMessage.supported_platforms}
   ///
   ///**Officially Supported Platforms/Implementations**:
   ///- Android WebView ([Official API - WebChromeClient.onConsoleMessage](https://developer.android.com/reference/android/webkit/WebChromeClient#onConsoleMessage(android.webkit.ConsoleMessage)))
@@ -190,7 +190,7 @@ enum PlatformWebViewCreationParamsProperty {
 
   ///Can be used to check if the [PlatformWebViewCreationParams.onContentSizeChanged] property is supported at runtime.
   ///
-  ///{@template flutter_inappwebview_platform_interface.PlatformWebViewCreationParams.onContentSizeChanged.supported_platforms}
+  ///{@template nosferatu500_inappwebview_platform_interface.PlatformWebViewCreationParams.onContentSizeChanged.supported_platforms}
   ///
   ///**Officially Supported Platforms/Implementations**:
   ///- iOS WKWebView
@@ -205,7 +205,7 @@ enum PlatformWebViewCreationParamsProperty {
 
   ///Can be used to check if the [PlatformWebViewCreationParams.onCreateWindow] property is supported at runtime.
   ///
-  ///{@template flutter_inappwebview_platform_interface.PlatformWebViewCreationParams.onCreateWindow.supported_platforms}
+  ///{@template nosferatu500_inappwebview_platform_interface.PlatformWebViewCreationParams.onCreateWindow.supported_platforms}
   ///
   ///**Officially Supported Platforms/Implementations**:
   ///- Android WebView ([Official API - WebChromeClient.onCreateWindow](https://developer.android.com/reference/android/webkit/WebChromeClient#onCreateWindow(android.webkit.WebView,%20boolean,%20boolean,%20android.os.Message))):
@@ -222,7 +222,7 @@ enum PlatformWebViewCreationParamsProperty {
 
   ///Can be used to check if the [PlatformWebViewCreationParams.onDidReceiveServerRedirectForProvisionalNavigation] property is supported at runtime.
   ///
-  ///{@template flutter_inappwebview_platform_interface.PlatformWebViewCreationParams.onDidReceiveServerRedirectForProvisionalNavigation.supported_platforms}
+  ///{@template nosferatu500_inappwebview_platform_interface.PlatformWebViewCreationParams.onDidReceiveServerRedirectForProvisionalNavigation.supported_platforms}
   ///
   ///**Officially Supported Platforms/Implementations**:
   ///- iOS WKWebView ([Official API - WKNavigationDelegate.webView](https://developer.apple.com/documentation/webkit/wknavigationdelegate/1455627-webview))
@@ -233,7 +233,7 @@ enum PlatformWebViewCreationParamsProperty {
 
   ///Can be used to check if the [PlatformWebViewCreationParams.onDownloadStarting] property is supported at runtime.
   ///
-  ///{@template flutter_inappwebview_platform_interface.PlatformWebViewCreationParams.onDownloadStarting.supported_platforms}
+  ///{@template nosferatu500_inappwebview_platform_interface.PlatformWebViewCreationParams.onDownloadStarting.supported_platforms}
   ///
   ///**Officially Supported Platforms/Implementations**:
   ///- Android WebView ([Official API - WebView.setDownloadListener]((https://developer.android.com/reference/android/webkit/WebView#setDownloadListener(android.webkit.DownloadListener)))
@@ -248,7 +248,7 @@ enum PlatformWebViewCreationParamsProperty {
 
   ///Can be used to check if the [PlatformWebViewCreationParams.onEnterFullscreen] property is supported at runtime.
   ///
-  ///{@template flutter_inappwebview_platform_interface.PlatformWebViewCreationParams.onEnterFullscreen.supported_platforms}
+  ///{@template nosferatu500_inappwebview_platform_interface.PlatformWebViewCreationParams.onEnterFullscreen.supported_platforms}
   ///
   ///**Officially Supported Platforms/Implementations**:
   ///- Android WebView ([Official API - WebChromeClient.onShowCustomView](https://developer.android.com/reference/android/webkit/WebChromeClient#onShowCustomView(android.view.View,%20android.webkit.WebChromeClient.CustomViewCallback)))
@@ -260,7 +260,7 @@ enum PlatformWebViewCreationParamsProperty {
 
   ///Can be used to check if the [PlatformWebViewCreationParams.onExitFullscreen] property is supported at runtime.
   ///
-  ///{@template flutter_inappwebview_platform_interface.PlatformWebViewCreationParams.onExitFullscreen.supported_platforms}
+  ///{@template nosferatu500_inappwebview_platform_interface.PlatformWebViewCreationParams.onExitFullscreen.supported_platforms}
   ///
   ///**Officially Supported Platforms/Implementations**:
   ///- Android WebView ([Official API - WebChromeClient.onHideCustomView](https://developer.android.com/reference/android/webkit/WebChromeClient#onHideCustomView()))
@@ -272,7 +272,7 @@ enum PlatformWebViewCreationParamsProperty {
 
   ///Can be used to check if the [PlatformWebViewCreationParams.onFirstContentfulPaintMillis] property is supported at runtime.
   ///
-  ///{@template flutter_inappwebview_platform_interface.PlatformWebViewCreationParams.onFirstContentfulPaintMillis.supported_platforms}
+  ///{@template nosferatu500_inappwebview_platform_interface.PlatformWebViewCreationParams.onFirstContentfulPaintMillis.supported_platforms}
   ///
   ///**Officially Supported Platforms/Implementations**:
   ///- Android WebView ([Official API - NavigationListener.onFirstContentfulPaintMillis](https://developer.android.com/reference/androidx/webkit/NavigationListener#onFirstContentfulPaintMillis(androidx.webkit.Page,long))):
@@ -288,7 +288,7 @@ enum PlatformWebViewCreationParamsProperty {
 
   ///Can be used to check if the [PlatformWebViewCreationParams.onFormResubmission] property is supported at runtime.
   ///
-  ///{@template flutter_inappwebview_platform_interface.PlatformWebViewCreationParams.onFormResubmission.supported_platforms}
+  ///{@template nosferatu500_inappwebview_platform_interface.PlatformWebViewCreationParams.onFormResubmission.supported_platforms}
   ///
   ///**Officially Supported Platforms/Implementations**:
   ///- Android WebView ([Official API - WebViewClient.onFormResubmission](https://developer.android.com/reference/android/webkit/WebViewClient#onFormResubmission(android.webkit.WebView,%20android.os.Message,%20android.os.Message)))
@@ -302,7 +302,7 @@ enum PlatformWebViewCreationParamsProperty {
 
   ///Can be used to check if the [PlatformWebViewCreationParams.onGeolocationPermissionsHidePrompt] property is supported at runtime.
   ///
-  ///{@template flutter_inappwebview_platform_interface.PlatformWebViewCreationParams.onGeolocationPermissionsHidePrompt.supported_platforms}
+  ///{@template nosferatu500_inappwebview_platform_interface.PlatformWebViewCreationParams.onGeolocationPermissionsHidePrompt.supported_platforms}
   ///
   ///**Officially Supported Platforms/Implementations**:
   ///- Android WebView ([Official API - WebChromeClient.onGeolocationPermissionsHidePrompt](https://developer.android.com/reference/android/webkit/WebChromeClient#onGeolocationPermissionsHidePrompt()))
@@ -313,7 +313,7 @@ enum PlatformWebViewCreationParamsProperty {
 
   ///Can be used to check if the [PlatformWebViewCreationParams.onGeolocationPermissionsShowPrompt] property is supported at runtime.
   ///
-  ///{@template flutter_inappwebview_platform_interface.PlatformWebViewCreationParams.onGeolocationPermissionsShowPrompt.supported_platforms}
+  ///{@template nosferatu500_inappwebview_platform_interface.PlatformWebViewCreationParams.onGeolocationPermissionsShowPrompt.supported_platforms}
   ///
   ///**Officially Supported Platforms/Implementations**:
   ///- Android WebView ([Official API - WebChromeClient.onGeolocationPermissionsShowPrompt](https://developer.android.com/reference/android/webkit/WebChromeClient#onGeolocationPermissionsShowPrompt(java.lang.String,%20android.webkit.GeolocationPermissions.Callback)))
@@ -327,7 +327,7 @@ enum PlatformWebViewCreationParamsProperty {
 
   ///Can be used to check if the [PlatformWebViewCreationParams.onInsertInputSuggestion] property is supported at runtime.
   ///
-  ///{@template flutter_inappwebview_platform_interface.PlatformWebViewCreationParams.onInsertInputSuggestion.supported_platforms}
+  ///{@template nosferatu500_inappwebview_platform_interface.PlatformWebViewCreationParams.onInsertInputSuggestion.supported_platforms}
   ///
   ///**Officially Supported Platforms/Implementations**:
   ///- iOS WKWebView 26.0+ ([Official API - WKUIDelegate.webView(_:insertInputSuggestion:)](https://developer.apple.com/documentation/webkit/wkuidelegate/webview(_:insertinputsuggestion:))):
@@ -342,7 +342,7 @@ enum PlatformWebViewCreationParamsProperty {
 
   ///Can be used to check if the [PlatformWebViewCreationParams.onJsAlert] property is supported at runtime.
   ///
-  ///{@template flutter_inappwebview_platform_interface.PlatformWebViewCreationParams.onJsAlert.supported_platforms}
+  ///{@template nosferatu500_inappwebview_platform_interface.PlatformWebViewCreationParams.onJsAlert.supported_platforms}
   ///
   ///**Officially Supported Platforms/Implementations**:
   ///- Android WebView ([Official API - WebChromeClient.onJsAlert](https://developer.android.com/reference/android/webkit/WebChromeClient#onJsAlert(android.webkit.WebView,%20java.lang.String,%20java.lang.String,%20android.webkit.JsResult)))
@@ -357,7 +357,7 @@ enum PlatformWebViewCreationParamsProperty {
 
   ///Can be used to check if the [PlatformWebViewCreationParams.onJsBeforeUnload] property is supported at runtime.
   ///
-  ///{@template flutter_inappwebview_platform_interface.PlatformWebViewCreationParams.onJsBeforeUnload.supported_platforms}
+  ///{@template nosferatu500_inappwebview_platform_interface.PlatformWebViewCreationParams.onJsBeforeUnload.supported_platforms}
   ///
   ///**Officially Supported Platforms/Implementations**:
   ///- Android WebView ([Official API - WebChromeClient.onJsBeforeUnload](https://developer.android.com/reference/android/webkit/WebChromeClient#onJsBeforeUnload(android.webkit.WebView,%20java.lang.String,%20java.lang.String,%20android.webkit.JsResult)))
@@ -371,7 +371,7 @@ enum PlatformWebViewCreationParamsProperty {
 
   ///Can be used to check if the [PlatformWebViewCreationParams.onJsConfirm] property is supported at runtime.
   ///
-  ///{@template flutter_inappwebview_platform_interface.PlatformWebViewCreationParams.onJsConfirm.supported_platforms}
+  ///{@template nosferatu500_inappwebview_platform_interface.PlatformWebViewCreationParams.onJsConfirm.supported_platforms}
   ///
   ///**Officially Supported Platforms/Implementations**:
   ///- Android WebView ([Official API - WebChromeClient.onJsConfirm](https://developer.android.com/reference/android/webkit/WebChromeClient#onJsConfirm(android.webkit.WebView,%20java.lang.String,%20java.lang.String,%20android.webkit.JsResult)))
@@ -386,7 +386,7 @@ enum PlatformWebViewCreationParamsProperty {
 
   ///Can be used to check if the [PlatformWebViewCreationParams.onJsPrompt] property is supported at runtime.
   ///
-  ///{@template flutter_inappwebview_platform_interface.PlatformWebViewCreationParams.onJsPrompt.supported_platforms}
+  ///{@template nosferatu500_inappwebview_platform_interface.PlatformWebViewCreationParams.onJsPrompt.supported_platforms}
   ///
   ///**Officially Supported Platforms/Implementations**:
   ///- Android WebView ([Official API - WebChromeClient.onJsPrompt](https://developer.android.com/reference/android/webkit/WebChromeClient#onJsPrompt(android.webkit.WebView,%20java.lang.String,%20java.lang.String,%20java.lang.String,%20android.webkit.JsPromptResult)))
@@ -401,7 +401,7 @@ enum PlatformWebViewCreationParamsProperty {
 
   ///Can be used to check if the [PlatformWebViewCreationParams.onLargestContentfulPaintMillis] property is supported at runtime.
   ///
-  ///{@template flutter_inappwebview_platform_interface.PlatformWebViewCreationParams.onLargestContentfulPaintMillis.supported_platforms}
+  ///{@template nosferatu500_inappwebview_platform_interface.PlatformWebViewCreationParams.onLargestContentfulPaintMillis.supported_platforms}
   ///
   ///**Officially Supported Platforms/Implementations**:
   ///- Android WebView ([Official API - NavigationListener.onLargestContentfulPaintMillis](https://developer.android.com/reference/androidx/webkit/NavigationListener#onLargestContentfulPaintMillis(androidx.webkit.Page,long))):
@@ -417,7 +417,7 @@ enum PlatformWebViewCreationParamsProperty {
 
   ///Can be used to check if the [PlatformWebViewCreationParams.onLoadResource] property is supported at runtime.
   ///
-  ///{@template flutter_inappwebview_platform_interface.PlatformWebViewCreationParams.onLoadResource.supported_platforms}
+  ///{@template nosferatu500_inappwebview_platform_interface.PlatformWebViewCreationParams.onLoadResource.supported_platforms}
   ///
   ///**Officially Supported Platforms/Implementations**:
   ///- Android WebView:
@@ -434,7 +434,7 @@ enum PlatformWebViewCreationParamsProperty {
 
   ///Can be used to check if the [PlatformWebViewCreationParams.onLoadResourceWithCustomScheme] property is supported at runtime.
   ///
-  ///{@template flutter_inappwebview_platform_interface.PlatformWebViewCreationParams.onLoadResourceWithCustomScheme.supported_platforms}
+  ///{@template nosferatu500_inappwebview_platform_interface.PlatformWebViewCreationParams.onLoadResourceWithCustomScheme.supported_platforms}
   ///
   ///**Officially Supported Platforms/Implementations**:
   ///- Android WebView
@@ -449,7 +449,7 @@ enum PlatformWebViewCreationParamsProperty {
 
   ///Can be used to check if the [PlatformWebViewCreationParams.onLoadStart] property is supported at runtime.
   ///
-  ///{@template flutter_inappwebview_platform_interface.PlatformWebViewCreationParams.onLoadStart.supported_platforms}
+  ///{@template nosferatu500_inappwebview_platform_interface.PlatformWebViewCreationParams.onLoadStart.supported_platforms}
   ///
   ///**Officially Supported Platforms/Implementations**:
   ///- Android WebView ([Official API - WebViewClient.onPageStarted](https://developer.android.com/reference/android/webkit/WebViewClient#onPageStarted(android.webkit.WebView,%20java.lang.String,%20android.graphics.Bitmap)))
@@ -464,7 +464,7 @@ enum PlatformWebViewCreationParamsProperty {
 
   ///Can be used to check if the [PlatformWebViewCreationParams.onLoadStop] property is supported at runtime.
   ///
-  ///{@template flutter_inappwebview_platform_interface.PlatformWebViewCreationParams.onLoadStop.supported_platforms}
+  ///{@template nosferatu500_inappwebview_platform_interface.PlatformWebViewCreationParams.onLoadStop.supported_platforms}
   ///
   ///**Officially Supported Platforms/Implementations**:
   ///- Android WebView ([Official API - WebViewClient.onPageFinished](https://developer.android.com/reference/android/webkit/WebViewClient#onPageFinished(android.webkit.WebView,%20java.lang.String)))
@@ -479,7 +479,7 @@ enum PlatformWebViewCreationParamsProperty {
 
   ///Can be used to check if the [PlatformWebViewCreationParams.onLongPressHitTestResult] property is supported at runtime.
   ///
-  ///{@template flutter_inappwebview_platform_interface.PlatformWebViewCreationParams.onLongPressHitTestResult.supported_platforms}
+  ///{@template nosferatu500_inappwebview_platform_interface.PlatformWebViewCreationParams.onLongPressHitTestResult.supported_platforms}
   ///
   ///**Officially Supported Platforms/Implementations**:
   ///- Android WebView ([Official API - View.setOnLongClickListener](https://developer.android.com/reference/android/view/View#setOnLongClickListener(android.view.View.OnLongClickListener)))
@@ -494,7 +494,7 @@ enum PlatformWebViewCreationParamsProperty {
 
   ///Can be used to check if the [PlatformWebViewCreationParams.onMicrophoneCaptureStateChanged] property is supported at runtime.
   ///
-  ///{@template flutter_inappwebview_platform_interface.PlatformWebViewCreationParams.onMicrophoneCaptureStateChanged.supported_platforms}
+  ///{@template nosferatu500_inappwebview_platform_interface.PlatformWebViewCreationParams.onMicrophoneCaptureStateChanged.supported_platforms}
   ///
   ///**Officially Supported Platforms/Implementations**:
   ///- iOS WKWebView 15.0+
@@ -509,7 +509,7 @@ enum PlatformWebViewCreationParamsProperty {
 
   ///Can be used to check if the [PlatformWebViewCreationParams.onNavigationCompleted] property is supported at runtime.
   ///
-  ///{@template flutter_inappwebview_platform_interface.PlatformWebViewCreationParams.onNavigationCompleted.supported_platforms}
+  ///{@template nosferatu500_inappwebview_platform_interface.PlatformWebViewCreationParams.onNavigationCompleted.supported_platforms}
   ///
   ///**Officially Supported Platforms/Implementations**:
   ///- Android WebView ([Official API - NavigationListener.onNavigationCompleted](https://developer.android.com/reference/androidx/webkit/NavigationListener#onNavigationCompleted(androidx.webkit.Navigation))):
@@ -524,7 +524,7 @@ enum PlatformWebViewCreationParamsProperty {
 
   ///Can be used to check if the [PlatformWebViewCreationParams.onNavigationRedirected] property is supported at runtime.
   ///
-  ///{@template flutter_inappwebview_platform_interface.PlatformWebViewCreationParams.onNavigationRedirected.supported_platforms}
+  ///{@template nosferatu500_inappwebview_platform_interface.PlatformWebViewCreationParams.onNavigationRedirected.supported_platforms}
   ///
   ///**Officially Supported Platforms/Implementations**:
   ///- Android WebView ([Official API - NavigationListener.onNavigationRedirected](https://developer.android.com/reference/androidx/webkit/NavigationListener#onNavigationRedirected(androidx.webkit.Navigation))):
@@ -539,7 +539,7 @@ enum PlatformWebViewCreationParamsProperty {
 
   ///Can be used to check if the [PlatformWebViewCreationParams.onNavigationResponse] property is supported at runtime.
   ///
-  ///{@template flutter_inappwebview_platform_interface.PlatformWebViewCreationParams.onNavigationResponse.supported_platforms}
+  ///{@template nosferatu500_inappwebview_platform_interface.PlatformWebViewCreationParams.onNavigationResponse.supported_platforms}
   ///
   ///**Officially Supported Platforms/Implementations**:
   ///- iOS WKWebView ([Official API - WKNavigationDelegate.webView](https://developer.apple.com/documentation/webkit/wknavigationdelegate/1455643-webview))
@@ -553,7 +553,7 @@ enum PlatformWebViewCreationParamsProperty {
 
   ///Can be used to check if the [PlatformWebViewCreationParams.onNavigationStarted] property is supported at runtime.
   ///
-  ///{@template flutter_inappwebview_platform_interface.PlatformWebViewCreationParams.onNavigationStarted.supported_platforms}
+  ///{@template nosferatu500_inappwebview_platform_interface.PlatformWebViewCreationParams.onNavigationStarted.supported_platforms}
   ///
   ///**Officially Supported Platforms/Implementations**:
   ///- Android WebView ([Official API - NavigationListener.onNavigationStarted](https://developer.android.com/reference/androidx/webkit/NavigationListener#onNavigationStarted(androidx.webkit.Navigation))):
@@ -568,7 +568,7 @@ enum PlatformWebViewCreationParamsProperty {
 
   ///Can be used to check if the [PlatformWebViewCreationParams.onOverScrolled] property is supported at runtime.
   ///
-  ///{@template flutter_inappwebview_platform_interface.PlatformWebViewCreationParams.onOverScrolled.supported_platforms}
+  ///{@template nosferatu500_inappwebview_platform_interface.PlatformWebViewCreationParams.onOverScrolled.supported_platforms}
   ///
   ///**Officially Supported Platforms/Implementations**:
   ///- Android WebView ([Official API - WebView.onOverScrolled](https://developer.android.com/reference/android/webkit/WebView#onOverScrolled(int,%20int,%20boolean,%20boolean)))
@@ -586,7 +586,7 @@ enum PlatformWebViewCreationParamsProperty {
 
   ///Can be used to check if the [PlatformWebViewCreationParams.onPageCommitVisible] property is supported at runtime.
   ///
-  ///{@template flutter_inappwebview_platform_interface.PlatformWebViewCreationParams.onPageCommitVisible.supported_platforms}
+  ///{@template nosferatu500_inappwebview_platform_interface.PlatformWebViewCreationParams.onPageCommitVisible.supported_platforms}
   ///
   ///**Officially Supported Platforms/Implementations**:
   ///- Android WebView ([Official API - WebViewClient.onPageCommitVisible](https://developer.android.com/reference/android/webkit/WebViewClient#onPageCommitVisible(android.webkit.WebView,%20java.lang.String)))
@@ -601,7 +601,7 @@ enum PlatformWebViewCreationParamsProperty {
 
   ///Can be used to check if the [PlatformWebViewCreationParams.onPageDeleted] property is supported at runtime.
   ///
-  ///{@template flutter_inappwebview_platform_interface.PlatformWebViewCreationParams.onPageDeleted.supported_platforms}
+  ///{@template nosferatu500_inappwebview_platform_interface.PlatformWebViewCreationParams.onPageDeleted.supported_platforms}
   ///
   ///**Officially Supported Platforms/Implementations**:
   ///- Android WebView ([Official API - NavigationListener.onPageDeleted](https://developer.android.com/reference/androidx/webkit/NavigationListener#onPageDeleted(androidx.webkit.Page))):
@@ -616,7 +616,7 @@ enum PlatformWebViewCreationParamsProperty {
 
   ///Can be used to check if the [PlatformWebViewCreationParams.onPageDomContentLoadedEvent] property is supported at runtime.
   ///
-  ///{@template flutter_inappwebview_platform_interface.PlatformWebViewCreationParams.onPageDomContentLoadedEvent.supported_platforms}
+  ///{@template nosferatu500_inappwebview_platform_interface.PlatformWebViewCreationParams.onPageDomContentLoadedEvent.supported_platforms}
   ///
   ///**Officially Supported Platforms/Implementations**:
   ///- Android WebView ([Official API - NavigationListener.onPageDomContentLoadedEvent](https://developer.android.com/reference/androidx/webkit/NavigationListener#onPageDomContentLoadedEvent(androidx.webkit.Page))):
@@ -631,7 +631,7 @@ enum PlatformWebViewCreationParamsProperty {
 
   ///Can be used to check if the [PlatformWebViewCreationParams.onPageLoadEvent] property is supported at runtime.
   ///
-  ///{@template flutter_inappwebview_platform_interface.PlatformWebViewCreationParams.onPageLoadEvent.supported_platforms}
+  ///{@template nosferatu500_inappwebview_platform_interface.PlatformWebViewCreationParams.onPageLoadEvent.supported_platforms}
   ///
   ///**Officially Supported Platforms/Implementations**:
   ///- Android WebView ([Official API - NavigationListener.onPageLoadEvent](https://developer.android.com/reference/androidx/webkit/NavigationListener#onPageLoadEvent(androidx.webkit.Page))):
@@ -646,7 +646,7 @@ enum PlatformWebViewCreationParamsProperty {
 
   ///Can be used to check if the [PlatformWebViewCreationParams.onPerformanceMarkMillis] property is supported at runtime.
   ///
-  ///{@template flutter_inappwebview_platform_interface.PlatformWebViewCreationParams.onPerformanceMarkMillis.supported_platforms}
+  ///{@template nosferatu500_inappwebview_platform_interface.PlatformWebViewCreationParams.onPerformanceMarkMillis.supported_platforms}
   ///
   ///**Officially Supported Platforms/Implementations**:
   ///- Android WebView ([Official API - NavigationListener.onPerformanceMarkMillis](https://developer.android.com/reference/androidx/webkit/NavigationListener#onPerformanceMarkMillis(androidx.webkit.Page,java.lang.String,long))):
@@ -663,7 +663,7 @@ enum PlatformWebViewCreationParamsProperty {
 
   ///Can be used to check if the [PlatformWebViewCreationParams.onPermissionRequest] property is supported at runtime.
   ///
-  ///{@template flutter_inappwebview_platform_interface.PlatformWebViewCreationParams.onPermissionRequest.supported_platforms}
+  ///{@template nosferatu500_inappwebview_platform_interface.PlatformWebViewCreationParams.onPermissionRequest.supported_platforms}
   ///
   ///**Officially Supported Platforms/Implementations**:
   ///- Android WebView 21+ ([Official API - WebChromeClient.onPermissionRequest](https://developer.android.com/reference/android/webkit/WebChromeClient#onPermissionRequest(android.webkit.PermissionRequest)))
@@ -679,7 +679,7 @@ enum PlatformWebViewCreationParamsProperty {
 
   ///Can be used to check if the [PlatformWebViewCreationParams.onPermissionRequestCanceled] property is supported at runtime.
   ///
-  ///{@template flutter_inappwebview_platform_interface.PlatformWebViewCreationParams.onPermissionRequestCanceled.supported_platforms}
+  ///{@template nosferatu500_inappwebview_platform_interface.PlatformWebViewCreationParams.onPermissionRequestCanceled.supported_platforms}
   ///
   ///**Officially Supported Platforms/Implementations**:
   ///- Android WebView 21+ ([Official API - WebChromeClient.onPermissionRequestCanceled](https://developer.android.com/reference/android/webkit/WebChromeClient#onPermissionRequestCanceled(android.webkit.PermissionRequest)))
@@ -693,7 +693,7 @@ enum PlatformWebViewCreationParamsProperty {
 
   ///Can be used to check if the [PlatformWebViewCreationParams.onPrintRequest] property is supported at runtime.
   ///
-  ///{@template flutter_inappwebview_platform_interface.PlatformWebViewCreationParams.onPrintRequest.supported_platforms}
+  ///{@template nosferatu500_inappwebview_platform_interface.PlatformWebViewCreationParams.onPrintRequest.supported_platforms}
   ///
   ///**Officially Supported Platforms/Implementations**:
   ///- Android WebView
@@ -708,7 +708,7 @@ enum PlatformWebViewCreationParamsProperty {
 
   ///Can be used to check if the [PlatformWebViewCreationParams.onProgressChanged] property is supported at runtime.
   ///
-  ///{@template flutter_inappwebview_platform_interface.PlatformWebViewCreationParams.onProgressChanged.supported_platforms}
+  ///{@template nosferatu500_inappwebview_platform_interface.PlatformWebViewCreationParams.onProgressChanged.supported_platforms}
   ///
   ///**Officially Supported Platforms/Implementations**:
   ///- Android WebView ([Official API - WebChromeClient.onProgressChanged](https://developer.android.com/reference/android/webkit/WebChromeClient#onProgressChanged(android.webkit.WebView,%20int)))
@@ -723,7 +723,7 @@ enum PlatformWebViewCreationParamsProperty {
 
   ///Can be used to check if the [PlatformWebViewCreationParams.onReceivedClientCertRequest] property is supported at runtime.
   ///
-  ///{@template flutter_inappwebview_platform_interface.PlatformWebViewCreationParams.onReceivedClientCertRequest.supported_platforms}
+  ///{@template nosferatu500_inappwebview_platform_interface.PlatformWebViewCreationParams.onReceivedClientCertRequest.supported_platforms}
   ///
   ///**Officially Supported Platforms/Implementations**:
   ///- Android WebView ([Official API - WebViewClient.onReceivedClientCertRequest](https://developer.android.com/reference/android/webkit/WebViewClient#onReceivedClientCertRequest(android.webkit.WebView,%20android.webkit.ClientCertRequest)))
@@ -738,7 +738,7 @@ enum PlatformWebViewCreationParamsProperty {
 
   ///Can be used to check if the [PlatformWebViewCreationParams.onReceivedError] property is supported at runtime.
   ///
-  ///{@template flutter_inappwebview_platform_interface.PlatformWebViewCreationParams.onReceivedError.supported_platforms}
+  ///{@template nosferatu500_inappwebview_platform_interface.PlatformWebViewCreationParams.onReceivedError.supported_platforms}
   ///
   ///**Officially Supported Platforms/Implementations**:
   ///- Android WebView ([Official API - WebViewClient.onReceivedError](https://developer.android.com/reference/android/webkit/WebViewClient#onReceivedError(android.webkit.WebView,%20android.webkit.WebResourceRequest,%20android.webkit.WebResourceError)))
@@ -754,7 +754,7 @@ enum PlatformWebViewCreationParamsProperty {
 
   ///Can be used to check if the [PlatformWebViewCreationParams.onReceivedHttpAuthRequest] property is supported at runtime.
   ///
-  ///{@template flutter_inappwebview_platform_interface.PlatformWebViewCreationParams.onReceivedHttpAuthRequest.supported_platforms}
+  ///{@template nosferatu500_inappwebview_platform_interface.PlatformWebViewCreationParams.onReceivedHttpAuthRequest.supported_platforms}
   ///
   ///**Officially Supported Platforms/Implementations**:
   ///- Android WebView ([Official API - WebViewClient.onReceivedHttpAuthRequest](https://developer.android.com/reference/android/webkit/WebViewClient#onReceivedHttpAuthRequest(android.webkit.WebView,%20android.webkit.HttpAuthHandler,%20java.lang.String,%20java.lang.String)))
@@ -769,7 +769,7 @@ enum PlatformWebViewCreationParamsProperty {
 
   ///Can be used to check if the [PlatformWebViewCreationParams.onReceivedHttpError] property is supported at runtime.
   ///
-  ///{@template flutter_inappwebview_platform_interface.PlatformWebViewCreationParams.onReceivedHttpError.supported_platforms}
+  ///{@template nosferatu500_inappwebview_platform_interface.PlatformWebViewCreationParams.onReceivedHttpError.supported_platforms}
   ///
   ///**Officially Supported Platforms/Implementations**:
   ///- Android WebView 23+ ([Official API - WebViewClient.onReceivedHttpError](https://developer.android.com/reference/android/webkit/WebViewClient#onReceivedHttpError(android.webkit.WebView,%20android.webkit.WebResourceRequest,%20android.webkit.WebResourceResponse)))
@@ -785,7 +785,7 @@ enum PlatformWebViewCreationParamsProperty {
 
   ///Can be used to check if the [PlatformWebViewCreationParams.onReceivedLoginRequest] property is supported at runtime.
   ///
-  ///{@template flutter_inappwebview_platform_interface.PlatformWebViewCreationParams.onReceivedLoginRequest.supported_platforms}
+  ///{@template nosferatu500_inappwebview_platform_interface.PlatformWebViewCreationParams.onReceivedLoginRequest.supported_platforms}
   ///
   ///**Officially Supported Platforms/Implementations**:
   ///- Android WebView ([Official API - WebViewClient.onReceivedLoginRequest](https://developer.android.com/reference/android/webkit/WebViewClient#onReceivedLoginRequest(android.webkit.WebView,%20java.lang.String,%20java.lang.String,%20java.lang.String)))
@@ -799,7 +799,7 @@ enum PlatformWebViewCreationParamsProperty {
 
   ///Can be used to check if the [PlatformWebViewCreationParams.onReceivedServerTrustAuthRequest] property is supported at runtime.
   ///
-  ///{@template flutter_inappwebview_platform_interface.PlatformWebViewCreationParams.onReceivedServerTrustAuthRequest.supported_platforms}
+  ///{@template nosferatu500_inappwebview_platform_interface.PlatformWebViewCreationParams.onReceivedServerTrustAuthRequest.supported_platforms}
   ///
   ///**Officially Supported Platforms/Implementations**:
   ///- Android WebView ([Official API - WebViewClient.onReceivedSslError](https://developer.android.com/reference/android/webkit/WebViewClient#onReceivedSslError(android.webkit.WebView,%20android.webkit.SslErrorHandler,%20android.net.http.SslError)))
@@ -815,7 +815,7 @@ enum PlatformWebViewCreationParamsProperty {
 
   ///Can be used to check if the [PlatformWebViewCreationParams.onReceivedTouchIconUrl] property is supported at runtime.
   ///
-  ///{@template flutter_inappwebview_platform_interface.PlatformWebViewCreationParams.onReceivedTouchIconUrl.supported_platforms}
+  ///{@template nosferatu500_inappwebview_platform_interface.PlatformWebViewCreationParams.onReceivedTouchIconUrl.supported_platforms}
   ///
   ///**Officially Supported Platforms/Implementations**:
   ///- Android WebView ([Official API - WebChromeClient.onReceivedTouchIconUrl](https://developer.android.com/reference/android/webkit/WebChromeClient#onReceivedTouchIconUrl(android.webkit.WebView,%20java.lang.String,%20boolean)))
@@ -830,7 +830,7 @@ enum PlatformWebViewCreationParamsProperty {
 
   ///Can be used to check if the [PlatformWebViewCreationParams.onRenderProcessGone] property is supported at runtime.
   ///
-  ///{@template flutter_inappwebview_platform_interface.PlatformWebViewCreationParams.onRenderProcessGone.supported_platforms}
+  ///{@template nosferatu500_inappwebview_platform_interface.PlatformWebViewCreationParams.onRenderProcessGone.supported_platforms}
   ///
   ///**Officially Supported Platforms/Implementations**:
   ///- Android WebView 26+ ([Official API - WebViewClient.onRenderProcessGone](https://developer.android.com/reference/android/webkit/WebViewClient#onRenderProcessGone(android.webkit.WebView,%20android.webkit.RenderProcessGoneDetail)))
@@ -844,7 +844,7 @@ enum PlatformWebViewCreationParamsProperty {
 
   ///Can be used to check if the [PlatformWebViewCreationParams.onRenderProcessResponsive] property is supported at runtime.
   ///
-  ///{@template flutter_inappwebview_platform_interface.PlatformWebViewCreationParams.onRenderProcessResponsive.supported_platforms}
+  ///{@template nosferatu500_inappwebview_platform_interface.PlatformWebViewCreationParams.onRenderProcessResponsive.supported_platforms}
   ///
   ///**Officially Supported Platforms/Implementations**:
   ///- Android WebView 29+ ([Official API - WebViewRenderProcessClient.onRenderProcessResponsive](https://developer.android.com/reference/android/webkit/WebViewRenderProcessClient#onRenderProcessResponsive(android.webkit.WebView,%20android.webkit.WebViewRenderProcess)))
@@ -858,7 +858,7 @@ enum PlatformWebViewCreationParamsProperty {
 
   ///Can be used to check if the [PlatformWebViewCreationParams.onRenderProcessUnresponsive] property is supported at runtime.
   ///
-  ///{@template flutter_inappwebview_platform_interface.PlatformWebViewCreationParams.onRenderProcessUnresponsive.supported_platforms}
+  ///{@template nosferatu500_inappwebview_platform_interface.PlatformWebViewCreationParams.onRenderProcessUnresponsive.supported_platforms}
   ///
   ///**Officially Supported Platforms/Implementations**:
   ///- Android WebView 29+ ([Official API - WebViewRenderProcessClient.onRenderProcessUnresponsive](https://developer.android.com/reference/android/webkit/WebViewRenderProcessClient#onRenderProcessUnresponsive(android.webkit.WebView,%20android.webkit.WebViewRenderProcess)))
@@ -872,7 +872,7 @@ enum PlatformWebViewCreationParamsProperty {
 
   ///Can be used to check if the [PlatformWebViewCreationParams.onRequestFocus] property is supported at runtime.
   ///
-  ///{@template flutter_inappwebview_platform_interface.PlatformWebViewCreationParams.onRequestFocus.supported_platforms}
+  ///{@template nosferatu500_inappwebview_platform_interface.PlatformWebViewCreationParams.onRequestFocus.supported_platforms}
   ///
   ///**Officially Supported Platforms/Implementations**:
   ///- Android WebView ([Official API - WebChromeClient.onRequestFocus](https://developer.android.com/reference/android/webkit/WebChromeClient#onRequestFocus(android.webkit.WebView)))
@@ -883,7 +883,7 @@ enum PlatformWebViewCreationParamsProperty {
 
   ///Can be used to check if the [PlatformWebViewCreationParams.onRequestVisitedHistory] property is supported at runtime.
   ///
-  ///{@template flutter_inappwebview_platform_interface.PlatformWebViewCreationParams.onRequestVisitedHistory.supported_platforms}
+  ///{@template nosferatu500_inappwebview_platform_interface.PlatformWebViewCreationParams.onRequestVisitedHistory.supported_platforms}
   ///
   ///**Officially Supported Platforms/Implementations**:
   ///- Android WebView ([Official API - WebChromeClient.getVisitedHistory](https://developer.android.com/reference/android/webkit/WebChromeClient#getVisitedHistory(android.webkit.ValueCallback%3Cjava.lang.String%5B%5D%3E)))
@@ -894,7 +894,7 @@ enum PlatformWebViewCreationParamsProperty {
 
   ///Can be used to check if the [PlatformWebViewCreationParams.onSafeBrowsingHit] property is supported at runtime.
   ///
-  ///{@template flutter_inappwebview_platform_interface.PlatformWebViewCreationParams.onSafeBrowsingHit.supported_platforms}
+  ///{@template nosferatu500_inappwebview_platform_interface.PlatformWebViewCreationParams.onSafeBrowsingHit.supported_platforms}
   ///
   ///**Officially Supported Platforms/Implementations**:
   ///- Android WebView 27+ ([Official API - WebViewClient.onSafeBrowsingHit](https://developer.android.com/reference/android/webkit/WebViewClient#onSafeBrowsingHit(android.webkit.WebView,%20android.webkit.WebResourceRequest,%20int,%20android.webkit.SafeBrowsingResponse)))
@@ -909,7 +909,7 @@ enum PlatformWebViewCreationParamsProperty {
 
   ///Can be used to check if the [PlatformWebViewCreationParams.onScrollChanged] property is supported at runtime.
   ///
-  ///{@template flutter_inappwebview_platform_interface.PlatformWebViewCreationParams.onScrollChanged.supported_platforms}
+  ///{@template nosferatu500_inappwebview_platform_interface.PlatformWebViewCreationParams.onScrollChanged.supported_platforms}
   ///
   ///**Officially Supported Platforms/Implementations**:
   ///- Android WebView ([Official API - WebView.onScrollChanged](https://developer.android.com/reference/android/webkit/WebView#onScrollChanged(int,%20int,%20int,%20int)))
@@ -925,7 +925,7 @@ enum PlatformWebViewCreationParamsProperty {
 
   ///Can be used to check if the [PlatformWebViewCreationParams.onShowFileChooser] property is supported at runtime.
   ///
-  ///{@template flutter_inappwebview_platform_interface.PlatformWebViewCreationParams.onShowFileChooser.supported_platforms}
+  ///{@template nosferatu500_inappwebview_platform_interface.PlatformWebViewCreationParams.onShowFileChooser.supported_platforms}
   ///
   ///**Officially Supported Platforms/Implementations**:
   ///- Android WebView ([Official API - WebChromeClient.onShowFileChooser](https://developer.android.com/reference/android/webkit/WebChromeClient#onShowFileChooser(android.webkit.WebView,%20android.webkit.ValueCallback%3Candroid.net.Uri[]%3E,%20android.webkit.WebChromeClient.FileChooserParams)))
@@ -941,7 +941,7 @@ enum PlatformWebViewCreationParamsProperty {
 
   ///Can be used to check if the [PlatformWebViewCreationParams.onTitleChanged] property is supported at runtime.
   ///
-  ///{@template flutter_inappwebview_platform_interface.PlatformWebViewCreationParams.onTitleChanged.supported_platforms}
+  ///{@template nosferatu500_inappwebview_platform_interface.PlatformWebViewCreationParams.onTitleChanged.supported_platforms}
   ///
   ///**Officially Supported Platforms/Implementations**:
   ///- Android WebView ([Official API - WebChromeClient.onReceivedTitle](https://developer.android.com/reference/android/webkit/WebChromeClient#onReceivedTitle(android.webkit.WebView,%20java.lang.String)))
@@ -956,7 +956,7 @@ enum PlatformWebViewCreationParamsProperty {
 
   ///Can be used to check if the [PlatformWebViewCreationParams.onUpdateVisitedHistory] property is supported at runtime.
   ///
-  ///{@template flutter_inappwebview_platform_interface.PlatformWebViewCreationParams.onUpdateVisitedHistory.supported_platforms}
+  ///{@template nosferatu500_inappwebview_platform_interface.PlatformWebViewCreationParams.onUpdateVisitedHistory.supported_platforms}
   ///
   ///**Officially Supported Platforms/Implementations**:
   ///- Android WebView ([Official API - WebViewClient.doUpdateVisitedHistory](https://developer.android.com/reference/android/webkit/WebViewClient#doUpdateVisitedHistory(android.webkit.WebView,%20java.lang.String,%20boolean)))
@@ -973,7 +973,7 @@ enum PlatformWebViewCreationParamsProperty {
 
   ///Can be used to check if the [PlatformWebViewCreationParams.onWebContentProcessDidTerminate] property is supported at runtime.
   ///
-  ///{@template flutter_inappwebview_platform_interface.PlatformWebViewCreationParams.onWebContentProcessDidTerminate.supported_platforms}
+  ///{@template nosferatu500_inappwebview_platform_interface.PlatformWebViewCreationParams.onWebContentProcessDidTerminate.supported_platforms}
   ///
   ///**Officially Supported Platforms/Implementations**:
   ///- iOS WKWebView ([Official API - WKNavigationDelegate.webViewWebContentProcessDidTerminate](https://developer.apple.com/documentation/webkit/wknavigationdelegate/1455639-webviewwebcontentprocessdidtermi))
@@ -984,7 +984,7 @@ enum PlatformWebViewCreationParamsProperty {
 
   ///Can be used to check if the [PlatformWebViewCreationParams.onWebViewCreated] property is supported at runtime.
   ///
-  ///{@template flutter_inappwebview_platform_interface.PlatformWebViewCreationParams.onWebViewCreated.supported_platforms}
+  ///{@template nosferatu500_inappwebview_platform_interface.PlatformWebViewCreationParams.onWebViewCreated.supported_platforms}
   ///
   ///**Officially Supported Platforms/Implementations**:
   ///- Android WebView
@@ -996,7 +996,7 @@ enum PlatformWebViewCreationParamsProperty {
 
   ///Can be used to check if the [PlatformWebViewCreationParams.onWindowBlur] property is supported at runtime.
   ///
-  ///{@template flutter_inappwebview_platform_interface.PlatformWebViewCreationParams.onWindowBlur.supported_platforms}
+  ///{@template nosferatu500_inappwebview_platform_interface.PlatformWebViewCreationParams.onWindowBlur.supported_platforms}
   ///
   ///**Officially Supported Platforms/Implementations**:
   ///- Android WebView
@@ -1008,7 +1008,7 @@ enum PlatformWebViewCreationParamsProperty {
 
   ///Can be used to check if the [PlatformWebViewCreationParams.onWindowFocus] property is supported at runtime.
   ///
-  ///{@template flutter_inappwebview_platform_interface.PlatformWebViewCreationParams.onWindowFocus.supported_platforms}
+  ///{@template nosferatu500_inappwebview_platform_interface.PlatformWebViewCreationParams.onWindowFocus.supported_platforms}
   ///
   ///**Officially Supported Platforms/Implementations**:
   ///- Android WebView
@@ -1020,7 +1020,7 @@ enum PlatformWebViewCreationParamsProperty {
 
   ///Can be used to check if the [PlatformWebViewCreationParams.onWritingToolsActiveChanged] property is supported at runtime.
   ///
-  ///{@template flutter_inappwebview_platform_interface.PlatformWebViewCreationParams.onWritingToolsActiveChanged.supported_platforms}
+  ///{@template nosferatu500_inappwebview_platform_interface.PlatformWebViewCreationParams.onWritingToolsActiveChanged.supported_platforms}
   ///
   ///**Officially Supported Platforms/Implementations**:
   ///- iOS WKWebView 18.0+ ([Official API - WKWebView.writingToolsActive](https://developer.apple.com/documentation/webkit/wkwebview/4433211-writingtoolsactive))
@@ -1034,7 +1034,7 @@ enum PlatformWebViewCreationParamsProperty {
 
   ///Can be used to check if the [PlatformWebViewCreationParams.onZoomScaleChanged] property is supported at runtime.
   ///
-  ///{@template flutter_inappwebview_platform_interface.PlatformWebViewCreationParams.onZoomScaleChanged.supported_platforms}
+  ///{@template nosferatu500_inappwebview_platform_interface.PlatformWebViewCreationParams.onZoomScaleChanged.supported_platforms}
   ///
   ///**Officially Supported Platforms/Implementations**:
   ///- Android WebView ([Official API - WebViewClient.onScaleChanged](https://developer.android.com/reference/android/webkit/WebViewClient#onScaleChanged(android.webkit.WebView,%20float,%20float)))
@@ -1050,7 +1050,7 @@ enum PlatformWebViewCreationParamsProperty {
 
   ///Can be used to check if the [PlatformWebViewCreationParams.pullToRefreshController] property is supported at runtime.
   ///
-  ///{@template flutter_inappwebview_platform_interface.PlatformWebViewCreationParams.pullToRefreshController.supported_platforms}
+  ///{@template nosferatu500_inappwebview_platform_interface.PlatformWebViewCreationParams.pullToRefreshController.supported_platforms}
   ///
   ///**Officially Supported Platforms/Implementations**:
   ///- Android WebView:
@@ -1063,7 +1063,7 @@ enum PlatformWebViewCreationParamsProperty {
 
   ///Can be used to check if the [PlatformWebViewCreationParams.shouldAllowDeprecatedTLS] property is supported at runtime.
   ///
-  ///{@template flutter_inappwebview_platform_interface.PlatformWebViewCreationParams.shouldAllowDeprecatedTLS.supported_platforms}
+  ///{@template nosferatu500_inappwebview_platform_interface.PlatformWebViewCreationParams.shouldAllowDeprecatedTLS.supported_platforms}
   ///
   ///**Officially Supported Platforms/Implementations**:
   ///- iOS WKWebView 14.0+ ([Official API - WKNavigationDelegate.webView](https://developer.apple.com/documentation/webkit/wknavigationdelegate/3601237-webview))
@@ -1077,7 +1077,7 @@ enum PlatformWebViewCreationParamsProperty {
 
   ///Can be used to check if the [PlatformWebViewCreationParams.shouldGoToBackForwardListItem] property is supported at runtime.
   ///
-  ///{@template flutter_inappwebview_platform_interface.PlatformWebViewCreationParams.shouldGoToBackForwardListItem.supported_platforms}
+  ///{@template nosferatu500_inappwebview_platform_interface.PlatformWebViewCreationParams.shouldGoToBackForwardListItem.supported_platforms}
   ///
   ///**Officially Supported Platforms/Implementations**:
   ///- iOS WKWebView 26.0+ ([Official API - WKNavigationDelegate.webView](https://developer.apple.com/documentation/webkit/wknavigationdelegate/4448873-webview))
@@ -1092,7 +1092,7 @@ enum PlatformWebViewCreationParamsProperty {
 
   ///Can be used to check if the [PlatformWebViewCreationParams.shouldInterceptAjaxRequest] property is supported at runtime.
   ///
-  ///{@template flutter_inappwebview_platform_interface.PlatformWebViewCreationParams.shouldInterceptAjaxRequest.supported_platforms}
+  ///{@template nosferatu500_inappwebview_platform_interface.PlatformWebViewCreationParams.shouldInterceptAjaxRequest.supported_platforms}
   ///
   ///**Officially Supported Platforms/Implementations**:
   ///- Android WebView:
@@ -1108,7 +1108,7 @@ enum PlatformWebViewCreationParamsProperty {
 
   ///Can be used to check if the [PlatformWebViewCreationParams.shouldInterceptFetchRequest] property is supported at runtime.
   ///
-  ///{@template flutter_inappwebview_platform_interface.PlatformWebViewCreationParams.shouldInterceptFetchRequest.supported_platforms}
+  ///{@template nosferatu500_inappwebview_platform_interface.PlatformWebViewCreationParams.shouldInterceptFetchRequest.supported_platforms}
   ///
   ///**Officially Supported Platforms/Implementations**:
   ///- Android WebView:
@@ -1124,7 +1124,7 @@ enum PlatformWebViewCreationParamsProperty {
 
   ///Can be used to check if the [PlatformWebViewCreationParams.shouldInterceptRequest] property is supported at runtime.
   ///
-  ///{@template flutter_inappwebview_platform_interface.PlatformWebViewCreationParams.shouldInterceptRequest.supported_platforms}
+  ///{@template nosferatu500_inappwebview_platform_interface.PlatformWebViewCreationParams.shouldInterceptRequest.supported_platforms}
   ///
   ///**Officially Supported Platforms/Implementations**:
   ///- Android WebView ([Official API - WebViewClient.shouldInterceptRequest](https://developer.android.com/reference/android/webkit/WebViewClient#shouldInterceptRequest(android.webkit.WebView,%20android.webkit.WebResourceRequest)))
@@ -1138,7 +1138,7 @@ enum PlatformWebViewCreationParamsProperty {
 
   ///Can be used to check if the [PlatformWebViewCreationParams.shouldOverrideUrlLoading] property is supported at runtime.
   ///
-  ///{@template flutter_inappwebview_platform_interface.PlatformWebViewCreationParams.shouldOverrideUrlLoading.supported_platforms}
+  ///{@template nosferatu500_inappwebview_platform_interface.PlatformWebViewCreationParams.shouldOverrideUrlLoading.supported_platforms}
   ///
   ///**Officially Supported Platforms/Implementations**:
   ///- Android WebView ([Official API - WebViewClient.shouldOverrideUrlLoading](https://developer.android.com/reference/android/webkit/WebViewClient#shouldOverrideUrlLoading(android.webkit.WebView,%20java.lang.String))):
@@ -1154,7 +1154,7 @@ enum PlatformWebViewCreationParamsProperty {
 
   ///Can be used to check if the [PlatformWebViewCreationParams.windowId] property is supported at runtime.
   ///
-  ///{@template flutter_inappwebview_platform_interface.PlatformWebViewCreationParams.windowId.supported_platforms}
+  ///{@template nosferatu500_inappwebview_platform_interface.PlatformWebViewCreationParams.windowId.supported_platforms}
   ///
   ///**Officially Supported Platforms/Implementations**:
   ///- Android WebView

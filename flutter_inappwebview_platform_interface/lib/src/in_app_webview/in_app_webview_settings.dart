@@ -1,7 +1,7 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/widgets.dart';
-import 'package:flutter_inappwebview_internal_annotations/flutter_inappwebview_internal_annotations.dart';
-import 'package:flutter_inappwebview_platform_interface/flutter_inappwebview_platform_interface.dart';
+import 'package:nosferatu500_inappwebview_internal_annotations/nosferatu500_inappwebview_internal_annotations.dart';
+import 'package:nosferatu500_inappwebview_platform_interface/nosferatu500_inappwebview_platform_interface.dart';
 
 import '../types/action_mode_menu_item.dart';
 import '../types/attribution_registration_behavior.dart';
@@ -45,7 +45,7 @@ List<ContentBlocker> _deserializeContentBlockers(
   return contentBlockers;
 }
 
-///{@template flutter_inappwebview_platform_interface.InAppWebViewSettings}
+///{@template nosferatu500_inappwebview_platform_interface.InAppWebViewSettings}
 ///This class represents all the WebView settings available.
 ///{@endtemplate}
 @ExchangeableObject(copyMethod: true)

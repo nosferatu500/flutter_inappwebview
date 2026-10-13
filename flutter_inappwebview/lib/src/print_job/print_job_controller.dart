@@ -1,13 +1,13 @@
 import 'package:flutter/foundation.dart';
-import 'package:flutter_inappwebview_platform_interface/flutter_inappwebview_platform_interface.dart';
+import 'package:nosferatu500_inappwebview_platform_interface/nosferatu500_inappwebview_platform_interface.dart';
 
-///{@macro flutter_inappwebview_platform_interface.PlatformPrintJobController}
+///{@macro nosferatu500_inappwebview_platform_interface.PlatformPrintJobController}
 ///
-///{@macro flutter_inappwebview_platform_interface.PlatformPrintJobController.supported_platforms}
+///{@macro nosferatu500_inappwebview_platform_interface.PlatformPrintJobController.supported_platforms}
 class PrintJobController {
-  ///{@macro flutter_inappwebview_platform_interface.PlatformPrintJobController}
+  ///{@macro nosferatu500_inappwebview_platform_interface.PlatformPrintJobController}
   ///
-  ///{@macro flutter_inappwebview_platform_interface.PlatformPrintJobController.supported_platforms}
+  ///{@macro nosferatu500_inappwebview_platform_interface.PlatformPrintJobController.supported_platforms}
   PrintJobController({required String id})
     : this.fromPlatformCreationParams(
         params: PlatformPrintJobControllerCreationParams(id: id),
@@ -27,51 +27,51 @@ class PrintJobController {
   /// Implementation of [PlatformPrintJobController] for the current platform.
   final PlatformPrintJobController platform;
 
-  ///{@macro flutter_inappwebview_platform_interface.PlatformPrintJobController.id}
+  ///{@macro nosferatu500_inappwebview_platform_interface.PlatformPrintJobController.id}
   ///
-  ///{@macro flutter_inappwebview_platform_interface.PlatformPrintJobController.id.supported_platforms}
+  ///{@macro nosferatu500_inappwebview_platform_interface.PlatformPrintJobController.id.supported_platforms}
   String get id => platform.id;
 
-  ///{@macro flutter_inappwebview_platform_interface.PlatformPrintJobController.onComplete}
+  ///{@macro nosferatu500_inappwebview_platform_interface.PlatformPrintJobController.onComplete}
   ///
-  ///{@macro flutter_inappwebview_platform_interface.PlatformPrintJobController.onComplete.supported_platforms}
+  ///{@macro nosferatu500_inappwebview_platform_interface.PlatformPrintJobController.onComplete.supported_platforms}
   PrintJobCompletionHandler? get onComplete => platform.onComplete;
 
   set onComplete(PrintJobCompletionHandler? handler) {
     platform.onComplete = handler;
   }
 
-  ///{@macro flutter_inappwebview_platform_interface.PlatformPrintJobController.cancel}
+  ///{@macro nosferatu500_inappwebview_platform_interface.PlatformPrintJobController.cancel}
   ///
-  ///{@macro flutter_inappwebview_platform_interface.PlatformPrintJobController.cancel.supported_platforms}
+  ///{@macro nosferatu500_inappwebview_platform_interface.PlatformPrintJobController.cancel.supported_platforms}
   Future<void> cancel() => platform.cancel();
 
-  ///{@macro flutter_inappwebview_platform_interface.PlatformPrintJobController.restart}
+  ///{@macro nosferatu500_inappwebview_platform_interface.PlatformPrintJobController.restart}
   ///
-  ///{@macro flutter_inappwebview_platform_interface.PlatformPrintJobController.restart.supported_platforms}
+  ///{@macro nosferatu500_inappwebview_platform_interface.PlatformPrintJobController.restart.supported_platforms}
   Future<void> restart() => platform.restart();
 
-  ///{@macro flutter_inappwebview_platform_interface.PlatformPrintJobController.dismiss}
+  ///{@macro nosferatu500_inappwebview_platform_interface.PlatformPrintJobController.dismiss}
   ///
-  ///{@macro flutter_inappwebview_platform_interface.PlatformPrintJobController.dismiss.supported_platforms}
+  ///{@macro nosferatu500_inappwebview_platform_interface.PlatformPrintJobController.dismiss.supported_platforms}
   Future<void> dismiss({bool animated = true}) =>
       platform.dismiss(animated: animated);
 
-  ///{@macro flutter_inappwebview_platform_interface.PlatformPrintJobController.getInfo}
+  ///{@macro nosferatu500_inappwebview_platform_interface.PlatformPrintJobController.getInfo}
   ///
-  ///{@macro flutter_inappwebview_platform_interface.PlatformPrintJobController.getInfo.supported_platforms}
+  ///{@macro nosferatu500_inappwebview_platform_interface.PlatformPrintJobController.getInfo.supported_platforms}
   Future<PrintJobInfo?> getInfo() => platform.getInfo();
 
-  ///{@macro flutter_inappwebview_platform_interface.PlatformPrintJobController.dispose}
+  ///{@macro nosferatu500_inappwebview_platform_interface.PlatformPrintJobController.dispose}
   ///
-  ///{@macro flutter_inappwebview_platform_interface.PlatformPrintJobController.dispose.supported_platforms}
+  ///{@macro nosferatu500_inappwebview_platform_interface.PlatformPrintJobController.dispose.supported_platforms}
   void dispose() => platform.dispose();
 
-  ///{@macro flutter_inappwebview_platform_interface.PlatformPrintJobControllerCreationParams.isClassSupported}
+  ///{@macro nosferatu500_inappwebview_platform_interface.PlatformPrintJobControllerCreationParams.isClassSupported}
   static bool isClassSupported({TargetPlatform? platform}) =>
       PlatformPrintJobController.static().isClassSupported(platform: platform);
 
-  ///{@macro flutter_inappwebview_platform_interface.PlatformPrintJobController.isPropertySupported}
+  ///{@macro nosferatu500_inappwebview_platform_interface.PlatformPrintJobController.isPropertySupported}
   static bool isPropertySupported(
     dynamic property, {
     TargetPlatform? platform,
@@ -80,7 +80,7 @@ class PrintJobController {
     platform: platform,
   );
 
-  ///{@macro flutter_inappwebview_platform_interface.PlatformPrintJobController.isMethodSupported}
+  ///{@macro nosferatu500_inappwebview_platform_interface.PlatformPrintJobController.isMethodSupported}
   static bool isMethodSupported(
     PlatformPrintJobControllerMethod method, {
     TargetPlatform? platform,

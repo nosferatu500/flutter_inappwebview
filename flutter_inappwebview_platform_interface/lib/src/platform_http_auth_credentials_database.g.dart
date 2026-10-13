@@ -8,7 +8,7 @@ part of 'platform_http_auth_credentials_database.dart';
 
 extension _PlatformHttpAuthCredentialDatabaseCreationParamsClassSupported
     on PlatformHttpAuthCredentialDatabaseCreationParams {
-  ///{@template flutter_inappwebview_platform_interface.PlatformHttpAuthCredentialDatabaseCreationParams.supported_platforms}
+  ///{@template nosferatu500_inappwebview_platform_interface.PlatformHttpAuthCredentialDatabaseCreationParams.supported_platforms}
   ///
   ///**Officially Supported Platforms/Implementations**:
   ///- Android WebView
@@ -27,7 +27,7 @@ extension _PlatformHttpAuthCredentialDatabaseCreationParamsClassSupported
 
 extension _PlatformHttpAuthCredentialDatabaseClassSupported
     on PlatformHttpAuthCredentialDatabase {
-  ///{@template flutter_inappwebview_platform_interface.PlatformHttpAuthCredentialDatabase.supported_platforms}
+  ///{@template nosferatu500_inappwebview_platform_interface.PlatformHttpAuthCredentialDatabase.supported_platforms}
   ///
   ///**Officially Supported Platforms/Implementations**:
   ///- Android WebView:
@@ -52,7 +52,7 @@ extension _PlatformHttpAuthCredentialDatabaseClassSupported
 enum PlatformHttpAuthCredentialDatabaseMethod {
   ///Can be used to check if the [PlatformHttpAuthCredentialDatabase.clearAllAuthCredentials] method is supported at runtime.
   ///
-  ///{@template flutter_inappwebview_platform_interface.PlatformHttpAuthCredentialDatabase.clearAllAuthCredentials.supported_platforms}
+  ///{@template nosferatu500_inappwebview_platform_interface.PlatformHttpAuthCredentialDatabase.clearAllAuthCredentials.supported_platforms}
   ///
   ///**Officially Supported Platforms/Implementations**:
   ///- Android WebView
@@ -64,7 +64,7 @@ enum PlatformHttpAuthCredentialDatabaseMethod {
 
   ///Can be used to check if the [PlatformHttpAuthCredentialDatabase.getAllAuthCredentials] method is supported at runtime.
   ///
-  ///{@template flutter_inappwebview_platform_interface.PlatformHttpAuthCredentialDatabase.getAllAuthCredentials.supported_platforms}
+  ///{@template nosferatu500_inappwebview_platform_interface.PlatformHttpAuthCredentialDatabase.getAllAuthCredentials.supported_platforms}
   ///
   ///**Officially Supported Platforms/Implementations**:
   ///- Android WebView
@@ -76,7 +76,7 @@ enum PlatformHttpAuthCredentialDatabaseMethod {
 
   ///Can be used to check if the [PlatformHttpAuthCredentialDatabase.getHttpAuthCredentials] method is supported at runtime.
   ///
-  ///{@template flutter_inappwebview_platform_interface.PlatformHttpAuthCredentialDatabase.getHttpAuthCredentials.supported_platforms}
+  ///{@template nosferatu500_inappwebview_platform_interface.PlatformHttpAuthCredentialDatabase.getHttpAuthCredentials.supported_platforms}
   ///
   ///**Officially Supported Platforms/Implementations**:
   ///- Android WebView
@@ -91,7 +91,7 @@ enum PlatformHttpAuthCredentialDatabaseMethod {
 
   ///Can be used to check if the [PlatformHttpAuthCredentialDatabase.removeHttpAuthCredential] method is supported at runtime.
   ///
-  ///{@template flutter_inappwebview_platform_interface.PlatformHttpAuthCredentialDatabase.removeHttpAuthCredential.supported_platforms}
+  ///{@template nosferatu500_inappwebview_platform_interface.PlatformHttpAuthCredentialDatabase.removeHttpAuthCredential.supported_platforms}
   ///
   ///**Officially Supported Platforms/Implementations**:
   ///- Android WebView
@@ -107,7 +107,7 @@ enum PlatformHttpAuthCredentialDatabaseMethod {
 
   ///Can be used to check if the [PlatformHttpAuthCredentialDatabase.removeHttpAuthCredentials] method is supported at runtime.
   ///
-  ///{@template flutter_inappwebview_platform_interface.PlatformHttpAuthCredentialDatabase.removeHttpAuthCredentials.supported_platforms}
+  ///{@template nosferatu500_inappwebview_platform_interface.PlatformHttpAuthCredentialDatabase.removeHttpAuthCredentials.supported_platforms}
   ///
   ///**Officially Supported Platforms/Implementations**:
   ///- Android WebView
@@ -122,7 +122,7 @@ enum PlatformHttpAuthCredentialDatabaseMethod {
 
   ///Can be used to check if the [PlatformHttpAuthCredentialDatabase.setHttpAuthCredential] method is supported at runtime.
   ///
-  ///{@template flutter_inappwebview_platform_interface.PlatformHttpAuthCredentialDatabase.setHttpAuthCredential.supported_platforms}
+  ///{@template nosferatu500_inappwebview_platform_interface.PlatformHttpAuthCredentialDatabase.setHttpAuthCredential.supported_platforms}
   ///
   ///**Officially Supported Platforms/Implementations**:
   ///- Android WebView

@@ -1,8 +1,8 @@
 import 'dart:async';
 
 import 'package:flutter/services.dart';
-import 'package:flutter_inappwebview_android/flutter_inappwebview_android.dart';
-import 'package:flutter_inappwebview_android/src/pigeons/print_job.g.dart';
+import 'package:nosferatu500_inappwebview_android/nosferatu500_inappwebview_android.dart';
+import 'package:nosferatu500_inappwebview_android/src/pigeons/print_job.g.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 /// Boundary coverage for the print-job channel's **event direction** (§184), which had none at any
@@ -22,10 +22,10 @@ void main() {
   const id = 'print-job-boundary-test';
   const codec = PrintJobControllerHostApi.pigeonChannelCodec;
   const onCompleteChannel =
-      'dev.flutter.pigeon.flutter_inappwebview_android.PrintJobControllerFlutterApi'
+      'dev.flutter.pigeon.nosferatu500_inappwebview_android.PrintJobControllerFlutterApi'
       '.onComplete.$id';
   const hostDispose =
-      'dev.flutter.pigeon.flutter_inappwebview_android.PrintJobControllerHostApi'
+      'dev.flutter.pigeon.nosferatu500_inappwebview_android.PrintJobControllerHostApi'
       '.dispose.$id';
 
   final messenger =

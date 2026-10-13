@@ -191,7 +191,7 @@ class InAppWebViewManagerHostApi {
   /// Null only when the plugin has gone away; the Dart side answers `?? ''`, as before.
   Future<String?> getDefaultUserAgent() async {
     final pigeonVar_channelName =
-        'dev.flutter.pigeon.flutter_inappwebview_android.InAppWebViewManagerHostApi.getDefaultUserAgent$pigeonVar_messageChannelSuffix';
+        'dev.flutter.pigeon.nosferatu500_inappwebview_android.InAppWebViewManagerHostApi.getDefaultUserAgent$pigeonVar_messageChannelSuffix';
     final pigeonVar_channel = BasicMessageChannel<Object?>(
       pigeonVar_channelName,
       pigeonChannelCodec,
@@ -211,7 +211,7 @@ class InAppWebViewManagerHostApi {
   /// `@async`: the platform reports completion through a `Runnable`.
   Future<bool> clearClientCertPreferences() async {
     final pigeonVar_channelName =
-        'dev.flutter.pigeon.flutter_inappwebview_android.InAppWebViewManagerHostApi.clearClientCertPreferences$pigeonVar_messageChannelSuffix';
+        'dev.flutter.pigeon.nosferatu500_inappwebview_android.InAppWebViewManagerHostApi.clearClientCertPreferences$pigeonVar_messageChannelSuffix';
     final pigeonVar_channel = BasicMessageChannel<Object?>(
       pigeonVar_channelName,
       pigeonChannelCodec,
@@ -231,7 +231,7 @@ class InAppWebViewManagerHostApi {
   /// Null where `SAFE_BROWSING_PRIVACY_POLICY_URL` is unsupported.
   Future<String?> getSafeBrowsingPrivacyPolicyUrl() async {
     final pigeonVar_channelName =
-        'dev.flutter.pigeon.flutter_inappwebview_android.InAppWebViewManagerHostApi.getSafeBrowsingPrivacyPolicyUrl$pigeonVar_messageChannelSuffix';
+        'dev.flutter.pigeon.nosferatu500_inappwebview_android.InAppWebViewManagerHostApi.getSafeBrowsingPrivacyPolicyUrl$pigeonVar_messageChannelSuffix';
     final pigeonVar_channel = BasicMessageChannel<Object?>(
       pigeonVar_channelName,
       pigeonChannelCodec,
@@ -252,7 +252,7 @@ class InAppWebViewManagerHostApi {
   /// `SAFE_BROWSING_ALLOWLIST` is unsupported.
   Future<bool> setSafeBrowsingAllowlist(List<String> hosts) async {
     final pigeonVar_channelName =
-        'dev.flutter.pigeon.flutter_inappwebview_android.InAppWebViewManagerHostApi.setSafeBrowsingAllowlist$pigeonVar_messageChannelSuffix';
+        'dev.flutter.pigeon.nosferatu500_inappwebview_android.InAppWebViewManagerHostApi.setSafeBrowsingAllowlist$pigeonVar_messageChannelSuffix';
     final pigeonVar_channel = BasicMessageChannel<Object?>(
       pigeonVar_channelName,
       pigeonChannelCodec,
@@ -273,7 +273,7 @@ class InAppWebViewManagerHostApi {
 
   Future<WebViewPackageInfoData?> getCurrentWebViewPackage() async {
     final pigeonVar_channelName =
-        'dev.flutter.pigeon.flutter_inappwebview_android.InAppWebViewManagerHostApi.getCurrentWebViewPackage$pigeonVar_messageChannelSuffix';
+        'dev.flutter.pigeon.nosferatu500_inappwebview_android.InAppWebViewManagerHostApi.getCurrentWebViewPackage$pigeonVar_messageChannelSuffix';
     final pigeonVar_channel = BasicMessageChannel<Object?>(
       pigeonVar_channelName,
       pigeonChannelCodec,
@@ -292,7 +292,7 @@ class InAppWebViewManagerHostApi {
 
   Future<bool> setWebContentsDebuggingEnabled(bool debuggingEnabled) async {
     final pigeonVar_channelName =
-        'dev.flutter.pigeon.flutter_inappwebview_android.InAppWebViewManagerHostApi.setWebContentsDebuggingEnabled$pigeonVar_messageChannelSuffix';
+        'dev.flutter.pigeon.nosferatu500_inappwebview_android.InAppWebViewManagerHostApi.setWebContentsDebuggingEnabled$pigeonVar_messageChannelSuffix';
     final pigeonVar_channel = BasicMessageChannel<Object?>(
       pigeonVar_channelName,
       pigeonChannelCodec,
@@ -314,7 +314,7 @@ class InAppWebViewManagerHostApi {
   /// Null where `GET_VARIATIONS_HEADER` is unsupported.
   Future<String?> getVariationsHeader() async {
     final pigeonVar_channelName =
-        'dev.flutter.pigeon.flutter_inappwebview_android.InAppWebViewManagerHostApi.getVariationsHeader$pigeonVar_messageChannelSuffix';
+        'dev.flutter.pigeon.nosferatu500_inappwebview_android.InAppWebViewManagerHostApi.getVariationsHeader$pigeonVar_messageChannelSuffix';
     final pigeonVar_channel = BasicMessageChannel<Object?>(
       pigeonVar_channelName,
       pigeonChannelCodec,
@@ -334,7 +334,7 @@ class InAppWebViewManagerHostApi {
   /// `false` also where `MULTI_PROCESS` is unsupported.
   Future<bool> isMultiProcessEnabled() async {
     final pigeonVar_channelName =
-        'dev.flutter.pigeon.flutter_inappwebview_android.InAppWebViewManagerHostApi.isMultiProcessEnabled$pigeonVar_messageChannelSuffix';
+        'dev.flutter.pigeon.nosferatu500_inappwebview_android.InAppWebViewManagerHostApi.isMultiProcessEnabled$pigeonVar_messageChannelSuffix';
     final pigeonVar_channel = BasicMessageChannel<Object?>(
       pigeonVar_channelName,
       pigeonChannelCodec,
@@ -356,7 +356,7 @@ class InAppWebViewManagerHostApi {
   /// 32-bit narrowing.
   Future<bool> setDefaultTrafficStatsTag(int tag) async {
     final pigeonVar_channelName =
-        'dev.flutter.pigeon.flutter_inappwebview_android.InAppWebViewManagerHostApi.setDefaultTrafficStatsTag$pigeonVar_messageChannelSuffix';
+        'dev.flutter.pigeon.nosferatu500_inappwebview_android.InAppWebViewManagerHostApi.setDefaultTrafficStatsTag$pigeonVar_messageChannelSuffix';
     final pigeonVar_channel = BasicMessageChannel<Object?>(
       pigeonVar_channelName,
       pigeonChannelCodec,
@@ -377,7 +377,7 @@ class InAppWebViewManagerHostApi {
 
   Future<bool> disableWebView() async {
     final pigeonVar_channelName =
-        'dev.flutter.pigeon.flutter_inappwebview_android.InAppWebViewManagerHostApi.disableWebView$pigeonVar_messageChannelSuffix';
+        'dev.flutter.pigeon.nosferatu500_inappwebview_android.InAppWebViewManagerHostApi.disableWebView$pigeonVar_messageChannelSuffix';
     final pigeonVar_channel = BasicMessageChannel<Object?>(
       pigeonVar_channelName,
       pigeonChannelCodec,
@@ -396,7 +396,7 @@ class InAppWebViewManagerHostApi {
 
   Future<bool> disposeKeepAlive(String keepAliveId) async {
     final pigeonVar_channelName =
-        'dev.flutter.pigeon.flutter_inappwebview_android.InAppWebViewManagerHostApi.disposeKeepAlive$pigeonVar_messageChannelSuffix';
+        'dev.flutter.pigeon.nosferatu500_inappwebview_android.InAppWebViewManagerHostApi.disposeKeepAlive$pigeonVar_messageChannelSuffix';
     final pigeonVar_channel = BasicMessageChannel<Object?>(
       pigeonVar_channelName,
       pigeonChannelCodec,
@@ -417,7 +417,7 @@ class InAppWebViewManagerHostApi {
 
   Future<bool> clearAllCache(bool includeDiskFiles) async {
     final pigeonVar_channelName =
-        'dev.flutter.pigeon.flutter_inappwebview_android.InAppWebViewManagerHostApi.clearAllCache$pigeonVar_messageChannelSuffix';
+        'dev.flutter.pigeon.nosferatu500_inappwebview_android.InAppWebViewManagerHostApi.clearAllCache$pigeonVar_messageChannelSuffix';
     final pigeonVar_channel = BasicMessageChannel<Object?>(
       pigeonVar_channelName,
       pigeonChannelCodec,
@@ -438,7 +438,7 @@ class InAppWebViewManagerHostApi {
 
   Future<bool> enableSlowWholeDocumentDraw() async {
     final pigeonVar_channelName =
-        'dev.flutter.pigeon.flutter_inappwebview_android.InAppWebViewManagerHostApi.enableSlowWholeDocumentDraw$pigeonVar_messageChannelSuffix';
+        'dev.flutter.pigeon.nosferatu500_inappwebview_android.InAppWebViewManagerHostApi.enableSlowWholeDocumentDraw$pigeonVar_messageChannelSuffix';
     final pigeonVar_channel = BasicMessageChannel<Object?>(
       pigeonVar_channelName,
       pigeonChannelCodec,
@@ -457,7 +457,7 @@ class InAppWebViewManagerHostApi {
 
   Future<bool> setJavaScriptBridgeName(String bridgeName) async {
     final pigeonVar_channelName =
-        'dev.flutter.pigeon.flutter_inappwebview_android.InAppWebViewManagerHostApi.setJavaScriptBridgeName$pigeonVar_messageChannelSuffix';
+        'dev.flutter.pigeon.nosferatu500_inappwebview_android.InAppWebViewManagerHostApi.setJavaScriptBridgeName$pigeonVar_messageChannelSuffix';
     final pigeonVar_channel = BasicMessageChannel<Object?>(
       pigeonVar_channelName,
       pigeonChannelCodec,
@@ -478,7 +478,7 @@ class InAppWebViewManagerHostApi {
 
   Future<String> getJavaScriptBridgeName() async {
     final pigeonVar_channelName =
-        'dev.flutter.pigeon.flutter_inappwebview_android.InAppWebViewManagerHostApi.getJavaScriptBridgeName$pigeonVar_messageChannelSuffix';
+        'dev.flutter.pigeon.nosferatu500_inappwebview_android.InAppWebViewManagerHostApi.getJavaScriptBridgeName$pigeonVar_messageChannelSuffix';
     final pigeonVar_channel = BasicMessageChannel<Object?>(
       pigeonVar_channelName,
       pigeonChannelCodec,

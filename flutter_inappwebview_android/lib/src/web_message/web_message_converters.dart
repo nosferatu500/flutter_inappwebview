@@ -1,6 +1,6 @@
 import 'dart:typed_data';
 
-import 'package:flutter_inappwebview_platform_interface/flutter_inappwebview_platform_interface.dart';
+import 'package:nosferatu500_inappwebview_platform_interface/nosferatu500_inappwebview_platform_interface.dart';
 
 import '../pigeons/web_message.g.dart';
 // Imported directly rather than through `main.dart`, which hides `InternalWebMessagePort` —

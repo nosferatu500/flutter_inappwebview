@@ -30,7 +30,7 @@ Future<String> _generate(String model) async {
       // (`TypeChecker.typeNamedLiterally(..., inPackage: ...)`), so a same-named local class does
       // not satisfy it. Supplying the annotation library as a test asset under the real package
       // name is enough, and keeps the test independent of the annotations package's own contents.
-      'flutter_inappwebview_internal_annotations|lib/flutter_inappwebview_internal_annotations.dart':
+      'nosferatu500_inappwebview_internal_annotations|lib/nosferatu500_inappwebview_internal_annotations.dart':
           '''
 class ExchangeableObject {
   final bool toMapMethod;
@@ -88,7 +88,7 @@ void main() {
   group('Map field emitters', () {
     test('an enum-valued map converts every value, both directions', () async {
       final output = await _generate('''
-import 'package:flutter_inappwebview_internal_annotations/flutter_inappwebview_internal_annotations.dart';
+import 'package:nosferatu500_inappwebview_internal_annotations/nosferatu500_inappwebview_internal_annotations.dart';
 import 'status.dart';
 
 @ExchangeableObject()
@@ -124,7 +124,7 @@ class Model_ {
       //
       // Both halves of the fix are asserted, because either one alone still fails.
       final output = await _generate('''
-import 'package:flutter_inappwebview_internal_annotations/flutter_inappwebview_internal_annotations.dart';
+import 'package:nosferatu500_inappwebview_internal_annotations/nosferatu500_inappwebview_internal_annotations.dart';
 import 'status.dart';
 
 @ExchangeableObject()
@@ -149,7 +149,7 @@ class Model_ {
 
     test('a core-valued map still uses the plain cast', () async {
       final output = await _generate('''
-import 'package:flutter_inappwebview_internal_annotations/flutter_inappwebview_internal_annotations.dart';
+import 'package:nosferatu500_inappwebview_internal_annotations/nosferatu500_inappwebview_internal_annotations.dart';
 
 @ExchangeableObject()
 class Model_ {

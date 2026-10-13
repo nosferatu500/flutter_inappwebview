@@ -1,7 +1,7 @@
 import 'dart:async';
 
 import 'package:flutter/foundation.dart';
-import 'package:flutter_inappwebview_platform_interface/flutter_inappwebview_platform_interface.dart';
+import 'package:nosferatu500_inappwebview_platform_interface/nosferatu500_inappwebview_platform_interface.dart';
 
 import 'pigeons/geolocation_permissions.g.dart';
 
@@ -28,7 +28,7 @@ class AndroidGeolocationPermissionsCreationParams
   }
 }
 
-///{@macro flutter_inappwebview_platform_interface.PlatformGeolocationPermissions}
+///{@macro nosferatu500_inappwebview_platform_interface.PlatformGeolocationPermissions}
 ///
 /// Transport is Pigeon-generated ([GeolocationPermissionsHostApi]) rather than a hand-written
 /// `MethodChannel`; the eleventh channel migrated, after find_interaction (§14),

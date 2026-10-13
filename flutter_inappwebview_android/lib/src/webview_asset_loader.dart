@@ -1,5 +1,5 @@
 import 'package:flutter/foundation.dart';
-import 'package:flutter_inappwebview_platform_interface/flutter_inappwebview_platform_interface.dart';
+import 'package:nosferatu500_inappwebview_platform_interface/nosferatu500_inappwebview_platform_interface.dart';
 
 import 'pigeons/in_app_webview.g.dart';
 import 'web_resource_data.dart';
@@ -42,7 +42,7 @@ class _CustomPathHandlerFlutterApiImpl implements CustomPathHandlerFlutterApi {
       (await _handler.eventHandler?.handle(path))?.toPigeon();
 }
 
-///{@macro flutter_inappwebview_platform_interface.PlatformPathHandler}
+///{@macro nosferatu500_inappwebview_platform_interface.PlatformPathHandler}
 ///
 /// Transport is Pigeon-generated since §205 ([CustomPathHandlerFlutterApi], suffixed by the
 /// handler's id). Only the custom type has a platform end, but every type registers, as each opened
@@ -115,7 +115,7 @@ class AndroidAssetsPathHandlerCreationParams
   }
 }
 
-///{@macro flutter_inappwebview_platform_interface.PlatformAssetsPathHandler}
+///{@macro nosferatu500_inappwebview_platform_interface.PlatformAssetsPathHandler}
 class AndroidAssetsPathHandler extends PlatformAssetsPathHandler
     with AndroidPathHandler, ChannelController {
   /// Constructs a [AndroidAssetsPathHandler].
@@ -165,7 +165,7 @@ class AndroidResourcesPathHandlerCreationParams
   }
 }
 
-///{@macro flutter_inappwebview_platform_interface.PlatformResourcesPathHandler}
+///{@macro nosferatu500_inappwebview_platform_interface.PlatformResourcesPathHandler}
 class AndroidResourcesPathHandler extends PlatformResourcesPathHandler
     with AndroidPathHandler, ChannelController {
   /// Constructs a [AndroidResourcesPathHandler].
@@ -216,7 +216,7 @@ class AndroidInternalStoragePathHandlerCreationParams
   }
 }
 
-///{@macro flutter_inappwebview_platform_interface.PlatformInternalStoragePathHandler}
+///{@macro nosferatu500_inappwebview_platform_interface.PlatformInternalStoragePathHandler}
 class AndroidInternalStoragePathHandler
     extends PlatformInternalStoragePathHandler
     with AndroidPathHandler, ChannelController {
@@ -281,7 +281,7 @@ class AndroidCustomPathHandlerCreationParams
   }
 }
 
-///{@macro flutter_inappwebview_platform_interface.PlatformCustomPathHandler}
+///{@macro nosferatu500_inappwebview_platform_interface.PlatformCustomPathHandler}
 class AndroidCustomPathHandler extends PlatformCustomPathHandler
     with AndroidPathHandler, ChannelController {
   /// Constructs a [AndroidCustomPathHandler].

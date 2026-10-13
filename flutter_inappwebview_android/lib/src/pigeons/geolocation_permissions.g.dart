@@ -83,7 +83,7 @@ class GeolocationPermissionsHostApi {
   /// "the store was resolved and the call was made".
   Future<bool> allow(String origin, String? profileName) async {
     final pigeonVar_channelName =
-        'dev.flutter.pigeon.flutter_inappwebview_android.GeolocationPermissionsHostApi.allow$pigeonVar_messageChannelSuffix';
+        'dev.flutter.pigeon.nosferatu500_inappwebview_android.GeolocationPermissionsHostApi.allow$pigeonVar_messageChannelSuffix';
     final pigeonVar_channel = BasicMessageChannel<Object?>(
       pigeonVar_channelName,
       pigeonChannelCodec,
@@ -108,7 +108,7 @@ class GeolocationPermissionsHostApi {
   /// see [allow].
   Future<bool> clear(String origin, String? profileName) async {
     final pigeonVar_channelName =
-        'dev.flutter.pigeon.flutter_inappwebview_android.GeolocationPermissionsHostApi.clear$pigeonVar_messageChannelSuffix';
+        'dev.flutter.pigeon.nosferatu500_inappwebview_android.GeolocationPermissionsHostApi.clear$pigeonVar_messageChannelSuffix';
     final pigeonVar_channel = BasicMessageChannel<Object?>(
       pigeonVar_channelName,
       pigeonChannelCodec,
@@ -130,7 +130,7 @@ class GeolocationPermissionsHostApi {
   /// Removes every stored decision. Answers `false` on an unresolvable store; see [allow].
   Future<bool> clearAll(String? profileName) async {
     final pigeonVar_channelName =
-        'dev.flutter.pigeon.flutter_inappwebview_android.GeolocationPermissionsHostApi.clearAll$pigeonVar_messageChannelSuffix';
+        'dev.flutter.pigeon.nosferatu500_inappwebview_android.GeolocationPermissionsHostApi.clearAll$pigeonVar_messageChannelSuffix';
     final pigeonVar_channel = BasicMessageChannel<Object?>(
       pigeonVar_channelName,
       pigeonChannelCodec,
@@ -164,7 +164,7 @@ class GeolocationPermissionsHostApi {
   /// `@async`: `GeolocationPermissions.getAllowed` reports through a `ValueCallback<Boolean>`.
   Future<bool?> getAllowed(String origin, String? profileName) async {
     final pigeonVar_channelName =
-        'dev.flutter.pigeon.flutter_inappwebview_android.GeolocationPermissionsHostApi.getAllowed$pigeonVar_messageChannelSuffix';
+        'dev.flutter.pigeon.nosferatu500_inappwebview_android.GeolocationPermissionsHostApi.getAllowed$pigeonVar_messageChannelSuffix';
     final pigeonVar_channel = BasicMessageChannel<Object?>(
       pigeonVar_channelName,
       pigeonChannelCodec,
@@ -200,7 +200,7 @@ class GeolocationPermissionsHostApi {
   /// therefore whatever the set iterates, and nothing should depend on it.
   Future<List<String>> getOrigins(String? profileName) async {
     final pigeonVar_channelName =
-        'dev.flutter.pigeon.flutter_inappwebview_android.GeolocationPermissionsHostApi.getOrigins$pigeonVar_messageChannelSuffix';
+        'dev.flutter.pigeon.nosferatu500_inappwebview_android.GeolocationPermissionsHostApi.getOrigins$pigeonVar_messageChannelSuffix';
     final pigeonVar_channel = BasicMessageChannel<Object?>(
       pigeonVar_channelName,
       pigeonChannelCodec,

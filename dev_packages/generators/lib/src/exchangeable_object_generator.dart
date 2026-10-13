@@ -3,13 +3,13 @@ import 'package:analyzer/dart/element/element.dart';
 import 'package:analyzer/dart/element/type.dart';
 import 'package:build/build.dart';
 import 'package:collection/collection.dart';
-import 'package:flutter_inappwebview_internal_annotations/flutter_inappwebview_internal_annotations.dart';
+import 'package:nosferatu500_inappwebview_internal_annotations/nosferatu500_inappwebview_internal_annotations.dart';
 import 'package:source_gen/source_gen.dart';
 
 import 'model_visitor.dart';
 import 'util.dart';
 
-const _annotationsPackage = 'flutter_inappwebview_internal_annotations';
+const _annotationsPackage = 'nosferatu500_inappwebview_internal_annotations';
 
 /// Constant names accepted as an enum's stand-in for an unmapped native value.
 ///

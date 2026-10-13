@@ -1,7 +1,7 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/widgets.dart';
-import 'package:flutter_inappwebview_internal_annotations/flutter_inappwebview_internal_annotations.dart';
+import 'package:nosferatu500_inappwebview_internal_annotations/nosferatu500_inappwebview_internal_annotations.dart';
 import 'package:plugin_platform_interface/plugin_platform_interface.dart';
 
 import '../inappwebview_platform.dart';
@@ -13,20 +13,20 @@ import 'platform_webview.dart';
 
 part 'platform_inappwebview_widget.g.dart';
 
-///{@template flutter_inappwebview_platform_interface.PlatformInAppWebViewWidgetCreationParams}
+///{@template nosferatu500_inappwebview_platform_interface.PlatformInAppWebViewWidgetCreationParams}
 ///Object specifying creation parameters for creating a [PlatformInAppWebViewWidget].
 ///
 ///Platform specific implementations can add additional fields by extending
 ///this class.
 ///{@endtemplate}
 ///
-///{@macro flutter_inappwebview_platform_interface.PlatformInAppWebViewWidgetCreationParams.supported_platforms}
+///{@macro nosferatu500_inappwebview_platform_interface.PlatformInAppWebViewWidgetCreationParams.supported_platforms}
 @SupportedPlatforms(platforms: [AndroidPlatform(), IOSPlatform()])
 class PlatformInAppWebViewWidgetCreationParams
     extends PlatformWebViewCreationParams {
-  ///{@macro flutter_inappwebview_platform_interface.PlatformInAppWebViewWidgetCreationParams}
+  ///{@macro nosferatu500_inappwebview_platform_interface.PlatformInAppWebViewWidgetCreationParams}
   ///
-  ///{@macro flutter_inappwebview_platform_interface.PlatformWebViewCreationParams.supported_platforms}
+  ///{@macro nosferatu500_inappwebview_platform_interface.PlatformWebViewCreationParams.supported_platforms}
   PlatformInAppWebViewWidgetCreationParams({
     this.key,
     this.layoutDirection,
@@ -139,34 +139,34 @@ class PlatformInAppWebViewWidgetCreationParams
   /// recognizer.
   final Set<Factory<OneSequenceGestureRecognizer>>? gestureRecognizers;
 
-  ///{@template flutter_inappwebview_platform_interface.PlatformInAppWebViewWidgetCreationParams.headlessWebView}
+  ///{@template nosferatu500_inappwebview_platform_interface.PlatformInAppWebViewWidgetCreationParams.headlessWebView}
   ///The [PlatformHeadlessInAppWebView] to use to initialize this widget.
   ///{@endtemplate}
   ///
-  ///{@macro flutter_inappwebview_platform_interface.PlatformInAppWebViewWidgetCreationParams.keepAlive.supported_platforms}
+  ///{@macro nosferatu500_inappwebview_platform_interface.PlatformInAppWebViewWidgetCreationParams.keepAlive.supported_platforms}
   @SupportedPlatforms(platforms: [AndroidPlatform(), IOSPlatform()])
   final PlatformHeadlessInAppWebView? headlessWebView;
 
-  ///{@template flutter_inappwebview_platform_interface.PlatformInAppWebViewWidgetCreationParams.keepAlive}
+  ///{@template nosferatu500_inappwebview_platform_interface.PlatformInAppWebViewWidgetCreationParams.keepAlive}
   ///Used to keep alive this WebView.
   ///Remember to dispose the [InAppWebViewKeepAlive] instance
   ///using [InAppWebViewController.disposeKeepAlive].
   ///{@endtemplate}
   ///
-  ///{@macro flutter_inappwebview_platform_interface.PlatformInAppWebViewWidgetCreationParams.keepAlive.supported_platforms}
+  ///{@macro nosferatu500_inappwebview_platform_interface.PlatformInAppWebViewWidgetCreationParams.keepAlive.supported_platforms}
   @SupportedPlatforms(platforms: [AndroidPlatform(), IOSPlatform()])
   final InAppWebViewKeepAlive? keepAlive;
 
-  ///{@template flutter_inappwebview_platform_interface.PlatformInAppWebViewWidgetCreationParams.preventGestureDelay}
+  ///{@template nosferatu500_inappwebview_platform_interface.PlatformInAppWebViewWidgetCreationParams.preventGestureDelay}
   ///Used to prevent gesture delay on iOS caused by Flutter's gestures handling
   ///between native/platform views.
   ///{@endtemplate}
   ///
-  ///{@macro flutter_inappwebview_platform_interface.PlatformInAppWebViewWidgetCreationParams.preventGestureDelay.supported_platforms}
+  ///{@macro nosferatu500_inappwebview_platform_interface.PlatformInAppWebViewWidgetCreationParams.preventGestureDelay.supported_platforms}
   @SupportedPlatforms(platforms: [IOSPlatform()])
   final bool? preventGestureDelay;
 
-  ///{@template flutter_inappwebview_platform_interface.PlatformInAppWebViewWidgetCreationParams.isClassSupported}
+  ///{@template nosferatu500_inappwebview_platform_interface.PlatformInAppWebViewWidgetCreationParams.isClassSupported}
   ///Check if the current class is supported by the [defaultTargetPlatform] or a specific [platform].
   ///{@endtemplate}
   @override
@@ -175,7 +175,7 @@ class PlatformInAppWebViewWidgetCreationParams
         platform: platform,
       );
 
-  ///{@template flutter_inappwebview_platform_interface.PlatformInAppWebViewWidgetCreationParams.isPropertySupported}
+  ///{@template nosferatu500_inappwebview_platform_interface.PlatformInAppWebViewWidgetCreationParams.isPropertySupported}
   ///Check if the given [property] is supported by the [defaultTargetPlatform] or a specific [platform].
   ///The property should be one of the [PlatformWebViewCreationParamsProperty] or [PlatformInAppWebViewWidgetCreationParamsProperty] values.
   ///{@endtemplate}
@@ -191,11 +191,11 @@ class PlatformInAppWebViewWidgetCreationParams
 
 ///Interface for a platform implementation of a web view widget.
 ///
-///{@template flutter_inappwebview_platform_interface.PlatformInAppWebViewWidget}
+///{@template nosferatu500_inappwebview_platform_interface.PlatformInAppWebViewWidget}
 ///Flutter Widget for adding an **inline native WebView** integrated in the flutter widget tree.
 ///{@endtemplate}
 ///
-///{@macro flutter_inappwebview_platform_interface.PlatformInAppWebViewWidgetCreationParams.supported_platforms}
+///{@macro nosferatu500_inappwebview_platform_interface.PlatformInAppWebViewWidgetCreationParams.supported_platforms}
 abstract class PlatformInAppWebViewWidget extends PlatformInterface
     implements Disposable {
   /// Creates a new [PlatformInAppWebViewWidget]
@@ -204,7 +204,7 @@ abstract class PlatformInAppWebViewWidget extends PlatformInterface
   ) {
     assert(
       InAppWebViewPlatform.instance != null,
-      'A platform implementation for `flutter_inappwebview` has not been set. Please '
+      'A platform implementation for `nosferatu500_inappwebview` has not been set. Please '
       'ensure that an implementation of `InAppWebViewPlatform` has been set to '
       '`InAppWebViewPlatform.instance` before use. For unit testing, '
       '`InAppWebViewPlatform.instance` can be set with your own test implementation.',
@@ -219,7 +219,7 @@ abstract class PlatformInAppWebViewWidget extends PlatformInterface
   factory PlatformInAppWebViewWidget.static() {
     assert(
       InAppWebViewPlatform.instance != null,
-      'A platform implementation for `flutter_inappwebview` has not been set. Please '
+      'A platform implementation for `nosferatu500_inappwebview` has not been set. Please '
       'ensure that an implementation of `InAppWebViewPlatform` has been set to '
       '`InAppWebViewPlatform.instance` before use. For unit testing, '
       '`InAppWebViewPlatform.instance` can be set with your own test implementation.',
@@ -260,11 +260,11 @@ abstract class PlatformInAppWebViewWidget extends PlatformInterface
   /// Does nothing by default.
   void didUpdateWidget(covariant PlatformInAppWebViewWidget oldWidget) {}
 
-  ///{@macro flutter_inappwebview_platform_interface.PlatformInAppWebViewWidgetCreationParams.isClassSupported}
+  ///{@macro nosferatu500_inappwebview_platform_interface.PlatformInAppWebViewWidgetCreationParams.isClassSupported}
   bool isClassSupported({TargetPlatform? platform}) =>
       params.isClassSupported(platform: platform);
 
-  ///{@macro flutter_inappwebview_platform_interface.PlatformInAppWebViewWidgetCreationParams.isPropertySupported}
+  ///{@macro nosferatu500_inappwebview_platform_interface.PlatformInAppWebViewWidgetCreationParams.isPropertySupported}
   bool isPropertySupported(dynamic property, {TargetPlatform? platform}) =>
       params.isPropertySupported(property, platform: platform);
 

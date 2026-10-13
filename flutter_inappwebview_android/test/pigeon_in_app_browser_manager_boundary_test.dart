@@ -1,9 +1,9 @@
 import 'dart:collection';
 
 import 'package:flutter/services.dart';
-import 'package:flutter_inappwebview_android/flutter_inappwebview_android.dart';
-import 'package:flutter_inappwebview_android/src/pigeons/in_app_browser_manager.g.dart';
-import 'package:flutter_inappwebview_platform_interface/flutter_inappwebview_platform_interface.dart';
+import 'package:nosferatu500_inappwebview_android/nosferatu500_inappwebview_android.dart';
+import 'package:nosferatu500_inappwebview_android/src/pigeons/in_app_browser_manager.g.dart';
+import 'package:nosferatu500_inappwebview_platform_interface/nosferatu500_inappwebview_platform_interface.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 /// Runtime coverage for the in-app browser manager channel (§197), the nineteenth migrated to
@@ -17,7 +17,7 @@ void main() {
 
   const codec = InAppBrowserManagerHostApi.pigeonChannelCodec;
   const channelPrefix =
-      'dev.flutter.pigeon.flutter_inappwebview_android.InAppBrowserManagerHostApi';
+      'dev.flutter.pigeon.nosferatu500_inappwebview_android.InAppBrowserManagerHostApi';
 
   final sent = <String, List<Object?>>{};
 

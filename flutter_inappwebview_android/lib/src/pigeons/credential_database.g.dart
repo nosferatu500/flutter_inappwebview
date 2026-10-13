@@ -366,7 +366,7 @@ class CredentialDatabaseHostApi {
   Future<List<URLProtectionSpaceHttpAuthCredentialsData>>
   getAllAuthCredentials() async {
     final pigeonVar_channelName =
-        'dev.flutter.pigeon.flutter_inappwebview_android.CredentialDatabaseHostApi.getAllAuthCredentials$pigeonVar_messageChannelSuffix';
+        'dev.flutter.pigeon.nosferatu500_inappwebview_android.CredentialDatabaseHostApi.getAllAuthCredentials$pigeonVar_messageChannelSuffix';
     final pigeonVar_channel = BasicMessageChannel<Object?>(
       pigeonVar_channelName,
       pigeonChannelCodec,
@@ -389,7 +389,7 @@ class CredentialDatabaseHostApi {
     URLProtectionSpaceData protectionSpace,
   ) async {
     final pigeonVar_channelName =
-        'dev.flutter.pigeon.flutter_inappwebview_android.CredentialDatabaseHostApi.getHttpAuthCredentials$pigeonVar_messageChannelSuffix';
+        'dev.flutter.pigeon.nosferatu500_inappwebview_android.CredentialDatabaseHostApi.getHttpAuthCredentials$pigeonVar_messageChannelSuffix';
     final pigeonVar_channel = BasicMessageChannel<Object?>(
       pigeonVar_channelName,
       pigeonChannelCodec,
@@ -423,7 +423,7 @@ class CredentialDatabaseHostApi {
     URLCredentialData credential,
   ) async {
     final pigeonVar_channelName =
-        'dev.flutter.pigeon.flutter_inappwebview_android.CredentialDatabaseHostApi.setHttpAuthCredential$pigeonVar_messageChannelSuffix';
+        'dev.flutter.pigeon.nosferatu500_inappwebview_android.CredentialDatabaseHostApi.setHttpAuthCredential$pigeonVar_messageChannelSuffix';
     final pigeonVar_channel = BasicMessageChannel<Object?>(
       pigeonVar_channelName,
       pigeonChannelCodec,
@@ -449,7 +449,7 @@ class CredentialDatabaseHostApi {
     URLCredentialData credential,
   ) async {
     final pigeonVar_channelName =
-        'dev.flutter.pigeon.flutter_inappwebview_android.CredentialDatabaseHostApi.removeHttpAuthCredential$pigeonVar_messageChannelSuffix';
+        'dev.flutter.pigeon.nosferatu500_inappwebview_android.CredentialDatabaseHostApi.removeHttpAuthCredential$pigeonVar_messageChannelSuffix';
     final pigeonVar_channel = BasicMessageChannel<Object?>(
       pigeonVar_channelName,
       pigeonChannelCodec,
@@ -473,7 +473,7 @@ class CredentialDatabaseHostApi {
     URLProtectionSpaceData protectionSpace,
   ) async {
     final pigeonVar_channelName =
-        'dev.flutter.pigeon.flutter_inappwebview_android.CredentialDatabaseHostApi.removeHttpAuthCredentials$pigeonVar_messageChannelSuffix';
+        'dev.flutter.pigeon.nosferatu500_inappwebview_android.CredentialDatabaseHostApi.removeHttpAuthCredentials$pigeonVar_messageChannelSuffix';
     final pigeonVar_channel = BasicMessageChannel<Object?>(
       pigeonVar_channelName,
       pigeonChannelCodec,
@@ -497,7 +497,7 @@ class CredentialDatabaseHostApi {
   /// WebView itself consults, so clearing only the plugin's table would leave auth working.
   Future<bool> clearAllAuthCredentials() async {
     final pigeonVar_channelName =
-        'dev.flutter.pigeon.flutter_inappwebview_android.CredentialDatabaseHostApi.clearAllAuthCredentials$pigeonVar_messageChannelSuffix';
+        'dev.flutter.pigeon.nosferatu500_inappwebview_android.CredentialDatabaseHostApi.clearAllAuthCredentials$pigeonVar_messageChannelSuffix';
     final pigeonVar_channel = BasicMessageChannel<Object?>(
       pigeonVar_channelName,
       pigeonChannelCodec,

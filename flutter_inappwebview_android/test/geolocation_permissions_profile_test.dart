@@ -1,7 +1,7 @@
 import 'package:flutter/services.dart';
-import 'package:flutter_inappwebview_android/flutter_inappwebview_android.dart';
-import 'package:flutter_inappwebview_android/src/pigeons/geolocation_permissions.g.dart';
-import 'package:flutter_inappwebview_platform_interface/flutter_inappwebview_platform_interface.dart';
+import 'package:nosferatu500_inappwebview_android/nosferatu500_inappwebview_android.dart';
+import 'package:nosferatu500_inappwebview_android/src/pigeons/geolocation_permissions.g.dart';
+import 'package:nosferatu500_inappwebview_platform_interface/nosferatu500_inappwebview_platform_interface.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 /// Guards the wire contract of the geolocation-permissions channel. Converted in place from
@@ -24,7 +24,7 @@ void main() {
 
   const codec = GeolocationPermissionsHostApi.pigeonChannelCodec;
   const prefix =
-      'dev.flutter.pigeon.flutter_inappwebview_android.GeolocationPermissionsHostApi.';
+      'dev.flutter.pigeon.nosferatu500_inappwebview_android.GeolocationPermissionsHostApi.';
   const allowChannel = '${prefix}allow';
   const clearChannel = '${prefix}clear';
   const clearAllChannel = '${prefix}clearAll';

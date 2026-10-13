@@ -1,11 +1,11 @@
 import 'package:flutter/services.dart';
-import 'package:flutter_inappwebview_android/flutter_inappwebview_android.dart';
+import 'package:nosferatu500_inappwebview_android/nosferatu500_inappwebview_android.dart';
 // The package barrel hides the `InternalInAppWebViewController` extension, so `handleMethod` is
 // reachable only through the source file.
-import 'package:flutter_inappwebview_android/src/in_app_webview/in_app_webview_controller.dart'
+import 'package:nosferatu500_inappwebview_android/src/in_app_webview/in_app_webview_controller.dart'
     show InternalInAppWebViewController;
-import 'package:flutter_inappwebview_android/src/pigeons/headless_webview.g.dart';
-import 'package:flutter_inappwebview_platform_interface/flutter_inappwebview_platform_interface.dart';
+import 'package:nosferatu500_inappwebview_android/src/pigeons/headless_webview.g.dart';
+import 'package:nosferatu500_inappwebview_platform_interface/nosferatu500_inappwebview_platform_interface.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 /// A headless webview's `onShowFileChooser` reaches its handler.
@@ -23,7 +23,7 @@ void main() {
 
   const codec = HeadlessWebViewHostApi.pigeonChannelCodec;
   const managerRun =
-      'dev.flutter.pigeon.flutter_inappwebview_android.HeadlessInAppWebViewManagerHostApi.run';
+      'dev.flutter.pigeon.nosferatu500_inappwebview_android.HeadlessInAppWebViewManagerHostApi.run';
 
   Future<ShowFileChooserResponse?> handler(
     dynamic controller,

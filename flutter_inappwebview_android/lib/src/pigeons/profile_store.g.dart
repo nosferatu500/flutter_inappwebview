@@ -217,7 +217,7 @@ class ProfileStoreHostApi {
   /// missing. Preserved from the hand-written channel.
   Future<List<String>> getAllProfileNames() async {
     final pigeonVar_channelName =
-        'dev.flutter.pigeon.flutter_inappwebview_android.ProfileStoreHostApi.getAllProfileNames$pigeonVar_messageChannelSuffix';
+        'dev.flutter.pigeon.nosferatu500_inappwebview_android.ProfileStoreHostApi.getAllProfileNames$pigeonVar_messageChannelSuffix';
     final pigeonVar_channel = BasicMessageChannel<Object?>(
       pigeonVar_channelName,
       pigeonChannelCodec,
@@ -246,7 +246,7 @@ class ProfileStoreHostApi {
   /// [deleteProfile] refuse it afterwards.
   Future<String?> getOrCreateProfile(String name) async {
     final pigeonVar_channelName =
-        'dev.flutter.pigeon.flutter_inappwebview_android.ProfileStoreHostApi.getOrCreateProfile$pigeonVar_messageChannelSuffix';
+        'dev.flutter.pigeon.nosferatu500_inappwebview_android.ProfileStoreHostApi.getOrCreateProfile$pigeonVar_messageChannelSuffix';
     final pigeonVar_channel = BasicMessageChannel<Object?>(
       pigeonVar_channelName,
       pigeonChannelCodec,
@@ -287,7 +287,7 @@ class ProfileStoreHostApi {
   /// what carries the `FlutterError` into the error envelope.
   Future<bool> deleteProfile(String name) async {
     final pigeonVar_channelName =
-        'dev.flutter.pigeon.flutter_inappwebview_android.ProfileStoreHostApi.deleteProfile$pigeonVar_messageChannelSuffix';
+        'dev.flutter.pigeon.nosferatu500_inappwebview_android.ProfileStoreHostApi.deleteProfile$pigeonVar_messageChannelSuffix';
     final pigeonVar_channel = BasicMessageChannel<Object?>(
       pigeonVar_channelName,
       pigeonChannelCodec,
@@ -317,7 +317,7 @@ class ProfileStoreHostApi {
     String? profileName,
   ) async {
     final pigeonVar_channelName =
-        'dev.flutter.pigeon.flutter_inappwebview_android.ProfileStoreHostApi.addCustomHeader$pigeonVar_messageChannelSuffix';
+        'dev.flutter.pigeon.nosferatu500_inappwebview_android.ProfileStoreHostApi.addCustomHeader$pigeonVar_messageChannelSuffix';
     final pigeonVar_channel = BasicMessageChannel<Object?>(
       pigeonVar_channelName,
       pigeonChannelCodec,
@@ -343,7 +343,7 @@ class ProfileStoreHostApi {
   /// told apart from.
   Future<bool?> hasCustomHeader(String headerName, String? profileName) async {
     final pigeonVar_channelName =
-        'dev.flutter.pigeon.flutter_inappwebview_android.ProfileStoreHostApi.hasCustomHeader$pigeonVar_messageChannelSuffix';
+        'dev.flutter.pigeon.nosferatu500_inappwebview_android.ProfileStoreHostApi.hasCustomHeader$pigeonVar_messageChannelSuffix';
     final pigeonVar_channel = BasicMessageChannel<Object?>(
       pigeonVar_channelName,
       pigeonChannelCodec,
@@ -379,7 +379,7 @@ class ProfileStoreHostApi {
     String? profileName,
   ) async {
     final pigeonVar_channelName =
-        'dev.flutter.pigeon.flutter_inappwebview_android.ProfileStoreHostApi.getCustomHeaders$pigeonVar_messageChannelSuffix';
+        'dev.flutter.pigeon.nosferatu500_inappwebview_android.ProfileStoreHostApi.getCustomHeaders$pigeonVar_messageChannelSuffix';
     final pigeonVar_channel = BasicMessageChannel<Object?>(
       pigeonVar_channelName,
       pigeonChannelCodec,
@@ -409,7 +409,7 @@ class ProfileStoreHostApi {
     String? profileName,
   ) async {
     final pigeonVar_channelName =
-        'dev.flutter.pigeon.flutter_inappwebview_android.ProfileStoreHostApi.clearCustomHeader$pigeonVar_messageChannelSuffix';
+        'dev.flutter.pigeon.nosferatu500_inappwebview_android.ProfileStoreHostApi.clearCustomHeader$pigeonVar_messageChannelSuffix';
     final pigeonVar_channel = BasicMessageChannel<Object?>(
       pigeonVar_channelName,
       pigeonChannelCodec,
@@ -432,7 +432,7 @@ class ProfileStoreHostApi {
   /// [addCustomHeader].
   Future<bool> clearAllCustomHeaders(String? profileName) async {
     final pigeonVar_channelName =
-        'dev.flutter.pigeon.flutter_inappwebview_android.ProfileStoreHostApi.clearAllCustomHeaders$pigeonVar_messageChannelSuffix';
+        'dev.flutter.pigeon.nosferatu500_inappwebview_android.ProfileStoreHostApi.clearAllCustomHeaders$pigeonVar_messageChannelSuffix';
     final pigeonVar_channel = BasicMessageChannel<Object?>(
       pigeonVar_channelName,
       pigeonChannelCodec,

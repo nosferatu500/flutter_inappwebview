@@ -1,10 +1,10 @@
 import 'package:flutter/services.dart';
-import 'package:flutter_inappwebview_android/flutter_inappwebview_android.dart';
+import 'package:nosferatu500_inappwebview_android/nosferatu500_inappwebview_android.dart';
 // The package barrel hides the `InternalInAppWebViewController` extension, so `_handleMethod` is
 // reachable only through the source file.
-import 'package:flutter_inappwebview_android/src/in_app_webview/in_app_webview_controller.dart'
+import 'package:nosferatu500_inappwebview_android/src/in_app_webview/in_app_webview_controller.dart'
     show InternalInAppWebViewController;
-import 'package:flutter_inappwebview_platform_interface/flutter_inappwebview_platform_interface.dart';
+import 'package:nosferatu500_inappwebview_platform_interface/nosferatu500_inappwebview_platform_interface.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 /// Guards D4 — `onRequestVisitedHistory`, backed by `WebChromeClient.getVisitedHistory`.

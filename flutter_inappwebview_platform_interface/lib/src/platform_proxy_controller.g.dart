@@ -6,11 +6,11 @@ part of 'platform_proxy_controller.dart';
 // ExchangeableObjectGenerator
 // **************************************************************************
 
-///{@template flutter_inappwebview_platform_interface.ProxySettings}
+///{@template nosferatu500_inappwebview_platform_interface.ProxySettings}
 ///Class that represents the settings used to configure the [PlatformProxyController].
 ///{@endtemplate}
 ///
-///{@macro flutter_inappwebview_platform_interface.ProxySettings.supported_platforms}
+///{@macro nosferatu500_inappwebview_platform_interface.ProxySettings.supported_platforms}
 ///
 ///**Officially Supported Platforms/Implementations**:
 ///- Android WebView ([Official API - ProxyConfig](https://developer.android.com/reference/androidx/webkit/ProxyConfig))
@@ -133,13 +133,13 @@ class ProxySettings {
     return instance;
   }
 
-  ///{@template flutter_inappwebview_platform_interface.ProxySettings.isClassSupported}
+  ///{@template nosferatu500_inappwebview_platform_interface.ProxySettings.isClassSupported}
   ///Check if the current class is supported by the [defaultTargetPlatform] or a specific [platform].
   ///{@endtemplate}
   static bool isClassSupported({TargetPlatform? platform}) =>
       _ProxySettingsClassSupported.isClassSupported(platform: platform);
 
-  ///{@template flutter_inappwebview_platform_interface.ProxySettings.isPropertySupported}
+  ///{@template nosferatu500_inappwebview_platform_interface.ProxySettings.isPropertySupported}
   ///Check if the current class is supported by the [defaultTargetPlatform] or a specific [platform].
   ///{@endtemplate}
   static bool isPropertySupported(
@@ -186,7 +186,7 @@ class ProxySettings {
 
 extension _PlatformProxyControllerCreationParamsClassSupported
     on PlatformProxyControllerCreationParams {
-  ///{@template flutter_inappwebview_platform_interface.PlatformProxyControllerCreationParams.supported_platforms}
+  ///{@template nosferatu500_inappwebview_platform_interface.PlatformProxyControllerCreationParams.supported_platforms}
   ///
   ///**Officially Supported Platforms/Implementations**:
   ///- Android WebView
@@ -204,7 +204,7 @@ extension _PlatformProxyControllerCreationParamsClassSupported
 }
 
 extension _PlatformProxyControllerClassSupported on PlatformProxyController {
-  ///{@template flutter_inappwebview_platform_interface.PlatformProxyController.supported_platforms}
+  ///{@template nosferatu500_inappwebview_platform_interface.PlatformProxyController.supported_platforms}
   ///
   ///**Officially Supported Platforms/Implementations**:
   ///- Android WebView ([Official API - ProxyController](https://developer.android.com/reference/androidx/webkit/ProxyController))
@@ -227,7 +227,7 @@ extension _PlatformProxyControllerClassSupported on PlatformProxyController {
 enum PlatformProxyControllerMethod {
   ///Can be used to check if the [PlatformProxyController.clearProxyOverride] method is supported at runtime.
   ///
-  ///{@template flutter_inappwebview_platform_interface.PlatformProxyController.clearProxyOverride.supported_platforms}
+  ///{@template nosferatu500_inappwebview_platform_interface.PlatformProxyController.clearProxyOverride.supported_platforms}
   ///
   ///**Officially Supported Platforms/Implementations**:
   ///- Android WebView ([Official API - ProxyController.clearProxyOverride](https://developer.android.com/reference/androidx/webkit/ProxyController#clearProxyOverride(java.util.concurrent.Executor,%20java.lang.Runnable)))
@@ -239,7 +239,7 @@ enum PlatformProxyControllerMethod {
 
   ///Can be used to check if the [PlatformProxyController.setProxyOverride] method is supported at runtime.
   ///
-  ///{@template flutter_inappwebview_platform_interface.PlatformProxyController.setProxyOverride.supported_platforms}
+  ///{@template nosferatu500_inappwebview_platform_interface.PlatformProxyController.setProxyOverride.supported_platforms}
   ///
   ///**Officially Supported Platforms/Implementations**:
   ///- Android WebView ([Official API - ProxyController.setProxyOverride](https://developer.android.com/reference/androidx/webkit/ProxyController#setProxyOverride(androidx.webkit.ProxyConfig,%20java.util.concurrent.Executor,%20java.lang.Runnable)))
@@ -276,7 +276,7 @@ extension _PlatformProxyControllerMethodSupported on PlatformProxyController {
 }
 
 extension _ProxySettingsClassSupported on ProxySettings {
-  ///{@template flutter_inappwebview_platform_interface.ProxySettings.supported_platforms}
+  ///{@template nosferatu500_inappwebview_platform_interface.ProxySettings.supported_platforms}
   ///
   ///**Officially Supported Platforms/Implementations**:
   ///- Android WebView ([Official API - ProxyConfig](https://developer.android.com/reference/androidx/webkit/ProxyConfig))
@@ -297,7 +297,7 @@ extension _ProxySettingsClassSupported on ProxySettings {
 enum ProxySettingsProperty {
   ///Can be used to check if the [ProxySettings.bypassRules] property is supported at runtime.
   ///
-  ///{@template flutter_inappwebview_platform_interface.ProxySettings.bypassRules.supported_platforms}
+  ///{@template nosferatu500_inappwebview_platform_interface.ProxySettings.bypassRules.supported_platforms}
   ///
   ///**Officially Supported Platforms/Implementations**:
   ///- Android WebView
@@ -308,7 +308,7 @@ enum ProxySettingsProperty {
 
   ///Can be used to check if the [ProxySettings.bypassSimpleHostnames] property is supported at runtime.
   ///
-  ///{@template flutter_inappwebview_platform_interface.ProxySettings.bypassSimpleHostnames.supported_platforms}
+  ///{@template nosferatu500_inappwebview_platform_interface.ProxySettings.bypassSimpleHostnames.supported_platforms}
   ///
   ///**Officially Supported Platforms/Implementations**:
   ///- Android WebView
@@ -319,7 +319,7 @@ enum ProxySettingsProperty {
 
   ///Can be used to check if the [ProxySettings.directs] property is supported at runtime.
   ///
-  ///{@template flutter_inappwebview_platform_interface.ProxySettings.directs.supported_platforms}
+  ///{@template nosferatu500_inappwebview_platform_interface.ProxySettings.directs.supported_platforms}
   ///
   ///**Officially Supported Platforms/Implementations**:
   ///- Android WebView
@@ -330,7 +330,7 @@ enum ProxySettingsProperty {
 
   ///Can be used to check if the [ProxySettings.proxyRules] property is supported at runtime.
   ///
-  ///{@template flutter_inappwebview_platform_interface.ProxySettings.proxyRules.supported_platforms}
+  ///{@template nosferatu500_inappwebview_platform_interface.ProxySettings.proxyRules.supported_platforms}
   ///
   ///**Officially Supported Platforms/Implementations**:
   ///- Android WebView
@@ -342,7 +342,7 @@ enum ProxySettingsProperty {
 
   ///Can be used to check if the [ProxySettings.removeImplicitRules] property is supported at runtime.
   ///
-  ///{@template flutter_inappwebview_platform_interface.ProxySettings.removeImplicitRules.supported_platforms}
+  ///{@template nosferatu500_inappwebview_platform_interface.ProxySettings.removeImplicitRules.supported_platforms}
   ///
   ///**Officially Supported Platforms/Implementations**:
   ///- Android WebView
@@ -353,7 +353,7 @@ enum ProxySettingsProperty {
 
   ///Can be used to check if the [ProxySettings.reverseBypassEnabled] property is supported at runtime.
   ///
-  ///{@template flutter_inappwebview_platform_interface.ProxySettings.reverseBypassEnabled.supported_platforms}
+  ///{@template nosferatu500_inappwebview_platform_interface.ProxySettings.reverseBypassEnabled.supported_platforms}
   ///
   ///**Officially Supported Platforms/Implementations**:
   ///- Android WebView

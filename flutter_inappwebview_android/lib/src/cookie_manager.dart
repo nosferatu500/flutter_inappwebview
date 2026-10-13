@@ -1,7 +1,7 @@
 import 'dart:async';
 
 import 'package:flutter/foundation.dart';
-import 'package:flutter_inappwebview_platform_interface/flutter_inappwebview_platform_interface.dart';
+import 'package:nosferatu500_inappwebview_platform_interface/nosferatu500_inappwebview_platform_interface.dart';
 
 import 'pigeons/cookie_manager.g.dart';
 
@@ -28,7 +28,7 @@ class AndroidCookieManagerCreationParams
   }
 }
 
-///{@macro flutter_inappwebview_platform_interface.PlatformCookieManager}
+///{@macro nosferatu500_inappwebview_platform_interface.PlatformCookieManager}
 ///
 /// Transport is Pigeon-generated ([CookieManagerHostApi]) rather than a hand-written
 /// `MethodChannel`; the eighth channel migrated, after find_interaction (§14),

@@ -1,10 +1,10 @@
-import 'package:flutter_inappwebview_platform_interface/flutter_inappwebview_platform_interface.dart';
+import 'package:nosferatu500_inappwebview_platform_interface/nosferatu500_inappwebview_platform_interface.dart';
 
-///{@macro flutter_inappwebview_platform_interface.PlatformWebMessagePort}
+///{@macro nosferatu500_inappwebview_platform_interface.PlatformWebMessagePort}
 ///
-///{@macro flutter_inappwebview_platform_interface.PlatformWebMessagePort.supported_platforms}
+///{@macro nosferatu500_inappwebview_platform_interface.PlatformWebMessagePort.supported_platforms}
 class WebMessagePort implements IWebMessagePort {
-  ///{@macro flutter_inappwebview_platform_interface.PlatformWebMessagePort}
+  ///{@macro nosferatu500_inappwebview_platform_interface.PlatformWebMessagePort}
   WebMessagePort({required int index})
     : this.fromPlatformCreationParams(
         params: PlatformWebMessagePortCreationParams(index: index),
@@ -24,22 +24,22 @@ class WebMessagePort implements IWebMessagePort {
   /// Implementation of [PlatformWebMessagePort] for the current platform.
   final PlatformWebMessagePort platform;
 
-  ///{@macro flutter_inappwebview_platform_interface.PlatformWebMessagePort.setWebMessageCallback}
+  ///{@macro nosferatu500_inappwebview_platform_interface.PlatformWebMessagePort.setWebMessageCallback}
   ///
-  ///{@macro flutter_inappwebview_platform_interface.PlatformWebMessagePort.setWebMessageCallback.supported_platforms}
+  ///{@macro nosferatu500_inappwebview_platform_interface.PlatformWebMessagePort.setWebMessageCallback.supported_platforms}
   @override
   Future<void> setWebMessageCallback(WebMessageCallback? onMessage) =>
       platform.setWebMessageCallback(onMessage);
 
-  ///{@macro flutter_inappwebview_platform_interface.PlatformWebMessagePort.postMessage}
+  ///{@macro nosferatu500_inappwebview_platform_interface.PlatformWebMessagePort.postMessage}
   ///
-  ///{@macro flutter_inappwebview_platform_interface.PlatformWebMessagePort.postMessage.supported_platforms}
+  ///{@macro nosferatu500_inappwebview_platform_interface.PlatformWebMessagePort.postMessage.supported_platforms}
   @override
   Future<void> postMessage(WebMessage message) => platform.postMessage(message);
 
-  ///{@macro flutter_inappwebview_platform_interface.PlatformWebMessagePort.close}
+  ///{@macro nosferatu500_inappwebview_platform_interface.PlatformWebMessagePort.close}
   ///
-  ///{@macro flutter_inappwebview_platform_interface.PlatformWebMessagePort.close.supported_platforms}
+  ///{@macro nosferatu500_inappwebview_platform_interface.PlatformWebMessagePort.close.supported_platforms}
   @override
   Future<void> close() => platform.close();
 

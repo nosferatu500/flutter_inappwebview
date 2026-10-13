@@ -2,9 +2,9 @@ import 'package:flutter/painting.dart';
 import 'package:flutter/services.dart';
 // `init` lives on the internal extension, so the test drives the controller exactly the way
 // `InAppWebView`, `HeadlessInAppWebView` and `InAppBrowser` do at runtime.
-import 'package:flutter_inappwebview_android/src/pull_to_refresh/pull_to_refresh_controller.dart';
-import 'package:flutter_inappwebview_android/src/pigeons/pull_to_refresh.g.dart';
-import 'package:flutter_inappwebview_platform_interface/flutter_inappwebview_platform_interface.dart';
+import 'package:nosferatu500_inappwebview_android/src/pull_to_refresh/pull_to_refresh_controller.dart';
+import 'package:nosferatu500_inappwebview_android/src/pigeons/pull_to_refresh.g.dart';
+import 'package:nosferatu500_inappwebview_platform_interface/nosferatu500_inappwebview_platform_interface.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 /// Runtime coverage for the per-instance pull-to-refresh channel (§182), the fifteenth migrated to
@@ -38,11 +38,11 @@ void main() {
   const codec = PullToRefreshHostApi.pigeonChannelCodec;
 
   String hostChannel(String method) =>
-      'dev.flutter.pigeon.flutter_inappwebview_android.PullToRefreshHostApi'
+      'dev.flutter.pigeon.nosferatu500_inappwebview_android.PullToRefreshHostApi'
       '.$method.$suffix';
 
   const onRefreshChannel =
-      'dev.flutter.pigeon.flutter_inappwebview_android.PullToRefreshFlutterApi'
+      'dev.flutter.pigeon.nosferatu500_inappwebview_android.PullToRefreshFlutterApi'
       '.onRefresh.$suffix';
 
   const hostMethods = [

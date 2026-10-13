@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_inappwebview/flutter_inappwebview.dart';
+import 'package:nosferatu500_inappwebview/nosferatu500_inappwebview.dart';
 import '../widgets/common/app_drawer.dart';
 import '../utils/constants.dart';
 import '../utils/test_registry.dart';

@@ -5,8 +5,8 @@
   "scripts": {
     "build": "cd flutter_inappwebview_platform_interface && fvm dart run build_runner build",
     "watch": "cd flutter_inappwebview_platform_interface && fvm dart run build_runner watch",
-    "publish:dry": "cd flutter_inappwebview_platform_interface && fvm flutter pub publish --dry-run && cd ../flutter_inappwebview_android && fvm flutter pub publish --dry-run && cd ../flutter_inappwebview_ios && fvm flutter pub publish --dry-run && cd ../flutter_inappwebview && fvm flutter pub publish --dry-run",
-    "format": "fvm dart format flutter_inappwebview/lib flutter_inappwebview/example/integration_test flutter_inappwebview_platform_interface/lib flutter_inappwebview_android/lib flutter_inappwebview_ios/lib",
+    "publish:dry": "cd flutter_inappwebview_platform_interface && fvm flutter pub publish --dry-run && cd ../flutter_inappwebview_android && fvm flutter pub publish --dry-run && cd ../nosferatu500_inappwebview_ios && fvm flutter pub publish --dry-run && cd ../flutter_inappwebview && fvm flutter pub publish --dry-run",
+    "format": "fvm dart format flutter_inappwebview/lib flutter_inappwebview/example/integration_test flutter_inappwebview_platform_interface/lib flutter_inappwebview_android/lib nosferatu500_inappwebview_ios/lib",
     "format:kotlin": "ktlint -F \"flutter_inappwebview_android/android/src/**/*.kt\"",
     "format:kotlin:windows": "ktlint.bat -F \"flutter_inappwebview_android/android/src/**/*.kt\"",
     "format:kotlin:check": "ktlint \"flutter_inappwebview_android/android/src/**/*.kt\"",
@@ -15,7 +15,7 @@
     "docs:serve": "fvm flutter pub global activate dhttpd && fvm flutter pub global run dhttpd:dhttpd --path doc/api",
     "publish:platform_interface": "cd flutter_inappwebview_platform_interface && fvm flutter pub publish && cd ..",
     "publish:android": "cd flutter_inappwebview_android && fvm flutter pub publish && cd ..",
-    "publish:ios": "cd flutter_inappwebview_ios && fvm flutter pub publish && cd ..",
+    "publish:ios": "cd nosferatu500_inappwebview_ios && fvm flutter pub publish && cd ..",
     "publish:all_platforms": "npm run publish:android && npm run publish:ios",
     "publish:interface_and_all_platforms": "npm run publish:platform_interface && npm run publish:all_platforms",
     "publish:plugin": "cd flutter_inappwebview && fvm flutter pub publish && cd .."

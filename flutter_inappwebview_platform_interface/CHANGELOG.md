@@ -1,9 +1,15 @@
 ## 7.0.0
 
 The platform-interface half of a hard fork of 6.2.0-beta.3 / `1.4.0-beta.3`, **Android and iOS
-only**. The `flutter_inappwebview` 7.0.0 entry carries the full user-facing list with every old → new
+only**. The `nosferatu500_inappwebview` 7.0.0 entry carries the full user-facing list with every old → new
 rename; this entry is the API-owner's view.
 
+- **The package is renamed `nosferatu500_inappwebview_platform_interface`** (was
+  `flutter_inappwebview_platform_interface`); its main library is
+  `package:nosferatu500_inappwebview_platform_interface/nosferatu500_inappwebview_platform_interface.dart`.
+  It depends on `nosferatu500_inappwebview_internal_annotations` (was upstream's
+  `flutter_inappwebview_internal_annotations`), and its `{@template}` / `{@macro}` IDs take the new
+  name, as the generated ones do
 - Minimum Dart `^3.12.0`, minimum Flutter `>=3.44.0`
 - **Every method/event channel name changed**: `com.pichillilorenzo/…` →
   **`dev.nosferatu500.inappwebview/…`**. Invisible through the public API, breaking for anything

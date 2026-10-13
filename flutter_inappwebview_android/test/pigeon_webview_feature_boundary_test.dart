@@ -1,7 +1,7 @@
 import 'package:flutter/services.dart';
-import 'package:flutter_inappwebview_android/flutter_inappwebview_android.dart';
-import 'package:flutter_inappwebview_android/src/pigeons/webview_feature.g.dart';
-import 'package:flutter_inappwebview_platform_interface/flutter_inappwebview_platform_interface.dart';
+import 'package:nosferatu500_inappwebview_android/nosferatu500_inappwebview_android.dart';
+import 'package:nosferatu500_inappwebview_android/src/pigeons/webview_feature.g.dart';
+import 'package:nosferatu500_inappwebview_platform_interface/nosferatu500_inappwebview_platform_interface.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 /// Boundary coverage for the fourth channel migrated to Pigeon (§161, `webview_feature`), in the
@@ -23,9 +23,9 @@ void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
 
   const isFeatureChannel =
-      'dev.flutter.pigeon.flutter_inappwebview_android.WebViewFeatureHostApi.isFeatureSupported';
+      'dev.flutter.pigeon.nosferatu500_inappwebview_android.WebViewFeatureHostApi.isFeatureSupported';
   const isStartupChannel =
-      'dev.flutter.pigeon.flutter_inappwebview_android.WebViewFeatureHostApi.isStartupFeatureSupported';
+      'dev.flutter.pigeon.nosferatu500_inappwebview_android.WebViewFeatureHostApi.isStartupFeatureSupported';
   const codec = WebViewFeatureHostApi.pigeonChannelCodec;
 
   late AndroidWebViewFeature feature;

@@ -6,7 +6,7 @@ import 'dart:io';
 
 import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_inappwebview_platform_interface/flutter_inappwebview_platform_interface.dart';
+import 'package:nosferatu500_inappwebview_platform_interface/nosferatu500_inappwebview_platform_interface.dart';
 
 import '../in_app_browser/in_app_browser.dart';
 import '../print_job/main.dart';
@@ -3129,12 +3129,12 @@ class AndroidInAppWebViewController extends PlatformInAppWebViewController
 
   @override
   Future<String> get tRexRunnerHtml async => await rootBundle.loadString(
-    'packages/flutter_inappwebview/assets/t_rex_runner/t-rex.html',
+    'packages/nosferatu500_inappwebview/assets/t_rex_runner/t-rex.html',
   );
 
   @override
   Future<String> get tRexRunnerCss async => await rootBundle.loadString(
-    'packages/flutter_inappwebview/assets/t_rex_runner/t-rex.css',
+    'packages/nosferatu500_inappwebview/assets/t_rex_runner/t-rex.css',
   );
 
   @override

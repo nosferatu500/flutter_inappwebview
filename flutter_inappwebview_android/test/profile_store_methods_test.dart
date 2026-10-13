@@ -1,7 +1,7 @@
 import 'package:flutter/services.dart';
-import 'package:flutter_inappwebview_android/flutter_inappwebview_android.dart';
-import 'package:flutter_inappwebview_android/src/pigeons/profile_store.g.dart';
-import 'package:flutter_inappwebview_platform_interface/flutter_inappwebview_platform_interface.dart';
+import 'package:nosferatu500_inappwebview_android/nosferatu500_inappwebview_android.dart';
+import 'package:nosferatu500_inappwebview_android/src/pigeons/profile_store.g.dart';
+import 'package:nosferatu500_inappwebview_platform_interface/nosferatu500_inappwebview_platform_interface.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 /// Guards the wire shape of the `WebViewFeature.MULTI_PROFILE` store —
@@ -32,7 +32,7 @@ void main() {
 
   const codec = ProfileStoreHostApi.pigeonChannelCodec;
   const prefix =
-      'dev.flutter.pigeon.flutter_inappwebview_android.ProfileStoreHostApi.';
+      'dev.flutter.pigeon.nosferatu500_inappwebview_android.ProfileStoreHostApi.';
   const namesChannel = '${prefix}getAllProfileNames';
   const createChannel = '${prefix}getOrCreateProfile';
   const deleteChannel = '${prefix}deleteProfile';

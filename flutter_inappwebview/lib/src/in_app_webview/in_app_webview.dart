@@ -5,7 +5,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
-import 'package:flutter_inappwebview_platform_interface/flutter_inappwebview_platform_interface.dart';
+import 'package:nosferatu500_inappwebview_platform_interface/nosferatu500_inappwebview_platform_interface.dart';
 
 import '../find_interaction/find_interaction_controller.dart';
 import '../pull_to_refresh/main.dart';
@@ -13,9 +13,9 @@ import '../pull_to_refresh/pull_to_refresh_controller.dart';
 import 'headless_in_app_webview.dart';
 import 'in_app_webview_controller.dart';
 
-///{@macro flutter_inappwebview_platform_interface.PlatformInAppWebViewWidget}
+///{@macro nosferatu500_inappwebview_platform_interface.PlatformInAppWebViewWidget}
 ///
-///{@macro flutter_inappwebview_platform_interface.PlatformWebViewCreationParams.supported_platforms}
+///{@macro nosferatu500_inappwebview_platform_interface.PlatformWebViewCreationParams.supported_platforms}
 class InAppWebView extends StatefulWidget {
   /// Constructs a [InAppWebView].
   ///
@@ -35,9 +35,9 @@ class InAppWebView extends StatefulWidget {
   /// Implementation of [PlatformInAppWebView] for the current platform.
   final PlatformInAppWebViewWidget platform;
 
-  ///{@macro flutter_inappwebview_platform_interface.PlatformInAppWebViewWidget}
+  ///{@macro nosferatu500_inappwebview_platform_interface.PlatformInAppWebViewWidget}
   ///
-  ///{@macro flutter_inappwebview_platform_interface.PlatformWebViewCreationParams.supported_platforms}
+  ///{@macro nosferatu500_inappwebview_platform_interface.PlatformWebViewCreationParams.supported_platforms}
   InAppWebView({
     Key? key,
     Set<Factory<OneSequenceGestureRecognizer>>? gestureRecognizers,
@@ -660,11 +660,11 @@ class InAppWebView extends StatefulWidget {
   @override
   State<InAppWebView> createState() => _InAppWebViewState();
 
-  ///{@macro flutter_inappwebview_platform_interface.PlatformInAppWebViewWidgetCreationParams.isClassSupported}
+  ///{@macro nosferatu500_inappwebview_platform_interface.PlatformInAppWebViewWidgetCreationParams.isClassSupported}
   static bool isClassSupported({TargetPlatform? platform}) =>
       PlatformInAppWebViewWidget.static().isClassSupported(platform: platform);
 
-  ///{@macro flutter_inappwebview_platform_interface.PlatformInAppWebViewWidgetCreationParams.isPropertySupported}
+  ///{@macro nosferatu500_inappwebview_platform_interface.PlatformInAppWebViewWidgetCreationParams.isPropertySupported}
   static bool isPropertySupported(
     dynamic property, {
     TargetPlatform? platform,

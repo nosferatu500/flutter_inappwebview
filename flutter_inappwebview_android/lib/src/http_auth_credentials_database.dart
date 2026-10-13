@@ -1,6 +1,6 @@
 import 'dart:async';
 import 'package:flutter/foundation.dart';
-import 'package:flutter_inappwebview_platform_interface/flutter_inappwebview_platform_interface.dart';
+import 'package:nosferatu500_inappwebview_platform_interface/nosferatu500_inappwebview_platform_interface.dart';
 
 import 'pigeons/credential_database.g.dart';
 
@@ -27,7 +27,7 @@ class AndroidHttpAuthCredentialDatabaseCreationParams
   }
 }
 
-///{@macro flutter_inappwebview_platform_interface.PlatformHttpAuthCredentialDatabase}
+///{@macro nosferatu500_inappwebview_platform_interface.PlatformHttpAuthCredentialDatabase}
 ///
 /// Transport is Pigeon-generated ([CredentialDatabaseHostApi]) rather than a hand-written
 /// `MethodChannel`; the sixth channel migrated, after find_interaction (§14),

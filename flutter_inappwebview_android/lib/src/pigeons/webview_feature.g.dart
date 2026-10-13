@@ -88,7 +88,7 @@ class WebViewFeatureHostApi {
   /// which wrapped it, and Pigeon's `wrapError` does the same.
   Future<bool> isFeatureSupported(String feature) async {
     final pigeonVar_channelName =
-        'dev.flutter.pigeon.flutter_inappwebview_android.WebViewFeatureHostApi.isFeatureSupported$pigeonVar_messageChannelSuffix';
+        'dev.flutter.pigeon.nosferatu500_inappwebview_android.WebViewFeatureHostApi.isFeatureSupported$pigeonVar_messageChannelSuffix';
     final pigeonVar_channel = BasicMessageChannel<Object?>(
       pigeonVar_channelName,
       pigeonChannelCodec,
@@ -128,7 +128,7 @@ class WebViewFeatureHostApi {
   /// not inferred from the signature.
   Future<bool> isStartupFeatureSupported(String startupFeature) async {
     final pigeonVar_channelName =
-        'dev.flutter.pigeon.flutter_inappwebview_android.WebViewFeatureHostApi.isStartupFeatureSupported$pigeonVar_messageChannelSuffix';
+        'dev.flutter.pigeon.nosferatu500_inappwebview_android.WebViewFeatureHostApi.isStartupFeatureSupported$pigeonVar_messageChannelSuffix';
     final pigeonVar_channel = BasicMessageChannel<Object?>(
       pigeonVar_channelName,
       pigeonChannelCodec,

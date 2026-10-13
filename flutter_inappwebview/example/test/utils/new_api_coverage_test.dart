@@ -1,4 +1,4 @@
-import 'package:flutter_inappwebview/flutter_inappwebview.dart';
+import 'package:nosferatu500_inappwebview/nosferatu500_inappwebview.dart';
 import 'package:flutter_inappwebview_example/utils/controller_methods_registry.dart';
 import 'package:flutter_inappwebview_example/utils/settings_definitions.dart';
 import 'package:flutter_test/flutter_test.dart';

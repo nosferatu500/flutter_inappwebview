@@ -333,7 +333,7 @@ class ProxyHostApi {
   /// actually in effect.
   Future<bool> setProxyOverride(ProxySettingsData settings) async {
     final pigeonVar_channelName =
-        'dev.flutter.pigeon.flutter_inappwebview_android.ProxyHostApi.setProxyOverride$pigeonVar_messageChannelSuffix';
+        'dev.flutter.pigeon.nosferatu500_inappwebview_android.ProxyHostApi.setProxyOverride$pigeonVar_messageChannelSuffix';
     final pigeonVar_channel = BasicMessageChannel<Object?>(
       pigeonVar_channelName,
       pigeonChannelCodec,
@@ -359,7 +359,7 @@ class ProxyHostApi {
   /// executor-plus-callback on the androidx side.
   Future<bool> clearProxyOverride() async {
     final pigeonVar_channelName =
-        'dev.flutter.pigeon.flutter_inappwebview_android.ProxyHostApi.clearProxyOverride$pigeonVar_messageChannelSuffix';
+        'dev.flutter.pigeon.nosferatu500_inappwebview_android.ProxyHostApi.clearProxyOverride$pigeonVar_messageChannelSuffix';
     final pigeonVar_channel = BasicMessageChannel<Object?>(
       pigeonVar_channelName,
       pigeonChannelCodec,

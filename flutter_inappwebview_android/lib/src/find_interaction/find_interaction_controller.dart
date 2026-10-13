@@ -1,5 +1,5 @@
 import 'package:flutter/foundation.dart';
-import 'package:flutter_inappwebview_platform_interface/flutter_inappwebview_platform_interface.dart';
+import 'package:nosferatu500_inappwebview_platform_interface/nosferatu500_inappwebview_platform_interface.dart';
 
 import '../pigeons/find_interaction.g.dart';
 
@@ -59,7 +59,7 @@ class _FindInteractionFlutterApiImpl implements FindInteractionFlutterApi {
   }
 }
 
-///{@macro flutter_inappwebview_platform_interface.PlatformFindInteractionController}
+///{@macro nosferatu500_inappwebview_platform_interface.PlatformFindInteractionController}
 ///
 /// Transport is Pigeon-generated ([FindInteractionHostApi] / [FindInteractionFlutterApi]) rather
 /// than a hand-written `MethodChannel`; this is the pilot for migrating the rest of the plugin.
@@ -108,42 +108,42 @@ class AndroidFindInteractionController
   /// Retained so [dispose] can unregister the handler for this instance's suffix.
   String? _messageChannelSuffix;
 
-  ///{@macro flutter_inappwebview_platform_interface.PlatformFindInteractionController.findAll}
+  ///{@macro nosferatu500_inappwebview_platform_interface.PlatformFindInteractionController.findAll}
   @override
   Future<void> findAll({String? find}) async {
     _debugLog('findAll', {'find': find});
     await _hostApi?.findAll(find);
   }
 
-  ///{@macro flutter_inappwebview_platform_interface.PlatformFindInteractionController.findNext}
+  ///{@macro nosferatu500_inappwebview_platform_interface.PlatformFindInteractionController.findNext}
   @override
   Future<void> findNext({bool forward = true}) async {
     _debugLog('findNext', {'forward': forward});
     await _hostApi?.findNext(forward);
   }
 
-  ///{@macro flutter_inappwebview_platform_interface.PlatformFindInteractionController.clearMatches}
+  ///{@macro nosferatu500_inappwebview_platform_interface.PlatformFindInteractionController.clearMatches}
   @override
   Future<void> clearMatches() async {
     _debugLog('clearMatches', {});
     await _hostApi?.clearMatches();
   }
 
-  ///{@macro flutter_inappwebview_platform_interface.PlatformFindInteractionController.setSearchText}
+  ///{@macro nosferatu500_inappwebview_platform_interface.PlatformFindInteractionController.setSearchText}
   @override
   Future<void> setSearchText(String? searchText) async {
     _debugLog('setSearchText', {'searchText': searchText});
     await _hostApi?.setSearchText(searchText);
   }
 
-  ///{@macro flutter_inappwebview_platform_interface.PlatformFindInteractionController.getSearchText}
+  ///{@macro nosferatu500_inappwebview_platform_interface.PlatformFindInteractionController.getSearchText}
   @override
   Future<String?> getSearchText() async {
     _debugLog('getSearchText', {});
     return await _hostApi?.getSearchText();
   }
 
-  ///{@macro flutter_inappwebview_platform_interface.PlatformFindInteractionController.getActiveFindSession}
+  ///{@macro nosferatu500_inappwebview_platform_interface.PlatformFindInteractionController.getActiveFindSession}
   @override
   Future<FindSession?> getActiveFindSession() async {
     _debugLog('getActiveFindSession', {});
@@ -164,7 +164,7 @@ class AndroidFindInteractionController
     );
   }
 
-  ///{@macro flutter_inappwebview_platform_interface.PlatformFindInteractionController.dispose}
+  ///{@macro nosferatu500_inappwebview_platform_interface.PlatformFindInteractionController.dispose}
   @override
   void dispose({bool isKeepAlive = false}) {
     if (!isKeepAlive) {

@@ -1,12 +1,12 @@
 import 'dart:async';
 
 import 'package:flutter/services.dart';
-import 'package:flutter_inappwebview_android/flutter_inappwebview_android.dart';
+import 'package:nosferatu500_inappwebview_android/nosferatu500_inappwebview_android.dart';
 // `run()` is what wires the Pigeon APIs up, so the test drives the headless
 // webview exactly the way an app does at runtime.
-import 'package:flutter_inappwebview_android/src/in_app_webview/headless_in_app_webview.dart';
-import 'package:flutter_inappwebview_android/src/pigeons/headless_webview.g.dart';
-import 'package:flutter_inappwebview_platform_interface/flutter_inappwebview_platform_interface.dart'
+import 'package:nosferatu500_inappwebview_android/src/in_app_webview/headless_in_app_webview.dart';
+import 'package:nosferatu500_inappwebview_android/src/pigeons/headless_webview.g.dart';
+import 'package:nosferatu500_inappwebview_platform_interface/nosferatu500_inappwebview_platform_interface.dart'
     show PullToRefreshSettings;
 import 'package:flutter_test/flutter_test.dart';
 
@@ -47,7 +47,7 @@ void main() {
   // The manager's `run`, Pigeon since §203. Answering it is what lets `run()`
   // complete.
   const managerRun =
-      'dev.flutter.pigeon.flutter_inappwebview_android.HeadlessInAppWebViewManagerHostApi.run';
+      'dev.flutter.pigeon.nosferatu500_inappwebview_android.HeadlessInAppWebViewManagerHostApi.run';
 
   late AndroidHeadlessInAppWebView headlessWebView;
   late String suffix;
@@ -55,11 +55,11 @@ void main() {
   final received = <String, Object?>{};
 
   String hostChannel(String method) =>
-      'dev.flutter.pigeon.flutter_inappwebview_android.HeadlessWebViewHostApi'
+      'dev.flutter.pigeon.nosferatu500_inappwebview_android.HeadlessWebViewHostApi'
       '.$method.$suffix';
 
   String flutterChannel(String method) =>
-      'dev.flutter.pigeon.flutter_inappwebview_android.HeadlessWebViewFlutterApi'
+      'dev.flutter.pigeon.nosferatu500_inappwebview_android.HeadlessWebViewFlutterApi'
       '.$method.$suffix';
 
   /// Answers one HostApi method with [result], recording what Dart sent.

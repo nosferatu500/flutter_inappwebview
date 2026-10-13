@@ -3,13 +3,13 @@ import 'package:analyzer/dart/element/element.dart';
 import 'package:analyzer/dart/element/type.dart';
 import 'package:analyzer/dart/analysis/results.dart';
 import 'package:source_gen/source_gen.dart';
-import 'package:flutter_inappwebview_internal_annotations/flutter_inappwebview_internal_annotations.dart';
+import 'package:nosferatu500_inappwebview_internal_annotations/nosferatu500_inappwebview_internal_annotations.dart';
 import 'package:analyzer/dart/constant/value.dart';
 
 import 'model_visitor.dart';
 import 'util.dart';
 
-const _annotationsPackage = 'flutter_inappwebview_internal_annotations';
+const _annotationsPackage = 'nosferatu500_inappwebview_internal_annotations';
 
 final _coreCheckerEnumSupportedPlatforms = TypeChecker.typeNamedLiterally(
   'EnumSupportedPlatforms',

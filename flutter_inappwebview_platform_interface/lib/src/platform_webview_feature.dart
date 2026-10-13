@@ -1,26 +1,26 @@
 import 'dart:async';
 import 'package:flutter/foundation.dart';
 import 'package:plugin_platform_interface/plugin_platform_interface.dart';
-import 'package:flutter_inappwebview_internal_annotations/flutter_inappwebview_internal_annotations.dart';
+import 'package:nosferatu500_inappwebview_internal_annotations/nosferatu500_inappwebview_internal_annotations.dart';
 import 'inappwebview_platform.dart';
 
 part 'platform_webview_feature.g.dart';
 
-///{@template flutter_inappwebview_platform_interface.PlatformWebViewFeatureCreationParams}
+///{@template nosferatu500_inappwebview_platform_interface.PlatformWebViewFeatureCreationParams}
 /// Object specifying creation parameters for creating a [PlatformWebViewFeature].
 ///
 /// Platform specific implementations can add additional fields by extending
 /// this class.
 ///{@endtemplate}
 ///
-///{@macro flutter_inappwebview_platform_interface.PlatformWebViewFeatureCreationParams.supported_platforms}
+///{@macro nosferatu500_inappwebview_platform_interface.PlatformWebViewFeatureCreationParams.supported_platforms}
 @SupportedPlatforms(platforms: [AndroidPlatform()])
 @immutable
 class PlatformWebViewFeatureCreationParams {
   /// Used by the platform implementation to create a new [PlatformWebViewFeature].
   const PlatformWebViewFeatureCreationParams();
 
-  ///{@template flutter_inappwebview_platform_interface.PlatformWebViewFeatureCreationParams.isClassSupported}
+  ///{@template nosferatu500_inappwebview_platform_interface.PlatformWebViewFeatureCreationParams.isClassSupported}
   ///Check if the current class is supported by the [defaultTargetPlatform] or a specific [platform].
   ///{@endtemplate}
   bool isClassSupported({TargetPlatform? platform}) =>
@@ -29,18 +29,18 @@ class PlatformWebViewFeatureCreationParams {
       );
 }
 
-///{@template flutter_inappwebview_platform_interface.PlatformWebViewFeature}
+///{@template nosferatu500_inappwebview_platform_interface.PlatformWebViewFeature}
 ///Class that represents an Android-specific utility class for checking which WebView Support Library features are supported on the device.
 ///{@endtemplate}
 ///
-///{@macro flutter_inappwebview_platform_interface.PlatformWebViewFeature.supported_platforms}
+///{@macro nosferatu500_inappwebview_platform_interface.PlatformWebViewFeature.supported_platforms}
 @SupportedPlatforms(platforms: [AndroidPlatform()])
 abstract class PlatformWebViewFeature extends PlatformInterface {
   /// Creates a new [PlatformWebViewFeature]
   factory PlatformWebViewFeature(PlatformWebViewFeatureCreationParams params) {
     assert(
       InAppWebViewPlatform.instance != null,
-      'A platform implementation for `flutter_inappwebview` has not been set. Please '
+      'A platform implementation for `nosferatu500_inappwebview` has not been set. Please '
       'ensure that an implementation of `InAppWebViewPlatform` has been set to '
       '`WebViewPlatform.instance` before use. For unit testing, '
       '`WebViewPlatform.instance` can be set with your own test implementation.',
@@ -55,7 +55,7 @@ abstract class PlatformWebViewFeature extends PlatformInterface {
   factory PlatformWebViewFeature.static() {
     assert(
       InAppWebViewPlatform.instance != null,
-      'A platform implementation for `flutter_inappwebview` has not been set. Please '
+      'A platform implementation for `nosferatu500_inappwebview` has not been set. Please '
       'ensure that an implementation of `InAppWebViewPlatform` has been set to '
       '`WebViewPlatform.instance` before use. For unit testing, '
       '`WebViewPlatform.instance` can be set with your own test implementation.',
@@ -80,7 +80,7 @@ abstract class PlatformWebViewFeature extends PlatformInterface {
   /// The parameters used to initialize the [PlatformWebViewFeature].
   final PlatformWebViewFeatureCreationParams params;
 
-  ///{@template flutter_inappwebview_platform_interface.PlatformWebViewFeature.isFeatureSupported}
+  ///{@template nosferatu500_inappwebview_platform_interface.PlatformWebViewFeature.isFeatureSupported}
   ///Return whether a feature is supported at run-time. On devices running Android version `Build.VERSION_CODES.LOLLIPOP` and higher,
   ///this will check whether a feature is supported, depending on the combination of the desired feature, the Android version of device,
   ///and the WebView APK on the device. If running on a device with a lower API level, this will always return `false`.
@@ -95,7 +95,7 @@ abstract class PlatformWebViewFeature extends PlatformInterface {
   ///Furthermore, if this method returns `false` for a particular feature, any callback guarded by that feature will not be invoked.
   ///{@endtemplate}
   ///
-  ///{@macro flutter_inappwebview_platform_interface.PlatformWebViewFeature.isFeatureSupported.supported_platforms}
+  ///{@macro nosferatu500_inappwebview_platform_interface.PlatformWebViewFeature.isFeatureSupported.supported_platforms}
   @SupportedPlatforms(
     platforms: [
       AndroidPlatform(
@@ -111,7 +111,7 @@ abstract class PlatformWebViewFeature extends PlatformInterface {
     );
   }
 
-  ///{@template flutter_inappwebview_platform_interface.PlatformWebViewFeature.isStartupFeatureSupported}
+  ///{@template nosferatu500_inappwebview_platform_interface.PlatformWebViewFeature.isStartupFeatureSupported}
   ///Return whether a startup feature is supported at run-time.
   ///On devices running Android version `Build.VERSION_CODES.LOLLIPOP` and higher,
   ///this will check whether a startup feature is supported,
@@ -129,7 +129,7 @@ abstract class PlatformWebViewFeature extends PlatformInterface {
   ///any callback guarded by that feature will not be invoked.
   ///{@endtemplate}
   ///
-  ///{@macro flutter_inappwebview_platform_interface.PlatformWebViewFeature.isStartupFeatureSupported.supported_platforms}
+  ///{@macro nosferatu500_inappwebview_platform_interface.PlatformWebViewFeature.isStartupFeatureSupported.supported_platforms}
   @SupportedPlatforms(
     platforms: [
       AndroidPlatform(
@@ -145,11 +145,11 @@ abstract class PlatformWebViewFeature extends PlatformInterface {
     );
   }
 
-  ///{@macro flutter_inappwebview_platform_interface.PlatformWebViewFeatureCreationParams.isClassSupported}
+  ///{@macro nosferatu500_inappwebview_platform_interface.PlatformWebViewFeatureCreationParams.isClassSupported}
   bool isClassSupported({TargetPlatform? platform}) =>
       params.isClassSupported(platform: platform);
 
-  ///{@template flutter_inappwebview_platform_interface.PlatformWebViewFeature.isMethodSupported}
+  ///{@template nosferatu500_inappwebview_platform_interface.PlatformWebViewFeature.isMethodSupported}
   ///Check if the given [method] is supported by the [defaultTargetPlatform] or a specific [platform].
   ///{@endtemplate}
   bool isMethodSupported(
@@ -161,7 +161,7 @@ abstract class PlatformWebViewFeature extends PlatformInterface {
   );
 }
 
-///{@macro flutter_inappwebview_platform_interface.PlatformWebViewFeature}
+///{@macro nosferatu500_inappwebview_platform_interface.PlatformWebViewFeature}
 @ExchangeableEnum()
 class WebViewFeature_ {
   // ignore: unused_field
@@ -528,11 +528,11 @@ class WebViewFeature_ {
   static const STARTUP_FEATURE_SET_DIRECTORY_BASE_PATHS =
       WebViewFeature_._internal("STARTUP_FEATURE_SET_DIRECTORY_BASE_PATHS");
 
-  ///{@macro flutter_inappwebview_platform_interface.PlatformWebViewFeature.isFeatureSupported}
+  ///{@macro nosferatu500_inappwebview_platform_interface.PlatformWebViewFeature.isFeatureSupported}
   static Future<bool> isFeatureSupported(WebViewFeature feature) =>
       PlatformWebViewFeature.static().isFeatureSupported(feature);
 
-  ///{@macro flutter_inappwebview_platform_interface.PlatformWebViewFeature.isStartupFeatureSupported}
+  ///{@macro nosferatu500_inappwebview_platform_interface.PlatformWebViewFeature.isStartupFeatureSupported}
   static Future<bool> isStartupFeatureSupported(
     WebViewFeature startupFeature,
   ) =>

@@ -2,9 +2,9 @@ import 'dart:async';
 import 'dart:typed_data';
 
 import 'package:flutter/services.dart';
-import 'package:flutter_inappwebview_android/flutter_inappwebview_android.dart';
-import 'package:flutter_inappwebview_android/src/pigeons/in_app_webview.g.dart';
-import 'package:flutter_inappwebview_platform_interface/flutter_inappwebview_platform_interface.dart';
+import 'package:nosferatu500_inappwebview_android/nosferatu500_inappwebview_android.dart';
+import 'package:nosferatu500_inappwebview_android/src/pigeons/in_app_webview.g.dart';
+import 'package:nosferatu500_inappwebview_platform_interface/nosferatu500_inappwebview_platform_interface.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 /// Runtime coverage for the custom path handler's channel (§205), the twenty-second migrated to
@@ -22,7 +22,7 @@ void main() {
   late _RecordingEvents events;
 
   String channel() =>
-      'dev.flutter.pigeon.flutter_inappwebview_android.CustomPathHandlerFlutterApi'
+      'dev.flutter.pigeon.nosferatu500_inappwebview_android.CustomPathHandlerFlutterApi'
       '.handle.${handler.toMap()['id']}';
 
   /// Delivers `handle(path)` and returns the raw reply: an encoded envelope when a handler is

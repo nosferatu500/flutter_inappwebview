@@ -154,7 +154,7 @@ import 'package:pigeon/pigeon.dart';
       // other schema in this package must opt out here. See §157.
       includeErrorClass: false,
     ),
-    dartPackageName: 'flutter_inappwebview_android',
+    dartPackageName: 'nosferatu500_inappwebview_android',
   ),
 )
 /// Implemented by `WebViewChannelDelegate`, registered for as long as the delegate lives.

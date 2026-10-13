@@ -6,7 +6,7 @@ part of 'platform_webview_asset_loader.dart';
 // ExchangeableObjectGenerator
 // **************************************************************************
 
-///{@template flutter_inappwebview_platform_interface.WebViewAssetLoader}
+///{@template nosferatu500_inappwebview_platform_interface.WebViewAssetLoader}
 ///Helper class to load local files including application's static assets and resources using http(s):// URLs inside a `WebView` class.
 ///Loading local files using web-like URLs instead of `file://` is desirable as it is compatible with the Same-Origin policy.
 ///
@@ -18,7 +18,7 @@ part of 'platform_webview_asset_loader.dart';
 ///(at paths reserved for this purpose) or the default domain reserved for this: `appassets.androidplatform.net`.
 ///{@endtemplate}
 ///
-///{@macro flutter_inappwebview_platform_interface.WebViewAssetLoader.supported_platforms}
+///{@macro nosferatu500_inappwebview_platform_interface.WebViewAssetLoader.supported_platforms}
 ///
 ///**Officially Supported Platforms/Implementations**:
 ///- Android WebView
@@ -96,7 +96,7 @@ class WebViewAssetLoader {
 
 extension _PlatformPathHandlerCreationParamsClassSupported
     on PlatformPathHandlerCreationParams {
-  ///{@template flutter_inappwebview_platform_interface.PlatformPathHandlerCreationParams.supported_platforms}
+  ///{@template nosferatu500_inappwebview_platform_interface.PlatformPathHandlerCreationParams.supported_platforms}
   ///
   ///**Officially Supported Platforms/Implementations**:
   ///- Android WebView
@@ -111,7 +111,7 @@ extension _PlatformPathHandlerCreationParamsClassSupported
 
 extension _PlatformAssetsPathHandlerCreationParamsClassSupported
     on PlatformAssetsPathHandlerCreationParams {
-  ///{@template flutter_inappwebview_platform_interface.PlatformAssetsPathHandlerCreationParams.supported_platforms}
+  ///{@template nosferatu500_inappwebview_platform_interface.PlatformAssetsPathHandlerCreationParams.supported_platforms}
   ///
   ///**Officially Supported Platforms/Implementations**:
   ///- Android WebView
@@ -126,7 +126,7 @@ extension _PlatformAssetsPathHandlerCreationParamsClassSupported
 
 extension _PlatformAssetsPathHandlerClassSupported
     on PlatformAssetsPathHandler {
-  ///{@template flutter_inappwebview_platform_interface.PlatformAssetsPathHandler.supported_platforms}
+  ///{@template nosferatu500_inappwebview_platform_interface.PlatformAssetsPathHandler.supported_platforms}
   ///
   ///**Officially Supported Platforms/Implementations**:
   ///- Android WebView
@@ -143,7 +143,7 @@ extension _PlatformAssetsPathHandlerClassSupported
 
 extension _PlatformResourcesPathHandlerCreationParamsClassSupported
     on PlatformResourcesPathHandlerCreationParams {
-  ///{@template flutter_inappwebview_platform_interface.PlatformResourcesPathHandlerCreationParams.supported_platforms}
+  ///{@template nosferatu500_inappwebview_platform_interface.PlatformResourcesPathHandlerCreationParams.supported_platforms}
   ///
   ///**Officially Supported Platforms/Implementations**:
   ///- Android WebView
@@ -158,7 +158,7 @@ extension _PlatformResourcesPathHandlerCreationParamsClassSupported
 
 extension _PlatformResourcesPathHandlerClassSupported
     on PlatformResourcesPathHandler {
-  ///{@template flutter_inappwebview_platform_interface.PlatformResourcesPathHandler.supported_platforms}
+  ///{@template nosferatu500_inappwebview_platform_interface.PlatformResourcesPathHandler.supported_platforms}
   ///
   ///**Officially Supported Platforms/Implementations**:
   ///- Android WebView
@@ -175,7 +175,7 @@ extension _PlatformResourcesPathHandlerClassSupported
 
 extension _PlatformInternalStoragePathHandlerCreationParamsClassSupported
     on PlatformInternalStoragePathHandlerCreationParams {
-  ///{@template flutter_inappwebview_platform_interface.PlatformInternalStoragePathHandlerCreationParams.supported_platforms}
+  ///{@template nosferatu500_inappwebview_platform_interface.PlatformInternalStoragePathHandlerCreationParams.supported_platforms}
   ///
   ///**Officially Supported Platforms/Implementations**:
   ///- Android WebView
@@ -190,7 +190,7 @@ extension _PlatformInternalStoragePathHandlerCreationParamsClassSupported
 
 extension _PlatformInternalStoragePathHandlerClassSupported
     on PlatformInternalStoragePathHandler {
-  ///{@template flutter_inappwebview_platform_interface.PlatformInternalStoragePathHandler.supported_platforms}
+  ///{@template nosferatu500_inappwebview_platform_interface.PlatformInternalStoragePathHandler.supported_platforms}
   ///
   ///**Officially Supported Platforms/Implementations**:
   ///- Android WebView
@@ -207,7 +207,7 @@ extension _PlatformInternalStoragePathHandlerClassSupported
 
 extension _PlatformCustomPathHandlerCreationParamsClassSupported
     on PlatformCustomPathHandlerCreationParams {
-  ///{@template flutter_inappwebview_platform_interface.PlatformCustomPathHandlerCreationParams.supported_platforms}
+  ///{@template nosferatu500_inappwebview_platform_interface.PlatformCustomPathHandlerCreationParams.supported_platforms}
   ///
   ///**Officially Supported Platforms/Implementations**:
   ///- Android WebView
@@ -222,7 +222,7 @@ extension _PlatformCustomPathHandlerCreationParamsClassSupported
 
 extension _PlatformCustomPathHandlerClassSupported
     on PlatformCustomPathHandler {
-  ///{@template flutter_inappwebview_platform_interface.PlatformCustomPathHandler.supported_platforms}
+  ///{@template nosferatu500_inappwebview_platform_interface.PlatformCustomPathHandler.supported_platforms}
   ///
   ///**Officially Supported Platforms/Implementations**:
   ///- Android WebView

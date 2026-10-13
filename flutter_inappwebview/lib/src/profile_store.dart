@@ -1,13 +1,13 @@
 import 'dart:async';
 
 import 'package:flutter/foundation.dart';
-import 'package:flutter_inappwebview_platform_interface/flutter_inappwebview_platform_interface.dart';
+import 'package:nosferatu500_inappwebview_platform_interface/nosferatu500_inappwebview_platform_interface.dart';
 
-///{@macro flutter_inappwebview_platform_interface.PlatformProfileStore}
+///{@macro nosferatu500_inappwebview_platform_interface.PlatformProfileStore}
 ///
-///{@macro flutter_inappwebview_platform_interface.PlatformProfileStore.supported_platforms}
+///{@macro nosferatu500_inappwebview_platform_interface.PlatformProfileStore.supported_platforms}
 class ProfileStore {
-  ///{@macro flutter_inappwebview_platform_interface.PlatformProfileStore}
+  ///{@macro nosferatu500_inappwebview_platform_interface.PlatformProfileStore}
   ProfileStore()
     : this.fromPlatformCreationParams(
         const PlatformProfileStoreCreationParams(),
@@ -34,36 +34,36 @@ class ProfileStore {
     return _instance!;
   }
 
-  ///{@macro flutter_inappwebview_platform_interface.PlatformProfileStore.defaultProfileName}
+  ///{@macro nosferatu500_inappwebview_platform_interface.PlatformProfileStore.defaultProfileName}
   static const String defaultProfileName =
       PlatformProfileStore.defaultProfileName;
 
-  ///{@macro flutter_inappwebview_platform_interface.PlatformProfileStore.getAllProfileNames}
+  ///{@macro nosferatu500_inappwebview_platform_interface.PlatformProfileStore.getAllProfileNames}
   ///
-  ///{@macro flutter_inappwebview_platform_interface.PlatformProfileStore.getAllProfileNames.supported_platforms}
+  ///{@macro nosferatu500_inappwebview_platform_interface.PlatformProfileStore.getAllProfileNames.supported_platforms}
   Future<List<String>> getAllProfileNames() => platform.getAllProfileNames();
 
-  ///{@macro flutter_inappwebview_platform_interface.PlatformProfileStore.getOrCreateProfile}
+  ///{@macro nosferatu500_inappwebview_platform_interface.PlatformProfileStore.getOrCreateProfile}
   ///
-  ///{@macro flutter_inappwebview_platform_interface.PlatformProfileStore.getOrCreateProfile.supported_platforms}
+  ///{@macro nosferatu500_inappwebview_platform_interface.PlatformProfileStore.getOrCreateProfile.supported_platforms}
   Future<String?> getOrCreateProfile({required String name}) =>
       platform.getOrCreateProfile(name: name);
 
-  ///{@macro flutter_inappwebview_platform_interface.PlatformProfileStore.addCustomHeader}
+  ///{@macro nosferatu500_inappwebview_platform_interface.PlatformProfileStore.addCustomHeader}
   ///
-  ///{@macro flutter_inappwebview_platform_interface.PlatformProfileStore.addCustomHeader.supported_platforms}
+  ///{@macro nosferatu500_inappwebview_platform_interface.PlatformProfileStore.addCustomHeader.supported_platforms}
   Future<bool> addCustomHeader(CustomHeader header, {String? profileName}) =>
       platform.addCustomHeader(header, profileName: profileName);
 
-  ///{@macro flutter_inappwebview_platform_interface.PlatformProfileStore.hasCustomHeader}
+  ///{@macro nosferatu500_inappwebview_platform_interface.PlatformProfileStore.hasCustomHeader}
   ///
-  ///{@macro flutter_inappwebview_platform_interface.PlatformProfileStore.hasCustomHeader.supported_platforms}
+  ///{@macro nosferatu500_inappwebview_platform_interface.PlatformProfileStore.hasCustomHeader.supported_platforms}
   Future<bool?> hasCustomHeader(String headerName, {String? profileName}) =>
       platform.hasCustomHeader(headerName, profileName: profileName);
 
-  ///{@macro flutter_inappwebview_platform_interface.PlatformProfileStore.getCustomHeaders}
+  ///{@macro nosferatu500_inappwebview_platform_interface.PlatformProfileStore.getCustomHeaders}
   ///
-  ///{@macro flutter_inappwebview_platform_interface.PlatformProfileStore.getCustomHeaders.supported_platforms}
+  ///{@macro nosferatu500_inappwebview_platform_interface.PlatformProfileStore.getCustomHeaders.supported_platforms}
   Future<Set<CustomHeader>> getCustomHeaders({
     String? headerName,
     String? headerValue,
@@ -74,9 +74,9 @@ class ProfileStore {
     profileName: profileName,
   );
 
-  ///{@macro flutter_inappwebview_platform_interface.PlatformProfileStore.clearCustomHeader}
+  ///{@macro nosferatu500_inappwebview_platform_interface.PlatformProfileStore.clearCustomHeader}
   ///
-  ///{@macro flutter_inappwebview_platform_interface.PlatformProfileStore.clearCustomHeader.supported_platforms}
+  ///{@macro nosferatu500_inappwebview_platform_interface.PlatformProfileStore.clearCustomHeader.supported_platforms}
   Future<bool> clearCustomHeader(
     String headerName, {
     String? headerValue,
@@ -87,23 +87,23 @@ class ProfileStore {
     profileName: profileName,
   );
 
-  ///{@macro flutter_inappwebview_platform_interface.PlatformProfileStore.clearAllCustomHeaders}
+  ///{@macro nosferatu500_inappwebview_platform_interface.PlatformProfileStore.clearAllCustomHeaders}
   ///
-  ///{@macro flutter_inappwebview_platform_interface.PlatformProfileStore.clearAllCustomHeaders.supported_platforms}
+  ///{@macro nosferatu500_inappwebview_platform_interface.PlatformProfileStore.clearAllCustomHeaders.supported_platforms}
   Future<bool> clearAllCustomHeaders({String? profileName}) =>
       platform.clearAllCustomHeaders(profileName: profileName);
 
-  ///{@macro flutter_inappwebview_platform_interface.PlatformProfileStore.deleteProfile}
+  ///{@macro nosferatu500_inappwebview_platform_interface.PlatformProfileStore.deleteProfile}
   ///
-  ///{@macro flutter_inappwebview_platform_interface.PlatformProfileStore.deleteProfile.supported_platforms}
+  ///{@macro nosferatu500_inappwebview_platform_interface.PlatformProfileStore.deleteProfile.supported_platforms}
   Future<bool> deleteProfile({required String name}) =>
       platform.deleteProfile(name: name);
 
-  ///{@macro flutter_inappwebview_platform_interface.PlatformProfileStoreCreationParams.isClassSupported}
+  ///{@macro nosferatu500_inappwebview_platform_interface.PlatformProfileStoreCreationParams.isClassSupported}
   static bool isClassSupported({TargetPlatform? platform}) =>
       PlatformProfileStore.static().isClassSupported(platform: platform);
 
-  ///{@macro flutter_inappwebview_platform_interface.PlatformProfileStore.isMethodSupported}
+  ///{@macro nosferatu500_inappwebview_platform_interface.PlatformProfileStore.isMethodSupported}
   static bool isMethodSupported(
     PlatformProfileStoreMethod method, {
     TargetPlatform? platform,

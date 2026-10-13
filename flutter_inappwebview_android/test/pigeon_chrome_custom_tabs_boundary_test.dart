@@ -1,9 +1,9 @@
 import 'dart:async';
 
 import 'package:flutter/services.dart';
-import 'package:flutter_inappwebview_android/flutter_inappwebview_android.dart';
-import 'package:flutter_inappwebview_android/src/pigeons/chrome_custom_tabs.g.dart';
-import 'package:flutter_inappwebview_android/src/pigeons/chrome_safari_browser_manager.g.dart';
+import 'package:nosferatu500_inappwebview_android/nosferatu500_inappwebview_android.dart';
+import 'package:nosferatu500_inappwebview_android/src/pigeons/chrome_custom_tabs.g.dart';
+import 'package:nosferatu500_inappwebview_android/src/pigeons/chrome_safari_browser_manager.g.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 /// Boundary coverage for the chrome-custom-tabs channel's **event unregistration** (§184), which
@@ -25,9 +25,9 @@ void main() {
   const codec = ChromeCustomTabsHostApi.pigeonChannelCodec;
   // The manager's `open`, Pigeon since §201.
   const managerOpen =
-      'dev.flutter.pigeon.flutter_inappwebview_android.ChromeSafariBrowserManagerHostApi.open';
+      'dev.flutter.pigeon.nosferatu500_inappwebview_android.ChromeSafariBrowserManagerHostApi.open';
   const eventBase =
-      'dev.flutter.pigeon.flutter_inappwebview_android.ChromeCustomTabsFlutterApi';
+      'dev.flutter.pigeon.nosferatu500_inappwebview_android.ChromeCustomTabsFlutterApi';
 
   final messenger =
       TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger;

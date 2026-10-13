@@ -5,7 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
-import 'package:flutter_inappwebview_platform_interface/flutter_inappwebview_platform_interface.dart';
+import 'package:nosferatu500_inappwebview_platform_interface/nosferatu500_inappwebview_platform_interface.dart';
 
 import '../find_interaction/find_interaction_controller.dart';
 import '../pull_to_refresh/pull_to_refresh_controller.dart';
@@ -210,11 +210,11 @@ class AndroidInAppWebViewWidgetCreationParams
       super.pullToRefreshController as AndroidPullToRefreshController?;
 }
 
-///{@macro flutter_inappwebview_platform_interface.PlatformInAppWebViewWidget}
+///{@macro nosferatu500_inappwebview_platform_interface.PlatformInAppWebViewWidget}
 class AndroidInAppWebViewWidget extends PlatformInAppWebViewWidget {
   /// Constructs a [AndroidInAppWebViewWidget].
   ///
-  ///{@macro flutter_inappwebview_platform_interface.PlatformInAppWebViewWidget}
+  ///{@macro nosferatu500_inappwebview_platform_interface.PlatformInAppWebViewWidget}
   AndroidInAppWebViewWidget(PlatformInAppWebViewWidgetCreationParams params)
     : super.implementation(
         params is AndroidInAppWebViewWidgetCreationParams

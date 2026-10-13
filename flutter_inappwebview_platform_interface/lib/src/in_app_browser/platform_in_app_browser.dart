@@ -3,7 +3,7 @@ import 'dart:collection';
 
 import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_inappwebview_internal_annotations/flutter_inappwebview_internal_annotations.dart';
+import 'package:nosferatu500_inappwebview_internal_annotations/nosferatu500_inappwebview_internal_annotations.dart';
 import 'package:plugin_platform_interface/plugin_platform_interface.dart';
 
 import '../context_menu/context_menu.dart';
@@ -22,7 +22,7 @@ import 'in_app_browser_settings.dart';
 
 part 'platform_in_app_browser.g.dart';
 
-///{@template flutter_inappwebview_platform_interface.PlatformInAppBrowserCreationParams}
+///{@template nosferatu500_inappwebview_platform_interface.PlatformInAppBrowserCreationParams}
 /// Object specifying creation parameters for creating a [PlatformInAppBrowser].
 ///
 /// Platform specific implementations can add additional fields by extending
@@ -39,40 +39,40 @@ class PlatformInAppBrowserCreationParams {
     this.windowId,
   });
 
-  ///{@macro flutter_inappwebview_platform_interface.PlatformWebViewCreationParams.contextMenu}
+  ///{@macro nosferatu500_inappwebview_platform_interface.PlatformWebViewCreationParams.contextMenu}
   ///
-  ///{@macro flutter_inappwebview_platform_interface.PlatformInAppBrowser.contextMenu.supported_platforms}
+  ///{@macro nosferatu500_inappwebview_platform_interface.PlatformInAppBrowser.contextMenu.supported_platforms}
   final ContextMenu? contextMenu;
 
-  ///{@macro flutter_inappwebview_platform_interface.PlatformWebViewCreationParams.pullToRefreshController}
+  ///{@macro nosferatu500_inappwebview_platform_interface.PlatformWebViewCreationParams.pullToRefreshController}
   ///
-  ///{@macro flutter_inappwebview_platform_interface.PlatformInAppBrowser.pullToRefreshController.supported_platforms}
+  ///{@macro nosferatu500_inappwebview_platform_interface.PlatformInAppBrowser.pullToRefreshController.supported_platforms}
   final PlatformPullToRefreshController? pullToRefreshController;
 
-  ///{@macro flutter_inappwebview_platform_interface.PlatformWebViewCreationParams.findInteractionController}
+  ///{@macro nosferatu500_inappwebview_platform_interface.PlatformWebViewCreationParams.findInteractionController}
   ///
-  ///{@macro flutter_inappwebview_platform_interface.PlatformInAppBrowser.findInteractionController.supported_platforms}
+  ///{@macro nosferatu500_inappwebview_platform_interface.PlatformInAppBrowser.findInteractionController.supported_platforms}
   final PlatformFindInteractionController? findInteractionController;
 
-  ///{@macro flutter_inappwebview_platform_interface.PlatformWebViewCreationParams.initialUserScripts}
+  ///{@macro nosferatu500_inappwebview_platform_interface.PlatformWebViewCreationParams.initialUserScripts}
   ///
-  ///{@macro flutter_inappwebview_platform_interface.PlatformInAppBrowser.initialUserScripts.supported_platforms}
+  ///{@macro nosferatu500_inappwebview_platform_interface.PlatformInAppBrowser.initialUserScripts.supported_platforms}
   final UnmodifiableListView<UserScript>? initialUserScripts;
 
-  ///{@macro flutter_inappwebview_platform_interface.PlatformWebViewCreationParams.windowId}
+  ///{@macro nosferatu500_inappwebview_platform_interface.PlatformWebViewCreationParams.windowId}
   ///
-  ///{@macro flutter_inappwebview_platform_interface.PlatformInAppBrowser.windowId.supported_platforms}
+  ///{@macro nosferatu500_inappwebview_platform_interface.PlatformInAppBrowser.windowId.supported_platforms}
   final int? windowId;
 }
 
-///{@template flutter_inappwebview_platform_interface.PlatformInAppBrowser}
+///{@template nosferatu500_inappwebview_platform_interface.PlatformInAppBrowser}
 ///This class represents a native WebView displayed on top of the Flutter App,
 ///so it's not integrated into the Flutter widget tree.
 ///It uses the native WebView of the platform.
 ///The [webViewController] field can be used to access the [PlatformInAppWebViewController] API.
 ///{@endtemplate}
 ///
-///{@macro flutter_inappwebview_platform_interface.PlatformInAppBrowser.supported_platforms}
+///{@macro nosferatu500_inappwebview_platform_interface.PlatformInAppBrowser.supported_platforms}
 @SupportedPlatforms(platforms: [AndroidPlatform(), IOSPlatform()])
 abstract class PlatformInAppBrowser extends PlatformInterface
     implements Disposable {
@@ -82,39 +82,39 @@ abstract class PlatformInAppBrowser extends PlatformInterface
   /// Event handler object that handles the [PlatformInAppBrowser] events.
   PlatformInAppBrowserEvents? eventHandler;
 
-  ///{@template flutter_inappwebview_platform_interface.PlatformInAppBrowser.id}
+  ///{@template nosferatu500_inappwebview_platform_interface.PlatformInAppBrowser.id}
   ///View ID used internally.
   ///{@endtemplate}
   ///
-  ///{@macro flutter_inappwebview_platform_interface.PlatformInAppBrowser.id.supported_platforms}
+  ///{@macro nosferatu500_inappwebview_platform_interface.PlatformInAppBrowser.id.supported_platforms}
   @SupportedPlatforms(platforms: [AndroidPlatform(), IOSPlatform()])
   String get id {
     throw UnimplementedError('id is not implemented on the current platform');
   }
 
-  ///{@macro flutter_inappwebview_platform_interface.PlatformWebViewCreationParams.contextMenu}
+  ///{@macro nosferatu500_inappwebview_platform_interface.PlatformWebViewCreationParams.contextMenu}
   ///
-  ///{@macro flutter_inappwebview_platform_interface.PlatformInAppBrowser.contextMenu.supported_platforms}
+  ///{@macro nosferatu500_inappwebview_platform_interface.PlatformInAppBrowser.contextMenu.supported_platforms}
   @SupportedPlatforms(platforms: [AndroidPlatform(), IOSPlatform()])
   ContextMenu? get contextMenu => params.contextMenu;
 
-  ///{@macro flutter_inappwebview_platform_interface.PlatformWebViewCreationParams.pullToRefreshController}
+  ///{@macro nosferatu500_inappwebview_platform_interface.PlatformWebViewCreationParams.pullToRefreshController}
   ///
-  ///{@macro flutter_inappwebview_platform_interface.PlatformInAppBrowser.pullToRefreshController.supported_platforms}
+  ///{@macro nosferatu500_inappwebview_platform_interface.PlatformInAppBrowser.pullToRefreshController.supported_platforms}
   @SupportedPlatforms(platforms: [AndroidPlatform(), IOSPlatform()])
   PlatformPullToRefreshController? get pullToRefreshController =>
       params.pullToRefreshController;
 
-  ///{@macro flutter_inappwebview_platform_interface.PlatformWebViewCreationParams.findInteractionController}
+  ///{@macro nosferatu500_inappwebview_platform_interface.PlatformWebViewCreationParams.findInteractionController}
   ///
-  ///{@macro flutter_inappwebview_platform_interface.PlatformInAppBrowser.findInteractionController.supported_platforms}
+  ///{@macro nosferatu500_inappwebview_platform_interface.PlatformInAppBrowser.findInteractionController.supported_platforms}
   @SupportedPlatforms(platforms: [AndroidPlatform(), IOSPlatform()])
   PlatformFindInteractionController? get findInteractionController =>
       params.findInteractionController;
 
-  ///{@macro flutter_inappwebview_platform_interface.PlatformWebViewCreationParams.initialUserScripts}
+  ///{@macro nosferatu500_inappwebview_platform_interface.PlatformWebViewCreationParams.initialUserScripts}
   ///
-  ///{@macro flutter_inappwebview_platform_interface.PlatformInAppBrowser.initialUserScripts.supported_platforms}
+  ///{@macro nosferatu500_inappwebview_platform_interface.PlatformInAppBrowser.initialUserScripts.supported_platforms}
   @SupportedPlatforms(
     platforms: [
       AndroidPlatform(),
@@ -129,13 +129,13 @@ This is a limitation of the native WebKit APIs.""",
   UnmodifiableListView<UserScript>? get initialUserScripts =>
       params.initialUserScripts;
 
-  ///{@macro flutter_inappwebview_platform_interface.PlatformWebViewCreationParams.windowId}
+  ///{@macro nosferatu500_inappwebview_platform_interface.PlatformWebViewCreationParams.windowId}
   ///
-  ///{@macro flutter_inappwebview_platform_interface.PlatformInAppBrowser.windowId.supported_platforms}
+  ///{@macro nosferatu500_inappwebview_platform_interface.PlatformInAppBrowser.windowId.supported_platforms}
   @SupportedPlatforms(platforms: [AndroidPlatform(), IOSPlatform()])
   int? get windowId => params.windowId;
 
-  ///{@template flutter_inappwebview_platform_interface.PlatformInAppBrowser.webViewController}
+  ///{@template nosferatu500_inappwebview_platform_interface.PlatformInAppBrowser.webViewController}
   ///WebView Controller that can be used to access the [PlatformInAppWebViewController] API.
   ///When [onExit] is fired, this will be `null` and cannot be used anymore.
   ///{@endtemplate}
@@ -149,7 +149,7 @@ This is a limitation of the native WebKit APIs.""",
   factory PlatformInAppBrowser(PlatformInAppBrowserCreationParams params) {
     assert(
       InAppWebViewPlatform.instance != null,
-      'A platform implementation for `flutter_inappwebview` has not been set. Please '
+      'A platform implementation for `nosferatu500_inappwebview` has not been set. Please '
       'ensure that an implementation of `InAppWebViewPlatform` has been set to '
       '`InAppWebViewPlatform.instance` before use. For unit testing, '
       '`InAppWebViewPlatform.instance` can be set with your own test implementation.',
@@ -164,7 +164,7 @@ This is a limitation of the native WebKit APIs.""",
   factory PlatformInAppBrowser.static() {
     assert(
       InAppWebViewPlatform.instance != null,
-      'A platform implementation for `flutter_inappwebview` has not been set. Please '
+      'A platform implementation for `nosferatu500_inappwebview` has not been set. Please '
       'ensure that an implementation of `InAppWebViewPlatform` has been set to '
       '`InAppWebViewPlatform.instance` before use. For unit testing, '
       '`InAppWebViewPlatform.instance` can be set with your own test implementation.',
@@ -188,7 +188,7 @@ This is a limitation of the native WebKit APIs.""",
   /// The parameters used to initialize the [PlatformInAppBrowser].
   final PlatformInAppBrowserCreationParams params;
 
-  ///{@template flutter_inappwebview_platform_interface.PlatformInAppBrowser.openUrlRequest}
+  ///{@template nosferatu500_inappwebview_platform_interface.PlatformInAppBrowser.openUrlRequest}
   ///Opens the [PlatformInAppBrowser] instance with an [urlRequest].
   ///
   ///[urlRequest]: The [urlRequest] to load.
@@ -196,7 +196,7 @@ This is a limitation of the native WebKit APIs.""",
   ///[settings]: Settings for the [PlatformInAppBrowser].
   ///{@endtemplate}
   ///
-  ///{@macro flutter_inappwebview_platform_interface.PlatformInAppBrowser.openUrlRequest.supported_platforms}
+  ///{@macro nosferatu500_inappwebview_platform_interface.PlatformInAppBrowser.openUrlRequest.supported_platforms}
   @SupportedPlatforms(platforms: [AndroidPlatform(), IOSPlatform()])
   Future<void> openUrlRequest({
     required URLRequest urlRequest,
@@ -207,7 +207,7 @@ This is a limitation of the native WebKit APIs.""",
     );
   }
 
-  ///{@template flutter_inappwebview_platform_interface.PlatformInAppBrowser.openFile}
+  ///{@template nosferatu500_inappwebview_platform_interface.PlatformInAppBrowser.openFile}
   ///Opens the [PlatformInAppBrowser] instance with the given [assetFilePath] file.
   ///
   ///To be able to load your local files (assets, js, css, etc.), you need to add them in the `assets` section of the `pubspec.yaml` file, otherwise they cannot be found!
@@ -243,7 +243,7 @@ This is a limitation of the native WebKit APIs.""",
   ///[settings]: Settings for the [PlatformInAppBrowser].
   ///{@endtemplate}
   ///
-  ///{@macro flutter_inappwebview_platform_interface.PlatformInAppBrowser.openFile.supported_platforms}
+  ///{@macro nosferatu500_inappwebview_platform_interface.PlatformInAppBrowser.openFile.supported_platforms}
   @SupportedPlatforms(platforms: [AndroidPlatform(), IOSPlatform()])
   Future<void> openFile({
     required String assetFilePath,
@@ -254,7 +254,7 @@ This is a limitation of the native WebKit APIs.""",
     );
   }
 
-  ///{@template flutter_inappwebview_platform_interface.PlatformInAppBrowser.openData}
+  ///{@template nosferatu500_inappwebview_platform_interface.PlatformInAppBrowser.openData}
   ///Opens the [PlatformInAppBrowser] instance with [data] as a content, using [baseUrl] as the base URL for it.
   ///
   ///The [mimeType] parameter specifies the format of the data. The default value is `"text/html"`.
@@ -268,7 +268,7 @@ This is a limitation of the native WebKit APIs.""",
   ///[settings]: Settings for the [PlatformInAppBrowser].
   ///{@endtemplate}
   ///
-  ///{@macro flutter_inappwebview_platform_interface.PlatformInAppBrowser.openData.supported_platforms}
+  ///{@macro nosferatu500_inappwebview_platform_interface.PlatformInAppBrowser.openData.supported_platforms}
   @SupportedPlatforms(platforms: [AndroidPlatform(), IOSPlatform()])
   Future<void> openData({
     required String data,
@@ -283,12 +283,12 @@ This is a limitation of the native WebKit APIs.""",
     );
   }
 
-  ///{@template flutter_inappwebview_platform_interface.PlatformInAppBrowser.openWithSystemBrowser}
+  ///{@template nosferatu500_inappwebview_platform_interface.PlatformInAppBrowser.openWithSystemBrowser}
   ///This is a static method that opens an [url] in the system browser.
   ///You wont be able to use the [PlatformInAppBrowser] events and methods here.
   ///{@endtemplate}
   ///
-  ///{@macro flutter_inappwebview_platform_interface.PlatformInAppBrowser.openWithSystemBrowser.supported_platforms}
+  ///{@macro nosferatu500_inappwebview_platform_interface.PlatformInAppBrowser.openWithSystemBrowser.supported_platforms}
   @SupportedPlatforms(platforms: [AndroidPlatform(), IOSPlatform()])
   Future<void> openWithSystemBrowser({required WebUri url}) {
     throw UnimplementedError(
@@ -296,13 +296,13 @@ This is a limitation of the native WebKit APIs.""",
     );
   }
 
-  ///{@template flutter_inappwebview_platform_interface.PlatformInAppBrowser.addMenuItem}
+  ///{@template nosferatu500_inappwebview_platform_interface.PlatformInAppBrowser.addMenuItem}
   ///Adds a [InAppBrowserMenuItem] to the menu.
   ///If the browser is already open,
   ///it will take effect the next time it is opened.
   ///{@endtemplate}
   ///
-  ///{@macro flutter_inappwebview_platform_interface.PlatformInAppBrowser.addMenuItem.supported_platforms}
+  ///{@macro nosferatu500_inappwebview_platform_interface.PlatformInAppBrowser.addMenuItem.supported_platforms}
   @SupportedPlatforms(
     platforms: [
       AndroidPlatform(),
@@ -315,13 +315,13 @@ This is a limitation of the native WebKit APIs.""",
     );
   }
 
-  ///{@template flutter_inappwebview_platform_interface.PlatformInAppBrowser.addMenuItems}
+  ///{@template nosferatu500_inappwebview_platform_interface.PlatformInAppBrowser.addMenuItems}
   ///Adds a list of [InAppBrowserMenuItem] to the menu.
   ///If the browser is already open,
   ///it will take effect the next time it is opened.
   ///{@endtemplate}
   ///
-  ///{@macro flutter_inappwebview_platform_interface.PlatformInAppBrowser.addMenuItems.supported_platforms}
+  ///{@macro nosferatu500_inappwebview_platform_interface.PlatformInAppBrowser.addMenuItems.supported_platforms}
   @SupportedPlatforms(
     platforms: [
       AndroidPlatform(),
@@ -334,14 +334,14 @@ This is a limitation of the native WebKit APIs.""",
     );
   }
 
-  ///{@template flutter_inappwebview_platform_interface.PlatformInAppBrowser.removeMenuItem}
+  ///{@template nosferatu500_inappwebview_platform_interface.PlatformInAppBrowser.removeMenuItem}
   ///Removes the [menuItem] from the list.
   ///Returns `true` if it was in the list, `false` otherwise.
   ///If the browser is already open,
   ///it will take effect the next time it is opened.
   ///{@endtemplate}
   ///
-  ///{@macro flutter_inappwebview_platform_interface.PlatformInAppBrowser.removeMenuItem.supported_platforms}
+  ///{@macro nosferatu500_inappwebview_platform_interface.PlatformInAppBrowser.removeMenuItem.supported_platforms}
   @SupportedPlatforms(
     platforms: [
       AndroidPlatform(),
@@ -354,13 +354,13 @@ This is a limitation of the native WebKit APIs.""",
     );
   }
 
-  ///{@template flutter_inappwebview_platform_interface.PlatformInAppBrowser.removeMenuItems}
+  ///{@template nosferatu500_inappwebview_platform_interface.PlatformInAppBrowser.removeMenuItems}
   ///Removes a list of [menuItems] from the list.
   ///If the browser is already open,
   ///it will take effect the next time it is opened.
   ///{@endtemplate}
   ///
-  ///{@macro flutter_inappwebview_platform_interface.PlatformInAppBrowser.removeMenuItems.supported_platforms}
+  ///{@macro nosferatu500_inappwebview_platform_interface.PlatformInAppBrowser.removeMenuItems.supported_platforms}
   @SupportedPlatforms(
     platforms: [
       AndroidPlatform(),
@@ -373,13 +373,13 @@ This is a limitation of the native WebKit APIs.""",
     );
   }
 
-  ///{@template flutter_inappwebview_platform_interface.PlatformInAppBrowser.removeAllMenuItem}
+  ///{@template nosferatu500_inappwebview_platform_interface.PlatformInAppBrowser.removeAllMenuItem}
   ///Removes all the menu items from the list.
   ///If the browser is already open,
   ///it will take effect the next time it is opened.
   ///{@endtemplate}
   ///
-  ///{@macro flutter_inappwebview_platform_interface.PlatformInAppBrowser.removeAllMenuItem.supported_platforms}
+  ///{@macro nosferatu500_inappwebview_platform_interface.PlatformInAppBrowser.removeAllMenuItem.supported_platforms}
   @SupportedPlatforms(
     platforms: [
       AndroidPlatform(),
@@ -392,11 +392,11 @@ This is a limitation of the native WebKit APIs.""",
     );
   }
 
-  ///{@template flutter_inappwebview_platform_interface.PlatformInAppBrowser.hasMenuItem}
+  ///{@template nosferatu500_inappwebview_platform_interface.PlatformInAppBrowser.hasMenuItem}
   ///Returns `true` if the [menuItem] has been already added, otherwise `false`.
   ///{@endtemplate}
   ///
-  ///{@macro flutter_inappwebview_platform_interface.PlatformInAppBrowser.hasMenuItem.supported_platforms}
+  ///{@macro nosferatu500_inappwebview_platform_interface.PlatformInAppBrowser.hasMenuItem.supported_platforms}
   @SupportedPlatforms(
     platforms: [
       AndroidPlatform(),
@@ -409,31 +409,31 @@ This is a limitation of the native WebKit APIs.""",
     );
   }
 
-  ///{@template flutter_inappwebview_platform_interface.PlatformInAppBrowser.show}
+  ///{@template nosferatu500_inappwebview_platform_interface.PlatformInAppBrowser.show}
   ///Displays a [PlatformInAppBrowser] window that was opened hidden. Calling this has no effect if the [PlatformInAppBrowser] was already visible.
   ///{@endtemplate}
   ///
-  ///{@macro flutter_inappwebview_platform_interface.PlatformInAppBrowser.show.supported_platforms}
+  ///{@macro nosferatu500_inappwebview_platform_interface.PlatformInAppBrowser.show.supported_platforms}
   @SupportedPlatforms(platforms: [AndroidPlatform(), IOSPlatform()])
   Future<void> show() {
     throw UnimplementedError('show is not implemented on the current platform');
   }
 
-  ///{@template flutter_inappwebview_platform_interface.PlatformInAppBrowser.hide}
+  ///{@template nosferatu500_inappwebview_platform_interface.PlatformInAppBrowser.hide}
   ///Hides the [PlatformInAppBrowser] window. Calling this has no effect if the [PlatformInAppBrowser] was already hidden.
   ///{@endtemplate}
   ///
-  ///{@macro flutter_inappwebview_platform_interface.PlatformInAppBrowser.hide.supported_platforms}
+  ///{@macro nosferatu500_inappwebview_platform_interface.PlatformInAppBrowser.hide.supported_platforms}
   @SupportedPlatforms(platforms: [AndroidPlatform(), IOSPlatform()])
   Future<void> hide() {
     throw UnimplementedError('hide is not implemented on the current platform');
   }
 
-  ///{@template flutter_inappwebview_platform_interface.PlatformInAppBrowser.close}
+  ///{@template nosferatu500_inappwebview_platform_interface.PlatformInAppBrowser.close}
   ///Closes the [PlatformInAppBrowser] window.
   ///{@endtemplate}
   ///
-  ///{@macro flutter_inappwebview_platform_interface.PlatformInAppBrowser.close.supported_platforms}
+  ///{@macro nosferatu500_inappwebview_platform_interface.PlatformInAppBrowser.close.supported_platforms}
   @SupportedPlatforms(platforms: [AndroidPlatform(), IOSPlatform()])
   Future<void> close() {
     throw UnimplementedError(
@@ -441,11 +441,11 @@ This is a limitation of the native WebKit APIs.""",
     );
   }
 
-  ///{@template flutter_inappwebview_platform_interface.PlatformInAppBrowser.isHidden}
+  ///{@template nosferatu500_inappwebview_platform_interface.PlatformInAppBrowser.isHidden}
   ///Check if the Web View of the [PlatformInAppBrowser] instance is hidden.
   ///{@endtemplate}
   ///
-  ///{@macro flutter_inappwebview_platform_interface.PlatformInAppBrowser.isHidden.supported_platforms}
+  ///{@macro nosferatu500_inappwebview_platform_interface.PlatformInAppBrowser.isHidden.supported_platforms}
   @SupportedPlatforms(platforms: [AndroidPlatform(), IOSPlatform()])
   Future<bool> isHidden() {
     throw UnimplementedError(
@@ -453,11 +453,11 @@ This is a limitation of the native WebKit APIs.""",
     );
   }
 
-  ///{@template flutter_inappwebview_platform_interface.PlatformInAppBrowser.setSettings}
+  ///{@template nosferatu500_inappwebview_platform_interface.PlatformInAppBrowser.setSettings}
   ///Sets the [PlatformInAppBrowser] settings with the new [settings] and evaluates them.
   ///{@endtemplate}
   ///
-  ///{@macro flutter_inappwebview_platform_interface.PlatformInAppBrowser.setSettings.supported_platforms}
+  ///{@macro nosferatu500_inappwebview_platform_interface.PlatformInAppBrowser.setSettings.supported_platforms}
   @SupportedPlatforms(platforms: [AndroidPlatform(), IOSPlatform()])
   Future<void> setSettings({required InAppBrowserClassSettings settings}) {
     throw UnimplementedError(
@@ -465,11 +465,11 @@ This is a limitation of the native WebKit APIs.""",
     );
   }
 
-  ///{@template flutter_inappwebview_platform_interface.PlatformInAppBrowser.getSettings}
+  ///{@template nosferatu500_inappwebview_platform_interface.PlatformInAppBrowser.getSettings}
   ///Gets the current [PlatformInAppBrowser] settings. Returns `null` if it wasn't able to get them.
   ///{@endtemplate}
   ///
-  ///{@macro flutter_inappwebview_platform_interface.PlatformInAppBrowser.getSettings.supported_platforms}
+  ///{@macro nosferatu500_inappwebview_platform_interface.PlatformInAppBrowser.getSettings.supported_platforms}
   @SupportedPlatforms(platforms: [AndroidPlatform(), IOSPlatform()])
   Future<InAppBrowserClassSettings?> getSettings() {
     throw UnimplementedError(
@@ -477,11 +477,11 @@ This is a limitation of the native WebKit APIs.""",
     );
   }
 
-  ///{@template flutter_inappwebview_platform_interface.PlatformInAppBrowser.isOpened}
+  ///{@template nosferatu500_inappwebview_platform_interface.PlatformInAppBrowser.isOpened}
   ///Returns `true` if the [PlatformInAppBrowser] instance is opened, otherwise `false`.
   ///{@endtemplate}
   ///
-  ///{@macro flutter_inappwebview_platform_interface.PlatformInAppBrowser.isOpened.supported_platforms}
+  ///{@macro nosferatu500_inappwebview_platform_interface.PlatformInAppBrowser.isOpened.supported_platforms}
   @SupportedPlatforms(platforms: [AndroidPlatform(), IOSPlatform()])
   bool isOpened() {
     throw UnimplementedError(
@@ -489,11 +489,11 @@ This is a limitation of the native WebKit APIs.""",
     );
   }
 
-  ///{@template flutter_inappwebview_platform_interface.PlatformInAppBrowser.dispose}
+  ///{@template nosferatu500_inappwebview_platform_interface.PlatformInAppBrowser.dispose}
   ///Disposes the channel and controllers.
   ///{@endtemplate}
   ///
-  ///{@macro flutter_inappwebview_platform_interface.PlatformInAppBrowser.dispose.supported_platforms}
+  ///{@macro nosferatu500_inappwebview_platform_interface.PlatformInAppBrowser.dispose.supported_platforms}
   @SupportedPlatforms(platforms: [AndroidPlatform(), IOSPlatform()])
   @override
   @mustCallSuper
@@ -501,13 +501,13 @@ This is a limitation of the native WebKit APIs.""",
     eventHandler = null;
   }
 
-  ///{@template flutter_inappwebview_platform_interface.PlatformInAppBrowser.isClassSupported}
+  ///{@template nosferatu500_inappwebview_platform_interface.PlatformInAppBrowser.isClassSupported}
   ///Check if the current class is supported by the [defaultTargetPlatform] or a specific [platform].
   ///{@endtemplate}
   bool isClassSupported({TargetPlatform? platform}) =>
       _PlatformInAppBrowserClassSupported.isClassSupported(platform: platform);
 
-  ///{@template flutter_inappwebview_platform_interface.PlatformInAppBrowser.isPropertySupported}
+  ///{@template nosferatu500_inappwebview_platform_interface.PlatformInAppBrowser.isPropertySupported}
   ///Check if the given [property] is supported by the [defaultTargetPlatform] or a specific [platform].
   ///{@endtemplate}
   bool isPropertySupported(
@@ -518,7 +518,7 @@ This is a limitation of the native WebKit APIs.""",
     platform: platform,
   );
 
-  ///{@template flutter_inappwebview_platform_interface.PlatformInAppBrowser.isMethodSupported}
+  ///{@template nosferatu500_inappwebview_platform_interface.PlatformInAppBrowser.isMethodSupported}
   ///Check if the given [method] is supported by the [defaultTargetPlatform] or a specific [platform].
   ///{@endtemplate}
   bool isMethodSupported(
@@ -529,7 +529,7 @@ This is a limitation of the native WebKit APIs.""",
     platform: platform,
   );
 
-  ///{@macro flutter_inappwebview_platform_interface.PlatformInAppBrowserEvents.isMethodSupported}
+  ///{@macro nosferatu500_inappwebview_platform_interface.PlatformInAppBrowserEvents.isMethodSupported}
   bool isEventMethodSupported(
     PlatformInAppBrowserEventsMethod method, {
     TargetPlatform? platform,
@@ -539,25 +539,25 @@ This is a limitation of the native WebKit APIs.""",
 
 @SupportedPlatforms(platforms: [AndroidPlatform(), IOSPlatform()])
 abstract class PlatformInAppBrowserEvents {
-  ///{@template flutter_inappwebview_platform_interface.PlatformInAppBrowserEvents.onBrowserCreated}
+  ///{@template nosferatu500_inappwebview_platform_interface.PlatformInAppBrowserEvents.onBrowserCreated}
   ///Event fired when the [PlatformInAppBrowser] is created.
   ///{@endtemplate}
   ///
-  ///{@macro flutter_inappwebview_platform_interface.PlatformInAppBrowserEvents.onBrowserCreated.supported_platforms}
+  ///{@macro nosferatu500_inappwebview_platform_interface.PlatformInAppBrowserEvents.onBrowserCreated.supported_platforms}
   @SupportedPlatforms(platforms: [AndroidPlatform(), IOSPlatform()])
   void onBrowserCreated() {}
 
-  ///{@template flutter_inappwebview_platform_interface.PlatformInAppBrowserEvents.onExit}
+  ///{@template nosferatu500_inappwebview_platform_interface.PlatformInAppBrowserEvents.onExit}
   ///Event fired when the [PlatformInAppBrowser] window is closed.
   ///{@endtemplate}
   ///
-  ///{@macro flutter_inappwebview_platform_interface.PlatformInAppBrowserEvents.onExit.supported_platforms}
+  ///{@macro nosferatu500_inappwebview_platform_interface.PlatformInAppBrowserEvents.onExit.supported_platforms}
   @SupportedPlatforms(platforms: [AndroidPlatform(), IOSPlatform()])
   void onExit() {}
 
-  ///{@macro flutter_inappwebview_platform_interface.PlatformWebViewCreationParams.onLoadStart}
+  ///{@macro nosferatu500_inappwebview_platform_interface.PlatformWebViewCreationParams.onLoadStart}
   ///
-  ///{@macro flutter_inappwebview_platform_interface.PlatformInAppBrowserEvents.onLoadStart.supported_platforms}
+  ///{@macro nosferatu500_inappwebview_platform_interface.PlatformInAppBrowserEvents.onLoadStart.supported_platforms}
   @SupportedPlatforms(
     platforms: [
       AndroidPlatform(
@@ -574,9 +574,9 @@ abstract class PlatformInAppBrowserEvents {
   )
   void onLoadStart(WebUri? url) {}
 
-  ///{@macro flutter_inappwebview_platform_interface.PlatformWebViewCreationParams.onLoadStop}
+  ///{@macro nosferatu500_inappwebview_platform_interface.PlatformWebViewCreationParams.onLoadStop}
   ///
-  ///{@macro flutter_inappwebview_platform_interface.PlatformInAppBrowserEvents.onLoadStop.supported_platforms}
+  ///{@macro nosferatu500_inappwebview_platform_interface.PlatformInAppBrowserEvents.onLoadStop.supported_platforms}
   @SupportedPlatforms(
     platforms: [
       AndroidPlatform(
@@ -593,9 +593,9 @@ abstract class PlatformInAppBrowserEvents {
   )
   void onLoadStop(WebUri? url) {}
 
-  ///{@macro flutter_inappwebview_platform_interface.PlatformWebViewCreationParams.onReceivedError}
+  ///{@macro nosferatu500_inappwebview_platform_interface.PlatformWebViewCreationParams.onReceivedError}
   ///
-  ///{@macro flutter_inappwebview_platform_interface.PlatformInAppBrowserEvents.onReceivedError.supported_platforms}
+  ///{@macro nosferatu500_inappwebview_platform_interface.PlatformInAppBrowserEvents.onReceivedError.supported_platforms}
   @SupportedPlatforms(
     platforms: [
       AndroidPlatform(
@@ -612,9 +612,9 @@ abstract class PlatformInAppBrowserEvents {
   )
   void onReceivedError(WebResourceRequest request, WebResourceError error) {}
 
-  ///{@macro flutter_inappwebview_platform_interface.PlatformWebViewCreationParams.onReceivedHttpError}
+  ///{@macro nosferatu500_inappwebview_platform_interface.PlatformWebViewCreationParams.onReceivedHttpError}
   ///
-  ///{@macro flutter_inappwebview_platform_interface.PlatformInAppBrowserEvents.onReceivedHttpError.supported_platforms}
+  ///{@macro nosferatu500_inappwebview_platform_interface.PlatformInAppBrowserEvents.onReceivedHttpError.supported_platforms}
   @SupportedPlatforms(
     platforms: [
       AndroidPlatform(
@@ -635,9 +635,9 @@ abstract class PlatformInAppBrowserEvents {
     WebResourceResponse errorResponse,
   ) {}
 
-  ///{@macro flutter_inappwebview_platform_interface.PlatformWebViewCreationParams.onProgressChanged}
+  ///{@macro nosferatu500_inappwebview_platform_interface.PlatformWebViewCreationParams.onProgressChanged}
   ///
-  ///{@macro flutter_inappwebview_platform_interface.PlatformInAppBrowserEvents.onProgressChanged.supported_platforms}
+  ///{@macro nosferatu500_inappwebview_platform_interface.PlatformInAppBrowserEvents.onProgressChanged.supported_platforms}
   @SupportedPlatforms(
     platforms: [
       AndroidPlatform(
@@ -650,9 +650,9 @@ abstract class PlatformInAppBrowserEvents {
   )
   void onProgressChanged(int progress) {}
 
-  ///{@macro flutter_inappwebview_platform_interface.PlatformWebViewCreationParams.onConsoleMessage}
+  ///{@macro nosferatu500_inappwebview_platform_interface.PlatformWebViewCreationParams.onConsoleMessage}
   ///
-  ///{@macro flutter_inappwebview_platform_interface.PlatformInAppBrowserEvents.onConsoleMessage.supported_platforms}
+  ///{@macro nosferatu500_inappwebview_platform_interface.PlatformInAppBrowserEvents.onConsoleMessage.supported_platforms}
   @SupportedPlatforms(
     platforms: [
       AndroidPlatform(
@@ -665,9 +665,9 @@ abstract class PlatformInAppBrowserEvents {
   )
   void onConsoleMessage(ConsoleMessage consoleMessage) {}
 
-  ///{@macro flutter_inappwebview_platform_interface.PlatformWebViewCreationParams.shouldOverrideUrlLoading}
+  ///{@macro nosferatu500_inappwebview_platform_interface.PlatformWebViewCreationParams.shouldOverrideUrlLoading}
   ///
-  ///{@macro flutter_inappwebview_platform_interface.PlatformInAppBrowserEvents.shouldOverrideUrlLoading.supported_platforms}
+  ///{@macro nosferatu500_inappwebview_platform_interface.PlatformInAppBrowserEvents.shouldOverrideUrlLoading.supported_platforms}
   @SupportedPlatforms(
     platforms: [
       AndroidPlatform(
@@ -697,9 +697,9 @@ Also, this event is not called for POST requests and is not called on the first 
     return null;
   }
 
-  ///{@macro flutter_inappwebview_platform_interface.PlatformWebViewCreationParams.onLoadResource}
+  ///{@macro nosferatu500_inappwebview_platform_interface.PlatformWebViewCreationParams.onLoadResource}
   ///
-  ///{@macro flutter_inappwebview_platform_interface.PlatformInAppBrowserEvents.onLoadResource.supported_platforms}
+  ///{@macro nosferatu500_inappwebview_platform_interface.PlatformInAppBrowserEvents.onLoadResource.supported_platforms}
   @SupportedPlatforms(
     platforms: [
       AndroidPlatform(note: 'This event is implemented using JavaScript.'),
@@ -708,9 +708,9 @@ Also, this event is not called for POST requests and is not called on the first 
   )
   void onLoadResource(LoadedResource resource) {}
 
-  ///{@macro flutter_inappwebview_platform_interface.PlatformWebViewCreationParams.onScrollChanged}
+  ///{@macro nosferatu500_inappwebview_platform_interface.PlatformWebViewCreationParams.onScrollChanged}
   ///
-  ///{@macro flutter_inappwebview_platform_interface.PlatformInAppBrowserEvents.onScrollChanged.supported_platforms}
+  ///{@macro nosferatu500_inappwebview_platform_interface.PlatformInAppBrowserEvents.onScrollChanged.supported_platforms}
   @SupportedPlatforms(
     platforms: [
       AndroidPlatform(
@@ -727,9 +727,9 @@ Also, this event is not called for POST requests and is not called on the first 
   )
   void onScrollChanged(int x, int y) {}
 
-  ///{@macro flutter_inappwebview_platform_interface.PlatformWebViewCreationParams.onDownloadStarting}
+  ///{@macro nosferatu500_inappwebview_platform_interface.PlatformWebViewCreationParams.onDownloadStarting}
   ///
-  ///{@macro flutter_inappwebview_platform_interface.PlatformInAppBrowserEvents.onDownloadStarting.supported_platforms}
+  ///{@macro nosferatu500_inappwebview_platform_interface.PlatformInAppBrowserEvents.onDownloadStarting.supported_platforms}
   @SupportedPlatforms(
     platforms: [
       AndroidPlatform(
@@ -746,9 +746,9 @@ Also, this event is not called for POST requests and is not called on the first 
     return null;
   }
 
-  ///{@macro flutter_inappwebview_platform_interface.PlatformWebViewCreationParams.onLoadResourceWithCustomScheme}
+  ///{@macro nosferatu500_inappwebview_platform_interface.PlatformWebViewCreationParams.onLoadResourceWithCustomScheme}
   ///
-  ///{@macro flutter_inappwebview_platform_interface.PlatformInAppBrowserEvents.onLoadResourceWithCustomScheme.supported_platforms}
+  ///{@macro nosferatu500_inappwebview_platform_interface.PlatformInAppBrowserEvents.onLoadResourceWithCustomScheme.supported_platforms}
   @SupportedPlatforms(
     platforms: [
       AndroidPlatform(),
@@ -765,9 +765,9 @@ Also, this event is not called for POST requests and is not called on the first 
     return null;
   }
 
-  ///{@macro flutter_inappwebview_platform_interface.PlatformWebViewCreationParams.onCreateWindow}
+  ///{@macro nosferatu500_inappwebview_platform_interface.PlatformWebViewCreationParams.onCreateWindow}
   ///
-  ///{@macro flutter_inappwebview_platform_interface.PlatformInAppBrowserEvents.onCreateWindow.supported_platforms}
+  ///{@macro nosferatu500_inappwebview_platform_interface.PlatformInAppBrowserEvents.onCreateWindow.supported_platforms}
   @SupportedPlatforms(
     platforms: [
       AndroidPlatform(
@@ -807,9 +807,9 @@ It applies its own [InAppWebViewSettings.contentBlockers] and none of the caller
     return null;
   }
 
-  ///{@macro flutter_inappwebview_platform_interface.PlatformWebViewCreationParams.onCloseWindow}
+  ///{@macro nosferatu500_inappwebview_platform_interface.PlatformWebViewCreationParams.onCloseWindow}
   ///
-  ///{@macro flutter_inappwebview_platform_interface.PlatformInAppBrowserEvents.onCloseWindow.supported_platforms}
+  ///{@macro nosferatu500_inappwebview_platform_interface.PlatformInAppBrowserEvents.onCloseWindow.supported_platforms}
   @SupportedPlatforms(
     platforms: [
       AndroidPlatform(
@@ -826,21 +826,21 @@ It applies its own [InAppWebViewSettings.contentBlockers] and none of the caller
   )
   void onCloseWindow() {}
 
-  ///{@macro flutter_inappwebview_platform_interface.PlatformWebViewCreationParams.onWindowFocus}
+  ///{@macro nosferatu500_inappwebview_platform_interface.PlatformWebViewCreationParams.onWindowFocus}
   ///
-  ///{@macro flutter_inappwebview_platform_interface.PlatformInAppBrowserEvents.onWindowFocus.supported_platforms}
+  ///{@macro nosferatu500_inappwebview_platform_interface.PlatformInAppBrowserEvents.onWindowFocus.supported_platforms}
   @SupportedPlatforms(platforms: [AndroidPlatform(), IOSPlatform()])
   void onWindowFocus() {}
 
-  ///{@macro flutter_inappwebview_platform_interface.PlatformWebViewCreationParams.onWindowBlur}
+  ///{@macro nosferatu500_inappwebview_platform_interface.PlatformWebViewCreationParams.onWindowBlur}
   ///
-  ///{@macro flutter_inappwebview_platform_interface.PlatformInAppBrowserEvents.onWindowBlur.supported_platforms}
+  ///{@macro nosferatu500_inappwebview_platform_interface.PlatformInAppBrowserEvents.onWindowBlur.supported_platforms}
   @SupportedPlatforms(platforms: [AndroidPlatform(), IOSPlatform()])
   void onWindowBlur() {}
 
-  ///{@macro flutter_inappwebview_platform_interface.PlatformWebViewCreationParams.onJsAlert}
+  ///{@macro nosferatu500_inappwebview_platform_interface.PlatformWebViewCreationParams.onJsAlert}
   ///
-  ///{@macro flutter_inappwebview_platform_interface.PlatformInAppBrowserEvents.onJsAlert.supported_platforms}
+  ///{@macro nosferatu500_inappwebview_platform_interface.PlatformInAppBrowserEvents.onJsAlert.supported_platforms}
   @SupportedPlatforms(
     platforms: [
       AndroidPlatform(
@@ -859,9 +859,9 @@ It applies its own [InAppWebViewSettings.contentBlockers] and none of the caller
     return null;
   }
 
-  ///{@macro flutter_inappwebview_platform_interface.PlatformWebViewCreationParams.onJsConfirm}
+  ///{@macro nosferatu500_inappwebview_platform_interface.PlatformWebViewCreationParams.onJsConfirm}
   ///
-  ///{@macro flutter_inappwebview_platform_interface.PlatformInAppBrowserEvents.onJsConfirm.supported_platforms}
+  ///{@macro nosferatu500_inappwebview_platform_interface.PlatformInAppBrowserEvents.onJsConfirm.supported_platforms}
   @SupportedPlatforms(
     platforms: [
       AndroidPlatform(
@@ -880,9 +880,9 @@ It applies its own [InAppWebViewSettings.contentBlockers] and none of the caller
     return null;
   }
 
-  ///{@macro flutter_inappwebview_platform_interface.PlatformWebViewCreationParams.onJsPrompt}
+  ///{@macro nosferatu500_inappwebview_platform_interface.PlatformWebViewCreationParams.onJsPrompt}
   ///
-  ///{@macro flutter_inappwebview_platform_interface.PlatformInAppBrowserEvents.onJsPrompt.supported_platforms}
+  ///{@macro nosferatu500_inappwebview_platform_interface.PlatformInAppBrowserEvents.onJsPrompt.supported_platforms}
   @SupportedPlatforms(
     platforms: [
       AndroidPlatform(
@@ -901,9 +901,9 @@ It applies its own [InAppWebViewSettings.contentBlockers] and none of the caller
     return null;
   }
 
-  ///{@macro flutter_inappwebview_platform_interface.PlatformWebViewCreationParams.onReceivedHttpAuthRequest}
+  ///{@macro nosferatu500_inappwebview_platform_interface.PlatformWebViewCreationParams.onReceivedHttpAuthRequest}
   ///
-  ///{@macro flutter_inappwebview_platform_interface.PlatformInAppBrowserEvents.onReceivedHttpAuthRequest.supported_platforms}
+  ///{@macro nosferatu500_inappwebview_platform_interface.PlatformInAppBrowserEvents.onReceivedHttpAuthRequest.supported_platforms}
   @SupportedPlatforms(
     platforms: [
       AndroidPlatform(
@@ -924,9 +924,9 @@ It applies its own [InAppWebViewSettings.contentBlockers] and none of the caller
     return null;
   }
 
-  ///{@macro flutter_inappwebview_platform_interface.PlatformWebViewCreationParams.onReceivedServerTrustAuthRequest}
+  ///{@macro nosferatu500_inappwebview_platform_interface.PlatformWebViewCreationParams.onReceivedServerTrustAuthRequest}
   ///
-  ///{@macro flutter_inappwebview_platform_interface.PlatformInAppBrowserEvents.onReceivedServerTrustAuthRequest.supported_platforms}
+  ///{@macro nosferatu500_inappwebview_platform_interface.PlatformInAppBrowserEvents.onReceivedServerTrustAuthRequest.supported_platforms}
   @SupportedPlatforms(
     platforms: [
       AndroidPlatform(
@@ -950,9 +950,9 @@ See `NSAppTransportSecurity` in the [Information Property List Key Reference](ht
     return null;
   }
 
-  ///{@macro flutter_inappwebview_platform_interface.PlatformWebViewCreationParams.onReceivedClientCertRequest}
+  ///{@macro nosferatu500_inappwebview_platform_interface.PlatformWebViewCreationParams.onReceivedClientCertRequest}
   ///
-  ///{@macro flutter_inappwebview_platform_interface.PlatformInAppBrowserEvents.onReceivedClientCertRequest.supported_platforms}
+  ///{@macro nosferatu500_inappwebview_platform_interface.PlatformInAppBrowserEvents.onReceivedClientCertRequest.supported_platforms}
   @SupportedPlatforms(
     platforms: [
       AndroidPlatform(
@@ -973,9 +973,9 @@ See `NSAppTransportSecurity` in the [Information Property List Key Reference](ht
     return null;
   }
 
-  ///{@macro flutter_inappwebview_platform_interface.PlatformWebViewCreationParams.shouldInterceptAjaxRequest}
+  ///{@macro nosferatu500_inappwebview_platform_interface.PlatformWebViewCreationParams.shouldInterceptAjaxRequest}
   ///
-  ///{@macro flutter_inappwebview_platform_interface.PlatformInAppBrowserEvents.shouldInterceptAjaxRequest.supported_platforms}
+  ///{@macro nosferatu500_inappwebview_platform_interface.PlatformInAppBrowserEvents.shouldInterceptAjaxRequest.supported_platforms}
   @SupportedPlatforms(
     platforms: [
       AndroidPlatform(
@@ -993,9 +993,9 @@ In that case, after the `window.addEventListener("flutterInAppWebViewPlatformRea
     return null;
   }
 
-  ///{@macro flutter_inappwebview_platform_interface.PlatformWebViewCreationParams.onAjaxReadyStateChange}
+  ///{@macro nosferatu500_inappwebview_platform_interface.PlatformWebViewCreationParams.onAjaxReadyStateChange}
   ///
-  ///{@macro flutter_inappwebview_platform_interface.PlatformInAppBrowserEvents.onAjaxReadyStateChange.supported_platforms}
+  ///{@macro nosferatu500_inappwebview_platform_interface.PlatformInAppBrowserEvents.onAjaxReadyStateChange.supported_platforms}
   @SupportedPlatforms(
     platforms: [
       AndroidPlatform(
@@ -1015,9 +1015,9 @@ In that case, after the `window.addEventListener("flutterInAppWebViewPlatformRea
     return null;
   }
 
-  ///{@macro flutter_inappwebview_platform_interface.PlatformWebViewCreationParams.onAjaxProgress}
+  ///{@macro nosferatu500_inappwebview_platform_interface.PlatformWebViewCreationParams.onAjaxProgress}
   ///
-  ///{@macro flutter_inappwebview_platform_interface.PlatformInAppBrowserEvents.onAjaxProgress.supported_platforms}
+  ///{@macro nosferatu500_inappwebview_platform_interface.PlatformInAppBrowserEvents.onAjaxProgress.supported_platforms}
   @SupportedPlatforms(
     platforms: [
       AndroidPlatform(
@@ -1035,9 +1035,9 @@ In that case, after the `window.addEventListener("flutterInAppWebViewPlatformRea
     return null;
   }
 
-  ///{@macro flutter_inappwebview_platform_interface.PlatformWebViewCreationParams.shouldInterceptFetchRequest}
+  ///{@macro nosferatu500_inappwebview_platform_interface.PlatformWebViewCreationParams.shouldInterceptFetchRequest}
   ///
-  ///{@macro flutter_inappwebview_platform_interface.PlatformInAppBrowserEvents.shouldInterceptFetchRequest.supported_platforms}
+  ///{@macro nosferatu500_inappwebview_platform_interface.PlatformInAppBrowserEvents.shouldInterceptFetchRequest.supported_platforms}
   @SupportedPlatforms(
     platforms: [
       AndroidPlatform(
@@ -1057,9 +1057,9 @@ In that case, after the `window.addEventListener("flutterInAppWebViewPlatformRea
     return null;
   }
 
-  ///{@macro flutter_inappwebview_platform_interface.PlatformWebViewCreationParams.onUpdateVisitedHistory}
+  ///{@macro nosferatu500_inappwebview_platform_interface.PlatformWebViewCreationParams.onUpdateVisitedHistory}
   ///
-  ///{@macro flutter_inappwebview_platform_interface.PlatformInAppBrowserEvents.onUpdateVisitedHistory.supported_platforms}
+  ///{@macro nosferatu500_inappwebview_platform_interface.PlatformInAppBrowserEvents.onUpdateVisitedHistory.supported_platforms}
   @SupportedPlatforms(
     platforms: [
       AndroidPlatform(
@@ -1075,9 +1075,9 @@ In that case, after the `window.addEventListener("flutterInAppWebViewPlatformRea
     @SupportedPlatforms(platforms: [AndroidPlatform()]) bool? isReload,
   ) {}
 
-  ///{@macro flutter_inappwebview_platform_interface.PlatformWebViewCreationParams.onPrintRequest}
+  ///{@macro nosferatu500_inappwebview_platform_interface.PlatformWebViewCreationParams.onPrintRequest}
   ///
-  ///{@macro flutter_inappwebview_platform_interface.PlatformInAppBrowserEvents.onPrintRequest.supported_platforms}
+  ///{@macro nosferatu500_inappwebview_platform_interface.PlatformInAppBrowserEvents.onPrintRequest.supported_platforms}
   @SupportedPlatforms(
     platforms: [
       AndroidPlatform(
@@ -1096,9 +1096,9 @@ In that case, after the `window.addEventListener("flutterInAppWebViewPlatformRea
     return null;
   }
 
-  ///{@macro flutter_inappwebview_platform_interface.PlatformWebViewCreationParams.onLongPressHitTestResult}
+  ///{@macro nosferatu500_inappwebview_platform_interface.PlatformWebViewCreationParams.onLongPressHitTestResult}
   ///
-  ///{@macro flutter_inappwebview_platform_interface.PlatformInAppBrowserEvents.onLongPressHitTestResult.supported_platforms}
+  ///{@macro nosferatu500_inappwebview_platform_interface.PlatformInAppBrowserEvents.onLongPressHitTestResult.supported_platforms}
   @SupportedPlatforms(
     platforms: [
       AndroidPlatform(
@@ -1115,9 +1115,9 @@ In that case, after the `window.addEventListener("flutterInAppWebViewPlatformRea
   )
   void onLongPressHitTestResult(InAppWebViewHitTestResult hitTestResult) {}
 
-  ///{@macro flutter_inappwebview_platform_interface.PlatformWebViewCreationParams.onEnterFullscreen}
+  ///{@macro nosferatu500_inappwebview_platform_interface.PlatformWebViewCreationParams.onEnterFullscreen}
   ///
-  ///{@macro flutter_inappwebview_platform_interface.PlatformInAppBrowserEvents.onEnterFullscreen.supported_platforms}
+  ///{@macro nosferatu500_inappwebview_platform_interface.PlatformInAppBrowserEvents.onEnterFullscreen.supported_platforms}
   @SupportedPlatforms(
     platforms: [
       AndroidPlatform(
@@ -1134,9 +1134,9 @@ In that case, after the `window.addEventListener("flutterInAppWebViewPlatformRea
   )
   void onEnterFullscreen() {}
 
-  ///{@macro flutter_inappwebview_platform_interface.PlatformWebViewCreationParams.onExitFullscreen}
+  ///{@macro nosferatu500_inappwebview_platform_interface.PlatformWebViewCreationParams.onExitFullscreen}
   ///
-  ///{@macro flutter_inappwebview_platform_interface.PlatformInAppBrowserEvents.onExitFullscreen.supported_platforms}
+  ///{@macro nosferatu500_inappwebview_platform_interface.PlatformInAppBrowserEvents.onExitFullscreen.supported_platforms}
   @SupportedPlatforms(
     platforms: [
       AndroidPlatform(
@@ -1153,9 +1153,9 @@ In that case, after the `window.addEventListener("flutterInAppWebViewPlatformRea
   )
   void onExitFullscreen() {}
 
-  ///{@macro flutter_inappwebview_platform_interface.PlatformWebViewCreationParams.onPageCommitVisible}
+  ///{@macro nosferatu500_inappwebview_platform_interface.PlatformWebViewCreationParams.onPageCommitVisible}
   ///
-  ///{@macro flutter_inappwebview_platform_interface.PlatformInAppBrowserEvents.onPageCommitVisible.supported_platforms}
+  ///{@macro nosferatu500_inappwebview_platform_interface.PlatformInAppBrowserEvents.onPageCommitVisible.supported_platforms}
   @SupportedPlatforms(
     platforms: [
       AndroidPlatform(
@@ -1172,9 +1172,9 @@ In that case, after the `window.addEventListener("flutterInAppWebViewPlatformRea
   )
   void onPageCommitVisible(WebUri? url) {}
 
-  ///{@macro flutter_inappwebview_platform_interface.PlatformWebViewCreationParams.onTitleChanged}
+  ///{@macro nosferatu500_inappwebview_platform_interface.PlatformWebViewCreationParams.onTitleChanged}
   ///
-  ///{@macro flutter_inappwebview_platform_interface.PlatformInAppBrowserEvents.onTitleChanged.supported_platforms}
+  ///{@macro nosferatu500_inappwebview_platform_interface.PlatformInAppBrowserEvents.onTitleChanged.supported_platforms}
   @SupportedPlatforms(
     platforms: [
       AndroidPlatform(
@@ -1187,9 +1187,9 @@ In that case, after the `window.addEventListener("flutterInAppWebViewPlatformRea
   )
   void onTitleChanged(String? title) {}
 
-  ///{@macro flutter_inappwebview_platform_interface.PlatformWebViewCreationParams.onOverScrolled}
+  ///{@macro nosferatu500_inappwebview_platform_interface.PlatformWebViewCreationParams.onOverScrolled}
   ///
-  ///{@macro flutter_inappwebview_platform_interface.PlatformInAppBrowserEvents.onOverScrolled.supported_platforms}
+  ///{@macro nosferatu500_inappwebview_platform_interface.PlatformInAppBrowserEvents.onOverScrolled.supported_platforms}
   @SupportedPlatforms(
     platforms: [
       AndroidPlatform(
@@ -1202,9 +1202,9 @@ In that case, after the `window.addEventListener("flutterInAppWebViewPlatformRea
   )
   void onOverScrolled(int x, int y, bool clampedX, bool clampedY) {}
 
-  ///{@macro flutter_inappwebview_platform_interface.PlatformWebViewCreationParams.onZoomScaleChanged}
+  ///{@macro nosferatu500_inappwebview_platform_interface.PlatformWebViewCreationParams.onZoomScaleChanged}
   ///
-  ///{@macro flutter_inappwebview_platform_interface.PlatformInAppBrowserEvents.onZoomScaleChanged.supported_platforms}
+  ///{@macro nosferatu500_inappwebview_platform_interface.PlatformInAppBrowserEvents.onZoomScaleChanged.supported_platforms}
   @SupportedPlatforms(
     platforms: [
       AndroidPlatform(
@@ -1221,9 +1221,9 @@ In that case, after the `window.addEventListener("flutterInAppWebViewPlatformRea
   )
   void onZoomScaleChanged(double oldScale, double newScale) {}
 
-  ///{@macro flutter_inappwebview_platform_interface.PlatformWebViewCreationParams.onSafeBrowsingHit}
+  ///{@macro nosferatu500_inappwebview_platform_interface.PlatformWebViewCreationParams.onSafeBrowsingHit}
   ///
-  ///{@macro flutter_inappwebview_platform_interface.PlatformInAppBrowserEvents.onSafeBrowsingHit.supported_platforms}
+  ///{@macro nosferatu500_inappwebview_platform_interface.PlatformInAppBrowserEvents.onSafeBrowsingHit.supported_platforms}
   @SupportedPlatforms(
     platforms: [
       AndroidPlatform(
@@ -1241,9 +1241,9 @@ In that case, after the `window.addEventListener("flutterInAppWebViewPlatformRea
     return null;
   }
 
-  ///{@macro flutter_inappwebview_platform_interface.PlatformWebViewCreationParams.onPermissionRequest}
+  ///{@macro nosferatu500_inappwebview_platform_interface.PlatformWebViewCreationParams.onPermissionRequest}
   ///
-  ///{@macro flutter_inappwebview_platform_interface.PlatformInAppBrowserEvents.onPermissionRequest.supported_platforms}
+  ///{@macro nosferatu500_inappwebview_platform_interface.PlatformInAppBrowserEvents.onPermissionRequest.supported_platforms}
   @SupportedPlatforms(
     platforms: [
       AndroidPlatform(
@@ -1265,9 +1265,9 @@ In that case, after the `window.addEventListener("flutterInAppWebViewPlatformRea
     return null;
   }
 
-  ///{@macro flutter_inappwebview_platform_interface.PlatformWebViewCreationParams.onGeolocationPermissionsShowPrompt}
+  ///{@macro nosferatu500_inappwebview_platform_interface.PlatformWebViewCreationParams.onGeolocationPermissionsShowPrompt}
   ///
-  ///{@macro flutter_inappwebview_platform_interface.PlatformInAppBrowserEvents.onGeolocationPermissionsShowPrompt.supported_platforms}
+  ///{@macro nosferatu500_inappwebview_platform_interface.PlatformInAppBrowserEvents.onGeolocationPermissionsShowPrompt.supported_platforms}
   @SupportedPlatforms(
     platforms: [
       AndroidPlatform(
@@ -1282,9 +1282,9 @@ In that case, after the `window.addEventListener("flutterInAppWebViewPlatformRea
     return null;
   }
 
-  ///{@macro flutter_inappwebview_platform_interface.PlatformWebViewCreationParams.onGeolocationPermissionsHidePrompt}
+  ///{@macro nosferatu500_inappwebview_platform_interface.PlatformWebViewCreationParams.onGeolocationPermissionsHidePrompt}
   ///
-  ///{@macro flutter_inappwebview_platform_interface.PlatformInAppBrowserEvents.onGeolocationPermissionsHidePrompt.supported_platforms}
+  ///{@macro nosferatu500_inappwebview_platform_interface.PlatformInAppBrowserEvents.onGeolocationPermissionsHidePrompt.supported_platforms}
   @SupportedPlatforms(
     platforms: [
       AndroidPlatform(
@@ -1296,9 +1296,9 @@ In that case, after the `window.addEventListener("flutterInAppWebViewPlatformRea
   )
   void onGeolocationPermissionsHidePrompt() {}
 
-  ///{@macro flutter_inappwebview_platform_interface.PlatformWebViewCreationParams.shouldInterceptRequest}
+  ///{@macro nosferatu500_inappwebview_platform_interface.PlatformWebViewCreationParams.shouldInterceptRequest}
   ///
-  ///{@macro flutter_inappwebview_platform_interface.PlatformInAppBrowserEvents.shouldInterceptRequest.supported_platforms}
+  ///{@macro nosferatu500_inappwebview_platform_interface.PlatformInAppBrowserEvents.shouldInterceptRequest.supported_platforms}
   @SupportedPlatforms(
     platforms: [
       AndroidPlatform(
@@ -1314,9 +1314,9 @@ In that case, after the `window.addEventListener("flutterInAppWebViewPlatformRea
     return null;
   }
 
-  ///{@macro flutter_inappwebview_platform_interface.PlatformWebViewCreationParams.onRenderProcessUnresponsive}
+  ///{@macro nosferatu500_inappwebview_platform_interface.PlatformWebViewCreationParams.onRenderProcessUnresponsive}
   ///
-  ///{@macro flutter_inappwebview_platform_interface.PlatformInAppBrowserEvents.onRenderProcessUnresponsive.supported_platforms}
+  ///{@macro nosferatu500_inappwebview_platform_interface.PlatformInAppBrowserEvents.onRenderProcessUnresponsive.supported_platforms}
   @SupportedPlatforms(
     platforms: [
       AndroidPlatform(
@@ -1333,9 +1333,9 @@ In that case, after the `window.addEventListener("flutterInAppWebViewPlatformRea
     return null;
   }
 
-  ///{@macro flutter_inappwebview_platform_interface.PlatformWebViewCreationParams.onRenderProcessResponsive}
+  ///{@macro nosferatu500_inappwebview_platform_interface.PlatformWebViewCreationParams.onRenderProcessResponsive}
   ///
-  ///{@macro flutter_inappwebview_platform_interface.PlatformInAppBrowserEvents.onRenderProcessResponsive.supported_platforms}
+  ///{@macro nosferatu500_inappwebview_platform_interface.PlatformInAppBrowserEvents.onRenderProcessResponsive.supported_platforms}
   @SupportedPlatforms(
     platforms: [
       AndroidPlatform(
@@ -1352,9 +1352,9 @@ In that case, after the `window.addEventListener("flutterInAppWebViewPlatformRea
     return null;
   }
 
-  ///{@macro flutter_inappwebview_platform_interface.PlatformWebViewCreationParams.onRenderProcessGone}
+  ///{@macro nosferatu500_inappwebview_platform_interface.PlatformWebViewCreationParams.onRenderProcessGone}
   ///
-  ///{@macro flutter_inappwebview_platform_interface.PlatformInAppBrowserEvents.onRenderProcessGone.supported_platforms}
+  ///{@macro nosferatu500_inappwebview_platform_interface.PlatformInAppBrowserEvents.onRenderProcessGone.supported_platforms}
   @SupportedPlatforms(
     platforms: [
       AndroidPlatform(
@@ -1367,9 +1367,9 @@ In that case, after the `window.addEventListener("flutterInAppWebViewPlatformRea
   )
   void onRenderProcessGone(RenderProcessGoneDetail detail) {}
 
-  ///{@macro flutter_inappwebview_platform_interface.PlatformWebViewCreationParams.onFormResubmission}
+  ///{@macro nosferatu500_inappwebview_platform_interface.PlatformWebViewCreationParams.onFormResubmission}
   ///
-  ///{@macro flutter_inappwebview_platform_interface.PlatformInAppBrowserEvents.onFormResubmission.supported_platforms}
+  ///{@macro nosferatu500_inappwebview_platform_interface.PlatformInAppBrowserEvents.onFormResubmission.supported_platforms}
   @SupportedPlatforms(
     platforms: [
       AndroidPlatform(
@@ -1383,9 +1383,9 @@ In that case, after the `window.addEventListener("flutterInAppWebViewPlatformRea
     return null;
   }
 
-  ///{@macro flutter_inappwebview_platform_interface.PlatformWebViewCreationParams.onReceivedTouchIconUrl}
+  ///{@macro nosferatu500_inappwebview_platform_interface.PlatformWebViewCreationParams.onReceivedTouchIconUrl}
   ///
-  ///{@macro flutter_inappwebview_platform_interface.PlatformInAppBrowserEvents.onReceivedTouchIconUrl.supported_platforms}
+  ///{@macro nosferatu500_inappwebview_platform_interface.PlatformInAppBrowserEvents.onReceivedTouchIconUrl.supported_platforms}
   @SupportedPlatforms(
     platforms: [
       AndroidPlatform(
@@ -1397,18 +1397,18 @@ In that case, after the `window.addEventListener("flutterInAppWebViewPlatformRea
   )
   void onReceivedTouchIconUrl(WebUri url, bool precomposed) {}
 
-  ///{@macro flutter_inappwebview_platform_interface.PlatformWebViewCreationParams.onJsBeforeUnload}
+  ///{@macro nosferatu500_inappwebview_platform_interface.PlatformWebViewCreationParams.onJsBeforeUnload}
   ///
-  ///{@macro flutter_inappwebview_platform_interface.PlatformInAppBrowserEvents.onJsBeforeUnload.supported_platforms}
+  ///{@macro nosferatu500_inappwebview_platform_interface.PlatformInAppBrowserEvents.onJsBeforeUnload.supported_platforms}
   FutureOr<JsBeforeUnloadResponse?>? onJsBeforeUnload(
     JsBeforeUnloadRequest jsBeforeUnloadRequest,
   ) {
     return null;
   }
 
-  ///{@macro flutter_inappwebview_platform_interface.PlatformWebViewCreationParams.onReceivedLoginRequest}
+  ///{@macro nosferatu500_inappwebview_platform_interface.PlatformWebViewCreationParams.onReceivedLoginRequest}
   ///
-  ///{@macro flutter_inappwebview_platform_interface.PlatformInAppBrowserEvents.onReceivedLoginRequest.supported_platforms}
+  ///{@macro nosferatu500_inappwebview_platform_interface.PlatformInAppBrowserEvents.onReceivedLoginRequest.supported_platforms}
   @SupportedPlatforms(
     platforms: [
       AndroidPlatform(
@@ -1420,9 +1420,9 @@ In that case, after the `window.addEventListener("flutterInAppWebViewPlatformRea
   )
   void onReceivedLoginRequest(LoginRequest loginRequest) {}
 
-  ///{@macro flutter_inappwebview_platform_interface.PlatformWebViewCreationParams.onPermissionRequestCanceled}
+  ///{@macro nosferatu500_inappwebview_platform_interface.PlatformWebViewCreationParams.onPermissionRequestCanceled}
   ///
-  ///{@macro flutter_inappwebview_platform_interface.PlatformInAppBrowserEvents.onPermissionRequestCanceled.supported_platforms}
+  ///{@macro nosferatu500_inappwebview_platform_interface.PlatformInAppBrowserEvents.onPermissionRequestCanceled.supported_platforms}
   @SupportedPlatforms(
     platforms: [
       AndroidPlatform(
@@ -1435,9 +1435,9 @@ In that case, after the `window.addEventListener("flutterInAppWebViewPlatformRea
   )
   void onPermissionRequestCanceled(PermissionRequest permissionRequest) {}
 
-  ///{@macro flutter_inappwebview_platform_interface.PlatformWebViewCreationParams.onRequestFocus}
+  ///{@macro nosferatu500_inappwebview_platform_interface.PlatformWebViewCreationParams.onRequestFocus}
   ///
-  ///{@macro flutter_inappwebview_platform_interface.PlatformInAppBrowserEvents.onRequestFocus.supported_platforms}
+  ///{@macro nosferatu500_inappwebview_platform_interface.PlatformInAppBrowserEvents.onRequestFocus.supported_platforms}
   @SupportedPlatforms(
     platforms: [
       AndroidPlatform(
@@ -1449,9 +1449,9 @@ In that case, after the `window.addEventListener("flutterInAppWebViewPlatformRea
   )
   void onRequestFocus() {}
 
-  ///{@macro flutter_inappwebview_platform_interface.PlatformWebViewCreationParams.onWebContentProcessDidTerminate}
+  ///{@macro nosferatu500_inappwebview_platform_interface.PlatformWebViewCreationParams.onWebContentProcessDidTerminate}
   ///
-  ///{@macro flutter_inappwebview_platform_interface.PlatformInAppBrowserEvents.onWebContentProcessDidTerminate.supported_platforms}
+  ///{@macro nosferatu500_inappwebview_platform_interface.PlatformInAppBrowserEvents.onWebContentProcessDidTerminate.supported_platforms}
   @SupportedPlatforms(
     platforms: [
       IOSPlatform(
@@ -1463,9 +1463,9 @@ In that case, after the `window.addEventListener("flutterInAppWebViewPlatformRea
   )
   void onWebContentProcessDidTerminate() {}
 
-  ///{@macro flutter_inappwebview_platform_interface.PlatformWebViewCreationParams.onDidReceiveServerRedirectForProvisionalNavigation}
+  ///{@macro nosferatu500_inappwebview_platform_interface.PlatformWebViewCreationParams.onDidReceiveServerRedirectForProvisionalNavigation}
   ///
-  ///{@macro flutter_inappwebview_platform_interface.PlatformInAppBrowserEvents.onDidReceiveServerRedirectForProvisionalNavigation.supported_platforms}
+  ///{@macro nosferatu500_inappwebview_platform_interface.PlatformInAppBrowserEvents.onDidReceiveServerRedirectForProvisionalNavigation.supported_platforms}
   @SupportedPlatforms(
     platforms: [
       IOSPlatform(
@@ -1477,9 +1477,9 @@ In that case, after the `window.addEventListener("flutterInAppWebViewPlatformRea
   )
   void onDidReceiveServerRedirectForProvisionalNavigation() {}
 
-  ///{@macro flutter_inappwebview_platform_interface.PlatformWebViewCreationParams.onNavigationResponse}
+  ///{@macro nosferatu500_inappwebview_platform_interface.PlatformWebViewCreationParams.onNavigationResponse}
   ///
-  ///{@macro flutter_inappwebview_platform_interface.PlatformInAppBrowserEvents.onNavigationResponse.supported_platforms}
+  ///{@macro nosferatu500_inappwebview_platform_interface.PlatformInAppBrowserEvents.onNavigationResponse.supported_platforms}
   @SupportedPlatforms(
     platforms: [
       IOSPlatform(
@@ -1495,9 +1495,9 @@ In that case, after the `window.addEventListener("flutterInAppWebViewPlatformRea
     return null;
   }
 
-  ///{@macro flutter_inappwebview_platform_interface.PlatformWebViewCreationParams.shouldAllowDeprecatedTLS}
+  ///{@macro nosferatu500_inappwebview_platform_interface.PlatformWebViewCreationParams.shouldAllowDeprecatedTLS}
   ///
-  ///{@macro flutter_inappwebview_platform_interface.PlatformInAppBrowserEvents.shouldAllowDeprecatedTLS.supported_platforms}
+  ///{@macro nosferatu500_inappwebview_platform_interface.PlatformInAppBrowserEvents.shouldAllowDeprecatedTLS.supported_platforms}
   @SupportedPlatforms(
     platforms: [
       IOSPlatform(
@@ -1514,27 +1514,27 @@ In that case, after the `window.addEventListener("flutterInAppWebViewPlatformRea
     return null;
   }
 
-  ///{@macro flutter_inappwebview_platform_interface.PlatformWebViewCreationParams.onCameraCaptureStateChanged}
+  ///{@macro nosferatu500_inappwebview_platform_interface.PlatformWebViewCreationParams.onCameraCaptureStateChanged}
   ///
-  ///{@macro flutter_inappwebview_platform_interface.PlatformInAppBrowserEvents.onCameraCaptureStateChanged.supported_platforms}
+  ///{@macro nosferatu500_inappwebview_platform_interface.PlatformInAppBrowserEvents.onCameraCaptureStateChanged.supported_platforms}
   @SupportedPlatforms(platforms: [IOSPlatform(available: '15.0')])
   void onCameraCaptureStateChanged(
     MediaCaptureState? oldState,
     MediaCaptureState? newState,
   ) {}
 
-  ///{@macro flutter_inappwebview_platform_interface.PlatformWebViewCreationParams.onMicrophoneCaptureStateChanged}
+  ///{@macro nosferatu500_inappwebview_platform_interface.PlatformWebViewCreationParams.onMicrophoneCaptureStateChanged}
   ///
-  ///{@macro flutter_inappwebview_platform_interface.PlatformInAppBrowserEvents.onMicrophoneCaptureStateChanged.supported_platforms}
+  ///{@macro nosferatu500_inappwebview_platform_interface.PlatformInAppBrowserEvents.onMicrophoneCaptureStateChanged.supported_platforms}
   @SupportedPlatforms(platforms: [IOSPlatform(available: '15.0')])
   void onMicrophoneCaptureStateChanged(
     MediaCaptureState? oldState,
     MediaCaptureState? newState,
   ) {}
 
-  ///{@macro flutter_inappwebview_platform_interface.PlatformWebViewCreationParams.shouldGoToBackForwardListItem}
+  ///{@macro nosferatu500_inappwebview_platform_interface.PlatformWebViewCreationParams.shouldGoToBackForwardListItem}
   ///
-  ///{@macro flutter_inappwebview_platform_interface.PlatformInAppBrowserEvents.shouldGoToBackForwardListItem.supported_platforms}
+  ///{@macro nosferatu500_inappwebview_platform_interface.PlatformInAppBrowserEvents.shouldGoToBackForwardListItem.supported_platforms}
   @SupportedPlatforms(
     platforms: [
       IOSPlatform(
@@ -1552,9 +1552,9 @@ In that case, after the `window.addEventListener("flutterInAppWebViewPlatformRea
     return null;
   }
 
-  ///{@macro flutter_inappwebview_platform_interface.PlatformWebViewCreationParams.onWritingToolsActiveChanged}
+  ///{@macro nosferatu500_inappwebview_platform_interface.PlatformWebViewCreationParams.onWritingToolsActiveChanged}
   ///
-  ///{@macro flutter_inappwebview_platform_interface.PlatformInAppBrowserEvents.onWritingToolsActiveChanged.supported_platforms}
+  ///{@macro nosferatu500_inappwebview_platform_interface.PlatformInAppBrowserEvents.onWritingToolsActiveChanged.supported_platforms}
   @SupportedPlatforms(
     platforms: [
       IOSPlatform(
@@ -1567,9 +1567,9 @@ In that case, after the `window.addEventListener("flutterInAppWebViewPlatformRea
   )
   void onWritingToolsActiveChanged(bool active) {}
 
-  ///{@macro flutter_inappwebview_platform_interface.PlatformWebViewCreationParams.onNavigationStarted}
+  ///{@macro nosferatu500_inappwebview_platform_interface.PlatformWebViewCreationParams.onNavigationStarted}
   ///
-  ///{@macro flutter_inappwebview_platform_interface.PlatformInAppBrowserEvents.onNavigationStarted.supported_platforms}
+  ///{@macro nosferatu500_inappwebview_platform_interface.PlatformInAppBrowserEvents.onNavigationStarted.supported_platforms}
   @SupportedPlatforms(
     platforms: [
       AndroidPlatform(
@@ -1583,9 +1583,9 @@ In that case, after the `window.addEventListener("flutterInAppWebViewPlatformRea
   )
   void onNavigationStarted(WebViewNavigation navigation) {}
 
-  ///{@macro flutter_inappwebview_platform_interface.PlatformWebViewCreationParams.onNavigationRedirected}
+  ///{@macro nosferatu500_inappwebview_platform_interface.PlatformWebViewCreationParams.onNavigationRedirected}
   ///
-  ///{@macro flutter_inappwebview_platform_interface.PlatformInAppBrowserEvents.onNavigationRedirected.supported_platforms}
+  ///{@macro nosferatu500_inappwebview_platform_interface.PlatformInAppBrowserEvents.onNavigationRedirected.supported_platforms}
   @SupportedPlatforms(
     platforms: [
       AndroidPlatform(
@@ -1599,9 +1599,9 @@ In that case, after the `window.addEventListener("flutterInAppWebViewPlatformRea
   )
   void onNavigationRedirected(WebViewNavigation navigation) {}
 
-  ///{@macro flutter_inappwebview_platform_interface.PlatformWebViewCreationParams.onNavigationCompleted}
+  ///{@macro nosferatu500_inappwebview_platform_interface.PlatformWebViewCreationParams.onNavigationCompleted}
   ///
-  ///{@macro flutter_inappwebview_platform_interface.PlatformInAppBrowserEvents.onNavigationCompleted.supported_platforms}
+  ///{@macro nosferatu500_inappwebview_platform_interface.PlatformInAppBrowserEvents.onNavigationCompleted.supported_platforms}
   @SupportedPlatforms(
     platforms: [
       AndroidPlatform(
@@ -1615,9 +1615,9 @@ In that case, after the `window.addEventListener("flutterInAppWebViewPlatformRea
   )
   void onNavigationCompleted(WebViewNavigation navigation) {}
 
-  ///{@macro flutter_inappwebview_platform_interface.PlatformWebViewCreationParams.onPageLoadEvent}
+  ///{@macro nosferatu500_inappwebview_platform_interface.PlatformWebViewCreationParams.onPageLoadEvent}
   ///
-  ///{@macro flutter_inappwebview_platform_interface.PlatformInAppBrowserEvents.onPageLoadEvent.supported_platforms}
+  ///{@macro nosferatu500_inappwebview_platform_interface.PlatformInAppBrowserEvents.onPageLoadEvent.supported_platforms}
   @SupportedPlatforms(
     platforms: [
       AndroidPlatform(
@@ -1631,9 +1631,9 @@ In that case, after the `window.addEventListener("flutterInAppWebViewPlatformRea
   )
   void onPageLoadEvent(WebViewPage page) {}
 
-  ///{@macro flutter_inappwebview_platform_interface.PlatformWebViewCreationParams.onPageDomContentLoadedEvent}
+  ///{@macro nosferatu500_inappwebview_platform_interface.PlatformWebViewCreationParams.onPageDomContentLoadedEvent}
   ///
-  ///{@macro flutter_inappwebview_platform_interface.PlatformInAppBrowserEvents.onPageDomContentLoadedEvent.supported_platforms}
+  ///{@macro nosferatu500_inappwebview_platform_interface.PlatformInAppBrowserEvents.onPageDomContentLoadedEvent.supported_platforms}
   @SupportedPlatforms(
     platforms: [
       AndroidPlatform(
@@ -1647,9 +1647,9 @@ In that case, after the `window.addEventListener("flutterInAppWebViewPlatformRea
   )
   void onPageDomContentLoadedEvent(WebViewPage page) {}
 
-  ///{@macro flutter_inappwebview_platform_interface.PlatformWebViewCreationParams.onPageDeleted}
+  ///{@macro nosferatu500_inappwebview_platform_interface.PlatformWebViewCreationParams.onPageDeleted}
   ///
-  ///{@macro flutter_inappwebview_platform_interface.PlatformInAppBrowserEvents.onPageDeleted.supported_platforms}
+  ///{@macro nosferatu500_inappwebview_platform_interface.PlatformInAppBrowserEvents.onPageDeleted.supported_platforms}
   @SupportedPlatforms(
     platforms: [
       AndroidPlatform(
@@ -1663,9 +1663,9 @@ In that case, after the `window.addEventListener("flutterInAppWebViewPlatformRea
   )
   void onPageDeleted(WebViewPage page) {}
 
-  ///{@macro flutter_inappwebview_platform_interface.PlatformWebViewCreationParams.onFirstContentfulPaintMillis}
+  ///{@macro nosferatu500_inappwebview_platform_interface.PlatformWebViewCreationParams.onFirstContentfulPaintMillis}
   ///
-  ///{@macro flutter_inappwebview_platform_interface.PlatformInAppBrowserEvents.onFirstContentfulPaintMillis.supported_platforms}
+  ///{@macro nosferatu500_inappwebview_platform_interface.PlatformInAppBrowserEvents.onFirstContentfulPaintMillis.supported_platforms}
   @SupportedPlatforms(
     platforms: [
       AndroidPlatform(
@@ -1679,9 +1679,9 @@ In that case, after the `window.addEventListener("flutterInAppWebViewPlatformRea
   )
   void onFirstContentfulPaintMillis(WebViewPage page, int durationMillis) {}
 
-  ///{@macro flutter_inappwebview_platform_interface.PlatformWebViewCreationParams.onLargestContentfulPaintMillis}
+  ///{@macro nosferatu500_inappwebview_platform_interface.PlatformWebViewCreationParams.onLargestContentfulPaintMillis}
   ///
-  ///{@macro flutter_inappwebview_platform_interface.PlatformInAppBrowserEvents.onLargestContentfulPaintMillis.supported_platforms}
+  ///{@macro nosferatu500_inappwebview_platform_interface.PlatformInAppBrowserEvents.onLargestContentfulPaintMillis.supported_platforms}
   @SupportedPlatforms(
     platforms: [
       AndroidPlatform(
@@ -1695,9 +1695,9 @@ In that case, after the `window.addEventListener("flutterInAppWebViewPlatformRea
   )
   void onLargestContentfulPaintMillis(WebViewPage page, int durationMillis) {}
 
-  ///{@macro flutter_inappwebview_platform_interface.PlatformWebViewCreationParams.onPerformanceMarkMillis}
+  ///{@macro nosferatu500_inappwebview_platform_interface.PlatformWebViewCreationParams.onPerformanceMarkMillis}
   ///
-  ///{@macro flutter_inappwebview_platform_interface.PlatformInAppBrowserEvents.onPerformanceMarkMillis.supported_platforms}
+  ///{@macro nosferatu500_inappwebview_platform_interface.PlatformInAppBrowserEvents.onPerformanceMarkMillis.supported_platforms}
   @SupportedPlatforms(
     platforms: [
       AndroidPlatform(
@@ -1715,9 +1715,9 @@ In that case, after the `window.addEventListener("flutterInAppWebViewPlatformRea
     int markTimeMillis,
   ) {}
 
-  ///{@macro flutter_inappwebview_platform_interface.PlatformWebViewCreationParams.onRequestVisitedHistory}
+  ///{@macro nosferatu500_inappwebview_platform_interface.PlatformWebViewCreationParams.onRequestVisitedHistory}
   ///
-  ///{@macro flutter_inappwebview_platform_interface.PlatformInAppBrowserEvents.onRequestVisitedHistory.supported_platforms}
+  ///{@macro nosferatu500_inappwebview_platform_interface.PlatformInAppBrowserEvents.onRequestVisitedHistory.supported_platforms}
   @SupportedPlatforms(
     platforms: [
       AndroidPlatform(
@@ -1731,15 +1731,15 @@ In that case, after the `window.addEventListener("flutterInAppWebViewPlatformRea
     return null;
   }
 
-  ///{@macro flutter_inappwebview_platform_interface.PlatformWebViewCreationParams.onContentSizeChanged}
+  ///{@macro nosferatu500_inappwebview_platform_interface.PlatformWebViewCreationParams.onContentSizeChanged}
   ///
-  ///{@macro flutter_inappwebview_platform_interface.PlatformInAppBrowserEvents.onContentSizeChanged.supported_platforms}
+  ///{@macro nosferatu500_inappwebview_platform_interface.PlatformInAppBrowserEvents.onContentSizeChanged.supported_platforms}
   @SupportedPlatforms(platforms: [IOSPlatform()])
   void onContentSizeChanged(Size oldContentSize, Size newContentSize) {}
 
-  ///{@macro flutter_inappwebview_platform_interface.PlatformWebViewCreationParams.onShowFileChooser}
+  ///{@macro nosferatu500_inappwebview_platform_interface.PlatformWebViewCreationParams.onShowFileChooser}
   ///
-  ///{@macro flutter_inappwebview_platform_interface.PlatformInAppBrowserEvents.onShowFileChooser.supported_platforms}
+  ///{@macro nosferatu500_inappwebview_platform_interface.PlatformInAppBrowserEvents.onShowFileChooser.supported_platforms}
   @SupportedPlatforms(
     platforms: [
       AndroidPlatform(
@@ -1755,9 +1755,9 @@ In that case, after the `window.addEventListener("flutterInAppWebViewPlatformRea
     return null;
   }
 
-  ///{@macro flutter_inappwebview_platform_interface.PlatformWebViewCreationParams.onInsertInputSuggestion}
+  ///{@macro nosferatu500_inappwebview_platform_interface.PlatformWebViewCreationParams.onInsertInputSuggestion}
   ///
-  ///{@macro flutter_inappwebview_platform_interface.PlatformInAppBrowserEvents.onInsertInputSuggestion.supported_platforms}
+  ///{@macro nosferatu500_inappwebview_platform_interface.PlatformInAppBrowserEvents.onInsertInputSuggestion.supported_platforms}
   @SupportedPlatforms(
     platforms: [
       IOSPlatform(
@@ -1772,7 +1772,7 @@ In that case, after the `window.addEventListener("flutterInAppWebViewPlatformRea
   )
   void onInsertInputSuggestion(InputSuggestion inputSuggestion) {}
 
-  ///{@template flutter_inappwebview_platform_interface.PlatformInAppBrowserEvents.isMethodSupported}
+  ///{@template nosferatu500_inappwebview_platform_interface.PlatformInAppBrowserEvents.isMethodSupported}
   ///Check if the given [method] is supported by the [defaultTargetPlatform] or a specific [platform].
   ///{@endtemplate}
   static bool isMethodSupported(

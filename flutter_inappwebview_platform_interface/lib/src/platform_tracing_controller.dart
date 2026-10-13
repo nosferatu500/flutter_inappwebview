@@ -1,6 +1,6 @@
 import 'dart:async';
 import 'package:flutter/foundation.dart';
-import 'package:flutter_inappwebview_internal_annotations/flutter_inappwebview_internal_annotations.dart';
+import 'package:nosferatu500_inappwebview_internal_annotations/nosferatu500_inappwebview_internal_annotations.dart';
 import 'package:plugin_platform_interface/plugin_platform_interface.dart';
 import 'inappwebview_platform.dart';
 import 'types/tracing_mode.dart';
@@ -8,21 +8,21 @@ import 'types/main.dart';
 
 part 'platform_tracing_controller.g.dart';
 
-///{@template flutter_inappwebview_platform_interface.PlatformTracingControllerCreationParams}
+///{@template nosferatu500_inappwebview_platform_interface.PlatformTracingControllerCreationParams}
 /// Object specifying creation parameters for creating a [PlatformTracingController].
 ///
 /// Platform specific implementations can add additional fields by extending
 /// this class.
 ///{@endtemplate}
 ///
-///{@macro flutter_inappwebview_platform_interface.PlatformTracingControllerCreationParams.supported_platforms}
+///{@macro nosferatu500_inappwebview_platform_interface.PlatformTracingControllerCreationParams.supported_platforms}
 @SupportedPlatforms(platforms: [AndroidPlatform()])
 @immutable
 class PlatformTracingControllerCreationParams {
   /// Used by the platform implementation to create a new [PlatformTracingController].
   const PlatformTracingControllerCreationParams();
 
-  ///{@template flutter_inappwebview_platform_interface.PlatformTracingControllerCreationParams.isClassSupported}
+  ///{@template nosferatu500_inappwebview_platform_interface.PlatformTracingControllerCreationParams.isClassSupported}
   ///Check if the current class is supported by the [defaultTargetPlatform] or a specific [platform].
   ///{@endtemplate}
   bool isClassSupported({TargetPlatform? platform}) =>
@@ -31,7 +31,7 @@ class PlatformTracingControllerCreationParams {
       );
 }
 
-///{@template flutter_inappwebview_platform_interface.PlatformTracingController}
+///{@template nosferatu500_inappwebview_platform_interface.PlatformTracingController}
 ///Manages tracing of `WebView`s.
 ///In particular provides functionality for the app to enable/disable tracing of parts of code and to collect tracing data.
 ///This is useful for profiling performance issues, debugging and memory usage analysis in production and real life scenarios.
@@ -40,7 +40,7 @@ class PlatformTracingControllerCreationParams {
 ///This file can be loaded in "chrome://tracing" for further analysis.
 ///{@endtemplate}
 ///
-///{@macro flutter_inappwebview_platform_interface.PlatformTracingController.supported_platforms}
+///{@macro nosferatu500_inappwebview_platform_interface.PlatformTracingController.supported_platforms}
 @SupportedPlatforms(
   platforms: [
     AndroidPlatform(
@@ -57,7 +57,7 @@ abstract class PlatformTracingController extends PlatformInterface {
   ) {
     assert(
       InAppWebViewPlatform.instance != null,
-      'A platform implementation for `flutter_inappwebview` has not been set. Please '
+      'A platform implementation for `nosferatu500_inappwebview` has not been set. Please '
       'ensure that an implementation of `InAppWebViewPlatform` has been set to '
       '`WebViewPlatform.instance` before use. For unit testing, '
       '`WebViewPlatform.instance` can be set with your own test implementation.',
@@ -73,7 +73,7 @@ abstract class PlatformTracingController extends PlatformInterface {
   factory PlatformTracingController.static() {
     assert(
       InAppWebViewPlatform.instance != null,
-      'A platform implementation for `flutter_inappwebview` has not been set. Please '
+      'A platform implementation for `nosferatu500_inappwebview` has not been set. Please '
       'ensure that an implementation of `InAppWebViewPlatform` has been set to '
       '`WebViewPlatform.instance` before use. For unit testing, '
       '`WebViewPlatform.instance` can be set with your own test implementation.',
@@ -97,7 +97,7 @@ abstract class PlatformTracingController extends PlatformInterface {
   /// The parameters used to initialize the [PlatformTracingController].
   final PlatformTracingControllerCreationParams params;
 
-  ///{@template flutter_inappwebview_platform_interface.PlatformTracingController.start}
+  ///{@template nosferatu500_inappwebview_platform_interface.PlatformTracingController.start}
   ///Starts tracing all `WebView`s.
   ///Depending on the trace mode in trace config specifies how the trace events are recorded.
   ///For tracing modes [TracingMode.RECORD_UNTIL_FULL] and [TracingMode.RECORD_CONTINUOUSLY]
@@ -105,7 +105,7 @@ abstract class PlatformTracingController extends PlatformInterface {
   ///when [stop] is called.
   ///{@endtemplate}
   ///
-  ///{@macro flutter_inappwebview_platform_interface.PlatformTracingController.start.supported_platforms}
+  ///{@macro nosferatu500_inappwebview_platform_interface.PlatformTracingController.start.supported_platforms}
   @SupportedPlatforms(
     platforms: [
       AndroidPlatform(
@@ -121,7 +121,7 @@ abstract class PlatformTracingController extends PlatformInterface {
     );
   }
 
-  ///{@template flutter_inappwebview_platform_interface.PlatformTracingController.stop}
+  ///{@template nosferatu500_inappwebview_platform_interface.PlatformTracingController.stop}
   ///Stops tracing and flushes tracing data to the specified output stream.
   ///The data is sent to the specified output stream in json format typically in
   ///chunks.
@@ -130,7 +130,7 @@ abstract class PlatformTracingController extends PlatformInterface {
   ///`true` otherwise.
   ///{@endtemplate}
   ///
-  ///{@macro flutter_inappwebview_platform_interface.PlatformTracingController.stop.supported_platforms}
+  ///{@macro nosferatu500_inappwebview_platform_interface.PlatformTracingController.stop.supported_platforms}
   @SupportedPlatforms(
     platforms: [
       AndroidPlatform(
@@ -144,11 +144,11 @@ abstract class PlatformTracingController extends PlatformInterface {
     throw UnimplementedError('stop is not implemented on the current platform');
   }
 
-  ///{@template flutter_inappwebview_platform_interface.PlatformTracingController.isTracing}
+  ///{@template nosferatu500_inappwebview_platform_interface.PlatformTracingController.isTracing}
   ///Returns whether the WebView framework is tracing.
   ///{@endtemplate}
   ///
-  ///{@macro flutter_inappwebview_platform_interface.PlatformTracingController.isTracing.supported_platforms}
+  ///{@macro nosferatu500_inappwebview_platform_interface.PlatformTracingController.isTracing.supported_platforms}
   @SupportedPlatforms(
     platforms: [
       AndroidPlatform(
@@ -164,11 +164,11 @@ abstract class PlatformTracingController extends PlatformInterface {
     );
   }
 
-  ///{@macro flutter_inappwebview_platform_interface.PlatformTracingControllerCreationParams.isClassSupported}
+  ///{@macro nosferatu500_inappwebview_platform_interface.PlatformTracingControllerCreationParams.isClassSupported}
   bool isClassSupported({TargetPlatform? platform}) =>
       params.isClassSupported(platform: platform);
 
-  ///{@template flutter_inappwebview_platform_interface.PlatformTracingController.isMethodSupported}
+  ///{@template nosferatu500_inappwebview_platform_interface.PlatformTracingController.isMethodSupported}
   ///Check if the given [method] is supported by the [defaultTargetPlatform] or a specific [platform].
   ///{@endtemplate}
   bool isMethodSupported(
@@ -221,11 +221,11 @@ List<dynamic> _serializeCategories(
   return serializedCategories;
 }
 
-///{@template flutter_inappwebview_platform_interface.TracingSettings}
+///{@template nosferatu500_inappwebview_platform_interface.TracingSettings}
 ///Class that represents the settings used to configure the [PlatformTracingController].
 ///{@endtemplate}
 ///
-///{@macro flutter_inappwebview_platform_interface.TracingSettings.supported_platforms}
+///{@macro nosferatu500_inappwebview_platform_interface.TracingSettings.supported_platforms}
 @SupportedPlatforms(
   platforms: [
     AndroidPlatform(
@@ -254,7 +254,7 @@ class TracingSettings_ {
   ///The tracing mode for this configuration.
   ///When tracingMode is not set explicitly, the default is [TracingMode.RECORD_CONTINUOUSLY].
   ///
-  ///{@macro flutter_inappwebview_platform_interface.TracingSettings.tracingMode.supported_platforms}
+  ///{@macro nosferatu500_inappwebview_platform_interface.TracingSettings.tracingMode.supported_platforms}
   @SupportedPlatforms(platforms: [AndroidPlatform()])
   TracingMode_? tracingMode;
 
@@ -283,13 +283,13 @@ class TracingSettings_ {
     );
   }
 
-  ///{@template flutter_inappwebview_platform_interface.TracingSettings.isClassSupported}
+  ///{@template nosferatu500_inappwebview_platform_interface.TracingSettings.isClassSupported}
   ///Check if the current class is supported by the [defaultTargetPlatform] or a specific [platform].
   ///{@endtemplate}
   static bool isClassSupported({TargetPlatform? platform}) =>
       _TracingSettingsClassSupported.isClassSupported(platform: platform);
 
-  ///{@template flutter_inappwebview_platform_interface.TracingSettings.isPropertySupported}
+  ///{@template nosferatu500_inappwebview_platform_interface.TracingSettings.isPropertySupported}
   ///Check if the current class is supported by the [defaultTargetPlatform] or a specific [platform].
   ///{@endtemplate}
   static bool isPropertySupported(

@@ -8,7 +8,7 @@ part of 'platform_inappwebview_widget.dart';
 
 extension _PlatformInAppWebViewWidgetCreationParamsClassSupported
     on PlatformInAppWebViewWidgetCreationParams {
-  ///{@template flutter_inappwebview_platform_interface.PlatformInAppWebViewWidgetCreationParams.supported_platforms}
+  ///{@template nosferatu500_inappwebview_platform_interface.PlatformInAppWebViewWidgetCreationParams.supported_platforms}
   ///
   ///**Officially Supported Platforms/Implementations**:
   ///- Android WebView
@@ -29,7 +29,7 @@ extension _PlatformInAppWebViewWidgetCreationParamsClassSupported
 enum PlatformInAppWebViewWidgetCreationParamsProperty {
   ///Can be used to check if the [PlatformInAppWebViewWidgetCreationParams.headlessWebView] property is supported at runtime.
   ///
-  ///{@template flutter_inappwebview_platform_interface.PlatformInAppWebViewWidgetCreationParams.headlessWebView.supported_platforms}
+  ///{@template nosferatu500_inappwebview_platform_interface.PlatformInAppWebViewWidgetCreationParams.headlessWebView.supported_platforms}
   ///
   ///**Officially Supported Platforms/Implementations**:
   ///- Android WebView
@@ -41,7 +41,7 @@ enum PlatformInAppWebViewWidgetCreationParamsProperty {
 
   ///Can be used to check if the [PlatformInAppWebViewWidgetCreationParams.keepAlive] property is supported at runtime.
   ///
-  ///{@template flutter_inappwebview_platform_interface.PlatformInAppWebViewWidgetCreationParams.keepAlive.supported_platforms}
+  ///{@template nosferatu500_inappwebview_platform_interface.PlatformInAppWebViewWidgetCreationParams.keepAlive.supported_platforms}
   ///
   ///**Officially Supported Platforms/Implementations**:
   ///- Android WebView
@@ -53,7 +53,7 @@ enum PlatformInAppWebViewWidgetCreationParamsProperty {
 
   ///Can be used to check if the [PlatformInAppWebViewWidgetCreationParams.preventGestureDelay] property is supported at runtime.
   ///
-  ///{@template flutter_inappwebview_platform_interface.PlatformInAppWebViewWidgetCreationParams.preventGestureDelay.supported_platforms}
+  ///{@template nosferatu500_inappwebview_platform_interface.PlatformInAppWebViewWidgetCreationParams.preventGestureDelay.supported_platforms}
   ///
   ///**Officially Supported Platforms/Implementations**:
   ///- iOS WKWebView

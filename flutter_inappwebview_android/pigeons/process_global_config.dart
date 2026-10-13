@@ -32,7 +32,7 @@ import 'package:pigeon/pigeon.dart';
       // the designated declarer; every other schema in this package must opt out here.
       includeErrorClass: false,
     ),
-    dartPackageName: 'flutter_inappwebview_android',
+    dartPackageName: 'nosferatu500_inappwebview_android',
   ),
 )
 /// Mirrors the platform interface's `ProcessGlobalConfigDirectoryBasePaths`.

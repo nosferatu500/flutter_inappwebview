@@ -2,12 +2,12 @@ import 'dart:async';
 import 'dart:typed_data';
 
 import 'package:flutter/services.dart';
-import 'package:flutter_inappwebview_android/flutter_inappwebview_android.dart';
-import 'package:flutter_inappwebview_android/src/pigeons/web_message.g.dart';
+import 'package:nosferatu500_inappwebview_android/nosferatu500_inappwebview_android.dart';
+import 'package:nosferatu500_inappwebview_android/src/pigeons/web_message.g.dart';
 // Imported directly: `main.dart` hides `InternalWebMessagePort`, the extension exposing a port's
 // `onMessage` callback and its owning channel.
-import 'package:flutter_inappwebview_android/src/web_message/web_message_port.dart';
-import 'package:flutter_inappwebview_platform_interface/flutter_inappwebview_platform_interface.dart';
+import 'package:nosferatu500_inappwebview_android/src/web_message/web_message_port.dart';
+import 'package:nosferatu500_inappwebview_platform_interface/nosferatu500_inappwebview_platform_interface.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 /// Boundary coverage for the two web-message channels (§165), in the shape §156 established.
@@ -25,11 +25,11 @@ void main() {
 
   const codec = WebMessageChannelHostApi.pigeonChannelCodec;
   const chBase =
-      'dev.flutter.pigeon.flutter_inappwebview_android.WebMessageChannelHostApi';
+      'dev.flutter.pigeon.nosferatu500_inappwebview_android.WebMessageChannelHostApi';
   const chEventBase =
-      'dev.flutter.pigeon.flutter_inappwebview_android.WebMessageChannelFlutterApi';
+      'dev.flutter.pigeon.nosferatu500_inappwebview_android.WebMessageChannelFlutterApi';
   const lsBase =
-      'dev.flutter.pigeon.flutter_inappwebview_android.WebMessageListenerHostApi';
+      'dev.flutter.pigeon.nosferatu500_inappwebview_android.WebMessageListenerHostApi';
 
   final messenger =
       TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger;
@@ -292,7 +292,7 @@ void main() {
       // Same derivation as `the listener posts on its own suffixed channel` below.
       final suffix = '${listener.toMap()['id']}_disposeObject';
       final event =
-          'dev.flutter.pigeon.flutter_inappwebview_android.WebMessageListenerFlutterApi'
+          'dev.flutter.pigeon.nosferatu500_inappwebview_android.WebMessageListenerFlutterApi'
           '.onPostMessage.$suffix';
       final args = <Object?>[
         WebMessageData(type: 0, stringData: 'x'),

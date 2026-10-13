@@ -1,5 +1,5 @@
 import 'package:flutter/foundation.dart';
-import 'package:flutter_inappwebview_platform_interface/flutter_inappwebview_platform_interface.dart';
+import 'package:nosferatu500_inappwebview_platform_interface/nosferatu500_inappwebview_platform_interface.dart';
 
 import 'web_message_channel.dart';
 import 'web_message_converters.dart';
@@ -30,7 +30,7 @@ class AndroidWebMessagePortCreationParams
   }
 }
 
-///{@macro flutter_inappwebview_platform_interface.PlatformWebMessagePort}
+///{@macro nosferatu500_inappwebview_platform_interface.PlatformWebMessagePort}
 class AndroidWebMessagePort extends PlatformWebMessagePort {
   WebMessageCallback? _onMessage;
   late AndroidWebMessageChannel _webMessageChannel;

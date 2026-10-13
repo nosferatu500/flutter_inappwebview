@@ -19,7 +19,7 @@
 // constants and pass while proving nothing.
 import 'dart:io';
 
-import 'package:flutter_inappwebview_internal_annotations/flutter_inappwebview_internal_annotations.dart';
+import 'package:nosferatu500_inappwebview_internal_annotations/nosferatu500_inappwebview_internal_annotations.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 void main() {

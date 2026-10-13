@@ -253,7 +253,7 @@ class ChromeSafariBrowserManagerHostApi {
   /// Tabs are not available.
   Future<bool> open(ChromeSafariBrowserOpenRequestData request) async {
     final pigeonVar_channelName =
-        'dev.flutter.pigeon.flutter_inappwebview_android.ChromeSafariBrowserManagerHostApi.open$pigeonVar_messageChannelSuffix';
+        'dev.flutter.pigeon.nosferatu500_inappwebview_android.ChromeSafariBrowserManagerHostApi.open$pigeonVar_messageChannelSuffix';
     final pigeonVar_channel = BasicMessageChannel<Object?>(
       pigeonVar_channelName,
       pigeonChannelCodec,
@@ -275,7 +275,7 @@ class ChromeSafariBrowserManagerHostApi {
   /// `false` when there is no host Activity.
   Future<bool> isAvailable() async {
     final pigeonVar_channelName =
-        'dev.flutter.pigeon.flutter_inappwebview_android.ChromeSafariBrowserManagerHostApi.isAvailable$pigeonVar_messageChannelSuffix';
+        'dev.flutter.pigeon.nosferatu500_inappwebview_android.ChromeSafariBrowserManagerHostApi.isAvailable$pigeonVar_messageChannelSuffix';
     final pigeonVar_channel = BasicMessageChannel<Object?>(
       pigeonVar_channelName,
       pigeonChannelCodec,
@@ -295,7 +295,7 @@ class ChromeSafariBrowserManagerHostApi {
   /// `CustomTabsIntent.getMaxToolbarItems()`.
   Future<int> getMaxToolbarItems() async {
     final pigeonVar_channelName =
-        'dev.flutter.pigeon.flutter_inappwebview_android.ChromeSafariBrowserManagerHostApi.getMaxToolbarItems$pigeonVar_messageChannelSuffix';
+        'dev.flutter.pigeon.nosferatu500_inappwebview_android.ChromeSafariBrowserManagerHostApi.getMaxToolbarItems$pigeonVar_messageChannelSuffix';
     final pigeonVar_channel = BasicMessageChannel<Object?>(
       pigeonVar_channelName,
       pigeonChannelCodec,
@@ -318,7 +318,7 @@ class ChromeSafariBrowserManagerHostApi {
     bool ignoreDefault,
   ) async {
     final pigeonVar_channelName =
-        'dev.flutter.pigeon.flutter_inappwebview_android.ChromeSafariBrowserManagerHostApi.getPackageName$pigeonVar_messageChannelSuffix';
+        'dev.flutter.pigeon.nosferatu500_inappwebview_android.ChromeSafariBrowserManagerHostApi.getPackageName$pigeonVar_messageChannelSuffix';
     final pigeonVar_channel = BasicMessageChannel<Object?>(
       pigeonVar_channelName,
       pigeonChannelCodec,

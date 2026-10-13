@@ -1,7 +1,7 @@
 import 'package:flutter/foundation.dart';
-import 'package:flutter_inappwebview_android/flutter_inappwebview_android.dart';
-import 'package:flutter_inappwebview_android/src/pigeons/cookie_manager.g.dart';
-import 'package:flutter_inappwebview_platform_interface/flutter_inappwebview_platform_interface.dart';
+import 'package:nosferatu500_inappwebview_android/nosferatu500_inappwebview_android.dart';
+import 'package:nosferatu500_inappwebview_android/src/pigeons/cookie_manager.g.dart';
+import 'package:nosferatu500_inappwebview_platform_interface/nosferatu500_inappwebview_platform_interface.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 /// Guards the wire shape of the cookie master switch — `CookieManager.setAcceptCookie` /
@@ -24,7 +24,7 @@ void main() {
 
   const codec = CookieManagerHostApi.pigeonChannelCodec;
   const prefix =
-      'dev.flutter.pigeon.flutter_inappwebview_android.CookieManagerHostApi.';
+      'dev.flutter.pigeon.nosferatu500_inappwebview_android.CookieManagerHostApi.';
   const setAcceptChannel = '${prefix}setAcceptCookie';
   const isAcceptEnabledChannel = '${prefix}isAcceptCookieEnabled';
 

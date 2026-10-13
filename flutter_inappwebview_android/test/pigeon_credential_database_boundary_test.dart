@@ -1,7 +1,7 @@
 import 'package:flutter/services.dart';
-import 'package:flutter_inappwebview_android/flutter_inappwebview_android.dart';
-import 'package:flutter_inappwebview_android/src/pigeons/credential_database.g.dart';
-import 'package:flutter_inappwebview_platform_interface/flutter_inappwebview_platform_interface.dart';
+import 'package:nosferatu500_inappwebview_android/nosferatu500_inappwebview_android.dart';
+import 'package:nosferatu500_inappwebview_android/src/pigeons/credential_database.g.dart';
+import 'package:nosferatu500_inappwebview_platform_interface/nosferatu500_inappwebview_platform_interface.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 /// Boundary coverage for the sixth channel migrated to Pigeon (§163, `credential_database`), in the
@@ -24,7 +24,7 @@ void main() {
 
   const codec = CredentialDatabaseHostApi.pigeonChannelCodec;
   const base =
-      'dev.flutter.pigeon.flutter_inappwebview_android.CredentialDatabaseHostApi';
+      'dev.flutter.pigeon.nosferatu500_inappwebview_android.CredentialDatabaseHostApi';
   const getAllChannel = '$base.getAllAuthCredentials';
   const getChannel = '$base.getHttpAuthCredentials';
   const setChannel = '$base.setHttpAuthCredential';

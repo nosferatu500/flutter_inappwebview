@@ -1,6 +1,6 @@
-import 'package:flutter_inappwebview_android/flutter_inappwebview_android.dart';
-import 'package:flutter_inappwebview_android/src/pigeons/tracing_controller.g.dart';
-import 'package:flutter_inappwebview_platform_interface/flutter_inappwebview_platform_interface.dart';
+import 'package:nosferatu500_inappwebview_android/nosferatu500_inappwebview_android.dart';
+import 'package:nosferatu500_inappwebview_android/src/pigeons/tracing_controller.g.dart';
+import 'package:nosferatu500_inappwebview_platform_interface/nosferatu500_inappwebview_platform_interface.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 /// Boundary coverage for the fifth channel migrated to Pigeon (§162, `tracing_controller`), in the
@@ -21,11 +21,11 @@ void main() {
 
   const codec = TracingControllerHostApi.pigeonChannelCodec;
   const startChannel =
-      'dev.flutter.pigeon.flutter_inappwebview_android.TracingControllerHostApi.start';
+      'dev.flutter.pigeon.nosferatu500_inappwebview_android.TracingControllerHostApi.start';
   const stopChannel =
-      'dev.flutter.pigeon.flutter_inappwebview_android.TracingControllerHostApi.stop';
+      'dev.flutter.pigeon.nosferatu500_inappwebview_android.TracingControllerHostApi.stop';
   const isTracingChannel =
-      'dev.flutter.pigeon.flutter_inappwebview_android.TracingControllerHostApi.isTracing';
+      'dev.flutter.pigeon.nosferatu500_inappwebview_android.TracingControllerHostApi.isTracing';
 
   late AndroidTracingController tracing;
   final Map<String, List<Object?>?> received = {};

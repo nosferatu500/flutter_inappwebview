@@ -1,9 +1,9 @@
 import 'dart:typed_data';
 
 import 'package:flutter/services.dart';
-import 'package:flutter_inappwebview_android/flutter_inappwebview_android.dart';
-import 'package:flutter_inappwebview_android/src/pigeons/in_app_webview.g.dart';
-import 'package:flutter_inappwebview_platform_interface/flutter_inappwebview_platform_interface.dart';
+import 'package:nosferatu500_inappwebview_android/nosferatu500_inappwebview_android.dart';
+import 'package:nosferatu500_inappwebview_android/src/pigeons/in_app_webview.g.dart';
+import 'package:nosferatu500_inappwebview_platform_interface/nosferatu500_inappwebview_platform_interface.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 /// Runtime coverage for the per-WebView channel's events on `InAppWebViewFlutterApi` (W4, §214):
@@ -23,7 +23,7 @@ void main() {
       TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger;
 
   String channel(String method, String suffix) =>
-      'dev.flutter.pigeon.flutter_inappwebview_android.InAppWebViewFlutterApi'
+      'dev.flutter.pigeon.nosferatu500_inappwebview_android.InAppWebViewFlutterApi'
       '.$method.$suffix';
 
   /// Delivers one event the way Kotlin does and returns the raw reply: an encoded envelope when a

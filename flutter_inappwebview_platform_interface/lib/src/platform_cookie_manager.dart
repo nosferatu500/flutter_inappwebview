@@ -1,7 +1,7 @@
 import 'dart:async';
 
 import 'package:flutter/foundation.dart';
-import 'package:flutter_inappwebview_internal_annotations/flutter_inappwebview_internal_annotations.dart';
+import 'package:nosferatu500_inappwebview_internal_annotations/nosferatu500_inappwebview_internal_annotations.dart';
 import 'package:plugin_platform_interface/plugin_platform_interface.dart';
 
 import 'inappwebview_platform.dart';
@@ -10,21 +10,21 @@ import 'web_uri.dart';
 
 part 'platform_cookie_manager.g.dart';
 
-///{@template flutter_inappwebview_platform_interface.PlatformCookieManagerCreationParams}
+///{@template nosferatu500_inappwebview_platform_interface.PlatformCookieManagerCreationParams}
 /// Object specifying creation parameters for creating a [PlatformCookieManager].
 ///
 /// Platform specific implementations can add additional fields by extending
 /// this class.
 ///{@endtemplate}
 ///
-///{@macro flutter_inappwebview_platform_interface.PlatformCookieManagerCreationParams.supported_platforms}
+///{@macro nosferatu500_inappwebview_platform_interface.PlatformCookieManagerCreationParams.supported_platforms}
 @SupportedPlatforms(platforms: [AndroidPlatform(), IOSPlatform()])
 @immutable
 class PlatformCookieManagerCreationParams {
   /// Used by the platform implementation to create a new [PlatformCookieManager].
   const PlatformCookieManagerCreationParams();
 
-  ///{@template flutter_inappwebview_platform_interface.PlatformCookieManagerCreationParams.isClassSupported}
+  ///{@template nosferatu500_inappwebview_platform_interface.PlatformCookieManagerCreationParams.isClassSupported}
   ///Check if the current class is supported by the [defaultTargetPlatform] or a specific [platform].
   ///{@endtemplate}
   bool isClassSupported({TargetPlatform? platform}) =>
@@ -33,7 +33,7 @@ class PlatformCookieManagerCreationParams {
       );
 }
 
-///{@template flutter_inappwebview_platform_interface.PlatformCookieManager}
+///{@template nosferatu500_inappwebview_platform_interface.PlatformCookieManager}
 ///Class that implements a singleton object (shared instance) which manages the cookies used by WebView instances.
 ///
 ///Every method here operates on the default cookie store unless a `profileName` is given. On
@@ -51,7 +51,7 @@ class PlatformCookieManagerCreationParams {
 ///back to the default store. Use [PlatformProfileStore] to create profiles.
 ///{@endtemplate}
 ///
-///{@macro flutter_inappwebview_platform_interface.PlatformCookieManager.supported_platforms}
+///{@macro nosferatu500_inappwebview_platform_interface.PlatformCookieManager.supported_platforms}
 @SupportedPlatforms(
   platforms: [
     AndroidPlatform(
@@ -69,7 +69,7 @@ abstract class PlatformCookieManager extends PlatformInterface {
   factory PlatformCookieManager(PlatformCookieManagerCreationParams params) {
     assert(
       InAppWebViewPlatform.instance != null,
-      'A platform implementation for `flutter_inappwebview` has not been set. Please '
+      'A platform implementation for `nosferatu500_inappwebview` has not been set. Please '
       'ensure that an implementation of `InAppWebViewPlatform` has been set to '
       '`WebViewPlatform.instance` before use. For unit testing, '
       '`WebViewPlatform.instance` can be set with your own test implementation.',
@@ -84,7 +84,7 @@ abstract class PlatformCookieManager extends PlatformInterface {
   factory PlatformCookieManager.static() {
     assert(
       InAppWebViewPlatform.instance != null,
-      'A platform implementation for `flutter_inappwebview` has not been set. Please '
+      'A platform implementation for `nosferatu500_inappwebview` has not been set. Please '
       'ensure that an implementation of `InAppWebViewPlatform` has been set to '
       '`InAppWebViewPlatform.instance` before use. For unit testing, '
       '`InAppWebViewPlatform.instance` can be set with your own test implementation.',
@@ -109,7 +109,7 @@ abstract class PlatformCookieManager extends PlatformInterface {
   /// The parameters used to initialize the [PlatformCookieManager].
   final PlatformCookieManagerCreationParams params;
 
-  ///{@template flutter_inappwebview_platform_interface.PlatformCookieManager.setCookie}
+  ///{@template nosferatu500_inappwebview_platform_interface.PlatformCookieManager.setCookie}
   ///Sets a cookie for the given [url]. Any existing cookie with the same [host], [path] and [name] will be replaced with the new cookie.
   ///The cookie being set will be ignored if it is expired.
   ///
@@ -118,7 +118,7 @@ abstract class PlatformCookieManager extends PlatformInterface {
   ///The return value indicates whether the cookie was set successfully.
   ///{@endtemplate}
   ///
-  ///{@macro flutter_inappwebview_platform_interface.PlatformCookieManager.setCookie.supported_platforms}
+  ///{@macro nosferatu500_inappwebview_platform_interface.PlatformCookieManager.setCookie.supported_platforms}
   @SupportedPlatforms(
     platforms: [
       AndroidPlatform(
@@ -151,7 +151,7 @@ abstract class PlatformCookieManager extends PlatformInterface {
     );
   }
 
-  ///{@template flutter_inappwebview_platform_interface.PlatformCookieManager.setCookies}
+  ///{@template nosferatu500_inappwebview_platform_interface.PlatformCookieManager.setCookies}
   ///Sets several cookies in one call. Each [CookieToSet] carries its own `url`, so one call may
   ///write cookies for different origins.
   ///
@@ -174,7 +174,7 @@ abstract class PlatformCookieManager extends PlatformInterface {
   ///An empty list is a no-op and returns an empty list.
   ///{@endtemplate}
   ///
-  ///{@macro flutter_inappwebview_platform_interface.PlatformCookieManager.setCookies.supported_platforms}
+  ///{@macro nosferatu500_inappwebview_platform_interface.PlatformCookieManager.setCookies.supported_platforms}
   @SupportedPlatforms(
     platforms: [
       AndroidPlatform(
@@ -205,11 +205,11 @@ abstract class PlatformCookieManager extends PlatformInterface {
     );
   }
 
-  ///{@template flutter_inappwebview_platform_interface.PlatformCookieManager.getCookies}
+  ///{@template nosferatu500_inappwebview_platform_interface.PlatformCookieManager.getCookies}
   ///Gets all the cookies for the given [url].
   ///{@endtemplate}
   ///
-  ///{@macro flutter_inappwebview_platform_interface.PlatformCookieManager.getCookies.supported_platforms}
+  ///{@macro nosferatu500_inappwebview_platform_interface.PlatformCookieManager.getCookies.supported_platforms}
   @SupportedPlatforms(
     platforms: [
       AndroidPlatform(
@@ -233,11 +233,11 @@ abstract class PlatformCookieManager extends PlatformInterface {
     );
   }
 
-  ///{@template flutter_inappwebview_platform_interface.PlatformCookieManager.getCookie}
+  ///{@template nosferatu500_inappwebview_platform_interface.PlatformCookieManager.getCookie}
   ///Gets a cookie by its [name] for the given [url].
   ///{@endtemplate}
   ///
-  ///{@macro flutter_inappwebview_platform_interface.PlatformCookieManager.getCookie.supported_platforms}
+  ///{@macro nosferatu500_inappwebview_platform_interface.PlatformCookieManager.getCookie.supported_platforms}
   @SupportedPlatforms(
     platforms: [
       AndroidPlatform(
@@ -262,7 +262,7 @@ abstract class PlatformCookieManager extends PlatformInterface {
     );
   }
 
-  ///{@template flutter_inappwebview_platform_interface.PlatformCookieManager.deleteCookie}
+  ///{@template nosferatu500_inappwebview_platform_interface.PlatformCookieManager.deleteCookie}
   ///Removes a cookie by its [name] for the given [url], [domain] and [path].
   ///
   ///The default value of [path] is `"/"`.
@@ -270,7 +270,7 @@ abstract class PlatformCookieManager extends PlatformInterface {
   ///The return value indicates whether the cookie was deleted successfully.
   ///{@endtemplate}
   ///
-  ///{@macro flutter_inappwebview_platform_interface.PlatformCookieManager.deleteCookie.supported_platforms}
+  ///{@macro nosferatu500_inappwebview_platform_interface.PlatformCookieManager.deleteCookie.supported_platforms}
   @SupportedPlatforms(
     platforms: [
       AndroidPlatform(
@@ -297,7 +297,7 @@ abstract class PlatformCookieManager extends PlatformInterface {
     );
   }
 
-  ///{@template flutter_inappwebview_platform_interface.PlatformCookieManager.deleteCookies}
+  ///{@template nosferatu500_inappwebview_platform_interface.PlatformCookieManager.deleteCookies}
   ///Removes all cookies for the given [url], [domain] and [path].
   ///
   ///The default value of [path] is `"/"`.
@@ -305,7 +305,7 @@ abstract class PlatformCookieManager extends PlatformInterface {
   ///The return value indicates whether cookies were deleted successfully.
   ///{@endtemplate}
   ///
-  ///{@macro flutter_inappwebview_platform_interface.PlatformCookieManager.deleteCookies.supported_platforms}
+  ///{@macro nosferatu500_inappwebview_platform_interface.PlatformCookieManager.deleteCookies.supported_platforms}
   @SupportedPlatforms(
     platforms: [
       AndroidPlatform(
@@ -331,7 +331,7 @@ abstract class PlatformCookieManager extends PlatformInterface {
     );
   }
 
-  ///{@template flutter_inappwebview_platform_interface.PlatformCookieManager.deleteAllCookies}
+  ///{@template nosferatu500_inappwebview_platform_interface.PlatformCookieManager.deleteAllCookies}
   ///Removes all cookies.
   ///
   ///The return value indicates whether any cookies were removed.
@@ -342,7 +342,7 @@ abstract class PlatformCookieManager extends PlatformInterface {
   ///`WebViewFeature.DELETE_BROWSING_DATA` is supported.
   ///{@endtemplate}
   ///
-  ///{@macro flutter_inappwebview_platform_interface.PlatformCookieManager.deleteAllCookies.supported_platforms}
+  ///{@macro nosferatu500_inappwebview_platform_interface.PlatformCookieManager.deleteAllCookies.supported_platforms}
   @SupportedPlatforms(
     platforms: [
       AndroidPlatform(
@@ -367,11 +367,11 @@ abstract class PlatformCookieManager extends PlatformInterface {
     );
   }
 
-  ///{@template flutter_inappwebview_platform_interface.PlatformCookieManager.getAllCookies}
+  ///{@template nosferatu500_inappwebview_platform_interface.PlatformCookieManager.getAllCookies}
   ///Fetches all stored cookies.
   ///{@endtemplate}
   ///
-  ///{@macro flutter_inappwebview_platform_interface.PlatformCookieManager.getAllCookies.supported_platforms}
+  ///{@macro nosferatu500_inappwebview_platform_interface.PlatformCookieManager.getAllCookies.supported_platforms}
   @SupportedPlatforms(
     platforms: [
       IOSPlatform(
@@ -388,13 +388,13 @@ abstract class PlatformCookieManager extends PlatformInterface {
     );
   }
 
-  ///{@template flutter_inappwebview_platform_interface.PlatformCookieManager.removeSessionCookies}
+  ///{@template nosferatu500_inappwebview_platform_interface.PlatformCookieManager.removeSessionCookies}
   ///Removes all session cookies, which are cookies without an expiration date.
   ///
   ///The return value indicates whether any cookies were removed.
   ///{@endtemplate}
   ///
-  ///{@macro flutter_inappwebview_platform_interface.PlatformCookieManager.removeSessionCookies.supported_platforms}
+  ///{@macro nosferatu500_inappwebview_platform_interface.PlatformCookieManager.removeSessionCookies.supported_platforms}
   @SupportedPlatforms(
     platforms: [
       AndroidPlatform(
@@ -412,7 +412,7 @@ abstract class PlatformCookieManager extends PlatformInterface {
     );
   }
 
-  ///{@template flutter_inappwebview_platform_interface.PlatformCookieManager.flush}
+  ///{@template nosferatu500_inappwebview_platform_interface.PlatformCookieManager.flush}
   ///Ensures all cookies currently accessible through the getCookie API are written to persistent storage.
   ///This call will block the caller until it is done and may perform I/O.
   ///
@@ -422,7 +422,7 @@ abstract class PlatformCookieManager extends PlatformInterface {
   ///not happen rather than that it failed partway.
   ///{@endtemplate}
   ///
-  ///{@macro flutter_inappwebview_platform_interface.PlatformCookieManager.flush.supported_platforms}
+  ///{@macro nosferatu500_inappwebview_platform_interface.PlatformCookieManager.flush.supported_platforms}
   @SupportedPlatforms(
     platforms: [
       AndroidPlatform(
@@ -440,7 +440,7 @@ abstract class PlatformCookieManager extends PlatformInterface {
     );
   }
 
-  ///{@template flutter_inappwebview_platform_interface.PlatformCookieManager.hasCookies}
+  ///{@template nosferatu500_inappwebview_platform_interface.PlatformCookieManager.hasCookies}
   ///Returns whether the cookie store holds any cookie at all.
   ///
   ///Unlike [getCookies] this takes **no url**: it is a question about the whole store, not about
@@ -456,7 +456,7 @@ abstract class PlatformCookieManager extends PlatformInterface {
   ///apart before deciding to skip the work.
   ///{@endtemplate}
   ///
-  ///{@macro flutter_inappwebview_platform_interface.PlatformCookieManager.hasCookies.supported_platforms}
+  ///{@macro nosferatu500_inappwebview_platform_interface.PlatformCookieManager.hasCookies.supported_platforms}
   @SupportedPlatforms(
     platforms: [
       AndroidPlatform(
@@ -474,7 +474,7 @@ abstract class PlatformCookieManager extends PlatformInterface {
     );
   }
 
-  ///{@template flutter_inappwebview_platform_interface.PlatformCookieManager.isFileSchemeCookiesAllowed}
+  ///{@template nosferatu500_inappwebview_platform_interface.PlatformCookieManager.isFileSchemeCookiesAllowed}
   ///Returns whether the WebView sends and accepts cookies for `file://` URLs.
   ///
   ///**Read-only, deliberately.** The platform's setter, `setAcceptFileSchemeCookies`, is
@@ -491,7 +491,7 @@ abstract class PlatformCookieManager extends PlatformInterface {
   ///could be resolved, which is not the same as "file-scheme cookies are disallowed".
   ///{@endtemplate}
   ///
-  ///{@macro flutter_inappwebview_platform_interface.PlatformCookieManager.isFileSchemeCookiesAllowed.supported_platforms}
+  ///{@macro nosferatu500_inappwebview_platform_interface.PlatformCookieManager.isFileSchemeCookiesAllowed.supported_platforms}
   @SupportedPlatforms(
     platforms: [
       AndroidPlatform(
@@ -509,7 +509,7 @@ abstract class PlatformCookieManager extends PlatformInterface {
     );
   }
 
-  ///{@template flutter_inappwebview_platform_interface.PlatformCookieManager.setAcceptCookie}
+  ///{@template nosferatu500_inappwebview_platform_interface.PlatformCookieManager.setAcceptCookie}
   ///Sets whether the cookie store accepts cookies at all.
   ///
   ///This is the master switch for cookies flowing through the WebView's **own network traffic**:
@@ -542,7 +542,7 @@ abstract class PlatformCookieManager extends PlatformInterface {
   ///Read the current state with [isAcceptCookieEnabled].
   ///{@endtemplate}
   ///
-  ///{@macro flutter_inappwebview_platform_interface.PlatformCookieManager.setAcceptCookie.supported_platforms}
+  ///{@macro nosferatu500_inappwebview_platform_interface.PlatformCookieManager.setAcceptCookie.supported_platforms}
   @SupportedPlatforms(
     platforms: [
       AndroidPlatform(
@@ -571,7 +571,7 @@ abstract class PlatformCookieManager extends PlatformInterface {
     );
   }
 
-  ///{@template flutter_inappwebview_platform_interface.PlatformCookieManager.isAcceptCookieEnabled}
+  ///{@template nosferatu500_inappwebview_platform_interface.PlatformCookieManager.isAcceptCookieEnabled}
   ///Returns whether the cookie store currently accepts cookies, as last set by
   ///[setAcceptCookie].
   ///
@@ -587,7 +587,7 @@ abstract class PlatformCookieManager extends PlatformInterface {
   ///at or above the floor.
   ///{@endtemplate}
   ///
-  ///{@macro flutter_inappwebview_platform_interface.PlatformCookieManager.isAcceptCookieEnabled.supported_platforms}
+  ///{@macro nosferatu500_inappwebview_platform_interface.PlatformCookieManager.isAcceptCookieEnabled.supported_platforms}
   @SupportedPlatforms(
     platforms: [
       AndroidPlatform(
@@ -613,7 +613,7 @@ abstract class PlatformCookieManager extends PlatformInterface {
     );
   }
 
-  ///{@template flutter_inappwebview_platform_interface.PlatformCookieManager.cookieStoreObserver}
+  ///{@template nosferatu500_inappwebview_platform_interface.PlatformCookieManager.cookieStoreObserver}
   ///The observer currently registered with [setCookieStoreObserver], or `null` if there is none.
   ///
   ///Answers `null` on any platform that cannot register one — which is every platform except iOS,
@@ -626,7 +626,7 @@ abstract class PlatformCookieManager extends PlatformInterface {
   ///{@endtemplate}
   CookieStoreObserver? get cookieStoreObserver => null;
 
-  ///{@template flutter_inappwebview_platform_interface.PlatformCookieManager.setCookieStoreObserver}
+  ///{@template nosferatu500_inappwebview_platform_interface.PlatformCookieManager.setCookieStoreObserver}
   ///Registers an [observer] that is notified whenever the cookie store changes, or removes the
   ///current one when [observer] is `null`.
   ///
@@ -656,7 +656,7 @@ abstract class PlatformCookieManager extends PlatformInterface {
   ///store is process-wide, so an observer cannot belong to one instance.
   ///{@endtemplate}
   ///
-  ///{@macro flutter_inappwebview_platform_interface.PlatformCookieManager.setCookieStoreObserver.supported_platforms}
+  ///{@macro nosferatu500_inappwebview_platform_interface.PlatformCookieManager.setCookieStoreObserver.supported_platforms}
   @SupportedPlatforms(
     platforms: [
       IOSPlatform(
@@ -675,11 +675,11 @@ abstract class PlatformCookieManager extends PlatformInterface {
     );
   }
 
-  ///{@macro flutter_inappwebview_platform_interface.PlatformCookieManagerCreationParams.isClassSupported}
+  ///{@macro nosferatu500_inappwebview_platform_interface.PlatformCookieManagerCreationParams.isClassSupported}
   bool isClassSupported({TargetPlatform? platform}) =>
       params.isClassSupported(platform: platform);
 
-  ///{@template flutter_inappwebview_platform_interface.PlatformCookieManager.isMethodSupported}
+  ///{@template nosferatu500_inappwebview_platform_interface.PlatformCookieManager.isMethodSupported}
   ///Check if the given [method] is supported by the [defaultTargetPlatform] or a specific [platform].
   ///{@endtemplate}
   bool isMethodSupported(
@@ -691,7 +691,7 @@ abstract class PlatformCookieManager extends PlatformInterface {
   );
 }
 
-///{@template flutter_inappwebview_platform_interface.CookieStoreObserver}
+///{@template nosferatu500_inappwebview_platform_interface.CookieStoreObserver}
 ///Class used by clients to be notified of cookie store changes.
 ///
 ///Register one with [PlatformCookieManager.setCookieStoreObserver]. It is modelled as a class
@@ -699,7 +699,7 @@ abstract class PlatformCookieManager extends PlatformInterface {
 ///same reason [ServiceWorkerClient] is a class with one field.
 ///{@endtemplate}
 ///
-///{@macro flutter_inappwebview_platform_interface.CookieStoreObserver.supported_platforms}
+///{@macro nosferatu500_inappwebview_platform_interface.CookieStoreObserver.supported_platforms}
 @SupportedPlatforms(
   platforms: [
     IOSPlatform(
@@ -711,7 +711,7 @@ abstract class PlatformCookieManager extends PlatformInterface {
   ],
 )
 class CookieStoreObserver {
-  ///{@template flutter_inappwebview_platform_interface.CookieStoreObserver.onCookiesChanged}
+  ///{@template nosferatu500_inappwebview_platform_interface.CookieStoreObserver.onCookiesChanged}
   ///Notifies that the cookies in the store changed.
   ///
   ///It takes no arguments and there is nothing missing: the platform callback reports the *fact*
@@ -719,7 +719,7 @@ class CookieStoreObserver {
   ///state.
   ///{@endtemplate}
   ///
-  ///{@macro flutter_inappwebview_platform_interface.CookieStoreObserver.onCookiesChanged.supported_platforms}
+  ///{@macro nosferatu500_inappwebview_platform_interface.CookieStoreObserver.onCookiesChanged.supported_platforms}
   @SupportedPlatforms(
     platforms: [
       IOSPlatform(
@@ -734,13 +734,13 @@ class CookieStoreObserver {
 
   CookieStoreObserver({this.onCookiesChanged});
 
-  ///{@template flutter_inappwebview_platform_interface.CookieStoreObserver.isClassSupported}
+  ///{@template nosferatu500_inappwebview_platform_interface.CookieStoreObserver.isClassSupported}
   ///Check if the current class is supported by the [defaultTargetPlatform] or a specific [platform].
   ///{@endtemplate}
   static bool isClassSupported({TargetPlatform? platform}) =>
       _CookieStoreObserverClassSupported.isClassSupported(platform: platform);
 
-  ///{@template flutter_inappwebview_platform_interface.CookieStoreObserver.isPropertySupported}
+  ///{@template nosferatu500_inappwebview_platform_interface.CookieStoreObserver.isPropertySupported}
   ///Check if the given [property] is supported by the [defaultTargetPlatform] or a specific [platform].
   ///{@endtemplate}
   static bool isPropertySupported(

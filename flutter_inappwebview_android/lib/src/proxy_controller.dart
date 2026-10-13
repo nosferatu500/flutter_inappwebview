@@ -1,7 +1,7 @@
 import 'dart:async';
 
 import 'package:flutter/foundation.dart';
-import 'package:flutter_inappwebview_platform_interface/flutter_inappwebview_platform_interface.dart';
+import 'package:nosferatu500_inappwebview_platform_interface/nosferatu500_inappwebview_platform_interface.dart';
 
 import 'pigeons/proxy.g.dart';
 
@@ -28,7 +28,7 @@ class AndroidProxyControllerCreationParams
   }
 }
 
-///{@macro flutter_inappwebview_platform_interface.PlatformProxyController}
+///{@macro nosferatu500_inappwebview_platform_interface.PlatformProxyController}
 ///
 /// Transport is Pigeon-generated ([ProxyHostApi]) rather than a hand-written `MethodChannel`; the
 /// third channel migrated, after find_interaction (§14) and process_global_config (§157). There is

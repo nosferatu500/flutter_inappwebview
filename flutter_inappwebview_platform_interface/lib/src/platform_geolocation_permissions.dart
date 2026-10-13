@@ -1,7 +1,7 @@
 import 'dart:async';
 
 import 'package:flutter/foundation.dart';
-import 'package:flutter_inappwebview_internal_annotations/flutter_inappwebview_internal_annotations.dart';
+import 'package:nosferatu500_inappwebview_internal_annotations/nosferatu500_inappwebview_internal_annotations.dart';
 import 'package:plugin_platform_interface/plugin_platform_interface.dart';
 
 import 'inappwebview_platform.dart';
@@ -9,21 +9,21 @@ import 'platform_webview_feature.dart';
 
 part 'platform_geolocation_permissions.g.dart';
 
-///{@template flutter_inappwebview_platform_interface.PlatformGeolocationPermissionsCreationParams}
+///{@template nosferatu500_inappwebview_platform_interface.PlatformGeolocationPermissionsCreationParams}
 /// Object specifying creation parameters for creating a [PlatformGeolocationPermissions].
 ///
 /// Platform specific implementations can add additional fields by extending
 /// this class.
 ///{@endtemplate}
 ///
-///{@macro flutter_inappwebview_platform_interface.PlatformGeolocationPermissionsCreationParams.supported_platforms}
+///{@macro nosferatu500_inappwebview_platform_interface.PlatformGeolocationPermissionsCreationParams.supported_platforms}
 @SupportedPlatforms(platforms: [AndroidPlatform()])
 @immutable
 class PlatformGeolocationPermissionsCreationParams {
   /// Used by the platform implementation to create a new [PlatformGeolocationPermissions].
   const PlatformGeolocationPermissionsCreationParams();
 
-  ///{@template flutter_inappwebview_platform_interface.PlatformGeolocationPermissionsCreationParams.isClassSupported}
+  ///{@template nosferatu500_inappwebview_platform_interface.PlatformGeolocationPermissionsCreationParams.isClassSupported}
   ///Check if the current class is supported by the [defaultTargetPlatform] or a specific [platform].
   ///{@endtemplate}
   bool isClassSupported({TargetPlatform? platform}) =>
@@ -32,7 +32,7 @@ class PlatformGeolocationPermissionsCreationParams {
       );
 }
 
-///{@template flutter_inappwebview_platform_interface.PlatformGeolocationPermissions}
+///{@template nosferatu500_inappwebview_platform_interface.PlatformGeolocationPermissions}
 ///Manages which origins are allowed to use the Geolocation API.
 ///
 ///These are the *stored* decisions, and they are what a WebView consults before it asks again. They
@@ -54,7 +54,7 @@ class PlatformGeolocationPermissionsCreationParams {
 ///the WebView regardless of what is stored here.
 ///{@endtemplate}
 ///
-///{@macro flutter_inappwebview_platform_interface.PlatformGeolocationPermissions.supported_platforms}
+///{@macro nosferatu500_inappwebview_platform_interface.PlatformGeolocationPermissions.supported_platforms}
 @SupportedPlatforms(
   platforms: [
     AndroidPlatform(
@@ -71,7 +71,7 @@ abstract class PlatformGeolocationPermissions extends PlatformInterface {
   ) {
     assert(
       InAppWebViewPlatform.instance != null,
-      'A platform implementation for `flutter_inappwebview` has not been set. Please '
+      'A platform implementation for `nosferatu500_inappwebview` has not been set. Please '
       'ensure that an implementation of `InAppWebViewPlatform` has been set to '
       '`WebViewPlatform.instance` before use. For unit testing, '
       '`WebViewPlatform.instance` can be set with your own test implementation.',
@@ -88,7 +88,7 @@ abstract class PlatformGeolocationPermissions extends PlatformInterface {
   factory PlatformGeolocationPermissions.static() {
     assert(
       InAppWebViewPlatform.instance != null,
-      'A platform implementation for `flutter_inappwebview` has not been set. Please '
+      'A platform implementation for `nosferatu500_inappwebview` has not been set. Please '
       'ensure that an implementation of `InAppWebViewPlatform` has been set to '
       '`InAppWebViewPlatform.instance` before use. For unit testing, '
       '`InAppWebViewPlatform.instance` can be set with your own test implementation.',
@@ -114,7 +114,7 @@ abstract class PlatformGeolocationPermissions extends PlatformInterface {
   /// The parameters used to initialize the [PlatformGeolocationPermissions].
   final PlatformGeolocationPermissionsCreationParams params;
 
-  ///{@template flutter_inappwebview_platform_interface.PlatformGeolocationPermissions.allow}
+  ///{@template nosferatu500_inappwebview_platform_interface.PlatformGeolocationPermissions.allow}
   ///Stores a decision allowing [origin] to use the Geolocation API.
   ///
   ///[origin] must be a web origin — scheme, host and, when it is not the default for the scheme,
@@ -129,7 +129,7 @@ abstract class PlatformGeolocationPermissions extends PlatformInterface {
   ///case nothing was stored.
   ///{@endtemplate}
   ///
-  ///{@macro flutter_inappwebview_platform_interface.PlatformGeolocationPermissions.allow.supported_platforms}
+  ///{@macro nosferatu500_inappwebview_platform_interface.PlatformGeolocationPermissions.allow.supported_platforms}
   @SupportedPlatforms(
     platforms: [
       AndroidPlatform(
@@ -148,7 +148,7 @@ abstract class PlatformGeolocationPermissions extends PlatformInterface {
     );
   }
 
-  ///{@template flutter_inappwebview_platform_interface.PlatformGeolocationPermissions.clear}
+  ///{@template nosferatu500_inappwebview_platform_interface.PlatformGeolocationPermissions.clear}
   ///Removes any stored decision for [origin], so the next request from it prompts again.
   ///
   ///Clearing is not the same as denying: there is no stored "deny". An origin with no decision is
@@ -159,7 +159,7 @@ abstract class PlatformGeolocationPermissions extends PlatformInterface {
   ///case nothing was cleared.
   ///{@endtemplate}
   ///
-  ///{@macro flutter_inappwebview_platform_interface.PlatformGeolocationPermissions.clear.supported_platforms}
+  ///{@macro nosferatu500_inappwebview_platform_interface.PlatformGeolocationPermissions.clear.supported_platforms}
   @SupportedPlatforms(
     platforms: [
       AndroidPlatform(
@@ -178,7 +178,7 @@ abstract class PlatformGeolocationPermissions extends PlatformInterface {
     );
   }
 
-  ///{@template flutter_inappwebview_platform_interface.PlatformGeolocationPermissions.clearAll}
+  ///{@template nosferatu500_inappwebview_platform_interface.PlatformGeolocationPermissions.clearAll}
   ///Removes every stored decision, so all origins prompt again.
   ///
   ///Returns `true` once the decisions are cleared, or `false` when
@@ -186,7 +186,7 @@ abstract class PlatformGeolocationPermissions extends PlatformInterface {
   ///case nothing was cleared.
   ///{@endtemplate}
   ///
-  ///{@macro flutter_inappwebview_platform_interface.PlatformGeolocationPermissions.clearAll.supported_platforms}
+  ///{@macro nosferatu500_inappwebview_platform_interface.PlatformGeolocationPermissions.clearAll.supported_platforms}
   @SupportedPlatforms(
     platforms: [
       AndroidPlatform(
@@ -204,7 +204,7 @@ abstract class PlatformGeolocationPermissions extends PlatformInterface {
     );
   }
 
-  ///{@template flutter_inappwebview_platform_interface.PlatformGeolocationPermissions.getAllowed}
+  ///{@template nosferatu500_inappwebview_platform_interface.PlatformGeolocationPermissions.getAllowed}
   ///Returns whether [origin] has a stored decision allowing the Geolocation API.
   ///
   ///`false` means no decision is stored, which is also the state after [clear] — there is no stored
@@ -215,7 +215,7 @@ abstract class PlatformGeolocationPermissions extends PlatformInterface {
   ///which is an answer.
   ///{@endtemplate}
   ///
-  ///{@macro flutter_inappwebview_platform_interface.PlatformGeolocationPermissions.getAllowed.supported_platforms}
+  ///{@macro nosferatu500_inappwebview_platform_interface.PlatformGeolocationPermissions.getAllowed.supported_platforms}
   @SupportedPlatforms(
     platforms: [
       AndroidPlatform(
@@ -234,7 +234,7 @@ abstract class PlatformGeolocationPermissions extends PlatformInterface {
     );
   }
 
-  ///{@template flutter_inappwebview_platform_interface.PlatformGeolocationPermissions.getOrigins}
+  ///{@template nosferatu500_inappwebview_platform_interface.PlatformGeolocationPermissions.getOrigins}
   ///Returns the origins that have a stored decision allowing the Geolocation API.
   ///
   ///**The origins come back normalised, with a trailing `/`.** Storing `https://example.com` with
@@ -249,7 +249,7 @@ abstract class PlatformGeolocationPermissions extends PlatformInterface {
   ///[WebViewFeature.MULTI_PROFILE] is not supported or the named profile does not exist.
   ///{@endtemplate}
   ///
-  ///{@macro flutter_inappwebview_platform_interface.PlatformGeolocationPermissions.getOrigins.supported_platforms}
+  ///{@macro nosferatu500_inappwebview_platform_interface.PlatformGeolocationPermissions.getOrigins.supported_platforms}
   @SupportedPlatforms(
     platforms: [
       AndroidPlatform(
@@ -267,11 +267,11 @@ abstract class PlatformGeolocationPermissions extends PlatformInterface {
     );
   }
 
-  ///{@macro flutter_inappwebview_platform_interface.PlatformGeolocationPermissionsCreationParams.isClassSupported}
+  ///{@macro nosferatu500_inappwebview_platform_interface.PlatformGeolocationPermissionsCreationParams.isClassSupported}
   bool isClassSupported({TargetPlatform? platform}) =>
       params.isClassSupported(platform: platform);
 
-  ///{@template flutter_inappwebview_platform_interface.PlatformGeolocationPermissions.isMethodSupported}
+  ///{@template nosferatu500_inappwebview_platform_interface.PlatformGeolocationPermissions.isMethodSupported}
   ///Check if the given [method] is supported by the [defaultTargetPlatform] or a specific [platform].
   ///{@endtemplate}
   bool isMethodSupported(

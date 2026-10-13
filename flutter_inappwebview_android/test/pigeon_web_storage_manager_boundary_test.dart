@@ -1,7 +1,7 @@
 import 'package:flutter/services.dart';
-import 'package:flutter_inappwebview_android/flutter_inappwebview_android.dart';
-import 'package:flutter_inappwebview_android/src/pigeons/web_storage_manager.g.dart';
-import 'package:flutter_inappwebview_platform_interface/flutter_inappwebview_platform_interface.dart';
+import 'package:nosferatu500_inappwebview_android/nosferatu500_inappwebview_android.dart';
+import 'package:nosferatu500_inappwebview_android/src/pigeons/web_storage_manager.g.dart';
+import 'package:nosferatu500_inappwebview_platform_interface/nosferatu500_inappwebview_platform_interface.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 /// Boundary coverage for the ninth channel migrated to Pigeon (§169, `web_storage_manager`), in the
@@ -25,7 +25,7 @@ void main() {
 
   const codec = WebStorageManagerHostApi.pigeonChannelCodec;
   const prefix =
-      'dev.flutter.pigeon.flutter_inappwebview_android.WebStorageManagerHostApi.';
+      'dev.flutter.pigeon.nosferatu500_inappwebview_android.WebStorageManagerHostApi.';
   const getOriginsChannel = '${prefix}getOrigins';
   const deleteAllDataChannel = '${prefix}deleteAllData';
   const deleteOriginChannel = '${prefix}deleteOrigin';

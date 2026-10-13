@@ -286,7 +286,7 @@ class InAppBrowserManagerHostApi {
   /// Starts the browser Activity. `false` when there is no host Activity to start it from.
   Future<bool> open(InAppBrowserOpenRequestData request) async {
     final pigeonVar_channelName =
-        'dev.flutter.pigeon.flutter_inappwebview_android.InAppBrowserManagerHostApi.open$pigeonVar_messageChannelSuffix';
+        'dev.flutter.pigeon.nosferatu500_inappwebview_android.InAppBrowserManagerHostApi.open$pigeonVar_messageChannelSuffix';
     final pigeonVar_channel = BasicMessageChannel<Object?>(
       pigeonVar_channelName,
       pigeonChannelCodec,
@@ -309,7 +309,7 @@ class InAppBrowserManagerHostApi {
   /// open it.
   Future<bool> openWithSystemBrowser(String url) async {
     final pigeonVar_channelName =
-        'dev.flutter.pigeon.flutter_inappwebview_android.InAppBrowserManagerHostApi.openWithSystemBrowser$pigeonVar_messageChannelSuffix';
+        'dev.flutter.pigeon.nosferatu500_inappwebview_android.InAppBrowserManagerHostApi.openWithSystemBrowser$pigeonVar_messageChannelSuffix';
     final pigeonVar_channel = BasicMessageChannel<Object?>(
       pigeonVar_channelName,
       pigeonChannelCodec,

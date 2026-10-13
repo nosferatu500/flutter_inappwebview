@@ -1,6 +1,6 @@
 import 'dart:async';
 import 'package:flutter/foundation.dart';
-import 'package:flutter_inappwebview_platform_interface/flutter_inappwebview_platform_interface.dart';
+import 'package:nosferatu500_inappwebview_platform_interface/nosferatu500_inappwebview_platform_interface.dart';
 
 import 'pigeons/in_app_webview.g.dart';
 import 'web_resource_data.dart';
@@ -54,7 +54,7 @@ class _ServiceWorkerFlutterApiImpl implements ServiceWorkerFlutterApi {
   }
 }
 
-///{@macro flutter_inappwebview_platform_interface.PlatformServiceWorkerController}
+///{@macro nosferatu500_inappwebview_platform_interface.PlatformServiceWorkerController}
 ///
 /// Transport is Pigeon-generated ([ServiceWorkerHostApi] / [ServiceWorkerFlutterApi]) rather than a
 /// hand-written `MethodChannel`. The public API is unchanged.

@@ -45,21 +45,21 @@
       "flutterMode": "release"
     },
     {
-      "name": "flutter_inappwebview_ios",
-      "cwd": "flutter_inappwebview_ios",
+      "name": "nosferatu500_inappwebview_ios",
+      "cwd": "nosferatu500_inappwebview_ios",
       "request": "launch",
       "type": "dart"
     },
     {
-      "name": "flutter_inappwebview_ios (profile mode)",
-      "cwd": "flutter_inappwebview_ios",
+      "name": "nosferatu500_inappwebview_ios (profile mode)",
+      "cwd": "nosferatu500_inappwebview_ios",
       "request": "launch",
       "type": "dart",
       "flutterMode": "profile"
     },
     {
-      "name": "flutter_inappwebview_ios (release mode)",
-      "cwd": "flutter_inappwebview_ios",
+      "name": "nosferatu500_inappwebview_ios (release mode)",
+      "cwd": "nosferatu500_inappwebview_ios",
       "request": "launch",
       "type": "dart",
       "flutterMode": "release"
@@ -152,20 +152,20 @@
     },
     {
       "name": "ios example",
-      "cwd": "flutter_inappwebview_ios/example",
+      "cwd": "nosferatu500_inappwebview_ios/example",
       "request": "launch",
       "type": "dart"
     },
     {
       "name": "ios example (profile mode)",
-      "cwd": "flutter_inappwebview_ios/example",
+      "cwd": "nosferatu500_inappwebview_ios/example",
       "request": "launch",
       "type": "dart",
       "flutterMode": "profile"
     },
     {
       "name": "ios example (release mode)",
-      "cwd": "flutter_inappwebview_ios/example",
+      "cwd": "nosferatu500_inappwebview_ios/example",
       "request": "launch",
       "type": "dart",
       "flutterMode": "release"

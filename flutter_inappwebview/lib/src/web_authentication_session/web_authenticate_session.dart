@@ -1,15 +1,15 @@
 import 'dart:async';
 
 import 'package:flutter/foundation.dart';
-import 'package:flutter_inappwebview_platform_interface/flutter_inappwebview_platform_interface.dart';
+import 'package:nosferatu500_inappwebview_platform_interface/nosferatu500_inappwebview_platform_interface.dart';
 
-///{@macro flutter_inappwebview_platform_interface.PlatformWebAuthenticationSession}
+///{@macro nosferatu500_inappwebview_platform_interface.PlatformWebAuthenticationSession}
 ///
-///{@macro flutter_inappwebview_platform_interface.PlatformWebAuthenticationSession.supported_platforms}
+///{@macro nosferatu500_inappwebview_platform_interface.PlatformWebAuthenticationSession.supported_platforms}
 class WebAuthenticationSession {
-  ///{@macro flutter_inappwebview_platform_interface.PlatformWebAuthenticationSession}
+  ///{@macro nosferatu500_inappwebview_platform_interface.PlatformWebAuthenticationSession}
   ///
-  ///{@macro flutter_inappwebview_platform_interface.PlatformWebAuthenticationSession.supported_platforms}
+  ///{@macro nosferatu500_inappwebview_platform_interface.PlatformWebAuthenticationSession.supported_platforms}
   WebAuthenticationSession()
     : this.fromPlatformCreationParams(
         params: PlatformWebAuthenticationSessionCreationParams(),
@@ -29,36 +29,36 @@ class WebAuthenticationSession {
   /// Implementation of [PlatformWebAuthenticationSession] for the current platform.
   final PlatformWebAuthenticationSession platform;
 
-  ///{@macro flutter_inappwebview_platform_interface.PlatformWebAuthenticationSession.id}
+  ///{@macro nosferatu500_inappwebview_platform_interface.PlatformWebAuthenticationSession.id}
   ///
-  ///{@macro flutter_inappwebview_platform_interface.PlatformWebAuthenticationSession.id.supported_platforms}
+  ///{@macro nosferatu500_inappwebview_platform_interface.PlatformWebAuthenticationSession.id.supported_platforms}
   String get id => platform.id;
 
-  ///{@macro flutter_inappwebview_platform_interface.PlatformWebAuthenticationSession.url}
+  ///{@macro nosferatu500_inappwebview_platform_interface.PlatformWebAuthenticationSession.url}
   ///
-  ///{@macro flutter_inappwebview_platform_interface.PlatformWebAuthenticationSession.url.supported_platforms}
+  ///{@macro nosferatu500_inappwebview_platform_interface.PlatformWebAuthenticationSession.url.supported_platforms}
   WebUri get url => platform.url;
 
-  ///{@macro flutter_inappwebview_platform_interface.PlatformWebAuthenticationSession.callbackURLScheme}
+  ///{@macro nosferatu500_inappwebview_platform_interface.PlatformWebAuthenticationSession.callbackURLScheme}
   ///
-  ///{@macro flutter_inappwebview_platform_interface.PlatformWebAuthenticationSession.callbackURLScheme.supported_platforms}
+  ///{@macro nosferatu500_inappwebview_platform_interface.PlatformWebAuthenticationSession.callbackURLScheme.supported_platforms}
   String? get callbackURLScheme => platform.callbackURLScheme;
 
-  ///{@macro flutter_inappwebview_platform_interface.PlatformWebAuthenticationSession.initialSettings}
+  ///{@macro nosferatu500_inappwebview_platform_interface.PlatformWebAuthenticationSession.initialSettings}
   ///
-  ///{@macro flutter_inappwebview_platform_interface.PlatformWebAuthenticationSession.initialSettings.supported_platforms}
+  ///{@macro nosferatu500_inappwebview_platform_interface.PlatformWebAuthenticationSession.initialSettings.supported_platforms}
   WebAuthenticationSessionSettings? get initialSettings =>
       platform.initialSettings;
 
-  ///{@macro flutter_inappwebview_platform_interface.PlatformWebAuthenticationSession.onComplete}
+  ///{@macro nosferatu500_inappwebview_platform_interface.PlatformWebAuthenticationSession.onComplete}
   ///
-  ///{@macro flutter_inappwebview_platform_interface.PlatformWebAuthenticationSession.onComplete.supported_platforms}
+  ///{@macro nosferatu500_inappwebview_platform_interface.PlatformWebAuthenticationSession.onComplete.supported_platforms}
   WebAuthenticationSessionCompletionHandler get onComplete =>
       platform.onComplete;
 
-  ///{@macro flutter_inappwebview_platform_interface.PlatformWebAuthenticationSession.create}
+  ///{@macro nosferatu500_inappwebview_platform_interface.PlatformWebAuthenticationSession.create}
   ///
-  ///{@macro flutter_inappwebview_platform_interface.PlatformWebAuthenticationSession.create.supported_platforms}
+  ///{@macro nosferatu500_inappwebview_platform_interface.PlatformWebAuthenticationSession.create.supported_platforms}
   static Future<WebAuthenticationSession> create({
     required WebUri url,
     String? callbackURLScheme,
@@ -75,33 +75,33 @@ class WebAuthenticationSession {
     );
   }
 
-  ///{@macro flutter_inappwebview_platform_interface.PlatformWebAuthenticationSession.canStart}
+  ///{@macro nosferatu500_inappwebview_platform_interface.PlatformWebAuthenticationSession.canStart}
   ///
-  ///{@macro flutter_inappwebview_platform_interface.PlatformWebAuthenticationSession.canStart.supported_platforms}
+  ///{@macro nosferatu500_inappwebview_platform_interface.PlatformWebAuthenticationSession.canStart.supported_platforms}
   Future<bool> canStart() => platform.canStart();
 
-  ///{@macro flutter_inappwebview_platform_interface.PlatformWebAuthenticationSession.start}
+  ///{@macro nosferatu500_inappwebview_platform_interface.PlatformWebAuthenticationSession.start}
   ///
-  ///{@macro flutter_inappwebview_platform_interface.PlatformWebAuthenticationSession.start.supported_platforms}
+  ///{@macro nosferatu500_inappwebview_platform_interface.PlatformWebAuthenticationSession.start.supported_platforms}
   Future<bool> start() => platform.start();
 
-  ///{@macro flutter_inappwebview_platform_interface.PlatformWebAuthenticationSession.cancel}
+  ///{@macro nosferatu500_inappwebview_platform_interface.PlatformWebAuthenticationSession.cancel}
   ///
-  ///{@macro flutter_inappwebview_platform_interface.PlatformWebAuthenticationSession.cancel.supported_platforms}
+  ///{@macro nosferatu500_inappwebview_platform_interface.PlatformWebAuthenticationSession.cancel.supported_platforms}
   Future<void> cancel() => platform.cancel();
 
-  ///{@macro flutter_inappwebview_platform_interface.PlatformWebAuthenticationSession.dispose}
+  ///{@macro nosferatu500_inappwebview_platform_interface.PlatformWebAuthenticationSession.dispose}
   ///
-  ///{@macro flutter_inappwebview_platform_interface.PlatformWebAuthenticationSession.dispose.supported_platforms}
+  ///{@macro nosferatu500_inappwebview_platform_interface.PlatformWebAuthenticationSession.dispose.supported_platforms}
   Future<void> dispose() => platform.dispose();
 
-  ///{@macro flutter_inappwebview_platform_interface.PlatformWebAuthenticationSession.isAvailable}
+  ///{@macro nosferatu500_inappwebview_platform_interface.PlatformWebAuthenticationSession.isAvailable}
   ///
-  ///{@macro flutter_inappwebview_platform_interface.PlatformWebAuthenticationSession.isAvailable.supported_platforms}
+  ///{@macro nosferatu500_inappwebview_platform_interface.PlatformWebAuthenticationSession.isAvailable.supported_platforms}
   static Future<bool> isAvailable() =>
       PlatformWebAuthenticationSession.static().isAvailable();
 
-  ///{@template flutter_inappwebview.WebAuthenticationSession.isClassSupported}
+  ///{@template nosferatu500_inappwebview.WebAuthenticationSession.isClassSupported}
   ///Check if the current class is supported by the [defaultTargetPlatform] or a specific [platform].
   ///{@endtemplate}
   static bool isClassSupported({TargetPlatform? platform}) =>
@@ -109,7 +109,7 @@ class WebAuthenticationSession {
         platform: platform,
       );
 
-  ///{@template flutter_inappwebview.WebAuthenticationSession.isPropertySupported}
+  ///{@template nosferatu500_inappwebview.WebAuthenticationSession.isPropertySupported}
   ///Check if the given [property] is supported by the [defaultTargetPlatform] or a specific [platform].
   ///The property should be one of the [PlatformWebAuthenticationSessionProperty] or [PlatformWebAuthenticationSessionCreationParamsProperty] values.
   ///{@endtemplate}
@@ -121,7 +121,7 @@ class WebAuthenticationSession {
     platform: platform,
   );
 
-  ///{@template flutter_inappwebview.WebAuthenticationSession.isMethodSupported}
+  ///{@template nosferatu500_inappwebview.WebAuthenticationSession.isMethodSupported}
   ///Check if the given [method] is supported by the [defaultTargetPlatform] or a specific [platform].
   ///{@endtemplate}
   static bool isMethodSupported(

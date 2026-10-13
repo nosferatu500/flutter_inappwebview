@@ -3,7 +3,7 @@ import 'dart:collection';
 import 'dart:ui';
 
 import 'package:flutter/foundation.dart';
-import 'package:flutter_inappwebview_internal_annotations/flutter_inappwebview_internal_annotations.dart';
+import 'package:nosferatu500_inappwebview_internal_annotations/nosferatu500_inappwebview_internal_annotations.dart';
 
 import '../find_interaction/platform_find_interaction_controller.dart';
 import '../pull_to_refresh/platform_pull_to_refresh_controller.dart';
@@ -20,12 +20,12 @@ import '../in_app_browser/platform_in_app_browser.dart';
 
 part 'platform_webview.g.dart';
 
-///{@template flutter_inappwebview_platform_interface.PlatformWebViewCreationParams}
+///{@template nosferatu500_inappwebview_platform_interface.PlatformWebViewCreationParams}
 ///Class that represents a WebView. Used by [PlatformInAppWebViewWidget],
 ///[PlatformHeadlessInAppWebView] and the WebView of [PlatformInAppBrowser].
 ///{@endtemplate}
 ///
-///{@macro flutter_inappwebview_platform_interface.PlatformWebViewCreationParams.supported_platforms}
+///{@macro nosferatu500_inappwebview_platform_interface.PlatformWebViewCreationParams.supported_platforms}
 @SupportedPlatforms(
   ignoreParameterNames: ['controller'],
   platforms: [AndroidPlatform(), IOSPlatform()],
@@ -34,27 +34,27 @@ class PlatformWebViewCreationParams<T> {
   final T Function(PlatformInAppWebViewController controller)?
   controllerFromPlatform;
 
-  ///{@template flutter_inappwebview_platform_interface.PlatformWebViewCreationParams.windowId}
+  ///{@template nosferatu500_inappwebview_platform_interface.PlatformWebViewCreationParams.windowId}
   ///The window id of a [CreateWindowAction.windowId].
   ///{@endtemplate}
   ///
-  ///{@macro flutter_inappwebview_platform_interface.PlatformWebViewCreationParams.windowId.supported_platforms}
+  ///{@macro nosferatu500_inappwebview_platform_interface.PlatformWebViewCreationParams.windowId.supported_platforms}
   @SupportedPlatforms(platforms: [AndroidPlatform(), IOSPlatform()])
   final int? windowId;
 
-  ///{@template flutter_inappwebview_platform_interface.PlatformWebViewCreationParams.onWebViewCreated}
+  ///{@template nosferatu500_inappwebview_platform_interface.PlatformWebViewCreationParams.onWebViewCreated}
   ///Event fired when the `WebView` is created.
   ///{@endtemplate}
   ///
-  ///{@macro flutter_inappwebview_platform_interface.PlatformWebViewCreationParams.onWebViewCreated.supported_platforms}
+  ///{@macro nosferatu500_inappwebview_platform_interface.PlatformWebViewCreationParams.onWebViewCreated.supported_platforms}
   @SupportedPlatforms(platforms: [AndroidPlatform(), IOSPlatform()])
   final void Function(T controller)? onWebViewCreated;
 
-  ///{@template flutter_inappwebview_platform_interface.PlatformWebViewCreationParams.onLoadStart}
+  ///{@template nosferatu500_inappwebview_platform_interface.PlatformWebViewCreationParams.onLoadStart}
   ///Event fired when the `WebView` starts to load an [url].
   ///{@endtemplate}
   ///
-  ///{@macro flutter_inappwebview_platform_interface.PlatformWebViewCreationParams.onLoadStart.supported_platforms}
+  ///{@macro nosferatu500_inappwebview_platform_interface.PlatformWebViewCreationParams.onLoadStart.supported_platforms}
   @SupportedPlatforms(
     platforms: [
       AndroidPlatform(
@@ -71,7 +71,7 @@ class PlatformWebViewCreationParams<T> {
   )
   final void Function(T controller, WebUri? url)? onLoadStart;
 
-  ///{@template flutter_inappwebview_platform_interface.PlatformWebViewCreationParams.onLoadStop}
+  ///{@template nosferatu500_inappwebview_platform_interface.PlatformWebViewCreationParams.onLoadStop}
   ///Event fired when the `WebView` finishes loading an [url].
   ///
   ///**Do not treat this as guaranteed after every navigation.** A page can cancel its own
@@ -88,7 +88,7 @@ class PlatformWebViewCreationParams<T> {
   ///both cases, or handle `CANCELLED` in `onReceivedError`.
   ///{@endtemplate}
   ///
-  ///{@macro flutter_inappwebview_platform_interface.PlatformWebViewCreationParams.onLoadStop.supported_platforms}
+  ///{@macro nosferatu500_inappwebview_platform_interface.PlatformWebViewCreationParams.onLoadStop.supported_platforms}
   @SupportedPlatforms(
     platforms: [
       AndroidPlatform(
@@ -105,7 +105,7 @@ class PlatformWebViewCreationParams<T> {
   )
   final void Function(T controller, WebUri? url)? onLoadStop;
 
-  ///{@template flutter_inappwebview_platform_interface.PlatformWebViewCreationParams.onReceivedError}
+  ///{@template nosferatu500_inappwebview_platform_interface.PlatformWebViewCreationParams.onReceivedError}
   ///Event fired when the `WebView` encounters an [error] loading a [request].
   ///
   ///A host that refuses the connection or doesn't resolve is reported on both platforms, as
@@ -119,7 +119,7 @@ class PlatformWebViewCreationParams<T> {
   ///error page under the URL.
   ///{@endtemplate}
   ///
-  ///{@macro flutter_inappwebview_platform_interface.PlatformWebViewCreationParams.onReceivedError.supported_platforms}
+  ///{@macro nosferatu500_inappwebview_platform_interface.PlatformWebViewCreationParams.onReceivedError.supported_platforms}
   @SupportedPlatforms(
     platforms: [
       AndroidPlatform(
@@ -141,7 +141,7 @@ class PlatformWebViewCreationParams<T> {
   )?
   onReceivedError;
 
-  ///{@template flutter_inappwebview_platform_interface.PlatformWebViewCreationParams.onReceivedHttpError}
+  ///{@template nosferatu500_inappwebview_platform_interface.PlatformWebViewCreationParams.onReceivedHttpError}
   ///Event fired when the `WebView` receives an HTTP error.
   ///
   ///[request] represents the originating request.
@@ -149,7 +149,7 @@ class PlatformWebViewCreationParams<T> {
   ///[errorResponse] represents the information about the error occurred.
   ///{@endtemplate}
   ///
-  ///{@macro flutter_inappwebview_platform_interface.PlatformWebViewCreationParams.onReceivedHttpError.supported_platforms}
+  ///{@macro nosferatu500_inappwebview_platform_interface.PlatformWebViewCreationParams.onReceivedHttpError.supported_platforms}
   @SupportedPlatforms(
     platforms: [
       AndroidPlatform(
@@ -172,11 +172,11 @@ class PlatformWebViewCreationParams<T> {
   )?
   onReceivedHttpError;
 
-  ///{@template flutter_inappwebview_platform_interface.PlatformWebViewCreationParams.onProgressChanged}
+  ///{@template nosferatu500_inappwebview_platform_interface.PlatformWebViewCreationParams.onProgressChanged}
   ///Event fired when the current [progress] of loading a page is changed.
   ///{@endtemplate}
   ///
-  ///{@macro flutter_inappwebview_platform_interface.PlatformWebViewCreationParams.onProgressChanged.supported_platforms}
+  ///{@macro nosferatu500_inappwebview_platform_interface.PlatformWebViewCreationParams.onProgressChanged.supported_platforms}
   @SupportedPlatforms(
     platforms: [
       AndroidPlatform(
@@ -189,11 +189,11 @@ class PlatformWebViewCreationParams<T> {
   )
   final void Function(T controller, int progress)? onProgressChanged;
 
-  ///{@template flutter_inappwebview_platform_interface.PlatformWebViewCreationParams.onConsoleMessage}
+  ///{@template nosferatu500_inappwebview_platform_interface.PlatformWebViewCreationParams.onConsoleMessage}
   ///Event fired when the `WebView` receives a [ConsoleMessage].
   ///{@endtemplate}
   ///
-  ///{@macro flutter_inappwebview_platform_interface.PlatformWebViewCreationParams.onConsoleMessage.supported_platforms}
+  ///{@macro nosferatu500_inappwebview_platform_interface.PlatformWebViewCreationParams.onConsoleMessage.supported_platforms}
   @SupportedPlatforms(
     platforms: [
       AndroidPlatform(
@@ -207,7 +207,7 @@ class PlatformWebViewCreationParams<T> {
   final void Function(T controller, ConsoleMessage consoleMessage)?
   onConsoleMessage;
 
-  ///{@template flutter_inappwebview_platform_interface.PlatformWebViewCreationParams.shouldOverrideUrlLoading}
+  ///{@template nosferatu500_inappwebview_platform_interface.PlatformWebViewCreationParams.shouldOverrideUrlLoading}
   ///Give the host application a chance to take control when a URL is about to be loaded in the current WebView.
   ///
   ///[navigationAction] represents an object that contains information about an action that causes navigation to occur.
@@ -221,7 +221,7 @@ class PlatformWebViewCreationParams<T> {
   ///**NOTE**: In order to be able to listen this event, check the [InAppWebViewSettings.useShouldOverrideUrlLoading] setting documentation.
   ///{@endtemplate}
   ///
-  ///{@macro flutter_inappwebview_platform_interface.PlatformWebViewCreationParams.shouldOverrideUrlLoading.supported_platforms}
+  ///{@macro nosferatu500_inappwebview_platform_interface.PlatformWebViewCreationParams.shouldOverrideUrlLoading.supported_platforms}
   @SupportedPlatforms(
     platforms: [
       AndroidPlatform(
@@ -251,13 +251,13 @@ Also, this event is not called for POST requests and is not called on the first 
   )?
   shouldOverrideUrlLoading;
 
-  ///{@template flutter_inappwebview_platform_interface.PlatformWebViewCreationParams.onLoadResource}
+  ///{@template nosferatu500_inappwebview_platform_interface.PlatformWebViewCreationParams.onLoadResource}
   ///Event fired when the `WebView` loads a resource.
   ///
   ///**NOTE**: In order to be able to listen this event, check the [InAppWebViewSettings.useOnLoadResource] setting documentation.
   ///{@endtemplate}
   ///
-  ///{@macro flutter_inappwebview_platform_interface.PlatformWebViewCreationParams.onLoadResource.supported_platforms}
+  ///{@macro nosferatu500_inappwebview_platform_interface.PlatformWebViewCreationParams.onLoadResource.supported_platforms}
   @SupportedPlatforms(
     platforms: [
       AndroidPlatform(note: 'This event is implemented using JavaScript.'),
@@ -266,7 +266,7 @@ Also, this event is not called for POST requests and is not called on the first 
   )
   final void Function(T controller, LoadedResource resource)? onLoadResource;
 
-  ///{@template flutter_inappwebview_platform_interface.PlatformWebViewCreationParams.onScrollChanged}
+  ///{@template nosferatu500_inappwebview_platform_interface.PlatformWebViewCreationParams.onScrollChanged}
   ///Event fired when the `WebView` scrolls.
   ///
   ///[x] represents the current horizontal scroll origin in pixels.
@@ -274,7 +274,7 @@ Also, this event is not called for POST requests and is not called on the first 
   ///[y] represents the current vertical scroll origin in pixels.
   ///{@endtemplate}
   ///
-  ///{@macro flutter_inappwebview_platform_interface.PlatformWebViewCreationParams.onScrollChanged.supported_platforms}
+  ///{@macro nosferatu500_inappwebview_platform_interface.PlatformWebViewCreationParams.onScrollChanged.supported_platforms}
   @SupportedPlatforms(
     platforms: [
       AndroidPlatform(
@@ -291,7 +291,7 @@ Also, this event is not called for POST requests and is not called on the first 
   )
   final void Function(T controller, int x, int y)? onScrollChanged;
 
-  ///{@template flutter_inappwebview_platform_interface.PlatformWebViewCreationParams.onDownloadStarting}
+  ///{@template nosferatu500_inappwebview_platform_interface.PlatformWebViewCreationParams.onDownloadStarting}
   ///Event fired when `WebView` recognizes a downloadable file.
   ///To download the file, you can use the [flutter_downloader](https://pub.dev/packages/flutter_downloader) plugin.
   ///
@@ -320,7 +320,7 @@ Also, this event is not called for POST requests and is not called on the first 
   ///headers — since your download is a separate request that shares none of the WebView's state.
   ///{@endtemplate}
   ///
-  ///{@macro flutter_inappwebview_platform_interface.PlatformWebViewCreationParams.onDownloadStarting.supported_platforms}
+  ///{@macro nosferatu500_inappwebview_platform_interface.PlatformWebViewCreationParams.onDownloadStarting.supported_platforms}
   @SupportedPlatforms(
     platforms: [
       AndroidPlatform(
@@ -337,12 +337,12 @@ Also, this event is not called for POST requests and is not called on the first 
   )?
   onDownloadStarting;
 
-  ///{@template flutter_inappwebview_platform_interface.PlatformWebViewCreationParams.onLoadResourceWithCustomScheme}
+  ///{@template nosferatu500_inappwebview_platform_interface.PlatformWebViewCreationParams.onLoadResourceWithCustomScheme}
   ///Event fired when the `WebView` finds the `custom-scheme` while loading a resource.
   ///Here you can handle the url [request] and return a [CustomSchemeResponse] to load a specific resource encoded to `base64`.
   ///{@endtemplate}
   ///
-  ///{@macro flutter_inappwebview_platform_interface.PlatformWebViewCreationParams.onLoadResourceWithCustomScheme.supported_platforms}
+  ///{@macro nosferatu500_inappwebview_platform_interface.PlatformWebViewCreationParams.onLoadResourceWithCustomScheme.supported_platforms}
   @SupportedPlatforms(
     platforms: [
       AndroidPlatform(),
@@ -359,7 +359,7 @@ Also, this event is not called for POST requests and is not called on the first 
   )?
   onLoadResourceWithCustomScheme;
 
-  ///{@template flutter_inappwebview_platform_interface.PlatformWebViewCreationParams.onCreateWindow}
+  ///{@template nosferatu500_inappwebview_platform_interface.PlatformWebViewCreationParams.onCreateWindow}
   ///Event fired when the `WebView` requests the host application to create a new window,
   ///for example when trying to open a link with `target="_blank"` or when `window.open()` is called by JavaScript side.
   ///If the host application chooses to honor this request, it should return `true` from this method, create a new WebView to host the window.
@@ -371,7 +371,7 @@ Also, this event is not called for POST requests and is not called on the first 
   ///**NOTE**: to allow JavaScript to open windows, you need to set [InAppWebViewSettings.javaScriptCanOpenWindowsAutomatically] setting to `true`.
   ///{@endtemplate}
   ///
-  ///{@macro flutter_inappwebview_platform_interface.PlatformWebViewCreationParams.onCreateWindow.supported_platforms}
+  ///{@macro nosferatu500_inappwebview_platform_interface.PlatformWebViewCreationParams.onCreateWindow.supported_platforms}
   @SupportedPlatforms(
     platforms: [
       AndroidPlatform(
@@ -413,12 +413,12 @@ It applies its own [InAppWebViewSettings.contentBlockers] and none of the caller
   )?
   onCreateWindow;
 
-  ///{@template flutter_inappwebview_platform_interface.PlatformWebViewCreationParams.onCloseWindow}
+  ///{@template nosferatu500_inappwebview_platform_interface.PlatformWebViewCreationParams.onCloseWindow}
   ///Event fired when the host application should close the given WebView and remove it from the view system if necessary.
   ///At this point, WebCore has stopped any loading in this window and has removed any cross-scripting ability in javascript.
   ///{@endtemplate}
   ///
-  ///{@macro flutter_inappwebview_platform_interface.PlatformWebViewCreationParams.onCloseWindow.supported_platforms}
+  ///{@macro nosferatu500_inappwebview_platform_interface.PlatformWebViewCreationParams.onCloseWindow.supported_platforms}
   @SupportedPlatforms(
     platforms: [
       AndroidPlatform(
@@ -435,32 +435,32 @@ It applies its own [InAppWebViewSettings.contentBlockers] and none of the caller
   )
   final void Function(T controller)? onCloseWindow;
 
-  ///{@template flutter_inappwebview_platform_interface.PlatformWebViewCreationParams.onWindowFocus}
+  ///{@template nosferatu500_inappwebview_platform_interface.PlatformWebViewCreationParams.onWindowFocus}
   ///Event fired when the JavaScript `window` object of the WebView has received focus.
   ///This is the result of the `focus` JavaScript event applied to the `window` object.
   ///{@endtemplate}
   ///
-  ///{@macro flutter_inappwebview_platform_interface.PlatformWebViewCreationParams.onWindowFocus.supported_platforms}
+  ///{@macro nosferatu500_inappwebview_platform_interface.PlatformWebViewCreationParams.onWindowFocus.supported_platforms}
   @SupportedPlatforms(platforms: [AndroidPlatform(), IOSPlatform()])
   final void Function(T controller)? onWindowFocus;
 
-  ///{@template flutter_inappwebview_platform_interface.PlatformWebViewCreationParams.onWindowBlur}
+  ///{@template nosferatu500_inappwebview_platform_interface.PlatformWebViewCreationParams.onWindowBlur}
   ///Event fired when the JavaScript `window` object of the WebView has lost focus.
   ///This is the result of the `blur` JavaScript event applied to the `window` object.
   ///{@endtemplate}
   ///
-  ///{@macro flutter_inappwebview_platform_interface.PlatformWebViewCreationParams.onWindowBlur.supported_platforms}
+  ///{@macro nosferatu500_inappwebview_platform_interface.PlatformWebViewCreationParams.onWindowBlur.supported_platforms}
   @SupportedPlatforms(platforms: [AndroidPlatform(), IOSPlatform()])
   final void Function(T controller)? onWindowBlur;
 
-  ///{@template flutter_inappwebview_platform_interface.PlatformWebViewCreationParams.onJsAlert}
+  ///{@template nosferatu500_inappwebview_platform_interface.PlatformWebViewCreationParams.onJsAlert}
   ///Event fired when javascript calls the `alert()` method to display an alert dialog.
   ///If [JsAlertResponse.handledByClient] is `true`, the webview will assume that the client will handle the dialog.
   ///
   ///[jsAlertRequest] contains the message to be displayed in the alert dialog and the of the page requesting the dialog.
   ///{@endtemplate}
   ///
-  ///{@macro flutter_inappwebview_platform_interface.PlatformWebViewCreationParams.onJsAlert.supported_platforms}
+  ///{@macro nosferatu500_inappwebview_platform_interface.PlatformWebViewCreationParams.onJsAlert.supported_platforms}
   @SupportedPlatforms(
     platforms: [
       AndroidPlatform(
@@ -481,14 +481,14 @@ It applies its own [InAppWebViewSettings.contentBlockers] and none of the caller
   )?
   onJsAlert;
 
-  ///{@template flutter_inappwebview_platform_interface.PlatformWebViewCreationParams.onJsConfirm}
+  ///{@template nosferatu500_inappwebview_platform_interface.PlatformWebViewCreationParams.onJsConfirm}
   ///Event fired when javascript calls the `confirm()` method to display a confirm dialog.
   ///If [JsConfirmResponse.handledByClient] is `true`, the webview will assume that the client will handle the dialog.
   ///
   ///[jsConfirmRequest] contains the message to be displayed in the confirm dialog and the of the page requesting the dialog.
   ///{@endtemplate}
   ///
-  ///{@macro flutter_inappwebview_platform_interface.PlatformWebViewCreationParams.onJsConfirm.onJsConfirm}
+  ///{@macro nosferatu500_inappwebview_platform_interface.PlatformWebViewCreationParams.onJsConfirm.onJsConfirm}
   @SupportedPlatforms(
     platforms: [
       AndroidPlatform(
@@ -509,14 +509,14 @@ It applies its own [InAppWebViewSettings.contentBlockers] and none of the caller
   )?
   onJsConfirm;
 
-  ///{@template flutter_inappwebview_platform_interface.PlatformWebViewCreationParams.onJsPrompt}
+  ///{@template nosferatu500_inappwebview_platform_interface.PlatformWebViewCreationParams.onJsPrompt}
   ///Event fired when javascript calls the `prompt()` method to display a prompt dialog.
   ///If [JsPromptResponse.handledByClient] is `true`, the webview will assume that the client will handle the dialog.
   ///
   ///[jsPromptRequest] contains the message to be displayed in the prompt dialog, the default value displayed in the prompt dialog, and the of the page requesting the dialog.
   ///{@endtemplate}
   ///
-  ///{@macro flutter_inappwebview_platform_interface.PlatformWebViewCreationParams.onJsPrompt.supported_platforms}
+  ///{@macro nosferatu500_inappwebview_platform_interface.PlatformWebViewCreationParams.onJsPrompt.supported_platforms}
   @SupportedPlatforms(
     platforms: [
       AndroidPlatform(
@@ -537,13 +537,13 @@ It applies its own [InAppWebViewSettings.contentBlockers] and none of the caller
   )?
   onJsPrompt;
 
-  ///{@template flutter_inappwebview_platform_interface.PlatformWebViewCreationParams.onReceivedHttpAuthRequest}
+  ///{@template nosferatu500_inappwebview_platform_interface.PlatformWebViewCreationParams.onReceivedHttpAuthRequest}
   ///Event fired when the WebView received an HTTP authentication request. The default behavior is to cancel the request.
   ///
   ///[challenge] contains data about host, port, protocol, realm, etc. as specified in the [URLAuthenticationChallenge].
   ///{@endtemplate}
   ///
-  ///{@macro flutter_inappwebview_platform_interface.PlatformWebViewCreationParams.onReceivedHttpAuthRequest.supported_platforms}
+  ///{@macro nosferatu500_inappwebview_platform_interface.PlatformWebViewCreationParams.onReceivedHttpAuthRequest.supported_platforms}
   @SupportedPlatforms(
     platforms: [
       AndroidPlatform(
@@ -564,14 +564,14 @@ It applies its own [InAppWebViewSettings.contentBlockers] and none of the caller
   )?
   onReceivedHttpAuthRequest;
 
-  ///{@template flutter_inappwebview_platform_interface.PlatformWebViewCreationParams.onReceivedServerTrustAuthRequest}
+  ///{@template nosferatu500_inappwebview_platform_interface.PlatformWebViewCreationParams.onReceivedServerTrustAuthRequest}
   ///Event fired when the WebView need to perform server trust authentication (certificate validation).
   ///The host application must return either [ServerTrustAuthResponse] instance with [ServerTrustAuthResponseAction.CANCEL] or [ServerTrustAuthResponseAction.PROCEED].
   ///
   ///[challenge] contains data about host, port, protocol, realm, etc. as specified in the [ServerTrustChallenge].
   ///{@endtemplate}
   ///
-  ///{@macro flutter_inappwebview_platform_interface.PlatformWebViewCreationParams.onReceivedServerTrustAuthRequest.supported_platforms}
+  ///{@macro nosferatu500_inappwebview_platform_interface.PlatformWebViewCreationParams.onReceivedServerTrustAuthRequest.supported_platforms}
   @SupportedPlatforms(
     platforms: [
       AndroidPlatform(
@@ -595,7 +595,7 @@ See `NSAppTransportSecurity` in the [Information Property List Key Reference](ht
   )?
   onReceivedServerTrustAuthRequest;
 
-  ///{@template flutter_inappwebview_platform_interface.PlatformWebViewCreationParams.onReceivedClientCertRequest}
+  ///{@template nosferatu500_inappwebview_platform_interface.PlatformWebViewCreationParams.onReceivedClientCertRequest}
   ///Notify the host application to handle an SSL client certificate request.
   ///Webview stores the response in memory (for the life of the application) if [ClientCertResponseAction.PROCEED] or [ClientCertResponseAction.CANCEL]
   ///is called and does not call [onReceivedClientCertRequest] again for the same host and port pair.
@@ -630,7 +630,7 @@ See `NSAppTransportSecurity` in the [Information Property List Key Reference](ht
   ///that against dropping iOS 17.x support; the plugin cannot work around it.
   ///{@endtemplate}
   ///
-  ///{@macro flutter_inappwebview_platform_interface.PlatformWebViewCreationParams.onReceivedClientCertRequest.supported_platforms}
+  ///{@macro nosferatu500_inappwebview_platform_interface.PlatformWebViewCreationParams.onReceivedClientCertRequest.supported_platforms}
   @SupportedPlatforms(
     platforms: [
       AndroidPlatform(
@@ -651,7 +651,7 @@ See `NSAppTransportSecurity` in the [Information Property List Key Reference](ht
   )?
   onReceivedClientCertRequest;
 
-  ///{@template flutter_inappwebview_platform_interface.PlatformWebViewCreationParams.shouldInterceptAjaxRequest}
+  ///{@template nosferatu500_inappwebview_platform_interface.PlatformWebViewCreationParams.shouldInterceptAjaxRequest}
   ///Event fired when an `XMLHttpRequest` is sent to a server.
   ///It gives the host application a chance to take control over the request before sending it.
   ///This event is implemented using JavaScript under the hood.
@@ -664,7 +664,7 @@ See `NSAppTransportSecurity` in the [Information Property List Key Reference](ht
   ///[ajaxRequest] represents the `XMLHttpRequest`.
   ///{@endtemplate}
   ///
-  ///{@macro flutter_inappwebview_platform_interface.PlatformWebViewCreationParams.shouldInterceptAjaxRequest.supported_platforms}
+  ///{@macro nosferatu500_inappwebview_platform_interface.PlatformWebViewCreationParams.shouldInterceptAjaxRequest.supported_platforms}
   @SupportedPlatforms(
     platforms: [
       AndroidPlatform(
@@ -681,7 +681,7 @@ In that case, after the `window.addEventListener("flutterInAppWebViewPlatformRea
   final FutureOr<AjaxRequest?> Function(T controller, AjaxRequest ajaxRequest)?
   shouldInterceptAjaxRequest;
 
-  ///{@template flutter_inappwebview_platform_interface.PlatformWebViewCreationParams.onAjaxReadyStateChange}
+  ///{@template nosferatu500_inappwebview_platform_interface.PlatformWebViewCreationParams.onAjaxReadyStateChange}
   ///Event fired whenever the `readyState` attribute of an `XMLHttpRequest` changes.
   ///It gives the host application a chance to abort the request.
   ///This event is implemented using JavaScript under the hood.
@@ -694,7 +694,7 @@ In that case, after the `window.addEventListener("flutterInAppWebViewPlatformRea
   ///[ajaxRequest] represents the [XMLHttpRequest].
   ///{@endtemplate}
   ///
-  ///{@macro flutter_inappwebview_platform_interface.PlatformWebViewCreationParams.onAjaxReadyStateChange.supported_platforms}
+  ///{@macro nosferatu500_inappwebview_platform_interface.PlatformWebViewCreationParams.onAjaxReadyStateChange.supported_platforms}
   @SupportedPlatforms(
     platforms: [
       AndroidPlatform(
@@ -714,7 +714,7 @@ In that case, after the `window.addEventListener("flutterInAppWebViewPlatformRea
   )?
   onAjaxReadyStateChange;
 
-  ///{@template flutter_inappwebview_platform_interface.PlatformWebViewCreationParams.onAjaxProgress}
+  ///{@template nosferatu500_inappwebview_platform_interface.PlatformWebViewCreationParams.onAjaxProgress}
   ///Event fired as an `XMLHttpRequest` progress.
   ///It gives the host application a chance to abort the request.
   ///This event is implemented using JavaScript under the hood.
@@ -722,7 +722,7 @@ In that case, after the `window.addEventListener("flutterInAppWebViewPlatformRea
   ///[ajaxRequest] represents the [XMLHttpRequest].
   ///{@endtemplate}
   ///
-  ///{@macro flutter_inappwebview_platform_interface.PlatformWebViewCreationParams.onAjaxProgress.supported_platforms}
+  ///{@macro nosferatu500_inappwebview_platform_interface.PlatformWebViewCreationParams.onAjaxProgress.supported_platforms}
   @SupportedPlatforms(
     platforms: [
       AndroidPlatform(
@@ -742,7 +742,7 @@ In that case, after the `window.addEventListener("flutterInAppWebViewPlatformRea
   )?
   onAjaxProgress;
 
-  ///{@template flutter_inappwebview_platform_interface.PlatformWebViewCreationParams.shouldInterceptFetchRequest}
+  ///{@template nosferatu500_inappwebview_platform_interface.PlatformWebViewCreationParams.shouldInterceptFetchRequest}
   ///Event fired when a request is sent to a server through [Fetch API](https://developer.mozilla.org/it/docs/Web/API/Fetch_API).
   ///It gives the host application a chance to take control over the request before sending it.
   ///This event is implemented using JavaScript under the hood.
@@ -750,7 +750,7 @@ In that case, after the `window.addEventListener("flutterInAppWebViewPlatformRea
   ///[fetchRequest] represents a resource request.
   ///{@endtemplate}
   ///
-  ///{@macro flutter_inappwebview_platform_interface.PlatformWebViewCreationParams.shouldInterceptFetchRequest.supported_platforms}
+  ///{@macro nosferatu500_inappwebview_platform_interface.PlatformWebViewCreationParams.shouldInterceptFetchRequest.supported_platforms}
   @SupportedPlatforms(
     platforms: [
       AndroidPlatform(
@@ -770,7 +770,7 @@ In that case, after the `window.addEventListener("flutterInAppWebViewPlatformRea
   )?
   shouldInterceptFetchRequest;
 
-  ///{@template flutter_inappwebview_platform_interface.PlatformWebViewCreationParams.onUpdateVisitedHistory}
+  ///{@template nosferatu500_inappwebview_platform_interface.PlatformWebViewCreationParams.onUpdateVisitedHistory}
   ///Event fired when the host application updates its visited links database.
   ///This event is also fired when the navigation state of the `WebView` changes through the usage of
   ///javascript **[History API](https://developer.mozilla.org/en-US/docs/Web/API/History_API)** functions (`pushState()`, `replaceState()`) and `onpopstate` event
@@ -781,7 +781,7 @@ In that case, after the `window.addEventListener("flutterInAppWebViewPlatformRea
   ///[isReload] indicates if this url is being reloaded.
   ///{@endtemplate}
   ///
-  ///{@macro flutter_inappwebview_platform_interface.PlatformWebViewCreationParams.onUpdateVisitedHistory.supported_platforms}
+  ///{@macro nosferatu500_inappwebview_platform_interface.PlatformWebViewCreationParams.onUpdateVisitedHistory.supported_platforms}
   @SupportedPlatforms(
     platforms: [
       AndroidPlatform(
@@ -798,7 +798,7 @@ In that case, after the `window.addEventListener("flutterInAppWebViewPlatformRea
   final void Function(T controller, WebUri? url, bool? isReload)?
   onUpdateVisitedHistory;
 
-  ///{@template flutter_inappwebview_platform_interface.PlatformWebViewCreationParams.onPrintRequest}
+  ///{@template nosferatu500_inappwebview_platform_interface.PlatformWebViewCreationParams.onPrintRequest}
   ///Event fired when `window.print()` is called from JavaScript side.
   ///
   ///Return `true` to handle printing yourself: **the OS print UI is not shown at all**. Return
@@ -829,17 +829,17 @@ In that case, after the `window.addEventListener("flutterInAppWebViewPlatformRea
   ///is an explicit request to print. This event is the only place where printing can be declined.
   ///{@endtemplate}
   ///
-  ///{@macro flutter_inappwebview_platform_interface.PlatformWebViewCreationParams.onPrintRequest.supported_platforms}
+  ///{@macro nosferatu500_inappwebview_platform_interface.PlatformWebViewCreationParams.onPrintRequest.supported_platforms}
   @SupportedPlatforms(platforms: [AndroidPlatform(), IOSPlatform()])
   final FutureOr<bool?> Function(T controller, WebUri? url)? onPrintRequest;
 
-  ///{@template flutter_inappwebview_platform_interface.PlatformWebViewCreationParams.onLongPressHitTestResult}
+  ///{@template nosferatu500_inappwebview_platform_interface.PlatformWebViewCreationParams.onLongPressHitTestResult}
   ///Event fired when an HTML element of the webview has been clicked and held.
   ///
   ///[hitTestResult] represents the hit result for hitting an HTML elements.
   ///{@endtemplate}
   ///
-  ///{@macro flutter_inappwebview_platform_interface.PlatformWebViewCreationParams.onLongPressHitTestResult.supported_platforms}
+  ///{@macro nosferatu500_inappwebview_platform_interface.PlatformWebViewCreationParams.onLongPressHitTestResult.supported_platforms}
   @SupportedPlatforms(
     platforms: [
       AndroidPlatform(
@@ -857,11 +857,11 @@ In that case, after the `window.addEventListener("flutterInAppWebViewPlatformRea
   final void Function(T controller, InAppWebViewHitTestResult hitTestResult)?
   onLongPressHitTestResult;
 
-  ///{@template flutter_inappwebview_platform_interface.PlatformWebViewCreationParams.onEnterFullscreen}
+  ///{@template nosferatu500_inappwebview_platform_interface.PlatformWebViewCreationParams.onEnterFullscreen}
   ///Event fired when the current page has entered full screen mode.
   ///{@endtemplate}
   ///
-  ///{@macro flutter_inappwebview_platform_interface.PlatformWebViewCreationParams.onEnterFullscreen.supported_platforms}
+  ///{@macro nosferatu500_inappwebview_platform_interface.PlatformWebViewCreationParams.onEnterFullscreen.supported_platforms}
   @SupportedPlatforms(
     platforms: [
       AndroidPlatform(
@@ -878,11 +878,11 @@ In that case, after the `window.addEventListener("flutterInAppWebViewPlatformRea
   )
   final void Function(T controller)? onEnterFullscreen;
 
-  ///{@template flutter_inappwebview_platform_interface.PlatformWebViewCreationParams.onExitFullscreen}
+  ///{@template nosferatu500_inappwebview_platform_interface.PlatformWebViewCreationParams.onExitFullscreen}
   ///Event fired when the current page has exited full screen mode.
   ///{@endtemplate}
   ///
-  ///{@macro flutter_inappwebview_platform_interface.PlatformWebViewCreationParams.onExitFullscreen.supported_platforms}
+  ///{@macro nosferatu500_inappwebview_platform_interface.PlatformWebViewCreationParams.onExitFullscreen.supported_platforms}
   @SupportedPlatforms(
     platforms: [
       AndroidPlatform(
@@ -899,7 +899,7 @@ In that case, after the `window.addEventListener("flutterInAppWebViewPlatformRea
   )
   final void Function(T controller)? onExitFullscreen;
 
-  ///{@template flutter_inappwebview_platform_interface.PlatformWebViewCreationParams.onPageCommitVisible}
+  ///{@template nosferatu500_inappwebview_platform_interface.PlatformWebViewCreationParams.onPageCommitVisible}
   ///Called when the web view begins to receive web content.
   ///
   ///This event occurs early in the document loading process, and as such
@@ -908,7 +908,7 @@ In that case, after the `window.addEventListener("flutterInAppWebViewPlatformRea
   ///[url] represents the URL corresponding to the page navigation that triggered this callback.
   ///{@endtemplate}
   ///
-  ///{@macro flutter_inappwebview_platform_interface.PlatformWebViewCreationParams.onPageCommitVisible.supported_platforms}
+  ///{@macro nosferatu500_inappwebview_platform_interface.PlatformWebViewCreationParams.onPageCommitVisible.supported_platforms}
   @SupportedPlatforms(
     platforms: [
       AndroidPlatform(
@@ -925,13 +925,13 @@ In that case, after the `window.addEventListener("flutterInAppWebViewPlatformRea
   )
   final void Function(T controller, WebUri? url)? onPageCommitVisible;
 
-  ///{@template flutter_inappwebview_platform_interface.PlatformWebViewCreationParams.onTitleChanged}
+  ///{@template nosferatu500_inappwebview_platform_interface.PlatformWebViewCreationParams.onTitleChanged}
   ///Event fired when a change in the document title occurred.
   ///
   ///[title] represents the string containing the new title of the document.
   ///{@endtemplate}
   ///
-  ///{@macro flutter_inappwebview_platform_interface.PlatformWebViewCreationParams.onTitleChanged.supported_platforms}
+  ///{@macro nosferatu500_inappwebview_platform_interface.PlatformWebViewCreationParams.onTitleChanged.supported_platforms}
   @SupportedPlatforms(
     platforms: [
       AndroidPlatform(
@@ -944,7 +944,7 @@ In that case, after the `window.addEventListener("flutterInAppWebViewPlatformRea
   )
   final void Function(T controller, String? title)? onTitleChanged;
 
-  ///{@template flutter_inappwebview_platform_interface.PlatformWebViewCreationParams.onOverScrolled}
+  ///{@template nosferatu500_inappwebview_platform_interface.PlatformWebViewCreationParams.onOverScrolled}
   ///Event fired to respond to the results of an over-scroll operation.
   ///
   ///[x] represents the new X scroll value in pixels.
@@ -956,7 +956,7 @@ In that case, after the `window.addEventListener("flutterInAppWebViewPlatformRea
   ///[clampedY] is `true` if [y] was clamped to an over-scroll boundary.
   ///{@endtemplate}
   ///
-  ///{@macro flutter_inappwebview_platform_interface.PlatformWebViewCreationParams.onOverScrolled.supported_platforms}
+  ///{@macro nosferatu500_inappwebview_platform_interface.PlatformWebViewCreationParams.onOverScrolled.supported_platforms}
   @SupportedPlatforms(
     platforms: [
       AndroidPlatform(
@@ -970,7 +970,7 @@ In that case, after the `window.addEventListener("flutterInAppWebViewPlatformRea
   final void Function(T controller, int x, int y, bool clampedX, bool clampedY)?
   onOverScrolled;
 
-  ///{@template flutter_inappwebview_platform_interface.PlatformWebViewCreationParams.onZoomScaleChanged}
+  ///{@template nosferatu500_inappwebview_platform_interface.PlatformWebViewCreationParams.onZoomScaleChanged}
   ///Event fired when the zoom scale of the WebView has changed.
   ///
   ///[oldScale] The old zoom scale factor.
@@ -978,7 +978,7 @@ In that case, after the `window.addEventListener("flutterInAppWebViewPlatformRea
   ///[newScale] The new zoom scale factor.
   ///{@endtemplate}
   ///
-  ///{@macro flutter_inappwebview_platform_interface.PlatformWebViewCreationParams.onZoomScaleChanged.supported_platforms}
+  ///{@macro nosferatu500_inappwebview_platform_interface.PlatformWebViewCreationParams.onZoomScaleChanged.supported_platforms}
   @SupportedPlatforms(
     platforms: [
       AndroidPlatform(
@@ -996,7 +996,7 @@ In that case, after the `window.addEventListener("flutterInAppWebViewPlatformRea
   final void Function(T controller, double oldScale, double newScale)?
   onZoomScaleChanged;
 
-  ///{@template flutter_inappwebview_platform_interface.PlatformWebViewCreationParams.onSafeBrowsingHit}
+  ///{@template nosferatu500_inappwebview_platform_interface.PlatformWebViewCreationParams.onSafeBrowsingHit}
   ///Event fired when the webview notifies that a loading URL has been flagged by Safe Browsing.
   ///The default behavior is to show an interstitial to the user, with the reporting checkbox visible.
   ///
@@ -1005,7 +1005,7 @@ In that case, after the `window.addEventListener("flutterInAppWebViewPlatformRea
   ///[threatType] represents the reason the resource was caught by Safe Browsing, corresponding to a [SafeBrowsingThreat].
   ///{@endtemplate}
   ///
-  ///{@macro flutter_inappwebview_platform_interface.PlatformWebViewCreationParams.onSafeBrowsingHit.supported_platforms}
+  ///{@macro nosferatu500_inappwebview_platform_interface.PlatformWebViewCreationParams.onSafeBrowsingHit.supported_platforms}
   @SupportedPlatforms(
     platforms: [
       AndroidPlatform(
@@ -1023,14 +1023,14 @@ In that case, after the `window.addEventListener("flutterInAppWebViewPlatformRea
   )?
   onSafeBrowsingHit;
 
-  ///{@template flutter_inappwebview_platform_interface.PlatformWebViewCreationParams.onPermissionRequest}
+  ///{@template nosferatu500_inappwebview_platform_interface.PlatformWebViewCreationParams.onPermissionRequest}
   ///Event fired when the WebView is requesting permission to access the specified resources and the permission currently isn't granted or denied.
   ///
   ///[permissionRequest] represents the permission request with an array of resources the web content wants to access
   ///and the origin of the web page which is trying to access the restricted resources.
   ///{@endtemplate}
   ///
-  ///{@macro flutter_inappwebview_platform_interface.PlatformWebViewCreationParams.onPermissionRequest.supported_platforms}
+  ///{@macro nosferatu500_inappwebview_platform_interface.PlatformWebViewCreationParams.onPermissionRequest.supported_platforms}
   @SupportedPlatforms(
     platforms: [
       AndroidPlatform(
@@ -1052,7 +1052,7 @@ In that case, after the `window.addEventListener("flutterInAppWebViewPlatformRea
   )?
   onPermissionRequest;
 
-  ///{@template flutter_inappwebview_platform_interface.PlatformWebViewCreationParams.onGeolocationPermissionsShowPrompt}
+  ///{@template nosferatu500_inappwebview_platform_interface.PlatformWebViewCreationParams.onGeolocationPermissionsShowPrompt}
   ///Event that notifies the host application that web content from the specified origin is attempting to use the Geolocation API, but no permission state is currently set for that origin.
   ///Note that for applications targeting Android N and later SDKs (API level > `Build.VERSION_CODES.M`) this method is only called for requests originating from secure origins such as https.
   ///On non-secure origins geolocation requests are automatically denied.
@@ -1060,7 +1060,7 @@ In that case, after the `window.addEventListener("flutterInAppWebViewPlatformRea
   ///[origin] represents the origin of the web content attempting to use the Geolocation API.
   ///{@endtemplate}
   ///
-  ///{@macro flutter_inappwebview_platform_interface.PlatformWebViewCreationParams.onGeolocationPermissionsShowPrompt.supported_platforms}
+  ///{@macro nosferatu500_inappwebview_platform_interface.PlatformWebViewCreationParams.onGeolocationPermissionsShowPrompt.supported_platforms}
   @SupportedPlatforms(
     platforms: [
       AndroidPlatform(
@@ -1076,12 +1076,12 @@ In that case, after the `window.addEventListener("flutterInAppWebViewPlatformRea
   )?
   onGeolocationPermissionsShowPrompt;
 
-  ///{@template flutter_inappwebview_platform_interface.PlatformWebViewCreationParams.onGeolocationPermissionsHidePrompt}
+  ///{@template nosferatu500_inappwebview_platform_interface.PlatformWebViewCreationParams.onGeolocationPermissionsHidePrompt}
   ///Notify the host application that a request for Geolocation permissions, made with a previous call to [onGeolocationPermissionsShowPrompt] has been canceled.
   ///Any related UI should therefore be hidden.
   ///{@endtemplate}
   ///
-  ///{@macro flutter_inappwebview_platform_interface.PlatformWebViewCreationParams.onGeolocationPermissionsHidePrompt.supported_platforms}
+  ///{@macro nosferatu500_inappwebview_platform_interface.PlatformWebViewCreationParams.onGeolocationPermissionsHidePrompt.supported_platforms}
   @SupportedPlatforms(
     platforms: [
       AndroidPlatform(
@@ -1093,7 +1093,7 @@ In that case, after the `window.addEventListener("flutterInAppWebViewPlatformRea
   )
   final void Function(T controller)? onGeolocationPermissionsHidePrompt;
 
-  ///{@template flutter_inappwebview_platform_interface.PlatformWebViewCreationParams.shouldInterceptRequest}
+  ///{@template nosferatu500_inappwebview_platform_interface.PlatformWebViewCreationParams.shouldInterceptRequest}
   ///Notify the host application of a resource request and allow the application to return the data.
   ///If the return value is `null`, the WebView will continue to load the resource as usual.
   ///Otherwise, the return response and data will be used.
@@ -1109,7 +1109,7 @@ In that case, after the `window.addEventListener("flutterInAppWebViewPlatformRea
   ///**NOTE**: In order to be able to listen this event, check the [InAppWebViewSettings.useShouldInterceptRequest] setting documentation.
   ///{@endtemplate}
   ///
-  ///{@macro flutter_inappwebview_platform_interface.PlatformWebViewCreationParams.shouldInterceptRequest.supported_platforms}
+  ///{@macro nosferatu500_inappwebview_platform_interface.PlatformWebViewCreationParams.shouldInterceptRequest.supported_platforms}
   @SupportedPlatforms(
     platforms: [
       AndroidPlatform(
@@ -1125,7 +1125,7 @@ In that case, after the `window.addEventListener("flutterInAppWebViewPlatformRea
   )?
   shouldInterceptRequest;
 
-  ///{@template flutter_inappwebview_platform_interface.PlatformWebViewCreationParams.onRenderProcessUnresponsive}
+  ///{@template nosferatu500_inappwebview_platform_interface.PlatformWebViewCreationParams.onRenderProcessUnresponsive}
   ///Event called when the renderer currently associated with the WebView becomes unresponsive as a result of a long running blocking task such as the execution of JavaScript.
   ///
   ///If a WebView fails to process an input event, or successfully navigate to a new URL within a reasonable time frame, the renderer is considered to be unresponsive, and this callback will be called.
@@ -1142,7 +1142,7 @@ In that case, after the `window.addEventListener("flutterInAppWebViewPlatformRea
   ///and all other WebViews associated with the same renderer. Failure to do so will result in application termination.
   ///{@endtemplate}
   ///
-  ///{@macro flutter_inappwebview_platform_interface.PlatformWebViewCreationParams.onRenderProcessUnresponsive.supported_platforms}
+  ///{@macro nosferatu500_inappwebview_platform_interface.PlatformWebViewCreationParams.onRenderProcessUnresponsive.supported_platforms}
   @SupportedPlatforms(
     platforms: [
       AndroidPlatform(
@@ -1159,7 +1159,7 @@ In that case, after the `window.addEventListener("flutterInAppWebViewPlatformRea
   )?
   onRenderProcessUnresponsive;
 
-  ///{@template flutter_inappwebview_platform_interface.PlatformWebViewCreationParams.onRenderProcessResponsive}
+  ///{@template nosferatu500_inappwebview_platform_interface.PlatformWebViewCreationParams.onRenderProcessResponsive}
   ///Event called once when an unresponsive renderer currently associated with the WebView becomes responsive.
   ///
   ///After a WebView renderer becomes unresponsive, which is notified to the application by [onRenderProcessUnresponsive],
@@ -1169,7 +1169,7 @@ In that case, after the `window.addEventListener("flutterInAppWebViewPlatformRea
   ///No action is taken by WebView as a result of this method call.
   ///{@endtemplate}
   ///
-  ///{@macro flutter_inappwebview_platform_interface.PlatformWebViewCreationParams.onRenderProcessResponsive.supported_platforms}
+  ///{@macro nosferatu500_inappwebview_platform_interface.PlatformWebViewCreationParams.onRenderProcessResponsive.supported_platforms}
   @SupportedPlatforms(
     platforms: [
       AndroidPlatform(
@@ -1186,7 +1186,7 @@ In that case, after the `window.addEventListener("flutterInAppWebViewPlatformRea
   )?
   onRenderProcessResponsive;
 
-  ///{@template flutter_inappwebview_platform_interface.PlatformWebViewCreationParams.onRenderProcessGone}
+  ///{@template nosferatu500_inappwebview_platform_interface.PlatformWebViewCreationParams.onRenderProcessGone}
   ///Event fired when the given WebView's render process has exited.
   ///The application's implementation of this callback should only attempt to clean up the WebView.
   ///The WebView should be removed from the view hierarchy, all references to it should be cleaned up.
@@ -1197,7 +1197,7 @@ In that case, after the `window.addEventListener("flutterInAppWebViewPlatformRea
   ///[detail] the reason why it exited.
   ///{@endtemplate}
   ///
-  ///{@macro flutter_inappwebview_platform_interface.PlatformWebViewCreationParams.onRenderProcessGone.supported_platforms}
+  ///{@macro nosferatu500_inappwebview_platform_interface.PlatformWebViewCreationParams.onRenderProcessGone.supported_platforms}
   @SupportedPlatforms(
     platforms: [
       AndroidPlatform(
@@ -1211,11 +1211,11 @@ In that case, after the `window.addEventListener("flutterInAppWebViewPlatformRea
   final void Function(T controller, RenderProcessGoneDetail detail)?
   onRenderProcessGone;
 
-  ///{@template flutter_inappwebview_platform_interface.PlatformWebViewCreationParams.onFormResubmission}
+  ///{@template nosferatu500_inappwebview_platform_interface.PlatformWebViewCreationParams.onFormResubmission}
   ///As the host application if the browser should resend data as the requested page was a result of a POST. The default is to not resend the data.
   ///{@endtemplate}
   ///
-  ///{@macro flutter_inappwebview_platform_interface.PlatformWebViewCreationParams.onFormResubmission.supported_platforms}
+  ///{@macro nosferatu500_inappwebview_platform_interface.PlatformWebViewCreationParams.onFormResubmission.supported_platforms}
   @SupportedPlatforms(
     platforms: [
       AndroidPlatform(
@@ -1228,7 +1228,7 @@ In that case, after the `window.addEventListener("flutterInAppWebViewPlatformRea
   final FutureOr<FormResubmissionAction?> Function(T controller, WebUri? url)?
   onFormResubmission;
 
-  ///{@template flutter_inappwebview_platform_interface.PlatformWebViewCreationParams.onReceivedTouchIconUrl}
+  ///{@template nosferatu500_inappwebview_platform_interface.PlatformWebViewCreationParams.onReceivedTouchIconUrl}
   ///Event fired when there is an url for an apple-touch-icon.
   ///
   ///[url] represents the icon url.
@@ -1236,7 +1236,7 @@ In that case, after the `window.addEventListener("flutterInAppWebViewPlatformRea
   ///[precomposed] is `true` if the url is for a precomposed touch icon.
   ///{@endtemplate}
   ///
-  ///{@macro flutter_inappwebview_platform_interface.PlatformWebViewCreationParams.onReceivedTouchIconUrl.supported_platforms}
+  ///{@macro nosferatu500_inappwebview_platform_interface.PlatformWebViewCreationParams.onReceivedTouchIconUrl.supported_platforms}
   @SupportedPlatforms(
     platforms: [
       AndroidPlatform(
@@ -1249,7 +1249,7 @@ In that case, after the `window.addEventListener("flutterInAppWebViewPlatformRea
   final void Function(T controller, WebUri url, bool precomposed)?
   onReceivedTouchIconUrl;
 
-  ///{@template flutter_inappwebview_platform_interface.PlatformWebViewCreationParams.onJsBeforeUnload}
+  ///{@template nosferatu500_inappwebview_platform_interface.PlatformWebViewCreationParams.onJsBeforeUnload}
   ///Event fired when the client should display a dialog to confirm navigation away from the current page.
   ///This is the result of the `onbeforeunload` javascript event.
   ///If [JsBeforeUnloadResponse.handledByClient] is `true`, WebView will assume that the client will handle the confirm dialog.
@@ -1261,7 +1261,7 @@ In that case, after the `window.addEventListener("flutterInAppWebViewPlatformRea
   ///[jsBeforeUnloadRequest] contains the message to be displayed in the alert dialog and the of the page requesting the dialog.
   ///{@endtemplate}
   ///
-  ///{@macro flutter_inappwebview_platform_interface.PlatformWebViewCreationParams.onJsBeforeUnload.supported_platforms}
+  ///{@macro nosferatu500_inappwebview_platform_interface.PlatformWebViewCreationParams.onJsBeforeUnload.supported_platforms}
   @SupportedPlatforms(
     platforms: [
       AndroidPlatform(
@@ -1277,13 +1277,13 @@ In that case, after the `window.addEventListener("flutterInAppWebViewPlatformRea
   )?
   onJsBeforeUnload;
 
-  ///{@template flutter_inappwebview_platform_interface.PlatformWebViewCreationParams.onReceivedLoginRequest}
+  ///{@template nosferatu500_inappwebview_platform_interface.PlatformWebViewCreationParams.onReceivedLoginRequest}
   ///Event fired when a request to automatically log in the user has been processed.
   ///
   ///[loginRequest] contains the realm, account and args of the login request.
   ///{@endtemplate}
   ///
-  ///{@macro flutter_inappwebview_platform_interface.PlatformWebViewCreationParams.onReceivedLoginRequest.supported_platforms}
+  ///{@macro nosferatu500_inappwebview_platform_interface.PlatformWebViewCreationParams.onReceivedLoginRequest.supported_platforms}
   @SupportedPlatforms(
     platforms: [
       AndroidPlatform(
@@ -1296,7 +1296,7 @@ In that case, after the `window.addEventListener("flutterInAppWebViewPlatformRea
   final void Function(T controller, LoginRequest loginRequest)?
   onReceivedLoginRequest;
 
-  ///{@template flutter_inappwebview_platform_interface.PlatformWebViewCreationParams.onPermissionRequestCanceled}
+  ///{@template nosferatu500_inappwebview_platform_interface.PlatformWebViewCreationParams.onPermissionRequestCanceled}
   ///Notify the host application that the given permission request has been canceled. Any related UI should therefore be hidden.
   ///
   ///[permissionRequest] represents the permission request that needs be canceled
@@ -1304,7 +1304,7 @@ In that case, after the `window.addEventListener("flutterInAppWebViewPlatformRea
   ///and the origin of the web page which is trying to access the restricted resources.
   ///{@endtemplate}
   ///
-  ///{@macro flutter_inappwebview_platform_interface.PlatformWebViewCreationParams.onPermissionRequestCanceled.supported_platforms}
+  ///{@macro nosferatu500_inappwebview_platform_interface.PlatformWebViewCreationParams.onPermissionRequestCanceled.supported_platforms}
   @SupportedPlatforms(
     platforms: [
       AndroidPlatform(
@@ -1318,7 +1318,7 @@ In that case, after the `window.addEventListener("flutterInAppWebViewPlatformRea
   final void Function(T controller, PermissionRequest permissionRequest)?
   onPermissionRequestCanceled;
 
-  ///{@template flutter_inappwebview_platform_interface.PlatformWebViewCreationParams.onRequestFocus}
+  ///{@template nosferatu500_inappwebview_platform_interface.PlatformWebViewCreationParams.onRequestFocus}
   ///Request display and focus for this WebView.
   ///This may happen due to another WebView opening a link in this WebView and requesting that this WebView be displayed.
   ///
@@ -1326,7 +1326,7 @@ In that case, after the `window.addEventListener("flutterInAppWebViewPlatformRea
   ///- Android native WebView ([Official API - WebChromeClient.onRequestFocus](https://developer.android.com/reference/android/webkit/WebChromeClient#onRequestFocus(android.webkit.WebView)))
   ///{@endtemplate}
   ///
-  ///{@macro flutter_inappwebview_platform_interface.PlatformWebViewCreationParams.onRequestFocus.supported_platforms}
+  ///{@macro nosferatu500_inappwebview_platform_interface.PlatformWebViewCreationParams.onRequestFocus.supported_platforms}
   @SupportedPlatforms(
     platforms: [
       AndroidPlatform(
@@ -1338,12 +1338,12 @@ In that case, after the `window.addEventListener("flutterInAppWebViewPlatformRea
   )
   final void Function(T controller)? onRequestFocus;
 
-  ///{@template flutter_inappwebview_platform_interface.PlatformWebViewCreationParams.onWebContentProcessDidTerminate}
+  ///{@template nosferatu500_inappwebview_platform_interface.PlatformWebViewCreationParams.onWebContentProcessDidTerminate}
   ///Invoked when the web view's web content process is terminated.
   ///Reloading the page will start a new render process if needed.
   ///{@endtemplate}
   ///
-  ///{@macro flutter_inappwebview_platform_interface.PlatformWebViewCreationParams.onWebContentProcessDidTerminate.supported_platforms}
+  ///{@macro nosferatu500_inappwebview_platform_interface.PlatformWebViewCreationParams.onWebContentProcessDidTerminate.supported_platforms}
   @SupportedPlatforms(
     platforms: [
       IOSPlatform(
@@ -1355,11 +1355,11 @@ In that case, after the `window.addEventListener("flutterInAppWebViewPlatformRea
   )
   final void Function(T controller)? onWebContentProcessDidTerminate;
 
-  ///{@template flutter_inappwebview_platform_interface.PlatformWebViewCreationParams.onDidReceiveServerRedirectForProvisionalNavigation}
+  ///{@template nosferatu500_inappwebview_platform_interface.PlatformWebViewCreationParams.onDidReceiveServerRedirectForProvisionalNavigation}
   ///Called when a web view receives a server redirect.
   ///{@endtemplate}
   ///
-  ///{@macro flutter_inappwebview_platform_interface.PlatformWebViewCreationParams.onDidReceiveServerRedirectForProvisionalNavigation.supported_platforms}
+  ///{@macro nosferatu500_inappwebview_platform_interface.PlatformWebViewCreationParams.onDidReceiveServerRedirectForProvisionalNavigation.supported_platforms}
   @SupportedPlatforms(
     platforms: [
       IOSPlatform(
@@ -1372,7 +1372,7 @@ In that case, after the `window.addEventListener("flutterInAppWebViewPlatformRea
   final void Function(T controller)?
   onDidReceiveServerRedirectForProvisionalNavigation;
 
-  ///{@template flutter_inappwebview_platform_interface.PlatformWebViewCreationParams.onNavigationResponse}
+  ///{@template nosferatu500_inappwebview_platform_interface.PlatformWebViewCreationParams.onNavigationResponse}
   ///Called when a web view asks for permission to navigate to new content after the response to the navigation request is known.
   ///
   ///[navigationResponse] represents the navigation response.
@@ -1380,7 +1380,7 @@ In that case, after the `window.addEventListener("flutterInAppWebViewPlatformRea
   ///**NOTE**: In order to be able to listen this event, check the [InAppWebViewSettings.useOnNavigationResponse] setting documentation.
   ///{@endtemplate}
   ///
-  ///{@macro flutter_inappwebview_platform_interface.PlatformWebViewCreationParams.onNavigationResponse.supported_platforms}
+  ///{@macro nosferatu500_inappwebview_platform_interface.PlatformWebViewCreationParams.onNavigationResponse.supported_platforms}
   @SupportedPlatforms(
     platforms: [
       IOSPlatform(
@@ -1396,13 +1396,13 @@ In that case, after the `window.addEventListener("flutterInAppWebViewPlatformRea
   )?
   onNavigationResponse;
 
-  ///{@template flutter_inappwebview_platform_interface.PlatformWebViewCreationParams.shouldAllowDeprecatedTLS}
+  ///{@template nosferatu500_inappwebview_platform_interface.PlatformWebViewCreationParams.shouldAllowDeprecatedTLS}
   ///Called when a web view asks whether to continue with a connection that uses a deprecated version of TLS (v1.0 and v1.1).
   ///
   ///[challenge] represents the authentication challenge.
   ///{@endtemplate}
   ///
-  ///{@macro flutter_inappwebview_platform_interface.PlatformWebViewCreationParams.shouldAllowDeprecatedTLS.supported_platforms}
+  ///{@macro nosferatu500_inappwebview_platform_interface.PlatformWebViewCreationParams.shouldAllowDeprecatedTLS.supported_platforms}
   @SupportedPlatforms(
     platforms: [
       IOSPlatform(
@@ -1419,11 +1419,11 @@ In that case, after the `window.addEventListener("flutterInAppWebViewPlatformRea
   )?
   shouldAllowDeprecatedTLS;
 
-  ///{@template flutter_inappwebview_platform_interface.PlatformWebViewCreationParams.onCameraCaptureStateChanged}
+  ///{@template nosferatu500_inappwebview_platform_interface.PlatformWebViewCreationParams.onCameraCaptureStateChanged}
   ///Event fired when a change in the camera capture state occurred.
   ///{@endtemplate}
   ///
-  ///{@macro flutter_inappwebview_platform_interface.PlatformWebViewCreationParams.onCameraCaptureStateChanged.supported_platforms}
+  ///{@macro nosferatu500_inappwebview_platform_interface.PlatformWebViewCreationParams.onCameraCaptureStateChanged.supported_platforms}
   @SupportedPlatforms(platforms: [IOSPlatform(available: '15.0')])
   final FutureOr<void> Function(
     T controller,
@@ -1432,11 +1432,11 @@ In that case, after the `window.addEventListener("flutterInAppWebViewPlatformRea
   )?
   onCameraCaptureStateChanged;
 
-  ///{@template flutter_inappwebview_platform_interface.PlatformWebViewCreationParams.onMicrophoneCaptureStateChanged}
+  ///{@template nosferatu500_inappwebview_platform_interface.PlatformWebViewCreationParams.onMicrophoneCaptureStateChanged}
   ///Event fired when a change in the microphone capture state occurred.
   ///{@endtemplate}
   ///
-  ///{@macro flutter_inappwebview_platform_interface.PlatformWebViewCreationParams.onMicrophoneCaptureStateChanged.supported_platforms}
+  ///{@macro nosferatu500_inappwebview_platform_interface.PlatformWebViewCreationParams.onMicrophoneCaptureStateChanged.supported_platforms}
   @SupportedPlatforms(platforms: [IOSPlatform(available: '15.0')])
   final FutureOr<void> Function(
     T controller,
@@ -1445,7 +1445,7 @@ In that case, after the `window.addEventListener("flutterInAppWebViewPlatformRea
   )?
   onMicrophoneCaptureStateChanged;
 
-  ///{@template flutter_inappwebview_platform_interface.PlatformWebViewCreationParams.shouldGoToBackForwardListItem}
+  ///{@template nosferatu500_inappwebview_platform_interface.PlatformWebViewCreationParams.shouldGoToBackForwardListItem}
   ///Gives the app the chance to veto a back or forward navigation before it happens.
   ///
   ///[backForwardListItem] is the entry the `WebView` is about to navigate to. Its `index` and
@@ -1480,7 +1480,7 @@ In that case, after the `window.addEventListener("flutterInAppWebViewPlatformRea
   ///automatically.
   ///{@endtemplate}
   ///
-  ///{@macro flutter_inappwebview_platform_interface.PlatformWebViewCreationParams.shouldGoToBackForwardListItem.supported_platforms}
+  ///{@macro nosferatu500_inappwebview_platform_interface.PlatformWebViewCreationParams.shouldGoToBackForwardListItem.supported_platforms}
   @SupportedPlatforms(
     platforms: [
       IOSPlatform(
@@ -1498,7 +1498,7 @@ In that case, after the `window.addEventListener("flutterInAppWebViewPlatformRea
   )?
   shouldGoToBackForwardListItem;
 
-  ///{@template flutter_inappwebview_platform_interface.PlatformWebViewCreationParams.onWritingToolsActiveChanged}
+  ///{@template nosferatu500_inappwebview_platform_interface.PlatformWebViewCreationParams.onWritingToolsActiveChanged}
   ///Event fired when Writing Tools becomes active or inactive for the `WebView`.
   ///
   ///[active] is `true` while the system Writing Tools UI is operating on this `WebView` — the user
@@ -1520,7 +1520,7 @@ In that case, after the `window.addEventListener("flutterInAppWebViewPlatformRea
   ///neither.
   ///{@endtemplate}
   ///
-  ///{@macro flutter_inappwebview_platform_interface.PlatformWebViewCreationParams.onWritingToolsActiveChanged.supported_platforms}
+  ///{@macro nosferatu500_inappwebview_platform_interface.PlatformWebViewCreationParams.onWritingToolsActiveChanged.supported_platforms}
   @SupportedPlatforms(
     platforms: [
       IOSPlatform(
@@ -1533,7 +1533,7 @@ In that case, after the `window.addEventListener("flutterInAppWebViewPlatformRea
   )
   final void Function(T controller, bool active)? onWritingToolsActiveChanged;
 
-  ///{@template flutter_inappwebview_platform_interface.PlatformWebViewCreationParams.onNavigationStarted}
+  ///{@template nosferatu500_inappwebview_platform_interface.PlatformWebViewCreationParams.onNavigationStarted}
   ///Event fired when a navigation starts.
   ///
   ///This fires for **every** navigation the `WebView` begins, including ones no other event in this
@@ -1560,7 +1560,7 @@ In that case, after the `window.addEventListener("flutterInAppWebViewPlatformRea
   ///[WebViewFeature.NAVIGATION_LISTENER].
   ///{@endtemplate}
   ///
-  ///{@macro flutter_inappwebview_platform_interface.PlatformWebViewCreationParams.onNavigationStarted.supported_platforms}
+  ///{@macro nosferatu500_inappwebview_platform_interface.PlatformWebViewCreationParams.onNavigationStarted.supported_platforms}
   @SupportedPlatforms(
     platforms: [
       AndroidPlatform(
@@ -1575,7 +1575,7 @@ In that case, after the `window.addEventListener("flutterInAppWebViewPlatformRea
   final void Function(T controller, WebViewNavigation navigation)?
   onNavigationStarted;
 
-  ///{@template flutter_inappwebview_platform_interface.PlatformWebViewCreationParams.onNavigationRedirected}
+  ///{@template nosferatu500_inappwebview_platform_interface.PlatformWebViewCreationParams.onNavigationRedirected}
   ///Event fired when a navigation is redirected to another URL.
   ///
   ///Fires once per redirect hop, each time with the new [WebViewNavigation.url] and the same
@@ -1590,7 +1590,7 @@ In that case, after the `window.addEventListener("flutterInAppWebViewPlatformRea
   ///[WebViewFeature.NAVIGATION_LISTENER].
   ///{@endtemplate}
   ///
-  ///{@macro flutter_inappwebview_platform_interface.PlatformWebViewCreationParams.onNavigationRedirected.supported_platforms}
+  ///{@macro nosferatu500_inappwebview_platform_interface.PlatformWebViewCreationParams.onNavigationRedirected.supported_platforms}
   @SupportedPlatforms(
     platforms: [
       AndroidPlatform(
@@ -1605,7 +1605,7 @@ In that case, after the `window.addEventListener("flutterInAppWebViewPlatformRea
   final void Function(T controller, WebViewNavigation navigation)?
   onNavigationRedirected;
 
-  ///{@template flutter_inappwebview_platform_interface.PlatformWebViewCreationParams.onNavigationCompleted}
+  ///{@template nosferatu500_inappwebview_platform_interface.PlatformWebViewCreationParams.onNavigationCompleted}
   ///Event fired when a navigation finishes, whether or not it succeeded.
   ///
   ///"Completed" means the platform is done with the navigation, **not** that it loaded anything:
@@ -1625,7 +1625,7 @@ In that case, after the `window.addEventListener("flutterInAppWebViewPlatformRea
   ///[WebViewFeature.NAVIGATION_LISTENER].
   ///{@endtemplate}
   ///
-  ///{@macro flutter_inappwebview_platform_interface.PlatformWebViewCreationParams.onNavigationCompleted.supported_platforms}
+  ///{@macro nosferatu500_inappwebview_platform_interface.PlatformWebViewCreationParams.onNavigationCompleted.supported_platforms}
   @SupportedPlatforms(
     platforms: [
       AndroidPlatform(
@@ -1640,7 +1640,7 @@ In that case, after the `window.addEventListener("flutterInAppWebViewPlatformRea
   final void Function(T controller, WebViewNavigation navigation)?
   onNavigationCompleted;
 
-  ///{@template flutter_inappwebview_platform_interface.PlatformWebViewCreationParams.onPageLoadEvent}
+  ///{@template nosferatu500_inappwebview_platform_interface.PlatformWebViewCreationParams.onPageLoadEvent}
   ///Event fired when a page's `load` event has run.
   ///
   ///This is the platform reporting the DOM `load` event for a specific document, which is a
@@ -1652,7 +1652,7 @@ In that case, after the `window.addEventListener("flutterInAppWebViewPlatformRea
   ///[WebViewFeature.NAVIGATION_LISTENER].
   ///{@endtemplate}
   ///
-  ///{@macro flutter_inappwebview_platform_interface.PlatformWebViewCreationParams.onPageLoadEvent.supported_platforms}
+  ///{@macro nosferatu500_inappwebview_platform_interface.PlatformWebViewCreationParams.onPageLoadEvent.supported_platforms}
   @SupportedPlatforms(
     platforms: [
       AndroidPlatform(
@@ -1666,7 +1666,7 @@ In that case, after the `window.addEventListener("flutterInAppWebViewPlatformRea
   )
   final void Function(T controller, WebViewPage page)? onPageLoadEvent;
 
-  ///{@template flutter_inappwebview_platform_interface.PlatformWebViewCreationParams.onPageDomContentLoadedEvent}
+  ///{@template nosferatu500_inappwebview_platform_interface.PlatformWebViewCreationParams.onPageDomContentLoadedEvent}
   ///Event fired when a page's `DOMContentLoaded` event has run.
   ///
   ///**This is `DOMContentLoaded` without injecting any JavaScript**, which the plugin could not
@@ -1681,7 +1681,7 @@ In that case, after the `window.addEventListener("flutterInAppWebViewPlatformRea
   ///[WebViewFeature.NAVIGATION_LISTENER].
   ///{@endtemplate}
   ///
-  ///{@macro flutter_inappwebview_platform_interface.PlatformWebViewCreationParams.onPageDomContentLoadedEvent.supported_platforms}
+  ///{@macro nosferatu500_inappwebview_platform_interface.PlatformWebViewCreationParams.onPageDomContentLoadedEvent.supported_platforms}
   @SupportedPlatforms(
     platforms: [
       AndroidPlatform(
@@ -1696,7 +1696,7 @@ In that case, after the `window.addEventListener("flutterInAppWebViewPlatformRea
   final void Function(T controller, WebViewPage page)?
   onPageDomContentLoadedEvent;
 
-  ///{@template flutter_inappwebview_platform_interface.PlatformWebViewCreationParams.onPageDeleted}
+  ///{@template nosferatu500_inappwebview_platform_interface.PlatformWebViewCreationParams.onPageDeleted}
   ///Event fired when a page is destroyed and will never be shown again.
   ///
   ///**This is the only way to observe back/forward-cache eviction.**
@@ -1712,7 +1712,7 @@ In that case, after the `window.addEventListener("flutterInAppWebViewPlatformRea
   ///[WebViewFeature.NAVIGATION_LISTENER].
   ///{@endtemplate}
   ///
-  ///{@macro flutter_inappwebview_platform_interface.PlatformWebViewCreationParams.onPageDeleted.supported_platforms}
+  ///{@macro nosferatu500_inappwebview_platform_interface.PlatformWebViewCreationParams.onPageDeleted.supported_platforms}
   @SupportedPlatforms(
     platforms: [
       AndroidPlatform(
@@ -1726,7 +1726,7 @@ In that case, after the `window.addEventListener("flutterInAppWebViewPlatformRea
   )
   final void Function(T controller, WebViewPage page)? onPageDeleted;
 
-  ///{@template flutter_inappwebview_platform_interface.PlatformWebViewCreationParams.onFirstContentfulPaintMillis}
+  ///{@template nosferatu500_inappwebview_platform_interface.PlatformWebViewCreationParams.onFirstContentfulPaintMillis}
   ///Event fired when the page's First Contentful Paint happens.
   ///
   ///[durationMillis] is the platform's own measurement of how long the paint took to happen — a
@@ -1740,7 +1740,7 @@ In that case, after the `window.addEventListener("flutterInAppWebViewPlatformRea
   ///[WebViewFeature.NAVIGATION_LISTENER].
   ///{@endtemplate}
   ///
-  ///{@macro flutter_inappwebview_platform_interface.PlatformWebViewCreationParams.onFirstContentfulPaintMillis.supported_platforms}
+  ///{@macro nosferatu500_inappwebview_platform_interface.PlatformWebViewCreationParams.onFirstContentfulPaintMillis.supported_platforms}
   @SupportedPlatforms(
     platforms: [
       AndroidPlatform(
@@ -1755,7 +1755,7 @@ In that case, after the `window.addEventListener("flutterInAppWebViewPlatformRea
   final void Function(T controller, WebViewPage page, int durationMillis)?
   onFirstContentfulPaintMillis;
 
-  ///{@template flutter_inappwebview_platform_interface.PlatformWebViewCreationParams.onLargestContentfulPaintMillis}
+  ///{@template nosferatu500_inappwebview_platform_interface.PlatformWebViewCreationParams.onLargestContentfulPaintMillis}
   ///Event fired when the page's Largest Contentful Paint happens.
   ///
   ///[durationMillis] is a **duration**, as for [onFirstContentfulPaintMillis].
@@ -1769,7 +1769,7 @@ In that case, after the `window.addEventListener("flutterInAppWebViewPlatformRea
   ///[WebViewFeature.NAVIGATION_LISTENER].
   ///{@endtemplate}
   ///
-  ///{@macro flutter_inappwebview_platform_interface.PlatformWebViewCreationParams.onLargestContentfulPaintMillis.supported_platforms}
+  ///{@macro nosferatu500_inappwebview_platform_interface.PlatformWebViewCreationParams.onLargestContentfulPaintMillis.supported_platforms}
   @SupportedPlatforms(
     platforms: [
       AndroidPlatform(
@@ -1784,7 +1784,7 @@ In that case, after the `window.addEventListener("flutterInAppWebViewPlatformRea
   final void Function(T controller, WebViewPage page, int durationMillis)?
   onLargestContentfulPaintMillis;
 
-  ///{@template flutter_inappwebview_platform_interface.PlatformWebViewCreationParams.onPerformanceMarkMillis}
+  ///{@template nosferatu500_inappwebview_platform_interface.PlatformWebViewCreationParams.onPerformanceMarkMillis}
   ///Event fired once for every `performance.mark()` the page makes.
   ///
   ///[markName] is the name the page passed to `performance.mark()`; [markTimeMillis] is the time of
@@ -1803,7 +1803,7 @@ In that case, after the `window.addEventListener("flutterInAppWebViewPlatformRea
   ///[WebViewFeature.NAVIGATION_LISTENER].
   ///{@endtemplate}
   ///
-  ///{@macro flutter_inappwebview_platform_interface.PlatformWebViewCreationParams.onPerformanceMarkMillis.supported_platforms}
+  ///{@macro nosferatu500_inappwebview_platform_interface.PlatformWebViewCreationParams.onPerformanceMarkMillis.supported_platforms}
   @SupportedPlatforms(
     platforms: [
       AndroidPlatform(
@@ -1823,7 +1823,7 @@ In that case, after the `window.addEventListener("flutterInAppWebViewPlatformRea
   )?
   onPerformanceMarkMillis;
 
-  ///{@template flutter_inappwebview_platform_interface.PlatformWebViewCreationParams.onRequestVisitedHistory}
+  ///{@template nosferatu500_inappwebview_platform_interface.PlatformWebViewCreationParams.onRequestVisitedHistory}
   ///Event fired when the `WebView` asks your app which URLs the user has already visited, so that
   ///the page can style its `:visited` links.
   ///
@@ -1858,7 +1858,7 @@ In that case, after the `window.addEventListener("flutterInAppWebViewPlatformRea
   ///observable part of this feature is that the request arrived and your answer was accepted.
   ///{@endtemplate}
   ///
-  ///{@macro flutter_inappwebview_platform_interface.PlatformWebViewCreationParams.onRequestVisitedHistory.supported_platforms}
+  ///{@macro nosferatu500_inappwebview_platform_interface.PlatformWebViewCreationParams.onRequestVisitedHistory.supported_platforms}
   @SupportedPlatforms(
     platforms: [
       AndroidPlatform(
@@ -1870,7 +1870,7 @@ In that case, after the `window.addEventListener("flutterInAppWebViewPlatformRea
   )
   final FutureOr<List<WebUri>?> Function(T controller)? onRequestVisitedHistory;
 
-  ///{@template flutter_inappwebview_platform_interface.PlatformWebViewCreationParams.onContentSizeChanged}
+  ///{@template nosferatu500_inappwebview_platform_interface.PlatformWebViewCreationParams.onContentSizeChanged}
   ///Event fired when the content size of the `WebView` changes.
   ///
   ///[oldContentSize] represents the old content size value.
@@ -1878,12 +1878,12 @@ In that case, after the `window.addEventListener("flutterInAppWebViewPlatformRea
   ///[newContentSize] represents the new content size value.
   ///{@endtemplate}
   ///
-  ///{@macro flutter_inappwebview_platform_interface.PlatformWebViewCreationParams.onContentSizeChanged.supported_platforms}
+  ///{@macro nosferatu500_inappwebview_platform_interface.PlatformWebViewCreationParams.onContentSizeChanged.supported_platforms}
   @SupportedPlatforms(platforms: [IOSPlatform()])
   final void Function(T controller, Size oldContentSize, Size newContentSize)?
   onContentSizeChanged;
 
-  ///{@template flutter_inappwebview_platform_interface.PlatformWebViewCreationParams.onShowFileChooser}
+  ///{@template nosferatu500_inappwebview_platform_interface.PlatformWebViewCreationParams.onShowFileChooser}
   ///Tell the client to show a file chooser.
   ///This is called to handle HTML forms with 'file' input type,
   ///in response to the user pressing the "Select File" button.
@@ -1911,7 +1911,7 @@ In that case, after the `window.addEventListener("flutterInAppWebViewPlatformRea
   ///`<input type="file">` element, so filtering by MIME type is not possible on iOS.
   ///{@endtemplate}
   ///
-  ///{@macro flutter_inappwebview_platform_interface.PlatformWebViewCreationParams.onShowFileChooser.supported_platforms}
+  ///{@macro nosferatu500_inappwebview_platform_interface.PlatformWebViewCreationParams.onShowFileChooser.supported_platforms}
   @SupportedPlatforms(
     platforms: [
       AndroidPlatform(
@@ -1936,7 +1936,7 @@ In that case, after the `window.addEventListener("flutterInAppWebViewPlatformRea
   )?
   onShowFileChooser;
 
-  ///{@template flutter_inappwebview_platform_interface.PlatformWebViewCreationParams.onInsertInputSuggestion}
+  ///{@template nosferatu500_inappwebview_platform_interface.PlatformWebViewCreationParams.onInsertInputSuggestion}
   ///Event fired when the system keyboard delivers an input suggestion the user selected — in
   ///practice a **Smart Reply**, offered because the WebView was given a conversation with
   ///[PlatformInAppWebViewController.setConversationContext].
@@ -1958,7 +1958,7 @@ In that case, after the `window.addEventListener("flutterInAppWebViewPlatformRea
   ///of one feature.
   ///{@endtemplate}
   ///
-  ///{@macro flutter_inappwebview_platform_interface.PlatformWebViewCreationParams.onInsertInputSuggestion.supported_platforms}
+  ///{@macro nosferatu500_inappwebview_platform_interface.PlatformWebViewCreationParams.onInsertInputSuggestion.supported_platforms}
   @SupportedPlatforms(
     platforms: [
       IOSPlatform(
@@ -1974,11 +1974,11 @@ In that case, after the `window.addEventListener("flutterInAppWebViewPlatformRea
   final FutureOr<void> Function(T controller, InputSuggestion inputSuggestion)?
   onInsertInputSuggestion;
 
-  ///{@template flutter_inappwebview_platform_interface.PlatformWebViewCreationParams.initialUrlRequest}
+  ///{@template nosferatu500_inappwebview_platform_interface.PlatformWebViewCreationParams.initialUrlRequest}
   ///Initial url request that will be loaded.
   ///{@endtemplate}
   ///
-  ///{@macro flutter_inappwebview_platform_interface.PlatformWebViewCreationParams.initialUrlRequest.supported_platforms}
+  ///{@macro nosferatu500_inappwebview_platform_interface.PlatformWebViewCreationParams.initialUrlRequest.supported_platforms}
   @SupportedPlatforms(
     platforms: [
       AndroidPlatform(
@@ -1990,45 +1990,45 @@ In that case, after the `window.addEventListener("flutterInAppWebViewPlatformRea
   )
   final URLRequest? initialUrlRequest;
 
-  ///{@template flutter_inappwebview_platform_interface.PlatformWebViewCreationParams.initialFile}
+  ///{@template nosferatu500_inappwebview_platform_interface.PlatformWebViewCreationParams.initialFile}
   ///Initial asset file that will be loaded. See [InAppWebViewController.loadFile] for explanation.
   ///{@endtemplate}
   ///
-  ///{@macro flutter_inappwebview_platform_interface.PlatformWebViewCreationParams.initialFile.supported_platforms}
+  ///{@macro nosferatu500_inappwebview_platform_interface.PlatformWebViewCreationParams.initialFile.supported_platforms}
   @SupportedPlatforms(platforms: [AndroidPlatform(), IOSPlatform()])
   final String? initialFile;
 
-  ///{@template flutter_inappwebview_platform_interface.PlatformWebViewCreationParams.initialData}
+  ///{@template nosferatu500_inappwebview_platform_interface.PlatformWebViewCreationParams.initialData}
   ///Initial [InAppWebViewInitialData] that will be loaded.
   ///{@endtemplate}
   ///
-  ///{@macro flutter_inappwebview_platform_interface.PlatformWebViewCreationParams.initialData.supported_platforms}
+  ///{@macro nosferatu500_inappwebview_platform_interface.PlatformWebViewCreationParams.initialData.supported_platforms}
   @SupportedPlatforms(platforms: [AndroidPlatform(), IOSPlatform()])
   final InAppWebViewInitialData? initialData;
 
-  ///{@template flutter_inappwebview_platform_interface.PlatformWebViewCreationParams.initialSettings}
+  ///{@template nosferatu500_inappwebview_platform_interface.PlatformWebViewCreationParams.initialSettings}
   ///Initial settings that will be used.
   ///{@endtemplate}
   ///
-  ///{@macro flutter_inappwebview_platform_interface.PlatformWebViewCreationParams.initialSettings.supported_platforms}
+  ///{@macro nosferatu500_inappwebview_platform_interface.PlatformWebViewCreationParams.initialSettings.supported_platforms}
   @SupportedPlatforms(platforms: [AndroidPlatform(), IOSPlatform()])
   final InAppWebViewSettings? initialSettings;
 
-  ///{@template flutter_inappwebview_platform_interface.PlatformWebViewCreationParams.contextMenu}
+  ///{@template nosferatu500_inappwebview_platform_interface.PlatformWebViewCreationParams.contextMenu}
   ///Context menu which contains custom menu items to be shown when [ContextMenu] is presented.
   ///{@endtemplate}
   ///
-  ///{@macro flutter_inappwebview_platform_interface.PlatformWebViewCreationParams.contextMenu.supported_platforms}
+  ///{@macro nosferatu500_inappwebview_platform_interface.PlatformWebViewCreationParams.contextMenu.supported_platforms}
   @SupportedPlatforms(platforms: [AndroidPlatform(), IOSPlatform()])
   final ContextMenu? contextMenu;
 
-  ///{@template flutter_inappwebview_platform_interface.PlatformWebViewCreationParams.initialUserScripts}
+  ///{@template nosferatu500_inappwebview_platform_interface.PlatformWebViewCreationParams.initialUserScripts}
   ///Initial list of user scripts to be loaded at start or end of a page loading.
   ///To add or remove user scripts, you have to use the [InAppWebViewController]'s methods such as [InAppWebViewController.addUserScript],
   ///[InAppWebViewController.removeUserScript], [InAppWebViewController.removeAllUserScripts], etc.
   ///{@endtemplate}
   ///
-  ///{@macro flutter_inappwebview_platform_interface.PlatformWebViewCreationParams.initialUserScripts.supported_platforms}
+  ///{@macro nosferatu500_inappwebview_platform_interface.PlatformWebViewCreationParams.initialUserScripts.supported_platforms}
   @SupportedPlatforms(
     platforms: [
       AndroidPlatform(),
@@ -2042,11 +2042,11 @@ This is a limitation of the native WebKit APIs.""",
   )
   final UnmodifiableListView<UserScript>? initialUserScripts;
 
-  ///{@template flutter_inappwebview_platform_interface.PlatformWebViewCreationParams.pullToRefreshController}
+  ///{@template nosferatu500_inappwebview_platform_interface.PlatformWebViewCreationParams.pullToRefreshController}
   ///Represents the pull-to-refresh feature controller.
   ///{@endtemplate}
   ///
-  ///{@macro flutter_inappwebview_platform_interface.PlatformWebViewCreationParams.pullToRefreshController.supported_platforms}
+  ///{@macro nosferatu500_inappwebview_platform_interface.PlatformWebViewCreationParams.pullToRefreshController.supported_platforms}
   @SupportedPlatforms(
     platforms: [
       AndroidPlatform(
@@ -2058,17 +2058,17 @@ This is a limitation of the native WebKit APIs.""",
   )
   final PlatformPullToRefreshController? pullToRefreshController;
 
-  ///{@template flutter_inappwebview_platform_interface.PlatformWebViewCreationParams.findInteractionController}
+  ///{@template nosferatu500_inappwebview_platform_interface.PlatformWebViewCreationParams.findInteractionController}
   ///Represents the find interaction feature controller.
   ///{@endtemplate}
   ///
-  ///{@macro flutter_inappwebview_platform_interface.PlatformWebViewCreationParams.findInteractionController.supported_platforms}
+  ///{@macro nosferatu500_inappwebview_platform_interface.PlatformWebViewCreationParams.findInteractionController.supported_platforms}
   @SupportedPlatforms(platforms: [AndroidPlatform(), IOSPlatform()])
   final PlatformFindInteractionController? findInteractionController;
 
-  ///{@macro flutter_inappwebview_platform_interface.PlatformWebViewCreationParams}
+  ///{@macro nosferatu500_inappwebview_platform_interface.PlatformWebViewCreationParams}
   ///
-  ///{@macro flutter_inappwebview_platform_interface.PlatformWebViewCreationParams.supported_platforms}
+  ///{@macro nosferatu500_inappwebview_platform_interface.PlatformWebViewCreationParams.supported_platforms}
   const PlatformWebViewCreationParams({
     this.controllerFromPlatform,
     this.windowId,
@@ -2152,7 +2152,7 @@ This is a limitation of the native WebKit APIs.""",
     this.findInteractionController,
   });
 
-  ///{@template flutter_inappwebview_platform_interface.PlatformWebViewCreationParams.isClassSupported}
+  ///{@template nosferatu500_inappwebview_platform_interface.PlatformWebViewCreationParams.isClassSupported}
   ///Check if the current class is supported by the [defaultTargetPlatform] or a specific [platform].
   ///{@endtemplate}
   bool isClassSupported({TargetPlatform? platform}) =>
@@ -2160,7 +2160,7 @@ This is a limitation of the native WebKit APIs.""",
         platform: platform,
       );
 
-  ///{@template flutter_inappwebview_platform_interface.PlatformWebViewCreationParams.isPropertySupported}
+  ///{@template nosferatu500_inappwebview_platform_interface.PlatformWebViewCreationParams.isPropertySupported}
   ///Check if the given [property] is supported by the [defaultTargetPlatform] or a specific [platform].
   ///{@endtemplate}
   bool isPropertySupported(

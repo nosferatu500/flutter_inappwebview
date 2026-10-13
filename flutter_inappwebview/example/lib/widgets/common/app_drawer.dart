@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_inappwebview/flutter_inappwebview.dart';
+import 'package:nosferatu500_inappwebview/nosferatu500_inappwebview.dart';
 import 'package:flutter_inappwebview_example/models/navigation_section.dart';
 import 'package:flutter_inappwebview_example/utils/responsive_utils.dart';
 import 'package:pointer_interceptor/pointer_interceptor.dart';

@@ -223,7 +223,7 @@ class FindInteractionHostApi {
 
   Future<void> findAll(String? find) async {
     final pigeonVar_channelName =
-        'dev.flutter.pigeon.flutter_inappwebview_android.FindInteractionHostApi.findAll$pigeonVar_messageChannelSuffix';
+        'dev.flutter.pigeon.nosferatu500_inappwebview_android.FindInteractionHostApi.findAll$pigeonVar_messageChannelSuffix';
     final pigeonVar_channel = BasicMessageChannel<Object?>(
       pigeonVar_channelName,
       pigeonChannelCodec,
@@ -243,7 +243,7 @@ class FindInteractionHostApi {
 
   Future<void> findNext(bool forward) async {
     final pigeonVar_channelName =
-        'dev.flutter.pigeon.flutter_inappwebview_android.FindInteractionHostApi.findNext$pigeonVar_messageChannelSuffix';
+        'dev.flutter.pigeon.nosferatu500_inappwebview_android.FindInteractionHostApi.findNext$pigeonVar_messageChannelSuffix';
     final pigeonVar_channel = BasicMessageChannel<Object?>(
       pigeonVar_channelName,
       pigeonChannelCodec,
@@ -263,7 +263,7 @@ class FindInteractionHostApi {
 
   Future<void> clearMatches() async {
     final pigeonVar_channelName =
-        'dev.flutter.pigeon.flutter_inappwebview_android.FindInteractionHostApi.clearMatches$pigeonVar_messageChannelSuffix';
+        'dev.flutter.pigeon.nosferatu500_inappwebview_android.FindInteractionHostApi.clearMatches$pigeonVar_messageChannelSuffix';
     final pigeonVar_channel = BasicMessageChannel<Object?>(
       pigeonVar_channelName,
       pigeonChannelCodec,
@@ -281,7 +281,7 @@ class FindInteractionHostApi {
 
   Future<void> setSearchText(String? searchText) async {
     final pigeonVar_channelName =
-        'dev.flutter.pigeon.flutter_inappwebview_android.FindInteractionHostApi.setSearchText$pigeonVar_messageChannelSuffix';
+        'dev.flutter.pigeon.nosferatu500_inappwebview_android.FindInteractionHostApi.setSearchText$pigeonVar_messageChannelSuffix';
     final pigeonVar_channel = BasicMessageChannel<Object?>(
       pigeonVar_channelName,
       pigeonChannelCodec,
@@ -306,7 +306,7 @@ class FindInteractionHostApi {
   /// makes that unrepresentable: a missing controller is simply null.
   Future<String?> getSearchText() async {
     final pigeonVar_channelName =
-        'dev.flutter.pigeon.flutter_inappwebview_android.FindInteractionHostApi.getSearchText$pigeonVar_messageChannelSuffix';
+        'dev.flutter.pigeon.nosferatu500_inappwebview_android.FindInteractionHostApi.getSearchText$pigeonVar_messageChannelSuffix';
     final pigeonVar_channel = BasicMessageChannel<Object?>(
       pigeonVar_channelName,
       pigeonChannelCodec,
@@ -325,7 +325,7 @@ class FindInteractionHostApi {
 
   Future<FindSessionData?> getActiveFindSession() async {
     final pigeonVar_channelName =
-        'dev.flutter.pigeon.flutter_inappwebview_android.FindInteractionHostApi.getActiveFindSession$pigeonVar_messageChannelSuffix';
+        'dev.flutter.pigeon.nosferatu500_inappwebview_android.FindInteractionHostApi.getActiveFindSession$pigeonVar_messageChannelSuffix';
     final pigeonVar_channel = BasicMessageChannel<Object?>(
       pigeonVar_channelName,
       pigeonChannelCodec,
@@ -362,7 +362,7 @@ abstract class FindInteractionFlutterApi {
         : '';
     {
       final pigeonVar_channel = BasicMessageChannel<Object?>(
-        'dev.flutter.pigeon.flutter_inappwebview_android.FindInteractionFlutterApi.onFindResultReceived$messageChannelSuffix',
+        'dev.flutter.pigeon.nosferatu500_inappwebview_android.FindInteractionFlutterApi.onFindResultReceived$messageChannelSuffix',
         pigeonChannelCodec,
         binaryMessenger: binaryMessenger,
       );

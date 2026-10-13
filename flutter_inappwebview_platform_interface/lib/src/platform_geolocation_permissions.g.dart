@@ -8,7 +8,7 @@ part of 'platform_geolocation_permissions.dart';
 
 extension _PlatformGeolocationPermissionsCreationParamsClassSupported
     on PlatformGeolocationPermissionsCreationParams {
-  ///{@template flutter_inappwebview_platform_interface.PlatformGeolocationPermissionsCreationParams.supported_platforms}
+  ///{@template nosferatu500_inappwebview_platform_interface.PlatformGeolocationPermissionsCreationParams.supported_platforms}
   ///
   ///**Officially Supported Platforms/Implementations**:
   ///- Android WebView
@@ -23,7 +23,7 @@ extension _PlatformGeolocationPermissionsCreationParamsClassSupported
 
 extension _PlatformGeolocationPermissionsClassSupported
     on PlatformGeolocationPermissions {
-  ///{@template flutter_inappwebview_platform_interface.PlatformGeolocationPermissions.supported_platforms}
+  ///{@template nosferatu500_inappwebview_platform_interface.PlatformGeolocationPermissions.supported_platforms}
   ///
   ///**Officially Supported Platforms/Implementations**:
   ///- Android WebView ([Official API - GeolocationPermissions](https://developer.android.com/reference/android/webkit/GeolocationPermissions))
@@ -42,7 +42,7 @@ extension _PlatformGeolocationPermissionsClassSupported
 enum PlatformGeolocationPermissionsMethod {
   ///Can be used to check if the [PlatformGeolocationPermissions.allow] method is supported at runtime.
   ///
-  ///{@template flutter_inappwebview_platform_interface.PlatformGeolocationPermissions.allow.supported_platforms}
+  ///{@template nosferatu500_inappwebview_platform_interface.PlatformGeolocationPermissions.allow.supported_platforms}
   ///
   ///**Officially Supported Platforms/Implementations**:
   ///- Android WebView ([Official API - GeolocationPermissions.allow](https://developer.android.com/reference/android/webkit/GeolocationPermissions#allow(java.lang.String)))
@@ -58,7 +58,7 @@ enum PlatformGeolocationPermissionsMethod {
 
   ///Can be used to check if the [PlatformGeolocationPermissions.clear] method is supported at runtime.
   ///
-  ///{@template flutter_inappwebview_platform_interface.PlatformGeolocationPermissions.clear.supported_platforms}
+  ///{@template nosferatu500_inappwebview_platform_interface.PlatformGeolocationPermissions.clear.supported_platforms}
   ///
   ///**Officially Supported Platforms/Implementations**:
   ///- Android WebView ([Official API - GeolocationPermissions.clear](https://developer.android.com/reference/android/webkit/GeolocationPermissions#clear(java.lang.String)))
@@ -74,7 +74,7 @@ enum PlatformGeolocationPermissionsMethod {
 
   ///Can be used to check if the [PlatformGeolocationPermissions.clearAll] method is supported at runtime.
   ///
-  ///{@template flutter_inappwebview_platform_interface.PlatformGeolocationPermissions.clearAll.supported_platforms}
+  ///{@template nosferatu500_inappwebview_platform_interface.PlatformGeolocationPermissions.clearAll.supported_platforms}
   ///
   ///**Officially Supported Platforms/Implementations**:
   ///- Android WebView ([Official API - GeolocationPermissions.clearAll](https://developer.android.com/reference/android/webkit/GeolocationPermissions#clearAll()))
@@ -89,7 +89,7 @@ enum PlatformGeolocationPermissionsMethod {
 
   ///Can be used to check if the [PlatformGeolocationPermissions.getAllowed] method is supported at runtime.
   ///
-  ///{@template flutter_inappwebview_platform_interface.PlatformGeolocationPermissions.getAllowed.supported_platforms}
+  ///{@template nosferatu500_inappwebview_platform_interface.PlatformGeolocationPermissions.getAllowed.supported_platforms}
   ///
   ///**Officially Supported Platforms/Implementations**:
   ///- Android WebView ([Official API - GeolocationPermissions.getAllowed](https://developer.android.com/reference/android/webkit/GeolocationPermissions#getAllowed(java.lang.String,%20android.webkit.ValueCallback%3Cjava.lang.Boolean%3E)))
@@ -105,7 +105,7 @@ enum PlatformGeolocationPermissionsMethod {
 
   ///Can be used to check if the [PlatformGeolocationPermissions.getOrigins] method is supported at runtime.
   ///
-  ///{@template flutter_inappwebview_platform_interface.PlatformGeolocationPermissions.getOrigins.supported_platforms}
+  ///{@template nosferatu500_inappwebview_platform_interface.PlatformGeolocationPermissions.getOrigins.supported_platforms}
   ///
   ///**Officially Supported Platforms/Implementations**:
   ///- Android WebView ([Official API - GeolocationPermissions.getOrigins](https://developer.android.com/reference/android/webkit/GeolocationPermissions#getOrigins(android.webkit.ValueCallback%3Cjava.util.Set%3Cjava.lang.String%3E%3E)))

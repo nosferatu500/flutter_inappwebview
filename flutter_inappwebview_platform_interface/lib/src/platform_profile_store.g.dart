@@ -8,7 +8,7 @@ part of 'platform_profile_store.dart';
 
 extension _PlatformProfileStoreCreationParamsClassSupported
     on PlatformProfileStoreCreationParams {
-  ///{@template flutter_inappwebview_platform_interface.PlatformProfileStoreCreationParams.supported_platforms}
+  ///{@template nosferatu500_inappwebview_platform_interface.PlatformProfileStoreCreationParams.supported_platforms}
   ///
   ///**Officially Supported Platforms/Implementations**:
   ///- Android WebView
@@ -22,7 +22,7 @@ extension _PlatformProfileStoreCreationParamsClassSupported
 }
 
 extension _PlatformProfileStoreClassSupported on PlatformProfileStore {
-  ///{@template flutter_inappwebview_platform_interface.PlatformProfileStore.supported_platforms}
+  ///{@template nosferatu500_inappwebview_platform_interface.PlatformProfileStore.supported_platforms}
   ///
   ///**Officially Supported Platforms/Implementations**:
   ///- Android WebView ([Official API - ProfileStore](https://developer.android.com/reference/androidx/webkit/ProfileStore)):
@@ -42,7 +42,7 @@ extension _PlatformProfileStoreClassSupported on PlatformProfileStore {
 enum PlatformProfileStoreMethod {
   ///Can be used to check if the [PlatformProfileStore.addCustomHeader] method is supported at runtime.
   ///
-  ///{@template flutter_inappwebview_platform_interface.PlatformProfileStore.addCustomHeader.supported_platforms}
+  ///{@template nosferatu500_inappwebview_platform_interface.PlatformProfileStore.addCustomHeader.supported_platforms}
   ///
   ///**Officially Supported Platforms/Implementations**:
   ///- Android WebView ([Official API - Profile.addCustomHeader](https://developer.android.com/reference/androidx/webkit/Profile#addCustomHeader(androidx.webkit.CustomHeader))):
@@ -59,7 +59,7 @@ enum PlatformProfileStoreMethod {
 
   ///Can be used to check if the [PlatformProfileStore.clearAllCustomHeaders] method is supported at runtime.
   ///
-  ///{@template flutter_inappwebview_platform_interface.PlatformProfileStore.clearAllCustomHeaders.supported_platforms}
+  ///{@template nosferatu500_inappwebview_platform_interface.PlatformProfileStore.clearAllCustomHeaders.supported_platforms}
   ///
   ///**Officially Supported Platforms/Implementations**:
   ///- Android WebView ([Official API - Profile.clearAllCustomHeaders](https://developer.android.com/reference/androidx/webkit/Profile#clearAllCustomHeaders())):
@@ -75,7 +75,7 @@ enum PlatformProfileStoreMethod {
 
   ///Can be used to check if the [PlatformProfileStore.clearCustomHeader] method is supported at runtime.
   ///
-  ///{@template flutter_inappwebview_platform_interface.PlatformProfileStore.clearCustomHeader.supported_platforms}
+  ///{@template nosferatu500_inappwebview_platform_interface.PlatformProfileStore.clearCustomHeader.supported_platforms}
   ///
   ///**Officially Supported Platforms/Implementations**:
   ///- Android WebView ([Official API - Profile.clearCustomHeader](https://developer.android.com/reference/androidx/webkit/Profile#clearCustomHeader(java.lang.String))):
@@ -94,7 +94,7 @@ enum PlatformProfileStoreMethod {
 
   ///Can be used to check if the [PlatformProfileStore.deleteProfile] method is supported at runtime.
   ///
-  ///{@template flutter_inappwebview_platform_interface.PlatformProfileStore.deleteProfile.supported_platforms}
+  ///{@template nosferatu500_inappwebview_platform_interface.PlatformProfileStore.deleteProfile.supported_platforms}
   ///
   ///**Officially Supported Platforms/Implementations**:
   ///- Android WebView ([Official API - ProfileStore.deleteProfile](https://developer.android.com/reference/androidx/webkit/ProfileStore#deleteProfile(java.lang.String))):
@@ -109,7 +109,7 @@ enum PlatformProfileStoreMethod {
 
   ///Can be used to check if the [PlatformProfileStore.getAllProfileNames] method is supported at runtime.
   ///
-  ///{@template flutter_inappwebview_platform_interface.PlatformProfileStore.getAllProfileNames.supported_platforms}
+  ///{@template nosferatu500_inappwebview_platform_interface.PlatformProfileStore.getAllProfileNames.supported_platforms}
   ///
   ///**Officially Supported Platforms/Implementations**:
   ///- Android WebView ([Official API - ProfileStore.getAllProfileNames](https://developer.android.com/reference/androidx/webkit/ProfileStore#getAllProfileNames())):
@@ -121,7 +121,7 @@ enum PlatformProfileStoreMethod {
 
   ///Can be used to check if the [PlatformProfileStore.getCustomHeaders] method is supported at runtime.
   ///
-  ///{@template flutter_inappwebview_platform_interface.PlatformProfileStore.getCustomHeaders.supported_platforms}
+  ///{@template nosferatu500_inappwebview_platform_interface.PlatformProfileStore.getCustomHeaders.supported_platforms}
   ///
   ///**Officially Supported Platforms/Implementations**:
   ///- Android WebView ([Official API - Profile.getCustomHeaders](https://developer.android.com/reference/androidx/webkit/Profile#getCustomHeaders())):
@@ -141,7 +141,7 @@ enum PlatformProfileStoreMethod {
 
   ///Can be used to check if the [PlatformProfileStore.getOrCreateProfile] method is supported at runtime.
   ///
-  ///{@template flutter_inappwebview_platform_interface.PlatformProfileStore.getOrCreateProfile.supported_platforms}
+  ///{@template nosferatu500_inappwebview_platform_interface.PlatformProfileStore.getOrCreateProfile.supported_platforms}
   ///
   ///**Officially Supported Platforms/Implementations**:
   ///- Android WebView ([Official API - ProfileStore.getOrCreateProfile](https://developer.android.com/reference/androidx/webkit/ProfileStore#getOrCreateProfile(java.lang.String))):
@@ -156,7 +156,7 @@ enum PlatformProfileStoreMethod {
 
   ///Can be used to check if the [PlatformProfileStore.hasCustomHeader] method is supported at runtime.
   ///
-  ///{@template flutter_inappwebview_platform_interface.PlatformProfileStore.hasCustomHeader.supported_platforms}
+  ///{@template nosferatu500_inappwebview_platform_interface.PlatformProfileStore.hasCustomHeader.supported_platforms}
   ///
   ///**Officially Supported Platforms/Implementations**:
   ///- Android WebView ([Official API - Profile.hasCustomHeader](https://developer.android.com/reference/androidx/webkit/Profile#hasCustomHeader(java.lang.String))):

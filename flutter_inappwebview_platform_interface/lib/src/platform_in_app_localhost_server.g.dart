@@ -8,7 +8,7 @@ part of 'platform_in_app_localhost_server.dart';
 
 extension _PlatformInAppLocalhostServerCreationParamsClassSupported
     on PlatformInAppLocalhostServerCreationParams {
-  ///{@template flutter_inappwebview_platform_interface.PlatformInAppLocalhostServerCreationParams.supported_platforms}
+  ///{@template nosferatu500_inappwebview_platform_interface.PlatformInAppLocalhostServerCreationParams.supported_platforms}
   ///
   ///**Officially Supported Platforms/Implementations**:
   ///- Android WebView
@@ -27,7 +27,7 @@ extension _PlatformInAppLocalhostServerCreationParamsClassSupported
 
 extension _PlatformInAppLocalhostServerClassSupported
     on PlatformInAppLocalhostServer {
-  ///{@template flutter_inappwebview_platform_interface.PlatformInAppLocalhostServer.supported_platforms}
+  ///{@template nosferatu500_inappwebview_platform_interface.PlatformInAppLocalhostServer.supported_platforms}
   ///
   ///**Officially Supported Platforms/Implementations**:
   ///- Android WebView
@@ -50,7 +50,7 @@ extension _PlatformInAppLocalhostServerClassSupported
 enum PlatformInAppLocalhostServerMethod {
   ///Can be used to check if the [PlatformInAppLocalhostServer.close] method is supported at runtime.
   ///
-  ///{@template flutter_inappwebview_platform_interface.PlatformInAppLocalhostServer.close.supported_platforms}
+  ///{@template nosferatu500_inappwebview_platform_interface.PlatformInAppLocalhostServer.close.supported_platforms}
   ///
   ///**Officially Supported Platforms/Implementations**:
   ///- Android WebView
@@ -62,7 +62,7 @@ enum PlatformInAppLocalhostServerMethod {
 
   ///Can be used to check if the [PlatformInAppLocalhostServer.isRunning] method is supported at runtime.
   ///
-  ///{@template flutter_inappwebview_platform_interface.PlatformInAppLocalhostServer.isRunning.supported_platforms}
+  ///{@template nosferatu500_inappwebview_platform_interface.PlatformInAppLocalhostServer.isRunning.supported_platforms}
   ///
   ///**Officially Supported Platforms/Implementations**:
   ///- Android WebView
@@ -74,7 +74,7 @@ enum PlatformInAppLocalhostServerMethod {
 
   ///Can be used to check if the [PlatformInAppLocalhostServer.start] method is supported at runtime.
   ///
-  ///{@template flutter_inappwebview_platform_interface.PlatformInAppLocalhostServer.start.supported_platforms}
+  ///{@template nosferatu500_inappwebview_platform_interface.PlatformInAppLocalhostServer.start.supported_platforms}
   ///
   ///**Officially Supported Platforms/Implementations**:
   ///- Android WebView

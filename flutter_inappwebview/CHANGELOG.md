@@ -39,6 +39,23 @@ bugs that includes four on iOS which were silently swallowing events.
   (`flutter config --no-enable-swift-package-manager`, or `enable-swift-package-manager: false` under
   `flutter: config:` in its pubspec) has to turn it back on, or the plugin has no way into the build.
 
+### BREAKING: the packages are renamed
+
+| 6.2.0-beta.3 | 7.0.0 |
+|---|---|
+| `flutter_inappwebview` | **`nosferatu500_inappwebview`** |
+| `flutter_inappwebview_platform_interface` | `nosferatu500_inappwebview_platform_interface` |
+| `flutter_inappwebview_android` | `nosferatu500_inappwebview_android` |
+| `flutter_inappwebview_ios` | `nosferatu500_inappwebview_ios` |
+| `flutter_inappwebview_internal_annotations` | `nosferatu500_inappwebview_internal_annotations` |
+
+Depend on `nosferatu500_inappwebview` and import
+`package:nosferatu500_inappwebview/nosferatu500_inappwebview.dart` (was
+`package:flutter_inappwebview/flutter_inappwebview.dart`). Class, method and setting names don't
+change. The JavaScript bridge web pages call keeps its name, `window.flutter_inappwebview`, so page
+code needs no change. On iOS the Swift package, target and module are `nosferatu500_inappwebview_ios`
+(product `nosferatu500-inappwebview-ios`).
+
 ### BREAKING: the Android namespace and every method/event channel name changed
 
 - Android namespace / Gradle `group`: `com.pichillilorenzo.flutter_inappwebview_android` →
@@ -1587,7 +1604,7 @@ simulator for the first time:**
 - **The Android module is 100% Kotlin** (158 files translated) with ktlint 1.8 formatting and an
   opt-in `allWarningsAsErrors`; Android lint is at **0 findings**
 - **The iOS module builds in Swift 6 language mode** with complete concurrency checking, 0 errors
-  and 0 warnings (see the `flutter_inappwebview_ios` 7.0.0 entry for how that's measured)
+  and 0 warnings (see the `nosferatu500_inappwebview_ios` 7.0.0 entry for how that's measured)
 - **Pigeon** is wired up and the `find_interaction` channel is migrated end to end as a proof; the
   other ~409 messages still use `MethodChannel`
 - **412 unit tests** (from 276) — including the Android module's first native tests, which found two
@@ -1596,25 +1613,28 @@ simulator for the first time:**
 
 ### Migration
 
-1. Rename every `*Options` type and parameter to its `*Settings` equivalent, and
+1. Replace the `flutter_inappwebview` dependency with `nosferatu500_inappwebview`, and every
+   `package:flutter_inappwebview/flutter_inappwebview.dart` import with
+   `package:nosferatu500_inappwebview/nosferatu500_inappwebview.dart`.
+2. Rename every `*Options` type and parameter to its `*Settings` equivalent, and
    `getOptions`/`setOptions` to `getSettings`/`setSettings`.
-2. Drop the `Android` / `IOS` prefix from the duplicate types, events, fields and methods listed
+3. Drop the `Android` / `IOS` prefix from the duplicate types, events, fields and methods listed
    above. Every replacement already existed in 6.x.
-3. Raise `minSdk` to 30 and your iOS deployment target to 15.0; build the iOS module with
+4. Raise `minSdk` to 30 and your iOS deployment target to 15.0; build the iOS module with
    **Xcode 26 or newer**. Keep Swift Package Manager enabled (Flutter's default): the iOS module
    has no podspec any more, and if your Podfile only existed for this plugin, `pod deintegrate` it
    away.
-4. Delete any macOS / Windows / Linux / Web-only API — there is nothing to migrate to. `switch`
+5. Delete any macOS / Windows / Linux / Web-only API — there is nothing to migrate to. `switch`
    chains over `WebResourceErrorType`, `SslErrorType` and `PermissionResourceType` may name
    constants that no longer exist; these are constant classes rather than Dart `enum`s, so the
    analyzer reports the missing name but never an exhaustiveness error.
-5. If you declared the plugin's FileProvider, replace the whole `<provider>` block with the one in
+6. If you declared the plugin's FileProvider, replace the whole `<provider>` block with the one in
    the `InAppWebViewFileProvider` KDoc: `android:name` →
    `dev.nosferatu500.inappwebview.InAppWebViewFileProvider`, `android:authorities` →
    `${applicationId}.dev.nosferatu500.inappwebview.fileprovider`, and the `meta-data` resource →
    `@xml/inappwebview_provider_paths`. Missing the authority is silent — `<input type="file"
    capture>` simply stops producing a file, with no Dart error.
-6. If anything in your app talks to the plugin's platform channels directly, update the channel
+7. If anything in your app talks to the plugin's platform channels directly, update the channel
    names to the `dev.nosferatu500.inappwebview/…` prefix.
 
 ## 6.2.0-beta.3

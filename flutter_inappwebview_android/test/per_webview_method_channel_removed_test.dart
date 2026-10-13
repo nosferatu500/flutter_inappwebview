@@ -1,10 +1,10 @@
 import 'dart:async';
 
 import 'package:flutter/services.dart';
-import 'package:flutter_inappwebview_android/flutter_inappwebview_android.dart';
-import 'package:flutter_inappwebview_android/src/pigeons/in_app_browser_manager.g.dart';
-import 'package:flutter_inappwebview_android/src/pigeons/in_app_webview.g.dart';
-import 'package:flutter_inappwebview_platform_interface/flutter_inappwebview_platform_interface.dart';
+import 'package:nosferatu500_inappwebview_android/nosferatu500_inappwebview_android.dart';
+import 'package:nosferatu500_inappwebview_android/src/pigeons/in_app_browser_manager.g.dart';
+import 'package:nosferatu500_inappwebview_android/src/pigeons/in_app_webview.g.dart';
+import 'package:nosferatu500_inappwebview_platform_interface/nosferatu500_inappwebview_platform_interface.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 /// §217: the per-WebView MethodChannels (`inappwebview_<id>` and `inappbrowser_<id>`) are gone.
@@ -38,7 +38,7 @@ void main() {
     String method,
     List<Object?> args,
   ) => send(
-    'dev.flutter.pigeon.flutter_inappwebview_android.InAppWebViewFlutterApi'
+    'dev.flutter.pigeon.nosferatu500_inappwebview_android.InAppWebViewFlutterApi'
     '.$method.$suffix',
     pigeonCodec.encodeMessage(args),
   );
@@ -79,7 +79,7 @@ void main() {
     // The browser builds its WebView controller when it opens, so it is opened; answering the
     // manager's `open` is what lets that complete.
     const managerOpen =
-        'dev.flutter.pigeon.flutter_inappwebview_android.InAppBrowserManagerHostApi.open';
+        'dev.flutter.pigeon.nosferatu500_inappwebview_android.InAppBrowserManagerHostApi.open';
     messenger.setMockMessageHandler(
       managerOpen,
       (message) async => InAppBrowserManagerHostApi.pigeonChannelCodec

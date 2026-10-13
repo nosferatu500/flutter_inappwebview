@@ -2,20 +2,20 @@ import 'dart:async';
 import 'dart:io';
 
 import 'package:flutter/foundation.dart';
-import 'package:flutter_inappwebview_internal_annotations/flutter_inappwebview_internal_annotations.dart';
-import 'package:flutter_inappwebview_platform_interface/flutter_inappwebview_platform_interface.dart';
+import 'package:nosferatu500_inappwebview_internal_annotations/nosferatu500_inappwebview_internal_annotations.dart';
+import 'package:nosferatu500_inappwebview_platform_interface/nosferatu500_inappwebview_platform_interface.dart';
 import 'package:plugin_platform_interface/plugin_platform_interface.dart';
 
 part 'platform_in_app_localhost_server.g.dart';
 
-///{@template flutter_inappwebview_platform_interface.PlatformInAppLocalhostServerCreationParams}
+///{@template nosferatu500_inappwebview_platform_interface.PlatformInAppLocalhostServerCreationParams}
 /// Object specifying creation parameters for creating a [PlatformInAppLocalhostServer].
 ///
 /// Platform specific implementations can add additional fields by extending
 /// this class.
 ///{@endtemplate}
 ///
-///{@macro flutter_inappwebview_platform_interface.PlatformInAppLocalhostServerCreationParams.supported_platforms}
+///{@macro nosferatu500_inappwebview_platform_interface.PlatformInAppLocalhostServerCreationParams.supported_platforms}
 @SupportedPlatforms(platforms: [AndroidPlatform(), IOSPlatform()])
 @immutable
 class PlatformInAppLocalhostServerCreationParams {
@@ -28,22 +28,22 @@ class PlatformInAppLocalhostServerCreationParams {
     this.onData,
   });
 
-  ///{@macro flutter_inappwebview_platform_interface.PlatformInAppLocalhostServer.port}
+  ///{@macro nosferatu500_inappwebview_platform_interface.PlatformInAppLocalhostServer.port}
   final int port;
 
-  ///{@macro flutter_inappwebview_platform_interface.PlatformInAppLocalhostServer.directoryIndex}
+  ///{@macro nosferatu500_inappwebview_platform_interface.PlatformInAppLocalhostServer.directoryIndex}
   final String directoryIndex;
 
-  ///{@macro flutter_inappwebview_platform_interface.PlatformInAppLocalhostServer.documentRoot}
+  ///{@macro nosferatu500_inappwebview_platform_interface.PlatformInAppLocalhostServer.documentRoot}
   final String documentRoot;
 
-  ///{@macro flutter_inappwebview_platform_interface.PlatformInAppLocalhostServer.shared}
+  ///{@macro nosferatu500_inappwebview_platform_interface.PlatformInAppLocalhostServer.shared}
   final bool shared;
 
-  ///{@macro flutter_inappwebview_platform_interface.PlatformInAppLocalhostServer.onData}
+  ///{@macro nosferatu500_inappwebview_platform_interface.PlatformInAppLocalhostServer.onData}
   final Future<bool> Function(HttpRequest request)? onData;
 
-  ///{@template flutter_inappwebview_platform_interface.PlatformInAppLocalhostServerCreationParams.isClassSupported}
+  ///{@template nosferatu500_inappwebview_platform_interface.PlatformInAppLocalhostServerCreationParams.isClassSupported}
   ///Check if the current class is supported by the [defaultTargetPlatform] or a specific [platform].
   ///{@endtemplate}
   bool isClassSupported({TargetPlatform? platform}) =>
@@ -52,13 +52,13 @@ class PlatformInAppLocalhostServerCreationParams {
       );
 }
 
-///{@template flutter_inappwebview_platform_interface.PlatformInAppLocalhostServer}
+///{@template nosferatu500_inappwebview_platform_interface.PlatformInAppLocalhostServer}
 ///This class allows you to create a simple server on `http://localhost:[port]/`
 ///in order to be able to load your assets file on a local server.
 ///The default `port` value is `8080`.
 ///{@endtemplate}
 ///
-///{@macro flutter_inappwebview_platform_interface.PlatformInAppLocalhostServer.supported_platforms}
+///{@macro nosferatu500_inappwebview_platform_interface.PlatformInAppLocalhostServer.supported_platforms}
 @SupportedPlatforms(platforms: [AndroidPlatform(), IOSPlatform()])
 abstract class PlatformInAppLocalhostServer extends PlatformInterface {
   /// Creates a new [PlatformInAppLocalhostServer]
@@ -67,7 +67,7 @@ abstract class PlatformInAppLocalhostServer extends PlatformInterface {
   ) {
     assert(
       InAppWebViewPlatform.instance != null,
-      'A platform implementation for `flutter_inappwebview` has not been set. Please '
+      'A platform implementation for `nosferatu500_inappwebview` has not been set. Please '
       'ensure that an implementation of `InAppWebViewPlatform` has been set to '
       '`WebViewPlatform.instance` before use. For unit testing, '
       '`WebViewPlatform.instance` can be set with your own test implementation.',
@@ -84,7 +84,7 @@ abstract class PlatformInAppLocalhostServer extends PlatformInterface {
   factory PlatformInAppLocalhostServer.static() {
     assert(
       InAppWebViewPlatform.instance != null,
-      'A platform implementation for `flutter_inappwebview` has not been set. Please '
+      'A platform implementation for `nosferatu500_inappwebview` has not been set. Please '
       'ensure that an implementation of `InAppWebViewPlatform` has been set to '
       '`InAppWebViewPlatform.instance` before use. For unit testing, '
       '`InAppWebViewPlatform.instance` can be set with your own test implementation.',
@@ -110,22 +110,22 @@ abstract class PlatformInAppLocalhostServer extends PlatformInterface {
   /// The parameters used to initialize the [PlatformInAppLocalhostServer].
   final PlatformInAppLocalhostServerCreationParams params;
 
-  ///{@template flutter_inappwebview_platform_interface.PlatformInAppLocalhostServer.port}
+  ///{@template nosferatu500_inappwebview_platform_interface.PlatformInAppLocalhostServer.port}
   ///Represents the port of the server. The default value is `8080`.
   ///{@endtemplate}
   int get port => params.port;
 
-  ///{@template flutter_inappwebview_platform_interface.PlatformInAppLocalhostServer.directoryIndex}
+  ///{@template nosferatu500_inappwebview_platform_interface.PlatformInAppLocalhostServer.directoryIndex}
   ///represents the index file to use. The default value is `index.html`.
   ///{@endtemplate}
   String get directoryIndex => params.directoryIndex;
 
-  ///{@template flutter_inappwebview_platform_interface.PlatformInAppLocalhostServer.documentRoot}
+  ///{@template nosferatu500_inappwebview_platform_interface.PlatformInAppLocalhostServer.documentRoot}
   ///Represents the document root path to serve. The default value is `./`.
   ///{@endtemplate}
   String get documentRoot => params.documentRoot;
 
-  ///{@template flutter_inappwebview_platform_interface.PlatformInAppLocalhostServer.shared}
+  ///{@template nosferatu500_inappwebview_platform_interface.PlatformInAppLocalhostServer.shared}
   ///Specifies whether additional `HttpServer`
   /// objects can bind to the same combination of `address`, `port` and `v6Only`.
   /// If `shared` is `true` and more `HttpServer`s from this isolate or other
@@ -135,7 +135,7 @@ abstract class PlatformInAppLocalhostServer extends PlatformInterface {
   ///{@endtemplate}
   bool get shared => params.shared;
 
-  ///{@template flutter_inappwebview_platform_interface.PlatformInAppLocalhostServer.onData}
+  ///{@template nosferatu500_inappwebview_platform_interface.PlatformInAppLocalhostServer.onData}
   ///A custom callback that is called when a new request is received by the server
   ///that can be used to send or modify the response, for example adding custom headers.
   ///If this callback returns `true`, it means that the request has been handled by this callback.
@@ -143,7 +143,7 @@ abstract class PlatformInAppLocalhostServer extends PlatformInterface {
   ///{@endtemplate}
   Future<bool> Function(HttpRequest request)? get onData => params.onData;
 
-  ///{@template flutter_inappwebview_platform_interface.PlatformInAppLocalhostServer.start}
+  ///{@template nosferatu500_inappwebview_platform_interface.PlatformInAppLocalhostServer.start}
   ///Starts the server on `http://localhost:[port]/`.
   ///
   ///**NOTE for iOS**: For the iOS Platform, you need to add the `NSAllowsLocalNetworking` key with `true` in the `Info.plist` file
@@ -158,7 +158,7 @@ abstract class PlatformInAppLocalhostServer extends PlatformInterface {
   ///The `NSAllowsLocalNetworking` key is available since **iOS 10**.
   ///{@endtemplate}
   ///
-  ///{@macro flutter_inappwebview_platform_interface.PlatformInAppLocalhostServer.start.supported_platforms}
+  ///{@macro nosferatu500_inappwebview_platform_interface.PlatformInAppLocalhostServer.start.supported_platforms}
   @SupportedPlatforms(platforms: [AndroidPlatform(), IOSPlatform()])
   Future<void> start() {
     throw UnimplementedError(
@@ -166,11 +166,11 @@ abstract class PlatformInAppLocalhostServer extends PlatformInterface {
     );
   }
 
-  ///{@template flutter_inappwebview_platform_interface.PlatformInAppLocalhostServer.close}
+  ///{@template nosferatu500_inappwebview_platform_interface.PlatformInAppLocalhostServer.close}
   ///Closes the server.
   ///{@endtemplate}
   ///
-  ///{@macro flutter_inappwebview_platform_interface.PlatformInAppLocalhostServer.close.supported_platforms}
+  ///{@macro nosferatu500_inappwebview_platform_interface.PlatformInAppLocalhostServer.close.supported_platforms}
   @SupportedPlatforms(platforms: [AndroidPlatform(), IOSPlatform()])
   Future<void> close() {
     throw UnimplementedError(
@@ -178,11 +178,11 @@ abstract class PlatformInAppLocalhostServer extends PlatformInterface {
     );
   }
 
-  ///{@template flutter_inappwebview_platform_interface.PlatformInAppLocalhostServer.isRunning}
+  ///{@template nosferatu500_inappwebview_platform_interface.PlatformInAppLocalhostServer.isRunning}
   ///Indicates if the server is running or not.
   ///{@endtemplate}
   ///
-  ///{@macro flutter_inappwebview_platform_interface.PlatformInAppLocalhostServer.isRunning.supported_platforms}
+  ///{@macro nosferatu500_inappwebview_platform_interface.PlatformInAppLocalhostServer.isRunning.supported_platforms}
   @SupportedPlatforms(platforms: [AndroidPlatform(), IOSPlatform()])
   bool isRunning() {
     throw UnimplementedError(
@@ -190,11 +190,11 @@ abstract class PlatformInAppLocalhostServer extends PlatformInterface {
     );
   }
 
-  ///{@macro flutter_inappwebview_platform_interface.PlatformInAppLocalhostServerCreationParams.isClassSupported}
+  ///{@macro nosferatu500_inappwebview_platform_interface.PlatformInAppLocalhostServerCreationParams.isClassSupported}
   bool isClassSupported({TargetPlatform? platform}) =>
       params.isClassSupported(platform: platform);
 
-  ///{@template flutter_inappwebview_platform_interface.PlatformInAppLocalhostServer.isMethodSupported}
+  ///{@template nosferatu500_inappwebview_platform_interface.PlatformInAppLocalhostServer.isMethodSupported}
   ///Check if the given [method] is supported by the [defaultTargetPlatform] or a specific [platform].
   ///{@endtemplate}
   bool isMethodSupported(

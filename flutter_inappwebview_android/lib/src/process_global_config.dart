@@ -1,7 +1,7 @@
 import 'dart:async';
 
 import 'package:flutter/foundation.dart';
-import 'package:flutter_inappwebview_platform_interface/flutter_inappwebview_platform_interface.dart';
+import 'package:nosferatu500_inappwebview_platform_interface/nosferatu500_inappwebview_platform_interface.dart';
 
 import 'pigeons/process_global_config.g.dart';
 
@@ -28,7 +28,7 @@ class AndroidProcessGlobalConfigCreationParams
   }
 }
 
-///{@macro flutter_inappwebview_platform_interface.PlatformProcessGlobalConfig}
+///{@macro nosferatu500_inappwebview_platform_interface.PlatformProcessGlobalConfig}
 ///
 /// Transport is Pigeon-generated ([ProcessGlobalConfigHostApi]) rather than a hand-written
 /// `MethodChannel`; the second channel migrated, after find_interaction (§14). There is no

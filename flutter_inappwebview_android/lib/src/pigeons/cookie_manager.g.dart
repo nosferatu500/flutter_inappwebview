@@ -394,7 +394,7 @@ class CookieManagerHostApi {
   /// §160's finding, where `await` resolved before the proxy was actually in effect.
   Future<bool> setCookie(CookieToSetData cookie, String? profileName) async {
     final pigeonVar_channelName =
-        'dev.flutter.pigeon.flutter_inappwebview_android.CookieManagerHostApi.setCookie$pigeonVar_messageChannelSuffix';
+        'dev.flutter.pigeon.nosferatu500_inappwebview_android.CookieManagerHostApi.setCookie$pigeonVar_messageChannelSuffix';
     final pigeonVar_channel = BasicMessageChannel<Object?>(
       pigeonVar_channelName,
       pigeonChannelCodec,
@@ -427,7 +427,7 @@ class CookieManagerHostApi {
     String? profileName,
   ) async {
     final pigeonVar_channelName =
-        'dev.flutter.pigeon.flutter_inappwebview_android.CookieManagerHostApi.setCookies$pigeonVar_messageChannelSuffix';
+        'dev.flutter.pigeon.nosferatu500_inappwebview_android.CookieManagerHostApi.setCookies$pigeonVar_messageChannelSuffix';
     final pigeonVar_channel = BasicMessageChannel<Object?>(
       pigeonVar_channelName,
       pigeonChannelCodec,
@@ -452,7 +452,7 @@ class CookieManagerHostApi {
   /// directly. Answers an empty list when the store cannot be resolved, as before.
   Future<List<CookieData>> getCookies(String url, String? profileName) async {
     final pigeonVar_channelName =
-        'dev.flutter.pigeon.flutter_inappwebview_android.CookieManagerHostApi.getCookies$pigeonVar_messageChannelSuffix';
+        'dev.flutter.pigeon.nosferatu500_inappwebview_android.CookieManagerHostApi.getCookies$pigeonVar_messageChannelSuffix';
     final pigeonVar_channel = BasicMessageChannel<Object?>(
       pigeonVar_channelName,
       pigeonChannelCodec,
@@ -483,7 +483,7 @@ class CookieManagerHostApi {
     String? profileName,
   ) async {
     final pigeonVar_channelName =
-        'dev.flutter.pigeon.flutter_inappwebview_android.CookieManagerHostApi.deleteCookie$pigeonVar_messageChannelSuffix';
+        'dev.flutter.pigeon.nosferatu500_inappwebview_android.CookieManagerHostApi.deleteCookie$pigeonVar_messageChannelSuffix';
     final pigeonVar_channel = BasicMessageChannel<Object?>(
       pigeonVar_channelName,
       pigeonChannelCodec,
@@ -520,7 +520,7 @@ class CookieManagerHostApi {
     String? profileName,
   ) async {
     final pigeonVar_channelName =
-        'dev.flutter.pigeon.flutter_inappwebview_android.CookieManagerHostApi.deleteCookies$pigeonVar_messageChannelSuffix';
+        'dev.flutter.pigeon.nosferatu500_inappwebview_android.CookieManagerHostApi.deleteCookies$pigeonVar_messageChannelSuffix';
     final pigeonVar_channel = BasicMessageChannel<Object?>(
       pigeonVar_channelName,
       pigeonChannelCodec,
@@ -542,7 +542,7 @@ class CookieManagerHostApi {
   /// Empties the store. `@async` -- `removeAllCookies` is `ValueCallback`-completed.
   Future<bool> deleteAllCookies(String? profileName) async {
     final pigeonVar_channelName =
-        'dev.flutter.pigeon.flutter_inappwebview_android.CookieManagerHostApi.deleteAllCookies$pigeonVar_messageChannelSuffix';
+        'dev.flutter.pigeon.nosferatu500_inappwebview_android.CookieManagerHostApi.deleteAllCookies$pigeonVar_messageChannelSuffix';
     final pigeonVar_channel = BasicMessageChannel<Object?>(
       pigeonVar_channelName,
       pigeonChannelCodec,
@@ -564,7 +564,7 @@ class CookieManagerHostApi {
   /// Removes only session cookies. `@async` -- `removeSessionCookies` is `ValueCallback`-completed.
   Future<bool> removeSessionCookies(String? profileName) async {
     final pigeonVar_channelName =
-        'dev.flutter.pigeon.flutter_inappwebview_android.CookieManagerHostApi.removeSessionCookies$pigeonVar_messageChannelSuffix';
+        'dev.flutter.pigeon.nosferatu500_inappwebview_android.CookieManagerHostApi.removeSessionCookies$pigeonVar_messageChannelSuffix';
     final pigeonVar_channel = BasicMessageChannel<Object?>(
       pigeonVar_channelName,
       pigeonChannelCodec,
@@ -591,7 +591,7 @@ class CookieManagerHostApi {
   /// unrepresentable.
   Future<bool> flush(String? profileName) async {
     final pigeonVar_channelName =
-        'dev.flutter.pigeon.flutter_inappwebview_android.CookieManagerHostApi.flush$pigeonVar_messageChannelSuffix';
+        'dev.flutter.pigeon.nosferatu500_inappwebview_android.CookieManagerHostApi.flush$pigeonVar_messageChannelSuffix';
     final pigeonVar_channel = BasicMessageChannel<Object?>(
       pigeonVar_channelName,
       pigeonChannelCodec,
@@ -618,7 +618,7 @@ class CookieManagerHostApi {
   /// basis would skip it wrongly. §167's `an unknown profile resolves to no store` pins this.
   Future<bool?> hasCookies(String? profileName) async {
     final pigeonVar_channelName =
-        'dev.flutter.pigeon.flutter_inappwebview_android.CookieManagerHostApi.hasCookies$pigeonVar_messageChannelSuffix';
+        'dev.flutter.pigeon.nosferatu500_inappwebview_android.CookieManagerHostApi.hasCookies$pigeonVar_messageChannelSuffix';
     final pigeonVar_channel = BasicMessageChannel<Object?>(
       pigeonVar_channelName,
       pigeonChannelCodec,
@@ -647,7 +647,7 @@ class CookieManagerHostApi {
   /// `bool?` for that reason; see [hasCookies].
   Future<bool?> isFileSchemeCookiesAllowed() async {
     final pigeonVar_channelName =
-        'dev.flutter.pigeon.flutter_inappwebview_android.CookieManagerHostApi.isFileSchemeCookiesAllowed$pigeonVar_messageChannelSuffix';
+        'dev.flutter.pigeon.nosferatu500_inappwebview_android.CookieManagerHostApi.isFileSchemeCookiesAllowed$pigeonVar_messageChannelSuffix';
     final pigeonVar_channel = BasicMessageChannel<Object?>(
       pigeonVar_channelName,
       pigeonChannelCodec,
@@ -671,7 +671,7 @@ class CookieManagerHostApi {
   /// and pinned by `accept cookie master switch`.
   Future<bool> setAcceptCookie(bool accept, String? profileName) async {
     final pigeonVar_channelName =
-        'dev.flutter.pigeon.flutter_inappwebview_android.CookieManagerHostApi.setAcceptCookie$pigeonVar_messageChannelSuffix';
+        'dev.flutter.pigeon.nosferatu500_inappwebview_android.CookieManagerHostApi.setAcceptCookie$pigeonVar_messageChannelSuffix';
     final pigeonVar_channel = BasicMessageChannel<Object?>(
       pigeonVar_channelName,
       pigeonChannelCodec,
@@ -695,7 +695,7 @@ class CookieManagerHostApi {
   /// misleading collapse of the two.
   Future<bool?> isAcceptCookieEnabled(String? profileName) async {
     final pigeonVar_channelName =
-        'dev.flutter.pigeon.flutter_inappwebview_android.CookieManagerHostApi.isAcceptCookieEnabled$pigeonVar_messageChannelSuffix';
+        'dev.flutter.pigeon.nosferatu500_inappwebview_android.CookieManagerHostApi.isAcceptCookieEnabled$pigeonVar_messageChannelSuffix';
     final pigeonVar_channel = BasicMessageChannel<Object?>(
       pigeonVar_channelName,
       pigeonChannelCodec,

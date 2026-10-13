@@ -1,5 +1,5 @@
 import 'package:flutter/foundation.dart';
-import 'package:flutter_inappwebview_internal_annotations/flutter_inappwebview_internal_annotations.dart';
+import 'package:nosferatu500_inappwebview_internal_annotations/nosferatu500_inappwebview_internal_annotations.dart';
 import 'package:plugin_platform_interface/plugin_platform_interface.dart';
 
 import '../in_app_webview/platform_inappwebview_controller.dart';
@@ -13,14 +13,14 @@ part 'platform_web_storage.g.dart';
 ///
 /// Platform specific implementations can add additional fields by extending
 /// this class.
-///{@template flutter_inappwebview_platform_interface.PlatformWebStorageCreationParams}
+///{@template nosferatu500_inappwebview_platform_interface.PlatformWebStorageCreationParams}
 /// Object specifying creation parameters for creating a [PlatformWebStorage].
 ///
 /// Platform specific implementations can add additional fields by extending
 /// this class.
 ///{@endtemplate}
 ///
-///{@macro flutter_inappwebview_platform_interface.PlatformWebStorageCreationParams.supported_platforms}
+///{@macro nosferatu500_inappwebview_platform_interface.PlatformWebStorageCreationParams.supported_platforms}
 @SupportedPlatforms(platforms: [AndroidPlatform(), IOSPlatform()])
 @immutable
 class PlatformWebStorageCreationParams {
@@ -30,19 +30,19 @@ class PlatformWebStorageCreationParams {
     required this.sessionStorage,
   });
 
-  ///{@macro flutter_inappwebview_platform_interface.PlatformWebStorage.localStorage}
+  ///{@macro nosferatu500_inappwebview_platform_interface.PlatformWebStorage.localStorage}
   ///
-  ///{@macro flutter_inappwebview_platform_interface.PlatformWebStorage.localStorage.supported_platforms}
+  ///{@macro nosferatu500_inappwebview_platform_interface.PlatformWebStorage.localStorage.supported_platforms}
   @SupportedPlatforms(platforms: [AndroidPlatform(), IOSPlatform()])
   final PlatformLocalStorage localStorage;
 
-  ///{@macro flutter_inappwebview_platform_interface.PlatformWebStorage.sessionStorage}
+  ///{@macro nosferatu500_inappwebview_platform_interface.PlatformWebStorage.sessionStorage}
   ///
-  ///{@macro flutter_inappwebview_platform_interface.PlatformWebStorage.sessionStorage.supported_platforms}
+  ///{@macro nosferatu500_inappwebview_platform_interface.PlatformWebStorage.sessionStorage.supported_platforms}
   @SupportedPlatforms(platforms: [AndroidPlatform(), IOSPlatform()])
   final PlatformSessionStorage sessionStorage;
 
-  ///{@template flutter_inappwebview_platform_interface.PlatformWebStorageCreationParams.isClassSupported}
+  ///{@template nosferatu500_inappwebview_platform_interface.PlatformWebStorageCreationParams.isClassSupported}
   ///Check if the current class is supported by the [defaultTargetPlatform] or a specific [platform].
   ///{@endtemplate}
   bool isClassSupported({TargetPlatform? platform}) =>
@@ -50,7 +50,7 @@ class PlatformWebStorageCreationParams {
         platform: platform,
       );
 
-  ///{@template flutter_inappwebview_platform_interface.PlatformWebStorageCreationParams.isPropertySupported}
+  ///{@template nosferatu500_inappwebview_platform_interface.PlatformWebStorageCreationParams.isPropertySupported}
   ///Check if the given [property] is supported by the [defaultTargetPlatform] or a specific [platform].
   ///{@endtemplate}
   bool isPropertySupported(
@@ -62,11 +62,11 @@ class PlatformWebStorageCreationParams {
   );
 }
 
-///{@template flutter_inappwebview_platform_interface.PlatformWebStorage}
+///{@template nosferatu500_inappwebview_platform_interface.PlatformWebStorage}
 ///Class that provides access to the JavaScript [Web Storage API](https://developer.mozilla.org/en-US/docs/Web/API/Web_Storage_API): `window.sessionStorage` and `window.localStorage`.
 ///It used by [PlatformInAppWebViewController.webStorage].
 ///{@endtemplate}
-///{@macro flutter_inappwebview_platform_interface.PlatformWebStorage.supported_platforms}
+///{@macro nosferatu500_inappwebview_platform_interface.PlatformWebStorage.supported_platforms}
 @SupportedPlatforms(platforms: [AndroidPlatform(), IOSPlatform()])
 abstract class PlatformWebStorage extends PlatformInterface
     implements Disposable {
@@ -74,7 +74,7 @@ abstract class PlatformWebStorage extends PlatformInterface
   factory PlatformWebStorage(PlatformWebStorageCreationParams params) {
     assert(
       InAppWebViewPlatform.instance != null,
-      'A platform implementation for `flutter_inappwebview` has not been set. Please '
+      'A platform implementation for `nosferatu500_inappwebview` has not been set. Please '
       'ensure that an implementation of `InAppWebViewPlatform` has been set to '
       '`InAppWebViewPlatform.instance` before use. For unit testing, '
       '`InAppWebViewPlatform.instance` can be set with your own test implementation.',
@@ -89,7 +89,7 @@ abstract class PlatformWebStorage extends PlatformInterface
   factory PlatformWebStorage.static() {
     assert(
       InAppWebViewPlatform.instance != null,
-      'A platform implementation for `flutter_inappwebview` has not been set. Please '
+      'A platform implementation for `nosferatu500_inappwebview` has not been set. Please '
       'ensure that an implementation of `InAppWebViewPlatform` has been set to '
       '`InAppWebViewPlatform.instance` before use. For unit testing, '
       '`InAppWebViewPlatform.instance` can be set with your own test implementation.',
@@ -112,27 +112,27 @@ abstract class PlatformWebStorage extends PlatformInterface
   /// The parameters used to initialize the [PlatformWebStorage].
   final PlatformWebStorageCreationParams params;
 
-  ///{@template flutter_inappwebview_platform_interface.PlatformWebStorage.localStorage}
+  ///{@template nosferatu500_inappwebview_platform_interface.PlatformWebStorage.localStorage}
   ///Represents `window.localStorage`.
   ///{@endtemplate}
   ///
-  ///{@macro flutter_inappwebview_platform_interface.PlatformWebStorage.localStorage.supported_platforms}
+  ///{@macro nosferatu500_inappwebview_platform_interface.PlatformWebStorage.localStorage.supported_platforms}
   @SupportedPlatforms(platforms: [AndroidPlatform(), IOSPlatform()])
   PlatformLocalStorage get localStorage => params.localStorage;
 
-  ///{@template flutter_inappwebview_platform_interface.PlatformWebStorage.sessionStorage}
+  ///{@template nosferatu500_inappwebview_platform_interface.PlatformWebStorage.sessionStorage}
   ///Represents `window.sessionStorage`.
   ///{@endtemplate}
   ///
-  ///{@macro flutter_inappwebview_platform_interface.PlatformWebStorage.sessionStorage.supported_platforms}
+  ///{@macro nosferatu500_inappwebview_platform_interface.PlatformWebStorage.sessionStorage.supported_platforms}
   @SupportedPlatforms(platforms: [AndroidPlatform(), IOSPlatform()])
   PlatformSessionStorage get sessionStorage => params.sessionStorage;
 
-  ///{@template flutter_inappwebview_platform_interface.PlatformWebStorage.dispose}
+  ///{@template nosferatu500_inappwebview_platform_interface.PlatformWebStorage.dispose}
   ///Disposes the web storage.
   ///{@endtemplate}
   ///
-  ///{@macro flutter_inappwebview_platform_interface.PlatformWebStorage.dispose.supported_platforms}
+  ///{@macro nosferatu500_inappwebview_platform_interface.PlatformWebStorage.dispose.supported_platforms}
   @override
   @SupportedPlatforms(platforms: [AndroidPlatform(), IOSPlatform()])
   void dispose() {
@@ -141,11 +141,11 @@ abstract class PlatformWebStorage extends PlatformInterface
     );
   }
 
-  ///{@macro flutter_inappwebview_platform_interface.PlatformWebStorageCreationParams.isClassSupported}
+  ///{@macro nosferatu500_inappwebview_platform_interface.PlatformWebStorageCreationParams.isClassSupported}
   bool isClassSupported({TargetPlatform? platform}) =>
       _PlatformWebStorageClassSupported.isClassSupported(platform: platform);
 
-  ///{@template flutter_inappwebview_platform_interface.PlatformWebStorage.isPropertySupported}
+  ///{@template nosferatu500_inappwebview_platform_interface.PlatformWebStorage.isPropertySupported}
   ///Check if the given [property] is supported by the [defaultTargetPlatform] or a specific [platform].
   ///{@endtemplate}
   bool isPropertySupported(dynamic property, {TargetPlatform? platform}) =>
@@ -156,7 +156,7 @@ abstract class PlatformWebStorage extends PlatformInterface
           platform: platform,
         );
 
-  ///{@template flutter_inappwebview_platform_interface.PlatformWebStorage.isMethodSupported}
+  ///{@template nosferatu500_inappwebview_platform_interface.PlatformWebStorage.isMethodSupported}
   ///Check if the given [method] is supported by the [defaultTargetPlatform] or a specific [platform].
   ///{@endtemplate}
   bool isMethodSupported(
@@ -172,14 +172,14 @@ abstract class PlatformWebStorage extends PlatformInterface
 ///
 /// Platform specific implementations can add additional fields by extending
 /// this class.
-///{@template flutter_inappwebview_platform_interface.PlatformStorageCreationParams}
+///{@template nosferatu500_inappwebview_platform_interface.PlatformStorageCreationParams}
 /// Object specifying creation parameters for creating a [PlatformStorage].
 ///
 /// Platform specific implementations can add additional fields by extending
 /// this class.
 ///{@endtemplate}
 ///
-///{@macro flutter_inappwebview_platform_interface.PlatformStorageCreationParams.supported_platforms}
+///{@macro nosferatu500_inappwebview_platform_interface.PlatformStorageCreationParams.supported_platforms}
 @SupportedPlatforms(platforms: [AndroidPlatform(), IOSPlatform()])
 @immutable
 class PlatformStorageCreationParams {
@@ -189,19 +189,19 @@ class PlatformStorageCreationParams {
     required this.webStorageType,
   });
 
-  ///{@macro flutter_inappwebview_platform_interface.PlatformStorage.controller}
+  ///{@macro nosferatu500_inappwebview_platform_interface.PlatformStorage.controller}
   ///
-  ///{@macro flutter_inappwebview_platform_interface.PlatformStorage.controller.supported_platforms}
+  ///{@macro nosferatu500_inappwebview_platform_interface.PlatformStorage.controller.supported_platforms}
   @SupportedPlatforms(platforms: [AndroidPlatform(), IOSPlatform()])
   final PlatformInAppWebViewController? controller;
 
-  ///{@macro flutter_inappwebview_platform_interface.PlatformStorage.webStorageType}
+  ///{@macro nosferatu500_inappwebview_platform_interface.PlatformStorage.webStorageType}
   ///
-  ///{@macro flutter_inappwebview_platform_interface.PlatformStorage.webStorageType.supported_platforms}
+  ///{@macro nosferatu500_inappwebview_platform_interface.PlatformStorage.webStorageType.supported_platforms}
   @SupportedPlatforms(platforms: [AndroidPlatform(), IOSPlatform()])
   final WebStorageType webStorageType;
 
-  ///{@template flutter_inappwebview_platform_interface.PlatformStorageCreationParams.isClassSupported}
+  ///{@template nosferatu500_inappwebview_platform_interface.PlatformStorageCreationParams.isClassSupported}
   ///Check if the current class is supported by the [defaultTargetPlatform] or a specific [platform].
   ///{@endtemplate}
   bool isClassSupported({TargetPlatform? platform}) =>
@@ -209,7 +209,7 @@ class PlatformStorageCreationParams {
         platform: platform,
       );
 
-  ///{@template flutter_inappwebview_platform_interface.PlatformStorageCreationParams.isPropertySupported}
+  ///{@template nosferatu500_inappwebview_platform_interface.PlatformStorageCreationParams.isPropertySupported}
   ///Check if the given [property] is supported by the [defaultTargetPlatform] or a specific [platform].
   ///{@endtemplate}
   bool isPropertySupported(
@@ -221,20 +221,20 @@ class PlatformStorageCreationParams {
   );
 }
 
-///{@template flutter_inappwebview_platform_interface.PlatformStorage}
+///{@template nosferatu500_inappwebview_platform_interface.PlatformStorage}
 ///Class that provides methods to manage the JavaScript [Storage](https://developer.mozilla.org/en-US/docs/Web/API/Storage) object.
 ///It is used by [PlatformLocalStorage] and [PlatformSessionStorage].
 ///{@endtemplate}
-///{@macro flutter_inappwebview_platform_interface.PlatformStorage.supported_platforms}
+///{@macro nosferatu500_inappwebview_platform_interface.PlatformStorage.supported_platforms}
 @SupportedPlatforms(platforms: [AndroidPlatform(), IOSPlatform()])
 abstract mixin class PlatformStorage implements Disposable {
-  ///{@template flutter_inappwebview_platform_interface.PlatformStorage.controller}
+  ///{@template nosferatu500_inappwebview_platform_interface.PlatformStorage.controller}
   ///Controller used to interact with storage.
   ///{@endtemplate}
   @SupportedPlatforms(platforms: [AndroidPlatform(), IOSPlatform()])
   PlatformInAppWebViewController? get controller;
 
-  ///{@template flutter_inappwebview_platform_interface.PlatformStorage.webStorageType}
+  ///{@template nosferatu500_inappwebview_platform_interface.PlatformStorage.webStorageType}
   ///The web storage type: `window.sessionStorage` or `window.localStorage`.
   ///{@endtemplate}
   @SupportedPlatforms(platforms: [AndroidPlatform(), IOSPlatform()])
@@ -244,7 +244,7 @@ abstract mixin class PlatformStorage implements Disposable {
     );
   }
 
-  ///{@template flutter_inappwebview_platform_interface.PlatformStorage.length}
+  ///{@template nosferatu500_inappwebview_platform_interface.PlatformStorage.length}
   ///Returns an integer representing the number of data items stored in the Storage object.
   ///{@endtemplate}
   @SupportedPlatforms(platforms: [AndroidPlatform(), IOSPlatform()])
@@ -254,7 +254,7 @@ abstract mixin class PlatformStorage implements Disposable {
     );
   }
 
-  ///{@template flutter_inappwebview_platform_interface.PlatformStorage.setItem}
+  ///{@template nosferatu500_inappwebview_platform_interface.PlatformStorage.setItem}
   ///When passed a [key] name and [value], will add that key to the storage, or update that key's value if it already exists.
   ///{@endtemplate}
   @SupportedPlatforms(platforms: [AndroidPlatform(), IOSPlatform()])
@@ -264,7 +264,7 @@ abstract mixin class PlatformStorage implements Disposable {
     );
   }
 
-  ///{@template flutter_inappwebview_platform_interface.PlatformStorage.getItem}
+  ///{@template nosferatu500_inappwebview_platform_interface.PlatformStorage.getItem}
   ///When passed a [key] name, will return that key's value, or `null` if the key does not exist, in the given Storage object.
   ///{@endtemplate}
   @SupportedPlatforms(platforms: [AndroidPlatform(), IOSPlatform()])
@@ -274,7 +274,7 @@ abstract mixin class PlatformStorage implements Disposable {
     );
   }
 
-  ///{@template flutter_inappwebview_platform_interface.PlatformStorage.removeItem}
+  ///{@template nosferatu500_inappwebview_platform_interface.PlatformStorage.removeItem}
   ///When passed a [key] name, will remove that key from the given Storage object if it exists.
   ///{@endtemplate}
   @SupportedPlatforms(platforms: [AndroidPlatform(), IOSPlatform()])
@@ -284,7 +284,7 @@ abstract mixin class PlatformStorage implements Disposable {
     );
   }
 
-  ///{@template flutter_inappwebview_platform_interface.PlatformStorage.getItems}
+  ///{@template nosferatu500_inappwebview_platform_interface.PlatformStorage.getItems}
   ///Returns the list of all items from the given Storage object.
   ///{@endtemplate}
   @SupportedPlatforms(platforms: [AndroidPlatform(), IOSPlatform()])
@@ -294,7 +294,7 @@ abstract mixin class PlatformStorage implements Disposable {
     );
   }
 
-  ///{@template flutter_inappwebview_platform_interface.PlatformStorage.clear}
+  ///{@template nosferatu500_inappwebview_platform_interface.PlatformStorage.clear}
   ///Clears all keys stored in a given Storage object.
   ///{@endtemplate}
   @SupportedPlatforms(platforms: [AndroidPlatform(), IOSPlatform()])
@@ -304,7 +304,7 @@ abstract mixin class PlatformStorage implements Disposable {
     );
   }
 
-  ///{@template flutter_inappwebview_platform_interface.PlatformStorage.key}
+  ///{@template nosferatu500_inappwebview_platform_interface.PlatformStorage.key}
   ///When passed a number [index], returns the name of the nth key in a given Storage object.
   ///The order of keys is user-agent defined, so you should not rely on it.
   ///{@endtemplate}
@@ -346,7 +346,7 @@ class PlatformLocalStorageCreationParams extends PlatformStorageCreationParams {
     return PlatformLocalStorageCreationParams(params);
   }
 
-  ///{@template flutter_inappwebview_platform_interface.PlatformLocalStorageCreationParams.isClassSupported}
+  ///{@template nosferatu500_inappwebview_platform_interface.PlatformLocalStorageCreationParams.isClassSupported}
   ///Check if the current class is supported by the [defaultTargetPlatform] or a specific [platform].
   ///{@endtemplate}
   @override
@@ -356,11 +356,11 @@ class PlatformLocalStorageCreationParams extends PlatformStorageCreationParams {
       );
 }
 
-///{@template flutter_inappwebview_platform_interface.PlatformLocalStorage}
+///{@template nosferatu500_inappwebview_platform_interface.PlatformLocalStorage}
 ///Class that provides methods to manage the JavaScript `window.localStorage` object.
 ///It used by [PlatformWebStorage].
 ///{@endtemplate}
-///{@macro flutter_inappwebview_platform_interface.PlatformLocalStorage.supported_platforms}
+///{@macro nosferatu500_inappwebview_platform_interface.PlatformLocalStorage.supported_platforms}
 @SupportedPlatforms(platforms: [AndroidPlatform(), IOSPlatform()])
 abstract class PlatformLocalStorage extends PlatformInterface
     with PlatformStorage {
@@ -368,7 +368,7 @@ abstract class PlatformLocalStorage extends PlatformInterface
   factory PlatformLocalStorage(PlatformLocalStorageCreationParams params) {
     assert(
       InAppWebViewPlatform.instance != null,
-      'A platform implementation for `flutter_inappwebview` has not been set. Please '
+      'A platform implementation for `nosferatu500_inappwebview` has not been set. Please '
       'ensure that an implementation of `InAppWebViewPlatform` has been set to '
       '`InAppWebViewPlatform.instance` before use. For unit testing, '
       '`InAppWebViewPlatform.instance` can be set with your own test implementation.',
@@ -383,7 +383,7 @@ abstract class PlatformLocalStorage extends PlatformInterface
   factory PlatformLocalStorage.static() {
     assert(
       InAppWebViewPlatform.instance != null,
-      'A platform implementation for `flutter_inappwebview` has not been set. Please '
+      'A platform implementation for `nosferatu500_inappwebview` has not been set. Please '
       'ensure that an implementation of `InAppWebViewPlatform` has been set to '
       '`WebViewPlatform.instance` before use. For unit testing, '
       '`WebViewPlatform.instance` can be set with your own test implementation.',
@@ -410,11 +410,11 @@ abstract class PlatformLocalStorage extends PlatformInterface
   @override
   WebStorageType get webStorageType => params.webStorageType;
 
-  ///{@macro flutter_inappwebview_platform_interface.PlatformLocalStorage.isClassSupported}
+  ///{@macro nosferatu500_inappwebview_platform_interface.PlatformLocalStorage.isClassSupported}
   bool isClassSupported({TargetPlatform? platform}) =>
       _PlatformLocalStorageClassSupported.isClassSupported(platform: platform);
 
-  ///{@template flutter_inappwebview_platform_interface.PlatformLocalStorage.isPropertySupported}
+  ///{@template nosferatu500_inappwebview_platform_interface.PlatformLocalStorage.isPropertySupported}
   ///Check if the given [property] is supported by the [defaultTargetPlatform] or a specific [platform].
   ///{@endtemplate}
   bool isPropertySupported(
@@ -422,7 +422,7 @@ abstract class PlatformLocalStorage extends PlatformInterface
     TargetPlatform? platform,
   }) => params.isPropertySupported(property, platform: platform);
 
-  ///{@template flutter_inappwebview_platform_interface.PlatformLocalStorage.isMethodSupported}
+  ///{@template nosferatu500_inappwebview_platform_interface.PlatformLocalStorage.isMethodSupported}
   ///Check if the given [method] is supported by the [defaultTargetPlatform] or a specific [platform].
   ///{@endtemplate}
   bool isMethodSupported(
@@ -492,7 +492,7 @@ class PlatformSessionStorageCreationParams
     return PlatformSessionStorageCreationParams(params);
   }
 
-  ///{@template flutter_inappwebview_platform_interface.PlatformSessionStorageCreationParams.isClassSupported}
+  ///{@template nosferatu500_inappwebview_platform_interface.PlatformSessionStorageCreationParams.isClassSupported}
   ///Check if the current class is supported by the [defaultTargetPlatform] or a specific [platform].
   ///{@endtemplate}
   @override
@@ -502,11 +502,11 @@ class PlatformSessionStorageCreationParams
       );
 }
 
-///{@template flutter_inappwebview_platform_interface.PlatformSessionStorage}
+///{@template nosferatu500_inappwebview_platform_interface.PlatformSessionStorage}
 ///Class that provides methods to manage the JavaScript `window.sessionStorage` object.
 ///It used by [PlatformWebStorage].
 ///{@endtemplate}
-///{@macro flutter_inappwebview_platform_interface.PlatformSessionStorage.supported_platforms}
+///{@macro nosferatu500_inappwebview_platform_interface.PlatformSessionStorage.supported_platforms}
 @SupportedPlatforms(platforms: [AndroidPlatform(), IOSPlatform()])
 abstract class PlatformSessionStorage extends PlatformInterface
     with PlatformStorage {
@@ -514,7 +514,7 @@ abstract class PlatformSessionStorage extends PlatformInterface
   factory PlatformSessionStorage(PlatformSessionStorageCreationParams params) {
     assert(
       InAppWebViewPlatform.instance != null,
-      'A platform implementation for `flutter_inappwebview` has not been set. Please '
+      'A platform implementation for `nosferatu500_inappwebview` has not been set. Please '
       'ensure that an implementation of `InAppWebViewPlatform` has been set to '
       '`InAppWebViewPlatform.instance` before use. For unit testing, '
       '`InAppWebViewPlatform.instance` can be set with your own test implementation.',
@@ -529,7 +529,7 @@ abstract class PlatformSessionStorage extends PlatformInterface
   factory PlatformSessionStorage.static() {
     assert(
       InAppWebViewPlatform.instance != null,
-      'A platform implementation for `flutter_inappwebview` has not been set. Please '
+      'A platform implementation for `nosferatu500_inappwebview` has not been set. Please '
       'ensure that an implementation of `InAppWebViewPlatform` has been set to '
       '`WebViewPlatform.instance` before use. For unit testing, '
       '`WebViewPlatform.instance` can be set with your own test implementation.',
@@ -556,13 +556,13 @@ abstract class PlatformSessionStorage extends PlatformInterface
   @override
   WebStorageType get webStorageType => params.webStorageType;
 
-  ///{@macro flutter_inappwebview_platform_interface.PlatformSessionStorage.isClassSupported}
+  ///{@macro nosferatu500_inappwebview_platform_interface.PlatformSessionStorage.isClassSupported}
   bool isClassSupported({TargetPlatform? platform}) =>
       _PlatformSessionStorageClassSupported.isClassSupported(
         platform: platform,
       );
 
-  ///{@template flutter_inappwebview_platform_interface.PlatformSessionStorage.isPropertySupported}
+  ///{@template nosferatu500_inappwebview_platform_interface.PlatformSessionStorage.isPropertySupported}
   ///Check if the given [property] is supported by the [defaultTargetPlatform] or a specific [platform].
   ///{@endtemplate}
   bool isPropertySupported(
@@ -570,7 +570,7 @@ abstract class PlatformSessionStorage extends PlatformInterface
     TargetPlatform? platform,
   }) => params.isPropertySupported(property, platform: platform);
 
-  ///{@template flutter_inappwebview_platform_interface.PlatformSessionStorage.isMethodSupported}
+  ///{@template nosferatu500_inappwebview_platform_interface.PlatformSessionStorage.isMethodSupported}
   ///Check if the given [method] is supported by the [defaultTargetPlatform] or a specific [platform].
   ///{@endtemplate}
   bool isMethodSupported(

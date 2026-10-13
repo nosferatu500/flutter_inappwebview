@@ -227,7 +227,7 @@ class TracingControllerHostApi {
   /// indistinguishable from "not tracing" and was already conflated by the channel this replaces.
   Future<bool> isTracing() async {
     final pigeonVar_channelName =
-        'dev.flutter.pigeon.flutter_inappwebview_android.TracingControllerHostApi.isTracing$pigeonVar_messageChannelSuffix';
+        'dev.flutter.pigeon.nosferatu500_inappwebview_android.TracingControllerHostApi.isTracing$pigeonVar_messageChannelSuffix';
     final pigeonVar_channel = BasicMessageChannel<Object?>(
       pigeonVar_channelName,
       pigeonChannelCodec,
@@ -252,7 +252,7 @@ class TracingControllerHostApi {
   /// `ProxyHostApi.setProxyOverride` (§160).
   Future<bool> start(TracingSettingsData settings) async {
     final pigeonVar_channelName =
-        'dev.flutter.pigeon.flutter_inappwebview_android.TracingControllerHostApi.start$pigeonVar_messageChannelSuffix';
+        'dev.flutter.pigeon.nosferatu500_inappwebview_android.TracingControllerHostApi.start$pigeonVar_messageChannelSuffix';
     final pigeonVar_channel = BasicMessageChannel<Object?>(
       pigeonVar_channelName,
       pigeonChannelCodec,
@@ -283,7 +283,7 @@ class TracingControllerHostApi {
   /// A null [filePath] discards the trace data, per androidx.
   Future<bool> stop(String? filePath) async {
     final pigeonVar_channelName =
-        'dev.flutter.pigeon.flutter_inappwebview_android.TracingControllerHostApi.stop$pigeonVar_messageChannelSuffix';
+        'dev.flutter.pigeon.nosferatu500_inappwebview_android.TracingControllerHostApi.stop$pigeonVar_messageChannelSuffix';
     final pigeonVar_channel = BasicMessageChannel<Object?>(
       pigeonVar_channelName,
       pigeonChannelCodec,

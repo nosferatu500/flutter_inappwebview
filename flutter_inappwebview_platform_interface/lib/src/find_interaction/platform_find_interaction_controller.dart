@@ -1,5 +1,5 @@
 import 'package:flutter/foundation.dart';
-import 'package:flutter_inappwebview_internal_annotations/flutter_inappwebview_internal_annotations.dart';
+import 'package:nosferatu500_inappwebview_internal_annotations/nosferatu500_inappwebview_internal_annotations.dart';
 import 'package:plugin_platform_interface/plugin_platform_interface.dart';
 import '../in_app_webview/in_app_webview_settings.dart';
 import '../debug_logging_settings.dart';
@@ -8,14 +8,14 @@ import '../types/main.dart';
 
 part 'platform_find_interaction_controller.g.dart';
 
-///{@template flutter_inappwebview_platform_interface.PlatformFindInteractionControllerCreationParams}
+///{@template nosferatu500_inappwebview_platform_interface.PlatformFindInteractionControllerCreationParams}
 /// Object specifying creation parameters for creating a [PlatformFindInteractionController].
 ///
 /// Platform specific implementations can add additional fields by extending
 /// this class.
 ///{@endtemplate}
 ///
-///{@macro flutter_inappwebview_platform_interface.PlatformFindInteractionControllerCreationParams.supported_platforms}
+///{@macro nosferatu500_inappwebview_platform_interface.PlatformFindInteractionControllerCreationParams.supported_platforms}
 @SupportedPlatforms(platforms: [AndroidPlatform(), IOSPlatform()])
 @immutable
 class PlatformFindInteractionControllerCreationParams {
@@ -24,7 +24,7 @@ class PlatformFindInteractionControllerCreationParams {
     this.onFindResultReceived,
   });
 
-  ///{@template flutter_inappwebview_platform_interface.PlatformFindInteractionControllerCreationParams.onFindResultReceived}
+  ///{@template nosferatu500_inappwebview_platform_interface.PlatformFindInteractionControllerCreationParams.onFindResultReceived}
   ///Event fired as find-on-page operations progress.
   ///The listener may be notified multiple times while the operation is underway, and the [numberOfMatches] value should not be considered final unless [isDoneCounting] is true.
   ///
@@ -46,7 +46,7 @@ class PlatformFindInteractionControllerCreationParams {
   ///happen.
   ///{@endtemplate}
   ///
-  ///{@macro flutter_inappwebview_platform_interface.PlatformFindInteractionControllerCreationParams.onFindResultReceived.supported_platforms}
+  ///{@macro nosferatu500_inappwebview_platform_interface.PlatformFindInteractionControllerCreationParams.onFindResultReceived.supported_platforms}
   @SupportedPlatforms(
     platforms: [
       AndroidPlatform(
@@ -69,7 +69,7 @@ Below iOS 16.0 that setting cannot take effect, so the search falls back to the 
   )?
   onFindResultReceived;
 
-  ///{@template flutter_inappwebview_platform_interface.PlatformFindInteractionControllerCreationParams.isClassSupported}
+  ///{@template nosferatu500_inappwebview_platform_interface.PlatformFindInteractionControllerCreationParams.isClassSupported}
   ///Check if the current class is supported by the [defaultTargetPlatform] or a specific [platform].
   ///{@endtemplate}
   bool isClassSupported({TargetPlatform? platform}) =>
@@ -77,7 +77,7 @@ Below iOS 16.0 that setting cannot take effect, so the search falls back to the 
         platform: platform,
       );
 
-  ///{@template flutter_inappwebview_platform_interface.PlatformFindInteractionControllerCreationParams.isPropertySupported}
+  ///{@template nosferatu500_inappwebview_platform_interface.PlatformFindInteractionControllerCreationParams.isPropertySupported}
   ///Check if the given [property] is supported by the [defaultTargetPlatform] or a specific [platform].
   ///{@endtemplate}
   bool isPropertySupported(
@@ -90,12 +90,12 @@ Below iOS 16.0 that setting cannot take effect, so the search falls back to the 
       );
 }
 
-///{@template flutter_inappwebview_platform_interface.PlatformFindInteractionController}
+///{@template nosferatu500_inappwebview_platform_interface.PlatformFindInteractionController}
 ///This class represents the controller used by the `WebView` to add
 ///text-finding capabilities, such as the "Find on page" feature.
 ///{@endtemplate}
 ///
-///{@macro flutter_inappwebview_platform_interface.PlatformFindInteractionController.supported_platforms}
+///{@macro nosferatu500_inappwebview_platform_interface.PlatformFindInteractionController.supported_platforms}
 @SupportedPlatforms(platforms: [AndroidPlatform(), IOSPlatform()])
 abstract class PlatformFindInteractionController extends PlatformInterface
     implements Disposable {
@@ -108,7 +108,7 @@ abstract class PlatformFindInteractionController extends PlatformInterface
   ) {
     assert(
       InAppWebViewPlatform.instance != null,
-      'A platform implementation for `flutter_inappwebview` has not been set. Please '
+      'A platform implementation for `nosferatu500_inappwebview` has not been set. Please '
       'ensure that an implementation of `InAppWebViewPlatform` has been set to '
       '`InAppWebViewPlatform.instance` before use. For unit testing, '
       '`InAppWebViewPlatform.instance` can be set with your own test implementation.',
@@ -125,7 +125,7 @@ abstract class PlatformFindInteractionController extends PlatformInterface
   factory PlatformFindInteractionController.static() {
     assert(
       InAppWebViewPlatform.instance != null,
-      'A platform implementation for `flutter_inappwebview` has not been set. Please '
+      'A platform implementation for `nosferatu500_inappwebview` has not been set. Please '
       'ensure that an implementation of `InAppWebViewPlatform` has been set to '
       '`WebViewPlatform.instance` before use. For unit testing, '
       '`WebViewPlatform.instance` can be set with your own test implementation.',
@@ -150,9 +150,9 @@ abstract class PlatformFindInteractionController extends PlatformInterface
   /// The parameters used to initialize the [PlatformFindInteractionController].
   final PlatformFindInteractionControllerCreationParams params;
 
-  ///{@macro flutter_inappwebview_platform_interface.PlatformFindInteractionControllerCreationParams.onFindResultReceived}
+  ///{@macro nosferatu500_inappwebview_platform_interface.PlatformFindInteractionControllerCreationParams.onFindResultReceived}
   ///
-  ///{@macro flutter_inappwebview_platform_interface.PlatformFindInteractionControllerCreationParams.onFindResultReceived.supported_platforms}
+  ///{@macro nosferatu500_inappwebview_platform_interface.PlatformFindInteractionControllerCreationParams.onFindResultReceived.supported_platforms}
   void Function(
     PlatformFindInteractionController controller,
     int activeMatchOrdinal,
@@ -161,7 +161,7 @@ abstract class PlatformFindInteractionController extends PlatformInterface
   )?
   get onFindResultReceived => params.onFindResultReceived;
 
-  ///{@template flutter_inappwebview_platform_interface.PlatformFindInteractionController.findAll}
+  ///{@template nosferatu500_inappwebview_platform_interface.PlatformFindInteractionController.findAll}
   ///Finds all instances of find on the page and highlights them. Notifies [PlatformFindInteractionController.onFindResultReceived] listener.
   ///
   ///[find] represents the string to find.
@@ -171,7 +171,7 @@ abstract class PlatformFindInteractionController extends PlatformInterface
   ///[PlatformFindInteractionController.onFindResultReceived] for the measurement.
   ///{@endtemplate}
   ///
-  ///{@macro flutter_inappwebview_platform_interface.PlatformFindInteractionController.findAll.supported_platforms}
+  ///{@macro nosferatu500_inappwebview_platform_interface.PlatformFindInteractionController.findAll.supported_platforms}
   @SupportedPlatforms(
     platforms: [
       AndroidPlatform(
@@ -193,13 +193,13 @@ abstract class PlatformFindInteractionController extends PlatformInterface
     );
   }
 
-  ///{@template flutter_inappwebview_platform_interface.PlatformFindInteractionController.findNext}
+  ///{@template nosferatu500_inappwebview_platform_interface.PlatformFindInteractionController.findNext}
   ///Highlights and scrolls to the next match found by [findAll]. Notifies [PlatformFindInteractionController.onFindResultReceived] listener.
   ///
   ///[forward] represents the direction to search. The default value is `true`, meaning forward.
   ///{@endtemplate}
   ///
-  ///{@macro flutter_inappwebview_platform_interface.PlatformFindInteractionController.findNext.supported_platforms}
+  ///{@macro nosferatu500_inappwebview_platform_interface.PlatformFindInteractionController.findNext.supported_platforms}
   @SupportedPlatforms(
     platforms: [
       AndroidPlatform(
@@ -219,11 +219,11 @@ abstract class PlatformFindInteractionController extends PlatformInterface
     );
   }
 
-  ///{@template flutter_inappwebview_platform_interface.PlatformFindInteractionController.clearMatches}
+  ///{@template nosferatu500_inappwebview_platform_interface.PlatformFindInteractionController.clearMatches}
   ///Clears the highlighting surrounding text matches created by [findAll].
   ///{@endtemplate}
   ///
-  ///{@macro flutter_inappwebview_platform_interface.PlatformFindInteractionController.clearMatches.supported_platforms}
+  ///{@macro nosferatu500_inappwebview_platform_interface.PlatformFindInteractionController.clearMatches.supported_platforms}
   @SupportedPlatforms(
     platforms: [
       AndroidPlatform(
@@ -243,11 +243,11 @@ abstract class PlatformFindInteractionController extends PlatformInterface
     );
   }
 
-  ///{@template flutter_inappwebview_platform_interface.PlatformFindInteractionController.setSearchText}
+  ///{@template nosferatu500_inappwebview_platform_interface.PlatformFindInteractionController.setSearchText}
   ///Pre-populate the search text to be used.
   ///{@endtemplate}
   ///
-  ///{@macro flutter_inappwebview_platform_interface.PlatformFindInteractionController.setSearchText.supported_platforms}
+  ///{@macro nosferatu500_inappwebview_platform_interface.PlatformFindInteractionController.setSearchText.supported_platforms}
   @SupportedPlatforms(
     platforms: [
       AndroidPlatform(),
@@ -266,11 +266,11 @@ abstract class PlatformFindInteractionController extends PlatformInterface
     );
   }
 
-  ///{@template flutter_inappwebview_platform_interface.PlatformFindInteractionController.getSearchText}
+  ///{@template nosferatu500_inappwebview_platform_interface.PlatformFindInteractionController.getSearchText}
   ///Get the search text used.
   ///{@endtemplate}
   ///
-  ///{@macro flutter_inappwebview_platform_interface.PlatformFindInteractionController.getSearchText.supported_platforms}
+  ///{@macro nosferatu500_inappwebview_platform_interface.PlatformFindInteractionController.getSearchText.supported_platforms}
   @SupportedPlatforms(
     platforms: [
       AndroidPlatform(),
@@ -289,11 +289,11 @@ abstract class PlatformFindInteractionController extends PlatformInterface
     );
   }
 
-  ///{@template flutter_inappwebview_platform_interface.PlatformFindInteractionController.isFindNavigatorVisible}
+  ///{@template nosferatu500_inappwebview_platform_interface.PlatformFindInteractionController.isFindNavigatorVisible}
   ///A Boolean value that indicates when the find panel displays onscreen.
   ///{@endtemplate}
   ///
-  ///{@macro flutter_inappwebview_platform_interface.PlatformFindInteractionController.isFindNavigatorVisible.supported_platforms}
+  ///{@macro nosferatu500_inappwebview_platform_interface.PlatformFindInteractionController.isFindNavigatorVisible.supported_platforms}
   @SupportedPlatforms(
     platforms: [
       IOSPlatform(
@@ -311,11 +311,11 @@ abstract class PlatformFindInteractionController extends PlatformInterface
     );
   }
 
-  ///{@template flutter_inappwebview_platform_interface.PlatformFindInteractionController.updateResultCount}
+  ///{@template nosferatu500_inappwebview_platform_interface.PlatformFindInteractionController.updateResultCount}
   ///Updates the results the interface displays for the active search.
   ///{@endtemplate}
   ///
-  ///{@macro flutter_inappwebview_platform_interface.PlatformFindInteractionController.updateResultCount.supported_platforms}
+  ///{@macro nosferatu500_inappwebview_platform_interface.PlatformFindInteractionController.updateResultCount.supported_platforms}
   @SupportedPlatforms(
     platforms: [
       IOSPlatform(
@@ -333,11 +333,11 @@ abstract class PlatformFindInteractionController extends PlatformInterface
     );
   }
 
-  ///{@template flutter_inappwebview_platform_interface.PlatformFindInteractionController.presentFindNavigator}
+  ///{@template nosferatu500_inappwebview_platform_interface.PlatformFindInteractionController.presentFindNavigator}
   ///Begins a search, displaying the find panel.
   ///{@endtemplate}
   ///
-  ///{@macro flutter_inappwebview_platform_interface.PlatformFindInteractionController.presentFindNavigator.supported_platforms}
+  ///{@macro nosferatu500_inappwebview_platform_interface.PlatformFindInteractionController.presentFindNavigator.supported_platforms}
   @SupportedPlatforms(
     platforms: [
       IOSPlatform(
@@ -355,11 +355,11 @@ abstract class PlatformFindInteractionController extends PlatformInterface
     );
   }
 
-  ///{@template flutter_inappwebview_platform_interface.PlatformFindInteractionController.dismissFindNavigator}
+  ///{@template nosferatu500_inappwebview_platform_interface.PlatformFindInteractionController.dismissFindNavigator}
   ///Dismisses the find panel, if present.
   ///{@endtemplate}
   ///
-  ///{@macro flutter_inappwebview_platform_interface.PlatformFindInteractionController.dismissFindNavigator.supported_platforms}
+  ///{@macro nosferatu500_inappwebview_platform_interface.PlatformFindInteractionController.dismissFindNavigator.supported_platforms}
   @SupportedPlatforms(
     platforms: [
       IOSPlatform(
@@ -377,11 +377,11 @@ abstract class PlatformFindInteractionController extends PlatformInterface
     );
   }
 
-  ///{@template flutter_inappwebview_platform_interface.PlatformFindInteractionController.getActiveFindSession}
+  ///{@template nosferatu500_inappwebview_platform_interface.PlatformFindInteractionController.getActiveFindSession}
   ///If there's a currently active find session, returns the active find session.
   ///{@endtemplate}
   ///
-  ///{@macro flutter_inappwebview_platform_interface.PlatformFindInteractionController.getActiveFindSession.supported_platforms}
+  ///{@macro nosferatu500_inappwebview_platform_interface.PlatformFindInteractionController.getActiveFindSession.supported_platforms}
   @SupportedPlatforms(
     platforms: [
       AndroidPlatform(),
@@ -398,11 +398,11 @@ abstract class PlatformFindInteractionController extends PlatformInterface
     );
   }
 
-  ///{@template flutter_inappwebview_platform_interface.PlatformFindInteractionController.dispose}
+  ///{@template nosferatu500_inappwebview_platform_interface.PlatformFindInteractionController.dispose}
   ///Disposes the controller.
   ///{@endtemplate}
   ///
-  ///{@macro flutter_inappwebview_platform_interface.PlatformFindInteractionController.dispose.supported_platforms}
+  ///{@macro nosferatu500_inappwebview_platform_interface.PlatformFindInteractionController.dispose.supported_platforms}
   @SupportedPlatforms(platforms: [AndroidPlatform(), IOSPlatform()])
   @override
   void dispose({bool isKeepAlive = false}) {
@@ -411,17 +411,17 @@ abstract class PlatformFindInteractionController extends PlatformInterface
     );
   }
 
-  ///{@macro flutter_inappwebview_platform_interface.PlatformFindInteractionControllerCreationParams.isClassSupported}
+  ///{@macro nosferatu500_inappwebview_platform_interface.PlatformFindInteractionControllerCreationParams.isClassSupported}
   bool isClassSupported({TargetPlatform? platform}) =>
       params.isClassSupported(platform: platform);
 
-  ///{@macro flutter_inappwebview_platform_interface.PlatformFindInteractionControllerCreationParams.isPropertySupported}
+  ///{@macro nosferatu500_inappwebview_platform_interface.PlatformFindInteractionControllerCreationParams.isPropertySupported}
   bool isPropertySupported(
     PlatformFindInteractionControllerCreationParamsProperty property, {
     TargetPlatform? platform,
   }) => params.isPropertySupported(property, platform: platform);
 
-  ///{@template flutter_inappwebview_platform_interface.PlatformFindInteractionController.isMethodSupported}
+  ///{@template nosferatu500_inappwebview_platform_interface.PlatformFindInteractionController.isMethodSupported}
   ///Check if the given [method] is supported by the [defaultTargetPlatform] or a specific [platform].
   ///{@endtemplate}
   bool isMethodSupported(

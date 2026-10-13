@@ -226,7 +226,7 @@ class WebStorageManagerHostApi {
   /// by `android.jar`), but it is now scoped to this one function and the *outbound* half is typed.
   Future<List<WebStorageOriginData>> getOrigins(String? profileName) async {
     final pigeonVar_channelName =
-        'dev.flutter.pigeon.flutter_inappwebview_android.WebStorageManagerHostApi.getOrigins$pigeonVar_messageChannelSuffix';
+        'dev.flutter.pigeon.nosferatu500_inappwebview_android.WebStorageManagerHostApi.getOrigins$pigeonVar_messageChannelSuffix';
     final pigeonVar_channel = BasicMessageChannel<Object?>(
       pigeonVar_channelName,
       pigeonChannelCodec,
@@ -256,7 +256,7 @@ class WebStorageManagerHostApi {
   /// Not `@async`: `WebStorage.deleteAllData()` returns `void` and inline.
   Future<bool> deleteAllData(String? profileName) async {
     final pigeonVar_channelName =
-        'dev.flutter.pigeon.flutter_inappwebview_android.WebStorageManagerHostApi.deleteAllData$pigeonVar_messageChannelSuffix';
+        'dev.flutter.pigeon.nosferatu500_inappwebview_android.WebStorageManagerHostApi.deleteAllData$pigeonVar_messageChannelSuffix';
     final pigeonVar_channel = BasicMessageChannel<Object?>(
       pigeonVar_channelName,
       pigeonChannelCodec,
@@ -282,7 +282,7 @@ class WebStorageManagerHostApi {
   /// `WebStorage.deleteOrigin`, so a dropped key reached the platform as null.
   Future<bool> deleteOrigin(String origin, String? profileName) async {
     final pigeonVar_channelName =
-        'dev.flutter.pigeon.flutter_inappwebview_android.WebStorageManagerHostApi.deleteOrigin$pigeonVar_messageChannelSuffix';
+        'dev.flutter.pigeon.nosferatu500_inappwebview_android.WebStorageManagerHostApi.deleteOrigin$pigeonVar_messageChannelSuffix';
     final pigeonVar_channel = BasicMessageChannel<Object?>(
       pigeonVar_channelName,
       pigeonChannelCodec,
@@ -310,7 +310,7 @@ class WebStorageManagerHostApi {
   /// defensive, because the compat call throws `UnsupportedOperationException` without it.
   Future<bool> deleteBrowsingData(String? profileName) async {
     final pigeonVar_channelName =
-        'dev.flutter.pigeon.flutter_inappwebview_android.WebStorageManagerHostApi.deleteBrowsingData$pigeonVar_messageChannelSuffix';
+        'dev.flutter.pigeon.nosferatu500_inappwebview_android.WebStorageManagerHostApi.deleteBrowsingData$pigeonVar_messageChannelSuffix';
     final pigeonVar_channel = BasicMessageChannel<Object?>(
       pigeonVar_channelName,
       pigeonChannelCodec,
@@ -356,7 +356,7 @@ class WebStorageManagerHostApi {
     String? profileName,
   ) async {
     final pigeonVar_channelName =
-        'dev.flutter.pigeon.flutter_inappwebview_android.WebStorageManagerHostApi.deleteBrowsingDataForSite$pigeonVar_messageChannelSuffix';
+        'dev.flutter.pigeon.nosferatu500_inappwebview_android.WebStorageManagerHostApi.deleteBrowsingDataForSite$pigeonVar_messageChannelSuffix';
     final pigeonVar_channel = BasicMessageChannel<Object?>(
       pigeonVar_channelName,
       pigeonChannelCodec,
@@ -384,7 +384,7 @@ class WebStorageManagerHostApi {
   /// couldn't be told apart from.
   Future<int?> getQuotaForOrigin(String origin, String? profileName) async {
     final pigeonVar_channelName =
-        'dev.flutter.pigeon.flutter_inappwebview_android.WebStorageManagerHostApi.getQuotaForOrigin$pigeonVar_messageChannelSuffix';
+        'dev.flutter.pigeon.nosferatu500_inappwebview_android.WebStorageManagerHostApi.getQuotaForOrigin$pigeonVar_messageChannelSuffix';
     final pigeonVar_channel = BasicMessageChannel<Object?>(
       pigeonVar_channelName,
       pigeonChannelCodec,
@@ -408,7 +408,7 @@ class WebStorageManagerHostApi {
   /// `@async`, and answers `null` on an unresolvable store; see [getQuotaForOrigin].
   Future<int?> getUsageForOrigin(String origin, String? profileName) async {
     final pigeonVar_channelName =
-        'dev.flutter.pigeon.flutter_inappwebview_android.WebStorageManagerHostApi.getUsageForOrigin$pigeonVar_messageChannelSuffix';
+        'dev.flutter.pigeon.nosferatu500_inappwebview_android.WebStorageManagerHostApi.getUsageForOrigin$pigeonVar_messageChannelSuffix';
     final pigeonVar_channel = BasicMessageChannel<Object?>(
       pigeonVar_channelName,
       pigeonChannelCodec,

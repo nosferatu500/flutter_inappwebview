@@ -2,19 +2,19 @@ import 'dart:async';
 import 'dart:collection';
 
 import 'package:flutter/services.dart';
-import 'package:flutter_inappwebview_platform_interface/flutter_inappwebview_platform_interface.dart';
+import 'package:nosferatu500_inappwebview_platform_interface/nosferatu500_inappwebview_platform_interface.dart';
 
 import '../find_interaction/find_interaction_controller.dart';
 import '../pull_to_refresh/pull_to_refresh_controller.dart';
 import 'in_app_webview_controller.dart';
 
-///{@macro flutter_inappwebview_platform_interface.PlatformHeadlessInAppWebView}
+///{@macro nosferatu500_inappwebview_platform_interface.PlatformHeadlessInAppWebView}
 ///
-///{@macro flutter_inappwebview_platform_interface.PlatformHeadlessInAppWebView.supported_platforms}
+///{@macro nosferatu500_inappwebview_platform_interface.PlatformHeadlessInAppWebView.supported_platforms}
 class HeadlessInAppWebView {
   /// Constructs a [HeadlessInAppWebView].
   ///
-  ///{@macro flutter_inappwebview_platform_interface.PlatformHeadlessInAppWebView}
+  ///{@macro nosferatu500_inappwebview_platform_interface.PlatformHeadlessInAppWebView}
   HeadlessInAppWebView.fromPlatformCreationParams({
     required PlatformHeadlessInAppWebViewCreationParams params,
   }) : this.fromPlatform(platform: PlatformHeadlessInAppWebView(params));
@@ -25,14 +25,14 @@ class HeadlessInAppWebView {
   /// Implementation of [PlatformHeadlessInAppWebView] for the current platform.
   final PlatformHeadlessInAppWebView platform;
 
-  ///{@macro flutter_inappwebview_platform_interface.PlatformHeadlessInAppWebView.id}
+  ///{@macro nosferatu500_inappwebview_platform_interface.PlatformHeadlessInAppWebView.id}
   ///
-  ///{@macro flutter_inappwebview_platform_interface.PlatformHeadlessInAppWebView.id.supported_platforms}
+  ///{@macro nosferatu500_inappwebview_platform_interface.PlatformHeadlessInAppWebView.id.supported_platforms}
   String get id => platform.id;
 
-  ///{@macro flutter_inappwebview_platform_interface.PlatformHeadlessInAppWebView.webViewController}
+  ///{@macro nosferatu500_inappwebview_platform_interface.PlatformHeadlessInAppWebView.webViewController}
   ///
-  ///{@macro flutter_inappwebview_platform_interface.PlatformHeadlessInAppWebView.webViewController.supported_platforms}
+  ///{@macro nosferatu500_inappwebview_platform_interface.PlatformHeadlessInAppWebView.webViewController.supported_platforms}
   InAppWebViewController? get webViewController {
     final webViewControllerPlatform = platform.webViewController;
     if (webViewControllerPlatform == null) {
@@ -43,9 +43,9 @@ class HeadlessInAppWebView {
     );
   }
 
-  ///{@macro flutter_inappwebview_platform_interface.PlatformHeadlessInAppWebView}
+  ///{@macro nosferatu500_inappwebview_platform_interface.PlatformHeadlessInAppWebView}
   ///
-  ///{@macro flutter_inappwebview_platform_interface.PlatformHeadlessInAppWebView.supported_platforms}
+  ///{@macro nosferatu500_inappwebview_platform_interface.PlatformHeadlessInAppWebView.supported_platforms}
   HeadlessInAppWebView({
     Size initialSize = const Size(-1, -1),
     int? windowId,
@@ -658,38 +658,38 @@ class HeadlessInAppWebView {
          ),
        );
 
-  ///{@macro flutter_inappwebview_platform_interface.PlatformHeadlessInAppWebView.run}
+  ///{@macro nosferatu500_inappwebview_platform_interface.PlatformHeadlessInAppWebView.run}
   ///
-  ///{@macro flutter_inappwebview_platform_interface.PlatformHeadlessInAppWebView.run.supported_platforms}
+  ///{@macro nosferatu500_inappwebview_platform_interface.PlatformHeadlessInAppWebView.run.supported_platforms}
   Future<void> run() => platform.run();
 
-  ///{@macro flutter_inappwebview_platform_interface.PlatformHeadlessInAppWebView.isRunning}
+  ///{@macro nosferatu500_inappwebview_platform_interface.PlatformHeadlessInAppWebView.isRunning}
   ///
-  ///{@macro flutter_inappwebview_platform_interface.PlatformHeadlessInAppWebView.isRunning.supported_platforms}
+  ///{@macro nosferatu500_inappwebview_platform_interface.PlatformHeadlessInAppWebView.isRunning.supported_platforms}
   bool isRunning() => platform.isRunning();
 
-  ///{@macro flutter_inappwebview_platform_interface.PlatformHeadlessInAppWebView.setSize}
+  ///{@macro nosferatu500_inappwebview_platform_interface.PlatformHeadlessInAppWebView.setSize}
   ///
-  ///{@macro flutter_inappwebview_platform_interface.PlatformHeadlessInAppWebView.setSize.supported_platforms}
+  ///{@macro nosferatu500_inappwebview_platform_interface.PlatformHeadlessInAppWebView.setSize.supported_platforms}
   Future<void> setSize(Size size) => platform.setSize(size);
 
-  ///{@macro flutter_inappwebview_platform_interface.PlatformHeadlessInAppWebView.getSize}
+  ///{@macro nosferatu500_inappwebview_platform_interface.PlatformHeadlessInAppWebView.getSize}
   ///
-  ///{@macro flutter_inappwebview_platform_interface.PlatformHeadlessInAppWebView.getSize.supported_platforms}
+  ///{@macro nosferatu500_inappwebview_platform_interface.PlatformHeadlessInAppWebView.getSize.supported_platforms}
   Future<Size?> getSize() => platform.getSize();
 
-  ///{@macro flutter_inappwebview_platform_interface.PlatformHeadlessInAppWebView.dispose}
+  ///{@macro nosferatu500_inappwebview_platform_interface.PlatformHeadlessInAppWebView.dispose}
   ///
-  ///{@macro flutter_inappwebview_platform_interface.PlatformHeadlessInAppWebView.dispose.supported_platforms}
+  ///{@macro nosferatu500_inappwebview_platform_interface.PlatformHeadlessInAppWebView.dispose.supported_platforms}
   Future<void> dispose() => platform.dispose();
 
-  ///{@macro flutter_inappwebview_platform_interface.PlatformHeadlessInAppWebViewCreationParams.isClassSupported}
+  ///{@macro nosferatu500_inappwebview_platform_interface.PlatformHeadlessInAppWebViewCreationParams.isClassSupported}
   static bool isClassSupported({TargetPlatform? platform}) =>
       PlatformHeadlessInAppWebView.static().isClassSupported(
         platform: platform,
       );
 
-  ///{@macro flutter_inappwebview_platform_interface.PlatformHeadlessInAppWebViewCreationParams.isPropertySupported}
+  ///{@macro nosferatu500_inappwebview_platform_interface.PlatformHeadlessInAppWebViewCreationParams.isPropertySupported}
   static bool isPropertySupported(
     PlatformHeadlessInAppWebViewCreationParamsProperty property, {
     TargetPlatform? platform,
@@ -698,7 +698,7 @@ class HeadlessInAppWebView {
     platform: platform,
   );
 
-  ///{@macro flutter_inappwebview_platform_interface.PlatformHeadlessInAppWebViewCreationParams.isMethodSupported}
+  ///{@macro nosferatu500_inappwebview_platform_interface.PlatformHeadlessInAppWebViewCreationParams.isMethodSupported}
   static bool isMethodSupported(
     PlatformHeadlessInAppWebViewMethod method, {
     TargetPlatform? platform,

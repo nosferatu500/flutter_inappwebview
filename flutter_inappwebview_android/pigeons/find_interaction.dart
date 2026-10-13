@@ -40,7 +40,7 @@ import 'package:pigeon/pigeon.dart';
       // it -- the rest set `includeErrorClass: false`. Do not delete or repackage this schema
       // without moving the declaration first, or every other generated file loses the type.
     ),
-    dartPackageName: 'flutter_inappwebview_android',
+    dartPackageName: 'nosferatu500_inappwebview_android',
   ),
 )
 /// Mirrors the platform interface's `FindSession`.

@@ -402,7 +402,7 @@ interface ChromeCustomTabsHostApi {
     fun setUp(binaryMessenger: BinaryMessenger, api: ChromeCustomTabsHostApi?, messageChannelSuffix: String = "") {
       val separatedMessageChannelSuffix = if (messageChannelSuffix.isNotEmpty()) ".$messageChannelSuffix" else ""
       run {
-        val channel = BasicMessageChannel<Any?>(binaryMessenger, "dev.flutter.pigeon.flutter_inappwebview_android.ChromeCustomTabsHostApi.launchUrl$separatedMessageChannelSuffix", codec)
+        val channel = BasicMessageChannel<Any?>(binaryMessenger, "dev.flutter.pigeon.nosferatu500_inappwebview_android.ChromeCustomTabsHostApi.launchUrl$separatedMessageChannelSuffix", codec)
         if (api != null) {
           channel.setMessageHandler { message, reply ->
             val args = message as List<Any?>
@@ -422,7 +422,7 @@ interface ChromeCustomTabsHostApi {
         }
       }
       run {
-        val channel = BasicMessageChannel<Any?>(binaryMessenger, "dev.flutter.pigeon.flutter_inappwebview_android.ChromeCustomTabsHostApi.mayLaunchUrl$separatedMessageChannelSuffix", codec)
+        val channel = BasicMessageChannel<Any?>(binaryMessenger, "dev.flutter.pigeon.nosferatu500_inappwebview_android.ChromeCustomTabsHostApi.mayLaunchUrl$separatedMessageChannelSuffix", codec)
         if (api != null) {
           channel.setMessageHandler { message, reply ->
             val args = message as List<Any?>
@@ -440,7 +440,7 @@ interface ChromeCustomTabsHostApi {
         }
       }
       run {
-        val channel = BasicMessageChannel<Any?>(binaryMessenger, "dev.flutter.pigeon.flutter_inappwebview_android.ChromeCustomTabsHostApi.updateActionButton$separatedMessageChannelSuffix", codec)
+        val channel = BasicMessageChannel<Any?>(binaryMessenger, "dev.flutter.pigeon.nosferatu500_inappwebview_android.ChromeCustomTabsHostApi.updateActionButton$separatedMessageChannelSuffix", codec)
         if (api != null) {
           channel.setMessageHandler { message, reply ->
             val args = message as List<Any?>
@@ -458,7 +458,7 @@ interface ChromeCustomTabsHostApi {
         }
       }
       run {
-        val channel = BasicMessageChannel<Any?>(binaryMessenger, "dev.flutter.pigeon.flutter_inappwebview_android.ChromeCustomTabsHostApi.validateRelationship$separatedMessageChannelSuffix", codec)
+        val channel = BasicMessageChannel<Any?>(binaryMessenger, "dev.flutter.pigeon.nosferatu500_inappwebview_android.ChromeCustomTabsHostApi.validateRelationship$separatedMessageChannelSuffix", codec)
         if (api != null) {
           channel.setMessageHandler { message, reply ->
             val args = message as List<Any?>
@@ -476,7 +476,7 @@ interface ChromeCustomTabsHostApi {
         }
       }
       run {
-        val channel = BasicMessageChannel<Any?>(binaryMessenger, "dev.flutter.pigeon.flutter_inappwebview_android.ChromeCustomTabsHostApi.updateSecondaryToolbar$separatedMessageChannelSuffix", codec)
+        val channel = BasicMessageChannel<Any?>(binaryMessenger, "dev.flutter.pigeon.nosferatu500_inappwebview_android.ChromeCustomTabsHostApi.updateSecondaryToolbar$separatedMessageChannelSuffix", codec)
         if (api != null) {
           channel.setMessageHandler { message, reply ->
             val args = message as List<Any?>
@@ -493,7 +493,7 @@ interface ChromeCustomTabsHostApi {
         }
       }
       run {
-        val channel = BasicMessageChannel<Any?>(binaryMessenger, "dev.flutter.pigeon.flutter_inappwebview_android.ChromeCustomTabsHostApi.requestPostMessageChannel$separatedMessageChannelSuffix", codec)
+        val channel = BasicMessageChannel<Any?>(binaryMessenger, "dev.flutter.pigeon.nosferatu500_inappwebview_android.ChromeCustomTabsHostApi.requestPostMessageChannel$separatedMessageChannelSuffix", codec)
         if (api != null) {
           channel.setMessageHandler { message, reply ->
             val args = message as List<Any?>
@@ -511,7 +511,7 @@ interface ChromeCustomTabsHostApi {
         }
       }
       run {
-        val channel = BasicMessageChannel<Any?>(binaryMessenger, "dev.flutter.pigeon.flutter_inappwebview_android.ChromeCustomTabsHostApi.postMessage$separatedMessageChannelSuffix", codec)
+        val channel = BasicMessageChannel<Any?>(binaryMessenger, "dev.flutter.pigeon.nosferatu500_inappwebview_android.ChromeCustomTabsHostApi.postMessage$separatedMessageChannelSuffix", codec)
         if (api != null) {
           channel.setMessageHandler { message, reply ->
             val args = message as List<Any?>
@@ -528,7 +528,7 @@ interface ChromeCustomTabsHostApi {
         }
       }
       run {
-        val channel = BasicMessageChannel<Any?>(binaryMessenger, "dev.flutter.pigeon.flutter_inappwebview_android.ChromeCustomTabsHostApi.isEngagementSignalsApiAvailable$separatedMessageChannelSuffix", codec)
+        val channel = BasicMessageChannel<Any?>(binaryMessenger, "dev.flutter.pigeon.nosferatu500_inappwebview_android.ChromeCustomTabsHostApi.isEngagementSignalsApiAvailable$separatedMessageChannelSuffix", codec)
         if (api != null) {
           channel.setMessageHandler { _, reply ->
             val wrapped: List<Any?> = try {
@@ -543,7 +543,7 @@ interface ChromeCustomTabsHostApi {
         }
       }
       run {
-        val channel = BasicMessageChannel<Any?>(binaryMessenger, "dev.flutter.pigeon.flutter_inappwebview_android.ChromeCustomTabsHostApi.close$separatedMessageChannelSuffix", codec)
+        val channel = BasicMessageChannel<Any?>(binaryMessenger, "dev.flutter.pigeon.nosferatu500_inappwebview_android.ChromeCustomTabsHostApi.close$separatedMessageChannelSuffix", codec)
         if (api != null) {
           channel.setMessageHandler { _, reply ->
             val wrapped: List<Any?> = try {
@@ -589,7 +589,7 @@ class ChromeCustomTabsFlutterApi(private val binaryMessenger: BinaryMessenger, p
   fun onServiceConnected(callback: (Result<Unit>) -> Unit)
 {
     val separatedMessageChannelSuffix = if (messageChannelSuffix.isNotEmpty()) ".$messageChannelSuffix" else ""
-    val channelName = "dev.flutter.pigeon.flutter_inappwebview_android.ChromeCustomTabsFlutterApi.onServiceConnected$separatedMessageChannelSuffix"
+    val channelName = "dev.flutter.pigeon.nosferatu500_inappwebview_android.ChromeCustomTabsFlutterApi.onServiceConnected$separatedMessageChannelSuffix"
     val channel = BasicMessageChannel<Any?>(binaryMessenger, channelName, codec)
     channel.send(null) {
       if (it is List<*>) {
@@ -606,7 +606,7 @@ class ChromeCustomTabsFlutterApi(private val binaryMessenger: BinaryMessenger, p
   fun onOpened(callback: (Result<Unit>) -> Unit)
 {
     val separatedMessageChannelSuffix = if (messageChannelSuffix.isNotEmpty()) ".$messageChannelSuffix" else ""
-    val channelName = "dev.flutter.pigeon.flutter_inappwebview_android.ChromeCustomTabsFlutterApi.onOpened$separatedMessageChannelSuffix"
+    val channelName = "dev.flutter.pigeon.nosferatu500_inappwebview_android.ChromeCustomTabsFlutterApi.onOpened$separatedMessageChannelSuffix"
     val channel = BasicMessageChannel<Any?>(binaryMessenger, channelName, codec)
     channel.send(null) {
       if (it is List<*>) {
@@ -634,7 +634,7 @@ class ChromeCustomTabsFlutterApi(private val binaryMessenger: BinaryMessenger, p
   fun onCompletedInitialLoad(callback: (Result<Unit>) -> Unit)
 {
     val separatedMessageChannelSuffix = if (messageChannelSuffix.isNotEmpty()) ".$messageChannelSuffix" else ""
-    val channelName = "dev.flutter.pigeon.flutter_inappwebview_android.ChromeCustomTabsFlutterApi.onCompletedInitialLoad$separatedMessageChannelSuffix"
+    val channelName = "dev.flutter.pigeon.nosferatu500_inappwebview_android.ChromeCustomTabsFlutterApi.onCompletedInitialLoad$separatedMessageChannelSuffix"
     val channel = BasicMessageChannel<Any?>(binaryMessenger, channelName, codec)
     channel.send(null) {
       if (it is List<*>) {
@@ -655,7 +655,7 @@ class ChromeCustomTabsFlutterApi(private val binaryMessenger: BinaryMessenger, p
   fun onNavigationEvent(navigationEventArg: Long, callback: (Result<Unit>) -> Unit)
 {
     val separatedMessageChannelSuffix = if (messageChannelSuffix.isNotEmpty()) ".$messageChannelSuffix" else ""
-    val channelName = "dev.flutter.pigeon.flutter_inappwebview_android.ChromeCustomTabsFlutterApi.onNavigationEvent$separatedMessageChannelSuffix"
+    val channelName = "dev.flutter.pigeon.nosferatu500_inappwebview_android.ChromeCustomTabsFlutterApi.onNavigationEvent$separatedMessageChannelSuffix"
     val channel = BasicMessageChannel<Any?>(binaryMessenger, channelName, codec)
     channel.send(listOf(navigationEventArg)) {
       if (it is List<*>) {
@@ -672,7 +672,7 @@ class ChromeCustomTabsFlutterApi(private val binaryMessenger: BinaryMessenger, p
   fun onClosed(callback: (Result<Unit>) -> Unit)
 {
     val separatedMessageChannelSuffix = if (messageChannelSuffix.isNotEmpty()) ".$messageChannelSuffix" else ""
-    val channelName = "dev.flutter.pigeon.flutter_inappwebview_android.ChromeCustomTabsFlutterApi.onClosed$separatedMessageChannelSuffix"
+    val channelName = "dev.flutter.pigeon.nosferatu500_inappwebview_android.ChromeCustomTabsFlutterApi.onClosed$separatedMessageChannelSuffix"
     val channel = BasicMessageChannel<Any?>(binaryMessenger, channelName, codec)
     channel.send(null) {
       if (it is List<*>) {
@@ -698,7 +698,7 @@ class ChromeCustomTabsFlutterApi(private val binaryMessenger: BinaryMessenger, p
   fun onItemActionPerform(idArg: Long, urlArg: String?, titleArg: String?, callback: (Result<Unit>) -> Unit)
 {
     val separatedMessageChannelSuffix = if (messageChannelSuffix.isNotEmpty()) ".$messageChannelSuffix" else ""
-    val channelName = "dev.flutter.pigeon.flutter_inappwebview_android.ChromeCustomTabsFlutterApi.onItemActionPerform$separatedMessageChannelSuffix"
+    val channelName = "dev.flutter.pigeon.nosferatu500_inappwebview_android.ChromeCustomTabsFlutterApi.onItemActionPerform$separatedMessageChannelSuffix"
     val channel = BasicMessageChannel<Any?>(binaryMessenger, channelName, codec)
     channel.send(listOf(idArg, urlArg, titleArg)) {
       if (it is List<*>) {
@@ -719,7 +719,7 @@ class ChromeCustomTabsFlutterApi(private val binaryMessenger: BinaryMessenger, p
   fun onSecondaryItemActionPerform(nameArg: String?, urlArg: String?, callback: (Result<Unit>) -> Unit)
 {
     val separatedMessageChannelSuffix = if (messageChannelSuffix.isNotEmpty()) ".$messageChannelSuffix" else ""
-    val channelName = "dev.flutter.pigeon.flutter_inappwebview_android.ChromeCustomTabsFlutterApi.onSecondaryItemActionPerform$separatedMessageChannelSuffix"
+    val channelName = "dev.flutter.pigeon.nosferatu500_inappwebview_android.ChromeCustomTabsFlutterApi.onSecondaryItemActionPerform$separatedMessageChannelSuffix"
     val channel = BasicMessageChannel<Any?>(binaryMessenger, channelName, codec)
     channel.send(listOf(nameArg, urlArg)) {
       if (it is List<*>) {
@@ -740,7 +740,7 @@ class ChromeCustomTabsFlutterApi(private val binaryMessenger: BinaryMessenger, p
   fun onRelationshipValidationResult(relationArg: Long, requestedOriginArg: String, resultArg: Boolean, callback: (Result<Unit>) -> Unit)
 {
     val separatedMessageChannelSuffix = if (messageChannelSuffix.isNotEmpty()) ".$messageChannelSuffix" else ""
-    val channelName = "dev.flutter.pigeon.flutter_inappwebview_android.ChromeCustomTabsFlutterApi.onRelationshipValidationResult$separatedMessageChannelSuffix"
+    val channelName = "dev.flutter.pigeon.nosferatu500_inappwebview_android.ChromeCustomTabsFlutterApi.onRelationshipValidationResult$separatedMessageChannelSuffix"
     val channel = BasicMessageChannel<Any?>(binaryMessenger, channelName, codec)
     channel.send(listOf(relationArg, requestedOriginArg, resultArg)) {
       if (it is List<*>) {
@@ -761,7 +761,7 @@ class ChromeCustomTabsFlutterApi(private val binaryMessenger: BinaryMessenger, p
   fun onMessageChannelReady(callback: (Result<Unit>) -> Unit)
 {
     val separatedMessageChannelSuffix = if (messageChannelSuffix.isNotEmpty()) ".$messageChannelSuffix" else ""
-    val channelName = "dev.flutter.pigeon.flutter_inappwebview_android.ChromeCustomTabsFlutterApi.onMessageChannelReady$separatedMessageChannelSuffix"
+    val channelName = "dev.flutter.pigeon.nosferatu500_inappwebview_android.ChromeCustomTabsFlutterApi.onMessageChannelReady$separatedMessageChannelSuffix"
     val channel = BasicMessageChannel<Any?>(binaryMessenger, channelName, codec)
     channel.send(null) {
       if (it is List<*>) {
@@ -778,7 +778,7 @@ class ChromeCustomTabsFlutterApi(private val binaryMessenger: BinaryMessenger, p
   fun onPostMessage(messageArg: String, callback: (Result<Unit>) -> Unit)
 {
     val separatedMessageChannelSuffix = if (messageChannelSuffix.isNotEmpty()) ".$messageChannelSuffix" else ""
-    val channelName = "dev.flutter.pigeon.flutter_inappwebview_android.ChromeCustomTabsFlutterApi.onPostMessage$separatedMessageChannelSuffix"
+    val channelName = "dev.flutter.pigeon.nosferatu500_inappwebview_android.ChromeCustomTabsFlutterApi.onPostMessage$separatedMessageChannelSuffix"
     val channel = BasicMessageChannel<Any?>(binaryMessenger, channelName, codec)
     channel.send(listOf(messageArg)) {
       if (it is List<*>) {
@@ -795,7 +795,7 @@ class ChromeCustomTabsFlutterApi(private val binaryMessenger: BinaryMessenger, p
   fun onVerticalScrollEvent(isDirectionUpArg: Boolean, callback: (Result<Unit>) -> Unit)
 {
     val separatedMessageChannelSuffix = if (messageChannelSuffix.isNotEmpty()) ".$messageChannelSuffix" else ""
-    val channelName = "dev.flutter.pigeon.flutter_inappwebview_android.ChromeCustomTabsFlutterApi.onVerticalScrollEvent$separatedMessageChannelSuffix"
+    val channelName = "dev.flutter.pigeon.nosferatu500_inappwebview_android.ChromeCustomTabsFlutterApi.onVerticalScrollEvent$separatedMessageChannelSuffix"
     val channel = BasicMessageChannel<Any?>(binaryMessenger, channelName, codec)
     channel.send(listOf(isDirectionUpArg)) {
       if (it is List<*>) {
@@ -812,7 +812,7 @@ class ChromeCustomTabsFlutterApi(private val binaryMessenger: BinaryMessenger, p
   fun onGreatestScrollPercentageIncreased(scrollPercentageArg: Long, callback: (Result<Unit>) -> Unit)
 {
     val separatedMessageChannelSuffix = if (messageChannelSuffix.isNotEmpty()) ".$messageChannelSuffix" else ""
-    val channelName = "dev.flutter.pigeon.flutter_inappwebview_android.ChromeCustomTabsFlutterApi.onGreatestScrollPercentageIncreased$separatedMessageChannelSuffix"
+    val channelName = "dev.flutter.pigeon.nosferatu500_inappwebview_android.ChromeCustomTabsFlutterApi.onGreatestScrollPercentageIncreased$separatedMessageChannelSuffix"
     val channel = BasicMessageChannel<Any?>(binaryMessenger, channelName, codec)
     channel.send(listOf(scrollPercentageArg)) {
       if (it is List<*>) {
@@ -829,7 +829,7 @@ class ChromeCustomTabsFlutterApi(private val binaryMessenger: BinaryMessenger, p
   fun onSessionEnded(didUserInteractArg: Boolean, callback: (Result<Unit>) -> Unit)
 {
     val separatedMessageChannelSuffix = if (messageChannelSuffix.isNotEmpty()) ".$messageChannelSuffix" else ""
-    val channelName = "dev.flutter.pigeon.flutter_inappwebview_android.ChromeCustomTabsFlutterApi.onSessionEnded$separatedMessageChannelSuffix"
+    val channelName = "dev.flutter.pigeon.nosferatu500_inappwebview_android.ChromeCustomTabsFlutterApi.onSessionEnded$separatedMessageChannelSuffix"
     val channel = BasicMessageChannel<Any?>(binaryMessenger, channelName, codec)
     channel.send(listOf(didUserInteractArg)) {
       if (it is List<*>) {

@@ -333,7 +333,7 @@ class PrintJobSettings {
 enum PrintJobSettingsProperty {
   ///Can be used to check if the [PrintJobSettings.animated] property is supported at runtime.
   ///
-  ///{@template flutter_inappwebview_platform_interface.PrintJobSettings.animated.supported_platforms}
+  ///{@template nosferatu500_inappwebview_platform_interface.PrintJobSettings.animated.supported_platforms}
   ///
   ///**Officially Supported Platforms/Implementations**:
   ///- iOS WKWebView
@@ -344,7 +344,7 @@ enum PrintJobSettingsProperty {
 
   ///Can be used to check if the [PrintJobSettings.colorMode] property is supported at runtime.
   ///
-  ///{@template flutter_inappwebview_platform_interface.PrintJobSettings.colorMode.supported_platforms}
+  ///{@template nosferatu500_inappwebview_platform_interface.PrintJobSettings.colorMode.supported_platforms}
   ///
   ///**Officially Supported Platforms/Implementations**:
   ///- Android WebView
@@ -355,7 +355,7 @@ enum PrintJobSettingsProperty {
 
   ///Can be used to check if the [PrintJobSettings.duplexMode] property is supported at runtime.
   ///
-  ///{@template flutter_inappwebview_platform_interface.PrintJobSettings.duplexMode.supported_platforms}
+  ///{@template nosferatu500_inappwebview_platform_interface.PrintJobSettings.duplexMode.supported_platforms}
   ///
   ///**Officially Supported Platforms/Implementations**:
   ///- Android WebView 23+
@@ -367,7 +367,7 @@ enum PrintJobSettingsProperty {
 
   ///Can be used to check if the [PrintJobSettings.footerHeight] property is supported at runtime.
   ///
-  ///{@template flutter_inappwebview_platform_interface.PrintJobSettings.footerHeight.supported_platforms}
+  ///{@template nosferatu500_inappwebview_platform_interface.PrintJobSettings.footerHeight.supported_platforms}
   ///
   ///**Officially Supported Platforms/Implementations**:
   ///- iOS WKWebView
@@ -378,7 +378,7 @@ enum PrintJobSettingsProperty {
 
   ///Can be used to check if the [PrintJobSettings.forceRenderingQuality] property is supported at runtime.
   ///
-  ///{@template flutter_inappwebview_platform_interface.PrintJobSettings.forceRenderingQuality.supported_platforms}
+  ///{@template nosferatu500_inappwebview_platform_interface.PrintJobSettings.forceRenderingQuality.supported_platforms}
   ///
   ///**Officially Supported Platforms/Implementations**:
   ///- iOS WKWebView 14.5+
@@ -389,7 +389,7 @@ enum PrintJobSettingsProperty {
 
   ///Can be used to check if the [PrintJobSettings.handledByClient] property is supported at runtime.
   ///
-  ///{@template flutter_inappwebview_platform_interface.PrintJobSettings.handledByClient.supported_platforms}
+  ///{@template nosferatu500_inappwebview_platform_interface.PrintJobSettings.handledByClient.supported_platforms}
   ///
   ///**Officially Supported Platforms/Implementations**:
   ///- Android WebView
@@ -401,7 +401,7 @@ enum PrintJobSettingsProperty {
 
   ///Can be used to check if the [PrintJobSettings.headerHeight] property is supported at runtime.
   ///
-  ///{@template flutter_inappwebview_platform_interface.PrintJobSettings.headerHeight.supported_platforms}
+  ///{@template nosferatu500_inappwebview_platform_interface.PrintJobSettings.headerHeight.supported_platforms}
   ///
   ///**Officially Supported Platforms/Implementations**:
   ///- iOS WKWebView
@@ -412,7 +412,7 @@ enum PrintJobSettingsProperty {
 
   ///Can be used to check if the [PrintJobSettings.jobName] property is supported at runtime.
   ///
-  ///{@template flutter_inappwebview_platform_interface.PrintJobSettings.jobName.supported_platforms}
+  ///{@template nosferatu500_inappwebview_platform_interface.PrintJobSettings.jobName.supported_platforms}
   ///
   ///**Officially Supported Platforms/Implementations**:
   ///- Android WebView
@@ -424,7 +424,7 @@ enum PrintJobSettingsProperty {
 
   ///Can be used to check if the [PrintJobSettings.margins] property is supported at runtime.
   ///
-  ///{@template flutter_inappwebview_platform_interface.PrintJobSettings.margins.supported_platforms}
+  ///{@template nosferatu500_inappwebview_platform_interface.PrintJobSettings.margins.supported_platforms}
   ///
   ///**Officially Supported Platforms/Implementations**:
   ///- iOS WKWebView
@@ -435,7 +435,7 @@ enum PrintJobSettingsProperty {
 
   ///Can be used to check if the [PrintJobSettings.maximumContentHeight] property is supported at runtime.
   ///
-  ///{@template flutter_inappwebview_platform_interface.PrintJobSettings.maximumContentHeight.supported_platforms}
+  ///{@template nosferatu500_inappwebview_platform_interface.PrintJobSettings.maximumContentHeight.supported_platforms}
   ///
   ///**Officially Supported Platforms/Implementations**:
   ///- iOS WKWebView
@@ -446,7 +446,7 @@ enum PrintJobSettingsProperty {
 
   ///Can be used to check if the [PrintJobSettings.maximumContentWidth] property is supported at runtime.
   ///
-  ///{@template flutter_inappwebview_platform_interface.PrintJobSettings.maximumContentWidth.supported_platforms}
+  ///{@template nosferatu500_inappwebview_platform_interface.PrintJobSettings.maximumContentWidth.supported_platforms}
   ///
   ///**Officially Supported Platforms/Implementations**:
   ///- iOS WKWebView
@@ -457,7 +457,7 @@ enum PrintJobSettingsProperty {
 
   ///Can be used to check if the [PrintJobSettings.mediaSize] property is supported at runtime.
   ///
-  ///{@template flutter_inappwebview_platform_interface.PrintJobSettings.mediaSize.supported_platforms}
+  ///{@template nosferatu500_inappwebview_platform_interface.PrintJobSettings.mediaSize.supported_platforms}
   ///
   ///**Officially Supported Platforms/Implementations**:
   ///- Android WebView
@@ -468,7 +468,7 @@ enum PrintJobSettingsProperty {
 
   ///Can be used to check if the [PrintJobSettings.numberOfPages] property is supported at runtime.
   ///
-  ///{@template flutter_inappwebview_platform_interface.PrintJobSettings.numberOfPages.supported_platforms}
+  ///{@template nosferatu500_inappwebview_platform_interface.PrintJobSettings.numberOfPages.supported_platforms}
   ///
   ///**Officially Supported Platforms/Implementations**:
   ///- iOS WKWebView
@@ -479,7 +479,7 @@ enum PrintJobSettingsProperty {
 
   ///Can be used to check if the [PrintJobSettings.orientation] property is supported at runtime.
   ///
-  ///{@template flutter_inappwebview_platform_interface.PrintJobSettings.orientation.supported_platforms}
+  ///{@template nosferatu500_inappwebview_platform_interface.PrintJobSettings.orientation.supported_platforms}
   ///
   ///**Officially Supported Platforms/Implementations**:
   ///- Android WebView
@@ -491,7 +491,7 @@ enum PrintJobSettingsProperty {
 
   ///Can be used to check if the [PrintJobSettings.outputType] property is supported at runtime.
   ///
-  ///{@template flutter_inappwebview_platform_interface.PrintJobSettings.outputType.supported_platforms}
+  ///{@template nosferatu500_inappwebview_platform_interface.PrintJobSettings.outputType.supported_platforms}
   ///
   ///**Officially Supported Platforms/Implementations**:
   ///- iOS WKWebView
@@ -502,7 +502,7 @@ enum PrintJobSettingsProperty {
 
   ///Can be used to check if the [PrintJobSettings.resolution] property is supported at runtime.
   ///
-  ///{@template flutter_inappwebview_platform_interface.PrintJobSettings.resolution.supported_platforms}
+  ///{@template nosferatu500_inappwebview_platform_interface.PrintJobSettings.resolution.supported_platforms}
   ///
   ///**Officially Supported Platforms/Implementations**:
   ///- Android WebView
@@ -513,7 +513,7 @@ enum PrintJobSettingsProperty {
 
   ///Can be used to check if the [PrintJobSettings.showsNumberOfCopies] property is supported at runtime.
   ///
-  ///{@template flutter_inappwebview_platform_interface.PrintJobSettings.showsNumberOfCopies.supported_platforms}
+  ///{@template nosferatu500_inappwebview_platform_interface.PrintJobSettings.showsNumberOfCopies.supported_platforms}
   ///
   ///**Officially Supported Platforms/Implementations**:
   ///- iOS WKWebView
@@ -524,7 +524,7 @@ enum PrintJobSettingsProperty {
 
   ///Can be used to check if the [PrintJobSettings.showsPaperOrientation] property is supported at runtime.
   ///
-  ///{@template flutter_inappwebview_platform_interface.PrintJobSettings.showsPaperOrientation.supported_platforms}
+  ///{@template nosferatu500_inappwebview_platform_interface.PrintJobSettings.showsPaperOrientation.supported_platforms}
   ///
   ///**Officially Supported Platforms/Implementations**:
   ///- iOS WKWebView 15.0+
@@ -535,7 +535,7 @@ enum PrintJobSettingsProperty {
 
   ///Can be used to check if the [PrintJobSettings.showsPaperSelectionForLoadedPapers] property is supported at runtime.
   ///
-  ///{@template flutter_inappwebview_platform_interface.PrintJobSettings.showsPaperSelectionForLoadedPapers.supported_platforms}
+  ///{@template nosferatu500_inappwebview_platform_interface.PrintJobSettings.showsPaperSelectionForLoadedPapers.supported_platforms}
   ///
   ///**Officially Supported Platforms/Implementations**:
   ///- iOS WKWebView

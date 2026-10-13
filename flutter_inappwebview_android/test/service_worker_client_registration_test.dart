@@ -2,9 +2,9 @@ import 'dart:async';
 import 'dart:typed_data';
 
 import 'package:flutter/services.dart';
-import 'package:flutter_inappwebview_android/flutter_inappwebview_android.dart';
-import 'package:flutter_inappwebview_android/src/pigeons/in_app_webview.g.dart';
-import 'package:flutter_inappwebview_platform_interface/flutter_inappwebview_platform_interface.dart';
+import 'package:nosferatu500_inappwebview_android/nosferatu500_inappwebview_android.dart';
+import 'package:nosferatu500_inappwebview_android/src/pigeons/in_app_webview.g.dart';
+import 'package:nosferatu500_inappwebview_platform_interface/nosferatu500_inappwebview_platform_interface.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 /// Guards that a registered [ServiceWorkerClient] keeps receiving `shouldInterceptRequest` after
@@ -31,9 +31,9 @@ void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
 
   const hostBase =
-      'dev.flutter.pigeon.flutter_inappwebview_android.ServiceWorkerHostApi';
+      'dev.flutter.pigeon.nosferatu500_inappwebview_android.ServiceWorkerHostApi';
   const eventChannel =
-      'dev.flutter.pigeon.flutter_inappwebview_android.ServiceWorkerFlutterApi'
+      'dev.flutter.pigeon.nosferatu500_inappwebview_android.ServiceWorkerFlutterApi'
       '.shouldInterceptRequest';
   const codec = ServiceWorkerFlutterApi.pigeonChannelCodec;
 

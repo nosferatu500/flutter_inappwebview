@@ -571,7 +571,7 @@ class PrintJobControllerHostApi {
   /// reach.
   Future<bool> cancel() async {
     final pigeonVar_channelName =
-        'dev.flutter.pigeon.flutter_inappwebview_android.PrintJobControllerHostApi.cancel$pigeonVar_messageChannelSuffix';
+        'dev.flutter.pigeon.nosferatu500_inappwebview_android.PrintJobControllerHostApi.cancel$pigeonVar_messageChannelSuffix';
     final pigeonVar_channel = BasicMessageChannel<Object?>(
       pigeonVar_channelName,
       pigeonChannelCodec,
@@ -594,7 +594,7 @@ class PrintJobControllerHostApi {
   /// to a **failed** job. Preserved as-is.
   Future<bool> restart() async {
     final pigeonVar_channelName =
-        'dev.flutter.pigeon.flutter_inappwebview_android.PrintJobControllerHostApi.restart$pigeonVar_messageChannelSuffix';
+        'dev.flutter.pigeon.nosferatu500_inappwebview_android.PrintJobControllerHostApi.restart$pigeonVar_messageChannelSuffix';
     final pigeonVar_channel = BasicMessageChannel<Object?>(
       pigeonVar_channelName,
       pigeonChannelCodec,
@@ -617,7 +617,7 @@ class PrintJobControllerHostApi {
   /// `getInfo()` answers null after [dispose], which is that group's one true state transition.
   Future<PrintJobInfoData?> getInfo() async {
     final pigeonVar_channelName =
-        'dev.flutter.pigeon.flutter_inappwebview_android.PrintJobControllerHostApi.getInfo$pigeonVar_messageChannelSuffix';
+        'dev.flutter.pigeon.nosferatu500_inappwebview_android.PrintJobControllerHostApi.getInfo$pigeonVar_messageChannelSuffix';
     final pigeonVar_channel = BasicMessageChannel<Object?>(
       pigeonVar_channelName,
       pigeonChannelCodec,
@@ -642,7 +642,7 @@ class PrintJobControllerHostApi {
   /// await the teardown. Recorded, not changed — both are public signatures.
   Future<bool> dispose() async {
     final pigeonVar_channelName =
-        'dev.flutter.pigeon.flutter_inappwebview_android.PrintJobControllerHostApi.dispose$pigeonVar_messageChannelSuffix';
+        'dev.flutter.pigeon.nosferatu500_inappwebview_android.PrintJobControllerHostApi.dispose$pigeonVar_messageChannelSuffix';
     final pigeonVar_channel = BasicMessageChannel<Object?>(
       pigeonVar_channelName,
       pigeonChannelCodec,
@@ -691,7 +691,7 @@ abstract class PrintJobControllerFlutterApi {
         : '';
     {
       final pigeonVar_channel = BasicMessageChannel<Object?>(
-        'dev.flutter.pigeon.flutter_inappwebview_android.PrintJobControllerFlutterApi.onComplete$messageChannelSuffix',
+        'dev.flutter.pigeon.nosferatu500_inappwebview_android.PrintJobControllerFlutterApi.onComplete$messageChannelSuffix',
         pigeonChannelCodec,
         binaryMessenger: binaryMessenger,
       );
