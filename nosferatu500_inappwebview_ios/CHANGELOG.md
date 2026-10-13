@@ -605,6 +605,9 @@ error.
 
 ### Internal
 
+- **Version 7.0.0 in the pubspec, which said 1.2.0-beta.3 under this CHANGELOG's 7.0.0 heading.** The
+  platform interface constraint is `^7.0.0` (was `^1.4.0-beta.3`); all five packages ship at 7.0.0.
+
 - **The last 14 warnings are gone: the module builds with 0.**
   - `javaScriptEnabled` keeps its meaning: the deprecated `WKPreferences.javaScriptEnabled` is still
     written, alongside `allowsContentJavaScript`, through a non-deprecated accessor. Measured on iOS

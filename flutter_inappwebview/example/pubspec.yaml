@@ -58,7 +58,7 @@ dev_dependencies:
 #      path: packages/integration_test
   flutter_lints: ^6.0.0
   # Imported by test/test_helpers/mock_inappwebview_platform.dart.
-  nosferatu500_inappwebview_platform_interface: ^1.4.0-beta.3
+  nosferatu500_inappwebview_platform_interface: ^7.0.0
   plugin_platform_interface: ^2.1.8
 
 # For information on the generic Dart part of this file, see the

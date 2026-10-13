@@ -606,6 +606,9 @@ for, and five others have a native *value* that differs from their name.
 
 ### Internal
 
+- **Version 7.0.0 in the pubspec, which said 1.2.0-beta.3 under this CHANGELOG's 7.0.0 heading.** The
+  platform interface constraint is `^7.0.0` (was `^1.4.0-beta.3`); all five packages ship at 7.0.0.
+
 - **The empty `onUnhandledKeyEvent` override is explained, from a measurement.** Both WebView
   clients drop the platform default, which re-injects a key the page didn't handle into the window.
   The override came from upstream in 2019 with no reason given. Measured in a plain app on API 37:

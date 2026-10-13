@@ -1,6 +1,6 @@
 name: nosferatu500_inappwebview_ios
 description: iOS implementation of the nosferatu500_inappwebview plugin.
-version: 1.2.0-beta.3
+version: 7.0.0
 homepage: https://github.com/nosferatu500/flutter_inappwebview
 repository: https://github.com/nosferatu500/flutter_inappwebview/tree/master/nosferatu500_inappwebview_ios
 issue_tracker: https://github.com/nosferatu500/flutter_inappwebview/issues
@@ -18,7 +18,7 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
-  nosferatu500_inappwebview_platform_interface: ^1.4.0-beta.3
+  nosferatu500_inappwebview_platform_interface: ^7.0.0
     # path: ../flutter_inappwebview_platform_interface
 
 dev_dependencies:

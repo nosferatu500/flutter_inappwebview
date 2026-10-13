@@ -14,7 +14,7 @@ dependencies:
   source_gen: ^4.0.0
   analyzer: ^13.0.0
   collection: any
-  nosferatu500_inappwebview_internal_annotations: ^1.3.0
+  nosferatu500_inappwebview_internal_annotations: ^7.0.0
     # path: ../flutter_inappwebview_internal_annotations
 
 dev_dependencies:

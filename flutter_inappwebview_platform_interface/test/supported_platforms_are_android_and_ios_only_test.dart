@@ -14,9 +14,11 @@
 //
 // NOTE ON WHERE THIS LIVES: it must be in a package that resolves the *local*
 // `dev_packages/flutter_inappwebview_internal_annotations`. This one does, via
-// `dependency_overrides`. `dev_packages/generators` does NOT — it resolves
-// 1.3.0 from pub.dev, so the same assertions there would read the old six-entry
-// constants and pass while proving nothing.
+// `dependency_overrides`, and so does every other package in the repo since
+// the rename (the renamed annotations package isn't on pub.dev until it is
+// published). A package that resolved the pub.dev copy instead would read that
+// copy's constants, so the same assertions there would prove nothing about this
+// one.
 import 'dart:io';
 
 import 'package:nosferatu500_inappwebview_internal_annotations/nosferatu500_inappwebview_internal_annotations.dart';

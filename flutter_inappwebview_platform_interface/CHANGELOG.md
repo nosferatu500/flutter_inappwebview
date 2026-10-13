@@ -683,6 +683,11 @@ rename; this entry is the API-owner's view.
 
 ### Internal
 
+- **Version 7.0.0 in the pubspec, which said 1.4.0-beta.3 under this CHANGELOG's 7.0.0 heading.** The
+  annotations constraint is `^7.0.0` (was `^1.3.0`), as in `dev_packages/generators`; all five packages
+  ship at 7.0.0. A test comment that still said the generators package resolves the annotations from
+  pub.dev is corrected: since the rename every package in the repo overrides it with a path.
+
 - **The clearing methods' docs say what each one keeps, and why they don't delegate to
   `deleteBrowsingData`.** Measured on Android 17 (WebView 153), with one origin holding a cookie,
   `localStorage`, IndexedDB, Cache Storage, OPFS data and a service worker:

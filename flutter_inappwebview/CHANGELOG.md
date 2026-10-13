@@ -1281,6 +1281,11 @@ simulator for the first time:**
 
 ### Internal
 
+- **Version 7.0.0 in the pubspec, which said 6.2.0-beta.3 under this CHANGELOG's 7.0.0 heading.** The
+  platform interface, Android and iOS constraints are `^7.0.0` (were `^1.4.0-beta.3`,
+  `^1.2.0-beta.3`, `^1.2.0-beta.3`), and so is the example's platform interface dev dependency; all
+  five packages ship at 7.0.0, the annotations package included.
+
 - **On iOS, the device tests' dropped frame is fixed where it happens; the 2 s watchdog stays as a
   backstop on both platforms.** After a frame the live test binding skipped, the test helper now
   asks the engine for the next frame itself. When the binding already asked, the engine treats the
