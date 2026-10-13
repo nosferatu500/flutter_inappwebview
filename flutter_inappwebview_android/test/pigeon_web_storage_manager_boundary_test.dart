@@ -246,7 +246,7 @@ void main() {
 
     test('they are not interchangeable', () async {
       // Cheap, and the only thing that catches the two being wired to each other's channel — a
-      // swap that type-checks perfectly because both are `Future<int>` of the same arguments.
+      // swap that type-checks perfectly because both are `Future<int?>` of the same arguments.
       replies[quotaChannel] = 111;
       replies[usageChannel] = 222;
 
@@ -261,10 +261,30 @@ void main() {
     });
 
     test('zero is returned as zero', () async {
-      // The host sends 0 both for a genuine zero and for an unresolvable store; the Dart side no
-      // longer needs a `?? 0` because the schema types these non-null. Recorded rather than fixed.
+      // A genuine zero stays a zero: only an unresolvable store answers null (§329).
       replies[quotaChannel] = 0;
       expect(await manager.getQuotaForOrigin(origin: 'https://example.com'), 0);
+    });
+
+    test('null, the unresolvable-store answer, is returned as null', () async {
+      // §329: the host answers null when the storage can't be resolved. Before, both were typed
+      // non-null and the host answered 0, which a real store also answers.
+      replies[quotaChannel] = null;
+      replies[usageChannel] = null;
+      expect(
+        await manager.getQuotaForOrigin(
+          origin: 'https://example.com',
+          profileName: 'missing',
+        ),
+        isNull,
+      );
+      expect(
+        await manager.getUsageForOrigin(
+          origin: 'https://example.com',
+          profileName: 'missing',
+        ),
+        isNull,
+      );
     });
 
     test('a value beyond 32 bits survives', () async {

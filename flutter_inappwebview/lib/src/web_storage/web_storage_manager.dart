@@ -83,7 +83,7 @@ class WebStorageManager {
   ///{@macro flutter_inappwebview_platform_interface.PlatformWebStorageManager.getQuotaForOrigin}
   ///
   ///{@macro flutter_inappwebview_platform_interface.PlatformWebStorageManager.getQuotaForOrigin.supported_platforms}
-  Future<int> getQuotaForOrigin({
+  Future<int?> getQuotaForOrigin({
     required String origin,
     String? profileName,
   }) => platform.getQuotaForOrigin(origin: origin, profileName: profileName);
@@ -91,7 +91,7 @@ class WebStorageManager {
   ///{@macro flutter_inappwebview_platform_interface.PlatformWebStorageManager.getUsageForOrigin}
   ///
   ///{@macro flutter_inappwebview_platform_interface.PlatformWebStorageManager.getUsageForOrigin.supported_platforms}
-  Future<int> getUsageForOrigin({
+  Future<int?> getUsageForOrigin({
     required String origin,
     String? profileName,
   }) => platform.getUsageForOrigin(origin: origin, profileName: profileName);

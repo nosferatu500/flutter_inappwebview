@@ -800,6 +800,12 @@ since the `WebsiteDataType.ALL` fix below. It stays **deliberately out of `ALL`*
 
 ### Fixed
 
+**Android — `WebStorageManager.getQuotaForOrigin()` and `.getUsageForOrigin()` say when they read
+nothing: they return `Future<int?>`** (signature change). `null` means the storage couldn't be
+resolved: a `profileName` that doesn't exist, or any `profileName` without `MULTI_PROFILE`. They
+answered `0`, which a real origin's usage can also be, so a mistyped profile name read as "no
+storage". Code that uses the number needs a null check; `?? 0` keeps the old behaviour.
+
 **Android — `ProfileStore.addCustomHeader()`, `.clearCustomHeader()` and `.clearAllCustomHeaders()`
 say whether they reached the profile: they return `Future<bool>`** (signature change). `false`
 means `CUSTOM_REQUEST_HEADERS` or `MULTI_PROFILE` is unsupported, or no profile has that name, and

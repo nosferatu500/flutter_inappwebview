@@ -442,6 +442,10 @@ rename; this entry is the API-owner's view.
 
 ### Fixed
 
+- **`PlatformWebStorageManager.getQuotaForOrigin` and `.getUsageForOrigin` return `Future<int?>`**
+  (breaking for implementations and callers). `null` means the storage couldn't be resolved (a
+  `profileName` that doesn't exist, or any `profileName` while `MULTI_PROFILE` is missing). They
+  answered `0`, which a real store's usage can also be. The docs say so
 - **`PlatformProfileStore.addCustomHeader`, `.clearCustomHeader` and `.clearAllCustomHeaders` return
   `Future<bool>`** (breaking for implementations). `false` means the profile couldn't be reached and
   nothing was done. The docs replace "a no-op where the feature is unsupported", and say that

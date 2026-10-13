@@ -13,8 +13,8 @@
 //      `getQuotaForOrigin` and `getUsageForOrigin` all complete through a `ValueCallback` or a
 //      `Runnable`. `deleteAllData` and `deleteOrigin` are `void` platform calls that return inline.
 //   3. A branch that never calls `result`? **None** -- all seven audited. Two answered in a way
-//      the Dart side threw away; [deleteAllData]'s is returned since §312, [getQuotaForOrigin]'s
-//      `0` for an unresolvable store is still ambiguous.
+//      the Dart side threw away; [deleteAllData]'s is returned since §312, and [getQuotaForOrigin] /
+//      [getUsageForOrigin] answer `null` for an unresolvable store since §329 (they answered `0`).
 //   4. Dart `int` -> Kotlin `Long`? **Yes**, and it is free here: `quota`/`usage` are `long` on
 //      `WebStorage.Origin` and `ValueCallback<Long>` on the two getters, so the generated `Long` is
 //      what the platform already hands over. No narrowing anywhere (contrast §162).
@@ -161,17 +161,15 @@ abstract class WebStorageManagerHostApi {
   ///
   /// `@async`: `WebStorage.getQuotaForOrigin` reports through a `ValueCallback<Long>`.
   ///
-  /// 🚨 **Answers `0` when the storage cannot be resolved**, which is indistinguishable from an
-  /// origin that genuinely has a zero quota. Preserved from the hand-written channel — the Dart side
-  /// declares `Future<int>` and coalesced a null reply to `0` as well — but recorded because it is
-  /// the same collapse `hasCookies` refuses to make (§168). Making it `int?` is a public-API change;
-  /// filed in TODO.
+  /// Answers `null` when the storage cannot be resolved (no such profile, or a profile without
+  /// `MULTI_PROFILE`), as `hasCookies` does (§168). It answered `0` until §329, which a real zero
+  /// couldn't be told apart from.
   @async
-  int getQuotaForOrigin(String origin, String? profileName);
+  int? getQuotaForOrigin(String origin, String? profileName);
 
   /// Bytes of quota-managed storage currently used by one origin (see [WebStorageOriginData.usage]).
   ///
-  /// `@async`, and answers `0` on an unresolvable store; see [getQuotaForOrigin].
+  /// `@async`, and answers `null` on an unresolvable store; see [getQuotaForOrigin].
   @async
-  int getUsageForOrigin(String origin, String? profileName);
+  int? getUsageForOrigin(String origin, String? profileName);
 }

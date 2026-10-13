@@ -110,21 +110,20 @@ class AndroidWebStorageManager extends PlatformWebStorageManager
   }
 
   @override
-  Future<int> getQuotaForOrigin({
+  Future<int?> getQuotaForOrigin({
     required String origin,
     String? profileName,
   }) async {
-    // `0` when the storage could not be resolved, which is indistinguishable from a genuine zero
-    // quota. Preserved from the hand-written channel; see the schema.
+    // `null` when the storage could not be resolved (§329); see the schema.
     return await _hostApi.getQuotaForOrigin(origin, profileName);
   }
 
   @override
-  Future<int> getUsageForOrigin({
+  Future<int?> getUsageForOrigin({
     required String origin,
     String? profileName,
   }) async {
-    // `0` on an unresolvable store; see getQuotaForOrigin.
+    // `null` on an unresolvable store; see getQuotaForOrigin.
     return await _hostApi.getUsageForOrigin(origin, profileName);
   }
 

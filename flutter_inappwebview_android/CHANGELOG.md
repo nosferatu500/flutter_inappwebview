@@ -239,6 +239,11 @@ for, and five others have a native *value* that differs from their name.
 
 ### Fixed
 
+- **`getQuotaForOrigin` / `getUsageForOrigin` answered `0` for storage that couldn't be resolved.**
+  `MyWebStorage` now answers `null` there (`int?` in the Pigeon schema, regenerated: the two
+  signatures, the Dart side's null handling and the notes), and `AndroidWebStorageManager` returns
+  it, as `PlatformWebStorageManager` declares `Future<int?>`. A host test pins that `null` reaches
+  the caller, and the device test asks both about a profile that doesn't exist
 - **The custom-header writes couldn't say they did nothing.** `ProfileStoreManager` resolved the
   profile through an elvis, so with `CUSTOM_REQUEST_HEADERS` or `MULTI_PROFILE` missing, or an
   unknown profile name, `addCustomHeader` / `clearCustomHeader` / `clearAllCustomHeaders` silently

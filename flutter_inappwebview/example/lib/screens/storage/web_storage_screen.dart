@@ -1094,8 +1094,10 @@ class _WebStorageScreenState extends State<WebStorageScreen>
       final quota = await _webStorageManager.getQuotaForOrigin(origin: origin);
       _recordMethodResult(
         _managerMethodKey(PlatformWebStorageManagerMethod.getQuotaForOrigin),
-        'Quota for "$origin": $quota bytes',
-        isError: false,
+        quota == null
+            ? 'Storage not found: no quota read'
+            : 'Quota for "$origin": $quota bytes',
+        isError: quota == null,
         value: quota,
       );
     } catch (e) {
@@ -1133,8 +1135,10 @@ class _WebStorageScreenState extends State<WebStorageScreen>
       final usage = await _webStorageManager.getUsageForOrigin(origin: origin);
       _recordMethodResult(
         _managerMethodKey(PlatformWebStorageManagerMethod.getUsageForOrigin),
-        'Usage for "$origin": $usage bytes',
-        isError: false,
+        usage == null
+            ? 'Storage not found: no usage read'
+            : 'Usage for "$origin": $usage bytes',
+        isError: usage == null,
         value: usage,
       );
     } catch (e) {

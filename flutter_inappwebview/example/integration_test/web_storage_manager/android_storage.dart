@@ -246,11 +246,11 @@ void androidStorage() {
         // between can be lost: `indexedDB.databases()` never resolved in 1 of 10 tries (3 of 9
         // runs of this test before it waited). So wait for the usage to drop, then read back.
         final after = await pollListed(
-          (o) => o != null && o.usage! < usage - 50000,
+          (o) => o != null && o.usage! < usage! - 50000,
         );
         expect(
           after?.usage,
-          allOf(greaterThan(50000), lessThan(usage - 50000)),
+          allOf(greaterThan(50000), lessThan(usage! - 50000)),
           reason:
               'still listed, with only the Cache Storage counted: before $usage, '
               'after ${after?.usage}',
@@ -276,25 +276,28 @@ void androidStorage() {
     );
 
     skippableTest(
-      'an unresolvable profile answers 0, which a real origin never does',
+      'quota and usage answer null for an unresolvable profile',
       () async {
-        // The null-manager branch, and the one case where `0` is meaningful. Paired with the quota
-        // test above, which shows a resolvable store always answers non-zero: that pairing is what
-        // makes `0` diagnostic rather than ambiguous *in practice*, even though the type cannot say
-        // so. `PlatformWebStorageManager.getQuotaForOrigin` returns `int`, not `int?`, which is the
-        // TODO row §169 filed.
+        // The null-manager branch (§329). Both answered `0` before, which the usage test above shows
+        // a real store answers too, so a mistyped profile name read as "no storage". The default
+        // store's non-null answers are pinned by the quota and usage tests above.
         final manager = WebStorageManager.instance();
+        const noSuchProfile = 'inappwebview_no_such_profile';
         expect(
           await manager.getQuotaForOrigin(
             origin: fixtureOrigin,
-            profileName: 'inappwebview_no_such_profile',
+            profileName: noSuchProfile,
           ),
-          0,
+          isNull,
         );
         expect(
-          await manager.getOrigins(profileName: 'inappwebview_no_such_profile'),
-          isEmpty,
+          await manager.getUsageForOrigin(
+            origin: fixtureOrigin,
+            profileName: noSuchProfile,
+          ),
+          isNull,
         );
+        expect(await manager.getOrigins(profileName: noSuchProfile), isEmpty);
       },
       skip: shouldSkip,
     );

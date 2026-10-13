@@ -155,12 +155,13 @@ class MyWebStorage(plugin: InAppWebViewFlutterPlugin) : Disposable, WebStorageMa
   override fun getQuotaForOrigin(
     origin: String,
     profileName: String?,
-    callback: (Result<Long>) -> Unit
+    callback: (Result<Long?>) -> Unit
   ) {
     replyingOnThrow(LOG_TAG, callback) { reply ->
       val manager = getWebStorage(profileName)
       if (manager == null) {
-        reply(Result.success(0L))
+        // Unresolvable storage: null, not a zero a real one couldn't be told apart from (§329).
+        reply(Result.success(null))
         return@replyingOnThrow
       }
       manager.getQuotaForOrigin(origin) { value -> reply(Result.success(value)) }
@@ -170,12 +171,13 @@ class MyWebStorage(plugin: InAppWebViewFlutterPlugin) : Disposable, WebStorageMa
   override fun getUsageForOrigin(
     origin: String,
     profileName: String?,
-    callback: (Result<Long>) -> Unit
+    callback: (Result<Long?>) -> Unit
   ) {
     replyingOnThrow(LOG_TAG, callback) { reply ->
       val manager = getWebStorage(profileName)
       if (manager == null) {
-        reply(Result.success(0L))
+        // Unresolvable storage: null, not a zero a real one couldn't be told apart from (§329).
+        reply(Result.success(null))
         return@replyingOnThrow
       }
       manager.getUsageForOrigin(origin) { value -> reply(Result.success(value)) }

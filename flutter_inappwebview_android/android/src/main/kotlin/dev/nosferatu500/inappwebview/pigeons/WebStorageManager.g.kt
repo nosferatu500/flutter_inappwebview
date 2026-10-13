@@ -348,19 +348,17 @@ interface WebStorageManagerHostApi {
    *
    * `@async`: `WebStorage.getQuotaForOrigin` reports through a `ValueCallback<Long>`.
    *
-   * 🚨 **Answers `0` when the storage cannot be resolved**, which is indistinguishable from an
-   * origin that genuinely has a zero quota. Preserved from the hand-written channel — the Dart side
-   * declares `Future<int>` and coalesced a null reply to `0` as well — but recorded because it is
-   * the same collapse `hasCookies` refuses to make (§168). Making it `int?` is a public-API change;
-   * filed in TODO.
+   * Answers `null` when the storage cannot be resolved (no such profile, or a profile without
+   * `MULTI_PROFILE`), as `hasCookies` does (§168). It answered `0` until §329, which a real zero
+   * couldn't be told apart from.
    */
-  fun getQuotaForOrigin(origin: String, profileName: String?, callback: (Result<Long>) -> Unit)
+  fun getQuotaForOrigin(origin: String, profileName: String?, callback: (Result<Long?>) -> Unit)
   /**
    * Bytes of quota-managed storage currently used by one origin (see [WebStorageOriginData.usage]).
    *
-   * `@async`, and answers `0` on an unresolvable store; see [getQuotaForOrigin].
+   * `@async`, and answers `null` on an unresolvable store; see [getQuotaForOrigin].
    */
-  fun getUsageForOrigin(origin: String, profileName: String?, callback: (Result<Long>) -> Unit)
+  fun getUsageForOrigin(origin: String, profileName: String?, callback: (Result<Long?>) -> Unit)
 
   companion object {
     /** The codec used by WebStorageManagerHostApi. */
@@ -474,7 +472,7 @@ interface WebStorageManagerHostApi {
             val args = message as List<Any?>
             val originArg = args[0] as String
             val profileNameArg = args[1] as String?
-            api.getQuotaForOrigin(originArg, profileNameArg) { result: Result<Long> ->
+            api.getQuotaForOrigin(originArg, profileNameArg) { result: Result<Long?> ->
               val error = result.exceptionOrNull()
               if (error != null) {
                 reply.reply(WebStorageManagerPigeonUtils.wrapError(error))
@@ -495,7 +493,7 @@ interface WebStorageManagerHostApi {
             val args = message as List<Any?>
             val originArg = args[0] as String
             val profileNameArg = args[1] as String?
-            api.getUsageForOrigin(originArg, profileNameArg) { result: Result<Long> ->
+            api.getUsageForOrigin(originArg, profileNameArg) { result: Result<Long?> ->
               val error = result.exceptionOrNull()
               if (error != null) {
                 reply.reply(WebStorageManagerPigeonUtils.wrapError(error))

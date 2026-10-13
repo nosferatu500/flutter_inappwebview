@@ -379,12 +379,10 @@ class WebStorageManagerHostApi {
   ///
   /// `@async`: `WebStorage.getQuotaForOrigin` reports through a `ValueCallback<Long>`.
   ///
-  /// 🚨 **Answers `0` when the storage cannot be resolved**, which is indistinguishable from an
-  /// origin that genuinely has a zero quota. Preserved from the hand-written channel — the Dart side
-  /// declares `Future<int>` and coalesced a null reply to `0` as well — but recorded because it is
-  /// the same collapse `hasCookies` refuses to make (§168). Making it `int?` is a public-API change;
-  /// filed in TODO.
-  Future<int> getQuotaForOrigin(String origin, String? profileName) async {
+  /// Answers `null` when the storage cannot be resolved (no such profile, or a profile without
+  /// `MULTI_PROFILE`), as `hasCookies` does (§168). It answered `0` until §329, which a real zero
+  /// couldn't be told apart from.
+  Future<int?> getQuotaForOrigin(String origin, String? profileName) async {
     final pigeonVar_channelName =
         'dev.flutter.pigeon.flutter_inappwebview_android.WebStorageManagerHostApi.getQuotaForOrigin$pigeonVar_messageChannelSuffix';
     final pigeonVar_channel = BasicMessageChannel<Object?>(
@@ -400,15 +398,15 @@ class WebStorageManagerHostApi {
     final Object? pigeonVar_replyValue = _extractReplyValueOrThrow(
       pigeonVar_replyList,
       pigeonVar_channelName,
-      isNullValid: false,
+      isNullValid: true,
     );
-    return pigeonVar_replyValue! as int;
+    return pigeonVar_replyValue as int?;
   }
 
   /// Bytes of quota-managed storage currently used by one origin (see [WebStorageOriginData.usage]).
   ///
-  /// `@async`, and answers `0` on an unresolvable store; see [getQuotaForOrigin].
-  Future<int> getUsageForOrigin(String origin, String? profileName) async {
+  /// `@async`, and answers `null` on an unresolvable store; see [getQuotaForOrigin].
+  Future<int?> getUsageForOrigin(String origin, String? profileName) async {
     final pigeonVar_channelName =
         'dev.flutter.pigeon.flutter_inappwebview_android.WebStorageManagerHostApi.getUsageForOrigin$pigeonVar_messageChannelSuffix';
     final pigeonVar_channel = BasicMessageChannel<Object?>(
@@ -424,8 +422,8 @@ class WebStorageManagerHostApi {
     final Object? pigeonVar_replyValue = _extractReplyValueOrThrow(
       pigeonVar_replyList,
       pigeonVar_channelName,
-      isNullValid: false,
+      isNullValid: true,
     );
-    return pigeonVar_replyValue! as int;
+    return pigeonVar_replyValue as int?;
   }
 }

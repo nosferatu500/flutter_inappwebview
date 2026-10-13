@@ -305,6 +305,9 @@ abstract class PlatformWebStorageManager extends PlatformInterface {
   ///On Android this is one global figure, not a per-origin limit: the same number comes back for
   ///every origin, for one with no storage at all, and for a string that isn't an origin (measured
   ///on Android 17, WebView 153). Android's own documentation describes a Web SQL Database quota.
+  ///
+  ///Returns `null` when the storage couldn't be resolved (a `profileName` that doesn't exist, or any
+  ///`profileName` while [WebViewFeature.MULTI_PROFILE] is missing), so a real `0` means `0`.
   ///{@endtemplate}
   ///
   ///{@macro flutter_inappwebview_platform_interface.PlatformWebStorageManager.getQuotaForOrigin.supported_platforms}
@@ -317,7 +320,7 @@ abstract class PlatformWebStorageManager extends PlatformInterface {
       ),
     ],
   )
-  Future<int> getQuotaForOrigin({
+  Future<int?> getQuotaForOrigin({
     required String origin,
     @SupportedPlatforms(platforms: [AndroidPlatform()]) String? profileName,
   }) {
@@ -333,6 +336,9 @@ abstract class PlatformWebStorageManager extends PlatformInterface {
   ///It counts what [getOrigins] counts: on Android IndexedDB, Cache Storage, the origin-private file
   ///system and service worker registrations, not cookies, `localStorage` or `sessionStorage`
   ///(measured on Android 17, WebView 153).
+  ///
+  ///Returns `null` when the storage couldn't be resolved (a `profileName` that doesn't exist, or any
+  ///`profileName` while [WebViewFeature.MULTI_PROFILE] is missing), so a real `0` means `0`.
   ///{@endtemplate}
   ///
   ///{@macro flutter_inappwebview_platform_interface.PlatformWebStorageManager.getUsageForOrigin.supported_platforms}
@@ -345,7 +351,7 @@ abstract class PlatformWebStorageManager extends PlatformInterface {
       ),
     ],
   )
-  Future<int> getUsageForOrigin({
+  Future<int?> getUsageForOrigin({
     required String origin,
     @SupportedPlatforms(platforms: [AndroidPlatform()]) String? profileName,
   }) {
