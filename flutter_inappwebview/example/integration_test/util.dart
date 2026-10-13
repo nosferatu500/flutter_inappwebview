@@ -32,25 +32,40 @@ int? iosMajorVersion() {
 
 bool _frameWatchdogInstalled = false;
 
-/// Asks the engine for a frame when a pump has had none for 2 s, for every test (§305).
+/// Closes the live test binding's frame hole on iOS (§306, fixed §328) and, as a backstop on every
+/// platform, asks the engine for a frame when a pump has had none for 2 s (§305), for every test.
 ///
-/// The hang it covers is the live test binding's, not the engine's (§306). For a frame no pump
-/// asked for, the binding skips `handleBeginFrame`, so `hasScheduledFrame` stays true, and its
-/// `handleDrawFrame` asks the engine for the next frame. A pump that starts in the engine's
-/// microtask flush between such a frame's `onBeginFrame` and `onDrawFrame` sees `hasScheduledFrame`
-/// true and asks for nothing; that frame's draw then completes the pump without drawing and asks
-/// for no next frame, and the following pump waits forever. Reproduced without a WebView (Android
-/// 3 of 3 runs, iOS 2 of 2 once its launch-time metrics updates, which also ask the engine, had
-/// stopped). With merged platform and UI threads a native event runs its Dart handler at once and
-/// leaves the handler's microtasks to the next flush, which can be a frame's, so a test resuming
-/// from a WebView callback can pump there: §298's four popup hangs were each in the first pump
-/// after the `pumpWidget` that followed `onCreateWindow` (not yet caught in the act). Unrescued,
-/// every later test in the run failed on the test binding's asserts. In live test mode the binding
-/// asks for the next frame after every frame, so the engine calls `onBeginFrame` continuously; 2 s
-/// without one while a frame is scheduled and frames are enabled is that hang. Measured (§305): no
-/// event in a full `in_app_webview` group on Android or iOS, and alone it carried 15 of 15
-/// `WebView Windows` runs through 6 hangs. Each rescue is recorded and printed at the end of its
-/// test. Installed once, at registration, wrapping the binding's own `onBeginFrame`.
+/// The hole is the live test binding's, not the engine's (§306). For a frame no pump asked for, the
+/// binding skips `handleBeginFrame`, so `hasScheduledFrame` stays true, and its `handleDrawFrame` asks
+/// the engine for the next frame. A pump that starts in the engine's microtask flush between such a
+/// frame's `onBeginFrame` and `onDrawFrame` sees `hasScheduledFrame` true and asks for nothing; that
+/// frame's draw then completes the pump without drawing and asks for no next frame, and the following
+/// pump waits forever. With merged platform and UI threads a native event runs its Dart handler at
+/// once and leaves the handler's microtasks to the next flush, which can be a frame's, so a test
+/// resuming from a WebView callback can pump there.
+///
+/// The fix: after a skipped frame's draw (the scheduler phase is still idle after its
+/// `onBeginFrame`), ask the engine once more. When the binding has already asked, the engine's
+/// one-slot frame request coalesces the two. Measured (§328) on iOS 26.5: 15 `WebView Windows` runs
+/// caught 2 hangs in the act, each right after a skipped frame's draw; with the fix, 15 more runs had
+/// none and no more frames (540 `onBeginFrame`s per run against 564). A forced repro (a pump started
+/// in that window, no WebView) hung until the watchdog asked, 2.0 to 2.4 s, in 5 of 6 cases on iOS
+/// 26.5 and Android 17 (a metrics change released the sixth); with the fix all 6 took 13 to 19 ms.
+///
+/// **iOS only.** On Android 17 the same request made frames come later after skipped frames, not
+/// sooner: a full `in_app_webview` group had 176 gaps over 200 ms after a skipped frame's draw with it
+/// (23 of them 0.8 s or more) against 19 without (all under 400 ms), and it didn't stop rescues that
+/// follow a skipped frame there (3 with it, 0 without, over 2 full groups and 7 `find` runs against 1
+/// and 6). Why isn't known: by the engine's source the extra request should be coalesced. So Android
+/// keeps only the watchdog, as before §328.
+///
+/// The watchdog stays as a backstop for any other path to a stale `hasScheduledFrame`: 2 s without
+/// `onBeginFrame` while a frame is scheduled and frames are enabled. On iOS it didn't fire once with
+/// the fix (18 `WebView Windows` runs and every group). On Android it also catches a second kind,
+/// after a frame that was drawn, not skipped: 5 in the 16 Android runs above, with the fix or
+/// without. Each rescue, and any gap over 200 ms after a skipped frame's draw, is recorded and printed at the
+/// end of its test. Installed once, at registration, wrapping the binding's own `onBeginFrame` and
+/// `onDrawFrame`.
 void installFrameWatchdog() {
   if (_frameWatchdogInstalled) return;
   final binding = SchedulerBinding.instance;
@@ -65,12 +80,44 @@ void installFrameWatchdog() {
     _frameWatchdogEvents.add('not installed: no onBeginFrame to wrap');
     return;
   }
+  final VoidCallback? handleDrawFrame = dispatcher.onDrawFrame;
+  if (handleDrawFrame == null) {
+    _frameWatchdogEvents.add('not installed: no onDrawFrame to wrap');
+    return;
+  }
   _frameWatchdogInstalled = true;
   _frameWatchdogEvents.add('frame watchdog installed (§305)');
+  // iOS only: on Android the same request made the next frame come later, not sooner (§328).
+  final askAfterSkippedFrame = defaultTargetPlatform == TargetPlatform.iOS;
   _lastBeginFrame = DateTime.now();
   dispatcher.onBeginFrame = (Duration timeStamp) {
-    _lastBeginFrame = DateTime.now();
+    final now = DateTime.now();
+    final skippedDraw = _lastSkippedDraw;
+    if (skippedDraw != null) {
+      final gap = now.difference(skippedDraw);
+      if (gap > const Duration(milliseconds: 200)) {
+        _frameWatchdogEvents.add(
+          'stall after a skipped frame: next onBeginFrame ${gap.inMilliseconds} ms after its draw'
+          '${_watchdogAskedSinceSkip ? ', after the watchdog asked' : ''} (§328)',
+        );
+      }
+      _lastSkippedDraw = null;
+    }
+    _lastBeginFrame = now;
     handleBeginFrame(timeStamp);
+    _frameSkipped = binding.schedulerPhase == SchedulerPhase.idle;
+  };
+  dispatcher.onDrawFrame = () {
+    handleDrawFrame();
+    if (_frameSkipped) {
+      _lastSkippedDraw = DateTime.now();
+      _watchdogAskedSinceSkip = false;
+      if (askAfterSkippedFrame) {
+        // The binding asked for nothing if this draw completed a pump (§306); otherwise the engine
+        // coalesces this request with the binding's.
+        dispatcher.scheduleFrame();
+      }
+    }
   };
   Timer.periodic(const Duration(milliseconds: 500), (_) {
     _frameWatchdogTicks++;
@@ -81,16 +128,22 @@ void installFrameWatchdog() {
       return;
     }
     // Printed from the test's zone by `skippableTestWidgets` (a print from here reaches no test).
+    final skippedDraw = _lastSkippedDraw;
     _frameWatchdogEvents.add(
       'frame watchdog: no frame for ${idle.inMilliseconds} ms with one scheduled; '
-      'asked the engine again (§305)',
+      'asked the engine again (§305); last frame '
+      '${skippedDraw == null ? 'not skipped' : 'skipped, its draw ${DateTime.now().difference(skippedDraw).inMilliseconds} ms ago'}',
     );
+    _watchdogAskedSinceSkip = true;
     _lastBeginFrame = DateTime.now();
     dispatcher.scheduleFrame();
   });
 }
 
 DateTime _lastBeginFrame = DateTime.now();
+bool _frameSkipped = false;
+DateTime? _lastSkippedDraw;
+bool _watchdogAskedSinceSkip = false;
 int _frameWatchdogTicks = 0;
 final List<String> _frameWatchdogEvents = <String>[];
 
@@ -131,8 +184,9 @@ class TestDeadline {
     );
   }
 
-  /// [step] for a `pump` or `pumpWidget`. A pump the live binding leaves with no frame requested
-  /// (§306) is rescued by [installFrameWatchdog] (§305), so it waits at most a few seconds longer.
+  /// [step] for a `pump` or `pumpWidget`. A pump the live binding would leave with no frame
+  /// requested (§306) gets one from [installFrameWatchdog]'s draw hook on iOS (§328); the 2 s watchdog
+  /// rescues it on Android, and anything else on either platform (§305).
   Future<void> frame(
     String name,
     Future<void> pumping, {

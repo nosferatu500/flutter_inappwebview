@@ -1251,6 +1251,17 @@ simulator for the first time:**
 
 ### Internal
 
+- **On iOS, the device tests' dropped frame is fixed where it happens; the 2 s watchdog stays as a
+  backstop on both platforms.** After a frame the live test binding skipped, the test helper now
+  asks the engine for the next frame itself. When the binding already asked, the engine treats the
+  two requests as one. When a pump started inside that frame, the binding asks for nothing, and this
+  request is what ends the hang. It was first caught in the act: in 15 runs of the popup tests on
+  iOS, both watchdog rescues came right after such a frame. With the change, 15 more runs had no
+  rescue and no extra frames. A forced repro of the hang, without a WebView, waited 2 to 2.4 s for
+  the watchdog in 5 of 6 cases on iOS and Android before; now all 6 wait one frame (13 to 19 ms).
+  Android doesn't get it: there, the same request made frames come later after skipped frames
+  (176 gaps over 200 ms in a full `in_app_webview` run against 19 without), for a reason not yet
+  known, so Android keeps the watchdog alone
 - **Android device tests pin what each clearing method keeps.** One test per method: an origin gets
   a cookie, `localStorage`, IndexedDB, Cache Storage, OPFS data and a service worker, then the method
   runs and a fresh WebView reads back what's left. The expected results are the ones the docs state:
