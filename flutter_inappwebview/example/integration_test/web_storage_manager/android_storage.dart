@@ -289,6 +289,227 @@ void androidStorage() {
       expect(await manager.getOrigins(profileName: noSuchProfile), isEmpty);
     }, skip: shouldSkip);
 
+    // The other half of the two null tests around this one: an existing named profile (§329 found by
+    // a designed survivor that no test read one; D4's `deleteAllData` / `deleteOrigin` had the same
+    // gap). A WebView on the profile stores IndexedDB, Cache Storage and `localStorage`; each call
+    // passes `profileName`, and the default store is checked alongside, because a dropped or ignored
+    // `profileName` resolves the default store, where these calls answer just as plausibly.
+    skippableTestWidgets(
+      "a named profile's storage is read and cleared through its name",
+      (WidgetTester tester) async {
+        final deadline = TestDeadline();
+        final manager = WebStorageManager.instance();
+        if (!await WebViewFeature.isFeatureSupported(
+              WebViewFeature.MULTI_PROFILE,
+            ) ||
+            !await WebViewFeature.isFeatureSupported(
+              WebViewFeature.DELETE_BROWSING_DATA,
+            )) {
+          markTestSkipped(
+            'needs MULTI_PROFILE, and DELETE_BROWSING_DATA to start from no storage',
+          );
+          return;
+        }
+        // Never deleted, like `cookie_manager/profile_scope.dart`'s: androidx refuses to delete a
+        // profile in use, and `getOrCreateProfile` is idempotent.
+        const profile = 'inappwebview_storage_scope_test';
+        expect(
+          await ProfileStore.instance().getOrCreateProfile(name: profile),
+          isNotNull,
+          reason: 'the rest of this test is meaningless without a real profile',
+        );
+        const origin = 'http://127.0.0.1:8080';
+        final server = InAppLocalhostServer();
+        await deadline.step('starting the localhost server', server.start());
+        addTearDown(server.close);
+        for (final name in [null, profile]) {
+          expect(
+            await deadline.step(
+              'deleteBrowsingData($name)',
+              manager.deleteBrowsingData(profileName: name),
+            ),
+            isTrue,
+          );
+        }
+        addTearDown(() => manager.deleteBrowsingData(profileName: profile));
+
+        Future<WebStorageOrigin?> listed(String? name) async =>
+            (await deadline.step(
+              'getOrigins($name)',
+              manager.getOrigins(profileName: name),
+            )).where((o) => o.origin == '$origin/').firstOrNull;
+        // Bounded polls, as in the default-store test above.
+        Future<WebStorageOrigin?> pollListed(
+          bool Function(WebStorageOrigin? o) done,
+        ) async {
+          WebStorageOrigin? o = await listed(profile);
+          for (var i = 0; i < 10 && !done(o); i++) {
+            await Future<void>.delayed(const Duration(milliseconds: 500));
+            o = await listed(profile);
+          }
+          return o;
+        }
+
+        Future<InAppWebViewController> mount(String name) async {
+          final loaded = Completer<InAppWebViewController>();
+          await deadline.frame(
+            'mounting $name',
+            tester.pumpWidget(
+              Directionality(
+                textDirection: TextDirection.ltr,
+                child: InAppWebView(
+                  key: ValueKey(name),
+                  initialUrlRequest: URLRequest(
+                    url: WebUri('$origin/test_assets/page-1.html'),
+                  ),
+                  initialSettings: InAppWebViewSettings(profileName: profile),
+                  onLoadStop: (controller, url) {
+                    if (!loaded.isCompleted) loaded.complete(controller);
+                  },
+                ),
+              ),
+            ),
+          );
+          return deadline.step('$name: the page load', loaded.future);
+        }
+
+        Future<String?> js(
+          InAppWebViewController c,
+          String what,
+          String body,
+        ) async {
+          final result = await deadline.step(
+            what,
+            c.callAsyncJavaScript(functionBody: body),
+          );
+          return '${result?.value} ${result?.error}';
+        }
+
+        final writer = await mount('the writer');
+        expect(
+          await js(writer, 'storing in the named profile', """
+            localStorage.setItem('zz', 'x');
+            const db = await new Promise((ok, ko) => {
+              const r = indexedDB.open('zz', 1);
+              r.onupgradeneeded = () => r.result.createObjectStore('s');
+              r.onsuccess = () => ok(r.result); r.onerror = () => ko(r.error);
+            });
+            await new Promise((ok, ko) => {
+              const t = db.transaction('s', 'readwrite');
+              t.objectStore('s').put('x'.repeat(50000), 'k');
+              t.oncomplete = ok; t.onerror = () => ko(t.error);
+            });
+            db.close();
+            await (await caches.open('zz')).put('/zz', new Response('x'.repeat(50000)));
+            return 'stored';"""),
+          'stored null',
+        );
+
+        // Reads.
+        final before = await pollListed((o) => o != null);
+        expect(
+          before,
+          isNotNull,
+          reason: "the named profile's getOrigins lists the origin",
+        );
+        final usage = await deadline.step(
+          'getUsageForOrigin(profile)',
+          manager.getUsageForOrigin(origin: origin, profileName: profile),
+        );
+        expect(
+          usage,
+          greaterThan(100000),
+          reason: 'both 50 000-character stores count toward the usage',
+        );
+        expect(
+          before!.usage,
+          usage,
+          reason: 'the listing reports the same usage',
+        );
+        expect(
+          await deadline.step(
+            'getQuotaForOrigin(profile)',
+            manager.getQuotaForOrigin(origin: origin, profileName: profile),
+          ),
+          greaterThan(0),
+          reason: 'a resolvable store answers a quota, not null',
+        );
+        expect(
+          await listed(null),
+          isNull,
+          reason: "the default store doesn't see the named profile's storage",
+        );
+        expect(
+          await deadline.step(
+            'getUsageForOrigin(default)',
+            manager.getUsageForOrigin(origin: origin),
+          ),
+          0,
+          reason: "the default store doesn't count the named profile's storage",
+        );
+
+        // deleteOrigin clears the named profile's IndexedDB and keeps its Cache Storage (§308).
+        expect(
+          await deadline.step(
+            'deleteOrigin(profile)',
+            manager.deleteOrigin(origin: origin, profileName: profile),
+          ),
+          isTrue,
+        );
+        final after = await pollListed(
+          (o) => o != null && o.usage! < usage! - 50000,
+        );
+        expect(
+          after?.usage,
+          allOf(greaterThan(50000), lessThan(usage! - 50000)),
+          reason:
+              'still listed, with only the Cache Storage counted: before $usage, '
+              'after ${after?.usage}',
+        );
+        expect(
+          await js(
+            writer,
+            'reading the IndexedDB back',
+            "return (await indexedDB.databases()).some(d => d.name === 'zz');",
+          ),
+          'false null',
+          reason: 'deleteOrigin cleared the named profile\'s IndexedDB',
+        );
+
+        // deleteAllData clears the named profile's localStorage (§308), read from a fresh WebView 2 s
+        // later, as the clearing tests below do.
+        expect(
+          await js(
+            writer,
+            'reading localStorage before deleteAllData',
+            "return localStorage.getItem('zz');",
+          ),
+          'x null',
+          reason: 'the control: localStorage is there before the call',
+        );
+        expect(
+          await deadline.step(
+            'deleteAllData(profile)',
+            manager.deleteAllData(profileName: profile),
+          ),
+          isTrue,
+        );
+        await Future<void>.delayed(const Duration(seconds: 2));
+        await deadline.frame('unmounting', tester.pumpWidget(const SizedBox()));
+        final reader = await mount('the reader');
+        expect(
+          await js(
+            reader,
+            'reading localStorage after deleteAllData',
+            "return localStorage.getItem('zz');",
+          ),
+          'null null',
+          reason: "deleteAllData cleared the named profile's localStorage",
+        );
+      },
+      skip: shouldSkip,
+    );
+
     skippableTest('deleteAllData and deleteOrigin report true, and false for an unknown profile', () async {
       // D4 (§312). `false` is the unresolvable-storage branch: a profile that doesn't exist (or any
       // profile without MULTI_PROFILE), where nothing is deleted. Until then both returned

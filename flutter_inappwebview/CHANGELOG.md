@@ -49,6 +49,13 @@
 
 ### Internal
 
+- **Test: an existing named profile's storage, read and cleared through `WebStorageManager`** (Android
+  device test, `MULTI_PROFILE`). A WebView on the profile stores IndexedDB, Cache Storage and
+  `localStorage`. The test checks that `getOrigins`, `getUsageForOrigin` and `getQuotaForOrigin` with
+  `profileName` see that data, that the default store doesn't, and that `deleteOrigin` and `deleteAllData`
+  answer `true` and clear the profile's data. Until now only the default store and a missing profile were
+  covered. 4 of 5 mutants killed; the designed survivor shows `deleteBrowsingData` on a named profile is
+  still unchecked.
 - **Doc fix: class docs show their "supported platforms" tables.** The generated template they
   `{@macro}` sat where dartdoc couldn't see it; it now sits on a public enum in the platform interface.
   dartdoc's undefined-macro warnings for this package go from 44 to 9, and its unresolved doc references
