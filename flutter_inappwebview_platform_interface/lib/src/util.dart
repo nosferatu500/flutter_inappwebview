@@ -2,8 +2,8 @@ import 'dart:math';
 import 'dart:developer' as developer;
 
 import 'package:flutter/foundation.dart';
-import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter/widgets.dart';
 
 import 'debug_logging_settings.dart';
 import 'types/disposable.dart';

@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 
 /// A card displaying the status of a component (e.g., browser, WebView, channel).
 ///

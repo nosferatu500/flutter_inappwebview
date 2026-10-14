@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:flutter_inappwebview_example/widgets/common/test_card.dart';
 import 'package:flutter_inappwebview_example/models/test_case.dart';

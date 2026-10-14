@@ -7,6 +7,12 @@
 
 ### Internal
 
+- **No `package:flutter/material.dart` or `cupertino.dart` import left in `lib/`**: `util.dart` and
+  `print_job_settings.dart` import `widgets.dart` instead.
+  Nothing in this package's `lib/` used Material or Cupertino: with the import swapped for `widgets.dart`,
+  analyze reported 0 errors. So the package works the same in an app on `package:material_ui` or on the
+  SDK's Material, and needs no `material_ui` dependency (the migration guide calls moving a package onto
+  `material_ui` a major-version change; this avoids it).
 - **Formatting only: 59 Dart files reformatted by Flutter 3.47.7's formatter at language 3.13** (`build_runner` still writes the same 484 outputs, 0 `.g.dart` changed).
   Each file's code is unchanged once whitespace and commas are removed (the tall style adds and drops
   trailing commas); analyze and every test suite pass unchanged.

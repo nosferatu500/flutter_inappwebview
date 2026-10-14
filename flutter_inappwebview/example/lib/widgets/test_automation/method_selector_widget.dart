@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:flutter_inappwebview_example/utils/controller_methods_registry.dart';
 import 'package:flutter_inappwebview_example/widgets/common/method_card.dart';
 import 'package:flutter_inappwebview_example/widgets/common/parameter_dialog.dart';

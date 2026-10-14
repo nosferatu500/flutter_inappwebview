@@ -13,6 +13,13 @@
 
 ### Internal
 
+- **No `package:flutter/material.dart` import left in `lib/`**: `in_app_webview.dart` dropped it (it already
+  imports `widgets.dart`).
+  Nothing in this package's `lib/` used Material or Cupertino: with the import swapped for `widgets.dart`,
+  analyze reported 0 errors. So the package works the same in an app on `package:material_ui` or on the
+  SDK's Material, and needs no `material_ui` dependency (the migration guide calls moving a package onto
+  `material_ui` a major-version change; this avoids it).
+- The example uses `package:material_ui` (`^1.6.0`): 1 file moved by `dart fix`.
 - **Formatting only: 45 Dart files reformatted by Flutter 3.47.7's formatter at language 3.13** (including the 20 Pigeon schemas under `pigeons/`; regenerating all 20 gives byte-identical Dart and Kotlin, so the next Pigeon run won't undo it; 3 in the example).
   Each file's code is unchanged once whitespace and commas are removed (the tall style adds and drops
   trailing commas); analyze and every test suite pass unchanged.
