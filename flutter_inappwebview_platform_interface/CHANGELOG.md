@@ -12,6 +12,10 @@
   showcase pages. Nothing is printed now.
 ### Internal
 
+- **The code generator's `build.yaml` no longer configures a builder that doesn't exist**
+  (`generators|flutter_inappwebview_internal_annotations`; the file defines only `generators`).
+  build_runner had ignored it with a warning, and only when building the generators package itself.
+  This package's build writes the same 484 outputs, with the same 16 warnings, and no `.g.dart` changes.
 - **Doc fix: `{@macro}`s that named no template.** dartdoc's undefined-macro warnings for this package go from
   82 to 66. Some macros named the platform class where the template sits on its `…CreationParams` (now
   pointed there), two were typos, and the rest named a template that exists nowhere (removed: they

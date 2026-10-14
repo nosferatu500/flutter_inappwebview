@@ -1,9 +1,3 @@
-targets:
-  $default:
-    builders:
-      generators|flutter_inappwebview_internal_annotations:
-        enabled: true
-
 builders:
   generators:
     target: ":generators"
