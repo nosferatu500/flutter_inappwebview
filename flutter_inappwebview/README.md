@@ -49,10 +49,10 @@ Send a submission request to the [Submit App](https://inappwebview.dev/submit-ap
 
 ## Requirements
 
-- Dart sdk: "^3.8.0"
-- Flutter: ">=3.32.0"
-- Android: `minSdk >= 30`, [AGP](https://developer.android.com/build/releases/gradle-plugin) version `>= 9.0.0` (AGP 8 and lower are not supported), Gradle `>= 9.1.0`, JDK `>= 17` (use [Android Studio - Android Gradle plugin Upgrade Assistant](https://developer.android.com/build/agp-upgrade-assistant) for help)
-- iOS 15.0+, Xcode version `>= 15.0`
+- Dart sdk: "^3.13.0"
+- Flutter: ">=3.47.0"
+- Android: `minSdk >= 30`, [AGP](https://developer.android.com/build/releases/gradle-plugin) version `>= 9.0.0` (AGP 8 and lower are not supported), Gradle `>= 9.1.0`, JDK `>= 17`, Kotlin Gradle Plugin `>= 2.2.20` on the app's build classpath (Flutter 3.47's own minimum; AGP 9.3.0 through 9.4.1 bring 2.2.10, so declare it, as Flutter 3.47's app template does: `id("org.jetbrains.kotlin.android") version "2.4.0" apply false` in `settings.gradle(.kts)`) (use [Android Studio - Android Gradle plugin Upgrade Assistant](https://developer.android.com/build/agp-upgrade-assistant) for help)
+- iOS 15.0+, **Xcode version `>= 26`** — the iOS module uses `isolated deinit` (SE-0371) and needs a Swift 6.2+ compiler, which is a newer toolchain than Flutter itself requires
 
 ## Installation
 
@@ -61,6 +61,8 @@ Add `nosferatu500_inappwebview` as a [dependency in your pubspec.yaml file](http
 ```sh
 flutter pub add nosferatu500_inappwebview
 ```
+
+Coming from upstream `flutter_inappwebview` 6.x? Follow the [migration guide](https://github.com/nosferatu500/flutter_inappwebview/blob/master/flutter_inappwebview/MIGRATION.md).
 
 ### Platform Installation Setup:
 - [Android](https://inappwebview.dev/docs/intro/#setup-android)

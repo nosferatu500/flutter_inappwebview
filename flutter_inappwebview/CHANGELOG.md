@@ -11,6 +11,13 @@
   relies on AGP's built-in Kotlin has to declare it, as Flutter 3.47.7's app template does:
   `id("org.jetbrains.kotlin.android") version "2.4.0" apply false` in `settings.gradle(.kts)`.
 
+### Added
+
+- **A migration guide from `flutter_inappwebview` 6.x: [MIGRATION.md](MIGRATION.md)**, linked from the
+  README's Installation section. It covers the package change, the build requirements, the removed API,
+  the changed signatures, and the behaviour changes that compile unchanged (`shouldOverrideUrlLoading`'s
+  `null`, the iOS event URLs and `contentBlockers` errors, among others).
+
 ### Changed
 
 - **Android: the InAppBrowser and the JavaScript alert / confirm / prompt dialogs use Material 3 and
@@ -27,6 +34,11 @@
   3 themes for Android views; every app using the plugin now includes it.
 
 ### Fixed
+
+- **This package's README listed old requirements**: Dart `^3.8.0`, Flutter `>=3.32.0` and Xcode `>= 15.0`,
+  which pub.dev showed for 7.0.0 although that release needs Dart 3.12, Flutter 3.44 and Xcode 26. Its
+  Requirements now match the repository README's (and 7.1.0: Dart 3.13, Flutter 3.47, the Kotlin Gradle
+  Plugin note).
 
 - **Android: the InAppBrowser's status bar icons are readable in light mode.** They were white on the
   light toolbar (measured on Android 17); the theme now asks for dark icons in light mode and light ones

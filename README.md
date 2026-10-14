@@ -218,6 +218,8 @@ Add `nosferatu500_inappwebview` as a [dependency in your pubspec.yaml file](http
 flutter pub add nosferatu500_inappwebview
 ```
 
+Coming from upstream `flutter_inappwebview` 6.x? Follow the [migration guide](flutter_inappwebview/MIGRATION.md).
+
 ### Platform Installation Setup:
 - [Android](https://inappwebview.dev/docs/intro/#setup-android)
 - [iOS](https://inappwebview.dev/docs/intro/#setup-ios)
