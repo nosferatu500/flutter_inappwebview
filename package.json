@@ -31,12 +31,12 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/pichillilorenzo/flutter_inappwebview.git"
+    "url": "git+https://github.com/nosferatu500/flutter_inappwebview.git"
   },
   "author": "Lorenzo Pichilli",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/pichillilorenzo/flutter_inappwebview/issues"
+    "url": "https://github.com/nosferatu500/flutter_inappwebview/issues"
   },
-  "homepage": "https://github.com/pichillilorenzo/flutter_inappwebview#README.md"
+  "homepage": "https://github.com/nosferatu500/flutter_inappwebview#readme"
 }

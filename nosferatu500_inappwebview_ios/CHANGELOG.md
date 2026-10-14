@@ -7,6 +7,7 @@
 
 ### Internal
 
+- The example app opens the fork's repository page instead of `inappwebview.dev`.
 - **The 7.0.0 section had two "### Fixed" headings; they are one now.** The second held a single entry (the
   UIScene key-window fix), moved word for word to the end of the first. No entry changed.
 - **Dead code removed: 12 Swift declarations nothing called, and three calls that did nothing.** The

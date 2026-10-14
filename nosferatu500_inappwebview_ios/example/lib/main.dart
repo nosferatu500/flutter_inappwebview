@@ -76,7 +76,9 @@ class _MyAppState extends State<MyApp> {
                     IOSInAppWebViewWidgetCreationParams(
                       key: webViewKey,
                       initialUrlRequest: URLRequest(
-                        url: WebUri("https://inappwebview.dev/"),
+                        url: WebUri(
+                          "https://github.com/nosferatu500/flutter_inappwebview",
+                        ),
                       ),
                       initialSettings: settings,
                       pullToRefreshController: pullToRefreshController,

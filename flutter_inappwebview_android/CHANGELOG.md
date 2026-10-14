@@ -38,6 +38,7 @@
 
 ### Internal
 
+- The example app opens the fork's repository page instead of `inappwebview.dev`.
 - **Dead code removed: 16 Kotlin declarations nothing called**, found by listing every declared name that
   occurs once across the module's sources, manifest and resources, then checked against the JVM tests.
   `Util.getX509CertFromSslCertHack` / `log` / `isClass`, `NO_HISTORY_CHROME_CUSTOM_TAB_REQUEST_CODE`,

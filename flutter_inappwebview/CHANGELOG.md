@@ -20,6 +20,9 @@
 
 ### Changed
 
+- **The debug-mode console message promoting upstream is gone.** In debug builds, the first platform
+  instance printed "Hi, flutter_inappwebview here…" with links to upstream's donation, GitHub and
+  showcase pages. Nothing is printed now.
 - **Android: the InAppBrowser and the JavaScript alert / confirm / prompt dialogs use Material 3 and
   follow the system's light / dark setting.** The InAppBrowser activity's theme is
   `Theme.Material3.DayNight.NoActionBar` (was `Theme.AppCompat.Light.NoActionBar`); its toolbar uses the
@@ -46,6 +49,14 @@
 
 ### Internal
 
+- **Upstream's promotion is gone from the READMEs**: the share buttons, the donate badge, upstream's GitHub
+  forks / stars and Awesome Flutter badges, the Articles, Showcase and Support sections, and the
+  100-person upstream contributor table (with `.all-contributorsrc`, its bot's config). In their place:
+  a Resources section (the pub.dev API reference, the integration tests), a platform-setup pointer to
+  Requirements and the migration guide (upstream's setup pages describe 6.x), and a Credits line linking
+  to upstream and its contributors. `package.json`'s repository, bugs and homepage point at the fork.
+- The integration tests' `TEST_URL_3` and the test page's link use the fork's repository URL instead of
+  upstream's (the `shouldOverrideUrlLoading` test that follows that link passes on Android and iOS).
 - **The example app is Material 3.** Flutter side: `useMaterial3: false` and the blue Material 2 app bar
   with white title and icons are gone, replaced by `colorSchemeSeed: Colors.blue`; three screens drop their
   own blue app-bar colours (and a tab bar its white labels) and the app-bar loading spinner drops its
