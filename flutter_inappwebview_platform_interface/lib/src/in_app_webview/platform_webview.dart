@@ -463,7 +463,7 @@ It applies its own [InAppWebViewSettings.contentBlockers] and none of the caller
   ///[jsConfirmRequest] contains the message to be displayed in the confirm dialog and the of the page requesting the dialog.
   ///{@endtemplate}
   ///
-  ///{@macro nosferatu500_inappwebview_platform_interface.PlatformWebViewCreationParams.onJsConfirm.onJsConfirm}
+  ///{@macro nosferatu500_inappwebview_platform_interface.PlatformWebViewCreationParams.onJsConfirm}
   @SupportedPlatforms(
     platforms: [
       AndroidPlatform(

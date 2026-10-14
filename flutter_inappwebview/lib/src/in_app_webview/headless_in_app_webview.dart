@@ -26,13 +26,9 @@ class HeadlessInAppWebView {
   final PlatformHeadlessInAppWebView platform;
 
   ///{@macro nosferatu500_inappwebview_platform_interface.PlatformHeadlessInAppWebView.id}
-  ///
-  ///{@macro nosferatu500_inappwebview_platform_interface.PlatformHeadlessInAppWebView.id.supported_platforms}
   String get id => platform.id;
 
   ///{@macro nosferatu500_inappwebview_platform_interface.PlatformHeadlessInAppWebView.webViewController}
-  ///
-  ///{@macro nosferatu500_inappwebview_platform_interface.PlatformHeadlessInAppWebView.webViewController.supported_platforms}
   InAppWebViewController? get webViewController {
     final webViewControllerPlatform = platform.webViewController;
     if (webViewControllerPlatform == null) {
@@ -698,7 +694,7 @@ class HeadlessInAppWebView {
     platform: platform,
   );
 
-  ///{@macro nosferatu500_inappwebview_platform_interface.PlatformHeadlessInAppWebViewCreationParams.isMethodSupported}
+  ///{@macro nosferatu500_inappwebview_platform_interface.PlatformHeadlessInAppWebView.isMethodSupported}
   static bool isMethodSupported(
     PlatformHeadlessInAppWebViewMethod method, {
     TargetPlatform? platform,

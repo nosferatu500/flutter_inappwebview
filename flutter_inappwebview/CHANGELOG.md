@@ -49,6 +49,12 @@
 
 ### Internal
 
+- **Doc fix: `{@macro}`s that named no template.** dartdoc's undefined-macro warnings for this package go from
+  99 to 44, so 38 references now render their docs (for example `WebMessageChannel.port1`,
+  `PullToRefreshController.onRefresh`, `FindInteractionController.onFindResultReceived`), and 39 that named
+  nothing are removed. The 44 left are class-level "supported platforms" tables the generator hides in
+  private extensions; the newly rendered callback docs add 8 "unresolved doc reference" warnings (14 → 22)
+  for their parameter names, which dartdoc shows as plain text.
 - **Upstream's promotion is gone from the READMEs**: the share buttons, the donate badge, upstream's GitHub
   forks / stars and Awesome Flutter badges, the Articles, Showcase and Support sections, and the
   100-person upstream contributor table (with `.all-contributorsrc`, its bot's config). In their place:

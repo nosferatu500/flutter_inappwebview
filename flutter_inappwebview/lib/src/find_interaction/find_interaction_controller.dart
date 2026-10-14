@@ -36,9 +36,9 @@ class FindInteractionController {
   /// Implementation of [PlatformFindInteractionController] for the current platform.
   final PlatformFindInteractionController platform;
 
-  ///{@macro nosferatu500_inappwebview_platform_interface.PlatformFindInteractionController.onFindResultReceived}
+  ///{@macro nosferatu500_inappwebview_platform_interface.PlatformFindInteractionControllerCreationParams.onFindResultReceived}
   ///
-  ///{@macro nosferatu500_inappwebview_platform_interface.PlatformFindInteractionController.onFindResultReceived.supported_platforms}
+  ///{@macro nosferatu500_inappwebview_platform_interface.PlatformFindInteractionControllerCreationParams.onFindResultReceived.supported_platforms}
   void Function(
     PlatformFindInteractionController controller,
     int activeMatchOrdinal,
@@ -111,7 +111,7 @@ class FindInteractionController {
         platform: platform,
       );
 
-  ///{@macro nosferatu500_inappwebview_platform_interface.PlatformFindInteractionController.isPropertySupported}
+  ///{@macro nosferatu500_inappwebview_platform_interface.PlatformFindInteractionControllerCreationParams.isPropertySupported}
   static bool isPropertySupported(
     PlatformFindInteractionControllerCreationParamsProperty property, {
     TargetPlatform? platform,

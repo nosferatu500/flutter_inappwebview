@@ -10,8 +10,6 @@ part of 'chrome_safari_browser_settings.dart';
 ///Class that represents the settings that can be used for an [ChromeSafariBrowser] window.
 ///{@endtemplate}
 ///
-///{@macro nosferatu500_inappwebview_platform_interface.ChromeSafariBrowserSettings.supported_platforms}
-///
 ///**Officially Supported Platforms/Implementations**:
 ///- Android Chrome Custom Tabs
 ///- iOS SFSafariViewController

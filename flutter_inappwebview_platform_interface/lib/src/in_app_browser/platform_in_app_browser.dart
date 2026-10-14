@@ -1331,8 +1331,6 @@ In that case, after the `window.addEventListener("flutterInAppWebViewPlatformRea
   void onReceivedTouchIconUrl(WebUri url, bool precomposed) {}
 
   ///{@macro nosferatu500_inappwebview_platform_interface.PlatformWebViewCreationParams.onJsBeforeUnload}
-  ///
-  ///{@macro nosferatu500_inappwebview_platform_interface.PlatformInAppBrowserEvents.onJsBeforeUnload.supported_platforms}
   FutureOr<JsBeforeUnloadResponse?>? onJsBeforeUnload(
     JsBeforeUnloadRequest jsBeforeUnloadRequest,
   ) {

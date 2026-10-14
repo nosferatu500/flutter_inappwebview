@@ -12,6 +12,11 @@
   showcase pages. Nothing is printed now.
 ### Internal
 
+- **Doc fix: `{@macro}`s that named no template.** dartdoc's undefined-macro warnings for this package go from
+  82 to 66. Some macros named the platform class where the template sits on its `…CreationParams` (now
+  pointed there), two were typos, and the rest named a template that exists nowhere (removed: they
+  rendered nothing). The 66 left are all class-level "supported platforms" tables, which the generator
+  attaches to a member of a private extension, where dartdoc never sees them.
 - **No `package:flutter/material.dart` or `cupertino.dart` import left in `lib/`**: `util.dart` and
   `print_job_settings.dart` import `widgets.dart` instead.
   Nothing in this package's `lib/` used Material or Cupertino: with the import swapped for `widgets.dart`,

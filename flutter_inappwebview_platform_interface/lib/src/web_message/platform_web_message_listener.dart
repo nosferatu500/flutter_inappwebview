@@ -279,8 +279,6 @@ class PlatformJavaScriptReplyProxyCreationParams {
 ///
 ///There is a 1:1 relationship between this object and the JavaScript object in a frame.
 ///{@endtemplate}
-///
-///{@macro nosferatu500_inappwebview_platform_interface.PlatformJavaScriptReplyProxy.supported_platforms}
 @SupportedPlatforms(platforms: [AndroidPlatform(), IOSPlatform()])
 abstract class PlatformJavaScriptReplyProxy extends PlatformInterface {
   /// Creates a new [PlatformWebMessageListener]
@@ -322,8 +320,6 @@ abstract class PlatformJavaScriptReplyProxy extends PlatformInterface {
   ///
   ///**Official Android API**: https://developer.android.com/reference/androidx/webkit/JavaScriptReplyProxy#postMessage(java.lang.String)
   ///{@endtemplate}
-  ///
-  ///{@macro nosferatu500_inappwebview_platform_interface.PlatformJavaScriptReplyProxy.postMessage.supported_platforms}
   @SupportedPlatforms(platforms: [AndroidPlatform(), IOSPlatform()])
   Future<void> postMessage(WebMessage message) {
     throw UnimplementedError(

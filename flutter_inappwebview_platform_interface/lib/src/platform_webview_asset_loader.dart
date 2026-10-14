@@ -16,8 +16,6 @@ part 'platform_webview_asset_loader.g.dart';
 ///This means that local files should only be hosted on domains your organization owns
 ///(at paths reserved for this purpose) or the default domain reserved for this: `appassets.androidplatform.net`.
 ///{@endtemplate}
-///
-///{@macro nosferatu500_inappwebview_platform_interface.WebViewAssetLoader.supported_platforms}
 @SupportedPlatforms(platforms: [AndroidPlatform()])
 @ExchangeableObject(copyMethod: true)
 class WebViewAssetLoader_ {
@@ -75,7 +73,7 @@ class PlatformPathHandlerCreationParams {
 ///Implement this interface to handle other use-cases according to your app's needs.
 ///{@endtemplate}
 ///
-///{@macro nosferatu500_inappwebview_platform_interface.PlatformPathHandler.supported_platforms}
+///{@macro nosferatu500_inappwebview_platform_interface.PlatformPathHandlerCreationParams.supported_platforms}
 @SupportedPlatforms(platforms: [AndroidPlatform()])
 abstract class PlatformPathHandler {
   /// Event handler object that handles the [PlatformPathHandler] events.
@@ -125,8 +123,6 @@ abstract class PlatformPathHandler {
 ///{@template nosferatu500_inappwebview_platform_interface.PlatformPathHandlerEvents}
 ///Interface path handler events.
 ///{@endtemplate}
-///
-///{@macro nosferatu500_inappwebview_platform_interface.PlatformPathHandlerEvents.supported_platforms}
 @SupportedPlatforms(platforms: [AndroidPlatform()])
 abstract class PlatformPathHandlerEvents {
   ///{@template nosferatu500_inappwebview_platform_interface.PlatformPathHandler.handle}

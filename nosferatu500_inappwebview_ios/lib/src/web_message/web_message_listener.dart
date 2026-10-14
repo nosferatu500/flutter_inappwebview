@@ -160,7 +160,7 @@ class IOSJavaScriptReplyProxyCreationParams
   }
 }
 
-///{@macro nosferatu500_inappwebview_platform_interface.JavaScriptReplyProxy}
+///{@macro nosferatu500_inappwebview_platform_interface.PlatformJavaScriptReplyProxy}
 class IOSJavaScriptReplyProxy extends PlatformJavaScriptReplyProxy {
   /// Constructs a [IOSWebMessageListener].
   IOSJavaScriptReplyProxy(PlatformJavaScriptReplyProxyCreationParams params)

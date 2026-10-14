@@ -72,7 +72,7 @@ class WebStorage {
 
 ///{@macro nosferatu500_inappwebview_platform_interface.PlatformStorage}
 ///
-///{@macro nosferatu500_inappwebview_platform_interface.PlatformStorage.supported_platforms}
+///{@macro nosferatu500_inappwebview_platform_interface.PlatformStorageCreationParams.supported_platforms}
 abstract class Storage implements PlatformStorage {
   /// Constructs a [Storage] from a specific platform implementation.
   Storage.fromPlatform({required this.platform});
@@ -82,63 +82,46 @@ abstract class Storage implements PlatformStorage {
 
   ///{@macro nosferatu500_inappwebview_platform_interface.PlatformStorage.controller}
   ///
-  ///{@macro nosferatu500_inappwebview_platform_interface.PlatformStorage.controller.supported_platforms}
+  ///{@macro nosferatu500_inappwebview_platform_interface.PlatformStorageCreationParams.controller.supported_platforms}
   @override
   PlatformInAppWebViewController? get controller => platform.controller;
 
   ///{@macro nosferatu500_inappwebview_platform_interface.PlatformStorage.webStorageType}
   ///
-  ///{@macro nosferatu500_inappwebview_platform_interface.PlatformStorage.webStorageType.supported_platforms}
+  ///{@macro nosferatu500_inappwebview_platform_interface.PlatformStorageCreationParams.webStorageType.supported_platforms}
   @override
   WebStorageType get webStorageType => platform.webStorageType;
 
   ///{@macro nosferatu500_inappwebview_platform_interface.PlatformStorage.length}
-  ///
-  ///{@macro nosferatu500_inappwebview_platform_interface.PlatformStorage.length.supported_platforms}
   @override
   Future<int?> length() => platform.length();
 
   ///{@macro nosferatu500_inappwebview_platform_interface.PlatformStorage.setItem}
-  ///
-  ///{@macro nosferatu500_inappwebview_platform_interface.PlatformStorage.setItem.supported_platforms}
   @override
   Future<void> setItem({required String key, required dynamic value}) =>
       platform.setItem(key: key, value: value);
 
   ///{@macro nosferatu500_inappwebview_platform_interface.PlatformStorage.getItem}
-  ///
-  ///{@macro nosferatu500_inappwebview_platform_interface.PlatformStorage.getItem.supported_platforms}
   @override
   Future<dynamic> getItem({required String key}) => platform.getItem(key: key);
 
   ///{@macro nosferatu500_inappwebview_platform_interface.PlatformStorage.removeItem}
-  ///
-  ///{@macro nosferatu500_inappwebview_platform_interface.PlatformStorage.removeItem.supported_platforms}
   @override
   Future<void> removeItem({required String key}) =>
       platform.removeItem(key: key);
 
   ///{@macro nosferatu500_inappwebview_platform_interface.PlatformStorage.getItems}
-  ///
-  ///{@macro nosferatu500_inappwebview_platform_interface.PlatformStorage.getItems.supported_platforms}
   @override
   Future<List<WebStorageItem>> getItems() => platform.getItems();
 
   ///{@macro nosferatu500_inappwebview_platform_interface.PlatformStorage.clear}
-  ///
-  ///{@macro nosferatu500_inappwebview_platform_interface.PlatformStorage.clear.supported_platforms}
   @override
   Future<void> clear() => platform.clear();
 
   ///{@macro nosferatu500_inappwebview_platform_interface.PlatformStorage.key}
-  ///
-  ///{@macro nosferatu500_inappwebview_platform_interface.PlatformStorage.key.supported_platforms}
   @override
   Future<String> key({required int index}) => platform.key(index: index);
 
-  ///{@macro nosferatu500_inappwebview_platform_interface.PlatformStorage.dispose}
-  ///
-  ///{@macro nosferatu500_inappwebview_platform_interface.PlatformStorage.dispose.supported_platforms}
   @override
   void dispose() => platform.dispose();
 }

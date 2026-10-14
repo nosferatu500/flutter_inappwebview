@@ -3,7 +3,7 @@ import 'package:nosferatu500_inappwebview_platform_interface/nosferatu500_inappw
 
 ///{@macro nosferatu500_inappwebview_platform_interface.PlatformPathHandler}
 ///
-///{@macro nosferatu500_inappwebview_platform_interface.PlatformPathHandler.supported_platforms}
+///{@macro nosferatu500_inappwebview_platform_interface.PlatformPathHandlerCreationParams.supported_platforms}
 abstract class PathHandler
     implements PlatformPathHandler, PlatformPathHandlerEvents {
   /// Constructs a [PathHandler] from a specific platform implementation.

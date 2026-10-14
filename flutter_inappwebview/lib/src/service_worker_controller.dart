@@ -35,8 +35,6 @@ class ServiceWorkerController {
   }
 
   ///{@macro nosferatu500_inappwebview_platform_interface.PlatformServiceWorkerController.serviceWorkerClient}
-  ///
-  ///{@macro nosferatu500_inappwebview_platform_interface.PlatformServiceWorkerController.serviceWorkerClient.supported_platforms}
   ServiceWorkerClient? get serviceWorkerClient => platform.serviceWorkerClient;
 
   ///{@macro nosferatu500_inappwebview_platform_interface.PlatformServiceWorkerController.setServiceWorkerClient}

@@ -45,8 +45,6 @@ class PlatformWebMessagePortCreationParams {
 ///
 ///It is possible to transfer both ports of a channel to JavaScript, for example for communication between subframes.
 ///{@endtemplate}
-///
-///{@macro nosferatu500_inappwebview_platform_interface.PlatformWebMessagePort.supported_platforms}
 @SupportedPlatforms(platforms: [AndroidPlatform(), IOSPlatform()])
 abstract class PlatformWebMessagePort extends PlatformInterface
     implements IWebMessagePort {
@@ -87,8 +85,6 @@ abstract class IWebMessagePort {
   ///{@template nosferatu500_inappwebview_platform_interface.PlatformWebMessagePort.setWebMessageCallback}
   ///Sets a callback to receive message events on the main thread.
   ///{@endtemplate}
-  ///
-  ///{@macro nosferatu500_inappwebview_platform_interface.PlatformWebMessagePort.setWebMessageCallback.supported_platforms}
   @SupportedPlatforms(platforms: [AndroidPlatform(), IOSPlatform()])
   Future<void> setWebMessageCallback(WebMessageCallback? onMessage) {
     throw UnimplementedError(
@@ -99,8 +95,6 @@ abstract class IWebMessagePort {
   ///{@template nosferatu500_inappwebview_platform_interface.PlatformWebMessagePort.postMessage}
   ///Post a WebMessage to the entangled port.
   ///{@endtemplate}
-  ///
-  ///{@macro nosferatu500_inappwebview_platform_interface.PlatformWebMessagePort.postMessage.supported_platforms}
   @SupportedPlatforms(platforms: [AndroidPlatform(), IOSPlatform()])
   Future<void> postMessage(WebMessage message) {
     throw UnimplementedError(
@@ -111,8 +105,6 @@ abstract class IWebMessagePort {
   ///{@template nosferatu500_inappwebview_platform_interface.PlatformWebMessagePort.close}
   ///Close the message port and free any resources associated with it.
   ///{@endtemplate}
-  ///
-  ///{@macro nosferatu500_inappwebview_platform_interface.PlatformWebMessagePort.close.supported_platforms}
   @SupportedPlatforms(platforms: [AndroidPlatform(), IOSPlatform()])
   Future<void> close() {
     throw UnimplementedError(

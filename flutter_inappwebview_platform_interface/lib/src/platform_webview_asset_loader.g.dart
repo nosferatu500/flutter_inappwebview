@@ -18,8 +18,6 @@ part of 'platform_webview_asset_loader.dart';
 ///(at paths reserved for this purpose) or the default domain reserved for this: `appassets.androidplatform.net`.
 ///{@endtemplate}
 ///
-///{@macro nosferatu500_inappwebview_platform_interface.WebViewAssetLoader.supported_platforms}
-///
 ///**Officially Supported Platforms/Implementations**:
 ///- Android WebView
 class WebViewAssetLoader {

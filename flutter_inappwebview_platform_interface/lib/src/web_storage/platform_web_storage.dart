@@ -191,13 +191,13 @@ class PlatformStorageCreationParams {
 
   ///{@macro nosferatu500_inappwebview_platform_interface.PlatformStorage.controller}
   ///
-  ///{@macro nosferatu500_inappwebview_platform_interface.PlatformStorage.controller.supported_platforms}
+  ///{@macro nosferatu500_inappwebview_platform_interface.PlatformStorageCreationParams.controller.supported_platforms}
   @SupportedPlatforms(platforms: [AndroidPlatform(), IOSPlatform()])
   final PlatformInAppWebViewController? controller;
 
   ///{@macro nosferatu500_inappwebview_platform_interface.PlatformStorage.webStorageType}
   ///
-  ///{@macro nosferatu500_inappwebview_platform_interface.PlatformStorage.webStorageType.supported_platforms}
+  ///{@macro nosferatu500_inappwebview_platform_interface.PlatformStorageCreationParams.webStorageType.supported_platforms}
   @SupportedPlatforms(platforms: [AndroidPlatform(), IOSPlatform()])
   final WebStorageType webStorageType;
 
@@ -225,7 +225,7 @@ class PlatformStorageCreationParams {
 ///Class that provides methods to manage the JavaScript [Storage](https://developer.mozilla.org/en-US/docs/Web/API/Storage) object.
 ///It is used by [PlatformLocalStorage] and [PlatformSessionStorage].
 ///{@endtemplate}
-///{@macro nosferatu500_inappwebview_platform_interface.PlatformStorage.supported_platforms}
+///{@macro nosferatu500_inappwebview_platform_interface.PlatformStorageCreationParams.supported_platforms}
 @SupportedPlatforms(platforms: [AndroidPlatform(), IOSPlatform()])
 abstract mixin class PlatformStorage implements Disposable {
   ///{@template nosferatu500_inappwebview_platform_interface.PlatformStorage.controller}
@@ -410,7 +410,7 @@ abstract class PlatformLocalStorage extends PlatformInterface
   @override
   WebStorageType get webStorageType => params.webStorageType;
 
-  ///{@macro nosferatu500_inappwebview_platform_interface.PlatformLocalStorage.isClassSupported}
+  ///{@macro nosferatu500_inappwebview_platform_interface.PlatformLocalStorageCreationParams.isClassSupported}
   bool isClassSupported({TargetPlatform? platform}) =>
       _PlatformLocalStorageClassSupported.isClassSupported(platform: platform);
 
@@ -556,7 +556,7 @@ abstract class PlatformSessionStorage extends PlatformInterface
   @override
   WebStorageType get webStorageType => params.webStorageType;
 
-  ///{@macro nosferatu500_inappwebview_platform_interface.PlatformSessionStorage.isClassSupported}
+  ///{@macro nosferatu500_inappwebview_platform_interface.PlatformSessionStorageCreationParams.isClassSupported}
   bool isClassSupported({TargetPlatform? platform}) =>
       _PlatformSessionStorageClassSupported.isClassSupported(
         platform: platform,
