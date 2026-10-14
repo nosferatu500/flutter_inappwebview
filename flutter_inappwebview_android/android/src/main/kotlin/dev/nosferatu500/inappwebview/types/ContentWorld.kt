@@ -16,9 +16,6 @@ class ContentWorld private constructor(var name: String) {
     @JvmField
     val PAGE: ContentWorld = ContentWorld("page")
 
-    @JvmField
-    val DEFAULT_CLIENT: ContentWorld = ContentWorld("defaultClient")
-
     @JvmStatic
     fun world(name: String): ContentWorld = ContentWorld(name)
 

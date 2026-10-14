@@ -26,6 +26,10 @@
   **New dependency: `com.google.android.material:material` 1.14.0**, the library that ships the Material
   3 themes for Android views; every app using the plugin now includes it.
 
+- **Android: the unused `InAppWebViewTheme` style is removed.** Upstream declared it (`Theme.AppCompat`) and
+  nothing in the plugin used it. Library styles are public, so an app that referenced
+  `@style/InAppWebViewTheme` has to use its own theme instead; it was never documented.
+
 ### Fixed
 
 - **Android: the InAppBrowser's status bar icons are readable in light mode.** They were white on the
@@ -34,6 +38,14 @@
 
 ### Internal
 
+- **Dead code removed: 16 Kotlin declarations nothing called**, found by listing every declared name that
+  occurs once across the module's sources, manifest and resources, then checked against the JVM tests.
+  `Util.getX509CertFromSslCertHack` / `log` / `isClass`, `NO_HISTORY_CHROME_CUSTOM_TAB_REQUEST_CODE`,
+  `CustomTabsHelper.getPackages`, `NavigationActionPolicy.rawValue()`, seven `UserContentController` methods
+  (`addPluginScripts`, `containsPluginScript`, `containsPluginScriptByGroupName`, `containsUserOnlyScript`,
+  `containsUserOnlyScriptByGroupName`, `removePluginScriptsByGroupName`, `getContentWorlds`),
+  `WebMessageChannel.initJsInstance`, `ContentWorld.DEFAULT_CLIENT` (read only by one JVM assertion of its
+  own name, removed with it) and an unread `maxHeight` local, plus the imports they left orphaned.
 - **The example app is Material 3 on the native side**: both `NormalTheme` and `LaunchTheme`, light and night,
   are `Theme.Material3.DayNight.NoActionBar` (were plain `@android:style/Theme.Light / Black.NoTitleBar`);
   its Material dependency goes from 1.12.0 to 1.14.0, the plugin's.

@@ -449,6 +449,5 @@ open class ChromeCustomTabsActivity : Activity(), Disposable {
     // the `messageChannelSuffix` (the view id), so there is no name for this side to build.
     // The iOS package still declares its own copy of the old name -- that half is not migrated.
     const val CHROME_CUSTOM_TAB_REQUEST_CODE = 100
-    const val NO_HISTORY_CHROME_CUSTOM_TAB_REQUEST_CODE = 101
   }
 }

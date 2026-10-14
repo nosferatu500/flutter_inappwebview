@@ -43,9 +43,6 @@ public class InAppWebViewFlutterPlugin: NSObject, @MainActor FlutterPlugin {
     var printJobManager: PrintJobManager?
     var proxyManager: Any?
     
-    var webViewControllers: [String: InAppBrowserWebViewController?] = [:]
-    var safariViewControllers: [String: Any?] = [:]
-    
     public init(with registrar: FlutterPluginRegistrar) {
         self.registrar = registrar
         

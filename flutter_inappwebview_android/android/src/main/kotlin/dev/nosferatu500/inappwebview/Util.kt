@@ -5,7 +5,6 @@ import android.content.Context
 import android.graphics.BitmapFactory
 import android.graphics.drawable.BitmapDrawable
 import android.graphics.drawable.Drawable
-import android.net.http.SslCertificate
 import android.text.TextUtils
 import android.util.Log
 import android.view.WindowInsets
@@ -14,7 +13,6 @@ import androidx.webkit.WebViewFeature
 import dev.nosferatu500.inappwebview.types.Size2D
 import org.json.JSONArray
 import org.json.JSONObject
-import java.io.ByteArrayInputStream
 import java.io.ByteArrayOutputStream
 import java.io.FileInputStream
 import java.io.IOException
@@ -27,8 +25,6 @@ import java.net.URL
 import java.net.UnknownHostException
 import java.security.KeyStore
 import java.security.PrivateKey
-import java.security.cert.CertificateException
-import java.security.cert.CertificateFactory
 import java.security.cert.X509Certificate
 import java.util.Objects
 import java.util.regex.Pattern
@@ -243,22 +239,6 @@ object Util {
     return null
   }
 
-  /**
-   * SslCertificate class does not has a public getter for the underlying
-   * X509Certificate, we can only do this by hack. This only works for Android 4.0+
-   * https://groups.google.com/forum/#!topic/android-developers/eAPJ6b7mrmg
-   */
-  @JvmStatic
-  fun getX509CertFromSslCertHack(sslCert: SslCertificate): X509Certificate? {
-    val bytes = SslCertificate.saveState(sslCert).getByteArray("x509-certificate") ?: return null
-    return try {
-      CertificateFactory.getInstance("X.509")
-        .generateCertificate(ByteArrayInputStream(bytes)) as X509Certificate
-    } catch (e: CertificateException) {
-      null
-    }
-  }
-
   @JvmStatic
   fun JSONStringify(value: Any?): String = when (value) {
     null -> "null"
@@ -276,25 +256,6 @@ object Util {
   @JvmStatic
   fun replaceAll(s: String, oldString: String, newString: String): String =
     TextUtils.join(newString, s.split(Pattern.quote(oldString).toRegex()).toTypedArray())
-
-  @JvmStatic
-  fun log(tag: String, message: String) {
-    // Split by line, then ensure each line can fit into Log's maximum length.
-    var i = 0
-    val length = message.length
-    while (i < length) {
-      var newline = message.indexOf('\n', i)
-      if (newline == -1) {
-        newline = length
-      }
-      do {
-        val end = Math.min(newline, i + 4000)
-        Log.d(tag, message.substring(i, end))
-        i = end
-      } while (i < newline)
-      i++
-    }
-  }
 
   @JvmStatic
   fun getPixelDensity(context: Context): Float = context.resources.displayMetrics.density
@@ -316,14 +277,6 @@ object Util {
       fullscreenSize.height = (bounds.height() - insetsHeight).toDouble()
     }
     return fullscreenSize
-  }
-
-  @JvmStatic
-  fun isClass(className: String): Boolean = try {
-    Class.forName(className)
-    true
-  } catch (e: ClassNotFoundException) {
-    false
   }
 
   /**

@@ -7,6 +7,17 @@
 
 ### Internal
 
+- **Dead code removed: 12 Swift declarations nothing called, and three calls that did nothing.** The
+  declarations: `InAppBrowserManager.WEBVIEW_STORYBOARD_CONTROLLER_ID`, `InAppBrowserWebViewController.tmpWindow`,
+  the plugin's `webViewControllers` / `safariViewControllers`, `WindowIdJS.WINDOW_ID_JS_PLUGIN_SCRIPT_GROUP_NAME`,
+  the `WKUserContentController` extension's `addPluginScripts` / `removePluginScript` / `removeAllPluginScripts`,
+  and `Util.convertToDictionary` / `JSONStringify` / `isIpAddress`, then `Util.isIPv4`, whose only caller was
+  `isIpAddress`. The calls: `UIApplication.shared.delegate?.window??.makeKeyAndVisible()`, twice in
+  `InAppBrowserWebViewController.hide()` and once in `InAppBrowserNavigationController`'s deinit. Measured on iOS
+  26.5 with a temporary log during the `in_app_browser` group: the app delegate's `window` was nil all 12 times
+  (under UIScene, Flutter's scene delegate owns the window), and the key window was the same window every time,
+  because the browser presents modally from the app's own view controller. By reading, the same holds without
+  UIScene: the delegate's window is then the one that is already key.
 - **No `package:flutter/material.dart` import left in `lib/`**: `in_app_webview.dart` dropped it (it already
   imports `widgets.dart`).
   Nothing in this package's `lib/` used Material or Cupertino: with the import swapped for `widgets.dart`,

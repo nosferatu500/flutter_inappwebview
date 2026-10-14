@@ -38,17 +38,6 @@ public class Util {
         return assetAbsPath
     }
     
-    public static func convertToDictionary(text: String) -> [String: Any]? {
-        if let data = text.data(using: .utf8) {
-            do {
-                return try JSONSerialization.jsonObject(with: data, options: []) as? [String: Any]
-            } catch {
-                print(error.localizedDescription)
-            }
-        }
-        return nil
-    }
-
     /// Renders `string` as a JavaScript string literal, **including its surrounding quotes**, for
     /// safe interpolation into a script built as text.
     ///
@@ -77,19 +66,6 @@ public class Util {
             .replacingOccurrences(of: "\u{2029}", with: "\\u2029")
     }
 
-    public static func JSONStringify(value: Any, prettyPrinted: Bool = false) -> String {
-        let options: JSONSerialization.WritingOptions = prettyPrinted ? .prettyPrinted : .init(rawValue: 0)
-        if JSONSerialization.isValidJSONObject(value) {
-            let data = try? JSONSerialization.data(withJSONObject: value, options: options)
-            if data != nil {
-                if let string = String(data: data!, encoding: .utf8) {
-                    return string
-                }
-            }
-        }
-        return ""
-    }
-    
     @MainActor
     public static func getContentWorld(name: String) -> WKContentWorld {
         switch name {
@@ -220,20 +196,11 @@ public class Util {
         }
     }
     
-    public static func isIPv4(address: String) -> Bool {
-        var sin = sockaddr_in()
-        return address.withCString({ cstring in inet_pton(AF_INET, cstring, &sin.sin_addr) }) == 1
-    }
-
     public static func isIPv6(address: String) -> Bool {
         var sin6 = sockaddr_in6()
         return address.withCString({ cstring in inet_pton(AF_INET6, cstring, &sin6.sin6_addr) }) == 1
     }
 
-    public static func isIpAddress(address: String) -> Bool {
-        return Util.isIPv6(address: address) || Util.isIPv4(address: address)
-    }
-    
     public static func normalizeIPv6(address: String) throws -> String {
         if !Util.isIPv6(address: address) {
             throw NSError(domain: "Invalid address: \(address)", code: 0)

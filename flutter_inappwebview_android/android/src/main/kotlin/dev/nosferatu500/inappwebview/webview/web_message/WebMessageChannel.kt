@@ -1,6 +1,5 @@
 package dev.nosferatu500.inappwebview.webview.web_message
 
-import android.webkit.ValueCallback
 import androidx.webkit.WebMessageCompat
 import androidx.webkit.WebMessagePortCompat
 import androidx.webkit.WebViewCompat
@@ -8,7 +7,6 @@ import androidx.webkit.WebViewFeature
 import dev.nosferatu500.inappwebview.pigeons.WebMessageChannelFlutterApi
 import dev.nosferatu500.inappwebview.pigeons.WebMessageChannelHostApi
 import dev.nosferatu500.inappwebview.pigeons.WebMessageData
-import dev.nosferatu500.inappwebview.plugin_scripts_js.JavaScriptBridgeJS
 import dev.nosferatu500.inappwebview.types.Disposable
 import dev.nosferatu500.inappwebview.types.WebMessageCompatExt
 import dev.nosferatu500.inappwebview.types.WebMessagePort
@@ -59,23 +57,6 @@ class WebMessageChannel(
     } else {
       ports = listOf(WebMessagePort("port1", this), WebMessagePort("port2", this))
       compatPorts = ArrayList()
-    }
-  }
-
-  fun initJsInstance(
-    webView: InAppWebViewInterface?,
-    callback: ValueCallback<WebMessageChannel>
-  ) {
-    if (webView != null) {
-      webView.evaluateJavascript(
-        "(function() {" +
-          JavaScriptBridgeJS.WEB_MESSAGE_CHANNELS_VARIABLE_NAME() + "['" + id +
-          "'] = new MessageChannel();" +
-          "})();",
-        null
-      ) { callback.onReceiveValue(this) }
-    } else {
-      callback.onReceiveValue(this)
     }
   }
 

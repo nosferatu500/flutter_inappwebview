@@ -31,7 +31,6 @@ public class InAppBrowserWebViewController: UIViewController, InAppBrowserDelega
         }
     }
     
-    var tmpWindow: UIWindow?
     var id: String = ""
     var plugin: InAppWebViewFlutterPlugin?
     var windowId: Int64?
@@ -515,11 +514,9 @@ public class InAppBrowserWebViewController: UIViewController, InAppBrowserDelega
             isHidden = true
             navigationController.dismiss(animated: true) {
                 completion?()
-                UIApplication.shared.delegate?.window??.makeKeyAndVisible()
             }
         } else {
             completion?()
-            UIApplication.shared.delegate?.window??.makeKeyAndVisible()
         }
     }
     

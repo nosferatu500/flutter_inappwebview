@@ -2380,7 +2380,6 @@ class InAppWebView : WebView, InAppWebViewInterface, Disposable {
   fun onFloatingActionGlobalLayout(x: Int, y: Int) {
     val menu = floatingContextMenu ?: return
     val maxWidth = width
-    val maxHeight = height
     val menuWidth = menu.width
     val menuHeight = menu.height
     var curx = x - (menuWidth / 2)

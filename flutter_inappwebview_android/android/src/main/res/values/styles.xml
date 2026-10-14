@@ -1,9 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <style name="InAppWebViewTheme" parent="Theme.AppCompat">
-
-    </style>
-
     <style name="AppTheme" parent="Theme.Material3.DayNight.NoActionBar">
         <!-- InAppBrowserActivity lays out edge-to-edge and pads its toolbar by the status bar
              inset, so the toolbar paints its own background behind the status bar. Declared here
