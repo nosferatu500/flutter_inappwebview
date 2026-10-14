@@ -21,24 +21,15 @@ extension _PlatformGeolocationPermissionsCreationParamsClassSupported
   }
 }
 
-extension _PlatformGeolocationPermissionsClassSupported
-    on PlatformGeolocationPermissions {
-  ///{@template nosferatu500_inappwebview_platform_interface.PlatformGeolocationPermissions.supported_platforms}
-  ///
-  ///**Officially Supported Platforms/Implementations**:
-  ///- Android WebView ([Official API - GeolocationPermissions](https://developer.android.com/reference/android/webkit/GeolocationPermissions))
-  ///
-  ///Use the [PlatformGeolocationPermissions.isClassSupported] method to check if this class is supported at runtime.
-  ///{@endtemplate}
-  // Unused: [PlatformGeolocationPermissions.isClassSupported] answers through its creation params. Kept for the doc template above.
-  // ignore: unused_element
-  static bool isClassSupported({TargetPlatform? platform}) {
-    return ((kIsWeb && platform != null) || !kIsWeb) &&
-        [TargetPlatform.android].contains(platform ?? defaultTargetPlatform);
-  }
-}
-
 ///List of [PlatformGeolocationPermissions]'s methods that can be used to check if they are supported or not by the current platform.
+///
+///{@template nosferatu500_inappwebview_platform_interface.PlatformGeolocationPermissions.supported_platforms}
+///
+///**Officially Supported Platforms/Implementations**:
+///- Android WebView ([Official API - GeolocationPermissions](https://developer.android.com/reference/android/webkit/GeolocationPermissions))
+///
+///Use the [PlatformGeolocationPermissions.isClassSupported] method to check if this class is supported at runtime.
+///{@endtemplate}
 enum PlatformGeolocationPermissionsMethod {
   ///Can be used to check if the [PlatformGeolocationPermissions.allow] method is supported at runtime.
   ///
@@ -48,8 +39,8 @@ enum PlatformGeolocationPermissionsMethod {
   ///- Android WebView ([Official API - GeolocationPermissions.allow](https://developer.android.com/reference/android/webkit/GeolocationPermissions#allow(java.lang.String)))
   ///
   ///**Parameters - Officially Supported Platforms/Implementations**:
-  ///- [origin]: all platforms
-  ///- [profileName]:
+  ///- `origin`: all platforms
+  ///- `profileName`:
   ///    - Android WebView
   ///
   ///Use the [PlatformGeolocationPermissions.isMethodSupported] method to check if this method is supported at runtime.
@@ -64,8 +55,8 @@ enum PlatformGeolocationPermissionsMethod {
   ///- Android WebView ([Official API - GeolocationPermissions.clear](https://developer.android.com/reference/android/webkit/GeolocationPermissions#clear(java.lang.String)))
   ///
   ///**Parameters - Officially Supported Platforms/Implementations**:
-  ///- [origin]: all platforms
-  ///- [profileName]:
+  ///- `origin`: all platforms
+  ///- `profileName`:
   ///    - Android WebView
   ///
   ///Use the [PlatformGeolocationPermissions.isMethodSupported] method to check if this method is supported at runtime.
@@ -80,7 +71,7 @@ enum PlatformGeolocationPermissionsMethod {
   ///- Android WebView ([Official API - GeolocationPermissions.clearAll](https://developer.android.com/reference/android/webkit/GeolocationPermissions#clearAll()))
   ///
   ///**Parameters - Officially Supported Platforms/Implementations**:
-  ///- [profileName]:
+  ///- `profileName`:
   ///    - Android WebView
   ///
   ///Use the [PlatformGeolocationPermissions.isMethodSupported] method to check if this method is supported at runtime.
@@ -95,8 +86,8 @@ enum PlatformGeolocationPermissionsMethod {
   ///- Android WebView ([Official API - GeolocationPermissions.getAllowed](https://developer.android.com/reference/android/webkit/GeolocationPermissions#getAllowed(java.lang.String,%20android.webkit.ValueCallback%3Cjava.lang.Boolean%3E)))
   ///
   ///**Parameters - Officially Supported Platforms/Implementations**:
-  ///- [origin]: all platforms
-  ///- [profileName]:
+  ///- `origin`: all platforms
+  ///- `profileName`:
   ///    - Android WebView
   ///
   ///Use the [PlatformGeolocationPermissions.isMethodSupported] method to check if this method is supported at runtime.
@@ -111,7 +102,7 @@ enum PlatformGeolocationPermissionsMethod {
   ///- Android WebView ([Official API - GeolocationPermissions.getOrigins](https://developer.android.com/reference/android/webkit/GeolocationPermissions#getOrigins(android.webkit.ValueCallback%3Cjava.util.Set%3Cjava.lang.String%3E%3E)))
   ///
   ///**Parameters - Officially Supported Platforms/Implementations**:
-  ///- [profileName]:
+  ///- `profileName`:
   ///    - Android WebView
   ///
   ///Use the [PlatformGeolocationPermissions.isMethodSupported] method to check if this method is supported at runtime.

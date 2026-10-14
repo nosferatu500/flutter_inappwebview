@@ -21,24 +21,16 @@ extension _PlatformProfileStoreCreationParamsClassSupported
   }
 }
 
-extension _PlatformProfileStoreClassSupported on PlatformProfileStore {
-  ///{@template nosferatu500_inappwebview_platform_interface.PlatformProfileStore.supported_platforms}
-  ///
-  ///**Officially Supported Platforms/Implementations**:
-  ///- Android WebView ([Official API - ProfileStore](https://developer.android.com/reference/androidx/webkit/ProfileStore)):
-  ///    - available on Android only if [WebViewFeature.MULTI_PROFILE] feature is supported.
-  ///
-  ///Use the [PlatformProfileStore.isClassSupported] method to check if this class is supported at runtime.
-  ///{@endtemplate}
-  // Unused: [PlatformProfileStore.isClassSupported] answers through its creation params. Kept for the doc template above.
-  // ignore: unused_element
-  static bool isClassSupported({TargetPlatform? platform}) {
-    return ((kIsWeb && platform != null) || !kIsWeb) &&
-        [TargetPlatform.android].contains(platform ?? defaultTargetPlatform);
-  }
-}
-
 ///List of [PlatformProfileStore]'s methods that can be used to check if they are supported or not by the current platform.
+///
+///{@template nosferatu500_inappwebview_platform_interface.PlatformProfileStore.supported_platforms}
+///
+///**Officially Supported Platforms/Implementations**:
+///- Android WebView ([Official API - ProfileStore](https://developer.android.com/reference/androidx/webkit/ProfileStore)):
+///    - available on Android only if [WebViewFeature.MULTI_PROFILE] feature is supported.
+///
+///Use the [PlatformProfileStore.isClassSupported] method to check if this class is supported at runtime.
+///{@endtemplate}
 enum PlatformProfileStoreMethod {
   ///Can be used to check if the [PlatformProfileStore.addCustomHeader] method is supported at runtime.
   ///
@@ -49,8 +41,8 @@ enum PlatformProfileStoreMethod {
   ///    - Requires [WebViewFeature.MULTI_PROFILE] and [WebViewFeature.CUSTOM_REQUEST_HEADERS]. The androidx API is on `Profile`; this class reaches it by name, which is how every other profile-scoped surface in this plugin works.
   ///
   ///**Parameters - Officially Supported Platforms/Implementations**:
-  ///- [header]: all platforms
-  ///- [profileName]:
+  ///- `header`: all platforms
+  ///- `profileName`:
   ///    - Android WebView
   ///
   ///Use the [PlatformProfileStore.isMethodSupported] method to check if this method is supported at runtime.
@@ -66,7 +58,7 @@ enum PlatformProfileStoreMethod {
   ///    - Requires [WebViewFeature.MULTI_PROFILE] and [WebViewFeature.CUSTOM_REQUEST_HEADERS]. The androidx API is on `Profile`; this class reaches it by name, which is how every other profile-scoped surface in this plugin works.
   ///
   ///**Parameters - Officially Supported Platforms/Implementations**:
-  ///- [profileName]:
+  ///- `profileName`:
   ///    - Android WebView
   ///
   ///Use the [PlatformProfileStore.isMethodSupported] method to check if this method is supported at runtime.
@@ -82,10 +74,10 @@ enum PlatformProfileStoreMethod {
   ///    - Requires [WebViewFeature.MULTI_PROFILE] and [WebViewFeature.CUSTOM_REQUEST_HEADERS]. The androidx API is on `Profile`; this class reaches it by name, which is how every other profile-scoped surface in this plugin works.
   ///
   ///**Parameters - Officially Supported Platforms/Implementations**:
-  ///- [headerName]: all platforms
-  ///- [headerValue]:
+  ///- `headerName`: all platforms
+  ///- `headerValue`:
   ///    - Android WebView
-  ///- [profileName]:
+  ///- `profileName`:
   ///    - Android WebView
   ///
   ///Use the [PlatformProfileStore.isMethodSupported] method to check if this method is supported at runtime.
@@ -101,7 +93,7 @@ enum PlatformProfileStoreMethod {
   ///    - Requires [WebViewFeature.MULTI_PROFILE]. Returns `false` and deletes nothing if the feature is not supported.
   ///
   ///**Parameters - Officially Supported Platforms/Implementations**:
-  ///- [name]: all platforms
+  ///- `name`: all platforms
   ///
   ///Use the [PlatformProfileStore.isMethodSupported] method to check if this method is supported at runtime.
   ///{@endtemplate}
@@ -128,11 +120,11 @@ enum PlatformProfileStoreMethod {
   ///    - Requires [WebViewFeature.MULTI_PROFILE] and [WebViewFeature.CUSTOM_REQUEST_HEADERS]. The androidx API is on `Profile`; this class reaches it by name, which is how every other profile-scoped surface in this plugin works.
   ///
   ///**Parameters - Officially Supported Platforms/Implementations**:
-  ///- [headerName]:
+  ///- `headerName`:
   ///    - Android WebView
-  ///- [headerValue]:
+  ///- `headerValue`:
   ///    - Android WebView
-  ///- [profileName]:
+  ///- `profileName`:
   ///    - Android WebView
   ///
   ///Use the [PlatformProfileStore.isMethodSupported] method to check if this method is supported at runtime.
@@ -148,7 +140,7 @@ enum PlatformProfileStoreMethod {
   ///    - Requires [WebViewFeature.MULTI_PROFILE]. Returns `null` and creates nothing if the feature is not supported.
   ///
   ///**Parameters - Officially Supported Platforms/Implementations**:
-  ///- [name]: all platforms
+  ///- `name`: all platforms
   ///
   ///Use the [PlatformProfileStore.isMethodSupported] method to check if this method is supported at runtime.
   ///{@endtemplate}
@@ -163,8 +155,8 @@ enum PlatformProfileStoreMethod {
   ///    - Requires [WebViewFeature.MULTI_PROFILE] and [WebViewFeature.CUSTOM_REQUEST_HEADERS]. The androidx API is on `Profile`; this class reaches it by name, which is how every other profile-scoped surface in this plugin works.
   ///
   ///**Parameters - Officially Supported Platforms/Implementations**:
-  ///- [headerName]: all platforms
-  ///- [profileName]:
+  ///- `headerName`: all platforms
+  ///- `profileName`:
   ///    - Android WebView
   ///
   ///Use the [PlatformProfileStore.isMethodSupported] method to check if this method is supported at runtime.

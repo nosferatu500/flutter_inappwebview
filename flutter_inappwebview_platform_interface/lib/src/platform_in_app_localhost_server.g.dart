@@ -25,28 +25,16 @@ extension _PlatformInAppLocalhostServerCreationParamsClassSupported
   }
 }
 
-extension _PlatformInAppLocalhostServerClassSupported
-    on PlatformInAppLocalhostServer {
-  ///{@template nosferatu500_inappwebview_platform_interface.PlatformInAppLocalhostServer.supported_platforms}
-  ///
-  ///**Officially Supported Platforms/Implementations**:
-  ///- Android WebView
-  ///- iOS WKWebView
-  ///
-  ///Use the [PlatformInAppLocalhostServer.isClassSupported] method to check if this class is supported at runtime.
-  ///{@endtemplate}
-  // Unused: [PlatformInAppLocalhostServer.isClassSupported] answers through its creation params. Kept for the doc template above.
-  // ignore: unused_element
-  static bool isClassSupported({TargetPlatform? platform}) {
-    return ((kIsWeb && platform != null) || !kIsWeb) &&
-        [
-          TargetPlatform.android,
-          TargetPlatform.iOS,
-        ].contains(platform ?? defaultTargetPlatform);
-  }
-}
-
 ///List of [PlatformInAppLocalhostServer]'s methods that can be used to check if they are supported or not by the current platform.
+///
+///{@template nosferatu500_inappwebview_platform_interface.PlatformInAppLocalhostServer.supported_platforms}
+///
+///**Officially Supported Platforms/Implementations**:
+///- Android WebView
+///- iOS WKWebView
+///
+///Use the [PlatformInAppLocalhostServer.isClassSupported] method to check if this class is supported at runtime.
+///{@endtemplate}
 enum PlatformInAppLocalhostServerMethod {
   ///Can be used to check if the [PlatformInAppLocalhostServer.close] method is supported at runtime.
   ///

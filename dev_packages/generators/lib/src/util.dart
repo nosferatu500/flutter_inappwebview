@@ -151,9 +151,9 @@ abstract class Util {
               ? workaroundPlatforms![parameter.name]!
               : <DartObject>[]);
       if (platforms.isEmpty) {
-        docs += "\n///- [${parameter.name}]: all platforms";
+        docs += "\n///- `${parameter.name}`: all platforms";
       } else {
-        docs += "\n///- [${parameter.name}]: ";
+        docs += "\n///- `${parameter.name}`: ";
 
         for (var platform in platforms) {
           final classElementPlatform = classElementPlatforms.firstWhereOrNull(

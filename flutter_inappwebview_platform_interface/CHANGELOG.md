@@ -12,6 +12,16 @@
   showcase pages. Nothing is printed now.
 ### Internal
 
+- **Doc fix: the generated "supported platforms" docs now reach dartdoc.** dartdoc's warnings for this
+  package go from 713 to 234 (undefined macro 66 → 23, unresolved doc reference 647 → 211), with none new.
+  The generator put each class's "supported platforms" template on a member of a private extension, which
+  dartdoc doesn't document, so every class doc that `{@macro}`s it rendered nothing. The template now sits on
+  the class's public `…Property` enum, or else its `…Method` enum (39 of the 62 classes). The 23 with
+  neither enum, mostly `…CreationParams`, keep it where dartdoc can't see it. The 13 private
+  `_…ClassSupported` extensions that no code called and that only held the template are no longer
+  generated. "Parameters" lists write each parameter as `name` instead of `[name]`, a link dartdoc can't
+  resolve from an enum value (370 entries). No public API changes: apart from comments, the regenerated code
+  differs only by those 13 extensions. 3 generator tests.
 - **The code generator's `build.yaml` no longer configures a builder that doesn't exist**
   (`generators|flutter_inappwebview_internal_annotations`; the file defines only `generators`).
   build_runner had ignored it with a warning, and only when building the generators package itself.

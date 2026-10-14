@@ -8,14 +8,6 @@ part of 'platform_find_interaction_controller.dart';
 
 extension _PlatformFindInteractionControllerCreationParamsClassSupported
     on PlatformFindInteractionControllerCreationParams {
-  ///{@template nosferatu500_inappwebview_platform_interface.PlatformFindInteractionControllerCreationParams.supported_platforms}
-  ///
-  ///**Officially Supported Platforms/Implementations**:
-  ///- Android WebView
-  ///- iOS WKWebView
-  ///
-  ///Use the [PlatformFindInteractionControllerCreationParams.isClassSupported] method to check if this class is supported at runtime.
-  ///{@endtemplate}
   static bool isClassSupported({TargetPlatform? platform}) {
     return ((kIsWeb && platform != null) || !kIsWeb) &&
         [
@@ -26,6 +18,15 @@ extension _PlatformFindInteractionControllerCreationParamsClassSupported
 }
 
 ///List of [PlatformFindInteractionControllerCreationParams]'s properties that can be used to check i they are supported or not by the current platform.
+///
+///{@template nosferatu500_inappwebview_platform_interface.PlatformFindInteractionControllerCreationParams.supported_platforms}
+///
+///**Officially Supported Platforms/Implementations**:
+///- Android WebView
+///- iOS WKWebView
+///
+///Use the [PlatformFindInteractionControllerCreationParams.isClassSupported] method to check if this class is supported at runtime.
+///{@endtemplate}
 enum PlatformFindInteractionControllerCreationParamsProperty {
   ///Can be used to check if the [PlatformFindInteractionControllerCreationParams.onFindResultReceived] property is supported at runtime.
   ///
@@ -37,10 +38,10 @@ enum PlatformFindInteractionControllerCreationParamsProperty {
   ///    - Not called while the native find interaction is driving the search, which is when [InAppWebViewSettings.isFindInteractionEnabled] is `true` **and** the device is on iOS 16.0 or later. Use [PlatformFindInteractionController.getActiveFindSession] for the counts in that case. Below iOS 16.0 that setting cannot take effect, so the search falls back to the JavaScript implementation and this event **is** called even with the setting `true`.
   ///
   ///**Parameters - Officially Supported Platforms/Implementations**:
-  ///- [controller]: all platforms
-  ///- [activeMatchOrdinal]: all platforms
-  ///- [numberOfMatches]: all platforms
-  ///- [isDoneCounting]: all platforms
+  ///- `controller`: all platforms
+  ///- `activeMatchOrdinal`: all platforms
+  ///- `numberOfMatches`: all platforms
+  ///- `isDoneCounting`: all platforms
   ///
   ///Use the [PlatformFindInteractionControllerCreationParams.isPropertySupported] method to check if this property is supported at runtime.
   ///{@endtemplate}
@@ -65,28 +66,16 @@ extension _PlatformFindInteractionControllerCreationParamsPropertySupported
   }
 }
 
-extension _PlatformFindInteractionControllerClassSupported
-    on PlatformFindInteractionController {
-  ///{@template nosferatu500_inappwebview_platform_interface.PlatformFindInteractionController.supported_platforms}
-  ///
-  ///**Officially Supported Platforms/Implementations**:
-  ///- Android WebView
-  ///- iOS WKWebView
-  ///
-  ///Use the [PlatformFindInteractionController.isClassSupported] method to check if this class is supported at runtime.
-  ///{@endtemplate}
-  // Unused: [PlatformFindInteractionController.isClassSupported] answers through its creation params. Kept for the doc template above.
-  // ignore: unused_element
-  static bool isClassSupported({TargetPlatform? platform}) {
-    return ((kIsWeb && platform != null) || !kIsWeb) &&
-        [
-          TargetPlatform.android,
-          TargetPlatform.iOS,
-        ].contains(platform ?? defaultTargetPlatform);
-  }
-}
-
 ///List of [PlatformFindInteractionController]'s methods that can be used to check if they are supported or not by the current platform.
+///
+///{@template nosferatu500_inappwebview_platform_interface.PlatformFindInteractionController.supported_platforms}
+///
+///**Officially Supported Platforms/Implementations**:
+///- Android WebView
+///- iOS WKWebView
+///
+///Use the [PlatformFindInteractionController.isClassSupported] method to check if this class is supported at runtime.
+///{@endtemplate}
 enum PlatformFindInteractionControllerMethod {
   ///Can be used to check if the [PlatformFindInteractionController.clearMatches] method is supported at runtime.
   ///
@@ -122,7 +111,7 @@ enum PlatformFindInteractionControllerMethod {
   ///- iOS WKWebView
   ///
   ///**Parameters - Officially Supported Platforms/Implementations**:
-  ///- [isKeepAlive]: all platforms
+  ///- `isKeepAlive`: all platforms
   ///
   ///Use the [PlatformFindInteractionController.isMethodSupported] method to check if this method is supported at runtime.
   ///{@endtemplate}
@@ -139,7 +128,7 @@ enum PlatformFindInteractionControllerMethod {
   ///    - If [InAppWebViewSettings.isFindInteractionEnabled] is `true`, it uses the built-in find interaction native UI, otherwise this is implemented using CSS and Javascript. In this case, it will use the [Official API - UIFindInteraction.presentFindNavigator](https://developer.apple.com/documentation/uikit/uifindinteraction/3975832-presentfindnavigator?changes=_2) with [Official API - UIFindInteraction.searchText](https://developer.apple.com/documentation/uikit/uifindinteraction/3975834-searchtext?changes=_2)
   ///
   ///**Parameters - Officially Supported Platforms/Implementations**:
-  ///- [find]: all platforms
+  ///- `find`: all platforms
   ///
   ///Use the [PlatformFindInteractionController.isMethodSupported] method to check if this method is supported at runtime.
   ///{@endtemplate}
@@ -155,7 +144,7 @@ enum PlatformFindInteractionControllerMethod {
   ///    - If [InAppWebViewSettings.isFindInteractionEnabled] is `true`, it uses the built-in find interaction native UI, otherwise this is implemented using CSS and Javascript. In this case, it will use the [Official API - UIFindInteraction.findNext](https://developer.apple.com/documentation/uikit/uifindinteraction/3975829-findnext?changes=_2) and ([Official API - UIFindInteraction.findPrevious](https://developer.apple.com/documentation/uikit/uifindinteraction/3975830-findprevious?changes=_2)
   ///
   ///**Parameters - Officially Supported Platforms/Implementations**:
-  ///- [forward]: all platforms
+  ///- `forward`: all platforms
   ///
   ///Use the [PlatformFindInteractionController.isMethodSupported] method to check if this method is supported at runtime.
   ///{@endtemplate}
@@ -220,7 +209,7 @@ enum PlatformFindInteractionControllerMethod {
   ///    - If [InAppWebViewSettings.isFindInteractionEnabled] is `true`, it will pre-populate the system find panel's search text field with a search query.
   ///
   ///**Parameters - Officially Supported Platforms/Implementations**:
-  ///- [searchText]: all platforms
+  ///- `searchText`: all platforms
   ///
   ///Use the [PlatformFindInteractionController.isMethodSupported] method to check if this method is supported at runtime.
   ///{@endtemplate}

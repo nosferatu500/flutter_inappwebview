@@ -130,24 +130,51 @@ class SupportedPlatformsGenerator
       className = className.substring(0, className.length - 1);
     }
 
-    if (hasClassSupportedFunction) {
+    final hasPropertyEnum =
+        hasPropertySupportedFunction && fieldEntriesSorted.isNotEmpty;
+    final hasMethodEnum =
+        hasMethodSupportedFunction && methodEntriesSorted.isNotEmpty;
+
+    // The class's `supported_platforms` template, which other docs `{@macro}`. dartdoc only
+    // registers a template on an element it documents, and it doesn't document the private
+    // extension below, so the template goes on the class's public property (or else method) enum.
+    // A class with neither keeps it on the extension, where dartdoc can't see it (§345).
+    final classSupportedDocs = hasClassSupportedFunction
+        ? Util.getSupportedDocs(
+            _coreCheckerSupportedPlatforms,
+            visitor.constructor.returnType.element,
+          )
+        : null;
+    void writeClassTemplate() {
+      if (classSupportedDocs == null) {
+        return;
+      }
+      classBuffer.writeln(
+        '///{@template $packageName.$className.supported_platforms}',
+      );
+      classBuffer.writeln(classSupportedDocs);
+      classBuffer.writeln('///');
+      classBuffer.writeln(
+        '///Use the [$className.$isClassSupportedFunctionName] method to check if this class is supported at runtime.',
+      );
+      classBuffer.writeln('///{@endtemplate}');
+    }
+
+    final classTemplateOnEnum = hasPropertyEnum || hasMethodEnum;
+    final classExtensionCalled = librarySource.contains(
+      '_${className}ClassSupported.',
+    );
+
+    // Most classes answer `isClassSupported` through this extension. Some answer through their
+    // creation params instead (an instance method, so a platform's params can override it), and
+    // never call it. For those it is emitted only to carry the class template, when no enum can.
+    if (hasClassSupportedFunction &&
+        (classExtensionCalled || !classTemplateOnEnum)) {
       classBuffer.writeln("""
       extension _${className}ClassSupported on $className {""");
 
-      final classSupportedDocs = Util.getSupportedDocs(
-        _coreCheckerSupportedPlatforms,
-        visitor.constructor.returnType.element,
-      );
-      if (classSupportedDocs != null) {
-        classBuffer.writeln(
-          '///{@template $packageName.$className.supported_platforms}',
-        );
-        classBuffer.writeln(classSupportedDocs);
-        classBuffer.writeln('///');
-        classBuffer.writeln(
-          '///Use the [$className.$isClassSupportedFunctionName] method to check if this class is supported at runtime.',
-        );
-        classBuffer.writeln('///{@endtemplate}');
+      if (!classTemplateOnEnum) {
+        writeClassTemplate();
       }
       if (visitor.constructor.returnType.element.metadata.hasDeprecated) {
         classBuffer.writeln(
@@ -155,12 +182,9 @@ class SupportedPlatformsGenerator
         );
       }
 
-      // Most classes answer `isClassSupported` through this extension. Some answer through their
-      // creation params instead (an instance method, so a platform's params can override it), and
-      // never call it. It is emitted for them anyway, because it carries the `supported_platforms`
-      // template above, which other docs `{@macro}`. So the ignore goes on exactly the extensions
-      // the hand-written library never calls, and every other one stays checked (§220).
-      if (!librarySource.contains('_${className}ClassSupported.')) {
+      // The ignore goes on exactly the extensions the hand-written library never calls, and every
+      // other one stays checked (§220).
+      if (!classExtensionCalled) {
         classBuffer.writeln(
           '// Unused: [$className.$isClassSupportedFunctionName] answers through its creation '
           'params. Kept for the doc template above.',
@@ -193,12 +217,16 @@ class SupportedPlatformsGenerator
       """);
     }
 
-    if (hasPropertySupportedFunction && !fieldEntriesSorted.isEmpty) {
+    if (hasPropertyEnum) {
       final enumClassName = '${className}Property';
 
       classBuffer.writeln(
         "///List of [${className}]'s properties that can be used to check i they are supported or not by the current platform.",
       );
+      if (classSupportedDocs != null) {
+        classBuffer.writeln('///');
+        writeClassTemplate();
+      }
       classBuffer.writeln("enum ${enumClassName} {");
       for (final entry in fieldEntriesSorted) {
         final fieldName = entry.key;
@@ -318,12 +346,16 @@ class SupportedPlatformsGenerator
       """);
     }
 
-    if (hasMethodSupportedFunction && !methodEntriesSorted.isEmpty) {
+    if (hasMethodEnum) {
       final enumClassName = '${className}Method';
 
       classBuffer.writeln(
         "///List of [${className}]'s methods that can be used to check if they are supported or not by the current platform.",
       );
+      if (classSupportedDocs != null && !hasPropertyEnum) {
+        classBuffer.writeln('///');
+        writeClassTemplate();
+      }
       classBuffer.writeln("enum ${enumClassName} {");
       for (final entry in methodEntriesSorted) {
         final methodName = entry.key;

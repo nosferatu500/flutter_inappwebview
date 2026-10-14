@@ -8,16 +8,6 @@ part of 'platform_chrome_safari_browser.dart';
 
 extension _PlatformChromeSafariBrowserClassSupported
     on PlatformChromeSafariBrowser {
-  ///{@template nosferatu500_inappwebview_platform_interface.PlatformChromeSafariBrowser.supported_platforms}
-  ///
-  ///**Officially Supported Platforms/Implementations**:
-  ///- Android Chrome Custom Tabs:
-  ///    - This class uses native [Chrome Custom Tabs](https://developer.android.com/reference/android/support/customtabs/package-summary). If you want to use the `ChromeSafariBrowser` class on Android 11+ you need to specify your app querying for `android.support.customtabs.action.CustomTabsService` in your `AndroidManifest.xml` (you can read more about it here: https://developers.google.com/web/android/custom-tabs/best-practices#applications_targeting_android_11_api_level_30_or_above).
-  ///- iOS SFSafariViewController:
-  ///    - This class uses native [SFSafariViewController](https://developer.apple.com/documentation/safariservices/sfsafariviewcontroller)
-  ///
-  ///Use the [PlatformChromeSafariBrowser.isClassSupported] method to check if this class is supported at runtime.
-  ///{@endtemplate}
   static bool isClassSupported({TargetPlatform? platform}) {
     return ((kIsWeb && platform != null) || !kIsWeb) &&
         [
@@ -28,6 +18,17 @@ extension _PlatformChromeSafariBrowserClassSupported
 }
 
 ///List of [PlatformChromeSafariBrowser]'s methods that can be used to check if they are supported or not by the current platform.
+///
+///{@template nosferatu500_inappwebview_platform_interface.PlatformChromeSafariBrowser.supported_platforms}
+///
+///**Officially Supported Platforms/Implementations**:
+///- Android Chrome Custom Tabs:
+///    - This class uses native [Chrome Custom Tabs](https://developer.android.com/reference/android/support/customtabs/package-summary). If you want to use the `ChromeSafariBrowser` class on Android 11+ you need to specify your app querying for `android.support.customtabs.action.CustomTabsService` in your `AndroidManifest.xml` (you can read more about it here: https://developers.google.com/web/android/custom-tabs/best-practices#applications_targeting_android_11_api_level_30_or_above).
+///- iOS SFSafariViewController:
+///    - This class uses native [SFSafariViewController](https://developer.apple.com/documentation/safariservices/sfsafariviewcontroller)
+///
+///Use the [PlatformChromeSafariBrowser.isClassSupported] method to check if this class is supported at runtime.
+///{@endtemplate}
 enum PlatformChromeSafariBrowserMethod {
   ///Can be used to check if the [PlatformChromeSafariBrowser.addMenuItem] method is supported at runtime.
   ///
@@ -39,7 +40,7 @@ enum PlatformChromeSafariBrowserMethod {
   ///- iOS SFSafariViewController
   ///
   ///**Parameters - Officially Supported Platforms/Implementations**:
-  ///- [menuItem]: all platforms
+  ///- `menuItem`: all platforms
   ///
   ///Use the [PlatformChromeSafariBrowser.isMethodSupported] method to check if this method is supported at runtime.
   ///{@endtemplate}
@@ -55,7 +56,7 @@ enum PlatformChromeSafariBrowserMethod {
   ///- iOS SFSafariViewController
   ///
   ///**Parameters - Officially Supported Platforms/Implementations**:
-  ///- [menuItems]: all platforms
+  ///- `menuItems`: all platforms
   ///
   ///Use the [PlatformChromeSafariBrowser.isMethodSupported] method to check if this method is supported at runtime.
   ///{@endtemplate}
@@ -115,8 +116,8 @@ enum PlatformChromeSafariBrowserMethod {
   ///- Android Chrome Custom Tabs ([Official API - CustomTabsClient.getPackageName](https://developer.android.com/reference/androidx/browser/customtabs/CustomTabsClient#getPackageName(android.content.Context,java.util.List%3Cjava.lang.String%3E,boolean)))
   ///
   ///**Parameters - Officially Supported Platforms/Implementations**:
-  ///- [packages]: all platforms
-  ///- [ignoreDefault]: all platforms
+  ///- `packages`: all platforms
+  ///- `ignoreDefault`: all platforms
   ///
   ///Use the [PlatformChromeSafariBrowser.isMethodSupported] method to check if this method is supported at runtime.
   ///{@endtemplate}
@@ -130,7 +131,7 @@ enum PlatformChromeSafariBrowserMethod {
   ///- iOS SFSafariViewController 15.0+ ([Official API - SFSafariViewController.PrewarmingToken.invalidate](https://developer.apple.com/documentation/safariservices/sfsafariviewcontroller/prewarmingtoken/invalidate()))
   ///
   ///**Parameters - Officially Supported Platforms/Implementations**:
-  ///- [prewarmingToken]: all platforms
+  ///- `prewarmingToken`: all platforms
   ///
   ///Use the [PlatformChromeSafariBrowser.isMethodSupported] method to check if this method is supported at runtime.
   ///{@endtemplate}
@@ -179,10 +180,10 @@ enum PlatformChromeSafariBrowserMethod {
   ///- Android Chrome Custom Tabs
   ///
   ///**Parameters - Officially Supported Platforms/Implementations**:
-  ///- [url]: all platforms
-  ///- [headers]: all platforms
-  ///- [otherLikelyURLs]: all platforms
-  ///- [referrer]: all platforms
+  ///- `url`: all platforms
+  ///- `headers`: all platforms
+  ///- `otherLikelyURLs`: all platforms
+  ///- `referrer`: all platforms
   ///
   ///Use the [PlatformChromeSafariBrowser.isMethodSupported] method to check if this method is supported at runtime.
   ///{@endtemplate}
@@ -196,8 +197,8 @@ enum PlatformChromeSafariBrowserMethod {
   ///- Android Chrome Custom Tabs ([Official API - CustomTabsSession.mayLaunchUrl](https://developer.android.com/reference/androidx/browser/customtabs/CustomTabsSession#mayLaunchUrl(android.net.Uri,android.os.Bundle,java.util.List%3Candroid.os.Bundle%3E)))
   ///
   ///**Parameters - Officially Supported Platforms/Implementations**:
-  ///- [url]: all platforms
-  ///- [otherLikelyURLs]: all platforms
+  ///- `url`: all platforms
+  ///- `otherLikelyURLs`: all platforms
   ///
   ///Use the [PlatformChromeSafariBrowser.isMethodSupported] method to check if this method is supported at runtime.
   ///{@endtemplate}
@@ -212,14 +213,14 @@ enum PlatformChromeSafariBrowserMethod {
   ///- iOS SFSafariViewController
   ///
   ///**Parameters - Officially Supported Platforms/Implementations**:
-  ///- [url]: all platforms
-  ///- [headers]:
+  ///- `url`: all platforms
+  ///- `headers`:
   ///    - Android Chrome Custom Tabs
-  ///- [otherLikelyURLs]:
+  ///- `otherLikelyURLs`:
   ///    - Android Chrome Custom Tabs
-  ///- [referrer]:
+  ///- `referrer`:
   ///    - Android Chrome Custom Tabs
-  ///- [settings]: all platforms
+  ///- `settings`: all platforms
   ///
   ///Use the [PlatformChromeSafariBrowser.isMethodSupported] method to check if this method is supported at runtime.
   ///{@endtemplate}
@@ -233,7 +234,7 @@ enum PlatformChromeSafariBrowserMethod {
   ///- Android Chrome Custom Tabs ([Official API - CustomTabsSession.postMessage](https://developer.android.com/reference/androidx/browser/customtabs/CustomTabsSession#postMessage(java.lang.String,android.os.Bundle)))
   ///
   ///**Parameters - Officially Supported Platforms/Implementations**:
-  ///- [message]: all platforms
+  ///- `message`: all platforms
   ///
   ///Use the [PlatformChromeSafariBrowser.isMethodSupported] method to check if this method is supported at runtime.
   ///{@endtemplate}
@@ -247,7 +248,7 @@ enum PlatformChromeSafariBrowserMethod {
   ///- iOS SFSafariViewController 15.0+ ([Official API - SFSafariViewController.prewarmConnections](https://developer.apple.com/documentation/safariservices/sfsafariviewcontroller/3752133-prewarmconnections))
   ///
   ///**Parameters - Officially Supported Platforms/Implementations**:
-  ///- [URLs]: all platforms
+  ///- `URLs`: all platforms
   ///
   ///Use the [PlatformChromeSafariBrowser.isMethodSupported] method to check if this method is supported at runtime.
   ///{@endtemplate}
@@ -261,8 +262,8 @@ enum PlatformChromeSafariBrowserMethod {
   ///- Android Chrome Custom Tabs ([Official API - CustomTabsSession.requestPostMessageChannel](https://developer.android.com/reference/androidx/browser/customtabs/CustomTabsSession#requestPostMessageChannel(android.net.Uri,android.net.Uri,android.os.Bundle)))
   ///
   ///**Parameters - Officially Supported Platforms/Implementations**:
-  ///- [sourceOrigin]: all platforms
-  ///- [targetOrigin]: all platforms
+  ///- `sourceOrigin`: all platforms
+  ///- `targetOrigin`: all platforms
   ///
   ///Use the [PlatformChromeSafariBrowser.isMethodSupported] method to check if this method is supported at runtime.
   ///{@endtemplate}
@@ -277,7 +278,7 @@ enum PlatformChromeSafariBrowserMethod {
   ///    - Not available in a Trusted Web Activity.
   ///
   ///**Parameters - Officially Supported Platforms/Implementations**:
-  ///- [actionButton]: all platforms
+  ///- `actionButton`: all platforms
   ///
   ///Use the [PlatformChromeSafariBrowser.isMethodSupported] method to check if this method is supported at runtime.
   ///{@endtemplate}
@@ -292,7 +293,7 @@ enum PlatformChromeSafariBrowserMethod {
   ///    - Not available in a Trusted Web Activity.
   ///
   ///**Parameters - Officially Supported Platforms/Implementations**:
-  ///- [secondaryToolbar]: all platforms
+  ///- `secondaryToolbar`: all platforms
   ///
   ///Use the [PlatformChromeSafariBrowser.isMethodSupported] method to check if this method is supported at runtime.
   ///{@endtemplate}
@@ -307,8 +308,8 @@ enum PlatformChromeSafariBrowserMethod {
   ///    - Not available in a Trusted Web Activity.
   ///
   ///**Parameters - Officially Supported Platforms/Implementations**:
-  ///- [icon]: all platforms
-  ///- [description]: all platforms
+  ///- `icon`: all platforms
+  ///- `description`: all platforms
   ///
   ///Use the [PlatformChromeSafariBrowser.isMethodSupported] method to check if this method is supported at runtime.
   ///{@endtemplate}
@@ -323,7 +324,7 @@ enum PlatformChromeSafariBrowserMethod {
   ///    - Not available in a Trusted Web Activity.
   ///
   ///**Parameters - Officially Supported Platforms/Implementations**:
-  ///- [secondaryToolbar]: all platforms
+  ///- `secondaryToolbar`: all platforms
   ///
   ///Use the [PlatformChromeSafariBrowser.isMethodSupported] method to check if this method is supported at runtime.
   ///{@endtemplate}
@@ -337,8 +338,8 @@ enum PlatformChromeSafariBrowserMethod {
   ///- Android Chrome Custom Tabs ([Official API - CustomTabsSession.validateRelationship](https://developer.android.com/reference/androidx/browser/customtabs/CustomTabsSession#validateRelationship(int,android.net.Uri,android.os.Bundle)))
   ///
   ///**Parameters - Officially Supported Platforms/Implementations**:
-  ///- [relation]: all platforms
-  ///- [origin]: all platforms
+  ///- `relation`: all platforms
+  ///- `origin`: all platforms
   ///
   ///Use the [PlatformChromeSafariBrowser.isMethodSupported] method to check if this method is supported at runtime.
   ///{@endtemplate}
@@ -478,7 +479,7 @@ enum PlatformChromeSafariBrowserEventsMethod {
   ///- iOS WKWebView ([Official API - SFSafariViewControllerDelegate.safariViewController](https://developer.apple.com/documentation/safariservices/sfsafariviewcontrollerdelegate/1621215-safariviewcontroller))
   ///
   ///**Parameters - Officially Supported Platforms/Implementations**:
-  ///- [didLoadSuccessfully]:
+  ///- `didLoadSuccessfully`:
   ///    - iOS WKWebView
   ///
   ///Use the [PlatformChromeSafariBrowserEvents.isMethodSupported] method to check if this method is supported at runtime.
@@ -493,7 +494,7 @@ enum PlatformChromeSafariBrowserEventsMethod {
   ///- Android WebView ([Official API - EngagementSignalsCallback.onGreatestScrollPercentageIncreased](https://developer.android.com/reference/androidx/browser/customtabs/EngagementSignalsCallback#onGreatestScrollPercentageIncreased(int,android.os.Bundle)))
   ///
   ///**Parameters - Officially Supported Platforms/Implementations**:
-  ///- [scrollPercentage]: all platforms
+  ///- `scrollPercentage`: all platforms
   ///
   ///Use the [PlatformChromeSafariBrowserEvents.isMethodSupported] method to check if this method is supported at runtime.
   ///{@endtemplate}
@@ -507,7 +508,7 @@ enum PlatformChromeSafariBrowserEventsMethod {
   ///- iOS WKWebView ([Official API - SFSafariViewControllerDelegate.safariViewController](https://developer.apple.com/documentation/safariservices/sfsafariviewcontrollerdelegate/2923545-safariviewcontroller))
   ///
   ///**Parameters - Officially Supported Platforms/Implementations**:
-  ///- [url]: all platforms
+  ///- `url`: all platforms
   ///
   ///Use the [PlatformChromeSafariBrowserEvents.isMethodSupported] method to check if this method is supported at runtime.
   ///{@endtemplate}
@@ -532,7 +533,7 @@ enum PlatformChromeSafariBrowserEventsMethod {
   ///- Android WebView ([Official API - CustomTabsCallback.onNavigationEvent](https://developer.android.com/reference/androidx/browser/customtabs/CustomTabsCallback#onNavigationEvent(int,android.os.Bundle)))
   ///
   ///**Parameters - Officially Supported Platforms/Implementations**:
-  ///- [navigationEvent]: all platforms
+  ///- `navigationEvent`: all platforms
   ///
   ///Use the [PlatformChromeSafariBrowserEvents.isMethodSupported] method to check if this method is supported at runtime.
   ///{@endtemplate}
@@ -558,7 +559,7 @@ enum PlatformChromeSafariBrowserEventsMethod {
   ///- Android WebView ([Official API - CustomTabsCallback.onPostMessage](https://developer.android.com/reference/androidx/browser/customtabs/CustomTabsCallback#onPostMessage(java.lang.String,android.os.Bundle)))
   ///
   ///**Parameters - Officially Supported Platforms/Implementations**:
-  ///- [message]: all platforms
+  ///- `message`: all platforms
   ///
   ///Use the [PlatformChromeSafariBrowserEvents.isMethodSupported] method to check if this method is supported at runtime.
   ///{@endtemplate}
@@ -572,9 +573,9 @@ enum PlatformChromeSafariBrowserEventsMethod {
   ///- Android WebView ([Official API - CustomTabsCallback.onRelationshipValidationResult](https://developer.android.com/reference/androidx/browser/customtabs/CustomTabsCallback#onRelationshipValidationResult(int,android.net.Uri,boolean,android.os.Bundle)))
   ///
   ///**Parameters - Officially Supported Platforms/Implementations**:
-  ///- [relation]: all platforms
-  ///- [requestedOrigin]: all platforms
-  ///- [result]: all platforms
+  ///- `relation`: all platforms
+  ///- `requestedOrigin`: all platforms
+  ///- `result`: all platforms
   ///
   ///Use the [PlatformChromeSafariBrowserEvents.isMethodSupported] method to check if this method is supported at runtime.
   ///{@endtemplate}
@@ -599,7 +600,7 @@ enum PlatformChromeSafariBrowserEventsMethod {
   ///- Android WebView ([Official API - EngagementSignalsCallback.onSessionEnded](https://developer.android.com/reference/androidx/browser/customtabs/EngagementSignalsCallback#onSessionEnded(boolean,android.os.Bundle)))
   ///
   ///**Parameters - Officially Supported Platforms/Implementations**:
-  ///- [didUserInteract]: all platforms
+  ///- `didUserInteract`: all platforms
   ///
   ///Use the [PlatformChromeSafariBrowserEvents.isMethodSupported] method to check if this method is supported at runtime.
   ///{@endtemplate}
@@ -613,7 +614,7 @@ enum PlatformChromeSafariBrowserEventsMethod {
   ///- Android WebView ([Official API - EngagementSignalsCallback.onVerticalScrollEvent](https://developer.android.com/reference/androidx/browser/customtabs/EngagementSignalsCallback#onVerticalScrollEvent(boolean,android.os.Bundle)))
   ///
   ///**Parameters - Officially Supported Platforms/Implementations**:
-  ///- [isDirectionUp]: all platforms
+  ///- `isDirectionUp`: all platforms
   ///
   ///Use the [PlatformChromeSafariBrowserEvents.isMethodSupported] method to check if this method is supported at runtime.
   ///{@endtemplate}

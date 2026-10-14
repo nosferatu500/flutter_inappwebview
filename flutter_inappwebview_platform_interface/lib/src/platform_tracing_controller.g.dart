@@ -135,24 +135,15 @@ extension _PlatformTracingControllerCreationParamsClassSupported
   }
 }
 
-extension _PlatformTracingControllerClassSupported
-    on PlatformTracingController {
-  ///{@template nosferatu500_inappwebview_platform_interface.PlatformTracingController.supported_platforms}
-  ///
-  ///**Officially Supported Platforms/Implementations**:
-  ///- Android WebView ([Official API - TracingController](https://developer.android.com/reference/androidx/webkit/TracingController))
-  ///
-  ///Use the [PlatformTracingController.isClassSupported] method to check if this class is supported at runtime.
-  ///{@endtemplate}
-  // Unused: [PlatformTracingController.isClassSupported] answers through its creation params. Kept for the doc template above.
-  // ignore: unused_element
-  static bool isClassSupported({TargetPlatform? platform}) {
-    return ((kIsWeb && platform != null) || !kIsWeb) &&
-        [TargetPlatform.android].contains(platform ?? defaultTargetPlatform);
-  }
-}
-
 ///List of [PlatformTracingController]'s methods that can be used to check if they are supported or not by the current platform.
+///
+///{@template nosferatu500_inappwebview_platform_interface.PlatformTracingController.supported_platforms}
+///
+///**Officially Supported Platforms/Implementations**:
+///- Android WebView ([Official API - TracingController](https://developer.android.com/reference/androidx/webkit/TracingController))
+///
+///Use the [PlatformTracingController.isClassSupported] method to check if this class is supported at runtime.
+///{@endtemplate}
 enum PlatformTracingControllerMethod {
   ///Can be used to check if the [PlatformTracingController.isTracing] method is supported at runtime.
   ///
@@ -173,7 +164,7 @@ enum PlatformTracingControllerMethod {
   ///- Android WebView ([Official API - TracingController.start](https://developer.android.com/reference/android/webkit/TracingController#start(android.webkit.TracingConfig)))
   ///
   ///**Parameters - Officially Supported Platforms/Implementations**:
-  ///- [settings]: all platforms
+  ///- `settings`: all platforms
   ///
   ///Use the [PlatformTracingController.isMethodSupported] method to check if this method is supported at runtime.
   ///{@endtemplate}
@@ -187,7 +178,7 @@ enum PlatformTracingControllerMethod {
   ///- Android WebView ([Official API - TracingController.stop](https://developer.android.com/reference/android/webkit/TracingController#stop(java.io.OutputStream,%20java.util.concurrent.Executor)))
   ///
   ///**Parameters - Officially Supported Platforms/Implementations**:
-  ///- [filePath]: all platforms
+  ///- `filePath`: all platforms
   ///
   ///Use the [PlatformTracingController.isMethodSupported] method to check if this method is supported at runtime.
   ///{@endtemplate}
@@ -218,13 +209,6 @@ extension _PlatformTracingControllerMethodSupported
 }
 
 extension _TracingSettingsClassSupported on TracingSettings {
-  ///{@template nosferatu500_inappwebview_platform_interface.TracingSettings.supported_platforms}
-  ///
-  ///**Officially Supported Platforms/Implementations**:
-  ///- Android WebView ([Official API - TracingConfig](https://developer.android.com/reference/androidx/webkit/TracingConfig))
-  ///
-  ///Use the [TracingSettings.isClassSupported] method to check if this class is supported at runtime.
-  ///{@endtemplate}
   static bool isClassSupported({TargetPlatform? platform}) {
     return ((kIsWeb && platform != null) || !kIsWeb) &&
         [TargetPlatform.android].contains(platform ?? defaultTargetPlatform);
@@ -232,6 +216,14 @@ extension _TracingSettingsClassSupported on TracingSettings {
 }
 
 ///List of [TracingSettings]'s properties that can be used to check i they are supported or not by the current platform.
+///
+///{@template nosferatu500_inappwebview_platform_interface.TracingSettings.supported_platforms}
+///
+///**Officially Supported Platforms/Implementations**:
+///- Android WebView ([Official API - TracingConfig](https://developer.android.com/reference/androidx/webkit/TracingConfig))
+///
+///Use the [TracingSettings.isClassSupported] method to check if this class is supported at runtime.
+///{@endtemplate}
 enum TracingSettingsProperty {
   ///Can be used to check if the [TracingSettings.tracingMode] property is supported at runtime.
   ///

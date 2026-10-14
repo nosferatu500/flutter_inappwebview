@@ -21,24 +21,15 @@ extension _PlatformServiceWorkerControllerCreationParamsClassSupported
   }
 }
 
-extension _PlatformServiceWorkerControllerClassSupported
-    on PlatformServiceWorkerController {
-  ///{@template nosferatu500_inappwebview_platform_interface.PlatformServiceWorkerController.supported_platforms}
-  ///
-  ///**Officially Supported Platforms/Implementations**:
-  ///- Android WebView ([Official API - ServiceWorkerControllerCompat](https://developer.android.com/reference/androidx/webkit/ServiceWorkerControllerCompat))
-  ///
-  ///Use the [PlatformServiceWorkerController.isClassSupported] method to check if this class is supported at runtime.
-  ///{@endtemplate}
-  // Unused: [PlatformServiceWorkerController.isClassSupported] answers through its creation params. Kept for the doc template above.
-  // ignore: unused_element
-  static bool isClassSupported({TargetPlatform? platform}) {
-    return ((kIsWeb && platform != null) || !kIsWeb) &&
-        [TargetPlatform.android].contains(platform ?? defaultTargetPlatform);
-  }
-}
-
 ///List of [PlatformServiceWorkerController]'s methods that can be used to check if they are supported or not by the current platform.
+///
+///{@template nosferatu500_inappwebview_platform_interface.PlatformServiceWorkerController.supported_platforms}
+///
+///**Officially Supported Platforms/Implementations**:
+///- Android WebView ([Official API - ServiceWorkerControllerCompat](https://developer.android.com/reference/androidx/webkit/ServiceWorkerControllerCompat))
+///
+///Use the [PlatformServiceWorkerController.isClassSupported] method to check if this class is supported at runtime.
+///{@endtemplate}
 enum PlatformServiceWorkerControllerMethod {
   ///Can be used to check if the [PlatformServiceWorkerController.getAllowContentAccess] method is supported at runtime.
   ///
@@ -48,7 +39,7 @@ enum PlatformServiceWorkerControllerMethod {
   ///- Android WebView ([Official API - ServiceWorkerWebSettingsCompat.getAllowContentAccess](https://developer.android.com/reference/androidx/webkit/ServiceWorkerWebSettingsCompat#getAllowContentAccess()))
   ///
   ///**Parameters - Officially Supported Platforms/Implementations**:
-  ///- [profileName]:
+  ///- `profileName`:
   ///    - Android WebView
   ///
   ///Use the [PlatformServiceWorkerController.isMethodSupported] method to check if this method is supported at runtime.
@@ -63,7 +54,7 @@ enum PlatformServiceWorkerControllerMethod {
   ///- Android WebView ([Official API - ServiceWorkerWebSettingsCompat.getAllowFileAccess](https://developer.android.com/reference/androidx/webkit/ServiceWorkerWebSettingsCompat#getAllowFileAccess()))
   ///
   ///**Parameters - Officially Supported Platforms/Implementations**:
-  ///- [profileName]:
+  ///- `profileName`:
   ///    - Android WebView
   ///
   ///Use the [PlatformServiceWorkerController.isMethodSupported] method to check if this method is supported at runtime.
@@ -78,7 +69,7 @@ enum PlatformServiceWorkerControllerMethod {
   ///- Android WebView ([Official API - ServiceWorkerWebSettingsCompat.getBlockNetworkLoads](https://developer.android.com/reference/androidx/webkit/ServiceWorkerWebSettingsCompat#getBlockNetworkLoads()))
   ///
   ///**Parameters - Officially Supported Platforms/Implementations**:
-  ///- [profileName]:
+  ///- `profileName`:
   ///    - Android WebView
   ///
   ///Use the [PlatformServiceWorkerController.isMethodSupported] method to check if this method is supported at runtime.
@@ -93,7 +84,7 @@ enum PlatformServiceWorkerControllerMethod {
   ///- Android WebView ([Official API - ServiceWorkerWebSettingsCompat.getCacheMode](https://developer.android.com/reference/androidx/webkit/ServiceWorkerWebSettingsCompat#getCacheMode()))
   ///
   ///**Parameters - Officially Supported Platforms/Implementations**:
-  ///- [profileName]:
+  ///- `profileName`:
   ///    - Android WebView
   ///
   ///Use the [PlatformServiceWorkerController.isMethodSupported] method to check if this method is supported at runtime.
@@ -109,7 +100,7 @@ enum PlatformServiceWorkerControllerMethod {
   ///    - available on Android only if [WebViewFeature.COOKIE_INTERCEPT] feature is supported, and only for the default profile.
   ///
   ///**Parameters - Officially Supported Platforms/Implementations**:
-  ///- [profileName]:
+  ///- `profileName`:
   ///    - Android WebView
   ///
   ///Use the [PlatformServiceWorkerController.isMethodSupported] method to check if this method is supported at runtime.
@@ -124,8 +115,8 @@ enum PlatformServiceWorkerControllerMethod {
   ///- Android WebView ([Official API - ServiceWorkerWebSettingsCompat.setAllowContentAccess](https://developer.android.com/reference/androidx/webkit/ServiceWorkerWebSettingsCompat#setAllowContentAccess(boolean)))
   ///
   ///**Parameters - Officially Supported Platforms/Implementations**:
-  ///- [allow]: all platforms
-  ///- [profileName]:
+  ///- `allow`: all platforms
+  ///- `profileName`:
   ///    - Android WebView
   ///
   ///Use the [PlatformServiceWorkerController.isMethodSupported] method to check if this method is supported at runtime.
@@ -140,8 +131,8 @@ enum PlatformServiceWorkerControllerMethod {
   ///- Android WebView ([Official API - ServiceWorkerWebSettingsCompat.setAllowFileAccess](https://developer.android.com/reference/androidx/webkit/ServiceWorkerWebSettingsCompat#setAllowFileAccess(boolean)))
   ///
   ///**Parameters - Officially Supported Platforms/Implementations**:
-  ///- [allow]: all platforms
-  ///- [profileName]:
+  ///- `allow`: all platforms
+  ///- `profileName`:
   ///    - Android WebView
   ///
   ///Use the [PlatformServiceWorkerController.isMethodSupported] method to check if this method is supported at runtime.
@@ -156,8 +147,8 @@ enum PlatformServiceWorkerControllerMethod {
   ///- Android WebView ([Official API - ServiceWorkerWebSettingsCompat.setBlockNetworkLoads](https://developer.android.com/reference/androidx/webkit/ServiceWorkerWebSettingsCompat#setBlockNetworkLoads(boolean)))
   ///
   ///**Parameters - Officially Supported Platforms/Implementations**:
-  ///- [flag]: all platforms
-  ///- [profileName]:
+  ///- `flag`: all platforms
+  ///- `profileName`:
   ///    - Android WebView
   ///
   ///Use the [PlatformServiceWorkerController.isMethodSupported] method to check if this method is supported at runtime.
@@ -172,8 +163,8 @@ enum PlatformServiceWorkerControllerMethod {
   ///- Android WebView ([Official API - ServiceWorkerWebSettingsCompat.setCacheMode](https://developer.android.com/reference/androidx/webkit/ServiceWorkerWebSettingsCompat#setCacheMode(int)))
   ///
   ///**Parameters - Officially Supported Platforms/Implementations**:
-  ///- [mode]: all platforms
-  ///- [profileName]:
+  ///- `mode`: all platforms
+  ///- `profileName`:
   ///    - Android WebView
   ///
   ///Use the [PlatformServiceWorkerController.isMethodSupported] method to check if this method is supported at runtime.
@@ -189,8 +180,8 @@ enum PlatformServiceWorkerControllerMethod {
   ///    - available on Android only if [WebViewFeature.COOKIE_INTERCEPT] feature is supported, and only for the default profile.
   ///
   ///**Parameters - Officially Supported Platforms/Implementations**:
-  ///- [enabled]: all platforms
-  ///- [profileName]:
+  ///- `enabled`: all platforms
+  ///- `profileName`:
   ///    - Android WebView
   ///
   ///Use the [PlatformServiceWorkerController.isMethodSupported] method to check if this method is supported at runtime.
@@ -205,7 +196,7 @@ enum PlatformServiceWorkerControllerMethod {
   ///- Android WebView ([Official API - ServiceWorkerControllerCompat.setServiceWorkerClient](https://developer.android.com/reference/androidx/webkit/ServiceWorkerControllerCompat#setServiceWorkerClient(androidx.webkit.ServiceWorkerClientCompat)))
   ///
   ///**Parameters - Officially Supported Platforms/Implementations**:
-  ///- [value]: all platforms
+  ///- `value`: all platforms
   ///
   ///Use the [PlatformServiceWorkerController.isMethodSupported] method to check if this method is supported at runtime.
   ///{@endtemplate}
@@ -270,13 +261,6 @@ extension _PlatformServiceWorkerControllerMethodSupported
 }
 
 extension _ServiceWorkerClientClassSupported on ServiceWorkerClient {
-  ///{@template nosferatu500_inappwebview_platform_interface.ServiceWorkerClient.supported_platforms}
-  ///
-  ///**Officially Supported Platforms/Implementations**:
-  ///- Android WebView ([Official API - ServiceWorkerClientCompat](https://developer.android.com/reference/androidx/webkit/ServiceWorkerClientCompat))
-  ///
-  ///Use the [ServiceWorkerClient.isClassSupported] method to check if this class is supported at runtime.
-  ///{@endtemplate}
   static bool isClassSupported({TargetPlatform? platform}) {
     return ((kIsWeb && platform != null) || !kIsWeb) &&
         [TargetPlatform.android].contains(platform ?? defaultTargetPlatform);
@@ -284,6 +268,14 @@ extension _ServiceWorkerClientClassSupported on ServiceWorkerClient {
 }
 
 ///List of [ServiceWorkerClient]'s properties that can be used to check i they are supported or not by the current platform.
+///
+///{@template nosferatu500_inappwebview_platform_interface.ServiceWorkerClient.supported_platforms}
+///
+///**Officially Supported Platforms/Implementations**:
+///- Android WebView ([Official API - ServiceWorkerClientCompat](https://developer.android.com/reference/androidx/webkit/ServiceWorkerClientCompat))
+///
+///Use the [ServiceWorkerClient.isClassSupported] method to check if this class is supported at runtime.
+///{@endtemplate}
 enum ServiceWorkerClientProperty {
   ///Can be used to check if the [ServiceWorkerClient.shouldInterceptRequest] property is supported at runtime.
   ///
@@ -293,7 +285,7 @@ enum ServiceWorkerClientProperty {
   ///- Android WebView ([Official API - ServiceWorkerClientCompat.shouldInterceptRequest](https://developer.android.com/reference/androidx/webkit/ServiceWorkerClientCompat#shouldInterceptRequest(android.webkit.WebResourceRequest)))
   ///
   ///**Parameters - Officially Supported Platforms/Implementations**:
-  ///- [request]: all platforms
+  ///- `request`: all platforms
   ///
   ///Use the [ServiceWorkerClient.isPropertySupported] method to check if this property is supported at runtime.
   ///{@endtemplate}

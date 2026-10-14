@@ -8,14 +8,6 @@ part of 'platform_web_storage.dart';
 
 extension _PlatformWebStorageCreationParamsClassSupported
     on PlatformWebStorageCreationParams {
-  ///{@template nosferatu500_inappwebview_platform_interface.PlatformWebStorageCreationParams.supported_platforms}
-  ///
-  ///**Officially Supported Platforms/Implementations**:
-  ///- Android WebView
-  ///- iOS WKWebView
-  ///
-  ///Use the [PlatformWebStorageCreationParams.isClassSupported] method to check if this class is supported at runtime.
-  ///{@endtemplate}
   static bool isClassSupported({TargetPlatform? platform}) {
     return ((kIsWeb && platform != null) || !kIsWeb) &&
         [
@@ -26,6 +18,15 @@ extension _PlatformWebStorageCreationParamsClassSupported
 }
 
 ///List of [PlatformWebStorageCreationParams]'s properties that can be used to check i they are supported or not by the current platform.
+///
+///{@template nosferatu500_inappwebview_platform_interface.PlatformWebStorageCreationParams.supported_platforms}
+///
+///**Officially Supported Platforms/Implementations**:
+///- Android WebView
+///- iOS WKWebView
+///
+///Use the [PlatformWebStorageCreationParams.isClassSupported] method to check if this class is supported at runtime.
+///{@endtemplate}
 enum PlatformWebStorageCreationParamsProperty {
   ///Can be used to check if the [PlatformWebStorageCreationParams.localStorage] property is supported at runtime.
   ///
@@ -76,14 +77,6 @@ extension _PlatformWebStorageCreationParamsPropertySupported
 }
 
 extension _PlatformWebStorageClassSupported on PlatformWebStorage {
-  ///{@template nosferatu500_inappwebview_platform_interface.PlatformWebStorage.supported_platforms}
-  ///
-  ///**Officially Supported Platforms/Implementations**:
-  ///- Android WebView
-  ///- iOS WKWebView
-  ///
-  ///Use the [PlatformWebStorage.isClassSupported] method to check if this class is supported at runtime.
-  ///{@endtemplate}
   static bool isClassSupported({TargetPlatform? platform}) {
     return ((kIsWeb && platform != null) || !kIsWeb) &&
         [
@@ -94,6 +87,15 @@ extension _PlatformWebStorageClassSupported on PlatformWebStorage {
 }
 
 ///List of [PlatformWebStorage]'s properties that can be used to check i they are supported or not by the current platform.
+///
+///{@template nosferatu500_inappwebview_platform_interface.PlatformWebStorage.supported_platforms}
+///
+///**Officially Supported Platforms/Implementations**:
+///- Android WebView
+///- iOS WKWebView
+///
+///Use the [PlatformWebStorage.isClassSupported] method to check if this class is supported at runtime.
+///{@endtemplate}
 enum PlatformWebStorageProperty {
   ///Can be used to check if the [PlatformWebStorage.localStorage] property is supported at runtime.
   ///
@@ -175,14 +177,6 @@ extension _PlatformWebStorageMethodSupported on PlatformWebStorage {
 
 extension _PlatformStorageCreationParamsClassSupported
     on PlatformStorageCreationParams {
-  ///{@template nosferatu500_inappwebview_platform_interface.PlatformStorageCreationParams.supported_platforms}
-  ///
-  ///**Officially Supported Platforms/Implementations**:
-  ///- Android WebView
-  ///- iOS WKWebView
-  ///
-  ///Use the [PlatformStorageCreationParams.isClassSupported] method to check if this class is supported at runtime.
-  ///{@endtemplate}
   static bool isClassSupported({TargetPlatform? platform}) {
     return ((kIsWeb && platform != null) || !kIsWeb) &&
         [
@@ -193,6 +187,15 @@ extension _PlatformStorageCreationParamsClassSupported
 }
 
 ///List of [PlatformStorageCreationParams]'s properties that can be used to check i they are supported or not by the current platform.
+///
+///{@template nosferatu500_inappwebview_platform_interface.PlatformStorageCreationParams.supported_platforms}
+///
+///**Officially Supported Platforms/Implementations**:
+///- Android WebView
+///- iOS WKWebView
+///
+///Use the [PlatformStorageCreationParams.isClassSupported] method to check if this class is supported at runtime.
+///{@endtemplate}
 enum PlatformStorageCreationParamsProperty {
   ///Can be used to check if the [PlatformStorageCreationParams.controller] property is supported at runtime.
   ///
@@ -262,14 +265,6 @@ extension _PlatformLocalStorageCreationParamsClassSupported
 }
 
 extension _PlatformLocalStorageClassSupported on PlatformLocalStorage {
-  ///{@template nosferatu500_inappwebview_platform_interface.PlatformLocalStorage.supported_platforms}
-  ///
-  ///**Officially Supported Platforms/Implementations**:
-  ///- Android WebView
-  ///- iOS WKWebView
-  ///
-  ///Use the [PlatformLocalStorage.isClassSupported] method to check if this class is supported at runtime.
-  ///{@endtemplate}
   static bool isClassSupported({TargetPlatform? platform}) {
     return ((kIsWeb && platform != null) || !kIsWeb) &&
         [
@@ -280,6 +275,15 @@ extension _PlatformLocalStorageClassSupported on PlatformLocalStorage {
 }
 
 ///List of [PlatformLocalStorage]'s methods that can be used to check if they are supported or not by the current platform.
+///
+///{@template nosferatu500_inappwebview_platform_interface.PlatformLocalStorage.supported_platforms}
+///
+///**Officially Supported Platforms/Implementations**:
+///- Android WebView
+///- iOS WKWebView
+///
+///Use the [PlatformLocalStorage.isClassSupported] method to check if this class is supported at runtime.
+///{@endtemplate}
 enum PlatformLocalStorageMethod {
   ///Can be used to check if the [PlatformLocalStorage.clear] method is supported at runtime.
   ///
@@ -314,7 +318,7 @@ enum PlatformLocalStorageMethod {
   ///- iOS WKWebView
   ///
   ///**Parameters - Officially Supported Platforms/Implementations**:
-  ///- [key]: all platforms
+  ///- `key`: all platforms
   ///
   ///Use the [PlatformLocalStorage.isMethodSupported] method to check if this method is supported at runtime.
   ///{@endtemplate}
@@ -341,7 +345,7 @@ enum PlatformLocalStorageMethod {
   ///- iOS WKWebView
   ///
   ///**Parameters - Officially Supported Platforms/Implementations**:
-  ///- [index]: all platforms
+  ///- `index`: all platforms
   ///
   ///Use the [PlatformLocalStorage.isMethodSupported] method to check if this method is supported at runtime.
   ///{@endtemplate}
@@ -368,7 +372,7 @@ enum PlatformLocalStorageMethod {
   ///- iOS WKWebView
   ///
   ///**Parameters - Officially Supported Platforms/Implementations**:
-  ///- [key]: all platforms
+  ///- `key`: all platforms
   ///
   ///Use the [PlatformLocalStorage.isMethodSupported] method to check if this method is supported at runtime.
   ///{@endtemplate}
@@ -383,8 +387,8 @@ enum PlatformLocalStorageMethod {
   ///- iOS WKWebView
   ///
   ///**Parameters - Officially Supported Platforms/Implementations**:
-  ///- [key]: all platforms
-  ///- [value]: all platforms
+  ///- `key`: all platforms
+  ///- `value`: all platforms
   ///
   ///Use the [PlatformLocalStorage.isMethodSupported] method to check if this method is supported at runtime.
   ///{@endtemplate}
@@ -469,14 +473,6 @@ extension _PlatformSessionStorageCreationParamsClassSupported
 }
 
 extension _PlatformSessionStorageClassSupported on PlatformSessionStorage {
-  ///{@template nosferatu500_inappwebview_platform_interface.PlatformSessionStorage.supported_platforms}
-  ///
-  ///**Officially Supported Platforms/Implementations**:
-  ///- Android WebView
-  ///- iOS WKWebView
-  ///
-  ///Use the [PlatformSessionStorage.isClassSupported] method to check if this class is supported at runtime.
-  ///{@endtemplate}
   static bool isClassSupported({TargetPlatform? platform}) {
     return ((kIsWeb && platform != null) || !kIsWeb) &&
         [
@@ -487,6 +483,15 @@ extension _PlatformSessionStorageClassSupported on PlatformSessionStorage {
 }
 
 ///List of [PlatformSessionStorage]'s methods that can be used to check if they are supported or not by the current platform.
+///
+///{@template nosferatu500_inappwebview_platform_interface.PlatformSessionStorage.supported_platforms}
+///
+///**Officially Supported Platforms/Implementations**:
+///- Android WebView
+///- iOS WKWebView
+///
+///Use the [PlatformSessionStorage.isClassSupported] method to check if this class is supported at runtime.
+///{@endtemplate}
 enum PlatformSessionStorageMethod {
   ///Can be used to check if the [PlatformSessionStorage.clear] method is supported at runtime.
   ///
@@ -521,7 +526,7 @@ enum PlatformSessionStorageMethod {
   ///- iOS WKWebView
   ///
   ///**Parameters - Officially Supported Platforms/Implementations**:
-  ///- [key]: all platforms
+  ///- `key`: all platforms
   ///
   ///Use the [PlatformSessionStorage.isMethodSupported] method to check if this method is supported at runtime.
   ///{@endtemplate}
@@ -548,7 +553,7 @@ enum PlatformSessionStorageMethod {
   ///- iOS WKWebView
   ///
   ///**Parameters - Officially Supported Platforms/Implementations**:
-  ///- [index]: all platforms
+  ///- `index`: all platforms
   ///
   ///Use the [PlatformSessionStorage.isMethodSupported] method to check if this method is supported at runtime.
   ///{@endtemplate}
@@ -575,7 +580,7 @@ enum PlatformSessionStorageMethod {
   ///- iOS WKWebView
   ///
   ///**Parameters - Officially Supported Platforms/Implementations**:
-  ///- [key]: all platforms
+  ///- `key`: all platforms
   ///
   ///Use the [PlatformSessionStorage.isMethodSupported] method to check if this method is supported at runtime.
   ///{@endtemplate}
@@ -590,8 +595,8 @@ enum PlatformSessionStorageMethod {
   ///- iOS WKWebView
   ///
   ///**Parameters - Officially Supported Platforms/Implementations**:
-  ///- [key]: all platforms
-  ///- [value]: all platforms
+  ///- `key`: all platforms
+  ///- `value`: all platforms
   ///
   ///Use the [PlatformSessionStorage.isMethodSupported] method to check if this method is supported at runtime.
   ///{@endtemplate}

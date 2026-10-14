@@ -49,6 +49,11 @@
 
 ### Internal
 
+- **Doc fix: class docs show their "supported platforms" tables.** The generated template they
+  `{@macro}` sat where dartdoc couldn't see it; it now sits on a public enum in the platform interface.
+  dartdoc's undefined-macro warnings for this package go from 44 to 9, and its unresolved doc references
+  from 22 to 18, with none new. The 9 left are path handlers and `PathHandlerCreationParams`, whose tables
+  still have no public home.
 - **Doc fix: `{@macro}`s that named no template.** dartdoc's undefined-macro warnings for this package go from
   99 to 44, so 38 references now render their docs (for example `WebMessageChannel.port1`,
   `PullToRefreshController.onRefresh`, `FindInteractionController.onFindResultReceived`), and 39 that named

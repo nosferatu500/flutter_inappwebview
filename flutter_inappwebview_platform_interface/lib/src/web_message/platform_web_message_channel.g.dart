@@ -8,14 +8,6 @@ part of 'platform_web_message_channel.dart';
 
 extension _PlatformWebMessageChannelCreationParamsClassSupported
     on PlatformWebMessageChannelCreationParams {
-  ///{@template nosferatu500_inappwebview_platform_interface.PlatformWebMessageChannelCreationParams.supported_platforms}
-  ///
-  ///**Officially Supported Platforms/Implementations**:
-  ///- Android WebView
-  ///- iOS WKWebView
-  ///
-  ///Use the [PlatformWebMessageChannelCreationParams.isClassSupported] method to check if this class is supported at runtime.
-  ///{@endtemplate}
   static bool isClassSupported({TargetPlatform? platform}) {
     return ((kIsWeb && platform != null) || !kIsWeb) &&
         [
@@ -26,6 +18,15 @@ extension _PlatformWebMessageChannelCreationParamsClassSupported
 }
 
 ///List of [PlatformWebMessageChannelCreationParams]'s properties that can be used to check i they are supported or not by the current platform.
+///
+///{@template nosferatu500_inappwebview_platform_interface.PlatformWebMessageChannelCreationParams.supported_platforms}
+///
+///**Officially Supported Platforms/Implementations**:
+///- Android WebView
+///- iOS WKWebView
+///
+///Use the [PlatformWebMessageChannelCreationParams.isClassSupported] method to check if this class is supported at runtime.
+///{@endtemplate}
 enum PlatformWebMessageChannelCreationParamsProperty {
   ///Can be used to check if the [PlatformWebMessageChannelCreationParams.id] property is supported at runtime.
   ///
@@ -95,14 +96,6 @@ extension _PlatformWebMessageChannelCreationParamsPropertySupported
 
 extension _PlatformWebMessageChannelClassSupported
     on PlatformWebMessageChannel {
-  ///{@template nosferatu500_inappwebview_platform_interface.PlatformWebMessageChannel.supported_platforms}
-  ///
-  ///**Officially Supported Platforms/Implementations**:
-  ///- Android WebView
-  ///- iOS WKWebView
-  ///
-  ///Use the [PlatformWebMessageChannel.isClassSupported] method to check if this class is supported at runtime.
-  ///{@endtemplate}
   static bool isClassSupported({TargetPlatform? platform}) {
     return ((kIsWeb && platform != null) || !kIsWeb) &&
         [
@@ -113,6 +106,15 @@ extension _PlatformWebMessageChannelClassSupported
 }
 
 ///List of [PlatformWebMessageChannel]'s methods that can be used to check if they are supported or not by the current platform.
+///
+///{@template nosferatu500_inappwebview_platform_interface.PlatformWebMessageChannel.supported_platforms}
+///
+///**Officially Supported Platforms/Implementations**:
+///- Android WebView
+///- iOS WKWebView
+///
+///Use the [PlatformWebMessageChannel.isClassSupported] method to check if this class is supported at runtime.
+///{@endtemplate}
 enum PlatformWebMessageChannelMethod {
   ///Can be used to check if the [PlatformWebMessageChannel.dispose] method is supported at runtime.
   ///

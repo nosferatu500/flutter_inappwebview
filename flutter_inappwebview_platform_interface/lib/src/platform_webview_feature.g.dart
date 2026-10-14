@@ -810,23 +810,15 @@ extension _PlatformWebViewFeatureCreationParamsClassSupported
   }
 }
 
-extension _PlatformWebViewFeatureClassSupported on PlatformWebViewFeature {
-  ///{@template nosferatu500_inappwebview_platform_interface.PlatformWebViewFeature.supported_platforms}
-  ///
-  ///**Officially Supported Platforms/Implementations**:
-  ///- Android WebView
-  ///
-  ///Use the [PlatformWebViewFeature.isClassSupported] method to check if this class is supported at runtime.
-  ///{@endtemplate}
-  // Unused: [PlatformWebViewFeature.isClassSupported] answers through its creation params. Kept for the doc template above.
-  // ignore: unused_element
-  static bool isClassSupported({TargetPlatform? platform}) {
-    return ((kIsWeb && platform != null) || !kIsWeb) &&
-        [TargetPlatform.android].contains(platform ?? defaultTargetPlatform);
-  }
-}
-
 ///List of [PlatformWebViewFeature]'s methods that can be used to check if they are supported or not by the current platform.
+///
+///{@template nosferatu500_inappwebview_platform_interface.PlatformWebViewFeature.supported_platforms}
+///
+///**Officially Supported Platforms/Implementations**:
+///- Android WebView
+///
+///Use the [PlatformWebViewFeature.isClassSupported] method to check if this class is supported at runtime.
+///{@endtemplate}
 enum PlatformWebViewFeatureMethod {
   ///Can be used to check if the [PlatformWebViewFeature.isFeatureSupported] method is supported at runtime.
   ///
@@ -836,7 +828,7 @@ enum PlatformWebViewFeatureMethod {
   ///- Android WebView ([Official API - WebViewFeature.isFeatureSupported](https://developer.android.com/reference/androidx/webkit/WebViewFeature#isFeatureSupported(java.lang.String)))
   ///
   ///**Parameters - Officially Supported Platforms/Implementations**:
-  ///- [feature]: all platforms
+  ///- `feature`: all platforms
   ///
   ///Use the [PlatformWebViewFeature.isMethodSupported] method to check if this method is supported at runtime.
   ///{@endtemplate}
@@ -850,7 +842,7 @@ enum PlatformWebViewFeatureMethod {
   ///- Android WebView ([Official API - WebViewFeature.isStartupFeatureSupported](https://developer.android.com/reference/androidx/webkit/WebViewFeature#isStartupFeatureSupported(android.content.Context,java.lang.String)))
   ///
   ///**Parameters - Officially Supported Platforms/Implementations**:
-  ///- [startupFeature]: all platforms
+  ///- `startupFeature`: all platforms
   ///
   ///Use the [PlatformWebViewFeature.isMethodSupported] method to check if this method is supported at runtime.
   ///{@endtemplate}

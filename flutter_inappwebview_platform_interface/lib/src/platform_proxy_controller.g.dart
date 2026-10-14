@@ -203,27 +203,16 @@ extension _PlatformProxyControllerCreationParamsClassSupported
   }
 }
 
-extension _PlatformProxyControllerClassSupported on PlatformProxyController {
-  ///{@template nosferatu500_inappwebview_platform_interface.PlatformProxyController.supported_platforms}
-  ///
-  ///**Officially Supported Platforms/Implementations**:
-  ///- Android WebView ([Official API - ProxyController](https://developer.android.com/reference/androidx/webkit/ProxyController))
-  ///- iOS WKWebView 17.0+ ([Official API - WKWebsiteDataStore.proxyConfigurations](https://developer.apple.com/documentation/webkit/wkwebsitedatastore/4264546-proxyconfigurations))
-  ///
-  ///Use the [PlatformProxyController.isClassSupported] method to check if this class is supported at runtime.
-  ///{@endtemplate}
-  // Unused: [PlatformProxyController.isClassSupported] answers through its creation params. Kept for the doc template above.
-  // ignore: unused_element
-  static bool isClassSupported({TargetPlatform? platform}) {
-    return ((kIsWeb && platform != null) || !kIsWeb) &&
-        [
-          TargetPlatform.android,
-          TargetPlatform.iOS,
-        ].contains(platform ?? defaultTargetPlatform);
-  }
-}
-
 ///List of [PlatformProxyController]'s methods that can be used to check if they are supported or not by the current platform.
+///
+///{@template nosferatu500_inappwebview_platform_interface.PlatformProxyController.supported_platforms}
+///
+///**Officially Supported Platforms/Implementations**:
+///- Android WebView ([Official API - ProxyController](https://developer.android.com/reference/androidx/webkit/ProxyController))
+///- iOS WKWebView 17.0+ ([Official API - WKWebsiteDataStore.proxyConfigurations](https://developer.apple.com/documentation/webkit/wkwebsitedatastore/4264546-proxyconfigurations))
+///
+///Use the [PlatformProxyController.isClassSupported] method to check if this class is supported at runtime.
+///{@endtemplate}
 enum PlatformProxyControllerMethod {
   ///Can be used to check if the [PlatformProxyController.clearProxyOverride] method is supported at runtime.
   ///
@@ -246,7 +235,7 @@ enum PlatformProxyControllerMethod {
   ///- iOS WKWebView 17.0+ ([Official API - WKWebsiteDataStore.proxyConfigurations](https://developer.apple.com/documentation/webkit/wkwebsitedatastore/4264546-proxyconfigurations))
   ///
   ///**Parameters - Officially Supported Platforms/Implementations**:
-  ///- [settings]: all platforms
+  ///- `settings`: all platforms
   ///
   ///Use the [PlatformProxyController.isMethodSupported] method to check if this method is supported at runtime.
   ///{@endtemplate}
@@ -276,14 +265,6 @@ extension _PlatformProxyControllerMethodSupported on PlatformProxyController {
 }
 
 extension _ProxySettingsClassSupported on ProxySettings {
-  ///{@template nosferatu500_inappwebview_platform_interface.ProxySettings.supported_platforms}
-  ///
-  ///**Officially Supported Platforms/Implementations**:
-  ///- Android WebView ([Official API - ProxyConfig](https://developer.android.com/reference/androidx/webkit/ProxyConfig))
-  ///- iOS WKWebView 17.0+ ([Official API - ProxyConfiguration](https://developer.apple.com/documentation/network/proxyconfiguration))
-  ///
-  ///Use the [ProxySettings.isClassSupported] method to check if this class is supported at runtime.
-  ///{@endtemplate}
   static bool isClassSupported({TargetPlatform? platform}) {
     return ((kIsWeb && platform != null) || !kIsWeb) &&
         [
@@ -294,6 +275,15 @@ extension _ProxySettingsClassSupported on ProxySettings {
 }
 
 ///List of [ProxySettings]'s properties that can be used to check i they are supported or not by the current platform.
+///
+///{@template nosferatu500_inappwebview_platform_interface.ProxySettings.supported_platforms}
+///
+///**Officially Supported Platforms/Implementations**:
+///- Android WebView ([Official API - ProxyConfig](https://developer.android.com/reference/androidx/webkit/ProxyConfig))
+///- iOS WKWebView 17.0+ ([Official API - ProxyConfiguration](https://developer.apple.com/documentation/network/proxyconfiguration))
+///
+///Use the [ProxySettings.isClassSupported] method to check if this class is supported at runtime.
+///{@endtemplate}
 enum ProxySettingsProperty {
   ///Can be used to check if the [ProxySettings.bypassRules] property is supported at runtime.
   ///

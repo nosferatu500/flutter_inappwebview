@@ -8,14 +8,6 @@ part of 'platform_inappwebview_widget.dart';
 
 extension _PlatformInAppWebViewWidgetCreationParamsClassSupported
     on PlatformInAppWebViewWidgetCreationParams {
-  ///{@template nosferatu500_inappwebview_platform_interface.PlatformInAppWebViewWidgetCreationParams.supported_platforms}
-  ///
-  ///**Officially Supported Platforms/Implementations**:
-  ///- Android WebView
-  ///- iOS WKWebView
-  ///
-  ///Use the [PlatformInAppWebViewWidgetCreationParams.isClassSupported] method to check if this class is supported at runtime.
-  ///{@endtemplate}
   static bool isClassSupported({TargetPlatform? platform}) {
     return ((kIsWeb && platform != null) || !kIsWeb) &&
         [
@@ -26,6 +18,15 @@ extension _PlatformInAppWebViewWidgetCreationParamsClassSupported
 }
 
 ///List of [PlatformInAppWebViewWidgetCreationParams]'s properties that can be used to check i they are supported or not by the current platform.
+///
+///{@template nosferatu500_inappwebview_platform_interface.PlatformInAppWebViewWidgetCreationParams.supported_platforms}
+///
+///**Officially Supported Platforms/Implementations**:
+///- Android WebView
+///- iOS WKWebView
+///
+///Use the [PlatformInAppWebViewWidgetCreationParams.isClassSupported] method to check if this class is supported at runtime.
+///{@endtemplate}
 enum PlatformInAppWebViewWidgetCreationParamsProperty {
   ///Can be used to check if the [PlatformInAppWebViewWidgetCreationParams.headlessWebView] property is supported at runtime.
   ///

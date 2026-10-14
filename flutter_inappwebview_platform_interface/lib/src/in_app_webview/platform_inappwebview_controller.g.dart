@@ -8,14 +8,6 @@ part of 'platform_inappwebview_controller.dart';
 
 extension _PlatformInAppWebViewControllerClassSupported
     on PlatformInAppWebViewController {
-  ///{@template nosferatu500_inappwebview_platform_interface.PlatformInAppWebViewController.supported_platforms}
-  ///
-  ///**Officially Supported Platforms/Implementations**:
-  ///- Android WebView
-  ///- iOS WKWebView
-  ///
-  ///Use the [PlatformInAppWebViewController.isClassSupported] method to check if this class is supported at runtime.
-  ///{@endtemplate}
   static bool isClassSupported({TargetPlatform? platform}) {
     return ((kIsWeb && platform != null) || !kIsWeb) &&
         [
@@ -26,6 +18,15 @@ extension _PlatformInAppWebViewControllerClassSupported
 }
 
 ///List of [PlatformInAppWebViewController]'s properties that can be used to check i they are supported or not by the current platform.
+///
+///{@template nosferatu500_inappwebview_platform_interface.PlatformInAppWebViewController.supported_platforms}
+///
+///**Officially Supported Platforms/Implementations**:
+///- Android WebView
+///- iOS WKWebView
+///
+///Use the [PlatformInAppWebViewController.isClassSupported] method to check if this class is supported at runtime.
+///{@endtemplate}
 enum PlatformInAppWebViewControllerProperty {
   ///Can be used to check if the [PlatformInAppWebViewController.tRexRunnerCss] property is supported at runtime.
   ///
@@ -104,8 +105,8 @@ enum PlatformInAppWebViewControllerMethod {
   ///- iOS WKWebView
   ///
   ///**Parameters - Officially Supported Platforms/Implementations**:
-  ///- [handlerName]: all platforms
-  ///- [callback]: all platforms
+  ///- `handlerName`: all platforms
+  ///- `callback`: all platforms
   ///
   ///Use the [PlatformInAppWebViewController.isMethodSupported] method to check if this method is supported at runtime.
   ///{@endtemplate}
@@ -121,7 +122,7 @@ enum PlatformInAppWebViewControllerMethod {
   ///    - This method will throw an error if the [PlatformWebViewCreationParams.windowId] has been set. There isn't any way to add/remove user scripts specific to window WebViews. This is a limitation of the native WebKit APIs.
   ///
   ///**Parameters - Officially Supported Platforms/Implementations**:
-  ///- [userScript]: all platforms
+  ///- `userScript`: all platforms
   ///
   ///Use the [PlatformInAppWebViewController.isMethodSupported] method to check if this method is supported at runtime.
   ///{@endtemplate}
@@ -137,7 +138,7 @@ enum PlatformInAppWebViewControllerMethod {
   ///    - This method will throw an error if the [PlatformWebViewCreationParams.windowId] has been set. There isn't any way to add/remove user scripts specific to window WebViews. This is a limitation of the native WebKit APIs.
   ///
   ///**Parameters - Officially Supported Platforms/Implementations**:
-  ///- [userScripts]: all platforms
+  ///- `userScripts`: all platforms
   ///
   ///Use the [PlatformInAppWebViewController.isMethodSupported] method to check if this method is supported at runtime.
   ///{@endtemplate}
@@ -154,7 +155,7 @@ enum PlatformInAppWebViewControllerMethod {
   ///    - This method is implemented using JavaScript.
   ///
   ///**Parameters - Officially Supported Platforms/Implementations**:
-  ///- [webMessageListener]: all platforms
+  ///- `webMessageListener`: all platforms
   ///
   ///Use the [PlatformInAppWebViewController.isMethodSupported] method to check if this method is supported at runtime.
   ///{@endtemplate}
@@ -169,9 +170,9 @@ enum PlatformInAppWebViewControllerMethod {
   ///- iOS WKWebView 14.3+ ([Official API - WKWebView.callAsyncJavaScript](https://developer.apple.com/documentation/webkit/wkwebview/3656441-callasyncjavascript))
   ///
   ///**Parameters - Officially Supported Platforms/Implementations**:
-  ///- [functionBody]: all platforms
-  ///- [arguments]: all platforms
-  ///- [contentWorld]: all platforms
+  ///- `functionBody`: all platforms
+  ///- `arguments`: all platforms
+  ///- `contentWorld`: all platforms
   ///
   ///Use the [PlatformInAppWebViewController.isMethodSupported] method to check if this method is supported at runtime.
   ///{@endtemplate}
@@ -198,7 +199,7 @@ enum PlatformInAppWebViewControllerMethod {
   ///- iOS WKWebView
   ///
   ///**Parameters - Officially Supported Platforms/Implementations**:
-  ///- [steps]: all platforms
+  ///- `steps`: all platforms
   ///
   ///Use the [PlatformInAppWebViewController.isMethodSupported] method to check if this method is supported at runtime.
   ///{@endtemplate}
@@ -249,7 +250,7 @@ enum PlatformInAppWebViewControllerMethod {
   ///- iOS WKWebView
   ///
   ///**Parameters - Officially Supported Platforms/Implementations**:
-  ///- [includeDiskFiles]: all platforms
+  ///- `includeDiskFiles`: all platforms
   ///
   ///Use the [PlatformInAppWebViewController.isMethodSupported] method to check if this method is supported at runtime.
   ///{@endtemplate}
@@ -330,7 +331,7 @@ enum PlatformInAppWebViewControllerMethod {
   ///- iOS WKWebView 14.0+ ([Official API - WKWebView.createPdf](https://developer.apple.com/documentation/webkit/wkwebview/3650490-createpdf))
   ///
   ///**Parameters - Officially Supported Platforms/Implementations**:
-  ///- [pdfConfiguration]: all platforms
+  ///- `pdfConfiguration`: all platforms
   ///
   ///Use the [PlatformInAppWebViewController.isMethodSupported] method to check if this method is supported at runtime.
   ///{@endtemplate}
@@ -381,7 +382,7 @@ enum PlatformInAppWebViewControllerMethod {
   ///- iOS WKWebView
   ///
   ///**Parameters - Officially Supported Platforms/Implementations**:
-  ///- [isKeepAlive]: all platforms
+  ///- `isKeepAlive`: all platforms
   ///
   ///Use the [PlatformInAppWebViewController.isMethodSupported] method to check if this method is supported at runtime.
   ///{@endtemplate}
@@ -396,7 +397,7 @@ enum PlatformInAppWebViewControllerMethod {
   ///- iOS WKWebView
   ///
   ///**Parameters - Officially Supported Platforms/Implementations**:
-  ///- [keepAlive]: all platforms
+  ///- `keepAlive`: all platforms
   ///
   ///Use the [PlatformInAppWebViewController.isMethodSupported] method to check if this method is supported at runtime.
   ///{@endtemplate}
@@ -435,8 +436,8 @@ enum PlatformInAppWebViewControllerMethod {
   ///- iOS WKWebView ([Official API - WKWebView.evaluateJavaScript](https://developer.apple.com/documentation/webkit/wkwebview/3656442-evaluatejavascript))
   ///
   ///**Parameters - Officially Supported Platforms/Implementations**:
-  ///- [source]: all platforms
-  ///- [contentWorld]:
+  ///- `source`: all platforms
+  ///- `contentWorld`:
   ///    - Android WebView
   ///    - iOS WKWebView 14.0+
   ///
@@ -452,8 +453,8 @@ enum PlatformInAppWebViewControllerMethod {
   ///- Android WebView ([Official API - WebView.flingScroll](https://developer.android.com/reference/android/webkit/WebView#flingScroll(int,%20int)))
   ///
   ///**Parameters - Officially Supported Platforms/Implementations**:
-  ///- [velocityX]: all platforms
-  ///- [velocityY]: all platforms
+  ///- `velocityX`: all platforms
+  ///- `velocityY`: all platforms
   ///
   ///Use the [PlatformInAppWebViewController.isMethodSupported] method to check if this method is supported at runtime.
   ///{@endtemplate}
@@ -811,7 +812,7 @@ enum PlatformInAppWebViewControllerMethod {
   ///- iOS WKWebView ([Official API - WKWebView.go](https://developer.apple.com/documentation/webkit/wkwebview/1414991-go))
   ///
   ///**Parameters - Officially Supported Platforms/Implementations**:
-  ///- [steps]: all platforms
+  ///- `steps`: all platforms
   ///
   ///Use the [PlatformInAppWebViewController.isMethodSupported] method to check if this method is supported at runtime.
   ///{@endtemplate}
@@ -838,7 +839,7 @@ enum PlatformInAppWebViewControllerMethod {
   ///- iOS WKWebView
   ///
   ///**Parameters - Officially Supported Platforms/Implementations**:
-  ///- [historyItem]: all platforms
+  ///- `historyItem`: all platforms
   ///
   ///Use the [PlatformInAppWebViewController.isMethodSupported] method to check if this method is supported at runtime.
   ///{@endtemplate}
@@ -852,7 +853,7 @@ enum PlatformInAppWebViewControllerMethod {
   ///- iOS WKWebView 11.0+ ([Official API - WKWebView.handlesURLScheme](https://developer.apple.com/documentation/webkit/wkwebview/2875370-handlesurlscheme))
   ///
   ///**Parameters - Officially Supported Platforms/Implementations**:
-  ///- [urlScheme]: all platforms
+  ///- `urlScheme`: all platforms
   ///
   ///Use the [PlatformInAppWebViewController.isMethodSupported] method to check if this method is supported at runtime.
   ///{@endtemplate}
@@ -867,7 +868,7 @@ enum PlatformInAppWebViewControllerMethod {
   ///- iOS WKWebView
   ///
   ///**Parameters - Officially Supported Platforms/Implementations**:
-  ///- [handlerName]: all platforms
+  ///- `handlerName`: all platforms
   ///
   ///Use the [PlatformInAppWebViewController.isMethodSupported] method to check if this method is supported at runtime.
   ///{@endtemplate}
@@ -893,7 +894,7 @@ enum PlatformInAppWebViewControllerMethod {
   ///- iOS WKWebView
   ///
   ///**Parameters - Officially Supported Platforms/Implementations**:
-  ///- [userScript]: all platforms
+  ///- `userScript`: all platforms
   ///
   ///Use the [PlatformInAppWebViewController.isMethodSupported] method to check if this method is supported at runtime.
   ///{@endtemplate}
@@ -908,7 +909,7 @@ enum PlatformInAppWebViewControllerMethod {
   ///- iOS WKWebView
   ///
   ///**Parameters - Officially Supported Platforms/Implementations**:
-  ///- [webMessageListener]: all platforms
+  ///- `webMessageListener`: all platforms
   ///
   ///Use the [PlatformInAppWebViewController.isMethodSupported] method to check if this method is supported at runtime.
   ///{@endtemplate}
@@ -935,7 +936,7 @@ enum PlatformInAppWebViewControllerMethod {
   ///- iOS WKWebView
   ///
   ///**Parameters - Officially Supported Platforms/Implementations**:
-  ///- [source]: all platforms
+  ///- `source`: all platforms
   ///
   ///Use the [PlatformInAppWebViewController.isMethodSupported] method to check if this method is supported at runtime.
   ///{@endtemplate}
@@ -950,7 +951,7 @@ enum PlatformInAppWebViewControllerMethod {
   ///- iOS WKWebView
   ///
   ///**Parameters - Officially Supported Platforms/Implementations**:
-  ///- [assetFilePath]: all platforms
+  ///- `assetFilePath`: all platforms
   ///
   ///Use the [PlatformInAppWebViewController.isMethodSupported] method to check if this method is supported at runtime.
   ///{@endtemplate}
@@ -965,8 +966,8 @@ enum PlatformInAppWebViewControllerMethod {
   ///- iOS WKWebView
   ///
   ///**Parameters - Officially Supported Platforms/Implementations**:
-  ///- [urlFile]: all platforms
-  ///- [cssLinkHtmlTagAttributes]: all platforms
+  ///- `urlFile`: all platforms
+  ///- `cssLinkHtmlTagAttributes`: all platforms
   ///
   ///Use the [PlatformInAppWebViewController.isMethodSupported] method to check if this method is supported at runtime.
   ///{@endtemplate}
@@ -981,7 +982,7 @@ enum PlatformInAppWebViewControllerMethod {
   ///- iOS WKWebView
   ///
   ///**Parameters - Officially Supported Platforms/Implementations**:
-  ///- [assetFilePath]: all platforms
+  ///- `assetFilePath`: all platforms
   ///
   ///Use the [PlatformInAppWebViewController.isMethodSupported] method to check if this method is supported at runtime.
   ///{@endtemplate}
@@ -996,8 +997,8 @@ enum PlatformInAppWebViewControllerMethod {
   ///- iOS WKWebView
   ///
   ///**Parameters - Officially Supported Platforms/Implementations**:
-  ///- [urlFile]: all platforms
-  ///- [scriptHtmlTagAttributes]: all platforms
+  ///- `urlFile`: all platforms
+  ///- `scriptHtmlTagAttributes`: all platforms
   ///
   ///Use the [PlatformInAppWebViewController.isMethodSupported] method to check if this method is supported at runtime.
   ///{@endtemplate}
@@ -1087,19 +1088,19 @@ enum PlatformInAppWebViewControllerMethod {
   ///    - or [Official API - WKWebView.load](https://developer.apple.com/documentation/webkit/wkwebview/1415011-load)
   ///
   ///**Parameters - Officially Supported Platforms/Implementations**:
-  ///- [data]: all platforms
-  ///- [mimeType]:
+  ///- `data`: all platforms
+  ///- `mimeType`:
   ///    - Android WebView
   ///    - iOS WKWebView
-  ///- [encoding]:
+  ///- `encoding`:
   ///    - Android WebView
   ///    - iOS WKWebView
-  ///- [baseUrl]:
+  ///- `baseUrl`:
   ///    - Android WebView
   ///    - iOS WKWebView
-  ///- [historyUrl]:
+  ///- `historyUrl`:
   ///    - Android WebView
-  ///- [allowingReadAccessTo]:
+  ///- `allowingReadAccessTo`:
   ///    - iOS WKWebView
   ///
   ///Use the [PlatformInAppWebViewController.isMethodSupported] method to check if this method is supported at runtime.
@@ -1115,7 +1116,7 @@ enum PlatformInAppWebViewControllerMethod {
   ///- iOS WKWebView ([Official API - WKWebView.load](https://developer.apple.com/documentation/webkit/wkwebview/1414954-load))
   ///
   ///**Parameters - Officially Supported Platforms/Implementations**:
-  ///- [assetFilePath]: all platforms
+  ///- `assetFilePath`: all platforms
   ///
   ///Use the [PlatformInAppWebViewController.isMethodSupported] method to check if this method is supported at runtime.
   ///{@endtemplate}
@@ -1130,9 +1131,9 @@ enum PlatformInAppWebViewControllerMethod {
   ///    - or [Official API - WKWebView.loadSimulatedRequest(_:responseHTML:)](https://developer.apple.com/documentation/webkit/wkwebview/3763095-loadsimulatedrequest)
   ///
   ///**Parameters - Officially Supported Platforms/Implementations**:
-  ///- [urlRequest]: all platforms
-  ///- [data]: all platforms
-  ///- [urlResponse]: all platforms
+  ///- `urlRequest`: all platforms
+  ///- `data`: all platforms
+  ///- `urlResponse`: all platforms
   ///
   ///Use the [PlatformInAppWebViewController.isMethodSupported] method to check if this method is supported at runtime.
   ///{@endtemplate}
@@ -1149,8 +1150,8 @@ enum PlatformInAppWebViewControllerMethod {
   ///    - If [allowingReadAccessTo] is used, [Official API - WKWebView.loadFileURL](https://developer.apple.com/documentation/webkit/wkwebview/1414973-loadfileurl), which takes only a URL - so custom headers and `timeoutInterval` are discarded, while the same call without [allowingReadAccessTo] keeps them (measured on iOS 17.5 and 26.5).
   ///
   ///**Parameters - Officially Supported Platforms/Implementations**:
-  ///- [urlRequest]: all platforms
-  ///- [allowingReadAccessTo]:
+  ///- `urlRequest`: all platforms
+  ///- `allowingReadAccessTo`:
   ///    - iOS WKWebView
   ///
   ///Use the [PlatformInAppWebViewController.isMethodSupported] method to check if this method is supported at runtime.
@@ -1165,7 +1166,7 @@ enum PlatformInAppWebViewControllerMethod {
   ///- Android WebView ([Official API - WebView.pageDown](https://developer.android.com/reference/android/webkit/WebView#pageDown(boolean)))
   ///
   ///**Parameters - Officially Supported Platforms/Implementations**:
-  ///- [bottom]: all platforms
+  ///- `bottom`: all platforms
   ///
   ///Use the [PlatformInAppWebViewController.isMethodSupported] method to check if this method is supported at runtime.
   ///{@endtemplate}
@@ -1179,7 +1180,7 @@ enum PlatformInAppWebViewControllerMethod {
   ///- Android WebView ([Official API - WebView.pageUp](https://developer.android.com/reference/android/webkit/WebView#pageUp(boolean)))
   ///
   ///**Parameters - Officially Supported Platforms/Implementations**:
-  ///- [top]: all platforms
+  ///- `top`: all platforms
   ///
   ///Use the [PlatformInAppWebViewController.isMethodSupported] method to check if this method is supported at runtime.
   ///{@endtemplate}
@@ -1229,8 +1230,8 @@ enum PlatformInAppWebViewControllerMethod {
   ///- iOS WKWebView
   ///
   ///**Parameters - Officially Supported Platforms/Implementations**:
-  ///- [url]: all platforms
-  ///- [postData]: all platforms
+  ///- `url`: all platforms
+  ///- `postData`: all platforms
   ///
   ///Use the [PlatformInAppWebViewController.isMethodSupported] method to check if this method is supported at runtime.
   ///{@endtemplate}
@@ -1259,8 +1260,8 @@ enum PlatformInAppWebViewControllerMethod {
   ///    - This method is implemented using JavaScript.
   ///
   ///**Parameters - Officially Supported Platforms/Implementations**:
-  ///- [message]: all platforms
-  ///- [targetOrigin]: all platforms
+  ///- `message`: all platforms
+  ///- `targetOrigin`: all platforms
   ///
   ///Use the [PlatformInAppWebViewController.isMethodSupported] method to check if this method is supported at runtime.
   ///{@endtemplate}
@@ -1275,7 +1276,7 @@ enum PlatformInAppWebViewControllerMethod {
   ///    - Requires [WebViewFeature.PRERENDER_WITH_URL]. Returns `false` and prerenders nothing if the feature is not supported.
   ///
   ///**Parameters - Officially Supported Platforms/Implementations**:
-  ///- [url]: all platforms
+  ///- `url`: all platforms
   ///
   ///Use the [PlatformInAppWebViewController.isMethodSupported] method to check if this method is supported at runtime.
   ///{@endtemplate}
@@ -1290,7 +1291,7 @@ enum PlatformInAppWebViewControllerMethod {
   ///- iOS WKWebView ([Official API - UIPrintInteractionController.present](https://developer.apple.com/documentation/uikit/uiprintinteractioncontroller/1618149-present))
   ///
   ///**Parameters - Officially Supported Platforms/Implementations**:
-  ///- [settings]: all platforms
+  ///- `settings`: all platforms
   ///
   ///Use the [PlatformInAppWebViewController.isMethodSupported] method to check if this method is supported at runtime.
   ///{@endtemplate}
@@ -1341,7 +1342,7 @@ enum PlatformInAppWebViewControllerMethod {
   ///- iOS WKWebView
   ///
   ///**Parameters - Officially Supported Platforms/Implementations**:
-  ///- [handlerName]: all platforms
+  ///- `handlerName`: all platforms
   ///
   ///Use the [PlatformInAppWebViewController.isMethodSupported] method to check if this method is supported at runtime.
   ///{@endtemplate}
@@ -1357,7 +1358,7 @@ enum PlatformInAppWebViewControllerMethod {
   ///    - This method will throw an error if the [PlatformWebViewCreationParams.windowId] has been set. There isn't any way to add/remove user scripts specific to window WebViews. This is a limitation of the native WebKit APIs.
   ///
   ///**Parameters - Officially Supported Platforms/Implementations**:
-  ///- [userScript]: all platforms
+  ///- `userScript`: all platforms
   ///
   ///Use the [PlatformInAppWebViewController.isMethodSupported] method to check if this method is supported at runtime.
   ///{@endtemplate}
@@ -1373,7 +1374,7 @@ enum PlatformInAppWebViewControllerMethod {
   ///    - This method will throw an error if the [PlatformWebViewCreationParams.windowId] has been set. There isn't any way to add/remove user scripts specific to window WebViews. This is a limitation of the native WebKit APIs.
   ///
   ///**Parameters - Officially Supported Platforms/Implementations**:
-  ///- [userScripts]: all platforms
+  ///- `userScripts`: all platforms
   ///
   ///Use the [PlatformInAppWebViewController.isMethodSupported] method to check if this method is supported at runtime.
   ///{@endtemplate}
@@ -1389,7 +1390,7 @@ enum PlatformInAppWebViewControllerMethod {
   ///    - This method will throw an error if the [PlatformWebViewCreationParams.windowId] has been set. There isn't any way to add/remove user scripts specific to window WebViews. This is a limitation of the native WebKit APIs.
   ///
   ///**Parameters - Officially Supported Platforms/Implementations**:
-  ///- [groupName]: all platforms
+  ///- `groupName`: all platforms
   ///
   ///Use the [PlatformInAppWebViewController.isMethodSupported] method to check if this method is supported at runtime.
   ///{@endtemplate}
@@ -1404,9 +1405,9 @@ enum PlatformInAppWebViewControllerMethod {
   ///- iOS WKWebView ([Official API - UIResponder.becomeFirstResponder](https://developer.apple.com/documentation/uikit/uiresponder/1621113-becomefirstresponder))
   ///
   ///**Parameters - Officially Supported Platforms/Implementations**:
-  ///- [direction]:
+  ///- `direction`:
   ///    - Android WebView
-  ///- [previouslyFocusedRect]:
+  ///- `previouslyFocusedRect`:
   ///    - Android WebView
   ///
   ///Use the [PlatformInAppWebViewController.isMethodSupported] method to check if this method is supported at runtime.
@@ -1460,7 +1461,7 @@ enum PlatformInAppWebViewControllerMethod {
   ///- iOS WKWebView 15.0+ ([Official API - WKWebView.interactionState](https://developer.apple.com/documentation/webkit/wkwebview/3752236-interactionstate))
   ///
   ///**Parameters - Officially Supported Platforms/Implementations**:
-  ///- [state]: all platforms
+  ///- `state`: all platforms
   ///
   ///Use the [PlatformInAppWebViewController.isMethodSupported] method to check if this method is supported at runtime.
   ///{@endtemplate}
@@ -1501,9 +1502,9 @@ enum PlatformInAppWebViewControllerMethod {
   ///    - The `maxSize` and `includeForwardState` arguments are ignored: `interactionState` exposes no equivalent control.
   ///
   ///**Parameters - Officially Supported Platforms/Implementations**:
-  ///- [maxSize]:
+  ///- `maxSize`:
   ///    - Android WebView
-  ///- [includeForwardState]:
+  ///- `includeForwardState`:
   ///    - Android WebView
   ///
   ///Use the [PlatformInAppWebViewController.isMethodSupported] method to check if this method is supported at runtime.
@@ -1521,8 +1522,8 @@ enum PlatformInAppWebViewControllerMethod {
   ///    - If [autoname] is `false`, the [filePath] must ends with the [WebArchiveFormat.WEBARCHIVE] file extension.
   ///
   ///**Parameters - Officially Supported Platforms/Implementations**:
-  ///- [filePath]: all platforms
-  ///- [autoname]: all platforms
+  ///- `filePath`: all platforms
+  ///- `autoname`: all platforms
   ///
   ///Use the [PlatformInAppWebViewController.isMethodSupported] method to check if this method is supported at runtime.
   ///{@endtemplate}
@@ -1537,9 +1538,9 @@ enum PlatformInAppWebViewControllerMethod {
   ///- iOS WKWebView ([Official API - UIScrollView.setContentOffset](https://developer.apple.com/documentation/uikit/uiscrollview/1619400-setcontentoffset))
   ///
   ///**Parameters - Officially Supported Platforms/Implementations**:
-  ///- [x]: all platforms
-  ///- [y]: all platforms
-  ///- [animated]: all platforms
+  ///- `x`: all platforms
+  ///- `y`: all platforms
+  ///- `animated`: all platforms
   ///
   ///Use the [PlatformInAppWebViewController.isMethodSupported] method to check if this method is supported at runtime.
   ///{@endtemplate}
@@ -1554,9 +1555,9 @@ enum PlatformInAppWebViewControllerMethod {
   ///- iOS WKWebView ([Official API - UIScrollView.setContentOffset](https://developer.apple.com/documentation/uikit/uiscrollview/1619400-setcontentoffset))
   ///
   ///**Parameters - Officially Supported Platforms/Implementations**:
-  ///- [x]: all platforms
-  ///- [y]: all platforms
-  ///- [animated]: all platforms
+  ///- `x`: all platforms
+  ///- `y`: all platforms
+  ///- `animated`: all platforms
   ///
   ///Use the [PlatformInAppWebViewController.isMethodSupported] method to check if this method is supported at runtime.
   ///{@endtemplate}
@@ -1570,7 +1571,7 @@ enum PlatformInAppWebViewControllerMethod {
   ///- iOS WKWebView 15.0+ ([Official API - WKWebView.setAllMediaPlaybackSuspended](https://developer.apple.com/documentation/webkit/wkwebview/3752242-setallmediaplaybacksuspended))
   ///
   ///**Parameters - Officially Supported Platforms/Implementations**:
-  ///- [suspended]: all platforms
+  ///- `suspended`: all platforms
   ///
   ///Use the [PlatformInAppWebViewController.isMethodSupported] method to check if this method is supported at runtime.
   ///{@endtemplate}
@@ -1585,7 +1586,7 @@ enum PlatformInAppWebViewControllerMethod {
   ///    - Requires [WebViewFeature.MUTE_AUDIO]. Does nothing if the feature is not supported.
   ///
   ///**Parameters - Officially Supported Platforms/Implementations**:
-  ///- [muted]: all platforms
+  ///- `muted`: all platforms
   ///
   ///Use the [PlatformInAppWebViewController.isMethodSupported] method to check if this method is supported at runtime.
   ///{@endtemplate}
@@ -1599,7 +1600,7 @@ enum PlatformInAppWebViewControllerMethod {
   ///- iOS WKWebView 15.0+ ([Official API - WKWebView.setCameraCaptureState](https://developer.apple.com/documentation/webkit/wkwebview/3763097-setcameracapturestate))
   ///
   ///**Parameters - Officially Supported Platforms/Implementations**:
-  ///- [state]: all platforms
+  ///- `state`: all platforms
   ///
   ///Use the [PlatformInAppWebViewController.isMethodSupported] method to check if this method is supported at runtime.
   ///{@endtemplate}
@@ -1614,7 +1615,7 @@ enum PlatformInAppWebViewControllerMethod {
   ///- iOS WKWebView
   ///
   ///**Parameters - Officially Supported Platforms/Implementations**:
-  ///- [contextMenu]: all platforms
+  ///- `contextMenu`: all platforms
   ///
   ///Use the [PlatformInAppWebViewController.isMethodSupported] method to check if this method is supported at runtime.
   ///{@endtemplate}
@@ -1629,7 +1630,7 @@ enum PlatformInAppWebViewControllerMethod {
   ///    - Read by the keyboard when it appears, so set it beforehand. Entries missing a required field are dropped.
   ///
   ///**Parameters - Officially Supported Platforms/Implementations**:
-  ///- [conversationContext]: all platforms
+  ///- `conversationContext`: all platforms
   ///
   ///Use the [PlatformInAppWebViewController.isMethodSupported] method to check if this method is supported at runtime.
   ///{@endtemplate}
@@ -1644,7 +1645,7 @@ enum PlatformInAppWebViewControllerMethod {
   ///    - Requires [WebViewFeature.DEFAULT_TRAFFICSTATS_TAGGING]. Returns `false` and does nothing if the feature is not supported.
   ///
   ///**Parameters - Officially Supported Platforms/Implementations**:
-  ///- [tag]: all platforms
+  ///- `tag`: all platforms
   ///
   ///Use the [PlatformInAppWebViewController.isMethodSupported] method to check if this method is supported at runtime.
   ///{@endtemplate}
@@ -1658,7 +1659,7 @@ enum PlatformInAppWebViewControllerMethod {
   ///- iOS WKWebView ([Official API - UIResponder.inputView](https://developer.apple.com/documentation/uikit/uiresponder/1621092-inputview))
   ///
   ///**Parameters - Officially Supported Platforms/Implementations**:
-  ///- [enabled]: all platforms
+  ///- `enabled`: all platforms
   ///
   ///Use the [PlatformInAppWebViewController.isMethodSupported] method to check if this method is supported at runtime.
   ///{@endtemplate}
@@ -1673,7 +1674,7 @@ enum PlatformInAppWebViewControllerMethod {
   ///- iOS WKWebView
   ///
   ///**Parameters - Officially Supported Platforms/Implementations**:
-  ///- [bridgeName]: all platforms
+  ///- `bridgeName`: all platforms
   ///
   ///Use the [PlatformInAppWebViewController.isMethodSupported] method to check if this method is supported at runtime.
   ///{@endtemplate}
@@ -1687,7 +1688,7 @@ enum PlatformInAppWebViewControllerMethod {
   ///- iOS WKWebView 15.0+ ([Official API - WKWebView.setMicrophoneCaptureState](https://developer.apple.com/documentation/webkit/wkwebview/3763098-setmicrophonecapturestate))
   ///
   ///**Parameters - Officially Supported Platforms/Implementations**:
-  ///- [state]: all platforms
+  ///- `state`: all platforms
   ///
   ///Use the [PlatformInAppWebViewController.isMethodSupported] method to check if this method is supported at runtime.
   ///{@endtemplate}
@@ -1702,7 +1703,7 @@ enum PlatformInAppWebViewControllerMethod {
   ///    - This method should only be called if [WebViewFeature.isFeatureSupported] returns `true` for [WebViewFeature.SAFE_BROWSING_ALLOWLIST].
   ///
   ///**Parameters - Officially Supported Platforms/Implementations**:
-  ///- [hosts]: all platforms
+  ///- `hosts`: all platforms
   ///
   ///Use the [PlatformInAppWebViewController.isMethodSupported] method to check if this method is supported at runtime.
   ///{@endtemplate}
@@ -1717,7 +1718,7 @@ enum PlatformInAppWebViewControllerMethod {
   ///- iOS WKWebView
   ///
   ///**Parameters - Officially Supported Platforms/Implementations**:
-  ///- [settings]: all platforms
+  ///- `settings`: all platforms
   ///
   ///Use the [PlatformInAppWebViewController.isMethodSupported] method to check if this method is supported at runtime.
   ///{@endtemplate}
@@ -1731,7 +1732,7 @@ enum PlatformInAppWebViewControllerMethod {
   ///- Android WebView ([Official API - WebView.setWebContentsDebuggingEnabled](https://developer.android.com/reference/android/webkit/WebView#setWebContentsDebuggingEnabled(boolean)))
   ///
   ///**Parameters - Officially Supported Platforms/Implementations**:
-  ///- [debuggingEnabled]: all platforms
+  ///- `debuggingEnabled`: all platforms
   ///
   ///Use the [PlatformInAppWebViewController.isMethodSupported] method to check if this method is supported at runtime.
   ///{@endtemplate}
@@ -1770,7 +1771,7 @@ enum PlatformInAppWebViewControllerMethod {
   ///- iOS WKWebView 11.0+ ([Official API - WKWebView.takeSnapshot](https://developer.apple.com/documentation/webkit/wkwebview/2873260-takesnapshot))
   ///
   ///**Parameters - Officially Supported Platforms/Implementations**:
-  ///- [screenshotConfiguration]: all platforms
+  ///- `screenshotConfiguration`: all platforms
   ///
   ///Use the [PlatformInAppWebViewController.isMethodSupported] method to check if this method is supported at runtime.
   ///{@endtemplate}
@@ -1785,8 +1786,8 @@ enum PlatformInAppWebViewControllerMethod {
   ///- iOS WKWebView ([Official API - UIScrollView.setZoomScale](https://developer.apple.com/documentation/uikit/uiscrollview/1619412-setzoomscale))
   ///
   ///**Parameters - Officially Supported Platforms/Implementations**:
-  ///- [zoomFactor]: all platforms
-  ///- [animated]:
+  ///- `zoomFactor`: all platforms
+  ///- `animated`:
   ///    - iOS WKWebView
   ///
   ///Use the [PlatformInAppWebViewController.isMethodSupported] method to check if this method is supported at runtime.
