@@ -1,6 +1,7 @@
 ## 7.1.0
 
 - **Dart 3.12 or newer** (`sdk: ^3.12.0`; was `>=3.7.0 <4.0.0`). No code change.
+- Formatting only: 3 files reformatted by Flutter 3.47.7's formatter (trailing commas, whitespace).
 
 ## 7.0.0
 

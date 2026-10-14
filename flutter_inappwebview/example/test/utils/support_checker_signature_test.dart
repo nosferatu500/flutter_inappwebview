@@ -297,9 +297,8 @@ void main() {
           if (stated.contains('...')) {
             // A summary: each parameter it names must exist as named.
             abbreviated++;
-            final listed = _parameters(
-              stated.replaceAll('...', ''),
-            ).where((p) => !p.endsWith(' '));
+            final listed = _parameters(stated.replaceAll('...', ''))
+                .where((p) => !p.endsWith(' '));
             for (final p in listed) {
               if (!declaredParameters.contains(p)) {
                 lies.add('$where: names "$p", not among $declaredParameters');

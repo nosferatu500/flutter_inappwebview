@@ -23,8 +23,7 @@ class Cookie_ {
     platforms: [
       IOSPlatform(),
       AndroidPlatform(
-        note:
-            "available on Android only if [WebViewFeature.GET_COOKIE_INFO] feature is supported.",
+        note: "available on Android only if [WebViewFeature.GET_COOKIE_INFO] feature is supported.",
       ),
     ],
   )
@@ -39,8 +38,7 @@ class Cookie_ {
     platforms: [
       IOSPlatform(),
       AndroidPlatform(
-        note:
-            "available on Android only if [WebViewFeature.GET_COOKIE_INFO] feature is supported.",
+        note: "available on Android only if [WebViewFeature.GET_COOKIE_INFO] feature is supported.",
       ),
     ],
   )
@@ -51,8 +49,7 @@ class Cookie_ {
     platforms: [
       IOSPlatform(),
       AndroidPlatform(
-        note:
-            "available on Android only if [WebViewFeature.GET_COOKIE_INFO] feature is supported.",
+        note: "available on Android only if [WebViewFeature.GET_COOKIE_INFO] feature is supported.",
       ),
     ],
   )
@@ -63,8 +60,7 @@ class Cookie_ {
     platforms: [
       IOSPlatform(),
       AndroidPlatform(
-        note:
-            "available on Android only if [WebViewFeature.GET_COOKIE_INFO] feature is supported.",
+        note: "available on Android only if [WebViewFeature.GET_COOKIE_INFO] feature is supported.",
       ),
     ],
   )
@@ -75,8 +71,7 @@ class Cookie_ {
     platforms: [
       IOSPlatform(),
       AndroidPlatform(
-        note:
-            "available on Android only if [WebViewFeature.GET_COOKIE_INFO] feature is supported.",
+        note: "available on Android only if [WebViewFeature.GET_COOKIE_INFO] feature is supported.",
       ),
     ],
   )
@@ -87,8 +82,7 @@ class Cookie_ {
     platforms: [
       IOSPlatform(),
       AndroidPlatform(
-        note:
-            "available on Android only if [WebViewFeature.GET_COOKIE_INFO] feature is supported.",
+        note: "available on Android only if [WebViewFeature.GET_COOKIE_INFO] feature is supported.",
       ),
     ],
   )

@@ -61,8 +61,7 @@ class PlatformProcessGlobalConfigCreationParams {
   platforms: [
     AndroidPlatform(
       apiName: 'ProcessGlobalConfig',
-      apiUrl:
-          'https://developer.android.com/reference/androidx/webkit/ProcessGlobalConfig',
+      apiUrl: 'https://developer.android.com/reference/androidx/webkit/ProcessGlobalConfig',
     ),
   ],
 )
@@ -127,8 +126,7 @@ abstract class PlatformProcessGlobalConfig extends PlatformInterface {
     platforms: [
       AndroidPlatform(
         apiName: 'ProcessGlobalConfig.apply',
-        apiUrl:
-            'https://developer.android.com/reference/androidx/webkit/ProcessGlobalConfig#apply(androidx.webkit.ProcessGlobalConfig)',
+        apiUrl: 'https://developer.android.com/reference/androidx/webkit/ProcessGlobalConfig#apply(androidx.webkit.ProcessGlobalConfig)',
       ),
     ],
   )
@@ -163,8 +161,7 @@ abstract class PlatformProcessGlobalConfig extends PlatformInterface {
   platforms: [
     AndroidPlatform(
       apiName: 'ProcessGlobalConfig.apply',
-      apiUrl:
-          'https://developer.android.com/reference/androidx/webkit/ProcessGlobalConfig#apply(androidx.webkit.ProcessGlobalConfig)',
+      apiUrl: 'https://developer.android.com/reference/androidx/webkit/ProcessGlobalConfig#apply(androidx.webkit.ProcessGlobalConfig)',
     ),
   ],
 )
@@ -194,8 +191,7 @@ class ProcessGlobalConfigSettings_ {
   @SupportedPlatforms(
     platforms: [
       AndroidPlatform(
-        note:
-            'Available only if [WebViewFeature.STARTUP_FEATURE_SET_DATA_DIRECTORY_SUFFIX] feature is supported.',
+        note: 'Available only if [WebViewFeature.STARTUP_FEATURE_SET_DATA_DIRECTORY_SUFFIX] feature is supported.',
       ),
     ],
   )
@@ -223,8 +219,7 @@ class ProcessGlobalConfigSettings_ {
   @SupportedPlatforms(
     platforms: [
       AndroidPlatform(
-        note:
-            'Available only if [WebViewFeature.STARTUP_FEATURE_SET_DIRECTORY_BASE_PATHS] feature is supported.',
+        note: 'Available only if [WebViewFeature.STARTUP_FEATURE_SET_DIRECTORY_BASE_PATHS] feature is supported.',
       ),
     ],
   )

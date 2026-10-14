@@ -283,9 +283,8 @@ class _UserScriptTesterWidgetState extends State<UserScriptTesterWidget> {
       });
 
       if (mounted) {
-        ScaffoldMessenger.of(
-          context,
-        ).showSnackBar(SnackBar(content: Text('Failed to add script: $e')));
+        ScaffoldMessenger.of(context)
+            .showSnackBar(SnackBar(content: Text('Failed to add script: $e')));
       }
     }
   }

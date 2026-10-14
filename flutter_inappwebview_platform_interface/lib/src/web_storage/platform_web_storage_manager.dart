@@ -60,8 +60,7 @@ class PlatformWebStorageManagerCreationParams {
   platforms: [
     AndroidPlatform(
       apiName: 'WebStorage',
-      apiUrl:
-          'https://developer.android.com/reference/android/webkit/WebStorage.html',
+      apiUrl: 'https://developer.android.com/reference/android/webkit/WebStorage.html',
     ),
     IOSPlatform(
       apiName: 'WKWebsiteDataStore',
@@ -134,8 +133,7 @@ abstract class PlatformWebStorageManager extends PlatformInterface {
     platforms: [
       AndroidPlatform(
         apiName: 'WebStorage.getOrigins',
-        apiUrl:
-            'https://developer.android.com/reference/android/webkit/WebStorage#getOrigins(android.webkit.ValueCallback%3Cjava.util.Map%3E)',
+        apiUrl: 'https://developer.android.com/reference/android/webkit/WebStorage#getOrigins(android.webkit.ValueCallback%3Cjava.util.Map%3E)',
       ),
     ],
   )
@@ -165,8 +163,7 @@ abstract class PlatformWebStorageManager extends PlatformInterface {
     platforms: [
       AndroidPlatform(
         apiName: 'WebStorage.deleteAllData',
-        apiUrl:
-            'https://developer.android.com/reference/android/webkit/WebStorage#deleteAllData()',
+        apiUrl: 'https://developer.android.com/reference/android/webkit/WebStorage#deleteAllData()',
       ),
     ],
   )
@@ -202,8 +199,7 @@ abstract class PlatformWebStorageManager extends PlatformInterface {
     platforms: [
       AndroidPlatform(
         apiName: 'WebStorage.deleteOrigin',
-        apiUrl:
-            'https://developer.android.com/reference/android/webkit/WebStorage#deleteOrigin(java.lang.String)',
+        apiUrl: 'https://developer.android.com/reference/android/webkit/WebStorage#deleteOrigin(java.lang.String)',
       ),
     ],
   )
@@ -243,10 +239,8 @@ abstract class PlatformWebStorageManager extends PlatformInterface {
     platforms: [
       AndroidPlatform(
         apiName: 'WebStorageCompat.deleteBrowsingData',
-        apiUrl:
-            'https://developer.android.com/reference/androidx/webkit/WebStorageCompat#deleteBrowsingData(android.webkit.WebStorage,java.lang.Runnable)',
-        note:
-            'Requires [WebViewFeature.DELETE_BROWSING_DATA]. Returns `false` and deletes nothing if the feature is not supported.',
+        apiUrl: 'https://developer.android.com/reference/androidx/webkit/WebStorageCompat#deleteBrowsingData(android.webkit.WebStorage,java.lang.Runnable)',
+        note: 'Requires [WebViewFeature.DELETE_BROWSING_DATA]. Returns `false` and deletes nothing if the feature is not supported.',
       ),
     ],
   )
@@ -282,10 +276,8 @@ abstract class PlatformWebStorageManager extends PlatformInterface {
     platforms: [
       AndroidPlatform(
         apiName: 'WebStorageCompat.deleteBrowsingDataForSite',
-        apiUrl:
-            'https://developer.android.com/reference/androidx/webkit/WebStorageCompat#deleteBrowsingDataForSite(android.webkit.WebStorage,java.lang.String,java.lang.Runnable)',
-        note:
-            'Requires [WebViewFeature.DELETE_BROWSING_DATA]. Returns `null` and deletes nothing if the feature is not supported.',
+        apiUrl: 'https://developer.android.com/reference/androidx/webkit/WebStorageCompat#deleteBrowsingDataForSite(android.webkit.WebStorage,java.lang.String,java.lang.Runnable)',
+        note: 'Requires [WebViewFeature.DELETE_BROWSING_DATA]. Returns `null` and deletes nothing if the feature is not supported.',
       ),
     ],
   )
@@ -315,8 +307,7 @@ abstract class PlatformWebStorageManager extends PlatformInterface {
     platforms: [
       AndroidPlatform(
         apiName: 'WebStorage.getQuotaForOrigin',
-        apiUrl:
-            'https://developer.android.com/reference/android/webkit/WebStorage#getQuotaForOrigin(java.lang.String,%20android.webkit.ValueCallback%3Cjava.lang.Long%3E)',
+        apiUrl: 'https://developer.android.com/reference/android/webkit/WebStorage#getQuotaForOrigin(java.lang.String,%20android.webkit.ValueCallback%3Cjava.lang.Long%3E)',
       ),
     ],
   )
@@ -346,8 +337,7 @@ abstract class PlatformWebStorageManager extends PlatformInterface {
     platforms: [
       AndroidPlatform(
         apiName: 'WebStorage.getUsageForOrigin',
-        apiUrl:
-            'https://developer.android.com/reference/android/webkit/WebStorage#getUsageForOrigin(java.lang.String,%20android.webkit.ValueCallback%3Cjava.lang.Long%3E)',
+        apiUrl: 'https://developer.android.com/reference/android/webkit/WebStorage#getUsageForOrigin(java.lang.String,%20android.webkit.ValueCallback%3Cjava.lang.Long%3E)',
       ),
     ],
   )
@@ -372,8 +362,7 @@ abstract class PlatformWebStorageManager extends PlatformInterface {
       IOSPlatform(
         available: '9.0',
         apiName: 'WKWebsiteDataStore.fetchDataRecords',
-        apiUrl:
-            'https://developer.apple.com/documentation/webkit/wkwebsitedatastore/1532932-fetchdatarecords',
+        apiUrl: 'https://developer.apple.com/documentation/webkit/wkwebsitedatastore/1532932-fetchdatarecords',
       ),
     ],
   )
@@ -399,8 +388,7 @@ abstract class PlatformWebStorageManager extends PlatformInterface {
       IOSPlatform(
         available: '9.0',
         apiName: 'WKWebsiteDataStore.removeData',
-        apiUrl:
-            'https://developer.apple.com/documentation/webkit/wkwebsitedatastore/1532936-removedata',
+        apiUrl: 'https://developer.apple.com/documentation/webkit/wkwebsitedatastore/1532936-removedata',
       ),
     ],
   )
@@ -427,8 +415,7 @@ abstract class PlatformWebStorageManager extends PlatformInterface {
       IOSPlatform(
         available: '9.0',
         apiName: 'WKWebsiteDataStore.removeData',
-        apiUrl:
-            'https://developer.apple.com/documentation/webkit/wkwebsitedatastore/1532938-removedata',
+        apiUrl: 'https://developer.apple.com/documentation/webkit/wkwebsitedatastore/1532938-removedata',
       ),
     ],
   )

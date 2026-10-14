@@ -15,9 +15,8 @@ abstract class PathHandler
   ///
   /// Use [platform] to check support for a specific platform.
   static bool isClassSupported({TargetPlatform? platform}) =>
-      PlatformPathHandlerCreationParams(
-        path: '',
-      ).isClassSupported(platform: platform);
+      PlatformPathHandlerCreationParams(path: '')
+          .isClassSupported(platform: platform);
 
   @override
   late final PlatformPathHandlerEvents? eventHandler;
@@ -83,9 +82,8 @@ class AssetsPathHandler extends PathHandler {
   ///
   /// Use [platform] to check support for a specific platform.
   static bool isClassSupported({TargetPlatform? platform}) =>
-      PlatformPathHandlerCreationParams(
-        path: '',
-      ).isClassSupported(platform: platform);
+      PlatformPathHandlerCreationParams(path: '')
+          .isClassSupported(platform: platform);
 }
 
 ///{@macro nosferatu500_inappwebview_platform_interface.PlatformResourcesPathHandler}
@@ -124,9 +122,8 @@ class ResourcesPathHandler extends PathHandler {
   ///
   /// Use [platform] to check support for a specific platform.
   static bool isClassSupported({TargetPlatform? platform}) =>
-      PlatformPathHandlerCreationParams(
-        path: '',
-      ).isClassSupported(platform: platform);
+      PlatformPathHandlerCreationParams(path: '')
+          .isClassSupported(platform: platform);
 }
 
 ///{@macro nosferatu500_inappwebview_platform_interface.PlatformInternalStoragePathHandler}
@@ -168,9 +165,8 @@ class InternalStoragePathHandler extends PathHandler {
   ///
   /// Use [platform] to check support for a specific platform.
   static bool isClassSupported({TargetPlatform? platform}) =>
-      PlatformPathHandlerCreationParams(
-        path: '',
-      ).isClassSupported(platform: platform);
+      PlatformPathHandlerCreationParams(path: '')
+          .isClassSupported(platform: platform);
 }
 
 ///{@macro nosferatu500_inappwebview_platform_interface.PlatformCustomPathHandler}
@@ -208,7 +204,6 @@ abstract class CustomPathHandler extends PathHandler {
   ///
   /// Use [platform] to check support for a specific platform.
   static bool isClassSupported({TargetPlatform? platform}) =>
-      PlatformPathHandlerCreationParams(
-        path: '',
-      ).isClassSupported(platform: platform);
+      PlatformPathHandlerCreationParams(path: '')
+          .isClassSupported(platform: platform);
 }

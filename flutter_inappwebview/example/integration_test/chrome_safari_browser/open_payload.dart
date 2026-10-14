@@ -86,20 +86,23 @@ void openPayload() {
       expect(page.headers.value('accept-language'), 'it-IT');
     });
 
-    skippableTest('isTrustedWebActivity opens a Trusted Web Activity', () async {
-      // The only request difference measured between the four launch targets: Chrome marks a
-      // Trusted Web Activity's first load as user-initiated. The plain open is the control.
-      await openAndClose('/plain');
-      await openAndClose(
-        '/twa',
-        settings: ChromeSafariBrowserSettings(isTrustedWebActivity: true),
-      );
-      expect(
-        recorder.document('/plain').headers.value('sec-fetch-user'),
-        isNull,
-      );
-      expect(recorder.document('/twa').headers.value('sec-fetch-user'), '?1');
-    });
+    skippableTest(
+      'isTrustedWebActivity opens a Trusted Web Activity',
+      () async {
+        // The only request difference measured between the four launch targets: Chrome marks a
+        // Trusted Web Activity's first load as user-initiated. The plain open is the control.
+        await openAndClose('/plain');
+        await openAndClose(
+          '/twa',
+          settings: ChromeSafariBrowserSettings(isTrustedWebActivity: true),
+        );
+        expect(
+          recorder.document('/plain').headers.value('sec-fetch-user'),
+          isNull,
+        );
+        expect(recorder.document('/twa').headers.value('sec-fetch-user'), '?1');
+      },
+    );
 
     skippableTest('an int nested in the settings reaches the parser', () async {
       // `displayMode.displayCutoutMode` is the one int the settings parser reads out of a nested

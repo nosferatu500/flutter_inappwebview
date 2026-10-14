@@ -59,13 +59,11 @@ class PlatformWebViewCreationParams<T> {
     platforms: [
       AndroidPlatform(
         apiName: 'WebViewClient.onPageStarted',
-        apiUrl:
-            'https://developer.android.com/reference/android/webkit/WebViewClient#onPageStarted(android.webkit.WebView,%20java.lang.String,%20android.graphics.Bitmap)',
+        apiUrl: 'https://developer.android.com/reference/android/webkit/WebViewClient#onPageStarted(android.webkit.WebView,%20java.lang.String,%20android.graphics.Bitmap)',
       ),
       IOSPlatform(
         apiName: 'WKNavigationDelegate.webView',
-        apiUrl:
-            'https://developer.apple.com/documentation/webkit/wknavigationdelegate/1455621-webview',
+        apiUrl: 'https://developer.apple.com/documentation/webkit/wknavigationdelegate/1455621-webview',
       ),
     ],
   )
@@ -93,13 +91,11 @@ class PlatformWebViewCreationParams<T> {
     platforms: [
       AndroidPlatform(
         apiName: 'WebViewClient.onPageFinished',
-        apiUrl:
-            'https://developer.android.com/reference/android/webkit/WebViewClient#onPageFinished(android.webkit.WebView,%20java.lang.String)',
+        apiUrl: 'https://developer.android.com/reference/android/webkit/WebViewClient#onPageFinished(android.webkit.WebView,%20java.lang.String)',
       ),
       IOSPlatform(
         apiName: 'WKNavigationDelegate.webView',
-        apiUrl:
-            'https://developer.apple.com/documentation/webkit/wknavigationdelegate/1455629-webview',
+        apiUrl: 'https://developer.apple.com/documentation/webkit/wknavigationdelegate/1455629-webview',
       ),
     ],
   )
@@ -124,13 +120,11 @@ class PlatformWebViewCreationParams<T> {
     platforms: [
       AndroidPlatform(
         apiName: 'WebViewClient.onReceivedError',
-        apiUrl:
-            'https://developer.android.com/reference/android/webkit/WebViewClient#onReceivedError(android.webkit.WebView,%20android.webkit.WebResourceRequest,%20android.webkit.WebResourceError)',
+        apiUrl: 'https://developer.android.com/reference/android/webkit/WebViewClient#onReceivedError(android.webkit.WebView,%20android.webkit.WebResourceRequest,%20android.webkit.WebResourceError)',
       ),
       IOSPlatform(
         apiName: 'WKNavigationDelegate.webView',
-        apiUrl:
-            'https://developer.apple.com/documentation/webkit/wknavigationdelegate/1455623-webview',
+        apiUrl: 'https://developer.apple.com/documentation/webkit/wknavigationdelegate/1455623-webview',
       ),
     ],
   )
@@ -154,14 +148,12 @@ class PlatformWebViewCreationParams<T> {
     platforms: [
       AndroidPlatform(
         apiName: 'WebViewClient.onReceivedHttpError',
-        apiUrl:
-            'https://developer.android.com/reference/android/webkit/WebViewClient#onReceivedHttpError(android.webkit.WebView,%20android.webkit.WebResourceRequest,%20android.webkit.WebResourceResponse)',
+        apiUrl: 'https://developer.android.com/reference/android/webkit/WebViewClient#onReceivedHttpError(android.webkit.WebView,%20android.webkit.WebResourceRequest,%20android.webkit.WebResourceResponse)',
         available: '23',
       ),
       IOSPlatform(
         apiName: 'WKNavigationDelegate.webView',
-        apiUrl:
-            'https://developer.apple.com/documentation/webkit/wknavigationdelegate/1455643-webview',
+        apiUrl: 'https://developer.apple.com/documentation/webkit/wknavigationdelegate/1455643-webview',
       ),
     ],
   )
@@ -181,8 +173,7 @@ class PlatformWebViewCreationParams<T> {
     platforms: [
       AndroidPlatform(
         apiName: 'WebChromeClient.onProgressChanged',
-        apiUrl:
-            'https://developer.android.com/reference/android/webkit/WebChromeClient#onProgressChanged(android.webkit.WebView,%20int)',
+        apiUrl: 'https://developer.android.com/reference/android/webkit/WebChromeClient#onProgressChanged(android.webkit.WebView,%20int)',
       ),
       IOSPlatform(),
     ],
@@ -198,8 +189,7 @@ class PlatformWebViewCreationParams<T> {
     platforms: [
       AndroidPlatform(
         apiName: 'WebChromeClient.onConsoleMessage',
-        apiUrl:
-            'https://developer.android.com/reference/android/webkit/WebChromeClient#onConsoleMessage(android.webkit.ConsoleMessage)',
+        apiUrl: 'https://developer.android.com/reference/android/webkit/WebChromeClient#onConsoleMessage(android.webkit.ConsoleMessage)',
       ),
       IOSPlatform(note: 'This event is implemented using JavaScript.'),
     ],
@@ -226,10 +216,8 @@ class PlatformWebViewCreationParams<T> {
     platforms: [
       AndroidPlatform(
         apiName: 'WebViewClient.shouldOverrideUrlLoading',
-        apiUrl:
-            'https://developer.android.com/reference/android/webkit/WebViewClient#shouldOverrideUrlLoading(android.webkit.WebView,%20java.lang.String)',
-        note:
-            """There isn't any way to load an URL for a frame that is not the main frame, so if the request is not for the main frame, the navigation is allowed by default.
+        apiUrl: 'https://developer.android.com/reference/android/webkit/WebViewClient#shouldOverrideUrlLoading(android.webkit.WebView,%20java.lang.String)',
+        note: """There isn't any way to load an URL for a frame that is not the main frame, so if the request is not for the main frame, the navigation is allowed by default.
 However, if you want to cancel requests for subframes, you can use the [InAppWebViewSettings.regexToCancelSubFramesLoading] setting
 to write a Regular Expression that, if the url request of a subframe matches, then the request of that subframe is canceled.
 Instead, the [InAppWebViewSettings.regexToAllowSyncUrlLoading] setting could
@@ -240,8 +228,7 @@ Also, this event is not called for POST requests and is not called on the first 
       ),
       IOSPlatform(
         apiName: 'WKNavigationDelegate.webView',
-        apiUrl:
-            'https://developer.apple.com/documentation/webkit/wknavigationdelegate/1455641-webview',
+        apiUrl: 'https://developer.apple.com/documentation/webkit/wknavigationdelegate/1455641-webview',
       ),
     ],
   )
@@ -279,13 +266,11 @@ Also, this event is not called for POST requests and is not called on the first 
     platforms: [
       AndroidPlatform(
         apiName: 'WebView.onScrollChanged',
-        apiUrl:
-            'https://developer.android.com/reference/android/webkit/WebView#onScrollChanged(int,%20int,%20int,%20int)',
+        apiUrl: 'https://developer.android.com/reference/android/webkit/WebView#onScrollChanged(int,%20int,%20int,%20int)',
       ),
       IOSPlatform(
         apiName: 'UIScrollViewDelegate.scrollViewDidScroll',
-        apiUrl:
-            'https://developer.apple.com/documentation/uikit/uiscrollviewdelegate/1619392-scrollviewdidscroll',
+        apiUrl: 'https://developer.apple.com/documentation/uikit/uiscrollviewdelegate/1619392-scrollviewdidscroll',
       ),
     ],
   )
@@ -325,8 +310,7 @@ Also, this event is not called for POST requests and is not called on the first 
     platforms: [
       AndroidPlatform(
         apiName: 'WebView.setDownloadListener',
-        apiUrl:
-            '(https://developer.android.com/reference/android/webkit/WebView#setDownloadListener(android.webkit.DownloadListener)',
+        apiUrl: '(https://developer.android.com/reference/android/webkit/WebView#setDownloadListener(android.webkit.DownloadListener)',
       ),
       IOSPlatform(),
     ],
@@ -348,8 +332,7 @@ Also, this event is not called for POST requests and is not called on the first 
       AndroidPlatform(),
       IOSPlatform(
         apiName: 'WKURLSchemeHandler',
-        apiUrl:
-            'https://developer.apple.com/documentation/webkit/wkurlschemehandler',
+        apiUrl: 'https://developer.apple.com/documentation/webkit/wkurlschemehandler',
       ),
     ],
   )
@@ -376,17 +359,13 @@ Also, this event is not called for POST requests and is not called on the first 
     platforms: [
       AndroidPlatform(
         apiName: 'WebChromeClient.onCreateWindow',
-        apiUrl:
-            'https://developer.android.com/reference/android/webkit/WebChromeClient#onCreateWindow(android.webkit.WebView,%20boolean,%20boolean,%20android.os.Message)',
-        note:
-            'You need to set [InAppWebViewSettings.supportMultipleWindows] setting to `true`. Also, if the request has been created using JavaScript (`window.open()`), then there are some limitation: check the [NavigationAction] class.',
+        apiUrl: 'https://developer.android.com/reference/android/webkit/WebChromeClient#onCreateWindow(android.webkit.WebView,%20boolean,%20boolean,%20android.os.Message)',
+        note: 'You need to set [InAppWebViewSettings.supportMultipleWindows] setting to `true`. Also, if the request has been created using JavaScript (`window.open()`), then there are some limitation: check the [NavigationAction] class.',
       ),
       IOSPlatform(
         apiName: 'WKUIDelegate.webView',
-        apiUrl:
-            'https://developer.apple.com/documentation/webkit/wkuidelegate/1536907-webview',
-        note:
-            """Setting these initial settings [InAppWebViewSettings.applicationNameForUserAgent], [InAppWebViewSettings.javaScriptCanOpenWindowsAutomatically],
+        apiUrl: 'https://developer.apple.com/documentation/webkit/wkuidelegate/1536907-webview',
+        note: """Setting these initial settings [InAppWebViewSettings.applicationNameForUserAgent], [InAppWebViewSettings.javaScriptCanOpenWindowsAutomatically],
 [InAppWebViewSettings.javaScriptEnabled], [InAppWebViewSettings.minimumFontSize], [InAppWebViewSettings.preferredContentMode], [InAppWebViewSettings.incognito],
 [InAppWebViewSettings.cacheEnabled], [InAppWebViewSettings.mediaPlaybackRequiresUserGesture],
 [InAppWebViewSettings.resourceCustomSchemes], [InAppWebViewSettings.sharedCookiesEnabled],
@@ -423,13 +402,11 @@ It applies its own [InAppWebViewSettings.contentBlockers] and none of the caller
     platforms: [
       AndroidPlatform(
         apiName: 'WebChromeClient.onCloseWindow',
-        apiUrl:
-            'https://developer.android.com/reference/android/webkit/WebChromeClient#onCloseWindow(android.webkit.WebView)',
+        apiUrl: 'https://developer.android.com/reference/android/webkit/WebChromeClient#onCloseWindow(android.webkit.WebView)',
       ),
       IOSPlatform(
         apiName: 'WKUIDelegate.webViewDidClose',
-        apiUrl:
-            'https://developer.apple.com/documentation/webkit/wkuidelegate/1537390-webviewdidclose',
+        apiUrl: 'https://developer.apple.com/documentation/webkit/wkuidelegate/1537390-webviewdidclose',
       ),
     ],
   )
@@ -465,13 +442,11 @@ It applies its own [InAppWebViewSettings.contentBlockers] and none of the caller
     platforms: [
       AndroidPlatform(
         apiName: 'WebChromeClient.onJsAlert',
-        apiUrl:
-            'https://developer.android.com/reference/android/webkit/WebChromeClient#onJsAlert(android.webkit.WebView,%20java.lang.String,%20java.lang.String,%20android.webkit.JsResult)',
+        apiUrl: 'https://developer.android.com/reference/android/webkit/WebChromeClient#onJsAlert(android.webkit.WebView,%20java.lang.String,%20java.lang.String,%20android.webkit.JsResult)',
       ),
       IOSPlatform(
         apiName: 'WKUIDelegate.webView',
-        apiUrl:
-            'https://developer.apple.com/documentation/webkit/wkuidelegate/1537406-webview',
+        apiUrl: 'https://developer.apple.com/documentation/webkit/wkuidelegate/1537406-webview',
       ),
     ],
   )
@@ -493,13 +468,11 @@ It applies its own [InAppWebViewSettings.contentBlockers] and none of the caller
     platforms: [
       AndroidPlatform(
         apiName: 'WebChromeClient.onJsConfirm',
-        apiUrl:
-            'https://developer.android.com/reference/android/webkit/WebChromeClient#onJsConfirm(android.webkit.WebView,%20java.lang.String,%20java.lang.String,%20android.webkit.JsResult)',
+        apiUrl: 'https://developer.android.com/reference/android/webkit/WebChromeClient#onJsConfirm(android.webkit.WebView,%20java.lang.String,%20java.lang.String,%20android.webkit.JsResult)',
       ),
       IOSPlatform(
         apiName: 'WKUIDelegate.webView',
-        apiUrl:
-            'https://developer.apple.com/documentation/webkit/wkuidelegate/1536489-webview',
+        apiUrl: 'https://developer.apple.com/documentation/webkit/wkuidelegate/1536489-webview',
       ),
     ],
   )
@@ -521,13 +494,11 @@ It applies its own [InAppWebViewSettings.contentBlockers] and none of the caller
     platforms: [
       AndroidPlatform(
         apiName: 'WebChromeClient.onJsPrompt',
-        apiUrl:
-            'https://developer.android.com/reference/android/webkit/WebChromeClient#onJsPrompt(android.webkit.WebView,%20java.lang.String,%20java.lang.String,%20java.lang.String,%20android.webkit.JsPromptResult)',
+        apiUrl: 'https://developer.android.com/reference/android/webkit/WebChromeClient#onJsPrompt(android.webkit.WebView,%20java.lang.String,%20java.lang.String,%20java.lang.String,%20android.webkit.JsPromptResult)',
       ),
       IOSPlatform(
         apiName: 'WKUIDelegate.webView',
-        apiUrl:
-            'https://developer.apple.com/documentation/webkit/wkuidelegate/1538086-webview',
+        apiUrl: 'https://developer.apple.com/documentation/webkit/wkuidelegate/1538086-webview',
       ),
     ],
   )
@@ -548,13 +519,11 @@ It applies its own [InAppWebViewSettings.contentBlockers] and none of the caller
     platforms: [
       AndroidPlatform(
         apiName: 'WebViewClient.onReceivedHttpAuthRequest',
-        apiUrl:
-            'https://developer.android.com/reference/android/webkit/WebViewClient#onReceivedHttpAuthRequest(android.webkit.WebView,%20android.webkit.HttpAuthHandler,%20java.lang.String,%20java.lang.String)',
+        apiUrl: 'https://developer.android.com/reference/android/webkit/WebViewClient#onReceivedHttpAuthRequest(android.webkit.WebView,%20android.webkit.HttpAuthHandler,%20java.lang.String,%20java.lang.String)',
       ),
       IOSPlatform(
         apiName: 'WKNavigationDelegate.webView',
-        apiUrl:
-            'https://developer.apple.com/documentation/webkit/wknavigationdelegate/1455638-webview',
+        apiUrl: 'https://developer.apple.com/documentation/webkit/wknavigationdelegate/1455638-webview',
       ),
     ],
   )
@@ -576,15 +545,12 @@ It applies its own [InAppWebViewSettings.contentBlockers] and none of the caller
     platforms: [
       AndroidPlatform(
         apiName: 'WebViewClient.onReceivedSslError',
-        apiUrl:
-            'https://developer.android.com/reference/android/webkit/WebViewClient#onReceivedSslError(android.webkit.WebView,%20android.webkit.SslErrorHandler,%20android.net.http.SslError)',
+        apiUrl: 'https://developer.android.com/reference/android/webkit/WebViewClient#onReceivedSslError(android.webkit.WebView,%20android.webkit.SslErrorHandler,%20android.net.http.SslError)',
       ),
       IOSPlatform(
         apiName: 'WKNavigationDelegate.webView',
-        apiUrl:
-            'https://developer.apple.com/documentation/webkit/wknavigationdelegate/1455638-webview',
-        note:
-            """To override the certificate verification logic, you have to provide ATS (App Transport Security) exceptions in your iOS/macOS `Info.plist`.
+        apiUrl: 'https://developer.apple.com/documentation/webkit/wknavigationdelegate/1455638-webview',
+        note: """To override the certificate verification logic, you have to provide ATS (App Transport Security) exceptions in your iOS/macOS `Info.plist`.
 See `NSAppTransportSecurity` in the [Information Property List Key Reference](https://developer.apple.com/library/content/documentation/General/Reference/InfoPlistKeyReference/Articles/CocoaKeys.html#//apple_ref/doc/uid/TP40009251-SW1) for details.""",
       ),
     ],
@@ -635,13 +601,11 @@ See `NSAppTransportSecurity` in the [Information Property List Key Reference](ht
     platforms: [
       AndroidPlatform(
         apiName: 'WebViewClient.onReceivedClientCertRequest',
-        apiUrl:
-            'https://developer.android.com/reference/android/webkit/WebViewClient#onReceivedClientCertRequest(android.webkit.WebView,%20android.webkit.ClientCertRequest)',
+        apiUrl: 'https://developer.android.com/reference/android/webkit/WebViewClient#onReceivedClientCertRequest(android.webkit.WebView,%20android.webkit.ClientCertRequest)',
       ),
       IOSPlatform(
         apiName: 'WKNavigationDelegate.webView',
-        apiUrl:
-            'https://developer.apple.com/documentation/webkit/wknavigationdelegate/1455638-webview',
+        apiUrl: 'https://developer.apple.com/documentation/webkit/wknavigationdelegate/1455638-webview',
       ),
     ],
   )
@@ -668,8 +632,7 @@ See `NSAppTransportSecurity` in the [Information Property List Key Reference](ht
   @SupportedPlatforms(
     platforms: [
       AndroidPlatform(
-        note:
-            """In order to be able to listen this event, check the [InAppWebViewSettings.useShouldInterceptAjaxRequest] setting documentation.
+        note: """In order to be able to listen this event, check the [InAppWebViewSettings.useShouldInterceptAjaxRequest] setting documentation.
 Also, on Android that doesn't support the [WebViewFeature.DOCUMENT_START_SCRIPT], unlike iOS that has [WKUserScript](https://developer.apple.com/documentation/webkit/wkuserscript) that
 can inject javascript code right after the document element is created but before any other content is loaded, in Android the javascript code
 used to intercept ajax requests is loaded as soon as possible so it won't be instantaneous as iOS.
@@ -698,8 +661,7 @@ In that case, after the `window.addEventListener("flutterInAppWebViewPlatformRea
   @SupportedPlatforms(
     platforms: [
       AndroidPlatform(
-        note:
-            """In order to be able to listen this event, check the [InAppWebViewSettings.useShouldInterceptAjaxRequest] and [InAppWebViewSettings.useOnAjaxReadyStateChange] settings documentation.
+        note: """In order to be able to listen this event, check the [InAppWebViewSettings.useShouldInterceptAjaxRequest] and [InAppWebViewSettings.useOnAjaxReadyStateChange] settings documentation.
 Also, on Android that doesn't support the [WebViewFeature.DOCUMENT_START_SCRIPT], unlike iOS that has [WKUserScript](https://developer.apple.com/documentation/webkit/wkuserscript) that
 can inject javascript code right after the document element is created but before any other content is loaded, in Android the javascript code
 used to intercept ajax requests is loaded as soon as possible so it won't be instantaneous as iOS.
@@ -726,8 +688,7 @@ In that case, after the `window.addEventListener("flutterInAppWebViewPlatformRea
   @SupportedPlatforms(
     platforms: [
       AndroidPlatform(
-        note:
-            """In order to be able to listen this event, check the [InAppWebViewSettings.useShouldInterceptAjaxRequest] and [InAppWebViewSettings.useOnAjaxProgress] settings documentation.
+        note: """In order to be able to listen this event, check the [InAppWebViewSettings.useShouldInterceptAjaxRequest] and [InAppWebViewSettings.useOnAjaxProgress] settings documentation.
 Also, on Android that doesn't support the [WebViewFeature.DOCUMENT_START_SCRIPT], unlike iOS that has [WKUserScript](https://developer.apple.com/documentation/webkit/wkuserscript) that
 can inject javascript code right after the document element is created but before any other content is loaded, in Android the javascript code
 used to intercept ajax requests is loaded as soon as possible so it won't be instantaneous as iOS.
@@ -754,8 +715,7 @@ In that case, after the `window.addEventListener("flutterInAppWebViewPlatformRea
   @SupportedPlatforms(
     platforms: [
       AndroidPlatform(
-        note:
-            """In order to be able to listen this event, check the [InAppWebViewSettings.useShouldInterceptFetchRequest] setting documentation.
+        note: """In order to be able to listen this event, check the [InAppWebViewSettings.useShouldInterceptFetchRequest] setting documentation.
 Also, on Android that doesn't support the [WebViewFeature.DOCUMENT_START_SCRIPT], unlike iOS that has [WKUserScript](https://developer.apple.com/documentation/webkit/wkuserscript) that
 can inject javascript code right after the document element is created but before any other content is loaded, in Android the javascript code
 used to intercept ajax requests is loaded as soon as possible so it won't be instantaneous as iOS.
@@ -786,8 +746,7 @@ In that case, after the `window.addEventListener("flutterInAppWebViewPlatformRea
     platforms: [
       AndroidPlatform(
         apiName: 'WebViewClient.doUpdateVisitedHistory',
-        apiUrl:
-            'https://developer.android.com/reference/android/webkit/WebViewClient#doUpdateVisitedHistory(android.webkit.WebView,%20java.lang.String,%20boolean)',
+        apiUrl: 'https://developer.android.com/reference/android/webkit/WebViewClient#doUpdateVisitedHistory(android.webkit.WebView,%20java.lang.String,%20boolean)',
       ),
       IOSPlatform(),
     ],
@@ -844,13 +803,11 @@ In that case, after the `window.addEventListener("flutterInAppWebViewPlatformRea
     platforms: [
       AndroidPlatform(
         apiName: 'View.setOnLongClickListener',
-        apiUrl:
-            'https://developer.android.com/reference/android/view/View#setOnLongClickListener(android.view.View.OnLongClickListener)',
+        apiUrl: 'https://developer.android.com/reference/android/view/View#setOnLongClickListener(android.view.View.OnLongClickListener)',
       ),
       IOSPlatform(
         apiName: 'UILongPressGestureRecognizer',
-        apiUrl:
-            'https://developer.apple.com/documentation/uikit/uilongpressgesturerecognizer',
+        apiUrl: 'https://developer.apple.com/documentation/uikit/uilongpressgesturerecognizer',
       ),
     ],
   )
@@ -866,13 +823,11 @@ In that case, after the `window.addEventListener("flutterInAppWebViewPlatformRea
     platforms: [
       AndroidPlatform(
         apiName: 'WebChromeClient.onShowCustomView',
-        apiUrl:
-            'https://developer.android.com/reference/android/webkit/WebChromeClient#onShowCustomView(android.view.View,%20android.webkit.WebChromeClient.CustomViewCallback)',
+        apiUrl: 'https://developer.android.com/reference/android/webkit/WebChromeClient#onShowCustomView(android.view.View,%20android.webkit.WebChromeClient.CustomViewCallback)',
       ),
       IOSPlatform(
         apiName: 'UIWindow.didBecomeVisibleNotification',
-        apiUrl:
-            'https://developer.apple.com/documentation/uikit/uiwindow/1621621-didbecomevisiblenotification',
+        apiUrl: 'https://developer.apple.com/documentation/uikit/uiwindow/1621621-didbecomevisiblenotification',
       ),
     ],
   )
@@ -887,13 +842,11 @@ In that case, after the `window.addEventListener("flutterInAppWebViewPlatformRea
     platforms: [
       AndroidPlatform(
         apiName: 'WebChromeClient.onHideCustomView',
-        apiUrl:
-            'https://developer.android.com/reference/android/webkit/WebChromeClient#onHideCustomView()',
+        apiUrl: 'https://developer.android.com/reference/android/webkit/WebChromeClient#onHideCustomView()',
       ),
       IOSPlatform(
         apiName: 'UIWindow.didBecomeHiddenNotification',
-        apiUrl:
-            'https://developer.apple.com/documentation/uikit/uiwindow/1621617-didbecomehiddennotification',
+        apiUrl: 'https://developer.apple.com/documentation/uikit/uiwindow/1621617-didbecomehiddennotification',
       ),
     ],
   )
@@ -913,13 +866,11 @@ In that case, after the `window.addEventListener("flutterInAppWebViewPlatformRea
     platforms: [
       AndroidPlatform(
         apiName: 'WebViewClient.onPageCommitVisible',
-        apiUrl:
-            'https://developer.android.com/reference/android/webkit/WebViewClient#onPageCommitVisible(android.webkit.WebView,%20java.lang.String)',
+        apiUrl: 'https://developer.android.com/reference/android/webkit/WebViewClient#onPageCommitVisible(android.webkit.WebView,%20java.lang.String)',
       ),
       IOSPlatform(
         apiName: 'WKNavigationDelegate.webView',
-        apiUrl:
-            'https://developer.apple.com/documentation/webkit/wknavigationdelegate/1455635-webview',
+        apiUrl: 'https://developer.apple.com/documentation/webkit/wknavigationdelegate/1455635-webview',
       ),
     ],
   )
@@ -936,8 +887,7 @@ In that case, after the `window.addEventListener("flutterInAppWebViewPlatformRea
     platforms: [
       AndroidPlatform(
         apiName: 'WebChromeClient.onReceivedTitle',
-        apiUrl:
-            'https://developer.android.com/reference/android/webkit/WebChromeClient#onReceivedTitle(android.webkit.WebView,%20java.lang.String)',
+        apiUrl: 'https://developer.android.com/reference/android/webkit/WebChromeClient#onReceivedTitle(android.webkit.WebView,%20java.lang.String)',
       ),
       IOSPlatform(),
     ],
@@ -961,8 +911,7 @@ In that case, after the `window.addEventListener("flutterInAppWebViewPlatformRea
     platforms: [
       AndroidPlatform(
         apiName: 'WebView.onOverScrolled',
-        apiUrl:
-            'https://developer.android.com/reference/android/webkit/WebView#onOverScrolled(int,%20int,%20boolean,%20boolean)',
+        apiUrl: 'https://developer.android.com/reference/android/webkit/WebView#onOverScrolled(int,%20int,%20boolean,%20boolean)',
       ),
       IOSPlatform(),
     ],
@@ -983,13 +932,11 @@ In that case, after the `window.addEventListener("flutterInAppWebViewPlatformRea
     platforms: [
       AndroidPlatform(
         apiName: 'WebViewClient.onScaleChanged',
-        apiUrl:
-            'https://developer.android.com/reference/android/webkit/WebViewClient#onScaleChanged(android.webkit.WebView,%20float,%20float)',
+        apiUrl: 'https://developer.android.com/reference/android/webkit/WebViewClient#onScaleChanged(android.webkit.WebView,%20float,%20float)',
       ),
       IOSPlatform(
         apiName: 'UIScrollViewDelegate.scrollViewDidZoom',
-        apiUrl:
-            'https://developer.apple.com/documentation/uikit/uiscrollviewdelegate/1619409-scrollviewdidzoom',
+        apiUrl: 'https://developer.apple.com/documentation/uikit/uiscrollviewdelegate/1619409-scrollviewdidzoom',
       ),
     ],
   )
@@ -1010,8 +957,7 @@ In that case, after the `window.addEventListener("flutterInAppWebViewPlatformRea
     platforms: [
       AndroidPlatform(
         apiName: 'WebViewClient.onSafeBrowsingHit',
-        apiUrl:
-            'https://developer.android.com/reference/android/webkit/WebViewClient#onSafeBrowsingHit(android.webkit.WebView,%20android.webkit.WebResourceRequest,%20int,%20android.webkit.SafeBrowsingResponse)',
+        apiUrl: 'https://developer.android.com/reference/android/webkit/WebViewClient#onSafeBrowsingHit(android.webkit.WebView,%20android.webkit.WebResourceRequest,%20int,%20android.webkit.SafeBrowsingResponse)',
         available: '27',
       ),
     ],
@@ -1035,14 +981,12 @@ In that case, after the `window.addEventListener("flutterInAppWebViewPlatformRea
     platforms: [
       AndroidPlatform(
         apiName: 'WebChromeClient.onPermissionRequest',
-        apiUrl:
-            'https://developer.android.com/reference/android/webkit/WebChromeClient#onPermissionRequest(android.webkit.PermissionRequest)',
+        apiUrl: 'https://developer.android.com/reference/android/webkit/WebChromeClient#onPermissionRequest(android.webkit.PermissionRequest)',
         available: '21',
       ),
       IOSPlatform(
         available: '15.0',
-        note:
-            'The default [PermissionResponse.action] is [PermissionResponseAction.PROMPT].',
+        note: 'The default [PermissionResponse.action] is [PermissionResponseAction.PROMPT].',
       ),
     ],
   )
@@ -1065,8 +1009,7 @@ In that case, after the `window.addEventListener("flutterInAppWebViewPlatformRea
     platforms: [
       AndroidPlatform(
         apiName: 'WebChromeClient.onGeolocationPermissionsShowPrompt',
-        apiUrl:
-            'https://developer.android.com/reference/android/webkit/WebChromeClient#onGeolocationPermissionsShowPrompt(java.lang.String,%20android.webkit.GeolocationPermissions.Callback)',
+        apiUrl: 'https://developer.android.com/reference/android/webkit/WebChromeClient#onGeolocationPermissionsShowPrompt(java.lang.String,%20android.webkit.GeolocationPermissions.Callback)',
       ),
     ],
   )
@@ -1086,8 +1029,7 @@ In that case, after the `window.addEventListener("flutterInAppWebViewPlatformRea
     platforms: [
       AndroidPlatform(
         apiName: 'WebChromeClient.onGeolocationPermissionsHidePrompt',
-        apiUrl:
-            'https://developer.android.com/reference/android/webkit/WebChromeClient#onGeolocationPermissionsHidePrompt()',
+        apiUrl: 'https://developer.android.com/reference/android/webkit/WebChromeClient#onGeolocationPermissionsHidePrompt()',
       ),
     ],
   )
@@ -1114,8 +1056,7 @@ In that case, after the `window.addEventListener("flutterInAppWebViewPlatformRea
     platforms: [
       AndroidPlatform(
         apiName: 'WebViewClient.shouldInterceptRequest',
-        apiUrl:
-            'https://developer.android.com/reference/android/webkit/WebViewClient#shouldInterceptRequest(android.webkit.WebView,%20android.webkit.WebResourceRequest)',
+        apiUrl: 'https://developer.android.com/reference/android/webkit/WebViewClient#shouldInterceptRequest(android.webkit.WebView,%20android.webkit.WebResourceRequest)',
       ),
     ],
   )
@@ -1147,8 +1088,7 @@ In that case, after the `window.addEventListener("flutterInAppWebViewPlatformRea
     platforms: [
       AndroidPlatform(
         apiName: 'WebViewRenderProcessClient.onRenderProcessUnresponsive',
-        apiUrl:
-            'https://developer.android.com/reference/android/webkit/WebViewRenderProcessClient#onRenderProcessUnresponsive(android.webkit.WebView,%20android.webkit.WebViewRenderProcess)',
+        apiUrl: 'https://developer.android.com/reference/android/webkit/WebViewRenderProcessClient#onRenderProcessUnresponsive(android.webkit.WebView,%20android.webkit.WebViewRenderProcess)',
         available: '29',
       ),
     ],
@@ -1174,8 +1114,7 @@ In that case, after the `window.addEventListener("flutterInAppWebViewPlatformRea
     platforms: [
       AndroidPlatform(
         apiName: 'WebViewRenderProcessClient.onRenderProcessResponsive',
-        apiUrl:
-            'https://developer.android.com/reference/android/webkit/WebViewRenderProcessClient#onRenderProcessResponsive(android.webkit.WebView,%20android.webkit.WebViewRenderProcess)',
+        apiUrl: 'https://developer.android.com/reference/android/webkit/WebViewRenderProcessClient#onRenderProcessResponsive(android.webkit.WebView,%20android.webkit.WebViewRenderProcess)',
         available: '29',
       ),
     ],
@@ -1202,8 +1141,7 @@ In that case, after the `window.addEventListener("flutterInAppWebViewPlatformRea
     platforms: [
       AndroidPlatform(
         apiName: 'WebViewClient.onRenderProcessGone',
-        apiUrl:
-            'https://developer.android.com/reference/android/webkit/WebViewClient#onRenderProcessGone(android.webkit.WebView,%20android.webkit.RenderProcessGoneDetail)',
+        apiUrl: 'https://developer.android.com/reference/android/webkit/WebViewClient#onRenderProcessGone(android.webkit.WebView,%20android.webkit.RenderProcessGoneDetail)',
         available: '26',
       ),
     ],
@@ -1220,8 +1158,7 @@ In that case, after the `window.addEventListener("flutterInAppWebViewPlatformRea
     platforms: [
       AndroidPlatform(
         apiName: 'WebViewClient.onFormResubmission',
-        apiUrl:
-            'https://developer.android.com/reference/android/webkit/WebViewClient#onFormResubmission(android.webkit.WebView,%20android.os.Message,%20android.os.Message)',
+        apiUrl: 'https://developer.android.com/reference/android/webkit/WebViewClient#onFormResubmission(android.webkit.WebView,%20android.os.Message,%20android.os.Message)',
       ),
     ],
   )
@@ -1241,8 +1178,7 @@ In that case, after the `window.addEventListener("flutterInAppWebViewPlatformRea
     platforms: [
       AndroidPlatform(
         apiName: 'WebChromeClient.onReceivedTouchIconUrl',
-        apiUrl:
-            'https://developer.android.com/reference/android/webkit/WebChromeClient#onReceivedTouchIconUrl(android.webkit.WebView,%20java.lang.String,%20boolean)',
+        apiUrl: 'https://developer.android.com/reference/android/webkit/WebChromeClient#onReceivedTouchIconUrl(android.webkit.WebView,%20java.lang.String,%20boolean)',
       ),
     ],
   )
@@ -1266,8 +1202,7 @@ In that case, after the `window.addEventListener("flutterInAppWebViewPlatformRea
     platforms: [
       AndroidPlatform(
         apiName: 'WebChromeClient.onJsBeforeUnload',
-        apiUrl:
-            'https://developer.android.com/reference/android/webkit/WebChromeClient#onJsBeforeUnload(android.webkit.WebView,%20java.lang.String,%20java.lang.String,%20android.webkit.JsResult)',
+        apiUrl: 'https://developer.android.com/reference/android/webkit/WebChromeClient#onJsBeforeUnload(android.webkit.WebView,%20java.lang.String,%20java.lang.String,%20android.webkit.JsResult)',
       ),
     ],
   )
@@ -1288,8 +1223,7 @@ In that case, after the `window.addEventListener("flutterInAppWebViewPlatformRea
     platforms: [
       AndroidPlatform(
         apiName: 'WebViewClient.onReceivedLoginRequest',
-        apiUrl:
-            'https://developer.android.com/reference/android/webkit/WebViewClient#onReceivedLoginRequest(android.webkit.WebView,%20java.lang.String,%20java.lang.String,%20java.lang.String)',
+        apiUrl: 'https://developer.android.com/reference/android/webkit/WebViewClient#onReceivedLoginRequest(android.webkit.WebView,%20java.lang.String,%20java.lang.String,%20java.lang.String)',
       ),
     ],
   )
@@ -1309,8 +1243,7 @@ In that case, after the `window.addEventListener("flutterInAppWebViewPlatformRea
     platforms: [
       AndroidPlatform(
         apiName: 'WebChromeClient.onPermissionRequestCanceled',
-        apiUrl:
-            'https://developer.android.com/reference/android/webkit/WebChromeClient#onPermissionRequestCanceled(android.webkit.PermissionRequest)',
+        apiUrl: 'https://developer.android.com/reference/android/webkit/WebChromeClient#onPermissionRequestCanceled(android.webkit.PermissionRequest)',
         available: '21',
       ),
     ],
@@ -1331,8 +1264,7 @@ In that case, after the `window.addEventListener("flutterInAppWebViewPlatformRea
     platforms: [
       AndroidPlatform(
         apiName: 'WebChromeClient.onRequestFocus',
-        apiUrl:
-            'https://developer.android.com/reference/android/webkit/WebChromeClient#onRequestFocus(android.webkit.WebView)',
+        apiUrl: 'https://developer.android.com/reference/android/webkit/WebChromeClient#onRequestFocus(android.webkit.WebView)',
       ),
     ],
   )
@@ -1348,8 +1280,7 @@ In that case, after the `window.addEventListener("flutterInAppWebViewPlatformRea
     platforms: [
       IOSPlatform(
         apiName: 'WKNavigationDelegate.webViewWebContentProcessDidTerminate',
-        apiUrl:
-            'https://developer.apple.com/documentation/webkit/wknavigationdelegate/1455639-webviewwebcontentprocessdidtermi',
+        apiUrl: 'https://developer.apple.com/documentation/webkit/wknavigationdelegate/1455639-webviewwebcontentprocessdidtermi',
       ),
     ],
   )
@@ -1364,8 +1295,7 @@ In that case, after the `window.addEventListener("flutterInAppWebViewPlatformRea
     platforms: [
       IOSPlatform(
         apiName: 'WKNavigationDelegate.webView',
-        apiUrl:
-            'https://developer.apple.com/documentation/webkit/wknavigationdelegate/1455627-webview',
+        apiUrl: 'https://developer.apple.com/documentation/webkit/wknavigationdelegate/1455627-webview',
       ),
     ],
   )
@@ -1385,8 +1315,7 @@ In that case, after the `window.addEventListener("flutterInAppWebViewPlatformRea
     platforms: [
       IOSPlatform(
         apiName: 'WKNavigationDelegate.webView',
-        apiUrl:
-            'https://developer.apple.com/documentation/webkit/wknavigationdelegate/1455643-webview',
+        apiUrl: 'https://developer.apple.com/documentation/webkit/wknavigationdelegate/1455643-webview',
       ),
     ],
   )
@@ -1407,8 +1336,7 @@ In that case, after the `window.addEventListener("flutterInAppWebViewPlatformRea
     platforms: [
       IOSPlatform(
         apiName: 'WKNavigationDelegate.webView',
-        apiUrl:
-            'https://developer.apple.com/documentation/webkit/wknavigationdelegate/3601237-webview',
+        apiUrl: 'https://developer.apple.com/documentation/webkit/wknavigationdelegate/3601237-webview',
         available: '14.0',
       ),
     ],
@@ -1485,8 +1413,7 @@ In that case, after the `window.addEventListener("flutterInAppWebViewPlatformRea
     platforms: [
       IOSPlatform(
         apiName: 'WKNavigationDelegate.webView',
-        apiUrl:
-            'https://developer.apple.com/documentation/webkit/wknavigationdelegate/4448873-webview',
+        apiUrl: 'https://developer.apple.com/documentation/webkit/wknavigationdelegate/4448873-webview',
         available: '26.0',
       ),
     ],
@@ -1525,8 +1452,7 @@ In that case, after the `window.addEventListener("flutterInAppWebViewPlatformRea
     platforms: [
       IOSPlatform(
         apiName: 'WKWebView.writingToolsActive',
-        apiUrl:
-            'https://developer.apple.com/documentation/webkit/wkwebview/4433211-writingtoolsactive',
+        apiUrl: 'https://developer.apple.com/documentation/webkit/wkwebview/4433211-writingtoolsactive',
         available: '18.0',
       ),
     ],
@@ -1565,10 +1491,8 @@ In that case, after the `window.addEventListener("flutterInAppWebViewPlatformRea
     platforms: [
       AndroidPlatform(
         apiName: 'NavigationListener.onNavigationStarted',
-        apiUrl:
-            'https://developer.android.com/reference/androidx/webkit/NavigationListener#onNavigationStarted(androidx.webkit.Navigation)',
-        note:
-            'Requires WebViewFeature.NAVIGATION_LISTENER and InAppWebViewSettings.useNavigationListener.',
+        apiUrl: 'https://developer.android.com/reference/androidx/webkit/NavigationListener#onNavigationStarted(androidx.webkit.Navigation)',
+        note: 'Requires WebViewFeature.NAVIGATION_LISTENER and InAppWebViewSettings.useNavigationListener.',
       ),
     ],
   )
@@ -1595,10 +1519,8 @@ In that case, after the `window.addEventListener("flutterInAppWebViewPlatformRea
     platforms: [
       AndroidPlatform(
         apiName: 'NavigationListener.onNavigationRedirected',
-        apiUrl:
-            'https://developer.android.com/reference/androidx/webkit/NavigationListener#onNavigationRedirected(androidx.webkit.Navigation)',
-        note:
-            'Requires WebViewFeature.NAVIGATION_LISTENER and InAppWebViewSettings.useNavigationListener.',
+        apiUrl: 'https://developer.android.com/reference/androidx/webkit/NavigationListener#onNavigationRedirected(androidx.webkit.Navigation)',
+        note: 'Requires WebViewFeature.NAVIGATION_LISTENER and InAppWebViewSettings.useNavigationListener.',
       ),
     ],
   )
@@ -1630,10 +1552,8 @@ In that case, after the `window.addEventListener("flutterInAppWebViewPlatformRea
     platforms: [
       AndroidPlatform(
         apiName: 'NavigationListener.onNavigationCompleted',
-        apiUrl:
-            'https://developer.android.com/reference/androidx/webkit/NavigationListener#onNavigationCompleted(androidx.webkit.Navigation)',
-        note:
-            'Requires WebViewFeature.NAVIGATION_LISTENER and InAppWebViewSettings.useNavigationListener.',
+        apiUrl: 'https://developer.android.com/reference/androidx/webkit/NavigationListener#onNavigationCompleted(androidx.webkit.Navigation)',
+        note: 'Requires WebViewFeature.NAVIGATION_LISTENER and InAppWebViewSettings.useNavigationListener.',
       ),
     ],
   )
@@ -1657,10 +1577,8 @@ In that case, after the `window.addEventListener("flutterInAppWebViewPlatformRea
     platforms: [
       AndroidPlatform(
         apiName: 'NavigationListener.onPageLoadEvent',
-        apiUrl:
-            'https://developer.android.com/reference/androidx/webkit/NavigationListener#onPageLoadEvent(androidx.webkit.Page)',
-        note:
-            'Requires WebViewFeature.NAVIGATION_LISTENER and InAppWebViewSettings.useNavigationListener.',
+        apiUrl: 'https://developer.android.com/reference/androidx/webkit/NavigationListener#onPageLoadEvent(androidx.webkit.Page)',
+        note: 'Requires WebViewFeature.NAVIGATION_LISTENER and InAppWebViewSettings.useNavigationListener.',
       ),
     ],
   )
@@ -1686,10 +1604,8 @@ In that case, after the `window.addEventListener("flutterInAppWebViewPlatformRea
     platforms: [
       AndroidPlatform(
         apiName: 'NavigationListener.onPageDomContentLoadedEvent',
-        apiUrl:
-            'https://developer.android.com/reference/androidx/webkit/NavigationListener#onPageDomContentLoadedEvent(androidx.webkit.Page)',
-        note:
-            'Requires WebViewFeature.NAVIGATION_LISTENER and InAppWebViewSettings.useNavigationListener.',
+        apiUrl: 'https://developer.android.com/reference/androidx/webkit/NavigationListener#onPageDomContentLoadedEvent(androidx.webkit.Page)',
+        note: 'Requires WebViewFeature.NAVIGATION_LISTENER and InAppWebViewSettings.useNavigationListener.',
       ),
     ],
   )
@@ -1717,10 +1633,8 @@ In that case, after the `window.addEventListener("flutterInAppWebViewPlatformRea
     platforms: [
       AndroidPlatform(
         apiName: 'NavigationListener.onPageDeleted',
-        apiUrl:
-            'https://developer.android.com/reference/androidx/webkit/NavigationListener#onPageDeleted(androidx.webkit.Page)',
-        note:
-            'Requires WebViewFeature.NAVIGATION_LISTENER and InAppWebViewSettings.useNavigationListener.',
+        apiUrl: 'https://developer.android.com/reference/androidx/webkit/NavigationListener#onPageDeleted(androidx.webkit.Page)',
+        note: 'Requires WebViewFeature.NAVIGATION_LISTENER and InAppWebViewSettings.useNavigationListener.',
       ),
     ],
   )
@@ -1745,10 +1659,8 @@ In that case, after the `window.addEventListener("flutterInAppWebViewPlatformRea
     platforms: [
       AndroidPlatform(
         apiName: 'NavigationListener.onFirstContentfulPaintMillis',
-        apiUrl:
-            'https://developer.android.com/reference/androidx/webkit/NavigationListener#onFirstContentfulPaintMillis(androidx.webkit.Page,long)',
-        note:
-            'Requires WebViewFeature.NAVIGATION_LISTENER and InAppWebViewSettings.useNavigationListener.',
+        apiUrl: 'https://developer.android.com/reference/androidx/webkit/NavigationListener#onFirstContentfulPaintMillis(androidx.webkit.Page,long)',
+        note: 'Requires WebViewFeature.NAVIGATION_LISTENER and InAppWebViewSettings.useNavigationListener.',
       ),
     ],
   )
@@ -1774,10 +1686,8 @@ In that case, after the `window.addEventListener("flutterInAppWebViewPlatformRea
     platforms: [
       AndroidPlatform(
         apiName: 'NavigationListener.onLargestContentfulPaintMillis',
-        apiUrl:
-            'https://developer.android.com/reference/androidx/webkit/NavigationListener#onLargestContentfulPaintMillis(androidx.webkit.Page,long)',
-        note:
-            'Requires WebViewFeature.NAVIGATION_LISTENER and InAppWebViewSettings.useNavigationListener.',
+        apiUrl: 'https://developer.android.com/reference/androidx/webkit/NavigationListener#onLargestContentfulPaintMillis(androidx.webkit.Page,long)',
+        note: 'Requires WebViewFeature.NAVIGATION_LISTENER and InAppWebViewSettings.useNavigationListener.',
       ),
     ],
   )
@@ -1808,10 +1718,8 @@ In that case, after the `window.addEventListener("flutterInAppWebViewPlatformRea
     platforms: [
       AndroidPlatform(
         apiName: 'NavigationListener.onPerformanceMarkMillis',
-        apiUrl:
-            'https://developer.android.com/reference/androidx/webkit/NavigationListener#onPerformanceMarkMillis(androidx.webkit.Page,java.lang.String,long)',
-        note:
-            'Requires WebViewFeature.NAVIGATION_LISTENER, InAppWebViewSettings.useNavigationListener and the separate InAppWebViewSettings.useOnPerformanceMarkMillis.',
+        apiUrl: 'https://developer.android.com/reference/androidx/webkit/NavigationListener#onPerformanceMarkMillis(androidx.webkit.Page,java.lang.String,long)',
+        note: 'Requires WebViewFeature.NAVIGATION_LISTENER, InAppWebViewSettings.useNavigationListener and the separate InAppWebViewSettings.useOnPerformanceMarkMillis.',
       ),
     ],
   )
@@ -1863,8 +1771,7 @@ In that case, after the `window.addEventListener("flutterInAppWebViewPlatformRea
     platforms: [
       AndroidPlatform(
         apiName: 'WebChromeClient.getVisitedHistory',
-        apiUrl:
-            'https://developer.android.com/reference/android/webkit/WebChromeClient#getVisitedHistory(android.webkit.ValueCallback%3Cjava.lang.String%5B%5D%3E)',
+        apiUrl: 'https://developer.android.com/reference/android/webkit/WebChromeClient#getVisitedHistory(android.webkit.ValueCallback%3Cjava.lang.String%5B%5D%3E)',
       ),
     ],
   )
@@ -1916,17 +1823,13 @@ In that case, after the `window.addEventListener("flutterInAppWebViewPlatformRea
     platforms: [
       AndroidPlatform(
         apiName: 'WebChromeClient.onShowFileChooser',
-        apiUrl:
-            'https://developer.android.com/reference/android/webkit/WebChromeClient#onShowFileChooser(android.webkit.WebView,%20android.webkit.ValueCallback%3Candroid.net.Uri[]%3E,%20android.webkit.WebChromeClient.FileChooserParams)',
+        apiUrl: 'https://developer.android.com/reference/android/webkit/WebChromeClient#onShowFileChooser(android.webkit.WebView,%20android.webkit.ValueCallback%3Candroid.net.Uri[]%3E,%20android.webkit.WebChromeClient.FileChooserParams)',
       ),
       IOSPlatform(
         available: "18.4",
-        apiName:
-            'WKUIDelegate.webView(_:runOpenPanelWith:initiatedByFrame:completionHandler:)',
-        apiUrl:
-            'https://developer.apple.com/documentation/webkit/wkuidelegate/webview(_:runopenpanelwith:initiatedbyframe:completionhandler:)',
-        note:
-            'Requires [InAppWebViewSettings.useOnShowFileChooser] to be `true`. Returning `handledByClient: false` cancels the request instead of falling back to a default picker.',
+        apiName: 'WKUIDelegate.webView(_:runOpenPanelWith:initiatedByFrame:completionHandler:)',
+        apiUrl: 'https://developer.apple.com/documentation/webkit/wkuidelegate/webview(_:runopenpanelwith:initiatedbyframe:completionhandler:)',
+        note: 'Requires [InAppWebViewSettings.useOnShowFileChooser] to be `true`. Returning `handledByClient: false` cancels the request instead of falling back to a default picker.',
       ),
     ],
   )
@@ -1964,10 +1867,8 @@ In that case, after the `window.addEventListener("flutterInAppWebViewPlatformRea
       IOSPlatform(
         available: '26.0',
         apiName: 'WKUIDelegate.webView(_:insertInputSuggestion:)',
-        apiUrl:
-            'https://developer.apple.com/documentation/webkit/wkuidelegate/webview(_:insertinputsuggestion:)',
-        note:
-            'Requires [InAppWebViewSettings.useOnInsertInputSuggestion] to be `true`. The app is responsible for inserting the text; WebKit documents no fallback.',
+        apiUrl: 'https://developer.apple.com/documentation/webkit/wkuidelegate/webview(_:insertinputsuggestion:)',
+        note: 'Requires [InAppWebViewSettings.useOnInsertInputSuggestion] to be `true`. The app is responsible for inserting the text; WebKit documents no fallback.',
       ),
     ],
   )
@@ -1982,8 +1883,7 @@ In that case, after the `window.addEventListener("flutterInAppWebViewPlatformRea
   @SupportedPlatforms(
     platforms: [
       AndroidPlatform(
-        note:
-            'When loading an URL Request using "POST" method, headers are ignored.',
+        note: 'When loading an URL Request using "POST" method, headers are ignored.',
       ),
       IOSPlatform(),
     ],
@@ -2033,8 +1933,7 @@ In that case, after the `window.addEventListener("flutterInAppWebViewPlatformRea
     platforms: [
       AndroidPlatform(),
       IOSPlatform(
-        note:
-            """This property will be ignored if the [PlatformWebViewCreationParams.windowId] has been set.
+        note: """This property will be ignored if the [PlatformWebViewCreationParams.windowId] has been set.
 There isn't any way to add/remove user scripts specific to iOS window WebViews.
 This is a limitation of the native WebKit APIs.""",
       ),
@@ -2050,8 +1949,7 @@ This is a limitation of the native WebKit APIs.""",
   @SupportedPlatforms(
     platforms: [
       AndroidPlatform(
-        note:
-            'To be able to use the "pull-to-refresh" feature, [InAppWebViewSettings.useHybridComposition] must be `true`.',
+        note: 'To be able to use the "pull-to-refresh" feature, [InAppWebViewSettings.useHybridComposition] must be `true`.',
       ),
       IOSPlatform(),
     ],

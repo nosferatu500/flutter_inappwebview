@@ -52,8 +52,7 @@ class ProxyRule_ {
     platforms: [
       IOSPlatform(
         apiName: 'ProxyConfiguration.init(relayHops:)',
-        apiUrl:
-            'https://developer.apple.com/documentation/network/proxyconfiguration/init(relayhops:)',
+        apiUrl: 'https://developer.apple.com/documentation/network/proxyconfiguration/init(relayhops:)',
         available: '17.0',
       ),
     ],
@@ -68,8 +67,7 @@ class ProxyRule_ {
     platforms: [
       IOSPlatform(
         apiName: 'ProxyConfiguration.init(relayHops:)',
-        apiUrl:
-            'https://developer.apple.com/documentation/network/proxyconfiguration/init(relayhops:)',
+        apiUrl: 'https://developer.apple.com/documentation/network/proxyconfiguration/init(relayhops:)',
         available: '17.0',
       ),
     ],

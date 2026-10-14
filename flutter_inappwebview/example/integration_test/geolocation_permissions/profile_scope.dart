@@ -130,8 +130,7 @@ void geolocationProfileScope() {
       expect(
         await permissions.getAllowed(origin: origin, profileName: missing),
         isNull,
-        reason:
-            'null means "could not ask", which false would misreport as "no decision stored"',
+        reason: 'null means "could not ask", which false would misreport as "no decision stored"',
       );
 
       // And none of that touched the default store — including the clearAll, which is the call

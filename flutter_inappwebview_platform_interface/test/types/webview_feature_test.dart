@@ -106,29 +106,32 @@ void main() {
     // "Use NAVIGATION_LISTENER instead", so they read like perfectly good flags to port and are in
     // fact tombstones. Mirroring one would make `WebViewFeature.isFeatureSupported` throw a
     // `PlatformException` on every device.
-    test('no constant mirrors a flag androidx declares but never registers', () {
-      const tombstones = <String>{
-        'WEB_VIEW_NAVIGATION_CLIENT_BASIC_USAGE', // NAVIGATION_CALLBACK_BASIC
-        'NAVIGATION_LISTENER_V1',
-        'NAVIGATION_LISTENER_V2',
-        'NAVIGATION_LISTENER_ON_COMPLETED_FIRES_FOR_NON_COMMITTED',
-        'NAVIGATION_LISTENER_NON_NULL_PAGE_FOR_SAME_DOCUMENT_NAVIGATIONS',
-        'PAGE_GET_URL',
-      };
+    test(
+      'no constant mirrors a flag androidx declares but never registers',
+      () {
+        const tombstones = <String>{
+          'WEB_VIEW_NAVIGATION_CLIENT_BASIC_USAGE', // NAVIGATION_CALLBACK_BASIC
+          'NAVIGATION_LISTENER_V1',
+          'NAVIGATION_LISTENER_V2',
+          'NAVIGATION_LISTENER_ON_COMPLETED_FIRES_FOR_NON_COMMITTED',
+          'NAVIGATION_LISTENER_NON_NULL_PAGE_FOR_SAME_DOCUMENT_NAVIGATIONS',
+          'PAGE_GET_URL',
+        };
 
-      final offenders = WebViewFeature.values
-          .map((feature) => feature.toNativeValue())
-          .whereType<String>()
-          .where(tombstones.contains)
-          .toSet();
+        final offenders = WebViewFeature.values
+            .map((feature) => feature.toNativeValue())
+            .whereType<String>()
+            .where(tombstones.contains)
+            .toSet();
 
-      expect(
-        offenders,
-        isEmpty,
-        reason:
-            'These native values are declared by androidx.webkit but never registered, so '
-            'WebViewFeature.isFeatureSupported throws for them. Use NAVIGATION_LISTENER instead.',
-      );
-    });
+        expect(
+          offenders,
+          isEmpty,
+          reason:
+              'These native values are declared by androidx.webkit but never registered, so '
+              'WebViewFeature.isFeatureSupported throws for them. Use NAVIGATION_LISTENER instead.',
+        );
+      },
+    );
   });
 }

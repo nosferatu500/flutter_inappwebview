@@ -7,6 +7,9 @@
 
 ### Internal
 
+- **Formatting only: 59 Dart files reformatted by Flutter 3.47.7's formatter at language 3.13** (`build_runner` still writes the same 484 outputs, 0 `.g.dart` changed).
+  Each file's code is unchanged once whitespace and commas are removed (the tall style adds and drops
+  trailing commas); analyze and every test suite pass unchanged.
 - **The repo builds and tests on Flutter 3.47.7** (`.fvmrc`; was 3.44.9). `flutter pub get` on 3.47
   adds `analyzer: exclude:` entries (`build/**`, plus the platform folders that exist) to each Flutter
   package's `analysis_options.yaml`; that is flutter_tools' `AnalysisOptionsMigration`, which re-adds

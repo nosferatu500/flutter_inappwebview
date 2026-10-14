@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'dart:typed_data';
+
 import 'package:flutter/material.dart';
 import 'package:nosferatu500_inappwebview/nosferatu500_inappwebview.dart';
 import 'package:flutter_inappwebview_example/widgets/common/parameter_dialog.dart';
@@ -628,8 +629,7 @@ class ControllerMethodsRegistry {
           description: 'Injects CSS file from URL',
           methodEnum: PlatformInAppWebViewControllerMethod.injectCSSFileFromUrl,
           parameters: {
-            'urlFile':
-                'https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css',
+            'urlFile': 'https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css',
           },
           requiredParameters: ['urlFile'],
           execute: (controller, params) async {
@@ -935,14 +935,12 @@ class ControllerMethodsRegistry {
             // InAppWebViewSettings constructor, so a bad value here would throw rather than
             // silently misbehave.
             final obscuredTop =
-                double.tryParse(
-                  params['obscuredTop']?.toString() ?? '',
-                )?.abs() ??
+                double.tryParse(params['obscuredTop']?.toString() ?? '')
+                    ?.abs() ??
                 44.0;
             final obscuredBottom =
-                double.tryParse(
-                  params['obscuredBottom']?.toString() ?? '',
-                )?.abs() ??
+                double.tryParse(params['obscuredBottom']?.toString() ?? '')
+                    ?.abs() ??
                 0.0;
 
             await controller.setSettings(
@@ -1020,9 +1018,8 @@ class ControllerMethodsRegistry {
                 ? compressFormatParam
                 : CompressFormat.PNG;
             final quality = (params['quality'] as num?)?.toInt() ?? 100;
-            final snapshotWidth = extractParam<num>(
-              params['snapshotWidth'],
-            )?.toDouble();
+            final snapshotWidth = extractParam<num>(params['snapshotWidth'])
+                ?.toDouble();
 
             final screenshot = await controller.takeScreenshot(
               screenshotConfiguration: ScreenshotConfiguration(
@@ -1276,8 +1273,7 @@ class ControllerMethodsRegistry {
           },
         ),
         ControllerMethodEntry(
-          description:
-              'Checks if Screen Time is blocking the content — null below iOS 26',
+          description: 'Checks if Screen Time is blocking the content — null below iOS 26',
           methodEnum:
               PlatformInAppWebViewControllerMethod.isBlockedByScreenTime,
           execute: (controller, params) async {
@@ -1352,8 +1348,7 @@ class ControllerMethodsRegistry {
           // The entry id derives from methodEnum, so the bounded form cannot have a registry row of
           // its own without colliding. It is demonstrated here instead, next to the unbounded one,
           // which is also the only way to see the size difference the arguments buy.
-          description:
-              'Saves WebView state (unbounded, then capped and without forward history)',
+          description: 'Saves WebView state (unbounded, then capped and without forward history)',
           methodEnum: PlatformInAppWebViewControllerMethod.saveState,
           execute: (controller, params) async {
             final state = await controller.saveState();

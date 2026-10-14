@@ -15,9 +15,8 @@ void main() {
     test('serialises under the key the Swift side parses', () {
       // Swift: `var supportsAdaptiveImageGlyph = false`, set by KVC from this exact key.
       expect(
-        InAppWebViewSettings(
-          supportsAdaptiveImageGlyph: true,
-        ).toMap()['supportsAdaptiveImageGlyph'],
+        InAppWebViewSettings(supportsAdaptiveImageGlyph: true)
+            .toMap()['supportsAdaptiveImageGlyph'],
         true,
       );
     });
@@ -33,9 +32,8 @@ void main() {
 
     test('false reaches the wire distinctly from unset', () {
       expect(
-        InAppWebViewSettings(
-          supportsAdaptiveImageGlyph: false,
-        ).toMap()['supportsAdaptiveImageGlyph'],
+        InAppWebViewSettings(supportsAdaptiveImageGlyph: false)
+            .toMap()['supportsAdaptiveImageGlyph'],
         false,
       );
     });

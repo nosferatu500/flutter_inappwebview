@@ -49,13 +49,11 @@ class PlatformProxyControllerCreationParams {
   platforms: [
     AndroidPlatform(
       apiName: 'ProxyController',
-      apiUrl:
-          'https://developer.android.com/reference/androidx/webkit/ProxyController',
+      apiUrl: 'https://developer.android.com/reference/androidx/webkit/ProxyController',
     ),
     IOSPlatform(
       apiName: 'WKWebsiteDataStore.proxyConfigurations',
-      apiUrl:
-          'https://developer.apple.com/documentation/webkit/wkwebsitedatastore/4264546-proxyconfigurations',
+      apiUrl: 'https://developer.apple.com/documentation/webkit/wkwebsitedatastore/4264546-proxyconfigurations',
       available: '17.0',
     ),
   ],
@@ -139,13 +137,11 @@ abstract class PlatformProxyController extends PlatformInterface {
     platforms: [
       AndroidPlatform(
         apiName: 'ProxyController.setProxyOverride',
-        apiUrl:
-            'https://developer.android.com/reference/androidx/webkit/ProxyController#setProxyOverride(androidx.webkit.ProxyConfig,%20java.util.concurrent.Executor,%20java.lang.Runnable)',
+        apiUrl: 'https://developer.android.com/reference/androidx/webkit/ProxyController#setProxyOverride(androidx.webkit.ProxyConfig,%20java.util.concurrent.Executor,%20java.lang.Runnable)',
       ),
       IOSPlatform(
         apiName: 'WKWebsiteDataStore.proxyConfigurations',
-        apiUrl:
-            'https://developer.apple.com/documentation/webkit/wkwebsitedatastore/4264546-proxyconfigurations',
+        apiUrl: 'https://developer.apple.com/documentation/webkit/wkwebsitedatastore/4264546-proxyconfigurations',
         available: '17.0',
       ),
     ],
@@ -167,13 +163,11 @@ abstract class PlatformProxyController extends PlatformInterface {
     platforms: [
       AndroidPlatform(
         apiName: 'ProxyController.clearProxyOverride',
-        apiUrl:
-            'https://developer.android.com/reference/androidx/webkit/ProxyController#clearProxyOverride(java.util.concurrent.Executor,%20java.lang.Runnable)',
+        apiUrl: 'https://developer.android.com/reference/androidx/webkit/ProxyController#clearProxyOverride(java.util.concurrent.Executor,%20java.lang.Runnable)',
       ),
       IOSPlatform(
         apiName: 'WKWebsiteDataStore.proxyConfigurations',
-        apiUrl:
-            'https://developer.apple.com/documentation/webkit/wkwebsitedatastore/4264546-proxyconfigurations',
+        apiUrl: 'https://developer.apple.com/documentation/webkit/wkwebsitedatastore/4264546-proxyconfigurations',
         available: '17.0',
       ),
     ],
@@ -214,8 +208,7 @@ abstract class PlatformProxyController extends PlatformInterface {
     ),
     IOSPlatform(
       apiName: 'ProxyConfiguration',
-      apiUrl:
-          'https://developer.apple.com/documentation/network/proxyconfiguration',
+      apiUrl: 'https://developer.apple.com/documentation/network/proxyconfiguration',
       available: '17.0',
     ),
   ],

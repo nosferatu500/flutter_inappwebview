@@ -342,8 +342,12 @@ void webMessage() {
                 WebMessageListener(
                   jsObjectName: "myUnanchoredObj",
                   allowedOriginRules: {"https://*.example.com"},
-                  onPostMessage:
-                      (message, sourceOrigin, isMainFrame, replyProxy) {},
+                  onPostMessage: (
+                    message,
+                    sourceOrigin,
+                    isMainFrame,
+                    replyProxy,
+                  ) {},
                 ),
               );
               // The control. Without it a broken injection path — a JS syntax error, a listener
@@ -353,8 +357,12 @@ void webMessage() {
                 WebMessageListener(
                   jsObjectName: "myAnchoredObj",
                   allowedOriginRules: {"https://*.evil.test"},
-                  onPostMessage:
-                      (message, sourceOrigin, isMainFrame, replyProxy) {},
+                  onPostMessage: (
+                    message,
+                    sourceOrigin,
+                    isMainFrame,
+                    replyProxy,
+                  ) {},
                 ),
               );
               controllerCompleter.complete(controller);
@@ -424,15 +432,23 @@ void webMessage() {
                   WebMessageListener(
                     jsObjectName: "myIsolatedObj",
                     contentWorld: ContentWorld.world(name: worldName),
-                    onPostMessage:
-                        (message, sourceOrigin, isMainFrame, replyProxy) {},
+                    onPostMessage: (
+                      message,
+                      sourceOrigin,
+                      isMainFrame,
+                      replyProxy,
+                    ) {},
                   ),
                 );
                 await controller.addWebMessageListener(
                   WebMessageListener(
                     jsObjectName: "myPageObj",
-                    onPostMessage:
-                        (message, sourceOrigin, isMainFrame, replyProxy) {},
+                    onPostMessage: (
+                      message,
+                      sourceOrigin,
+                      isMainFrame,
+                      replyProxy,
+                    ) {},
                   ),
                 );
                 controllerCompleter.complete(controller);
@@ -462,20 +478,17 @@ void webMessage() {
         expect(
           await readFromPage('myPageObj'),
           'object',
-          reason:
-              'the page-world control must be installed, or nothing below means anything',
+          reason: 'the page-world control must be installed, or nothing below means anything',
         );
         expect(
           await readFromPage('myIsolatedObj'),
           'undefined',
-          reason:
-              'a listener asked for an isolated world must not be visible to page scripts',
+          reason: 'a listener asked for an isolated world must not be visible to page scripts',
         );
         expect(
           await readFromWorld('myIsolatedObj'),
           'object',
-          reason:
-              'the isolated listener must be reachable from its own content world',
+          reason: 'the isolated listener must be reachable from its own content world',
         );
         expect(
           await readFromWorld('myPageObj'),

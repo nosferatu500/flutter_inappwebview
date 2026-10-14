@@ -4,6 +4,7 @@ import 'package:provider/provider.dart';
 import 'package:flutter_inappwebview_example/providers/event_log_provider.dart';
 import 'package:flutter_inappwebview_example/providers/settings_manager.dart';
 import 'package:flutter_inappwebview_example/screens/browsers/inapp_browser_screen.dart';
+
 import '../test_helpers/test_settings_manager.dart';
 
 void main() {

@@ -173,9 +173,8 @@ class _MethodSelectorWidgetState extends State<MethodSelectorWidget> {
         else
           Text(
             'Using default values',
-            style: Theme.of(
-              context,
-            ).textTheme.bodySmall?.copyWith(fontStyle: FontStyle.italic),
+            style: Theme.of(context).textTheme.bodySmall
+                ?.copyWith(fontStyle: FontStyle.italic),
           ),
       ],
     );

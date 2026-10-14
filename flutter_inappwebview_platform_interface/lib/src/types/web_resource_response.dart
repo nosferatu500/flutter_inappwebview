@@ -1,4 +1,5 @@
 import 'dart:typed_data';
+
 import 'package:nosferatu500_inappwebview_internal_annotations/nosferatu500_inappwebview_internal_annotations.dart';
 
 import 'enum_method.dart';
@@ -53,10 +54,8 @@ class WebResourceResponse_ {
     platforms: [
       AndroidPlatform(
         apiName: 'WebResourceResponseCompat.setCookies',
-        apiUrl:
-            'https://developer.android.com/reference/androidx/webkit/WebResourceResponseCompat#setCookies(java.util.List%3Cjava.lang.String%3E)',
-        note:
-            'available on Android only if [WebViewFeature.COOKIE_INTERCEPT] feature is supported.',
+        apiUrl: 'https://developer.android.com/reference/androidx/webkit/WebResourceResponseCompat#setCookies(java.util.List%3Cjava.lang.String%3E)',
+        note: 'available on Android only if [WebViewFeature.COOKIE_INTERCEPT] feature is supported.',
       ),
     ],
   )

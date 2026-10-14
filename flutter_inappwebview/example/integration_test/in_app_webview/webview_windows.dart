@@ -252,8 +252,7 @@ void webViewWindows() {
                       injectionTime: UserScriptInjectionTime.AT_DOCUMENT_START,
                     ),
                     UserScript(
-                      source:
-                          "window.popupEndRuns = (window.popupEndRuns || 0) + 1;",
+                      source: "window.popupEndRuns = (window.popupEndRuns || 0) + 1;",
                       injectionTime: UserScriptInjectionTime.AT_DOCUMENT_END,
                       contentWorld: ContentWorld.world(name: "popupWorld"),
                     ),
@@ -677,16 +676,12 @@ void webViewWindows() {
           isEmpty,
           reason: 'the popup must not load without its rules: $events',
         );
-        expect(
-          events.where((e) => e.startsWith('error ')),
-          [
-            allOf(
-              contains('test-redirect-target'),
-              contains('contentBlockers could not be compiled'),
-            ),
-          ],
-          reason: 'one error for the first page naming the cause: $events',
-        );
+        expect(events.where((e) => e.startsWith('error ')), [
+          allOf(
+            contains('test-redirect-target'),
+            contains('contentBlockers could not be compiled'),
+          ),
+        ], reason: 'one error for the first page naming the cause: $events');
       },
       skip: shouldSkipTest2 || defaultTargetPlatform != TargetPlatform.iOS,
     );
@@ -730,31 +725,29 @@ void webViewWindows() {
 
     // iOS only: the popup's plugin scripts follow its own settings now that it has its own
     // `WKUserContentController` (§259); `supportZoom: false` adds a viewport meta on iOS only.
-    skippableTestWidgets(
-      'a popup WebView uses its own settings',
-      (WidgetTester tester) async {
-        final deadline = TestDeadline();
-        final (opener: _, :popup) = await openPopup(
-          tester,
-          deadline,
-          popupSettings: InAppWebViewSettings(supportZoom: false),
-        );
-        expect(
-          await deadline.step(
-            "reading the popup's viewport meta",
-            popup.evaluateJavascript(
-              source:
-                  "Array.from(document.querySelectorAll('meta[name=viewport]'))"
-                  ".some(function(m) { return m.content.indexOf('user-scalable=no') >= 0; })",
-            ),
+    skippableTestWidgets('a popup WebView uses its own settings', (
+      WidgetTester tester,
+    ) async {
+      final deadline = TestDeadline();
+      final (opener: _, :popup) = await openPopup(
+        tester,
+        deadline,
+        popupSettings: InAppWebViewSettings(supportZoom: false),
+      );
+      expect(
+        await deadline.step(
+          "reading the popup's viewport meta",
+          popup.evaluateJavascript(
+            source:
+                "Array.from(document.querySelectorAll('meta[name=viewport]'))"
+                ".some(function(m) { return m.content.indexOf('user-scalable=no') >= 0; })",
           ),
-          true,
-          reason:
-              "the popup's own supportZoom: false should add its viewport meta",
-        );
-      },
-      skip: shouldSkipTest2 || defaultTargetPlatform != TargetPlatform.iOS,
-    );
+        ),
+        true,
+        reason:
+            "the popup's own supportZoom: false should add its viewport meta",
+      );
+    }, skip: shouldSkipTest2 || defaultTargetPlatform != TargetPlatform.iOS);
 
     final shouldSkipTest3 =
         kIsWeb ||
@@ -997,8 +990,7 @@ void webViewWindows() {
       final pElement = await deadline.step(
         'reading the <p> element',
         controller.evaluateJavascript(
-          source:
-              'document.querySelector("p") && document.querySelector("p").textContent',
+          source: 'document.querySelector("p") && document.querySelector("p").textContent',
         ),
       );
       expect(pElement, null);

@@ -1,6 +1,7 @@
 import 'package:flutter/foundation.dart';
 import 'package:nosferatu500_inappwebview_internal_annotations/nosferatu500_inappwebview_internal_annotations.dart';
 import 'package:plugin_platform_interface/plugin_platform_interface.dart';
+
 import '../in_app_webview/platform_inappwebview_controller.dart';
 import '../inappwebview_platform.dart';
 import '../types/main.dart';
@@ -73,8 +74,7 @@ class PlatformWebMessageListenerCreationParams {
     platforms: [
       IOSPlatform(
         apiName: 'WKUserContentController.addScriptMessageHandler',
-        apiUrl:
-            'https://developer.apple.com/documentation/webkit/wkusercontentcontroller/3585113-addscriptmessagehandler',
+        apiUrl: 'https://developer.apple.com/documentation/webkit/wkusercontentcontroller/3585113-addscriptmessagehandler',
       ),
     ],
   )
@@ -96,8 +96,7 @@ class PlatformWebMessageListenerCreationParams {
     platforms: [
       AndroidPlatform(
         apiName: 'WebViewCompat.WebMessageListener.onPostMessage',
-        apiUrl:
-            'https://developer.android.com/reference/androidx/webkit/WebViewCompat.WebMessageListener#onPostMessage(android.webkit.WebView,%20androidx.webkit.WebMessageCompat,%20android.net.Uri,%20boolean,%20androidx.webkit.JavaScriptReplyProxy)',
+        apiUrl: 'https://developer.android.com/reference/androidx/webkit/WebViewCompat.WebMessageListener#onPostMessage(android.webkit.WebView,%20androidx.webkit.WebMessageCompat,%20android.net.Uri,%20boolean,%20androidx.webkit.JavaScriptReplyProxy)',
       ),
       IOSPlatform(),
     ],

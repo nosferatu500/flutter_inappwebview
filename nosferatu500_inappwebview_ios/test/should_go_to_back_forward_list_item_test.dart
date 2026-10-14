@@ -116,34 +116,36 @@ void main() {
           }),
         ),
         isNull,
-        reason:
-            'the Swift reads a non-int as allow, which is what WebKit does with no delegate at all',
+        reason: 'the Swift reads a non-int as allow, which is what WebKit does with no delegate at all',
       );
     });
 
-    test('an item that could not be located carries null index/offset', () async {
-      WebHistoryItem? received;
-      final controller = controllerWith(
-        IOSHeadlessInAppWebViewCreationParams(
-          shouldGoToBackForwardListItem: (dynamic a, item, b) {
-            received = item;
-            return null;
-          },
-        ),
-      );
+    test(
+      'an item that could not be located carries null index/offset',
+      () async {
+        WebHistoryItem? received;
+        final controller = controllerWith(
+          IOSHeadlessInAppWebViewCreationParams(
+            shouldGoToBackForwardListItem: (dynamic a, item, b) {
+              received = item;
+              return null;
+            },
+          ),
+        );
 
-      await controller.handleMethod(
-        MethodCall('shouldGoToBackForwardListItem', <String, dynamic>{
-          'backForwardListItem': itemMap(),
-          'willUseInstantBack': false,
-        }),
-      );
+        await controller.handleMethod(
+          MethodCall('shouldGoToBackForwardListItem', <String, dynamic>{
+            'backForwardListItem': itemMap(),
+            'willUseInstantBack': false,
+          }),
+        );
 
-      // WebKit hands over the item without saying where it sits, and the Swift looks it up by
-      // identity; a miss must not be reported as index 0.
-      expect(received!.index, isNull);
-      expect(received!.offset, isNull);
-    });
+        // WebKit hands over the item without saying where it sits, and the Swift looks it up by
+        // identity; a miss must not be reported as index 0.
+        expect(received!.index, isNull);
+        expect(received!.offset, isNull);
+      },
+    );
 
     test('does nothing when no handler is registered', () async {
       final controller = controllerWith(
@@ -184,8 +186,7 @@ void main() {
           platform: TargetPlatform.android,
         ),
         isFalse,
-        reason:
-            'android.webkit has no back/forward veto; shouldOverrideUrlLoading does not see them',
+        reason: 'android.webkit has no back/forward veto; shouldOverrideUrlLoading does not see them',
       );
     });
 
@@ -199,9 +200,8 @@ void main() {
         isNull,
       );
       expect(
-        InAppWebViewSettings(
-          useShouldGoToBackForwardListItem: true,
-        ).toMap()['useShouldGoToBackForwardListItem'],
+        InAppWebViewSettings(useShouldGoToBackForwardListItem: true)
+            .toMap()['useShouldGoToBackForwardListItem'],
         isTrue,
       );
     });

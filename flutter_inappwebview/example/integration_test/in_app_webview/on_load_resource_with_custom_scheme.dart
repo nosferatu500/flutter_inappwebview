@@ -19,8 +19,7 @@ void onLoadResourceWithCustomScheme() {
         textDirection: TextDirection.ltr,
         child: InAppWebView(
           key: GlobalKey(),
-          initialFile:
-              "test_assets/in_app_webview_on_load_resource_custom_scheme_test.html",
+          initialFile: "test_assets/in_app_webview_on_load_resource_custom_scheme_test.html",
           initialSettings: InAppWebViewSettings(
             resourceCustomSchemes: ["my-special-custom-scheme"],
           ),

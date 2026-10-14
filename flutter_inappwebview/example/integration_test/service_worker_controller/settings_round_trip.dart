@@ -99,75 +99,77 @@ void serviceWorkerSettingsRoundTrip() {
     }
   }, skip: shouldSkip);
 
-  skippableTestWidgets('settings written to a named profile stay on that profile', (
-    WidgetTester tester,
-  ) async {
-    if (!await swSupported() ||
-        !await WebViewFeature.isFeatureSupported(
-          WebViewFeature.MULTI_PROFILE,
-        )) {
-      markTestSkipped(
-        'SERVICE_WORKER_BASIC_USAGE or MULTI_PROFILE unsupported',
-      );
-      return;
-    }
-    const profile = 'serviceWorkerSettingsRoundTripProfile';
-    await ProfileStore.instance().getOrCreateProfile(name: profile);
-
-    for (final entry in boolSettings.entries) {
-      final (get, set) = entry.value;
-      final defaultBefore = await get();
-      final profileOriginal = await get(profileName: profile);
-      try {
-        for (final value in [!profileOriginal, profileOriginal]) {
-          await set(value, profileName: profile);
-          expect(
-            await get(profileName: profile),
-            value,
-            reason: '${entry.key} did not read back as $value on $profile',
-          );
-          // The assertion that sees a dropped `profileName`: the write would land here instead.
-          expect(
-            await get(),
-            defaultBefore,
-            reason:
-                'writing ${entry.key} on $profile changed the default profile',
-          );
-        }
-      } finally {
-        await set(profileOriginal, profileName: profile);
+  skippableTestWidgets(
+    'settings written to a named profile stay on that profile',
+    (WidgetTester tester) async {
+      if (!await swSupported() ||
+          !await WebViewFeature.isFeatureSupported(
+            WebViewFeature.MULTI_PROFILE,
+          )) {
+        markTestSkipped(
+          'SERVICE_WORKER_BASIC_USAGE or MULTI_PROFILE unsupported',
+        );
+        return;
       }
-    }
+      const profile = 'serviceWorkerSettingsRoundTripProfile';
+      await ProfileStore.instance().getOrCreateProfile(name: profile);
 
-    final defaultMode = await ServiceWorkerController.getCacheMode();
-    final profileMode = await ServiceWorkerController.getCacheMode(
-      profileName: profile,
-    );
-    expect(
-      profileMode,
-      isNotNull,
-      reason: 'the profile cache mode was unreadable',
-    );
-    // A mode the default profile is not in, so the isolation check below can fail.
-    final probe = defaultMode == CacheMode.LOAD_NO_CACHE
-        ? CacheMode.LOAD_CACHE_ELSE_NETWORK
-        : CacheMode.LOAD_NO_CACHE;
-    try {
-      await ServiceWorkerController.setCacheMode(probe, profileName: profile);
-      expect(
-        await ServiceWorkerController.getCacheMode(profileName: profile),
-        probe,
-      );
-      expect(
-        await ServiceWorkerController.getCacheMode(),
-        defaultMode,
-        reason: 'writing cacheMode on $profile changed the default profile',
-      );
-    } finally {
-      await ServiceWorkerController.setCacheMode(
-        profileMode!,
+      for (final entry in boolSettings.entries) {
+        final (get, set) = entry.value;
+        final defaultBefore = await get();
+        final profileOriginal = await get(profileName: profile);
+        try {
+          for (final value in [!profileOriginal, profileOriginal]) {
+            await set(value, profileName: profile);
+            expect(
+              await get(profileName: profile),
+              value,
+              reason: '${entry.key} did not read back as $value on $profile',
+            );
+            // The assertion that sees a dropped `profileName`: the write would land here instead.
+            expect(
+              await get(),
+              defaultBefore,
+              reason:
+                  'writing ${entry.key} on $profile changed the default profile',
+            );
+          }
+        } finally {
+          await set(profileOriginal, profileName: profile);
+        }
+      }
+
+      final defaultMode = await ServiceWorkerController.getCacheMode();
+      final profileMode = await ServiceWorkerController.getCacheMode(
         profileName: profile,
       );
-    }
-  }, skip: shouldSkip);
+      expect(
+        profileMode,
+        isNotNull,
+        reason: 'the profile cache mode was unreadable',
+      );
+      // A mode the default profile is not in, so the isolation check below can fail.
+      final probe = defaultMode == CacheMode.LOAD_NO_CACHE
+          ? CacheMode.LOAD_CACHE_ELSE_NETWORK
+          : CacheMode.LOAD_NO_CACHE;
+      try {
+        await ServiceWorkerController.setCacheMode(probe, profileName: profile);
+        expect(
+          await ServiceWorkerController.getCacheMode(profileName: profile),
+          probe,
+        );
+        expect(
+          await ServiceWorkerController.getCacheMode(),
+          defaultMode,
+          reason: 'writing cacheMode on $profile changed the default profile',
+        );
+      } finally {
+        await ServiceWorkerController.setCacheMode(
+          profileMode!,
+          profileName: profile,
+        );
+      }
+    },
+    skip: shouldSkip,
+  );
 }

@@ -35,8 +35,7 @@ class NavigationAction_ {
       AndroidPlatform(
         available: "21",
         apiName: "WebResourceRequest.hasGesture",
-        apiUrl:
-            "https://developer.android.com/reference/android/webkit/WebResourceRequest#hasGesture()",
+        apiUrl: "https://developer.android.com/reference/android/webkit/WebResourceRequest#hasGesture()",
         note: "On Android < 21, this is always `false`",
       ),
     ],
@@ -52,8 +51,7 @@ class NavigationAction_ {
       AndroidPlatform(
         available: "21",
         apiName: "WebResourceRequest.isRedirect",
-        apiUrl:
-            "https://developer.android.com/reference/android/webkit/WebResourceRequest#isRedirect()",
+        apiUrl: "https://developer.android.com/reference/android/webkit/WebResourceRequest#isRedirect()",
       ),
     ],
   )
@@ -64,8 +62,7 @@ class NavigationAction_ {
     platforms: [
       IOSPlatform(
         apiName: "WKNavigationAction.navigationType",
-        apiUrl:
-            "https://developer.apple.com/documentation/webkit/wknavigationaction/1401914-navigationtype",
+        apiUrl: "https://developer.apple.com/documentation/webkit/wknavigationaction/1401914-navigationtype",
       ),
     ],
   )
@@ -76,8 +73,7 @@ class NavigationAction_ {
     platforms: [
       IOSPlatform(
         apiName: "WKNavigationAction.sourceFrame",
-        apiUrl:
-            "https://developer.apple.com/documentation/webkit/wknavigationaction/1401926-sourceframe",
+        apiUrl: "https://developer.apple.com/documentation/webkit/wknavigationaction/1401926-sourceframe",
       ),
     ],
   )
@@ -88,8 +84,7 @@ class NavigationAction_ {
     platforms: [
       IOSPlatform(
         apiName: "WKNavigationAction.targetFrame",
-        apiUrl:
-            "https://developer.apple.com/documentation/webkit/wknavigationaction/1401918-targetframe",
+        apiUrl: "https://developer.apple.com/documentation/webkit/wknavigationaction/1401918-targetframe",
       ),
     ],
   )
@@ -101,8 +96,7 @@ class NavigationAction_ {
       IOSPlatform(
         available: "14.5",
         apiName: "WKNavigationAction.shouldPerformDownload",
-        apiUrl:
-            "https://developer.apple.com/documentation/webkit/wknavigationaction/3727357-shouldperformdownload",
+        apiUrl: "https://developer.apple.com/documentation/webkit/wknavigationaction/3727357-shouldperformdownload",
       ),
     ],
   )
@@ -128,8 +122,7 @@ class NavigationAction_ {
       IOSPlatform(
         available: "26.0",
         apiName: "WKNavigationAction.isContentRuleListRedirect",
-        apiUrl:
-            "https://developer.apple.com/documentation/webkit/wknavigationaction/iscontentrulelistredirect",
+        apiUrl: "https://developer.apple.com/documentation/webkit/wknavigationaction/iscontentrulelistredirect",
       ),
     ],
   )
@@ -149,8 +142,7 @@ class NavigationAction_ {
       IOSPlatform(
         available: "18.4",
         apiName: "WKNavigationAction.modifierFlags",
-        apiUrl:
-            "https://developer.apple.com/documentation/webkit/wknavigationaction/modifierflags",
+        apiUrl: "https://developer.apple.com/documentation/webkit/wknavigationaction/modifierflags",
       ),
     ],
   )
@@ -167,8 +159,7 @@ class NavigationAction_ {
       IOSPlatform(
         available: "18.4",
         apiName: "WKNavigationAction.buttonNumber",
-        apiUrl:
-            "https://developer.apple.com/documentation/webkit/wknavigationaction/buttonnumber",
+        apiUrl: "https://developer.apple.com/documentation/webkit/wknavigationaction/buttonnumber",
       ),
     ],
   )

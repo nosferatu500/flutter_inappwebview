@@ -260,9 +260,9 @@ class ExchangeableObjectGenerator
     }
     if (hasCustomConstructor) {
       final library = visitor.constructor.library;
-      ParsedLibraryResult parsed =
-          library.session.getParsedLibraryByElement(library)
-              as ParsedLibraryResult;
+      ParsedLibraryResult parsed = library.session.getParsedLibraryByElement(
+        library,
+      ) as ParsedLibraryResult;
       final constructorBody = parsed
           .getFragmentDeclaration(visitor.constructor.firstFragment)
           ?.node;

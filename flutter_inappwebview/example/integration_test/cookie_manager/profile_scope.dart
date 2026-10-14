@@ -84,16 +84,12 @@ void profileScope() {
       // *disjoint lists* rather than "the profile has its cookie", because a dropped parameter
       // makes both calls resolve the same store -- and then each list carries both names, which a
       // one-sided `contains` assertion would happily pass.
-      expect(
-        await namesIn(null),
-        ['inDefault'],
-        reason: 'the default store must not see the named profile\'s cookie',
-      );
-      expect(
-        await namesIn(profile),
-        ['inProfile'],
-        reason: 'the named profile must not see the default store\'s cookie',
-      );
+      expect(await namesIn(null), [
+        'inDefault',
+      ], reason: 'the default store must not see the named profile\'s cookie');
+      expect(await namesIn(profile), [
+        'inProfile',
+      ], reason: 'the named profile must not see the default store\'s cookie');
     } finally {
       await cookieManager.deleteAllCookies();
       await cookieManager.deleteAllCookies(profileName: profile);
@@ -157,8 +153,7 @@ void profileScope() {
     expect(
       await cookieManager.isAcceptCookieEnabled(profileName: missing),
       isNull,
-      reason:
-          'null means "could not read", which false would misreport as "rejecting"',
+      reason: 'null means "could not read", which false would misreport as "rejecting"',
     );
 
     // And none of that touched the default store.

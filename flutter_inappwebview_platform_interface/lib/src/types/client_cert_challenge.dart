@@ -16,8 +16,7 @@ class ClientCertChallenge_ extends URLAuthenticationChallenge_ {
     platforms: [
       AndroidPlatform(
         apiName: "ClientCertRequest.getPrincipals",
-        apiUrl:
-            "https://developer.android.com/reference/android/webkit/ClientCertRequest#getPrincipals()",
+        apiUrl: "https://developer.android.com/reference/android/webkit/ClientCertRequest#getPrincipals()",
         available: "21",
       ),
     ],
@@ -29,8 +28,7 @@ class ClientCertChallenge_ extends URLAuthenticationChallenge_ {
     platforms: [
       AndroidPlatform(
         apiName: "ClientCertRequest.getKeyTypes",
-        apiUrl:
-            "https://developer.android.com/reference/android/webkit/ClientCertRequest#getKeyTypes()",
+        apiUrl: "https://developer.android.com/reference/android/webkit/ClientCertRequest#getKeyTypes()",
         available: "21",
       ),
     ],

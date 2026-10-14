@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+
 import '../utils/constants.dart';
 import '../utils/support_checker.dart';
 import '../models/test_case.dart';
@@ -41,9 +42,8 @@ class _CategoryScreenState extends State<CategoryScreen> {
           if (_selectedPlatforms.isNotEmpty)
             Container(
               padding: const EdgeInsets.all(8.0),
-              color: Theme.of(
-                context,
-              ).primaryColor.withAlpha((255 * 0.1).round()),
+              color: Theme.of(context).primaryColor
+                  .withAlpha((255 * 0.1).round()),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [

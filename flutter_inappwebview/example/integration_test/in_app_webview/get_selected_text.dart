@@ -21,8 +21,7 @@ void getSelectedText() {
         child: InAppWebView(
           key: GlobalKey(),
           initialData: InAppWebViewInitialData(
-            data:
-                '<!DOCTYPE html><html><body><p id="p">alpha beta gamma</p></body></html>',
+            data: '<!DOCTYPE html><html><body><p id="p">alpha beta gamma</p></body></html>',
           ),
           onWebViewCreated: (controller) {
             controllerCompleter.complete(controller);

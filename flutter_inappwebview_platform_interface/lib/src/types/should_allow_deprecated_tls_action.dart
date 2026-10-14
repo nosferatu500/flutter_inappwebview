@@ -1,4 +1,5 @@
 import 'package:nosferatu500_inappwebview_internal_annotations/nosferatu500_inappwebview_internal_annotations.dart';
+
 import '../in_app_webview/platform_webview.dart';
 part 'should_allow_deprecated_tls_action.g.dart';
 

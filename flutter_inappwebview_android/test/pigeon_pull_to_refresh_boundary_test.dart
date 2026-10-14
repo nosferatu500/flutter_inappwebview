@@ -103,13 +103,16 @@ void main() {
   });
 
   group('Dart -> Kotlin (HostApi)', () {
-    test('setColor sends the #AARRGGBB string Color.parseColor takes', () async {
-      stubHost('setColor', true);
-      await controller.setColor(const Color(0x80FF0000));
-      // Alpha first. `Color.parseColor` reads an 8-digit string as AARRGGBB, so an RRGGBBAA
-      // encoding would silently produce a different colour, not an error.
-      expect(sent['setColor'], <Object?>['#80ff0000']);
-    });
+    test(
+      'setColor sends the #AARRGGBB string Color.parseColor takes',
+      () async {
+        stubHost('setColor', true);
+        await controller.setColor(const Color(0x80FF0000));
+        // Alpha first. `Color.parseColor` reads an 8-digit string as AARRGGBB, so an RRGGBBAA
+        // encoding would silently produce a different colour, not an error.
+        expect(sent['setColor'], <Object?>['#80ff0000']);
+      },
+    );
 
     test('setIndicatorSize sends the native size constant', () async {
       stubHost('setSize', true);

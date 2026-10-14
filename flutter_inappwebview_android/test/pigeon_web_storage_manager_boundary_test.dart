@@ -194,15 +194,18 @@ void main() {
       },
     );
 
-    test('a null domain is preserved, not turned into an empty string', () async {
-      // null is the unresolvable-store / unsupported-feature answer, and it is the `String?`
-      // counterpart of deleteBrowsingData's `false` — an inconsistency that predates the migration.
-      replies[deleteForSiteChannel] = null;
-      expect(
-        await manager.deleteBrowsingDataForSite(site: 'https://example.com'),
-        isNull,
-      );
-    });
+    test(
+      'a null domain is preserved, not turned into an empty string',
+      () async {
+        // null is the unresolvable-store / unsupported-feature answer, and it is the `String?`
+        // counterpart of deleteBrowsingData's `false` — an inconsistency that predates the migration.
+        replies[deleteForSiteChannel] = null;
+        expect(
+          await manager.deleteBrowsingDataForSite(site: 'https://example.com'),
+          isNull,
+        );
+      },
+    );
 
     test('an unparseable site surfaces as a PlatformException', () async {
       // The Kotlin lets IllegalArgumentException propagate so Pigeon reports it through wrapError;

@@ -80,8 +80,7 @@ class PlatformPullToRefreshControllerCreationParams {
 @SupportedPlatforms(
   platforms: [
     AndroidPlatform(
-      note:
-          '**NOTE**: to be able to use the "pull-to-refresh" feature, [InAppWebViewSettings.useHybridComposition] must be `true`.',
+      note: '**NOTE**: to be able to use the "pull-to-refresh" feature, [InAppWebViewSettings.useHybridComposition] must be `true`.',
     ),
     IOSPlatform(),
   ],
@@ -158,13 +157,11 @@ abstract class PlatformPullToRefreshController extends PlatformInterface
     platforms: [
       AndroidPlatform(
         apiName: 'SwipeRefreshLayout.setEnabled',
-        apiUrl:
-            'https://developer.android.com/reference/androidx/swiperefreshlayout/widget/SwipeRefreshLayout#setEnabled(boolean)',
+        apiUrl: 'https://developer.android.com/reference/androidx/swiperefreshlayout/widget/SwipeRefreshLayout#setEnabled(boolean)',
       ),
       IOSPlatform(
         apiName: 'UIScrollView.refreshControl',
-        apiUrl:
-            'https://developer.apple.com/documentation/uikit/uiscrollview/2127691-refreshcontrol',
+        apiUrl: 'https://developer.apple.com/documentation/uikit/uiscrollview/2127691-refreshcontrol',
       ),
     ],
   )
@@ -183,13 +180,11 @@ abstract class PlatformPullToRefreshController extends PlatformInterface
     platforms: [
       AndroidPlatform(
         apiName: 'View.isEnabled',
-        apiUrl:
-            'https://developer.android.com/reference/android/view/View#isEnabled()',
+        apiUrl: 'https://developer.android.com/reference/android/view/View#isEnabled()',
       ),
       IOSPlatform(
         apiName: 'UIScrollView.refreshControl',
-        apiUrl:
-            'https://developer.apple.com/documentation/uikit/uiscrollview/2127691-refreshcontrol',
+        apiUrl: 'https://developer.apple.com/documentation/uikit/uiscrollview/2127691-refreshcontrol',
       ),
     ],
   )
@@ -212,13 +207,11 @@ abstract class PlatformPullToRefreshController extends PlatformInterface
     platforms: [
       AndroidPlatform(
         apiName: 'SwipeRefreshLayout.setRefreshing',
-        apiUrl:
-            'https://developer.android.com/reference/androidx/swiperefreshlayout/widget/SwipeRefreshLayout#setRefreshing(boolean)',
+        apiUrl: 'https://developer.android.com/reference/androidx/swiperefreshlayout/widget/SwipeRefreshLayout#setRefreshing(boolean)',
       ),
       IOSPlatform(
         apiName: 'UIRefreshControl.beginRefreshing',
-        apiUrl:
-            'https://developer.apple.com/documentation/uikit/uirefreshcontrol/1624842-beginrefreshing',
+        apiUrl: 'https://developer.apple.com/documentation/uikit/uirefreshcontrol/1624842-beginrefreshing',
       ),
     ],
   )
@@ -242,13 +235,11 @@ abstract class PlatformPullToRefreshController extends PlatformInterface
     platforms: [
       AndroidPlatform(
         apiName: 'SwipeRefreshLayout.setRefreshing',
-        apiUrl:
-            'https://developer.android.com/reference/androidx/swiperefreshlayout/widget/SwipeRefreshLayout#setRefreshing(boolean)',
+        apiUrl: 'https://developer.android.com/reference/androidx/swiperefreshlayout/widget/SwipeRefreshLayout#setRefreshing(boolean)',
       ),
       IOSPlatform(
         apiName: 'UIRefreshControl.endRefreshing',
-        apiUrl:
-            'https://developer.apple.com/documentation/uikit/uirefreshcontrol/1624846-endrefreshing',
+        apiUrl: 'https://developer.apple.com/documentation/uikit/uirefreshcontrol/1624846-endrefreshing',
       ),
     ],
   )
@@ -267,13 +258,11 @@ abstract class PlatformPullToRefreshController extends PlatformInterface
     platforms: [
       AndroidPlatform(
         apiName: 'SwipeRefreshLayout.isRefreshing',
-        apiUrl:
-            'https://developer.android.com/reference/androidx/swiperefreshlayout/widget/SwipeRefreshLayout#isRefreshing()',
+        apiUrl: 'https://developer.android.com/reference/androidx/swiperefreshlayout/widget/SwipeRefreshLayout#isRefreshing()',
       ),
       IOSPlatform(
         apiName: 'UIRefreshControl.isRefreshing',
-        apiUrl:
-            'https://developer.apple.com/documentation/uikit/uirefreshcontrol/1624844-isrefreshing',
+        apiUrl: 'https://developer.apple.com/documentation/uikit/uirefreshcontrol/1624844-isrefreshing',
       ),
     ],
   )
@@ -292,13 +281,11 @@ abstract class PlatformPullToRefreshController extends PlatformInterface
     platforms: [
       AndroidPlatform(
         apiName: 'SwipeRefreshLayout.setColorSchemeColors',
-        apiUrl:
-            'https://developer.android.com/reference/androidx/swiperefreshlayout/widget/SwipeRefreshLayout#setColorSchemeColors(int...)',
+        apiUrl: 'https://developer.android.com/reference/androidx/swiperefreshlayout/widget/SwipeRefreshLayout#setColorSchemeColors(int...)',
       ),
       IOSPlatform(
         apiName: 'UIRefreshControl.tintColor',
-        apiUrl:
-            'https://developer.apple.com/documentation/uikit/uirefreshcontrol/1624847-tintcolor',
+        apiUrl: 'https://developer.apple.com/documentation/uikit/uirefreshcontrol/1624847-tintcolor',
       ),
     ],
   )
@@ -317,13 +304,11 @@ abstract class PlatformPullToRefreshController extends PlatformInterface
     platforms: [
       AndroidPlatform(
         apiName: 'SwipeRefreshLayout.setProgressBackgroundColorSchemeColor',
-        apiUrl:
-            'https://developer.android.com/reference/androidx/swiperefreshlayout/widget/SwipeRefreshLayout#setProgressBackgroundColorSchemeColor(int)',
+        apiUrl: 'https://developer.android.com/reference/androidx/swiperefreshlayout/widget/SwipeRefreshLayout#setProgressBackgroundColorSchemeColor(int)',
       ),
       IOSPlatform(
         apiName: 'UIView.backgroundColor',
-        apiUrl:
-            'https://developer.apple.com/documentation/uikit/uiview/1622591-backgroundcolor',
+        apiUrl: 'https://developer.apple.com/documentation/uikit/uiview/1622591-backgroundcolor',
       ),
     ],
   )
@@ -342,8 +327,7 @@ abstract class PlatformPullToRefreshController extends PlatformInterface
     platforms: [
       AndroidPlatform(
         apiName: 'SwipeRefreshLayout.setDistanceToTriggerSync',
-        apiUrl:
-            'https://developer.android.com/reference/androidx/swiperefreshlayout/widget/SwipeRefreshLayout#setDistanceToTriggerSync(int)',
+        apiUrl: 'https://developer.android.com/reference/androidx/swiperefreshlayout/widget/SwipeRefreshLayout#setDistanceToTriggerSync(int)',
       ),
     ],
   )
@@ -362,8 +346,7 @@ abstract class PlatformPullToRefreshController extends PlatformInterface
     platforms: [
       AndroidPlatform(
         apiName: 'SwipeRefreshLayout.setSlingshotDistance',
-        apiUrl:
-            'https://developer.android.com/reference/androidx/swiperefreshlayout/widget/SwipeRefreshLayout#setSlingshotDistance(int)',
+        apiUrl: 'https://developer.android.com/reference/androidx/swiperefreshlayout/widget/SwipeRefreshLayout#setSlingshotDistance(int)',
       ),
     ],
   )
@@ -382,8 +365,7 @@ abstract class PlatformPullToRefreshController extends PlatformInterface
     platforms: [
       AndroidPlatform(
         apiName: 'SwipeRefreshLayout.DEFAULT_SLINGSHOT_DISTANCE',
-        apiUrl:
-            'https://developer.android.com/reference/androidx/swiperefreshlayout/widget/SwipeRefreshLayout#DEFAULT_SLINGSHOT_DISTANCE()',
+        apiUrl: 'https://developer.android.com/reference/androidx/swiperefreshlayout/widget/SwipeRefreshLayout#DEFAULT_SLINGSHOT_DISTANCE()',
       ),
     ],
   )
@@ -402,8 +384,7 @@ abstract class PlatformPullToRefreshController extends PlatformInterface
     platforms: [
       AndroidPlatform(
         apiName: 'SwipeRefreshLayout.setSize',
-        apiUrl:
-            'https://developer.android.com/reference/androidx/swiperefreshlayout/widget/SwipeRefreshLayout#setSize(int)',
+        apiUrl: 'https://developer.android.com/reference/androidx/swiperefreshlayout/widget/SwipeRefreshLayout#setSize(int)',
       ),
     ],
   )
@@ -422,8 +403,7 @@ abstract class PlatformPullToRefreshController extends PlatformInterface
     platforms: [
       IOSPlatform(
         apiName: 'UIRefreshControl.attributedTitle',
-        apiUrl:
-            'https://developer.apple.com/documentation/uikit/uirefreshcontrol/1624845-attributedtitle',
+        apiUrl: 'https://developer.apple.com/documentation/uikit/uirefreshcontrol/1624845-attributedtitle',
       ),
     ],
   )

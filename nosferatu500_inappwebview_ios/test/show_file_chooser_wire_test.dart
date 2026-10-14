@@ -79,21 +79,24 @@ void main() {
       expect(map['filePaths'], ['file:///tmp/a.png', 'file:///tmp/b.png']);
     });
 
-    test('null filePaths is the cancel signal, distinct from an empty list', () {
-      // Swift toURLs() returns nil for a null filePaths -> completionHandler(nil) -> cancel.
-      expect(
-        ShowFileChooserResponse(handledByClient: true).toMap()['filePaths'],
-        isNull,
-      );
-      // An empty list is a successful empty selection, NOT a cancel.
-      expect(
-        ShowFileChooserResponse(
-          handledByClient: true,
-          filePaths: const [],
-        ).toMap()['filePaths'],
-        isEmpty,
-      );
-    });
+    test(
+      'null filePaths is the cancel signal, distinct from an empty list',
+      () {
+        // Swift toURLs() returns nil for a null filePaths -> completionHandler(nil) -> cancel.
+        expect(
+          ShowFileChooserResponse(handledByClient: true).toMap()['filePaths'],
+          isNull,
+        );
+        // An empty list is a successful empty selection, NOT a cancel.
+        expect(
+          ShowFileChooserResponse(
+            handledByClient: true,
+            filePaths: const [],
+          ).toMap()['filePaths'],
+          isEmpty,
+        );
+      },
+    );
 
     test('handledByClient false is what cancels the upload on iOS', () {
       // Documented divergence from Android, where false falls through to the plugin's own picker.
@@ -126,9 +129,8 @@ void main() {
 
     test('serialises under the key the Swift side reads', () {
       expect(
-        InAppWebViewSettings(
-          useOnShowFileChooser: true,
-        ).toMap()['useOnShowFileChooser'],
+        InAppWebViewSettings(useOnShowFileChooser: true)
+            .toMap()['useOnShowFileChooser'],
         true,
       );
     });

@@ -1,6 +1,7 @@
 import 'package:flutter/foundation.dart';
 import 'package:nosferatu500_inappwebview_internal_annotations/nosferatu500_inappwebview_internal_annotations.dart';
 import 'package:plugin_platform_interface/plugin_platform_interface.dart';
+
 import '../in_app_webview/in_app_webview_settings.dart';
 import '../debug_logging_settings.dart';
 import '../inappwebview_platform.dart';
@@ -51,12 +52,10 @@ class PlatformFindInteractionControllerCreationParams {
     platforms: [
       AndroidPlatform(
         apiName: 'WebView.FindListener.onFindResultReceived',
-        apiUrl:
-            'https://developer.android.com/reference/android/webkit/WebView.FindListener#onFindResultReceived(int,%20int,%20boolean)',
+        apiUrl: 'https://developer.android.com/reference/android/webkit/WebView.FindListener#onFindResultReceived(int,%20int,%20boolean)',
       ),
       IOSPlatform(
-        note:
-            """Not called while the native find interaction is driving the search, which is when [InAppWebViewSettings.isFindInteractionEnabled] is `true` **and** the device is on iOS 16.0 or later. Use [PlatformFindInteractionController.getActiveFindSession] for the counts in that case.
+        note: """Not called while the native find interaction is driving the search, which is when [InAppWebViewSettings.isFindInteractionEnabled] is `true` **and** the device is on iOS 16.0 or later. Use [PlatformFindInteractionController.getActiveFindSession] for the counts in that case.
 Below iOS 16.0 that setting cannot take effect, so the search falls back to the JavaScript implementation and this event **is** called even with the setting `true`.""",
       ),
     ],
@@ -176,14 +175,11 @@ abstract class PlatformFindInteractionController extends PlatformInterface
     platforms: [
       AndroidPlatform(
         apiName: 'WebView.findAllAsync',
-        apiUrl:
-            'https://developer.android.com/reference/android/webkit/WebView#findAllAsync(java.lang.String)',
-        note:
-            'It finds all instances asynchronously. Successive calls to this will cancel any pending searches.',
+        apiUrl: 'https://developer.android.com/reference/android/webkit/WebView#findAllAsync(java.lang.String)',
+        note: 'It finds all instances asynchronously. Successive calls to this will cancel any pending searches.',
       ),
       IOSPlatform(
-        note:
-            'If [InAppWebViewSettings.isFindInteractionEnabled] is `true`, it uses the built-in find interaction native UI, otherwise this is implemented using CSS and Javascript. In this case, it will use the [Official API - UIFindInteraction.presentFindNavigator](https://developer.apple.com/documentation/uikit/uifindinteraction/3975832-presentfindnavigator?changes=_2) with [Official API - UIFindInteraction.searchText](https://developer.apple.com/documentation/uikit/uifindinteraction/3975834-searchtext?changes=_2)',
+        note: 'If [InAppWebViewSettings.isFindInteractionEnabled] is `true`, it uses the built-in find interaction native UI, otherwise this is implemented using CSS and Javascript. In this case, it will use the [Official API - UIFindInteraction.presentFindNavigator](https://developer.apple.com/documentation/uikit/uifindinteraction/3975832-presentfindnavigator?changes=_2) with [Official API - UIFindInteraction.searchText](https://developer.apple.com/documentation/uikit/uifindinteraction/3975834-searchtext?changes=_2)',
       ),
     ],
   )
@@ -204,12 +200,10 @@ abstract class PlatformFindInteractionController extends PlatformInterface
     platforms: [
       AndroidPlatform(
         apiName: 'WebView.findNext',
-        apiUrl:
-            'https://developer.android.com/reference/android/webkit/WebView#findNext(boolean)',
+        apiUrl: 'https://developer.android.com/reference/android/webkit/WebView#findNext(boolean)',
       ),
       IOSPlatform(
-        note:
-            'If [InAppWebViewSettings.isFindInteractionEnabled] is `true`, it uses the built-in find interaction native UI, otherwise this is implemented using CSS and Javascript. In this case, it will use the [Official API - UIFindInteraction.findNext](https://developer.apple.com/documentation/uikit/uifindinteraction/3975829-findnext?changes=_2) and ([Official API - UIFindInteraction.findPrevious](https://developer.apple.com/documentation/uikit/uifindinteraction/3975830-findprevious?changes=_2)',
+        note: 'If [InAppWebViewSettings.isFindInteractionEnabled] is `true`, it uses the built-in find interaction native UI, otherwise this is implemented using CSS and Javascript. In this case, it will use the [Official API - UIFindInteraction.findNext](https://developer.apple.com/documentation/uikit/uifindinteraction/3975829-findnext?changes=_2) and ([Official API - UIFindInteraction.findPrevious](https://developer.apple.com/documentation/uikit/uifindinteraction/3975830-findprevious?changes=_2)',
       ),
     ],
   )
@@ -228,12 +222,10 @@ abstract class PlatformFindInteractionController extends PlatformInterface
     platforms: [
       AndroidPlatform(
         apiName: 'WebView.clearMatches',
-        apiUrl:
-            'https://developer.android.com/reference/android/webkit/WebView#clearMatches()',
+        apiUrl: 'https://developer.android.com/reference/android/webkit/WebView#clearMatches()',
       ),
       IOSPlatform(
-        note:
-            'If [InAppWebViewSettings.isFindInteractionEnabled] is `true`, it uses the built-in find interaction native UI, otherwise this is implemented using CSS and Javascript. In this case, it will use the [Official API - UIFindInteraction.dismissFindNavigator](https://developer.apple.com/documentation/uikit/uifindinteraction/3975827-dismissfindnavigator?changes=_2)',
+        note: 'If [InAppWebViewSettings.isFindInteractionEnabled] is `true`, it uses the built-in find interaction native UI, otherwise this is implemented using CSS and Javascript. In this case, it will use the [Official API - UIFindInteraction.dismissFindNavigator](https://developer.apple.com/documentation/uikit/uifindinteraction/3975827-dismissfindnavigator?changes=_2)',
       ),
     ],
   )
@@ -253,10 +245,8 @@ abstract class PlatformFindInteractionController extends PlatformInterface
       AndroidPlatform(),
       IOSPlatform(
         apiName: 'UIFindInteraction.searchText',
-        apiUrl:
-            'https://developer.apple.com/documentation/uikit/uifindinteraction/3975834-searchtext?changes=_2',
-        note:
-            'If [InAppWebViewSettings.isFindInteractionEnabled] is `true`, it will pre-populate the system find panel\'s search text field with a search query.',
+        apiUrl: 'https://developer.apple.com/documentation/uikit/uifindinteraction/3975834-searchtext?changes=_2',
+        note: 'If [InAppWebViewSettings.isFindInteractionEnabled] is `true`, it will pre-populate the system find panel\'s search text field with a search query.',
       ),
     ],
   )
@@ -276,10 +266,8 @@ abstract class PlatformFindInteractionController extends PlatformInterface
       AndroidPlatform(),
       IOSPlatform(
         apiName: 'UIFindInteraction.getSearchText',
-        apiUrl:
-            'https://developer.apple.com/documentation/uikit/uifindinteraction/3975834-searchtext?changes=_2',
-        note:
-            'If [InAppWebViewSettings.isFindInteractionEnabled] is `true`, it will get the system find panel\'s search text field value.',
+        apiUrl: 'https://developer.apple.com/documentation/uikit/uifindinteraction/3975834-searchtext?changes=_2',
+        note: 'If [InAppWebViewSettings.isFindInteractionEnabled] is `true`, it will get the system find panel\'s search text field value.',
       ),
     ],
   )
@@ -298,10 +286,8 @@ abstract class PlatformFindInteractionController extends PlatformInterface
     platforms: [
       IOSPlatform(
         apiName: 'UIFindInteraction.isFindNavigatorVisible',
-        apiUrl:
-            'https://developer.apple.com/documentation/uikit/uifindinteraction/3975828-isfindnavigatorvisible?changes=_2',
-        note:
-            'Available only if [InAppWebViewSettings.isFindInteractionEnabled] is `true`.',
+        apiUrl: 'https://developer.apple.com/documentation/uikit/uifindinteraction/3975828-isfindnavigatorvisible?changes=_2',
+        note: 'Available only if [InAppWebViewSettings.isFindInteractionEnabled] is `true`.',
       ),
     ],
   )
@@ -320,10 +306,8 @@ abstract class PlatformFindInteractionController extends PlatformInterface
     platforms: [
       IOSPlatform(
         apiName: 'UIFindInteraction.updateResultCount',
-        apiUrl:
-            'https://developer.apple.com/documentation/uikit/uifindinteraction/3975835-updateresultcount?changes=_2',
-        note:
-            'Available only if [InAppWebViewSettings.isFindInteractionEnabled] is `true`.',
+        apiUrl: 'https://developer.apple.com/documentation/uikit/uifindinteraction/3975835-updateresultcount?changes=_2',
+        note: 'Available only if [InAppWebViewSettings.isFindInteractionEnabled] is `true`.',
       ),
     ],
   )
@@ -342,10 +326,8 @@ abstract class PlatformFindInteractionController extends PlatformInterface
     platforms: [
       IOSPlatform(
         apiName: 'UIFindInteraction.presentFindNavigator',
-        apiUrl:
-            'https://developer.apple.com/documentation/uikit/uifindinteraction/3975832-presentfindnavigator?changes=_2',
-        note:
-            'Available only if [InAppWebViewSettings.isFindInteractionEnabled] is `true`.',
+        apiUrl: 'https://developer.apple.com/documentation/uikit/uifindinteraction/3975832-presentfindnavigator?changes=_2',
+        note: 'Available only if [InAppWebViewSettings.isFindInteractionEnabled] is `true`.',
       ),
     ],
   )
@@ -364,10 +346,8 @@ abstract class PlatformFindInteractionController extends PlatformInterface
     platforms: [
       IOSPlatform(
         apiName: 'UIFindInteraction.dismissFindNavigator',
-        apiUrl:
-            'https://developer.apple.com/documentation/uikit/uifindinteraction/3975827-dismissfindnavigator?changes=_2',
-        note:
-            'Available only if [InAppWebViewSettings.isFindInteractionEnabled] is `true`.',
+        apiUrl: 'https://developer.apple.com/documentation/uikit/uifindinteraction/3975827-dismissfindnavigator?changes=_2',
+        note: 'Available only if [InAppWebViewSettings.isFindInteractionEnabled] is `true`.',
       ),
     ],
   )
@@ -387,8 +367,7 @@ abstract class PlatformFindInteractionController extends PlatformInterface
       AndroidPlatform(),
       IOSPlatform(
         apiName: 'UIFindInteraction.activeFindSession',
-        apiUrl:
-            'https://developer.apple.com/documentation/uikit/uifindinteraction/3975825-activefindsession?changes=_7____4_8&language=objc',
+        apiUrl: 'https://developer.apple.com/documentation/uikit/uifindinteraction/3975825-activefindsession?changes=_7____4_8&language=objc',
       ),
     ],
   )

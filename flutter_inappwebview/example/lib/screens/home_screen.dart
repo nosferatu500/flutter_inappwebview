@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:nosferatu500_inappwebview/nosferatu500_inappwebview.dart';
+
 import '../widgets/common/app_drawer.dart';
 import '../utils/constants.dart';
 import '../utils/test_registry.dart';
@@ -40,16 +41,14 @@ class HomeScreen extends StatelessWidget {
           children: [
             Text(
               'Test Categories',
-              style: Theme.of(
-                context,
-              ).textTheme.headlineSmall?.copyWith(fontWeight: FontWeight.bold),
+              style: Theme.of(context).textTheme.headlineSmall
+                  ?.copyWith(fontWeight: FontWeight.bold),
             ),
             const SizedBox(height: 8),
             Text(
               'Select a category to run tests',
-              style: Theme.of(
-                context,
-              ).textTheme.bodyMedium?.copyWith(color: Colors.grey[600]),
+              style: Theme.of(context).textTheme.bodyMedium
+                  ?.copyWith(color: Colors.grey[600]),
             ),
             const SizedBox(height: 24),
             Expanded(
@@ -154,9 +153,8 @@ class HomeScreen extends StatelessWidget {
               Text(
                 title,
                 textAlign: TextAlign.center,
-                style: Theme.of(
-                  context,
-                ).textTheme.titleMedium?.copyWith(fontWeight: FontWeight.bold),
+                style: Theme.of(context).textTheme.titleMedium
+                    ?.copyWith(fontWeight: FontWeight.bold),
               ),
               const SizedBox(height: 8),
               Container(

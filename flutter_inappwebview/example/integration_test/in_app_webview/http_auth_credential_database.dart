@@ -165,87 +165,89 @@ void httpAuthCredentialDatabase() {
     // challenge therefore has to run somewhere no earlier test has unlocked. Neither of these ever
     // authenticates successfully, so 8084 stays locked for the whole run.
 
-    skippableTestWidgets('a credential saved for another protection space is not offered', (
-      WidgetTester tester,
-    ) async {
-      final httpAuthCredentialDatabase = HttpAuthCredentialDatabase.instance();
-      final Completer<InAppWebViewController> controllerCompleter =
-          Completer<InAppWebViewController>();
-      final Completer<void> pageLoaded = Completer<void>();
+    skippableTestWidgets(
+      'a credential saved for another protection space is not offered',
+      (WidgetTester tester) async {
+        final httpAuthCredentialDatabase =
+            HttpAuthCredentialDatabase.instance();
+        final Completer<InAppWebViewController> controllerCompleter =
+            Completer<InAppWebViewController>();
+        final Completer<void> pageLoaded = Completer<void>();
 
-      await httpAuthCredentialDatabase.clearAllAuthCredentials();
+        await httpAuthCredentialDatabase.clearAllAuthCredentials();
 
-      // Saved for 8081/realm "Node" — a different port *and* a different realm from the origin
-      // this WebView will visit, so it is a different `URLProtectionSpace` in two dimensions.
-      await httpAuthCredentialDatabase.setHttpAuthCredential(
-        protectionSpace: URLProtectionSpace(
-          host: environment["NODE_SERVER_IP"]!,
-          protocol: "http",
-          realm: "Node",
-          port: 8081,
-        ),
-        credential: URLCredential(username: "USERNAME", password: "PASSWORD"),
-      );
-
-      var challenges = 0;
-      await tester.pumpWidget(
-        Directionality(
-          textDirection: TextDirection.ltr,
-          child: InAppWebView(
-            key: GlobalKey(),
-            initialUrlRequest: URLRequest(
-              url: WebUri("http://${environment["NODE_SERVER_IP"]}:8084/"),
-            ),
-            onWebViewCreated: (controller) {
-              controllerCompleter.complete(controller);
-            },
-            onLoadStop: (controller, url) {
-              if (!pageLoaded.isCompleted) {
-                pageLoaded.complete();
-              }
-            },
-            onReceivedHttpAuthRequest: (controller, challenge) async {
-              challenges++;
-              // Ask for whatever is saved for *this* space. Nothing is, and the credential
-              // saved above belongs to another one, so the guard is what decides the outcome.
-              return HttpAuthResponse(
-                action: challenges > 2
-                    ? HttpAuthResponseAction.CANCEL
-                    : HttpAuthResponseAction.USE_SAVED_HTTP_AUTH_CREDENTIALS,
-              );
-            },
+        // Saved for 8081/realm "Node" — a different port *and* a different realm from the origin
+        // this WebView will visit, so it is a different `URLProtectionSpace` in two dimensions.
+        await httpAuthCredentialDatabase.setHttpAuthCredential(
+          protectionSpace: URLProtectionSpace(
+            host: environment["NODE_SERVER_IP"]!,
+            protocol: "http",
+            realm: "Node",
+            port: 8081,
           ),
-        ),
-      );
+          credential: URLCredential(username: "USERNAME", password: "PASSWORD"),
+        );
 
-      final InAppWebViewController controller =
-          await controllerCompleter.future;
-      await pageLoaded.future;
+        var challenges = 0;
+        await tester.pumpWidget(
+          Directionality(
+            textDirection: TextDirection.ltr,
+            child: InAppWebView(
+              key: GlobalKey(),
+              initialUrlRequest: URLRequest(
+                url: WebUri("http://${environment["NODE_SERVER_IP"]}:8084/"),
+              ),
+              onWebViewCreated: (controller) {
+                controllerCompleter.complete(controller);
+              },
+              onLoadStop: (controller, url) {
+                if (!pageLoaded.isCompleted) {
+                  pageLoaded.complete();
+                }
+              },
+              onReceivedHttpAuthRequest: (controller, challenge) async {
+                challenges++;
+                // Ask for whatever is saved for *this* space. Nothing is, and the credential
+                // saved above belongs to another one, so the guard is what decides the outcome.
+                return HttpAuthResponse(
+                  action: challenges > 2
+                      ? HttpAuthResponseAction.CANCEL
+                      : HttpAuthResponseAction.USE_SAVED_HTTP_AUTH_CREDENTIALS,
+                );
+              },
+            ),
+          ),
+        );
 
-      // The challenge firing at all is half the assertion: it proves 8084 is genuinely locked
-      // and that this test is measuring something. Without it the check below would pass on an
-      // origin that simply never asked.
-      expect(
-        challenges,
-        greaterThan(0),
-        reason:
-            'no challenge fired — 8084 was already unlocked, so this '
-            'test proves nothing. Check no earlier test authenticates there.',
-      );
+        final InAppWebViewController controller =
+            await controllerCompleter.future;
+        await pageLoaded.future;
 
-      final String h1Content = await controller.evaluateJavascript(
-        source: "document.body.querySelector('h1').textContent",
-      );
-      expect(
-        h1Content,
-        "Unauthorized",
-        reason:
-            'the credential saved for 8081/"Node" was offered to '
-            '8084/"Node2"',
-      );
+        // The challenge firing at all is half the assertion: it proves 8084 is genuinely locked
+        // and that this test is measuring something. Without it the check below would pass on an
+        // origin that simply never asked.
+        expect(
+          challenges,
+          greaterThan(0),
+          reason:
+              'no challenge fired — 8084 was already unlocked, so this '
+              'test proves nothing. Check no earlier test authenticates there.',
+        );
 
-      await httpAuthCredentialDatabase.clearAllAuthCredentials();
-    });
+        final String h1Content = await controller.evaluateJavascript(
+          source: "document.body.querySelector('h1').textContent",
+        );
+        expect(
+          h1Content,
+          "Unauthorized",
+          reason:
+              'the credential saved for 8081/"Node" was offered to '
+              '8084/"Node2"',
+        );
+
+        await httpAuthCredentialDatabase.clearAllAuthCredentials();
+      },
+    );
 
     skippableTestWidgets('previousFailureCount starts at zero and rises', (
       WidgetTester tester,
@@ -310,62 +312,55 @@ void httpAuthCredentialDatabase() {
     // credential never works, the second challenge is cancelled, and 8084 stays locked for anything
     // after this. Measured on API 37 (§215): the space is stored as http, the realm the server
     // named, and the port; a right credential (probed in its own process) is stored the same way.
-    skippableTestWidgets(
-      'permanentPersistence saves the answered credential',
-      (WidgetTester tester) async {
-        final httpAuthCredentialDatabase =
-            HttpAuthCredentialDatabase.instance();
-        final protectionSpace = URLProtectionSpace(
-          host: environment["NODE_SERVER_IP"]!,
-          protocol: "http",
-          realm: "Node2",
-          port: 8084,
-        );
-        final Completer<void> done = Completer<void>();
-        var challenges = 0;
+    skippableTestWidgets('permanentPersistence saves the answered credential', (
+      WidgetTester tester,
+    ) async {
+      final httpAuthCredentialDatabase = HttpAuthCredentialDatabase.instance();
+      final protectionSpace = URLProtectionSpace(
+        host: environment["NODE_SERVER_IP"]!,
+        protocol: "http",
+        realm: "Node2",
+        port: 8084,
+      );
+      final Completer<void> done = Completer<void>();
+      var challenges = 0;
 
-        await httpAuthCredentialDatabase.clearAllAuthCredentials();
-        addTearDown(httpAuthCredentialDatabase.clearAllAuthCredentials);
+      await httpAuthCredentialDatabase.clearAllAuthCredentials();
+      addTearDown(httpAuthCredentialDatabase.clearAllAuthCredentials);
 
-        await tester.pumpWidget(
-          Directionality(
-            textDirection: TextDirection.ltr,
-            child: InAppWebView(
-              key: GlobalKey(),
-              initialUrlRequest: URLRequest(
-                url: WebUri("http://${environment["NODE_SERVER_IP"]}:8084/"),
-              ),
-              onReceivedHttpAuthRequest: (controller, challenge) async {
-                challenges++;
-                if (challenges > 1) {
-                  if (!done.isCompleted) done.complete();
-                  return HttpAuthResponse(
-                    action: HttpAuthResponseAction.CANCEL,
-                  );
-                }
-                return HttpAuthResponse(
-                  username: "WRONG",
-                  password: "WRONG",
-                  action: HttpAuthResponseAction.PROCEED,
-                  permanentPersistence: true,
-                );
-              },
+      await tester.pumpWidget(
+        Directionality(
+          textDirection: TextDirection.ltr,
+          child: InAppWebView(
+            key: GlobalKey(),
+            initialUrlRequest: URLRequest(
+              url: WebUri("http://${environment["NODE_SERVER_IP"]}:8084/"),
             ),
+            onReceivedHttpAuthRequest: (controller, challenge) async {
+              challenges++;
+              if (challenges > 1) {
+                if (!done.isCompleted) done.complete();
+                return HttpAuthResponse(action: HttpAuthResponseAction.CANCEL);
+              }
+              return HttpAuthResponse(
+                username: "WRONG",
+                password: "WRONG",
+                action: HttpAuthResponseAction.PROCEED,
+                permanentPersistence: true,
+              );
+            },
           ),
-        );
+        ),
+      );
 
-        await done.future.timeout(const Duration(seconds: 20));
+      await done.future.timeout(const Duration(seconds: 20));
 
-        final saved = await httpAuthCredentialDatabase.getHttpAuthCredentials(
-          protectionSpace: protectionSpace,
-        );
-        expect(
-          saved.map((c) => '${c.username}:${c.password}').toList(),
-          ['WRONG:WRONG'],
-          reason: 'permanentPersistence was not used',
-        );
-      },
-      skip: defaultTargetPlatform != TargetPlatform.android,
-    );
+      final saved = await httpAuthCredentialDatabase.getHttpAuthCredentials(
+        protectionSpace: protectionSpace,
+      );
+      expect(saved.map((c) => '${c.username}:${c.password}').toList(), [
+        'WRONG:WRONG',
+      ], reason: 'permanentPersistence was not used');
+    }, skip: defaultTargetPlatform != TargetPlatform.android);
   }, skip: shouldSkip);
 }

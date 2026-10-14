@@ -102,8 +102,7 @@ void cookieIntercept() {
       expect(
         untouched.$1,
         isNullOrEmpty,
-        reason:
-            'a Cookie header reached the intercept without the setting being enabled',
+        reason: 'a Cookie header reached the intercept without the setting being enabled',
       );
 
       final off = await load(include: false);
@@ -231,8 +230,7 @@ void cookieIntercept() {
       expect(
         on.$2,
         isNot(contains('httpOnlyOne')),
-        reason:
-            'an HttpOnly cookie was readable from script, so these are not real cookies',
+        reason: 'an HttpOnly cookie was readable from script, so these are not real cookies',
       );
     },
     skip: shouldSkip,

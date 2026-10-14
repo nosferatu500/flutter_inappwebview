@@ -2,6 +2,7 @@ import 'package:flutter/foundation.dart';
 import 'package:nosferatu500_inappwebview_internal_annotations/nosferatu500_inappwebview_internal_annotations.dart';
 import 'package:nosferatu500_inappwebview_platform_interface/src/types/disposable.dart';
 import 'package:plugin_platform_interface/plugin_platform_interface.dart';
+
 import '../inappwebview_platform.dart';
 import 'platform_web_message_port.dart';
 

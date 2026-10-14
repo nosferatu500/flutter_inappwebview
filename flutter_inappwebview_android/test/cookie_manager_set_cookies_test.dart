@@ -90,45 +90,48 @@ void main() {
       expect(cookiesSent().length, 2);
     });
 
-    test('spells every field the way the singular setCookie spells it', () async {
-      await cookieManager.setCookie(
-        url: WebUri('https://example.com'),
-        name: 'a',
-        value: '1',
-        path: '/p',
-        domain: '.example.com',
-        expiresDate: 1750000000000,
-        maxAge: 60,
-        isSecure: true,
-        isHttpOnly: false,
-        sameSite: HTTPCookieSameSitePolicy.LAX,
-      );
-      await cookieManager.setCookies(
-        cookies: [
-          CookieToSet(
-            url: WebUri('https://example.com'),
-            name: 'a',
-            value: '1',
-            path: '/p',
-            domain: '.example.com',
-            expiresDate: 1750000000000,
-            maxAge: 60,
-            isSecure: true,
-            isHttpOnly: false,
-            sameSite: HTTPCookieSameSitePolicy.LAX,
-          ),
-        ],
-      );
+    test(
+      'spells every field the way the singular setCookie spells it',
+      () async {
+        await cookieManager.setCookie(
+          url: WebUri('https://example.com'),
+          name: 'a',
+          value: '1',
+          path: '/p',
+          domain: '.example.com',
+          expiresDate: 1750000000000,
+          maxAge: 60,
+          isSecure: true,
+          isHttpOnly: false,
+          sameSite: HTTPCookieSameSitePolicy.LAX,
+        );
+        await cookieManager.setCookies(
+          cookies: [
+            CookieToSet(
+              url: WebUri('https://example.com'),
+              name: 'a',
+              value: '1',
+              path: '/p',
+              domain: '.example.com',
+              expiresDate: 1750000000000,
+              maxAge: 60,
+              isSecure: true,
+              isHttpOnly: false,
+              sameSite: HTTPCookieSameSitePolicy.LAX,
+            ),
+          ],
+        );
 
-      final singular = received[setCookieChannel]![0] as CookieToSetData;
-      final plural = cookiesSent().single as CookieToSetData;
+        final singular = received[setCookieChannel]![0] as CookieToSetData;
+        final plural = cookiesSent().single as CookieToSetData;
 
-      // Compared field-by-field through the generated encoding rather than as a list of individual
-      // expects: it stays true when a field is added to the schema, which is exactly when the two
-      // paths are most likely to drift. Pigeon's Dart classes do not override `==`, so `encode()`
-      // is what makes the comparison structural.
-      expect(plural.encode(), singular.encode());
-    });
+        // Compared field-by-field through the generated encoding rather than as a list of individual
+        // expects: it stays true when a field is added to the schema, which is exactly when the two
+        // paths are most likely to drift. Pigeon's Dart classes do not override `==`, so `encode()`
+        // is what makes the comparison structural.
+        expect(plural.encode(), singular.encode());
+      },
+    );
 
     test('sends expiresDate as an int, not a String', () async {
       // The inverse of the pre-§168 assertion, and the reason the hand-written map existed. Now

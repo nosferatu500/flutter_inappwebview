@@ -54,8 +54,10 @@ class PlatformPrintJobControllerCreationParams {
 }
 
 ///A completion handler for the [PlatformPrintJobController].
-typedef PrintJobCompletionHandler =
-    Future<void> Function(bool completed, String? error)?;
+typedef PrintJobCompletionHandler = Future<void> Function(
+  bool completed,
+  String? error,
+)?;
 
 ///{@template nosferatu500_inappwebview_platform_interface.PlatformPrintJobController}
 ///Class representing a print job eventually returned by [PlatformInAppWebViewController.printCurrentPage].
@@ -124,14 +126,12 @@ abstract class PlatformPrintJobController extends PlatformInterface
     platforms: [
       AndroidPlatform(
         apiName: 'PrintDocumentAdapter.onFinish',
-        apiUrl:
-            'https://developer.android.com/reference/android/print/PrintDocumentAdapter#onFinish()',
+        apiUrl: 'https://developer.android.com/reference/android/print/PrintDocumentAdapter#onFinish()',
         note: '`completed` is always `true` and `error` is always `null`.',
       ),
       IOSPlatform(
         apiName: 'UIPrintInteractionController.CompletionHandler',
-        apiUrl:
-            'https://developer.apple.com/documentation/uikit/uiprintinteractioncontroller/completionhandler',
+        apiUrl: 'https://developer.apple.com/documentation/uikit/uiprintinteractioncontroller/completionhandler',
       ),
     ],
   )
@@ -147,8 +147,7 @@ abstract class PlatformPrintJobController extends PlatformInterface
     platforms: [
       AndroidPlatform(
         apiName: 'PrintJob.cancel',
-        apiUrl:
-            'https://developer.android.com/reference/android/print/PrintJob#cancel()',
+        apiUrl: 'https://developer.android.com/reference/android/print/PrintJob#cancel()',
       ),
     ],
   )
@@ -168,8 +167,7 @@ abstract class PlatformPrintJobController extends PlatformInterface
     platforms: [
       AndroidPlatform(
         apiName: 'PrintJob.restart',
-        apiUrl:
-            'https://developer.android.com/reference/android/print/PrintJob#restart()',
+        apiUrl: 'https://developer.android.com/reference/android/print/PrintJob#restart()',
       ),
     ],
   )
@@ -209,8 +207,7 @@ abstract class PlatformPrintJobController extends PlatformInterface
     platforms: [
       AndroidPlatform(
         apiName: 'PrintJob.getInfo',
-        apiUrl:
-            'https://developer.android.com/reference/android/print/PrintJob#getInfo()',
+        apiUrl: 'https://developer.android.com/reference/android/print/PrintJob#getInfo()',
       ),
       IOSPlatform(),
     ],

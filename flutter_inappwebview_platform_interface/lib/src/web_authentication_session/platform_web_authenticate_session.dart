@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:flutter/foundation.dart';
 import 'package:nosferatu500_inappwebview_internal_annotations/nosferatu500_inappwebview_internal_annotations.dart';
 import 'package:plugin_platform_interface/plugin_platform_interface.dart';
+
 import '../debug_logging_settings.dart';
 import '../inappwebview_platform.dart';
 import '../types/main.dart';
@@ -13,8 +14,10 @@ import 'web_authenticate_session_settings.dart';
 part 'platform_web_authenticate_session.g.dart';
 
 ///A completion handler for the [PlatformWebAuthenticationSession].
-typedef WebAuthenticationSessionCompletionHandler =
-    Future<void> Function(WebUri? url, WebAuthenticationSessionError? error)?;
+typedef WebAuthenticationSessionCompletionHandler = Future<void> Function(
+  WebUri? url,
+  WebAuthenticationSessionError? error,
+)?;
 
 ///{@template nosferatu500_inappwebview_platform_interface.PlatformWebAuthenticationSessionCreationParams}
 /// Object specifying creation parameters for creating a [PlatformWebAuthenticationSession].
@@ -197,8 +200,7 @@ abstract class PlatformWebAuthenticationSession extends PlatformInterface
     platforms: [
       IOSPlatform(
         apiName: 'ASWebAuthenticationSession.canStart',
-        apiUrl:
-            'https://developer.apple.com/documentation/authenticationservices/aswebauthenticationsession/3516277-canstart',
+        apiUrl: 'https://developer.apple.com/documentation/authenticationservices/aswebauthenticationsession/3516277-canstart',
       ),
     ],
   )
@@ -222,8 +224,7 @@ abstract class PlatformWebAuthenticationSession extends PlatformInterface
     platforms: [
       IOSPlatform(
         apiName: 'ASWebAuthenticationSession.start',
-        apiUrl:
-            'https://developer.apple.com/documentation/authenticationservices/aswebauthenticationsession/2990953-start',
+        apiUrl: 'https://developer.apple.com/documentation/authenticationservices/aswebauthenticationsession/2990953-start',
       ),
     ],
   )
@@ -245,8 +246,7 @@ abstract class PlatformWebAuthenticationSession extends PlatformInterface
     platforms: [
       IOSPlatform(
         apiName: 'ASWebAuthenticationSession.cancel',
-        apiUrl:
-            'https://developer.apple.com/documentation/authenticationservices/aswebauthenticationsession/2990951-cancel',
+        apiUrl: 'https://developer.apple.com/documentation/authenticationservices/aswebauthenticationsession/2990951-cancel',
       ),
     ],
   )

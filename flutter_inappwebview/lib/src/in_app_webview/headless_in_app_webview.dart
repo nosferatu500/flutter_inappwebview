@@ -344,9 +344,9 @@ class HeadlessInAppWebView {
     onInsertInputSuggestion,
   }) : this.fromPlatformCreationParams(
          params: PlatformHeadlessInAppWebViewCreationParams(
-           controllerFromPlatform:
-               (PlatformInAppWebViewController controller) =>
-                   InAppWebViewController.fromPlatform(platform: controller),
+           controllerFromPlatform: (
+             PlatformInAppWebViewController controller,
+           ) => InAppWebViewController.fromPlatform(platform: controller),
            initialSize: initialSize,
            windowId: windowId,
            initialUrlRequest: initialUrlRequest,

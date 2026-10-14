@@ -808,9 +808,8 @@ class _CookieManagerScreenState extends State<CookieManagerScreen> {
               _buildDetailRow(
                 'Expires',
                 cookie.expiresDate != null
-                    ? DateTime.fromMillisecondsSinceEpoch(
-                        cookie.expiresDate!,
-                      ).toString()
+                    ? DateTime.fromMillisecondsSinceEpoch(cookie.expiresDate!)
+                          .toString()
                     : 'null',
               ),
               _buildDetailRow('Secure', cookie.isSecure?.toString() ?? 'null'),

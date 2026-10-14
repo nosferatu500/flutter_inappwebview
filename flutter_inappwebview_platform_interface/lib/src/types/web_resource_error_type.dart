@@ -18,8 +18,7 @@ class WebResourceErrorType_ {
     platforms: [
       EnumAndroidPlatform(
         apiName: 'WebViewClient.ERROR_AUTHENTICATION',
-        apiUrl:
-            'https://developer.android.com/reference/android/webkit/WebViewClient#ERROR_AUTHENTICATION',
+        apiUrl: 'https://developer.android.com/reference/android/webkit/WebViewClient#ERROR_AUTHENTICATION',
         value: -4,
       ),
     ],
@@ -33,14 +32,12 @@ class WebResourceErrorType_ {
     platforms: [
       EnumAndroidPlatform(
         apiName: 'WebViewClient.ERROR_BAD_URL',
-        apiUrl:
-            'https://developer.android.com/reference/android/webkit/WebViewClient#ERROR_BAD_URL',
+        apiUrl: 'https://developer.android.com/reference/android/webkit/WebViewClient#ERROR_BAD_URL',
         value: -12,
       ),
       EnumIOSPlatform(
         apiName: 'URLError.badURL',
-        apiUrl:
-            'https://developer.apple.com/documentation/foundation/urlerror/2293516-badurl',
+        apiUrl: 'https://developer.apple.com/documentation/foundation/urlerror/2293516-badurl',
         value: -1000,
       ),
     ],
@@ -52,14 +49,12 @@ class WebResourceErrorType_ {
     platforms: [
       EnumAndroidPlatform(
         apiName: 'WebViewClient.ERROR_CONNECT',
-        apiUrl:
-            'https://developer.android.com/reference/android/webkit/WebViewClient#ERROR_CONNECT',
+        apiUrl: 'https://developer.android.com/reference/android/webkit/WebViewClient#ERROR_CONNECT',
         value: -6,
       ),
       EnumIOSPlatform(
         apiName: 'URLError.cannotConnectToHost',
-        apiUrl:
-            'https://developer.apple.com/documentation/foundation/urlerror/code/2883001-cannotconnecttohost',
+        apiUrl: 'https://developer.apple.com/documentation/foundation/urlerror/code/2883001-cannotconnecttohost',
         value: -1004,
       ),
     ],
@@ -73,8 +68,7 @@ class WebResourceErrorType_ {
     platforms: [
       EnumAndroidPlatform(
         apiName: 'WebViewClient.ERROR_FAILED_SSL_HANDSHAKE',
-        apiUrl:
-            'https://developer.android.com/reference/android/webkit/WebViewClient#ERROR_FAILED_SSL_HANDSHAKE',
+        apiUrl: 'https://developer.android.com/reference/android/webkit/WebViewClient#ERROR_FAILED_SSL_HANDSHAKE',
         value: -11,
       ),
     ],
@@ -88,8 +82,7 @@ class WebResourceErrorType_ {
     platforms: [
       EnumAndroidPlatform(
         apiName: 'WebViewClient.ERROR_FILE',
-        apiUrl:
-            'https://developer.android.com/reference/android/webkit/WebViewClient#ERROR_FILE',
+        apiUrl: 'https://developer.android.com/reference/android/webkit/WebViewClient#ERROR_FILE',
         value: -13,
       ),
     ],
@@ -103,14 +96,12 @@ class WebResourceErrorType_ {
     platforms: [
       EnumAndroidPlatform(
         apiName: 'WebViewClient.ERROR_FILE_NOT_FOUND',
-        apiUrl:
-            'https://developer.android.com/reference/android/webkit/WebViewClient#ERROR_FILE_NOT_FOUND',
+        apiUrl: 'https://developer.android.com/reference/android/webkit/WebViewClient#ERROR_FILE_NOT_FOUND',
         value: -14,
       ),
       EnumIOSPlatform(
         apiName: 'URLError.fileDoesNotExist',
-        apiUrl:
-            'https://developer.apple.com/documentation/foundation/urlerror/code/2883074-filedoesnotexist',
+        apiUrl: 'https://developer.apple.com/documentation/foundation/urlerror/code/2883074-filedoesnotexist',
         value: -1100,
       ),
     ],
@@ -124,14 +115,12 @@ class WebResourceErrorType_ {
     platforms: [
       EnumAndroidPlatform(
         apiName: 'WebViewClient.ERROR_HOST_LOOKUP',
-        apiUrl:
-            'https://developer.android.com/reference/android/webkit/WebViewClient#ERROR_HOST_LOOKUP',
+        apiUrl: 'https://developer.android.com/reference/android/webkit/WebViewClient#ERROR_HOST_LOOKUP',
         value: -2,
       ),
       EnumIOSPlatform(
         apiName: 'URLError.cannotFindHost',
-        apiUrl:
-            'https://developer.apple.com/documentation/foundation/urlerror/code/2883157-cannotfindhost',
+        apiUrl: 'https://developer.apple.com/documentation/foundation/urlerror/code/2883157-cannotfindhost',
         // iOS 26 reports a DNS failure as -1006 (`URLError.dnsLookupFailed`) where earlier
         // versions reported -1003. Android calls both `ERROR_HOST_LOOKUP`, so they belong on
         // the same constant -- otherwise `if (error.type == HOST_LOOKUP)` silently stops
@@ -150,8 +139,7 @@ class WebResourceErrorType_ {
     platforms: [
       EnumAndroidPlatform(
         apiName: 'WebViewClient.ERROR_IO',
-        apiUrl:
-            'https://developer.android.com/reference/android/webkit/WebViewClient#ERROR_IO',
+        apiUrl: 'https://developer.android.com/reference/android/webkit/WebViewClient#ERROR_IO',
         value: -7,
       ),
     ],
@@ -163,8 +151,7 @@ class WebResourceErrorType_ {
     platforms: [
       EnumAndroidPlatform(
         apiName: 'WebViewClient.ERROR_PROXY_AUTHENTICATION',
-        apiUrl:
-            'https://developer.android.com/reference/android/webkit/WebViewClient#ERROR_PROXY_AUTHENTICATION',
+        apiUrl: 'https://developer.android.com/reference/android/webkit/WebViewClient#ERROR_PROXY_AUTHENTICATION',
         value: -5,
       ),
     ],
@@ -178,14 +165,12 @@ class WebResourceErrorType_ {
     platforms: [
       EnumAndroidPlatform(
         apiName: 'WebViewClient.ERROR_REDIRECT_LOOP',
-        apiUrl:
-            'https://developer.android.com/reference/android/webkit/WebViewClient#ERROR_REDIRECT_LOOP',
+        apiUrl: 'https://developer.android.com/reference/android/webkit/WebViewClient#ERROR_REDIRECT_LOOP',
         value: -9,
       ),
       EnumIOSPlatform(
         apiName: 'URLError.httpTooManyRedirects',
-        apiUrl:
-            'https://developer.apple.com/documentation/foundation/urlerror/code/2883099-httptoomanyredirects',
+        apiUrl: 'https://developer.apple.com/documentation/foundation/urlerror/code/2883099-httptoomanyredirects',
         value: -1007,
       ),
     ],
@@ -199,14 +184,12 @@ class WebResourceErrorType_ {
     platforms: [
       EnumAndroidPlatform(
         apiName: 'WebViewClient.ERROR_TIMEOUT',
-        apiUrl:
-            'https://developer.android.com/reference/android/webkit/WebViewClient#ERROR_TIMEOUT',
+        apiUrl: 'https://developer.android.com/reference/android/webkit/WebViewClient#ERROR_TIMEOUT',
         value: -8,
       ),
       EnumIOSPlatform(
         apiName: 'URLError.timedOut',
-        apiUrl:
-            'https://developer.apple.com/documentation/foundation/urlerror/code/2883027-timedout',
+        apiUrl: 'https://developer.apple.com/documentation/foundation/urlerror/code/2883027-timedout',
         value: -1001,
       ),
     ],
@@ -218,8 +201,7 @@ class WebResourceErrorType_ {
     platforms: [
       EnumAndroidPlatform(
         apiName: 'WebViewClient.ERROR_TOO_MANY_REQUESTS',
-        apiUrl:
-            'https://developer.android.com/reference/android/webkit/WebViewClient#ERROR_TOO_MANY_REQUESTS',
+        apiUrl: 'https://developer.android.com/reference/android/webkit/WebViewClient#ERROR_TOO_MANY_REQUESTS',
         value: -15,
       ),
     ],
@@ -233,14 +215,12 @@ class WebResourceErrorType_ {
     platforms: [
       EnumAndroidPlatform(
         apiName: 'WebViewClient.ERROR_UNKNOWN',
-        apiUrl:
-            'https://developer.android.com/reference/android/webkit/WebViewClient#ERROR_UNKNOWN',
+        apiUrl: 'https://developer.android.com/reference/android/webkit/WebViewClient#ERROR_UNKNOWN',
         value: -1,
       ),
       EnumIOSPlatform(
         apiName: 'URLError.unknown',
-        apiUrl:
-            'https://developer.apple.com/documentation/foundation/urlerror/2293357-unknown',
+        apiUrl: 'https://developer.apple.com/documentation/foundation/urlerror/2293357-unknown',
         value: -1,
       ),
     ],
@@ -252,8 +232,7 @@ class WebResourceErrorType_ {
     platforms: [
       EnumAndroidPlatform(
         apiName: 'WebViewClient.ERROR_UNSAFE_RESOURCE',
-        apiUrl:
-            'https://developer.android.com/reference/android/webkit/WebViewClient#ERROR_UNSAFE_RESOURCE',
+        apiUrl: 'https://developer.android.com/reference/android/webkit/WebViewClient#ERROR_UNSAFE_RESOURCE',
         value: -16,
       ),
     ],
@@ -267,8 +246,7 @@ class WebResourceErrorType_ {
     platforms: [
       EnumAndroidPlatform(
         apiName: 'WebViewClient.ERROR_UNSUPPORTED_AUTH_SCHEME',
-        apiUrl:
-            'https://developer.android.com/reference/android/webkit/WebViewClient#ERROR_UNSUPPORTED_AUTH_SCHEME',
+        apiUrl: 'https://developer.android.com/reference/android/webkit/WebViewClient#ERROR_UNSUPPORTED_AUTH_SCHEME',
         value: -3,
       ),
     ],
@@ -283,14 +261,12 @@ class WebResourceErrorType_ {
     platforms: [
       EnumAndroidPlatform(
         apiName: 'WebViewClient.ERROR_UNSUPPORTED_SCHEME',
-        apiUrl:
-            'https://developer.android.com/reference/android/webkit/WebViewClient#ERROR_UNSUPPORTED_SCHEME',
+        apiUrl: 'https://developer.android.com/reference/android/webkit/WebViewClient#ERROR_UNSUPPORTED_SCHEME',
         value: -10,
       ),
       EnumIOSPlatform(
         apiName: 'URLError.unsupportedURL',
-        apiUrl:
-            'https://developer.apple.com/documentation/foundation/urlerror/code/2883043-unsupportedurl',
+        apiUrl: 'https://developer.apple.com/documentation/foundation/urlerror/code/2883043-unsupportedurl',
         value: -1002,
       ),
     ],
@@ -304,8 +280,7 @@ class WebResourceErrorType_ {
     platforms: [
       EnumIOSPlatform(
         apiName: 'URLError.cancelled',
-        apiUrl:
-            'https://developer.apple.com/documentation/foundation/urlerror/code/2883178-cancelled',
+        apiUrl: 'https://developer.apple.com/documentation/foundation/urlerror/code/2883178-cancelled',
         value: -999,
       ),
     ],
@@ -317,8 +292,7 @@ class WebResourceErrorType_ {
     platforms: [
       EnumIOSPlatform(
         apiName: 'URLError.networkConnectionLost',
-        apiUrl:
-            'https://developer.apple.com/documentation/foundation/urlerror/2293759-networkconnectionlost',
+        apiUrl: 'https://developer.apple.com/documentation/foundation/urlerror/2293759-networkconnectionlost',
         value: -1005,
       ),
     ],
@@ -333,8 +307,7 @@ class WebResourceErrorType_ {
     platforms: [
       EnumIOSPlatform(
         apiName: 'URLError.resourceUnavailable',
-        apiUrl:
-            'https://developer.apple.com/documentation/foundation/urlerror/2293555-resourceunavailable',
+        apiUrl: 'https://developer.apple.com/documentation/foundation/urlerror/2293555-resourceunavailable',
         value: -1008,
       ),
     ],
@@ -348,8 +321,7 @@ class WebResourceErrorType_ {
     platforms: [
       EnumIOSPlatform(
         apiName: 'URLError.notConnectedToInternet',
-        apiUrl:
-            'https://developer.apple.com/documentation/foundation/urlerror/2293104-notconnectedtointernet',
+        apiUrl: 'https://developer.apple.com/documentation/foundation/urlerror/2293104-notconnectedtointernet',
         value: -1009,
       ),
     ],
@@ -363,8 +335,7 @@ class WebResourceErrorType_ {
     platforms: [
       EnumIOSPlatform(
         apiName: 'URLError.redirectToNonExistentLocation',
-        apiUrl:
-            'https://developer.apple.com/documentation/foundation/urlerror/2293066-redirecttononexistentlocation',
+        apiUrl: 'https://developer.apple.com/documentation/foundation/urlerror/2293066-redirecttononexistentlocation',
         value: -1010,
       ),
     ],
@@ -377,8 +348,7 @@ class WebResourceErrorType_ {
     platforms: [
       EnumIOSPlatform(
         apiName: 'URLError.badServerResponse',
-        apiUrl:
-            'https://developer.apple.com/documentation/foundation/urlerror/2293606-badserverresponse',
+        apiUrl: 'https://developer.apple.com/documentation/foundation/urlerror/2293606-badserverresponse',
         value: -1011,
       ),
     ],
@@ -393,8 +363,7 @@ class WebResourceErrorType_ {
     platforms: [
       EnumIOSPlatform(
         apiName: 'URLError.userCancelledAuthentication',
-        apiUrl:
-            'https://developer.apple.com/documentation/foundation/urlerror/2293330-usercancelledauthentication',
+        apiUrl: 'https://developer.apple.com/documentation/foundation/urlerror/2293330-usercancelledauthentication',
         value: -1012,
       ),
     ],
@@ -408,8 +377,7 @@ class WebResourceErrorType_ {
     platforms: [
       EnumIOSPlatform(
         apiName: 'URLError.userAuthenticationRequired',
-        apiUrl:
-            'https://developer.apple.com/documentation/foundation/urlerror/2293560-userauthenticationrequired',
+        apiUrl: 'https://developer.apple.com/documentation/foundation/urlerror/2293560-userauthenticationrequired',
         value: -1013,
       ),
     ],
@@ -423,8 +391,7 @@ class WebResourceErrorType_ {
     platforms: [
       EnumIOSPlatform(
         apiName: 'URLError.zeroByteResource',
-        apiUrl:
-            'https://developer.apple.com/documentation/foundation/urlerror/2293773-zerobyteresource',
+        apiUrl: 'https://developer.apple.com/documentation/foundation/urlerror/2293773-zerobyteresource',
         value: -1014,
       ),
     ],
@@ -438,8 +405,7 @@ class WebResourceErrorType_ {
     platforms: [
       EnumIOSPlatform(
         apiName: 'URLError.cannotDecodeRawData',
-        apiUrl:
-            'https://developer.apple.com/documentation/foundation/urlerror/2293573-cannotdecoderawdata',
+        apiUrl: 'https://developer.apple.com/documentation/foundation/urlerror/2293573-cannotdecoderawdata',
         value: -1015,
       ),
     ],
@@ -453,8 +419,7 @@ class WebResourceErrorType_ {
     platforms: [
       EnumIOSPlatform(
         apiName: 'URLError.cannotDecodeContentData',
-        apiUrl:
-            'https://developer.apple.com/documentation/foundation/urlerror/2292983-cannotdecodecontentdata',
+        apiUrl: 'https://developer.apple.com/documentation/foundation/urlerror/2292983-cannotdecodecontentdata',
         value: -1016,
       ),
     ],
@@ -468,8 +433,7 @@ class WebResourceErrorType_ {
     platforms: [
       EnumIOSPlatform(
         apiName: 'URLError.cannotParseResponse',
-        apiUrl:
-            'https://developer.apple.com/documentation/foundation/urlerror/code/2882919-cannotparseresponse',
+        apiUrl: 'https://developer.apple.com/documentation/foundation/urlerror/code/2882919-cannotparseresponse',
         value: -1017,
       ),
     ],
@@ -483,8 +447,7 @@ class WebResourceErrorType_ {
     platforms: [
       EnumIOSPlatform(
         apiName: 'URLError.appTransportSecurityRequiresSecureConnection',
-        apiUrl:
-            'https://developer.apple.com/documentation/foundation/urlerror/code/2882980-apptransportsecurityrequiressecu',
+        apiUrl: 'https://developer.apple.com/documentation/foundation/urlerror/code/2882980-apptransportsecurityrequiressecu',
         value: -1022,
       ),
     ],
@@ -499,8 +462,7 @@ class WebResourceErrorType_ {
     platforms: [
       EnumIOSPlatform(
         apiName: 'URLError.fileIsDirectory',
-        apiUrl:
-            'https://developer.apple.com/documentation/foundation/urlerror/code/2883220-fileisdirectory',
+        apiUrl: 'https://developer.apple.com/documentation/foundation/urlerror/code/2883220-fileisdirectory',
         value: -1101,
       ),
     ],
@@ -514,8 +476,7 @@ class WebResourceErrorType_ {
     platforms: [
       EnumIOSPlatform(
         apiName: 'URLError.noPermissionsToReadFile',
-        apiUrl:
-            'https://developer.apple.com/documentation/foundation/urlerror/code/2882941-nopermissionstoreadfile',
+        apiUrl: 'https://developer.apple.com/documentation/foundation/urlerror/code/2882941-nopermissionstoreadfile',
         value: -1102,
       ),
     ],
@@ -529,8 +490,7 @@ class WebResourceErrorType_ {
     platforms: [
       EnumIOSPlatform(
         apiName: 'URLError.dataLengthExceedsMaximum',
-        apiUrl:
-            'https://developer.apple.com/documentation/foundation/urlerror/code/2882930-datalengthexceedsmaximum',
+        apiUrl: 'https://developer.apple.com/documentation/foundation/urlerror/code/2882930-datalengthexceedsmaximum',
         value: -1103,
       ),
     ],
@@ -544,8 +504,7 @@ class WebResourceErrorType_ {
     platforms: [
       EnumIOSPlatform(
         apiName: 'URLError.secureConnectionFailed',
-        apiUrl:
-            'https://developer.apple.com/documentation/foundation/urlerror/code/2883122-secureconnectionfailed',
+        apiUrl: 'https://developer.apple.com/documentation/foundation/urlerror/code/2883122-secureconnectionfailed',
         value: -1200,
       ),
     ],
@@ -559,8 +518,7 @@ class WebResourceErrorType_ {
     platforms: [
       EnumIOSPlatform(
         apiName: 'URLError.serverCertificateHasBadDate',
-        apiUrl:
-            'https://developer.apple.com/documentation/foundation/urlerror/code/2883088-servercertificatehasbaddate',
+        apiUrl: 'https://developer.apple.com/documentation/foundation/urlerror/code/2883088-servercertificatehasbaddate',
         value: -1201,
       ),
     ],
@@ -573,8 +531,7 @@ class WebResourceErrorType_ {
     platforms: [
       EnumIOSPlatform(
         apiName: 'URLError.serverCertificateUntrusted',
-        apiUrl:
-            'https://developer.apple.com/documentation/foundation/urlerror/code/2882976-servercertificateuntrusted',
+        apiUrl: 'https://developer.apple.com/documentation/foundation/urlerror/code/2882976-servercertificateuntrusted',
         value: -1202,
       ),
     ],
@@ -588,8 +545,7 @@ class WebResourceErrorType_ {
     platforms: [
       EnumIOSPlatform(
         apiName: 'URLError.serverCertificateHasUnknownRoot',
-        apiUrl:
-            'https://developer.apple.com/documentation/foundation/urlerror/code/2883085-servercertificatehasunknownroot',
+        apiUrl: 'https://developer.apple.com/documentation/foundation/urlerror/code/2883085-servercertificatehasunknownroot',
         value: -1203,
       ),
     ],
@@ -602,8 +558,7 @@ class WebResourceErrorType_ {
     platforms: [
       EnumIOSPlatform(
         apiName: 'URLError.serverCertificateNotYetValid',
-        apiUrl:
-            'https://developer.apple.com/documentation/foundation/urlerror/code/2882991-servercertificatenotyetvalid',
+        apiUrl: 'https://developer.apple.com/documentation/foundation/urlerror/code/2882991-servercertificatenotyetvalid',
         value: -1204,
       ),
     ],
@@ -616,8 +571,7 @@ class WebResourceErrorType_ {
     platforms: [
       EnumIOSPlatform(
         apiName: 'URLError.clientCertificateRejected',
-        apiUrl:
-            'https://developer.apple.com/documentation/foundation/urlerror/code/2883091-clientcertificaterejected',
+        apiUrl: 'https://developer.apple.com/documentation/foundation/urlerror/code/2883091-clientcertificaterejected',
         value: -1205,
       ),
     ],
@@ -631,8 +585,7 @@ class WebResourceErrorType_ {
     platforms: [
       EnumIOSPlatform(
         apiName: 'URLError.clientCertificateRequired',
-        apiUrl:
-            'https://developer.apple.com/documentation/foundation/urlerror/code/2883199-clientcertificaterequired',
+        apiUrl: 'https://developer.apple.com/documentation/foundation/urlerror/code/2883199-clientcertificaterequired',
         value: -1206,
       ),
     ],
@@ -646,8 +599,7 @@ class WebResourceErrorType_ {
     platforms: [
       EnumIOSPlatform(
         apiName: 'URLError.cannotLoadFromNetwork',
-        apiUrl:
-            'https://developer.apple.com/documentation/foundation/urlerror/code/2882968-cannotloadfromnetwork',
+        apiUrl: 'https://developer.apple.com/documentation/foundation/urlerror/code/2882968-cannotloadfromnetwork',
         value: -2000,
       ),
     ],
@@ -661,8 +613,7 @@ class WebResourceErrorType_ {
     platforms: [
       EnumIOSPlatform(
         apiName: 'URLError.cannotCreateFile',
-        apiUrl:
-            'https://developer.apple.com/documentation/foundation/urlerror/code/2883204-cannotcreatefile',
+        apiUrl: 'https://developer.apple.com/documentation/foundation/urlerror/code/2883204-cannotcreatefile',
         value: -3000,
       ),
     ],
@@ -676,8 +627,7 @@ class WebResourceErrorType_ {
     platforms: [
       EnumIOSPlatform(
         apiName: 'URLError.cannotOpenFile',
-        apiUrl:
-            'https://developer.apple.com/documentation/foundation/urlerror/code/2883034-cannotopenfile',
+        apiUrl: 'https://developer.apple.com/documentation/foundation/urlerror/code/2883034-cannotopenfile',
         value: -3001,
       ),
     ],
@@ -691,8 +641,7 @@ class WebResourceErrorType_ {
     platforms: [
       EnumIOSPlatform(
         apiName: 'URLError.cannotCloseFile',
-        apiUrl:
-            'https://developer.apple.com/documentation/foundation/urlerror/code/2883215-cannotclosefile',
+        apiUrl: 'https://developer.apple.com/documentation/foundation/urlerror/code/2883215-cannotclosefile',
         value: -3002,
       ),
     ],
@@ -706,8 +655,7 @@ class WebResourceErrorType_ {
     platforms: [
       EnumIOSPlatform(
         apiName: 'URLError.cannotWriteToFile',
-        apiUrl:
-            'https://developer.apple.com/documentation/foundation/urlerror/code/2883098-cannotwritetofile',
+        apiUrl: 'https://developer.apple.com/documentation/foundation/urlerror/code/2883098-cannotwritetofile',
         value: -3003,
       ),
     ],
@@ -721,8 +669,7 @@ class WebResourceErrorType_ {
     platforms: [
       EnumIOSPlatform(
         apiName: 'URLError.cannotRemoveFile',
-        apiUrl:
-            'https://developer.apple.com/documentation/foundation/urlerror/code/2883202-cannotremovefile',
+        apiUrl: 'https://developer.apple.com/documentation/foundation/urlerror/code/2883202-cannotremovefile',
         value: -3004,
       ),
     ],
@@ -736,8 +683,7 @@ class WebResourceErrorType_ {
     platforms: [
       EnumIOSPlatform(
         apiName: 'URLError.cannotMoveFile',
-        apiUrl:
-            'https://developer.apple.com/documentation/foundation/urlerror/code/2883180-cannotmovefile',
+        apiUrl: 'https://developer.apple.com/documentation/foundation/urlerror/code/2883180-cannotmovefile',
         value: -3005,
       ),
     ],
@@ -751,8 +697,7 @@ class WebResourceErrorType_ {
     platforms: [
       EnumIOSPlatform(
         apiName: 'URLError.downloadDecodingFailedMidStream',
-        apiUrl:
-            'https://developer.apple.com/documentation/foundation/urlerror/code/2883224-downloaddecodingfailedmidstream',
+        apiUrl: 'https://developer.apple.com/documentation/foundation/urlerror/code/2883224-downloaddecodingfailedmidstream',
         value: -3006,
       ),
     ],
@@ -765,8 +710,7 @@ class WebResourceErrorType_ {
     platforms: [
       EnumIOSPlatform(
         apiName: 'URLError.downloadDecodingFailedToComplete',
-        apiUrl:
-            'https://developer.apple.com/documentation/foundation/urlerror/code/2882936-downloaddecodingfailedtocomplete',
+        apiUrl: 'https://developer.apple.com/documentation/foundation/urlerror/code/2882936-downloaddecodingfailedtocomplete',
         value: -3007,
       ),
     ],
@@ -779,8 +723,7 @@ class WebResourceErrorType_ {
     platforms: [
       EnumIOSPlatform(
         apiName: 'URLError.internationalRoamingOff',
-        apiUrl:
-            'https://developer.apple.com/documentation/foundation/urlerror/code/2883134-internationalroamingoff',
+        apiUrl: 'https://developer.apple.com/documentation/foundation/urlerror/code/2883134-internationalroamingoff',
         value: -1018,
       ),
     ],
@@ -794,8 +737,7 @@ class WebResourceErrorType_ {
     platforms: [
       EnumIOSPlatform(
         apiName: 'URLError.callIsActive',
-        apiUrl:
-            'https://developer.apple.com/documentation/foundation/urlerror/code/2883170-callisactive',
+        apiUrl: 'https://developer.apple.com/documentation/foundation/urlerror/code/2883170-callisactive',
         value: -1019,
       ),
     ],
@@ -809,8 +751,7 @@ class WebResourceErrorType_ {
     platforms: [
       EnumIOSPlatform(
         apiName: 'URLError.dataNotAllowed',
-        apiUrl:
-            'https://developer.apple.com/documentation/foundation/urlerror/code/2883217-datanotallowed',
+        apiUrl: 'https://developer.apple.com/documentation/foundation/urlerror/code/2883217-datanotallowed',
         value: -1020,
       ),
     ],
@@ -824,8 +765,7 @@ class WebResourceErrorType_ {
     platforms: [
       EnumIOSPlatform(
         apiName: 'URLError.requestBodyStreamExhausted',
-        apiUrl:
-            'https://developer.apple.com/documentation/foundation/urlerror/code/2883176-requestbodystreamexhausted',
+        apiUrl: 'https://developer.apple.com/documentation/foundation/urlerror/code/2883176-requestbodystreamexhausted',
         value: -1021,
       ),
     ],
@@ -839,8 +779,7 @@ class WebResourceErrorType_ {
     platforms: [
       EnumIOSPlatform(
         apiName: 'URLError.backgroundSessionRequiresSharedContainer',
-        apiUrl:
-            'https://developer.apple.com/documentation/foundation/urlerror/code/2883169-backgroundsessionrequiressharedc',
+        apiUrl: 'https://developer.apple.com/documentation/foundation/urlerror/code/2883169-backgroundsessionrequiressharedc',
         value: -995,
       ),
     ],
@@ -855,8 +794,7 @@ class WebResourceErrorType_ {
     platforms: [
       EnumIOSPlatform(
         apiName: 'URLError.backgroundSessionInUseByAnotherProcess',
-        apiUrl:
-            'https://developer.apple.com/documentation/foundation/urlerror/code/2882923-backgroundsessioninusebyanotherp',
+        apiUrl: 'https://developer.apple.com/documentation/foundation/urlerror/code/2882923-backgroundsessioninusebyanotherp',
         value: -996,
       ),
     ],
@@ -871,8 +809,7 @@ class WebResourceErrorType_ {
     platforms: [
       EnumIOSPlatform(
         apiName: 'URLError.backgroundSessionWasDisconnected',
-        apiUrl:
-            'https://developer.apple.com/documentation/foundation/urlerror/code/2883075-backgroundsessionwasdisconnected',
+        apiUrl: 'https://developer.apple.com/documentation/foundation/urlerror/code/2883075-backgroundsessionwasdisconnected',
         value: -997,
       ),
     ],

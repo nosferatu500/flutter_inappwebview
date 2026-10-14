@@ -44,17 +44,14 @@ void main() {
       expect(hop2['http3RelayEndpoint'], isNull);
     });
 
-    test(
-      'both hops are absent-as-null when not set, which Swift reads as no relay chain',
-      () {
-        // Swift's `as? [String: Any?]` yields nil for a missing or null value, and
-        // `ProxyRelayHop.fromMap` returns nil for it, so `proxyRelayHops` is empty and
-        // `toProxyConfiguration()` takes the plain-endpoint branch off `url`.
-        final map = ProxyRule(url: 'https://proxy.example.com:443').toMap();
-        expect(map['relayHop1'], isNull);
-        expect(map['relayHop2'], isNull);
-      },
-    );
+    test('both hops are absent-as-null when not set, which Swift reads as no relay chain', () {
+      // Swift's `as? [String: Any?]` yields nil for a missing or null value, and
+      // `ProxyRelayHop.fromMap` returns nil for it, so `proxyRelayHops` is empty and
+      // `toProxyConfiguration()` takes the plain-endpoint branch off `url`.
+      final map = ProxyRule(url: 'https://proxy.example.com:443').toMap();
+      expect(map['relayHop1'], isNull);
+      expect(map['relayHop2'], isNull);
+    });
 
     test('a hop with neither endpoint is rejected before it can be sent', () {
       // ProxyRelayHop_'s constructor asserts that at least one endpoint is non-null, matching

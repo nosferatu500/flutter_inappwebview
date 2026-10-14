@@ -243,11 +243,15 @@ class SupportSummary {
       (methodsPerPlatform[platform] ?? 0) + (eventsPerPlatform[platform] ?? 0);
 }
 
-typedef _MethodSupportResolver =
-    bool Function(String methodName, SupportedPlatform platform);
+typedef _MethodSupportResolver = bool Function(
+  String methodName,
+  SupportedPlatform platform,
+);
 
-typedef _PropertySupportResolver =
-    bool Function(String propertyName, SupportedPlatform platform);
+typedef _PropertySupportResolver = bool Function(
+  String propertyName,
+  SupportedPlatform platform,
+);
 
 /// Utility class that provides comprehensive API support information.
 class SupportChecker {
@@ -690,16 +694,14 @@ class SupportChecker {
         // Navigation methods
         ApiMethodDefinition(
           name: PlatformInAppWebViewControllerMethod.loadUrl.name,
-          signature:
-              'Future<void> loadUrl({required URLRequest urlRequest, WebUri? allowingReadAccessTo})',
+          signature: 'Future<void> loadUrl({required URLRequest urlRequest, WebUri? allowingReadAccessTo})',
           description: 'Loads the given URL with optional headers.',
           className: className,
           category: 'Navigation',
         ),
         ApiMethodDefinition(
           name: PlatformInAppWebViewControllerMethod.postUrl.name,
-          signature:
-              'Future<void> postUrl({required WebUri url, required Uint8List postData})',
+          signature: 'Future<void> postUrl({required WebUri url, required Uint8List postData})',
           description: 'Loads the URL with POST data.',
           className: className,
           category: 'Navigation',
@@ -799,8 +801,7 @@ class SupportChecker {
         ),
         ApiMethodDefinition(
           name: PlatformInAppWebViewControllerMethod.loadSimulatedRequest.name,
-          signature:
-              'Future<void> loadSimulatedRequest({required URLRequest urlRequest, ...})',
+          signature: 'Future<void> loadSimulatedRequest({required URLRequest urlRequest, ...})',
           description:
               'Navigates to a requested URL with simulated response data.',
           className: className,
@@ -905,8 +906,7 @@ class SupportChecker {
         // JavaScript methods
         ApiMethodDefinition(
           name: PlatformInAppWebViewControllerMethod.evaluateJavascript.name,
-          signature:
-              'Future<dynamic> evaluateJavascript({required String source, ...})',
+          signature: 'Future<dynamic> evaluateJavascript({required String source, ...})',
           description: 'Evaluates JavaScript code and returns the result.',
           className: className,
           category: 'JavaScript',
@@ -923,8 +923,7 @@ class SupportChecker {
           name: PlatformInAppWebViewControllerMethod
               .injectJavascriptFileFromUrl
               .name,
-          signature:
-              'Future<void> injectJavascriptFileFromUrl({required WebUri urlFile, ...})',
+          signature: 'Future<void> injectJavascriptFileFromUrl({required WebUri urlFile, ...})',
           description: 'Injects a JavaScript file from a URL.',
           className: className,
           category: 'JavaScript',
@@ -933,8 +932,7 @@ class SupportChecker {
           name: PlatformInAppWebViewControllerMethod
               .injectJavascriptFileFromAsset
               .name,
-          signature:
-              'Future<dynamic> injectJavascriptFileFromAsset({required String assetFilePath})',
+          signature: 'Future<dynamic> injectJavascriptFileFromAsset({required String assetFilePath})',
           description: 'Injects a JavaScript file from assets.',
           className: className,
           category: 'JavaScript',
@@ -948,8 +946,7 @@ class SupportChecker {
         ),
         ApiMethodDefinition(
           name: PlatformInAppWebViewControllerMethod.injectCSSFileFromUrl.name,
-          signature:
-              'Future<void> injectCSSFileFromUrl({required WebUri urlFile, ...})',
+          signature: 'Future<void> injectCSSFileFromUrl({required WebUri urlFile, ...})',
           description: 'Injects a CSS file from a URL.',
           className: className,
           category: 'JavaScript',
@@ -957,8 +954,7 @@ class SupportChecker {
         ApiMethodDefinition(
           name:
               PlatformInAppWebViewControllerMethod.injectCSSFileFromAsset.name,
-          signature:
-              'Future<void> injectCSSFileFromAsset({required String assetFilePath})',
+          signature: 'Future<void> injectCSSFileFromAsset({required String assetFilePath})',
           description: 'Injects a CSS file from assets.',
           className: className,
           category: 'JavaScript',
@@ -976,8 +972,7 @@ class SupportChecker {
         ApiMethodDefinition(
           name:
               PlatformInAppWebViewControllerMethod.removeJavaScriptHandler.name,
-          signature:
-              'Function? removeJavaScriptHandler({required String handlerName})',
+          signature: 'Function? removeJavaScriptHandler({required String handlerName})',
           description: 'Removes a JavaScript handler.',
           className: className,
           category: 'Handlers',
@@ -1001,8 +996,7 @@ class SupportChecker {
         ),
         ApiMethodDefinition(
           name: PlatformInAppWebViewControllerMethod.addUserScripts.name,
-          signature:
-              'Future<void> addUserScripts({required List<UserScript> userScripts})',
+          signature: 'Future<void> addUserScripts({required List<UserScript> userScripts})',
           description: 'Adds several user scripts to the WebView.',
           className: className,
           category: 'User Scripts',
@@ -1017,8 +1011,7 @@ class SupportChecker {
         ),
         ApiMethodDefinition(
           name: PlatformInAppWebViewControllerMethod.removeUserScripts.name,
-          signature:
-              'Future<void> removeUserScripts({required List<UserScript> userScripts})',
+          signature: 'Future<void> removeUserScripts({required List<UserScript> userScripts})',
           description: 'Removes several user scripts.',
           className: className,
           category: 'User Scripts',
@@ -1027,8 +1020,7 @@ class SupportChecker {
           name: PlatformInAppWebViewControllerMethod
               .removeUserScriptsByGroupName
               .name,
-          signature:
-              'Future<void> removeUserScriptsByGroupName({required String groupName})',
+          signature: 'Future<void> removeUserScriptsByGroupName({required String groupName})',
           description: 'Removes user scripts by group name.',
           className: className,
           category: 'User Scripts',
@@ -1051,16 +1043,14 @@ class SupportChecker {
         // Scrolling methods
         ApiMethodDefinition(
           name: PlatformInAppWebViewControllerMethod.scrollTo.name,
-          signature:
-              'Future<void> scrollTo({required int x, required int y, bool animated})',
+          signature: 'Future<void> scrollTo({required int x, required int y, bool animated})',
           description: 'Scrolls the WebView to the specified position.',
           className: className,
           category: 'Scrolling',
         ),
         ApiMethodDefinition(
           name: PlatformInAppWebViewControllerMethod.scrollBy.name,
-          signature:
-              'Future<void> scrollBy({required int x, required int y, bool animated})',
+          signature: 'Future<void> scrollBy({required int x, required int y, bool animated})',
           description: 'Scrolls the WebView by the specified amount.',
           className: className,
           category: 'Scrolling',
@@ -1116,8 +1106,7 @@ class SupportChecker {
         ),
         ApiMethodDefinition(
           name: PlatformInAppWebViewControllerMethod.flingScroll.name,
-          signature:
-              'Future<void> flingScroll({required int velocityX, required int velocityY})',
+          signature: 'Future<void> flingScroll({required int velocityX, required int velocityY})',
           description: 'Flings the scroll view at the given velocity.',
           className: className,
           category: 'Scrolling',
@@ -1186,8 +1175,7 @@ class SupportChecker {
         ),
         ApiMethodDefinition(
           name: PlatformInAppWebViewControllerMethod.requestFocus.name,
-          signature:
-              'Future<bool?> requestFocus({FocusDirection? direction, InAppWebViewRect? previouslyFocusedRect})',
+          signature: 'Future<bool?> requestFocus({FocusDirection? direction, InAppWebViewRect? previouslyFocusedRect})',
           description: 'Requests focus for the WebView.',
           className: className,
           category: 'Settings',
@@ -1203,8 +1191,7 @@ class SupportChecker {
         // Screenshot methods
         ApiMethodDefinition(
           name: PlatformInAppWebViewControllerMethod.takeScreenshot.name,
-          signature:
-              'Future<Uint8List?> takeScreenshot({ScreenshotConfiguration? screenshotConfiguration})',
+          signature: 'Future<Uint8List?> takeScreenshot({ScreenshotConfiguration? screenshotConfiguration})',
           description: 'Takes a screenshot of the WebView.',
           className: className,
           category: 'Screenshot',
@@ -1219,8 +1206,7 @@ class SupportChecker {
         ),
         ApiMethodDefinition(
           name: PlatformInAppWebViewControllerMethod.createPdf.name,
-          signature:
-              'Future<Uint8List?> createPdf({PDFConfiguration? pdfConfiguration})',
+          signature: 'Future<Uint8List?> createPdf({PDFConfiguration? pdfConfiguration})',
           description: 'Creates a PDF from the current page.',
           className: className,
           category: 'Screenshot',
@@ -1307,8 +1293,7 @@ class SupportChecker {
         ),
         ApiMethodDefinition(
           name: PlatformInAppWebViewControllerMethod.hasWebMessageListener.name,
-          signature:
-              'bool hasWebMessageListener(WebMessageListener webMessageListener)',
+          signature: 'bool hasWebMessageListener(WebMessageListener webMessageListener)',
           description: 'Checks if a web message listener exists.',
           className: className,
           category: 'Web Messaging',
@@ -1333,8 +1318,7 @@ class SupportChecker {
           name: PlatformInAppWebViewControllerMethod
               .setAllMediaPlaybackSuspended
               .name,
-          signature:
-              'Future<void> setAllMediaPlaybackSuspended({required bool suspended})',
+          signature: 'Future<void> setAllMediaPlaybackSuspended({required bool suspended})',
           description: 'Suspends or resumes all media playback.',
           className: className,
           category: 'Media',
@@ -1382,8 +1366,7 @@ class SupportChecker {
         ),
         ApiMethodDefinition(
           name: PlatformInAppWebViewControllerMethod.setCameraCaptureState.name,
-          signature:
-              'Future<void> setCameraCaptureState({required MediaCaptureState state})',
+          signature: 'Future<void> setCameraCaptureState({required MediaCaptureState state})',
           description: 'Sets the camera capture state.',
           className: className,
           category: 'Camera/Mic',
@@ -1401,8 +1384,7 @@ class SupportChecker {
           name: PlatformInAppWebViewControllerMethod
               .setMicrophoneCaptureState
               .name,
-          signature:
-              'Future<void> setMicrophoneCaptureState({required MediaCaptureState state})',
+          signature: 'Future<void> setMicrophoneCaptureState({required MediaCaptureState state})',
           description: 'Sets the microphone capture state.',
           className: className,
           category: 'Camera/Mic',
@@ -1427,8 +1409,7 @@ class SupportChecker {
         // Android-specific methods
         ApiMethodDefinition(
           name: PlatformInAppWebViewControllerMethod.saveWebArchive.name,
-          signature:
-              'Future<String?> saveWebArchive({required String filePath, bool autoname = false})',
+          signature: 'Future<String?> saveWebArchive({required String filePath, bool autoname = false})',
           description: 'Saves the current page as a web archive.',
           className: className,
           category: 'Android',
@@ -1450,8 +1431,7 @@ class SupportChecker {
         ),
         ApiMethodDefinition(
           name: PlatformInAppWebViewControllerMethod.saveState.name,
-          signature:
-              'Future<Uint8List?> saveState({int? maxSize, bool? includeForwardState})',
+          signature: 'Future<Uint8List?> saveState({int? maxSize, bool? includeForwardState})',
           description: 'Saves the WebView state to a bundle.',
           className: className,
           category: 'Android',
@@ -1467,8 +1447,7 @@ class SupportChecker {
           name:
               PlatformInAppWebViewControllerMethod.postVisualStateCallback.name,
           signature: 'Future<void> postVisualStateCallback()',
-          description:
-              'Requests an onRenderProcessResponsive-style visual state callback.',
+          description: 'Requests an onRenderProcessResponsive-style visual state callback.',
           className: className,
           category: 'Android',
         ),
@@ -1528,8 +1507,7 @@ class SupportChecker {
         ApiMethodDefinition(
           name:
               PlatformInAppWebViewControllerMethod.setConversationContext.name,
-          signature:
-              'Future<void> setConversationContext({required ConversationContext conversationContext})',
+          signature: 'Future<void> setConversationContext({required ConversationContext conversationContext})',
           description:
               'Gives the keyboard a conversation to base Smart Replies on.',
           className: className,
@@ -1593,8 +1571,7 @@ class SupportChecker {
           name: PlatformInAppWebViewControllerMethod
               .setSafeBrowsingAllowlist
               .name,
-          signature:
-              'static Future<bool> setSafeBrowsingAllowlist({required List<String> hosts})',
+          signature: 'static Future<bool> setSafeBrowsingAllowlist({required List<String> hosts})',
           description: 'Sets the Safe Browsing allowlist.',
           className: className,
           isStatic: true,
@@ -1615,8 +1592,7 @@ class SupportChecker {
           name: PlatformInAppWebViewControllerMethod
               .setWebContentsDebuggingEnabled
               .name,
-          signature:
-              'static Future<void> setWebContentsDebuggingEnabled(bool debuggingEnabled)',
+          signature: 'static Future<void> setWebContentsDebuggingEnabled(bool debuggingEnabled)',
           description: 'Enables or disables debugging.',
           className: className,
           isStatic: true,
@@ -1665,8 +1641,7 @@ class SupportChecker {
         ),
         ApiMethodDefinition(
           name: PlatformInAppWebViewControllerMethod.clearAllCache.name,
-          signature:
-              'static Future<void> clearAllCache({bool includeDiskFiles = true})',
+          signature: 'static Future<void> clearAllCache({bool includeDiskFiles = true})',
           description: 'Clears all WebView caches.',
           className: className,
           isStatic: true,
@@ -1789,8 +1764,7 @@ class SupportChecker {
         ApiEventDefinition(
           name:
               PlatformWebViewCreationParamsProperty.onNavigationRedirected.name,
-          description:
-              'Called when a navigation is redirected (Android, NAVIGATION_LISTENER).',
+          description: 'Called when a navigation is redirected (Android, NAVIGATION_LISTENER).',
           className: className,
           category: 'Navigation',
         ),
@@ -1805,8 +1779,7 @@ class SupportChecker {
         ),
         ApiEventDefinition(
           name: PlatformWebViewCreationParamsProperty.onPageLoadEvent.name,
-          description:
-              "Called when a page's load event has run (Android, NAVIGATION_LISTENER).",
+          description: "Called when a page's load event has run (Android, NAVIGATION_LISTENER).",
           className: className,
           category: 'Navigation',
         ),
@@ -1832,8 +1805,7 @@ class SupportChecker {
           name: PlatformWebViewCreationParamsProperty
               .onFirstContentfulPaintMillis
               .name,
-          description:
-              'Reports First Contentful Paint from the engine (Android, NAVIGATION_LISTENER).',
+          description: 'Reports First Contentful Paint from the engine (Android, NAVIGATION_LISTENER).',
           className: className,
           category: 'Navigation',
         ),
@@ -1895,8 +1867,7 @@ class SupportChecker {
         ),
         ApiEventDefinition(
           name: PlatformWebViewCreationParamsProperty.onRequestFocus.name,
-          description:
-              'Called when another WebView requests this one be displayed and focused.',
+          description: 'Called when another WebView requests this one be displayed and focused.',
           className: className,
           category: 'Window',
         ),
@@ -1955,8 +1926,7 @@ class SupportChecker {
         ApiEventDefinition(
           name:
               PlatformWebViewCreationParamsProperty.onReceivedLoginRequest.name,
-          description:
-              'Called when a request to automatically log in the user has been processed.',
+          description: 'Called when a request to automatically log in the user has been processed.',
           className: className,
           category: 'Authentication',
         ),
@@ -2198,8 +2168,7 @@ class SupportChecker {
           name: PlatformWebViewCreationParamsProperty
               .onInsertInputSuggestion
               .name,
-          description:
-              'Called when the keyboard delivers a Smart Reply the user selected.',
+          description: 'Called when the keyboard delivers a Smart Reply the user selected.',
           className: className,
           category: 'iOS/macOS',
         ),
@@ -2300,8 +2269,7 @@ class SupportChecker {
       methods: [
         ApiMethodDefinition(
           name: PlatformInAppBrowserMethod.openUrlRequest.name,
-          signature:
-              'Future<void> openUrlRequest({required URLRequest urlRequest, ...})',
+          signature: 'Future<void> openUrlRequest({required URLRequest urlRequest, ...})',
           description: 'Opens a URL in the browser.',
           className: className,
         ),
@@ -2320,8 +2288,7 @@ class SupportChecker {
         ),
         ApiMethodDefinition(
           name: PlatformInAppBrowserMethod.openWithSystemBrowser.name,
-          signature:
-              'static Future<void> openWithSystemBrowser({required WebUri url})',
+          signature: 'static Future<void> openWithSystemBrowser({required WebUri url})',
           description: 'Opens a URL in the system browser.',
           className: className,
           isStatic: true,
@@ -2457,8 +2424,7 @@ class SupportChecker {
         ),
         ApiMethodDefinition(
           name: PlatformChromeSafariBrowserMethod.validateRelationship.name,
-          signature:
-              'Future<bool> validateRelationship({required CustomTabsRelationType relation, ...})',
+          signature: 'Future<bool> validateRelationship({required CustomTabsRelationType relation, ...})',
           description: 'Validates a relationship.',
           className: className,
         ),
@@ -2490,8 +2456,7 @@ class SupportChecker {
         ),
         ApiMethodDefinition(
           name: PlatformChromeSafariBrowserMethod.getPackageName.name,
-          signature:
-              'static Future<String?> getPackageName({List<String>? packages, ...})',
+          signature: 'static Future<String?> getPackageName({List<String>? packages, ...})',
           description: 'Gets the package name for Custom Tabs.',
           className: className,
           isStatic: true,
@@ -2505,8 +2470,7 @@ class SupportChecker {
         ),
         ApiMethodDefinition(
           name: PlatformChromeSafariBrowserMethod.prewarmConnections.name,
-          signature:
-              'static Future<PrewarmingToken?> prewarmConnections(List<WebUri> URLs)',
+          signature: 'static Future<PrewarmingToken?> prewarmConnections(List<WebUri> URLs)',
           description: 'Prewarms connections.',
           className: className,
           isStatic: true,
@@ -2514,8 +2478,7 @@ class SupportChecker {
         ApiMethodDefinition(
           name:
               PlatformChromeSafariBrowserMethod.invalidatePrewarmingToken.name,
-          signature:
-              'static Future<void> invalidatePrewarmingToken(PrewarmingToken prewarmingToken)',
+          signature: 'static Future<void> invalidatePrewarmingToken(PrewarmingToken prewarmingToken)',
           description: 'Invalidates a prewarming token.',
           className: className,
           isStatic: true,
@@ -2529,8 +2492,7 @@ class SupportChecker {
         ),
         ApiMethodDefinition(
           name: PlatformChromeSafariBrowserMethod.updateActionButton.name,
-          signature:
-              'Future<void> updateActionButton({required Uint8List icon, required String description})',
+          signature: 'Future<void> updateActionButton({required Uint8List icon, required String description})',
           description: 'Updates the action button.',
           className: className,
         ),
@@ -2551,15 +2513,13 @@ class SupportChecker {
         ApiMethodDefinition(
           name:
               PlatformChromeSafariBrowserMethod.requestPostMessageChannel.name,
-          signature:
-              'Future<bool> requestPostMessageChannel({required WebUri sourceOrigin, ...})',
+          signature: 'Future<bool> requestPostMessageChannel({required WebUri sourceOrigin, ...})',
           description: 'Requests a post message channel.',
           className: className,
         ),
         ApiMethodDefinition(
           name: PlatformChromeSafariBrowserMethod.postMessage.name,
-          signature:
-              'Future<CustomTabsPostMessageResultType> postMessage(String message)',
+          signature: 'Future<CustomTabsPostMessageResultType> postMessage(String message)',
           description: 'Posts a message.',
           className: className,
         ),
@@ -2683,43 +2643,37 @@ class SupportChecker {
       methods: [
         ApiMethodDefinition(
           name: PlatformCookieManagerMethod.setCookie.name,
-          signature:
-              'Future<bool> setCookie({required WebUri url, required String name, required String value, ...})',
+          signature: 'Future<bool> setCookie({required WebUri url, required String name, required String value, ...})',
           description: 'Sets a cookie.',
           className: className,
         ),
         ApiMethodDefinition(
           name: PlatformCookieManagerMethod.getCookies.name,
-          signature:
-              'Future<List<Cookie>> getCookies({required WebUri url, String? profileName})',
+          signature: 'Future<List<Cookie>> getCookies({required WebUri url, String? profileName})',
           description: 'Gets all cookies for a URL.',
           className: className,
         ),
         ApiMethodDefinition(
           name: PlatformCookieManagerMethod.getCookie.name,
-          signature:
-              'Future<Cookie?> getCookie({required WebUri url, required String name, String? profileName})',
+          signature: 'Future<Cookie?> getCookie({required WebUri url, required String name, String? profileName})',
           description: 'Gets a specific cookie.',
           className: className,
         ),
         ApiMethodDefinition(
           name: PlatformCookieManagerMethod.setCookies.name,
-          signature:
-              'Future<List<bool>> setCookies({required List<CookieToSet> cookies, String? profileName})',
+          signature: 'Future<List<bool>> setCookies({required List<CookieToSet> cookies, String? profileName})',
           description: 'Sets several cookies in one call.',
           className: className,
         ),
         ApiMethodDefinition(
           name: PlatformCookieManagerMethod.deleteCookie.name,
-          signature:
-              'Future<bool> deleteCookie({required WebUri url, required String name, ...})',
+          signature: 'Future<bool> deleteCookie({required WebUri url, required String name, ...})',
           description: 'Deletes a cookie.',
           className: className,
         ),
         ApiMethodDefinition(
           name: PlatformCookieManagerMethod.deleteCookies.name,
-          signature:
-              'Future<bool> deleteCookies({required WebUri url, String path = "/", String? domain, String? profileName})',
+          signature: 'Future<bool> deleteCookies({required WebUri url, String path = "/", String? domain, String? profileName})',
           description: 'Deletes cookies for a URL.',
           className: className,
         ),
@@ -2737,8 +2691,7 @@ class SupportChecker {
         ),
         ApiMethodDefinition(
           name: PlatformCookieManagerMethod.setAcceptCookie.name,
-          signature:
-              'Future<bool> setAcceptCookie(bool accept, {String? profileName})',
+          signature: 'Future<bool> setAcceptCookie(bool accept, {String? profileName})',
           description: 'Enables or disables cookie acceptance.',
           className: className,
         ),
@@ -2758,8 +2711,7 @@ class SupportChecker {
         ),
         ApiMethodDefinition(
           name: PlatformCookieManagerMethod.setCookieStoreObserver.name,
-          signature:
-              'Future<void> setCookieStoreObserver(CookieStoreObserver? observer)',
+          signature: 'Future<void> setCookieStoreObserver(CookieStoreObserver? observer)',
           description: 'Observes changes to the cookie store.',
           className: className,
         ),
@@ -2800,8 +2752,7 @@ class SupportChecker {
         ),
         ApiMethodDefinition(
           name: PlatformLocalStorageMethod.setItem.name,
-          signature:
-              'Future<void> setItem({required String key, required dynamic value})',
+          signature: 'Future<void> setItem({required String key, required dynamic value})',
           description: 'Sets an item.',
           className: className,
         ),
@@ -2990,8 +2941,7 @@ class SupportChecker {
           name: PlatformPullToRefreshControllerMethod
               .setDistanceToTriggerSync
               .name,
-          signature:
-              'Future<void> setDistanceToTriggerSync(int distanceToTriggerSync)',
+          signature: 'Future<void> setDistanceToTriggerSync(int distanceToTriggerSync)',
           description: 'Sets the distance to trigger refresh.',
           className: className,
         ),
@@ -3164,16 +3114,14 @@ class SupportChecker {
         ApiMethodDefinition(
           name:
               PlatformServiceWorkerControllerMethod.getAllowContentAccess.name,
-          signature:
-              'static Future<bool> getAllowContentAccess({String? profileName})',
+          signature: 'static Future<bool> getAllowContentAccess({String? profileName})',
           description: 'Gets allow content access setting.',
           className: className,
         ),
         ApiMethodDefinition(
           name:
               PlatformServiceWorkerControllerMethod.setAllowContentAccess.name,
-          signature:
-              'static Future<void> setAllowContentAccess(bool allow, {String? profileName})',
+          signature: 'static Future<void> setAllowContentAccess(bool allow, {String? profileName})',
           description: 'Sets allow content access setting.',
           className: className,
         ),
@@ -3186,8 +3134,7 @@ class SupportChecker {
         ),
         ApiMethodDefinition(
           name: PlatformServiceWorkerControllerMethod.setAllowFileAccess.name,
-          signature:
-              'static Future<void> setAllowFileAccess(bool allow, {String? profileName})',
+          signature: 'static Future<void> setAllowFileAccess(bool allow, {String? profileName})',
           description: 'Sets allow file access setting.',
           className: className,
         ),
@@ -3200,8 +3147,7 @@ class SupportChecker {
         ),
         ApiMethodDefinition(
           name: PlatformServiceWorkerControllerMethod.setBlockNetworkLoads.name,
-          signature:
-              'static Future<void> setBlockNetworkLoads(bool flag, {String? profileName})',
+          signature: 'static Future<void> setBlockNetworkLoads(bool flag, {String? profileName})',
           description: 'Sets block network loads setting.',
           className: className,
         ),
@@ -3215,8 +3161,7 @@ class SupportChecker {
         ),
         ApiMethodDefinition(
           name: PlatformServiceWorkerControllerMethod.setCacheMode.name,
-          signature:
-              'static Future<void> setCacheMode(CacheMode mode, {String? profileName})',
+          signature: 'static Future<void> setCacheMode(CacheMode mode, {String? profileName})',
           description: 'Sets the service worker cache mode.',
           className: className,
           isStatic: true,
@@ -3225,8 +3170,7 @@ class SupportChecker {
           name: PlatformServiceWorkerControllerMethod
               .getIncludeCookiesOnShouldInterceptRequestEnabled
               .name,
-          signature:
-              'static Future<bool?> getIncludeCookiesOnShouldInterceptRequestEnabled({String? profileName})',
+          signature: 'static Future<bool?> getIncludeCookiesOnShouldInterceptRequestEnabled({String? profileName})',
           description:
               'Whether intercepted service worker requests carry cookies.',
           className: className,
@@ -3236,8 +3180,7 @@ class SupportChecker {
           name: PlatformServiceWorkerControllerMethod
               .setIncludeCookiesOnShouldInterceptRequestEnabled
               .name,
-          signature:
-              'static Future<void> setIncludeCookiesOnShouldInterceptRequestEnabled(bool enabled, {String? profileName})',
+          signature: 'static Future<void> setIncludeCookiesOnShouldInterceptRequestEnabled(bool enabled, {String? profileName})',
           description:
               'Sets whether intercepted service worker requests carry cookies.',
           className: className,
@@ -3263,8 +3206,7 @@ class SupportChecker {
       methods: [
         ApiMethodDefinition(
           name: PlatformProxyControllerMethod.setProxyOverride.name,
-          signature:
-              'Future<void> setProxyOverride({required ProxySettings settings})',
+          signature: 'Future<void> setProxyOverride({required ProxySettings settings})',
           description: 'Sets the proxy override.',
           className: className,
         ),
@@ -3318,8 +3260,7 @@ class SupportChecker {
           name: PlatformHttpAuthCredentialDatabaseMethod
               .getAllAuthCredentials
               .name,
-          signature:
-              'Future<List<URLProtectionSpaceHttpAuthCredentials>> getAllAuthCredentials()',
+          signature: 'Future<List<URLProtectionSpaceHttpAuthCredentials>> getAllAuthCredentials()',
           description: 'Gets all stored credentials.',
           className: className,
         ),

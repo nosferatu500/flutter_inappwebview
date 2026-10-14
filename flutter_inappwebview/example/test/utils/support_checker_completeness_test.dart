@@ -154,9 +154,9 @@ void main() {
   group('the Support Matrix lists every method', () {
     for (final entry in methodEnums.entries) {
       test(entry.key, () {
-        final listed = definitionFor(
-          entry.key,
-        ).methods.map((method) => method.name).toSet();
+        final listed = definitionFor(entry.key).methods
+            .map((method) => method.name)
+            .toSet();
         final missing = entry.value
             .where((name) => !listed.contains(name))
             .toList();
@@ -175,9 +175,9 @@ void main() {
   group('the Support Matrix lists every event', () {
     for (final entry in eventEnums.entries) {
       test(entry.key, () {
-        final listed = definitionFor(
-          entry.key,
-        ).events.map((event) => event.name).toSet();
+        final listed = definitionFor(entry.key).events
+            .map((event) => event.name)
+            .toSet();
         final missing = entry.value
             .where((name) => !listed.contains(name))
             .toList();

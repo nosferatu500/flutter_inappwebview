@@ -119,8 +119,7 @@ class PlatformHeadlessInAppWebViewCreationParams
   @SupportedPlatforms(
     platforms: [
       AndroidPlatform(
-        note:
-            '`Size` width and height values will be converted to `int` values because they cannot have `double` values.',
+        note: '`Size` width and height values will be converted to `int` values because they cannot have `double` values.',
       ),
       IOSPlatform(),
     ],
@@ -259,8 +258,7 @@ abstract class PlatformHeadlessInAppWebView extends PlatformInterface
   @SupportedPlatforms(
     platforms: [
       AndroidPlatform(
-        note:
-            'A `View`\'s layout params are an `int` number of *physical* pixels, so the size is multiplied by the display density and rounded to the nearest pixel. The WebView can therefore end up less than one physical pixel away from the size requested here; `getSize` still reports the requested value.',
+        note: 'A `View`\'s layout params are an `int` number of *physical* pixels, so the size is multiplied by the display density and rounded to the nearest pixel. The WebView can therefore end up less than one physical pixel away from the size requested here; `getSize` still reports the requested value.',
       ),
       IOSPlatform(),
     ],

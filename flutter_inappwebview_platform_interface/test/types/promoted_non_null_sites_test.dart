@@ -47,25 +47,22 @@ void main() {
     },
   );
 
-  test(
-    'URLProtectionSpace keeps the distinguished names that decode and skips the rest',
-    () {
-      final space = quiet(
-        () => URLProtectionSpace.fromMap({
-          'host': 'example.com',
-          'protocol': 'https',
-          'port': 443,
-          'distinguishedNames': [junk, der],
-        }),
-      );
-      expect(space!.distinguishedNames, hasLength(1));
-    },
-  );
+  test('URLProtectionSpace keeps the distinguished names that decode and skips the rest', () {
+    final space = quiet(
+      () => URLProtectionSpace.fromMap({
+        'host': 'example.com',
+        'protocol': 'https',
+        'port': 443,
+        'distinguishedNames': [junk, der],
+      }),
+    );
+    expect(space!.distinguishedNames, hasLength(1));
+  });
 
   test('certificate policies: qualifiers are collected only where present', () {
-    final policies = X509Certificate.fromData(
-      data: der,
-    ).certificatePolicies!.policies!;
+    final policies = X509Certificate.fromData(data: der)
+        .certificatePolicies!
+        .policies!;
     expect(policies.map((p) => p.oid), ['1.2.3.4', '1.3.6.1.4.1.99999.1']);
     expect(policies[0].qualifiers, isNull);
     expect(policies[1].qualifiers, hasLength(1));

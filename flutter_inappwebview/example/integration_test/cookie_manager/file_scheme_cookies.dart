@@ -23,8 +23,7 @@ void fileSchemeCookies() {
     expect(
       allowed,
       isNotNull,
-      reason:
-          'null means the provider guard rejected the call, not that file cookies are disallowed',
+      reason: 'null means the provider guard rejected the call, not that file cookies are disallowed',
     );
     expect(
       allowed,

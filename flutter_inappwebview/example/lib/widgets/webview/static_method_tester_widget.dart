@@ -1,4 +1,5 @@
 import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:nosferatu500_inappwebview/nosferatu500_inappwebview.dart';
 import 'package:flutter_inappwebview_example/utils/support_checker.dart';
@@ -368,8 +369,7 @@ class _StaticMethodTesterWidgetState extends State<StaticMethodTesterWidget> {
         methods: [
           StaticMethodEntry(
             methodType: StaticMethodType.isAvailable,
-            description:
-                'Checks if Chrome Custom Tabs / SFSafariViewController is available',
+            description: 'Checks if Chrome Custom Tabs / SFSafariViewController is available',
             classType: ChromeSafariBrowser,
             execute: (params) async {
               return await ChromeSafariBrowser.isAvailable();

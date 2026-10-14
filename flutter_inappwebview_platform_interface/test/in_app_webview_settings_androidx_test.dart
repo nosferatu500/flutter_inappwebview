@@ -37,20 +37,17 @@ void main() {
       expect(map['attributionRegistrationBehavior'], 3);
     });
 
-    test(
-      'the nullable four stay null when unset, and only paymentRequest defaults',
-      () {
-        final map = InAppWebViewSettings().toMap();
+    test('the nullable four stay null when unset, and only paymentRequest defaults', () {
+      final map = InAppWebViewSettings().toMap();
 
-        // §16 defaults this one because the platform default is documented and matches.
-        expect(map['paymentRequestEnabled'], false);
-        // §17/§18/§19/§20 left theirs nullable precisely so the plugin applies nothing.
-        expect(map['webAuthenticationSupport'], isNull);
-        expect(map['downloadFaviconsEnabled'], isNull);
-        expect(map['backForwardCacheEnabled'], isNull);
-        expect(map['attributionRegistrationBehavior'], isNull);
-      },
-    );
+      // §16 defaults this one because the platform default is documented and matches.
+      expect(map['paymentRequestEnabled'], false);
+      // §17/§18/§19/§20 left theirs nullable precisely so the plugin applies nothing.
+      expect(map['webAuthenticationSupport'], isNull);
+      expect(map['downloadFaviconsEnabled'], isNull);
+      expect(map['backForwardCacheEnabled'], isNull);
+      expect(map['attributionRegistrationBehavior'], isNull);
+    });
 
     test('all five survive a fromMap round-trip', () {
       final original = InAppWebViewSettings(

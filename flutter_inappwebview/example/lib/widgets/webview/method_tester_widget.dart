@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'dart:typed_data';
+
 import 'package:flutter/material.dart';
 import 'package:nosferatu500_inappwebview/nosferatu500_inappwebview.dart';
 import 'package:flutter_inappwebview_example/utils/support_checker.dart';
@@ -532,8 +533,7 @@ class _MethodTesterWidgetState extends State<MethodTesterWidget> {
             methodEnum:
                 PlatformInAppWebViewControllerMethod.injectCSSFileFromUrl,
             parameters: {
-              'urlFile':
-                  'https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css',
+              'urlFile': 'https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css',
             },
             requiredParameters: ['urlFile'],
             execute: (controller, params) async {
@@ -1159,8 +1159,12 @@ class _MethodTesterWidgetState extends State<MethodTesterWidget> {
             execute: (controller, params) async {
               final listener = WebMessageListener(
                 jsObjectName: params['jsObjectName']?.toString() ?? '',
-                onPostMessage:
-                    (message, sourceOrigin, isMainFrame, replyProxy) {},
+                onPostMessage: (
+                  message,
+                  sourceOrigin,
+                  isMainFrame,
+                  replyProxy,
+                ) {},
               );
               return controller.hasWebMessageListener(listener);
             },

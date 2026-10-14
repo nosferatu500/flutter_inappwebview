@@ -6,9 +6,9 @@ void customMenuItems() {
   skippableTest('custom menu items', () async {
     var inAppBrowser = MyInAppBrowser();
 
-    final data = (await rootBundle.load(
-      'test_assets/images/flutter-logo.png',
-    )).buffer.asUint8List();
+    final data = (await rootBundle.load('test_assets/images/flutter-logo.png'))
+        .buffer
+        .asUint8List();
 
     inAppBrowser.addMenuItem(
       InAppBrowserMenuItem(

@@ -49,12 +49,9 @@ void prerenderUrl() {
       expect(loadStops, greaterThan(previous), reason: 'the page never loaded');
     }
 
-    Future<num> activationStart() async =>
-        await controller.evaluateJavascript(
-              source:
-                  "performance.getEntriesByType('navigation')[0].activationStart",
-            )
-            as num;
+    Future<num> activationStart() async => await controller.evaluateJavascript(
+      source: "performance.getEntriesByType('navigation')[0].activationStart",
+    ) as num;
 
     await waitForLoadStop(0);
 

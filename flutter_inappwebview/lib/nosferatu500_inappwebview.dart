@@ -33,4 +33,5 @@ export 'package:nosferatu500_inappwebview_platform_interface/nosferatu500_inappw
         HexColor,
         MapSize,
         MapEdgeInsets;
+
 export 'src/main.dart';

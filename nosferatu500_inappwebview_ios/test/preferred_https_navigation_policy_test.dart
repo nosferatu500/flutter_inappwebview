@@ -27,12 +27,15 @@ void main() {
       expect(UpgradeToHTTPSPolicy.values, hasLength(4));
     });
 
-    test('KEEP_AS_REQUESTED is 0, which is what makes the Swift default safe', () {
-      // The Swift field is a non-optional `Int = 0` precisely because WebKit documents its own
-      // default as KeepAsRequested. If this value were ever not 0, applying the setting
-      // unconditionally would start changing behaviour for callers who never asked.
-      expect(UpgradeToHTTPSPolicy.KEEP_AS_REQUESTED.toNativeValue(), 0);
-    });
+    test(
+      'KEEP_AS_REQUESTED is 0, which is what makes the Swift default safe',
+      () {
+        // The Swift field is a non-optional `Int = 0` precisely because WebKit documents its own
+        // default as KeepAsRequested. If this value were ever not 0, applying the setting
+        // unconditionally would start changing behaviour for callers who never asked.
+        expect(UpgradeToHTTPSPolicy.KEEP_AS_REQUESTED.toNativeValue(), 0);
+      },
+    );
 
     test('round-trips through fromNativeValue', () {
       for (final p in UpgradeToHTTPSPolicy.values) {

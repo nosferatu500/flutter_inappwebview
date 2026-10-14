@@ -1048,8 +1048,7 @@ class _ServiceControllersScreenState extends State<ServiceControllersScreen> {
                   decoration: const InputDecoration(
                     labelText: 'Relay hop 1 — HTTP/3 endpoint (iOS 17+)',
                     hintText: 'https://relay.example.com/h3',
-                    helperText:
-                        'ProxyRule.relayHop1. Leave empty for a direct proxy connection.',
+                    helperText: 'ProxyRule.relayHop1. Leave empty for a direct proxy connection.',
                     border: OutlineInputBorder(),
                     isDense: true,
                   ),
@@ -1247,9 +1246,7 @@ class _ServiceControllersScreenState extends State<ServiceControllersScreen> {
       );
       _recordMethodResult(
         PlatformProfileStoreMethod.addCustomHeader.name,
-        added
-            ? 'Added ${params['name']}: ${params['value']}'
-            : 'Profile not reachable (feature missing or no such profile): nothing done',
+        added ? 'Added ${params['name']}: ${params['value']}' : 'Profile not reachable (feature missing or no such profile): nothing done',
         isError: !added,
       );
     } catch (e) {
@@ -1361,9 +1358,7 @@ class _ServiceControllersScreenState extends State<ServiceControllersScreen> {
       final reached = await ProfileStore.instance().clearAllCustomHeaders();
       _recordMethodResult(
         PlatformProfileStoreMethod.clearAllCustomHeaders.name,
-        reached
-            ? 'All custom headers cleared'
-            : 'Profile not reachable (feature missing or no such profile): nothing done',
+        reached ? 'All custom headers cleared' : 'Profile not reachable (feature missing or no such profile): nothing done',
         isError: !reached,
       );
     } catch (e) {

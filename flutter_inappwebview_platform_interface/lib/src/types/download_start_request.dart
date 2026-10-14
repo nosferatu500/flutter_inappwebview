@@ -51,10 +51,8 @@ class DownloadStartRequest_ {
       IOSPlatform(
         available: "18.2",
         apiName: "WKDownload.isUserInitiated",
-        apiUrl:
-            "https://developer.apple.com/documentation/webkit/wkdownload/isuserinitiated",
-        note:
-            "`null` when the event came from the navigation-response path, which has no WKDownload to ask.",
+        apiUrl: "https://developer.apple.com/documentation/webkit/wkdownload/isuserinitiated",
+        note: "`null` when the event came from the navigation-response path, which has no WKDownload to ask.",
       ),
     ],
   )
@@ -72,10 +70,8 @@ class DownloadStartRequest_ {
       IOSPlatform(
         available: "18.2",
         apiName: "WKDownload.originatingFrame",
-        apiUrl:
-            "https://developer.apple.com/documentation/webkit/wkdownload/originatingframe",
-        note:
-            "`null` when the event came from the navigation-response path, which has no WKDownload to ask.",
+        apiUrl: "https://developer.apple.com/documentation/webkit/wkdownload/originatingframe",
+        note: "`null` when the event came from the navigation-response path, which has no WKDownload to ask.",
       ),
     ],
   )

@@ -17,8 +17,7 @@ class FocusDirection_ {
     platforms: [
       EnumAndroidPlatform(
         apiName: 'FOCUS_UP',
-        apiUrl:
-            'https://developer.android.com/reference/android/view/View#FOCUS_UP',
+        apiUrl: 'https://developer.android.com/reference/android/view/View#FOCUS_UP',
         value: 33,
       ),
     ],
@@ -30,8 +29,7 @@ class FocusDirection_ {
     platforms: [
       EnumAndroidPlatform(
         apiName: 'FOCUS_DOWN',
-        apiUrl:
-            'https://developer.android.com/reference/android/view/View#FOCUS_DOWN',
+        apiUrl: 'https://developer.android.com/reference/android/view/View#FOCUS_DOWN',
         value: 130,
       ),
     ],
@@ -43,8 +41,7 @@ class FocusDirection_ {
     platforms: [
       EnumAndroidPlatform(
         apiName: 'FOCUS_LEFT',
-        apiUrl:
-            'https://developer.android.com/reference/android/view/View#FOCUS_LEFT',
+        apiUrl: 'https://developer.android.com/reference/android/view/View#FOCUS_LEFT',
         value: 130,
       ),
     ],
@@ -56,8 +53,7 @@ class FocusDirection_ {
     platforms: [
       EnumAndroidPlatform(
         apiName: 'FOCUS_RIGHT',
-        apiUrl:
-            'https://developer.android.com/reference/android/view/View#FOCUS_RIGHT',
+        apiUrl: 'https://developer.android.com/reference/android/view/View#FOCUS_RIGHT',
         value: 130,
       ),
     ],

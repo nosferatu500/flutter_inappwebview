@@ -54,10 +54,8 @@ class PlatformProfileStoreCreationParams {
   platforms: [
     AndroidPlatform(
       apiName: 'ProfileStore',
-      apiUrl:
-          'https://developer.android.com/reference/androidx/webkit/ProfileStore',
-      note:
-          'available on Android only if [WebViewFeature.MULTI_PROFILE] feature is supported.',
+      apiUrl: 'https://developer.android.com/reference/androidx/webkit/ProfileStore',
+      note: 'available on Android only if [WebViewFeature.MULTI_PROFILE] feature is supported.',
     ),
   ],
 )
@@ -131,10 +129,8 @@ abstract class PlatformProfileStore extends PlatformInterface {
     platforms: [
       AndroidPlatform(
         apiName: 'ProfileStore.getAllProfileNames',
-        apiUrl:
-            'https://developer.android.com/reference/androidx/webkit/ProfileStore#getAllProfileNames()',
-        note:
-            'Requires [WebViewFeature.MULTI_PROFILE]. Returns an empty list if the feature is not supported.',
+        apiUrl: 'https://developer.android.com/reference/androidx/webkit/ProfileStore#getAllProfileNames()',
+        note: 'Requires [WebViewFeature.MULTI_PROFILE]. Returns an empty list if the feature is not supported.',
       ),
     ],
   )
@@ -165,10 +161,8 @@ abstract class PlatformProfileStore extends PlatformInterface {
     platforms: [
       AndroidPlatform(
         apiName: 'ProfileStore.getOrCreateProfile',
-        apiUrl:
-            'https://developer.android.com/reference/androidx/webkit/ProfileStore#getOrCreateProfile(java.lang.String)',
-        note:
-            'Requires [WebViewFeature.MULTI_PROFILE]. Returns `null` and creates nothing if the feature is not supported.',
+        apiUrl: 'https://developer.android.com/reference/androidx/webkit/ProfileStore#getOrCreateProfile(java.lang.String)',
+        note: 'Requires [WebViewFeature.MULTI_PROFILE]. Returns `null` and creates nothing if the feature is not supported.',
       ),
     ],
   )
@@ -201,10 +195,8 @@ abstract class PlatformProfileStore extends PlatformInterface {
     platforms: [
       AndroidPlatform(
         apiName: 'ProfileStore.deleteProfile',
-        apiUrl:
-            'https://developer.android.com/reference/androidx/webkit/ProfileStore#deleteProfile(java.lang.String)',
-        note:
-            'Requires [WebViewFeature.MULTI_PROFILE]. Returns `false` and deletes nothing if the feature is not supported.',
+        apiUrl: 'https://developer.android.com/reference/androidx/webkit/ProfileStore#deleteProfile(java.lang.String)',
+        note: 'Requires [WebViewFeature.MULTI_PROFILE]. Returns `false` and deletes nothing if the feature is not supported.',
       ),
     ],
   )
@@ -236,8 +228,7 @@ abstract class PlatformProfileStore extends PlatformInterface {
     platforms: [
       AndroidPlatform(
         apiName: 'Profile.addCustomHeader',
-        apiUrl:
-            'https://developer.android.com/reference/androidx/webkit/Profile#addCustomHeader(androidx.webkit.CustomHeader)',
+        apiUrl: 'https://developer.android.com/reference/androidx/webkit/Profile#addCustomHeader(androidx.webkit.CustomHeader)',
         note:
             'Requires [WebViewFeature.MULTI_PROFILE] and [WebViewFeature.CUSTOM_REQUEST_HEADERS]. '
             'The androidx API is on `Profile`; this class reaches it by name, which is how every other profile-scoped surface in this plugin works.',
@@ -266,8 +257,7 @@ abstract class PlatformProfileStore extends PlatformInterface {
     platforms: [
       AndroidPlatform(
         apiName: 'Profile.hasCustomHeader',
-        apiUrl:
-            'https://developer.android.com/reference/androidx/webkit/Profile#hasCustomHeader(java.lang.String)',
+        apiUrl: 'https://developer.android.com/reference/androidx/webkit/Profile#hasCustomHeader(java.lang.String)',
         note:
             'Requires [WebViewFeature.MULTI_PROFILE] and [WebViewFeature.CUSTOM_REQUEST_HEADERS]. '
             'The androidx API is on `Profile`; this class reaches it by name, which is how every other profile-scoped surface in this plugin works.',
@@ -301,8 +291,7 @@ abstract class PlatformProfileStore extends PlatformInterface {
     platforms: [
       AndroidPlatform(
         apiName: 'Profile.getCustomHeaders',
-        apiUrl:
-            'https://developer.android.com/reference/androidx/webkit/Profile#getCustomHeaders()',
+        apiUrl: 'https://developer.android.com/reference/androidx/webkit/Profile#getCustomHeaders()',
         note:
             'Requires [WebViewFeature.MULTI_PROFILE] and [WebViewFeature.CUSTOM_REQUEST_HEADERS]. '
             'The androidx API is on `Profile`; this class reaches it by name, which is how every other profile-scoped surface in this plugin works.',
@@ -335,8 +324,7 @@ abstract class PlatformProfileStore extends PlatformInterface {
     platforms: [
       AndroidPlatform(
         apiName: 'Profile.clearCustomHeader',
-        apiUrl:
-            'https://developer.android.com/reference/androidx/webkit/Profile#clearCustomHeader(java.lang.String)',
+        apiUrl: 'https://developer.android.com/reference/androidx/webkit/Profile#clearCustomHeader(java.lang.String)',
         note:
             'Requires [WebViewFeature.MULTI_PROFILE] and [WebViewFeature.CUSTOM_REQUEST_HEADERS]. '
             'The androidx API is on `Profile`; this class reaches it by name, which is how every other profile-scoped surface in this plugin works.',
@@ -365,8 +353,7 @@ abstract class PlatformProfileStore extends PlatformInterface {
     platforms: [
       AndroidPlatform(
         apiName: 'Profile.clearAllCustomHeaders',
-        apiUrl:
-            'https://developer.android.com/reference/androidx/webkit/Profile#clearAllCustomHeaders()',
+        apiUrl: 'https://developer.android.com/reference/androidx/webkit/Profile#clearAllCustomHeaders()',
         note:
             'Requires [WebViewFeature.MULTI_PROFILE] and [WebViewFeature.CUSTOM_REQUEST_HEADERS]. '
             'The androidx API is on `Profile`; this class reaches it by name, which is how every other profile-scoped surface in this plugin works.',

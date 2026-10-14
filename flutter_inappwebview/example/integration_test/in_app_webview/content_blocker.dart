@@ -82,11 +82,9 @@ void contentBlocker() {
         await tester.pump(const Duration(milliseconds: 100));
         await Future<void>.delayed(const Duration(milliseconds: 100));
       }
-      expect(
-        events.where((e) => e.startsWith('error $url')),
-        [contains('contentBlockers could not be compiled')],
-        reason: 'one error for the initial URL naming the cause: $events',
-      );
+      expect(events.where((e) => e.startsWith('error $url')), [
+        contains('contentBlockers could not be compiled'),
+      ], reason: 'one error for the initial URL naming the cause: $events');
       // Then make sure the page doesn't load after all.
       await Future<void>.delayed(const Duration(seconds: 1));
       expect(

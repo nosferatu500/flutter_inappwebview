@@ -94,73 +94,67 @@ void popupBrowser() {
   // `window.opener`. On iOS before §259 WebKit's `createWebViewWith` handed the popup its opener's
   // `WKUserContentController`, so it was the other way round: measured then with a probe
   // (`parentRuns: 1`, no `childRuns`), since closing a popup browser crashed until §266.
-  skippableTest(
-    'a popup browser runs its own user scripts, not its opener\'s',
-    () async {
-      UnmodifiableListView<UserScript> counter(String name) =>
-          UnmodifiableListView([
-            UserScript(
-              source: 'window.$name = (window.$name || 0) + 1;',
-              injectionTime: UserScriptInjectionTime.AT_DOCUMENT_START,
-            ),
-          ]);
-      const read =
-          'JSON.stringify({parent: window.parentRuns || null, '
-          'child: window.childRuns || null, hasOpener: window.opener != null})';
-      final origin = 'http://${environment["NODE_SERVER_IP"]}:8082';
-
-      final childOpened = Completer<_PopupTestBrowser>();
-      final parent = _PopupTestBrowser(
-        initialUserScripts: counter('parentRuns'),
-        onWindow: (action) async {
-          final popup = _PopupTestBrowser(
-            windowId: action.windowId,
-            initialUserScripts: counter('childRuns'),
-          );
-          await popup.openUrlRequest(
-            urlRequest: URLRequest(url: WebUri('about:blank')),
-          );
-          childOpened.complete(popup);
-          return true;
-        },
-      );
-      await parent.openData(
-        data:
-            '<html><body>opener<script>setTimeout(function() {'
-            ' window.open("$origin/test-redirect-target"); }, 500);</script></body></html>',
-        baseUrl: WebUri('$origin/'),
-        settings: InAppBrowserClassSettings(
-          webViewSettings: InAppWebViewSettings(
-            javaScriptCanOpenWindowsAutomatically: true,
-            supportMultipleWindows: true,
+  skippableTest('a popup browser runs its own user scripts, not its opener\'s', () async {
+    UnmodifiableListView<UserScript> counter(String name) =>
+        UnmodifiableListView([
+          UserScript(
+            source: 'window.$name = (window.$name || 0) + 1;',
+            injectionTime: UserScriptInjectionTime.AT_DOCUMENT_START,
           ),
+        ]);
+    const read =
+        'JSON.stringify({parent: window.parentRuns || null, '
+        'child: window.childRuns || null, hasOpener: window.opener != null})';
+    final origin = 'http://${environment["NODE_SERVER_IP"]}:8082';
+
+    final childOpened = Completer<_PopupTestBrowser>();
+    final parent = _PopupTestBrowser(
+      initialUserScripts: counter('parentRuns'),
+      onWindow: (action) async {
+        final popup = _PopupTestBrowser(
+          windowId: action.windowId,
+          initialUserScripts: counter('childRuns'),
+        );
+        await popup.openUrlRequest(
+          urlRequest: URLRequest(url: WebUri('about:blank')),
+        );
+        childOpened.complete(popup);
+        return true;
+      },
+    );
+    await parent.openData(
+      data:
+          '<html><body>opener<script>setTimeout(function() {'
+          ' window.open("$origin/test-redirect-target"); }, 500);</script></body></html>',
+      baseUrl: WebUri('$origin/'),
+      settings: InAppBrowserClassSettings(
+        webViewSettings: InAppWebViewSettings(
+          javaScriptCanOpenWindowsAutomatically: true,
+          supportMultipleWindows: true,
         ),
-      );
+      ),
+    );
 
-      final popup = await childOpened.future.timeout(
-        const Duration(seconds: 30),
-      );
-      final popupUrl = await popup.loaded.future.timeout(
-        const Duration(seconds: 30),
-      );
-      expect(popupUrl, '$origin/test-redirect-target');
+    final popup = await childOpened.future.timeout(const Duration(seconds: 30));
+    final popupUrl = await popup.loaded.future.timeout(
+      const Duration(seconds: 30),
+    );
+    expect(popupUrl, '$origin/test-redirect-target');
 
-      expect(
-        await popup.webViewController!.evaluateJavascript(source: read),
-        '{"parent":null,"child":1,"hasOpener":true}',
-        reason: 'in the popup',
-      );
-      expect(
-        await parent.webViewController!.evaluateJavascript(source: read),
-        '{"parent":1,"child":null,"hasOpener":false}',
-        reason: 'in the opener',
-      );
+    expect(
+      await popup.webViewController!.evaluateJavascript(source: read),
+      '{"parent":null,"child":1,"hasOpener":true}',
+      reason: 'in the popup',
+    );
+    expect(
+      await parent.webViewController!.evaluateJavascript(source: read),
+      '{"parent":1,"child":null,"hasOpener":false}',
+      reason: 'in the opener',
+    );
 
-      await popup.close();
-      await popup.closed.future.timeout(const Duration(seconds: 10));
-      await parent.close();
-      await parent.closed.future.timeout(const Duration(seconds: 10));
-    },
-    skip: shouldSkip,
-  );
+    await popup.close();
+    await popup.closed.future.timeout(const Duration(seconds: 10));
+    await parent.close();
+    await parent.closed.future.timeout(const Duration(seconds: 10));
+  }, skip: shouldSkip);
 }

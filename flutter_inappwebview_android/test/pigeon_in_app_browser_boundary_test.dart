@@ -198,40 +198,37 @@ void main() {
 
     // Since §212 the WebView's pair is Pigeon too, but on the WebView's HostApi under suffix
     // `inappbrowser_<id>`, not on the browser's. The split this group pins is still a split.
-    test(
-      "the WebView controller settings pair goes to the WebView's HostApi, not the browser's",
-      () async {
-        String webViewHost(String method) =>
-            'dev.flutter.pigeon.nosferatu500_inappwebview_android.InAppWebViewHostApi'
-            '.$method.inappbrowser_${browser.id}';
-        const webViewCodec = InAppWebViewHostApi.pigeonChannelCodec;
-        final webViewSent = <String>[];
+    test("the WebView controller settings pair goes to the WebView's HostApi, not the browser's", () async {
+      String webViewHost(String method) =>
+          'dev.flutter.pigeon.nosferatu500_inappwebview_android.InAppWebViewHostApi'
+          '.$method.inappbrowser_${browser.id}';
+      const webViewCodec = InAppWebViewHostApi.pigeonChannelCodec;
+      final webViewSent = <String>[];
+      for (final method in ['setSettings', 'getSettings']) {
+        TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
+            .setMockMessageHandler(webViewHost(method), (message) async {
+              webViewSent.add(method);
+              return webViewCodec.encodeMessage(<Object?>[
+                method == 'getSettings'
+                    ? InAppWebViewSettings(minimumFontSize: 27).toMap()
+                    : true,
+              ]);
+            });
+      }
+      addTearDown(() {
         for (final method in ['setSettings', 'getSettings']) {
           TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
-              .setMockMessageHandler(webViewHost(method), (message) async {
-                webViewSent.add(method);
-                return webViewCodec.encodeMessage(<Object?>[
-                  method == 'getSettings'
-                      ? InAppWebViewSettings(minimumFontSize: 27).toMap()
-                      : true,
-                ]);
-              });
+              .setMockMessageHandler(webViewHost(method), null);
         }
-        addTearDown(() {
-          for (final method in ['setSettings', 'getSettings']) {
-            TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
-                .setMockMessageHandler(webViewHost(method), null);
-          }
-        });
+      });
 
-        final controller = browser.webViewController!;
-        await controller.setSettings(settings: InAppWebViewSettings());
-        expect((await controller.getSettings())?.minimumFontSize, 27);
-        expect(webViewSent, ['setSettings', 'getSettings']);
-        expect(channelCalls, isEmpty);
-        expect(sent, isEmpty);
-      },
-    );
+      final controller = browser.webViewController!;
+      await controller.setSettings(settings: InAppWebViewSettings());
+      expect((await controller.getSettings())?.minimumFontSize, 27);
+      expect(webViewSent, ['setSettings', 'getSettings']);
+      expect(channelCalls, isEmpty);
+      expect(sent, isEmpty);
+    });
   });
 
   group('Kotlin -> Dart (FlutterApi events)', () {

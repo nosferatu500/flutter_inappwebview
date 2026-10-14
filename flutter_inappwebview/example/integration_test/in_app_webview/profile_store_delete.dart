@@ -35,33 +35,34 @@ void profileStoreDelete() {
   Future<bool> available() async =>
       await WebViewFeature.isFeatureSupported(WebViewFeature.MULTI_PROFILE);
 
-  skippableTestWidgets('deleting an unknown profile answers false, not an error', (
-    WidgetTester tester,
-  ) async {
-    if (!await available()) {
-      markTestSkipped('MULTI_PROFILE unsupported');
-      return;
-    }
+  skippableTestWidgets(
+    'deleting an unknown profile answers false, not an error',
+    (WidgetTester tester) async {
+      if (!await available()) {
+        markTestSkipped('MULTI_PROFILE unsupported');
+        return;
+      }
 
-    final store = ProfileStore.instance();
-    const missing = 'inappwebview_no_such_profile_to_delete';
+      final store = ProfileStore.instance();
+      const missing = 'inappwebview_no_such_profile_to_delete';
 
-    // Vacuity guard: the assertion below means nothing if this name happens to exist, because then
-    // `false` would be the wrong answer for a different reason. `getAllProfileNames` is used rather
-    // than a lookup on purpose — a lookup would load the profile and change what delete does.
-    expect(
-      await store.getAllProfileNames(),
-      isNot(contains(missing)),
-      reason: 'the test is vacuous if this name happens to exist',
-    );
+      // Vacuity guard: the assertion below means nothing if this name happens to exist, because then
+      // `false` would be the wrong answer for a different reason. `getAllProfileNames` is used rather
+      // than a lookup on purpose — a lookup would load the profile and change what delete does.
+      expect(
+        await store.getAllProfileNames(),
+        isNot(contains(missing)),
+        reason: 'the test is vacuous if this name happens to exist',
+      );
 
-    expect(
-      await store.deleteProfile(name: missing),
-      isFalse,
-      reason:
-          'a missing profile is a false, not a throw — the two refusal cases below are what throw',
-    );
-  }, skip: shouldSkip);
+      expect(
+        await store.deleteProfile(name: missing),
+        isFalse,
+        reason: 'a missing profile is a false, not a throw — the two refusal cases below are what throw',
+      );
+    },
+    skip: shouldSkip,
+  );
 
   skippableTestWidgets(
     'deleting a profile loaded this run is refused under the plugin code',

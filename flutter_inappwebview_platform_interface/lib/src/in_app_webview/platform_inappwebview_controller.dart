@@ -159,13 +159,11 @@ abstract class PlatformInAppWebViewController extends PlatformInterface
     platforms: [
       AndroidPlatform(
         apiName: 'WebView.getUrl',
-        apiUrl:
-            'https://developer.android.com/reference/android/webkit/WebView#getUrl()',
+        apiUrl: 'https://developer.android.com/reference/android/webkit/WebView#getUrl()',
       ),
       IOSPlatform(
         apiName: 'WKWebView.url',
-        apiUrl:
-            'https://developer.apple.com/documentation/webkit/wkwebview/1415005-url',
+        apiUrl: 'https://developer.apple.com/documentation/webkit/wkwebview/1415005-url',
       ),
     ],
   )
@@ -184,13 +182,11 @@ abstract class PlatformInAppWebViewController extends PlatformInterface
     platforms: [
       AndroidPlatform(
         apiName: 'WebView.getTitle',
-        apiUrl:
-            'https://developer.android.com/reference/android/webkit/WebView#getTitle()',
+        apiUrl: 'https://developer.android.com/reference/android/webkit/WebView#getTitle()',
       ),
       IOSPlatform(
         apiName: 'WKWebView.title',
-        apiUrl:
-            'https://developer.apple.com/documentation/webkit/wkwebview/1415015-title',
+        apiUrl: 'https://developer.apple.com/documentation/webkit/wkwebview/1415015-title',
       ),
     ],
   )
@@ -209,13 +205,11 @@ abstract class PlatformInAppWebViewController extends PlatformInterface
     platforms: [
       AndroidPlatform(
         apiName: 'WebView.getProgress',
-        apiUrl:
-            'https://developer.android.com/reference/android/webkit/WebView#getProgress()',
+        apiUrl: 'https://developer.android.com/reference/android/webkit/WebView#getProgress()',
       ),
       IOSPlatform(
         apiName: 'WKWebView.estimatedProgress',
-        apiUrl:
-            'https://developer.apple.com/documentation/webkit/wkwebview/1415007-estimatedprogress',
+        apiUrl: 'https://developer.apple.com/documentation/webkit/wkwebview/1415007-estimatedprogress',
       ),
     ],
   )
@@ -292,17 +286,13 @@ abstract class PlatformInAppWebViewController extends PlatformInterface
     platforms: [
       AndroidPlatform(
         apiName: 'WebView.loadUrl',
-        apiUrl:
-            'https://developer.android.com/reference/android/webkit/WebView#loadUrl(java.lang.String)',
-        note:
-            'If method is "POST", [Official API - WebView.postUrl](https://developer.android.com/reference/android/webkit/WebView#postUrl(java.lang.String,%20byte[])). Also, when loading an URL Request using "POST" method, headers are ignored.',
+        apiUrl: 'https://developer.android.com/reference/android/webkit/WebView#loadUrl(java.lang.String)',
+        note: 'If method is "POST", [Official API - WebView.postUrl](https://developer.android.com/reference/android/webkit/WebView#postUrl(java.lang.String,%20byte[])). Also, when loading an URL Request using "POST" method, headers are ignored.',
       ),
       IOSPlatform(
         apiName: 'WKWebView.load',
-        apiUrl:
-            'https://developer.apple.com/documentation/webkit/wkwebview/1414954-load',
-        note:
-            'If [allowingReadAccessTo] is used, [Official API - WKWebView.loadFileURL](https://developer.apple.com/documentation/webkit/wkwebview/1414973-loadfileurl), which takes only a URL - so custom headers and `timeoutInterval` are discarded, while the same call without [allowingReadAccessTo] keeps them (measured on iOS 17.5 and 26.5).',
+        apiUrl: 'https://developer.apple.com/documentation/webkit/wkwebview/1414954-load',
+        note: 'If [allowingReadAccessTo] is used, [Official API - WKWebView.loadFileURL](https://developer.apple.com/documentation/webkit/wkwebview/1414973-loadfileurl), which takes only a URL - so custom headers and `timeoutInterval` are discarded, while the same call without [allowingReadAccessTo] keeps them (measured on iOS 17.5 and 26.5).',
       ),
     ],
   )
@@ -331,8 +321,7 @@ abstract class PlatformInAppWebViewController extends PlatformInterface
     platforms: [
       AndroidPlatform(
         apiName: 'WebView.postUrl',
-        apiUrl:
-            'https://developer.android.com/reference/android/webkit/WebView#postUrl(java.lang.String,%20byte[])',
+        apiUrl: 'https://developer.android.com/reference/android/webkit/WebView#postUrl(java.lang.String,%20byte[])',
       ),
       IOSPlatform(),
     ],
@@ -361,15 +350,12 @@ abstract class PlatformInAppWebViewController extends PlatformInterface
     platforms: [
       AndroidPlatform(
         apiName: 'WebView.loadDataWithBaseURL',
-        apiUrl:
-            'https://developer.android.com/reference/android/webkit/WebView#loadDataWithBaseURL(java.lang.String,%20java.lang.String,%20java.lang.String,%20java.lang.String,%20java.lang.String)',
+        apiUrl: 'https://developer.android.com/reference/android/webkit/WebView#loadDataWithBaseURL(java.lang.String,%20java.lang.String,%20java.lang.String,%20java.lang.String,%20java.lang.String)',
       ),
       IOSPlatform(
         apiName: 'WKWebView.loadHTMLString',
-        apiUrl:
-            'https://developer.apple.com/documentation/webkit/wkwebview/1415004-loadhtmlstring',
-        note:
-            'or [Official API - WKWebView.load](https://developer.apple.com/documentation/webkit/wkwebview/1415011-load)',
+        apiUrl: 'https://developer.apple.com/documentation/webkit/wkwebview/1415004-loadhtmlstring',
+        note: 'or [Official API - WKWebView.load](https://developer.apple.com/documentation/webkit/wkwebview/1415011-load)',
       ),
     ],
   )
@@ -427,13 +413,11 @@ abstract class PlatformInAppWebViewController extends PlatformInterface
     platforms: [
       AndroidPlatform(
         apiName: 'WebView.loadUrl',
-        apiUrl:
-            'https://developer.android.com/reference/android/webkit/WebView#loadUrl(java.lang.String)',
+        apiUrl: 'https://developer.android.com/reference/android/webkit/WebView#loadUrl(java.lang.String)',
       ),
       IOSPlatform(
         apiName: 'WKWebView.load',
-        apiUrl:
-            'https://developer.apple.com/documentation/webkit/wkwebview/1414954-load',
+        apiUrl: 'https://developer.apple.com/documentation/webkit/wkwebview/1414954-load',
       ),
     ],
   )
@@ -452,13 +436,11 @@ abstract class PlatformInAppWebViewController extends PlatformInterface
     platforms: [
       AndroidPlatform(
         apiName: 'WebView.reload',
-        apiUrl:
-            'https://developer.android.com/reference/android/webkit/WebView#reload()',
+        apiUrl: 'https://developer.android.com/reference/android/webkit/WebView#reload()',
       ),
       IOSPlatform(
         apiName: 'WKWebView.reload',
-        apiUrl:
-            'https://developer.apple.com/documentation/webkit/wkwebview/1414969-reload',
+        apiUrl: 'https://developer.apple.com/documentation/webkit/wkwebview/1414969-reload',
       ),
     ],
   )
@@ -477,13 +459,11 @@ abstract class PlatformInAppWebViewController extends PlatformInterface
     platforms: [
       AndroidPlatform(
         apiName: 'WebView.goBack',
-        apiUrl:
-            'https://developer.android.com/reference/android/webkit/WebView#goBack()',
+        apiUrl: 'https://developer.android.com/reference/android/webkit/WebView#goBack()',
       ),
       IOSPlatform(
         apiName: 'WKWebView.goBack',
-        apiUrl:
-            'https://developer.apple.com/documentation/webkit/wkwebview/1414952-goback',
+        apiUrl: 'https://developer.apple.com/documentation/webkit/wkwebview/1414952-goback',
       ),
     ],
   )
@@ -502,13 +482,11 @@ abstract class PlatformInAppWebViewController extends PlatformInterface
     platforms: [
       AndroidPlatform(
         apiName: 'WebView.canGoBack',
-        apiUrl:
-            'https://developer.android.com/reference/android/webkit/WebView#canGoBack()',
+        apiUrl: 'https://developer.android.com/reference/android/webkit/WebView#canGoBack()',
       ),
       IOSPlatform(
         apiName: 'WKWebView.canGoBack',
-        apiUrl:
-            'https://developer.apple.com/documentation/webkit/wkwebview/1414966-cangoback',
+        apiUrl: 'https://developer.apple.com/documentation/webkit/wkwebview/1414966-cangoback',
       ),
     ],
   )
@@ -527,13 +505,11 @@ abstract class PlatformInAppWebViewController extends PlatformInterface
     platforms: [
       AndroidPlatform(
         apiName: 'WebView.goForward',
-        apiUrl:
-            'https://developer.android.com/reference/android/webkit/WebView#goForward()',
+        apiUrl: 'https://developer.android.com/reference/android/webkit/WebView#goForward()',
       ),
       IOSPlatform(
         apiName: 'WKWebView.goForward',
-        apiUrl:
-            'https://developer.apple.com/documentation/webkit/wkwebview/1414993-goforward',
+        apiUrl: 'https://developer.apple.com/documentation/webkit/wkwebview/1414993-goforward',
       ),
     ],
   )
@@ -552,13 +528,11 @@ abstract class PlatformInAppWebViewController extends PlatformInterface
     platforms: [
       AndroidPlatform(
         apiName: 'WebView.canGoForward',
-        apiUrl:
-            'https://developer.android.com/reference/android/webkit/WebView#canGoForward()',
+        apiUrl: 'https://developer.android.com/reference/android/webkit/WebView#canGoForward()',
       ),
       IOSPlatform(
         apiName: 'WKWebView.canGoForward',
-        apiUrl:
-            'https://developer.apple.com/documentation/webkit/wkwebview/1414962-cangoforward',
+        apiUrl: 'https://developer.apple.com/documentation/webkit/wkwebview/1414962-cangoforward',
       ),
     ],
   )
@@ -577,13 +551,11 @@ abstract class PlatformInAppWebViewController extends PlatformInterface
     platforms: [
       AndroidPlatform(
         apiName: 'WebView.goBackOrForward',
-        apiUrl:
-            'https://developer.android.com/reference/android/webkit/WebView#goBackOrForward(int)',
+        apiUrl: 'https://developer.android.com/reference/android/webkit/WebView#goBackOrForward(int)',
       ),
       IOSPlatform(
         apiName: 'WKWebView.go',
-        apiUrl:
-            'https://developer.apple.com/documentation/webkit/wkwebview/1414991-go',
+        apiUrl: 'https://developer.apple.com/documentation/webkit/wkwebview/1414991-go',
       ),
     ],
   )
@@ -603,8 +575,7 @@ abstract class PlatformInAppWebViewController extends PlatformInterface
     platforms: [
       AndroidPlatform(
         apiName: 'WebView.canGoBackOrForward',
-        apiUrl:
-            'https://developer.android.com/reference/android/webkit/WebView#canGoBackOrForward(int)',
+        apiUrl: 'https://developer.android.com/reference/android/webkit/WebView#canGoBackOrForward(int)',
       ),
       IOSPlatform(),
     ],
@@ -648,13 +619,11 @@ abstract class PlatformInAppWebViewController extends PlatformInterface
     platforms: [
       AndroidPlatform(
         apiName: 'WebView.stopLoading',
-        apiUrl:
-            'https://developer.android.com/reference/android/webkit/WebView#stopLoading()',
+        apiUrl: 'https://developer.android.com/reference/android/webkit/WebView#stopLoading()',
       ),
       IOSPlatform(
         apiName: 'WKWebView.stopLoading',
-        apiUrl:
-            'https://developer.apple.com/documentation/webkit/wkwebview/1414981-stoploading',
+        apiUrl: 'https://developer.apple.com/documentation/webkit/wkwebview/1414981-stoploading',
       ),
     ],
   )
@@ -690,13 +659,11 @@ abstract class PlatformInAppWebViewController extends PlatformInterface
     platforms: [
       AndroidPlatform(
         apiName: 'WebView.evaluateJavascript',
-        apiUrl:
-            'https://developer.android.com/reference/android/webkit/WebView#evaluateJavascript(java.lang.String,%20android.webkit.ValueCallback%3Cjava.lang.String%3E)',
+        apiUrl: 'https://developer.android.com/reference/android/webkit/WebView#evaluateJavascript(java.lang.String,%20android.webkit.ValueCallback%3Cjava.lang.String%3E)',
       ),
       IOSPlatform(
         apiName: 'WKWebView.evaluateJavaScript',
-        apiUrl:
-            'https://developer.apple.com/documentation/webkit/wkwebview/3656442-evaluatejavascript',
+        apiUrl: 'https://developer.apple.com/documentation/webkit/wkwebview/3656442-evaluatejavascript',
       ),
     ],
   )
@@ -927,13 +894,11 @@ abstract class PlatformInAppWebViewController extends PlatformInterface
   @SupportedPlatforms(
     platforms: [
       AndroidPlatform(
-        note:
-            'To be able to take screenshots outside the visible viewport, you must call [PlatformInAppWebViewController.enableSlowWholeDocumentDraw] before any WebViews are created.',
+        note: 'To be able to take screenshots outside the visible viewport, you must call [PlatformInAppWebViewController.enableSlowWholeDocumentDraw] before any WebViews are created.',
       ),
       IOSPlatform(
         apiName: 'WKWebView.takeSnapshot',
-        apiUrl:
-            'https://developer.apple.com/documentation/webkit/wkwebview/2873260-takesnapshot',
+        apiUrl: 'https://developer.apple.com/documentation/webkit/wkwebview/2873260-takesnapshot',
         available: '11.0',
       ),
     ],
@@ -982,13 +947,11 @@ abstract class PlatformInAppWebViewController extends PlatformInterface
     platforms: [
       AndroidPlatform(
         apiName: 'WebView.copyBackForwardList',
-        apiUrl:
-            'https://developer.android.com/reference/android/webkit/WebView#copyBackForwardList()',
+        apiUrl: 'https://developer.android.com/reference/android/webkit/WebView#copyBackForwardList()',
       ),
       IOSPlatform(
         apiName: 'WKWebView.backForwardList',
-        apiUrl:
-            'https://developer.apple.com/documentation/webkit/wkwebview/1414977-backforwardlist',
+        apiUrl: 'https://developer.apple.com/documentation/webkit/wkwebview/1414977-backforwardlist',
       ),
     ],
   )
@@ -1013,13 +976,11 @@ abstract class PlatformInAppWebViewController extends PlatformInterface
     platforms: [
       AndroidPlatform(
         apiName: 'View.scrollTo',
-        apiUrl:
-            'https://developer.android.com/reference/android/webkit/WebView#scrollTo(int,%20int)',
+        apiUrl: 'https://developer.android.com/reference/android/webkit/WebView#scrollTo(int,%20int)',
       ),
       IOSPlatform(
         apiName: 'UIScrollView.setContentOffset',
-        apiUrl:
-            'https://developer.apple.com/documentation/uikit/uiscrollview/1619400-setcontentoffset',
+        apiUrl: 'https://developer.apple.com/documentation/uikit/uiscrollview/1619400-setcontentoffset',
       ),
     ],
   )
@@ -1048,13 +1009,11 @@ abstract class PlatformInAppWebViewController extends PlatformInterface
     platforms: [
       AndroidPlatform(
         apiName: 'View.scrollBy',
-        apiUrl:
-            'https://developer.android.com/reference/android/view/View#scrollBy(int,%20int)',
+        apiUrl: 'https://developer.android.com/reference/android/view/View#scrollBy(int,%20int)',
       ),
       IOSPlatform(
         apiName: 'UIScrollView.setContentOffset',
-        apiUrl:
-            'https://developer.apple.com/documentation/uikit/uiscrollview/1619400-setcontentoffset',
+        apiUrl: 'https://developer.apple.com/documentation/uikit/uiscrollview/1619400-setcontentoffset',
       ),
     ],
   )
@@ -1078,12 +1037,10 @@ abstract class PlatformInAppWebViewController extends PlatformInterface
     platforms: [
       AndroidPlatform(
         apiName: 'WebView.pauseTimers',
-        apiUrl:
-            'https://developer.android.com/reference/android/webkit/WebView#pauseTimers()',
+        apiUrl: 'https://developer.android.com/reference/android/webkit/WebView#pauseTimers()',
       ),
       IOSPlatform(
-        note:
-            'This method is implemented using JavaScript and it is restricted to just this WebView.',
+        note: 'This method is implemented using JavaScript and it is restricted to just this WebView.',
       ),
     ],
   )
@@ -1102,12 +1059,10 @@ abstract class PlatformInAppWebViewController extends PlatformInterface
     platforms: [
       AndroidPlatform(
         apiName: 'WebView.resumeTimers',
-        apiUrl:
-            'https://developer.android.com/reference/android/webkit/WebView#resumeTimers()',
+        apiUrl: 'https://developer.android.com/reference/android/webkit/WebView#resumeTimers()',
       ),
       IOSPlatform(
-        note:
-            'This method is implemented using JavaScript and it is restricted to just this WebView.',
+        note: 'This method is implemented using JavaScript and it is restricted to just this WebView.',
       ),
     ],
   )
@@ -1129,13 +1084,11 @@ abstract class PlatformInAppWebViewController extends PlatformInterface
     platforms: [
       AndroidPlatform(
         apiName: 'PrintManager.print',
-        apiUrl:
-            'https://developer.android.com/reference/android/print/PrintManager#print(java.lang.String,%20android.print.PrintDocumentAdapter,%20android.print.PrintAttributes)',
+        apiUrl: 'https://developer.android.com/reference/android/print/PrintManager#print(java.lang.String,%20android.print.PrintDocumentAdapter,%20android.print.PrintAttributes)',
       ),
       IOSPlatform(
         apiName: 'UIPrintInteractionController.present',
-        apiUrl:
-            'https://developer.apple.com/documentation/uikit/uiprintinteractioncontroller/1618149-present',
+        apiUrl: 'https://developer.apple.com/documentation/uikit/uiprintinteractioncontroller/1618149-present',
       ),
     ],
   )
@@ -1156,13 +1109,11 @@ abstract class PlatformInAppWebViewController extends PlatformInterface
     platforms: [
       AndroidPlatform(
         apiName: 'WebView.getContentHeight',
-        apiUrl:
-            'https://developer.android.com/reference/android/webkit/WebView#getContentHeight()',
+        apiUrl: 'https://developer.android.com/reference/android/webkit/WebView#getContentHeight()',
       ),
       IOSPlatform(
         apiName: 'UIScrollView.contentSize',
-        apiUrl:
-            'https://developer.apple.com/documentation/uikit/uiscrollview/1619399-contentsize',
+        apiUrl: 'https://developer.apple.com/documentation/uikit/uiscrollview/1619399-contentsize',
       ),
     ],
   )
@@ -1182,8 +1133,7 @@ abstract class PlatformInAppWebViewController extends PlatformInterface
       AndroidPlatform(note: 'This method is implemented using JavaScript.'),
       IOSPlatform(
         apiName: 'UIScrollView.contentSize',
-        apiUrl:
-            'https://developer.apple.com/documentation/uikit/uiscrollview/1619399-contentsize',
+        apiUrl: 'https://developer.apple.com/documentation/uikit/uiscrollview/1619399-contentsize',
       ),
     ],
   )
@@ -1206,14 +1156,12 @@ abstract class PlatformInAppWebViewController extends PlatformInterface
     platforms: [
       AndroidPlatform(
         apiName: 'WebView.zoomBy',
-        apiUrl:
-            'https://developer.android.com/reference/android/webkit/WebView#zoomBy(float)',
+        apiUrl: 'https://developer.android.com/reference/android/webkit/WebView#zoomBy(float)',
         available: '21',
       ),
       IOSPlatform(
         apiName: 'UIScrollView.setZoomScale',
-        apiUrl:
-            'https://developer.apple.com/documentation/uikit/uiscrollview/1619412-setzoomscale',
+        apiUrl: 'https://developer.apple.com/documentation/uikit/uiscrollview/1619412-setzoomscale',
       ),
     ],
   )
@@ -1237,8 +1185,7 @@ abstract class PlatformInAppWebViewController extends PlatformInterface
     platforms: [
       AndroidPlatform(
         apiName: 'WebView.getOriginalUrl',
-        apiUrl:
-            'https://developer.android.com/reference/android/webkit/WebView#getOriginalUrl()',
+        apiUrl: 'https://developer.android.com/reference/android/webkit/WebView#getOriginalUrl()',
       ),
       IOSPlatform(),
     ],
@@ -1259,8 +1206,7 @@ abstract class PlatformInAppWebViewController extends PlatformInterface
       AndroidPlatform(),
       IOSPlatform(
         apiName: 'UIScrollView.zoomScale',
-        apiUrl:
-            'https://developer.apple.com/documentation/uikit/uiscrollview/1619419-zoomscale',
+        apiUrl: 'https://developer.apple.com/documentation/uikit/uiscrollview/1619419-zoomscale',
       ),
     ],
   )
@@ -1296,8 +1242,7 @@ abstract class PlatformInAppWebViewController extends PlatformInterface
     platforms: [
       AndroidPlatform(
         apiName: 'WebView.getHitTestResult',
-        apiUrl:
-            'https://developer.android.com/reference/android/webkit/WebView#getHitTestResult()',
+        apiUrl: 'https://developer.android.com/reference/android/webkit/WebView#getHitTestResult()',
       ),
       IOSPlatform(note: 'This method is implemented using JavaScript.'),
     ],
@@ -1324,13 +1269,11 @@ abstract class PlatformInAppWebViewController extends PlatformInterface
     platforms: [
       AndroidPlatform(
         apiName: 'WebView.requestFocus',
-        apiUrl:
-            'https://developer.android.com/reference/android/webkit/WebView#requestFocus(int,%20android.graphics.Rect)',
+        apiUrl: 'https://developer.android.com/reference/android/webkit/WebView#requestFocus(int,%20android.graphics.Rect)',
       ),
       IOSPlatform(
         apiName: 'UIResponder.becomeFirstResponder',
-        apiUrl:
-            'https://developer.apple.com/documentation/uikit/uiresponder/1621113-becomefirstresponder',
+        apiUrl: 'https://developer.apple.com/documentation/uikit/uiresponder/1621113-becomefirstresponder',
       ),
     ],
   )
@@ -1354,13 +1297,11 @@ abstract class PlatformInAppWebViewController extends PlatformInterface
     platforms: [
       AndroidPlatform(
         apiName: 'ViewGroup.clearFocus',
-        apiUrl:
-            'https://developer.android.com/reference/android/view/ViewGroup#clearFocus()',
+        apiUrl: 'https://developer.android.com/reference/android/view/ViewGroup#clearFocus()',
       ),
       IOSPlatform(
         apiName: 'UIResponder.resignFirstResponder',
-        apiUrl:
-            'https://developer.apple.com/documentation/uikit/uiresponder/1621097-resignfirstresponder',
+        apiUrl: 'https://developer.apple.com/documentation/uikit/uiresponder/1621097-resignfirstresponder',
       ),
     ],
   )
@@ -1379,8 +1320,7 @@ abstract class PlatformInAppWebViewController extends PlatformInterface
     platforms: [
       IOSPlatform(
         apiName: 'UIResponder.inputView',
-        apiUrl:
-            'https://developer.apple.com/documentation/uikit/uiresponder/1621092-inputview',
+        apiUrl: 'https://developer.apple.com/documentation/uikit/uiresponder/1621092-inputview',
       ),
     ],
   )
@@ -1399,8 +1339,7 @@ abstract class PlatformInAppWebViewController extends PlatformInterface
     platforms: [
       AndroidPlatform(
         apiName: 'InputMethodManager.showSoftInput',
-        apiUrl:
-            'https://developer.android.com/reference/android/view/inputmethod/InputMethodManager#showSoftInput(android.view.View,%20int)',
+        apiUrl: 'https://developer.android.com/reference/android/view/inputmethod/InputMethodManager#showSoftInput(android.view.View,%20int)',
       ),
     ],
   )
@@ -1424,10 +1363,8 @@ abstract class PlatformInAppWebViewController extends PlatformInterface
     platforms: [
       AndroidPlatform(
         apiName: 'WebViewCompat.setAudioMuted',
-        apiUrl:
-            'https://developer.android.com/reference/androidx/webkit/WebViewCompat#setAudioMuted(android.webkit.WebView,boolean)',
-        note:
-            'Requires [WebViewFeature.MUTE_AUDIO]. Does nothing if the feature is not supported.',
+        apiUrl: 'https://developer.android.com/reference/androidx/webkit/WebViewCompat#setAudioMuted(android.webkit.WebView,boolean)',
+        note: 'Requires [WebViewFeature.MUTE_AUDIO]. Does nothing if the feature is not supported.',
       ),
     ],
   )
@@ -1449,8 +1386,7 @@ abstract class PlatformInAppWebViewController extends PlatformInterface
     platforms: [
       AndroidPlatform(
         apiName: 'WebViewCompat.isAudioMuted',
-        apiUrl:
-            'https://developer.android.com/reference/androidx/webkit/WebViewCompat#isAudioMuted(android.webkit.WebView)',
+        apiUrl: 'https://developer.android.com/reference/androidx/webkit/WebViewCompat#isAudioMuted(android.webkit.WebView)',
         note: 'Requires [WebViewFeature.MUTE_AUDIO].',
       ),
     ],
@@ -1489,10 +1425,8 @@ abstract class PlatformInAppWebViewController extends PlatformInterface
     platforms: [
       AndroidPlatform(
         apiName: 'WebViewCompat.prerenderUrlAsync',
-        apiUrl:
-            'https://developer.android.com/reference/androidx/webkit/WebViewCompat#prerenderUrlAsync(android.webkit.WebView,java.lang.String,android.os.CancellationSignal,java.util.concurrent.Executor,androidx.webkit.PrerenderOperationCallback)',
-        note:
-            'Requires [WebViewFeature.PRERENDER_WITH_URL]. Returns `false` and prerenders nothing if the feature is not supported.',
+        apiUrl: 'https://developer.android.com/reference/androidx/webkit/WebViewCompat#prerenderUrlAsync(android.webkit.WebView,java.lang.String,android.os.CancellationSignal,java.util.concurrent.Executor,androidx.webkit.PrerenderOperationCallback)',
+        note: 'Requires [WebViewFeature.PRERENDER_WITH_URL]. Returns `false` and prerenders nothing if the feature is not supported.',
       ),
     ],
   )
@@ -1534,8 +1468,7 @@ abstract class PlatformInAppWebViewController extends PlatformInterface
     platforms: [
       AndroidPlatform(
         apiName: 'WebView.flingScroll',
-        apiUrl:
-            'https://developer.android.com/reference/android/webkit/WebView#flingScroll(int,%20int)',
+        apiUrl: 'https://developer.android.com/reference/android/webkit/WebView#flingScroll(int,%20int)',
       ),
     ],
   )
@@ -1562,10 +1495,8 @@ abstract class PlatformInAppWebViewController extends PlatformInterface
     platforms: [
       AndroidPlatform(
         apiName: 'WebView.documentHasImages',
-        apiUrl:
-            'https://developer.android.com/reference/android/webkit/WebView#documentHasImages(android.os.Message)',
-        note:
-            'The platform answers by dispatching an `android.os.Message` rather than returning a value; this API awaits it.',
+        apiUrl: 'https://developer.android.com/reference/android/webkit/WebView#documentHasImages(android.os.Message)',
+        note: 'The platform answers by dispatching an `android.os.Message` rather than returning a value; this API awaits it.',
       ),
     ],
   )
@@ -1602,10 +1533,8 @@ abstract class PlatformInAppWebViewController extends PlatformInterface
     platforms: [
       AndroidPlatform(
         apiName: 'WebView.postVisualStateCallback',
-        apiUrl:
-            'https://developer.android.com/reference/android/webkit/WebView#postVisualStateCallback(long,%20android.webkit.WebView.VisualStateCallback)',
-        note:
-            'The platform takes a `requestId` to correlate its callback; this API omits it because the returned `Future` already correlates the reply with the call.',
+        apiUrl: 'https://developer.android.com/reference/android/webkit/WebView#postVisualStateCallback(long,%20android.webkit.WebView.VisualStateCallback)',
+        note: 'The platform takes a `requestId` to correlate its callback; this API omits it because the returned `Future` already correlates the reply with the call.',
       ),
     ],
   )
@@ -1624,13 +1553,11 @@ abstract class PlatformInAppWebViewController extends PlatformInterface
     platforms: [
       AndroidPlatform(
         apiName: 'InputMethodManager.hideSoftInputFromWindow',
-        apiUrl:
-            'https://developer.android.com/reference/android/view/inputmethod/InputMethodManager#hideSoftInputFromWindow(android.os.IBinder,%20int)',
+        apiUrl: 'https://developer.android.com/reference/android/view/inputmethod/InputMethodManager#hideSoftInputFromWindow(android.os.IBinder,%20int)',
       ),
       IOSPlatform(
         apiName: 'UIView.endEditing',
-        apiUrl:
-            'https://developer.apple.com/documentation/uikit/uiview/1619630-endediting',
+        apiUrl: 'https://developer.apple.com/documentation/uikit/uiview/1619630-endediting',
       ),
     ],
   )
@@ -1661,8 +1588,7 @@ abstract class PlatformInAppWebViewController extends PlatformInterface
     platforms: [
       AndroidPlatform(
         apiName: 'WebView.requestFocusNodeHref',
-        apiUrl:
-            'https://developer.android.com/reference/android/webkit/WebView#requestFocusNodeHref(android.os.Message)',
+        apiUrl: 'https://developer.android.com/reference/android/webkit/WebView#requestFocusNodeHref(android.os.Message)',
       ),
       IOSPlatform(note: 'This method is implemented using JavaScript.'),
     ],
@@ -1682,8 +1608,7 @@ abstract class PlatformInAppWebViewController extends PlatformInterface
     platforms: [
       AndroidPlatform(
         apiName: 'WebView.requestImageRef',
-        apiUrl:
-            'https://developer.android.com/reference/android/webkit/WebView#requestImageRef(android.os.Message)',
+        apiUrl: 'https://developer.android.com/reference/android/webkit/WebView#requestImageRef(android.os.Message)',
       ),
       IOSPlatform(note: 'This method is implemented using JavaScript.'),
     ],
@@ -1722,8 +1647,7 @@ abstract class PlatformInAppWebViewController extends PlatformInterface
       AndroidPlatform(note: 'This method is implemented using JavaScript.'),
       IOSPlatform(
         apiName: 'WKWebView.themeColor',
-        apiUrl:
-            'https://developer.apple.com/documentation/webkit/wkwebview/3794258-themecolor',
+        apiUrl: 'https://developer.apple.com/documentation/webkit/wkwebview/3794258-themecolor',
         note: 'On iOS < 15.0, this method is implemented using JavaScript.',
       ),
     ],
@@ -1743,15 +1667,12 @@ abstract class PlatformInAppWebViewController extends PlatformInterface
     platforms: [
       AndroidPlatform(
         apiName: 'View.getScrollX',
-        apiUrl:
-            'https://developer.android.com/reference/android/view/View#getScrollX()',
-        note:
-            'Straight after [PlatformInAppWebViewController.scrollTo] or [PlatformInAppWebViewController.scrollBy] this can still return the previous position for a moment, because the renderer applies the scroll asynchronously.',
+        apiUrl: 'https://developer.android.com/reference/android/view/View#getScrollX()',
+        note: 'Straight after [PlatformInAppWebViewController.scrollTo] or [PlatformInAppWebViewController.scrollBy] this can still return the previous position for a moment, because the renderer applies the scroll asynchronously.',
       ),
       IOSPlatform(
         apiName: 'UIScrollView.contentOffset',
-        apiUrl:
-            'https://developer.apple.com/documentation/uikit/uiscrollview/1619404-contentoffset',
+        apiUrl: 'https://developer.apple.com/documentation/uikit/uiscrollview/1619404-contentoffset',
       ),
     ],
   )
@@ -1770,15 +1691,12 @@ abstract class PlatformInAppWebViewController extends PlatformInterface
     platforms: [
       AndroidPlatform(
         apiName: 'View.getScrollY',
-        apiUrl:
-            'https://developer.android.com/reference/android/view/View#getScrollY()',
-        note:
-            'Straight after [PlatformInAppWebViewController.scrollTo] or [PlatformInAppWebViewController.scrollBy] this can still return the previous position for a moment, because the renderer applies the scroll asynchronously.',
+        apiUrl: 'https://developer.android.com/reference/android/view/View#getScrollY()',
+        note: 'Straight after [PlatformInAppWebViewController.scrollTo] or [PlatformInAppWebViewController.scrollBy] this can still return the previous position for a moment, because the renderer applies the scroll asynchronously.',
       ),
       IOSPlatform(
         apiName: 'UIScrollView.contentOffset',
-        apiUrl:
-            'https://developer.apple.com/documentation/uikit/uiscrollview/1619404-contentoffset',
+        apiUrl: 'https://developer.apple.com/documentation/uikit/uiscrollview/1619404-contentoffset',
       ),
     ],
   )
@@ -1797,12 +1715,10 @@ abstract class PlatformInAppWebViewController extends PlatformInterface
     platforms: [
       AndroidPlatform(
         apiName: 'WebView.getCertificate',
-        apiUrl:
-            'https://developer.android.com/reference/android/webkit/WebView#getCertificate()',
+        apiUrl: 'https://developer.android.com/reference/android/webkit/WebView#getCertificate()',
       ),
       IOSPlatform(
-        note:
-            'WebKit has no equivalent API, so this is the certificate the plugin recorded during a `NSURLAuthenticationMethodServerTrust` challenge for the page\'s host. **WebKit issues that challenge only once per host per process**: a second WebView loading the same host is not challenged at all, so the certificate is process-wide and can predate the current page load, this WebView, and even the WebView that is asking. It is `null` until the process has been challenged for that host at least once — which, for the very first load of a host, may be after `onLoadStop`.',
+        note: 'WebKit has no equivalent API, so this is the certificate the plugin recorded during a `NSURLAuthenticationMethodServerTrust` challenge for the page\'s host. **WebKit issues that challenge only once per host per process**: a second WebView loading the same host is not challenged at all, so the certificate is process-wide and can predate the current page load, this WebView, and even the WebView that is asking. It is `null` until the process has been challenged for that host at least once — which, for the very first load of a host, may be after `onLoadStop`.',
       ),
     ],
   )
@@ -1822,10 +1738,8 @@ abstract class PlatformInAppWebViewController extends PlatformInterface
       AndroidPlatform(),
       IOSPlatform(
         apiName: 'WKUserContentController.addUserScript',
-        apiUrl:
-            'https://developer.apple.com/documentation/webkit/wkusercontentcontroller/1537448-adduserscript',
-        note:
-            "This method will throw an error if the [PlatformWebViewCreationParams.windowId] has been set. There isn't any way to add/remove user scripts specific to window WebViews. This is a limitation of the native WebKit APIs.",
+        apiUrl: 'https://developer.apple.com/documentation/webkit/wkusercontentcontroller/1537448-adduserscript',
+        note: "This method will throw an error if the [PlatformWebViewCreationParams.windowId] has been set. There isn't any way to add/remove user scripts specific to window WebViews. This is a limitation of the native WebKit APIs.",
       ),
     ],
   )
@@ -1844,8 +1758,7 @@ abstract class PlatformInAppWebViewController extends PlatformInterface
     platforms: [
       AndroidPlatform(),
       IOSPlatform(
-        note:
-            "This method will throw an error if the [PlatformWebViewCreationParams.windowId] has been set. There isn't any way to add/remove user scripts specific to window WebViews. This is a limitation of the native WebKit APIs.",
+        note: "This method will throw an error if the [PlatformWebViewCreationParams.windowId] has been set. There isn't any way to add/remove user scripts specific to window WebViews. This is a limitation of the native WebKit APIs.",
       ),
     ],
   )
@@ -1866,8 +1779,7 @@ abstract class PlatformInAppWebViewController extends PlatformInterface
     platforms: [
       AndroidPlatform(),
       IOSPlatform(
-        note:
-            "This method will throw an error if the [PlatformWebViewCreationParams.windowId] has been set. There isn't any way to add/remove user scripts specific to window WebViews. This is a limitation of the native WebKit APIs.",
+        note: "This method will throw an error if the [PlatformWebViewCreationParams.windowId] has been set. There isn't any way to add/remove user scripts specific to window WebViews. This is a limitation of the native WebKit APIs.",
       ),
     ],
   )
@@ -1887,8 +1799,7 @@ abstract class PlatformInAppWebViewController extends PlatformInterface
     platforms: [
       AndroidPlatform(),
       IOSPlatform(
-        note:
-            "This method will throw an error if the [PlatformWebViewCreationParams.windowId] has been set. There isn't any way to add/remove user scripts specific to window WebViews. This is a limitation of the native WebKit APIs.",
+        note: "This method will throw an error if the [PlatformWebViewCreationParams.windowId] has been set. There isn't any way to add/remove user scripts specific to window WebViews. This is a limitation of the native WebKit APIs.",
       ),
     ],
   )
@@ -1908,8 +1819,7 @@ abstract class PlatformInAppWebViewController extends PlatformInterface
     platforms: [
       AndroidPlatform(),
       IOSPlatform(
-        note:
-            "This method will throw an error if the [PlatformWebViewCreationParams.windowId] has been set. There isn't any way to add/remove user scripts specific to window WebViews. This is a limitation of the native WebKit APIs.",
+        note: "This method will throw an error if the [PlatformWebViewCreationParams.windowId] has been set. There isn't any way to add/remove user scripts specific to window WebViews. This is a limitation of the native WebKit APIs.",
       ),
     ],
   )
@@ -1929,10 +1839,8 @@ abstract class PlatformInAppWebViewController extends PlatformInterface
       AndroidPlatform(),
       IOSPlatform(
         apiName: 'WKUserContentController.removeAllUserScripts',
-        apiUrl:
-            'https://developer.apple.com/documentation/webkit/wkusercontentcontroller/1536540-removealluserscripts',
-        note:
-            "This method will throw an error if the [PlatformWebViewCreationParams.windowId] has been set. There isn't any way to add/remove user scripts specific to window WebViews. This is a limitation of the native WebKit APIs.",
+        apiUrl: 'https://developer.apple.com/documentation/webkit/wkusercontentcontroller/1536540-removealluserscripts',
+        note: "This method will throw an error if the [PlatformWebViewCreationParams.windowId] has been set. There isn't any way to add/remove user scripts specific to window WebViews. This is a limitation of the native WebKit APIs.",
       ),
     ],
   )
@@ -1991,8 +1899,7 @@ abstract class PlatformInAppWebViewController extends PlatformInterface
       AndroidPlatform(available: '21'),
       IOSPlatform(
         apiName: 'WKWebView.callAsyncJavaScript',
-        apiUrl:
-            'https://developer.apple.com/documentation/webkit/wkwebview/3656441-callasyncjavascript',
+        apiUrl: 'https://developer.apple.com/documentation/webkit/wkwebview/3656441-callasyncjavascript',
         available: '14.3',
       ),
     ],
@@ -2022,15 +1929,12 @@ abstract class PlatformInAppWebViewController extends PlatformInterface
     platforms: [
       AndroidPlatform(
         apiName: 'WebView.saveWebArchive',
-        apiUrl:
-            'https://developer.android.com/reference/android/webkit/WebView#saveWebArchive(java.lang.String,%20boolean,%20android.webkit.ValueCallback%3Cjava.lang.String%3E)',
-        note:
-            'If [autoname] is `false`, the [filePath] must ends with the [WebArchiveFormat.MHT] file extension.',
+        apiUrl: 'https://developer.android.com/reference/android/webkit/WebView#saveWebArchive(java.lang.String,%20boolean,%20android.webkit.ValueCallback%3Cjava.lang.String%3E)',
+        note: 'If [autoname] is `false`, the [filePath] must ends with the [WebArchiveFormat.MHT] file extension.',
       ),
       IOSPlatform(
         available: '14.0',
-        note:
-            'If [autoname] is `false`, the [filePath] must ends with the [WebArchiveFormat.WEBARCHIVE] file extension.',
+        note: 'If [autoname] is `false`, the [filePath] must ends with the [WebArchiveFormat.WEBARCHIVE] file extension.',
       ),
     ],
   )
@@ -2077,10 +1981,8 @@ abstract class PlatformInAppWebViewController extends PlatformInterface
     platforms: [
       AndroidPlatform(
         apiName: 'WebViewCompat.createWebMessageChannel',
-        apiUrl:
-            'https://developer.android.com/reference/androidx/webkit/WebViewCompat#createWebMessageChannel(android.webkit.WebView)',
-        note:
-            'This method should only be called if [WebViewFeature.isFeatureSupported] returns `true` for [WebViewFeature.CREATE_WEB_MESSAGE_CHANNEL].',
+        apiUrl: 'https://developer.android.com/reference/androidx/webkit/WebViewCompat#createWebMessageChannel(android.webkit.WebView)',
+        note: 'This method should only be called if [WebViewFeature.isFeatureSupported] returns `true` for [WebViewFeature.CREATE_WEB_MESSAGE_CHANNEL].',
       ),
       IOSPlatform(note: 'This method is implemented using JavaScript.'),
     ],
@@ -2103,10 +2005,8 @@ abstract class PlatformInAppWebViewController extends PlatformInterface
     platforms: [
       AndroidPlatform(
         apiName: 'WebView.postWebMessage',
-        apiUrl:
-            'https://developer.android.com/reference/androidx/webkit/WebViewCompat#postWebMessage(android.webkit.WebView,%20androidx.webkit.WebMessageCompat,%20android.net.Uri)',
-        note:
-            'This method should only be called if [WebViewFeature.isFeatureSupported] returns `true` for [WebViewFeature.POST_WEB_MESSAGE].',
+        apiUrl: 'https://developer.android.com/reference/androidx/webkit/WebViewCompat#postWebMessage(android.webkit.WebView,%20androidx.webkit.WebMessageCompat,%20android.net.Uri)',
+        note: 'This method should only be called if [WebViewFeature.isFeatureSupported] returns `true` for [WebViewFeature.POST_WEB_MESSAGE].',
       ),
       IOSPlatform(note: 'This method is implemented using JavaScript.'),
     ],
@@ -2281,10 +2181,8 @@ abstract class PlatformInAppWebViewController extends PlatformInterface
     platforms: [
       AndroidPlatform(
         apiName: 'WebViewCompat.WebMessageListener',
-        apiUrl:
-            'https://developer.android.com/reference/androidx/webkit/WebViewCompat#addWebMessageListener(android.webkit.WebView,%20java.lang.String,%20java.util.Set%3Cjava.lang.String%3E,%20androidx.webkit.WebViewCompat.WebMessageListener)',
-        note:
-            'This method should only be called if [WebViewFeature.isFeatureSupported] returns `true` for [WebViewFeature.WEB_MESSAGE_LISTENER].',
+        apiUrl: 'https://developer.android.com/reference/androidx/webkit/WebViewCompat#addWebMessageListener(android.webkit.WebView,%20java.lang.String,%20java.util.Set%3Cjava.lang.String%3E,%20androidx.webkit.WebViewCompat.WebMessageListener)',
+        note: 'This method should only be called if [WebViewFeature.isFeatureSupported] returns `true` for [WebViewFeature.WEB_MESSAGE_LISTENER].',
       ),
       IOSPlatform(note: 'This method is implemented using JavaScript.'),
     ],
@@ -2342,8 +2240,7 @@ abstract class PlatformInAppWebViewController extends PlatformInterface
     platforms: [
       AndroidPlatform(
         apiName: 'WebView.clearSslPreferences',
-        apiUrl:
-            'https://developer.android.com/reference/android/webkit/WebView#clearSslPreferences()',
+        apiUrl: 'https://developer.android.com/reference/android/webkit/WebView#clearSslPreferences()',
       ),
     ],
   )
@@ -2363,8 +2260,7 @@ abstract class PlatformInAppWebViewController extends PlatformInterface
     platforms: [
       AndroidPlatform(
         apiName: 'WebView.onPause',
-        apiUrl:
-            'https://developer.android.com/reference/android/webkit/WebView#onPause()',
+        apiUrl: 'https://developer.android.com/reference/android/webkit/WebView#onPause()',
       ),
     ],
   )
@@ -2383,8 +2279,7 @@ abstract class PlatformInAppWebViewController extends PlatformInterface
     platforms: [
       AndroidPlatform(
         apiName: 'WebView.onResume',
-        apiUrl:
-            'https://developer.android.com/reference/android/webkit/WebView#onResume()',
+        apiUrl: 'https://developer.android.com/reference/android/webkit/WebView#onResume()',
       ),
     ],
   )
@@ -2406,8 +2301,7 @@ abstract class PlatformInAppWebViewController extends PlatformInterface
     platforms: [
       AndroidPlatform(
         apiName: 'WebView.pageDown',
-        apiUrl:
-            'https://developer.android.com/reference/android/webkit/WebView#pageDown(boolean)',
+        apiUrl: 'https://developer.android.com/reference/android/webkit/WebView#pageDown(boolean)',
       ),
     ],
   )
@@ -2429,8 +2323,7 @@ abstract class PlatformInAppWebViewController extends PlatformInterface
     platforms: [
       AndroidPlatform(
         apiName: 'WebView.pageUp',
-        apiUrl:
-            'https://developer.android.com/reference/android/webkit/WebView#pageUp(boolean)',
+        apiUrl: 'https://developer.android.com/reference/android/webkit/WebView#pageUp(boolean)',
       ),
     ],
   )
@@ -2450,8 +2343,7 @@ abstract class PlatformInAppWebViewController extends PlatformInterface
     platforms: [
       AndroidPlatform(
         apiName: 'WebView.zoomIn',
-        apiUrl:
-            'https://developer.android.com/reference/android/webkit/WebView#zoomIn()',
+        apiUrl: 'https://developer.android.com/reference/android/webkit/WebView#zoomIn()',
       ),
     ],
   )
@@ -2471,8 +2363,7 @@ abstract class PlatformInAppWebViewController extends PlatformInterface
     platforms: [
       AndroidPlatform(
         apiName: 'WebView.zoomOut',
-        apiUrl:
-            'https://developer.android.com/reference/android/webkit/WebView#zoomOut()',
+        apiUrl: 'https://developer.android.com/reference/android/webkit/WebView#zoomOut()',
       ),
     ],
   )
@@ -2491,8 +2382,7 @@ abstract class PlatformInAppWebViewController extends PlatformInterface
     platforms: [
       AndroidPlatform(
         apiName: 'WebView.clearHistory',
-        apiUrl:
-            'https://developer.android.com/reference/android/webkit/WebView#clearHistory()',
+        apiUrl: 'https://developer.android.com/reference/android/webkit/WebView#clearHistory()',
       ),
     ],
   )
@@ -2513,8 +2403,7 @@ abstract class PlatformInAppWebViewController extends PlatformInterface
     platforms: [
       AndroidPlatform(
         apiName: 'WebView.clearFormData',
-        apiUrl:
-            'https://developer.android.com/reference/android/webkit/WebView#clearFormData()',
+        apiUrl: 'https://developer.android.com/reference/android/webkit/WebView#clearFormData()',
       ),
     ],
   )
@@ -2533,8 +2422,7 @@ abstract class PlatformInAppWebViewController extends PlatformInterface
     platforms: [
       IOSPlatform(
         apiName: 'WKWebView.reloadFromOrigin',
-        apiUrl:
-            'https://developer.apple.com/documentation/webkit/wkwebview/1414956-reloadfromorigin',
+        apiUrl: 'https://developer.apple.com/documentation/webkit/wkwebview/1414956-reloadfromorigin',
       ),
     ],
   )
@@ -2556,8 +2444,7 @@ abstract class PlatformInAppWebViewController extends PlatformInterface
     platforms: [
       IOSPlatform(
         apiName: 'WKWebView.createPdf',
-        apiUrl:
-            'https://developer.apple.com/documentation/webkit/wkwebview/3650490-createpdf',
+        apiUrl: 'https://developer.apple.com/documentation/webkit/wkwebview/3650490-createpdf',
         available: '14.0',
       ),
     ],
@@ -2578,8 +2465,7 @@ abstract class PlatformInAppWebViewController extends PlatformInterface
     platforms: [
       IOSPlatform(
         apiName: 'WKWebView.createWebArchiveData',
-        apiUrl:
-            'https://developer.apple.com/documentation/webkit/wkwebview/3650491-createwebarchivedata',
+        apiUrl: 'https://developer.apple.com/documentation/webkit/wkwebview/3650491-createwebarchivedata',
         available: '14.0',
       ),
     ],
@@ -2599,8 +2485,7 @@ abstract class PlatformInAppWebViewController extends PlatformInterface
     platforms: [
       IOSPlatform(
         apiName: 'WKWebView.hasOnlySecureContent',
-        apiUrl:
-            'https://developer.apple.com/documentation/webkit/wkwebview/1415002-hasonlysecurecontent',
+        apiUrl: 'https://developer.apple.com/documentation/webkit/wkwebview/1415002-hasonlysecurecontent',
       ),
     ],
   )
@@ -2634,11 +2519,9 @@ abstract class PlatformInAppWebViewController extends PlatformInterface
     platforms: [
       IOSPlatform(
         apiName: 'WKWebView.isBlockedByScreenTime',
-        apiUrl:
-            'https://developer.apple.com/documentation/webkit/wkwebview/isblockedbyscreentime',
+        apiUrl: 'https://developer.apple.com/documentation/webkit/wkwebview/isblockedbyscreentime',
         available: '26.0',
-        note:
-            'Returns `null` below iOS 26.0. No change notification exists — read it when it matters.',
+        note: 'Returns `null` below iOS 26.0. No change notification exists — read it when it matters.',
       ),
     ],
   )
@@ -2674,11 +2557,9 @@ abstract class PlatformInAppWebViewController extends PlatformInterface
     platforms: [
       IOSPlatform(
         apiName: 'WKWebView.conversationContext',
-        apiUrl:
-            'https://developer.apple.com/documentation/webkit/wkwebview/conversationcontext',
+        apiUrl: 'https://developer.apple.com/documentation/webkit/wkwebview/conversationcontext',
         available: '26.0',
-        note:
-            'Read by the keyboard when it appears, so set it beforehand. Entries missing a required field are dropped.',
+        note: 'Read by the keyboard when it appears, so set it beforehand. Entries missing a required field are dropped.',
       ),
     ],
   )
@@ -2703,8 +2584,7 @@ abstract class PlatformInAppWebViewController extends PlatformInterface
     platforms: [
       IOSPlatform(
         apiName: 'WKWebView.conversationContext',
-        apiUrl:
-            'https://developer.apple.com/documentation/webkit/wkwebview/conversationcontext',
+        apiUrl: 'https://developer.apple.com/documentation/webkit/wkwebview/conversationcontext',
         available: '26.0',
       ),
     ],
@@ -2724,8 +2604,7 @@ abstract class PlatformInAppWebViewController extends PlatformInterface
     platforms: [
       IOSPlatform(
         apiName: 'WKWebView.pauseAllMediaPlayback',
-        apiUrl:
-            'https://developer.apple.com/documentation/webkit/wkwebview/3752240-pauseallmediaplayback',
+        apiUrl: 'https://developer.apple.com/documentation/webkit/wkwebview/3752240-pauseallmediaplayback',
         available: '15.0',
       ),
     ],
@@ -2748,8 +2627,7 @@ abstract class PlatformInAppWebViewController extends PlatformInterface
     platforms: [
       IOSPlatform(
         apiName: 'WKWebView.setAllMediaPlaybackSuspended',
-        apiUrl:
-            'https://developer.apple.com/documentation/webkit/wkwebview/3752242-setallmediaplaybacksuspended',
+        apiUrl: 'https://developer.apple.com/documentation/webkit/wkwebview/3752242-setallmediaplaybacksuspended',
         available: '15.0',
       ),
     ],
@@ -2769,8 +2647,7 @@ abstract class PlatformInAppWebViewController extends PlatformInterface
     platforms: [
       IOSPlatform(
         apiName: 'WKWebView.closeAllMediaPresentations',
-        apiUrl:
-            'https://developer.apple.com/documentation/webkit/wkwebview/3752235-closeallmediapresentations',
+        apiUrl: 'https://developer.apple.com/documentation/webkit/wkwebview/3752235-closeallmediapresentations',
         available: '14.5',
       ),
     ],
@@ -2792,8 +2669,7 @@ abstract class PlatformInAppWebViewController extends PlatformInterface
     platforms: [
       IOSPlatform(
         apiName: 'WKWebView.requestMediaPlaybackState',
-        apiUrl:
-            'https://developer.apple.com/documentation/webkit/wkwebview/3752241-requestmediaplaybackstate',
+        apiUrl: 'https://developer.apple.com/documentation/webkit/wkwebview/3752241-requestmediaplaybackstate',
         available: '15.0',
       ),
     ],
@@ -2825,8 +2701,7 @@ abstract class PlatformInAppWebViewController extends PlatformInterface
     platforms: [
       IOSPlatform(
         apiName: 'WKWebView.cameraCaptureState',
-        apiUrl:
-            'https://developer.apple.com/documentation/webkit/wkwebview/3763093-cameracapturestate',
+        apiUrl: 'https://developer.apple.com/documentation/webkit/wkwebview/3763093-cameracapturestate',
         available: '15.0',
       ),
     ],
@@ -2846,8 +2721,7 @@ abstract class PlatformInAppWebViewController extends PlatformInterface
     platforms: [
       IOSPlatform(
         apiName: 'WKWebView.setCameraCaptureState',
-        apiUrl:
-            'https://developer.apple.com/documentation/webkit/wkwebview/3763097-setcameracapturestate',
+        apiUrl: 'https://developer.apple.com/documentation/webkit/wkwebview/3763097-setcameracapturestate',
         available: '15.0',
       ),
     ],
@@ -2867,8 +2741,7 @@ abstract class PlatformInAppWebViewController extends PlatformInterface
     platforms: [
       IOSPlatform(
         apiName: 'WKWebView.microphoneCaptureState',
-        apiUrl:
-            'https://developer.apple.com/documentation/webkit/wkwebview/3763096-microphonecapturestate',
+        apiUrl: 'https://developer.apple.com/documentation/webkit/wkwebview/3763096-microphonecapturestate',
         available: '15.0',
       ),
     ],
@@ -2888,8 +2761,7 @@ abstract class PlatformInAppWebViewController extends PlatformInterface
     platforms: [
       IOSPlatform(
         apiName: 'WKWebView.setMicrophoneCaptureState',
-        apiUrl:
-            'https://developer.apple.com/documentation/webkit/wkwebview/3763098-setmicrophonecapturestate',
+        apiUrl: 'https://developer.apple.com/documentation/webkit/wkwebview/3763098-setmicrophonecapturestate',
         available: '15.0',
       ),
     ],
@@ -2925,11 +2797,9 @@ abstract class PlatformInAppWebViewController extends PlatformInterface
     platforms: [
       IOSPlatform(
         apiName: 'WKWebView.loadSimulatedRequest(_:response:responseData:)',
-        apiUrl:
-            'https://developer.apple.com/documentation/webkit/wkwebview/3763094-loadsimulatedrequest',
+        apiUrl: 'https://developer.apple.com/documentation/webkit/wkwebview/3763094-loadsimulatedrequest',
         available: '15.0',
-        note:
-            'or [Official API - WKWebView.loadSimulatedRequest(_:responseHTML:)](https://developer.apple.com/documentation/webkit/wkwebview/3763095-loadsimulatedrequest)',
+        note: 'or [Official API - WKWebView.loadSimulatedRequest(_:responseHTML:)](https://developer.apple.com/documentation/webkit/wkwebview/3763095-loadsimulatedrequest)',
       ),
     ],
   )
@@ -2992,8 +2862,7 @@ abstract class PlatformInAppWebViewController extends PlatformInterface
     platforms: [
       AndroidPlatform(
         apiName: 'WebView.saveState',
-        apiUrl:
-            'https://developer.android.com/reference/android/webkit/WebView#saveState(android.os.Bundle)',
+        apiUrl: 'https://developer.android.com/reference/android/webkit/WebView#saveState(android.os.Bundle)',
         note:
             'This method doesn\'t store the display data for this WebView. '
             'When `maxSize` or `includeForwardState` is given, `WebViewCompat.saveState` is used '
@@ -3001,8 +2870,7 @@ abstract class PlatformInAppWebViewController extends PlatformInterface
       ),
       IOSPlatform(
         apiName: 'WKWebView.interactionState',
-        apiUrl:
-            'https://developer.apple.com/documentation/webkit/wkwebview/3752236-interactionstate',
+        apiUrl: 'https://developer.apple.com/documentation/webkit/wkwebview/3752236-interactionstate',
         available: '15.0',
         note:
             'The `maxSize` and `includeForwardState` arguments are ignored: '
@@ -3033,14 +2901,12 @@ abstract class PlatformInAppWebViewController extends PlatformInterface
     platforms: [
       AndroidPlatform(
         apiName: 'WebView.restoreState',
-        apiUrl:
-            'https://developer.android.com/reference/android/webkit/WebView#restoreState(android.os.Bundle)',
+        apiUrl: 'https://developer.android.com/reference/android/webkit/WebView#restoreState(android.os.Bundle)',
         note: 'This method doesn\'t restore the display data for this WebView.',
       ),
       IOSPlatform(
         apiName: 'WKWebView.interactionState',
-        apiUrl:
-            'https://developer.apple.com/documentation/webkit/wkwebview/3752236-interactionstate',
+        apiUrl: 'https://developer.apple.com/documentation/webkit/wkwebview/3752236-interactionstate',
         available: '15.0',
       ),
     ],
@@ -3072,8 +2938,7 @@ abstract class PlatformInAppWebViewController extends PlatformInterface
     platforms: [
       AndroidPlatform(
         apiName: 'WebSettings.getDefaultUserAgent',
-        apiUrl:
-            'https://developer.android.com/reference/android/webkit/WebSettings#getDefaultUserAgent(android.content.Context)',
+        apiUrl: 'https://developer.android.com/reference/android/webkit/WebSettings#getDefaultUserAgent(android.content.Context)',
       ),
       IOSPlatform(),
     ],
@@ -3095,8 +2960,7 @@ abstract class PlatformInAppWebViewController extends PlatformInterface
     platforms: [
       AndroidPlatform(
         apiName: 'WebView.clearClientCertPreferences',
-        apiUrl:
-            'https://developer.android.com/reference/android/webkit/WebView#clearClientCertPreferences(java.lang.Runnable)',
+        apiUrl: 'https://developer.android.com/reference/android/webkit/WebView#clearClientCertPreferences(java.lang.Runnable)',
         available: '21',
       ),
     ],
@@ -3116,10 +2980,8 @@ abstract class PlatformInAppWebViewController extends PlatformInterface
     platforms: [
       AndroidPlatform(
         apiName: 'WebViewCompat.getSafeBrowsingPrivacyPolicyUrl',
-        apiUrl:
-            'https://developer.android.com/reference/androidx/webkit/WebViewCompat#getSafeBrowsingPrivacyPolicyUrl()',
-        note:
-            'This method should only be called if [WebViewFeature.isFeatureSupported] returns `true` for [WebViewFeature.SAFE_BROWSING_PRIVACY_POLICY_URL].',
+        apiUrl: 'https://developer.android.com/reference/androidx/webkit/WebViewCompat#getSafeBrowsingPrivacyPolicyUrl()',
+        note: 'This method should only be called if [WebViewFeature.isFeatureSupported] returns `true` for [WebViewFeature.SAFE_BROWSING_PRIVACY_POLICY_URL].',
       ),
     ],
   )
@@ -3150,10 +3012,8 @@ abstract class PlatformInAppWebViewController extends PlatformInterface
     platforms: [
       AndroidPlatform(
         apiName: 'WebViewCompat.setSafeBrowsingAllowlist',
-        apiUrl:
-            'https://developer.android.com/reference/androidx/webkit/WebViewCompat#setSafeBrowsingAllowlist(java.util.Set%3Cjava.lang.String%3E,%20android.webkit.ValueCallback%3Cjava.lang.Boolean%3E)',
-        note:
-            'This method should only be called if [WebViewFeature.isFeatureSupported] returns `true` for [WebViewFeature.SAFE_BROWSING_ALLOWLIST].',
+        apiUrl: 'https://developer.android.com/reference/androidx/webkit/WebViewCompat#setSafeBrowsingAllowlist(java.util.Set%3Cjava.lang.String%3E,%20android.webkit.ValueCallback%3Cjava.lang.Boolean%3E)',
+        note: 'This method should only be called if [WebViewFeature.isFeatureSupported] returns `true` for [WebViewFeature.SAFE_BROWSING_ALLOWLIST].',
       ),
     ],
   )
@@ -3178,8 +3038,7 @@ abstract class PlatformInAppWebViewController extends PlatformInterface
     platforms: [
       AndroidPlatform(
         apiName: 'WebViewCompat.getCurrentWebViewPackage',
-        apiUrl:
-            'https://developer.android.com/reference/androidx/webkit/WebViewCompat#getCurrentWebViewPackage(android.content.Context)',
+        apiUrl: 'https://developer.android.com/reference/androidx/webkit/WebViewCompat#getCurrentWebViewPackage(android.content.Context)',
         available: '21',
       ),
     ],
@@ -3203,8 +3062,7 @@ abstract class PlatformInAppWebViewController extends PlatformInterface
     platforms: [
       AndroidPlatform(
         apiName: 'WebView.setWebContentsDebuggingEnabled',
-        apiUrl:
-            'https://developer.android.com/reference/android/webkit/WebView#setWebContentsDebuggingEnabled(boolean)',
+        apiUrl: 'https://developer.android.com/reference/android/webkit/WebView#setWebContentsDebuggingEnabled(boolean)',
       ),
     ],
   )
@@ -3230,10 +3088,8 @@ abstract class PlatformInAppWebViewController extends PlatformInterface
     platforms: [
       AndroidPlatform(
         apiName: 'WebViewCompat.getVariationsHeader',
-        apiUrl:
-            'https://developer.android.com/reference/androidx/webkit/WebViewCompat#getVariationsHeader()',
-        note:
-            'This method should only be called if [WebViewFeature.isFeatureSupported] returns `true` for [WebViewFeature.GET_VARIATIONS_HEADER].',
+        apiUrl: 'https://developer.android.com/reference/androidx/webkit/WebViewCompat#getVariationsHeader()',
+        note: 'This method should only be called if [WebViewFeature.isFeatureSupported] returns `true` for [WebViewFeature.GET_VARIATIONS_HEADER].',
       ),
     ],
   )
@@ -3258,10 +3114,8 @@ abstract class PlatformInAppWebViewController extends PlatformInterface
     platforms: [
       AndroidPlatform(
         apiName: 'WebViewCompat.isMultiProcessEnabled',
-        apiUrl:
-            'https://developer.android.com/reference/androidx/webkit/WebViewCompat#isMultiProcessEnabled()',
-        note:
-            'This method should only be called if [WebViewFeature.isFeatureSupported] returns `true` for [WebViewFeature.MULTI_PROCESS].',
+        apiUrl: 'https://developer.android.com/reference/androidx/webkit/WebViewCompat#isMultiProcessEnabled()',
+        note: 'This method should only be called if [WebViewFeature.isFeatureSupported] returns `true` for [WebViewFeature.MULTI_PROCESS].',
       ),
     ],
   )
@@ -3297,10 +3151,8 @@ abstract class PlatformInAppWebViewController extends PlatformInterface
     platforms: [
       AndroidPlatform(
         apiName: 'WebViewCompat.setDefaultTrafficStatsTag',
-        apiUrl:
-            'https://developer.android.com/reference/androidx/webkit/WebViewCompat#setDefaultTrafficStatsTag(int)',
-        note:
-            'Requires [WebViewFeature.DEFAULT_TRAFFICSTATS_TAGGING]. Returns `false` and does nothing if the feature is not supported.',
+        apiUrl: 'https://developer.android.com/reference/androidx/webkit/WebViewCompat#setDefaultTrafficStatsTag(int)',
+        note: 'Requires [WebViewFeature.DEFAULT_TRAFFICSTATS_TAGGING]. Returns `false` and does nothing if the feature is not supported.',
       ),
     ],
   )
@@ -3326,8 +3178,7 @@ abstract class PlatformInAppWebViewController extends PlatformInterface
     platforms: [
       AndroidPlatform(
         apiName: 'WebView.disableWebView',
-        apiUrl:
-            'https://developer.android.com/reference/android/webkit/WebView#disableWebView()',
+        apiUrl: 'https://developer.android.com/reference/android/webkit/WebView#disableWebView()',
         available: '28',
       ),
     ],
@@ -3349,8 +3200,7 @@ abstract class PlatformInAppWebViewController extends PlatformInterface
     platforms: [
       IOSPlatform(
         apiName: 'WKWebView.handlesURLScheme',
-        apiUrl:
-            'https://developer.apple.com/documentation/webkit/wkwebview/2875370-handlesurlscheme',
+        apiUrl: 'https://developer.apple.com/documentation/webkit/wkwebview/2875370-handlesurlscheme',
         available: '11.0',
       ),
     ],
@@ -3407,8 +3257,7 @@ abstract class PlatformInAppWebViewController extends PlatformInterface
     platforms: [
       AndroidPlatform(
         apiName: 'WebView.enableSlowWholeDocumentDraw',
-        apiUrl:
-            'https://developer.android.com/reference/android/webkit/WebView#enableSlowWholeDocumentDraw()',
+        apiUrl: 'https://developer.android.com/reference/android/webkit/WebView#enableSlowWholeDocumentDraw()',
         available: '21',
         note: 'This method should be called before any WebViews are created.',
       ),

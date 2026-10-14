@@ -28,8 +28,7 @@ void renderProcessResponsiveness() {
           child: InAppWebView(
             key: GlobalKey(),
             initialData: InAppWebViewInitialData(
-              data:
-                  '<!DOCTYPE html><html><body style="height:100vh">busy</body></html>',
+              data: '<!DOCTYPE html><html><body style="height:100vh">busy</body></html>',
             ),
             onWebViewCreated: (controller) {
               controllerCompleter.complete(controller);
@@ -103,8 +102,7 @@ void renderProcessResponsiveness() {
         child: InAppWebView(
           key: GlobalKey(),
           initialData: InAppWebViewInitialData(
-            data:
-                '<!DOCTYPE html><html><body style="height:100vh">busy</body></html>',
+            data: '<!DOCTYPE html><html><body style="height:100vh">busy</body></html>',
           ),
           onWebViewCreated: (controller) {
             controllerCompleter.complete(controller);

@@ -1,5 +1,6 @@
 import 'package:flutter/foundation.dart';
 import 'package:nosferatu500_inappwebview_platform_interface/nosferatu500_inappwebview_platform_interface.dart';
+
 import 'web_message_port.dart';
 
 ///{@macro nosferatu500_inappwebview_platform_interface.PlatformWebMessageChannel}
