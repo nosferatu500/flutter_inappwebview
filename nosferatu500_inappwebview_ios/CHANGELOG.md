@@ -7,6 +7,8 @@
 
 ### Internal
 
+- **The 7.0.0 section had two "### Fixed" headings; they are one now.** The second held a single entry (the
+  UIScene key-window fix), moved word for word to the end of the first. No entry changed.
 - **Dead code removed: 12 Swift declarations nothing called, and three calls that did nothing.** The
   declarations: `InAppBrowserManager.WEBVIEW_STORYBOARD_CONTROLLER_ID`, `InAppBrowserWebViewController.tmpWindow`,
   the plugin's `webViewControllers` / `safariViewControllers`, `WindowIdJS.WINDOW_ID_JS_PLUGIN_SCRIPT_GROUP_NAME`,
@@ -522,6 +524,24 @@ lie. `onReceivedClientCertRequest` then silently presents no certificate. The sa
 26.5. Check container algorithms with `openssl pkcs12 -info -nokeys -noout` before believing that
 error.
 
+- **The plugin was broken in any host app using the UIScene lifecycle**, which is most modern iOS
+  apps and now the Flutter default. Three places looked the key window up through
+  `UIApplication.shared.keyWindow` / `UIApplication.shared.windows` — deprecated since iOS 13, below
+  this package's own 15.0 floor, and **both return nothing once the app adopts scenes**. The
+  consequences were silent:
+  - `HeadlessInAppWebView` attaches its web view to the key window on purpose, because an offscreen
+    `WKWebView` runs JavaScript unreliably (its own comment says so). With a nil key window it was
+    never attached, so headless web views could simply fail to execute JavaScript.
+  - `WebAuthenticationSession.presentationAnchor` fell back to a detached `ASPresentationAnchor()`,
+    leaving the authentication sheet with nothing to present from.
+  - `UIApplication.visibleViewController` returned `nil`, so anything routed through it did nothing.
+
+  All three now use a scene-aware lookup that prefers the foreground-active window scene and
+  **falls back to the pre-scene API when the app has no connected scenes**, so unmigrated apps are
+  unaffected. Measured on iOS 26.5 with the example migrated to `FlutterSceneDelegate`: the
+  `headless_in_app_webview` suite collapses after 2 tests without this fix and is 7/7 with it, and
+  7/7 either way on an unmigrated app.
+
 ### Removed
 
 - **`selectionGranularity`**: the setting, its application at creation and its `getSettings`
@@ -617,26 +637,6 @@ error.
   all still print. The job is created with `handledByClient = false`, so no `PrintJobController` is
   allocated on this path. `WebViewChannelDelegate.onPrintRequest` drops its `printJobId` argument
   and no longer sends that map key. Verified on the iOS 26.5 and 17.5 simulators
-
-### Fixed
-
-- **The plugin was broken in any host app using the UIScene lifecycle**, which is most modern iOS
-  apps and now the Flutter default. Three places looked the key window up through
-  `UIApplication.shared.keyWindow` / `UIApplication.shared.windows` — deprecated since iOS 13, below
-  this package's own 15.0 floor, and **both return nothing once the app adopts scenes**. The
-  consequences were silent:
-  - `HeadlessInAppWebView` attaches its web view to the key window on purpose, because an offscreen
-    `WKWebView` runs JavaScript unreliably (its own comment says so). With a nil key window it was
-    never attached, so headless web views could simply fail to execute JavaScript.
-  - `WebAuthenticationSession.presentationAnchor` fell back to a detached `ASPresentationAnchor()`,
-    leaving the authentication sheet with nothing to present from.
-  - `UIApplication.visibleViewController` returned `nil`, so anything routed through it did nothing.
-
-  All three now use a scene-aware lookup that prefers the foreground-active window scene and
-  **falls back to the pre-scene API when the app has no connected scenes**, so unmigrated apps are
-  unaffected. Measured on iOS 26.5 with the example migrated to `FlutterSceneDelegate`: the
-  `headless_in_app_webview` suite collapses after 2 tests without this fix and is 7/7 with it, and
-  7/7 either way on an unmigrated app.
 
 ### Internal
 
