@@ -11,8 +11,35 @@
   relies on AGP's built-in Kotlin has to declare it, as Flutter 3.47.7's app template does:
   `id("org.jetbrains.kotlin.android") version "2.4.0" apply false` in `settings.gradle(.kts)`.
 
+### Changed
+
+- **Android: the InAppBrowser and the JavaScript alert / confirm / prompt dialogs use Material 3 and
+  follow the system's light / dark setting.** The InAppBrowser activity's theme is
+  `Theme.Material3.DayNight.NoActionBar` (was `Theme.AppCompat.Light.NoActionBar`); its toolbar uses the
+  surface colour with an on-surface title (was `colorPrimary`, a light grey, with a hard-coded black
+  title), and its progress bar the AppCompat horizontal style (was Holo). A `toolbarTopBackgroundColor`
+  still replaces the toolbar's background. The dialogs are built by `MaterialAlertDialogBuilder` on a
+  `Theme.Material3.DayNight` context of their own (they were AppCompat's dark dialog, dark even in light
+  mode), so they work whatever the app's theme: measured with Flutter's template theme
+  (`@android:style/Theme.Light.NoTitleBar`), where the builder without that context throws "The style on
+  this component requires your app theme to be Theme.AppCompat" and no dialog appears.
+  **New dependency: `com.google.android.material:material` 1.14.0**, the library that ships the Material
+  3 themes for Android views; every app using the plugin now includes it.
+
+### Fixed
+
+- **Android: the InAppBrowser's status bar icons are readable in light mode.** They were white on the
+  light toolbar (measured on Android 17); the theme now asks for dark icons in light mode and light ones
+  in dark mode.
+
 ### Internal
 
+- **The example app is Material 3.** Flutter side: `useMaterial3: false` and the blue Material 2 app bar
+  with white title and icons are gone, replaced by `colorSchemeSeed: Colors.blue`; three screens drop their
+  own blue app-bar colours (and a tab bar its white labels) and the app-bar loading spinner drops its
+  white, all of which would be invisible on Material 3's surface-coloured app bar. Native side: both themes,
+  light and night, are `Theme.Material3.DayNight.NoActionBar` (were `Theme.MaterialComponents.*`, and the
+  night launch theme `@android:style/Theme.Black.NoTitleBar`); Material dependency 1.12.0 → 1.14.0.
 - **No `package:flutter/material.dart` import left in `lib/`**: `in_app_webview.dart` dropped it (it already
   imports `widgets.dart`).
   Nothing in this package's `lib/` used Material or Cupertino: with the import swapped for `widgets.dart`,

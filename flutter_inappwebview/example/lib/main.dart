@@ -104,18 +104,8 @@ class _MyAppState extends State<MyApp> {
     return MaterialApp(
       title: '$InAppWebView Test Suite',
       theme: ThemeData(
-        primarySwatch: Colors.blue,
-        appBarTheme: const AppBarTheme(
-          elevation: 2,
-          centerTitle: false,
-          iconTheme: IconThemeData(color: Colors.white),
-          titleTextStyle: TextStyle(
-            color: Colors.white,
-            fontSize: 20,
-            fontWeight: FontWeight.w500,
-          ),
-        ),
-        useMaterial3: false,
+        colorSchemeSeed: Colors.blue,
+        appBarTheme: const AppBarTheme(centerTitle: false),
       ),
       routes: {
         '/': (context) => const WebViewTesterScreen(),

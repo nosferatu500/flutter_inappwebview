@@ -47,13 +47,8 @@ class _TestConfigurationScreenState extends State<TestConfigurationScreen>
           builder: (context, manager, child) => Scaffold(
             appBar: AppBar(
               title: const Text('Test Configuration'),
-              backgroundColor: Colors.blue,
-              foregroundColor: Colors.white,
               bottom: TabBar(
                 controller: _tabController,
-                indicatorColor: Colors.white,
-                labelColor: Colors.white,
-                unselectedLabelColor: Colors.white70,
                 isScrollable: isNarrow,
                 tabs: const [
                   Tab(icon: Icon(Icons.edit_note), text: 'Custom Steps'),

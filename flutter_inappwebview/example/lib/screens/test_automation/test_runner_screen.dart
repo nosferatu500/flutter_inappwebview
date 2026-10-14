@@ -122,8 +122,6 @@ class _TestRunnerScreenState extends State<TestRunnerScreen> {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Test Runner'),
-        backgroundColor: Colors.blue,
-        foregroundColor: Colors.white,
         actions: [
           IconButton(
             icon: const Icon(Icons.settings),

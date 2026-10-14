@@ -10,10 +10,7 @@ class StaticMethodsScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Static Methods'),
-        backgroundColor: Colors.blue,
-      ),
+      appBar: AppBar(title: const Text('Static Methods')),
       drawer: AppDrawer(),
       body: const StaticMethodTesterWidget(),
     );

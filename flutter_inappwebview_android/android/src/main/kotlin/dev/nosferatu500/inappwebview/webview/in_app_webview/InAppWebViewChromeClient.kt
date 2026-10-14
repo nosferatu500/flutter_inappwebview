@@ -2,6 +2,7 @@ package dev.nosferatu500.inappwebview.webview.in_app_webview
 
 import android.Manifest
 import android.app.Activity
+import android.content.Context
 import android.content.DialogInterface
 import android.content.Intent
 import android.content.pm.PackageManager
@@ -14,6 +15,7 @@ import android.os.Message
 import android.os.Parcelable
 import android.provider.MediaStore
 import android.util.Log
+import android.view.ContextThemeWrapper
 import android.view.Gravity
 import android.view.View
 import android.view.ViewGroup
@@ -30,13 +32,13 @@ import android.webkit.WebView
 import android.widget.EditText
 import android.widget.FrameLayout
 import android.widget.LinearLayout
-import androidx.appcompat.app.AlertDialog
 import androidx.core.content.ContextCompat
 import androidx.core.content.FileProvider
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.WindowInsetsControllerCompat
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import dev.nosferatu500.inappwebview.InAppWebViewFileProvider
 import dev.nosferatu500.inappwebview.InAppWebViewFlutterPlugin
 import dev.nosferatu500.inappwebview.in_app_browser.ActivityResultListener
@@ -56,6 +58,7 @@ import io.flutter.plugin.common.PluginRegistry
 import java.io.File
 import java.io.IOException
 import java.util.Locale
+import com.google.android.material.R as MaterialR
 
 // The unchecked casts below are the Flutter codec boundary: StandardMessageCodec decodes to
 // Map<String,Object>/List<Object>, so every read of a structured value is an unverifiable
@@ -223,7 +226,7 @@ class InAppWebViewChromeClient(
     val activity = getActivity() ?: return
 
     val alertDialogBuilder =
-      AlertDialog.Builder(activity, androidx.appcompat.R.style.Theme_AppCompat_Dialog_Alert)
+      MaterialAlertDialogBuilder(material3(activity))
     alertDialogBuilder.setMessage(alertMessage)
     if (!confirmButtonTitle.isNullOrEmpty()) {
       alertDialogBuilder.setPositiveButton(confirmButtonTitle, clickListener)
@@ -303,7 +306,7 @@ class InAppWebViewChromeClient(
     val activity = getActivity() ?: return
 
     val alertDialogBuilder =
-      AlertDialog.Builder(activity, androidx.appcompat.R.style.Theme_AppCompat_Dialog_Alert)
+      MaterialAlertDialogBuilder(material3(activity))
     alertDialogBuilder.setMessage(alertMessage)
     if (!confirmButtonTitle.isNullOrEmpty()) {
       alertDialogBuilder.setPositiveButton(confirmButtonTitle, confirmClickListener)
@@ -378,9 +381,9 @@ class InAppWebViewChromeClient(
     cancelButtonTitle: String?,
     confirmButtonTitle: String?
   ) {
-    val layout = FrameLayout(view.context)
+    val layout = FrameLayout(material3(view.context))
 
-    val input = EditText(view.context)
+    val input = EditText(material3(view.context))
     input.maxLines = 1
     input.setText(
       if (!responseDefaultValue.isNullOrEmpty()) responseDefaultValue else defaultValue
@@ -409,7 +412,7 @@ class InAppWebViewChromeClient(
     val activity = getActivity() ?: return
 
     val alertDialogBuilder =
-      AlertDialog.Builder(activity, androidx.appcompat.R.style.Theme_AppCompat_Dialog_Alert)
+      MaterialAlertDialogBuilder(material3(activity))
     alertDialogBuilder.setMessage(alertMessage)
     if (!confirmButtonTitle.isNullOrEmpty()) {
       alertDialogBuilder.setPositiveButton(confirmButtonTitle, confirmClickListener)
@@ -495,7 +498,7 @@ class InAppWebViewChromeClient(
     val activity = getActivity() ?: return
 
     val alertDialogBuilder =
-      AlertDialog.Builder(activity, androidx.appcompat.R.style.Theme_AppCompat_Dialog_Alert)
+      MaterialAlertDialogBuilder(material3(activity))
     alertDialogBuilder.setMessage(alertMessage)
     if (!confirmButtonTitle.isNullOrEmpty()) {
       alertDialogBuilder.setPositiveButton(confirmButtonTitle, confirmClickListener)
@@ -1161,6 +1164,15 @@ class InAppWebViewChromeClient(
       request.origin.toString(), request.resources.toList()
     )
   }
+
+  /**
+   * A Material 3 DayNight context for the JavaScript alert / confirm / prompt / beforeunload dialogs,
+   * whatever the app's own theme is. [MaterialAlertDialogBuilder] reads Material theme attributes
+   * (`colorSurface` and the like) that an app on a platform theme doesn't have (Flutter's app
+   * template uses `@android:style/Theme.Light.NoTitleBar`), so the dialog brings its own.
+   */
+  private fun material3(context: Context): Context =
+    ContextThemeWrapper(context, MaterialR.style.Theme_Material3_DayNight)
 
   private fun getActivity(): Activity? {
     val delegate = inAppBrowserDelegate
