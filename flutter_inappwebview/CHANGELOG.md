@@ -49,6 +49,12 @@
 
 ### Internal
 
+- **The example app builds with AGP's built-in Kotlin** (`android.builtInKotlin=true`, was `false`). Under AGP 9 neither
+  `file_picker` 11 nor this plugin applies the Kotlin Gradle Plugin, so the per-module opt-ins (`:app`, and
+  `file_picker` from the root `build.gradle`) are gone. The value is set explicitly: Flutter 3.47.7's migrator appends
+  `android.builtInKotlin=false` to a `gradle.properties` that doesn't set the property. Flutter still warns that
+  `file_picker` applies KGP: its check reads the build file as text, and that `apply plugin` line only runs below
+  AGP 9.
 - **Tests: the integration tests' frame fix now runs on Android too.** After a frame the test binding
   skipped, `installFrameWatchdog` asks the engine for a frame again. That closes the hole where a `pump`
   waited for a frame no one had asked for. 7.1.0 limited it to iOS on the strength of one Android

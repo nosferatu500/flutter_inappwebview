@@ -38,6 +38,12 @@
 
 ### Internal
 
+- **The example app builds with AGP's built-in Kotlin** (`android.builtInKotlin=true`, was `false`). No Android plugin it
+  uses applies the Kotlin Gradle Plugin under AGP 9 any more, so the per-module `com.android.built-in-kotlin` opt-in
+  for `:app` is gone. The value is set explicitly: Flutter 3.47.7's migrator appends `android.builtInKotlin=false` to
+  a `gradle.properties` that doesn't set the property. Builds and `-Werror` checked: a planted deprecation still
+  fails the module's Kotlin compile. KGP's 3 "Deprecated org.jetbrains.kotlin.android" notices are gone. The
+  module's `build.gradle` comment now says which path each kind of app takes. No change for apps using the plugin.
 - The example app opens the fork's repository page instead of `inappwebview.dev`.
 - **Dead code removed: 16 Kotlin declarations nothing called**, found by listing every declared name that
   occurs once across the module's sources, manifest and resources, then checked against the JVM tests.

@@ -19,15 +19,11 @@ pluginManagement {
 plugins {
     id "dev.flutter.flutter-plugin-loader" version "1.0.0"
     id "com.android.application" version '9.3.1' apply false
-    // Resolved here so the :app module can opt back into Kotlin; see the comment there.
-    id "com.android.built-in-kotlin" version '9.3.1' apply false
-    // The Kotlin Gradle Plugin, on the build classpath only: `apply false`, so no module gets it
-    // from here. Flutter 3.47's Gradle plugin refuses a KGP older than 2.2.20 (and warns below
-    // 2.3.20), and the one AGP 9.3.1 brings is 2.2.10. 2.4.0 is what Flutter 3.47.7's own app
-    // template declares. Applying org.jetbrains.kotlin.android to a module is still wrong: it is
-    // incompatible with the AGP 9 DSL. Flutter's Gradle plugin applies KGP to the plugin
-    // subprojects that need it (this app sets android.builtInKotlin=false, so AGP's built-in
-    // Kotlin is off by default).
+    // The Kotlin Gradle Plugin, on the build classpath only: `apply false`, so no module applies it
+    // from here. AGP 9.3.1 brings KGP 2.2.10, and Flutter 3.47's Gradle plugin refuses a KGP older
+    // than 2.2.20 (and warns below 2.3.20); 2.4.0 is what Flutter 3.47.7's own app template
+    // declares. Kotlin itself comes from AGP's built-in Kotlin (gradle.properties), which rejects
+    // org.jetbrains.kotlin.android applied to a module.
     id "org.jetbrains.kotlin.android" version "2.4.0" apply false
 }
 
