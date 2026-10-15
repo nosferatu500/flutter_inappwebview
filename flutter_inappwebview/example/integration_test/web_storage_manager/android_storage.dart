@@ -506,6 +506,59 @@ void androidStorage() {
           'null null',
           reason: "deleteAllData cleared the named profile's localStorage",
         );
+
+        // deleteBrowsingData clears what deleteAllData keeps (§315), here the Cache Storage, the
+        // profile's last quota-managed storage, so the origin drops out of the named listing (§346's
+        // designed survivor: nothing checked this branch).
+        expect(
+          await listed(profile),
+          isNotNull,
+          reason: 'the control: the Cache Storage survived deleteAllData',
+        );
+        expect(
+          await deadline.step(
+            'deleteBrowsingData(profile)',
+            manager.deleteBrowsingData(profileName: profile),
+          ),
+          isTrue,
+        );
+        expect(
+          await pollListed((o) => o == null),
+          isNull,
+          reason:
+              "deleteBrowsingData cleared the named profile's Cache Storage",
+        );
+
+        // deleteBrowsingDataForSite, the same way: store again, clear by site.
+        expect(
+          await js(
+            reader,
+            'storing Cache Storage again',
+            "await (await caches.open('zz')).put('/zz', new Response('x'.repeat(50000)));"
+                "return 'stored';",
+          ),
+          'stored null',
+        );
+        expect(
+          await pollListed((o) => o != null),
+          isNotNull,
+          reason: 'the control: listed again',
+        );
+        expect(
+          await deadline.step(
+            'deleteBrowsingDataForSite(profile)',
+            manager.deleteBrowsingDataForSite(
+              site: '$origin/',
+              profileName: profile,
+            ),
+          ),
+          '127.0.0.1',
+        );
+        expect(
+          await pollListed((o) => o == null),
+          isNull,
+          reason: "deleteBrowsingDataForSite cleared the named profile's Cache Storage",
+        );
       },
       skip: shouldSkip,
     );

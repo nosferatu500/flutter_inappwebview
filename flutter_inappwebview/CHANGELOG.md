@@ -49,6 +49,12 @@
 
 ### Internal
 
+- **Test: `deleteBrowsingData` and `deleteBrowsingDataForSite` on an existing named profile** (Android device test,
+  added to the named-profile storage test). After `deleteAllData`, the profile's Cache Storage is still listed (the
+  control). Then `deleteBrowsingData(profileName:)` empties the profile's listing. Storing again,
+  `deleteBrowsingDataForSite(profileName:)` on `http://127.0.0.1:8080/` answers `127.0.0.1` and empties it too.
+  2 of 3 mutants killed; the designed survivor shows the test can't tell a clear that completed before the answer
+  from one still in progress.
 - **The example app builds with AGP's built-in Kotlin** (`android.builtInKotlin=true`, was `false`). Under AGP 9 neither
   `file_picker` 11 nor this plugin applies the Kotlin Gradle Plugin, so the per-module opt-ins (`:app`, and
   `file_picker` from the root `build.gradle`) are gone. The value is set explicitly: Flutter 3.47.7's migrator appends
