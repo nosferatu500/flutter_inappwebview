@@ -30,7 +30,7 @@ A Flutter plugin that allows you to add an inline webview, to use an headless we
 - Dart sdk: "^3.13.0"
 - Flutter: ">=3.47.0"
 - Android: `minSdk >= 30`, [AGP](https://developer.android.com/build/releases/gradle-plugin) version `>= 9.0.0` (AGP 8 and lower are not supported), Gradle `>= 9.1.0`, JDK `>= 17`, Kotlin Gradle Plugin `>= 2.2.20` on the app's build classpath (Flutter 3.47's own minimum; AGP 9.3.0 through 9.4.1 bring 2.2.10, so declare it, as Flutter 3.47's app template does: `id("org.jetbrains.kotlin.android") version "2.4.0" apply false` in `settings.gradle(.kts)`) (use [Android Studio - Android Gradle plugin Upgrade Assistant](https://developer.android.com/build/agp-upgrade-assistant) for help)
-- iOS 15.0+, **Xcode version `>= 26`** — the iOS module uses `isolated deinit` (SE-0371) and needs a Swift 6.2+ compiler, which is a newer toolchain than Flutter itself requires
+- iOS 15.0+, **Xcode version `>= 27`** — the iOS module uses iOS 27 WebKit API, which only the iOS 27 SDK declares (on older iOS versions those features are skipped at runtime), and `isolated deinit` (SE-0371). Both need a newer toolchain than Flutter itself requires
 
 ## Installation
 

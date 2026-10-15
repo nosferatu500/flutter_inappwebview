@@ -4,6 +4,22 @@
 
 - **Flutter 3.47 / Dart 3.13 or newer** (was 3.44 / 3.12): `flutter: ">=3.47.0"`, `sdk: ^3.13.0`.
   An app on an older Flutter keeps resolving 7.0.0; pub doesn't offer it 7.1.0.
+- **iOS: Xcode 27 or newer** (was 26). The iOS module now uses iOS 27 WebKit API, which only the iOS 27
+  SDK declares: Xcode 26 fails with `value of type 'WKWebpagePreferences' has no member
+  'globalPrivacyControlEnabled'`. Apps still run on iOS 15 and newer; the iOS 27 features are skipped
+  below iOS 27.
+
+### Added
+
+- **`InAppWebViewSettings.globalPrivacyControlEnabled` (iOS 27)**: sends the Global Privacy Control signal,
+  `navigator.globalPrivacyControl` and the `Sec-GPC: 1` request header. Measured on iOS 27.0, the header
+  follows the secure context: sent over `http://127.0.0.1`, not over plain HTTP to a LAN address, where
+  pages still see the JS flag.
+  `null` leaves WebKit untouched (no header, `navigator.globalPrivacyControl` undefined); `false` makes the
+  flag `false`. It's applied to each navigation, so a `setSettings` change reaches the next one.
+  Read from the settings map into an optional (an `NSNumber` shim, like `lockdownModeEnabled`) and assigned
+  in the per-navigation `WKWebpagePreferences` delegate only when set, because assigning `NO` is visible
+  to pages.
 
 ### Internal
 

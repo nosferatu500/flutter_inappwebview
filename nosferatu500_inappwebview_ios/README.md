@@ -12,7 +12,7 @@ The Apple iOS WKWebView implementation of [`nosferatu500_inappwebview`](https://
   or with `enable-swift-package-manager: false` under `flutter: config:` in its `pubspec.yaml`, has
   to turn it back on: without it the plugin has no way into the build. The app can still use
   CocoaPods for its other plugins.
-- Xcode 26 or newer.
+- Xcode 27 or newer.
 
 ## Usage
 

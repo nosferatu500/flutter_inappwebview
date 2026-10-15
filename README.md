@@ -54,8 +54,8 @@ app code. Android got its blocking-callback hang and its `CookieManager.flush()`
 **What it cost, stated plainly.** macOS, Windows, Linux and Web support is gone, and so is every
 API that only served them. `minSdk 30` is well above Flutter's own floor of 24 and forces every
 consuming app to raise its own. Most disruptive, and invisible in the version numbers: the iOS
-module needs **Xcode 26 / Swift 6.2+** to build, because `isolated deinit` (SE-0371) is used at 32
-sites — a consumer on Xcode 16 cannot build this plugin at all.
+module needs **Xcode 27** to build: it uses iOS 27 WebKit API, which only the iOS 27 SDK declares, and
+`isolated deinit` (SE-0371) at 32 sites. A consumer on Xcode 26 or older cannot build this plugin at all.
 
 **Migrating from upstream?** Every removal is a rename with a replacement that already existed in
 6.x: `*Options` → `*Settings`, `getOptions`/`setOptions` → `getSettings`/`setSettings`, and the
@@ -97,6 +97,7 @@ by its `WebViewFeature` flag.
 | `writingToolsBehavior` | iOS 18.0+ | How much of Apple's Writing Tools the WebView offers |
 | `preferredHTTPSNavigationPolicy` | iOS 18.0+ | Automatic HTTP→HTTPS upgrading; applied per navigation, so it responds to `setSettings` |
 | `securityRestrictionMode` | iOS 18.4+ | WebKit's built-in security restriction level |
+| `globalPrivacyControlEnabled` | iOS 27.0+ | Sends the Global Privacy Control signal (`navigator.globalPrivacyControl`; the `Sec-GPC: 1` header only from a secure context); applied per navigation, so it responds to `setSettings` |
 | `lockdownModeEnabled` | iOS 17.0+ | Forces Lockdown Mode on or off for this WebView; leave `null` to follow the system setting |
 | `supportsAdaptiveImageGlyph` | iOS 18.0+ | Allows inline Genmoji / adaptive image glyphs in editable content |
 | `showsSystemScreenTimeBlockingView` | iOS 26.0+ | Whether WebKit draws its own overlay over Screen-Time-blocked content. Creation-time only |
@@ -186,7 +187,7 @@ by its `WebViewFeature` flag.
 - Dart sdk: "^3.13.0"
 - Flutter: ">=3.47.0"
 - Android: `minSdk >= 30`, [AGP](https://developer.android.com/build/releases/gradle-plugin) version `>= 9.0.0` (AGP 8 and lower are not supported), Gradle `>= 9.1.0`, JDK `>= 17`, Kotlin Gradle Plugin `>= 2.2.20` on the app's build classpath (Flutter 3.47's own minimum; AGP 9.3.0 through 9.4.1 bring 2.2.10, so declare it, as Flutter 3.47's app template does: `id("org.jetbrains.kotlin.android") version "2.4.0" apply false` in `settings.gradle(.kts)`) (use [Android Studio - Android Gradle plugin Upgrade Assistant](https://developer.android.com/build/agp-upgrade-assistant) for help)
-- iOS 15.0+, **Xcode version `>= 26`** — the iOS module uses `isolated deinit` (SE-0371) and needs a Swift 6.2+ compiler, which is a newer toolchain than Flutter itself requires
+- iOS 15.0+, **Xcode version `>= 27`** — the iOS module uses iOS 27 WebKit API, which only the iOS 27 SDK declares (on older iOS versions those features are skipped at runtime), and `isolated deinit` (SE-0371). Both need a newer toolchain than Flutter itself requires
 
 ## Installation
 

@@ -99,6 +99,7 @@ part 'resize_webview.dart';
 part 'web_archive.dart';
 part 'set_custom_useragent.dart';
 part 'conversation_context.dart';
+part 'global_privacy_control.dart';
 part 'obscured_content_insets.dart';
 part 'should_go_to_back_forward_list_item.dart';
 part 'navigation_listener.dart';
@@ -254,6 +255,7 @@ void main() {
     navigationListener();
     visitedHistory();
     conversationContext();
+    globalPrivacyControl();
     saveStateBounds();
     cookieIntercept();
     customRequestHeaders();

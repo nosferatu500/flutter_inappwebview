@@ -10,9 +10,18 @@
   2.2.20") and warns below 2.3.20. AGP 9.3.0 through 9.4.1 bring only 2.2.10, so an app that
   relies on AGP's built-in Kotlin has to declare it, as Flutter 3.47.7's app template does:
   `id("org.jetbrains.kotlin.android") version "2.4.0" apply false` in `settings.gradle(.kts)`.
-
+- **iOS: Xcode 27 or newer** (was 26). The iOS module now uses iOS 27 WebKit API, which only the iOS 27
+  SDK declares: Xcode 26 fails with `value of type 'WKWebpagePreferences' has no member
+  'globalPrivacyControlEnabled'`. Apps still run on iOS 15 and newer; the iOS 27 features are skipped
+  below iOS 27.
 ### Added
 
+- **`InAppWebViewSettings.globalPrivacyControlEnabled` (iOS 27)**: sends the Global Privacy Control signal,
+  `navigator.globalPrivacyControl` and the `Sec-GPC: 1` request header. Measured on iOS 27.0, the header
+  follows the secure context: sent over `http://127.0.0.1`, not over plain HTTP to a LAN address, where
+  pages still see the JS flag.
+  `null` leaves WebKit untouched (no header, `navigator.globalPrivacyControl` undefined); `false` makes the
+  flag `false`. It's applied to each navigation, so a `setSettings` change reaches the next one.
 - **A migration guide from `flutter_inappwebview` 6.x: [MIGRATION.md](MIGRATION.md)**, linked from the
   README's Installation section. It covers the package change, the build requirements, the removed API,
   the changed signatures, and the behaviour changes that compile unchanged (`shouldOverrideUrlLoading`'s

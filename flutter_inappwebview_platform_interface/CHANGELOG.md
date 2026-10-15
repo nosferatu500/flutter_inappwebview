@@ -5,6 +5,11 @@
 - **Flutter 3.47 / Dart 3.13 or newer** (was 3.44 / 3.12): `flutter: ">=3.47.0"`, `sdk: ^3.13.0`.
   An app on an older Flutter keeps resolving 7.0.0; pub doesn't offer it 7.1.0.
 
+### Added
+
+- **`InAppWebViewSettings.globalPrivacyControlEnabled`** (`bool?`, iOS 27.0): the Global Privacy Control
+  signal (`WKWebpagePreferences.globalPrivacyControlEnabled`). `null` leaves WebKit untouched.
+
 ### Changed
 
 - **The debug-mode console message promoting upstream is gone.** In debug builds, the first platform

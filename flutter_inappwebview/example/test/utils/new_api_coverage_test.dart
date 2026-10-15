@@ -48,6 +48,7 @@ void main() {
         containsAll(<InAppWebViewSettingsProperty>[
           InAppWebViewSettingsProperty.lockdownModeEnabled,
           InAppWebViewSettingsProperty.securityRestrictionMode,
+          InAppWebViewSettingsProperty.globalPrivacyControlEnabled,
           InAppWebViewSettingsProperty.preferredHTTPSNavigationPolicy,
           InAppWebViewSettingsProperty.supportsAdaptiveImageGlyph,
           InAppWebViewSettingsProperty.writingToolsBehavior,

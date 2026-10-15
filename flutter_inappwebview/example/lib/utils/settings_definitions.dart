@@ -329,6 +329,13 @@ Map<String, List<SettingDefinition>> getSettingDefinitions() {
         enumValues: _safeEnumValues(() => SecurityRestrictionMode.values),
         property: InAppWebViewSettingsProperty.securityRestrictionMode,
       ),
+      const SettingDefinition(
+        name: 'Global Privacy Control',
+        description: 'Send the GPC signal: navigator.globalPrivacyControl and Sec-GPC (iOS 27)',
+        type: SettingType.boolean,
+        defaultValue: null,
+        property: InAppWebViewSettingsProperty.globalPrivacyControlEnabled,
+      ),
       SettingDefinition(
         name: 'HTTPS Navigation Policy',
         description:

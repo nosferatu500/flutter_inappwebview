@@ -2219,6 +2219,13 @@ public class InAppWebView: WKWebView, UIScrollViewDelegate, WKUIDelegate,
                 preferences.securityRestrictionMode = mode
             }
         }
+        // Same live-object reasoning, but `if let`, like `lockdownModeEnabled`: assigning `NO` is not a
+        // no-op (it turns `navigator.globalPrivacyControl` from `undefined` into `false`, §351).
+        if #available(iOS 27.0, *) {
+            if let globalPrivacyControlEnabled = settings?.globalPrivacyControlEnabled {
+                preferences.globalPrivacyControlEnabled = globalPrivacyControlEnabled
+            }
+        }
         self.webView(webView, decidePolicyFor: navigationAction, decisionHandler: {(navigationActionPolicy) -> Void in
             decisionHandler(navigationActionPolicy, preferences)
         })

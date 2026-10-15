@@ -2084,6 +2084,34 @@ as it can cause framerate drops on animations in Android 9 and lower (see [Hybri
   )
   SecurityRestrictionMode_? securityRestrictionMode;
 
+  ///Whether the WebView sends the Global Privacy Control (GPC) signal, the user's request that sites not
+  ///sell or share their data.
+  ///
+  ///When `true`, pages see `navigator.globalPrivacyControl` as `true`, and the `Sec-GPC: 1` request
+  ///header is sent; WebKit documents both for the main frame, its subframes and their subresources.
+  ///
+  ///**The header follows the secure context.** Measured on iOS 27.0: a page loaded over
+  ///`http://127.0.0.1` (a secure context) sent `Sec-GPC: 1` for itself and a subresource; the same server
+  ///reached over a LAN address with plain HTTP got no header, while that page still saw
+  ///`navigator.globalPrivacyControl` as `true`.
+  ///
+  ///Leaving this `null` leaves WebKit untouched: no header, and no `navigator.globalPrivacyControl` at all
+  ///(`undefined`). `false` is applied, so pages see it as `false`.
+  ///
+  ///Like [InAppWebViewSettings.securityRestrictionMode], this takes effect when changed through
+  ///`setSettings`: it is applied to each navigation's `WKWebpagePreferences`, so it reaches the next
+  ///navigation.
+  @SupportedPlatforms(
+    platforms: [
+      IOSPlatform(
+        available: "27.0",
+        apiName: "WKWebpagePreferences.globalPrivacyControlEnabled",
+        apiUrl: "https://developer.apple.com/documentation/webkit/wkwebpagepreferences/globalprivacycontrolenabled",
+      ),
+    ],
+  )
+  bool? globalPrivacyControlEnabled;
+
   ///Whether a top-level navigation should be upgraded to HTTPS, and what should happen when the
   ///upgrade fails.
   ///
@@ -2447,6 +2475,7 @@ as it can cause framerate drops on animations in Android 9 and lower (see [Hybri
     this.writingToolsBehavior,
     this.preferredHTTPSNavigationPolicy,
     this.securityRestrictionMode,
+    this.globalPrivacyControlEnabled,
     this.lockdownModeEnabled,
     this.showsSystemScreenTimeBlockingView = true,
     this.useOnShowFileChooser,

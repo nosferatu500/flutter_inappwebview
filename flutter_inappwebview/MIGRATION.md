@@ -16,7 +16,7 @@ rely on without the analyzer noticing, so read it even if everything compiles.
 | Platforms | Android, iOS, macOS, Windows, Linux, Web | **Android, iOS** |
 | Flutter / Dart | 3.x | **3.47 / 3.13** (7.0.0: 3.44 / 3.12) |
 | Android | `minSdk` 19, AGP 8 | **`minSdk` 30, `compileSdk` 37, AGP 9, Gradle 9.1, JDK 17, Kotlin Gradle Plugin 2.2.20+** |
-| iOS | 12.0, CocoaPods or SwiftPM | **15.0, Xcode 26, Swift Package Manager only** |
+| iOS | 12.0, CocoaPods or SwiftPM | **15.0, Xcode 27 (7.0.0: Xcode 26), Swift Package Manager only** |
 | Deprecated API | present | **removed** |
 
 ## 1. Change the package
@@ -65,7 +65,8 @@ Flutter 3.44.
 **iOS:**
 
 - Deployment target 15.0 or higher.
-- Xcode 26 or newer (the module needs a Swift 6.2 compiler).
+- Xcode 27 or newer (7.0.0 needed Xcode 26): the module uses iOS 27 WebKit API, which only the iOS 27
+  SDK declares.
 - Keep Swift Package Manager enabled; it is Flutter's default. The module has no podspec. If your
   Podfile existed only for this plugin, you can remove CocoaPods from the app (`pod deintegrate`);
   other plugins can keep using CocoaPods.
@@ -178,7 +179,7 @@ These compile unchanged but behave differently.
 - [ ] Flutter 3.47+ (or stay on 7.0.0 with 3.44).
 - [ ] Android: `minSdk` 30, `compileSdk` 37, AGP 9, Kotlin Gradle Plugin 2.2.20+ declared,
       `FileProvider` block replaced if you had one.
-- [ ] iOS: deployment target 15.0, Xcode 26, Swift Package Manager enabled.
+- [ ] iOS: deployment target 15.0, Xcode 27, Swift Package Manager enabled.
 - [ ] `*Options` → `*Settings`; `Android` / `IOS` prefixes dropped; platform-only API deleted.
 - [ ] `onPrintRequest`, `onDownloadStarting`, `getQuotaForOrigin`, `getUsageForOrigin`,
       `hasCustomHeader` call sites updated.
