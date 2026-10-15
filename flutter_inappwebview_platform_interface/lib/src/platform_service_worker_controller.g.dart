@@ -6,15 +6,18 @@ part of 'platform_service_worker_controller.dart';
 // SupportedPlatformsGenerator
 // **************************************************************************
 
+///{@template nosferatu500_inappwebview_platform_interface.PlatformServiceWorkerControllerCreationParams.supported_platforms}
+///
+///**Officially Supported Platforms/Implementations**:
+///- Android WebView
+///
+///Use the [PlatformServiceWorkerControllerCreationParams.isClassSupported] method to check if this class is supported at runtime.
+///{@endtemplate}
+// Carries the template above for dartdoc; hidden from every export, so not API (§350).
+abstract final class PlatformServiceWorkerControllerCreationParamsSupportedPlatforms {}
+
 extension _PlatformServiceWorkerControllerCreationParamsClassSupported
     on PlatformServiceWorkerControllerCreationParams {
-  ///{@template nosferatu500_inappwebview_platform_interface.PlatformServiceWorkerControllerCreationParams.supported_platforms}
-  ///
-  ///**Officially Supported Platforms/Implementations**:
-  ///- Android WebView
-  ///
-  ///Use the [PlatformServiceWorkerControllerCreationParams.isClassSupported] method to check if this class is supported at runtime.
-  ///{@endtemplate}
   static bool isClassSupported({TargetPlatform? platform}) {
     return ((kIsWeb && platform != null) || !kIsWeb) &&
         [TargetPlatform.android].contains(platform ?? defaultTargetPlatform);

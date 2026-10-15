@@ -12,12 +12,21 @@
   showcase pages. Nothing is printed now.
 ### Internal
 
+- **Doc fix: the last 23 classes' "supported platforms" tables reach dartdoc.** dartdoc's undefined-macro
+  warnings for this package go from 23 to 0 (none new). These classes (the 4 path handlers and 19
+  `…CreationParams`) have no generated `…Property` or `…Method` enum to carry their template. The generator
+  now emits a member-less `<Class>SupportedPlatforms` class for each, holding the template, and the
+  library's exports `hide` all 23 names, so they're not API (checked: none can be imported from this
+  package or the plugin). A public element is needed because dartdoc reads no template from a private
+  element in a generated part file. The 4 path handlers' private `_…ClassSupported` extensions, which
+  nothing called, are no longer generated, so the supported-platforms output needs no
+  `// ignore: unused_element` any more (4 → 0). Generator tests updated.
 - **Doc fix: the generated "supported platforms" docs now reach dartdoc.** dartdoc's warnings for this
   package go from 713 to 234 (undefined macro 66 → 23, unresolved doc reference 647 → 211), with none new.
-  The generator put each class's "supported platforms" template on a member of a private extension, which
-  dartdoc doesn't document, so every class doc that `{@macro}`s it rendered nothing. The template now sits on
-  the class's public `…Property` enum, or else its `…Method` enum (39 of the 62 classes). The 23 with
-  neither enum, mostly `…CreationParams`, keep it where dartdoc can't see it. The 13 private
+  The generator put each class's "supported platforms" template on a member of a private extension in the
+  generated part file, and dartdoc registers no template from a private element in a part file, so every
+  class doc that `{@macro}`s it rendered nothing. The template now sits on the class's public `…Property`
+  enum, or else its `…Method` enum (39 of the 62 classes; the other 23, below). The 13 private
   `_…ClassSupported` extensions that no code called and that only held the template are no longer
   generated. "Parameters" lists write each parameter as `name` instead of `[name]`, a link dartdoc can't
   resolve from an enum value (370 entries). No public API changes: apart from comments, the regenerated code
@@ -30,7 +39,7 @@
   82 to 66. Some macros named the platform class where the template sits on its `…CreationParams` (now
   pointed there), two were typos, and the rest named a template that exists nowhere (removed: they
   rendered nothing). The 66 left are all class-level "supported platforms" tables, which the generator
-  attaches to a member of a private extension, where dartdoc never sees them.
+  attached to a member of a private extension in a part file, where dartdoc doesn't register templates.
 - **No `package:flutter/material.dart` or `cupertino.dart` import left in `lib/`**: `util.dart` and
   `print_job_settings.dart` import `widgets.dart` instead.
   Nothing in this package's `lib/` used Material or Cupertino: with the import swapped for `widgets.dart`,

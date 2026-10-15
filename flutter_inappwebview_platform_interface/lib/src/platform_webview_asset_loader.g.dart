@@ -92,145 +92,132 @@ class WebViewAssetLoader {
 // SupportedPlatformsGenerator
 // **************************************************************************
 
+///{@template nosferatu500_inappwebview_platform_interface.PlatformPathHandlerCreationParams.supported_platforms}
+///
+///**Officially Supported Platforms/Implementations**:
+///- Android WebView
+///
+///Use the [PlatformPathHandlerCreationParams.isClassSupported] method to check if this class is supported at runtime.
+///{@endtemplate}
+// Carries the template above for dartdoc; hidden from every export, so not API (§350).
+abstract final class PlatformPathHandlerCreationParamsSupportedPlatforms {}
+
 extension _PlatformPathHandlerCreationParamsClassSupported
     on PlatformPathHandlerCreationParams {
-  ///{@template nosferatu500_inappwebview_platform_interface.PlatformPathHandlerCreationParams.supported_platforms}
-  ///
-  ///**Officially Supported Platforms/Implementations**:
-  ///- Android WebView
-  ///
-  ///Use the [PlatformPathHandlerCreationParams.isClassSupported] method to check if this class is supported at runtime.
-  ///{@endtemplate}
   static bool isClassSupported({TargetPlatform? platform}) {
     return ((kIsWeb && platform != null) || !kIsWeb) &&
         [TargetPlatform.android].contains(platform ?? defaultTargetPlatform);
   }
 }
+
+///{@template nosferatu500_inappwebview_platform_interface.PlatformAssetsPathHandlerCreationParams.supported_platforms}
+///
+///**Officially Supported Platforms/Implementations**:
+///- Android WebView
+///
+///Use the [PlatformAssetsPathHandlerCreationParams.isClassSupported] method to check if this class is supported at runtime.
+///{@endtemplate}
+// Carries the template above for dartdoc; hidden from every export, so not API (§350).
+abstract final class PlatformAssetsPathHandlerCreationParamsSupportedPlatforms {}
 
 extension _PlatformAssetsPathHandlerCreationParamsClassSupported
     on PlatformAssetsPathHandlerCreationParams {
-  ///{@template nosferatu500_inappwebview_platform_interface.PlatformAssetsPathHandlerCreationParams.supported_platforms}
-  ///
-  ///**Officially Supported Platforms/Implementations**:
-  ///- Android WebView
-  ///
-  ///Use the [PlatformAssetsPathHandlerCreationParams.isClassSupported] method to check if this class is supported at runtime.
-  ///{@endtemplate}
   static bool isClassSupported({TargetPlatform? platform}) {
     return ((kIsWeb && platform != null) || !kIsWeb) &&
         [TargetPlatform.android].contains(platform ?? defaultTargetPlatform);
   }
 }
 
-extension _PlatformAssetsPathHandlerClassSupported
-    on PlatformAssetsPathHandler {
-  ///{@template nosferatu500_inappwebview_platform_interface.PlatformAssetsPathHandler.supported_platforms}
-  ///
-  ///**Officially Supported Platforms/Implementations**:
-  ///- Android WebView
-  ///
-  ///Use the [PlatformAssetsPathHandler.isClassSupported] method to check if this class is supported at runtime.
-  ///{@endtemplate}
-  // Unused: [PlatformAssetsPathHandler.isClassSupported] answers through its creation params. Kept for the doc template above.
-  // ignore: unused_element
-  static bool isClassSupported({TargetPlatform? platform}) {
-    return ((kIsWeb && platform != null) || !kIsWeb) &&
-        [TargetPlatform.android].contains(platform ?? defaultTargetPlatform);
-  }
-}
+///{@template nosferatu500_inappwebview_platform_interface.PlatformAssetsPathHandler.supported_platforms}
+///
+///**Officially Supported Platforms/Implementations**:
+///- Android WebView
+///
+///Use the [PlatformAssetsPathHandler.isClassSupported] method to check if this class is supported at runtime.
+///{@endtemplate}
+// Carries the template above for dartdoc; hidden from every export, so not API (§350).
+abstract final class PlatformAssetsPathHandlerSupportedPlatforms {}
+
+///{@template nosferatu500_inappwebview_platform_interface.PlatformResourcesPathHandlerCreationParams.supported_platforms}
+///
+///**Officially Supported Platforms/Implementations**:
+///- Android WebView
+///
+///Use the [PlatformResourcesPathHandlerCreationParams.isClassSupported] method to check if this class is supported at runtime.
+///{@endtemplate}
+// Carries the template above for dartdoc; hidden from every export, so not API (§350).
+abstract final class PlatformResourcesPathHandlerCreationParamsSupportedPlatforms {}
 
 extension _PlatformResourcesPathHandlerCreationParamsClassSupported
     on PlatformResourcesPathHandlerCreationParams {
-  ///{@template nosferatu500_inappwebview_platform_interface.PlatformResourcesPathHandlerCreationParams.supported_platforms}
-  ///
-  ///**Officially Supported Platforms/Implementations**:
-  ///- Android WebView
-  ///
-  ///Use the [PlatformResourcesPathHandlerCreationParams.isClassSupported] method to check if this class is supported at runtime.
-  ///{@endtemplate}
   static bool isClassSupported({TargetPlatform? platform}) {
     return ((kIsWeb && platform != null) || !kIsWeb) &&
         [TargetPlatform.android].contains(platform ?? defaultTargetPlatform);
   }
 }
 
-extension _PlatformResourcesPathHandlerClassSupported
-    on PlatformResourcesPathHandler {
-  ///{@template nosferatu500_inappwebview_platform_interface.PlatformResourcesPathHandler.supported_platforms}
-  ///
-  ///**Officially Supported Platforms/Implementations**:
-  ///- Android WebView
-  ///
-  ///Use the [PlatformResourcesPathHandler.isClassSupported] method to check if this class is supported at runtime.
-  ///{@endtemplate}
-  // Unused: [PlatformResourcesPathHandler.isClassSupported] answers through its creation params. Kept for the doc template above.
-  // ignore: unused_element
-  static bool isClassSupported({TargetPlatform? platform}) {
-    return ((kIsWeb && platform != null) || !kIsWeb) &&
-        [TargetPlatform.android].contains(platform ?? defaultTargetPlatform);
-  }
-}
+///{@template nosferatu500_inappwebview_platform_interface.PlatformResourcesPathHandler.supported_platforms}
+///
+///**Officially Supported Platforms/Implementations**:
+///- Android WebView
+///
+///Use the [PlatformResourcesPathHandler.isClassSupported] method to check if this class is supported at runtime.
+///{@endtemplate}
+// Carries the template above for dartdoc; hidden from every export, so not API (§350).
+abstract final class PlatformResourcesPathHandlerSupportedPlatforms {}
+
+///{@template nosferatu500_inappwebview_platform_interface.PlatformInternalStoragePathHandlerCreationParams.supported_platforms}
+///
+///**Officially Supported Platforms/Implementations**:
+///- Android WebView
+///
+///Use the [PlatformInternalStoragePathHandlerCreationParams.isClassSupported] method to check if this class is supported at runtime.
+///{@endtemplate}
+// Carries the template above for dartdoc; hidden from every export, so not API (§350).
+abstract final class PlatformInternalStoragePathHandlerCreationParamsSupportedPlatforms {}
 
 extension _PlatformInternalStoragePathHandlerCreationParamsClassSupported
     on PlatformInternalStoragePathHandlerCreationParams {
-  ///{@template nosferatu500_inappwebview_platform_interface.PlatformInternalStoragePathHandlerCreationParams.supported_platforms}
-  ///
-  ///**Officially Supported Platforms/Implementations**:
-  ///- Android WebView
-  ///
-  ///Use the [PlatformInternalStoragePathHandlerCreationParams.isClassSupported] method to check if this class is supported at runtime.
-  ///{@endtemplate}
   static bool isClassSupported({TargetPlatform? platform}) {
     return ((kIsWeb && platform != null) || !kIsWeb) &&
         [TargetPlatform.android].contains(platform ?? defaultTargetPlatform);
   }
 }
 
-extension _PlatformInternalStoragePathHandlerClassSupported
-    on PlatformInternalStoragePathHandler {
-  ///{@template nosferatu500_inappwebview_platform_interface.PlatformInternalStoragePathHandler.supported_platforms}
-  ///
-  ///**Officially Supported Platforms/Implementations**:
-  ///- Android WebView
-  ///
-  ///Use the [PlatformInternalStoragePathHandler.isClassSupported] method to check if this class is supported at runtime.
-  ///{@endtemplate}
-  // Unused: [PlatformInternalStoragePathHandler.isClassSupported] answers through its creation params. Kept for the doc template above.
-  // ignore: unused_element
-  static bool isClassSupported({TargetPlatform? platform}) {
-    return ((kIsWeb && platform != null) || !kIsWeb) &&
-        [TargetPlatform.android].contains(platform ?? defaultTargetPlatform);
-  }
-}
+///{@template nosferatu500_inappwebview_platform_interface.PlatformInternalStoragePathHandler.supported_platforms}
+///
+///**Officially Supported Platforms/Implementations**:
+///- Android WebView
+///
+///Use the [PlatformInternalStoragePathHandler.isClassSupported] method to check if this class is supported at runtime.
+///{@endtemplate}
+// Carries the template above for dartdoc; hidden from every export, so not API (§350).
+abstract final class PlatformInternalStoragePathHandlerSupportedPlatforms {}
+
+///{@template nosferatu500_inappwebview_platform_interface.PlatformCustomPathHandlerCreationParams.supported_platforms}
+///
+///**Officially Supported Platforms/Implementations**:
+///- Android WebView
+///
+///Use the [PlatformCustomPathHandlerCreationParams.isClassSupported] method to check if this class is supported at runtime.
+///{@endtemplate}
+// Carries the template above for dartdoc; hidden from every export, so not API (§350).
+abstract final class PlatformCustomPathHandlerCreationParamsSupportedPlatforms {}
 
 extension _PlatformCustomPathHandlerCreationParamsClassSupported
     on PlatformCustomPathHandlerCreationParams {
-  ///{@template nosferatu500_inappwebview_platform_interface.PlatformCustomPathHandlerCreationParams.supported_platforms}
-  ///
-  ///**Officially Supported Platforms/Implementations**:
-  ///- Android WebView
-  ///
-  ///Use the [PlatformCustomPathHandlerCreationParams.isClassSupported] method to check if this class is supported at runtime.
-  ///{@endtemplate}
   static bool isClassSupported({TargetPlatform? platform}) {
     return ((kIsWeb && platform != null) || !kIsWeb) &&
         [TargetPlatform.android].contains(platform ?? defaultTargetPlatform);
   }
 }
 
-extension _PlatformCustomPathHandlerClassSupported
-    on PlatformCustomPathHandler {
-  ///{@template nosferatu500_inappwebview_platform_interface.PlatformCustomPathHandler.supported_platforms}
-  ///
-  ///**Officially Supported Platforms/Implementations**:
-  ///- Android WebView
-  ///
-  ///Use the [PlatformCustomPathHandler.isClassSupported] method to check if this class is supported at runtime.
-  ///{@endtemplate}
-  // Unused: [PlatformCustomPathHandler.isClassSupported] answers through its creation params. Kept for the doc template above.
-  // ignore: unused_element
-  static bool isClassSupported({TargetPlatform? platform}) {
-    return ((kIsWeb && platform != null) || !kIsWeb) &&
-        [TargetPlatform.android].contains(platform ?? defaultTargetPlatform);
-  }
-}
+///{@template nosferatu500_inappwebview_platform_interface.PlatformCustomPathHandler.supported_platforms}
+///
+///**Officially Supported Platforms/Implementations**:
+///- Android WebView
+///
+///Use the [PlatformCustomPathHandler.isClassSupported] method to check if this class is supported at runtime.
+///{@endtemplate}
+// Carries the template above for dartdoc; hidden from every export, so not API (§350).
+abstract final class PlatformCustomPathHandlerSupportedPlatforms {}

@@ -245,16 +245,19 @@ extension _PlatformStorageCreationParamsPropertySupported
   }
 }
 
+///{@template nosferatu500_inappwebview_platform_interface.PlatformLocalStorageCreationParams.supported_platforms}
+///
+///**Officially Supported Platforms/Implementations**:
+///- Android WebView
+///- iOS WKWebView
+///
+///Use the [PlatformLocalStorageCreationParams.isClassSupported] method to check if this class is supported at runtime.
+///{@endtemplate}
+// Carries the template above for dartdoc; hidden from every export, so not API (§350).
+abstract final class PlatformLocalStorageCreationParamsSupportedPlatforms {}
+
 extension _PlatformLocalStorageCreationParamsClassSupported
     on PlatformLocalStorageCreationParams {
-  ///{@template nosferatu500_inappwebview_platform_interface.PlatformLocalStorageCreationParams.supported_platforms}
-  ///
-  ///**Officially Supported Platforms/Implementations**:
-  ///- Android WebView
-  ///- iOS WKWebView
-  ///
-  ///Use the [PlatformLocalStorageCreationParams.isClassSupported] method to check if this class is supported at runtime.
-  ///{@endtemplate}
   static bool isClassSupported({TargetPlatform? platform}) {
     return ((kIsWeb && platform != null) || !kIsWeb) &&
         [
@@ -453,16 +456,19 @@ extension _PlatformLocalStorageMethodSupported on PlatformLocalStorage {
   }
 }
 
+///{@template nosferatu500_inappwebview_platform_interface.PlatformSessionStorageCreationParams.supported_platforms}
+///
+///**Officially Supported Platforms/Implementations**:
+///- Android WebView
+///- iOS WKWebView
+///
+///Use the [PlatformSessionStorageCreationParams.isClassSupported] method to check if this class is supported at runtime.
+///{@endtemplate}
+// Carries the template above for dartdoc; hidden from every export, so not API (§350).
+abstract final class PlatformSessionStorageCreationParamsSupportedPlatforms {}
+
 extension _PlatformSessionStorageCreationParamsClassSupported
     on PlatformSessionStorageCreationParams {
-  ///{@template nosferatu500_inappwebview_platform_interface.PlatformSessionStorageCreationParams.supported_platforms}
-  ///
-  ///**Officially Supported Platforms/Implementations**:
-  ///- Android WebView
-  ///- iOS WKWebView
-  ///
-  ///Use the [PlatformSessionStorageCreationParams.isClassSupported] method to check if this class is supported at runtime.
-  ///{@endtemplate}
   static bool isClassSupported({TargetPlatform? platform}) {
     return ((kIsWeb && platform != null) || !kIsWeb) &&
         [

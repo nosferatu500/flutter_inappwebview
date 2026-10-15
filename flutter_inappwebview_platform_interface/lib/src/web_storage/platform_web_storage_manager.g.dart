@@ -6,16 +6,19 @@ part of 'platform_web_storage_manager.dart';
 // SupportedPlatformsGenerator
 // **************************************************************************
 
+///{@template nosferatu500_inappwebview_platform_interface.PlatformWebStorageManagerCreationParams.supported_platforms}
+///
+///**Officially Supported Platforms/Implementations**:
+///- Android WebView
+///- iOS WKWebView 9.0+
+///
+///Use the [PlatformWebStorageManagerCreationParams.isClassSupported] method to check if this class is supported at runtime.
+///{@endtemplate}
+// Carries the template above for dartdoc; hidden from every export, so not API (§350).
+abstract final class PlatformWebStorageManagerCreationParamsSupportedPlatforms {}
+
 extension _PlatformWebStorageManagerCreationParamsClassSupported
     on PlatformWebStorageManagerCreationParams {
-  ///{@template nosferatu500_inappwebview_platform_interface.PlatformWebStorageManagerCreationParams.supported_platforms}
-  ///
-  ///**Officially Supported Platforms/Implementations**:
-  ///- Android WebView
-  ///- iOS WKWebView 9.0+
-  ///
-  ///Use the [PlatformWebStorageManagerCreationParams.isClassSupported] method to check if this class is supported at runtime.
-  ///{@endtemplate}
   static bool isClassSupported({TargetPlatform? platform}) {
     return ((kIsWeb && platform != null) || !kIsWeb) &&
         [

@@ -29,8 +29,8 @@ class SupportedPlatformsGenerator
     BuildStep buildStep,
   ) async {
     // The hand-written library, to see whether it calls the private `_<Class>ClassSupported`
-    // extension emitted below (see the `unused_element` note there). A private extension can only
-    // be called from its own library, and these libraries have no part but the generated one.
+    // extension emitted below, which is emitted only if it does. A private extension can only be
+    // called from its own library, and these libraries have no part but the generated one.
     final librarySource = await buildStep.readAsString(buildStep.inputId);
     final visitor = ModelVisitor();
     // Visits all the children of element in no particular order.
@@ -135,10 +135,12 @@ class SupportedPlatformsGenerator
     final hasMethodEnum =
         hasMethodSupportedFunction && methodEntriesSorted.isNotEmpty;
 
-    // The class's `supported_platforms` template, which other docs `{@macro}`. dartdoc only
-    // registers a template on an element it documents, and it doesn't document the private
-    // extension below, so the template goes on the class's public property (or else method) enum.
-    // A class with neither keeps it on the extension, where dartdoc can't see it (§345).
+    // The class's `supported_platforms` template, which other docs `{@macro}`. dartdoc registers no
+    // template from a private element in a part file (measured §350: a private extension, function,
+    // enum, variable or getter; a private extension in the library's own file does work), and this
+    // output is a part file. So the template goes on a public element: the class's property (or
+    // else method) enum (§345), or, for a class with neither, a member-less carrier class that the
+    // library's export hides (§350), so it registers without becoming API.
     final classSupportedDocs = hasClassSupportedFunction
         ? Util.getSupportedDocs(
             _coreCheckerSupportedPlatforms,
@@ -164,32 +166,33 @@ class SupportedPlatformsGenerator
     final classExtensionCalled = librarySource.contains(
       '_${className}ClassSupported.',
     );
+    final deprecation =
+        visitor.constructor.returnType.element.metadata.hasDeprecated
+        ? "@Deprecated('${_coreCheckerDeprecated.firstAnnotationOfExact(visitor.constructor.returnType.element)?.getField("message")?.toStringValue()}')"
+        : null;
+
+    if (classSupportedDocs != null && !classTemplateOnEnum) {
+      writeClassTemplate();
+      classBuffer.writeln(
+        '// Carries the template above for dartdoc; hidden from every export, so not API (§350).',
+      );
+      if (deprecation != null) {
+        classBuffer.writeln(deprecation);
+      }
+      classBuffer.writeln(
+        'abstract final class ${className}SupportedPlatforms {}',
+      );
+    }
 
     // Most classes answer `isClassSupported` through this extension. Some answer through their
     // creation params instead (an instance method, so a platform's params can override it), and
-    // never call it. For those it is emitted only to carry the class template, when no enum can.
-    if (hasClassSupportedFunction &&
-        (classExtensionCalled || !classTemplateOnEnum)) {
+    // never call it, so it is emitted only where the hand-written library calls it (§220, §350).
+    if (hasClassSupportedFunction && classExtensionCalled) {
       classBuffer.writeln("""
       extension _${className}ClassSupported on $className {""");
 
-      if (!classTemplateOnEnum) {
-        writeClassTemplate();
-      }
-      if (visitor.constructor.returnType.element.metadata.hasDeprecated) {
-        classBuffer.writeln(
-          "@Deprecated('${_coreCheckerDeprecated.firstAnnotationOfExact(visitor.constructor.returnType.element)?.getField("message")?.toStringValue()}')",
-        );
-      }
-
-      // The ignore goes on exactly the extensions the hand-written library never calls, and every
-      // other one stays checked (§220).
-      if (!classExtensionCalled) {
-        classBuffer.writeln(
-          '// Unused: [$className.$isClassSupportedFunctionName] answers through its creation '
-          'params. Kept for the doc template above.',
-        );
-        classBuffer.writeln('// ignore: unused_element');
+      if (deprecation != null) {
+        classBuffer.writeln(deprecation);
       }
       classBuffer.writeln(
         """static bool $isClassSupportedFunctionName({TargetPlatform? platform}) {""",

@@ -6,15 +6,18 @@ part of 'platform_web_authenticate_session.dart';
 // SupportedPlatformsGenerator
 // **************************************************************************
 
+///{@template nosferatu500_inappwebview_platform_interface.PlatformWebAuthenticationSessionCreationParams.supported_platforms}
+///
+///**Officially Supported Platforms/Implementations**:
+///- iOS WKWebView 11.0+
+///
+///Use the [PlatformWebAuthenticationSessionCreationParams.isClassSupported] method to check if this class is supported at runtime.
+///{@endtemplate}
+// Carries the template above for dartdoc; hidden from every export, so not API (§350).
+abstract final class PlatformWebAuthenticationSessionCreationParamsSupportedPlatforms {}
+
 extension _PlatformWebAuthenticationSessionCreationParamsClassSupported
     on PlatformWebAuthenticationSessionCreationParams {
-  ///{@template nosferatu500_inappwebview_platform_interface.PlatformWebAuthenticationSessionCreationParams.supported_platforms}
-  ///
-  ///**Officially Supported Platforms/Implementations**:
-  ///- iOS WKWebView 11.0+
-  ///
-  ///Use the [PlatformWebAuthenticationSessionCreationParams.isClassSupported] method to check if this class is supported at runtime.
-  ///{@endtemplate}
   static bool isClassSupported({TargetPlatform? platform}) {
     return ((kIsWeb && platform != null) || !kIsWeb) &&
         [TargetPlatform.iOS].contains(platform ?? defaultTargetPlatform);
