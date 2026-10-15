@@ -200,7 +200,8 @@ abstract class PlatformCookieManager extends PlatformInterface {
   }
 
   ///{@template nosferatu500_inappwebview_platform_interface.PlatformCookieManager.getCookies}
-  ///Gets all the cookies for the given [url].
+  ///Gets the cookies a request to [url] would send: those whose domain (or host, for a host-only cookie)
+  ///and path match it, and Secure cookies only for an `https` [url].
   ///{@endtemplate}
   ///
   ///{@macro nosferatu500_inappwebview_platform_interface.PlatformCookieManager.getCookies.supported_platforms}
@@ -211,8 +212,9 @@ abstract class PlatformCookieManager extends PlatformInterface {
         apiUrl: 'https://developer.android.com/reference/android/webkit/CookieManager#getCookie(java.lang.String)',
       ),
       IOSPlatform(
-        apiName: 'WKHTTPCookieStore.getAllCookies',
-        apiUrl: 'https://developer.apple.com/documentation/webkit/wkhttpcookiestore/2882005-getallcookies',
+        apiName: 'WKHTTPCookieStore.getCookies(for:)',
+        apiUrl: 'https://developer.apple.com/documentation/webkit/wkhttpcookiestore/getcookies(for:completionhandler:)',
+        note: 'iOS 27 and newer. Below iOS 27, WKHTTPCookieStore.getAllCookies, matched against the URL by RFC 6265 in the plugin.',
       ),
     ],
   )
@@ -237,8 +239,9 @@ abstract class PlatformCookieManager extends PlatformInterface {
         apiUrl: 'https://developer.android.com/reference/android/webkit/CookieManager#getCookie(java.lang.String)',
       ),
       IOSPlatform(
-        apiName: 'WKHTTPCookieStore.getAllCookies',
-        apiUrl: 'https://developer.apple.com/documentation/webkit/wkhttpcookiestore/2882005-getallcookies',
+        apiName: 'WKHTTPCookieStore.getCookies(for:)',
+        apiUrl: 'https://developer.apple.com/documentation/webkit/wkhttpcookiestore/getcookies(for:completionhandler:)',
+        note: 'Looks the name up among what getCookies returns for the URL: iOS 27 and newer, WebKit\'s own matching; below iOS 27, WKHTTPCookieStore.getAllCookies matched by RFC 6265 in the plugin.',
       ),
     ],
   )

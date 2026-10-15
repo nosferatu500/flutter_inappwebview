@@ -129,7 +129,8 @@ enum PlatformCookieManagerMethod {
   ///
   ///**Officially Supported Platforms/Implementations**:
   ///- Android WebView ([Official API - CookieManager.getCookie](https://developer.android.com/reference/android/webkit/CookieManager#getCookie(java.lang.String)))
-  ///- iOS WKWebView ([Official API - WKHTTPCookieStore.getAllCookies](https://developer.apple.com/documentation/webkit/wkhttpcookiestore/2882005-getallcookies))
+  ///- iOS WKWebView ([Official API - WKHTTPCookieStore.getCookies(for:)](https://developer.apple.com/documentation/webkit/wkhttpcookiestore/getcookies(for:completionhandler:))):
+  ///    - Looks the name up among what getCookies returns for the URL: iOS 27 and newer, WebKit's own matching; below iOS 27, WKHTTPCookieStore.getAllCookies matched by RFC 6265 in the plugin.
   ///
   ///**Parameters - Officially Supported Platforms/Implementations**:
   ///- `url`: all platforms
@@ -147,7 +148,8 @@ enum PlatformCookieManagerMethod {
   ///
   ///**Officially Supported Platforms/Implementations**:
   ///- Android WebView ([Official API - CookieManager.getCookie](https://developer.android.com/reference/android/webkit/CookieManager#getCookie(java.lang.String)))
-  ///- iOS WKWebView ([Official API - WKHTTPCookieStore.getAllCookies](https://developer.apple.com/documentation/webkit/wkhttpcookiestore/2882005-getallcookies))
+  ///- iOS WKWebView ([Official API - WKHTTPCookieStore.getCookies(for:)](https://developer.apple.com/documentation/webkit/wkhttpcookiestore/getcookies(for:completionhandler:))):
+  ///    - iOS 27 and newer. Below iOS 27, WKHTTPCookieStore.getAllCookies, matched against the URL by RFC 6265 in the plugin.
   ///
   ///**Parameters - Officially Supported Platforms/Implementations**:
   ///- `url`: all platforms

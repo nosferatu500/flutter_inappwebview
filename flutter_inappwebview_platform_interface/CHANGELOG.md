@@ -14,6 +14,9 @@
 
 ### Changed
 
+- **`getCookies` documents what it returns**: the cookies a request to the URL would send (domain or host,
+  path, Secure), where it said "all the cookies for the given url". Its and `getCookie`'s iOS entries
+  name `WKHTTPCookieStore.getCookies(for:)`, with a note for iOS below 27.
 - **The debug-mode console message promoting upstream is gone.** In debug builds, the first platform
   instance printed "Hi, flutter_inappwebview here…" with links to upstream's donation, GitHub and
   showcase pages. Nothing is printed now.

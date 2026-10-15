@@ -53,6 +53,13 @@
 
 ### Fixed
 
+- **iOS: `CookieManager.getCookies` and `getCookie` returned cookies a request to the URL wouldn't send.** The
+  iOS filter was a domain suffix match over every cookie. It ignored the path (a `/a` cookie came back for
+  `/`) and the Secure flag (Secure cookies for `http://`). It gave a host's host-only cookies to its
+  subdomains, and to unrelated sites whose name ends the same way: `example.com`'s cookies came back for
+  `notexample.com`. Now on iOS 27 the result is WebKit's own (`WKHTTPCookieStore.getCookies(for:)`), and
+  below iOS 27 the plugin matches by RFC 6265; measured, both give the same result on all 7 URLs of the new
+  device test (iOS 27.0 and 26.5), which also passes on iOS 17.5. Android is unchanged.
 - **This package's README listed old requirements**: Dart `^3.8.0`, Flutter `>=3.32.0` and Xcode `>= 15.0`,
   which pub.dev showed for 7.0.0 although that release needs Dart 3.12, Flutter 3.44 and Xcode 26. Its
   Requirements now match the repository README's (and 7.1.0: Dart 3.13, Flutter 3.47, the Kotlin Gradle

@@ -29,6 +29,16 @@
   in the per-navigation `WKWebpagePreferences` delegate only when set, because assigning `NO` is visible
   to pages.
 
+### Fixed
+
+- **iOS: `CookieManager.getCookies` and `getCookie` returned cookies a request to the URL wouldn't send.** The
+  iOS filter was a domain suffix match over every cookie. It ignored the path (a `/a` cookie came back for
+  `/`) and the Secure flag (Secure cookies for `http://`). It gave a host's host-only cookies to its
+  subdomains, and to unrelated sites whose name ends the same way: `example.com`'s cookies came back for
+  `notexample.com`. Now on iOS 27 the result is WebKit's own (`WKHTTPCookieStore.getCookies(for:)`), and
+  below iOS 27 the plugin matches by RFC 6265; measured, both give the same result on all 7 URLs of the new
+  device test (iOS 27.0 and 26.5), which also passes on iOS 17.5. Android is unchanged.
+
 ### Internal
 
 - The example app opens the fork's repository page instead of `inappwebview.dev`.
