@@ -1001,6 +1001,12 @@ In that case, after the `window.addEventListener("flutterInAppWebViewPlatformRea
   ///Note that for applications targeting Android N and later SDKs (API level > `Build.VERSION_CODES.M`) this method is only called for requests originating from secure origins such as https.
   ///On non-secure origins geolocation requests are automatically denied.
   ///
+  ///**NOTE for iOS** (27.0+): the event fires once per page; WebKit remembers the answer for later
+  ///requests from the same page. [origin] has no trailing slash (`https://example.com`, where
+  ///Android reports `https://example.com/`). Returning `null` leaves the decision to WebKit, which
+  ///shows its own prompt, as it does when the event isn't set. Measured in an integration test: while
+  ///Flutter drew no frames, the request stayed pending and the event didn't fire.
+  ///
   ///[origin] represents the origin of the web content attempting to use the Geolocation API.
   ///{@endtemplate}
   ///
@@ -1010,6 +1016,12 @@ In that case, after the `window.addEventListener("flutterInAppWebViewPlatformRea
       AndroidPlatform(
         apiName: 'WebChromeClient.onGeolocationPermissionsShowPrompt',
         apiUrl: 'https://developer.android.com/reference/android/webkit/WebChromeClient#onGeolocationPermissionsShowPrompt(java.lang.String,%20android.webkit.GeolocationPermissions.Callback)',
+      ),
+      IOSPlatform(
+        available: '27.0',
+        apiName: 'WKUIDelegate.webView(_:requestGeolocationPermissionFor:initiatedByFrame:decisionHandler:)',
+        apiUrl: 'https://developer.apple.com/documentation/webkit/wkuidelegate/webview(_:requestgeolocationpermissionfor:initiatedbyframe:decisionhandler:)',
+        note: '`retain` is ignored. A `null` answer leaves the decision to WebKit, which asks the user.',
       ),
     ],
   )

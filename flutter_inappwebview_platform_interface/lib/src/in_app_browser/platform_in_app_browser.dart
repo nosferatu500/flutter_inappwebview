@@ -1215,6 +1215,12 @@ In that case, after the `window.addEventListener("flutterInAppWebViewPlatformRea
         apiName: 'WebChromeClient.onGeolocationPermissionsShowPrompt',
         apiUrl: 'https://developer.android.com/reference/android/webkit/WebChromeClient#onGeolocationPermissionsShowPrompt(java.lang.String,%20android.webkit.GeolocationPermissions.Callback)',
       ),
+      IOSPlatform(
+        available: '27.0',
+        apiName: 'WKUIDelegate.webView(_:requestGeolocationPermissionFor:initiatedByFrame:decisionHandler:)',
+        apiUrl: 'https://developer.apple.com/documentation/webkit/wkuidelegate/webview(_:requestgeolocationpermissionfor:initiatedbyframe:decisionhandler:)',
+        note: '`retain` is ignored. A `null` answer leaves the decision to WebKit, which asks the user.',
+      ),
     ],
   )
   FutureOr<GeolocationPermissionShowPromptResponse?>?

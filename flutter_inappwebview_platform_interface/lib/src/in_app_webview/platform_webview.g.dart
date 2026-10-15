@@ -318,6 +318,8 @@ enum PlatformWebViewCreationParamsProperty {
   ///
   ///**Officially Supported Platforms/Implementations**:
   ///- Android WebView ([Official API - WebChromeClient.onGeolocationPermissionsShowPrompt](https://developer.android.com/reference/android/webkit/WebChromeClient#onGeolocationPermissionsShowPrompt(java.lang.String,%20android.webkit.GeolocationPermissions.Callback)))
+  ///- iOS WKWebView 27.0+ ([Official API - WKUIDelegate.webView(_:requestGeolocationPermissionFor:initiatedByFrame:decisionHandler:)](https://developer.apple.com/documentation/webkit/wkuidelegate/webview(_:requestgeolocationpermissionfor:initiatedbyframe:decisionhandler:))):
+  ///    - `retain` is ignored. A `null` answer leaves the decision to WebKit, which asks the user.
   ///
   ///**Parameters - Officially Supported Platforms/Implementations**:
   ///- `origin`: all platforms
@@ -1289,8 +1291,10 @@ extension _PlatformWebViewCreationParamsPropertySupported
       case PlatformWebViewCreationParamsProperty
           .onGeolocationPermissionsShowPrompt:
         return ((kIsWeb && platform != null) || !kIsWeb) &&
-            [TargetPlatform.android]
-                .contains(platform ?? defaultTargetPlatform);
+            [
+              TargetPlatform.android,
+              TargetPlatform.iOS,
+            ].contains(platform ?? defaultTargetPlatform);
       case PlatformWebViewCreationParamsProperty.onInsertInputSuggestion:
         return ((kIsWeb && platform != null) || !kIsWeb) &&
             [TargetPlatform.iOS].contains(platform ?? defaultTargetPlatform);

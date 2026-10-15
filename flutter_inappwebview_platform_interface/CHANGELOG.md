@@ -7,6 +7,8 @@
 
 ### Added
 
+- **`onGeolocationPermissionsShowPrompt` is declared for iOS 27.0** (`PlatformWebViewCreationParams` and
+  `PlatformInAppBrowserEvents`), with an iOS note in its docs.
 - **`InAppWebViewSettings.globalPrivacyControlEnabled`** (`bool?`, iOS 27.0): the Global Privacy Control
   signal (`WKWebpagePreferences.globalPrivacyControlEnabled`). `null` leaves WebKit untouched.
 

@@ -16,6 +16,12 @@
   below iOS 27.
 ### Added
 
+- **`onGeolocationPermissionsShowPrompt` on iOS 27** (was Android only): a page's geolocation request now
+  reaches the event, through `WKUIDelegate`'s new geolocation permission method. `allow: true` grants it and
+  `allow: false` denies it (measured on an iPhone 17, iOS 27.0.1: PERMISSION_DENIED in about 10 ms).
+  `retain` is ignored. A `null` answer, or no handler, leaves the decision to WebKit, which shows its own
+  prompt, the same as before. The event fires once per page, and `origin` has no trailing slash
+  (`https://example.com`; Android reports `https://example.com/`).
 - **`InAppWebViewSettings.globalPrivacyControlEnabled` (iOS 27)**: sends the Global Privacy Control signal,
   `navigator.globalPrivacyControl` and the `Sec-GPC: 1` request header. Measured on iOS 27.0, the header
   follows the secure context: sent over `http://127.0.0.1`, not over plain HTTP to a LAN address, where
