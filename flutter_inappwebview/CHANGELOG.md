@@ -49,6 +49,12 @@
 
 ### Internal
 
+- **Tests: the integration tests' frame fix now runs on Android too.** After a frame the test binding
+  skipped, `installFrameWatchdog` asks the engine for a frame again. That closes the hole where a `pump`
+  waited for a frame no one had asked for. 7.1.0 limited it to iOS on the strength of one Android
+  comparison between separate runs. Compared within one run, alternating per skipped frame (5 240
+  frames per arm), the request changed nothing on Android 17: median gap to the next frame 16.6 ms
+  either way. A planted 30 ms delay was detected (51 ms against 20).
 - **Test: an existing named profile's storage, read and cleared through `WebStorageManager`** (Android
   device test, `MULTI_PROFILE`). A WebView on the profile stores IndexedDB, Cache Storage and
   `localStorage`. The test checks that `getOrigins`, `getUsageForOrigin` and `getQuotaForOrigin` with
