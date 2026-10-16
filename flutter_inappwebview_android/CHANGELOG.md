@@ -10,8 +10,37 @@
   2.2.20") and warns below 2.3.20. AGP 9.3.0 through 9.4.1 bring only 2.2.10, so an app that
   relies on AGP's built-in Kotlin has to declare it, as Flutter 3.47.7's app template does:
   `id("org.jetbrains.kotlin.android") version "2.4.0" apply false` in `settings.gradle(.kts)`.
+- **`minSdk` 26 or newer** (was 30): the plugin runs on Android 8.0 and newer again. An app at
+  `minSdk` 26–29 can now use it; an app already at 30 or higher needs no change. AGP still rejects an
+  app whose `minSdk` is below this library's.
 
 ### Changed
+
+- **Android 8.0–10: the version checks 7.0.0 removed with `minSdk` 30 are back, with
+  6.2.0-beta.3's fallbacks.** On API 26–29:
+  - **`WebView.getWebViewLooper` (API 28) is no longer called below API 28; the main thread's looper
+    is used, as in 6.x.** Without this, every WebView would crash as it is created on API 26–27.
+    Lint can't see that call: it goes through the plugin's own `InAppWebViewInterface`.
+  - A headless WebView's fullscreen size comes from `Display.getMetrics` below API 30 (`WindowMetrics`
+    is API 30).
+  - A certificate's `x509Certificate` bytes are read through `SslCertificate.saveState` below API 29
+    (`getX509Certificate` is API 29).
+  - The four scrollbar colour settings (`verticalScrollbarThumbColor` and the others) are ignored
+    below API 29, where `View` has no setter for them.
+  - Below API 29 no `WebViewRenderProcessClient` is attached, so `onRenderProcessUnresponsive` and
+    `onRenderProcessResponsive` don't fire, and `algorithmicDarkeningAllowed` is neither applied nor
+    reported by `getSettings`. These are 6.2.0-beta.3's gates; androidx can attach the client below
+    API 29 when the WebView supports it, so these gates may be stricter than needed.
+  - `disableWebView` answers `true` without calling the platform below API 28, where it doesn't exist.
+  - `onSafeBrowsingHit` from the platform client is API 27; below that only the androidx client
+    delivers it, when the WebView supports `SAFE_BROWSING_HIT`.
+  - Two workarounds for Android 8.x's old WebViews are back: `DisplayListenerProxy` (now in Kotlin),
+    which filters the WebView's display listeners to avoid a crash in WebView before 61, and dropping
+    the focus loss that `ListPopupWindow.show` causes for a `<select>` in Chromium before 67
+    ([flutter/flutter#54164](https://github.com/flutter/flutter/issues/54164)). Both only act below
+    API 28.
+
+  Android lint at `minSdk` 26 reports 0 `NewApi` errors (31 before these checks).
 
 - **Android: the InAppBrowser and the JavaScript alert / confirm / prompt dialogs use Material 3 and
   follow the system's light / dark setting.** The InAppBrowser activity's theme is
@@ -38,6 +67,9 @@
 
 ### Internal
 
+- **Both example apps use `minSdk` 26** (were 30). The module compiles with warnings as errors at 26, and its
+  96 JVM tests pass. The integration tests ran on an API 26 emulator with its stock WebView 58; the main
+  example's 7.1.0 entry has the results.
 - **The example app builds with AGP's built-in Kotlin** (`android.builtInKotlin=true`, was `false`). No Android plugin it
   uses applies the Kotlin Gradle Plugin under AGP 9 any more, so the per-module `com.android.built-in-kotlin` opt-in
   for `:app` is gone. The value is set explicitly: Flutter 3.47.7's migrator appends `android.builtInKotlin=false` to
@@ -45,9 +77,9 @@
   fails the module's Kotlin compile. KGP's 3 "Deprecated org.jetbrains.kotlin.android" notices are gone. The
   module's `build.gradle` comment now says which path each kind of app takes. No change for apps using the plugin.
 - The example app opens the fork's repository page instead of `inappwebview.dev`.
-- **Dead code removed: 16 Kotlin declarations nothing called**, found by listing every declared name that
+- **Dead code removed: 15 Kotlin declarations nothing called**, found by listing every declared name that
   occurs once across the module's sources, manifest and resources, then checked against the JVM tests.
-  `Util.getX509CertFromSslCertHack` / `log` / `isClass`, `NO_HISTORY_CHROME_CUSTOM_TAB_REQUEST_CODE`,
+  `Util.log` / `isClass`, `NO_HISTORY_CHROME_CUSTOM_TAB_REQUEST_CODE`,
   `CustomTabsHelper.getPackages`, `NavigationActionPolicy.rawValue()`, seven `UserContentController` methods
   (`addPluginScripts`, `containsPluginScript`, `containsPluginScriptByGroupName`, `containsUserOnlyScript`,
   `containsUserOnlyScriptByGroupName`, `removePluginScriptsByGroupName`, `getContentWorlds`),

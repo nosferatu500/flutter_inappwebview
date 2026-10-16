@@ -1,6 +1,8 @@
 package dev.nosferatu500.inappwebview.types
 
 import android.net.http.SslCertificate
+import android.os.Build
+import dev.nosferatu500.inappwebview.Util
 import java.security.cert.CertificateEncodingException
 
 // Namespace for the SslCertificate -> Map conversion only; never instantiated. The Java version
@@ -36,7 +38,12 @@ object SslCertificateExt {
 
     var x509CertificateData: ByteArray? = null
     try {
-      x509CertificateData = sslCertificate.x509Certificate?.encoded
+      val certificate = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+        sslCertificate.x509Certificate
+      } else {
+        Util.getX509CertFromSslCertHack(sslCertificate)
+      }
+      x509CertificateData = certificate?.encoded
     } catch (e: CertificateEncodingException) {
       e.printStackTrace()
     }

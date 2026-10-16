@@ -53,6 +53,15 @@ void clearFocus() {
       reason: 'precondition: the page must have focus before it can lose it',
     );
 
+    // Below API 28, View.clearFocus() moves focus to the first focusable view from the top, and
+    // that is this WebView, so the page gets focus straight back (measured on API 26: hasFocus()
+    // stays true). Not a plugin defect: the old Java plugin behaved the same.
+    if ((await androidSdkInt())! < 28) {
+      await expectLater(controller.clearFocus(), completes);
+      markTestSkipped('clearFocus refocuses the WebView below API 28');
+      return;
+    }
+
     await controller.clearFocus();
     await Future.delayed(const Duration(seconds: 1));
 

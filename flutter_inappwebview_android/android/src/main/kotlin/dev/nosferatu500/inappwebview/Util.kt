@@ -5,7 +5,10 @@ import android.content.Context
 import android.graphics.BitmapFactory
 import android.graphics.drawable.BitmapDrawable
 import android.graphics.drawable.Drawable
+import android.net.http.SslCertificate
+import android.os.Build
 import android.text.TextUtils
+import android.util.DisplayMetrics
 import android.util.Log
 import android.view.WindowInsets
 import android.view.WindowManager
@@ -13,6 +16,7 @@ import androidx.webkit.WebViewFeature
 import dev.nosferatu500.inappwebview.types.Size2D
 import org.json.JSONArray
 import org.json.JSONObject
+import java.io.ByteArrayInputStream
 import java.io.ByteArrayOutputStream
 import java.io.FileInputStream
 import java.io.IOException
@@ -25,6 +29,8 @@ import java.net.URL
 import java.net.UnknownHostException
 import java.security.KeyStore
 import java.security.PrivateKey
+import java.security.cert.CertificateException
+import java.security.cert.CertificateFactory
 import java.security.cert.X509Certificate
 import java.util.Objects
 import java.util.regex.Pattern
@@ -265,18 +271,45 @@ object Util {
     val fullscreenSize = Size2D(-1.0, -1.0)
     val wm = context.getSystemService(Context.WINDOW_SERVICE) as WindowManager?
     if (wm != null) {
-      val metrics = wm.currentWindowMetrics
-      // Gets all excluding insets
-      val insets = metrics.windowInsets.getInsetsIgnoringVisibility(
-        WindowInsets.Type.navigationBars() or WindowInsets.Type.displayCutout()
-      )
-      val insetsWidth = insets.right + insets.left
-      val insetsHeight = insets.top + insets.bottom
-      val bounds = metrics.bounds
-      fullscreenSize.width = (bounds.width() - insetsWidth).toDouble()
-      fullscreenSize.height = (bounds.height() - insetsHeight).toDouble()
+      if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+        val metrics = wm.currentWindowMetrics
+        // Gets all excluding insets
+        val insets = metrics.windowInsets.getInsetsIgnoringVisibility(
+          WindowInsets.Type.navigationBars() or WindowInsets.Type.displayCutout()
+        )
+        val insetsWidth = insets.right + insets.left
+        val insetsHeight = insets.top + insets.bottom
+        val bounds = metrics.bounds
+        fullscreenSize.width = (bounds.width() - insetsWidth).toDouble()
+        fullscreenSize.height = (bounds.height() - insetsHeight).toDouble()
+      } else {
+        val displayMetrics = getDisplayMetricsPreR(wm)
+        fullscreenSize.width = displayMetrics.widthPixels.toDouble()
+        fullscreenSize.height = displayMetrics.heightPixels.toDouble()
+      }
     }
     return fullscreenSize
+  }
+
+  // Below API 30 there is no WindowMetrics; Display.getMetrics is the only source, and it already
+  // excludes the system decorations.
+  @Suppress("DEPRECATION")
+  private fun getDisplayMetricsPreR(wm: WindowManager): DisplayMetrics =
+    DisplayMetrics().also { wm.defaultDisplay.getMetrics(it) }
+
+  /**
+   * Below API 29 there is no `SslCertificate.getX509Certificate()`; the encoded certificate is only
+   * reachable through the bundle `SslCertificate.saveState` writes.
+   */
+  @JvmStatic
+  fun getX509CertFromSslCertHack(sslCert: SslCertificate): X509Certificate? {
+    val bytes = SslCertificate.saveState(sslCert).getByteArray("x509-certificate") ?: return null
+    return try {
+      CertificateFactory.getInstance("X.509")
+        .generateCertificate(ByteArrayInputStream(bytes)) as X509Certificate
+    } catch (e: CertificateException) {
+      null
+    }
   }
 
   /**

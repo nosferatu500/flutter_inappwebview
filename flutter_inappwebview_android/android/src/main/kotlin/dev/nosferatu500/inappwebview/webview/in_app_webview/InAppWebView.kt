@@ -8,8 +8,10 @@ import android.graphics.Bitmap
 import android.graphics.Canvas
 import android.graphics.Color
 import android.graphics.Point
+import android.graphics.Rect
 import android.graphics.drawable.ColorDrawable
 import android.net.Uri
+import android.os.Build
 import android.os.Bundle
 import android.os.Handler
 import android.os.IBinder
@@ -45,6 +47,7 @@ import android.webkit.WebView
 import android.webkit.WebViewClient
 import android.widget.HorizontalScrollView
 import android.widget.LinearLayout
+import android.widget.ListPopupWindow
 import android.widget.TextView
 import androidx.webkit.PrerenderException
 import androidx.webkit.PrerenderOperationCallback
@@ -116,7 +119,7 @@ class InAppWebView : WebView, InAppWebViewInterface, Disposable {
    *
    * This is all that survives of `InputAwareWebView`, which used to be this class's superclass and
    * carried a pre-Android-N hack for creating InputConnections on the WebView's IME thread. That
-   * hack was dead code: it only ever ran below API 24 and this module's minSdk is 30.
+   * hack was dead code: it only ever ran below API 24 and this module's minSdk is 26.
    */
   @JvmField var containerView: View? = null
 
@@ -379,7 +382,9 @@ class InAppWebView : WebView, InAppWebViewInterface, Disposable {
       webViewClient = client
     }
 
-    if (WebViewFeature.isFeatureSupported(WebViewFeature.WEB_VIEW_RENDERER_CLIENT_BASIC_USAGE)) {
+    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q &&
+      WebViewFeature.isFeatureSupported(WebViewFeature.WEB_VIEW_RENDERER_CLIENT_BASIC_USAGE)
+    ) {
       val renderProcessClient = InAppWebViewRenderProcessClient()
       inAppWebViewRenderProcessClient = renderProcessClient
       WebViewCompat.setWebViewRenderProcessClient(this, renderProcessClient)
@@ -539,17 +544,19 @@ class InAppWebView : WebView, InAppWebViewInterface, Disposable {
     }
     verticalScrollbarPosition = customSettings.verticalScrollbarPosition
 
-    customSettings.verticalScrollbarThumbColor?.let {
-      verticalScrollbarThumbDrawable = ColorDrawable(Color.parseColor(it))
-    }
-    customSettings.verticalScrollbarTrackColor?.let {
-      verticalScrollbarTrackDrawable = ColorDrawable(Color.parseColor(it))
-    }
-    customSettings.horizontalScrollbarThumbColor?.let {
-      horizontalScrollbarThumbDrawable = ColorDrawable(Color.parseColor(it))
-    }
-    customSettings.horizontalScrollbarTrackColor?.let {
-      horizontalScrollbarTrackDrawable = ColorDrawable(Color.parseColor(it))
+    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+      customSettings.verticalScrollbarThumbColor?.let {
+        verticalScrollbarThumbDrawable = ColorDrawable(Color.parseColor(it))
+      }
+      customSettings.verticalScrollbarTrackColor?.let {
+        verticalScrollbarTrackDrawable = ColorDrawable(Color.parseColor(it))
+      }
+      customSettings.horizontalScrollbarThumbColor?.let {
+        horizontalScrollbarThumbDrawable = ColorDrawable(Color.parseColor(it))
+      }
+      customSettings.horizontalScrollbarTrackColor?.let {
+        horizontalScrollbarTrackDrawable = ColorDrawable(Color.parseColor(it))
+      }
     }
 
     overScrollMode = customSettings.overScrollMode
@@ -561,7 +568,9 @@ class InAppWebView : WebView, InAppWebViewInterface, Disposable {
       )
     }
 
-    if (WebViewFeature.isFeatureSupported(WebViewFeature.ALGORITHMIC_DARKENING)) {
+    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q &&
+      WebViewFeature.isFeatureSupported(WebViewFeature.ALGORITHMIC_DARKENING)
+    ) {
       WebSettingsCompat.setAlgorithmicDarkeningAllowed(
         settings, customSettings.algorithmicDarkeningAllowed
       )
@@ -1591,44 +1600,46 @@ class InAppWebView : WebView, InAppWebViewInterface, Disposable {
       )
     }
 
-    if (newSettingsMap["verticalScrollbarThumbColor"] != null &&
-      !Util.objEquals(
-        customSettings.verticalScrollbarThumbColor,
-        newCustomSettings.verticalScrollbarThumbColor
-      )
-    ) {
-      verticalScrollbarThumbDrawable =
-        ColorDrawable(Color.parseColor(newCustomSettings.verticalScrollbarThumbColor))
-    }
+    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+      if (newSettingsMap["verticalScrollbarThumbColor"] != null &&
+        !Util.objEquals(
+          customSettings.verticalScrollbarThumbColor,
+          newCustomSettings.verticalScrollbarThumbColor
+        )
+      ) {
+        verticalScrollbarThumbDrawable =
+          ColorDrawable(Color.parseColor(newCustomSettings.verticalScrollbarThumbColor))
+      }
 
-    if (newSettingsMap["verticalScrollbarTrackColor"] != null &&
-      !Util.objEquals(
-        customSettings.verticalScrollbarTrackColor,
-        newCustomSettings.verticalScrollbarTrackColor
-      )
-    ) {
-      verticalScrollbarTrackDrawable =
-        ColorDrawable(Color.parseColor(newCustomSettings.verticalScrollbarTrackColor))
-    }
+      if (newSettingsMap["verticalScrollbarTrackColor"] != null &&
+        !Util.objEquals(
+          customSettings.verticalScrollbarTrackColor,
+          newCustomSettings.verticalScrollbarTrackColor
+        )
+      ) {
+        verticalScrollbarTrackDrawable =
+          ColorDrawable(Color.parseColor(newCustomSettings.verticalScrollbarTrackColor))
+      }
 
-    if (newSettingsMap["horizontalScrollbarThumbColor"] != null &&
-      !Util.objEquals(
-        customSettings.horizontalScrollbarThumbColor,
-        newCustomSettings.horizontalScrollbarThumbColor
-      )
-    ) {
-      horizontalScrollbarThumbDrawable =
-        ColorDrawable(Color.parseColor(newCustomSettings.horizontalScrollbarThumbColor))
-    }
+      if (newSettingsMap["horizontalScrollbarThumbColor"] != null &&
+        !Util.objEquals(
+          customSettings.horizontalScrollbarThumbColor,
+          newCustomSettings.horizontalScrollbarThumbColor
+        )
+      ) {
+        horizontalScrollbarThumbDrawable =
+          ColorDrawable(Color.parseColor(newCustomSettings.horizontalScrollbarThumbColor))
+      }
 
-    if (newSettingsMap["horizontalScrollbarTrackColor"] != null &&
-      !Util.objEquals(
-        customSettings.horizontalScrollbarTrackColor,
-        newCustomSettings.horizontalScrollbarTrackColor
-      )
-    ) {
-      horizontalScrollbarTrackDrawable =
-        ColorDrawable(Color.parseColor(newCustomSettings.horizontalScrollbarTrackColor))
+      if (newSettingsMap["horizontalScrollbarTrackColor"] != null &&
+        !Util.objEquals(
+          customSettings.horizontalScrollbarTrackColor,
+          newCustomSettings.horizontalScrollbarTrackColor
+        )
+      ) {
+        horizontalScrollbarTrackDrawable =
+          ColorDrawable(Color.parseColor(newCustomSettings.horizontalScrollbarTrackColor))
+      }
     }
 
     if (newSettingsMap["algorithmicDarkeningAllowed"] != null &&
@@ -1636,6 +1647,7 @@ class InAppWebView : WebView, InAppWebViewInterface, Disposable {
         customSettings.algorithmicDarkeningAllowed,
         newCustomSettings.algorithmicDarkeningAllowed
       ) &&
+      Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q &&
       WebViewFeature.isFeatureSupported(WebViewFeature.ALGORITHMIC_DARKENING)
     ) {
       WebSettingsCompat.setAlgorithmicDarkeningAllowed(
@@ -2196,6 +2208,33 @@ class InAppWebView : WebView, InAppWebViewInterface, Disposable {
   override fun dispatchTouchEvent(event: MotionEvent): Boolean =
     super.dispatchTouchEvent(event)
 
+  override fun onFocusChanged(focused: Boolean, direction: Int, previouslyFocusedRect: Rect?) {
+    // Works around a crash in Chromium < 67.0.3367.0 when a <select> drop-down is shown on
+    // tablets (https://github.com/flutter/flutter/issues/54164):
+    //
+    //  - WebView calls ListPopupWindow#show, which sets mDropDownList and adds it to the window;
+    //  - that synchronously takes focus from the WebView, which hides all its popups, which
+    //    dismisses the drop-down and sets mDropDownList back to null;
+    //  - ListPopupWindow#show then calls mDropDownList.setSelection and throws an NPE.
+    //
+    // So the focus-lost call made from inside ListPopupWindow#show is dropped. Android P shipped a
+    // new enough WebView, and limiting this to old releases keeps it from depending on how
+    // DropDownListView behaves in future ones.
+    if (!customSettings.useHybridComposition &&
+      Build.VERSION.SDK_INT < Build.VERSION_CODES.P &&
+      !focused &&
+      isCalledFromListPopupWindowShow()
+    ) {
+      return
+    }
+    super.onFocusChanged(focused, direction, previouslyFocusedRect)
+  }
+
+  private fun isCalledFromListPopupWindowShow(): Boolean =
+    Thread.currentThread().stackTrace.any {
+      it.className == ListPopupWindow::class.java.canonicalName && it.methodName == "show"
+    }
+
   override fun onCreateInputConnection(outAttrs: EditorInfo): InputConnection? {
     val connection = super.onCreateInputConnection(outAttrs)
     val currentContainerView = containerView
@@ -2599,7 +2638,15 @@ class InAppWebView : WebView, InAppWebViewInterface, Disposable {
     webMessageListeners.clear()
   }
 
-  override fun getWebViewLooper(): Looper = super.getWebViewLooper()
+  // WebView.getWebViewLooper is API 28. Lint does not flag the super call (it sits in an override of
+  // the same method), but below P it throws NoSuchMethodError, and this runs from the constructor
+  // (mainLooperHandler). Before P a WebView is always created on, and bound to, the main thread.
+  override fun getWebViewLooper(): Looper =
+    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
+      super.getWebViewLooper()
+    } else {
+      Looper.getMainLooper()
+    }
 
   override fun isInFullscreen(): Boolean = inFullscreen
 
@@ -2837,7 +2884,9 @@ class InAppWebView : WebView, InAppWebViewInterface, Disposable {
     channelDelegate = null
     settings.javaScriptEnabled = false
     removeJavascriptInterface(JavaScriptBridgeJS.get_JAVASCRIPT_BRIDGE_NAME())
-    if (WebViewFeature.isFeatureSupported(WebViewFeature.WEB_VIEW_RENDERER_CLIENT_BASIC_USAGE)) {
+    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q &&
+      WebViewFeature.isFeatureSupported(WebViewFeature.WEB_VIEW_RENDERER_CLIENT_BASIC_USAGE)
+    ) {
       WebViewCompat.setWebViewRenderProcessClient(this, null)
     }
     webChromeClient = WebChromeClient()

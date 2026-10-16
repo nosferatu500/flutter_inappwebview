@@ -10,6 +10,8 @@
   2.2.20") and warns below 2.3.20. AGP 9.3.0 through 9.4.1 bring only 2.2.10, so an app that
   relies on AGP's built-in Kotlin has to declare it, as Flutter 3.47.7's app template does:
   `id("org.jetbrains.kotlin.android") version "2.4.0" apply false` in `settings.gradle(.kts)`.
+- **Android: `minSdk` 26 or newer** (was 30): the plugin runs on Android 8.0 and newer again. An app at
+  `minSdk` 26–29 can now use it; an app already at 30 or higher needs no change.
 - **iOS: Xcode 27 or newer** (was 26). The iOS module now uses iOS 27 WebKit API, which only the iOS 27
   SDK declares: Xcode 26 fails with `value of type 'WKWebpagePreferences' has no member
   'globalPrivacyControlEnabled'`. Apps still run on iOS 15 and newer; the iOS 27 features are skipped
@@ -35,6 +37,17 @@
 
 ### Changed
 
+- **Android 8.0–10: the version checks 7.0.0 removed with `minSdk` 30 are back, with 6.2.0-beta.3's
+  fallbacks.** What an app sees on API 26–29:
+  - below API 29: the scrollbar colour settings are ignored; `onRenderProcessUnresponsive` /
+    `onRenderProcessResponsive` don't fire, because no render process client is attached; and
+    `algorithmicDarkeningAllowed` is neither applied nor reported by `getSettings`;
+  - below API 28: `disableWebView` answers `true` and does nothing;
+  - below API 27: `onSafeBrowsingHit` arrives only when the WebView supports `SAFE_BROWSING_HIT`.
+
+  The rest is invisible. Without it, though, every WebView would crash on creation on API 26–27
+  (`WebView.getWebViewLooper` is API 28). The `nosferatu500_inappwebview_android` 7.1.0 entry lists
+  each check.
 - **The debug-mode console message promoting upstream is gone.** In debug builds, the first platform
   instance printed "Hi, flutter_inappwebview here…" with links to upstream's donation, GitHub and
   showcase pages. Nothing is printed now.
@@ -71,6 +84,36 @@
 
 ### Internal
 
+- **Tests: the integration suite ran on Android 8.0** (an API 26 emulator, stock WebView 58). Twelve of
+  the 16 groups pass (eleven before the proxy-test fix below). The failures caused by the API level are fixed; all are in the tests or their
+  fixtures:
+  - **The client-certificate fixture is re-exported in a format Android 8 can read.** OpenSSL 3's
+    PKCS#12 defaults (PBES2/AES-256, SHA-256 MAC) made Android 8's KeyStore fail with "PKCS12 key
+    store mac invalid", so `SSL request` got "Unauthorized". It's the same certificate and key
+    (fingerprints compared). Both copies are replaced, and the recipe in `test_node_server/index.js`
+    now passes the SHA-1/3DES PBE and SHA-1 MAC options.
+  - `clear and set proxy override` asserted the proxy page even when no override could be set. It now
+    skips without `PROXY_OVERRIDE`, as its sibling test does.
+  - `clearFocus` skips below API 28, where `View.clearFocus()` hands focus straight back to the
+    WebView. `requestFocus` checks only its first half there.
+  - The 3 safe-browsing tests skip without their API level or WebView feature, and so do the 3
+    render-process tests, using the same gate as the plugin.
+  - A new `androidSdkInt()` helper in `integration_test/util.dart` gives tests the API level,
+    answered by the example app's `MainActivity`. The example's manifest now launches `MainActivity`.
+    It used to launch `FlutterActivity` directly, so `MainActivity` never ran.
+
+  Rerun of those tests: on API 26, 3 pass and 7 skip; on API 37, all 12 pass with none skipped.
+
+  **Still failing on WebView 58.** None of these failures comes from the API level:
+  - the 18 Custom Tabs tests: that emulator image has no Chrome;
+  - 2 service-worker tests: the test page loads its code as an ES module (Chrome 61+);
+  - 31 of `in_app_webview`'s 40 failures. Most use features WebView 58 lacks without checking
+    `WebViewFeature`: WebMessageListener, NavigationListener, WebViewAssetLoader, Web Vitals, prerender,
+    mute audio, unprefixed fullscreen.
+  - Three of them look like plugin issues on WebView before 73, which uses the non-androidx client:
+    - a popup with `initialUserScripts` never loads (also the headless group's 1 failure);
+    - a popup's content blocker blocks its first page, which then loads anyway;
+    - a `null` `shouldOverrideUrlLoading` answer, or no handler, doesn't let the navigation continue.
 - **Doc fix: the path handlers' class docs show their "supported platforms" tables too.** dartdoc's
   undefined-macro warnings for this package go from 9 to 0, with none new. The platform interface now
   carries those templates on hidden classes, which nothing can import.

@@ -2,6 +2,7 @@ package dev.nosferatu500.inappwebview.webview.in_app_webview
 
 import android.annotation.SuppressLint
 import android.content.Context
+import android.hardware.display.DisplayManager
 import android.util.Log
 import android.view.View
 import android.view.ViewGroup
@@ -55,11 +56,16 @@ class FlutterWebView(
       }
     }
 
+    val displayListenerProxy = DisplayListenerProxy()
+    val displayManager = context.getSystemService(Context.DISPLAY_SERVICE) as DisplayManager
+    displayListenerProxy.onPreWebViewInitialization(displayManager)
+
     val view = InAppWebView(
       context, plugin, id, windowId, customSettings, contextMenu,
       if (customSettings.useHybridComposition) null else plugin.flutterView, userScripts
     )
     webView = view
+    displayListenerProxy.onPostWebViewInitialization(displayManager)
 
     // Before anything else touches the WebView: setProfile throws once it has navigated or had
     // JavaScript evaluated on it, and view.prepare() below does both.

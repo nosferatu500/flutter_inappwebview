@@ -3,6 +3,7 @@ import 'dart:io' show Platform;
 
 import 'package:flutter/foundation.dart';
 import 'package:flutter/scheduler.dart';
+import 'package:flutter/services.dart' show MethodChannel;
 import 'package:nosferatu500_inappwebview/nosferatu500_inappwebview.dart';
 import 'package:flutter_test/flutter_test.dart';
 
@@ -29,6 +30,22 @@ int? iosMajorVersion() {
   final match = RegExp(r'\d+').firstMatch(Platform.operatingSystemVersion);
   return match == null ? null : int.tryParse(match.group(0)!);
 }
+
+/// The Android API level (`Build.VERSION.SDK_INT`), or `null` on any other platform.
+///
+/// The Android counterpart of [iosMajorVersion], for the same reason: since minSdk 26 the suite can
+/// run on devices where a framework API or behaviour is absent or different. Dart's
+/// `Platform.operatingSystemVersion` is the kernel's version on Android, so this asks the example
+/// app's `MainActivity`, which is test-harness code and not part of the plugin.
+Future<int?> androidSdkInt() async {
+  if (defaultTargetPlatform != TargetPlatform.android) {
+    return null;
+  }
+  return _androidSdkInt ??= await const MethodChannel('example/device_info')
+      .invokeMethod<int>('sdkInt');
+}
+
+int? _androidSdkInt;
 
 bool _frameWatchdogInstalled = false;
 

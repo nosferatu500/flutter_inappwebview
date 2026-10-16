@@ -8,7 +8,7 @@ The Android WebView implementation of [`nosferatu500_inappwebview`](https://pub.
   not supported. The module uses the AGP 9 DSL (`enableKotlin`) and declares no AGP version of its
   own, so it builds with whatever AGP the consuming app applies.
 - Gradle `>= 9.1.0`, JDK `>= 17` (both are AGP 9 requirements)
-- `minSdk >= 30` in the consuming app: AGP rejects an app whose `minSdk` is below that of a library
+- `minSdk >= 26` in the consuming app: AGP rejects an app whose `minSdk` is below that of a library
   it depends on.
 
 ## Usage

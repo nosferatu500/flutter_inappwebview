@@ -15,6 +15,7 @@ void renderProcessResponsiveness() {
   skippableTestWidgets(
     'onRenderProcessUnresponsive / onRenderProcessResponsive',
     (WidgetTester tester) async {
+      if (await _skipWithoutRendererClient()) return;
       final Completer<InAppWebViewController> controllerCompleter =
           Completer<InAppWebViewController>();
       final Completer<void> pageLoaded = Completer<void>();
@@ -154,6 +155,7 @@ void renderProcessResponsiveness() {
   skippableTestWidgets(
     'onRenderProcessUnresponsive TERMINATE kills the renderer',
     (WidgetTester tester) async {
+      if (await _skipWithoutRendererClient()) return;
       final events = await terminateFrom(tester, fromUnresponsive: true);
       expect(events.first, 'unresponsive');
       expect(events.last, 'gone didCrash=false');
@@ -165,6 +167,7 @@ void renderProcessResponsiveness() {
   skippableTestWidgets(
     'onRenderProcessResponsive TERMINATE kills the renderer',
     (WidgetTester tester) async {
+      if (await _skipWithoutRendererClient()) return;
       final events = await terminateFrom(tester, fromUnresponsive: false);
       expect(events.first, 'unresponsive');
       expect(events.last, 'gone didCrash=false');
@@ -176,4 +179,22 @@ void renderProcessResponsiveness() {
     },
     skip: shouldSkip,
   );
+}
+
+// Mirrors the plugin's own gate for attaching its WebViewRenderProcessClient (InAppWebView.kt):
+// API 29 and WEB_VIEW_RENDERER_CLIENT_BASIC_USAGE. Below it no responsiveness event can fire, which
+// is reachable since minSdk 26. Returns true when the test should stop.
+Future<bool> _skipWithoutRendererClient() async {
+  final sdkInt = await androidSdkInt();
+  if (sdkInt == null) return false;
+  if (sdkInt < 29 ||
+      !await WebViewFeature.isFeatureSupported(
+        WebViewFeature.WEB_VIEW_RENDERER_CLIENT_BASIC_USAGE,
+      )) {
+    markTestSkipped(
+      'no WebViewRenderProcessClient below API 29 / without the feature',
+    );
+    return true;
+  }
+  return false;
 }
