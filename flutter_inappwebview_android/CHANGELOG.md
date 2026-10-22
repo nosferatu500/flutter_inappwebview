@@ -14,6 +14,19 @@
   `minSdk` 26–29 can now use it; an app already at 30 or higher needs no change. AGP still rejects an
   app whose `minSdk` is below this library's.
 
+### Added
+
+- **`CROSS_ORIGIN_ISOLATED_ALLOWLIST`** (androidx.webkit 1.18.0): `ProfileStore`'s
+  `setCrossOriginIsolatedAllowlist` / `getCrossOriginIsolatedAllowlist` call `Profile`'s methods of the
+  same name on the default profile or a named one. Two Pigeon methods on the profile-store channel.
+  The set replaces the list (an empty set clears it) and answers `false` when `MULTI_PROFILE` or the
+  feature is missing or no profile has that name; the get answers `null` then. A rule androidx can't
+  parse throws `PlatformException(code: "ProfileStoreManager")`, the code `deleteProfile`'s refusals use.
+  Measured on Android 17, WebView 153 (all three device tests pass; WebView 151 on Android 13 skips them,
+  the feature is missing): `crossOriginIsolated` is `false` without the allowlist and `true` with it for a
+  page sending `Document-Isolation-Policy`. androidx's lint check `CrossOriginIsolatedAllowlist` is
+  suppressed on the one call: the origins are the app's.
+
 ### Changed
 
 - **Android 8.0–10: the version checks 7.0.0 removed with `minSdk` 30 are back, with
@@ -58,6 +71,9 @@
 - **Android: the unused `InAppWebViewTheme` style is removed.** Upstream declared it (`Theme.AppCompat`) and
   nothing in the plugin used it. Library styles are public, so an app that referenced
   `@style/InAppWebViewTheme` has to use its own theme instead; it was never documented.
+
+- **Native dependency: `androidx.webkit` 1.17.0 → 1.18.0.** No new build requirements (its AAR still
+  asks for `compileSdk` 33 and AGP 7.2). The plugin used none of the API 1.18.0 renames or deprecates.
 
 ### Fixed
 

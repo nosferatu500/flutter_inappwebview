@@ -359,6 +359,26 @@ interface ProfileStoreHostApi {
    * [addCustomHeader].
    */
   fun clearAllCustomHeaders(profileName: String?): Boolean
+  /**
+   * Replaces the profile's cross-origin-isolated allowlist (androidx 1.18.0,
+   * `CROSS_ORIGIN_ISOLATED_ALLOWLIST`) with [originRules]; an empty list clears it.
+   *
+   * Answers whether the profile was resolved, as [addCustomHeader] does: `false` when
+   * `CROSS_ORIGIN_ISOLATED_ALLOWLIST` or `MULTI_PROFILE` is missing, or no profile has that name.
+   *
+   * A rule androidx can't parse makes it throw `IllegalArgumentException`, which the Kotlin
+   * re-throws as `FlutterError("ProfileStoreManager", …)` for the reason [deleteProfile] gives.
+   * A `List` because the wire has no set.
+   */
+  fun setCrossOriginIsolatedAllowlist(originRules: List<String>, profileName: String?): Boolean
+  /**
+   * The profile's cross-origin-isolated allowlist, each rule with its port written out
+   * (`https://example.com` reads back as `https://example.com:443`).
+   *
+   * `null` when the profile or the feature can't be resolved, as [hasCustomHeader] answers: the
+   * empty list is a real answer here, "no allowlist", so it can't also mean "unreachable".
+   */
+  fun getCrossOriginIsolatedAllowlist(profileName: String?): List<String>?
 
   companion object {
     /** The codec used by ProfileStoreHostApi. */
@@ -500,6 +520,41 @@ interface ProfileStoreHostApi {
             val profileNameArg = args[0] as String?
             val wrapped: List<Any?> = try {
               listOf(api.clearAllCustomHeaders(profileNameArg))
+            } catch (exception: Throwable) {
+              ProfileStorePigeonUtils.wrapError(exception)
+            }
+            reply.reply(wrapped)
+          }
+        } else {
+          channel.setMessageHandler(null)
+        }
+      }
+      run {
+        val channel = BasicMessageChannel<Any?>(binaryMessenger, "dev.flutter.pigeon.nosferatu500_inappwebview_android.ProfileStoreHostApi.setCrossOriginIsolatedAllowlist$separatedMessageChannelSuffix", codec)
+        if (api != null) {
+          channel.setMessageHandler { message, reply ->
+            val args = message as List<Any?>
+            val originRulesArg = args[0] as List<String>
+            val profileNameArg = args[1] as String?
+            val wrapped: List<Any?> = try {
+              listOf(api.setCrossOriginIsolatedAllowlist(originRulesArg, profileNameArg))
+            } catch (exception: Throwable) {
+              ProfileStorePigeonUtils.wrapError(exception)
+            }
+            reply.reply(wrapped)
+          }
+        } else {
+          channel.setMessageHandler(null)
+        }
+      }
+      run {
+        val channel = BasicMessageChannel<Any?>(binaryMessenger, "dev.flutter.pigeon.nosferatu500_inappwebview_android.ProfileStoreHostApi.getCrossOriginIsolatedAllowlist$separatedMessageChannelSuffix", codec)
+        if (api != null) {
+          channel.setMessageHandler { message, reply ->
+            val args = message as List<Any?>
+            val profileNameArg = args[0] as String?
+            val wrapped: List<Any?> = try {
+              listOf(api.getCrossOriginIsolatedAllowlist(profileNameArg))
             } catch (exception: Throwable) {
               ProfileStorePigeonUtils.wrapError(exception)
             }

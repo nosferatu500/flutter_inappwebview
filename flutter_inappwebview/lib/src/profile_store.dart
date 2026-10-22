@@ -93,6 +93,23 @@ class ProfileStore {
   Future<bool> clearAllCustomHeaders({String? profileName}) =>
       platform.clearAllCustomHeaders(profileName: profileName);
 
+  ///{@macro nosferatu500_inappwebview_platform_interface.PlatformProfileStore.setCrossOriginIsolatedAllowlist}
+  ///
+  ///{@macro nosferatu500_inappwebview_platform_interface.PlatformProfileStore.setCrossOriginIsolatedAllowlist.supported_platforms}
+  Future<bool> setCrossOriginIsolatedAllowlist(
+    Set<String> originRules, {
+    String? profileName,
+  }) => platform.setCrossOriginIsolatedAllowlist(
+    originRules,
+    profileName: profileName,
+  );
+
+  ///{@macro nosferatu500_inappwebview_platform_interface.PlatformProfileStore.getCrossOriginIsolatedAllowlist}
+  ///
+  ///{@macro nosferatu500_inappwebview_platform_interface.PlatformProfileStore.getCrossOriginIsolatedAllowlist.supported_platforms}
+  Future<Set<String>?> getCrossOriginIsolatedAllowlist({String? profileName}) =>
+      platform.getCrossOriginIsolatedAllowlist(profileName: profileName);
+
   ///{@macro nosferatu500_inappwebview_platform_interface.PlatformProfileStore.deleteProfile}
   ///
   ///{@macro nosferatu500_inappwebview_platform_interface.PlatformProfileStore.deleteProfile.supported_platforms}

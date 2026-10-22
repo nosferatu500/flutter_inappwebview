@@ -3,7 +3,8 @@
 // Tenth channel migrated off hand-written MethodChannel dispatch, after find_interaction (§14),
 // process_global_config (§157), proxy (§160), webview_feature (§161), tracing_controller (§162),
 // credential_database (§163), both web_message channels (§165), cookie_manager (§168) and
-// web_storage_manager (§169). Eight methods.
+// web_storage_manager (§169). Ten methods: eight at migration, plus the cross-origin-isolated
+// allowlist pair added with androidx.webkit 1.18.0.
 //
 // No `messageChannelSuffix`: `androidx.webkit.ProfileStore` is process-global, so there is one
 // channel rather than one per WebView.
@@ -183,4 +184,25 @@ abstract class ProfileStoreHostApi {
   /// Removes every header from the profile. Answers whether the profile was resolved; see
   /// [addCustomHeader].
   bool clearAllCustomHeaders(String? profileName);
+
+  /// Replaces the profile's cross-origin-isolated allowlist (androidx 1.18.0,
+  /// `CROSS_ORIGIN_ISOLATED_ALLOWLIST`) with [originRules]; an empty list clears it.
+  ///
+  /// Answers whether the profile was resolved, as [addCustomHeader] does: `false` when
+  /// `CROSS_ORIGIN_ISOLATED_ALLOWLIST` or `MULTI_PROFILE` is missing, or no profile has that name.
+  ///
+  /// A rule androidx can't parse makes it throw `IllegalArgumentException`, which the Kotlin
+  /// re-throws as `FlutterError("ProfileStoreManager", …)` for the reason [deleteProfile] gives.
+  /// A `List` because the wire has no set.
+  bool setCrossOriginIsolatedAllowlist(
+    List<String> originRules,
+    String? profileName,
+  );
+
+  /// The profile's cross-origin-isolated allowlist, each rule with its port written out
+  /// (`https://example.com` reads back as `https://example.com:443`).
+  ///
+  /// `null` when the profile or the feature can't be resolved, as [hasCustomHeader] answers: the
+  /// empty list is a real answer here, "no allowlist", so it can't also mean "unreachable".
+  List<String>? getCrossOriginIsolatedAllowlist(String? profileName);
 }

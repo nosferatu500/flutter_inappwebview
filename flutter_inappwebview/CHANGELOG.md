@@ -28,6 +28,16 @@
   `navigator.globalPrivacyControl` and the `Sec-GPC: 1` request header. Measured on iOS 27.0, the header
   follows the secure context: sent over `http://127.0.0.1`, not over plain HTTP to a LAN address, where
   pages still see the JS flag.
+- **`ProfileStore.setCrossOriginIsolatedAllowlist` / `getCrossOriginIsolatedAllowlist` (Android,
+  `WebViewFeature.CROSS_ORIGIN_ISOLATED_ALLOWLIST`)**: lets pages on the listed origins use
+  cross-origin-isolated APIs such as `SharedArrayBuffer`, when they also send a
+  `Document-Isolation-Policy` header. WebView doesn't isolate renderer processes per site, so list only
+  origins you trust. The set replaces the list (`{}` clears it) and returns `false` when the profile
+  can't be reached; the get returns `null` then, and rules come back with their port
+  (`https://example.com:443`). A rule that can't be parsed throws a `PlatformException`.
+  Measured on Android 17 with WebView 153: a page sending `Document-Isolation-Policy:
+  isolate-and-require-corp` reports `crossOriginIsolated` `false` without the allowlist and `true`, with
+  `SharedArrayBuffer`, once its origin is listed. WebView 151 doesn't support the feature yet.
   `null` leaves WebKit untouched (no header, `navigator.globalPrivacyControl` undefined); `false` makes the
   flag `false`. It's applied to each navigation, so a `setSettings` change reaches the next one.
 - **A migration guide from `flutter_inappwebview` 6.x: [MIGRATION.md](MIGRATION.md)**, linked from the
@@ -63,6 +73,12 @@
   this component requires your app theme to be Theme.AppCompat" and no dialog appears.
   **New dependency: `com.google.android.material:material` 1.14.0**, the library that ships the Material
   3 themes for Android views; every app using the plugin now includes it.
+
+- **Android: native dependency `androidx.webkit` 1.17.0 → 1.18.0.** No new build requirements (its AAR
+  still asks for `compileSdk` 33 and AGP 7.2).
+- **`ProfileStore.addCustomHeader` and `CustomHeader` say when a header takes effect**: on document load.
+  A page or service worker already running when a header is added or cleared keeps sending what it sent
+  before. androidx.webkit 1.18.0 documented this; the docs said "every request".
 
 ### Fixed
 

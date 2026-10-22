@@ -448,6 +448,15 @@ class WebViewFeature_ {
     "CUSTOM_REQUEST_HEADERS",
   );
 
+  ///Feature for [isFeatureSupported]. This feature covers
+  ///[PlatformProfileStore.setCrossOriginIsolatedAllowlist] and
+  ///[PlatformProfileStore.getCrossOriginIsolatedAllowlist].
+  ///
+  ///Note these also need [MULTI_PROFILE], which is what makes a profile reachable at all.
+  static const CROSS_ORIGIN_ISOLATED_ALLOWLIST = WebViewFeature_._internal(
+    "CROSS_ORIGIN_ISOLATED_ALLOWLIST",
+  );
+
   ///Feature for [isFeatureSupported]. `androidx.webkit`'s real isolated JavaScript worlds:
   ///`WebViewCompat.addJavaScriptOnEvent`, the world-taking overloads of
   ///`addWebMessageListener` / `removeWebMessageListener`, `getExecutionWorld` and

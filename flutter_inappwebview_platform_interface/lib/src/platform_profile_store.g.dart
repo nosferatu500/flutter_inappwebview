@@ -114,6 +114,22 @@ enum PlatformProfileStoreMethod {
   ///{@endtemplate}
   getAllProfileNames,
 
+  ///Can be used to check if the [PlatformProfileStore.getCrossOriginIsolatedAllowlist] method is supported at runtime.
+  ///
+  ///{@template nosferatu500_inappwebview_platform_interface.PlatformProfileStore.getCrossOriginIsolatedAllowlist.supported_platforms}
+  ///
+  ///**Officially Supported Platforms/Implementations**:
+  ///- Android WebView ([Official API - Profile.getCrossOriginIsolatedAllowlist](https://developer.android.com/reference/androidx/webkit/Profile#getCrossOriginIsolatedAllowlist())):
+  ///    - Requires [WebViewFeature.MULTI_PROFILE] and [WebViewFeature.CROSS_ORIGIN_ISOLATED_ALLOWLIST]. The androidx API is on `Profile`; this class reaches it by name, which is how every other profile-scoped surface in this plugin works.
+  ///
+  ///**Parameters - Officially Supported Platforms/Implementations**:
+  ///- `profileName`:
+  ///    - Android WebView
+  ///
+  ///Use the [PlatformProfileStore.isMethodSupported] method to check if this method is supported at runtime.
+  ///{@endtemplate}
+  getCrossOriginIsolatedAllowlist,
+
   ///Can be used to check if the [PlatformProfileStore.getCustomHeaders] method is supported at runtime.
   ///
   ///{@template nosferatu500_inappwebview_platform_interface.PlatformProfileStore.getCustomHeaders.supported_platforms}
@@ -165,6 +181,23 @@ enum PlatformProfileStoreMethod {
   ///Use the [PlatformProfileStore.isMethodSupported] method to check if this method is supported at runtime.
   ///{@endtemplate}
   hasCustomHeader,
+
+  ///Can be used to check if the [PlatformProfileStore.setCrossOriginIsolatedAllowlist] method is supported at runtime.
+  ///
+  ///{@template nosferatu500_inappwebview_platform_interface.PlatformProfileStore.setCrossOriginIsolatedAllowlist.supported_platforms}
+  ///
+  ///**Officially Supported Platforms/Implementations**:
+  ///- Android WebView ([Official API - Profile.setCrossOriginIsolatedAllowlist](https://developer.android.com/reference/androidx/webkit/Profile#setCrossOriginIsolatedAllowlist(java.util.Set%3Cjava.lang.String%3E))):
+  ///    - Requires [WebViewFeature.MULTI_PROFILE] and [WebViewFeature.CROSS_ORIGIN_ISOLATED_ALLOWLIST]. The androidx API is on `Profile`; this class reaches it by name, which is how every other profile-scoped surface in this plugin works.
+  ///
+  ///**Parameters - Officially Supported Platforms/Implementations**:
+  ///- `originRules`: all platforms
+  ///- `profileName`:
+  ///    - Android WebView
+  ///
+  ///Use the [PlatformProfileStore.isMethodSupported] method to check if this method is supported at runtime.
+  ///{@endtemplate}
+  setCrossOriginIsolatedAllowlist,
 }
 
 extension _PlatformProfileStoreMethodSupported on PlatformProfileStore {
@@ -193,6 +226,10 @@ extension _PlatformProfileStoreMethodSupported on PlatformProfileStore {
         return ((kIsWeb && platform != null) || !kIsWeb) &&
             [TargetPlatform.android]
                 .contains(platform ?? defaultTargetPlatform);
+      case PlatformProfileStoreMethod.getCrossOriginIsolatedAllowlist:
+        return ((kIsWeb && platform != null) || !kIsWeb) &&
+            [TargetPlatform.android]
+                .contains(platform ?? defaultTargetPlatform);
       case PlatformProfileStoreMethod.getCustomHeaders:
         return ((kIsWeb && platform != null) || !kIsWeb) &&
             [TargetPlatform.android]
@@ -202,6 +239,10 @@ extension _PlatformProfileStoreMethodSupported on PlatformProfileStore {
             [TargetPlatform.android]
                 .contains(platform ?? defaultTargetPlatform);
       case PlatformProfileStoreMethod.hasCustomHeader:
+        return ((kIsWeb && platform != null) || !kIsWeb) &&
+            [TargetPlatform.android]
+                .contains(platform ?? defaultTargetPlatform);
+      case PlatformProfileStoreMethod.setCrossOriginIsolatedAllowlist:
         return ((kIsWeb && platform != null) || !kIsWeb) &&
             [TargetPlatform.android]
                 .contains(platform ?? defaultTargetPlatform);

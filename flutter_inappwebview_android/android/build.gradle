@@ -98,7 +98,7 @@ dependencies {
     // for as long as appcompat keeps bringing it. Pinned current, like the other androidx
     // dependencies here, rather than at the 1.13.1 that happened to resolve.
     implementation 'androidx.core:core:1.19.0'
-    implementation 'androidx.webkit:webkit:1.17.0'
+    implementation 'androidx.webkit:webkit:1.18.0'
     implementation 'androidx.browser:browser:1.10.0'
     implementation 'androidx.appcompat:appcompat:1.8.0'
     // Material 3 themes for the plugin's own native UI: the InAppBrowser activity

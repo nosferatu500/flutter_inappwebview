@@ -61,6 +61,7 @@ part 'load_file_url_request.dart';
 part 'save_state.dart';
 part 'cookie_intercept.dart';
 part 'custom_request_headers.dart';
+part 'cross_origin_isolated_allowlist.dart';
 part 'profile_store_delete.dart';
 part 'load_url.dart';
 part 'on_console_message.dart';
@@ -259,6 +260,7 @@ void main() {
     saveStateBounds();
     cookieIntercept();
     customRequestHeaders();
+    crossOriginIsolatedAllowlist();
     profileStoreDelete();
     keepAlive();
     onGeolocationPermissionsShowPrompt();

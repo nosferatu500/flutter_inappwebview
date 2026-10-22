@@ -69,6 +69,16 @@ class WebViewFeature {
     'CREATE_WEB_MESSAGE_CHANNEL',
   );
 
+  ///Feature for [isFeatureSupported]. This feature covers
+  ///[PlatformProfileStore.setCrossOriginIsolatedAllowlist] and
+  ///[PlatformProfileStore.getCrossOriginIsolatedAllowlist].
+  ///
+  ///Note these also need [MULTI_PROFILE], which is what makes a profile reachable at all.
+  static const CROSS_ORIGIN_ISOLATED_ALLOWLIST = WebViewFeature._internal(
+    'CROSS_ORIGIN_ISOLATED_ALLOWLIST',
+    'CROSS_ORIGIN_ISOLATED_ALLOWLIST',
+  );
+
   ///Feature for [isFeatureSupported]. This feature covers the custom-request-header family on
   ///[PlatformProfileStore]: [PlatformProfileStore.addCustomHeader],
   ///[PlatformProfileStore.hasCustomHeader], [PlatformProfileStore.getCustomHeaders],
@@ -491,6 +501,7 @@ class WebViewFeature {
     WebViewFeature.BACK_FORWARD_CACHE,
     WebViewFeature.COOKIE_INTERCEPT,
     WebViewFeature.CREATE_WEB_MESSAGE_CHANNEL,
+    WebViewFeature.CROSS_ORIGIN_ISOLATED_ALLOWLIST,
     WebViewFeature.CUSTOM_REQUEST_HEADERS,
     WebViewFeature.DEFAULT_TRAFFICSTATS_TAGGING,
     WebViewFeature.DELETE_BROWSING_DATA,
@@ -650,6 +661,8 @@ class WebViewFeature {
         return 'COOKIE_INTERCEPT';
       case 'CREATE_WEB_MESSAGE_CHANNEL':
         return 'CREATE_WEB_MESSAGE_CHANNEL';
+      case 'CROSS_ORIGIN_ISOLATED_ALLOWLIST':
+        return 'CROSS_ORIGIN_ISOLATED_ALLOWLIST';
       case 'CUSTOM_REQUEST_HEADERS':
         return 'CUSTOM_REQUEST_HEADERS';
       case 'DEFAULT_TRAFFICSTATS_TAGGING':

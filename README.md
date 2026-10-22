@@ -822,18 +822,20 @@ The tables are generated from the platform interface by `dart tool/readme_api_ta
 </details>
 
 <details>
-<summary><b><code>ProfileStore</code></b> — 8 APIs, 8 ★</summary>
+<summary><b><code>ProfileStore</code></b> — 10 APIs, 10 ★</summary>
 
 | API | Android | iOS | Description |
 | --- | --- | --- | --- |
-| ★ `addCustomHeader` | ✓ · `MULTI_PROFILE`, `CUSTOM_REQUEST_HEADERS` | — | Adds a `CustomHeader` sent on every request this profile makes to an origin matching the header's `originRules`. |
+| ★ `addCustomHeader` | ✓ · `MULTI_PROFILE`, `CUSTOM_REQUEST_HEADERS` | — | Adds a `CustomHeader` sent on this profile's requests to origins matching the header's `originRules`. |
 | ★ `clearAllCustomHeaders` | ✓ · `MULTI_PROFILE`, `CUSTOM_REQUEST_HEADERS` | — | Removes every custom header from this profile. |
 | ★ `clearCustomHeader` | ✓ · `MULTI_PROFILE`, `CUSTOM_REQUEST_HEADERS` | — | Removes custom headers with the given `headerName` (case-insensitive). |
 | ★ `deleteProfile` | ✓ · `MULTI_PROFILE` | — | Deletes the profile called `name` and the data it owns. |
 | ★ `getAllProfileNames` | ✓ · `MULTI_PROFILE` | — | Returns the names of every profile that currently exists, including `defaultProfileName`. |
+| ★ `getCrossOriginIsolatedAllowlist` | ✓ · `MULTI_PROFILE`, `CROSS_ORIGIN_ISOLATED_ALLOWLIST` | — | This profile's cross-origin-isolated allowlist, set by `setCrossOriginIsolatedAllowlist`. |
 | ★ `getCustomHeaders` | ✓ · `MULTI_PROFILE`, `CUSTOM_REQUEST_HEADERS` | — | All custom headers set on this profile. |
 | ★ `getOrCreateProfile` | ✓ · `MULTI_PROFILE` | — | Creates the profile called `name` if it does not exist yet, and returns its name. |
 | ★ `hasCustomHeader` | ✓ · `MULTI_PROFILE`, `CUSTOM_REQUEST_HEADERS` | — | Whether this profile has any custom header with the given `headerName`, **case-insensitively**. |
+| ★ `setCrossOriginIsolatedAllowlist` | ✓ · `MULTI_PROFILE`, `CROSS_ORIGIN_ISOLATED_ALLOWLIST` | — | Sets the origins where this profile allows cross-origin-isolated APIs, such as `SharedArrayBuffer`. |
 
 </details>
 

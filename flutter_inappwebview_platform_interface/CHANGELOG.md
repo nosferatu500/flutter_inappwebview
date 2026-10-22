@@ -11,6 +11,10 @@
   `PlatformInAppBrowserEvents`), with an iOS note in its docs.
 - **`InAppWebViewSettings.globalPrivacyControlEnabled`** (`bool?`, iOS 27.0): the Global Privacy Control
   signal (`WKWebpagePreferences.globalPrivacyControlEnabled`). `null` leaves WebKit untouched.
+- **`PlatformProfileStore.setCrossOriginIsolatedAllowlist` / `getCrossOriginIsolatedAllowlist`**
+  (Android) and **`WebViewFeature.CROSS_ORIGIN_ISOLATED_ALLOWLIST`**. The set returns `Future<bool>`,
+  `false` when the profile can't be reached; the get returns `Future<Set<String>?>`, `null` in that
+  case and `{}` for no allowlist.
 
 ### Changed
 
@@ -20,6 +24,9 @@
 - **The debug-mode console message promoting upstream is gone.** In debug builds, the first platform
   instance printed "Hi, flutter_inappwebview here…" with links to upstream's donation, GitHub and
   showcase pages. Nothing is printed now.
+- **`addCustomHeader` and `CustomHeader` say when a header takes effect**: on document load. Pages and
+  service workers already running keep sending what they sent before. androidx.webkit 1.18.0
+  documented this; the docs said "every request".
 ### Internal
 
 - **Doc fix: the last 23 classes' "supported platforms" tables reach dartdoc.** dartdoc's undefined-macro
