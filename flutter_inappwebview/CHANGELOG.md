@@ -106,6 +106,14 @@
 - **The example app drops `permission_handler` and compiles against `flutter.compileSdkVersion` (36).**
   Nothing used it (its import and calls were commented out), and `permission_handler_android` 14
   compiles against API 37, which made the example pin `compileSdk = 37`.
+- **Both example apps drop the `espresso-core` 3.6.1 `force`** that AGP 9 needed under Flutter 3.44, whose
+  `integration_test` asked for `espresso-core:3.2+` (3.2.0 has no unique namespace). Flutter 3.47's asks
+  for `3.3+`, which resolves to 3.3.0 and merges: both examples build debug and profile APKs without it.
+- **The example apps' Gradle files lose what nothing used:** the JUnit and `androidTest` dependencies and
+  the `testInstrumentationRunner` (neither app has `src/test` or `src/androidTest`, and `androidTest` didn't
+  resolve), the `InvalidPackage` lint opt-out, the hand-read `local.properties` version code and name
+  (now `flutter.versionCode` / `flutter.versionName`, which default to the same `1` / `1.0`), and the main
+  example's unreferenced `settings_aar.gradle`. The built APKs carry the same versions as before.
 - **Tests: the integration suite ran on Android 8.0** (an API 26 emulator, stock WebView 58). Twelve of
   the 16 groups pass (eleven before the proxy-test fix below). The failures caused by the API level are fixed; all are in the tests or their
   fixtures:
