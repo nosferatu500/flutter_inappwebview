@@ -29,10 +29,7 @@ android {
         targetCompatibility = JavaVersion.VERSION_17
     }
 
-    // Not flutter.compileSdkVersion (still 36 on Flutter 3.47): permission_handler 13
-    // publishes AAR metadata requiring consumers to compile against API 37+.
-    // flutter.compileSdkVersion (API 36)
-    compileSdk = 37
+    compileSdk = flutter.compileSdkVersion
     ndkVersion = flutter.ndkVersion
 
     defaultConfig {

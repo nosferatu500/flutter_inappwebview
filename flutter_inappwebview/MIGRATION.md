@@ -15,7 +15,7 @@ rely on without the analyzer noticing, so read it even if everything compiles.
 | Package | `flutter_inappwebview` | `nosferatu500_inappwebview` |
 | Platforms | Android, iOS, macOS, Windows, Linux, Web | **Android, iOS** |
 | Flutter / Dart | 3.x | **3.47 / 3.13** (7.0.0: 3.44 / 3.12) |
-| Android | `minSdk` 19, AGP 8 | **`minSdk` 26 (7.0.0: 30), `compileSdk` 37, AGP 9, Gradle 9.1, JDK 17, Kotlin Gradle Plugin 2.2.20+** |
+| Android | `minSdk` 19, AGP 8 | **`minSdk` 26 (7.0.0: 30), `compileSdk` 36 (7.0.0: 37), AGP 9, Gradle 9.1, JDK 17, Kotlin Gradle Plugin 2.2.20+** |
 | iOS | 12.0, CocoaPods or SwiftPM | **15.0, Xcode 27 (7.0.0: Xcode 26), Swift Package Manager only** |
 | Deprecated API | present | **removed** |
 
@@ -46,8 +46,8 @@ Flutter 3.44.
 **Android** (`android/app/build.gradle` and `settings.gradle`):
 
 - `minSdk` 26 or higher (7.0.0: 30). AGP rejects an app whose `minSdk` is below a library's.
-- `compileSdk = 37`. Flutter's default is still 36, and the plugin's `androidx.core` dependency makes
-  AGP fail the build below 37.
+- `compileSdk` 36 or higher: Flutter 3.47's default (`flutter.compileSdkVersion`), so the app template
+  needs no change. 7.0.0 needed 37, and an app that set `compileSdk = 37` for it can keep it.
 - Android Gradle Plugin 9, Gradle 9.1 or newer, JDK 17 or newer.
 - The Kotlin Gradle Plugin 2.2.20 or newer on your build classpath. That is Flutter 3.47's own
   minimum, and AGP 9.3–9.4 bring only 2.2.10, so declare it as Flutter 3.47's app template does:
@@ -177,7 +177,7 @@ These compile unchanged but behave differently.
 
 - [ ] `nosferatu500_inappwebview` in `pubspec.yaml`; imports updated.
 - [ ] Flutter 3.47+ (or stay on 7.0.0 with 3.44).
-- [ ] Android: `minSdk` 26, `compileSdk` 37, AGP 9, Kotlin Gradle Plugin 2.2.20+ declared,
+- [ ] Android: `minSdk` 26, `compileSdk` 36+, AGP 9, Kotlin Gradle Plugin 2.2.20+ declared,
       `FileProvider` block replaced if you had one.
 - [ ] iOS: deployment target 15.0, Xcode 27, Swift Package Manager enabled.
 - [ ] `*Options` → `*Settings`; `Android` / `IOS` prefixes dropped; platform-only API deleted.

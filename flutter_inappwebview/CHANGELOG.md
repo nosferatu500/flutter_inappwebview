@@ -12,6 +12,9 @@
   `id("org.jetbrains.kotlin.android") version "2.4.0" apply false` in `settings.gradle(.kts)`.
 - **Android: `minSdk` 26 or newer** (was 30): the plugin runs on Android 8.0 and newer again. An app at
   `minSdk` 26–29 can now use it; an app already at 30 or higher needs no change.
+- **Android: `compileSdk` 36 is enough again** (7.0.0 required 37), so Flutter 3.47's default works and
+  the `compileSdk = 37` line 7.0.0 asked for can go. Keeping it is harmless. The plugin's `androidx.core`
+  is held at 1.18.0 (was 1.19.0, which requires 37).
 - **iOS: Xcode 27 or newer** (was 26). The iOS module now uses iOS 27 WebKit API, which only the iOS 27
   SDK declares: Xcode 26 fails with `value of type 'WKWebpagePreferences' has no member
   'globalPrivacyControlEnabled'`. Apps still run on iOS 15 and newer; the iOS 27 features are skipped
@@ -100,6 +103,9 @@
 
 ### Internal
 
+- **The example app drops `permission_handler` and compiles against `flutter.compileSdkVersion` (36).**
+  Nothing used it (its import and calls were commented out), and `permission_handler_android` 14
+  compiles against API 37, which made the example pin `compileSdk = 37`.
 - **Tests: the integration suite ran on Android 8.0** (an API 26 emulator, stock WebView 58). Twelve of
   the 16 groups pass (eleven before the proxy-test fix below). The failures caused by the API level are fixed; all are in the tests or their
   fixtures:

@@ -28,7 +28,6 @@ import 'package:flutter_inappwebview_example/screens/test_automation/test_config
 import 'package:flutter_inappwebview_example/utils/test_registry.dart';
 
 // import 'package:path_provider/path_provider.dart';
-// import 'package:permission_handler/permission_handler.dart';
 
 final localhostServer = InAppLocalhostServer(documentRoot: 'assets');
 
@@ -37,10 +36,6 @@ Future main() async {
 
   // Initialize test registry
   TestRegistry.init();
-
-  // await Permission.camera.request();
-  // await Permission.microphone.request();
-  // await Permission.storage.request();
 
   if (!kIsWeb && defaultTargetPlatform == TargetPlatform.android) {
     await InAppWebViewController.setWebContentsDebuggingEnabled(kDebugMode);

@@ -13,6 +13,11 @@
 - **`minSdk` 26 or newer** (was 30): the plugin runs on Android 8.0 and newer again. An app at
   `minSdk` 26–29 can now use it; an app already at 30 or higher needs no change. AGP still rejects an
   app whose `minSdk` is below this library's.
+- **Apps no longer need `compileSdk = 37`: 36, Flutter 3.47's default, is enough again** (7.0.0
+  required 37). The module compiles against `flutter.compileSdkVersion` again, and `androidx.core` is
+  held at 1.18.0 (was 1.19.0), whose AAR metadata asks for 36 where 1.19.0's asks for 37 (and AGP 9.1).
+  The plugin used nothing from 1.19. Measured: the Android example builds at `compileSdk` 36; an app
+  that keeps 37 is unaffected.
 
 ### Added
 

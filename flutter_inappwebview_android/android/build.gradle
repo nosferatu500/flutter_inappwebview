@@ -16,12 +16,10 @@ apply plugin: 'com.android.library'
 
 android {
     namespace = 'dev.nosferatu500.inappwebview'
-    // Not flutter.compileSdkVersion (still 36 on Flutter 3.47): androidx.core 1.19.0 publishes AAR
-    // metadata requiring consumers to compile against API 37+, and lint fails the build rather
-    // than warning when that is unmet. The main example already pins 37 for the same class of
-    // reason (permission_handler 13). Drop back to flutter.compileSdkVersion once Flutter's
-    // default reaches 37.
-    compileSdk = 37
+    // An app has to compile against at least this, so it follows Flutter's default (36 on Flutter
+    // 3.47) rather than pinning a newer one: a pinned 37 made every app add `compileSdk = 37`.
+    // Every dependency below asks for 36 or less (androidx.core is held at 1.18.0 for that).
+    compileSdk = flutter.compileSdkVersion
 
     // This module's sources are Kotlin, so built-in Kotlin must stay on -- do not
     // reintroduce `enableKotlin = false`. Nothing else is needed here: whichever
@@ -95,9 +93,11 @@ dependencies {
     // Used directly -- ContextCompat, ViewCompat, WindowCompat, WindowInsetsCompat,
     // WindowInsetsControllerCompat, BundleCompat and FileProvider, across 4 files -- but it was
     // reaching the classpath only transitively (appcompat -> fragment -> core), which holds only
-    // for as long as appcompat keeps bringing it. Pinned current, like the other androidx
-    // dependencies here, rather than at the 1.13.1 that happened to resolve.
-    implementation 'androidx.core:core:1.19.0'
+    // for as long as appcompat keeps bringing it. Held at 1.18.0, not the current 1.19.x: 1.19.0's
+    // AAR metadata requires apps to compile against API 37 (and AGP 9.1), 1.18.0's against 36,
+    // Flutter's default. The plugin uses nothing from 1.19. Nothing else here asks for more than
+    // core 1.16.0, so this pin is what resolves.
+    implementation 'androidx.core:core:1.18.0'
     implementation 'androidx.webkit:webkit:1.18.0'
     implementation 'androidx.browser:browser:1.10.0'
     implementation 'androidx.appcompat:appcompat:1.8.0'
