@@ -79,18 +79,15 @@ void main() {
     return (result.$1, result.$2, result.$3, printed);
   }
 
-  test(
-    'serves an asset with its content type, and never prints the request\'s headers',
-    () async {
-      final (status, body, contentType, printed) = await fetch('page.html');
-      expect(status, 200);
-      expect(body, '<p>hi</p>');
-      expect(contentType, 'text/html; charset=utf-8');
-      final all = printed.join('\n');
-      expect(all, isNot(contains('request-secret')));
-      expect(all, isNot(contains('request-token')));
-    },
-  );
+  test('serves an asset with its content type, and never prints the request\'s headers', () async {
+    final (status, body, contentType, printed) = await fetch('page.html');
+    expect(status, 200);
+    expect(body, '<p>hi</p>');
+    expect(contentType, 'text/html; charset=utf-8');
+    final all = printed.join('\n');
+    expect(all, isNot(contains('request-secret')));
+    expect(all, isNot(contains('request-token')));
+  });
 
   test('in debug, prints each served response\'s headers once', () async {
     final (_, _, _, printed) = await fetch('page.html');

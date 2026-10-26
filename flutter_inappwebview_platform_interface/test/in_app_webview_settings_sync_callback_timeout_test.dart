@@ -23,9 +23,8 @@ import 'package:flutter_test/flutter_test.dart';
 void main() {
   group('syncCallbackTimeoutMillis wire shape', () {
     test('serialises under the key the Kotlin side parses', () {
-      final map = InAppWebViewSettings(
-        syncCallbackTimeoutMillis: 30000,
-      ).toMap();
+      final map = InAppWebViewSettings(syncCallbackTimeoutMillis: 30000)
+          .toMap();
 
       expect(map['syncCallbackTimeoutMillis'], 30000);
     });
@@ -49,15 +48,13 @@ void main() {
       // the fallback rule has exactly one home. Pinned here so a future Dart-side clamp is a
       // deliberate change rather than a quiet duplication of the rule.
       expect(
-        InAppWebViewSettings(
-          syncCallbackTimeoutMillis: 0,
-        ).toMap()['syncCallbackTimeoutMillis'],
+        InAppWebViewSettings(syncCallbackTimeoutMillis: 0)
+            .toMap()['syncCallbackTimeoutMillis'],
         0,
       );
       expect(
-        InAppWebViewSettings(
-          syncCallbackTimeoutMillis: -1,
-        ).toMap()['syncCallbackTimeoutMillis'],
+        InAppWebViewSettings(syncCallbackTimeoutMillis: -1)
+            .toMap()['syncCallbackTimeoutMillis'],
         -1,
       );
     });

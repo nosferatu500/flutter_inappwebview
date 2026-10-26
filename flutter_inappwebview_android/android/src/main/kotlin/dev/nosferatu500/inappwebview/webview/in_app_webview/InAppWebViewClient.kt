@@ -3,6 +3,7 @@ package dev.nosferatu500.inappwebview.webview.in_app_webview
 import android.annotation.SuppressLint
 import android.graphics.Bitmap
 import android.net.http.SslError
+import android.os.Build
 import android.os.Message
 import android.view.KeyEvent
 import android.webkit.ClientCertRequest
@@ -15,6 +16,7 @@ import android.webkit.WebResourceRequest
 import android.webkit.WebResourceResponse
 import android.webkit.WebView
 import android.webkit.WebViewClient
+import androidx.annotation.RequiresApi
 import dev.nosferatu500.inappwebview.in_app_browser.InAppBrowserDelegate
 import dev.nosferatu500.inappwebview.types.WebResourceErrorExt
 import dev.nosferatu500.inappwebview.types.WebResourceRequestExt
@@ -120,6 +122,9 @@ open class InAppWebViewClient(inAppBrowserDelegate: InAppBrowserDelegate?) : Web
     common.onScaleChanged(view, oldScale, newScale)
   }
 
+  // The framework only calls this on API 27+, which is what makes the SafeBrowsingResponse
+  // methods below safe to call unguarded.
+  @RequiresApi(Build.VERSION_CODES.O_MR1)
   override fun onSafeBrowsingHit(
     view: WebView,
     request: WebResourceRequest,

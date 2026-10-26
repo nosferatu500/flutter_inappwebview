@@ -4,6 +4,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/widgets.dart';
 import 'package:nosferatu500_inappwebview/nosferatu500_inappwebview.dart';
 import 'package:flutter_test/flutter_test.dart';
+
 import '../constants.dart';
 import '../util.dart';
 
@@ -15,6 +16,7 @@ part 'has_cookies.dart';
 part 'file_scheme_cookies.dart';
 part 'cookie_store_observer.dart';
 part 'profile_scope.dart';
+part 'get_cookies_matching.dart';
 
 void main() {
   final shouldSkip = !CookieManager.isClassSupported();
@@ -28,5 +30,6 @@ void main() {
     fileSchemeCookies();
     cookieStoreObserver();
     profileScope();
+    getCookiesMatching();
   }, skip: shouldSkip);
 }

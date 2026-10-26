@@ -33,8 +33,6 @@ class ChromeSafariBrowser implements PlatformChromeSafariBrowserEvents {
   final PlatformChromeSafariBrowser platform;
 
   ///{@macro nosferatu500_inappwebview_platform_interface.PlatformChromeSafariBrowser.id}
-  ///
-  ///{@macro nosferatu500_inappwebview_platform_interface.PlatformChromeSafariBrowser.id.supported_platforms}
   String get id => platform.id;
 
   ///{@macro nosferatu500_inappwebview_platform_interface.PlatformChromeSafariBrowser.open}

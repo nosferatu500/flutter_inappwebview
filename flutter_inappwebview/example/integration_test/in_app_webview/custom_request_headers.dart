@@ -88,14 +88,12 @@ void customRequestHeaders() {
       expect(
         matching,
         'sent',
-        reason:
-            'a header whose origin rule matches the loaded origin did not reach the request',
+        reason: 'a header whose origin rule matches the loaded origin did not reach the request',
       );
       expect(
         other,
         isEmpty,
-        reason:
-            'a header scoped to a different origin was sent anyway, so the rules are not applied',
+        reason: 'a header scoped to a different origin was sent anyway, so the rules are not applied',
       );
     } finally {
       await store.clearAllCustomHeaders();
@@ -148,9 +146,9 @@ void customRequestHeaders() {
       );
 
       expect(
-        (await store.getCustomHeaders(
-          headerName: 'X-Multi',
-        )).map((h) => h.value).toSet(),
+        (await store.getCustomHeaders(headerName: 'X-Multi'))
+            .map((h) => h.value)
+            .toSet(),
         {'one', 'two'},
       );
       expect(
@@ -165,9 +163,9 @@ void customRequestHeaders() {
       // overload, and the assertion that fails if the Kotlin picks the wrong one.
       await store.clearCustomHeader('X-Multi', headerValue: 'one');
       expect(
-        (await store.getCustomHeaders(
-          headerName: 'X-Multi',
-        )).map((h) => h.value).toSet(),
+        (await store.getCustomHeaders(headerName: 'X-Multi'))
+            .map((h) => h.value)
+            .toSet(),
         {'two'},
         reason:
             'clearing one value removed more (or fewer) headers than it should',

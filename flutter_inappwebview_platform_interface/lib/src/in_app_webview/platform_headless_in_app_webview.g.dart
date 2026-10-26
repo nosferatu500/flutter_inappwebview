@@ -8,14 +8,6 @@ part of 'platform_headless_in_app_webview.dart';
 
 extension _PlatformHeadlessInAppWebViewCreationParamsClassSupported
     on PlatformHeadlessInAppWebViewCreationParams {
-  ///{@template nosferatu500_inappwebview_platform_interface.PlatformHeadlessInAppWebViewCreationParams.supported_platforms}
-  ///
-  ///**Officially Supported Platforms/Implementations**:
-  ///- Android WebView
-  ///- iOS WKWebView
-  ///
-  ///Use the [PlatformHeadlessInAppWebViewCreationParams.isClassSupported] method to check if this class is supported at runtime.
-  ///{@endtemplate}
   static bool isClassSupported({TargetPlatform? platform}) {
     return ((kIsWeb && platform != null) || !kIsWeb) &&
         [
@@ -26,6 +18,15 @@ extension _PlatformHeadlessInAppWebViewCreationParamsClassSupported
 }
 
 ///List of [PlatformHeadlessInAppWebViewCreationParams]'s properties that can be used to check i they are supported or not by the current platform.
+///
+///{@template nosferatu500_inappwebview_platform_interface.PlatformHeadlessInAppWebViewCreationParams.supported_platforms}
+///
+///**Officially Supported Platforms/Implementations**:
+///- Android WebView
+///- iOS WKWebView
+///
+///Use the [PlatformHeadlessInAppWebViewCreationParams.isClassSupported] method to check if this class is supported at runtime.
+///{@endtemplate}
 enum PlatformHeadlessInAppWebViewCreationParamsProperty {
   ///Can be used to check if the [PlatformHeadlessInAppWebViewCreationParams.initialSize] property is supported at runtime.
   ///
@@ -58,28 +59,16 @@ extension _PlatformHeadlessInAppWebViewCreationParamsPropertySupported
   }
 }
 
-extension _PlatformHeadlessInAppWebViewClassSupported
-    on PlatformHeadlessInAppWebView {
-  ///{@template nosferatu500_inappwebview_platform_interface.PlatformHeadlessInAppWebView.supported_platforms}
-  ///
-  ///**Officially Supported Platforms/Implementations**:
-  ///- Android WebView
-  ///- iOS WKWebView
-  ///
-  ///Use the [PlatformHeadlessInAppWebView.isClassSupported] method to check if this class is supported at runtime.
-  ///{@endtemplate}
-  // Unused: [PlatformHeadlessInAppWebView.isClassSupported] answers through its creation params. Kept for the doc template above.
-  // ignore: unused_element
-  static bool isClassSupported({TargetPlatform? platform}) {
-    return ((kIsWeb && platform != null) || !kIsWeb) &&
-        [
-          TargetPlatform.android,
-          TargetPlatform.iOS,
-        ].contains(platform ?? defaultTargetPlatform);
-  }
-}
-
 ///List of [PlatformHeadlessInAppWebView]'s methods that can be used to check if they are supported or not by the current platform.
+///
+///{@template nosferatu500_inappwebview_platform_interface.PlatformHeadlessInAppWebView.supported_platforms}
+///
+///**Officially Supported Platforms/Implementations**:
+///- Android WebView
+///- iOS WKWebView
+///
+///Use the [PlatformHeadlessInAppWebView.isClassSupported] method to check if this class is supported at runtime.
+///{@endtemplate}
 enum PlatformHeadlessInAppWebViewMethod {
   ///Can be used to check if the [PlatformHeadlessInAppWebView.dispose] method is supported at runtime.
   ///
@@ -139,7 +128,7 @@ enum PlatformHeadlessInAppWebViewMethod {
   ///- iOS WKWebView
   ///
   ///**Parameters - Officially Supported Platforms/Implementations**:
-  ///- [size]: all platforms
+  ///- `size`: all platforms
   ///
   ///Use the [PlatformHeadlessInAppWebView.isMethodSupported] method to check if this method is supported at runtime.
   ///{@endtemplate}

@@ -6,37 +6,19 @@ part of 'platform_in_app_localhost_server.dart';
 // SupportedPlatformsGenerator
 // **************************************************************************
 
+///{@template nosferatu500_inappwebview_platform_interface.PlatformInAppLocalhostServerCreationParams.supported_platforms}
+///
+///**Officially Supported Platforms/Implementations**:
+///- Android WebView
+///- iOS WKWebView
+///
+///Use the [PlatformInAppLocalhostServerCreationParams.isClassSupported] method to check if this class is supported at runtime.
+///{@endtemplate}
+// Carries the template above for dartdoc; hidden from every export, so not API (§350).
+abstract final class PlatformInAppLocalhostServerCreationParamsSupportedPlatforms {}
+
 extension _PlatformInAppLocalhostServerCreationParamsClassSupported
     on PlatformInAppLocalhostServerCreationParams {
-  ///{@template nosferatu500_inappwebview_platform_interface.PlatformInAppLocalhostServerCreationParams.supported_platforms}
-  ///
-  ///**Officially Supported Platforms/Implementations**:
-  ///- Android WebView
-  ///- iOS WKWebView
-  ///
-  ///Use the [PlatformInAppLocalhostServerCreationParams.isClassSupported] method to check if this class is supported at runtime.
-  ///{@endtemplate}
-  static bool isClassSupported({TargetPlatform? platform}) {
-    return ((kIsWeb && platform != null) || !kIsWeb) &&
-        [
-          TargetPlatform.android,
-          TargetPlatform.iOS,
-        ].contains(platform ?? defaultTargetPlatform);
-  }
-}
-
-extension _PlatformInAppLocalhostServerClassSupported
-    on PlatformInAppLocalhostServer {
-  ///{@template nosferatu500_inappwebview_platform_interface.PlatformInAppLocalhostServer.supported_platforms}
-  ///
-  ///**Officially Supported Platforms/Implementations**:
-  ///- Android WebView
-  ///- iOS WKWebView
-  ///
-  ///Use the [PlatformInAppLocalhostServer.isClassSupported] method to check if this class is supported at runtime.
-  ///{@endtemplate}
-  // Unused: [PlatformInAppLocalhostServer.isClassSupported] answers through its creation params. Kept for the doc template above.
-  // ignore: unused_element
   static bool isClassSupported({TargetPlatform? platform}) {
     return ((kIsWeb && platform != null) || !kIsWeb) &&
         [
@@ -47,6 +29,15 @@ extension _PlatformInAppLocalhostServerClassSupported
 }
 
 ///List of [PlatformInAppLocalhostServer]'s methods that can be used to check if they are supported or not by the current platform.
+///
+///{@template nosferatu500_inappwebview_platform_interface.PlatformInAppLocalhostServer.supported_platforms}
+///
+///**Officially Supported Platforms/Implementations**:
+///- Android WebView
+///- iOS WKWebView
+///
+///Use the [PlatformInAppLocalhostServer.isClassSupported] method to check if this class is supported at runtime.
+///{@endtemplate}
 enum PlatformInAppLocalhostServerMethod {
   ///Can be used to check if the [PlatformInAppLocalhostServer.close] method is supported at runtime.
   ///

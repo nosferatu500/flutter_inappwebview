@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:nosferatu500_inappwebview/nosferatu500_inappwebview.dart';
 
 /// Widget to test user script injection
@@ -283,9 +283,8 @@ class _UserScriptTesterWidgetState extends State<UserScriptTesterWidget> {
       });
 
       if (mounted) {
-        ScaffoldMessenger.of(
-          context,
-        ).showSnackBar(SnackBar(content: Text('Failed to add script: $e')));
+        ScaffoldMessenger.of(context)
+            .showSnackBar(SnackBar(content: Text('Failed to add script: $e')));
       }
     }
   }

@@ -32,14 +32,14 @@ class PullToRefreshController {
   /// Implementation of [PlatformPullToRefreshController] for the current platform.
   final PlatformPullToRefreshController platform;
 
-  ///{@macro nosferatu500_inappwebview_platform_interface.PlatformPullToRefreshController.settings}
+  ///{@macro nosferatu500_inappwebview_platform_interface.PlatformPullToRefreshControllerCreationParams.settings}
   ///
-  ///{@macro nosferatu500_inappwebview_platform_interface.PlatformPullToRefreshController.settings.supported_platforms}
+  ///{@macro nosferatu500_inappwebview_platform_interface.PlatformPullToRefreshControllerCreationParams.settings.supported_platforms}
   PullToRefreshSettings get settings => platform.settings;
 
-  ///{@macro nosferatu500_inappwebview_platform_interface.PlatformPullToRefreshController.onRefresh}
+  ///{@macro nosferatu500_inappwebview_platform_interface.PlatformPullToRefreshControllerCreationParams.onRefresh}
   ///
-  ///{@macro nosferatu500_inappwebview_platform_interface.PlatformPullToRefreshController.onRefresh.supported_platforms}
+  ///{@macro nosferatu500_inappwebview_platform_interface.PlatformPullToRefreshControllerCreationParams.onRefresh.supported_platforms}
   void Function()? get onRefresh => platform.onRefresh;
 
   ///{@macro nosferatu500_inappwebview_platform_interface.PlatformPullToRefreshController.setEnabled}
@@ -114,7 +114,7 @@ class PullToRefreshController {
   void dispose({bool isKeepAlive = false}) =>
       platform.dispose(isKeepAlive: isKeepAlive);
 
-  ///{@macro nosferatu500_inappwebview_platform_interface.PlatformPullToRefreshController.isClassSupported}
+  ///{@macro nosferatu500_inappwebview_platform_interface.PlatformPullToRefreshControllerCreationParams.isClassSupported}
   static bool isClassSupported({TargetPlatform? platform}) =>
       PlatformPullToRefreshController.static().isClassSupported(
         platform: platform,

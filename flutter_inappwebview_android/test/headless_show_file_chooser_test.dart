@@ -59,9 +59,8 @@ void main() {
 
   test('the Android params take it directly', () {
     expect(
-      AndroidHeadlessInAppWebViewCreationParams(
-        onShowFileChooser: handler,
-      ).onShowFileChooser,
+      AndroidHeadlessInAppWebViewCreationParams(onShowFileChooser: handler)
+          .onShowFileChooser,
       same(handler),
     );
   });

@@ -69,6 +69,16 @@ class WebViewFeature {
     'CREATE_WEB_MESSAGE_CHANNEL',
   );
 
+  ///Feature for [isFeatureSupported]. This feature covers
+  ///[PlatformProfileStore.setCrossOriginIsolatedAllowlist] and
+  ///[PlatformProfileStore.getCrossOriginIsolatedAllowlist].
+  ///
+  ///Note these also need [MULTI_PROFILE], which is what makes a profile reachable at all.
+  static const CROSS_ORIGIN_ISOLATED_ALLOWLIST = WebViewFeature._internal(
+    'CROSS_ORIGIN_ISOLATED_ALLOWLIST',
+    'CROSS_ORIGIN_ISOLATED_ALLOWLIST',
+  );
+
   ///Feature for [isFeatureSupported]. This feature covers the custom-request-header family on
   ///[PlatformProfileStore]: [PlatformProfileStore.addCustomHeader],
   ///[PlatformProfileStore.hasCustomHeader], [PlatformProfileStore.getCustomHeaders],
@@ -491,6 +501,7 @@ class WebViewFeature {
     WebViewFeature.BACK_FORWARD_CACHE,
     WebViewFeature.COOKIE_INTERCEPT,
     WebViewFeature.CREATE_WEB_MESSAGE_CHANNEL,
+    WebViewFeature.CROSS_ORIGIN_ISOLATED_ALLOWLIST,
     WebViewFeature.CUSTOM_REQUEST_HEADERS,
     WebViewFeature.DEFAULT_TRAFFICSTATS_TAGGING,
     WebViewFeature.DELETE_BROWSING_DATA,
@@ -650,6 +661,8 @@ class WebViewFeature {
         return 'COOKIE_INTERCEPT';
       case 'CREATE_WEB_MESSAGE_CHANNEL':
         return 'CREATE_WEB_MESSAGE_CHANNEL';
+      case 'CROSS_ORIGIN_ISOLATED_ALLOWLIST':
+        return 'CROSS_ORIGIN_ISOLATED_ALLOWLIST';
       case 'CUSTOM_REQUEST_HEADERS':
         return 'CUSTOM_REQUEST_HEADERS';
       case 'DEFAULT_TRAFFICSTATS_TAGGING':
@@ -795,31 +808,18 @@ class WebViewFeature {
 // SupportedPlatformsGenerator
 // **************************************************************************
 
+///{@template nosferatu500_inappwebview_platform_interface.PlatformWebViewFeatureCreationParams.supported_platforms}
+///
+///**Officially Supported Platforms/Implementations**:
+///- Android WebView
+///
+///Use the [PlatformWebViewFeatureCreationParams.isClassSupported] method to check if this class is supported at runtime.
+///{@endtemplate}
+// Carries the template above for dartdoc; hidden from every export, so not API (§350).
+abstract final class PlatformWebViewFeatureCreationParamsSupportedPlatforms {}
+
 extension _PlatformWebViewFeatureCreationParamsClassSupported
     on PlatformWebViewFeatureCreationParams {
-  ///{@template nosferatu500_inappwebview_platform_interface.PlatformWebViewFeatureCreationParams.supported_platforms}
-  ///
-  ///**Officially Supported Platforms/Implementations**:
-  ///- Android WebView
-  ///
-  ///Use the [PlatformWebViewFeatureCreationParams.isClassSupported] method to check if this class is supported at runtime.
-  ///{@endtemplate}
-  static bool isClassSupported({TargetPlatform? platform}) {
-    return ((kIsWeb && platform != null) || !kIsWeb) &&
-        [TargetPlatform.android].contains(platform ?? defaultTargetPlatform);
-  }
-}
-
-extension _PlatformWebViewFeatureClassSupported on PlatformWebViewFeature {
-  ///{@template nosferatu500_inappwebview_platform_interface.PlatformWebViewFeature.supported_platforms}
-  ///
-  ///**Officially Supported Platforms/Implementations**:
-  ///- Android WebView
-  ///
-  ///Use the [PlatformWebViewFeature.isClassSupported] method to check if this class is supported at runtime.
-  ///{@endtemplate}
-  // Unused: [PlatformWebViewFeature.isClassSupported] answers through its creation params. Kept for the doc template above.
-  // ignore: unused_element
   static bool isClassSupported({TargetPlatform? platform}) {
     return ((kIsWeb && platform != null) || !kIsWeb) &&
         [TargetPlatform.android].contains(platform ?? defaultTargetPlatform);
@@ -827,6 +827,14 @@ extension _PlatformWebViewFeatureClassSupported on PlatformWebViewFeature {
 }
 
 ///List of [PlatformWebViewFeature]'s methods that can be used to check if they are supported or not by the current platform.
+///
+///{@template nosferatu500_inappwebview_platform_interface.PlatformWebViewFeature.supported_platforms}
+///
+///**Officially Supported Platforms/Implementations**:
+///- Android WebView
+///
+///Use the [PlatformWebViewFeature.isClassSupported] method to check if this class is supported at runtime.
+///{@endtemplate}
 enum PlatformWebViewFeatureMethod {
   ///Can be used to check if the [PlatformWebViewFeature.isFeatureSupported] method is supported at runtime.
   ///
@@ -836,7 +844,7 @@ enum PlatformWebViewFeatureMethod {
   ///- Android WebView ([Official API - WebViewFeature.isFeatureSupported](https://developer.android.com/reference/androidx/webkit/WebViewFeature#isFeatureSupported(java.lang.String)))
   ///
   ///**Parameters - Officially Supported Platforms/Implementations**:
-  ///- [feature]: all platforms
+  ///- `feature`: all platforms
   ///
   ///Use the [PlatformWebViewFeature.isMethodSupported] method to check if this method is supported at runtime.
   ///{@endtemplate}
@@ -850,7 +858,7 @@ enum PlatformWebViewFeatureMethod {
   ///- Android WebView ([Official API - WebViewFeature.isStartupFeatureSupported](https://developer.android.com/reference/androidx/webkit/WebViewFeature#isStartupFeatureSupported(android.content.Context,java.lang.String)))
   ///
   ///**Parameters - Officially Supported Platforms/Implementations**:
-  ///- [startupFeature]: all platforms
+  ///- `startupFeature`: all platforms
   ///
   ///Use the [PlatformWebViewFeature.isMethodSupported] method to check if this method is supported at runtime.
   ///{@endtemplate}
@@ -865,14 +873,12 @@ extension _PlatformWebViewFeatureMethodSupported on PlatformWebViewFeature {
     switch (method) {
       case PlatformWebViewFeatureMethod.isFeatureSupported:
         return ((kIsWeb && platform != null) || !kIsWeb) &&
-            [
-              TargetPlatform.android,
-            ].contains(platform ?? defaultTargetPlatform);
+            [TargetPlatform.android]
+                .contains(platform ?? defaultTargetPlatform);
       case PlatformWebViewFeatureMethod.isStartupFeatureSupported:
         return ((kIsWeb && platform != null) || !kIsWeb) &&
-            [
-              TargetPlatform.android,
-            ].contains(platform ?? defaultTargetPlatform);
+            [TargetPlatform.android]
+                .contains(platform ?? defaultTargetPlatform);
     }
   }
 }

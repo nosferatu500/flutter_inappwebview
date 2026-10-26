@@ -1,4 +1,5 @@
 import 'dart:typed_data';
+
 import 'package:nosferatu500_inappwebview_internal_annotations/nosferatu500_inappwebview_internal_annotations.dart';
 
 import '../x509_certificate/x509_certificate.dart';
@@ -60,8 +61,7 @@ class URLProtectionSpace_ {
     platforms: [
       IOSPlatform(
         apiName: "URLProtectionSpace.authenticationMethod",
-        apiUrl:
-            "https://developer.apple.com/documentation/foundation/urlprotectionspace/1415028-authenticationmethod",
+        apiUrl: "https://developer.apple.com/documentation/foundation/urlprotectionspace/1415028-authenticationmethod",
       ),
     ],
   )
@@ -75,8 +75,7 @@ class URLProtectionSpace_ {
     platforms: [
       IOSPlatform(
         apiName: "URLProtectionSpace.distinguishedNames",
-        apiUrl:
-            "https://developer.apple.com/documentation/foundation/urlprotectionspace/1417061-distinguishednames",
+        apiUrl: "https://developer.apple.com/documentation/foundation/urlprotectionspace/1417061-distinguishednames",
       ),
     ],
   )
@@ -88,8 +87,7 @@ class URLProtectionSpace_ {
     platforms: [
       IOSPlatform(
         apiName: "URLProtectionSpace.receivesCredentialSecurely",
-        apiUrl:
-            "https://developer.apple.com/documentation/foundation/urlprotectionspace/1415176-receivescredentialsecurely",
+        apiUrl: "https://developer.apple.com/documentation/foundation/urlprotectionspace/1415176-receivescredentialsecurely",
       ),
     ],
   )
@@ -102,8 +100,7 @@ class URLProtectionSpace_ {
     platforms: [
       IOSPlatform(
         apiName: "URLProtectionSpace.proxyType",
-        apiUrl:
-            "https://developer.apple.com/documentation/foundation/urlprotectionspace/1411924-proxytype",
+        apiUrl: "https://developer.apple.com/documentation/foundation/urlprotectionspace/1411924-proxytype",
       ),
     ],
   )

@@ -6,38 +6,19 @@ part of 'platform_cookie_manager.dart';
 // SupportedPlatformsGenerator
 // **************************************************************************
 
+///{@template nosferatu500_inappwebview_platform_interface.PlatformCookieManagerCreationParams.supported_platforms}
+///
+///**Officially Supported Platforms/Implementations**:
+///- Android WebView
+///- iOS WKWebView
+///
+///Use the [PlatformCookieManagerCreationParams.isClassSupported] method to check if this class is supported at runtime.
+///{@endtemplate}
+// Carries the template above for dartdoc; hidden from every export, so not API (§350).
+abstract final class PlatformCookieManagerCreationParamsSupportedPlatforms {}
+
 extension _PlatformCookieManagerCreationParamsClassSupported
     on PlatformCookieManagerCreationParams {
-  ///{@template nosferatu500_inappwebview_platform_interface.PlatformCookieManagerCreationParams.supported_platforms}
-  ///
-  ///**Officially Supported Platforms/Implementations**:
-  ///- Android WebView
-  ///- iOS WKWebView
-  ///
-  ///Use the [PlatformCookieManagerCreationParams.isClassSupported] method to check if this class is supported at runtime.
-  ///{@endtemplate}
-  static bool isClassSupported({TargetPlatform? platform}) {
-    return ((kIsWeb && platform != null) || !kIsWeb) &&
-        [
-          TargetPlatform.android,
-          TargetPlatform.iOS,
-        ].contains(platform ?? defaultTargetPlatform);
-  }
-}
-
-extension _PlatformCookieManagerClassSupported on PlatformCookieManager {
-  ///{@template nosferatu500_inappwebview_platform_interface.PlatformCookieManager.supported_platforms}
-  ///
-  ///**Officially Supported Platforms/Implementations**:
-  ///- Android WebView:
-  ///    - It is implemented using [CookieManager](https://developer.android.com/reference/android/webkit/CookieManager).
-  ///- iOS WKWebView:
-  ///    - It is implemented using [WKHTTPCookieStore](https://developer.apple.com/documentation/webkit/wkhttpcookiestore).
-  ///
-  ///Use the [PlatformCookieManager.isClassSupported] method to check if this class is supported at runtime.
-  ///{@endtemplate}
-  // Unused: [PlatformCookieManager.isClassSupported] answers through its creation params. Kept for the doc template above.
-  // ignore: unused_element
   static bool isClassSupported({TargetPlatform? platform}) {
     return ((kIsWeb && platform != null) || !kIsWeb) &&
         [
@@ -48,6 +29,17 @@ extension _PlatformCookieManagerClassSupported on PlatformCookieManager {
 }
 
 ///List of [PlatformCookieManager]'s methods that can be used to check if they are supported or not by the current platform.
+///
+///{@template nosferatu500_inappwebview_platform_interface.PlatformCookieManager.supported_platforms}
+///
+///**Officially Supported Platforms/Implementations**:
+///- Android WebView:
+///    - It is implemented using [CookieManager](https://developer.android.com/reference/android/webkit/CookieManager).
+///- iOS WKWebView:
+///    - It is implemented using [WKHTTPCookieStore](https://developer.apple.com/documentation/webkit/wkhttpcookiestore).
+///
+///Use the [PlatformCookieManager.isClassSupported] method to check if this class is supported at runtime.
+///{@endtemplate}
 enum PlatformCookieManagerMethod {
   ///Can be used to check if the [PlatformCookieManager.deleteAllCookies] method is supported at runtime.
   ///
@@ -59,7 +51,7 @@ enum PlatformCookieManagerMethod {
   ///    - It will return always `true`.
   ///
   ///**Parameters - Officially Supported Platforms/Implementations**:
-  ///- [profileName]:
+  ///- `profileName`:
   ///    - Android WebView
   ///
   ///Use the [PlatformCookieManager.isMethodSupported] method to check if this method is supported at runtime.
@@ -75,11 +67,11 @@ enum PlatformCookieManagerMethod {
   ///- iOS WKWebView ([Official API - WKHTTPCookieStore.delete](https://developer.apple.com/documentation/webkit/wkhttpcookiestore/2882009-delete))
   ///
   ///**Parameters - Officially Supported Platforms/Implementations**:
-  ///- [url]: all platforms
-  ///- [name]: all platforms
-  ///- [path]: all platforms
-  ///- [domain]: all platforms
-  ///- [profileName]:
+  ///- `url`: all platforms
+  ///- `name`: all platforms
+  ///- `path`: all platforms
+  ///- `domain`: all platforms
+  ///- `profileName`:
   ///    - Android WebView
   ///
   ///Use the [PlatformCookieManager.isMethodSupported] method to check if this method is supported at runtime.
@@ -95,10 +87,10 @@ enum PlatformCookieManagerMethod {
   ///- iOS WKWebView ([Official API - WKHTTPCookieStore.delete](https://developer.apple.com/documentation/webkit/wkhttpcookiestore/2882009-delete))
   ///
   ///**Parameters - Officially Supported Platforms/Implementations**:
-  ///- [url]: all platforms
-  ///- [path]: all platforms
-  ///- [domain]: all platforms
-  ///- [profileName]:
+  ///- `url`: all platforms
+  ///- `path`: all platforms
+  ///- `domain`: all platforms
+  ///- `profileName`:
   ///    - Android WebView
   ///
   ///Use the [PlatformCookieManager.isMethodSupported] method to check if this method is supported at runtime.
@@ -113,7 +105,7 @@ enum PlatformCookieManagerMethod {
   ///- Android WebView ([Official API - CookieManager.flush](https://developer.android.com/reference/android/webkit/CookieManager#flush()))
   ///
   ///**Parameters - Officially Supported Platforms/Implementations**:
-  ///- [profileName]:
+  ///- `profileName`:
   ///    - Android WebView
   ///
   ///Use the [PlatformCookieManager.isMethodSupported] method to check if this method is supported at runtime.
@@ -137,12 +129,13 @@ enum PlatformCookieManagerMethod {
   ///
   ///**Officially Supported Platforms/Implementations**:
   ///- Android WebView ([Official API - CookieManager.getCookie](https://developer.android.com/reference/android/webkit/CookieManager#getCookie(java.lang.String)))
-  ///- iOS WKWebView ([Official API - WKHTTPCookieStore.getAllCookies](https://developer.apple.com/documentation/webkit/wkhttpcookiestore/2882005-getallcookies))
+  ///- iOS WKWebView ([Official API - WKHTTPCookieStore.getCookies(for:)](https://developer.apple.com/documentation/webkit/wkhttpcookiestore/getcookies(for:completionhandler:))):
+  ///    - Looks the name up among what getCookies returns for the URL: iOS 27 and newer, WebKit's own matching; below iOS 27, WKHTTPCookieStore.getAllCookies matched by RFC 6265 in the plugin.
   ///
   ///**Parameters - Officially Supported Platforms/Implementations**:
-  ///- [url]: all platforms
-  ///- [name]: all platforms
-  ///- [profileName]:
+  ///- `url`: all platforms
+  ///- `name`: all platforms
+  ///- `profileName`:
   ///    - Android WebView
   ///
   ///Use the [PlatformCookieManager.isMethodSupported] method to check if this method is supported at runtime.
@@ -155,11 +148,12 @@ enum PlatformCookieManagerMethod {
   ///
   ///**Officially Supported Platforms/Implementations**:
   ///- Android WebView ([Official API - CookieManager.getCookie](https://developer.android.com/reference/android/webkit/CookieManager#getCookie(java.lang.String)))
-  ///- iOS WKWebView ([Official API - WKHTTPCookieStore.getAllCookies](https://developer.apple.com/documentation/webkit/wkhttpcookiestore/2882005-getallcookies))
+  ///- iOS WKWebView ([Official API - WKHTTPCookieStore.getCookies(for:)](https://developer.apple.com/documentation/webkit/wkhttpcookiestore/getcookies(for:completionhandler:))):
+  ///    - iOS 27 and newer. Below iOS 27, WKHTTPCookieStore.getAllCookies, matched against the URL by RFC 6265 in the plugin.
   ///
   ///**Parameters - Officially Supported Platforms/Implementations**:
-  ///- [url]: all platforms
-  ///- [profileName]:
+  ///- `url`: all platforms
+  ///- `profileName`:
   ///    - Android WebView
   ///
   ///Use the [PlatformCookieManager.isMethodSupported] method to check if this method is supported at runtime.
@@ -174,7 +168,7 @@ enum PlatformCookieManagerMethod {
   ///- Android WebView ([Official API - CookieManager.hasCookies](https://developer.android.com/reference/android/webkit/CookieManager#hasCookies()))
   ///
   ///**Parameters - Officially Supported Platforms/Implementations**:
-  ///- [profileName]:
+  ///- `profileName`:
   ///    - Android WebView
   ///
   ///Use the [PlatformCookieManager.isMethodSupported] method to check if this method is supported at runtime.
@@ -191,7 +185,7 @@ enum PlatformCookieManagerMethod {
   ///    - Returns `null` below iOS 17.0, where there is no policy to read.
   ///
   ///**Parameters - Officially Supported Platforms/Implementations**:
-  ///- [profileName]:
+  ///- `profileName`:
   ///    - Android WebView
   ///
   ///Use the [PlatformCookieManager.isMethodSupported] method to check if this method is supported at runtime.
@@ -218,7 +212,7 @@ enum PlatformCookieManagerMethod {
   ///- Android WebView ([Official API - CookieManager.removeSessionCookies](https://developer.android.com/reference/android/webkit/CookieManager#removeSessionCookies(android.webkit.ValueCallback%3Cjava.lang.Boolean%3E)))
   ///
   ///**Parameters - Officially Supported Platforms/Implementations**:
-  ///- [profileName]:
+  ///- `profileName`:
   ///    - Android WebView
   ///
   ///Use the [PlatformCookieManager.isMethodSupported] method to check if this method is supported at runtime.
@@ -236,8 +230,8 @@ enum PlatformCookieManagerMethod {
   ///    - Scoped to the default data store's cookie store rather than the process. Returns `false` below iOS 17.0, where the policy cannot be set at all.
   ///
   ///**Parameters - Officially Supported Platforms/Implementations**:
-  ///- [accept]: all platforms
-  ///- [profileName]:
+  ///- `accept`: all platforms
+  ///- `profileName`:
   ///    - Android WebView
   ///
   ///Use the [PlatformCookieManager.isMethodSupported] method to check if this method is supported at runtime.
@@ -253,17 +247,17 @@ enum PlatformCookieManagerMethod {
   ///- iOS WKWebView ([Official API - WKHTTPCookieStore.setCookie](https://developer.apple.com/documentation/webkit/wkhttpcookiestore/2882007-setcookie))
   ///
   ///**Parameters - Officially Supported Platforms/Implementations**:
-  ///- [url]: all platforms
-  ///- [name]: all platforms
-  ///- [value]: all platforms
-  ///- [path]: all platforms
-  ///- [domain]: all platforms
-  ///- [expiresDate]: all platforms
-  ///- [maxAge]: all platforms
-  ///- [isSecure]: all platforms
-  ///- [isHttpOnly]: all platforms
-  ///- [sameSite]: all platforms
-  ///- [profileName]:
+  ///- `url`: all platforms
+  ///- `name`: all platforms
+  ///- `value`: all platforms
+  ///- `path`: all platforms
+  ///- `domain`: all platforms
+  ///- `expiresDate`: all platforms
+  ///- `maxAge`: all platforms
+  ///- `isSecure`: all platforms
+  ///- `isHttpOnly`: all platforms
+  ///- `sameSite`: all platforms
+  ///- `profileName`:
   ///    - Android WebView
   ///
   ///Use the [PlatformCookieManager.isMethodSupported] method to check if this method is supported at runtime.
@@ -279,7 +273,7 @@ enum PlatformCookieManagerMethod {
   ///    - Android has no counterpart: `android.webkit.CookieManager` exposes no change notification.
   ///
   ///**Parameters - Officially Supported Platforms/Implementations**:
-  ///- [observer]: all platforms
+  ///- `observer`: all platforms
   ///
   ///Use the [PlatformCookieManager.isMethodSupported] method to check if this method is supported at runtime.
   ///{@endtemplate}
@@ -296,8 +290,8 @@ enum PlatformCookieManagerMethod {
   ///    - Uses `setCookies:` on iOS 26.0+ and falls back to a native loop of `setCookie:` below it. The two were measured to be within a few milliseconds of each other for 100 cookies, so nothing is lost below the floor.
   ///
   ///**Parameters - Officially Supported Platforms/Implementations**:
-  ///- [cookies]: all platforms
-  ///- [profileName]:
+  ///- `cookies`: all platforms
+  ///- `profileName`:
   ///    - Android WebView
   ///
   ///Use the [PlatformCookieManager.isMethodSupported] method to check if this method is supported at runtime.
@@ -331,9 +325,8 @@ extension _PlatformCookieManagerMethodSupported on PlatformCookieManager {
             ].contains(platform ?? defaultTargetPlatform);
       case PlatformCookieManagerMethod.flush:
         return ((kIsWeb && platform != null) || !kIsWeb) &&
-            [
-              TargetPlatform.android,
-            ].contains(platform ?? defaultTargetPlatform);
+            [TargetPlatform.android]
+                .contains(platform ?? defaultTargetPlatform);
       case PlatformCookieManagerMethod.getAllCookies:
         return ((kIsWeb && platform != null) || !kIsWeb) &&
             [TargetPlatform.iOS].contains(platform ?? defaultTargetPlatform);
@@ -351,9 +344,8 @@ extension _PlatformCookieManagerMethodSupported on PlatformCookieManager {
             ].contains(platform ?? defaultTargetPlatform);
       case PlatformCookieManagerMethod.hasCookies:
         return ((kIsWeb && platform != null) || !kIsWeb) &&
-            [
-              TargetPlatform.android,
-            ].contains(platform ?? defaultTargetPlatform);
+            [TargetPlatform.android]
+                .contains(platform ?? defaultTargetPlatform);
       case PlatformCookieManagerMethod.isAcceptCookieEnabled:
         return ((kIsWeb && platform != null) || !kIsWeb) &&
             [
@@ -362,14 +354,12 @@ extension _PlatformCookieManagerMethodSupported on PlatformCookieManager {
             ].contains(platform ?? defaultTargetPlatform);
       case PlatformCookieManagerMethod.isFileSchemeCookiesAllowed:
         return ((kIsWeb && platform != null) || !kIsWeb) &&
-            [
-              TargetPlatform.android,
-            ].contains(platform ?? defaultTargetPlatform);
+            [TargetPlatform.android]
+                .contains(platform ?? defaultTargetPlatform);
       case PlatformCookieManagerMethod.removeSessionCookies:
         return ((kIsWeb && platform != null) || !kIsWeb) &&
-            [
-              TargetPlatform.android,
-            ].contains(platform ?? defaultTargetPlatform);
+            [TargetPlatform.android]
+                .contains(platform ?? defaultTargetPlatform);
       case PlatformCookieManagerMethod.setAcceptCookie:
         return ((kIsWeb && platform != null) || !kIsWeb) &&
             [
@@ -396,13 +386,6 @@ extension _PlatformCookieManagerMethodSupported on PlatformCookieManager {
 }
 
 extension _CookieStoreObserverClassSupported on CookieStoreObserver {
-  ///{@template nosferatu500_inappwebview_platform_interface.CookieStoreObserver.supported_platforms}
-  ///
-  ///**Officially Supported Platforms/Implementations**:
-  ///- iOS WKWebView 11.0+ ([Official API - WKHTTPCookieStoreObserver](https://developer.apple.com/documentation/webkit/wkhttpcookiestoreobserver))
-  ///
-  ///Use the [CookieStoreObserver.isClassSupported] method to check if this class is supported at runtime.
-  ///{@endtemplate}
   static bool isClassSupported({TargetPlatform? platform}) {
     return ((kIsWeb && platform != null) || !kIsWeb) &&
         [TargetPlatform.iOS].contains(platform ?? defaultTargetPlatform);
@@ -410,6 +393,14 @@ extension _CookieStoreObserverClassSupported on CookieStoreObserver {
 }
 
 ///List of [CookieStoreObserver]'s properties that can be used to check i they are supported or not by the current platform.
+///
+///{@template nosferatu500_inappwebview_platform_interface.CookieStoreObserver.supported_platforms}
+///
+///**Officially Supported Platforms/Implementations**:
+///- iOS WKWebView 11.0+ ([Official API - WKHTTPCookieStoreObserver](https://developer.apple.com/documentation/webkit/wkhttpcookiestoreobserver))
+///
+///Use the [CookieStoreObserver.isClassSupported] method to check if this class is supported at runtime.
+///{@endtemplate}
 enum CookieStoreObserverProperty {
   ///Can be used to check if the [CookieStoreObserver.onCookiesChanged] property is supported at runtime.
   ///

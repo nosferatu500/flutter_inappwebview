@@ -257,9 +257,8 @@ extension _PullToRefreshSettingsPropertySupported on PullToRefreshSettings {
             ].contains(platform ?? defaultTargetPlatform);
       case PullToRefreshSettingsProperty.distanceToTriggerSync:
         return ((kIsWeb && platform != null) || !kIsWeb) &&
-            [
-              TargetPlatform.android,
-            ].contains(platform ?? defaultTargetPlatform);
+            [TargetPlatform.android]
+                .contains(platform ?? defaultTargetPlatform);
       case PullToRefreshSettingsProperty.enabled:
         return ((kIsWeb && platform != null) || !kIsWeb) &&
             [
@@ -268,14 +267,12 @@ extension _PullToRefreshSettingsPropertySupported on PullToRefreshSettings {
             ].contains(platform ?? defaultTargetPlatform);
       case PullToRefreshSettingsProperty.size:
         return ((kIsWeb && platform != null) || !kIsWeb) &&
-            [
-              TargetPlatform.android,
-            ].contains(platform ?? defaultTargetPlatform);
+            [TargetPlatform.android]
+                .contains(platform ?? defaultTargetPlatform);
       case PullToRefreshSettingsProperty.slingshotDistance:
         return ((kIsWeb && platform != null) || !kIsWeb) &&
-            [
-              TargetPlatform.android,
-            ].contains(platform ?? defaultTargetPlatform);
+            [TargetPlatform.android]
+                .contains(platform ?? defaultTargetPlatform);
     }
   }
 }

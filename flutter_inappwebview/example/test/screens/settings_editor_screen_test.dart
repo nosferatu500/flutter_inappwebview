@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:flutter_inappwebview_example/screens/settings_editor_screen.dart';
@@ -149,9 +149,8 @@ void main() {
         await tester.pumpWidget(createWidget());
         await tester.pumpAndSettle();
         await saveProfile(tester, 'p1');
-        ScaffoldMessenger.of(
-          tester.element(find.byType(Scaffold).first),
-        ).removeCurrentSnackBar();
+        ScaffoldMessenger.of(tester.element(find.byType(Scaffold).first))
+            .removeCurrentSnackBar();
         await tester.pumpAndSettle();
 
         await tester.tap(find.byIcon(Icons.folder_open));
@@ -160,9 +159,8 @@ void main() {
         await tester.pumpAndSettle();
         expect(find.byType(AlertDialog), findsNothing);
         expect(find.text('Loaded profile "p1"'), findsOneWidget);
-        ScaffoldMessenger.of(
-          tester.element(find.byType(Scaffold).first),
-        ).removeCurrentSnackBar();
+        ScaffoldMessenger.of(tester.element(find.byType(Scaffold).first))
+            .removeCurrentSnackBar();
         await tester.pumpAndSettle();
 
         await tester.tap(find.byIcon(Icons.folder_open));

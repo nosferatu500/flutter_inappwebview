@@ -452,122 +452,106 @@ void main() {
     expect(data.cookies, ['answer=cookie']);
   });
 
-  test(
-    'with no callback set, every event answers null, the "no answer" Kotlin defaults on',
-    () async {
-      final controller = AndroidInAppWebViewController(
-        AndroidInAppWebViewControllerCreationParams(
-          id: 16,
-          webviewParams: AndroidInAppWebViewWidgetCreationParams(),
-        ),
-      );
-      addTearDown(controller.dispose);
+  test('with no callback set, every event answers null, the "no answer" Kotlin defaults on', () async {
+    final controller = AndroidInAppWebViewController(
+      AndroidInAppWebViewControllerCreationParams(
+        id: 16,
+        webviewParams: AndroidInAppWebViewWidgetCreationParams(),
+      ),
+    );
+    addTearDown(controller.dispose);
 
-      final events = <(String, List<Object?>)>[
-        ('onJsAlert', ['u', 'm', null]),
-        ('onJsConfirm', ['u', 'm', null]),
-        ('onJsPrompt', ['u', 'm', 'd', null]),
-        ('onJsBeforeUnload', ['u', 'm']),
-        (
-          'onCreateWindow',
-          [
-            {'request': urlRequest, 'windowId': 1, 'isForMainFrame': true},
-          ],
-        ),
-        ('onGeolocationPermissionsShowPrompt', ['https://geo.example.com/']),
-        (
-          'onPermissionRequest',
-          ['https://perm.example.com/', <String>[], null],
-        ),
-        (
-          'shouldOverrideUrlLoading',
-          [
-            {'request': urlRequest, 'isForMainFrame': true},
-          ],
-        ),
-        (
-          'onReceivedHttpAuthRequest',
-          [
-            {'protectionSpace': protectionSpace, 'previousFailureCount': 0},
-          ],
-        ),
-        (
-          'onReceivedServerTrustAuthRequest',
-          [
-            {'protectionSpace': protectionSpace},
-          ],
-        ),
-        (
-          'onReceivedClientCertRequest',
-          [
-            {'protectionSpace': protectionSpace},
-          ],
-        ),
-        ('onSafeBrowsingHit', ['https://bad.example.com/', 1]),
-        ('onFormResubmission', ['u']),
-        ('onRenderProcessUnresponsive', ['u']),
-        ('onRenderProcessResponsive', ['u']),
-        (
-          'onCallJsHandler',
-          [
-            'unregistered',
-            {
-              'origin': 'o',
-              'requestUrl': 'r',
-              'isMainFrame': true,
-              'args': '[]',
-            },
-          ],
-        ),
-        ('onPrintRequest', ['u']),
-        ('onRequestVisitedHistory', []),
-        (
-          'onShowFileChooser',
-          [
-            {'mode': 0, 'acceptTypes': <String>[], 'isCaptureEnabled': false},
-          ],
-        ),
-        ('shouldInterceptRequest', [webResourceRequest]),
-        ('onLoadResourceWithCustomScheme', [webResourceRequest]),
-      ];
-      expect(events.length, 21, reason: 'every W5 event, once');
+    final events = <(String, List<Object?>)>[
+      ('onJsAlert', ['u', 'm', null]),
+      ('onJsConfirm', ['u', 'm', null]),
+      ('onJsPrompt', ['u', 'm', 'd', null]),
+      ('onJsBeforeUnload', ['u', 'm']),
+      (
+        'onCreateWindow',
+        [
+          {'request': urlRequest, 'windowId': 1, 'isForMainFrame': true},
+        ],
+      ),
+      ('onGeolocationPermissionsShowPrompt', ['https://geo.example.com/']),
+      ('onPermissionRequest', ['https://perm.example.com/', <String>[], null]),
+      (
+        'shouldOverrideUrlLoading',
+        [
+          {'request': urlRequest, 'isForMainFrame': true},
+        ],
+      ),
+      (
+        'onReceivedHttpAuthRequest',
+        [
+          {'protectionSpace': protectionSpace, 'previousFailureCount': 0},
+        ],
+      ),
+      (
+        'onReceivedServerTrustAuthRequest',
+        [
+          {'protectionSpace': protectionSpace},
+        ],
+      ),
+      (
+        'onReceivedClientCertRequest',
+        [
+          {'protectionSpace': protectionSpace},
+        ],
+      ),
+      ('onSafeBrowsingHit', ['https://bad.example.com/', 1]),
+      ('onFormResubmission', ['u']),
+      ('onRenderProcessUnresponsive', ['u']),
+      ('onRenderProcessResponsive', ['u']),
+      (
+        'onCallJsHandler',
+        [
+          'unregistered',
+          {'origin': 'o', 'requestUrl': 'r', 'isMainFrame': true, 'args': '[]'},
+        ],
+      ),
+      ('onPrintRequest', ['u']),
+      ('onRequestVisitedHistory', []),
+      (
+        'onShowFileChooser',
+        [
+          {'mode': 0, 'acceptTypes': <String>[], 'isCaptureEnabled': false},
+        ],
+      ),
+      ('shouldInterceptRequest', [webResourceRequest]),
+      ('onLoadResourceWithCustomScheme', [webResourceRequest]),
+    ];
+    expect(events.length, 21, reason: 'every W5 event, once');
 
-      for (final (method, args) in events) {
-        final reply = await deliver(method, args, suffix: 'inappwebview_16');
-        expect(reply, isNotNull, reason: '$method has no handler');
-        expect(
-          codec.decodeMessage(reply) as List<Object?>,
-          [null],
-          reason: '$method did not answer null',
-        );
-      }
-    },
-  );
-
-  test(
-    'a throwing callback answers an error envelope, which Kotlin hands to the callback\'s error',
-    () async {
-      final controller = AndroidInAppWebViewController(
-        AndroidInAppWebViewControllerCreationParams(
-          id: 17,
-          webviewParams: AndroidInAppWebViewWidgetCreationParams(
-            onJsConfirm: (_, r) async => throw StateError('confirm failed'),
-          ),
-        ),
-      );
-      addTearDown(controller.dispose);
-
-      final reply = await deliver('onJsConfirm', [
-        'u',
-        'm',
+    for (final (method, args) in events) {
+      final reply = await deliver(method, args, suffix: 'inappwebview_16');
+      expect(reply, isNotNull, reason: '$method has no handler');
+      expect(codec.decodeMessage(reply) as List<Object?>, [
         null,
-      ], suffix: 'inappwebview_17');
-      final envelope = codec.decodeMessage(reply) as List<Object?>;
-      expect(envelope, hasLength(3), reason: 'an error envelope');
-      expect(envelope[0], 'error');
-      expect(envelope[1], contains('confirm failed'));
-    },
-  );
+      ], reason: '$method did not answer null');
+    }
+  });
+
+  test('a throwing callback answers an error envelope, which Kotlin hands to the callback\'s error', () async {
+    final controller = AndroidInAppWebViewController(
+      AndroidInAppWebViewControllerCreationParams(
+        id: 17,
+        webviewParams: AndroidInAppWebViewWidgetCreationParams(
+          onJsConfirm: (_, r) async => throw StateError('confirm failed'),
+        ),
+      ),
+    );
+    addTearDown(controller.dispose);
+
+    final reply = await deliver('onJsConfirm', [
+      'u',
+      'm',
+      null,
+    ], suffix: 'inappwebview_17');
+    final envelope = codec.decodeMessage(reply) as List<Object?>;
+    expect(envelope, hasLength(3), reason: 'an error envelope');
+    expect(envelope[0], 'error');
+    expect(envelope[1], contains('confirm failed'));
+  });
 
   // The exception to the test above (D1, §309): an error would reach Kotlin's `error`, which
   // allows, so a throwing `shouldOverrideUrlLoading` answers CANCEL instead.

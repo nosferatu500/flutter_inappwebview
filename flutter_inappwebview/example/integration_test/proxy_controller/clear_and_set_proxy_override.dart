@@ -16,16 +16,22 @@ void clearAndSetProxyOverride() {
         !PlatformWebViewFeature.static().isClassSupported() ||
         await WebViewFeature.isFeatureSupported(WebViewFeature.PROXY_OVERRIDE);
 
-    if (proxyAvailable) {
-      ProxyController proxyController = ProxyController.instance();
-
-      await proxyController.clearProxyOverride();
-      await proxyController.setProxyOverride(
-        settings: ProxySettings(
-          proxyRules: [ProxyRule(url: "${environment["NODE_SERVER_IP"]}:8083")],
-        ),
-      );
+    // Everything below asserts the page came through the proxy, so without an
+    // override there is nothing to test. Reachable on Android since minSdk 26:
+    // PROXY_OVERRIDE needs WebView 72+, and Android 8.0 shipped WebView 58.
+    if (!proxyAvailable) {
+      markTestSkipped('PROXY_OVERRIDE unsupported');
+      return;
     }
+
+    ProxyController proxyController = ProxyController.instance();
+
+    await proxyController.clearProxyOverride();
+    await proxyController.setProxyOverride(
+      settings: ProxySettings(
+        proxyRules: [ProxyRule(url: "${environment["NODE_SERVER_IP"]}:8083")],
+      ),
+    );
 
     await tester.pumpWidget(
       Directionality(

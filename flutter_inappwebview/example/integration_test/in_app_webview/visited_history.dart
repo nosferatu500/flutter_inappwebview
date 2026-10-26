@@ -211,8 +211,7 @@ void visitedHistory() {
     expect(
       unreported,
       reported,
-      reason:
-          'a page cannot tell the two apart, which is the whole point of the mitigation',
+      reason: 'a page cannot tell the two apart, which is the whole point of the mitigation',
     );
   }, skip: shouldSkip);
 }

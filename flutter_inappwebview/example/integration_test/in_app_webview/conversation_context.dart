@@ -100,38 +100,36 @@ void conversationContext() {
   // declares text/senderIdentifier/sentDate/entryIdentifier non-null, so an entry missing any of
   // them is refused by the Swift `guard` rather than sent half-built. Two entries go in, one comes
   // back — and the survivor is the complete one, not merely "a" one.
-  skippableTestWidgets(
-    'an incomplete conversation entry is dropped natively',
-    (WidgetTester tester) async {
-      final controller = await openWebView(tester);
+  skippableTestWidgets('an incomplete conversation entry is dropped natively', (
+    WidgetTester tester,
+  ) async {
+    final controller = await openWebView(tester);
 
-      await controller.setConversationContext(
-        conversationContext: ConversationContext(
-          threadIdentifier: 'thread-2',
-          entries: [
-            ConversationEntry(
-              text: 'complete',
-              senderIdentifier: 'them',
-              sentDate: sentDate,
-              entryIdentifier: 'ok',
-            ),
-            // No senderIdentifier and no sentDate.
-            ConversationEntry(text: 'incomplete', entryIdentifier: 'bad'),
-          ],
-        ),
-      );
+    await controller.setConversationContext(
+      conversationContext: ConversationContext(
+        threadIdentifier: 'thread-2',
+        entries: [
+          ConversationEntry(
+            text: 'complete',
+            senderIdentifier: 'them',
+            sentDate: sentDate,
+            entryIdentifier: 'ok',
+          ),
+          // No senderIdentifier and no sentDate.
+          ConversationEntry(text: 'incomplete', entryIdentifier: 'bad'),
+        ],
+      ),
+    );
 
-      final back = await controller.getConversationContext();
-      expect(back, isNotNull);
-      expect(
-        back!.entries,
-        hasLength(1),
-        reason: 'the entry missing required fields must not survive',
-      );
-      expect(back.entries!.first.entryIdentifier, 'ok');
-    },
-    skip: shouldSkip || belowIOS26,
-  );
+    final back = await controller.getConversationContext();
+    expect(back, isNotNull);
+    expect(
+      back!.entries,
+      hasLength(1),
+      reason: 'the entry missing required fields must not survive',
+    );
+    expect(back.entries!.first.entryIdentifier, 'ok');
+  }, skip: shouldSkip || belowIOS26);
 
   // Below iOS 26 the property does not exist, and `null` says so — distinct from an empty context,
   // exactly as `isBlockedByScreenTime` distinguishes "cannot answer" from "no".

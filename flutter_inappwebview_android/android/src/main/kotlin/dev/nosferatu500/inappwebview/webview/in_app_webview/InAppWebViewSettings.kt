@@ -1,6 +1,7 @@
 package dev.nosferatu500.inappwebview.webview.in_app_webview
 
 import android.annotation.SuppressLint
+import android.os.Build
 import android.view.View
 import android.webkit.WebSettings
 import androidx.webkit.WebSettingsCompat
@@ -471,7 +472,9 @@ class InAppWebViewSettings : ISettings<InAppWebViewInterface> {
         "waivedWhenNotVisible" to obj.rendererPriorityWaivedWhenNotVisible
       )
 
-      if (WebViewFeature.isFeatureSupported(WebViewFeature.ALGORITHMIC_DARKENING)) {
+      if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q &&
+        WebViewFeature.isFeatureSupported(WebViewFeature.ALGORITHMIC_DARKENING)
+      ) {
         realSettings["algorithmicDarkeningAllowed"] =
           WebSettingsCompat.isAlgorithmicDarkeningAllowed(settings)
       }

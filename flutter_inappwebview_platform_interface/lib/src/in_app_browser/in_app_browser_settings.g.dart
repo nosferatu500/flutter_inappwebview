@@ -617,9 +617,8 @@ extension _InAppBrowserSettingsPropertySupported on InAppBrowserSettings {
     switch (property) {
       case InAppBrowserSettingsProperty.allowGoBackWithBackButton:
         return ((kIsWeb && platform != null) || !kIsWeb) &&
-            [
-              TargetPlatform.android,
-            ].contains(platform ?? defaultTargetPlatform);
+            [TargetPlatform.android]
+                .contains(platform ?? defaultTargetPlatform);
       case InAppBrowserSettingsProperty.closeButtonCaption:
         return ((kIsWeb && platform != null) || !kIsWeb) &&
             [TargetPlatform.iOS].contains(platform ?? defaultTargetPlatform);
@@ -628,9 +627,8 @@ extension _InAppBrowserSettingsPropertySupported on InAppBrowserSettings {
             [TargetPlatform.iOS].contains(platform ?? defaultTargetPlatform);
       case InAppBrowserSettingsProperty.closeOnCannotGoBack:
         return ((kIsWeb && platform != null) || !kIsWeb) &&
-            [
-              TargetPlatform.android,
-            ].contains(platform ?? defaultTargetPlatform);
+            [TargetPlatform.android]
+                .contains(platform ?? defaultTargetPlatform);
       case InAppBrowserSettingsProperty.hidden:
         return ((kIsWeb && platform != null) || !kIsWeb) &&
             [
@@ -654,9 +652,8 @@ extension _InAppBrowserSettingsPropertySupported on InAppBrowserSettings {
             ].contains(platform ?? defaultTargetPlatform);
       case InAppBrowserSettingsProperty.hideTitleBar:
         return ((kIsWeb && platform != null) || !kIsWeb) &&
-            [
-              TargetPlatform.android,
-            ].contains(platform ?? defaultTargetPlatform);
+            [TargetPlatform.android]
+                .contains(platform ?? defaultTargetPlatform);
       case InAppBrowserSettingsProperty.hideToolbarBottom:
         return ((kIsWeb && platform != null) || !kIsWeb) &&
             [TargetPlatform.iOS].contains(platform ?? defaultTargetPlatform);
@@ -680,9 +677,8 @@ extension _InAppBrowserSettingsPropertySupported on InAppBrowserSettings {
             [TargetPlatform.iOS].contains(platform ?? defaultTargetPlatform);
       case InAppBrowserSettingsProperty.shouldCloseOnBackButtonPressed:
         return ((kIsWeb && platform != null) || !kIsWeb) &&
-            [
-              TargetPlatform.android,
-            ].contains(platform ?? defaultTargetPlatform);
+            [TargetPlatform.android]
+                .contains(platform ?? defaultTargetPlatform);
       case InAppBrowserSettingsProperty.toolbarBottomBackgroundColor:
         return ((kIsWeb && platform != null) || !kIsWeb) &&
             [TargetPlatform.iOS].contains(platform ?? defaultTargetPlatform);
@@ -703,9 +699,8 @@ extension _InAppBrowserSettingsPropertySupported on InAppBrowserSettings {
             [TargetPlatform.iOS].contains(platform ?? defaultTargetPlatform);
       case InAppBrowserSettingsProperty.toolbarTopFixedTitle:
         return ((kIsWeb && platform != null) || !kIsWeb) &&
-            [
-              TargetPlatform.android,
-            ].contains(platform ?? defaultTargetPlatform);
+            [TargetPlatform.android]
+                .contains(platform ?? defaultTargetPlatform);
       case InAppBrowserSettingsProperty.toolbarTopTintColor:
         return ((kIsWeb && platform != null) || !kIsWeb) &&
             [TargetPlatform.iOS].contains(platform ?? defaultTargetPlatform);

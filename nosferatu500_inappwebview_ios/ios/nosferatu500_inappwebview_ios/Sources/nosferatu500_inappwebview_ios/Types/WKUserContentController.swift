@@ -186,12 +186,6 @@ extension WKUserContentController {
         pluginScripts[pluginScript.injectionTime]!.append(pluginScript)
     }
 
-    public func addPluginScripts(_ pluginScripts: [PluginScript]) {
-        for pluginScript in pluginScripts {
-            addPluginScript(pluginScript)
-        }
-    }
-
     public func getPluginScriptsRequiredInAllContentWorlds() -> [PluginScript] {
         return pluginScripts.compactMap({ $0.value })
             .joined()
@@ -236,27 +230,6 @@ extension WKUserContentController {
         userOnlyScripts[.atDocumentEnd]!.removeAll()
 
         removeUserScripts(scriptsToRemove: allUserOnlyScripts)
-    }
-
-    public func removePluginScript(_ pluginScript: PluginScript) {
-        pluginScripts[pluginScript.injectionTime]!.remove(pluginScript)
-        for messageHandlerName in pluginScript.messageHandlerNames {
-            removeScriptMessageHandler(forName: messageHandlerName)
-            for contentWorld in contentWorlds {
-                removeScriptMessageHandler(forName: messageHandlerName, contentWorld: contentWorld)
-            }
-
-        }
-        removeUserScript(scriptToRemove: pluginScript)
-    }
-
-    public func removeAllPluginScripts() {
-        let allPluginScripts = Array(pluginScripts.compactMap({ $0.value }).joined())
-
-        pluginScripts[.atDocumentStart]!.removeAll()
-        pluginScripts[.atDocumentEnd]!.removeAll()
-
-        removeUserScripts(scriptsToRemove: allPluginScripts)
     }
 
     public func removeAllPluginScriptMessageHandlers() {

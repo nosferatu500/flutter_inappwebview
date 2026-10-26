@@ -1,6 +1,6 @@
 name: nosferatu500_inappwebview_platform_interface
 description: A common platform interface for the nosferatu500_inappwebview plugin.
-version: 7.0.0
+version: 7.1.0
 homepage: https://github.com/nosferatu500/flutter_inappwebview
 repository: https://github.com/nosferatu500/flutter_inappwebview/tree/master/flutter_inappwebview_platform_interface
 issue_tracker: https://github.com/nosferatu500/flutter_inappwebview/issues
@@ -12,13 +12,13 @@ topics:
   - browser
 
 environment:
-  sdk: ^3.12.0
-  flutter: ">=3.44.0"
+  sdk: ^3.13.0
+  flutter: ">=3.47.0"
 
 dependencies:
   flutter:
     sdk: flutter
-  nosferatu500_inappwebview_internal_annotations: ^7.0.0
+  nosferatu500_inappwebview_internal_annotations: ^7.1.0
     # path: ../dev_packages/flutter_inappwebview_internal_annotations
   plugin_platform_interface: ^2.1.8
 
@@ -29,6 +29,11 @@ dev_dependencies:
   build_runner: ^2.4.12
   generators:
     path: ../dev_packages/generators
+  # Not imported: pinned so build_runner formats the generated *.g.dart like `dart format` does.
+  # source_gen formats them with whatever dart_style pub resolves, at the library's language
+  # version. 3.1.9 (what a lockfile from before the 3.47 move holds) writes the pre-3.13 style,
+  # which `dart format` on Dart 3.13 then rewrites in 20 files; 3.1.13 writes the 3.13 style.
+  dart_style: ^3.1.13
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec

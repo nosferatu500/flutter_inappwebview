@@ -3,6 +3,7 @@ import 'dart:io' show Platform;
 
 import 'package:flutter/foundation.dart';
 import 'package:flutter/scheduler.dart';
+import 'package:flutter/services.dart' show MethodChannel;
 import 'package:nosferatu500_inappwebview/nosferatu500_inappwebview.dart';
 import 'package:flutter_test/flutter_test.dart';
 
@@ -30,10 +31,26 @@ int? iosMajorVersion() {
   return match == null ? null : int.tryParse(match.group(0)!);
 }
 
+/// The Android API level (`Build.VERSION.SDK_INT`), or `null` on any other platform.
+///
+/// The Android counterpart of [iosMajorVersion], for the same reason: since minSdk 26 the suite can
+/// run on devices where a framework API or behaviour is absent or different. Dart's
+/// `Platform.operatingSystemVersion` is the kernel's version on Android, so this asks the example
+/// app's `MainActivity`, which is test-harness code and not part of the plugin.
+Future<int?> androidSdkInt() async {
+  if (defaultTargetPlatform != TargetPlatform.android) {
+    return null;
+  }
+  return _androidSdkInt ??= await const MethodChannel('example/device_info')
+      .invokeMethod<int>('sdkInt');
+}
+
+int? _androidSdkInt;
+
 bool _frameWatchdogInstalled = false;
 
-/// Closes the live test binding's frame hole on iOS (§306, fixed §328) and, as a backstop on every
-/// platform, asks the engine for a frame when a pump has had none for 2 s (§305), for every test.
+/// Closes the live test binding's frame hole (§306, fixed §328 on iOS, §347 on Android) and, as a
+/// backstop, asks the engine for a frame when a pump has had none for 2 s (§305), for every test.
 ///
 /// The hole is the live test binding's, not the engine's (§306). For a frame no pump asked for, the
 /// binding skips `handleBeginFrame`, so `hasScheduledFrame` stays true, and its `handleDrawFrame` asks
@@ -52,18 +69,20 @@ bool _frameWatchdogInstalled = false;
 /// in that window, no WebView) hung until the watchdog asked, 2.0 to 2.4 s, in 5 of 6 cases on iOS
 /// 26.5 and Android 17 (a metrics change released the sixth); with the fix all 6 took 13 to 19 ms.
 ///
-/// **iOS only.** On Android 17 the same request made frames come later after skipped frames, not
-/// sooner: a full `in_app_webview` group had 176 gaps over 200 ms after a skipped frame's draw with it
-/// (23 of them 0.8 s or more) against 19 without (all under 400 ms), and it didn't stop rescues that
-/// follow a skipped frame there (3 with it, 0 without, over 2 full groups and 7 `find` runs against 1
-/// and 6). Why isn't known: by the engine's source the extra request should be coalesced. So Android
-/// keeps only the watchdog, as before §328.
+/// On Android too, since §347. §328 kept it iOS-only after one full Android 17 `in_app_webview` run
+/// with it had 176 gaps over 200 ms after a skipped frame's draw against 19 in a run without. Runs
+/// without it have since had 75 and 128, so that was run-to-run spread. Measured within one run
+/// instead (§347), asking after every other skipped draw: 5 240 skipped draws per arm, the gap to
+/// the next `onBeginFrame` 16.6 ms at the median either way, over 200 ms 53 times when asking and 45
+/// when not, no rescues. The same comparison on the `find` group, with a 30 ms busy wait planted
+/// beside the request, gave medians of 51 ms against 20, so it can see an effect of that size. No
+/// effect is what the engine's source predicts: `Animator::RequestFrame` drops a second request
+/// made before the next `BeginFrame`.
 ///
 /// The watchdog stays as a backstop for any other path to a stale `hasScheduledFrame`: 2 s without
 /// `onBeginFrame` while a frame is scheduled and frames are enabled. On iOS it didn't fire once with
 /// the fix (18 `WebView Windows` runs and every group). On Android it also catches a second kind,
-/// after a frame that was drawn, not skipped: 5 in the 16 Android runs above, with the fix or
-/// without. Each rescue, and any gap over 200 ms after a skipped frame's draw, is recorded and printed at the
+/// after a frame that was drawn, not skipped: 5 in §328's 16 Android runs, with the fix or without. Each rescue, and any gap over 200 ms after a skipped frame's draw, is recorded and printed at the
 /// end of its test. Installed once, at registration, wrapping the binding's own `onBeginFrame` and
 /// `onDrawFrame`.
 void installFrameWatchdog() {
@@ -87,8 +106,6 @@ void installFrameWatchdog() {
   }
   _frameWatchdogInstalled = true;
   _frameWatchdogEvents.add('frame watchdog installed (§305)');
-  // iOS only: on Android the same request made the next frame come later, not sooner (§328).
-  final askAfterSkippedFrame = defaultTargetPlatform == TargetPlatform.iOS;
   _lastBeginFrame = DateTime.now();
   dispatcher.onBeginFrame = (Duration timeStamp) {
     final now = DateTime.now();
@@ -112,11 +129,9 @@ void installFrameWatchdog() {
     if (_frameSkipped) {
       _lastSkippedDraw = DateTime.now();
       _watchdogAskedSinceSkip = false;
-      if (askAfterSkippedFrame) {
-        // The binding asked for nothing if this draw completed a pump (§306); otherwise the engine
-        // coalesces this request with the binding's.
-        dispatcher.scheduleFrame();
-      }
+      // The binding asked for nothing if this draw completed a pump (§306); otherwise the engine
+      // coalesces this request with the binding's.
+      dispatcher.scheduleFrame();
     }
   };
   Timer.periodic(const Duration(milliseconds: 500), (_) {
@@ -185,8 +200,8 @@ class TestDeadline {
   }
 
   /// [step] for a `pump` or `pumpWidget`. A pump the live binding would leave with no frame
-  /// requested (§306) gets one from [installFrameWatchdog]'s draw hook on iOS (§328); the 2 s watchdog
-  /// rescues it on Android, and anything else on either platform (§305).
+  /// requested (§306) gets one from [installFrameWatchdog]'s draw hook (§328, §347); the 2 s watchdog
+  /// rescues anything else (§305).
   Future<void> frame(
     String name,
     Future<void> pumping, {

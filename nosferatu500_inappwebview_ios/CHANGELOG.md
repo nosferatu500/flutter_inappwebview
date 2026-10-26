@@ -1,3 +1,75 @@
+## 7.1.0
+
+### Requirements
+
+- **Flutter 3.47 / Dart 3.13 or newer** (was 3.44 / 3.12): `flutter: ">=3.47.0"`, `sdk: ^3.13.0`.
+  An app on an older Flutter keeps resolving 7.0.0; pub doesn't offer it 7.1.0.
+- **iOS: Xcode 27 or newer** (was 26). The iOS module now uses iOS 27 WebKit API, which only the iOS 27
+  SDK declares: Xcode 26 fails with `value of type 'WKWebpagePreferences' has no member
+  'globalPrivacyControlEnabled'`. Apps still run on iOS 15 and newer; the iOS 27 features are skipped
+  below iOS 27.
+
+### Added
+
+- **`onGeolocationPermissionsShowPrompt` on iOS 27** (was Android only): a page's geolocation request now
+  reaches the event, through `WKUIDelegate`'s new geolocation permission method. `allow: true` grants it and
+  `allow: false` denies it (measured on an iPhone 17, iOS 27.0.1: PERMISSION_DENIED in about 10 ms).
+  `retain` is ignored. A `null` answer, or no handler, leaves the decision to WebKit, which shows its own
+  prompt, the same as before. The event fires once per page, and `origin` has no trailing slash
+  (`https://example.com`; Android reports `https://example.com/`).
+  The Dart side already handled the event; the native delegate and its channel callback are new. 2
+  device tests (iOS 27, skipped below).
+- **`InAppWebViewSettings.globalPrivacyControlEnabled` (iOS 27)**: sends the Global Privacy Control signal,
+  `navigator.globalPrivacyControl` and the `Sec-GPC: 1` request header. Measured on iOS 27.0, the header
+  follows the secure context: sent over `http://127.0.0.1`, not over plain HTTP to a LAN address, where
+  pages still see the JS flag.
+  `null` leaves WebKit untouched (no header, `navigator.globalPrivacyControl` undefined); `false` makes the
+  flag `false`. It's applied to each navigation, so a `setSettings` change reaches the next one.
+  Read from the settings map into an optional (an `NSNumber` shim, like `lockdownModeEnabled`) and assigned
+  in the per-navigation `WKWebpagePreferences` delegate only when set, because assigning `NO` is visible
+  to pages.
+
+### Fixed
+
+- **iOS: `CookieManager.getCookies` and `getCookie` returned cookies a request to the URL wouldn't send.** The
+  iOS filter was a domain suffix match over every cookie. It ignored the path (a `/a` cookie came back for
+  `/`) and the Secure flag (Secure cookies for `http://`). It gave a host's host-only cookies to its
+  subdomains, and to unrelated sites whose name ends the same way: `example.com`'s cookies came back for
+  `notexample.com`. Now on iOS 27 the result is WebKit's own (`WKHTTPCookieStore.getCookies(for:)`), and
+  below iOS 27 the plugin matches by RFC 6265; measured, both give the same result on all 7 URLs of the new
+  device test (iOS 27.0 and 26.5), which also passes on iOS 17.5. Android is unchanged.
+
+### Internal
+
+- The example app opens the fork's repository page instead of `inappwebview.dev`.
+- **The 7.0.0 section had two "### Fixed" headings; they are one now.** The second held a single entry (the
+  UIScene key-window fix), moved word for word to the end of the first. No entry changed.
+- **Dead code removed: 12 Swift declarations nothing called, and three calls that did nothing.** The
+  declarations: `InAppBrowserManager.WEBVIEW_STORYBOARD_CONTROLLER_ID`, `InAppBrowserWebViewController.tmpWindow`,
+  the plugin's `webViewControllers` / `safariViewControllers`, `WindowIdJS.WINDOW_ID_JS_PLUGIN_SCRIPT_GROUP_NAME`,
+  the `WKUserContentController` extension's `addPluginScripts` / `removePluginScript` / `removeAllPluginScripts`,
+  and `Util.convertToDictionary` / `JSONStringify` / `isIpAddress`, then `Util.isIPv4`, whose only caller was
+  `isIpAddress`. The calls: `UIApplication.shared.delegate?.window??.makeKeyAndVisible()`, twice in
+  `InAppBrowserWebViewController.hide()` and once in `InAppBrowserNavigationController`'s deinit. Measured on iOS
+  26.5 with a temporary log during the `in_app_browser` group: the app delegate's `window` was nil all 12 times
+  (under UIScene, Flutter's scene delegate owns the window), and the key window was the same window every time,
+  because the browser presents modally from the app's own view controller. By reading, the same holds without
+  UIScene: the delegate's window is then the one that is already key.
+- **No `package:flutter/material.dart` import left in `lib/`**: `in_app_webview.dart` dropped it (it already
+  imports `widgets.dart`).
+  Nothing in this package's `lib/` used Material or Cupertino: with the import swapped for `widgets.dart`,
+  analyze reported 0 errors. So the package works the same in an app on `package:material_ui` or on the
+  SDK's Material, and needs no `material_ui` dependency (the migration guide calls moving a package onto
+  `material_ui` a major-version change; this avoids it).
+- The example uses `package:material_ui` (`^1.6.0`): 1 file moved by `dart fix`.
+- **Formatting only: 21 Dart files reformatted by Flutter 3.47.7's formatter at language 3.13** (1 in the example).
+  Each file's code is unchanged once whitespace and commas are removed (the tall style adds and drops
+  trailing commas); analyze and every test suite pass unchanged.
+- **The repo builds and tests on Flutter 3.47.7** (`.fvmrc`; was 3.44.9). `flutter pub get` on 3.47
+  adds `analyzer: exclude:` entries (`build/**`, plus the platform folders that exist) to each Flutter
+  package's `analysis_options.yaml`; that is flutter_tools' `AnalysisOptionsMigration`, which re-adds
+  them on every `pub get`, so they are kept. The excluded `android/` and `ios/` folders hold no Dart.
+
 ## 7.0.0
 
 The iOS half of a hard fork of 6.2.0-beta.3 / `1.2.0-beta.3`. The `nosferatu500_inappwebview` 7.0.0 entry
@@ -487,6 +559,24 @@ lie. `onReceivedClientCertRequest` then silently presents no certificate. The sa
 26.5. Check container algorithms with `openssl pkcs12 -info -nokeys -noout` before believing that
 error.
 
+- **The plugin was broken in any host app using the UIScene lifecycle**, which is most modern iOS
+  apps and now the Flutter default. Three places looked the key window up through
+  `UIApplication.shared.keyWindow` / `UIApplication.shared.windows` — deprecated since iOS 13, below
+  this package's own 15.0 floor, and **both return nothing once the app adopts scenes**. The
+  consequences were silent:
+  - `HeadlessInAppWebView` attaches its web view to the key window on purpose, because an offscreen
+    `WKWebView` runs JavaScript unreliably (its own comment says so). With a nil key window it was
+    never attached, so headless web views could simply fail to execute JavaScript.
+  - `WebAuthenticationSession.presentationAnchor` fell back to a detached `ASPresentationAnchor()`,
+    leaving the authentication sheet with nothing to present from.
+  - `UIApplication.visibleViewController` returned `nil`, so anything routed through it did nothing.
+
+  All three now use a scene-aware lookup that prefers the foreground-active window scene and
+  **falls back to the pre-scene API when the app has no connected scenes**, so unmigrated apps are
+  unaffected. Measured on iOS 26.5 with the example migrated to `FlutterSceneDelegate`: the
+  `headless_in_app_webview` suite collapses after 2 tests without this fix and is 7/7 with it, and
+  7/7 either way on an unmigrated app.
+
 ### Removed
 
 - **`selectionGranularity`**: the setting, its application at creation and its `getSettings`
@@ -582,26 +672,6 @@ error.
   all still print. The job is created with `handledByClient = false`, so no `PrintJobController` is
   allocated on this path. `WebViewChannelDelegate.onPrintRequest` drops its `printJobId` argument
   and no longer sends that map key. Verified on the iOS 26.5 and 17.5 simulators
-
-### Fixed
-
-- **The plugin was broken in any host app using the UIScene lifecycle**, which is most modern iOS
-  apps and now the Flutter default. Three places looked the key window up through
-  `UIApplication.shared.keyWindow` / `UIApplication.shared.windows` — deprecated since iOS 13, below
-  this package's own 15.0 floor, and **both return nothing once the app adopts scenes**. The
-  consequences were silent:
-  - `HeadlessInAppWebView` attaches its web view to the key window on purpose, because an offscreen
-    `WKWebView` runs JavaScript unreliably (its own comment says so). With a nil key window it was
-    never attached, so headless web views could simply fail to execute JavaScript.
-  - `WebAuthenticationSession.presentationAnchor` fell back to a detached `ASPresentationAnchor()`,
-    leaving the authentication sheet with nothing to present from.
-  - `UIApplication.visibleViewController` returned `nil`, so anything routed through it did nothing.
-
-  All three now use a scene-aware lookup that prefers the foreground-active window scene and
-  **falls back to the pre-scene API when the app has no connected scenes**, so unmigrated apps are
-  unaffected. Measured on iOS 26.5 with the example migrated to `FlutterSceneDelegate`: the
-  `headless_in_app_webview` suite collapses after 2 tests without this fix and is 7/7 with it, and
-  7/7 either way on an unmigrated app.
 
 ### Internal
 

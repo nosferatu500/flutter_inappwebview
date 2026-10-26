@@ -237,11 +237,10 @@ void widgetRebuild() {
           misrouted.add('$e (latest build $latest)');
         }
       }
-      expect(
-        events.take(2),
-        ['build 0', 'build 1'],
-        reason: 'the precondition: two builds before anything else: $events',
-      );
+      expect(events.take(2), [
+        'build 0',
+        'build 1',
+      ], reason: 'the precondition: two builds before anything else: $events');
       // Both at once, so a failure shows the disposal too.
       expect(
         'misrouted $misrouted, disposed '

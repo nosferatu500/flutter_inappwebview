@@ -186,7 +186,7 @@ class AndroidJavaScriptReplyProxyCreationParams
   }
 }
 
-///{@macro nosferatu500_inappwebview_platform_interface.JavaScriptReplyProxy}
+///{@macro nosferatu500_inappwebview_platform_interface.PlatformJavaScriptReplyProxy}
 class AndroidJavaScriptReplyProxy extends PlatformJavaScriptReplyProxy {
   /// Constructs a [AndroidWebMessageListener].
   AndroidJavaScriptReplyProxy(PlatformJavaScriptReplyProxyCreationParams params)

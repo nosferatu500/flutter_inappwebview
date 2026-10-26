@@ -190,32 +190,18 @@ class ProcessGlobalConfigDirectoryBasePaths {
 // SupportedPlatformsGenerator
 // **************************************************************************
 
+///{@template nosferatu500_inappwebview_platform_interface.PlatformProcessGlobalConfigCreationParams.supported_platforms}
+///
+///**Officially Supported Platforms/Implementations**:
+///- Android WebView
+///
+///Use the [PlatformProcessGlobalConfigCreationParams.isClassSupported] method to check if this class is supported at runtime.
+///{@endtemplate}
+// Carries the template above for dartdoc; hidden from every export, so not API (§350).
+abstract final class PlatformProcessGlobalConfigCreationParamsSupportedPlatforms {}
+
 extension _PlatformProcessGlobalConfigCreationParamsClassSupported
     on PlatformProcessGlobalConfigCreationParams {
-  ///{@template nosferatu500_inappwebview_platform_interface.PlatformProcessGlobalConfigCreationParams.supported_platforms}
-  ///
-  ///**Officially Supported Platforms/Implementations**:
-  ///- Android WebView
-  ///
-  ///Use the [PlatformProcessGlobalConfigCreationParams.isClassSupported] method to check if this class is supported at runtime.
-  ///{@endtemplate}
-  static bool isClassSupported({TargetPlatform? platform}) {
-    return ((kIsWeb && platform != null) || !kIsWeb) &&
-        [TargetPlatform.android].contains(platform ?? defaultTargetPlatform);
-  }
-}
-
-extension _PlatformProcessGlobalConfigClassSupported
-    on PlatformProcessGlobalConfig {
-  ///{@template nosferatu500_inappwebview_platform_interface.PlatformProcessGlobalConfig.supported_platforms}
-  ///
-  ///**Officially Supported Platforms/Implementations**:
-  ///- Android WebView ([Official API - ProcessGlobalConfig](https://developer.android.com/reference/androidx/webkit/ProcessGlobalConfig))
-  ///
-  ///Use the [PlatformProcessGlobalConfig.isClassSupported] method to check if this class is supported at runtime.
-  ///{@endtemplate}
-  // Unused: [PlatformProcessGlobalConfig.isClassSupported] answers through its creation params. Kept for the doc template above.
-  // ignore: unused_element
   static bool isClassSupported({TargetPlatform? platform}) {
     return ((kIsWeb && platform != null) || !kIsWeb) &&
         [TargetPlatform.android].contains(platform ?? defaultTargetPlatform);
@@ -223,6 +209,14 @@ extension _PlatformProcessGlobalConfigClassSupported
 }
 
 ///List of [PlatformProcessGlobalConfig]'s methods that can be used to check if they are supported or not by the current platform.
+///
+///{@template nosferatu500_inappwebview_platform_interface.PlatformProcessGlobalConfig.supported_platforms}
+///
+///**Officially Supported Platforms/Implementations**:
+///- Android WebView ([Official API - ProcessGlobalConfig](https://developer.android.com/reference/androidx/webkit/ProcessGlobalConfig))
+///
+///Use the [PlatformProcessGlobalConfig.isClassSupported] method to check if this class is supported at runtime.
+///{@endtemplate}
 enum PlatformProcessGlobalConfigMethod {
   ///Can be used to check if the [PlatformProcessGlobalConfig.apply] method is supported at runtime.
   ///
@@ -232,7 +226,7 @@ enum PlatformProcessGlobalConfigMethod {
   ///- Android WebView ([Official API - ProcessGlobalConfig.apply](https://developer.android.com/reference/androidx/webkit/ProcessGlobalConfig#apply(androidx.webkit.ProcessGlobalConfig)))
   ///
   ///**Parameters - Officially Supported Platforms/Implementations**:
-  ///- [settings]: all platforms
+  ///- `settings`: all platforms
   ///
   ///Use the [PlatformProcessGlobalConfig.isMethodSupported] method to check if this method is supported at runtime.
   ///{@endtemplate}
@@ -248,22 +242,14 @@ extension _PlatformProcessGlobalConfigMethodSupported
     switch (method) {
       case PlatformProcessGlobalConfigMethod.apply:
         return ((kIsWeb && platform != null) || !kIsWeb) &&
-            [
-              TargetPlatform.android,
-            ].contains(platform ?? defaultTargetPlatform);
+            [TargetPlatform.android]
+                .contains(platform ?? defaultTargetPlatform);
     }
   }
 }
 
 extension _ProcessGlobalConfigSettingsClassSupported
     on ProcessGlobalConfigSettings {
-  ///{@template nosferatu500_inappwebview_platform_interface.ProcessGlobalConfigSettings.supported_platforms}
-  ///
-  ///**Officially Supported Platforms/Implementations**:
-  ///- Android WebView ([Official API - ProcessGlobalConfig.apply](https://developer.android.com/reference/androidx/webkit/ProcessGlobalConfig#apply(androidx.webkit.ProcessGlobalConfig)))
-  ///
-  ///Use the [ProcessGlobalConfigSettings.isClassSupported] method to check if this class is supported at runtime.
-  ///{@endtemplate}
   static bool isClassSupported({TargetPlatform? platform}) {
     return ((kIsWeb && platform != null) || !kIsWeb) &&
         [TargetPlatform.android].contains(platform ?? defaultTargetPlatform);
@@ -271,6 +257,14 @@ extension _ProcessGlobalConfigSettingsClassSupported
 }
 
 ///List of [ProcessGlobalConfigSettings]'s properties that can be used to check i they are supported or not by the current platform.
+///
+///{@template nosferatu500_inappwebview_platform_interface.ProcessGlobalConfigSettings.supported_platforms}
+///
+///**Officially Supported Platforms/Implementations**:
+///- Android WebView ([Official API - ProcessGlobalConfig.apply](https://developer.android.com/reference/androidx/webkit/ProcessGlobalConfig#apply(androidx.webkit.ProcessGlobalConfig)))
+///
+///Use the [ProcessGlobalConfigSettings.isClassSupported] method to check if this class is supported at runtime.
+///{@endtemplate}
 enum ProcessGlobalConfigSettingsProperty {
   ///Can be used to check if the [ProcessGlobalConfigSettings.dataDirectorySuffix] property is supported at runtime.
   ///
@@ -306,14 +300,12 @@ extension _ProcessGlobalConfigSettingsPropertySupported
     switch (property) {
       case ProcessGlobalConfigSettingsProperty.dataDirectorySuffix:
         return ((kIsWeb && platform != null) || !kIsWeb) &&
-            [
-              TargetPlatform.android,
-            ].contains(platform ?? defaultTargetPlatform);
+            [TargetPlatform.android]
+                .contains(platform ?? defaultTargetPlatform);
       case ProcessGlobalConfigSettingsProperty.directoryBasePaths:
         return ((kIsWeb && platform != null) || !kIsWeb) &&
-            [
-              TargetPlatform.android,
-            ].contains(platform ?? defaultTargetPlatform);
+            [TargetPlatform.android]
+                .contains(platform ?? defaultTargetPlatform);
     }
   }
 }

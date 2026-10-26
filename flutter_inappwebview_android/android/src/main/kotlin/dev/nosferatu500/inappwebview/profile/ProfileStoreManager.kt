@@ -1,5 +1,6 @@
 package dev.nosferatu500.inappwebview.profile
 
+import android.annotation.SuppressLint
 import androidx.webkit.CustomHeader
 import androidx.webkit.Profile
 import androidx.webkit.ProfileStore
@@ -20,7 +21,7 @@ import io.flutter.plugin.common.BinaryMessenger
  * There is no `messageChannelSuffix`: `androidx.webkit.ProfileStore` is process-global, so there is
  * one channel rather than one per WebView.
  *
- * **None of the eight methods is `@async`** — every androidx call this class makes returns
+ * **None of the ten methods is `@async`** — every androidx call this class makes returns
  * directly, so Pigeon's own `try`/`catch` around each synchronous handler is the only error path
  * needed and §172's `replyingOnThrow` has nothing to wrap. [deleteProfile] depends on that wrapper
  * rather than working around it.
@@ -131,6 +132,32 @@ class ProfileStoreManager(plugin: InAppWebViewFlutterPlugin) : Disposable, Profi
     return true
   }
 
+  /**
+   * `Profile.setCrossOriginIsolatedAllowlist` replaces the whole set rather than adding to it, so an
+   * empty [originRules] clears the allowlist. A rule androidx can't parse is re-thrown as a
+   * [FlutterError] carrying [LOG_TAG], for the reason [deleteProfile] gives.
+   */
+  // androidx's lint check flags every call to warn that the listed origins get SharedArrayBuffer
+  // and friends. The plugin picks no origins: the list is the app's own, passed through from Dart,
+  // and the Dart docs carry the same warning to the app. Lint cannot see the Dart round-trip.
+  @SuppressLint("CrossOriginIsolatedAllowlist")
+  override fun setCrossOriginIsolatedAllowlist(
+    originRules: List<String>,
+    profileName: String?
+  ): Boolean {
+    val profile = crossOriginIsolatedProfile(profileName) ?: return false
+    try {
+      profile.setCrossOriginIsolatedAllowlist(originRules.toSet())
+    } catch (e: IllegalArgumentException) {
+      throw FlutterError(LOG_TAG, e.message, null)
+    }
+    return true
+  }
+
+  /** `null` when the profile or the feature can't be resolved; an empty list means no allowlist. */
+  override fun getCrossOriginIsolatedAllowlist(profileName: String?): List<String>? =
+    crossOriginIsolatedProfile(profileName)?.crossOriginIsolatedAllowlist?.toList()
+
   override fun dispose() {
     // Unregisters the generated handler. Skipping it would leave it bound to a disposed manager for
     // the life of the messenger.
@@ -164,6 +191,19 @@ class ProfileStoreManager(plugin: InAppWebViewFlutterPlugin) : Disposable, Profi
       // Direct isFeatureSupported, deliberately: unlike COOKIE_INTERCEPT (§126), this flag IS
       // present in androidx's @StringDef, so lint accepts it and no suppression is warranted.
       if (!WebViewFeature.isFeatureSupported(WebViewFeature.CUSTOM_REQUEST_HEADERS)) {
+        return null
+      }
+      return profileStore?.getProfile(profileName ?: DEFAULT_PROFILE_NAME)
+    }
+
+    /**
+     * The profile a cross-origin-isolated allowlist call applies to, or null if it cannot be
+     * reached. Same two-gate shape as [customHeaderProfile]. Unlike the custom-header methods,
+     * androidx's `ProfileImpl` throws `UnsupportedOperationException` for these when the feature is
+     * missing rather than no-oping, so the gate is what turns that into the documented answer.
+     */
+    private fun crossOriginIsolatedProfile(profileName: String?): Profile? {
+      if (!WebViewFeature.isFeatureSupported(WebViewFeature.CROSS_ORIGIN_ISOLATED_ALLOWLIST)) {
         return null
       }
       return profileStore?.getProfile(profileName ?: DEFAULT_PROFILE_NAME)

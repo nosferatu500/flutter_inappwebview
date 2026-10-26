@@ -14,7 +14,6 @@ import AVFoundation
 public class InAppBrowserManager: ChannelDelegate {
     static let METHOD_CHANNEL_NAME = "dev.nosferatu500.inappwebview/inappbrowser"
     static let WEBVIEW_STORYBOARD = "WebView"
-    static let WEBVIEW_STORYBOARD_CONTROLLER_ID = "viewController"
     static let NAV_STORYBOARD_CONTROLLER_ID = "navController"
     var plugin: InAppWebViewFlutterPlugin?
 

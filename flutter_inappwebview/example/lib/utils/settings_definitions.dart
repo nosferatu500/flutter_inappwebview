@@ -96,16 +96,14 @@ Map<String, List<SettingDefinition>> getSettingDefinitions() {
     'Content': [
       const SettingDefinition(
         name: 'Download Favicons',
-        description:
-            'Fetch page favicons (Android). Only controls the request — use getFavicons() to read them',
+        description: 'Fetch page favicons (Android). Only controls the request — use getFavicons() to read them',
         type: SettingType.boolean,
         defaultValue: null,
         property: InAppWebViewSettingsProperty.downloadFaviconsEnabled,
       ),
       const SettingDefinition(
         name: 'Adaptive Image Glyph',
-        description:
-            'Allow Genmoji and other adaptive image glyphs in editable content (iOS)',
+        description: 'Allow Genmoji and other adaptive image glyphs in editable content (iOS)',
         type: SettingType.boolean,
         defaultValue: null,
         property: InAppWebViewSettingsProperty.supportsAdaptiveImageGlyph,
@@ -331,6 +329,13 @@ Map<String, List<SettingDefinition>> getSettingDefinitions() {
         enumValues: _safeEnumValues(() => SecurityRestrictionMode.values),
         property: InAppWebViewSettingsProperty.securityRestrictionMode,
       ),
+      const SettingDefinition(
+        name: 'Global Privacy Control',
+        description: 'Send the GPC signal: navigator.globalPrivacyControl and Sec-GPC (iOS 27)',
+        type: SettingType.boolean,
+        defaultValue: null,
+        property: InAppWebViewSettingsProperty.globalPrivacyControlEnabled,
+      ),
       SettingDefinition(
         name: 'HTTPS Navigation Policy',
         description:
@@ -508,8 +513,7 @@ Map<String, List<SettingDefinition>> getSettingDefinitions() {
     'APIs': [
       const SettingDefinition(
         name: 'Payment Request API',
-        description:
-            'Let web content use the Payment Request API, e.g. Google Pay (Android)',
+        description: 'Let web content use the Payment Request API, e.g. Google Pay (Android)',
         type: SettingType.boolean,
         defaultValue: false,
         property: InAppWebViewSettingsProperty.paymentRequestEnabled,
@@ -528,8 +532,7 @@ Map<String, List<SettingDefinition>> getSettingDefinitions() {
       ),
       SettingDefinition(
         name: 'Attribution Registration',
-        description:
-            'Which side registers Attribution Reporting sources and triggers (Android)',
+        description: 'Which side registers Attribution Reporting sources and triggers (Android)',
         type: SettingType.enumeration,
         defaultValue: null,
         enumValues: _safeEnumValues(

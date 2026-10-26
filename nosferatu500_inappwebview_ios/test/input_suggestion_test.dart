@@ -37,12 +37,15 @@ void main() {
       );
     });
 
-    test('a non-Smart-Reply suggestion decodes to all-null, not to an error', () {
-      // What the Swift emits when the downcast fails. The event still fires — the fact that the
-      // user picked something is itself the signal — so `fromMap` must accept it.
-      final suggestion = InputSuggestion.fromMap({'smartReply': null})!;
-      expect(suggestion.smartReply, isNull);
-    });
+    test(
+      'a non-Smart-Reply suggestion decodes to all-null, not to an error',
+      () {
+        // What the Swift emits when the downcast fails. The event still fires — the fact that the
+        // user picked something is itself the signal — so `fromMap` must accept it.
+        final suggestion = InputSuggestion.fromMap({'smartReply': null})!;
+        expect(suggestion.smartReply, isNull);
+      },
+    );
 
     test('round-trips through fromMap', () {
       final back = InputSuggestion.fromMap(
@@ -63,9 +66,8 @@ void main() {
   group('useOnInsertInputSuggestion', () {
     test('serialises under the key the Swift reads by KVC', () {
       expect(
-        InAppWebViewSettings(
-          useOnInsertInputSuggestion: true,
-        ).toMap()['useOnInsertInputSuggestion'],
+        InAppWebViewSettings(useOnInsertInputSuggestion: true)
+            .toMap()['useOnInsertInputSuggestion'],
         true,
       );
     });

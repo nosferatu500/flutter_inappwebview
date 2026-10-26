@@ -263,26 +263,22 @@ class _InAppWebViewFlutterApiImpl implements InAppWebViewFlutterApi {
     String? url,
     String? message,
     bool? isMainFrame,
-  ) async =>
-      await _ask('onJsAlert', {
-            'url': url,
-            'message': message,
-            'isMainFrame': isMainFrame,
-          })
-          as Map<String?, Object?>?;
+  ) async => await _ask('onJsAlert', {
+    'url': url,
+    'message': message,
+    'isMainFrame': isMainFrame,
+  }) as Map<String?, Object?>?;
 
   @override
   Future<Map<String?, Object?>?> onJsConfirm(
     String? url,
     String? message,
     bool? isMainFrame,
-  ) async =>
-      await _ask('onJsConfirm', {
-            'url': url,
-            'message': message,
-            'isMainFrame': isMainFrame,
-          })
-          as Map<String?, Object?>?;
+  ) async => await _ask('onJsConfirm', {
+    'url': url,
+    'message': message,
+    'isMainFrame': isMainFrame,
+  }) as Map<String?, Object?>?;
 
   @override
   Future<Map<String?, Object?>?> onJsPrompt(
@@ -290,14 +286,12 @@ class _InAppWebViewFlutterApiImpl implements InAppWebViewFlutterApi {
     String? message,
     String? defaultValue,
     bool? isMainFrame,
-  ) async =>
-      await _ask('onJsPrompt', {
-            'url': url,
-            'message': message,
-            'defaultValue': defaultValue,
-            'isMainFrame': isMainFrame,
-          })
-          as Map<String?, Object?>?;
+  ) async => await _ask('onJsPrompt', {
+    'url': url,
+    'message': message,
+    'defaultValue': defaultValue,
+    'isMainFrame': isMainFrame,
+  }) as Map<String?, Object?>?;
 
   @override
   Future<Map<String?, Object?>?> onJsBeforeUnload(
@@ -325,13 +319,11 @@ class _InAppWebViewFlutterApiImpl implements InAppWebViewFlutterApi {
     String? origin,
     List<String?>? resources,
     Object? frame,
-  ) async =>
-      await _ask('onPermissionRequest', {
-            'origin': origin,
-            'resources': resources,
-            'frame': frame,
-          })
-          as Map<String?, Object?>?;
+  ) async => await _ask('onPermissionRequest', {
+    'origin': origin,
+    'resources': resources,
+    'frame': frame,
+  }) as Map<String?, Object?>?;
 
   // Kotlin sent `NavigationAction.toMap()` itself as the arguments.
   @override
@@ -410,20 +402,19 @@ class _InAppWebViewFlutterApiImpl implements InAppWebViewFlutterApi {
   Future<WebResourceResponseData?> shouldInterceptRequest(
     WebResourceRequestData request,
   ) async {
-    final response =
-        await _ask('shouldInterceptRequest', request.toMethodChannelMap())
-            as Map<String, dynamic>?;
+    final response = await _ask(
+      'shouldInterceptRequest',
+      request.toMethodChannelMap(),
+    ) as Map<String, dynamic>?;
     return WebResourceResponse.fromMap(response)?.toPigeon();
   }
 
   @override
   Future<Map<String?, Object?>?> onLoadResourceWithCustomScheme(
     WebResourceRequestData request,
-  ) async =>
-      await _ask('onLoadResourceWithCustomScheme', {
-            'request': request.toMethodChannelMap(),
-          })
-          as Map<String?, Object?>?;
+  ) async => await _ask('onLoadResourceWithCustomScheme', {
+    'request': request.toMethodChannelMap(),
+  }) as Map<String?, Object?>?;
 }
 
 ///Controls a WebView, such as an [InAppWebView] widget instance, a [AndroidHeadlessInAppWebView] instance or [AndroidInAppBrowser] WebView instance.
@@ -988,9 +979,8 @@ class AndroidInAppWebViewController extends PlatformInAppWebViewController
               uri,
             ))?.toNativeValue();
           } else {
-            return (await _inAppBrowserEventHandler!.onFormResubmission(
-              uri,
-            ))?.toNativeValue();
+            return (await _inAppBrowserEventHandler!.onFormResubmission(uri))
+                ?.toNativeValue();
           }
         }
         break;
@@ -1044,9 +1034,8 @@ class AndroidInAppWebViewController extends PlatformInAppWebViewController
               jsAlertRequest,
             ))?.toMap();
           } else {
-            return (await _inAppBrowserEventHandler!.onJsAlert(
-              jsAlertRequest,
-            ))?.toMap();
+            return (await _inAppBrowserEventHandler!.onJsAlert(jsAlertRequest))
+                ?.toMap();
           }
         }
         break;
@@ -1775,9 +1764,8 @@ class AndroidInAppWebViewController extends PlatformInAppWebViewController
               request,
             ))?.toMap();
           } else {
-            return (await _inAppBrowserEventHandler!.onShowFileChooser(
-              request,
-            ))?.toMap();
+            return (await _inAppBrowserEventHandler!.onShowFileChooser(request))
+                ?.toMap();
           }
         }
         break;
@@ -1888,9 +1876,8 @@ class AndroidInAppWebViewController extends PlatformInAppWebViewController
                 );
               } else {
                 return jsonEncode(
-                  (await _inAppBrowserEventHandler!.onAjaxProgress(
-                    request,
-                  ))?.toNativeValue(),
+                  (await _inAppBrowserEventHandler!.onAjaxProgress(request))
+                      ?.toNativeValue(),
                 );
               }
             }

@@ -120,15 +120,11 @@ void onReceivedError() {
     ) async {
       const target = 'http://127.0.0.1:59999/';
       final events = await eventsAfterLoading(tester, target);
-      expect(
-        events.where((e) => e.startsWith('error ')),
-        [
-          startsWith(
-            'error $target ${WebResourceErrorType.CANNOT_CONNECT_TO_HOST}',
-          ),
-        ],
-        reason: 'one error for the refused URL: $events',
-      );
+      expect(events.where((e) => e.startsWith('error ')), [
+        startsWith(
+          'error $target ${WebResourceErrorType.CANNOT_CONNECT_TO_HOST}',
+        ),
+      ], reason: 'one error for the refused URL: $events');
     });
 
     // WebKit refuses some ports itself, port 1 among them, and loads `about:blank` instead with no

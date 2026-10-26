@@ -1,8 +1,6 @@
 import 'package:nosferatu500_inappwebview_platform_interface/nosferatu500_inappwebview_platform_interface.dart';
 
 ///{@macro nosferatu500_inappwebview_platform_interface.PlatformWebMessagePort}
-///
-///{@macro nosferatu500_inappwebview_platform_interface.PlatformWebMessagePort.supported_platforms}
 class WebMessagePort implements IWebMessagePort {
   ///{@macro nosferatu500_inappwebview_platform_interface.PlatformWebMessagePort}
   WebMessagePort({required int index})
@@ -25,21 +23,15 @@ class WebMessagePort implements IWebMessagePort {
   final PlatformWebMessagePort platform;
 
   ///{@macro nosferatu500_inappwebview_platform_interface.PlatformWebMessagePort.setWebMessageCallback}
-  ///
-  ///{@macro nosferatu500_inappwebview_platform_interface.PlatformWebMessagePort.setWebMessageCallback.supported_platforms}
   @override
   Future<void> setWebMessageCallback(WebMessageCallback? onMessage) =>
       platform.setWebMessageCallback(onMessage);
 
   ///{@macro nosferatu500_inappwebview_platform_interface.PlatformWebMessagePort.postMessage}
-  ///
-  ///{@macro nosferatu500_inappwebview_platform_interface.PlatformWebMessagePort.postMessage.supported_platforms}
   @override
   Future<void> postMessage(WebMessage message) => platform.postMessage(message);
 
   ///{@macro nosferatu500_inappwebview_platform_interface.PlatformWebMessagePort.close}
-  ///
-  ///{@macro nosferatu500_inappwebview_platform_interface.PlatformWebMessagePort.close.supported_platforms}
   @override
   Future<void> close() => platform.close();
 

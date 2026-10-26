@@ -290,8 +290,7 @@ void main() {
       expect(
         await deliver('onTitleChanged', ['t'], suffix: 'inappwebview_8'),
         isNotNull,
-        reason:
-            'a keep-alive WebView keeps its handler, as it keeps its MethodChannel handler',
+        reason: 'a keep-alive WebView keeps its handler, as it keeps its MethodChannel handler',
       );
       InAppWebViewFlutterApi.setUp(
         null,

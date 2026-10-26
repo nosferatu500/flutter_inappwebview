@@ -25,18 +25,16 @@ void main() {
     test('false is distinct from unset and does reach the wire', () {
       // Explicitly opting out must still be expressible -- it is a deliberate override.
       expect(
-        InAppWebViewSettings(
-          lockdownModeEnabled: false,
-        ).toMap()['lockdownModeEnabled'],
+        InAppWebViewSettings(lockdownModeEnabled: false)
+            .toMap()['lockdownModeEnabled'],
         false,
       );
     });
 
     test('true reaches the wire', () {
       expect(
-        InAppWebViewSettings(
-          lockdownModeEnabled: true,
-        ).toMap()['lockdownModeEnabled'],
+        InAppWebViewSettings(lockdownModeEnabled: true)
+            .toMap()['lockdownModeEnabled'],
         true,
       );
     });

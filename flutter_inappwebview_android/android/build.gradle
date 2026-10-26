@@ -16,25 +16,25 @@ apply plugin: 'com.android.library'
 
 android {
     namespace = 'dev.nosferatu500.inappwebview'
-    // Not flutter.compileSdkVersion (36 on Flutter 3.44): androidx.core 1.19.0 publishes AAR
-    // metadata requiring consumers to compile against API 37+, and lint fails the build rather
-    // than warning when that is unmet. The main example already pins 37 for the same class of
-    // reason (permission_handler 13). Drop back to flutter.compileSdkVersion once Flutter's
-    // default reaches 37.
-    compileSdk = 37
+    // An app has to compile against at least this, so it follows Flutter's default (36 on Flutter
+    // 3.47) rather than pinning a newer one: a pinned 37 made every app add `compileSdk = 37`.
+    // Every dependency below asks for 36 or less (androidx.core is held at 1.18.0 for that).
+    compileSdk = flutter.compileSdkVersion
 
     // This module's sources are Kotlin, so built-in Kotlin must stay on -- do not
     // reintroduce `enableKotlin = false`. Nothing else is needed here: whichever
     // Kotlin toolchain the consuming app ends up with compiles this module.
     //
-    //   * app on AGP 9 defaults (android.builtInKotlin=true): AGP's built-in
-    //     Kotlin is applied to every module, including this one.
-    //   * app with android.builtInKotlin=false (still required whenever some
-    //     other plugin applies org.jetbrains.kotlin.android, which built-in
-    //     Kotlin rejects): Flutter's own Gradle plugin applies `kotlin-android`
-    //     to every plugin subproject that applies AGP and does not already
-    //     declare KGP -- see FlutterPluginUtils.kt. Both example apps here take
-    //     this path.
+    //   * app with android.builtInKotlin=true: AGP's built-in Kotlin is applied
+    //     to every module, including this one. Both example apps here take this
+    //     path.
+    //   * app with android.builtInKotlin=false (what Flutter 3.47's migrator
+    //     writes into an app's gradle.properties unless the app sets the
+    //     property itself; required whenever some other plugin applies
+    //     org.jetbrains.kotlin.android, which built-in Kotlin rejects): Flutter's
+    //     own Gradle plugin applies `kotlin-android` to every plugin subproject
+    //     that applies AGP and does not already declare KGP -- see
+    //     FlutterPluginUtils.kt.
     //
     // Declaring a Kotlin plugin explicitly would break one of those two cases:
     // `com.android.built-in-kotlin` is not on this module's classpath unless the
@@ -47,7 +47,7 @@ android {
     }
 
     defaultConfig {
-        minSdk = 30
+        minSdk = 26
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
 
         vectorDrawables.useSupportLibrary = true
@@ -93,12 +93,19 @@ dependencies {
     // Used directly -- ContextCompat, ViewCompat, WindowCompat, WindowInsetsCompat,
     // WindowInsetsControllerCompat, BundleCompat and FileProvider, across 4 files -- but it was
     // reaching the classpath only transitively (appcompat -> fragment -> core), which holds only
-    // for as long as appcompat keeps bringing it. Pinned current, like the other androidx
-    // dependencies here, rather than at the 1.13.1 that happened to resolve.
-    implementation 'androidx.core:core:1.19.0'
-    implementation 'androidx.webkit:webkit:1.17.0'
+    // for as long as appcompat keeps bringing it. Held at 1.18.0, not the current 1.19.x: 1.19.0's
+    // AAR metadata requires apps to compile against API 37 (and AGP 9.1), 1.18.0's against 36,
+    // Flutter's default. The plugin uses nothing from 1.19. Nothing else here asks for more than
+    // core 1.16.0, so this pin is what resolves.
+    implementation 'androidx.core:core:1.18.0'
+    implementation 'androidx.webkit:webkit:1.18.0'
     implementation 'androidx.browser:browser:1.10.0'
     implementation 'androidx.appcompat:appcompat:1.8.0'
+    // Material 3 themes for the plugin's own native UI: the InAppBrowser activity
+    // (Theme.Material3.DayNight.NoActionBar) and the JavaScript alert / confirm / prompt dialogs
+    // (Theme.Material3.DayNight.Dialog.Alert). Both carry their own theme, so the app's theme doesn't
+    // matter to them.
+    implementation 'com.google.android.material:material:1.14.0'
     implementation 'androidx.swiperefreshlayout:swiperefreshlayout:1.2.0'
 
     // JVM unit tests (src/test). These never reach a consumer: `testImplementation`

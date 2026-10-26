@@ -12,8 +12,8 @@ version: 1.0.0+1
 publish_to: none
 
 environment:
-  sdk: ^3.12.0
-  flutter: ">=3.44.0"
+  sdk: ^3.13.0
+  flutter: ">=3.47.0"
 
 dependencies:
   flutter:
@@ -23,7 +23,6 @@ dependencies:
   # Use with the CupertinoIcons class for iOS style icons.
   cupertino_icons: ^1.0.8
   path_provider: ^2.1.5
-  permission_handler: ^13.0.1
   pointer_interceptor: ^0.10.1+2
   shared_preferences: ^2.5.4
   provider: ^6.1.5
@@ -34,6 +33,7 @@ dependencies:
   nosferatu500_inappwebview:
     path: ../
 
+  material_ui: ^1.6.0
 dependency_overrides:
   nosferatu500_inappwebview_internal_annotations:
     path: ../../dev_packages/flutter_inappwebview_internal_annotations
@@ -58,7 +58,7 @@ dev_dependencies:
 #      path: packages/integration_test
   flutter_lints: ^6.0.0
   # Imported by test/test_helpers/mock_inappwebview_platform.dart.
-  nosferatu500_inappwebview_platform_interface: ^7.0.0
+  nosferatu500_inappwebview_platform_interface: ^7.1.0
   plugin_platform_interface: ^2.1.8
 
 # For information on the generic Dart part of this file, see the

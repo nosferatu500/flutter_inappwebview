@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:nosferatu500_inappwebview/nosferatu500_inappwebview.dart';
 import 'package:flutter_inappwebview_example/widgets/common/app_drawer.dart';
 import 'package:flutter_inappwebview_example/widgets/common/appbar_loading_indicator.dart';
@@ -808,9 +808,8 @@ class _CookieManagerScreenState extends State<CookieManagerScreen> {
               _buildDetailRow(
                 'Expires',
                 cookie.expiresDate != null
-                    ? DateTime.fromMillisecondsSinceEpoch(
-                        cookie.expiresDate!,
-                      ).toString()
+                    ? DateTime.fromMillisecondsSinceEpoch(cookie.expiresDate!)
+                          .toString()
                     : 'null',
               ),
               _buildDetailRow('Secure', cookie.isSecure?.toString() ?? 'null'),

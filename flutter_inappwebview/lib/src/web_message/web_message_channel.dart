@@ -1,5 +1,6 @@
 import 'package:flutter/foundation.dart';
 import 'package:nosferatu500_inappwebview_platform_interface/nosferatu500_inappwebview_platform_interface.dart';
+
 import 'web_message_port.dart';
 
 ///{@macro nosferatu500_inappwebview_platform_interface.PlatformWebMessageChannel}
@@ -71,20 +72,20 @@ class WebMessageChannel {
     return WebMessageChannel.fromPlatform(platform: platform);
   }
 
-  ///{@macro nosferatu500_inappwebview_platform_interface.PlatformWebMessageChannel.id}
+  ///{@macro nosferatu500_inappwebview_platform_interface.PlatformWebMessageChannelCreationParams.id}
   ///
-  ///{@macro nosferatu500_inappwebview_platform_interface.PlatformWebMessageChannel.id.supported_platforms}
+  ///{@macro nosferatu500_inappwebview_platform_interface.PlatformWebMessageChannelCreationParams.id.supported_platforms}
   String get id => platform.id;
 
-  ///{@macro nosferatu500_inappwebview_platform_interface.PlatformWebMessageChannel.port1}
+  ///{@macro nosferatu500_inappwebview_platform_interface.PlatformWebMessageChannelCreationParams.port1}
   ///
-  ///{@macro nosferatu500_inappwebview_platform_interface.PlatformWebMessageChannel.port1.supported_platforms}
+  ///{@macro nosferatu500_inappwebview_platform_interface.PlatformWebMessageChannelCreationParams.port1.supported_platforms}
   WebMessagePort get port1 =>
       WebMessagePort.fromPlatform(platform: platform.port1);
 
-  ///{@macro nosferatu500_inappwebview_platform_interface.PlatformWebMessageChannel.port2}
+  ///{@macro nosferatu500_inappwebview_platform_interface.PlatformWebMessageChannelCreationParams.port2}
   ///
-  ///{@macro nosferatu500_inappwebview_platform_interface.PlatformWebMessageChannel.port2.supported_platforms}
+  ///{@macro nosferatu500_inappwebview_platform_interface.PlatformWebMessageChannelCreationParams.port2.supported_platforms}
   WebMessagePort get port2 =>
       WebMessagePort.fromPlatform(platform: platform.port2);
 

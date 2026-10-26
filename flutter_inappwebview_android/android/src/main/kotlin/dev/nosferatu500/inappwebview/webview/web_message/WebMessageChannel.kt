@@ -1,6 +1,5 @@
 package dev.nosferatu500.inappwebview.webview.web_message
 
-import android.webkit.ValueCallback
 import androidx.webkit.WebMessageCompat
 import androidx.webkit.WebMessagePortCompat
 import androidx.webkit.WebViewCompat
@@ -8,7 +7,6 @@ import androidx.webkit.WebViewFeature
 import dev.nosferatu500.inappwebview.pigeons.WebMessageChannelFlutterApi
 import dev.nosferatu500.inappwebview.pigeons.WebMessageChannelHostApi
 import dev.nosferatu500.inappwebview.pigeons.WebMessageData
-import dev.nosferatu500.inappwebview.plugin_scripts_js.JavaScriptBridgeJS
 import dev.nosferatu500.inappwebview.types.Disposable
 import dev.nosferatu500.inappwebview.types.WebMessageCompatExt
 import dev.nosferatu500.inappwebview.types.WebMessagePort
@@ -62,23 +60,6 @@ class WebMessageChannel(
     }
   }
 
-  fun initJsInstance(
-    webView: InAppWebViewInterface?,
-    callback: ValueCallback<WebMessageChannel>
-  ) {
-    if (webView != null) {
-      webView.evaluateJavascript(
-        "(function() {" +
-          JavaScriptBridgeJS.WEB_MESSAGE_CHANNELS_VARIABLE_NAME() + "['" + id +
-          "'] = new MessageChannel();" +
-          "})();",
-        null
-      ) { callback.onReceiveValue(this) }
-    } else {
-      callback.onReceiveValue(this)
-    }
-  }
-
   /**
    * Returns false only when the view is not an `InAppWebView`.
    *
@@ -117,7 +98,7 @@ class WebMessageChannel(
       val port = compatPorts[index.toInt()]
       val webMessagePorts = mutableListOf<WebMessagePortCompat>()
       ext.ports?.forEach { portExt ->
-        val webMessageChannel = view.getWebMessageChannels()?.get(portExt.webMessageChannelId)
+        val webMessageChannel = view.getWebMessageChannels().get(portExt.webMessageChannelId)
         if (webMessageChannel != null) {
           webMessagePorts.add(webMessageChannel.compatPorts[portExt.index])
         }

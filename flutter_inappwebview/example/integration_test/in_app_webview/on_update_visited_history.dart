@@ -73,128 +73,128 @@ setTimeout(function() {
   // The test above reads only the URL. `isReload` (Android's) was never asserted, so a migration
   // that sent a constant would have passed it. Measured on API 37 (§213): the first load and a
   // `pushState` report false, and a reload reports true.
-  skippableTestWidgets(
-    'onUpdateVisitedHistory reports isReload',
-    (WidgetTester tester) async {
-      final Completer<InAppWebViewController> controllerCompleter =
-          Completer<InAppWebViewController>();
-      final StreamController<void> stops = StreamController<void>.broadcast();
-      final history = <(String, bool?)>[];
-      final root = 'http://${environment["NODE_SERVER_IP"]}:8082/';
-
-      await tester.pumpWidget(
-        Directionality(
-          textDirection: TextDirection.ltr,
-          child: InAppWebView(
-            key: GlobalKey(),
-            initialUrlRequest: URLRequest(url: WebUri(root)),
-            onWebViewCreated: (controller) {
-              controllerCompleter.complete(controller);
-            },
-            onLoadStop: (controller, url) {
-              stops.add(null);
-            },
-            onUpdateVisitedHistory: (controller, url, isReload) {
-              history.add((url.toString(), isReload));
-            },
-          ),
-        ),
-      );
-      final InAppWebViewController controller =
-          await controllerCompleter.future;
-      await stops.stream.first;
-
-      await controller.evaluateJavascript(
-        source: "history.pushState({}, '', '/pushed');",
-      );
-      final reloaded = stops.stream.first;
-      await controller.reload();
-      await reloaded;
-      for (var i = 0; i < 20 && history.length < 3; i++) {
-        await Future.delayed(const Duration(milliseconds: 100));
-      }
-
-      expect(history, [
-        (root, false),
-        ('${root}pushed', false),
-        ('${root}pushed', true),
-      ]);
-      await stops.close();
-    },
-    skip: shouldSkip || defaultTargetPlatform != TargetPlatform.android,
-  );
-
-  // A load is reported once it is in the history (§296). iOS used to report it from KVO on
-  // `WKWebView.url`, which names a `load()` request at once: B came 2-3 ms after `loadUrl(B)`,
-  // 1.5 s before B started, while the list still ended at A. Android reports it after B's start.
-  skippableTestWidgets('onUpdateVisitedHistory reports a load once it has started', (
+  skippableTestWidgets('onUpdateVisitedHistory reports isReload', (
     WidgetTester tester,
   ) async {
-    // Page A blocks its web process for 1.5 s after it commits, and `loadUrl(B)` is issued from
-    // A's commit, so B's request is pending for that long (the `loadUrl` relabelling test's setup).
-    final pageA = WebUri(
-      'data:text/html,<title>A</title><!--NAVURLA-->'
-      '<script>var t = Date.now(); while (Date.now() - t < 1500) {}</script>',
-    );
-    final pageB = WebUri('data:text/html,<title>B</title><!--NAVURLB-->');
-    String name(Object? url) => '$url'.contains('NAVURLA')
-        ? 'A'
-        : '$url'.contains('NAVURLB')
-        ? 'B'
-        : '$url';
-    final events = <String>[];
-    var issuedB = false;
+    final Completer<InAppWebViewController> controllerCompleter =
+        Completer<InAppWebViewController>();
+    final StreamController<void> stops = StreamController<void>.broadcast();
+    final history = <(String, bool?)>[];
+    final root = 'http://${environment["NODE_SERVER_IP"]}:8082/';
 
     await tester.pumpWidget(
       Directionality(
         textDirection: TextDirection.ltr,
         child: InAppWebView(
           key: GlobalKey(),
-          initialUrlRequest: URLRequest(url: pageA),
-          onLoadStart: (controller, url) => events.add('start ${name(url)}'),
-          onPageCommitVisible: (controller, url) {
-            if (name(url) == 'A' && !issuedB) {
-              issuedB = true;
-              events.add('loadUrl B');
-              controller.loadUrl(urlRequest: URLRequest(url: pageB));
-            }
+          initialUrlRequest: URLRequest(url: WebUri(root)),
+          onWebViewCreated: (controller) {
+            controllerCompleter.complete(controller);
           },
-          onLoadStop: (controller, url) => events.add('stop ${name(url)}'),
-          onUpdateVisitedHistory: (controller, url, isReload) async {
-            final label = name(url);
-            events.add('history $label');
-            final list = await controller.getCopyBackForwardList();
-            final index = list?.currentIndex;
-            final entries = list?.list ?? const <WebHistoryItem>[];
-            events.add(
-              'list at $label: current '
-              '${index != null && index < entries.length ? name(entries[index].url) : null}',
-            );
+          onLoadStop: (controller, url) {
+            stops.add(null);
+          },
+          onUpdateVisitedHistory: (controller, url, isReload) {
+            history.add((url.toString(), isReload));
           },
         ),
       ),
     );
+    final InAppWebViewController controller = await controllerCompleter.future;
+    await stops.stream.first;
 
-    final deadline = DateTime.now().add(const Duration(seconds: 20));
-    while (!events.any((e) => e.startsWith('list at B')) &&
-        DateTime.now().isBefore(deadline)) {
-      await tester.pump(const Duration(milliseconds: 100));
-      await Future<void>.delayed(const Duration(milliseconds: 100));
+    await controller.evaluateJavascript(
+      source: "history.pushState({}, '', '/pushed');",
+    );
+    final reloaded = stops.stream.first;
+    await controller.reload();
+    await reloaded;
+    for (var i = 0; i < 20 && history.length < 3; i++) {
+      await Future.delayed(const Duration(milliseconds: 100));
     }
 
-    final requested = events.indexOf('loadUrl B');
-    expect(requested, isNot(-1), reason: 'B was never requested: $events');
-    expect(
-      events.skip(requested + 1).firstWhere((e) => e.endsWith(' B')),
-      'start B',
-      reason: 'an event named B before B started: $events',
-    );
-    expect(
-      events.where((e) => e.startsWith('list at B')),
-      ['list at B: current B'],
-      reason: 'B reported once, when it is the current history entry: $events',
-    );
-  }, skip: shouldSkip);
+    expect(history, [
+      (root, false),
+      ('${root}pushed', false),
+      ('${root}pushed', true),
+    ]);
+    await stops.close();
+  }, skip: shouldSkip || defaultTargetPlatform != TargetPlatform.android);
+
+  // A load is reported once it is in the history (§296). iOS used to report it from KVO on
+  // `WKWebView.url`, which names a `load()` request at once: B came 2-3 ms after `loadUrl(B)`,
+  // 1.5 s before B started, while the list still ended at A. Android reports it after B's start.
+  skippableTestWidgets(
+    'onUpdateVisitedHistory reports a load once it has started',
+    (WidgetTester tester) async {
+      // Page A blocks its web process for 1.5 s after it commits, and `loadUrl(B)` is issued from
+      // A's commit, so B's request is pending for that long (the `loadUrl` relabelling test's setup).
+      final pageA = WebUri(
+        'data:text/html,<title>A</title><!--NAVURLA-->'
+        '<script>var t = Date.now(); while (Date.now() - t < 1500) {}</script>',
+      );
+      final pageB = WebUri('data:text/html,<title>B</title><!--NAVURLB-->');
+      String name(Object? url) => '$url'.contains('NAVURLA')
+          ? 'A'
+          : '$url'.contains('NAVURLB')
+          ? 'B'
+          : '$url';
+      final events = <String>[];
+      var issuedB = false;
+
+      await tester.pumpWidget(
+        Directionality(
+          textDirection: TextDirection.ltr,
+          child: InAppWebView(
+            key: GlobalKey(),
+            initialUrlRequest: URLRequest(url: pageA),
+            onLoadStart: (controller, url) => events.add('start ${name(url)}'),
+            onPageCommitVisible: (controller, url) {
+              if (name(url) == 'A' && !issuedB) {
+                issuedB = true;
+                events.add('loadUrl B');
+                controller.loadUrl(urlRequest: URLRequest(url: pageB));
+              }
+            },
+            onLoadStop: (controller, url) => events.add('stop ${name(url)}'),
+            onUpdateVisitedHistory: (controller, url, isReload) async {
+              final label = name(url);
+              events.add('history $label');
+              final list = await controller.getCopyBackForwardList();
+              final index = list?.currentIndex;
+              final entries = list?.list ?? const <WebHistoryItem>[];
+              events.add(
+                'list at $label: current '
+                '${index != null && index < entries.length ? name(entries[index].url) : null}',
+              );
+            },
+          ),
+        ),
+      );
+
+      final deadline = DateTime.now().add(const Duration(seconds: 20));
+      while (!events.any((e) => e.startsWith('list at B')) &&
+          DateTime.now().isBefore(deadline)) {
+        await tester.pump(const Duration(milliseconds: 100));
+        await Future<void>.delayed(const Duration(milliseconds: 100));
+      }
+
+      final requested = events.indexOf('loadUrl B');
+      expect(requested, isNot(-1), reason: 'B was never requested: $events');
+      expect(
+        events.skip(requested + 1).firstWhere((e) => e.endsWith(' B')),
+        'start B',
+        reason: 'an event named B before B started: $events',
+      );
+      expect(
+        events.where((e) => e.startsWith('list at B')),
+        ['list at B: current B'],
+        reason:
+            'B reported once, when it is the current history entry: $events',
+      );
+    },
+    skip: shouldSkip,
+  );
 
   // A navigation that never happens is never reported (§296). iOS used to report a `loadUrl`
   // refused by `shouldOverrideUrlLoading` twice: the refused URL, then the page it stayed on. And

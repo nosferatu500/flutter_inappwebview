@@ -1,4 +1,5 @@
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
+
 import '../../utils/support_checker.dart';
 
 class SupportBadge extends StatelessWidget {

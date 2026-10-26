@@ -1,3 +1,143 @@
+## 7.1.0
+
+### Requirements
+
+- **Flutter 3.47 / Dart 3.13 or newer** (was 3.44 / 3.12): `flutter: ">=3.47.0"`, `sdk: ^3.13.0`.
+  An app on an older Flutter keeps resolving 7.0.0; pub doesn't offer it 7.1.0.
+- **The app needs the Kotlin Gradle Plugin 2.2.20 or newer on its build classpath.** That is
+  Flutter 3.47's own minimum, not this plugin's: its Gradle plugin refuses anything older
+  ("Your project's Kotlin version (2.2.10) is lower than Flutter's minimum supported version of
+  2.2.20") and warns below 2.3.20. AGP 9.3.0 through 9.4.1 bring only 2.2.10, so an app that
+  relies on AGP's built-in Kotlin has to declare it, as Flutter 3.47.7's app template does:
+  `id("org.jetbrains.kotlin.android") version "2.4.0" apply false` in `settings.gradle(.kts)`.
+- **`minSdk` 26 or newer** (was 30): the plugin runs on Android 8.0 and newer again. An app at
+  `minSdk` 26–29 can now use it; an app already at 30 or higher needs no change. AGP still rejects an
+  app whose `minSdk` is below this library's.
+- **Apps no longer need `compileSdk = 37`: 36, Flutter 3.47's default, is enough again** (7.0.0
+  required 37). The module compiles against `flutter.compileSdkVersion` again, and `androidx.core` is
+  held at 1.18.0 (was 1.19.0), whose AAR metadata asks for 36 where 1.19.0's asks for 37 (and AGP 9.1).
+  The plugin used nothing from 1.19. Measured: the Android example builds at `compileSdk` 36; an app
+  that keeps 37 is unaffected.
+
+### Added
+
+- **`CROSS_ORIGIN_ISOLATED_ALLOWLIST`** (androidx.webkit 1.18.0): `ProfileStore`'s
+  `setCrossOriginIsolatedAllowlist` / `getCrossOriginIsolatedAllowlist` call `Profile`'s methods of the
+  same name on the default profile or a named one. Two Pigeon methods on the profile-store channel.
+  The set replaces the list (an empty set clears it) and answers `false` when `MULTI_PROFILE` or the
+  feature is missing or no profile has that name; the get answers `null` then. A rule androidx can't
+  parse throws `PlatformException(code: "ProfileStoreManager")`, the code `deleteProfile`'s refusals use.
+  Measured on Android 17, WebView 153 (all three device tests pass; WebView 151 on Android 13 skips them,
+  the feature is missing): `crossOriginIsolated` is `false` without the allowlist and `true` with it for a
+  page sending `Document-Isolation-Policy`. androidx's lint check `CrossOriginIsolatedAllowlist` is
+  suppressed on the one call: the origins are the app's.
+
+### Changed
+
+- **Android 8.0–10: the version checks 7.0.0 removed with `minSdk` 30 are back, with
+  6.2.0-beta.3's fallbacks.** On API 26–29:
+  - **`WebView.getWebViewLooper` (API 28) is no longer called below API 28; the main thread's looper
+    is used, as in 6.x.** Without this, every WebView would crash as it is created on API 26–27.
+    Lint can't see that call: it goes through the plugin's own `InAppWebViewInterface`.
+  - A headless WebView's fullscreen size comes from `Display.getMetrics` below API 30 (`WindowMetrics`
+    is API 30).
+  - A certificate's `x509Certificate` bytes are read through `SslCertificate.saveState` below API 29
+    (`getX509Certificate` is API 29).
+  - The four scrollbar colour settings (`verticalScrollbarThumbColor` and the others) are ignored
+    below API 29, where `View` has no setter for them.
+  - Below API 29 no `WebViewRenderProcessClient` is attached, so `onRenderProcessUnresponsive` and
+    `onRenderProcessResponsive` don't fire, and `algorithmicDarkeningAllowed` is neither applied nor
+    reported by `getSettings`. These are 6.2.0-beta.3's gates; androidx can attach the client below
+    API 29 when the WebView supports it, so these gates may be stricter than needed.
+  - `disableWebView` answers `true` without calling the platform below API 28, where it doesn't exist.
+  - `onSafeBrowsingHit` from the platform client is API 27; below that only the androidx client
+    delivers it, when the WebView supports `SAFE_BROWSING_HIT`.
+  - Two workarounds for Android 8.x's old WebViews are back: `DisplayListenerProxy` (now in Kotlin),
+    which filters the WebView's display listeners to avoid a crash in WebView before 61, and dropping
+    the focus loss that `ListPopupWindow.show` causes for a `<select>` in Chromium before 67
+    ([flutter/flutter#54164](https://github.com/flutter/flutter/issues/54164)). Both only act below
+    API 28.
+
+  Android lint at `minSdk` 26 reports 0 `NewApi` errors (31 before these checks).
+
+- **Android: the InAppBrowser and the JavaScript alert / confirm / prompt dialogs use Material 3 and
+  follow the system's light / dark setting.** The InAppBrowser activity's theme is
+  `Theme.Material3.DayNight.NoActionBar` (was `Theme.AppCompat.Light.NoActionBar`); its toolbar uses the
+  surface colour with an on-surface title (was `colorPrimary`, a light grey, with a hard-coded black
+  title), and its progress bar the AppCompat horizontal style (was Holo). A `toolbarTopBackgroundColor`
+  still replaces the toolbar's background. The dialogs are built by `MaterialAlertDialogBuilder` on a
+  `Theme.Material3.DayNight` context of their own (they were AppCompat's dark dialog, dark even in light
+  mode), so they work whatever the app's theme: measured with Flutter's template theme
+  (`@android:style/Theme.Light.NoTitleBar`), where the builder without that context throws "The style on
+  this component requires your app theme to be Theme.AppCompat" and no dialog appears.
+  **New dependency: `com.google.android.material:material` 1.14.0**, the library that ships the Material
+  3 themes for Android views; every app using the plugin now includes it.
+
+- **Android: the unused `InAppWebViewTheme` style is removed.** Upstream declared it (`Theme.AppCompat`) and
+  nothing in the plugin used it. Library styles are public, so an app that referenced
+  `@style/InAppWebViewTheme` has to use its own theme instead; it was never documented.
+
+- **Native dependency: `androidx.webkit` 1.17.0 → 1.18.0.** No new build requirements (its AAR still
+  asks for `compileSdk` 33 and AGP 7.2). The plugin used none of the API 1.18.0 renames or deprecates.
+
+### Fixed
+
+- **Android: the InAppBrowser's status bar icons are readable in light mode.** They were white on the
+  light toolbar (measured on Android 17); the theme now asks for dark icons in light mode and light ones
+  in dark mode.
+
+### Internal
+
+- **Both example apps use `minSdk` 26** (were 30). The module compiles with warnings as errors at 26, and its
+  96 JVM tests pass. The integration tests ran on an API 26 emulator with its stock WebView 58; the main
+  example's 7.1.0 entry has the results.
+- **The example app builds with AGP's built-in Kotlin** (`android.builtInKotlin=true`, was `false`). No Android plugin it
+  uses applies the Kotlin Gradle Plugin under AGP 9 any more, so the per-module `com.android.built-in-kotlin` opt-in
+  for `:app` is gone. The value is set explicitly: Flutter 3.47.7's migrator appends `android.builtInKotlin=false` to
+  a `gradle.properties` that doesn't set the property. Builds and `-Werror` checked: a planted deprecation still
+  fails the module's Kotlin compile. KGP's 3 "Deprecated org.jetbrains.kotlin.android" notices are gone. The
+  module's `build.gradle` comment now says which path each kind of app takes. No change for apps using the plugin.
+- The example app opens the fork's repository page instead of `inappwebview.dev`.
+- **Dead code removed: 15 Kotlin declarations nothing called**, found by listing every declared name that
+  occurs once across the module's sources, manifest and resources, then checked against the JVM tests.
+  `Util.log` / `isClass`, `NO_HISTORY_CHROME_CUSTOM_TAB_REQUEST_CODE`,
+  `CustomTabsHelper.getPackages`, `NavigationActionPolicy.rawValue()`, seven `UserContentController` methods
+  (`addPluginScripts`, `containsPluginScript`, `containsPluginScriptByGroupName`, `containsUserOnlyScript`,
+  `containsUserOnlyScriptByGroupName`, `removePluginScriptsByGroupName`, `getContentWorlds`),
+  `WebMessageChannel.initJsInstance`, `ContentWorld.DEFAULT_CLIENT` (read only by one JVM assertion of its
+  own name, removed with it) and an unread `maxHeight` local, plus the imports they left orphaned.
+- **The example app is Material 3 on the native side**: both `NormalTheme` and `LaunchTheme`, light and night,
+  are `Theme.Material3.DayNight.NoActionBar` (were plain `@android:style/Theme.Light / Black.NoTitleBar`);
+  its Material dependency goes from 1.12.0 to 1.14.0, the plugin's.
+- **No `package:flutter/material.dart` import left in `lib/`**: `in_app_webview.dart` dropped it (it already
+  imports `widgets.dart`).
+  Nothing in this package's `lib/` used Material or Cupertino: with the import swapped for `widgets.dart`,
+  analyze reported 0 errors. So the package works the same in an app on `package:material_ui` or on the
+  SDK's Material, and needs no `material_ui` dependency (the migration guide calls moving a package onto
+  `material_ui` a major-version change; this avoids it).
+- The example uses `package:material_ui` (`^1.6.0`): 1 file moved by `dart fix`.
+- **Formatting only: 45 Dart files reformatted by Flutter 3.47.7's formatter at language 3.13** (including the 20 Pigeon schemas under `pigeons/`; regenerating all 20 gives byte-identical Dart and Kotlin, so the next Pigeon run won't undo it; 3 in the example).
+  Each file's code is unchanged once whitespace and commas are removed (the tall style adds and drops
+  trailing commas); analyze and every test suite pass unchanged.
+- **The repo builds and tests on Flutter 3.47.7** (`.fvmrc`; was 3.44.9). `flutter pub get` on 3.47
+  adds `analyzer: exclude:` entries (`build/**`, plus the platform folders that exist) to each Flutter
+  package's `analysis_options.yaml`; that is flutter_tools' `AnalysisOptionsMigration`, which re-adds
+  them on every `pub get`, so they are kept. The excluded `android/` and `ios/` folders hold no Dart.
+- The example app declares KGP 2.4.0 on its build classpath (`apply false`), for the reason above;
+  AGP stays 9.3.1. `compileSdk` stays 37: Flutter 3.47.7's default is still 36.
+- **Kotlin 2.4.0 reports 5 new warnings in this module, now fixed** (the examples compile it with
+  warnings as errors; apps never do). Four are redundant code: a cast after an `is` check in
+  `Util.JSONStringify`, `toString()` on `PrintJobInfo.getLabel()`'s `@NonNull String`, and two
+  `?.` on `getWebMessageChannels()`, which `InAppWebView` declares non-null. **The fifth was a Java →
+  Kotlin translation bug.** `NoHistoryCustomTabsActivityCallbacks` builds its lifecycle callbacks in
+  a property initializer, where the constructor parameter `plugin` hides the `plugin` property, so
+  the callbacks captured the non-null parameter: after `dispose()` nulled the property, they still
+  held the plugin and would still close browsers through it. They now read the property. By reading,
+  it doesn't show in the normal lifecycle: the plugin unregisters these callbacks when it detaches
+  from the activity, before it disposes them. A new JVM test checks that, after `dispose()`, the
+  callbacks hold no reference to the plugin; it fails on the old code with "the callbacks still hold
+  the plugin in [$plugin]".
+
 ## 7.0.0
 
 The Android half of a hard fork of 6.2.0-beta.3 / `1.2.0-beta.3`. The `nosferatu500_inappwebview` 7.0.0

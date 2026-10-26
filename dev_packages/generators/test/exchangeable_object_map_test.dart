@@ -137,8 +137,7 @@ class Model_ {
       expect(
         output,
         contains('as Map).entries'),
-        reason:
-            'the source has to be cast before .entries or the chain stays dynamic',
+        reason: 'the source has to be cast before .entries or the chain stays dynamic',
       );
       expect(
         output,

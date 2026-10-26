@@ -33,57 +33,61 @@ void runPayload() {
       !HeadlessInAppWebView.isClassSupported() ||
       defaultTargetPlatform != TargetPlatform.android;
 
-  skippableTest('run carries initialData, and its base and history URLs', () async {
-    // baseUrl and historyUrl differ, and each is reported on a different channel: the document
-    // location is the base, the WebView's url is the history entry. A swap of the two fails.
-    final (html, c) = await _runLoaded(
-      (onCreated, onLoaded) => HeadlessInAppWebView(
-        initialData: InAppWebViewInitialData(
-          data: '<html><body>hello data</body></html>',
-          mimeType: 'text/html',
-          baseUrl: WebUri('https://example.com/base/'),
-          historyUrl: WebUri('https://example.com/history/'),
+  skippableTest(
+    'run carries initialData, and its base and history URLs',
+    () async {
+      // baseUrl and historyUrl differ, and each is reported on a different channel: the document
+      // location is the base, the WebView's url is the history entry. A swap of the two fails.
+      final (html, c) = await _runLoaded(
+        (onCreated, onLoaded) => HeadlessInAppWebView(
+          initialData: InAppWebViewInitialData(
+            data: '<html><body>hello data</body></html>',
+            mimeType: 'text/html',
+            baseUrl: WebUri('https://example.com/base/'),
+            historyUrl: WebUri('https://example.com/history/'),
+          ),
+          onWebViewCreated: onCreated,
+          onLoadStop: (_, _) => onLoaded(),
         ),
-        onWebViewCreated: onCreated,
-        onLoadStop: (_, _) => onLoaded(),
-      ),
-    );
-    expect(
-      await c.evaluateJavascript(source: 'location.href'),
-      'https://example.com/base/',
-    );
-    expect((await c.getUrl()).toString(), 'https://example.com/history/');
-    expect(
-      await c.evaluateJavascript(source: 'document.body.innerText'),
-      'hello data',
-    );
-    expect(
-      await c.evaluateJavascript(source: 'document.contentType'),
-      'text/html',
-    );
-    await html.dispose();
+      );
+      expect(
+        await c.evaluateJavascript(source: 'location.href'),
+        'https://example.com/base/',
+      );
+      expect((await c.getUrl()).toString(), 'https://example.com/history/');
+      expect(
+        await c.evaluateJavascript(source: 'document.body.innerText'),
+        'hello data',
+      );
+      expect(
+        await c.evaluateJavascript(source: 'document.contentType'),
+        'text/html',
+      );
+      await html.dispose();
 
-    // The same markup as text/plain is shown as text, not rendered.
-    final (plain, p) = await _runLoaded(
-      (onCreated, onLoaded) => HeadlessInAppWebView(
-        initialData: InAppWebViewInitialData(
-          data: '<b>plain</b>',
-          mimeType: 'text/plain',
+      // The same markup as text/plain is shown as text, not rendered.
+      final (plain, p) = await _runLoaded(
+        (onCreated, onLoaded) => HeadlessInAppWebView(
+          initialData: InAppWebViewInitialData(
+            data: '<b>plain</b>',
+            mimeType: 'text/plain',
+          ),
+          onWebViewCreated: onCreated,
+          onLoadStop: (_, _) => onLoaded(),
         ),
-        onWebViewCreated: onCreated,
-        onLoadStop: (_, _) => onLoaded(),
-      ),
-    );
-    expect(
-      await p.evaluateJavascript(source: 'document.contentType'),
-      'text/plain',
-    );
-    expect(
-      await p.evaluateJavascript(source: 'document.body.innerText'),
-      '<b>plain</b>',
-    );
-    await plain.dispose();
-  }, skip: shouldSkip);
+      );
+      expect(
+        await p.evaluateJavascript(source: 'document.contentType'),
+        'text/plain',
+      );
+      expect(
+        await p.evaluateJavascript(source: 'document.body.innerText'),
+        '<b>plain</b>',
+      );
+      await plain.dispose();
+    },
+    skip: shouldSkip,
+  );
 
   skippableTest('run carries initialFile', () async {
     final (headless, c) = await _runLoaded(
@@ -116,34 +120,38 @@ void runPayload() {
     await headless.dispose();
   }, skip: shouldSkip);
 
-  skippableTest('an onShowFileChooser handler turns on useOnShowFileChooser', () async {
-    // The handler used to be dropped converting the facade's params to Android's, so the setting
-    // was never inferred and the platform opened its own picker without asking. The chooser itself
-    // can't be opened here: it needs a user gesture, and a headless webview gets none (measured on
-    // API 37, a scripted `click()` fires nothing). `getSettings` answers the plugin's native copy,
-    // which is the one the chooser checks. Without a handler it is the platform default, false.
-    final (withHandler, c) = await _runLoaded(
-      (onCreated, onLoaded) => HeadlessInAppWebView(
-        initialData: InAppWebViewInitialData(data: '<html></html>'),
-        onShowFileChooser: (_, _) async =>
-            ShowFileChooserResponse(handledByClient: true, filePaths: []),
-        onWebViewCreated: onCreated,
-        onLoadStop: (_, _) => onLoaded(),
-      ),
-    );
-    expect((await c.getSettings())?.useOnShowFileChooser, isTrue);
-    await withHandler.dispose();
+  skippableTest(
+    'an onShowFileChooser handler turns on useOnShowFileChooser',
+    () async {
+      // The handler used to be dropped converting the facade's params to Android's, so the setting
+      // was never inferred and the platform opened its own picker without asking. The chooser itself
+      // can't be opened here: it needs a user gesture, and a headless webview gets none (measured on
+      // API 37, a scripted `click()` fires nothing). `getSettings` answers the plugin's native copy,
+      // which is the one the chooser checks. Without a handler it is the platform default, false.
+      final (withHandler, c) = await _runLoaded(
+        (onCreated, onLoaded) => HeadlessInAppWebView(
+          initialData: InAppWebViewInitialData(data: '<html></html>'),
+          onShowFileChooser: (_, _) async =>
+              ShowFileChooserResponse(handledByClient: true, filePaths: []),
+          onWebViewCreated: onCreated,
+          onLoadStop: (_, _) => onLoaded(),
+        ),
+      );
+      expect((await c.getSettings())?.useOnShowFileChooser, isTrue);
+      await withHandler.dispose();
 
-    final (withoutHandler, d) = await _runLoaded(
-      (onCreated, onLoaded) => HeadlessInAppWebView(
-        initialData: InAppWebViewInitialData(data: '<html></html>'),
-        onWebViewCreated: onCreated,
-        onLoadStop: (_, _) => onLoaded(),
-      ),
-    );
-    expect((await d.getSettings())?.useOnShowFileChooser, isFalse);
-    await withoutHandler.dispose();
-  }, skip: shouldSkip);
+      final (withoutHandler, d) = await _runLoaded(
+        (onCreated, onLoaded) => HeadlessInAppWebView(
+          initialData: InAppWebViewInitialData(data: '<html></html>'),
+          onWebViewCreated: onCreated,
+          onLoadStop: (_, _) => onLoaded(),
+        ),
+      );
+      expect((await d.getSettings())?.useOnShowFileChooser, isFalse);
+      await withoutHandler.dispose();
+    },
+    skip: shouldSkip,
+  );
 
   skippableTest('initialUserScripts run in the headless webview', () async {
     // A user script's `injectionTime` crosses as an int, read `as Int` by `UserScript.fromMap`.

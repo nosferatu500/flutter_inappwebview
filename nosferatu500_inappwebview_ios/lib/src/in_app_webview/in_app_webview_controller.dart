@@ -578,9 +578,8 @@ class IOSInAppWebViewController extends PlatformInAppWebViewController
               uri,
             ))?.toNativeValue();
           } else {
-            return (await _inAppBrowserEventHandler!.onFormResubmission(
-              uri,
-            ))?.toNativeValue();
+            return (await _inAppBrowserEventHandler!.onFormResubmission(uri))
+                ?.toNativeValue();
           }
         }
         break;
@@ -634,9 +633,8 @@ class IOSInAppWebViewController extends PlatformInAppWebViewController
               jsAlertRequest,
             ))?.toMap();
           } else {
-            return (await _inAppBrowserEventHandler!.onJsAlert(
-              jsAlertRequest,
-            ))?.toMap();
+            return (await _inAppBrowserEventHandler!.onJsAlert(jsAlertRequest))
+                ?.toMap();
           }
         }
         break;
@@ -1270,9 +1268,8 @@ class IOSInAppWebViewController extends PlatformInAppWebViewController
               request,
             ))?.toMap();
           } else {
-            return (await _inAppBrowserEventHandler!.onShowFileChooser(
-              request,
-            ))?.toMap();
+            return (await _inAppBrowserEventHandler!.onShowFileChooser(request))
+                ?.toMap();
           }
         }
         break;
@@ -1402,9 +1399,8 @@ class IOSInAppWebViewController extends PlatformInAppWebViewController
                 );
               } else {
                 return jsonEncode(
-                  (await _inAppBrowserEventHandler!.onAjaxProgress(
-                    request,
-                  ))?.toNativeValue(),
+                  (await _inAppBrowserEventHandler!.onAjaxProgress(request))
+                      ?.toNativeValue(),
                 );
               }
             }

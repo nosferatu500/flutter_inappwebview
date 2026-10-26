@@ -109,11 +109,4 @@ object CustomTabsHelper {
     }
     return false
   }
-
-  /**
-   * @return All possible chrome package names that provide custom tabs feature.
-   */
-  @JvmStatic
-  fun getPackages(): Array<String> =
-    arrayOf("", STABLE_PACKAGE, BETA_PACKAGE, DEV_PACKAGE, LOCAL_PACKAGE)
 }

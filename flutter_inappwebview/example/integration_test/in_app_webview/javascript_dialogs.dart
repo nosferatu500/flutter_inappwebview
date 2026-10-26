@@ -79,58 +79,55 @@ void javascriptDialogs() {
   // returns false. Had the throw been treated as no answer, the plugin's dialog would be up, and
   // that blocks the page: measured with the cancel removed, the poll's evaluateJavascript never
   // returned. Each poll therefore has its own timeout and reports "blocked".
-  skippableTestWidgets(
-    'javascript dialogs: a throwing onJsConfirm cancels',
-    (WidgetTester tester) async {
-      final Completer<InAppWebViewController> controllerCompleter =
-          Completer<InAppWebViewController>();
-      final Completer<void> pageLoaded = Completer<void>();
-      final messages = <String?>[];
+  skippableTestWidgets('javascript dialogs: a throwing onJsConfirm cancels', (
+    WidgetTester tester,
+  ) async {
+    final Completer<InAppWebViewController> controllerCompleter =
+        Completer<InAppWebViewController>();
+    final Completer<void> pageLoaded = Completer<void>();
+    final messages = <String?>[];
 
-      await tester.pumpWidget(
-        Directionality(
-          textDirection: TextDirection.ltr,
-          child: InAppWebView(
-            key: GlobalKey(),
-            initialData: InAppWebViewInitialData(
-              data:
-                  '<!DOCTYPE html><html><body>confirm<script>var answer = "pending";</script>'
-                  '</body></html>',
-            ),
-            onWebViewCreated: (controller) {
-              controllerCompleter.complete(controller);
-            },
-            onLoadStop: (controller, url) {
-              if (!pageLoaded.isCompleted) pageLoaded.complete();
-            },
-            onJsConfirm: (controller, jsConfirmRequest) async {
-              messages.add(jsConfirmRequest.message);
-              throw Exception('onJsConfirm throws on purpose');
-            },
+    await tester.pumpWidget(
+      Directionality(
+        textDirection: TextDirection.ltr,
+        child: InAppWebView(
+          key: GlobalKey(),
+          initialData: InAppWebViewInitialData(
+            data:
+                '<!DOCTYPE html><html><body>confirm<script>var answer = "pending";</script>'
+                '</body></html>',
           ),
+          onWebViewCreated: (controller) {
+            controllerCompleter.complete(controller);
+          },
+          onLoadStop: (controller, url) {
+            if (!pageLoaded.isCompleted) pageLoaded.complete();
+          },
+          onJsConfirm: (controller, jsConfirmRequest) async {
+            messages.add(jsConfirmRequest.message);
+            throw Exception('onJsConfirm throws on purpose');
+          },
         ),
-      );
+      ),
+    );
 
-      final InAppWebViewController controller =
-          await controllerCompleter.future;
-      await pageLoaded.future;
+    final InAppWebViewController controller = await controllerCompleter.future;
+    await pageLoaded.future;
 
-      // From a timer, so the blocking `confirm` does not hold up this evaluateJavascript reply.
-      await controller.evaluateJavascript(
-        source: 'setTimeout(function() { answer = String(confirm("q")); }, 0);',
-      );
+    // From a timer, so the blocking `confirm` does not hold up this evaluateJavascript reply.
+    await controller.evaluateJavascript(
+      source: 'setTimeout(function() { answer = String(confirm("q")); }, 0);',
+    );
 
-      String? answer;
-      for (var i = 0; i < 50; i++) {
-        answer = await controller
-            .evaluateJavascript(source: 'answer')
-            .timeout(const Duration(seconds: 2), onTimeout: () => 'blocked');
-        if (answer != 'pending') break;
-        await Future.delayed(const Duration(milliseconds: 100));
-      }
-      expect(messages, ['q']);
-      expect(answer, 'false');
-    },
-    skip: shouldSkip || defaultTargetPlatform != TargetPlatform.android,
-  );
+    String? answer;
+    for (var i = 0; i < 50; i++) {
+      answer = await controller
+          .evaluateJavascript(source: 'answer')
+          .timeout(const Duration(seconds: 2), onTimeout: () => 'blocked');
+      if (answer != 'pending') break;
+      await Future.delayed(const Duration(milliseconds: 100));
+    }
+    expect(messages, ['q']);
+    expect(answer, 'false');
+  }, skip: shouldSkip || defaultTargetPlatform != TargetPlatform.android);
 }

@@ -40,40 +40,37 @@ void getMetaThemeColor() {
   // value with three different components. Android only: there the value always comes from
   // reading the meta tag with JavaScript. iOS reads `WKWebView.themeColor` natively, which was not
   // measured against this page.
-  skippableTestWidgets(
-    'getMetaThemeColor reads the page\'s exact color',
-    (WidgetTester tester) async {
-      final Completer<InAppWebViewController> controllerCompleter =
-          Completer<InAppWebViewController>();
-      final Completer<void> pageLoaded = Completer<void>();
+  skippableTestWidgets('getMetaThemeColor reads the page\'s exact color', (
+    WidgetTester tester,
+  ) async {
+    final Completer<InAppWebViewController> controllerCompleter =
+        Completer<InAppWebViewController>();
+    final Completer<void> pageLoaded = Completer<void>();
 
-      await tester.pumpWidget(
-        Directionality(
-          textDirection: TextDirection.ltr,
-          child: InAppWebView(
-            key: GlobalKey(),
-            initialData: InAppWebViewInitialData(
-              data:
-                  '<!DOCTYPE html><html><head><meta charset="UTF-8">'
-                  '<meta name="theme-color" content="#0a8f3c">'
-                  '</head><body>theme</body></html>',
-            ),
-            onWebViewCreated: (controller) {
-              controllerCompleter.complete(controller);
-            },
-            onLoadStop: (controller, url) {
-              if (!pageLoaded.isCompleted) pageLoaded.complete();
-            },
+    await tester.pumpWidget(
+      Directionality(
+        textDirection: TextDirection.ltr,
+        child: InAppWebView(
+          key: GlobalKey(),
+          initialData: InAppWebViewInitialData(
+            data:
+                '<!DOCTYPE html><html><head><meta charset="UTF-8">'
+                '<meta name="theme-color" content="#0a8f3c">'
+                '</head><body>theme</body></html>',
           ),
+          onWebViewCreated: (controller) {
+            controllerCompleter.complete(controller);
+          },
+          onLoadStop: (controller, url) {
+            if (!pageLoaded.isCompleted) pageLoaded.complete();
+          },
         ),
-      );
+      ),
+    );
 
-      final InAppWebViewController controller =
-          await controllerCompleter.future;
-      await pageLoaded.future;
+    final InAppWebViewController controller = await controllerCompleter.future;
+    await pageLoaded.future;
 
-      expect(await controller.getMetaThemeColor(), const Color(0xFF0A8F3C));
-    },
-    skip: shouldSkip || defaultTargetPlatform != TargetPlatform.android,
-  );
+    expect(await controller.getMetaThemeColor(), const Color(0xFF0A8F3C));
+  }, skip: shouldSkip || defaultTargetPlatform != TargetPlatform.android);
 }

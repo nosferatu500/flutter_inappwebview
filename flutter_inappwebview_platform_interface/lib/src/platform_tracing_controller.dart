@@ -1,7 +1,9 @@
 import 'dart:async';
+
 import 'package:flutter/foundation.dart';
 import 'package:nosferatu500_inappwebview_internal_annotations/nosferatu500_inappwebview_internal_annotations.dart';
 import 'package:plugin_platform_interface/plugin_platform_interface.dart';
+
 import 'inappwebview_platform.dart';
 import 'types/tracing_mode.dart';
 import 'types/main.dart';
@@ -45,8 +47,7 @@ class PlatformTracingControllerCreationParams {
   platforms: [
     AndroidPlatform(
       apiName: 'TracingController',
-      apiUrl:
-          'https://developer.android.com/reference/androidx/webkit/TracingController',
+      apiUrl: 'https://developer.android.com/reference/androidx/webkit/TracingController',
     ),
   ],
 )
@@ -110,8 +111,7 @@ abstract class PlatformTracingController extends PlatformInterface {
     platforms: [
       AndroidPlatform(
         apiName: 'TracingController.start',
-        apiUrl:
-            'https://developer.android.com/reference/android/webkit/TracingController#start(android.webkit.TracingConfig)',
+        apiUrl: 'https://developer.android.com/reference/android/webkit/TracingController#start(android.webkit.TracingConfig)',
       ),
     ],
   )
@@ -135,8 +135,7 @@ abstract class PlatformTracingController extends PlatformInterface {
     platforms: [
       AndroidPlatform(
         apiName: 'TracingController.stop',
-        apiUrl:
-            'https://developer.android.com/reference/android/webkit/TracingController#stop(java.io.OutputStream,%20java.util.concurrent.Executor)',
+        apiUrl: 'https://developer.android.com/reference/android/webkit/TracingController#stop(java.io.OutputStream,%20java.util.concurrent.Executor)',
       ),
     ],
   )
@@ -153,8 +152,7 @@ abstract class PlatformTracingController extends PlatformInterface {
     platforms: [
       AndroidPlatform(
         apiName: 'TracingController.isTracing',
-        apiUrl:
-            'https://developer.android.com/reference/android/webkit/TracingController#isTracing()',
+        apiUrl: 'https://developer.android.com/reference/android/webkit/TracingController#isTracing()',
       ),
     ],
   )
@@ -230,8 +228,7 @@ List<dynamic> _serializeCategories(
   platforms: [
     AndroidPlatform(
       apiName: 'TracingConfig',
-      apiUrl:
-          'https://developer.android.com/reference/androidx/webkit/TracingConfig',
+      apiUrl: 'https://developer.android.com/reference/androidx/webkit/TracingConfig',
     ),
   ],
 )

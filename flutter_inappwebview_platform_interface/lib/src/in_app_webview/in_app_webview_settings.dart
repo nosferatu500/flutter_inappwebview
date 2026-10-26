@@ -82,13 +82,11 @@ class InAppWebViewSettings_ {
     platforms: [
       AndroidPlatform(
         apiName: "WebSettings.setUserAgentString",
-        apiUrl:
-            "https://developer.android.com/reference/android/webkit/WebSettings?hl=en#setUserAgentString(java.lang.String)",
+        apiUrl: "https://developer.android.com/reference/android/webkit/WebSettings?hl=en#setUserAgentString(java.lang.String)",
       ),
       IOSPlatform(
         apiName: "WKWebView.customUserAgent",
-        apiUrl:
-            "https://developer.apple.com/documentation/webkit/wkwebview/1414950-customuseragent",
+        apiUrl: "https://developer.apple.com/documentation/webkit/wkwebview/1414950-customuseragent",
       ),
     ],
   )
@@ -100,10 +98,8 @@ class InAppWebViewSettings_ {
       AndroidPlatform(),
       IOSPlatform(
         apiName: "WKWebViewConfiguration.applicationNameForUserAgent",
-        apiUrl:
-            "https://developer.apple.com/documentation/webkit/wkwebviewconfiguration/1395665-applicationnameforuseragent",
-        note:
-            "Applied when the WebView is created. Changing it with `setSettings` on a running WebView has **no** effect: `WKWebView.configuration` returns a fresh copy on every access, so the write is discarded. Recreate the WebView to change it. Use `userAgent` instead, which is applied to the live WebView and does respond to `setSettings`.",
+        apiUrl: "https://developer.apple.com/documentation/webkit/wkwebviewconfiguration/1395665-applicationnameforuseragent",
+        note: "Applied when the WebView is created. Changing it with `setSettings` on a running WebView has **no** effect: `WKWebView.configuration` returns a fresh copy on every access, so the write is discarded. Recreate the WebView to change it. Use `userAgent` instead, which is applied to the live WebView and does respond to `setSettings`.",
       ),
     ],
   )
@@ -114,13 +110,11 @@ class InAppWebViewSettings_ {
     platforms: [
       AndroidPlatform(
         apiName: "WebSettings.setJavaScriptEnabled",
-        apiUrl:
-            "https://developer.android.com/reference/android/webkit/WebSettings?hl=en#setJavaScriptEnabled(boolean)",
+        apiUrl: "https://developer.android.com/reference/android/webkit/WebSettings?hl=en#setJavaScriptEnabled(boolean)",
       ),
       IOSPlatform(
         apiName: "WKWebpagePreferences.allowsContentJavaScript",
-        apiUrl:
-            "https://developer.apple.com/documentation/webkit/wkwebpagepreferences/3552422-allowscontentjavascript/",
+        apiUrl: "https://developer.apple.com/documentation/webkit/wkwebpagepreferences/3552422-allowscontentjavascript/",
       ),
     ],
   )
@@ -131,13 +125,11 @@ class InAppWebViewSettings_ {
     platforms: [
       AndroidPlatform(
         apiName: "WebSettings.setJavaScriptCanOpenWindowsAutomatically",
-        apiUrl:
-            "https://developer.android.com/reference/android/webkit/WebSettings?hl=en#setJavaScriptCanOpenWindowsAutomatically(boolean)",
+        apiUrl: "https://developer.android.com/reference/android/webkit/WebSettings?hl=en#setJavaScriptCanOpenWindowsAutomatically(boolean)",
       ),
       IOSPlatform(
         apiName: "WKPreferences.javaScriptCanOpenWindowsAutomatically",
-        apiUrl:
-            "https://developer.apple.com/documentation/webkit/wkpreferences/1536573-javascriptcanopenwindowsautomati/",
+        apiUrl: "https://developer.apple.com/documentation/webkit/wkpreferences/1536573-javascriptcanopenwindowsautomati/",
       ),
     ],
   )
@@ -148,16 +140,13 @@ class InAppWebViewSettings_ {
     platforms: [
       AndroidPlatform(
         apiName: "WebSettings.setMediaPlaybackRequiresUserGesture",
-        apiUrl:
-            "https://developer.android.com/reference/android/webkit/WebSettings?hl=en#setMediaPlaybackRequiresUserGesture(boolean)",
+        apiUrl: "https://developer.android.com/reference/android/webkit/WebSettings?hl=en#setMediaPlaybackRequiresUserGesture(boolean)",
       ),
       IOSPlatform(
         apiName:
             "WKWebViewConfiguration.mediaTypesRequiringUserActionForPlayback",
-        apiUrl:
-            "https://developer.apple.com/documentation/webkit/wkwebviewconfiguration/1851524-mediatypesrequiringuseractionfor",
-        note:
-            "Applied when the WebView is created. Changing it with `setSettings` on a running WebView has **no** effect: `WKWebView.configuration` returns a fresh copy on every access, so the write is discarded. Recreate the WebView to change it.",
+        apiUrl: "https://developer.apple.com/documentation/webkit/wkwebviewconfiguration/1851524-mediatypesrequiringuseractionfor",
+        note: "Applied when the WebView is created. Changing it with `setSettings` on a running WebView has **no** effect: `WKWebView.configuration` returns a fresh copy on every access, so the write is discarded. Recreate the WebView to change it.",
       ),
     ],
   )
@@ -168,13 +157,11 @@ class InAppWebViewSettings_ {
     platforms: [
       AndroidPlatform(
         apiName: "WebSettings.setMinimumFontSize",
-        apiUrl:
-            "https://developer.android.com/reference/android/webkit/WebSettings?hl=en#setMinimumFontSize(int)",
+        apiUrl: "https://developer.android.com/reference/android/webkit/WebSettings?hl=en#setMinimumFontSize(int)",
       ),
       IOSPlatform(
         apiName: "WKPreferences.minimumFontSize",
-        apiUrl:
-            "https://developer.apple.com/documentation/webkit/wkpreferences/1537155-minimumfontsize/",
+        apiUrl: "https://developer.apple.com/documentation/webkit/wkpreferences/1537155-minimumfontsize/",
       ),
     ],
   )
@@ -185,13 +172,11 @@ class InAppWebViewSettings_ {
     platforms: [
       AndroidPlatform(
         apiName: "View.setVerticalScrollBarEnabled",
-        apiUrl:
-            "https://developer.android.com/reference/android/view/View#setVerticalScrollBarEnabled(boolean)",
+        apiUrl: "https://developer.android.com/reference/android/view/View#setVerticalScrollBarEnabled(boolean)",
       ),
       IOSPlatform(
         apiName: "UIScrollView.showsVerticalScrollIndicator",
-        apiUrl:
-            "https://developer.apple.com/documentation/uikit/uiscrollview/1619405-showsverticalscrollindicator/",
+        apiUrl: "https://developer.apple.com/documentation/uikit/uiscrollview/1619405-showsverticalscrollindicator/",
       ),
     ],
   )
@@ -202,13 +187,11 @@ class InAppWebViewSettings_ {
     platforms: [
       AndroidPlatform(
         apiName: "View.setHorizontalScrollBarEnabled",
-        apiUrl:
-            "https://developer.android.com/reference/android/view/View#setHorizontalScrollBarEnabled(boolean)",
+        apiUrl: "https://developer.android.com/reference/android/view/View#setHorizontalScrollBarEnabled(boolean)",
       ),
       IOSPlatform(
         apiName: "UIScrollView.showsHorizontalScrollIndicator",
-        apiUrl:
-            "https://developer.apple.com/documentation/uikit/uiscrollview/1619380-showshorizontalscrollindicator",
+        apiUrl: "https://developer.apple.com/documentation/uikit/uiscrollview/1619380-showshorizontalscrollindicator",
       ),
     ],
   )
@@ -246,8 +229,7 @@ class InAppWebViewSettings_ {
       IOSPlatform(
         available: "13.0",
         apiName: "WKWebpagePreferences.preferredContentMode",
-        apiUrl:
-            "https://developer.apple.com/documentation/webkit/wkwebpagepreferences/3194426-preferredcontentmode/",
+        apiUrl: "https://developer.apple.com/documentation/webkit/wkwebpagepreferences/3194426-preferredcontentmode/",
       ),
     ],
   )
@@ -316,13 +298,11 @@ class InAppWebViewSettings_ {
   @SupportedPlatforms(
     platforms: [
       AndroidPlatform(
-        note:
-            """setting this to `true`, it will clear all the cookies of all WebView instances, 
+        note: """setting this to `true`, it will clear all the cookies of all WebView instances, 
 because there isn't any way to make the website data store non-persistent for the specific WebView instance such as on iOS.""",
       ),
       IOSPlatform(
-        note:
-            "Applied when the WebView is created. Changing it with `setSettings` on a running WebView has **no** effect: `WKWebView.configuration` returns a fresh copy on every access, so the write is discarded. Recreate the WebView to change it.",
+        note: "Applied when the WebView is created. Changing it with `setSettings` on a running WebView has **no** effect: `WKWebView.configuration` returns a fresh copy on every access, so the write is discarded. Recreate the WebView to change it.",
       ),
     ],
   )
@@ -333,8 +313,7 @@ because there isn't any way to make the website data store non-persistent for th
     platforms: [
       AndroidPlatform(),
       IOSPlatform(
-        note:
-            "Applied when the WebView is created. Changing it with `setSettings` on a running WebView has **no** effect: `WKWebView.configuration` returns a fresh copy on every access, so the write is discarded. Recreate the WebView to change it.",
+        note: "Applied when the WebView is created. Changing it with `setSettings` on a running WebView has **no** effect: `WKWebView.configuration` returns a fresh copy on every access, so the write is discarded. Recreate the WebView to change it.",
       ),
     ],
   )
@@ -361,8 +340,7 @@ because there isn't any way to make the website data store non-persistent for th
     platforms: [
       AndroidPlatform(
         apiName: "WebSettings.setSupportZoom",
-        apiUrl:
-            "https://developer.android.com/reference/android/webkit/WebSettings?hl=en#setSupportZoom(boolean)",
+        apiUrl: "https://developer.android.com/reference/android/webkit/WebSettings?hl=en#setSupportZoom(boolean)",
       ),
       IOSPlatform(),
     ],
@@ -382,8 +360,7 @@ because there isn't any way to make the website data store non-persistent for th
     platforms: [
       AndroidPlatform(
         apiName: "WebSettings.setAllowFileAccessFromFileURLs",
-        apiUrl:
-            "https://developer.android.com/reference/android/webkit/WebSettings?hl=en#setAllowFileAccessFromFileURLs(boolean)",
+        apiUrl: "https://developer.android.com/reference/android/webkit/WebSettings?hl=en#setAllowFileAccessFromFileURLs(boolean)",
       ),
       IOSPlatform(),
     ],
@@ -403,12 +380,10 @@ because there isn't any way to make the website data store non-persistent for th
     platforms: [
       AndroidPlatform(
         apiName: "WebSettings.setAllowUniversalAccessFromFileURLs",
-        apiUrl:
-            "https://developer.android.com/reference/android/webkit/WebSettings?hl=en#setAllowUniversalAccessFromFileURLs(boolean)",
+        apiUrl: "https://developer.android.com/reference/android/webkit/WebSettings?hl=en#setAllowUniversalAccessFromFileURLs(boolean)",
       ),
       IOSPlatform(
-        note:
-            "Applied when the WebView is created. Changing it with `setSettings` on a running WebView has **no** effect: `WKWebView.configuration` returns a fresh copy on every access, so the write is discarded. Recreate the WebView to change it.",
+        note: "Applied when the WebView is created. Changing it with `setSettings` on a running WebView has **no** effect: `WKWebView.configuration` returns a fresh copy on every access, so the write is discarded. Recreate the WebView to change it.",
       ),
     ],
   )
@@ -434,8 +409,7 @@ because there isn't any way to make the website data store non-persistent for th
     platforms: [
       AndroidPlatform(
         apiName: "WebSettings.setTextZoom",
-        apiUrl:
-            "https://developer.android.com/reference/android/webkit/WebSettings?hl=en#setTextZoom(int)",
+        apiUrl: "https://developer.android.com/reference/android/webkit/WebSettings?hl=en#setTextZoom(int)",
       ),
     ],
   )
@@ -446,8 +420,7 @@ because there isn't any way to make the website data store non-persistent for th
     platforms: [
       AndroidPlatform(
         apiName: "WebSettings.setBuiltInZoomControls",
-        apiUrl:
-            "https://developer.android.com/reference/android/webkit/WebSettings?hl=en#setBuiltInZoomControls(boolean)",
+        apiUrl: "https://developer.android.com/reference/android/webkit/WebSettings?hl=en#setBuiltInZoomControls(boolean)",
       ),
     ],
   )
@@ -458,8 +431,7 @@ because there isn't any way to make the website data store non-persistent for th
     platforms: [
       AndroidPlatform(
         apiName: "WebSettings.setDisplayZoomControls",
-        apiUrl:
-            "https://developer.android.com/reference/android/webkit/WebSettings?hl=en#setDisplayZoomControls(boolean)",
+        apiUrl: "https://developer.android.com/reference/android/webkit/WebSettings?hl=en#setDisplayZoomControls(boolean)",
       ),
     ],
   )
@@ -470,8 +442,7 @@ because there isn't any way to make the website data store non-persistent for th
     platforms: [
       AndroidPlatform(
         apiName: "WebSettings.setDatabaseEnabled",
-        apiUrl:
-            "https://developer.android.com/reference/android/webkit/WebSettings?hl=en#setDatabaseEnabled(boolean)",
+        apiUrl: "https://developer.android.com/reference/android/webkit/WebSettings?hl=en#setDatabaseEnabled(boolean)",
       ),
     ],
   )
@@ -482,8 +453,7 @@ because there isn't any way to make the website data store non-persistent for th
     platforms: [
       AndroidPlatform(
         apiName: "WebSettings.setDomStorageEnabled",
-        apiUrl:
-            "https://developer.android.com/reference/android/webkit/WebSettings?hl=en#setDomStorageEnabled(boolean)",
+        apiUrl: "https://developer.android.com/reference/android/webkit/WebSettings?hl=en#setDomStorageEnabled(boolean)",
       ),
     ],
   )
@@ -497,8 +467,7 @@ because there isn't any way to make the website data store non-persistent for th
     platforms: [
       AndroidPlatform(
         apiName: "WebSettings.setUseWideViewPort",
-        apiUrl:
-            "https://developer.android.com/reference/android/webkit/WebSettings?hl=en#setUseWideViewPort(boolean)",
+        apiUrl: "https://developer.android.com/reference/android/webkit/WebSettings?hl=en#setUseWideViewPort(boolean)",
       ),
     ],
   )
@@ -511,8 +480,7 @@ because there isn't any way to make the website data store non-persistent for th
       AndroidPlatform(
         available: "26",
         apiName: "WebSettings.setSafeBrowsingEnabled",
-        apiUrl:
-            "https://developer.android.com/reference/android/webkit/WebSettings?hl=en#setSafeBrowsingEnabled(boolean)",
+        apiUrl: "https://developer.android.com/reference/android/webkit/WebSettings?hl=en#setSafeBrowsingEnabled(boolean)",
       ),
     ],
   )
@@ -524,8 +492,7 @@ because there isn't any way to make the website data store non-persistent for th
       AndroidPlatform(
         available: "21",
         apiName: "WebSettings.setMixedContentMode",
-        apiUrl:
-            "https://developer.android.com/reference/android/webkit/WebSettings?hl=en#setMixedContentMode(int)",
+        apiUrl: "https://developer.android.com/reference/android/webkit/WebSettings?hl=en#setMixedContentMode(int)",
       ),
     ],
   )
@@ -536,8 +503,7 @@ because there isn't any way to make the website data store non-persistent for th
     platforms: [
       AndroidPlatform(
         apiName: "WebSettings.setAllowContentAccess",
-        apiUrl:
-            "https://developer.android.com/reference/android/webkit/WebSettings?hl=en#setAllowContentAccess(boolean)",
+        apiUrl: "https://developer.android.com/reference/android/webkit/WebSettings?hl=en#setAllowContentAccess(boolean)",
       ),
     ],
   )
@@ -549,8 +515,7 @@ because there isn't any way to make the website data store non-persistent for th
     platforms: [
       AndroidPlatform(
         apiName: "WebSettings.setAllowFileAccess",
-        apiUrl:
-            "https://developer.android.com/reference/android/webkit/WebSettings?hl=en#setAllowFileAccess(boolean)",
+        apiUrl: "https://developer.android.com/reference/android/webkit/WebSettings?hl=en#setAllowFileAccess(boolean)",
       ),
     ],
   )
@@ -568,8 +533,7 @@ because there isn't any way to make the website data store non-persistent for th
     platforms: [
       AndroidPlatform(
         apiName: "WebSettings.setBlockNetworkImage",
-        apiUrl:
-            "https://developer.android.com/reference/android/webkit/WebSettings#setBlockNetworkImage(boolean)",
+        apiUrl: "https://developer.android.com/reference/android/webkit/WebSettings#setBlockNetworkImage(boolean)",
       ),
     ],
   )
@@ -580,8 +544,7 @@ because there isn't any way to make the website data store non-persistent for th
     platforms: [
       AndroidPlatform(
         apiName: "WebSettings.setBlockNetworkLoads",
-        apiUrl:
-            "https://developer.android.com/reference/android/webkit/WebSettings#setBlockNetworkLoads(boolean)",
+        apiUrl: "https://developer.android.com/reference/android/webkit/WebSettings#setBlockNetworkLoads(boolean)",
       ),
     ],
   )
@@ -593,8 +556,7 @@ because there isn't any way to make the website data store non-persistent for th
     platforms: [
       AndroidPlatform(
         apiName: "WebSettings.setCacheMode",
-        apiUrl:
-            "https://developer.android.com/reference/android/webkit/WebSettings#setCacheMode(int)",
+        apiUrl: "https://developer.android.com/reference/android/webkit/WebSettings#setCacheMode(int)",
       ),
     ],
   )
@@ -605,8 +567,7 @@ because there isn't any way to make the website data store non-persistent for th
     platforms: [
       AndroidPlatform(
         apiName: "WebSettings.setCursiveFontFamily",
-        apiUrl:
-            "https://developer.android.com/reference/android/webkit/WebSettings#setCursiveFontFamily(java.lang.String)",
+        apiUrl: "https://developer.android.com/reference/android/webkit/WebSettings#setCursiveFontFamily(java.lang.String)",
       ),
     ],
   )
@@ -617,8 +578,7 @@ because there isn't any way to make the website data store non-persistent for th
     platforms: [
       AndroidPlatform(
         apiName: "WebSettings.setDefaultFixedFontSize",
-        apiUrl:
-            "https://developer.android.com/reference/android/webkit/WebSettings#setDefaultFixedFontSize(int)",
+        apiUrl: "https://developer.android.com/reference/android/webkit/WebSettings#setDefaultFixedFontSize(int)",
       ),
     ],
   )
@@ -629,8 +589,7 @@ because there isn't any way to make the website data store non-persistent for th
     platforms: [
       AndroidPlatform(
         apiName: "WebSettings.setDefaultFontSize",
-        apiUrl:
-            "https://developer.android.com/reference/android/webkit/WebSettings#setDefaultFontSize(int)",
+        apiUrl: "https://developer.android.com/reference/android/webkit/WebSettings#setDefaultFontSize(int)",
       ),
     ],
   )
@@ -641,8 +600,7 @@ because there isn't any way to make the website data store non-persistent for th
     platforms: [
       AndroidPlatform(
         apiName: "WebSettings.setDefaultTextEncodingName",
-        apiUrl:
-            "https://developer.android.com/reference/android/webkit/WebSettings#setDefaultTextEncodingName(java.lang.String)",
+        apiUrl: "https://developer.android.com/reference/android/webkit/WebSettings#setDefaultTextEncodingName(java.lang.String)",
       ),
     ],
   )
@@ -654,8 +612,7 @@ because there isn't any way to make the website data store non-persistent for th
       AndroidPlatform(
         available: "24",
         apiName: "WebSettings.setDisabledActionModeMenuItems",
-        apiUrl:
-            "https://developer.android.com/reference/android/webkit/WebSettings#setDisabledActionModeMenuItems(int)",
+        apiUrl: "https://developer.android.com/reference/android/webkit/WebSettings#setDisabledActionModeMenuItems(int)",
       ),
     ],
   )
@@ -666,8 +623,7 @@ because there isn't any way to make the website data store non-persistent for th
     platforms: [
       AndroidPlatform(
         apiName: "WebSettings.setFantasyFontFamily",
-        apiUrl:
-            "https://developer.android.com/reference/android/webkit/WebSettings#setFantasyFontFamily(java.lang.String)",
+        apiUrl: "https://developer.android.com/reference/android/webkit/WebSettings#setFantasyFontFamily(java.lang.String)",
       ),
     ],
   )
@@ -678,8 +634,7 @@ because there isn't any way to make the website data store non-persistent for th
     platforms: [
       AndroidPlatform(
         apiName: "WebSettings.setFixedFontFamily",
-        apiUrl:
-            "https://developer.android.com/reference/android/webkit/WebSettings#setFixedFontFamily(java.lang.String)",
+        apiUrl: "https://developer.android.com/reference/android/webkit/WebSettings#setFixedFontFamily(java.lang.String)",
       ),
     ],
   )
@@ -690,10 +645,8 @@ because there isn't any way to make the website data store non-persistent for th
     platforms: [
       AndroidPlatform(
         apiName: "WebSettings.setGeolocationEnabled",
-        apiUrl:
-            "https://developer.android.com/reference/android/webkit/WebSettings?hl=en#setGeolocationEnabled(boolean)",
-        note:
-            """Please note that in order for the Geolocation API to be usable by a page in the WebView, the following requirements must be met:
+        apiUrl: "https://developer.android.com/reference/android/webkit/WebSettings?hl=en#setGeolocationEnabled(boolean)",
+        note: """Please note that in order for the Geolocation API to be usable by a page in the WebView, the following requirements must be met:
 - an application must have permission to access the device location, see [Manifest.permission.ACCESS_COARSE_LOCATION](https://developer.android.com/reference/android/Manifest.permission#ACCESS_COARSE_LOCATION), [Manifest.permission.ACCESS_FINE_LOCATION](https://developer.android.com/reference/android/Manifest.permission#ACCESS_FINE_LOCATION);
 - an application must provide an implementation of the [PlatformWebViewCreationParams.onGeolocationPermissionsShowPrompt] callback to receive notifications that a page is requesting access to location via the JavaScript Geolocation API.""",
       ),
@@ -706,8 +659,7 @@ because there isn't any way to make the website data store non-persistent for th
     platforms: [
       AndroidPlatform(
         apiName: "WebSettings.setLayoutAlgorithm",
-        apiUrl:
-            "https://developer.android.com/reference/android/webkit/WebSettings?hl=en#setLayoutAlgorithm(android.webkit.WebSettings.LayoutAlgorithm)",
+        apiUrl: "https://developer.android.com/reference/android/webkit/WebSettings?hl=en#setLayoutAlgorithm(android.webkit.WebSettings.LayoutAlgorithm)",
       ),
     ],
   )
@@ -720,8 +672,7 @@ because there isn't any way to make the website data store non-persistent for th
     platforms: [
       AndroidPlatform(
         apiName: "WebSettings.setLoadWithOverviewMode",
-        apiUrl:
-            "https://developer.android.com/reference/android/webkit/WebSettings?hl=en#setLoadWithOverviewMode(boolean)",
+        apiUrl: "https://developer.android.com/reference/android/webkit/WebSettings?hl=en#setLoadWithOverviewMode(boolean)",
       ),
     ],
   )
@@ -734,8 +685,7 @@ because there isn't any way to make the website data store non-persistent for th
     platforms: [
       AndroidPlatform(
         apiName: "WebSettings.setLoadsImagesAutomatically",
-        apiUrl:
-            "https://developer.android.com/reference/android/webkit/WebSettings?hl=en#setLoadsImagesAutomatically(boolean)",
+        apiUrl: "https://developer.android.com/reference/android/webkit/WebSettings?hl=en#setLoadsImagesAutomatically(boolean)",
       ),
     ],
   )
@@ -746,8 +696,7 @@ because there isn't any way to make the website data store non-persistent for th
     platforms: [
       AndroidPlatform(
         apiName: "WebSettings.setMinimumLogicalFontSize",
-        apiUrl:
-            "https://developer.android.com/reference/android/webkit/WebSettings?hl=en#setMinimumLogicalFontSize(int)",
+        apiUrl: "https://developer.android.com/reference/android/webkit/WebSettings?hl=en#setMinimumLogicalFontSize(int)",
       ),
     ],
   )
@@ -763,8 +712,7 @@ because there isn't any way to make the website data store non-persistent for th
     platforms: [
       AndroidPlatform(
         apiName: "WebView.setInitialScale",
-        apiUrl:
-            "https://developer.android.com/reference/android/webkit/WebView#setInitialScale(int)",
+        apiUrl: "https://developer.android.com/reference/android/webkit/WebView#setInitialScale(int)",
       ),
     ],
   )
@@ -775,8 +723,7 @@ because there isn't any way to make the website data store non-persistent for th
     platforms: [
       AndroidPlatform(
         apiName: "WebSettings.setNeedInitialFocus",
-        apiUrl:
-            "https://developer.android.com/reference/android/webkit/WebSettings?hl=en#setNeedInitialFocus(boolean)",
+        apiUrl: "https://developer.android.com/reference/android/webkit/WebSettings?hl=en#setNeedInitialFocus(boolean)",
       ),
     ],
   )
@@ -790,8 +737,7 @@ because there isn't any way to make the website data store non-persistent for th
       AndroidPlatform(
         available: "23",
         apiName: "WebSettings.setOffscreenPreRaster",
-        apiUrl:
-            "https://developer.android.com/reference/android/webkit/WebSettings?hl=en#setOffscreenPreRaster(boolean)",
+        apiUrl: "https://developer.android.com/reference/android/webkit/WebSettings?hl=en#setOffscreenPreRaster(boolean)",
       ),
     ],
   )
@@ -802,8 +748,7 @@ because there isn't any way to make the website data store non-persistent for th
     platforms: [
       AndroidPlatform(
         apiName: "WebSettings.setSansSerifFontFamily",
-        apiUrl:
-            "https://developer.android.com/reference/android/webkit/WebSettings?hl=en#setSansSerifFontFamily(java.lang.String)",
+        apiUrl: "https://developer.android.com/reference/android/webkit/WebSettings?hl=en#setSansSerifFontFamily(java.lang.String)",
       ),
     ],
   )
@@ -814,8 +759,7 @@ because there isn't any way to make the website data store non-persistent for th
     platforms: [
       AndroidPlatform(
         apiName: "WebSettings.setSerifFontFamily",
-        apiUrl:
-            "https://developer.android.com/reference/android/webkit/WebSettings?hl=en#setSerifFontFamily(java.lang.String)",
+        apiUrl: "https://developer.android.com/reference/android/webkit/WebSettings?hl=en#setSerifFontFamily(java.lang.String)",
       ),
     ],
   )
@@ -826,8 +770,7 @@ because there isn't any way to make the website data store non-persistent for th
     platforms: [
       AndroidPlatform(
         apiName: "WebSettings.setStandardFontFamily",
-        apiUrl:
-            "https://developer.android.com/reference/android/webkit/WebSettings?hl=en#setStandardFontFamily(java.lang.String)",
+        apiUrl: "https://developer.android.com/reference/android/webkit/WebSettings?hl=en#setStandardFontFamily(java.lang.String)",
       ),
     ],
   )
@@ -841,8 +784,7 @@ because there isn't any way to make the website data store non-persistent for th
       AndroidPlatform(
         available: "21",
         apiName: "CookieManager.setAcceptThirdPartyCookies",
-        apiUrl:
-            "https://developer.android.com/reference/android/webkit/CookieManager#setAcceptThirdPartyCookies(android.webkit.WebView,%20boolean)",
+        apiUrl: "https://developer.android.com/reference/android/webkit/CookieManager#setAcceptThirdPartyCookies(android.webkit.WebView,%20boolean)",
       ),
     ],
   )
@@ -854,8 +796,7 @@ because there isn't any way to make the website data store non-persistent for th
     platforms: [
       AndroidPlatform(
         apiName: "WebView.setLayerType",
-        apiUrl:
-            "https://developer.android.com/reference/android/webkit/WebView#setLayerType(int,%20android.graphics.Paint)",
+        apiUrl: "https://developer.android.com/reference/android/webkit/WebView#setLayerType(int,%20android.graphics.Paint)",
       ),
     ],
   )
@@ -867,8 +808,7 @@ because there isn't any way to make the website data store non-persistent for th
     platforms: [
       AndroidPlatform(
         apiName: "WebSettings.setSupportMultipleWindows",
-        apiUrl:
-            "https://developer.android.com/reference/android/webkit/WebSettings?hl=en#setSupportMultipleWindows(boolean)",
+        apiUrl: "https://developer.android.com/reference/android/webkit/WebSettings?hl=en#setSupportMultipleWindows(boolean)",
       ),
     ],
   )
@@ -892,8 +832,7 @@ because there isn't any way to make the website data store non-persistent for th
   @SupportedPlatforms(
     platforms: [
       AndroidPlatform(
-        note:
-            """It is recommended to use Hybrid Composition only on Android 10+ for a release app,
+        note: """It is recommended to use Hybrid Composition only on Android 10+ for a release app,
 as it can cause framerate drops on animations in Android 9 and lower (see [Hybrid-Composition#performance](https://github.com/flutter/flutter/wiki/Hybrid-Composition#performance)).""",
       ),
     ],
@@ -950,8 +889,7 @@ as it can cause framerate drops on animations in Android 9 and lower (see [Hybri
     platforms: [
       AndroidPlatform(
         apiName: "View.setOverScrollMode",
-        apiUrl:
-            "https://developer.android.com/reference/android/view/View#setOverScrollMode(int)",
+        apiUrl: "https://developer.android.com/reference/android/view/View#setOverScrollMode(int)",
       ),
     ],
   )
@@ -963,8 +901,7 @@ as it can cause framerate drops on animations in Android 9 and lower (see [Hybri
     platforms: [
       AndroidPlatform(
         apiName: "WebView.setNetworkAvailable",
-        apiUrl:
-            "https://developer.android.com/reference/android/webkit/WebView#setNetworkAvailable(boolean)",
+        apiUrl: "https://developer.android.com/reference/android/webkit/WebView#setNetworkAvailable(boolean)",
       ),
     ],
   )
@@ -980,8 +917,7 @@ as it can cause framerate drops on animations in Android 9 and lower (see [Hybri
     platforms: [
       AndroidPlatform(
         apiName: "WebView.setScrollBarStyle",
-        apiUrl:
-            "https://developer.android.com/reference/android/webkit/WebView#setScrollBarStyle(int)",
+        apiUrl: "https://developer.android.com/reference/android/webkit/WebView#setScrollBarStyle(int)",
       ),
     ],
   )
@@ -993,8 +929,7 @@ as it can cause framerate drops on animations in Android 9 and lower (see [Hybri
     platforms: [
       AndroidPlatform(
         apiName: "View.setVerticalScrollbarPosition",
-        apiUrl:
-            "https://developer.android.com/reference/android/view/View#setVerticalScrollbarPosition(int)",
+        apiUrl: "https://developer.android.com/reference/android/view/View#setVerticalScrollbarPosition(int)",
       ),
     ],
   )
@@ -1005,8 +940,7 @@ as it can cause framerate drops on animations in Android 9 and lower (see [Hybri
     platforms: [
       AndroidPlatform(
         apiName: "View.setScrollBarDefaultDelayBeforeFade",
-        apiUrl:
-            "https://developer.android.com/reference/android/view/View#setScrollBarDefaultDelayBeforeFade(int)",
+        apiUrl: "https://developer.android.com/reference/android/view/View#setScrollBarDefaultDelayBeforeFade(int)",
       ),
     ],
   )
@@ -1018,8 +952,7 @@ as it can cause framerate drops on animations in Android 9 and lower (see [Hybri
     platforms: [
       AndroidPlatform(
         apiName: "View.setScrollbarFadingEnabled",
-        apiUrl:
-            "https://developer.android.com/reference/android/view/View#setScrollbarFadingEnabled(boolean)",
+        apiUrl: "https://developer.android.com/reference/android/view/View#setScrollbarFadingEnabled(boolean)",
       ),
     ],
   )
@@ -1030,8 +963,7 @@ as it can cause framerate drops on animations in Android 9 and lower (see [Hybri
     platforms: [
       AndroidPlatform(
         apiName: "View.setScrollBarFadeDuration",
-        apiUrl:
-            "https://developer.android.com/reference/android/view/View#setScrollBarFadeDuration(int)",
+        apiUrl: "https://developer.android.com/reference/android/view/View#setScrollBarFadeDuration(int)",
       ),
     ],
   )
@@ -1042,8 +974,7 @@ as it can cause framerate drops on animations in Android 9 and lower (see [Hybri
     platforms: [
       AndroidPlatform(
         apiName: "WebView.setRendererPriorityPolicy",
-        apiUrl:
-            "https://developer.android.com/reference/android/webkit/WebView#setRendererPriorityPolicy(int,%20boolean)",
+        apiUrl: "https://developer.android.com/reference/android/webkit/WebView#setRendererPriorityPolicy(int,%20boolean)",
       ),
     ],
   )
@@ -1060,8 +991,7 @@ as it can cause framerate drops on animations in Android 9 and lower (see [Hybri
       AndroidPlatform(
         available: "29",
         apiName: "View.setVerticalScrollbarThumbDrawable",
-        apiUrl:
-            "https://developer.android.com/reference/android/view/View#setVerticalScrollbarThumbDrawable(android.graphics.drawable.Drawable)",
+        apiUrl: "https://developer.android.com/reference/android/view/View#setVerticalScrollbarThumbDrawable(android.graphics.drawable.Drawable)",
       ),
     ],
   )
@@ -1073,8 +1003,7 @@ as it can cause framerate drops on animations in Android 9 and lower (see [Hybri
       AndroidPlatform(
         available: "29",
         apiName: "View.setVerticalScrollbarTrackDrawable",
-        apiUrl:
-            "https://developer.android.com/reference/android/view/View#setVerticalScrollbarTrackDrawable(android.graphics.drawable.Drawable)",
+        apiUrl: "https://developer.android.com/reference/android/view/View#setVerticalScrollbarTrackDrawable(android.graphics.drawable.Drawable)",
       ),
     ],
   )
@@ -1086,8 +1015,7 @@ as it can cause framerate drops on animations in Android 9 and lower (see [Hybri
       AndroidPlatform(
         available: "29",
         apiName: "View.setHorizontalScrollbarThumbDrawable",
-        apiUrl:
-            "https://developer.android.com/reference/android/view/View#setHorizontalScrollbarThumbDrawable(android.graphics.drawable.Drawable)",
+        apiUrl: "https://developer.android.com/reference/android/view/View#setHorizontalScrollbarThumbDrawable(android.graphics.drawable.Drawable)",
       ),
     ],
   )
@@ -1099,8 +1027,7 @@ as it can cause framerate drops on animations in Android 9 and lower (see [Hybri
       AndroidPlatform(
         available: "29",
         apiName: "View.setHorizontalScrollbarTrackDrawable",
-        apiUrl:
-            "https://developer.android.com/reference/android/view/View#setHorizontalScrollbarTrackDrawable(android.graphics.drawable.Drawable)",
+        apiUrl: "https://developer.android.com/reference/android/view/View#setHorizontalScrollbarTrackDrawable(android.graphics.drawable.Drawable)",
       ),
     ],
   )
@@ -1122,10 +1049,8 @@ as it can cause framerate drops on animations in Android 9 and lower (see [Hybri
       AndroidPlatform(
         available: "29",
         apiName: "WebSettingsCompat.setAlgorithmicDarkeningAllowed",
-        apiUrl:
-            "https://developer.android.com/reference/androidx/webkit/WebSettingsCompat#setAlgorithmicDarkeningAllowed(android.webkit.WebSettings,boolean)",
-        note:
-            "available on Android only if [WebViewFeature.ALGORITHMIC_DARKENING] feature is supported.",
+        apiUrl: "https://developer.android.com/reference/androidx/webkit/WebSettingsCompat#setAlgorithmicDarkeningAllowed(android.webkit.WebSettings,boolean)",
+        note: "available on Android only if [WebViewFeature.ALGORITHMIC_DARKENING] feature is supported.",
       ),
     ],
   )
@@ -1142,10 +1067,8 @@ as it can cause framerate drops on animations in Android 9 and lower (see [Hybri
     platforms: [
       AndroidPlatform(
         apiName: "WebSettingsCompat.setPaymentRequestEnabled",
-        apiUrl:
-            "https://developer.android.com/reference/androidx/webkit/WebSettingsCompat#setPaymentRequestEnabled(android.webkit.WebSettings,boolean)",
-        note:
-            "available on Android only if [WebViewFeature.PAYMENT_REQUEST] feature is supported.",
+        apiUrl: "https://developer.android.com/reference/androidx/webkit/WebSettingsCompat#setPaymentRequestEnabled(android.webkit.WebSettings,boolean)",
+        note: "available on Android only if [WebViewFeature.PAYMENT_REQUEST] feature is supported.",
       ),
     ],
   )
@@ -1173,10 +1096,8 @@ as it can cause framerate drops on animations in Android 9 and lower (see [Hybri
     platforms: [
       AndroidPlatform(
         apiName: "WebSettingsCompat.setCookiesIncludedInShouldInterceptRequest",
-        apiUrl:
-            "https://developer.android.com/reference/androidx/webkit/WebSettingsCompat#setCookiesIncludedInShouldInterceptRequest(android.webkit.WebSettings,boolean)",
-        note:
-            "available on Android only if [WebViewFeature.COOKIE_INTERCEPT] feature is supported.",
+        apiUrl: "https://developer.android.com/reference/androidx/webkit/WebSettingsCompat#setCookiesIncludedInShouldInterceptRequest(android.webkit.WebSettings,boolean)",
+        note: "available on Android only if [WebViewFeature.COOKIE_INTERCEPT] feature is supported.",
       ),
     ],
   )
@@ -1194,10 +1115,8 @@ as it can cause framerate drops on animations in Android 9 and lower (see [Hybri
     platforms: [
       AndroidPlatform(
         apiName: "WebSettingsCompat.setWebAuthenticationSupport",
-        apiUrl:
-            "https://developer.android.com/reference/androidx/webkit/WebSettingsCompat#setWebAuthenticationSupport(android.webkit.WebSettings,int)",
-        note:
-            "available on Android only if [WebViewFeature.WEB_AUTHENTICATION] feature is supported.",
+        apiUrl: "https://developer.android.com/reference/androidx/webkit/WebSettingsCompat#setWebAuthenticationSupport(android.webkit.WebSettings,int)",
+        note: "available on Android only if [WebViewFeature.WEB_AUTHENTICATION] feature is supported.",
       ),
     ],
   )
@@ -1220,10 +1139,8 @@ as it can cause framerate drops on animations in Android 9 and lower (see [Hybri
     platforms: [
       AndroidPlatform(
         apiName: "WebSettingsCompat.setDownloadFaviconsEnabled",
-        apiUrl:
-            "https://developer.android.com/reference/androidx/webkit/WebSettingsCompat#setDownloadFaviconsEnabled(android.webkit.WebSettings,boolean)",
-        note:
-            "available on Android only if [WebViewFeature.DOWNLOAD_FAVICONS_ENABLED] feature is supported.",
+        apiUrl: "https://developer.android.com/reference/androidx/webkit/WebSettingsCompat#setDownloadFaviconsEnabled(android.webkit.WebSettings,boolean)",
+        note: "available on Android only if [WebViewFeature.DOWNLOAD_FAVICONS_ENABLED] feature is supported.",
       ),
     ],
   )
@@ -1245,10 +1162,8 @@ as it can cause framerate drops on animations in Android 9 and lower (see [Hybri
     platforms: [
       AndroidPlatform(
         apiName: "WebSettingsCompat.setBackForwardCacheEnabled",
-        apiUrl:
-            "https://developer.android.com/reference/androidx/webkit/WebSettingsCompat#setBackForwardCacheEnabled(android.webkit.WebSettings,boolean)",
-        note:
-            "available on Android only if [WebViewFeature.BACK_FORWARD_CACHE] feature is supported.",
+        apiUrl: "https://developer.android.com/reference/androidx/webkit/WebSettingsCompat#setBackForwardCacheEnabled(android.webkit.WebSettings,boolean)",
+        note: "available on Android only if [WebViewFeature.BACK_FORWARD_CACHE] feature is supported.",
       ),
     ],
   )
@@ -1266,10 +1181,8 @@ as it can cause framerate drops on animations in Android 9 and lower (see [Hybri
     platforms: [
       AndroidPlatform(
         apiName: "WebSettingsCompat.setAttributionRegistrationBehavior",
-        apiUrl:
-            "https://developer.android.com/reference/androidx/webkit/WebSettingsCompat#setAttributionRegistrationBehavior(android.webkit.WebSettings,int)",
-        note:
-            "available on Android only if [WebViewFeature.ATTRIBUTION_REGISTRATION_BEHAVIOR] feature is supported.",
+        apiUrl: "https://developer.android.com/reference/androidx/webkit/WebSettingsCompat#setAttributionRegistrationBehavior(android.webkit.WebSettings,int)",
+        note: "available on Android only if [WebViewFeature.ATTRIBUTION_REGISTRATION_BEHAVIOR] feature is supported.",
       ),
     ],
   )
@@ -1288,10 +1201,8 @@ as it can cause framerate drops on animations in Android 9 and lower (see [Hybri
     platforms: [
       AndroidPlatform(
         apiName: "WebSettingsCompat.setWebViewMediaIntegrityApiStatus",
-        apiUrl:
-            "https://developer.android.com/reference/androidx/webkit/WebSettingsCompat#setWebViewMediaIntegrityApiStatus(android.webkit.WebSettings,androidx.webkit.WebViewMediaIntegrityApiStatusConfig)",
-        note:
-            "available on Android only if [WebViewFeature.WEBVIEW_MEDIA_INTEGRITY_API_STATUS] feature is supported.",
+        apiUrl: "https://developer.android.com/reference/androidx/webkit/WebSettingsCompat#setWebViewMediaIntegrityApiStatus(android.webkit.WebSettings,androidx.webkit.WebViewMediaIntegrityApiStatusConfig)",
+        note: "available on Android only if [WebViewFeature.WEBVIEW_MEDIA_INTEGRITY_API_STATUS] feature is supported.",
       ),
     ],
   )
@@ -1313,10 +1224,8 @@ as it can cause framerate drops on animations in Android 9 and lower (see [Hybri
     platforms: [
       AndroidPlatform(
         apiName: "WebSettingsCompat.setUserAgentMetadata",
-        apiUrl:
-            "https://developer.android.com/reference/androidx/webkit/WebSettingsCompat#setUserAgentMetadata(android.webkit.WebSettings,androidx.webkit.UserAgentMetadata)",
-        note:
-            "available on Android only if [WebViewFeature.USER_AGENT_METADATA] feature is supported. [UserAgentMetadata.formFactors] additionally requires [WebViewFeature.USER_AGENT_METADATA_FORM_FACTORS].",
+        apiUrl: "https://developer.android.com/reference/androidx/webkit/WebSettingsCompat#setUserAgentMetadata(android.webkit.WebSettings,androidx.webkit.UserAgentMetadata)",
+        note: "available on Android only if [WebViewFeature.USER_AGENT_METADATA] feature is supported. [UserAgentMetadata.formFactors] additionally requires [WebViewFeature.USER_AGENT_METADATA_FORM_FACTORS].",
       ),
     ],
   )
@@ -1348,10 +1257,8 @@ as it can cause framerate drops on animations in Android 9 and lower (see [Hybri
     platforms: [
       AndroidPlatform(
         apiName: "WebViewCompat.setProfile",
-        apiUrl:
-            "https://developer.android.com/reference/androidx/webkit/WebViewCompat#setProfile(android.webkit.WebView,java.lang.String)",
-        note:
-            "available on Android only if [WebViewFeature.MULTI_PROFILE] feature is supported.",
+        apiUrl: "https://developer.android.com/reference/androidx/webkit/WebViewCompat#setProfile(android.webkit.WebView,java.lang.String)",
+        note: "available on Android only if [WebViewFeature.MULTI_PROFILE] feature is supported.",
       ),
     ],
   )
@@ -1368,8 +1275,7 @@ as it can cause framerate drops on animations in Android 9 and lower (see [Hybri
   @SupportedPlatforms(
     platforms: [
       AndroidPlatform(
-        note:
-            "available on Android only if [WebViewFeature.ENTERPRISE_AUTHENTICATION_APP_LINK_POLICY] feature is supported.",
+        note: "available on Android only if [WebViewFeature.ENTERPRISE_AUTHENTICATION_APP_LINK_POLICY] feature is supported.",
       ),
     ],
   )
@@ -1395,10 +1301,8 @@ as it can cause framerate drops on animations in Android 9 and lower (see [Hybri
     platforms: [
       IOSPlatform(
         apiName: "WKWebViewConfiguration.suppressesIncrementalRendering",
-        apiUrl:
-            "https://developer.apple.com/documentation/webkit/wkwebviewconfiguration/1395663-suppressesincrementalrendering",
-        note:
-            "Applied when the WebView is created. Changing it with `setSettings` on a running WebView has **no** effect: `WKWebView.configuration` returns a fresh copy on every access, so the write is discarded. Recreate the WebView to change it.",
+        apiUrl: "https://developer.apple.com/documentation/webkit/wkwebviewconfiguration/1395663-suppressesincrementalrendering",
+        note: "Applied when the WebView is created. Changing it with `setSettings` on a running WebView has **no** effect: `WKWebView.configuration` returns a fresh copy on every access, so the write is discarded. Recreate the WebView to change it.",
       ),
     ],
   )
@@ -1409,10 +1313,8 @@ as it can cause framerate drops on animations in Android 9 and lower (see [Hybri
     platforms: [
       IOSPlatform(
         apiName: "WKWebViewConfiguration.allowsAirPlayForMediaPlayback",
-        apiUrl:
-            "https://developer.apple.com/documentation/webkit/wkwebviewconfiguration/1395673-allowsairplayformediaplayback",
-        note:
-            "Applied when the WebView is created. Changing it with `setSettings` on a running WebView has **no** effect: `WKWebView.configuration` returns a fresh copy on every access, so the write is discarded. Recreate the WebView to change it.",
+        apiUrl: "https://developer.apple.com/documentation/webkit/wkwebviewconfiguration/1395673-allowsairplayformediaplayback",
+        note: "Applied when the WebView is created. Changing it with `setSettings` on a running WebView has **no** effect: `WKWebView.configuration` returns a fresh copy on every access, so the write is discarded. Recreate the WebView to change it.",
       ),
     ],
   )
@@ -1434,8 +1336,7 @@ as it can cause framerate drops on animations in Android 9 and lower (see [Hybri
     platforms: [
       IOSPlatform(
         apiName: "WKWebView.allowsBackForwardNavigationGestures",
-        apiUrl:
-            "https://developer.apple.com/documentation/webkit/wkwebview/1414995-allowsbackforwardnavigationgestu",
+        apiUrl: "https://developer.apple.com/documentation/webkit/wkwebview/1414995-allowsbackforwardnavigationgestu",
       ),
     ],
   )
@@ -1446,8 +1347,7 @@ as it can cause framerate drops on animations in Android 9 and lower (see [Hybri
     platforms: [
       IOSPlatform(
         apiName: "WKWebView.allowsLinkPreview",
-        apiUrl:
-            "https://developer.apple.com/documentation/webkit/wkwebview/1415000-allowslinkpreview",
+        apiUrl: "https://developer.apple.com/documentation/webkit/wkwebview/1415000-allowslinkpreview",
       ),
     ],
   )
@@ -1459,10 +1359,8 @@ as it can cause framerate drops on animations in Android 9 and lower (see [Hybri
     platforms: [
       IOSPlatform(
         apiName: "WKWebViewConfiguration.ignoresViewportScaleLimits",
-        apiUrl:
-            "https://developer.apple.com/documentation/webkit/wkwebviewconfiguration/2274633-ignoresviewportscalelimits",
-        note:
-            "Applied when the WebView is created. Changing it with `setSettings` on a running WebView has **no** effect: `WKWebView.configuration` returns a fresh copy on every access, so the write is discarded. Recreate the WebView to change it.",
+        apiUrl: "https://developer.apple.com/documentation/webkit/wkwebviewconfiguration/2274633-ignoresviewportscalelimits",
+        note: "Applied when the WebView is created. Changing it with `setSettings` on a running WebView has **no** effect: `WKWebView.configuration` returns a fresh copy on every access, so the write is discarded. Recreate the WebView to change it.",
       ),
     ],
   )
@@ -1474,10 +1372,8 @@ as it can cause framerate drops on animations in Android 9 and lower (see [Hybri
     platforms: [
       IOSPlatform(
         apiName: "WKWebViewConfiguration.allowsInlineMediaPlayback",
-        apiUrl:
-            "https://developer.apple.com/documentation/webkit/wkwebviewconfiguration/1614793-allowsinlinemediaplayback",
-        note:
-            "Applied when the WebView is created. Changing it with `setSettings` on a running WebView has **no** effect: `WKWebView.configuration` returns a fresh copy on every access, so the write is discarded. Recreate the WebView to change it.",
+        apiUrl: "https://developer.apple.com/documentation/webkit/wkwebviewconfiguration/1614793-allowsinlinemediaplayback",
+        note: "Applied when the WebView is created. Changing it with `setSettings` on a running WebView has **no** effect: `WKWebView.configuration` returns a fresh copy on every access, so the write is discarded. Recreate the WebView to change it.",
       ),
     ],
   )
@@ -1488,10 +1384,8 @@ as it can cause framerate drops on animations in Android 9 and lower (see [Hybri
     platforms: [
       IOSPlatform(
         apiName: "WKWebViewConfiguration.allowsPictureInPictureMediaPlayback",
-        apiUrl:
-            "https://developer.apple.com/documentation/webkit/wkwebviewconfiguration/1614792-allowspictureinpicturemediaplayb",
-        note:
-            "Applied when the WebView is created. Changing it with `setSettings` on a running WebView has **no** effect: `WKWebView.configuration` returns a fresh copy on every access, so the write is discarded. Recreate the WebView to change it.",
+        apiUrl: "https://developer.apple.com/documentation/webkit/wkwebviewconfiguration/1614792-allowspictureinpicturemediaplayb",
+        note: "Applied when the WebView is created. Changing it with `setSettings` on a running WebView has **no** effect: `WKWebView.configuration` returns a fresh copy on every access, so the write is discarded. Recreate the WebView to change it.",
       ),
     ],
   )
@@ -1505,8 +1399,7 @@ as it can cause framerate drops on animations in Android 9 and lower (see [Hybri
       IOSPlatform(
         available: "13.0",
         apiName: "WKPreferences.isFraudulentWebsiteWarningEnabled",
-        apiUrl:
-            "https://developer.apple.com/documentation/webkit/wkpreferences/3335219-isfraudulentwebsitewarningenable",
+        apiUrl: "https://developer.apple.com/documentation/webkit/wkpreferences/3335219-isfraudulentwebsitewarningenable",
       ),
     ],
   )
@@ -1520,10 +1413,8 @@ as it can cause framerate drops on animations in Android 9 and lower (see [Hybri
       IOSPlatform(
         available: "10",
         apiName: "WKWebViewConfiguration.dataDetectorTypes",
-        apiUrl:
-            "https://developer.apple.com/documentation/webkit/wkwebviewconfiguration/1641937-datadetectortypes",
-        note:
-            "Applied when the WebView is created. Changing it with `setSettings` on a running WebView has **no** effect: `WKWebView.configuration` returns a fresh copy on every access, so the write is discarded. Recreate the WebView to change it.",
+        apiUrl: "https://developer.apple.com/documentation/webkit/wkwebviewconfiguration/1641937-datadetectortypes",
+        note: "Applied when the WebView is created. Changing it with `setSettings` on a running WebView has **no** effect: `WKWebView.configuration` returns a fresh copy on every access, so the write is discarded. Recreate the WebView to change it.",
       ),
     ],
   )
@@ -1535,8 +1426,7 @@ as it can cause framerate drops on animations in Android 9 and lower (see [Hybri
     platforms: [
       IOSPlatform(
         available: "11.0",
-        note:
-            "Applied when the WebView is created. On a running WebView `setSettings` still copies the `HTTPCookieStorage.shared` cookies into the WebView's data store, but it cannot switch the WebView to a non-persistent store: that half of the work is written to a discarded copy of `WKWebView.configuration`. Recreate the WebView to change it.",
+        note: "Applied when the WebView is created. On a running WebView `setSettings` still copies the `HTTPCookieStorage.shared` cookies into the WebView's data store, but it cannot switch the WebView to a non-persistent store: that half of the work is written to a discarded copy of `WKWebView.configuration`. Recreate the WebView to change it.",
       ),
     ],
   )
@@ -1549,8 +1439,7 @@ as it can cause framerate drops on animations in Android 9 and lower (see [Hybri
       IOSPlatform(
         available: "13.0",
         apiName: "UIScrollView.automaticallyAdjustsScrollIndicatorInsets",
-        apiUrl:
-            "https://developer.apple.com/documentation/uikit/uiscrollview/3198043-automaticallyadjustsscrollindica",
+        apiUrl: "https://developer.apple.com/documentation/uikit/uiscrollview/3198043-automaticallyadjustsscrollindica",
       ),
     ],
   )
@@ -1563,8 +1452,7 @@ as it can cause framerate drops on animations in Android 9 and lower (see [Hybri
       IOSPlatform(
         available: "11.0",
         apiName: "UIView.accessibilityIgnoresInvertColors",
-        apiUrl:
-            "https://developer.apple.com/documentation/uikit/uiview/2865843-accessibilityignoresinvertcolors",
+        apiUrl: "https://developer.apple.com/documentation/uikit/uiview/2865843-accessibilityignoresinvertcolors",
       ),
     ],
   )
@@ -1576,8 +1464,7 @@ as it can cause framerate drops on animations in Android 9 and lower (see [Hybri
     platforms: [
       IOSPlatform(
         apiName: "UIScrollView.decelerationRate",
-        apiUrl:
-            "https://developer.apple.com/documentation/uikit/uiscrollview/1619438-decelerationrate",
+        apiUrl: "https://developer.apple.com/documentation/uikit/uiscrollview/1619438-decelerationrate",
       ),
     ],
   )
@@ -1591,8 +1478,7 @@ as it can cause framerate drops on animations in Android 9 and lower (see [Hybri
     platforms: [
       IOSPlatform(
         apiName: "UIScrollView.alwaysBounceVertical",
-        apiUrl:
-            "https://developer.apple.com/documentation/uikit/uiscrollview/1619383-alwaysbouncevertical",
+        apiUrl: "https://developer.apple.com/documentation/uikit/uiscrollview/1619383-alwaysbouncevertical",
       ),
     ],
   )
@@ -1606,8 +1492,7 @@ as it can cause framerate drops on animations in Android 9 and lower (see [Hybri
     platforms: [
       IOSPlatform(
         apiName: "UIScrollView.alwaysBounceHorizontal",
-        apiUrl:
-            "https://developer.apple.com/documentation/uikit/uiscrollview/1619393-alwaysbouncehorizontal",
+        apiUrl: "https://developer.apple.com/documentation/uikit/uiscrollview/1619393-alwaysbouncehorizontal",
       ),
     ],
   )
@@ -1621,8 +1506,7 @@ as it can cause framerate drops on animations in Android 9 and lower (see [Hybri
     platforms: [
       IOSPlatform(
         apiName: "UIScrollView.scrollsToTop",
-        apiUrl:
-            "https://developer.apple.com/documentation/uikit/uiscrollview/1619421-scrollstotop",
+        apiUrl: "https://developer.apple.com/documentation/uikit/uiscrollview/1619421-scrollstotop",
       ),
     ],
   )
@@ -1635,8 +1519,7 @@ as it can cause framerate drops on animations in Android 9 and lower (see [Hybri
     platforms: [
       IOSPlatform(
         apiName: "UIScrollView.isPagingEnabled",
-        apiUrl:
-            "https://developer.apple.com/documentation/uikit/uiscrollview/1619432-ispagingenabled",
+        apiUrl: "https://developer.apple.com/documentation/uikit/uiscrollview/1619432-ispagingenabled",
       ),
     ],
   )
@@ -1650,8 +1533,7 @@ as it can cause framerate drops on animations in Android 9 and lower (see [Hybri
     platforms: [
       IOSPlatform(
         apiName: "UIScrollView.maximumZoomScale",
-        apiUrl:
-            "https://developer.apple.com/documentation/uikit/uiscrollview/1619408-maximumzoomscale",
+        apiUrl: "https://developer.apple.com/documentation/uikit/uiscrollview/1619408-maximumzoomscale",
       ),
     ],
   )
@@ -1664,8 +1546,7 @@ as it can cause framerate drops on animations in Android 9 and lower (see [Hybri
     platforms: [
       IOSPlatform(
         apiName: "UIScrollView.minimumZoomScale",
-        apiUrl:
-            "https://developer.apple.com/documentation/uikit/uiscrollview/1619428-minimumzoomscale",
+        apiUrl: "https://developer.apple.com/documentation/uikit/uiscrollview/1619428-minimumzoomscale",
       ),
     ],
   )
@@ -1678,8 +1559,7 @@ as it can cause framerate drops on animations in Android 9 and lower (see [Hybri
       IOSPlatform(
         available: "11.0",
         apiName: "UIScrollView.contentInsetAdjustmentBehavior",
-        apiUrl:
-            "https://developer.apple.com/documentation/uikit/uiscrollview/2902261-contentinsetadjustmentbehavior",
+        apiUrl: "https://developer.apple.com/documentation/uikit/uiscrollview/2902261-contentinsetadjustmentbehavior",
       ),
     ],
   )
@@ -1695,8 +1575,7 @@ as it can cause framerate drops on animations in Android 9 and lower (see [Hybri
     platforms: [
       IOSPlatform(
         apiName: "UIScrollView.isDirectionalLockEnabled",
-        apiUrl:
-            "https://developer.apple.com/documentation/uikit/uiscrollview/1619390-isdirectionallockenabled",
+        apiUrl: "https://developer.apple.com/documentation/uikit/uiscrollview/1619390-isdirectionallockenabled",
       ),
     ],
   )
@@ -1711,8 +1590,7 @@ as it can cause framerate drops on animations in Android 9 and lower (see [Hybri
       IOSPlatform(
         available: "14.0",
         apiName: "WKWebView.mediaType",
-        apiUrl:
-            "https://developer.apple.com/documentation/webkit/wkwebview/3516410-mediatype",
+        apiUrl: "https://developer.apple.com/documentation/webkit/wkwebview/3516410-mediatype",
       ),
     ],
   )
@@ -1726,8 +1604,7 @@ as it can cause framerate drops on animations in Android 9 and lower (see [Hybri
       IOSPlatform(
         available: "14.0",
         apiName: "WKWebView.pageZoom",
-        apiUrl:
-            "https://developer.apple.com/documentation/webkit/wkwebview/3516411-pagezoom",
+        apiUrl: "https://developer.apple.com/documentation/webkit/wkwebview/3516411-pagezoom",
       ),
     ],
   )
@@ -1741,10 +1618,8 @@ as it can cause framerate drops on animations in Android 9 and lower (see [Hybri
       IOSPlatform(
         available: "14.0",
         apiName: "WKWebViewConfiguration.limitsNavigationsToAppBoundDomains",
-        apiUrl:
-            "https://developer.apple.com/documentation/webkit/wkwebviewconfiguration/3585117-limitsnavigationstoappbounddomai",
-        note:
-            "Applied when the WebView is created. Changing it with `setSettings` on a running WebView has **no** effect: `WKWebView.configuration` returns a fresh copy on every access, so the write is discarded. Recreate the WebView to change it.",
+        apiUrl: "https://developer.apple.com/documentation/webkit/wkwebviewconfiguration/3585117-limitsnavigationstoappbounddomai",
+        note: "Applied when the WebView is created. Changing it with `setSettings` on a running WebView has **no** effect: `WKWebView.configuration` returns a fresh copy on every access, so the write is discarded. Recreate the WebView to change it.",
       ),
     ],
   )
@@ -1855,8 +1730,7 @@ as it can cause framerate drops on animations in Android 9 and lower (see [Hybri
       IOSPlatform(
         available: "15.0",
         apiName: "WKWebView.underPageBackgroundColor",
-        apiUrl:
-            "https://developer.apple.com/documentation/webkit/wkwebview/3850574-underpagebackgroundcolor",
+        apiUrl: "https://developer.apple.com/documentation/webkit/wkwebview/3850574-underpagebackgroundcolor",
       ),
     ],
   )
@@ -1869,8 +1743,7 @@ as it can cause framerate drops on animations in Android 9 and lower (see [Hybri
       IOSPlatform(
         available: "15.0",
         apiName: "WKPreferences.isTextInteractionEnabled",
-        apiUrl:
-            "https://developer.apple.com/documentation/webkit/wkpreferences/3727362-istextinteractionenabled",
+        apiUrl: "https://developer.apple.com/documentation/webkit/wkpreferences/3727362-istextinteractionenabled",
       ),
     ],
   )
@@ -1884,8 +1757,7 @@ as it can cause framerate drops on animations in Android 9 and lower (see [Hybri
       IOSPlatform(
         available: "15.4",
         apiName: "WKPreferences.isSiteSpecificQuirksModeEnabled",
-        apiUrl:
-            "https://developer.apple.com/documentation/webkit/wkpreferences/3916069-issitespecificquirksmodeenabled",
+        apiUrl: "https://developer.apple.com/documentation/webkit/wkpreferences/3916069-issitespecificquirksmodeenabled",
       ),
     ],
   )
@@ -1898,10 +1770,8 @@ as it can cause framerate drops on animations in Android 9 and lower (see [Hybri
       IOSPlatform(
         available: "15.0",
         apiName: "WKWebViewConfiguration.upgradeKnownHostsToHTTPS",
-        apiUrl:
-            "https://developer.apple.com/documentation/webkit/wkwebviewconfiguration/3752243-upgradeknownhoststohttps",
-        note:
-            "Applied when the WebView is created. Changing it with `setSettings` on a running WebView has **no** effect: `WKWebView.configuration` returns a fresh copy on every access, so the write is discarded. Recreate the WebView to change it. Use `preferredHTTPSNavigationPolicy` instead, which is applied per navigation and does respond to `setSettings`.",
+        apiUrl: "https://developer.apple.com/documentation/webkit/wkwebviewconfiguration/3752243-upgradeknownhoststohttps",
+        note: "Applied when the WebView is created. Changing it with `setSettings` on a running WebView has **no** effect: `WKWebView.configuration` returns a fresh copy on every access, so the write is discarded. Recreate the WebView to change it. Use `preferredHTTPSNavigationPolicy` instead, which is applied per navigation and does respond to `setSettings`.",
       ),
     ],
   )
@@ -1915,8 +1785,7 @@ as it can cause framerate drops on animations in Android 9 and lower (see [Hybri
       IOSPlatform(
         available: "15.4",
         apiName: "WKPreferences.isElementFullscreenEnabled",
-        apiUrl:
-            "https://developer.apple.com/documentation/webkit/wkpreferences/3917769-iselementfullscreenenabled",
+        apiUrl: "https://developer.apple.com/documentation/webkit/wkpreferences/3917769-iselementfullscreenenabled",
       ),
     ],
   )
@@ -1930,8 +1799,7 @@ as it can cause framerate drops on animations in Android 9 and lower (see [Hybri
       IOSPlatform(
         available: "16.0",
         apiName: "WKWebView.isFindInteractionEnabled",
-        apiUrl:
-            "https://developer.apple.com/documentation/webkit/wkwebview/4002044-isfindinteractionenabled/",
+        apiUrl: "https://developer.apple.com/documentation/webkit/wkwebview/4002044-isfindinteractionenabled/",
       ),
     ],
   )
@@ -1944,8 +1812,7 @@ as it can cause framerate drops on animations in Android 9 and lower (see [Hybri
       IOSPlatform(
         available: "15.5",
         apiName: "WKWebView.setMinimumViewportInset",
-        apiUrl:
-            "https://developer.apple.com/documentation/webkit/wkwebview/3974127-setminimumviewportinset/",
+        apiUrl: "https://developer.apple.com/documentation/webkit/wkwebview/3974127-setminimumviewportinset/",
       ),
     ],
   )
@@ -1958,8 +1825,7 @@ as it can cause framerate drops on animations in Android 9 and lower (see [Hybri
       IOSPlatform(
         available: "15.5",
         apiName: "WKWebView.setMinimumViewportInset",
-        apiUrl:
-            "https://developer.apple.com/documentation/webkit/wkwebview/3974127-setminimumviewportinset/",
+        apiUrl: "https://developer.apple.com/documentation/webkit/wkwebview/3974127-setminimumviewportinset/",
       ),
     ],
   )
@@ -2004,10 +1870,8 @@ as it can cause framerate drops on animations in Android 9 and lower (see [Hybri
       IOSPlatform(
         available: "26.0",
         apiName: "WKWebView.obscuredContentInsets",
-        apiUrl:
-            "https://developer.apple.com/documentation/webkit/wkwebview/obscuredcontentinsets",
-        note:
-            "Shrinks the bounds of the layout viewport so fixed/sticky elements avoid app-drawn chrome; the page still paints edge to edge. The exact page-visible effect is WebKit's and is not characterised here — do not assume a relationship to `env(safe-area-inset-*)`. All values must be non-negative. Applied live, so `setSettings` works. **Not** a fix for the keyboard `contentInset` behaviour — that path is unchanged on iOS 15 through 18.",
+        apiUrl: "https://developer.apple.com/documentation/webkit/wkwebview/obscuredcontentinsets",
+        note: "Shrinks the bounds of the layout viewport so fixed/sticky elements avoid app-drawn chrome; the page still paints edge to edge. The exact page-visible effect is WebKit's and is not characterised here — do not assume a relationship to `env(safe-area-inset-*)`. All values must be non-negative. Applied live, so `setSettings` works. **Not** a fix for the keyboard `contentInset` behaviour — that path is unchanged on iOS 15 through 18.",
       ),
     ],
   )
@@ -2021,8 +1885,7 @@ as it can cause framerate drops on animations in Android 9 and lower (see [Hybri
       IOSPlatform(
         available: "16.4",
         apiName: "WKWebView.isInspectable",
-        apiUrl:
-            "https://developer.apple.com/documentation/webkit/wkwebview/4111163-isinspectable",
+        apiUrl: "https://developer.apple.com/documentation/webkit/wkwebview/4111163-isinspectable",
       ),
     ],
   )
@@ -2036,8 +1899,7 @@ as it can cause framerate drops on animations in Android 9 and lower (see [Hybri
       IOSPlatform(
         available: "16.4",
         apiName: "WKWebView.shouldPrintBackgrounds",
-        apiUrl:
-            "https://developer.apple.com/documentation/webkit/wkpreferences/4104043-shouldprintbackgrounds",
+        apiUrl: "https://developer.apple.com/documentation/webkit/wkpreferences/4104043-shouldprintbackgrounds",
       ),
     ],
   )
@@ -2138,8 +2000,7 @@ as it can cause framerate drops on animations in Android 9 and lower (see [Hybri
       AndroidPlatform(),
       IOSPlatform(
         apiName: "UIView.isUserInteractionEnabled",
-        apiUrl:
-            'https://developer.apple.com/documentation/uikit/uiview/1622577-isuserinteractionenabled',
+        apiUrl: 'https://developer.apple.com/documentation/uikit/uiview/1622577-isuserinteractionenabled',
       ),
     ],
   )
@@ -2151,13 +2012,11 @@ as it can cause framerate drops on animations in Android 9 and lower (see [Hybri
     platforms: [
       AndroidPlatform(
         apiName: "View.setAlpha",
-        apiUrl:
-            'https://developer.android.com/reference/android/view/View#setAlpha(float)',
+        apiUrl: 'https://developer.android.com/reference/android/view/View#setAlpha(float)',
       ),
       IOSPlatform(
         apiName: "UIView.alpha",
-        apiUrl:
-            'https://developer.apple.com/documentation/uikit/uiview/1622417-alpha',
+        apiUrl: 'https://developer.apple.com/documentation/uikit/uiview/1622417-alpha',
       ),
     ],
   )
@@ -2183,10 +2042,8 @@ as it can cause framerate drops on animations in Android 9 and lower (see [Hybri
       IOSPlatform(
         available: "16.0",
         apiName: "WKWebpagePreferences.lockdownModeEnabled",
-        apiUrl:
-            "https://developer.apple.com/documentation/webkit/wkwebpagepreferences/islockdownmodeenabled",
-        note:
-            "Defaults to the device's system setting. Passing `false` overrides a user who enabled Lockdown Mode.",
+        apiUrl: "https://developer.apple.com/documentation/webkit/wkwebpagepreferences/islockdownmodeenabled",
+        note: "Defaults to the device's system setting. Passing `false` overrides a user who enabled Lockdown Mode.",
       ),
     ],
   )
@@ -2220,14 +2077,40 @@ as it can cause framerate drops on animations in Android 9 and lower (see [Hybri
       IOSPlatform(
         available: "26.5",
         apiName: "WKWebpagePreferences.securityRestrictionMode",
-        apiUrl:
-            "https://developer.apple.com/documentation/webkit/wkwebpagepreferences/securityrestrictionmode",
-        note:
-            "Main-frame navigations only. Creates isolated WebContent processes. Lowering the mode fails silently while the system enforces Lockdown.",
+        apiUrl: "https://developer.apple.com/documentation/webkit/wkwebpagepreferences/securityrestrictionmode",
+        note: "Main-frame navigations only. Creates isolated WebContent processes. Lowering the mode fails silently while the system enforces Lockdown.",
       ),
     ],
   )
   SecurityRestrictionMode_? securityRestrictionMode;
+
+  ///Whether the WebView sends the Global Privacy Control (GPC) signal, the user's request that sites not
+  ///sell or share their data.
+  ///
+  ///When `true`, pages see `navigator.globalPrivacyControl` as `true`, and the `Sec-GPC: 1` request
+  ///header is sent; WebKit documents both for the main frame, its subframes and their subresources.
+  ///
+  ///**The header follows the secure context.** Measured on iOS 27.0: a page loaded over
+  ///`http://127.0.0.1` (a secure context) sent `Sec-GPC: 1` for itself and a subresource; the same server
+  ///reached over a LAN address with plain HTTP got no header, while that page still saw
+  ///`navigator.globalPrivacyControl` as `true`.
+  ///
+  ///Leaving this `null` leaves WebKit untouched: no header, and no `navigator.globalPrivacyControl` at all
+  ///(`undefined`). `false` is applied, so pages see it as `false`.
+  ///
+  ///Like [InAppWebViewSettings.securityRestrictionMode], this takes effect when changed through
+  ///`setSettings`: it is applied to each navigation's `WKWebpagePreferences`, so it reaches the next
+  ///navigation.
+  @SupportedPlatforms(
+    platforms: [
+      IOSPlatform(
+        available: "27.0",
+        apiName: "WKWebpagePreferences.globalPrivacyControlEnabled",
+        apiUrl: "https://developer.apple.com/documentation/webkit/wkwebpagepreferences/globalprivacycontrolenabled",
+      ),
+    ],
+  )
+  bool? globalPrivacyControlEnabled;
 
   ///Whether a top-level navigation should be upgraded to HTTPS, and what should happen when the
   ///upgrade fails.
@@ -2249,10 +2132,8 @@ as it can cause framerate drops on animations in Android 9 and lower (see [Hybri
       IOSPlatform(
         available: "18.2",
         apiName: "WKWebpagePreferences.preferredHTTPSNavigationPolicy",
-        apiUrl:
-            "https://developer.apple.com/documentation/webkit/wkwebpagepreferences/preferredhttpsnavigationpolicy",
-        note:
-            "Applies to top-level navigations only, and `upgradeKnownHostsToHTTPS` supersedes it for known hosts.",
+        apiUrl: "https://developer.apple.com/documentation/webkit/wkwebpagepreferences/preferredhttpsnavigationpolicy",
+        note: "Applies to top-level navigations only, and `upgradeKnownHostsToHTTPS` supersedes it for known hosts.",
       ),
     ],
   )
@@ -2275,10 +2156,8 @@ as it can cause framerate drops on animations in Android 9 and lower (see [Hybri
       IOSPlatform(
         available: "18.0",
         apiName: "WKWebViewConfiguration.supportsAdaptiveImageGlyph",
-        apiUrl:
-            "https://developer.apple.com/documentation/webkit/wkwebviewconfiguration/supportsadaptiveimageglyph",
-        note:
-            "Applied at WebView creation only; `WKWebView.configuration` is a copy, so later changes are ignored.",
+        apiUrl: "https://developer.apple.com/documentation/webkit/wkwebviewconfiguration/supportsadaptiveimageglyph",
+        note: "Applied at WebView creation only; `WKWebView.configuration` is a copy, so later changes are ignored.",
       ),
     ],
   )
@@ -2301,10 +2180,8 @@ as it can cause framerate drops on animations in Android 9 and lower (see [Hybri
       IOSPlatform(
         available: "18.0",
         apiName: "WKWebViewConfiguration.writingToolsBehavior",
-        apiUrl:
-            "https://developer.apple.com/documentation/webkit/wkwebviewconfiguration/writingtoolsbehavior",
-        note:
-            "Applied at WebView creation only; `WKWebView.configuration` is a copy, so later changes are ignored.",
+        apiUrl: "https://developer.apple.com/documentation/webkit/wkwebviewconfiguration/writingtoolsbehavior",
+        note: "Applied at WebView creation only; `WKWebView.configuration` is a copy, so later changes are ignored.",
       ),
     ],
   )
@@ -2333,10 +2210,8 @@ as it can cause framerate drops on animations in Android 9 and lower (see [Hybri
       IOSPlatform(
         available: "26.0",
         apiName: "WKWebViewConfiguration.showsSystemScreenTimeBlockingView",
-        apiUrl:
-            "https://developer.apple.com/documentation/webkit/wkwebviewconfiguration/showssystemscreentimeblockingview",
-        note:
-            "Applied at WebView creation only; `WKWebView.configuration` is a copy, so later changes are ignored. Setting it `false` hides the system blocking view but does not unblock the content.",
+        apiUrl: "https://developer.apple.com/documentation/webkit/wkwebviewconfiguration/showssystemscreentimeblockingview",
+        note: "Applied at WebView creation only; `WKWebView.configuration` is a copy, so later changes are ignored. Setting it `false` hides the system blocking view but does not unblock the content.",
       ),
     ],
   )
@@ -2358,8 +2233,7 @@ as it can cause framerate drops on animations in Android 9 and lower (see [Hybri
       AndroidPlatform(),
       IOSPlatform(
         available: "18.4",
-        note:
-            'While `false`, the WebView keeps WebKit\'s built-in file picker. Setting it `true` replaces that picker entirely with the [PlatformWebViewCreationParams.onShowFileChooser] event.',
+        note: 'While `false`, the WebView keeps WebKit\'s built-in file picker. Setting it `true` replaces that picker entirely with the [PlatformWebViewCreationParams.onShowFileChooser] event.',
       ),
     ],
   )
@@ -2384,8 +2258,7 @@ as it can cause framerate drops on animations in Android 9 and lower (see [Hybri
     platforms: [
       IOSPlatform(
         available: "26.0",
-        note:
-            'Gates the `WKUIDelegate` selector through a `responds(to:)` override, so while it is `false` WebKit does not see the delegate method at all.',
+        note: 'Gates the `WKUIDelegate` selector through a `responds(to:)` override, so while it is `false` WebKit does not see the delegate method at all.',
       ),
     ],
   )
@@ -2602,6 +2475,7 @@ as it can cause framerate drops on animations in Android 9 and lower (see [Hybri
     this.writingToolsBehavior,
     this.preferredHTTPSNavigationPolicy,
     this.securityRestrictionMode,
+    this.globalPrivacyControlEnabled,
     this.lockdownModeEnabled,
     this.showsSystemScreenTimeBlockingView = true,
     this.useOnShowFileChooser,

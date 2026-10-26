@@ -54,10 +54,8 @@ class PlatformProfileStoreCreationParams {
   platforms: [
     AndroidPlatform(
       apiName: 'ProfileStore',
-      apiUrl:
-          'https://developer.android.com/reference/androidx/webkit/ProfileStore',
-      note:
-          'available on Android only if [WebViewFeature.MULTI_PROFILE] feature is supported.',
+      apiUrl: 'https://developer.android.com/reference/androidx/webkit/ProfileStore',
+      note: 'available on Android only if [WebViewFeature.MULTI_PROFILE] feature is supported.',
     ),
   ],
 )
@@ -131,10 +129,8 @@ abstract class PlatformProfileStore extends PlatformInterface {
     platforms: [
       AndroidPlatform(
         apiName: 'ProfileStore.getAllProfileNames',
-        apiUrl:
-            'https://developer.android.com/reference/androidx/webkit/ProfileStore#getAllProfileNames()',
-        note:
-            'Requires [WebViewFeature.MULTI_PROFILE]. Returns an empty list if the feature is not supported.',
+        apiUrl: 'https://developer.android.com/reference/androidx/webkit/ProfileStore#getAllProfileNames()',
+        note: 'Requires [WebViewFeature.MULTI_PROFILE]. Returns an empty list if the feature is not supported.',
       ),
     ],
   )
@@ -165,10 +161,8 @@ abstract class PlatformProfileStore extends PlatformInterface {
     platforms: [
       AndroidPlatform(
         apiName: 'ProfileStore.getOrCreateProfile',
-        apiUrl:
-            'https://developer.android.com/reference/androidx/webkit/ProfileStore#getOrCreateProfile(java.lang.String)',
-        note:
-            'Requires [WebViewFeature.MULTI_PROFILE]. Returns `null` and creates nothing if the feature is not supported.',
+        apiUrl: 'https://developer.android.com/reference/androidx/webkit/ProfileStore#getOrCreateProfile(java.lang.String)',
+        note: 'Requires [WebViewFeature.MULTI_PROFILE]. Returns `null` and creates nothing if the feature is not supported.',
       ),
     ],
   )
@@ -201,10 +195,8 @@ abstract class PlatformProfileStore extends PlatformInterface {
     platforms: [
       AndroidPlatform(
         apiName: 'ProfileStore.deleteProfile',
-        apiUrl:
-            'https://developer.android.com/reference/androidx/webkit/ProfileStore#deleteProfile(java.lang.String)',
-        note:
-            'Requires [WebViewFeature.MULTI_PROFILE]. Returns `false` and deletes nothing if the feature is not supported.',
+        apiUrl: 'https://developer.android.com/reference/androidx/webkit/ProfileStore#deleteProfile(java.lang.String)',
+        note: 'Requires [WebViewFeature.MULTI_PROFILE]. Returns `false` and deletes nothing if the feature is not supported.',
       ),
     ],
   )
@@ -215,11 +207,14 @@ abstract class PlatformProfileStore extends PlatformInterface {
   }
 
   ///{@template nosferatu500_inappwebview_platform_interface.PlatformProfileStore.addCustomHeader}
-  ///Adds a [CustomHeader] sent on every request this profile makes to an origin matching the
-  ///header's [CustomHeader.originRules].
+  ///Adds a [CustomHeader] sent on this profile's requests to origins matching the header's
+  ///[CustomHeader.originRules].
   ///
-  ///It applies to requests started **after** this call, and covers subresources, prefetches and
-  ///requests made by service workers — not just navigations. `WebSocket` requests are excluded.
+  ///It covers navigations, subresources, `fetch()` / `XMLHttpRequest`, prefetches and requests made
+  ///by service workers. `WebSocket` requests are excluded. **It takes effect on document load**: a
+  ///page already loaded, or a service worker already running, when this is called keeps sending
+  ///what it sent before, and only documents and service workers started afterwards pick it up. The
+  ///same holds for [clearCustomHeader] and [clearAllCustomHeaders].
   ///Headers added here also appear in the request handed to
   ///[PlatformWebViewCreationParams.shouldInterceptRequest].
   ///
@@ -236,8 +231,7 @@ abstract class PlatformProfileStore extends PlatformInterface {
     platforms: [
       AndroidPlatform(
         apiName: 'Profile.addCustomHeader',
-        apiUrl:
-            'https://developer.android.com/reference/androidx/webkit/Profile#addCustomHeader(androidx.webkit.CustomHeader)',
+        apiUrl: 'https://developer.android.com/reference/androidx/webkit/Profile#addCustomHeader(androidx.webkit.CustomHeader)',
         note:
             'Requires [WebViewFeature.MULTI_PROFILE] and [WebViewFeature.CUSTOM_REQUEST_HEADERS]. '
             'The androidx API is on `Profile`; this class reaches it by name, which is how every other profile-scoped surface in this plugin works.',
@@ -266,8 +260,7 @@ abstract class PlatformProfileStore extends PlatformInterface {
     platforms: [
       AndroidPlatform(
         apiName: 'Profile.hasCustomHeader',
-        apiUrl:
-            'https://developer.android.com/reference/androidx/webkit/Profile#hasCustomHeader(java.lang.String)',
+        apiUrl: 'https://developer.android.com/reference/androidx/webkit/Profile#hasCustomHeader(java.lang.String)',
         note:
             'Requires [WebViewFeature.MULTI_PROFILE] and [WebViewFeature.CUSTOM_REQUEST_HEADERS]. '
             'The androidx API is on `Profile`; this class reaches it by name, which is how every other profile-scoped surface in this plugin works.',
@@ -301,8 +294,7 @@ abstract class PlatformProfileStore extends PlatformInterface {
     platforms: [
       AndroidPlatform(
         apiName: 'Profile.getCustomHeaders',
-        apiUrl:
-            'https://developer.android.com/reference/androidx/webkit/Profile#getCustomHeaders()',
+        apiUrl: 'https://developer.android.com/reference/androidx/webkit/Profile#getCustomHeaders()',
         note:
             'Requires [WebViewFeature.MULTI_PROFILE] and [WebViewFeature.CUSTOM_REQUEST_HEADERS]. '
             'The androidx API is on `Profile`; this class reaches it by name, which is how every other profile-scoped surface in this plugin works.',
@@ -335,8 +327,7 @@ abstract class PlatformProfileStore extends PlatformInterface {
     platforms: [
       AndroidPlatform(
         apiName: 'Profile.clearCustomHeader',
-        apiUrl:
-            'https://developer.android.com/reference/androidx/webkit/Profile#clearCustomHeader(java.lang.String)',
+        apiUrl: 'https://developer.android.com/reference/androidx/webkit/Profile#clearCustomHeader(java.lang.String)',
         note:
             'Requires [WebViewFeature.MULTI_PROFILE] and [WebViewFeature.CUSTOM_REQUEST_HEADERS]. '
             'The androidx API is on `Profile`; this class reaches it by name, which is how every other profile-scoped surface in this plugin works.',
@@ -365,8 +356,7 @@ abstract class PlatformProfileStore extends PlatformInterface {
     platforms: [
       AndroidPlatform(
         apiName: 'Profile.clearAllCustomHeaders',
-        apiUrl:
-            'https://developer.android.com/reference/androidx/webkit/Profile#clearAllCustomHeaders()',
+        apiUrl: 'https://developer.android.com/reference/androidx/webkit/Profile#clearAllCustomHeaders()',
         note:
             'Requires [WebViewFeature.MULTI_PROFILE] and [WebViewFeature.CUSTOM_REQUEST_HEADERS]. '
             'The androidx API is on `Profile`; this class reaches it by name, which is how every other profile-scoped surface in this plugin works.',
@@ -378,6 +368,80 @@ abstract class PlatformProfileStore extends PlatformInterface {
   }) {
     throw UnimplementedError(
       'clearAllCustomHeaders is not implemented on the current platform',
+    );
+  }
+
+  ///{@template nosferatu500_inappwebview_platform_interface.PlatformProfileStore.setCrossOriginIsolatedAllowlist}
+  ///Sets the origins where this profile allows
+  ///[cross-origin-isolated APIs](https://developer.mozilla.org/en-US/docs/Web/HTTP/Reference/Headers/Permissions-Policy/cross-origin-isolated),
+  ///such as `SharedArrayBuffer`.
+  ///
+  ///A page on a listed origin gets these APIs only if it also opts in with a
+  ///[`Document-Isolation-Policy`](https://developer.chrome.com/blog/document-isolation-policy)
+  ///response header. WebView does not enable them by default because it does not isolate renderer
+  ///processes per site; listing an origin accepts that weaker guarantee for it. **List only origins
+  ///you trust, and avoid the `*` wildcard.**
+  ///
+  ///[originRules] **replaces** the current allowlist; an empty set clears it. Each rule uses the
+  ///same syntax as [PlatformWebMessageListenerCreationParams.allowedOriginRules].
+  ///It also affects pages that are already loaded.
+  ///
+  ///Returns `false`, having changed nothing, when the profile can't be reached:
+  ///[WebViewFeature.CROSS_ORIGIN_ISOLATED_ALLOWLIST] or [WebViewFeature.MULTI_PROFILE] is
+  ///unsupported, or no profile has that [profileName]. `true` otherwise.
+  ///
+  ///Throws a `PlatformException` with code `ProfileStoreManager` when a rule can't be parsed.
+  ///{@endtemplate}
+  ///
+  ///{@macro nosferatu500_inappwebview_platform_interface.PlatformProfileStore.setCrossOriginIsolatedAllowlist.supported_platforms}
+  @SupportedPlatforms(
+    platforms: [
+      AndroidPlatform(
+        apiName: 'Profile.setCrossOriginIsolatedAllowlist',
+        apiUrl: 'https://developer.android.com/reference/androidx/webkit/Profile#setCrossOriginIsolatedAllowlist(java.util.Set%3Cjava.lang.String%3E)',
+        note:
+            'Requires [WebViewFeature.MULTI_PROFILE] and [WebViewFeature.CROSS_ORIGIN_ISOLATED_ALLOWLIST]. '
+            'The androidx API is on `Profile`; this class reaches it by name, which is how every other profile-scoped surface in this plugin works.',
+      ),
+    ],
+  )
+  Future<bool> setCrossOriginIsolatedAllowlist(
+    Set<String> originRules, {
+    @SupportedPlatforms(platforms: [AndroidPlatform()]) String? profileName,
+  }) {
+    throw UnimplementedError(
+      'setCrossOriginIsolatedAllowlist is not implemented on the current platform',
+    );
+  }
+
+  ///{@template nosferatu500_inappwebview_platform_interface.PlatformProfileStore.getCrossOriginIsolatedAllowlist}
+  ///This profile's cross-origin-isolated allowlist, set by [setCrossOriginIsolatedAllowlist].
+  ///
+  ///Each rule comes back with its port written out: `https://example.com` reads back as
+  ///`https://example.com:443`. An empty set means no allowlist.
+  ///
+  ///Returns `null` when the profile can't be reached:
+  ///[WebViewFeature.CROSS_ORIGIN_ISOLATED_ALLOWLIST] or [WebViewFeature.MULTI_PROFILE] is
+  ///unsupported, or no profile has that [profileName].
+  ///{@endtemplate}
+  ///
+  ///{@macro nosferatu500_inappwebview_platform_interface.PlatformProfileStore.getCrossOriginIsolatedAllowlist.supported_platforms}
+  @SupportedPlatforms(
+    platforms: [
+      AndroidPlatform(
+        apiName: 'Profile.getCrossOriginIsolatedAllowlist',
+        apiUrl: 'https://developer.android.com/reference/androidx/webkit/Profile#getCrossOriginIsolatedAllowlist()',
+        note:
+            'Requires [WebViewFeature.MULTI_PROFILE] and [WebViewFeature.CROSS_ORIGIN_ISOLATED_ALLOWLIST]. '
+            'The androidx API is on `Profile`; this class reaches it by name, which is how every other profile-scoped surface in this plugin works.',
+      ),
+    ],
+  )
+  Future<Set<String>?> getCrossOriginIsolatedAllowlist({
+    @SupportedPlatforms(platforms: [AndroidPlatform()]) String? profileName,
+  }) {
+    throw UnimplementedError(
+      'getCrossOriginIsolatedAllowlist is not implemented on the current platform',
     );
   }
 

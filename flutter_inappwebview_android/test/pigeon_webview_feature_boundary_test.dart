@@ -70,16 +70,19 @@ void main() {
     expect(received[isFeatureChannel]!.single, 'ALGORITHMIC_DARKENING');
   });
 
-  test('isFeatureSupported relays a false answer rather than defaulting', () async {
-    replies[isFeatureChannel] = false;
+  test(
+    'isFeatureSupported relays a false answer rather than defaulting',
+    () async {
+      replies[isFeatureChannel] = false;
 
-    // The old Dart read `invokeMethod<bool>(...) ?? false`, so a genuine false and an absent reply
-    // were the same value. They are different things and only one of them is an answer.
-    expect(
-      await feature.isFeatureSupported(WebViewFeature.ALGORITHMIC_DARKENING),
-      isFalse,
-    );
-  });
+      // The old Dart read `invokeMethod<bool>(...) ?? false`, so a genuine false and an absent reply
+      // were the same value. They are different things and only one of them is an answer.
+      expect(
+        await feature.isFeatureSupported(WebViewFeature.ALGORITHMIC_DARKENING),
+        isFalse,
+      );
+    },
+  );
 
   test(
     'isStartupFeatureSupported uses its own channel, not the other one',

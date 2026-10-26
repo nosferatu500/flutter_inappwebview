@@ -1,4 +1,5 @@
 import '../in_app_webview/platform_webview.dart';
+
 import 'package:nosferatu500_inappwebview_internal_annotations/nosferatu500_inappwebview_internal_annotations.dart';
 
 import '../util.dart';

@@ -262,46 +262,82 @@ public class MyCookieManager: ChannelDelegate, WKHTTPCookieStoreObserver {
         }
     }
     
-    public static func getCookies(url: String, result: @escaping FlutterResult) {
-        var cookieList: [[String: Any?]] = []
-        
-        if let urlHost = URL(string: url)?.host {
-            MyCookieManager.httpCookieStore.getAllCookies { (cookies) in
-                for cookie in cookies {
-                    if urlHost.hasSuffix(cookie.domain) || ".\(urlHost)".hasSuffix(cookie.domain) {
-                        var sameSite: String? = nil
-                        if let sameSiteValue = cookie.sameSitePolicy?.rawValue {
-                            sameSite = sameSiteValue.prefix(1).capitalized + sameSiteValue.dropFirst()
-                        }
+    /// The map `getCookies` sends to Dart for one cookie.
+    private static func cookieToMap(_ cookie: HTTPCookie) -> [String: Any?] {
+        var sameSite: String? = nil
+        if let sameSiteValue = cookie.sameSitePolicy?.rawValue {
+            sameSite = sameSiteValue.prefix(1).capitalized + sameSiteValue.dropFirst()
+        }
 
-                        
-                        var expiresDateTimestamp: Int64 = -1
-                        if let expiresDate = cookie.expiresDate?.timeIntervalSince1970 {
-                            // convert to milliseconds
-                            expiresDateTimestamp = Int64(expiresDate * 1000)
-                        }
-                        
-                        cookieList.append([
-                            "name": cookie.name,
-                            "value": cookie.value,
-                            "expiresDate": expiresDateTimestamp != -1 ? expiresDateTimestamp : nil,
-                            "isSessionOnly": cookie.isSessionOnly,
-                            "domain": cookie.domain,
-                            "sameSite": sameSite,
-                            "isSecure": cookie.isSecure,
-                            "isHttpOnly": cookie.isHTTPOnly,
-                            "path": cookie.path,
-                        ])
-                    }
-                }
-                result(cookieList)
+        var expiresDateTimestamp: Int64 = -1
+        if let expiresDate = cookie.expiresDate?.timeIntervalSince1970 {
+            // convert to milliseconds
+            expiresDateTimestamp = Int64(expiresDate * 1000)
+        }
+
+        return [
+            "name": cookie.name,
+            "value": cookie.value,
+            "expiresDate": expiresDateTimestamp != -1 ? expiresDateTimestamp : nil,
+            "isSessionOnly": cookie.isSessionOnly,
+            "domain": cookie.domain,
+            "sameSite": sameSite,
+            "isSecure": cookie.isSecure,
+            "isHttpOnly": cookie.isHTTPOnly,
+            "path": cookie.path,
+        ]
+    }
+
+    /// Whether a request to `url` would send `cookie`, by RFC 6265.
+    ///
+    /// Domain (5.1.3, 5.3 step 6): a leading dot marks a domain cookie, which matches the host and its
+    /// subdomains; without one the cookie is host-only and matches the host alone. Path (5.1.4): the request
+    /// path equals the cookie path, or extends it at a `/`. Secure (5.4): only over `https` or `wss`.
+    private static func cookieMatches(_ cookie: HTTPCookie, url: URL, host: String) -> Bool {
+        let host = host.lowercased()
+        let domain = cookie.domain.lowercased()
+        if domain.hasPrefix(".") {
+            let registrable = String(domain.dropFirst())
+            guard host == registrable || host.hasSuffix(domain) else { return false }
+        } else {
+            guard host == domain else { return false }
+        }
+
+        var requestPath = URLComponents(url: url, resolvingAgainstBaseURL: false)?.percentEncodedPath ?? ""
+        if requestPath.isEmpty {
+            requestPath = "/"
+        }
+        let cookiePath = cookie.path
+        let pathMatches = requestPath == cookiePath
+            || (requestPath.hasPrefix(cookiePath)
+                && (cookiePath.hasSuffix("/") || requestPath.dropFirst(cookiePath.count).hasPrefix("/")))
+        guard pathMatches else { return false }
+
+        if cookie.isSecure {
+            let scheme = url.scheme?.lowercased() ?? ""
+            guard scheme == "https" || scheme == "wss" else { return false }
+        }
+        return true
+    }
+
+    /// The cookies a request to `url` would send: domain or host-only, path and Secure (§353). On iOS 27 that
+    /// is WebKit's own answer (`WKHTTPCookieStore.getCookies(for:)`); below, `cookieMatches` over every cookie,
+    /// which reproduces it (measured: the same results on iOS 26.5 as WebKit's on iOS 27.0).
+    public static func getCookies(url: String, result: @escaping FlutterResult) {
+        guard let parsedUrl = URL(string: url), let urlHost = parsedUrl.host else {
+            print("Cannot get WebView cookies. No HOST found for URL: \(url)")
+            result([])
+            return
+        }
+        if #available(iOS 27.0, *) {
+            MyCookieManager.httpCookieStore.getCookies(for: parsedUrl) { (cookies) in
+                result(cookies.map { cookieToMap($0) })
             }
             return
-        } else {
-            print("Cannot get WebView cookies. No HOST found for URL: \(url)")
         }
-        
-        result(cookieList)
+        MyCookieManager.httpCookieStore.getAllCookies { (cookies) in
+            result(cookies.filter { cookieMatches($0, url: parsedUrl, host: urlHost) }.map { cookieToMap($0) })
+        }
     }
     
     public static func getAllCookies(result: @escaping FlutterResult) {

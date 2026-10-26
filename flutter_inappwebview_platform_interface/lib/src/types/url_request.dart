@@ -1,4 +1,5 @@
 import 'dart:typed_data';
+
 import 'package:nosferatu500_inappwebview_internal_annotations/nosferatu500_inappwebview_internal_annotations.dart';
 
 import '../web_uri.dart';
@@ -31,8 +32,7 @@ class URLRequest_ {
     platforms: [
       IOSPlatform(
         apiName: "URLRequest.allowsCellularAccess",
-        apiUrl:
-            "https://developer.apple.com/documentation/foundation/urlrequest/2011607-allowscellularaccess/",
+        apiUrl: "https://developer.apple.com/documentation/foundation/urlrequest/2011607-allowscellularaccess/",
       ),
     ],
   )
@@ -44,8 +44,7 @@ class URLRequest_ {
       IOSPlatform(
         available: "13.0",
         apiName: "URLRequest.allowsConstrainedNetworkAccess",
-        apiUrl:
-            "https://developer.apple.com/documentation/foundation/urlrequest/3358304-allowsconstrainednetworkaccess",
+        apiUrl: "https://developer.apple.com/documentation/foundation/urlrequest/3358304-allowsconstrainednetworkaccess",
       ),
     ],
   )
@@ -57,8 +56,7 @@ class URLRequest_ {
       IOSPlatform(
         available: "13.0",
         apiName: "URLRequest.allowsExpensiveNetworkAccess",
-        apiUrl:
-            "https://developer.apple.com/documentation/foundation/urlrequest/3358305-allowsexpensivenetworkaccess",
+        apiUrl: "https://developer.apple.com/documentation/foundation/urlrequest/3358305-allowsexpensivenetworkaccess",
       ),
     ],
   )
@@ -69,8 +67,7 @@ class URLRequest_ {
     platforms: [
       IOSPlatform(
         apiName: "URLRequest.cachePolicy",
-        apiUrl:
-            "https://developer.apple.com/documentation/foundation/urlrequest/2011593-cachepolicy",
+        apiUrl: "https://developer.apple.com/documentation/foundation/urlrequest/2011593-cachepolicy",
       ),
     ],
   )
@@ -81,8 +78,7 @@ class URLRequest_ {
     platforms: [
       IOSPlatform(
         apiName: "URLRequest.httpShouldHandleCookies",
-        apiUrl:
-            "https://developer.apple.com/documentation/foundation/urlrequest/2011548-httpshouldhandlecookies",
+        apiUrl: "https://developer.apple.com/documentation/foundation/urlrequest/2011548-httpshouldhandlecookies",
       ),
     ],
   )
@@ -93,8 +89,7 @@ class URLRequest_ {
     platforms: [
       IOSPlatform(
         apiName: "URLRequest.httpShouldUsePipelining",
-        apiUrl:
-            "https://developer.apple.com/documentation/foundation/urlrequest/2011508-httpshouldusepipelining",
+        apiUrl: "https://developer.apple.com/documentation/foundation/urlrequest/2011508-httpshouldusepipelining",
       ),
     ],
   )
@@ -105,8 +100,7 @@ class URLRequest_ {
     platforms: [
       IOSPlatform(
         apiName: "URLRequest.networkServiceType",
-        apiUrl:
-            "https://developer.apple.com/documentation/foundation/urlrequest/2011409-networkservicetype",
+        apiUrl: "https://developer.apple.com/documentation/foundation/urlrequest/2011409-networkservicetype",
       ),
     ],
   )
@@ -117,8 +111,7 @@ class URLRequest_ {
     platforms: [
       IOSPlatform(
         apiName: "URLRequest.timeoutInterval",
-        apiUrl:
-            "https://developer.apple.com/documentation/foundation/urlrequest/2011509-timeoutinterval",
+        apiUrl: "https://developer.apple.com/documentation/foundation/urlrequest/2011509-timeoutinterval",
       ),
     ],
   )
@@ -130,8 +123,7 @@ class URLRequest_ {
     platforms: [
       IOSPlatform(
         apiName: "URLRequest.mainDocumentURL",
-        apiUrl:
-            "https://developer.apple.com/documentation/foundation/urlrequest/2011552-maindocumenturl",
+        apiUrl: "https://developer.apple.com/documentation/foundation/urlrequest/2011552-maindocumenturl",
       ),
     ],
   )
@@ -145,8 +137,7 @@ class URLRequest_ {
       IOSPlatform(
         available: "14.5",
         apiName: "URLRequest.assumesHTTP3Capable",
-        apiUrl:
-            "https://developer.apple.com/documentation/foundation/urlrequest/3738175-assumeshttp3capable",
+        apiUrl: "https://developer.apple.com/documentation/foundation/urlrequest/3738175-assumeshttp3capable",
       ),
     ],
   )
@@ -160,8 +151,7 @@ class URLRequest_ {
       IOSPlatform(
         available: "15.0",
         apiName: "URLRequest.attribution",
-        apiUrl:
-            "https://developer.apple.com/documentation/foundation/urlrequest/3767318-attribution",
+        apiUrl: "https://developer.apple.com/documentation/foundation/urlrequest/3767318-attribution",
       ),
     ],
   )

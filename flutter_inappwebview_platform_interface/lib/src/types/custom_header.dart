@@ -4,14 +4,15 @@ import 'enum_method.dart';
 
 part 'custom_header.g.dart';
 
-///An HTTP header name/value pair sent on every request to an origin matching [originRules].
+///An HTTP header name/value pair sent on requests to origins matching [originRules].
 ///
 ///Added with [PlatformProfileStore.addCustomHeader] and scoped to a browsing profile, so it
-///applies to **every** request that profile makes to a matching origin — including subresources,
+///applies to the requests that profile makes to a matching origin — including subresources,
 ///prefetches and requests issued by service workers — not just to navigations. It is therefore a
 ///very different thing from the per-request `headers` on [URLRequest], which apply to one load.
 ///
-///`WebSocket` requests are **not** covered.
+///It takes effect on document load: documents and service workers already running when it is added
+///don't send it. `WebSocket` requests are **not** covered.
 @ExchangeableObject()
 class CustomHeader_ {
   ///A valid HTTP header name, for example `X-Tenant`.

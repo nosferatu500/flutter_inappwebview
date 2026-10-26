@@ -85,63 +85,60 @@ void screenTime() {
   // read the property back at all and simply reports what Dart last sent — so on iOS 17.5 the
   // second half of this test would assert the Dart round-trip, not the native contract, and would
   // fail while nothing was wrong.
-  skippableTestWidgets(
-    'showsSystemScreenTimeBlockingView is creation-only',
-    (WidgetTester tester) async {
-      final Completer<InAppWebViewController> controllerCompleter =
-          Completer<InAppWebViewController>();
-      final Completer<void> pageLoaded = Completer<void>();
+  skippableTestWidgets('showsSystemScreenTimeBlockingView is creation-only', (
+    WidgetTester tester,
+  ) async {
+    final Completer<InAppWebViewController> controllerCompleter =
+        Completer<InAppWebViewController>();
+    final Completer<void> pageLoaded = Completer<void>();
 
-      await tester.pumpWidget(
-        Directionality(
-          textDirection: TextDirection.ltr,
-          child: InAppWebView(
-            key: GlobalKey(),
-            initialUrlRequest: URLRequest(url: url),
-            initialSettings: InAppWebViewSettings(
-              showsSystemScreenTimeBlockingView: false,
-              minimumFontSize: 8,
-            ),
-            onWebViewCreated: (controller) {
-              controllerCompleter.complete(controller);
-            },
-            onLoadStop: (controller, url) {
-              if (!pageLoaded.isCompleted) {
-                pageLoaded.complete();
-              }
-            },
+    await tester.pumpWidget(
+      Directionality(
+        textDirection: TextDirection.ltr,
+        child: InAppWebView(
+          key: GlobalKey(),
+          initialUrlRequest: URLRequest(url: url),
+          initialSettings: InAppWebViewSettings(
+            showsSystemScreenTimeBlockingView: false,
+            minimumFontSize: 8,
           ),
+          onWebViewCreated: (controller) {
+            controllerCompleter.complete(controller);
+          },
+          onLoadStop: (controller, url) {
+            if (!pageLoaded.isCompleted) {
+              pageLoaded.complete();
+            }
+          },
         ),
-      );
-      await tester.pumpAndSettle();
-      final InAppWebViewController controller =
-          await controllerCompleter.future;
-      await pageLoaded.future;
+      ),
+    );
+    await tester.pumpAndSettle();
+    final InAppWebViewController controller = await controllerCompleter.future;
+    await pageLoaded.future;
 
-      var settings = await controller.getSettings();
-      expect(settings, isNotNull);
-      expect(
-        settings!.showsSystemScreenTimeBlockingView,
-        false,
-        reason: 'the creation-time value must reach the real configuration',
-      );
+    var settings = await controller.getSettings();
+    expect(settings, isNotNull);
+    expect(
+      settings!.showsSystemScreenTimeBlockingView,
+      false,
+      reason: 'the creation-time value must reach the real configuration',
+    );
 
-      await controller.setSettings(
-        settings: InAppWebViewSettings(
-          showsSystemScreenTimeBlockingView: true,
-          minimumFontSize: 22,
-        ),
-      );
+    await controller.setSettings(
+      settings: InAppWebViewSettings(
+        showsSystemScreenTimeBlockingView: true,
+        minimumFontSize: 22,
+      ),
+    );
 
-      settings = await controller.getSettings();
-      expect(settings, isNotNull);
-      expect(settings!.minimumFontSize, 22, reason: 'the control must change');
-      expect(
-        settings.showsSystemScreenTimeBlockingView,
-        false,
-        reason: 'creation-only: setSettings must not be able to change it',
-      );
-    },
-    skip: shouldSkip || (_iosMajorVersion() ?? 0) < 26,
-  );
+    settings = await controller.getSettings();
+    expect(settings, isNotNull);
+    expect(settings!.minimumFontSize, 22, reason: 'the control must change');
+    expect(
+      settings.showsSystemScreenTimeBlockingView,
+      false,
+      reason: 'creation-only: setSettings must not be able to change it',
+    );
+  }, skip: shouldSkip || (_iosMajorVersion() ?? 0) < 26);
 }

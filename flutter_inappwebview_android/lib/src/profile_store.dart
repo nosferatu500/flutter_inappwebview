@@ -141,6 +141,24 @@ class AndroidProfileStore extends PlatformProfileStore implements Disposable {
       _hostApi.clearAllCustomHeaders(profileName);
 
   @override
+  Future<bool> setCrossOriginIsolatedAllowlist(
+    Set<String> originRules, {
+    String? profileName,
+  }) => _hostApi.setCrossOriginIsolatedAllowlist(
+    originRules.toList(),
+    profileName,
+  );
+
+  @override
+  Future<Set<String>?> getCrossOriginIsolatedAllowlist({
+    String? profileName,
+  }) async {
+    // `null` for an unresolvable profile or a missing feature; `{}` means no allowlist.
+    return (await _hostApi.getCrossOriginIsolatedAllowlist(profileName))
+        ?.toSet();
+  }
+
+  @override
   Future<bool> deleteProfile({required String name}) async {
     // Throws a `PlatformException(code: "ProfileStoreManager")` when the platform refuses the
     // deletion — a living WebView holds the profile, the profile was loaded this run, or the name is

@@ -61,8 +61,7 @@ void main() {
       expect(
         calls.single.arguments as Map<Object?, Object?>,
         <Object?, Object?>{'isNull': false},
-        reason:
-            'the native side only needs to know whether to add or remove itself as the observer',
+        reason: 'the native side only needs to know whether to add or remove itself as the observer',
       );
       expect(cookieManager.cookieStoreObserver, isNotNull);
 

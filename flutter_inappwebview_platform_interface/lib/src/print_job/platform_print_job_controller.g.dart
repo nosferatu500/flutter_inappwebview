@@ -8,14 +8,6 @@ part of 'platform_print_job_controller.dart';
 
 extension _PlatformPrintJobControllerCreationParamsClassSupported
     on PlatformPrintJobControllerCreationParams {
-  ///{@template nosferatu500_inappwebview_platform_interface.PlatformPrintJobControllerCreationParams.supported_platforms}
-  ///
-  ///**Officially Supported Platforms/Implementations**:
-  ///- Android WebView
-  ///- iOS WKWebView
-  ///
-  ///Use the [PlatformPrintJobControllerCreationParams.isClassSupported] method to check if this class is supported at runtime.
-  ///{@endtemplate}
   static bool isClassSupported({TargetPlatform? platform}) {
     return ((kIsWeb && platform != null) || !kIsWeb) &&
         [
@@ -26,6 +18,15 @@ extension _PlatformPrintJobControllerCreationParamsClassSupported
 }
 
 ///List of [PlatformPrintJobControllerCreationParams]'s properties that can be used to check i they are supported or not by the current platform.
+///
+///{@template nosferatu500_inappwebview_platform_interface.PlatformPrintJobControllerCreationParams.supported_platforms}
+///
+///**Officially Supported Platforms/Implementations**:
+///- Android WebView
+///- iOS WKWebView
+///
+///Use the [PlatformPrintJobControllerCreationParams.isClassSupported] method to check if this class is supported at runtime.
+///{@endtemplate}
 enum PlatformPrintJobControllerCreationParamsProperty {
   ///Can be used to check if the [PlatformPrintJobControllerCreationParams.id] property is supported at runtime.
   ///
@@ -57,28 +58,16 @@ extension _PlatformPrintJobControllerCreationParamsPropertySupported
   }
 }
 
-extension _PlatformPrintJobControllerClassSupported
-    on PlatformPrintJobController {
-  ///{@template nosferatu500_inappwebview_platform_interface.PlatformPrintJobController.supported_platforms}
-  ///
-  ///**Officially Supported Platforms/Implementations**:
-  ///- Android WebView
-  ///- iOS WKWebView
-  ///
-  ///Use the [PlatformPrintJobController.isClassSupported] method to check if this class is supported at runtime.
-  ///{@endtemplate}
-  // Unused: [PlatformPrintJobController.isClassSupported] answers through its creation params. Kept for the doc template above.
-  // ignore: unused_element
-  static bool isClassSupported({TargetPlatform? platform}) {
-    return ((kIsWeb && platform != null) || !kIsWeb) &&
-        [
-          TargetPlatform.android,
-          TargetPlatform.iOS,
-        ].contains(platform ?? defaultTargetPlatform);
-  }
-}
-
 ///List of [PlatformPrintJobController]'s properties that can be used to check i they are supported or not by the current platform.
+///
+///{@template nosferatu500_inappwebview_platform_interface.PlatformPrintJobController.supported_platforms}
+///
+///**Officially Supported Platforms/Implementations**:
+///- Android WebView
+///- iOS WKWebView
+///
+///Use the [PlatformPrintJobController.isClassSupported] method to check if this class is supported at runtime.
+///{@endtemplate}
 enum PlatformPrintJobControllerProperty {
   ///Can be used to check if the [PlatformPrintJobController.onComplete] property is supported at runtime.
   ///
@@ -90,8 +79,8 @@ enum PlatformPrintJobControllerProperty {
   ///- iOS WKWebView ([Official API - UIPrintInteractionController.CompletionHandler](https://developer.apple.com/documentation/uikit/uiprintinteractioncontroller/completionhandler))
   ///
   ///**Parameters - Officially Supported Platforms/Implementations**:
-  ///- [completed]: all platforms
-  ///- [error]: all platforms
+  ///- `completed`: all platforms
+  ///- `error`: all platforms
   ///
   ///Use the [PlatformPrintJobController.isPropertySupported] method to check if this property is supported at runtime.
   ///{@endtemplate}
@@ -136,7 +125,7 @@ enum PlatformPrintJobControllerMethod {
   ///- iOS WKWebView
   ///
   ///**Parameters - Officially Supported Platforms/Implementations**:
-  ///- [animated]: all platforms
+  ///- `animated`: all platforms
   ///
   ///Use the [PlatformPrintJobController.isMethodSupported] method to check if this method is supported at runtime.
   ///{@endtemplate}
@@ -187,9 +176,8 @@ extension _PlatformPrintJobControllerMethodSupported
     switch (method) {
       case PlatformPrintJobControllerMethod.cancel:
         return ((kIsWeb && platform != null) || !kIsWeb) &&
-            [
-              TargetPlatform.android,
-            ].contains(platform ?? defaultTargetPlatform);
+            [TargetPlatform.android]
+                .contains(platform ?? defaultTargetPlatform);
       case PlatformPrintJobControllerMethod.dismiss:
         return ((kIsWeb && platform != null) || !kIsWeb) &&
             [TargetPlatform.iOS].contains(platform ?? defaultTargetPlatform);
@@ -207,9 +195,8 @@ extension _PlatformPrintJobControllerMethodSupported
             ].contains(platform ?? defaultTargetPlatform);
       case PlatformPrintJobControllerMethod.restart:
         return ((kIsWeb && platform != null) || !kIsWeb) &&
-            [
-              TargetPlatform.android,
-            ].contains(platform ?? defaultTargetPlatform);
+            [TargetPlatform.android]
+                .contains(platform ?? defaultTargetPlatform);
     }
   }
 }

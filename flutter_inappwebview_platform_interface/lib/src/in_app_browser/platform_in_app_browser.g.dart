@@ -7,14 +7,6 @@ part of 'platform_in_app_browser.dart';
 // **************************************************************************
 
 extension _PlatformInAppBrowserClassSupported on PlatformInAppBrowser {
-  ///{@template nosferatu500_inappwebview_platform_interface.PlatformInAppBrowser.supported_platforms}
-  ///
-  ///**Officially Supported Platforms/Implementations**:
-  ///- Android WebView
-  ///- iOS WKWebView
-  ///
-  ///Use the [PlatformInAppBrowser.isClassSupported] method to check if this class is supported at runtime.
-  ///{@endtemplate}
   static bool isClassSupported({TargetPlatform? platform}) {
     return ((kIsWeb && platform != null) || !kIsWeb) &&
         [
@@ -25,6 +17,15 @@ extension _PlatformInAppBrowserClassSupported on PlatformInAppBrowser {
 }
 
 ///List of [PlatformInAppBrowser]'s properties that can be used to check i they are supported or not by the current platform.
+///
+///{@template nosferatu500_inappwebview_platform_interface.PlatformInAppBrowser.supported_platforms}
+///
+///**Officially Supported Platforms/Implementations**:
+///- Android WebView
+///- iOS WKWebView
+///
+///Use the [PlatformInAppBrowser.isClassSupported] method to check if this class is supported at runtime.
+///{@endtemplate}
 enum PlatformInAppBrowserProperty {
   ///Can be used to check if the [PlatformInAppBrowser.contextMenu] property is supported at runtime.
   ///
@@ -157,7 +158,7 @@ enum PlatformInAppBrowserMethod {
   ///- iOS WKWebView 14.0+
   ///
   ///**Parameters - Officially Supported Platforms/Implementations**:
-  ///- [menuItem]: all platforms
+  ///- `menuItem`: all platforms
   ///
   ///Use the [PlatformInAppBrowser.isMethodSupported] method to check if this method is supported at runtime.
   ///{@endtemplate}
@@ -172,7 +173,7 @@ enum PlatformInAppBrowserMethod {
   ///- iOS WKWebView 14.0+
   ///
   ///**Parameters - Officially Supported Platforms/Implementations**:
-  ///- [menuItems]: all platforms
+  ///- `menuItems`: all platforms
   ///
   ///Use the [PlatformInAppBrowser.isMethodSupported] method to check if this method is supported at runtime.
   ///{@endtemplate}
@@ -223,7 +224,7 @@ enum PlatformInAppBrowserMethod {
   ///- iOS WKWebView 14.0+
   ///
   ///**Parameters - Officially Supported Platforms/Implementations**:
-  ///- [menuItem]: all platforms
+  ///- `menuItem`: all platforms
   ///
   ///Use the [PlatformInAppBrowser.isMethodSupported] method to check if this method is supported at runtime.
   ///{@endtemplate}
@@ -274,12 +275,12 @@ enum PlatformInAppBrowserMethod {
   ///- iOS WKWebView
   ///
   ///**Parameters - Officially Supported Platforms/Implementations**:
-  ///- [data]: all platforms
-  ///- [mimeType]: all platforms
-  ///- [encoding]: all platforms
-  ///- [baseUrl]: all platforms
-  ///- [historyUrl]: all platforms
-  ///- [settings]: all platforms
+  ///- `data`: all platforms
+  ///- `mimeType`: all platforms
+  ///- `encoding`: all platforms
+  ///- `baseUrl`: all platforms
+  ///- `historyUrl`: all platforms
+  ///- `settings`: all platforms
   ///
   ///Use the [PlatformInAppBrowser.isMethodSupported] method to check if this method is supported at runtime.
   ///{@endtemplate}
@@ -294,8 +295,8 @@ enum PlatformInAppBrowserMethod {
   ///- iOS WKWebView
   ///
   ///**Parameters - Officially Supported Platforms/Implementations**:
-  ///- [assetFilePath]: all platforms
-  ///- [settings]: all platforms
+  ///- `assetFilePath`: all platforms
+  ///- `settings`: all platforms
   ///
   ///Use the [PlatformInAppBrowser.isMethodSupported] method to check if this method is supported at runtime.
   ///{@endtemplate}
@@ -310,8 +311,8 @@ enum PlatformInAppBrowserMethod {
   ///- iOS WKWebView
   ///
   ///**Parameters - Officially Supported Platforms/Implementations**:
-  ///- [urlRequest]: all platforms
-  ///- [settings]: all platforms
+  ///- `urlRequest`: all platforms
+  ///- `settings`: all platforms
   ///
   ///Use the [PlatformInAppBrowser.isMethodSupported] method to check if this method is supported at runtime.
   ///{@endtemplate}
@@ -326,7 +327,7 @@ enum PlatformInAppBrowserMethod {
   ///- iOS WKWebView
   ///
   ///**Parameters - Officially Supported Platforms/Implementations**:
-  ///- [url]: all platforms
+  ///- `url`: all platforms
   ///
   ///Use the [PlatformInAppBrowser.isMethodSupported] method to check if this method is supported at runtime.
   ///{@endtemplate}
@@ -353,7 +354,7 @@ enum PlatformInAppBrowserMethod {
   ///- iOS WKWebView 14.0+
   ///
   ///**Parameters - Officially Supported Platforms/Implementations**:
-  ///- [menuItem]: all platforms
+  ///- `menuItem`: all platforms
   ///
   ///Use the [PlatformInAppBrowser.isMethodSupported] method to check if this method is supported at runtime.
   ///{@endtemplate}
@@ -368,7 +369,7 @@ enum PlatformInAppBrowserMethod {
   ///- iOS WKWebView 14.0+
   ///
   ///**Parameters - Officially Supported Platforms/Implementations**:
-  ///- [menuItems]: all platforms
+  ///- `menuItems`: all platforms
   ///
   ///Use the [PlatformInAppBrowser.isMethodSupported] method to check if this method is supported at runtime.
   ///{@endtemplate}
@@ -383,7 +384,7 @@ enum PlatformInAppBrowserMethod {
   ///- iOS WKWebView
   ///
   ///**Parameters - Officially Supported Platforms/Implementations**:
-  ///- [settings]: all platforms
+  ///- `settings`: all platforms
   ///
   ///Use the [PlatformInAppBrowser.isMethodSupported] method to check if this method is supported at runtime.
   ///{@endtemplate}
@@ -532,7 +533,7 @@ enum PlatformInAppBrowserEventsMethod {
   ///- iOS WKWebView
   ///
   ///**Parameters - Officially Supported Platforms/Implementations**:
-  ///- [ajaxRequest]: all platforms
+  ///- `ajaxRequest`: all platforms
   ///
   ///Use the [PlatformInAppBrowserEvents.isMethodSupported] method to check if this method is supported at runtime.
   ///{@endtemplate}
@@ -548,7 +549,7 @@ enum PlatformInAppBrowserEventsMethod {
   ///- iOS WKWebView
   ///
   ///**Parameters - Officially Supported Platforms/Implementations**:
-  ///- [ajaxRequest]: all platforms
+  ///- `ajaxRequest`: all platforms
   ///
   ///Use the [PlatformInAppBrowserEvents.isMethodSupported] method to check if this method is supported at runtime.
   ///{@endtemplate}
@@ -574,8 +575,8 @@ enum PlatformInAppBrowserEventsMethod {
   ///- iOS WKWebView 15.0+
   ///
   ///**Parameters - Officially Supported Platforms/Implementations**:
-  ///- [oldState]: all platforms
-  ///- [newState]: all platforms
+  ///- `oldState`: all platforms
+  ///- `newState`: all platforms
   ///
   ///Use the [PlatformInAppBrowserEvents.isMethodSupported] method to check if this method is supported at runtime.
   ///{@endtemplate}
@@ -603,7 +604,7 @@ enum PlatformInAppBrowserEventsMethod {
   ///    - This event is implemented using JavaScript.
   ///
   ///**Parameters - Officially Supported Platforms/Implementations**:
-  ///- [consoleMessage]: all platforms
+  ///- `consoleMessage`: all platforms
   ///
   ///Use the [PlatformInAppBrowserEvents.isMethodSupported] method to check if this method is supported at runtime.
   ///{@endtemplate}
@@ -617,8 +618,8 @@ enum PlatformInAppBrowserEventsMethod {
   ///- iOS WKWebView
   ///
   ///**Parameters - Officially Supported Platforms/Implementations**:
-  ///- [oldContentSize]: all platforms
-  ///- [newContentSize]: all platforms
+  ///- `oldContentSize`: all platforms
+  ///- `newContentSize`: all platforms
   ///
   ///Use the [PlatformInAppBrowserEvents.isMethodSupported] method to check if this method is supported at runtime.
   ///{@endtemplate}
@@ -635,7 +636,7 @@ enum PlatformInAppBrowserEventsMethod {
   ///    - Setting these initial settings [InAppWebViewSettings.applicationNameForUserAgent], [InAppWebViewSettings.javaScriptCanOpenWindowsAutomatically], [InAppWebViewSettings.javaScriptEnabled], [InAppWebViewSettings.minimumFontSize], [InAppWebViewSettings.preferredContentMode], [InAppWebViewSettings.incognito], [InAppWebViewSettings.cacheEnabled], [InAppWebViewSettings.mediaPlaybackRequiresUserGesture], [InAppWebViewSettings.resourceCustomSchemes], [InAppWebViewSettings.sharedCookiesEnabled], [InAppWebViewSettings.allowsAirPlayForMediaPlayback], [InAppWebViewSettings.allowsPictureInPictureMediaPlayback], [InAppWebViewSettings.isFraudulentWebsiteWarningEnabled], [InAppWebViewSettings.allowsInlineMediaPlayback], [InAppWebViewSettings.suppressesIncrementalRendering], [InAppWebViewSettings.ignoresViewportScaleLimits], [InAppWebViewSettings.limitsNavigationsToAppBoundDomains], [InAppWebViewSettings.upgradeKnownHostsToHTTPS], will have no effect due to a `WKWebView` limitation when creating the new window WebView: it's impossible to return the new `WKWebView` with a different `WKWebViewConfiguration` instance (see https://developer.apple.com/documentation/webkit/wkuidelegate/1536907-webview). So, these options will be inherited from the caller WebView. Those of them that [InAppWebViewController.setSettings] can still change, it changes for the caller WebView too when called on the new one: they live in the configuration the two share (measured with [InAppWebViewSettings.minimumFontSize] and [InAppWebViewSettings.javaScriptEnabled]). The new WebView's scripts are its own, though: it runs its own `initialUserScripts` and not the caller's, and [InAppWebViewSettings.supportZoom], [InAppWebViewSettings.useOnLoadResource], [InAppWebViewSettings.useShouldInterceptAjaxRequest], [InAppWebViewSettings.useShouldInterceptFetchRequest] and [InAppWebViewSettings.enableViewportScale] apply from its own settings. It applies its own [InAppWebViewSettings.contentBlockers] and none of the caller's.
   ///
   ///**Parameters - Officially Supported Platforms/Implementations**:
-  ///- [createWindowAction]: all platforms
+  ///- `createWindowAction`: all platforms
   ///
   ///Use the [PlatformInAppBrowserEvents.isMethodSupported] method to check if this method is supported at runtime.
   ///{@endtemplate}
@@ -661,7 +662,7 @@ enum PlatformInAppBrowserEventsMethod {
   ///- iOS WKWebView
   ///
   ///**Parameters - Officially Supported Platforms/Implementations**:
-  ///- [downloadStartRequest]: all platforms
+  ///- `downloadStartRequest`: all platforms
   ///
   ///Use the [PlatformInAppBrowserEvents.isMethodSupported] method to check if this method is supported at runtime.
   ///{@endtemplate}
@@ -712,8 +713,8 @@ enum PlatformInAppBrowserEventsMethod {
   ///    - Requires WebViewFeature.NAVIGATION_LISTENER and InAppWebViewSettings.useNavigationListener, which is never inferred here and must be set manually.
   ///
   ///**Parameters - Officially Supported Platforms/Implementations**:
-  ///- [page]: all platforms
-  ///- [durationMillis]: all platforms
+  ///- `page`: all platforms
+  ///- `durationMillis`: all platforms
   ///
   ///Use the [PlatformInAppBrowserEvents.isMethodSupported] method to check if this method is supported at runtime.
   ///{@endtemplate}
@@ -727,7 +728,7 @@ enum PlatformInAppBrowserEventsMethod {
   ///- Android WebView ([Official API - WebViewClient.onFormResubmission](https://developer.android.com/reference/android/webkit/WebViewClient#onFormResubmission(android.webkit.WebView,%20android.os.Message,%20android.os.Message)))
   ///
   ///**Parameters - Officially Supported Platforms/Implementations**:
-  ///- [url]: all platforms
+  ///- `url`: all platforms
   ///
   ///Use the [PlatformInAppBrowserEvents.isMethodSupported] method to check if this method is supported at runtime.
   ///{@endtemplate}
@@ -750,9 +751,11 @@ enum PlatformInAppBrowserEventsMethod {
   ///
   ///**Officially Supported Platforms/Implementations**:
   ///- Android WebView ([Official API - WebChromeClient.onGeolocationPermissionsShowPrompt](https://developer.android.com/reference/android/webkit/WebChromeClient#onGeolocationPermissionsShowPrompt(java.lang.String,%20android.webkit.GeolocationPermissions.Callback)))
+  ///- iOS WKWebView 27.0+ ([Official API - WKUIDelegate.webView(_:requestGeolocationPermissionFor:initiatedByFrame:decisionHandler:)](https://developer.apple.com/documentation/webkit/wkuidelegate/webview(_:requestgeolocationpermissionfor:initiatedbyframe:decisionhandler:))):
+  ///    - `retain` is ignored. A `null` answer leaves the decision to WebKit, which asks the user.
   ///
   ///**Parameters - Officially Supported Platforms/Implementations**:
-  ///- [origin]: all platforms
+  ///- `origin`: all platforms
   ///
   ///Use the [PlatformInAppBrowserEvents.isMethodSupported] method to check if this method is supported at runtime.
   ///{@endtemplate}
@@ -767,7 +770,7 @@ enum PlatformInAppBrowserEventsMethod {
   ///    - Requires [InAppWebViewSettings.useOnInsertInputSuggestion] to be `true`.
   ///
   ///**Parameters - Officially Supported Platforms/Implementations**:
-  ///- [inputSuggestion]: all platforms
+  ///- `inputSuggestion`: all platforms
   ///
   ///Use the [PlatformInAppBrowserEvents.isMethodSupported] method to check if this method is supported at runtime.
   ///{@endtemplate}
@@ -782,7 +785,7 @@ enum PlatformInAppBrowserEventsMethod {
   ///- iOS WKWebView ([Official API - WKUIDelegate.webView](https://developer.apple.com/documentation/webkit/wkuidelegate/1537406-webview))
   ///
   ///**Parameters - Officially Supported Platforms/Implementations**:
-  ///- [jsAlertRequest]: all platforms
+  ///- `jsAlertRequest`: all platforms
   ///
   ///Use the [PlatformInAppBrowserEvents.isMethodSupported] method to check if this method is supported at runtime.
   ///{@endtemplate}
@@ -797,7 +800,7 @@ enum PlatformInAppBrowserEventsMethod {
   ///- iOS WKWebView ([Official API - WKUIDelegate.webView](https://developer.apple.com/documentation/webkit/wkuidelegate/1536489-webview))
   ///
   ///**Parameters - Officially Supported Platforms/Implementations**:
-  ///- [jsConfirmRequest]: all platforms
+  ///- `jsConfirmRequest`: all platforms
   ///
   ///Use the [PlatformInAppBrowserEvents.isMethodSupported] method to check if this method is supported at runtime.
   ///{@endtemplate}
@@ -812,7 +815,7 @@ enum PlatformInAppBrowserEventsMethod {
   ///- iOS WKWebView ([Official API - WKUIDelegate.webView](https://developer.apple.com/documentation/webkit/wkuidelegate/1538086-webview))
   ///
   ///**Parameters - Officially Supported Platforms/Implementations**:
-  ///- [jsPromptRequest]: all platforms
+  ///- `jsPromptRequest`: all platforms
   ///
   ///Use the [PlatformInAppBrowserEvents.isMethodSupported] method to check if this method is supported at runtime.
   ///{@endtemplate}
@@ -827,8 +830,8 @@ enum PlatformInAppBrowserEventsMethod {
   ///    - Requires WebViewFeature.NAVIGATION_LISTENER and InAppWebViewSettings.useNavigationListener, which is never inferred here and must be set manually.
   ///
   ///**Parameters - Officially Supported Platforms/Implementations**:
-  ///- [page]: all platforms
-  ///- [durationMillis]: all platforms
+  ///- `page`: all platforms
+  ///- `durationMillis`: all platforms
   ///
   ///Use the [PlatformInAppBrowserEvents.isMethodSupported] method to check if this method is supported at runtime.
   ///{@endtemplate}
@@ -845,7 +848,7 @@ enum PlatformInAppBrowserEventsMethod {
   ///    - This event is implemented using JavaScript.
   ///
   ///**Parameters - Officially Supported Platforms/Implementations**:
-  ///- [resource]: all platforms
+  ///- `resource`: all platforms
   ///
   ///Use the [PlatformInAppBrowserEvents.isMethodSupported] method to check if this method is supported at runtime.
   ///{@endtemplate}
@@ -860,7 +863,7 @@ enum PlatformInAppBrowserEventsMethod {
   ///- iOS WKWebView ([Official API - WKURLSchemeHandler](https://developer.apple.com/documentation/webkit/wkurlschemehandler))
   ///
   ///**Parameters - Officially Supported Platforms/Implementations**:
-  ///- [request]: all platforms
+  ///- `request`: all platforms
   ///
   ///Use the [PlatformInAppBrowserEvents.isMethodSupported] method to check if this method is supported at runtime.
   ///{@endtemplate}
@@ -875,7 +878,7 @@ enum PlatformInAppBrowserEventsMethod {
   ///- iOS WKWebView ([Official API - WKNavigationDelegate.webView](https://developer.apple.com/documentation/webkit/wknavigationdelegate/1455621-webview))
   ///
   ///**Parameters - Officially Supported Platforms/Implementations**:
-  ///- [url]: all platforms
+  ///- `url`: all platforms
   ///
   ///Use the [PlatformInAppBrowserEvents.isMethodSupported] method to check if this method is supported at runtime.
   ///{@endtemplate}
@@ -890,7 +893,7 @@ enum PlatformInAppBrowserEventsMethod {
   ///- iOS WKWebView ([Official API - WKNavigationDelegate.webView](https://developer.apple.com/documentation/webkit/wknavigationdelegate/1455629-webview))
   ///
   ///**Parameters - Officially Supported Platforms/Implementations**:
-  ///- [url]: all platforms
+  ///- `url`: all platforms
   ///
   ///Use the [PlatformInAppBrowserEvents.isMethodSupported] method to check if this method is supported at runtime.
   ///{@endtemplate}
@@ -905,7 +908,7 @@ enum PlatformInAppBrowserEventsMethod {
   ///- iOS WKWebView ([Official API - UILongPressGestureRecognizer](https://developer.apple.com/documentation/uikit/uilongpressgesturerecognizer))
   ///
   ///**Parameters - Officially Supported Platforms/Implementations**:
-  ///- [hitTestResult]: all platforms
+  ///- `hitTestResult`: all platforms
   ///
   ///Use the [PlatformInAppBrowserEvents.isMethodSupported] method to check if this method is supported at runtime.
   ///{@endtemplate}
@@ -919,8 +922,8 @@ enum PlatformInAppBrowserEventsMethod {
   ///- iOS WKWebView 15.0+
   ///
   ///**Parameters - Officially Supported Platforms/Implementations**:
-  ///- [oldState]: all platforms
-  ///- [newState]: all platforms
+  ///- `oldState`: all platforms
+  ///- `newState`: all platforms
   ///
   ///Use the [PlatformInAppBrowserEvents.isMethodSupported] method to check if this method is supported at runtime.
   ///{@endtemplate}
@@ -935,7 +938,7 @@ enum PlatformInAppBrowserEventsMethod {
   ///    - Requires WebViewFeature.NAVIGATION_LISTENER and InAppWebViewSettings.useNavigationListener, which is never inferred here and must be set manually.
   ///
   ///**Parameters - Officially Supported Platforms/Implementations**:
-  ///- [navigation]: all platforms
+  ///- `navigation`: all platforms
   ///
   ///Use the [PlatformInAppBrowserEvents.isMethodSupported] method to check if this method is supported at runtime.
   ///{@endtemplate}
@@ -950,7 +953,7 @@ enum PlatformInAppBrowserEventsMethod {
   ///    - Requires WebViewFeature.NAVIGATION_LISTENER and InAppWebViewSettings.useNavigationListener, which is never inferred here and must be set manually.
   ///
   ///**Parameters - Officially Supported Platforms/Implementations**:
-  ///- [navigation]: all platforms
+  ///- `navigation`: all platforms
   ///
   ///Use the [PlatformInAppBrowserEvents.isMethodSupported] method to check if this method is supported at runtime.
   ///{@endtemplate}
@@ -964,7 +967,7 @@ enum PlatformInAppBrowserEventsMethod {
   ///- iOS WKWebView ([Official API - WKNavigationDelegate.webView](https://developer.apple.com/documentation/webkit/wknavigationdelegate/1455643-webview))
   ///
   ///**Parameters - Officially Supported Platforms/Implementations**:
-  ///- [navigationResponse]: all platforms
+  ///- `navigationResponse`: all platforms
   ///
   ///Use the [PlatformInAppBrowserEvents.isMethodSupported] method to check if this method is supported at runtime.
   ///{@endtemplate}
@@ -979,7 +982,7 @@ enum PlatformInAppBrowserEventsMethod {
   ///    - Requires WebViewFeature.NAVIGATION_LISTENER and InAppWebViewSettings.useNavigationListener, which is never inferred here and must be set manually.
   ///
   ///**Parameters - Officially Supported Platforms/Implementations**:
-  ///- [navigation]: all platforms
+  ///- `navigation`: all platforms
   ///
   ///Use the [PlatformInAppBrowserEvents.isMethodSupported] method to check if this method is supported at runtime.
   ///{@endtemplate}
@@ -994,10 +997,10 @@ enum PlatformInAppBrowserEventsMethod {
   ///- iOS WKWebView
   ///
   ///**Parameters - Officially Supported Platforms/Implementations**:
-  ///- [x]: all platforms
-  ///- [y]: all platforms
-  ///- [clampedX]: all platforms
-  ///- [clampedY]: all platforms
+  ///- `x`: all platforms
+  ///- `y`: all platforms
+  ///- `clampedX`: all platforms
+  ///- `clampedY`: all platforms
   ///
   ///Use the [PlatformInAppBrowserEvents.isMethodSupported] method to check if this method is supported at runtime.
   ///{@endtemplate}
@@ -1012,7 +1015,7 @@ enum PlatformInAppBrowserEventsMethod {
   ///- iOS WKWebView ([Official API - WKNavigationDelegate.webView](https://developer.apple.com/documentation/webkit/wknavigationdelegate/1455635-webview))
   ///
   ///**Parameters - Officially Supported Platforms/Implementations**:
-  ///- [url]: all platforms
+  ///- `url`: all platforms
   ///
   ///Use the [PlatformInAppBrowserEvents.isMethodSupported] method to check if this method is supported at runtime.
   ///{@endtemplate}
@@ -1027,7 +1030,7 @@ enum PlatformInAppBrowserEventsMethod {
   ///    - Requires WebViewFeature.NAVIGATION_LISTENER and InAppWebViewSettings.useNavigationListener, which is never inferred here and must be set manually.
   ///
   ///**Parameters - Officially Supported Platforms/Implementations**:
-  ///- [page]: all platforms
+  ///- `page`: all platforms
   ///
   ///Use the [PlatformInAppBrowserEvents.isMethodSupported] method to check if this method is supported at runtime.
   ///{@endtemplate}
@@ -1042,7 +1045,7 @@ enum PlatformInAppBrowserEventsMethod {
   ///    - Requires WebViewFeature.NAVIGATION_LISTENER and InAppWebViewSettings.useNavigationListener, which is never inferred here and must be set manually.
   ///
   ///**Parameters - Officially Supported Platforms/Implementations**:
-  ///- [page]: all platforms
+  ///- `page`: all platforms
   ///
   ///Use the [PlatformInAppBrowserEvents.isMethodSupported] method to check if this method is supported at runtime.
   ///{@endtemplate}
@@ -1057,7 +1060,7 @@ enum PlatformInAppBrowserEventsMethod {
   ///    - Requires WebViewFeature.NAVIGATION_LISTENER and InAppWebViewSettings.useNavigationListener, which is never inferred here and must be set manually.
   ///
   ///**Parameters - Officially Supported Platforms/Implementations**:
-  ///- [page]: all platforms
+  ///- `page`: all platforms
   ///
   ///Use the [PlatformInAppBrowserEvents.isMethodSupported] method to check if this method is supported at runtime.
   ///{@endtemplate}
@@ -1072,9 +1075,9 @@ enum PlatformInAppBrowserEventsMethod {
   ///    - Requires WebViewFeature.NAVIGATION_LISTENER plus both InAppWebViewSettings.useNavigationListener and InAppWebViewSettings.useOnPerformanceMarkMillis, neither of which is inferred here.
   ///
   ///**Parameters - Officially Supported Platforms/Implementations**:
-  ///- [page]: all platforms
-  ///- [markName]: all platforms
-  ///- [markTimeMillis]: all platforms
+  ///- `page`: all platforms
+  ///- `markName`: all platforms
+  ///- `markTimeMillis`: all platforms
   ///
   ///Use the [PlatformInAppBrowserEvents.isMethodSupported] method to check if this method is supported at runtime.
   ///{@endtemplate}
@@ -1090,7 +1093,7 @@ enum PlatformInAppBrowserEventsMethod {
   ///    - The default [PermissionResponse.action] is [PermissionResponseAction.PROMPT].
   ///
   ///**Parameters - Officially Supported Platforms/Implementations**:
-  ///- [permissionRequest]: all platforms
+  ///- `permissionRequest`: all platforms
   ///
   ///Use the [PlatformInAppBrowserEvents.isMethodSupported] method to check if this method is supported at runtime.
   ///{@endtemplate}
@@ -1104,7 +1107,7 @@ enum PlatformInAppBrowserEventsMethod {
   ///- Android WebView 21+ ([Official API - WebChromeClient.onPermissionRequestCanceled](https://developer.android.com/reference/android/webkit/WebChromeClient#onPermissionRequestCanceled(android.webkit.PermissionRequest)))
   ///
   ///**Parameters - Officially Supported Platforms/Implementations**:
-  ///- [permissionRequest]: all platforms
+  ///- `permissionRequest`: all platforms
   ///
   ///Use the [PlatformInAppBrowserEvents.isMethodSupported] method to check if this method is supported at runtime.
   ///{@endtemplate}
@@ -1119,7 +1122,7 @@ enum PlatformInAppBrowserEventsMethod {
   ///- iOS WKWebView ([Official API - UIPrintInteractionController.present](https://developer.apple.com/documentation/uikit/uiprintinteractioncontroller/1618149-present))
   ///
   ///**Parameters - Officially Supported Platforms/Implementations**:
-  ///- [url]: all platforms
+  ///- `url`: all platforms
   ///
   ///Use the [PlatformInAppBrowserEvents.isMethodSupported] method to check if this method is supported at runtime.
   ///{@endtemplate}
@@ -1134,7 +1137,7 @@ enum PlatformInAppBrowserEventsMethod {
   ///- iOS WKWebView
   ///
   ///**Parameters - Officially Supported Platforms/Implementations**:
-  ///- [progress]: all platforms
+  ///- `progress`: all platforms
   ///
   ///Use the [PlatformInAppBrowserEvents.isMethodSupported] method to check if this method is supported at runtime.
   ///{@endtemplate}
@@ -1149,7 +1152,7 @@ enum PlatformInAppBrowserEventsMethod {
   ///- iOS WKWebView ([Official API - WKNavigationDelegate.webView](https://developer.apple.com/documentation/webkit/wknavigationdelegate/1455638-webview))
   ///
   ///**Parameters - Officially Supported Platforms/Implementations**:
-  ///- [challenge]: all platforms
+  ///- `challenge`: all platforms
   ///
   ///Use the [PlatformInAppBrowserEvents.isMethodSupported] method to check if this method is supported at runtime.
   ///{@endtemplate}
@@ -1164,8 +1167,8 @@ enum PlatformInAppBrowserEventsMethod {
   ///- iOS WKWebView ([Official API - WKNavigationDelegate.webView](https://developer.apple.com/documentation/webkit/wknavigationdelegate/1455623-webview))
   ///
   ///**Parameters - Officially Supported Platforms/Implementations**:
-  ///- [request]: all platforms
-  ///- [error]: all platforms
+  ///- `request`: all platforms
+  ///- `error`: all platforms
   ///
   ///Use the [PlatformInAppBrowserEvents.isMethodSupported] method to check if this method is supported at runtime.
   ///{@endtemplate}
@@ -1180,7 +1183,7 @@ enum PlatformInAppBrowserEventsMethod {
   ///- iOS WKWebView ([Official API - WKNavigationDelegate.webView](https://developer.apple.com/documentation/webkit/wknavigationdelegate/1455638-webview))
   ///
   ///**Parameters - Officially Supported Platforms/Implementations**:
-  ///- [challenge]: all platforms
+  ///- `challenge`: all platforms
   ///
   ///Use the [PlatformInAppBrowserEvents.isMethodSupported] method to check if this method is supported at runtime.
   ///{@endtemplate}
@@ -1195,8 +1198,8 @@ enum PlatformInAppBrowserEventsMethod {
   ///- iOS WKWebView ([Official API - WKNavigationDelegate.webView](https://developer.apple.com/documentation/webkit/wknavigationdelegate/1455643-webview))
   ///
   ///**Parameters - Officially Supported Platforms/Implementations**:
-  ///- [request]: all platforms
-  ///- [errorResponse]: all platforms
+  ///- `request`: all platforms
+  ///- `errorResponse`: all platforms
   ///
   ///Use the [PlatformInAppBrowserEvents.isMethodSupported] method to check if this method is supported at runtime.
   ///{@endtemplate}
@@ -1210,7 +1213,7 @@ enum PlatformInAppBrowserEventsMethod {
   ///- Android WebView ([Official API - WebViewClient.onReceivedLoginRequest](https://developer.android.com/reference/android/webkit/WebViewClient#onReceivedLoginRequest(android.webkit.WebView,%20java.lang.String,%20java.lang.String,%20java.lang.String)))
   ///
   ///**Parameters - Officially Supported Platforms/Implementations**:
-  ///- [loginRequest]: all platforms
+  ///- `loginRequest`: all platforms
   ///
   ///Use the [PlatformInAppBrowserEvents.isMethodSupported] method to check if this method is supported at runtime.
   ///{@endtemplate}
@@ -1226,7 +1229,7 @@ enum PlatformInAppBrowserEventsMethod {
   ///    - To override the certificate verification logic, you have to provide ATS (App Transport Security) exceptions in your iOS/macOS `Info.plist`. See `NSAppTransportSecurity` in the [Information Property List Key Reference](https://developer.apple.com/library/content/documentation/General/Reference/InfoPlistKeyReference/Articles/CocoaKeys.html#//apple_ref/doc/uid/TP40009251-SW1) for details.
   ///
   ///**Parameters - Officially Supported Platforms/Implementations**:
-  ///- [challenge]: all platforms
+  ///- `challenge`: all platforms
   ///
   ///Use the [PlatformInAppBrowserEvents.isMethodSupported] method to check if this method is supported at runtime.
   ///{@endtemplate}
@@ -1240,8 +1243,8 @@ enum PlatformInAppBrowserEventsMethod {
   ///- Android WebView ([Official API - WebChromeClient.onReceivedTouchIconUrl](https://developer.android.com/reference/android/webkit/WebChromeClient#onReceivedTouchIconUrl(android.webkit.WebView,%20java.lang.String,%20boolean)))
   ///
   ///**Parameters - Officially Supported Platforms/Implementations**:
-  ///- [url]: all platforms
-  ///- [precomposed]: all platforms
+  ///- `url`: all platforms
+  ///- `precomposed`: all platforms
   ///
   ///Use the [PlatformInAppBrowserEvents.isMethodSupported] method to check if this method is supported at runtime.
   ///{@endtemplate}
@@ -1255,7 +1258,7 @@ enum PlatformInAppBrowserEventsMethod {
   ///- Android WebView 26+ ([Official API - WebViewClient.onRenderProcessGone](https://developer.android.com/reference/android/webkit/WebViewClient#onRenderProcessGone(android.webkit.WebView,%20android.webkit.RenderProcessGoneDetail)))
   ///
   ///**Parameters - Officially Supported Platforms/Implementations**:
-  ///- [detail]: all platforms
+  ///- `detail`: all platforms
   ///
   ///Use the [PlatformInAppBrowserEvents.isMethodSupported] method to check if this method is supported at runtime.
   ///{@endtemplate}
@@ -1269,7 +1272,7 @@ enum PlatformInAppBrowserEventsMethod {
   ///- Android WebView 29+ ([Official API - WebViewRenderProcessClient.onRenderProcessResponsive](https://developer.android.com/reference/android/webkit/WebViewRenderProcessClient#onRenderProcessResponsive(android.webkit.WebView,%20android.webkit.WebViewRenderProcess)))
   ///
   ///**Parameters - Officially Supported Platforms/Implementations**:
-  ///- [url]: all platforms
+  ///- `url`: all platforms
   ///
   ///Use the [PlatformInAppBrowserEvents.isMethodSupported] method to check if this method is supported at runtime.
   ///{@endtemplate}
@@ -1283,7 +1286,7 @@ enum PlatformInAppBrowserEventsMethod {
   ///- Android WebView 29+ ([Official API - WebViewRenderProcessClient.onRenderProcessUnresponsive](https://developer.android.com/reference/android/webkit/WebViewRenderProcessClient#onRenderProcessUnresponsive(android.webkit.WebView,%20android.webkit.WebViewRenderProcess)))
   ///
   ///**Parameters - Officially Supported Platforms/Implementations**:
-  ///- [url]: all platforms
+  ///- `url`: all platforms
   ///
   ///Use the [PlatformInAppBrowserEvents.isMethodSupported] method to check if this method is supported at runtime.
   ///{@endtemplate}
@@ -1319,8 +1322,8 @@ enum PlatformInAppBrowserEventsMethod {
   ///- Android WebView 27+ ([Official API - WebViewClient.onSafeBrowsingHit](https://developer.android.com/reference/android/webkit/WebViewClient#onSafeBrowsingHit(android.webkit.WebView,%20android.webkit.WebResourceRequest,%20int,%20android.webkit.SafeBrowsingResponse)))
   ///
   ///**Parameters - Officially Supported Platforms/Implementations**:
-  ///- [url]: all platforms
-  ///- [threatType]: all platforms
+  ///- `url`: all platforms
+  ///- `threatType`: all platforms
   ///
   ///Use the [PlatformInAppBrowserEvents.isMethodSupported] method to check if this method is supported at runtime.
   ///{@endtemplate}
@@ -1335,8 +1338,8 @@ enum PlatformInAppBrowserEventsMethod {
   ///- iOS WKWebView ([Official API - UIScrollViewDelegate.scrollViewDidScroll](https://developer.apple.com/documentation/uikit/uiscrollviewdelegate/1619392-scrollviewdidscroll))
   ///
   ///**Parameters - Officially Supported Platforms/Implementations**:
-  ///- [x]: all platforms
-  ///- [y]: all platforms
+  ///- `x`: all platforms
+  ///- `y`: all platforms
   ///
   ///Use the [PlatformInAppBrowserEvents.isMethodSupported] method to check if this method is supported at runtime.
   ///{@endtemplate}
@@ -1350,7 +1353,7 @@ enum PlatformInAppBrowserEventsMethod {
   ///- Android WebView ([Official API - WebChromeClient.onShowFileChooser](https://developer.android.com/reference/android/webkit/WebChromeClient#onShowFileChooser(android.webkit.WebView,%20android.webkit.ValueCallback%3Candroid.net.Uri[]%3E,%20android.webkit.WebChromeClient.FileChooserParams)))
   ///
   ///**Parameters - Officially Supported Platforms/Implementations**:
-  ///- [request]: all platforms
+  ///- `request`: all platforms
   ///
   ///Use the [PlatformInAppBrowserEvents.isMethodSupported] method to check if this method is supported at runtime.
   ///{@endtemplate}
@@ -1365,7 +1368,7 @@ enum PlatformInAppBrowserEventsMethod {
   ///- iOS WKWebView
   ///
   ///**Parameters - Officially Supported Platforms/Implementations**:
-  ///- [title]: all platforms
+  ///- `title`: all platforms
   ///
   ///Use the [PlatformInAppBrowserEvents.isMethodSupported] method to check if this method is supported at runtime.
   ///{@endtemplate}
@@ -1380,8 +1383,8 @@ enum PlatformInAppBrowserEventsMethod {
   ///- iOS WKWebView
   ///
   ///**Parameters - Officially Supported Platforms/Implementations**:
-  ///- [url]: all platforms
-  ///- [isReload]:
+  ///- `url`: all platforms
+  ///- `isReload`:
   ///    - Android WebView
   ///
   ///Use the [PlatformInAppBrowserEvents.isMethodSupported] method to check if this method is supported at runtime.
@@ -1431,7 +1434,7 @@ enum PlatformInAppBrowserEventsMethod {
   ///- iOS WKWebView 18.0+ ([Official API - WKWebView.writingToolsActive](https://developer.apple.com/documentation/webkit/wkwebview/4433211-writingtoolsactive))
   ///
   ///**Parameters - Officially Supported Platforms/Implementations**:
-  ///- [active]: all platforms
+  ///- `active`: all platforms
   ///
   ///Use the [PlatformInAppBrowserEvents.isMethodSupported] method to check if this method is supported at runtime.
   ///{@endtemplate}
@@ -1446,8 +1449,8 @@ enum PlatformInAppBrowserEventsMethod {
   ///- iOS WKWebView ([Official API - UIScrollViewDelegate.scrollViewDidZoom](https://developer.apple.com/documentation/uikit/uiscrollviewdelegate/1619409-scrollviewdidzoom))
   ///
   ///**Parameters - Officially Supported Platforms/Implementations**:
-  ///- [oldScale]: all platforms
-  ///- [newScale]: all platforms
+  ///- `oldScale`: all platforms
+  ///- `newScale`: all platforms
   ///
   ///Use the [PlatformInAppBrowserEvents.isMethodSupported] method to check if this method is supported at runtime.
   ///{@endtemplate}
@@ -1461,7 +1464,7 @@ enum PlatformInAppBrowserEventsMethod {
   ///- iOS WKWebView 14.0+ ([Official API - WKNavigationDelegate.webView](https://developer.apple.com/documentation/webkit/wknavigationdelegate/3601237-webview))
   ///
   ///**Parameters - Officially Supported Platforms/Implementations**:
-  ///- [challenge]: all platforms
+  ///- `challenge`: all platforms
   ///
   ///Use the [PlatformInAppBrowserEvents.isMethodSupported] method to check if this method is supported at runtime.
   ///{@endtemplate}
@@ -1475,8 +1478,8 @@ enum PlatformInAppBrowserEventsMethod {
   ///- iOS WKWebView 26.0+ ([Official API - WKNavigationDelegate.webView](https://developer.apple.com/documentation/webkit/wknavigationdelegate/4448873-webview))
   ///
   ///**Parameters - Officially Supported Platforms/Implementations**:
-  ///- [backForwardListItem]: all platforms
-  ///- [willUseInstantBack]: all platforms
+  ///- `backForwardListItem`: all platforms
+  ///- `willUseInstantBack`: all platforms
   ///
   ///Use the [PlatformInAppBrowserEvents.isMethodSupported] method to check if this method is supported at runtime.
   ///{@endtemplate}
@@ -1492,7 +1495,7 @@ enum PlatformInAppBrowserEventsMethod {
   ///- iOS WKWebView
   ///
   ///**Parameters - Officially Supported Platforms/Implementations**:
-  ///- [ajaxRequest]: all platforms
+  ///- `ajaxRequest`: all platforms
   ///
   ///Use the [PlatformInAppBrowserEvents.isMethodSupported] method to check if this method is supported at runtime.
   ///{@endtemplate}
@@ -1508,7 +1511,7 @@ enum PlatformInAppBrowserEventsMethod {
   ///- iOS WKWebView
   ///
   ///**Parameters - Officially Supported Platforms/Implementations**:
-  ///- [fetchRequest]: all platforms
+  ///- `fetchRequest`: all platforms
   ///
   ///Use the [PlatformInAppBrowserEvents.isMethodSupported] method to check if this method is supported at runtime.
   ///{@endtemplate}
@@ -1522,7 +1525,7 @@ enum PlatformInAppBrowserEventsMethod {
   ///- Android WebView ([Official API - WebViewClient.shouldInterceptRequest](https://developer.android.com/reference/android/webkit/WebViewClient#shouldInterceptRequest(android.webkit.WebView,%20android.webkit.WebResourceRequest)))
   ///
   ///**Parameters - Officially Supported Platforms/Implementations**:
-  ///- [request]: all platforms
+  ///- `request`: all platforms
   ///
   ///Use the [PlatformInAppBrowserEvents.isMethodSupported] method to check if this method is supported at runtime.
   ///{@endtemplate}
@@ -1538,7 +1541,7 @@ enum PlatformInAppBrowserEventsMethod {
   ///- iOS WKWebView ([Official API - WKNavigationDelegate.webView](https://developer.apple.com/documentation/webkit/wknavigationdelegate/1455641-webview))
   ///
   ///**Parameters - Officially Supported Platforms/Implementations**:
-  ///- [navigationAction]: all platforms
+  ///- `navigationAction`: all platforms
   ///
   ///Use the [PlatformInAppBrowserEvents.isMethodSupported] method to check if this method is supported at runtime.
   ///{@endtemplate}
@@ -1624,23 +1627,21 @@ extension _PlatformInAppBrowserEventsMethodSupported
             ].contains(platform ?? defaultTargetPlatform);
       case PlatformInAppBrowserEventsMethod.onFirstContentfulPaintMillis:
         return ((kIsWeb && platform != null) || !kIsWeb) &&
-            [
-              TargetPlatform.android,
-            ].contains(platform ?? defaultTargetPlatform);
+            [TargetPlatform.android]
+                .contains(platform ?? defaultTargetPlatform);
       case PlatformInAppBrowserEventsMethod.onFormResubmission:
         return ((kIsWeb && platform != null) || !kIsWeb) &&
-            [
-              TargetPlatform.android,
-            ].contains(platform ?? defaultTargetPlatform);
+            [TargetPlatform.android]
+                .contains(platform ?? defaultTargetPlatform);
       case PlatformInAppBrowserEventsMethod.onGeolocationPermissionsHidePrompt:
         return ((kIsWeb && platform != null) || !kIsWeb) &&
-            [
-              TargetPlatform.android,
-            ].contains(platform ?? defaultTargetPlatform);
+            [TargetPlatform.android]
+                .contains(platform ?? defaultTargetPlatform);
       case PlatformInAppBrowserEventsMethod.onGeolocationPermissionsShowPrompt:
         return ((kIsWeb && platform != null) || !kIsWeb) &&
             [
               TargetPlatform.android,
+              TargetPlatform.iOS,
             ].contains(platform ?? defaultTargetPlatform);
       case PlatformInAppBrowserEventsMethod.onInsertInputSuggestion:
         return ((kIsWeb && platform != null) || !kIsWeb) &&
@@ -1665,9 +1666,8 @@ extension _PlatformInAppBrowserEventsMethodSupported
             ].contains(platform ?? defaultTargetPlatform);
       case PlatformInAppBrowserEventsMethod.onLargestContentfulPaintMillis:
         return ((kIsWeb && platform != null) || !kIsWeb) &&
-            [
-              TargetPlatform.android,
-            ].contains(platform ?? defaultTargetPlatform);
+            [TargetPlatform.android]
+                .contains(platform ?? defaultTargetPlatform);
       case PlatformInAppBrowserEventsMethod.onLoadResource:
         return ((kIsWeb && platform != null) || !kIsWeb) &&
             [
@@ -1703,22 +1703,19 @@ extension _PlatformInAppBrowserEventsMethodSupported
             [TargetPlatform.iOS].contains(platform ?? defaultTargetPlatform);
       case PlatformInAppBrowserEventsMethod.onNavigationCompleted:
         return ((kIsWeb && platform != null) || !kIsWeb) &&
-            [
-              TargetPlatform.android,
-            ].contains(platform ?? defaultTargetPlatform);
+            [TargetPlatform.android]
+                .contains(platform ?? defaultTargetPlatform);
       case PlatformInAppBrowserEventsMethod.onNavigationRedirected:
         return ((kIsWeb && platform != null) || !kIsWeb) &&
-            [
-              TargetPlatform.android,
-            ].contains(platform ?? defaultTargetPlatform);
+            [TargetPlatform.android]
+                .contains(platform ?? defaultTargetPlatform);
       case PlatformInAppBrowserEventsMethod.onNavigationResponse:
         return ((kIsWeb && platform != null) || !kIsWeb) &&
             [TargetPlatform.iOS].contains(platform ?? defaultTargetPlatform);
       case PlatformInAppBrowserEventsMethod.onNavigationStarted:
         return ((kIsWeb && platform != null) || !kIsWeb) &&
-            [
-              TargetPlatform.android,
-            ].contains(platform ?? defaultTargetPlatform);
+            [TargetPlatform.android]
+                .contains(platform ?? defaultTargetPlatform);
       case PlatformInAppBrowserEventsMethod.onOverScrolled:
         return ((kIsWeb && platform != null) || !kIsWeb) &&
             [
@@ -1733,24 +1730,20 @@ extension _PlatformInAppBrowserEventsMethodSupported
             ].contains(platform ?? defaultTargetPlatform);
       case PlatformInAppBrowserEventsMethod.onPageDeleted:
         return ((kIsWeb && platform != null) || !kIsWeb) &&
-            [
-              TargetPlatform.android,
-            ].contains(platform ?? defaultTargetPlatform);
+            [TargetPlatform.android]
+                .contains(platform ?? defaultTargetPlatform);
       case PlatformInAppBrowserEventsMethod.onPageDomContentLoadedEvent:
         return ((kIsWeb && platform != null) || !kIsWeb) &&
-            [
-              TargetPlatform.android,
-            ].contains(platform ?? defaultTargetPlatform);
+            [TargetPlatform.android]
+                .contains(platform ?? defaultTargetPlatform);
       case PlatformInAppBrowserEventsMethod.onPageLoadEvent:
         return ((kIsWeb && platform != null) || !kIsWeb) &&
-            [
-              TargetPlatform.android,
-            ].contains(platform ?? defaultTargetPlatform);
+            [TargetPlatform.android]
+                .contains(platform ?? defaultTargetPlatform);
       case PlatformInAppBrowserEventsMethod.onPerformanceMarkMillis:
         return ((kIsWeb && platform != null) || !kIsWeb) &&
-            [
-              TargetPlatform.android,
-            ].contains(platform ?? defaultTargetPlatform);
+            [TargetPlatform.android]
+                .contains(platform ?? defaultTargetPlatform);
       case PlatformInAppBrowserEventsMethod.onPermissionRequest:
         return ((kIsWeb && platform != null) || !kIsWeb) &&
             [
@@ -1759,9 +1752,8 @@ extension _PlatformInAppBrowserEventsMethodSupported
             ].contains(platform ?? defaultTargetPlatform);
       case PlatformInAppBrowserEventsMethod.onPermissionRequestCanceled:
         return ((kIsWeb && platform != null) || !kIsWeb) &&
-            [
-              TargetPlatform.android,
-            ].contains(platform ?? defaultTargetPlatform);
+            [TargetPlatform.android]
+                .contains(platform ?? defaultTargetPlatform);
       case PlatformInAppBrowserEventsMethod.onPrintRequest:
         return ((kIsWeb && platform != null) || !kIsWeb) &&
             [
@@ -1800,9 +1792,8 @@ extension _PlatformInAppBrowserEventsMethodSupported
             ].contains(platform ?? defaultTargetPlatform);
       case PlatformInAppBrowserEventsMethod.onReceivedLoginRequest:
         return ((kIsWeb && platform != null) || !kIsWeb) &&
-            [
-              TargetPlatform.android,
-            ].contains(platform ?? defaultTargetPlatform);
+            [TargetPlatform.android]
+                .contains(platform ?? defaultTargetPlatform);
       case PlatformInAppBrowserEventsMethod.onReceivedServerTrustAuthRequest:
         return ((kIsWeb && platform != null) || !kIsWeb) &&
             [
@@ -1811,39 +1802,32 @@ extension _PlatformInAppBrowserEventsMethodSupported
             ].contains(platform ?? defaultTargetPlatform);
       case PlatformInAppBrowserEventsMethod.onReceivedTouchIconUrl:
         return ((kIsWeb && platform != null) || !kIsWeb) &&
-            [
-              TargetPlatform.android,
-            ].contains(platform ?? defaultTargetPlatform);
+            [TargetPlatform.android]
+                .contains(platform ?? defaultTargetPlatform);
       case PlatformInAppBrowserEventsMethod.onRenderProcessGone:
         return ((kIsWeb && platform != null) || !kIsWeb) &&
-            [
-              TargetPlatform.android,
-            ].contains(platform ?? defaultTargetPlatform);
+            [TargetPlatform.android]
+                .contains(platform ?? defaultTargetPlatform);
       case PlatformInAppBrowserEventsMethod.onRenderProcessResponsive:
         return ((kIsWeb && platform != null) || !kIsWeb) &&
-            [
-              TargetPlatform.android,
-            ].contains(platform ?? defaultTargetPlatform);
+            [TargetPlatform.android]
+                .contains(platform ?? defaultTargetPlatform);
       case PlatformInAppBrowserEventsMethod.onRenderProcessUnresponsive:
         return ((kIsWeb && platform != null) || !kIsWeb) &&
-            [
-              TargetPlatform.android,
-            ].contains(platform ?? defaultTargetPlatform);
+            [TargetPlatform.android]
+                .contains(platform ?? defaultTargetPlatform);
       case PlatformInAppBrowserEventsMethod.onRequestFocus:
         return ((kIsWeb && platform != null) || !kIsWeb) &&
-            [
-              TargetPlatform.android,
-            ].contains(platform ?? defaultTargetPlatform);
+            [TargetPlatform.android]
+                .contains(platform ?? defaultTargetPlatform);
       case PlatformInAppBrowserEventsMethod.onRequestVisitedHistory:
         return ((kIsWeb && platform != null) || !kIsWeb) &&
-            [
-              TargetPlatform.android,
-            ].contains(platform ?? defaultTargetPlatform);
+            [TargetPlatform.android]
+                .contains(platform ?? defaultTargetPlatform);
       case PlatformInAppBrowserEventsMethod.onSafeBrowsingHit:
         return ((kIsWeb && platform != null) || !kIsWeb) &&
-            [
-              TargetPlatform.android,
-            ].contains(platform ?? defaultTargetPlatform);
+            [TargetPlatform.android]
+                .contains(platform ?? defaultTargetPlatform);
       case PlatformInAppBrowserEventsMethod.onScrollChanged:
         return ((kIsWeb && platform != null) || !kIsWeb) &&
             [
@@ -1852,9 +1836,8 @@ extension _PlatformInAppBrowserEventsMethodSupported
             ].contains(platform ?? defaultTargetPlatform);
       case PlatformInAppBrowserEventsMethod.onShowFileChooser:
         return ((kIsWeb && platform != null) || !kIsWeb) &&
-            [
-              TargetPlatform.android,
-            ].contains(platform ?? defaultTargetPlatform);
+            [TargetPlatform.android]
+                .contains(platform ?? defaultTargetPlatform);
       case PlatformInAppBrowserEventsMethod.onTitleChanged:
         return ((kIsWeb && platform != null) || !kIsWeb) &&
             [
@@ -1911,9 +1894,8 @@ extension _PlatformInAppBrowserEventsMethodSupported
             ].contains(platform ?? defaultTargetPlatform);
       case PlatformInAppBrowserEventsMethod.shouldInterceptRequest:
         return ((kIsWeb && platform != null) || !kIsWeb) &&
-            [
-              TargetPlatform.android,
-            ].contains(platform ?? defaultTargetPlatform);
+            [TargetPlatform.android]
+                .contains(platform ?? defaultTargetPlatform);
       case PlatformInAppBrowserEventsMethod.shouldOverrideUrlLoading:
         return ((kIsWeb && platform != null) || !kIsWeb) &&
             [

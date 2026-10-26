@@ -92,8 +92,7 @@ void main() {
           platform: TargetPlatform.android,
         ),
         isFalse,
-        reason:
-            'Writing Tools is an Apple feature; there is no Android counterpart',
+        reason: 'Writing Tools is an Apple feature; there is no Android counterpart',
       );
     });
   });

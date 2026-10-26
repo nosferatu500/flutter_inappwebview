@@ -6,16 +6,19 @@ part of 'platform_web_storage_manager.dart';
 // SupportedPlatformsGenerator
 // **************************************************************************
 
+///{@template nosferatu500_inappwebview_platform_interface.PlatformWebStorageManagerCreationParams.supported_platforms}
+///
+///**Officially Supported Platforms/Implementations**:
+///- Android WebView
+///- iOS WKWebView 9.0+
+///
+///Use the [PlatformWebStorageManagerCreationParams.isClassSupported] method to check if this class is supported at runtime.
+///{@endtemplate}
+// Carries the template above for dartdoc; hidden from every export, so not API (§350).
+abstract final class PlatformWebStorageManagerCreationParamsSupportedPlatforms {}
+
 extension _PlatformWebStorageManagerCreationParamsClassSupported
     on PlatformWebStorageManagerCreationParams {
-  ///{@template nosferatu500_inappwebview_platform_interface.PlatformWebStorageManagerCreationParams.supported_platforms}
-  ///
-  ///**Officially Supported Platforms/Implementations**:
-  ///- Android WebView
-  ///- iOS WKWebView 9.0+
-  ///
-  ///Use the [PlatformWebStorageManagerCreationParams.isClassSupported] method to check if this class is supported at runtime.
-  ///{@endtemplate}
   static bool isClassSupported({TargetPlatform? platform}) {
     return ((kIsWeb && platform != null) || !kIsWeb) &&
         [
@@ -27,14 +30,6 @@ extension _PlatformWebStorageManagerCreationParamsClassSupported
 
 extension _PlatformWebStorageManagerClassSupported
     on PlatformWebStorageManager {
-  ///{@template nosferatu500_inappwebview_platform_interface.PlatformWebStorageManager.supported_platforms}
-  ///
-  ///**Officially Supported Platforms/Implementations**:
-  ///- Android WebView ([Official API - WebStorage](https://developer.android.com/reference/android/webkit/WebStorage.html))
-  ///- iOS WKWebView 9.0+ ([Official API - WKWebsiteDataStore](https://developer.apple.com/documentation/webkit/wkwebsitedatastore))
-  ///
-  ///Use the [PlatformWebStorageManager.isClassSupported] method to check if this class is supported at runtime.
-  ///{@endtemplate}
   static bool isClassSupported({TargetPlatform? platform}) {
     return ((kIsWeb && platform != null) || !kIsWeb) &&
         [
@@ -45,6 +40,15 @@ extension _PlatformWebStorageManagerClassSupported
 }
 
 ///List of [PlatformWebStorageManager]'s methods that can be used to check if they are supported or not by the current platform.
+///
+///{@template nosferatu500_inappwebview_platform_interface.PlatformWebStorageManager.supported_platforms}
+///
+///**Officially Supported Platforms/Implementations**:
+///- Android WebView ([Official API - WebStorage](https://developer.android.com/reference/android/webkit/WebStorage.html))
+///- iOS WKWebView 9.0+ ([Official API - WKWebsiteDataStore](https://developer.apple.com/documentation/webkit/wkwebsitedatastore))
+///
+///Use the [PlatformWebStorageManager.isClassSupported] method to check if this class is supported at runtime.
+///{@endtemplate}
 enum PlatformWebStorageManagerMethod {
   ///Can be used to check if the [PlatformWebStorageManager.deleteAllData] method is supported at runtime.
   ///
@@ -54,7 +58,7 @@ enum PlatformWebStorageManagerMethod {
   ///- Android WebView ([Official API - WebStorage.deleteAllData](https://developer.android.com/reference/android/webkit/WebStorage#deleteAllData()))
   ///
   ///**Parameters - Officially Supported Platforms/Implementations**:
-  ///- [profileName]:
+  ///- `profileName`:
   ///    - Android WebView
   ///
   ///Use the [PlatformWebStorageManager.isMethodSupported] method to check if this method is supported at runtime.
@@ -70,7 +74,7 @@ enum PlatformWebStorageManagerMethod {
   ///    - Requires [WebViewFeature.DELETE_BROWSING_DATA]. Returns `false` and deletes nothing if the feature is not supported.
   ///
   ///**Parameters - Officially Supported Platforms/Implementations**:
-  ///- [profileName]:
+  ///- `profileName`:
   ///    - Android WebView
   ///
   ///Use the [PlatformWebStorageManager.isMethodSupported] method to check if this method is supported at runtime.
@@ -86,8 +90,8 @@ enum PlatformWebStorageManagerMethod {
   ///    - Requires [WebViewFeature.DELETE_BROWSING_DATA]. Returns `null` and deletes nothing if the feature is not supported.
   ///
   ///**Parameters - Officially Supported Platforms/Implementations**:
-  ///- [site]: all platforms
-  ///- [profileName]:
+  ///- `site`: all platforms
+  ///- `profileName`:
   ///    - Android WebView
   ///
   ///Use the [PlatformWebStorageManager.isMethodSupported] method to check if this method is supported at runtime.
@@ -102,8 +106,8 @@ enum PlatformWebStorageManagerMethod {
   ///- Android WebView ([Official API - WebStorage.deleteOrigin](https://developer.android.com/reference/android/webkit/WebStorage#deleteOrigin(java.lang.String)))
   ///
   ///**Parameters - Officially Supported Platforms/Implementations**:
-  ///- [origin]: all platforms
-  ///- [profileName]:
+  ///- `origin`: all platforms
+  ///- `profileName`:
   ///    - Android WebView
   ///
   ///Use the [PlatformWebStorageManager.isMethodSupported] method to check if this method is supported at runtime.
@@ -118,7 +122,7 @@ enum PlatformWebStorageManagerMethod {
   ///- iOS WKWebView 9.0+ ([Official API - WKWebsiteDataStore.fetchDataRecords](https://developer.apple.com/documentation/webkit/wkwebsitedatastore/1532932-fetchdatarecords))
   ///
   ///**Parameters - Officially Supported Platforms/Implementations**:
-  ///- [dataTypes]: all platforms
+  ///- `dataTypes`: all platforms
   ///
   ///Use the [PlatformWebStorageManager.isMethodSupported] method to check if this method is supported at runtime.
   ///{@endtemplate}
@@ -132,7 +136,7 @@ enum PlatformWebStorageManagerMethod {
   ///- Android WebView ([Official API - WebStorage.getOrigins](https://developer.android.com/reference/android/webkit/WebStorage#getOrigins(android.webkit.ValueCallback%3Cjava.util.Map%3E)))
   ///
   ///**Parameters - Officially Supported Platforms/Implementations**:
-  ///- [profileName]:
+  ///- `profileName`:
   ///    - Android WebView
   ///
   ///Use the [PlatformWebStorageManager.isMethodSupported] method to check if this method is supported at runtime.
@@ -147,8 +151,8 @@ enum PlatformWebStorageManagerMethod {
   ///- Android WebView ([Official API - WebStorage.getQuotaForOrigin](https://developer.android.com/reference/android/webkit/WebStorage#getQuotaForOrigin(java.lang.String,%20android.webkit.ValueCallback%3Cjava.lang.Long%3E)))
   ///
   ///**Parameters - Officially Supported Platforms/Implementations**:
-  ///- [origin]: all platforms
-  ///- [profileName]:
+  ///- `origin`: all platforms
+  ///- `profileName`:
   ///    - Android WebView
   ///
   ///Use the [PlatformWebStorageManager.isMethodSupported] method to check if this method is supported at runtime.
@@ -163,8 +167,8 @@ enum PlatformWebStorageManagerMethod {
   ///- Android WebView ([Official API - WebStorage.getUsageForOrigin](https://developer.android.com/reference/android/webkit/WebStorage#getUsageForOrigin(java.lang.String,%20android.webkit.ValueCallback%3Cjava.lang.Long%3E)))
   ///
   ///**Parameters - Officially Supported Platforms/Implementations**:
-  ///- [origin]: all platforms
-  ///- [profileName]:
+  ///- `origin`: all platforms
+  ///- `profileName`:
   ///    - Android WebView
   ///
   ///Use the [PlatformWebStorageManager.isMethodSupported] method to check if this method is supported at runtime.
@@ -179,8 +183,8 @@ enum PlatformWebStorageManagerMethod {
   ///- iOS WKWebView 9.0+ ([Official API - WKWebsiteDataStore.removeData](https://developer.apple.com/documentation/webkit/wkwebsitedatastore/1532936-removedata))
   ///
   ///**Parameters - Officially Supported Platforms/Implementations**:
-  ///- [dataTypes]: all platforms
-  ///- [dataRecords]: all platforms
+  ///- `dataTypes`: all platforms
+  ///- `dataRecords`: all platforms
   ///
   ///Use the [PlatformWebStorageManager.isMethodSupported] method to check if this method is supported at runtime.
   ///{@endtemplate}
@@ -194,8 +198,8 @@ enum PlatformWebStorageManagerMethod {
   ///- iOS WKWebView 9.0+ ([Official API - WKWebsiteDataStore.removeData](https://developer.apple.com/documentation/webkit/wkwebsitedatastore/1532938-removedata))
   ///
   ///**Parameters - Officially Supported Platforms/Implementations**:
-  ///- [dataTypes]: all platforms
-  ///- [date]: all platforms
+  ///- `dataTypes`: all platforms
+  ///- `date`: all platforms
   ///
   ///Use the [PlatformWebStorageManager.isMethodSupported] method to check if this method is supported at runtime.
   ///{@endtemplate}
@@ -211,42 +215,35 @@ extension _PlatformWebStorageManagerMethodSupported
     switch (method) {
       case PlatformWebStorageManagerMethod.deleteAllData:
         return ((kIsWeb && platform != null) || !kIsWeb) &&
-            [
-              TargetPlatform.android,
-            ].contains(platform ?? defaultTargetPlatform);
+            [TargetPlatform.android]
+                .contains(platform ?? defaultTargetPlatform);
       case PlatformWebStorageManagerMethod.deleteBrowsingData:
         return ((kIsWeb && platform != null) || !kIsWeb) &&
-            [
-              TargetPlatform.android,
-            ].contains(platform ?? defaultTargetPlatform);
+            [TargetPlatform.android]
+                .contains(platform ?? defaultTargetPlatform);
       case PlatformWebStorageManagerMethod.deleteBrowsingDataForSite:
         return ((kIsWeb && platform != null) || !kIsWeb) &&
-            [
-              TargetPlatform.android,
-            ].contains(platform ?? defaultTargetPlatform);
+            [TargetPlatform.android]
+                .contains(platform ?? defaultTargetPlatform);
       case PlatformWebStorageManagerMethod.deleteOrigin:
         return ((kIsWeb && platform != null) || !kIsWeb) &&
-            [
-              TargetPlatform.android,
-            ].contains(platform ?? defaultTargetPlatform);
+            [TargetPlatform.android]
+                .contains(platform ?? defaultTargetPlatform);
       case PlatformWebStorageManagerMethod.fetchDataRecords:
         return ((kIsWeb && platform != null) || !kIsWeb) &&
             [TargetPlatform.iOS].contains(platform ?? defaultTargetPlatform);
       case PlatformWebStorageManagerMethod.getOrigins:
         return ((kIsWeb && platform != null) || !kIsWeb) &&
-            [
-              TargetPlatform.android,
-            ].contains(platform ?? defaultTargetPlatform);
+            [TargetPlatform.android]
+                .contains(platform ?? defaultTargetPlatform);
       case PlatformWebStorageManagerMethod.getQuotaForOrigin:
         return ((kIsWeb && platform != null) || !kIsWeb) &&
-            [
-              TargetPlatform.android,
-            ].contains(platform ?? defaultTargetPlatform);
+            [TargetPlatform.android]
+                .contains(platform ?? defaultTargetPlatform);
       case PlatformWebStorageManagerMethod.getUsageForOrigin:
         return ((kIsWeb && platform != null) || !kIsWeb) &&
-            [
-              TargetPlatform.android,
-            ].contains(platform ?? defaultTargetPlatform);
+            [TargetPlatform.android]
+                .contains(platform ?? defaultTargetPlatform);
       case PlatformWebStorageManagerMethod.removeDataFor:
         return ((kIsWeb && platform != null) || !kIsWeb) &&
             [TargetPlatform.iOS].contains(platform ?? defaultTargetPlatform);

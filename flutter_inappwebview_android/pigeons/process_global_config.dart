@@ -22,8 +22,7 @@ import 'package:pigeon/pigeon.dart';
   PigeonOptions(
     dartOut: 'lib/src/pigeons/process_global_config.g.dart',
     dartOptions: DartOptions(),
-    kotlinOut:
-        'android/src/main/kotlin/dev/nosferatu500/inappwebview/pigeons/ProcessGlobalConfig.g.kt',
+    kotlinOut: 'android/src/main/kotlin/dev/nosferatu500/inappwebview/pigeons/ProcessGlobalConfig.g.kt',
     kotlinOptions: KotlinOptions(
       package: 'dev.nosferatu500.inappwebview.pigeons',
       // Every Pigeon Kotlin output declares its own `FlutterError` by default, and all of this

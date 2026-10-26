@@ -99,8 +99,6 @@ class InAppBrowser implements PlatformInAppBrowserEvents {
   int? get windowId => platform.windowId;
 
   ///{@macro nosferatu500_inappwebview_platform_interface.PlatformInAppBrowser.webViewController}
-  ///
-  ///{@macro nosferatu500_inappwebview_platform_interface.PlatformInAppBrowser.webViewController.supported_platforms}
   InAppWebViewController? get webViewController {
     final webViewControllerPlatform = platform.webViewController;
     if (webViewControllerPlatform == null) {

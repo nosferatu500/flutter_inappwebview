@@ -2,6 +2,7 @@ package dev.nosferatu500.inappwebview.webview
 
 import android.content.Context
 import android.content.pm.PackageInfo
+import android.os.Build
 import android.os.Message
 import android.view.ViewGroup
 import android.webkit.WebSettings
@@ -131,7 +132,9 @@ class InAppWebViewManager(plugin: InAppWebViewFlutterPlugin) :
   }
 
   override fun disableWebView(): Boolean {
-    WebView.disableWebView()
+    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
+      WebView.disableWebView()
+    }
     return true
   }
 

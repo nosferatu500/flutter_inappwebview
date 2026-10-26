@@ -6,7 +6,9 @@ import android.graphics.BitmapFactory
 import android.graphics.drawable.BitmapDrawable
 import android.graphics.drawable.Drawable
 import android.net.http.SslCertificate
+import android.os.Build
 import android.text.TextUtils
+import android.util.DisplayMetrics
 import android.util.Log
 import android.view.WindowInsets
 import android.view.WindowManager
@@ -243,27 +245,11 @@ object Util {
     return null
   }
 
-  /**
-   * SslCertificate class does not has a public getter for the underlying
-   * X509Certificate, we can only do this by hack. This only works for Android 4.0+
-   * https://groups.google.com/forum/#!topic/android-developers/eAPJ6b7mrmg
-   */
-  @JvmStatic
-  fun getX509CertFromSslCertHack(sslCert: SslCertificate): X509Certificate? {
-    val bytes = SslCertificate.saveState(sslCert).getByteArray("x509-certificate") ?: return null
-    return try {
-      CertificateFactory.getInstance("X.509")
-        .generateCertificate(ByteArrayInputStream(bytes)) as X509Certificate
-    } catch (e: CertificateException) {
-      null
-    }
-  }
-
   @JvmStatic
   fun JSONStringify(value: Any?): String = when (value) {
     null -> "null"
     is Map<*, *> -> JSONObject(value as Map<String, Any?>).toString()
-    is List<*> -> JSONArray(value as List<Any?>).toString()
+    is List<*> -> JSONArray(value).toString()
     is String -> JSONObject.quote(value)
     // wrap() returns null for a value it cannot represent. The Java threw NPE here; !! keeps
     // that behaviour rather than silently producing the string "null".
@@ -278,25 +264,6 @@ object Util {
     TextUtils.join(newString, s.split(Pattern.quote(oldString).toRegex()).toTypedArray())
 
   @JvmStatic
-  fun log(tag: String, message: String) {
-    // Split by line, then ensure each line can fit into Log's maximum length.
-    var i = 0
-    val length = message.length
-    while (i < length) {
-      var newline = message.indexOf('\n', i)
-      if (newline == -1) {
-        newline = length
-      }
-      do {
-        val end = Math.min(newline, i + 4000)
-        Log.d(tag, message.substring(i, end))
-        i = end
-      } while (i < newline)
-      i++
-    }
-  }
-
-  @JvmStatic
   fun getPixelDensity(context: Context): Float = context.resources.displayMetrics.density
 
   @JvmStatic
@@ -304,26 +271,45 @@ object Util {
     val fullscreenSize = Size2D(-1.0, -1.0)
     val wm = context.getSystemService(Context.WINDOW_SERVICE) as WindowManager?
     if (wm != null) {
-      val metrics = wm.currentWindowMetrics
-      // Gets all excluding insets
-      val insets = metrics.windowInsets.getInsetsIgnoringVisibility(
-        WindowInsets.Type.navigationBars() or WindowInsets.Type.displayCutout()
-      )
-      val insetsWidth = insets.right + insets.left
-      val insetsHeight = insets.top + insets.bottom
-      val bounds = metrics.bounds
-      fullscreenSize.width = (bounds.width() - insetsWidth).toDouble()
-      fullscreenSize.height = (bounds.height() - insetsHeight).toDouble()
+      if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+        val metrics = wm.currentWindowMetrics
+        // Gets all excluding insets
+        val insets = metrics.windowInsets.getInsetsIgnoringVisibility(
+          WindowInsets.Type.navigationBars() or WindowInsets.Type.displayCutout()
+        )
+        val insetsWidth = insets.right + insets.left
+        val insetsHeight = insets.top + insets.bottom
+        val bounds = metrics.bounds
+        fullscreenSize.width = (bounds.width() - insetsWidth).toDouble()
+        fullscreenSize.height = (bounds.height() - insetsHeight).toDouble()
+      } else {
+        val displayMetrics = getDisplayMetricsPreR(wm)
+        fullscreenSize.width = displayMetrics.widthPixels.toDouble()
+        fullscreenSize.height = displayMetrics.heightPixels.toDouble()
+      }
     }
     return fullscreenSize
   }
 
+  // Below API 30 there is no WindowMetrics; Display.getMetrics is the only source, and it already
+  // excludes the system decorations.
+  @Suppress("DEPRECATION")
+  private fun getDisplayMetricsPreR(wm: WindowManager): DisplayMetrics =
+    DisplayMetrics().also { wm.defaultDisplay.getMetrics(it) }
+
+  /**
+   * Below API 29 there is no `SslCertificate.getX509Certificate()`; the encoded certificate is only
+   * reachable through the bundle `SslCertificate.saveState` writes.
+   */
   @JvmStatic
-  fun isClass(className: String): Boolean = try {
-    Class.forName(className)
-    true
-  } catch (e: ClassNotFoundException) {
-    false
+  fun getX509CertFromSslCertHack(sslCert: SslCertificate): X509Certificate? {
+    val bytes = SslCertificate.saveState(sslCert).getByteArray("x509-certificate") ?: return null
+    return try {
+      CertificateFactory.getInstance("X.509")
+        .generateCertificate(ByteArrayInputStream(bytes)) as X509Certificate
+    } catch (e: CertificateException) {
+      null
+    }
   }
 
   /**

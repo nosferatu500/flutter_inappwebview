@@ -26,6 +26,6 @@ class ExchangeableEnum {
     this.toStringMethod = true,
     this.hashCodeMethod = true,
     this.equalsOperator = true,
-    this.bitwiseOrOperator = false
+    this.bitwiseOrOperator = false,
   });
 }

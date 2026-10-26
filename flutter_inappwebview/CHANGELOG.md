@@ -1,3 +1,220 @@
+## 7.1.0
+
+### Requirements
+
+- **Flutter 3.47 / Dart 3.13 or newer** (was 3.44 / 3.12): `flutter: ">=3.47.0"`, `sdk: ^3.13.0`.
+  An app on an older Flutter keeps resolving 7.0.0; pub doesn't offer it 7.1.0.
+- **The app needs the Kotlin Gradle Plugin 2.2.20 or newer on its build classpath.** That is
+  Flutter 3.47's own minimum, not this plugin's: its Gradle plugin refuses anything older
+  ("Your project's Kotlin version (2.2.10) is lower than Flutter's minimum supported version of
+  2.2.20") and warns below 2.3.20. AGP 9.3.0 through 9.4.1 bring only 2.2.10, so an app that
+  relies on AGP's built-in Kotlin has to declare it, as Flutter 3.47.7's app template does:
+  `id("org.jetbrains.kotlin.android") version "2.4.0" apply false` in `settings.gradle(.kts)`.
+- **Android: `minSdk` 26 or newer** (was 30): the plugin runs on Android 8.0 and newer again. An app at
+  `minSdk` 26–29 can now use it; an app already at 30 or higher needs no change.
+- **Android: `compileSdk` 36 is enough again** (7.0.0 required 37), so Flutter 3.47's default works and
+  the `compileSdk = 37` line 7.0.0 asked for can go. Keeping it is harmless. The plugin's `androidx.core`
+  is held at 1.18.0 (was 1.19.0, which requires 37).
+- **iOS: Xcode 27 or newer** (was 26). The iOS module now uses iOS 27 WebKit API, which only the iOS 27
+  SDK declares: Xcode 26 fails with `value of type 'WKWebpagePreferences' has no member
+  'globalPrivacyControlEnabled'`. Apps still run on iOS 15 and newer; the iOS 27 features are skipped
+  below iOS 27.
+### Added
+
+- **`onGeolocationPermissionsShowPrompt` on iOS 27** (was Android only): a page's geolocation request now
+  reaches the event, through `WKUIDelegate`'s new geolocation permission method. `allow: true` grants it and
+  `allow: false` denies it (measured on an iPhone 17, iOS 27.0.1: PERMISSION_DENIED in about 10 ms).
+  `retain` is ignored. A `null` answer, or no handler, leaves the decision to WebKit, which shows its own
+  prompt, the same as before. The event fires once per page, and `origin` has no trailing slash
+  (`https://example.com`; Android reports `https://example.com/`).
+- **`InAppWebViewSettings.globalPrivacyControlEnabled` (iOS 27)**: sends the Global Privacy Control signal,
+  `navigator.globalPrivacyControl` and the `Sec-GPC: 1` request header. Measured on iOS 27.0, the header
+  follows the secure context: sent over `http://127.0.0.1`, not over plain HTTP to a LAN address, where
+  pages still see the JS flag.
+- **`ProfileStore.setCrossOriginIsolatedAllowlist` / `getCrossOriginIsolatedAllowlist` (Android,
+  `WebViewFeature.CROSS_ORIGIN_ISOLATED_ALLOWLIST`)**: lets pages on the listed origins use
+  cross-origin-isolated APIs such as `SharedArrayBuffer`, when they also send a
+  `Document-Isolation-Policy` header. WebView doesn't isolate renderer processes per site, so list only
+  origins you trust. The set replaces the list (`{}` clears it) and returns `false` when the profile
+  can't be reached; the get returns `null` then, and rules come back with their port
+  (`https://example.com:443`). A rule that can't be parsed throws a `PlatformException`.
+  Measured on Android 17 with WebView 153: a page sending `Document-Isolation-Policy:
+  isolate-and-require-corp` reports `crossOriginIsolated` `false` without the allowlist and `true`, with
+  `SharedArrayBuffer`, once its origin is listed. WebView 151 doesn't support the feature yet.
+  `null` leaves WebKit untouched (no header, `navigator.globalPrivacyControl` undefined); `false` makes the
+  flag `false`. It's applied to each navigation, so a `setSettings` change reaches the next one.
+- **A migration guide from `flutter_inappwebview` 6.x: [MIGRATION.md](MIGRATION.md)**, linked from the
+  README's Installation section. It covers the package change, the build requirements, the removed API,
+  the changed signatures, and the behaviour changes that compile unchanged (`shouldOverrideUrlLoading`'s
+  `null`, the iOS event URLs and `contentBlockers` errors, among others).
+
+### Changed
+
+- **Android 8.0–10: the version checks 7.0.0 removed with `minSdk` 30 are back, with 6.2.0-beta.3's
+  fallbacks.** What an app sees on API 26–29:
+  - below API 29: the scrollbar colour settings are ignored; `onRenderProcessUnresponsive` /
+    `onRenderProcessResponsive` don't fire, because no render process client is attached; and
+    `algorithmicDarkeningAllowed` is neither applied nor reported by `getSettings`;
+  - below API 28: `disableWebView` answers `true` and does nothing;
+  - below API 27: `onSafeBrowsingHit` arrives only when the WebView supports `SAFE_BROWSING_HIT`.
+
+  The rest is invisible. Without it, though, every WebView would crash on creation on API 26–27
+  (`WebView.getWebViewLooper` is API 28). The `nosferatu500_inappwebview_android` 7.1.0 entry lists
+  each check.
+- **The debug-mode console message promoting upstream is gone.** In debug builds, the first platform
+  instance printed "Hi, flutter_inappwebview here…" with links to upstream's donation, GitHub and
+  showcase pages. Nothing is printed now.
+- **Android: the InAppBrowser and the JavaScript alert / confirm / prompt dialogs use Material 3 and
+  follow the system's light / dark setting.** The InAppBrowser activity's theme is
+  `Theme.Material3.DayNight.NoActionBar` (was `Theme.AppCompat.Light.NoActionBar`); its toolbar uses the
+  surface colour with an on-surface title (was `colorPrimary`, a light grey, with a hard-coded black
+  title), and its progress bar the AppCompat horizontal style (was Holo). A `toolbarTopBackgroundColor`
+  still replaces the toolbar's background. The dialogs are built by `MaterialAlertDialogBuilder` on a
+  `Theme.Material3.DayNight` context of their own (they were AppCompat's dark dialog, dark even in light
+  mode), so they work whatever the app's theme: measured with Flutter's template theme
+  (`@android:style/Theme.Light.NoTitleBar`), where the builder without that context throws "The style on
+  this component requires your app theme to be Theme.AppCompat" and no dialog appears.
+  **New dependency: `com.google.android.material:material` 1.14.0**, the library that ships the Material
+  3 themes for Android views; every app using the plugin now includes it.
+
+- **Android: native dependency `androidx.webkit` 1.17.0 → 1.18.0.** No new build requirements (its AAR
+  still asks for `compileSdk` 33 and AGP 7.2).
+- **`ProfileStore.addCustomHeader` and `CustomHeader` say when a header takes effect**: on document load.
+  A page or service worker already running when a header is added or cleared keeps sending what it sent
+  before. androidx.webkit 1.18.0 documented this; the docs said "every request".
+
+### Fixed
+
+- **iOS: `CookieManager.getCookies` and `getCookie` returned cookies a request to the URL wouldn't send.** The
+  iOS filter was a domain suffix match over every cookie. It ignored the path (a `/a` cookie came back for
+  `/`) and the Secure flag (Secure cookies for `http://`). It gave a host's host-only cookies to its
+  subdomains, and to unrelated sites whose name ends the same way: `example.com`'s cookies came back for
+  `notexample.com`. Now on iOS 27 the result is WebKit's own (`WKHTTPCookieStore.getCookies(for:)`), and
+  below iOS 27 the plugin matches by RFC 6265; measured, both give the same result on all 7 URLs of the new
+  device test (iOS 27.0 and 26.5), which also passes on iOS 17.5. Android is unchanged.
+- **This package's README listed old requirements**: Dart `^3.8.0`, Flutter `>=3.32.0` and Xcode `>= 15.0`,
+  which pub.dev showed for 7.0.0 although that release needs Dart 3.12, Flutter 3.44 and Xcode 26. Its
+  Requirements now match the repository README's (and 7.1.0: Dart 3.13, Flutter 3.47, the Kotlin Gradle
+  Plugin note).
+
+- **Android: the InAppBrowser's status bar icons are readable in light mode.** They were white on the
+  light toolbar (measured on Android 17); the theme now asks for dark icons in light mode and light ones
+  in dark mode.
+
+### Internal
+
+- **The example app drops `permission_handler` and compiles against `flutter.compileSdkVersion` (36).**
+  Nothing used it (its import and calls were commented out), and `permission_handler_android` 14
+  compiles against API 37, which made the example pin `compileSdk = 37`.
+- **Both example apps drop the `espresso-core` 3.6.1 `force`** that AGP 9 needed under Flutter 3.44, whose
+  `integration_test` asked for `espresso-core:3.2+` (3.2.0 has no unique namespace). Flutter 3.47's asks
+  for `3.3+`, which resolves to 3.3.0 and merges: both examples build debug and profile APKs without it.
+- **The example apps' Gradle files lose what nothing used:** the JUnit and `androidTest` dependencies and
+  the `testInstrumentationRunner` (neither app has `src/test` or `src/androidTest`, and `androidTest` didn't
+  resolve), the `InvalidPackage` lint opt-out, the hand-read `local.properties` version code and name
+  (now `flutter.versionCode` / `flutter.versionName`, which default to the same `1` / `1.0`), and the main
+  example's unreferenced `settings_aar.gradle`. The built APKs carry the same versions as before.
+- **Tests: the integration suite ran on Android 8.0** (an API 26 emulator, stock WebView 58). Twelve of
+  the 16 groups pass (eleven before the proxy-test fix below). The failures caused by the API level are fixed; all are in the tests or their
+  fixtures:
+  - **The client-certificate fixture is re-exported in a format Android 8 can read.** OpenSSL 3's
+    PKCS#12 defaults (PBES2/AES-256, SHA-256 MAC) made Android 8's KeyStore fail with "PKCS12 key
+    store mac invalid", so `SSL request` got "Unauthorized". It's the same certificate and key
+    (fingerprints compared). Both copies are replaced, and the recipe in `test_node_server/index.js`
+    now passes the SHA-1/3DES PBE and SHA-1 MAC options.
+  - `clear and set proxy override` asserted the proxy page even when no override could be set. It now
+    skips without `PROXY_OVERRIDE`, as its sibling test does.
+  - `clearFocus` skips below API 28, where `View.clearFocus()` hands focus straight back to the
+    WebView. `requestFocus` checks only its first half there.
+  - The 3 safe-browsing tests skip without their API level or WebView feature, and so do the 3
+    render-process tests, using the same gate as the plugin.
+  - A new `androidSdkInt()` helper in `integration_test/util.dart` gives tests the API level,
+    answered by the example app's `MainActivity`. The example's manifest now launches `MainActivity`.
+    It used to launch `FlutterActivity` directly, so `MainActivity` never ran.
+
+  Rerun of those tests: on API 26, 3 pass and 7 skip; on API 37, all 12 pass with none skipped.
+
+  **Still failing on WebView 58.** None of these failures comes from the API level:
+  - the 18 Custom Tabs tests: that emulator image has no Chrome;
+  - 2 service-worker tests: the test page loads its code as an ES module (Chrome 61+);
+  - 31 of `in_app_webview`'s 40 failures. Most use features WebView 58 lacks without checking
+    `WebViewFeature`: WebMessageListener, NavigationListener, WebViewAssetLoader, Web Vitals, prerender,
+    mute audio, unprefixed fullscreen.
+  - Three of them look like plugin issues on WebView before 73, which uses the non-androidx client:
+    - a popup with `initialUserScripts` never loads (also the headless group's 1 failure);
+    - a popup's content blocker blocks its first page, which then loads anyway;
+    - a `null` `shouldOverrideUrlLoading` answer, or no handler, doesn't let the navigation continue.
+- **Doc fix: the path handlers' class docs show their "supported platforms" tables too.** dartdoc's
+  undefined-macro warnings for this package go from 9 to 0, with none new. The platform interface now
+  carries those templates on hidden classes, which nothing can import.
+- **Test: `deleteBrowsingData` and `deleteBrowsingDataForSite` on an existing named profile** (Android device test,
+  added to the named-profile storage test). After `deleteAllData`, the profile's Cache Storage is still listed (the
+  control). Then `deleteBrowsingData(profileName:)` empties the profile's listing. Storing again,
+  `deleteBrowsingDataForSite(profileName:)` on `http://127.0.0.1:8080/` answers `127.0.0.1` and empties it too.
+  2 of 3 mutants killed; the designed survivor shows the test can't tell a clear that completed before the answer
+  from one still in progress.
+- **The example app builds with AGP's built-in Kotlin** (`android.builtInKotlin=true`, was `false`). Under AGP 9 neither
+  `file_picker` 11 nor this plugin applies the Kotlin Gradle Plugin, so the per-module opt-ins (`:app`, and
+  `file_picker` from the root `build.gradle`) are gone. The value is set explicitly: Flutter 3.47.7's migrator appends
+  `android.builtInKotlin=false` to a `gradle.properties` that doesn't set the property. Flutter still warns that
+  `file_picker` applies KGP: its check reads the build file as text, and that `apply plugin` line only runs below
+  AGP 9.
+- **Tests: the integration tests' frame fix now runs on Android too.** After a frame the test binding
+  skipped, `installFrameWatchdog` asks the engine for a frame again. That closes the hole where a `pump`
+  waited for a frame no one had asked for. 7.1.0 limited it to iOS on the strength of one Android
+  comparison between separate runs. Compared within one run, alternating per skipped frame (5 240
+  frames per arm), the request changed nothing on Android 17: median gap to the next frame 16.6 ms
+  either way. A planted 30 ms delay was detected (51 ms against 20).
+- **Test: an existing named profile's storage, read and cleared through `WebStorageManager`** (Android
+  device test, `MULTI_PROFILE`). A WebView on the profile stores IndexedDB, Cache Storage and
+  `localStorage`. The test checks that `getOrigins`, `getUsageForOrigin` and `getQuotaForOrigin` with
+  `profileName` see that data, that the default store doesn't, and that `deleteOrigin` and `deleteAllData`
+  answer `true` and clear the profile's data. Until now only the default store and a missing profile were
+  covered. 4 of 5 mutants killed; the designed survivor shows `deleteBrowsingData` on a named profile is
+  still unchecked.
+- **Doc fix: class docs show their "supported platforms" tables.** The generated template they
+  `{@macro}` sat where dartdoc couldn't see it; it now sits on a public enum in the platform interface.
+  dartdoc's undefined-macro warnings for this package go from 44 to 9, and its unresolved doc references
+  from 22 to 18, with none new.
+- **Doc fix: `{@macro}`s that named no template.** dartdoc's undefined-macro warnings for this package go from
+  99 to 44, so 38 references now render their docs (for example `WebMessageChannel.port1`,
+  `PullToRefreshController.onRefresh`, `FindInteractionController.onFindResultReceived`), and 39 that named
+  nothing are removed. The 44 left are class-level "supported platforms" tables the generator hides in
+  private extensions; the newly rendered callback docs add 8 "unresolved doc reference" warnings (14 → 22)
+  for their parameter names, which dartdoc shows as plain text.
+- **Upstream's promotion is gone from the READMEs**: the share buttons, the donate badge, upstream's GitHub
+  forks / stars and Awesome Flutter badges, the Articles, Showcase and Support sections, and the
+  100-person upstream contributor table (with `.all-contributorsrc`, its bot's config). In their place:
+  a Resources section (the pub.dev API reference, the integration tests), a platform-setup pointer to
+  Requirements and the migration guide (upstream's setup pages describe 6.x), and a Credits line linking
+  to upstream and its contributors. `package.json`'s repository, bugs and homepage point at the fork.
+- The integration tests' `TEST_URL_3` and the test page's link use the fork's repository URL instead of
+  upstream's (the `shouldOverrideUrlLoading` test that follows that link passes on Android and iOS).
+- **The example app is Material 3.** Flutter side: `useMaterial3: false` and the blue Material 2 app bar
+  with white title and icons are gone, replaced by `colorSchemeSeed: Colors.blue`; three screens drop their
+  own blue app-bar colours (and a tab bar its white labels) and the app-bar loading spinner drops its
+  white, all of which would be invisible on Material 3's surface-coloured app bar. Native side: both themes,
+  light and night, are `Theme.Material3.DayNight.NoActionBar` (were `Theme.MaterialComponents.*`, and the
+  night launch theme `@android:style/Theme.Black.NoTitleBar`); Material dependency 1.12.0 → 1.14.0.
+- **No `package:flutter/material.dart` import left in `lib/`**: `in_app_webview.dart` dropped it (it already
+  imports `widgets.dart`).
+  Nothing in this package's `lib/` used Material or Cupertino: with the import swapped for `widgets.dart`,
+  analyze reported 0 errors. So the package works the same in an app on `package:material_ui` or on the
+  SDK's Material, and needs no `material_ui` dependency (the migration guide calls moving a package onto
+  `material_ui` a major-version change; this avoids it).
+- **The example uses `package:material_ui` (`^1.6.0`)**, Flutter 3.47's standalone Material: 81 files moved by
+  `dart fix --apply --code=migrate_design_widgets`. No dependency of the example reads Material theme or
+  localizations (`nested`, via `provider`, imports Material but uses none of it), so no compatibility bridge.
+- **Formatting only: 98 Dart files reformatted by Flutter 3.47.7's formatter at language 3.13** (7 in `lib/`, 91 in the example).
+  Each file's code is unchanged once whitespace and commas are removed (the tall style adds and drops
+  trailing commas); analyze and every test suite pass unchanged.
+- **The repo builds and tests on Flutter 3.47.7** (`.fvmrc`; was 3.44.9). `flutter pub get` on 3.47
+  adds `analyzer: exclude:` entries (`build/**`, plus the platform folders that exist) to each Flutter
+  package's `analysis_options.yaml`; that is flutter_tools' `AnalysisOptionsMigration`, which re-adds
+  them on every `pub get`, so they are kept. The excluded `android/` and `ios/` folders hold no Dart.
+- The example app declares KGP 2.4.0 on its build classpath (`apply false`), for the reason above;
+  AGP stays 9.3.1.
+
 ## 7.0.0
 
 **A hard fork of `flutter_inappwebview` 6.2.0-beta.3, for Android and iOS only.** Everything below is

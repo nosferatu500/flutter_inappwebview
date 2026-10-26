@@ -1,5 +1,6 @@
 import 'package:flutter/foundation.dart';
 import 'package:nosferatu500_inappwebview_internal_annotations/nosferatu500_inappwebview_internal_annotations.dart';
+
 import '../in_app_webview/platform_webview.dart';
 part 'navigation_type.g.dart';
 
@@ -18,8 +19,7 @@ class NavigationType_ {
     platforms: [
       EnumIOSPlatform(
         apiName: 'WKNavigationType.linkActivated',
-        apiUrl:
-            'https://developer.apple.com/documentation/webkit/wknavigationtype/linkactivated',
+        apiUrl: 'https://developer.apple.com/documentation/webkit/wknavigationtype/linkactivated',
         value: 0,
       ),
     ],
@@ -31,8 +31,7 @@ class NavigationType_ {
     platforms: [
       EnumIOSPlatform(
         apiName: 'WKNavigationType.formSubmitted',
-        apiUrl:
-            'https://developer.apple.com/documentation/webkit/wknavigationtype/formsubmitted',
+        apiUrl: 'https://developer.apple.com/documentation/webkit/wknavigationtype/formsubmitted',
         value: 1,
       ),
     ],
@@ -44,8 +43,7 @@ class NavigationType_ {
     platforms: [
       EnumIOSPlatform(
         apiName: 'WKNavigationType.formSubmitted',
-        apiUrl:
-            'https://developer.apple.com/documentation/webkit/wknavigationtype/formsubmitted',
+        apiUrl: 'https://developer.apple.com/documentation/webkit/wknavigationtype/formsubmitted',
         value: 2,
       ),
     ],
@@ -57,8 +55,7 @@ class NavigationType_ {
     platforms: [
       EnumIOSPlatform(
         apiName: 'WKNavigationType.reload',
-        apiUrl:
-            'https://developer.apple.com/documentation/webkit/wknavigationtype/reload',
+        apiUrl: 'https://developer.apple.com/documentation/webkit/wknavigationtype/reload',
         value: 3,
       ),
     ],
@@ -70,8 +67,7 @@ class NavigationType_ {
     platforms: [
       EnumIOSPlatform(
         apiName: 'WKNavigationType.formSubmitted',
-        apiUrl:
-            'https://developer.apple.com/documentation/webkit/wknavigationtype/formresubmitted',
+        apiUrl: 'https://developer.apple.com/documentation/webkit/wknavigationtype/formresubmitted',
         value: 4,
       ),
     ],
@@ -83,8 +79,7 @@ class NavigationType_ {
     platforms: [
       EnumIOSPlatform(
         apiName: 'WKNavigationType.other',
-        apiUrl:
-            'https://developer.apple.com/documentation/webkit/wknavigationtype/other',
+        apiUrl: 'https://developer.apple.com/documentation/webkit/wknavigationtype/other',
         value: -1,
       ),
     ],

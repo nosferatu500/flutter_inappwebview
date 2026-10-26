@@ -6,15 +6,18 @@ part of 'platform_web_authenticate_session.dart';
 // SupportedPlatformsGenerator
 // **************************************************************************
 
+///{@template nosferatu500_inappwebview_platform_interface.PlatformWebAuthenticationSessionCreationParams.supported_platforms}
+///
+///**Officially Supported Platforms/Implementations**:
+///- iOS WKWebView 11.0+
+///
+///Use the [PlatformWebAuthenticationSessionCreationParams.isClassSupported] method to check if this class is supported at runtime.
+///{@endtemplate}
+// Carries the template above for dartdoc; hidden from every export, so not API (§350).
+abstract final class PlatformWebAuthenticationSessionCreationParamsSupportedPlatforms {}
+
 extension _PlatformWebAuthenticationSessionCreationParamsClassSupported
     on PlatformWebAuthenticationSessionCreationParams {
-  ///{@template nosferatu500_inappwebview_platform_interface.PlatformWebAuthenticationSessionCreationParams.supported_platforms}
-  ///
-  ///**Officially Supported Platforms/Implementations**:
-  ///- iOS WKWebView 11.0+
-  ///
-  ///Use the [PlatformWebAuthenticationSessionCreationParams.isClassSupported] method to check if this class is supported at runtime.
-  ///{@endtemplate}
   static bool isClassSupported({TargetPlatform? platform}) {
     return ((kIsWeb && platform != null) || !kIsWeb) &&
         [TargetPlatform.iOS].contains(platform ?? defaultTargetPlatform);
@@ -23,13 +26,6 @@ extension _PlatformWebAuthenticationSessionCreationParamsClassSupported
 
 extension _PlatformWebAuthenticationSessionClassSupported
     on PlatformWebAuthenticationSession {
-  ///{@template nosferatu500_inappwebview_platform_interface.PlatformWebAuthenticationSession.supported_platforms}
-  ///
-  ///**Officially Supported Platforms/Implementations**:
-  ///- iOS WKWebView 11.0+
-  ///
-  ///Use the [PlatformWebAuthenticationSession.isClassSupported] method to check if this class is supported at runtime.
-  ///{@endtemplate}
   static bool isClassSupported({TargetPlatform? platform}) {
     return ((kIsWeb && platform != null) || !kIsWeb) &&
         [TargetPlatform.iOS].contains(platform ?? defaultTargetPlatform);
@@ -37,6 +33,14 @@ extension _PlatformWebAuthenticationSessionClassSupported
 }
 
 ///List of [PlatformWebAuthenticationSession]'s properties that can be used to check i they are supported or not by the current platform.
+///
+///{@template nosferatu500_inappwebview_platform_interface.PlatformWebAuthenticationSession.supported_platforms}
+///
+///**Officially Supported Platforms/Implementations**:
+///- iOS WKWebView 11.0+
+///
+///Use the [PlatformWebAuthenticationSession.isClassSupported] method to check if this class is supported at runtime.
+///{@endtemplate}
 enum PlatformWebAuthenticationSessionProperty {
   ///Can be used to check if the [PlatformWebAuthenticationSession.callbackURLScheme] property is supported at runtime.
   ///
@@ -79,8 +83,8 @@ enum PlatformWebAuthenticationSessionProperty {
   ///- iOS WKWebView
   ///
   ///**Parameters - Officially Supported Platforms/Implementations**:
-  ///- [url]: all platforms
-  ///- [error]: all platforms
+  ///- `url`: all platforms
+  ///- `error`: all platforms
   ///
   ///Use the [PlatformWebAuthenticationSession.isPropertySupported] method to check if this property is supported at runtime.
   ///{@endtemplate}
@@ -156,10 +160,10 @@ enum PlatformWebAuthenticationSessionMethod {
   ///- iOS WKWebView
   ///
   ///**Parameters - Officially Supported Platforms/Implementations**:
-  ///- [url]: all platforms
-  ///- [callbackURLScheme]: all platforms
-  ///- [onComplete]: all platforms
-  ///- [initialSettings]: all platforms
+  ///- `url`: all platforms
+  ///- `callbackURLScheme`: all platforms
+  ///- `onComplete`: all platforms
+  ///- `initialSettings`: all platforms
   ///
   ///Use the [PlatformWebAuthenticationSession.isMethodSupported] method to check if this method is supported at runtime.
   ///{@endtemplate}

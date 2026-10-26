@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'dart:io';
+
 import 'package:flutter/foundation.dart';
 import 'package:nosferatu500_inappwebview_platform_interface/nosferatu500_inappwebview_platform_interface.dart';
 
@@ -38,28 +39,18 @@ class InAppLocalhostServer {
   final PlatformInAppLocalhostServer platform;
 
   ///{@macro nosferatu500_inappwebview_platform_interface.PlatformInAppLocalhostServer.port}
-  ///
-  ///{@macro nosferatu500_inappwebview_platform_interface.PlatformInAppLocalhostServer.port.supported_platforms}
   int get port => platform.port;
 
   ///{@macro nosferatu500_inappwebview_platform_interface.PlatformInAppLocalhostServer.directoryIndex}
-  ///
-  ///{@macro nosferatu500_inappwebview_platform_interface.PlatformInAppLocalhostServer.directoryIndex.supported_platforms}
   String get directoryIndex => platform.directoryIndex;
 
   ///{@macro nosferatu500_inappwebview_platform_interface.PlatformInAppLocalhostServer.documentRoot}
-  ///
-  ///{@macro nosferatu500_inappwebview_platform_interface.PlatformInAppLocalhostServer.documentRoot.supported_platforms}
   String get documentRoot => platform.documentRoot;
 
   ///{@macro nosferatu500_inappwebview_platform_interface.PlatformInAppLocalhostServer.shared}
-  ///
-  ///{@macro nosferatu500_inappwebview_platform_interface.PlatformInAppLocalhostServer.shared.supported_platforms}
   bool get shared => platform.shared;
 
   ///{@macro nosferatu500_inappwebview_platform_interface.PlatformInAppLocalhostServer.onData}
-  ///
-  ///{@macro nosferatu500_inappwebview_platform_interface.PlatformInAppLocalhostServer.onData.supported_platforms}
   Future<bool> Function(HttpRequest request)? get onData => platform.onData;
 
   ///{@macro nosferatu500_inappwebview_platform_interface.PlatformInAppLocalhostServer.start}

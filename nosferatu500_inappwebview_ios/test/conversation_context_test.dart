@@ -53,16 +53,19 @@ void main() {
       expect(back.primaryRecipientIdentifiers, {'me'});
     });
 
-    test('an incomplete entry still serialises — the drop happens natively', () {
-      // Dart deliberately does not enforce the four required fields: the map is well-formed with
-      // nulls in it, and `UIConversationContext.Entry.fromMap` is what refuses it. This pins that
-      // the nulls actually reach the wire, which is what the Swift guard tests against.
-      final map = ConversationEntry(text: 'orphan').toMap();
-      expect(map['text'], 'orphan');
-      expect(map['senderIdentifier'], isNull);
-      expect(map['sentDate'], isNull);
-      expect(map['entryIdentifier'], isNull);
-    });
+    test(
+      'an incomplete entry still serialises — the drop happens natively',
+      () {
+        // Dart deliberately does not enforce the four required fields: the map is well-formed with
+        // nulls in it, and `UIConversationContext.Entry.fromMap` is what refuses it. This pins that
+        // the nulls actually reach the wire, which is what the Swift guard tests against.
+        final map = ConversationEntry(text: 'orphan').toMap();
+        expect(map['text'], 'orphan');
+        expect(map['senderIdentifier'], isNull);
+        expect(map['sentDate'], isNull);
+        expect(map['entryIdentifier'], isNull);
+      },
+    );
   });
 
   group('ConversationContext', () {

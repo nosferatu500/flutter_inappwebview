@@ -56,8 +56,7 @@ void main() {
       expect(
         calls.single.method,
         'setAcceptCookie',
-        reason:
-            'the same wire name the Kotlin answers to -- one Dart method, one channel method',
+        reason: 'the same wire name the Kotlin answers to -- one Dart method, one channel method',
       );
       expect(argsOf(calls.single), <Object?, Object?>{'accept': false});
     });

@@ -55,8 +55,7 @@ void cookieStoreObserver() {
       expect(
         changes,
         greaterThan(0),
-        reason:
-            'a cookie written through this plugin is a change to the store WebKit observes',
+        reason: 'a cookie written through this plugin is a change to the store WebKit observes',
       );
 
       final afterSet = changes;

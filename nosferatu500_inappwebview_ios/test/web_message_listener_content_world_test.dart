@@ -35,9 +35,8 @@ void main() {
       () {
         // Swift: WKContentWorld.fromMap(map: map["contentWorld"] as? [String:Any?], ...)
         //        -> map["name"] as! String
-        final map = listener(
-          contentWorld: ContentWorld.world(name: 'myWorld'),
-        ).toMap();
+        final map = listener(contentWorld: ContentWorld.world(name: 'myWorld'))
+            .toMap();
 
         expect(map.containsKey('contentWorld'), isTrue);
         expect(map['contentWorld'], {'name': 'myWorld'});

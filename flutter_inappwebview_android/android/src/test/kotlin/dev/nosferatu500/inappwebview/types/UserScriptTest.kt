@@ -108,6 +108,5 @@ class UserScriptTest {
   fun `ContentWorld identity is by name, so PAGE and a hand-built page world match`() {
     assertEquals(ContentWorld.PAGE, ContentWorld.world("page"))
     assertEquals(ContentWorld.PAGE, ContentWorld.fromMap(mapOf("name" to "page")))
-    assertEquals("defaultClient", ContentWorld.DEFAULT_CLIENT.name)
   }
 }

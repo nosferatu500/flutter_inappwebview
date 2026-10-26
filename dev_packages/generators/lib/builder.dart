@@ -1,5 +1,6 @@
 import 'package:build/build.dart';
 import 'package:source_gen/source_gen.dart';
+
 import 'src/exchangeable_object_generator.dart';
 import 'src/exchangeable_enum_generator.dart';
 import 'src/supported_platforms_generator.dart';

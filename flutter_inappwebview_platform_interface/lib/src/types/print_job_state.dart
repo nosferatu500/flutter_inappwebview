@@ -21,8 +21,7 @@ class PrintJobState_ {
     platforms: [
       EnumAndroidPlatform(
         apiName: 'PrintJobInfo.STATE_CREATED',
-        apiUrl:
-            'https://developer.android.com/reference/android/print/PrintJobInfo#STATE_CREATED',
+        apiUrl: 'https://developer.android.com/reference/android/print/PrintJobInfo#STATE_CREATED',
         value: 1,
       ),
       EnumIOSPlatform(value: 1),
@@ -37,8 +36,7 @@ class PrintJobState_ {
     platforms: [
       EnumAndroidPlatform(
         apiName: 'PrintJobInfo.STATE_QUEUED',
-        apiUrl:
-            'https://developer.android.com/reference/android/print/PrintJobInfo#STATE_QUEUED',
+        apiUrl: 'https://developer.android.com/reference/android/print/PrintJobInfo#STATE_QUEUED',
         value: 2,
       ),
     ],
@@ -52,8 +50,7 @@ class PrintJobState_ {
     platforms: [
       EnumAndroidPlatform(
         apiName: 'PrintJobInfo.STATE_STARTED',
-        apiUrl:
-            'https://developer.android.com/reference/android/print/PrintJobInfo#STATE_STARTED',
+        apiUrl: 'https://developer.android.com/reference/android/print/PrintJobInfo#STATE_STARTED',
         value: 3,
       ),
       EnumIOSPlatform(value: 3),
@@ -68,8 +65,7 @@ class PrintJobState_ {
     platforms: [
       EnumAndroidPlatform(
         apiName: 'PrintJobInfo.STATE_BLOCKED',
-        apiUrl:
-            'https://developer.android.com/reference/android/print/PrintJobInfo#STATE_BLOCKED',
+        apiUrl: 'https://developer.android.com/reference/android/print/PrintJobInfo#STATE_BLOCKED',
         value: 4,
       ),
     ],
@@ -83,8 +79,7 @@ class PrintJobState_ {
     platforms: [
       EnumAndroidPlatform(
         apiName: 'PrintJobInfo.STATE_COMPLETED',
-        apiUrl:
-            'https://developer.android.com/reference/android/print/PrintJobInfo#STATE_COMPLETED',
+        apiUrl: 'https://developer.android.com/reference/android/print/PrintJobInfo#STATE_COMPLETED',
         value: 5,
       ),
       EnumIOSPlatform(value: 5),
@@ -99,8 +94,7 @@ class PrintJobState_ {
     platforms: [
       EnumAndroidPlatform(
         apiName: 'PrintJobInfo.STATE_FAILED',
-        apiUrl:
-            'https://developer.android.com/reference/android/print/PrintJobInfo#STATE_FAILED',
+        apiUrl: 'https://developer.android.com/reference/android/print/PrintJobInfo#STATE_FAILED',
         value: 6,
       ),
       EnumIOSPlatform(value: 6),
@@ -115,8 +109,7 @@ class PrintJobState_ {
     platforms: [
       EnumAndroidPlatform(
         apiName: 'PrintJobInfo.STATE_CANCELED',
-        apiUrl:
-            'https://developer.android.com/reference/android/print/PrintJobInfo#STATE_CANCELED',
+        apiUrl: 'https://developer.android.com/reference/android/print/PrintJobInfo#STATE_CANCELED',
         value: 7,
       ),
       EnumIOSPlatform(value: 7),

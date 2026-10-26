@@ -6,32 +6,18 @@ part of 'platform_profile_store.dart';
 // SupportedPlatformsGenerator
 // **************************************************************************
 
+///{@template nosferatu500_inappwebview_platform_interface.PlatformProfileStoreCreationParams.supported_platforms}
+///
+///**Officially Supported Platforms/Implementations**:
+///- Android WebView
+///
+///Use the [PlatformProfileStoreCreationParams.isClassSupported] method to check if this class is supported at runtime.
+///{@endtemplate}
+// Carries the template above for dartdoc; hidden from every export, so not API (§350).
+abstract final class PlatformProfileStoreCreationParamsSupportedPlatforms {}
+
 extension _PlatformProfileStoreCreationParamsClassSupported
     on PlatformProfileStoreCreationParams {
-  ///{@template nosferatu500_inappwebview_platform_interface.PlatformProfileStoreCreationParams.supported_platforms}
-  ///
-  ///**Officially Supported Platforms/Implementations**:
-  ///- Android WebView
-  ///
-  ///Use the [PlatformProfileStoreCreationParams.isClassSupported] method to check if this class is supported at runtime.
-  ///{@endtemplate}
-  static bool isClassSupported({TargetPlatform? platform}) {
-    return ((kIsWeb && platform != null) || !kIsWeb) &&
-        [TargetPlatform.android].contains(platform ?? defaultTargetPlatform);
-  }
-}
-
-extension _PlatformProfileStoreClassSupported on PlatformProfileStore {
-  ///{@template nosferatu500_inappwebview_platform_interface.PlatformProfileStore.supported_platforms}
-  ///
-  ///**Officially Supported Platforms/Implementations**:
-  ///- Android WebView ([Official API - ProfileStore](https://developer.android.com/reference/androidx/webkit/ProfileStore)):
-  ///    - available on Android only if [WebViewFeature.MULTI_PROFILE] feature is supported.
-  ///
-  ///Use the [PlatformProfileStore.isClassSupported] method to check if this class is supported at runtime.
-  ///{@endtemplate}
-  // Unused: [PlatformProfileStore.isClassSupported] answers through its creation params. Kept for the doc template above.
-  // ignore: unused_element
   static bool isClassSupported({TargetPlatform? platform}) {
     return ((kIsWeb && platform != null) || !kIsWeb) &&
         [TargetPlatform.android].contains(platform ?? defaultTargetPlatform);
@@ -39,6 +25,15 @@ extension _PlatformProfileStoreClassSupported on PlatformProfileStore {
 }
 
 ///List of [PlatformProfileStore]'s methods that can be used to check if they are supported or not by the current platform.
+///
+///{@template nosferatu500_inappwebview_platform_interface.PlatformProfileStore.supported_platforms}
+///
+///**Officially Supported Platforms/Implementations**:
+///- Android WebView ([Official API - ProfileStore](https://developer.android.com/reference/androidx/webkit/ProfileStore)):
+///    - available on Android only if [WebViewFeature.MULTI_PROFILE] feature is supported.
+///
+///Use the [PlatformProfileStore.isClassSupported] method to check if this class is supported at runtime.
+///{@endtemplate}
 enum PlatformProfileStoreMethod {
   ///Can be used to check if the [PlatformProfileStore.addCustomHeader] method is supported at runtime.
   ///
@@ -49,8 +44,8 @@ enum PlatformProfileStoreMethod {
   ///    - Requires [WebViewFeature.MULTI_PROFILE] and [WebViewFeature.CUSTOM_REQUEST_HEADERS]. The androidx API is on `Profile`; this class reaches it by name, which is how every other profile-scoped surface in this plugin works.
   ///
   ///**Parameters - Officially Supported Platforms/Implementations**:
-  ///- [header]: all platforms
-  ///- [profileName]:
+  ///- `header`: all platforms
+  ///- `profileName`:
   ///    - Android WebView
   ///
   ///Use the [PlatformProfileStore.isMethodSupported] method to check if this method is supported at runtime.
@@ -66,7 +61,7 @@ enum PlatformProfileStoreMethod {
   ///    - Requires [WebViewFeature.MULTI_PROFILE] and [WebViewFeature.CUSTOM_REQUEST_HEADERS]. The androidx API is on `Profile`; this class reaches it by name, which is how every other profile-scoped surface in this plugin works.
   ///
   ///**Parameters - Officially Supported Platforms/Implementations**:
-  ///- [profileName]:
+  ///- `profileName`:
   ///    - Android WebView
   ///
   ///Use the [PlatformProfileStore.isMethodSupported] method to check if this method is supported at runtime.
@@ -82,10 +77,10 @@ enum PlatformProfileStoreMethod {
   ///    - Requires [WebViewFeature.MULTI_PROFILE] and [WebViewFeature.CUSTOM_REQUEST_HEADERS]. The androidx API is on `Profile`; this class reaches it by name, which is how every other profile-scoped surface in this plugin works.
   ///
   ///**Parameters - Officially Supported Platforms/Implementations**:
-  ///- [headerName]: all platforms
-  ///- [headerValue]:
+  ///- `headerName`: all platforms
+  ///- `headerValue`:
   ///    - Android WebView
-  ///- [profileName]:
+  ///- `profileName`:
   ///    - Android WebView
   ///
   ///Use the [PlatformProfileStore.isMethodSupported] method to check if this method is supported at runtime.
@@ -101,7 +96,7 @@ enum PlatformProfileStoreMethod {
   ///    - Requires [WebViewFeature.MULTI_PROFILE]. Returns `false` and deletes nothing if the feature is not supported.
   ///
   ///**Parameters - Officially Supported Platforms/Implementations**:
-  ///- [name]: all platforms
+  ///- `name`: all platforms
   ///
   ///Use the [PlatformProfileStore.isMethodSupported] method to check if this method is supported at runtime.
   ///{@endtemplate}
@@ -119,6 +114,22 @@ enum PlatformProfileStoreMethod {
   ///{@endtemplate}
   getAllProfileNames,
 
+  ///Can be used to check if the [PlatformProfileStore.getCrossOriginIsolatedAllowlist] method is supported at runtime.
+  ///
+  ///{@template nosferatu500_inappwebview_platform_interface.PlatformProfileStore.getCrossOriginIsolatedAllowlist.supported_platforms}
+  ///
+  ///**Officially Supported Platforms/Implementations**:
+  ///- Android WebView ([Official API - Profile.getCrossOriginIsolatedAllowlist](https://developer.android.com/reference/androidx/webkit/Profile#getCrossOriginIsolatedAllowlist())):
+  ///    - Requires [WebViewFeature.MULTI_PROFILE] and [WebViewFeature.CROSS_ORIGIN_ISOLATED_ALLOWLIST]. The androidx API is on `Profile`; this class reaches it by name, which is how every other profile-scoped surface in this plugin works.
+  ///
+  ///**Parameters - Officially Supported Platforms/Implementations**:
+  ///- `profileName`:
+  ///    - Android WebView
+  ///
+  ///Use the [PlatformProfileStore.isMethodSupported] method to check if this method is supported at runtime.
+  ///{@endtemplate}
+  getCrossOriginIsolatedAllowlist,
+
   ///Can be used to check if the [PlatformProfileStore.getCustomHeaders] method is supported at runtime.
   ///
   ///{@template nosferatu500_inappwebview_platform_interface.PlatformProfileStore.getCustomHeaders.supported_platforms}
@@ -128,11 +139,11 @@ enum PlatformProfileStoreMethod {
   ///    - Requires [WebViewFeature.MULTI_PROFILE] and [WebViewFeature.CUSTOM_REQUEST_HEADERS]. The androidx API is on `Profile`; this class reaches it by name, which is how every other profile-scoped surface in this plugin works.
   ///
   ///**Parameters - Officially Supported Platforms/Implementations**:
-  ///- [headerName]:
+  ///- `headerName`:
   ///    - Android WebView
-  ///- [headerValue]:
+  ///- `headerValue`:
   ///    - Android WebView
-  ///- [profileName]:
+  ///- `profileName`:
   ///    - Android WebView
   ///
   ///Use the [PlatformProfileStore.isMethodSupported] method to check if this method is supported at runtime.
@@ -148,7 +159,7 @@ enum PlatformProfileStoreMethod {
   ///    - Requires [WebViewFeature.MULTI_PROFILE]. Returns `null` and creates nothing if the feature is not supported.
   ///
   ///**Parameters - Officially Supported Platforms/Implementations**:
-  ///- [name]: all platforms
+  ///- `name`: all platforms
   ///
   ///Use the [PlatformProfileStore.isMethodSupported] method to check if this method is supported at runtime.
   ///{@endtemplate}
@@ -163,13 +174,30 @@ enum PlatformProfileStoreMethod {
   ///    - Requires [WebViewFeature.MULTI_PROFILE] and [WebViewFeature.CUSTOM_REQUEST_HEADERS]. The androidx API is on `Profile`; this class reaches it by name, which is how every other profile-scoped surface in this plugin works.
   ///
   ///**Parameters - Officially Supported Platforms/Implementations**:
-  ///- [headerName]: all platforms
-  ///- [profileName]:
+  ///- `headerName`: all platforms
+  ///- `profileName`:
   ///    - Android WebView
   ///
   ///Use the [PlatformProfileStore.isMethodSupported] method to check if this method is supported at runtime.
   ///{@endtemplate}
   hasCustomHeader,
+
+  ///Can be used to check if the [PlatformProfileStore.setCrossOriginIsolatedAllowlist] method is supported at runtime.
+  ///
+  ///{@template nosferatu500_inappwebview_platform_interface.PlatformProfileStore.setCrossOriginIsolatedAllowlist.supported_platforms}
+  ///
+  ///**Officially Supported Platforms/Implementations**:
+  ///- Android WebView ([Official API - Profile.setCrossOriginIsolatedAllowlist](https://developer.android.com/reference/androidx/webkit/Profile#setCrossOriginIsolatedAllowlist(java.util.Set%3Cjava.lang.String%3E))):
+  ///    - Requires [WebViewFeature.MULTI_PROFILE] and [WebViewFeature.CROSS_ORIGIN_ISOLATED_ALLOWLIST]. The androidx API is on `Profile`; this class reaches it by name, which is how every other profile-scoped surface in this plugin works.
+  ///
+  ///**Parameters - Officially Supported Platforms/Implementations**:
+  ///- `originRules`: all platforms
+  ///- `profileName`:
+  ///    - Android WebView
+  ///
+  ///Use the [PlatformProfileStore.isMethodSupported] method to check if this method is supported at runtime.
+  ///{@endtemplate}
+  setCrossOriginIsolatedAllowlist,
 }
 
 extension _PlatformProfileStoreMethodSupported on PlatformProfileStore {
@@ -180,44 +208,44 @@ extension _PlatformProfileStoreMethodSupported on PlatformProfileStore {
     switch (method) {
       case PlatformProfileStoreMethod.addCustomHeader:
         return ((kIsWeb && platform != null) || !kIsWeb) &&
-            [
-              TargetPlatform.android,
-            ].contains(platform ?? defaultTargetPlatform);
+            [TargetPlatform.android]
+                .contains(platform ?? defaultTargetPlatform);
       case PlatformProfileStoreMethod.clearAllCustomHeaders:
         return ((kIsWeb && platform != null) || !kIsWeb) &&
-            [
-              TargetPlatform.android,
-            ].contains(platform ?? defaultTargetPlatform);
+            [TargetPlatform.android]
+                .contains(platform ?? defaultTargetPlatform);
       case PlatformProfileStoreMethod.clearCustomHeader:
         return ((kIsWeb && platform != null) || !kIsWeb) &&
-            [
-              TargetPlatform.android,
-            ].contains(platform ?? defaultTargetPlatform);
+            [TargetPlatform.android]
+                .contains(platform ?? defaultTargetPlatform);
       case PlatformProfileStoreMethod.deleteProfile:
         return ((kIsWeb && platform != null) || !kIsWeb) &&
-            [
-              TargetPlatform.android,
-            ].contains(platform ?? defaultTargetPlatform);
+            [TargetPlatform.android]
+                .contains(platform ?? defaultTargetPlatform);
       case PlatformProfileStoreMethod.getAllProfileNames:
         return ((kIsWeb && platform != null) || !kIsWeb) &&
-            [
-              TargetPlatform.android,
-            ].contains(platform ?? defaultTargetPlatform);
+            [TargetPlatform.android]
+                .contains(platform ?? defaultTargetPlatform);
+      case PlatformProfileStoreMethod.getCrossOriginIsolatedAllowlist:
+        return ((kIsWeb && platform != null) || !kIsWeb) &&
+            [TargetPlatform.android]
+                .contains(platform ?? defaultTargetPlatform);
       case PlatformProfileStoreMethod.getCustomHeaders:
         return ((kIsWeb && platform != null) || !kIsWeb) &&
-            [
-              TargetPlatform.android,
-            ].contains(platform ?? defaultTargetPlatform);
+            [TargetPlatform.android]
+                .contains(platform ?? defaultTargetPlatform);
       case PlatformProfileStoreMethod.getOrCreateProfile:
         return ((kIsWeb && platform != null) || !kIsWeb) &&
-            [
-              TargetPlatform.android,
-            ].contains(platform ?? defaultTargetPlatform);
+            [TargetPlatform.android]
+                .contains(platform ?? defaultTargetPlatform);
       case PlatformProfileStoreMethod.hasCustomHeader:
         return ((kIsWeb && platform != null) || !kIsWeb) &&
-            [
-              TargetPlatform.android,
-            ].contains(platform ?? defaultTargetPlatform);
+            [TargetPlatform.android]
+                .contains(platform ?? defaultTargetPlatform);
+      case PlatformProfileStoreMethod.setCrossOriginIsolatedAllowlist:
+        return ((kIsWeb && platform != null) || !kIsWeb) &&
+            [TargetPlatform.android]
+                .contains(platform ?? defaultTargetPlatform);
     }
   }
 }

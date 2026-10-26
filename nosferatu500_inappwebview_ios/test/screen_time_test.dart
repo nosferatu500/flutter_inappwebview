@@ -22,9 +22,8 @@ void main() {
     test('serialises under the key the Swift side parses', () {
       // Swift: `var showsSystemScreenTimeBlockingView = true`, set by KVC from this exact key.
       expect(
-        InAppWebViewSettings(
-          showsSystemScreenTimeBlockingView: false,
-        ).toMap()['showsSystemScreenTimeBlockingView'],
+        InAppWebViewSettings(showsSystemScreenTimeBlockingView: false)
+            .toMap()['showsSystemScreenTimeBlockingView'],
         false,
       );
     });
@@ -43,9 +42,8 @@ void main() {
     test('round-trips both states through fromMap', () {
       for (final value in <bool>[false, true]) {
         final back = InAppWebViewSettings.fromMap(
-          InAppWebViewSettings(
-            showsSystemScreenTimeBlockingView: value,
-          ).toMap(),
+          InAppWebViewSettings(showsSystemScreenTimeBlockingView: value)
+              .toMap(),
         )!;
         expect(back.showsSystemScreenTimeBlockingView, value);
       }
@@ -113,18 +111,21 @@ void main() {
       );
     });
 
-    test('ALL still carries the neighbouring iOS 17 types it gained in §86', () {
-      // A control: if `ALL` were empty or truncated the assertion above would pass for the wrong
-      // reason. These four are the ones §86 added alongside the excluded one.
-      expect(
-        WebsiteDataType.ALL,
-        containsAll(<WebsiteDataType>[
-          WebsiteDataType.WKWebsiteDataTypeFileSystem,
-          WebsiteDataType.WKWebsiteDataTypeSearchFieldRecentSearches,
-          WebsiteDataType.WKWebsiteDataTypeMediaKeys,
-          WebsiteDataType.WKWebsiteDataTypeHashSalt,
-        ]),
-      );
-    });
+    test(
+      'ALL still carries the neighbouring iOS 17 types it gained in §86',
+      () {
+        // A control: if `ALL` were empty or truncated the assertion above would pass for the wrong
+        // reason. These four are the ones §86 added alongside the excluded one.
+        expect(
+          WebsiteDataType.ALL,
+          containsAll(<WebsiteDataType>[
+            WebsiteDataType.WKWebsiteDataTypeFileSystem,
+            WebsiteDataType.WKWebsiteDataTypeSearchFieldRecentSearches,
+            WebsiteDataType.WKWebsiteDataTypeMediaKeys,
+            WebsiteDataType.WKWebsiteDataTypeHashSalt,
+          ]),
+        );
+      },
+    );
   });
 }

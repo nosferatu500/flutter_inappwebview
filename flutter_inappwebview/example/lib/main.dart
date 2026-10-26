@@ -1,7 +1,7 @@
 import 'dart:async';
 
 import 'package:flutter/foundation.dart';
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:nosferatu500_inappwebview/nosferatu500_inappwebview.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter_inappwebview_example/providers/event_log_provider.dart';
@@ -28,7 +28,6 @@ import 'package:flutter_inappwebview_example/screens/test_automation/test_config
 import 'package:flutter_inappwebview_example/utils/test_registry.dart';
 
 // import 'package:path_provider/path_provider.dart';
-// import 'package:permission_handler/permission_handler.dart';
 
 final localhostServer = InAppLocalhostServer(documentRoot: 'assets');
 
@@ -37,10 +36,6 @@ Future main() async {
 
   // Initialize test registry
   TestRegistry.init();
-
-  // await Permission.camera.request();
-  // await Permission.microphone.request();
-  // await Permission.storage.request();
 
   if (!kIsWeb && defaultTargetPlatform == TargetPlatform.android) {
     await InAppWebViewController.setWebContentsDebuggingEnabled(kDebugMode);
@@ -104,18 +99,8 @@ class _MyAppState extends State<MyApp> {
     return MaterialApp(
       title: '$InAppWebView Test Suite',
       theme: ThemeData(
-        primarySwatch: Colors.blue,
-        appBarTheme: const AppBarTheme(
-          elevation: 2,
-          centerTitle: false,
-          iconTheme: IconThemeData(color: Colors.white),
-          titleTextStyle: TextStyle(
-            color: Colors.white,
-            fontSize: 20,
-            fontWeight: FontWeight.w500,
-          ),
-        ),
-        useMaterial3: false,
+        colorSchemeSeed: Colors.blue,
+        appBarTheme: const AppBarTheme(centerTitle: false),
       ),
       routes: {
         '/': (context) => const WebViewTesterScreen(),

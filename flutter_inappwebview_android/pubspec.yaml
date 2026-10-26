@@ -1,6 +1,6 @@
 name: nosferatu500_inappwebview_android
 description: Android implementation of the nosferatu500_inappwebview plugin.
-version: 7.0.0
+version: 7.1.0
 homepage: https://github.com/nosferatu500/flutter_inappwebview
 repository: https://github.com/nosferatu500/flutter_inappwebview/tree/master/flutter_inappwebview_android
 issue_tracker: https://github.com/nosferatu500/flutter_inappwebview/issues
@@ -12,21 +12,21 @@ topics:
   - browser
 
 environment:
-  sdk: ^3.12.0
-  flutter: ">=3.44.0"
+  sdk: ^3.13.0
+  flutter: ">=3.47.0"
 
 dependencies:
   flutter:
     sdk: flutter
-  nosferatu500_inappwebview_platform_interface: ^7.0.0
+  nosferatu500_inappwebview_platform_interface: ^7.1.0
     # path: ../flutter_inappwebview_platform_interface
   # Required by the Pigeon-generated lib/src/pigeons/*.g.dart, which import
   # `package:meta/meta.dart` for `immutable` / `protected` / `visibleForTesting`. Without it
   # `flutter pub publish` REFUSES this package (exit 65) — pub treats an undeclared import from
   # lib/ as an error, and no other gate in this repo can see it. Deliberately a loose lower bound:
-  # those three annotations have been in meta for years, while the Flutter SDK pins meta to an
-  # *exact* version (1.18.0 on 3.44.9), so a tight bound here would risk conflicting with whatever
-  # a given Flutter release happens to pin.
+  # those three annotations have been in meta for years, while the Flutter SDK constrains meta
+  # itself (an exact 1.18.0 on 3.44.9, ^1.18.3 on 3.47.7), so a tight bound here would risk
+  # conflicting with whatever a given Flutter release happens to require.
   meta: ^1.15.0
 
 dev_dependencies:

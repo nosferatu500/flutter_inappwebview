@@ -6,8 +6,6 @@ enum class NavigationActionPolicy(private val value: Int) {
 
   fun equalsValue(otherValue: Int): Boolean = value == otherValue
 
-  fun rawValue(): Int = value
-
   override fun toString(): String = value.toString()
 
   companion object {

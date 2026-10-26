@@ -450,4 +450,65 @@ class ProfileStoreHostApi {
     );
     return pigeonVar_replyValue! as bool;
   }
+
+  /// Replaces the profile's cross-origin-isolated allowlist (androidx 1.18.0,
+  /// `CROSS_ORIGIN_ISOLATED_ALLOWLIST`) with [originRules]; an empty list clears it.
+  ///
+  /// Answers whether the profile was resolved, as [addCustomHeader] does: `false` when
+  /// `CROSS_ORIGIN_ISOLATED_ALLOWLIST` or `MULTI_PROFILE` is missing, or no profile has that name.
+  ///
+  /// A rule androidx can't parse makes it throw `IllegalArgumentException`, which the Kotlin
+  /// re-throws as `FlutterError("ProfileStoreManager", …)` for the reason [deleteProfile] gives.
+  /// A `List` because the wire has no set.
+  Future<bool> setCrossOriginIsolatedAllowlist(
+    List<String> originRules,
+    String? profileName,
+  ) async {
+    final pigeonVar_channelName =
+        'dev.flutter.pigeon.nosferatu500_inappwebview_android.ProfileStoreHostApi.setCrossOriginIsolatedAllowlist$pigeonVar_messageChannelSuffix';
+    final pigeonVar_channel = BasicMessageChannel<Object?>(
+      pigeonVar_channelName,
+      pigeonChannelCodec,
+      binaryMessenger: pigeonVar_binaryMessenger,
+    );
+    final Future<Object?> pigeonVar_sendFuture = pigeonVar_channel.send(
+      <Object?>[originRules, profileName],
+    );
+    final pigeonVar_replyList = await pigeonVar_sendFuture as List<Object?>?;
+
+    final Object? pigeonVar_replyValue = _extractReplyValueOrThrow(
+      pigeonVar_replyList,
+      pigeonVar_channelName,
+      isNullValid: false,
+    );
+    return pigeonVar_replyValue! as bool;
+  }
+
+  /// The profile's cross-origin-isolated allowlist, each rule with its port written out
+  /// (`https://example.com` reads back as `https://example.com:443`).
+  ///
+  /// `null` when the profile or the feature can't be resolved, as [hasCustomHeader] answers: the
+  /// empty list is a real answer here, "no allowlist", so it can't also mean "unreachable".
+  Future<List<String>?> getCrossOriginIsolatedAllowlist(
+    String? profileName,
+  ) async {
+    final pigeonVar_channelName =
+        'dev.flutter.pigeon.nosferatu500_inappwebview_android.ProfileStoreHostApi.getCrossOriginIsolatedAllowlist$pigeonVar_messageChannelSuffix';
+    final pigeonVar_channel = BasicMessageChannel<Object?>(
+      pigeonVar_channelName,
+      pigeonChannelCodec,
+      binaryMessenger: pigeonVar_binaryMessenger,
+    );
+    final Future<Object?> pigeonVar_sendFuture = pigeonVar_channel.send(
+      <Object?>[profileName],
+    );
+    final pigeonVar_replyList = await pigeonVar_sendFuture as List<Object?>?;
+
+    final Object? pigeonVar_replyValue = _extractReplyValueOrThrow(
+      pigeonVar_replyList,
+      pigeonVar_channelName,
+      isNullValid: true,
+    );
+    return (pigeonVar_replyValue as List<Object?>?)?.cast<String>();
+  }
 }

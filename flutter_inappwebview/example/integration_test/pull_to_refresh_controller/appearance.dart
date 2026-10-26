@@ -5,19 +5,21 @@ void appearance() {
     PlatformPullToRefreshControllerMethod.getDefaultSlingshotDistance,
   );
 
-  skippableTestWidgets('getDefaultSlingshotDistance answers the platform constant', (
-    WidgetTester tester,
-  ) async {
-    final controller = await _pumpWebViewWithPullToRefresh(tester);
+  skippableTestWidgets(
+    'getDefaultSlingshotDistance answers the platform constant',
+    (WidgetTester tester) async {
+      final controller = await _pumpWebViewWithPullToRefresh(tester);
 
-    // `SwipeRefreshLayout.DEFAULT_SLINGSHOT_DISTANCE` is **-1**, read out of the androidx AAR with
-    // `javap -constants` rather than guessed. It is a sentinel meaning "compute the default", not a
-    // distance — so a test asserting a positive number here would have been wrong about the API.
-    //
-    // -1 is also the one value that proves the call *arrived*: the Dart side falls back to `?? 0`
-    // when the channel is null, so a dead channel answers 0 and cannot pass this.
-    expect(await controller.getDefaultSlingshotDistance(), -1);
-  }, skip: shouldSkip);
+      // `SwipeRefreshLayout.DEFAULT_SLINGSHOT_DISTANCE` is **-1**, read out of the androidx AAR with
+      // `javap -constants` rather than guessed. It is a sentinel meaning "compute the default", not a
+      // distance — so a test asserting a positive number here would have been wrong about the API.
+      //
+      // -1 is also the one value that proves the call *arrived*: the Dart side falls back to `?? 0`
+      // when the channel is null, so a dead channel answers 0 and cannot pass this.
+      expect(await controller.getDefaultSlingshotDistance(), -1);
+    },
+    skip: shouldSkip,
+  );
 
   skippableTestWidgets('the write-only setters are accepted by the platform', (
     WidgetTester tester,

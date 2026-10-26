@@ -88,36 +88,39 @@ void main() {
       },
     );
 
-    test('a status code on the happy path is the point of the feature', () async {
-      // `onReceivedHttpError` only ever fires for error responses, so before this event a 200 was
-      // indistinguishable from no response at all. Assert the success case specifically.
-      final List<int?> codes = <int?>[];
-      final controller = controllerWith(
-        AndroidHeadlessInAppWebViewCreationParams(
-          onNavigationCompleted: (dynamic _, WebViewNavigation n) =>
-              codes.add(n.statusCode),
-        ),
-      );
+    test(
+      'a status code on the happy path is the point of the feature',
+      () async {
+        // `onReceivedHttpError` only ever fires for error responses, so before this event a 200 was
+        // indistinguishable from no response at all. Assert the success case specifically.
+        final List<int?> codes = <int?>[];
+        final controller = controllerWith(
+          AndroidHeadlessInAppWebViewCreationParams(
+            onNavigationCompleted: (dynamic _, WebViewNavigation n) =>
+                codes.add(n.statusCode),
+          ),
+        );
 
-      await controller.handleMethod(
-        MethodCall('onNavigationCompleted', {
-          'navigation': navigationMap(statusCode: 200),
-        }),
-      );
-      await controller.handleMethod(
-        MethodCall('onNavigationCompleted', {
-          'navigation': navigationMap(didCommit: false, statusCode: null),
-        }),
-      );
+        await controller.handleMethod(
+          MethodCall('onNavigationCompleted', {
+            'navigation': navigationMap(statusCode: 200),
+          }),
+        );
+        await controller.handleMethod(
+          MethodCall('onNavigationCompleted', {
+            'navigation': navigationMap(didCommit: false, statusCode: null),
+          }),
+        );
 
-      expect(
-        codes,
-        <int?>[200, null],
-        reason:
-            'a committed navigation reports its status; an uncommitted one reports null rather '
-            'than a fabricated zero',
-      );
-    });
+        expect(
+          codes,
+          <int?>[200, null],
+          reason:
+              'a committed navigation reports its status; an uncommitted one reports null rather '
+              'than a fabricated zero',
+        );
+      },
+    );
 
     test('started and redirected reach their own handlers', () async {
       final List<String> order = <String>[];
@@ -141,14 +144,10 @@ void main() {
         }),
       );
 
-      expect(
-        order,
-        <String>[
-          'started:7:https://example.com/one',
-          'redirected:7:https://example.com/two',
-        ],
-        reason: 'the id is stable across the sequence while the url changes',
-      );
+      expect(order, <String>[
+        'started:7:https://example.com/one',
+        'redirected:7:https://example.com/two',
+      ], reason: 'the id is stable across the sequence while the url changes');
     });
 
     test('the nested WebResourceError is decoded, not dropped', () async {
@@ -290,9 +289,12 @@ void main() {
       final List<String> marks = <String>[];
       final controller = controllerWith(
         AndroidHeadlessInAppWebViewCreationParams(
-          onPerformanceMarkMillis:
-              (dynamic _, WebViewPage p, String name, int ms) =>
-                  marks.add('${p.id}|$name|$ms'),
+          onPerformanceMarkMillis: (
+            dynamic _,
+            WebViewPage p,
+            String name,
+            int ms,
+          ) => marks.add('${p.id}|$name|$ms'),
         ),
       );
 

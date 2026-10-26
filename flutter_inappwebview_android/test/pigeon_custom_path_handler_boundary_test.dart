@@ -56,32 +56,29 @@ void main() {
 
   // The answer has been the typed `WebResourceResponseData` since W5 (§216); it was the response's
   // `toMap()`. Every field carries a value only that field could produce.
-  test(
-    'handle reaches the app with the path, and answers its response field for field',
-    () async {
-      events.response = WebResourceResponse(
-        contentType: 'text/plain',
-        contentEncoding: 'ISO-8859-1',
-        statusCode: 404,
-        reasonPhrase: 'Not Here',
-        headers: {'X-Probe': 'probe-value'},
-        data: Uint8List.fromList([1, 2, 3]),
-        cookies: ['probe=cookie'],
-      );
+  test('handle reaches the app with the path, and answers its response field for field', () async {
+    events.response = WebResourceResponse(
+      contentType: 'text/plain',
+      contentEncoding: 'ISO-8859-1',
+      statusCode: 404,
+      reasonPhrase: 'Not Here',
+      headers: {'X-Probe': 'probe-value'},
+      data: Uint8List.fromList([1, 2, 3]),
+      cookies: ['probe=cookie'],
+    );
 
-      final reply = await deliver('page.html');
+    final reply = await deliver('page.html');
 
-      expect(events.paths, ['page.html']);
-      final data = answer(reply) as WebResourceResponseData;
-      expect(data.contentType, 'text/plain');
-      expect(data.contentEncoding, 'ISO-8859-1');
-      expect(data.statusCode, 404);
-      expect(data.reasonPhrase, 'Not Here');
-      expect(data.headers, {'X-Probe': 'probe-value'});
-      expect(data.data, [1, 2, 3]);
-      expect(data.cookies, ['probe=cookie']);
-    },
-  );
+    expect(events.paths, ['page.html']);
+    final data = answer(reply) as WebResourceResponseData;
+    expect(data.contentType, 'text/plain');
+    expect(data.contentEncoding, 'ISO-8859-1');
+    expect(data.statusCode, 404);
+    expect(data.reasonPhrase, 'Not Here');
+    expect(data.headers, {'X-Probe': 'probe-value'});
+    expect(data.data, [1, 2, 3]);
+    expect(data.cookies, ['probe=cookie']);
+  });
 
   test(
     'a null response answers null, which Kotlin reads as "not handled"',

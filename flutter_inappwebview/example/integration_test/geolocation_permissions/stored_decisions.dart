@@ -109,19 +109,21 @@ void storedDecisions() {
     expect(await permissions.getAllowed(origin: otherOrigin), isFalse);
   }, skip: false);
 
-  skippableTestWidgets('allow is idempotent and does not duplicate the origin', (
-    WidgetTester tester,
-  ) async {
-    await permissions.allow(origin: origin);
-    await permissions.allow(origin: origin);
+  skippableTestWidgets(
+    'allow is idempotent and does not duplicate the origin',
+    (WidgetTester tester) async {
+      await permissions.allow(origin: origin);
+      await permissions.allow(origin: origin);
 
-    // Cheap, and it pins that the store is keyed by origin rather than append-only — which is what
-    // makes `getOrigins().length` meaningful in the test above.
-    expect(
-      (await permissions.getOrigins()).where((o) => o == storedOrigin),
-      hasLength(1),
-    );
-  }, skip: false);
+      // Cheap, and it pins that the store is keyed by origin rather than append-only — which is what
+      // makes `getOrigins().length` meaningful in the test above.
+      expect(
+        (await permissions.getOrigins()).where((o) => o == storedOrigin),
+        hasLength(1),
+      );
+    },
+    skip: false,
+  );
 }
 
 /// 🚨 **The platform does not hand back the string it was given.**
@@ -143,49 +145,50 @@ void originNormalisation() {
   const origin = 'https://inappwebview-geo-norm.test';
   final permissions = GeolocationPermissions.instance();
 
-  skippableTestWidgets('getOrigins normalises the origin, and its output feeds back in', (
-    WidgetTester tester,
-  ) async {
-    await permissions.clearAll();
-    try {
-      await permissions.allow(origin: origin);
-
-      final origins = await permissions.getOrigins();
-      expect(origins, hasLength(1));
-
-      // The finding, pinned as an equality rather than a `contains` so that a future platform
-      // change in either direction fails here loudly instead of silently widening.
-      expect(
-        origins.single,
-        '$origin/',
-        reason:
-            'the platform normalisation changed; every assertion in this group that spells an '
-            'origin is affected',
-      );
-      expect(
-        origins.single,
-        isNot(origin),
-        reason:
-            'if this ever passes, the asymmetry is gone and this test should be deleted',
-      );
-
-      // The half that decides whether the asymmetry is a trap: can a caller take what getOrigins
-      // gave them and use it?
-      expect(
-        await permissions.getAllowed(origin: origins.single),
-        isTrue,
-        reason:
-            'getOrigins returned a string that getAllowed does not recognise, so listing then '
-            'querying is broken for every caller',
-      );
-      expect(await permissions.clear(origin: origins.single), isTrue);
-      expect(
-        await permissions.getOrigins(),
-        isEmpty,
-        reason: 'clear did not accept the very string getOrigins produced',
-      );
-    } finally {
+  skippableTestWidgets(
+    'getOrigins normalises the origin, and its output feeds back in',
+    (WidgetTester tester) async {
       await permissions.clearAll();
-    }
-  }, skip: false);
+      try {
+        await permissions.allow(origin: origin);
+
+        final origins = await permissions.getOrigins();
+        expect(origins, hasLength(1));
+
+        // The finding, pinned as an equality rather than a `contains` so that a future platform
+        // change in either direction fails here loudly instead of silently widening.
+        expect(
+          origins.single,
+          '$origin/',
+          reason:
+              'the platform normalisation changed; every assertion in this group that spells an '
+              'origin is affected',
+        );
+        expect(
+          origins.single,
+          isNot(origin),
+          reason: 'if this ever passes, the asymmetry is gone and this test should be deleted',
+        );
+
+        // The half that decides whether the asymmetry is a trap: can a caller take what getOrigins
+        // gave them and use it?
+        expect(
+          await permissions.getAllowed(origin: origins.single),
+          isTrue,
+          reason:
+              'getOrigins returned a string that getAllowed does not recognise, so listing then '
+              'querying is broken for every caller',
+        );
+        expect(await permissions.clear(origin: origins.single), isTrue);
+        expect(
+          await permissions.getOrigins(),
+          isEmpty,
+          reason: 'clear did not accept the very string getOrigins produced',
+        );
+      } finally {
+        await permissions.clearAll();
+      }
+    },
+    skip: false,
+  );
 }

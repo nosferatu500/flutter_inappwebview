@@ -1,3 +1,82 @@
+## 7.1.0
+
+### Requirements
+
+- **Flutter 3.47 / Dart 3.13 or newer** (was 3.44 / 3.12): `flutter: ">=3.47.0"`, `sdk: ^3.13.0`.
+  An app on an older Flutter keeps resolving 7.0.0; pub doesn't offer it 7.1.0.
+
+### Added
+
+- **`onGeolocationPermissionsShowPrompt` is declared for iOS 27.0** (`PlatformWebViewCreationParams` and
+  `PlatformInAppBrowserEvents`), with an iOS note in its docs.
+- **`InAppWebViewSettings.globalPrivacyControlEnabled`** (`bool?`, iOS 27.0): the Global Privacy Control
+  signal (`WKWebpagePreferences.globalPrivacyControlEnabled`). `null` leaves WebKit untouched.
+- **`PlatformProfileStore.setCrossOriginIsolatedAllowlist` / `getCrossOriginIsolatedAllowlist`**
+  (Android) and **`WebViewFeature.CROSS_ORIGIN_ISOLATED_ALLOWLIST`**. The set returns `Future<bool>`,
+  `false` when the profile can't be reached; the get returns `Future<Set<String>?>`, `null` in that
+  case and `{}` for no allowlist.
+
+### Changed
+
+- **`getCookies` documents what it returns**: the cookies a request to the URL would send (domain or host,
+  path, Secure), where it said "all the cookies for the given url". Its and `getCookie`'s iOS entries
+  name `WKHTTPCookieStore.getCookies(for:)`, with a note for iOS below 27.
+- **The debug-mode console message promoting upstream is gone.** In debug builds, the first platform
+  instance printed "Hi, flutter_inappwebview here…" with links to upstream's donation, GitHub and
+  showcase pages. Nothing is printed now.
+- **`addCustomHeader` and `CustomHeader` say when a header takes effect**: on document load. Pages and
+  service workers already running keep sending what they sent before. androidx.webkit 1.18.0
+  documented this; the docs said "every request".
+### Internal
+
+- **Doc fix: the last 23 classes' "supported platforms" tables reach dartdoc.** dartdoc's undefined-macro
+  warnings for this package go from 23 to 0 (none new). These classes (the 4 path handlers and 19
+  `…CreationParams`) have no generated `…Property` or `…Method` enum to carry their template. The generator
+  now emits a member-less `<Class>SupportedPlatforms` class for each, holding the template, and the
+  library's exports `hide` all 23 names, so they're not API (checked: none can be imported from this
+  package or the plugin). A public element is needed because dartdoc reads no template from a private
+  element in a generated part file. The 4 path handlers' private `_…ClassSupported` extensions, which
+  nothing called, are no longer generated, so the supported-platforms output needs no
+  `// ignore: unused_element` any more (4 → 0). Generator tests updated.
+- **Doc fix: the generated "supported platforms" docs now reach dartdoc.** dartdoc's warnings for this
+  package go from 713 to 234 (undefined macro 66 → 23, unresolved doc reference 647 → 211), with none new.
+  The generator put each class's "supported platforms" template on a member of a private extension in the
+  generated part file, and dartdoc registers no template from a private element in a part file, so every
+  class doc that `{@macro}`s it rendered nothing. The template now sits on the class's public `…Property`
+  enum, or else its `…Method` enum (39 of the 62 classes; the other 23, below). The 13 private
+  `_…ClassSupported` extensions that no code called and that only held the template are no longer
+  generated. "Parameters" lists write each parameter as `name` instead of `[name]`, a link dartdoc can't
+  resolve from an enum value (370 entries). No public API changes: apart from comments, the regenerated code
+  differs only by those 13 extensions. 3 generator tests.
+- **The code generator's `build.yaml` no longer configures a builder that doesn't exist**
+  (`generators|flutter_inappwebview_internal_annotations`; the file defines only `generators`).
+  build_runner had ignored it with a warning, and only when building the generators package itself.
+  This package's build writes the same 484 outputs, with the same 16 warnings, and no `.g.dart` changes.
+- **Doc fix: `{@macro}`s that named no template.** dartdoc's undefined-macro warnings for this package go from
+  82 to 66. Some macros named the platform class where the template sits on its `…CreationParams` (now
+  pointed there), two were typos, and the rest named a template that exists nowhere (removed: they
+  rendered nothing). The 66 left are all class-level "supported platforms" tables, which the generator
+  attached to a member of a private extension in a part file, where dartdoc doesn't register templates.
+- **No `package:flutter/material.dart` or `cupertino.dart` import left in `lib/`**: `util.dart` and
+  `print_job_settings.dart` import `widgets.dart` instead.
+  Nothing in this package's `lib/` used Material or Cupertino: with the import swapped for `widgets.dart`,
+  analyze reported 0 errors. So the package works the same in an app on `package:material_ui` or on the
+  SDK's Material, and needs no `material_ui` dependency (the migration guide calls moving a package onto
+  `material_ui` a major-version change; this avoids it).
+- **Formatting only: 59 Dart files reformatted by Flutter 3.47.7's formatter at language 3.13** (`build_runner` still writes the same 484 outputs, 0 `.g.dart` changed).
+  Each file's code is unchanged once whitespace and commas are removed (the tall style adds and drops
+  trailing commas); analyze and every test suite pass unchanged.
+- **The repo builds and tests on Flutter 3.47.7** (`.fvmrc`; was 3.44.9). `flutter pub get` on 3.47
+  adds `analyzer: exclude:` entries (`build/**`, plus the platform folders that exist) to each Flutter
+  package's `analysis_options.yaml`; that is flutter_tools' `AnalysisOptionsMigration`, which re-adds
+  them on every `pub get`, so they are kept. The excluded `android/` and `ios/` folders hold no Dart.
+- **The generated `*.g.dart` files are regenerated in the Dart 3.13 style** (20 files; formatting
+  only, `build_runner` wrote the same 484 outputs). source_gen formats them with whatever
+  `dart_style` pub resolves, at the library's language version: `dart_style` 3.1.9 still wrote the
+  old style, which `dart format` on Dart 3.13 then rewrote, while 3.1.13 writes what `dart format`
+  writes. **`dart_style: ^3.1.13` is now a dev dependency** so a stale lockfile can't regenerate the
+  old style: with a 3.1.9 lockfile, `pub get` moves it to 3.1.13.
+
 ## 7.0.0
 
 The platform-interface half of a hard fork of 6.2.0-beta.3 / `1.4.0-beta.3`, **Android and iOS

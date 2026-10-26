@@ -5,8 +5,8 @@ description: Demonstrates how to use the nosferatu500_inappwebview_ios plugin.
 publish_to: 'none' # Remove this line if you wish to publish to pub.dev
 
 environment:
-  sdk: ^3.12.0
-  flutter: ">=3.44.0"
+  sdk: ^3.13.0
+  flutter: ">=3.47.0"
 
 # Dependencies specify other packages that your package needs in order to work.
 # To automatically upgrade your package dependencies to the latest versions
@@ -34,6 +34,7 @@ dependencies:
   cupertino_icons: ^1.0.2
 
   nosferatu500_inappwebview_platform_interface: any
+  material_ui: ^1.6.0
 dependency_overrides:
   nosferatu500_inappwebview_internal_annotations:
     path: ../../dev_packages/flutter_inappwebview_internal_annotations

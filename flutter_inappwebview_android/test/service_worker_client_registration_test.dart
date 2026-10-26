@@ -231,15 +231,21 @@ void main() {
   });
 
   group('the event handler lifecycle', () {
-    test('disposing a controller leaves the event handler registered', () async {
-      // The deliberate exception to §184's rule. Every other migrated channel unregisters its
-      // event handler in `dispose`; this one must not, because the handler and the client are
-      // process-wide and one controller's dispose would silently cut off every other one.
-      // Observed through the reply (§183): non-null means a handler answered.
-      final controller = newController();
-      controller.dispose();
-      expect(await sendIncomingRequest('https://example.com/a.js'), isNotNull);
-    });
+    test(
+      'disposing a controller leaves the event handler registered',
+      () async {
+        // The deliberate exception to §184's rule. Every other migrated channel unregisters its
+        // event handler in `dispose`; this one must not, because the handler and the client are
+        // process-wide and one controller's dispose would silently cut off every other one.
+        // Observed through the reply (§183): non-null means a handler answered.
+        final controller = newController();
+        controller.dispose();
+        expect(
+          await sendIncomingRequest('https://example.com/a.js'),
+          isNotNull,
+        );
+      },
+    );
   });
 
   group('the native registration is still told', () {

@@ -57,8 +57,7 @@ class PlatformServiceWorkerControllerCreationParams {
   platforms: [
     AndroidPlatform(
       apiName: 'ServiceWorkerControllerCompat',
-      apiUrl:
-          'https://developer.android.com/reference/androidx/webkit/ServiceWorkerControllerCompat',
+      apiUrl: 'https://developer.android.com/reference/androidx/webkit/ServiceWorkerControllerCompat',
     ),
   ],
 )
@@ -127,8 +126,7 @@ abstract class PlatformServiceWorkerController extends PlatformInterface {
     platforms: [
       AndroidPlatform(
         apiName: 'ServiceWorkerControllerCompat.setServiceWorkerClient',
-        apiUrl:
-            'https://developer.android.com/reference/androidx/webkit/ServiceWorkerControllerCompat#setServiceWorkerClient(androidx.webkit.ServiceWorkerClientCompat)',
+        apiUrl: 'https://developer.android.com/reference/androidx/webkit/ServiceWorkerControllerCompat#setServiceWorkerClient(androidx.webkit.ServiceWorkerClientCompat)',
       ),
     ],
   )
@@ -148,8 +146,7 @@ abstract class PlatformServiceWorkerController extends PlatformInterface {
     platforms: [
       AndroidPlatform(
         apiName: 'ServiceWorkerWebSettingsCompat.getAllowContentAccess',
-        apiUrl:
-            'https://developer.android.com/reference/androidx/webkit/ServiceWorkerWebSettingsCompat#getAllowContentAccess()',
+        apiUrl: 'https://developer.android.com/reference/androidx/webkit/ServiceWorkerWebSettingsCompat#getAllowContentAccess()',
       ),
     ],
   )
@@ -171,8 +168,7 @@ abstract class PlatformServiceWorkerController extends PlatformInterface {
     platforms: [
       AndroidPlatform(
         apiName: 'ServiceWorkerWebSettingsCompat.getAllowFileAccess',
-        apiUrl:
-            'https://developer.android.com/reference/androidx/webkit/ServiceWorkerWebSettingsCompat#getAllowFileAccess()',
+        apiUrl: 'https://developer.android.com/reference/androidx/webkit/ServiceWorkerWebSettingsCompat#getAllowFileAccess()',
       ),
     ],
   )
@@ -194,8 +190,7 @@ abstract class PlatformServiceWorkerController extends PlatformInterface {
     platforms: [
       AndroidPlatform(
         apiName: 'ServiceWorkerWebSettingsCompat.getBlockNetworkLoads',
-        apiUrl:
-            'https://developer.android.com/reference/androidx/webkit/ServiceWorkerWebSettingsCompat#getBlockNetworkLoads()',
+        apiUrl: 'https://developer.android.com/reference/androidx/webkit/ServiceWorkerWebSettingsCompat#getBlockNetworkLoads()',
       ),
     ],
   )
@@ -217,8 +212,7 @@ abstract class PlatformServiceWorkerController extends PlatformInterface {
     platforms: [
       AndroidPlatform(
         apiName: 'ServiceWorkerWebSettingsCompat.getCacheMode',
-        apiUrl:
-            'https://developer.android.com/reference/androidx/webkit/ServiceWorkerWebSettingsCompat#getCacheMode()',
+        apiUrl: 'https://developer.android.com/reference/androidx/webkit/ServiceWorkerWebSettingsCompat#getCacheMode()',
       ),
     ],
   )
@@ -256,10 +250,8 @@ abstract class PlatformServiceWorkerController extends PlatformInterface {
   @SupportedPlatforms(
     platforms: [
       AndroidPlatform(
-        apiName:
-            'ServiceWorkerWebSettingsCompat.isIncludeCookiesOnShouldInterceptRequestEnabled',
-        apiUrl:
-            'https://developer.android.com/reference/androidx/webkit/ServiceWorkerWebSettingsCompat#isIncludeCookiesOnShouldInterceptRequestEnabled()',
+        apiName: 'ServiceWorkerWebSettingsCompat.isIncludeCookiesOnShouldInterceptRequestEnabled',
+        apiUrl: 'https://developer.android.com/reference/androidx/webkit/ServiceWorkerWebSettingsCompat#isIncludeCookiesOnShouldInterceptRequestEnabled()',
         note:
             'available on Android only if [WebViewFeature.COOKIE_INTERCEPT] feature is supported, '
             'and only for the default profile.',
@@ -295,10 +287,8 @@ abstract class PlatformServiceWorkerController extends PlatformInterface {
   @SupportedPlatforms(
     platforms: [
       AndroidPlatform(
-        apiName:
-            'ServiceWorkerWebSettingsCompat.setIncludeCookiesOnShouldInterceptRequestEnabled',
-        apiUrl:
-            'https://developer.android.com/reference/androidx/webkit/ServiceWorkerWebSettingsCompat#setIncludeCookiesOnShouldInterceptRequestEnabled(boolean)',
+        apiName: 'ServiceWorkerWebSettingsCompat.setIncludeCookiesOnShouldInterceptRequestEnabled',
+        apiUrl: 'https://developer.android.com/reference/androidx/webkit/ServiceWorkerWebSettingsCompat#setIncludeCookiesOnShouldInterceptRequestEnabled(boolean)',
         note:
             'available on Android only if [WebViewFeature.COOKIE_INTERCEPT] feature is supported, '
             'and only for the default profile.',
@@ -324,8 +314,7 @@ abstract class PlatformServiceWorkerController extends PlatformInterface {
     platforms: [
       AndroidPlatform(
         apiName: 'ServiceWorkerWebSettingsCompat.setAllowContentAccess',
-        apiUrl:
-            'https://developer.android.com/reference/androidx/webkit/ServiceWorkerWebSettingsCompat#setAllowContentAccess(boolean)',
+        apiUrl: 'https://developer.android.com/reference/androidx/webkit/ServiceWorkerWebSettingsCompat#setAllowContentAccess(boolean)',
       ),
     ],
   )
@@ -348,8 +337,7 @@ abstract class PlatformServiceWorkerController extends PlatformInterface {
     platforms: [
       AndroidPlatform(
         apiName: 'ServiceWorkerWebSettingsCompat.setAllowFileAccess',
-        apiUrl:
-            'https://developer.android.com/reference/androidx/webkit/ServiceWorkerWebSettingsCompat#setAllowFileAccess(boolean)',
+        apiUrl: 'https://developer.android.com/reference/androidx/webkit/ServiceWorkerWebSettingsCompat#setAllowFileAccess(boolean)',
       ),
     ],
   )
@@ -372,8 +360,7 @@ abstract class PlatformServiceWorkerController extends PlatformInterface {
     platforms: [
       AndroidPlatform(
         apiName: 'ServiceWorkerWebSettingsCompat.setBlockNetworkLoads',
-        apiUrl:
-            'https://developer.android.com/reference/androidx/webkit/ServiceWorkerWebSettingsCompat#setBlockNetworkLoads(boolean)',
+        apiUrl: 'https://developer.android.com/reference/androidx/webkit/ServiceWorkerWebSettingsCompat#setBlockNetworkLoads(boolean)',
       ),
     ],
   )
@@ -396,8 +383,7 @@ abstract class PlatformServiceWorkerController extends PlatformInterface {
     platforms: [
       AndroidPlatform(
         apiName: 'ServiceWorkerWebSettingsCompat.setCacheMode',
-        apiUrl:
-            'https://developer.android.com/reference/androidx/webkit/ServiceWorkerWebSettingsCompat#setCacheMode(int)',
+        apiUrl: 'https://developer.android.com/reference/androidx/webkit/ServiceWorkerWebSettingsCompat#setCacheMode(int)',
       ),
     ],
   )
@@ -435,8 +421,7 @@ abstract class PlatformServiceWorkerController extends PlatformInterface {
   platforms: [
     AndroidPlatform(
       apiName: 'ServiceWorkerClientCompat',
-      apiUrl:
-          'https://developer.android.com/reference/androidx/webkit/ServiceWorkerClientCompat',
+      apiUrl: 'https://developer.android.com/reference/androidx/webkit/ServiceWorkerClientCompat',
     ),
   ],
 )
@@ -457,8 +442,7 @@ class ServiceWorkerClient {
     platforms: [
       AndroidPlatform(
         apiName: 'ServiceWorkerClientCompat.shouldInterceptRequest',
-        apiUrl:
-            'https://developer.android.com/reference/androidx/webkit/ServiceWorkerClientCompat#shouldInterceptRequest(android.webkit.WebResourceRequest)',
+        apiUrl: 'https://developer.android.com/reference/androidx/webkit/ServiceWorkerClientCompat#shouldInterceptRequest(android.webkit.WebResourceRequest)',
       ),
     ],
   )

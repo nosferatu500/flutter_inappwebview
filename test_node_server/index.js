@@ -8,7 +8,9 @@
 // - openssl verify -CAfile ca-crt.pem client1-crt.pem
 // - openssl verify -CAfile ca-crt.pem client2-crt.pem
 // Conversion of client1-crt.pem to certificate.pfx: https://stackoverflow.com/a/38408666/4637638
-// - openssl pkcs12 -export -out certificate.pfx -inkey client1-key.pem -in client1-crt.pem -certfile ca-crt.pem
+// - openssl pkcs12 -export -out certificate.pfx -inkey client1-key.pem -in client1-crt.pem -certfile ca-crt.pem -keypbe PBE-SHA1-3DES -certpbe PBE-SHA1-3DES -macalg sha1 -passout pass:password
+//   The PBE/MAC flags are required: OpenSSL 3's defaults (PBES2/AES-256, SHA-256 MAC) can't be
+//   read by Android 8's KeyStore ("PKCS12 key store mac invalid"), and minSdk is 26.
 // - Overwrite certificate.pfx to example/test_assets/certificate.pfx
 const express = require('express');
 const http = require('http');

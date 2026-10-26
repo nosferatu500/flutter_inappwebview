@@ -1,10 +1,10 @@
 name: nosferatu500_inappwebview_internal_annotations
 description: Internal annotations used by the generator of the nosferatu500_inappwebview plugin
-version: 7.0.0
+version: 7.1.0
 homepage: https://github.com/nosferatu500/flutter_inappwebview
 
 environment:
-  sdk: ">=3.7.0 <4.0.0"
+  sdk: ^3.12.0
 
 dev_dependencies:
   test: ^1.25.8

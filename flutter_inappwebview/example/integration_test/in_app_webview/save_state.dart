@@ -184,8 +184,7 @@ void saveStateBounds() {
         expect(
           await controller.saveState(maxSize: 1024),
           isNull,
-          reason:
-              'without SAVE_STATE a bounded request must return null, not an unbounded state',
+          reason: 'without SAVE_STATE a bounded request must return null, not an unbounded state',
         );
       }
       return;
@@ -242,8 +241,7 @@ void saveStateBounds() {
     expect(
       await controller.saveState(maxSize: 1),
       isNull,
-      reason:
-          'maxSize below a single entry must return null rather than a truncated or unbounded state',
+      reason: 'maxSize below a single entry must return null rather than a truncated or unbounded state',
     );
   }, skip: shouldSkip);
 

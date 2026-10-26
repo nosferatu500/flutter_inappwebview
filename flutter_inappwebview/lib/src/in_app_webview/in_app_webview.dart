@@ -3,7 +3,6 @@ import 'dart:collection';
 
 import 'package:flutter/foundation.dart';
 import 'package:flutter/gestures.dart';
-import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:nosferatu500_inappwebview_platform_interface/nosferatu500_inappwebview_platform_interface.dart';
 
@@ -339,9 +338,9 @@ class InAppWebView extends StatefulWidget {
   }) : this.fromPlatformCreationParams(
          key: key,
          params: PlatformInAppWebViewWidgetCreationParams(
-           controllerFromPlatform:
-               (PlatformInAppWebViewController controller) =>
-                   InAppWebViewController.fromPlatform(platform: controller),
+           controllerFromPlatform: (
+             PlatformInAppWebViewController controller,
+           ) => InAppWebViewController.fromPlatform(platform: controller),
            windowId: windowId,
            keepAlive: keepAlive,
            initialUrlRequest: initialUrlRequest,

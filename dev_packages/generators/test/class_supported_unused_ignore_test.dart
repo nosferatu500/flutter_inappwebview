@@ -4,12 +4,17 @@ import 'package:logging/logging.dart';
 import 'package:source_gen/source_gen.dart';
 import 'package:test/test.dart';
 
-/// [SupportedPlatformsGenerator] emits a private `_<Class>ClassSupported` extension for every class
-/// that declares `isClassSupported`. Some classes answer through their creation params instead and
-/// never call it, but it still carries the `supported_platforms` doc template that other docs
-/// `{@macro}`. So it gets `// ignore: unused_element`, but **only** when the hand-written library
-/// never calls it (§220). An ignore on every extension would have hidden the bug §220 found:
-/// `ServiceWorkerClient` answered from another class's extension, and its own went unused.
+/// [SupportedPlatformsGenerator] emits a private `_<Class>ClassSupported` extension only for a class
+/// whose hand-written library calls it. Some classes answer through their creation params instead and
+/// never call it, and an uncalled extension isn't emitted at all (§350), so none needs an
+/// `// ignore: unused_element`. An ignore would have hidden the bug §220 found: `ServiceWorkerClient`
+/// answered from another class's extension, and its own went unused.
+///
+/// The class's `supported_platforms` doc template must sit on a public element: dartdoc registers no
+/// template from a private element in a part file (§350). It goes on the class's property enum, else
+/// its method enum (§345), else a member-less `<Class>SupportedPlatforms` carrier class, which the
+/// library's export hides (§350). Parameter names in the generated "Parameters" lists are code spans,
+/// not `[links]`: the lists sit on enum values, where dartdoc can't resolve a method's parameter.
 Future<String> _generate(String model) async {
   final result = await testBuilder(
     SharedPartBuilder([SupportedPlatformsGenerator()], 'supported_platforms'),
@@ -81,11 +86,28 @@ String _extension(String output, String name) {
   return output.substring(start, end);
 }
 
+/// The doc comment directly above `enum <name> {`.
+String _enumDoc(String output, String name) {
+  final match = RegExp(r'((?:[ \t]*///.*\n)+)[ \t]*enum ' + name + r' \{')
+      .firstMatch(output);
+  expect(match, isNotNull, reason: 'no documented enum $name emitted');
+  return match!.group(1)!;
+}
+
+/// The doc comment above `abstract final class <name>SupportedPlatforms {}`, past any `//` lines.
+String _carrierDoc(String output, String name) {
+  final match = RegExp(
+    r'((?:[ \t]*///.*\n)+)(?:[ \t]*//[^/].*\n)*[ \t]*abstract final class ' +
+        name +
+        r'SupportedPlatforms \{\}',
+  ).firstMatch(output);
+  expect(match, isNotNull, reason: 'no documented carrier for $name emitted');
+  return match!.group(1)!;
+}
+
 void main() {
-  test(
-    'the ignore goes on exactly the extension its library never calls',
-    () async {
-      final output = await _generate('''
+  test('the extension is emitted only where its library calls it; a class with no enum gets a carrier', () async {
+    final output = await _generate('''
 import 'package:nosferatu500_inappwebview_internal_annotations/nosferatu500_inappwebview_internal_annotations.dart';
 
 @SupportedPlatforms(platforms: [AndroidPlatform()])
@@ -101,22 +123,123 @@ class Delegates {
 }
 ''');
 
+    expect(_extension(output, 'Calls'), isNot(contains('{@template')));
+    expect(
+      output,
+      isNot(contains('_DelegatesClassSupported')),
+      reason: 'nothing calls it, and it no longer carries the template',
+    );
+    expect(output, isNot(contains('// ignore: unused_element')));
+    for (final name in ['Calls', 'Delegates']) {
+      // Public: dartdoc ignores a private element's template in a part file.
       expect(
-        _extension(output, 'Calls'),
-        isNot(contains('// ignore: unused_element')),
-        reason: 'a called extension must stay checked',
+        _carrierDoc(output, name),
+        contains('{@template a.$name.supported_platforms}'),
       );
-      final delegates = _extension(output, 'Delegates');
-      expect(delegates, contains('// ignore: unused_element'));
-      // The doc template it is kept for is still emitted.
       expect(
-        delegates,
-        contains('{@template a.Delegates.supported_platforms}'),
-      );
-      expect(
-        RegExp('// ignore: unused_element').allMatches(output),
+        '{@template a.$name.supported_platforms}'.allMatches(output),
         hasLength(1),
+        reason: '$name: one template, defined once',
       );
+    }
+  });
+
+  test(
+    'the class template goes on the public property enum, else the method enum',
+    () async {
+      final output = await _generate('''
+import 'package:nosferatu500_inappwebview_internal_annotations/nosferatu500_inappwebview_internal_annotations.dart';
+
+@SupportedPlatforms(platforms: [AndroidPlatform()])
+class Both {
+  Both();
+  @SupportedPlatforms(platforms: [AndroidPlatform()])
+  final int? field = null;
+  @SupportedPlatforms(platforms: [AndroidPlatform()])
+  void method() {}
+  static bool isClassSupported() => _BothClassSupported.isClassSupported();
+  bool isPropertySupported(dynamic property) => true;
+  bool isMethodSupported(dynamic method) => true;
+}
+
+@SupportedPlatforms(platforms: [AndroidPlatform()])
+class MethodsOnly {
+  MethodsOnly();
+  @SupportedPlatforms(platforms: [AndroidPlatform()])
+  void method() {}
+  static bool isClassSupported() => _MethodsOnlyClassSupported.isClassSupported();
+  bool isMethodSupported(dynamic method) => true;
+}
+''');
+
+      expect(
+        _enumDoc(output, 'BothProperty'),
+        contains('{@template a.Both.supported_platforms}'),
+      );
+      expect(
+        _enumDoc(output, 'BothMethod'),
+        isNot(contains('{@template a.Both.supported_platforms}')),
+        reason: 'the property enum already carries it',
+      );
+      expect(
+        _enumDoc(output, 'MethodsOnlyMethod'),
+        contains('{@template a.MethodsOnly.supported_platforms}'),
+      );
+      // Called, so still emitted, but no longer the template's home.
+      expect(_extension(output, 'Both'), isNot(contains('{@template')));
+      expect(_extension(output, 'MethodsOnly'), isNot(contains('{@template')));
+      expect(output, isNot(contains('SupportedPlatforms {}')));
+      for (final name in ['Both', 'MethodsOnly']) {
+        expect(
+          '{@template a.$name.supported_platforms}'.allMatches(output),
+          hasLength(1),
+          reason: '$name: one template, defined once',
+        );
+      }
     },
   );
+
+  test('a class with an enum gets no carrier, and no extension unless it calls one', () async {
+    final output = await _generate('''
+import 'package:nosferatu500_inappwebview_internal_annotations/nosferatu500_inappwebview_internal_annotations.dart';
+
+@SupportedPlatforms(platforms: [AndroidPlatform()])
+class DelegatesWithEnum {
+  DelegatesWithEnum();
+  @SupportedPlatforms(platforms: [AndroidPlatform()])
+  void method() {}
+  bool isClassSupported() => true;
+  bool isMethodSupported(dynamic method) => true;
+}
+''');
+
+    expect(output, isNot(contains('_DelegatesWithEnumClassSupported')));
+    expect(output, isNot(contains('DelegatesWithEnumSupportedPlatforms')));
+    expect(
+      _enumDoc(output, 'DelegatesWithEnumMethod'),
+      contains('{@template a.DelegatesWithEnum.supported_platforms}'),
+    );
+  });
+
+  test('parameter names in "Parameters" lists are code spans', () async {
+    final output = await _generate('''
+import 'package:nosferatu500_inappwebview_internal_annotations/nosferatu500_inappwebview_internal_annotations.dart';
+
+@SupportedPlatforms(platforms: [AndroidPlatform()])
+class WithParams {
+  WithParams();
+  @SupportedPlatforms(platforms: [AndroidPlatform()])
+  void method(int first, {String? second}) {}
+  @SupportedPlatforms(platforms: [AndroidPlatform()])
+  final void Function(int callbackArg)? callback = null;
+  bool isPropertySupported(dynamic property) => true;
+  bool isMethodSupported(dynamic method) => true;
+}
+''');
+
+    for (final name in ['first', 'second', 'callbackArg']) {
+      expect(output, contains('///- `$name`: all platforms'));
+      expect(output, isNot(contains('[$name]')));
+    }
+  });
 }

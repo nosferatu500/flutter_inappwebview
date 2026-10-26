@@ -8,14 +8,6 @@ part of 'platform_web_message_listener.dart';
 
 extension _PlatformWebMessageListenerCreationParamsClassSupported
     on PlatformWebMessageListenerCreationParams {
-  ///{@template nosferatu500_inappwebview_platform_interface.PlatformWebMessageListenerCreationParams.supported_platforms}
-  ///
-  ///**Officially Supported Platforms/Implementations**:
-  ///- Android WebView
-  ///- iOS WKWebView
-  ///
-  ///Use the [PlatformWebMessageListenerCreationParams.isClassSupported] method to check if this class is supported at runtime.
-  ///{@endtemplate}
   static bool isClassSupported({TargetPlatform? platform}) {
     return ((kIsWeb && platform != null) || !kIsWeb) &&
         [
@@ -26,6 +18,15 @@ extension _PlatformWebMessageListenerCreationParamsClassSupported
 }
 
 ///List of [PlatformWebMessageListenerCreationParams]'s properties that can be used to check i they are supported or not by the current platform.
+///
+///{@template nosferatu500_inappwebview_platform_interface.PlatformWebMessageListenerCreationParams.supported_platforms}
+///
+///**Officially Supported Platforms/Implementations**:
+///- Android WebView
+///- iOS WKWebView
+///
+///Use the [PlatformWebMessageListenerCreationParams.isClassSupported] method to check if this class is supported at runtime.
+///{@endtemplate}
 enum PlatformWebMessageListenerCreationParamsProperty {
   ///Can be used to check if the [PlatformWebMessageListenerCreationParams.allowedOriginRules] property is supported at runtime.
   ///
@@ -71,10 +72,10 @@ enum PlatformWebMessageListenerCreationParamsProperty {
   ///- iOS WKWebView
   ///
   ///**Parameters - Officially Supported Platforms/Implementations**:
-  ///- [message]: all platforms
-  ///- [sourceOrigin]: all platforms
-  ///- [isMainFrame]: all platforms
-  ///- [replyProxy]: all platforms
+  ///- `message`: all platforms
+  ///- `sourceOrigin`: all platforms
+  ///- `isMainFrame`: all platforms
+  ///- `replyProxy`: all platforms
   ///
   ///Use the [PlatformWebMessageListenerCreationParams.isPropertySupported] method to check if this property is supported at runtime.
   ///{@endtemplate}
@@ -115,14 +116,6 @@ extension _PlatformWebMessageListenerCreationParamsPropertySupported
 
 extension _PlatformWebMessageListenerClassSupported
     on PlatformWebMessageListener {
-  ///{@template nosferatu500_inappwebview_platform_interface.PlatformWebMessageListener.supported_platforms}
-  ///
-  ///**Officially Supported Platforms/Implementations**:
-  ///- Android WebView
-  ///- iOS WKWebView
-  ///
-  ///Use the [PlatformWebMessageListener.isClassSupported] method to check if this class is supported at runtime.
-  ///{@endtemplate}
   static bool isClassSupported({TargetPlatform? platform}) {
     return ((kIsWeb && platform != null) || !kIsWeb) &&
         [
@@ -133,6 +126,15 @@ extension _PlatformWebMessageListenerClassSupported
 }
 
 ///List of [PlatformWebMessageListener]'s methods that can be used to check if they are supported or not by the current platform.
+///
+///{@template nosferatu500_inappwebview_platform_interface.PlatformWebMessageListener.supported_platforms}
+///
+///**Officially Supported Platforms/Implementations**:
+///- Android WebView
+///- iOS WKWebView
+///
+///Use the [PlatformWebMessageListener.isClassSupported] method to check if this class is supported at runtime.
+///{@endtemplate}
 enum PlatformWebMessageListenerMethod {
   ///Can be used to check if the [PlatformWebMessageListener.dispose] method is supported at runtime.
   ///

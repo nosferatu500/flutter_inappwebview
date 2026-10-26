@@ -101,9 +101,9 @@ window.addEventListener("flutterInAppWebViewPlatformReady", function(event) {
           'JavaScript again, so evaluateJavaScript failed silently',
     );
     // The thrown message must survive escaping intact, newline and quote included.
-    final badResult =
-        await controller.evaluateJavascript(source: 'window.badResult;')
-            as String?;
+    final badResult = await controller.evaluateJavascript(
+      source: 'window.badResult;',
+    ) as String?;
     expect(badResult, contains('first line'));
     expect(badResult, contains("second line 'quoted'"));
   }, skip: shouldSkip);

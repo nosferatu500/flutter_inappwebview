@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:flutter_inappwebview_example/widgets/webview/static_method_tester_widget.dart';
 import 'package:flutter_inappwebview_example/widgets/common/app_drawer.dart';
 
@@ -10,10 +10,7 @@ class StaticMethodsScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Static Methods'),
-        backgroundColor: Colors.blue,
-      ),
+      appBar: AppBar(title: const Text('Static Methods')),
       drawer: AppDrawer(),
       body: const StaticMethodTesterWidget(),
     );

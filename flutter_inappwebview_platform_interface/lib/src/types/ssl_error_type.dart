@@ -21,8 +21,7 @@ class SslErrorType_ {
     platforms: [
       EnumAndroidPlatform(
         apiName: 'SslError.SSL_NOTYETVALID',
-        apiUrl:
-            'https://developer.android.com/reference/android/net/http/SslError#SSL_NOTYETVALID',
+        apiUrl: 'https://developer.android.com/reference/android/net/http/SslError#SSL_NOTYETVALID',
         value: 0,
       ),
     ],
@@ -34,8 +33,7 @@ class SslErrorType_ {
     platforms: [
       EnumAndroidPlatform(
         apiName: 'SslError.SSL_EXPIRED',
-        apiUrl:
-            'https://developer.android.com/reference/android/net/http/SslError#SSL_EXPIRED',
+        apiUrl: 'https://developer.android.com/reference/android/net/http/SslError#SSL_EXPIRED',
         value: 1,
       ),
     ],
@@ -47,8 +45,7 @@ class SslErrorType_ {
     platforms: [
       EnumAndroidPlatform(
         apiName: 'SslError.SSL_IDMISMATCH',
-        apiUrl:
-            'https://developer.android.com/reference/android/net/http/SslError#SSL_IDMISMATCH',
+        apiUrl: 'https://developer.android.com/reference/android/net/http/SslError#SSL_IDMISMATCH',
         value: 2,
       ),
     ],
@@ -60,8 +57,7 @@ class SslErrorType_ {
     platforms: [
       EnumAndroidPlatform(
         apiName: 'SslError.SSL_UNTRUSTED',
-        apiUrl:
-            'https://developer.android.com/reference/android/net/http/SslError#SSL_UNTRUSTED',
+        apiUrl: 'https://developer.android.com/reference/android/net/http/SslError#SSL_UNTRUSTED',
         value: 3,
       ),
     ],
@@ -73,8 +69,7 @@ class SslErrorType_ {
     platforms: [
       EnumAndroidPlatform(
         apiName: 'SslError.DATE_INVALID',
-        apiUrl:
-            'https://developer.android.com/reference/android/net/http/SslError#SSL_DATE_INVALID',
+        apiUrl: 'https://developer.android.com/reference/android/net/http/SslError#SSL_DATE_INVALID',
         value: 4,
       ),
     ],
@@ -86,14 +81,12 @@ class SslErrorType_ {
     platforms: [
       EnumAndroidPlatform(
         apiName: 'SslError.SSL_INVALID',
-        apiUrl:
-            'https://developer.android.com/reference/android/net/http/SslError#SSL_INVALID',
+        apiUrl: 'https://developer.android.com/reference/android/net/http/SslError#SSL_INVALID',
         value: 5,
       ),
       EnumIOSPlatform(
         apiName: 'SecTrustResultType.invalid',
-        apiUrl:
-            'https://developer.apple.com/documentation/security/sectrustresulttype/invalid',
+        apiUrl: 'https://developer.apple.com/documentation/security/sectrustresulttype/invalid',
         value: 0,
       ),
     ],
@@ -110,8 +103,7 @@ class SslErrorType_ {
     platforms: [
       EnumIOSPlatform(
         apiName: 'SecTrustResultType.deny',
-        apiUrl:
-            'https://developer.apple.com/documentation/security/sectrustresulttype/deny',
+        apiUrl: 'https://developer.apple.com/documentation/security/sectrustresulttype/deny',
         value: 3,
       ),
     ],
@@ -130,8 +122,7 @@ class SslErrorType_ {
     platforms: [
       EnumIOSPlatform(
         apiName: 'SecTrustResultType.unspecified',
-        apiUrl:
-            'https://developer.apple.com/documentation/security/sectrustresulttype/unspecified',
+        apiUrl: 'https://developer.apple.com/documentation/security/sectrustresulttype/unspecified',
         value: 4,
       ),
     ],
@@ -151,8 +142,7 @@ class SslErrorType_ {
     platforms: [
       EnumIOSPlatform(
         apiName: 'SecTrustResultType.recoverableTrustFailure',
-        apiUrl:
-            'https://developer.apple.com/documentation/security/sectrustresulttype/recoverabletrustfailure',
+        apiUrl: 'https://developer.apple.com/documentation/security/sectrustresulttype/recoverabletrustfailure',
         value: 5,
       ),
     ],
@@ -171,8 +161,7 @@ class SslErrorType_ {
     platforms: [
       EnumIOSPlatform(
         apiName: 'SecTrustResultType.fatalTrustFailure',
-        apiUrl:
-            'https://developer.apple.com/documentation/security/sectrustresulttype/fataltrustfailure',
+        apiUrl: 'https://developer.apple.com/documentation/security/sectrustresulttype/fataltrustfailure',
         value: 6,
       ),
     ],
@@ -191,8 +180,7 @@ class SslErrorType_ {
     platforms: [
       EnumIOSPlatform(
         apiName: 'SecTrustResultType.otherError',
-        apiUrl:
-            'https://developer.apple.com/documentation/security/sectrustresulttype/othererror',
+        apiUrl: 'https://developer.apple.com/documentation/security/sectrustresulttype/othererror',
         value: 7,
       ),
     ],

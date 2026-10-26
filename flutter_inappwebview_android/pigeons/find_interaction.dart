@@ -30,8 +30,7 @@ import 'package:pigeon/pigeon.dart';
   PigeonOptions(
     dartOut: 'lib/src/pigeons/find_interaction.g.dart',
     dartOptions: DartOptions(),
-    kotlinOut:
-        'android/src/main/kotlin/dev/nosferatu500/inappwebview/pigeons/FindInteraction.g.kt',
+    kotlinOut: 'android/src/main/kotlin/dev/nosferatu500/inappwebview/pigeons/FindInteraction.g.kt',
     kotlinOptions: KotlinOptions(
       package: 'dev.nosferatu500.inappwebview.pigeons',
       // THIS SCHEMA IS THE DESIGNATED DECLARER OF `FlutterError` for the whole

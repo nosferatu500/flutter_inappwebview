@@ -97,21 +97,18 @@ void main() {
       ]);
     });
 
-    test(
-      'origin comes first and profileName second, on every method that takes both',
-      () async {
-        // The swap that type-checks. Asserted per method rather than once, because the arguments are
-        // positional now and a single transposed call site would not show up anywhere else.
-        await permissions.allow(origin: 'o', profileName: 'p');
-        expect(received[allowChannel], <Object?>['o', 'p']);
+    test('origin comes first and profileName second, on every method that takes both', () async {
+      // The swap that type-checks. Asserted per method rather than once, because the arguments are
+      // positional now and a single transposed call site would not show up anywhere else.
+      await permissions.allow(origin: 'o', profileName: 'p');
+      expect(received[allowChannel], <Object?>['o', 'p']);
 
-        await permissions.clear(origin: 'o', profileName: 'p');
-        expect(received[clearChannel], <Object?>['o', 'p']);
+      await permissions.clear(origin: 'o', profileName: 'p');
+      expect(received[clearChannel], <Object?>['o', 'p']);
 
-        await permissions.getAllowed(origin: 'o', profileName: 'p');
-        expect(received[getAllowedChannel], <Object?>['o', 'p']);
-      },
-    );
+      await permissions.getAllowed(origin: 'o', profileName: 'p');
+      expect(received[getAllowedChannel], <Object?>['o', 'p']);
+    });
 
     test(
       'profileName is the only argument of the two that take it alone',

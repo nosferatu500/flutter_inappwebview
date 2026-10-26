@@ -55,12 +55,10 @@ class PlatformCookieManagerCreationParams {
 @SupportedPlatforms(
   platforms: [
     AndroidPlatform(
-      note:
-          'It is implemented using [CookieManager](https://developer.android.com/reference/android/webkit/CookieManager).',
+      note: 'It is implemented using [CookieManager](https://developer.android.com/reference/android/webkit/CookieManager).',
     ),
     IOSPlatform(
-      note:
-          'It is implemented using [WKHTTPCookieStore](https://developer.apple.com/documentation/webkit/wkhttpcookiestore).',
+      note: 'It is implemented using [WKHTTPCookieStore](https://developer.apple.com/documentation/webkit/wkhttpcookiestore).',
     ),
   ],
 )
@@ -123,13 +121,11 @@ abstract class PlatformCookieManager extends PlatformInterface {
     platforms: [
       AndroidPlatform(
         apiName: 'CookieManager.setCookie',
-        apiUrl:
-            'https://developer.android.com/reference/android/webkit/CookieManager#setCookie(java.lang.String,%20java.lang.String,%20android.webkit.ValueCallback%3Cjava.lang.Boolean%3E)',
+        apiUrl: 'https://developer.android.com/reference/android/webkit/CookieManager#setCookie(java.lang.String,%20java.lang.String,%20android.webkit.ValueCallback%3Cjava.lang.Boolean%3E)',
       ),
       IOSPlatform(
         apiName: 'WKHTTPCookieStore.setCookie',
-        apiUrl:
-            'https://developer.apple.com/documentation/webkit/wkhttpcookiestore/2882007-setcookie',
+        apiUrl: 'https://developer.apple.com/documentation/webkit/wkhttpcookiestore/2882007-setcookie',
       ),
     ],
   )
@@ -179,16 +175,14 @@ abstract class PlatformCookieManager extends PlatformInterface {
     platforms: [
       AndroidPlatform(
         apiName: 'CookieManager.setCookie',
-        apiUrl:
-            'https://developer.android.com/reference/android/webkit/CookieManager#setCookie(java.lang.String,%20java.lang.String,%20android.webkit.ValueCallback%3Cjava.lang.Boolean%3E)',
+        apiUrl: 'https://developer.android.com/reference/android/webkit/CookieManager#setCookie(java.lang.String,%20java.lang.String,%20android.webkit.ValueCallback%3Cjava.lang.Boolean%3E)',
         note:
             'There is no batch API in the framework, so the native side loops. The saving is the '
             'single channel round trip, which is where almost all of the cost was.',
       ),
       IOSPlatform(
         apiName: 'WKHTTPCookieStore.setCookies',
-        apiUrl:
-            'https://developer.apple.com/documentation/webkit/wkhttpcookiestore/setcookies(_:completionhandler:)',
+        apiUrl: 'https://developer.apple.com/documentation/webkit/wkhttpcookiestore/setcookies(_:completionhandler:)',
         note:
             'Uses `setCookies:` on iOS 26.0+ and falls back to a native loop of `setCookie:` below '
             'it. The two were measured to be within a few milliseconds of each other for 100 '
@@ -206,7 +200,8 @@ abstract class PlatformCookieManager extends PlatformInterface {
   }
 
   ///{@template nosferatu500_inappwebview_platform_interface.PlatformCookieManager.getCookies}
-  ///Gets all the cookies for the given [url].
+  ///Gets the cookies a request to [url] would send: those whose domain (or host, for a host-only cookie)
+  ///and path match it, and Secure cookies only for an `https` [url].
   ///{@endtemplate}
   ///
   ///{@macro nosferatu500_inappwebview_platform_interface.PlatformCookieManager.getCookies.supported_platforms}
@@ -214,13 +209,12 @@ abstract class PlatformCookieManager extends PlatformInterface {
     platforms: [
       AndroidPlatform(
         apiName: 'CookieManager.getCookie',
-        apiUrl:
-            'https://developer.android.com/reference/android/webkit/CookieManager#getCookie(java.lang.String)',
+        apiUrl: 'https://developer.android.com/reference/android/webkit/CookieManager#getCookie(java.lang.String)',
       ),
       IOSPlatform(
-        apiName: 'WKHTTPCookieStore.getAllCookies',
-        apiUrl:
-            'https://developer.apple.com/documentation/webkit/wkhttpcookiestore/2882005-getallcookies',
+        apiName: 'WKHTTPCookieStore.getCookies(for:)',
+        apiUrl: 'https://developer.apple.com/documentation/webkit/wkhttpcookiestore/getcookies(for:completionhandler:)',
+        note: 'iOS 27 and newer. Below iOS 27, WKHTTPCookieStore.getAllCookies, matched against the URL by RFC 6265 in the plugin.',
       ),
     ],
   )
@@ -242,13 +236,12 @@ abstract class PlatformCookieManager extends PlatformInterface {
     platforms: [
       AndroidPlatform(
         apiName: 'CookieManager.getCookie',
-        apiUrl:
-            'https://developer.android.com/reference/android/webkit/CookieManager#getCookie(java.lang.String)',
+        apiUrl: 'https://developer.android.com/reference/android/webkit/CookieManager#getCookie(java.lang.String)',
       ),
       IOSPlatform(
-        apiName: 'WKHTTPCookieStore.getAllCookies',
-        apiUrl:
-            'https://developer.apple.com/documentation/webkit/wkhttpcookiestore/2882005-getallcookies',
+        apiName: 'WKHTTPCookieStore.getCookies(for:)',
+        apiUrl: 'https://developer.apple.com/documentation/webkit/wkhttpcookiestore/getcookies(for:completionhandler:)',
+        note: 'Looks the name up among what getCookies returns for the URL: iOS 27 and newer, WebKit\'s own matching; below iOS 27, WKHTTPCookieStore.getAllCookies matched by RFC 6265 in the plugin.',
       ),
     ],
   )
@@ -275,13 +268,11 @@ abstract class PlatformCookieManager extends PlatformInterface {
     platforms: [
       AndroidPlatform(
         apiName: 'CookieManager.getCookie',
-        apiUrl:
-            'https://developer.android.com/reference/android/webkit/CookieManager#getCookie(java.lang.String)',
+        apiUrl: 'https://developer.android.com/reference/android/webkit/CookieManager#getCookie(java.lang.String)',
       ),
       IOSPlatform(
         apiName: 'WKHTTPCookieStore.delete',
-        apiUrl:
-            'https://developer.apple.com/documentation/webkit/wkhttpcookiestore/2882009-delete',
+        apiUrl: 'https://developer.apple.com/documentation/webkit/wkhttpcookiestore/2882009-delete',
       ),
     ],
   )
@@ -310,13 +301,11 @@ abstract class PlatformCookieManager extends PlatformInterface {
     platforms: [
       AndroidPlatform(
         apiName: 'CookieManager.getCookie',
-        apiUrl:
-            'https://developer.android.com/reference/android/webkit/CookieManager#getCookie(java.lang.String)',
+        apiUrl: 'https://developer.android.com/reference/android/webkit/CookieManager#getCookie(java.lang.String)',
       ),
       IOSPlatform(
         apiName: 'WKHTTPCookieStore.delete',
-        apiUrl:
-            'https://developer.apple.com/documentation/webkit/wkhttpcookiestore/2882009-delete',
+        apiUrl: 'https://developer.apple.com/documentation/webkit/wkhttpcookiestore/2882009-delete',
       ),
     ],
   )
@@ -347,13 +336,11 @@ abstract class PlatformCookieManager extends PlatformInterface {
     platforms: [
       AndroidPlatform(
         apiName: 'CookieManager.removeAllCookies',
-        apiUrl:
-            'https://developer.android.com/reference/android/webkit/CookieManager#removeAllCookies(android.webkit.ValueCallback%3Cjava.lang.Boolean%3E)',
+        apiUrl: 'https://developer.android.com/reference/android/webkit/CookieManager#removeAllCookies(android.webkit.ValueCallback%3Cjava.lang.Boolean%3E)',
       ),
       IOSPlatform(
         apiName: 'WKWebsiteDataStore.removeData',
-        apiUrl:
-            'https://developer.apple.com/documentation/webkit/wkwebsitedatastore/1532938-removedata',
+        apiUrl: 'https://developer.apple.com/documentation/webkit/wkwebsitedatastore/1532938-removedata',
         available: '11.0',
         note: """It will return always `true`.""",
       ),
@@ -376,8 +363,7 @@ abstract class PlatformCookieManager extends PlatformInterface {
     platforms: [
       IOSPlatform(
         apiName: 'WKHTTPCookieStore.getAllCookies',
-        apiUrl:
-            'https://developer.apple.com/documentation/webkit/wkhttpcookiestore/2882005-getallcookies',
+        apiUrl: 'https://developer.apple.com/documentation/webkit/wkhttpcookiestore/2882005-getallcookies',
         available: '11.0',
       ),
     ],
@@ -399,8 +385,7 @@ abstract class PlatformCookieManager extends PlatformInterface {
     platforms: [
       AndroidPlatform(
         apiName: 'CookieManager.removeSessionCookies',
-        apiUrl:
-            'https://developer.android.com/reference/android/webkit/CookieManager#removeSessionCookies(android.webkit.ValueCallback%3Cjava.lang.Boolean%3E)',
+        apiUrl: 'https://developer.android.com/reference/android/webkit/CookieManager#removeSessionCookies(android.webkit.ValueCallback%3Cjava.lang.Boolean%3E)',
       ),
     ],
   )
@@ -427,8 +412,7 @@ abstract class PlatformCookieManager extends PlatformInterface {
     platforms: [
       AndroidPlatform(
         apiName: 'CookieManager.flush',
-        apiUrl:
-            'https://developer.android.com/reference/android/webkit/CookieManager#flush()',
+        apiUrl: 'https://developer.android.com/reference/android/webkit/CookieManager#flush()',
       ),
     ],
   )
@@ -461,8 +445,7 @@ abstract class PlatformCookieManager extends PlatformInterface {
     platforms: [
       AndroidPlatform(
         apiName: 'CookieManager.hasCookies',
-        apiUrl:
-            'https://developer.android.com/reference/android/webkit/CookieManager#hasCookies()',
+        apiUrl: 'https://developer.android.com/reference/android/webkit/CookieManager#hasCookies()',
       ),
     ],
   )
@@ -496,10 +479,8 @@ abstract class PlatformCookieManager extends PlatformInterface {
     platforms: [
       AndroidPlatform(
         apiName: 'CookieManager.allowFileSchemeCookies',
-        apiUrl:
-            'https://developer.android.com/reference/android/webkit/CookieManager#allowFileSchemeCookies()',
-        note:
-            'Read-only: the counterpart `setAcceptFileSchemeCookies` is deprecated and is not exposed.',
+        apiUrl: 'https://developer.android.com/reference/android/webkit/CookieManager#allowFileSchemeCookies()',
+        note: 'Read-only: the counterpart `setAcceptFileSchemeCookies` is deprecated and is not exposed.',
       ),
     ],
   )
@@ -547,18 +528,14 @@ abstract class PlatformCookieManager extends PlatformInterface {
     platforms: [
       AndroidPlatform(
         apiName: 'CookieManager.setAcceptCookie',
-        apiUrl:
-            'https://developer.android.com/reference/android/webkit/CookieManager#setAcceptCookie(boolean)',
-        note:
-            'The switch is process-wide for the default cookie store, so it affects every WebView in the app, not just one.',
+        apiUrl: 'https://developer.android.com/reference/android/webkit/CookieManager#setAcceptCookie(boolean)',
+        note: 'The switch is process-wide for the default cookie store, so it affects every WebView in the app, not just one.',
       ),
       IOSPlatform(
         apiName: 'WKHTTPCookieStore.setCookiePolicy',
-        apiUrl:
-            'https://developer.apple.com/documentation/webkit/wkhttpcookiestore/4133727-setcookiepolicy',
+        apiUrl: 'https://developer.apple.com/documentation/webkit/wkhttpcookiestore/4133727-setcookiepolicy',
         available: '17.0',
-        note:
-            'Scoped to the default data store\'s cookie store rather than the process. Returns `false` below iOS 17.0, where the policy cannot be set at all.',
+        note: 'Scoped to the default data store\'s cookie store rather than the process. Returns `false` below iOS 17.0, where the policy cannot be set at all.',
       ),
     ],
   )
@@ -592,13 +569,11 @@ abstract class PlatformCookieManager extends PlatformInterface {
     platforms: [
       AndroidPlatform(
         apiName: 'CookieManager.acceptCookie',
-        apiUrl:
-            'https://developer.android.com/reference/android/webkit/CookieManager#acceptCookie()',
+        apiUrl: 'https://developer.android.com/reference/android/webkit/CookieManager#acceptCookie()',
       ),
       IOSPlatform(
         apiName: 'WKHTTPCookieStore.getCookiePolicy',
-        apiUrl:
-            'https://developer.apple.com/documentation/webkit/wkhttpcookiestore/4133726-getcookiepolicy',
+        apiUrl: 'https://developer.apple.com/documentation/webkit/wkhttpcookiestore/4133726-getcookiepolicy',
         available: '17.0',
         note:
             'Returns `null` below iOS 17.0, where there is no policy to read.',
@@ -661,11 +636,9 @@ abstract class PlatformCookieManager extends PlatformInterface {
     platforms: [
       IOSPlatform(
         apiName: 'WKHTTPCookieStore.addObserver',
-        apiUrl:
-            'https://developer.apple.com/documentation/webkit/wkhttpcookiestore/2915464-addobserver',
+        apiUrl: 'https://developer.apple.com/documentation/webkit/wkhttpcookiestore/2915464-addobserver',
         available: '11.0',
-        note:
-            'Android has no counterpart: `android.webkit.CookieManager` exposes no change notification.',
+        note: 'Android has no counterpart: `android.webkit.CookieManager` exposes no change notification.',
       ),
     ],
   )
@@ -704,8 +677,7 @@ abstract class PlatformCookieManager extends PlatformInterface {
   platforms: [
     IOSPlatform(
       apiName: 'WKHTTPCookieStoreObserver',
-      apiUrl:
-          'https://developer.apple.com/documentation/webkit/wkhttpcookiestoreobserver',
+      apiUrl: 'https://developer.apple.com/documentation/webkit/wkhttpcookiestoreobserver',
       available: '11.0',
     ),
   ],
@@ -724,8 +696,7 @@ class CookieStoreObserver {
     platforms: [
       IOSPlatform(
         apiName: 'WKHTTPCookieStoreObserver.cookiesDidChangeInCookieStore',
-        apiUrl:
-            'https://developer.apple.com/documentation/webkit/wkhttpcookiestoreobserver/2915463-cookiesdidchange',
+        apiUrl: 'https://developer.apple.com/documentation/webkit/wkhttpcookiestoreobserver/2915463-cookiesdidchange',
         available: '11.0',
       ),
     ],

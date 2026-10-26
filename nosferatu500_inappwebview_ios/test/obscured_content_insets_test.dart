@@ -41,9 +41,8 @@ void main() {
 
     test('an explicit zero is distinct from unset', () {
       expect(
-        InAppWebViewSettings(
-          obscuredContentInsets: EdgeInsets.zero,
-        ).toMap()['obscuredContentInsets'],
+        InAppWebViewSettings(obscuredContentInsets: EdgeInsets.zero)
+            .toMap()['obscuredContentInsets'],
         isNotNull,
       );
     });

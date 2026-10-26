@@ -128,24 +128,27 @@ void main() {
     expect(sent.predefinedCategories, isEmpty);
   });
 
-  test('tracingMode crosses as its native value, and null stays null', () async {
-    await tracing.start(
-      settings: TracingSettings(
-        categories: ['blink*'],
-        tracingMode: TracingMode.RECORD_UNTIL_FULL,
-      ),
-    );
-    expect(
-      sentSettings().tracingMode,
-      TracingMode.RECORD_UNTIL_FULL.toNativeValue(),
-    );
+  test(
+    'tracingMode crosses as its native value, and null stays null',
+    () async {
+      await tracing.start(
+        settings: TracingSettings(
+          categories: ['blink*'],
+          tracingMode: TracingMode.RECORD_UNTIL_FULL,
+        ),
+      );
+      expect(
+        sentSettings().tracingMode,
+        TracingMode.RECORD_UNTIL_FULL.toNativeValue(),
+      );
 
-    received.clear();
-    await tracing.start(settings: TracingSettings(categories: ['blink*']));
-    // Null means "not set", which androidx treats as RECORD_CONTINUOUSLY. Sending a concrete
-    // default here would take that choice away from androidx.
-    expect(sentSettings().tracingMode, isNull);
-  });
+      received.clear();
+      await tracing.start(settings: TracingSettings(categories: ['blink*']));
+      // Null means "not set", which androidx treats as RECORD_CONTINUOUSLY. Sending a concrete
+      // default here would take that choice away from androidx.
+      expect(sentSettings().tracingMode, isNull);
+    },
+  );
 
   test('stop sends the file path on its own channel', () async {
     expect(await tracing.stop(filePath: '/tmp/trace.json'), isTrue);

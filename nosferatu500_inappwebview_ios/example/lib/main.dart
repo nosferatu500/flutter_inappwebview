@@ -1,6 +1,7 @@
 import 'dart:async';
+
 import 'package:flutter/foundation.dart';
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:nosferatu500_inappwebview_platform_interface/nosferatu500_inappwebview_platform_interface.dart';
 import 'package:nosferatu500_inappwebview_ios/nosferatu500_inappwebview_ios.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -75,7 +76,9 @@ class _MyAppState extends State<MyApp> {
                     IOSInAppWebViewWidgetCreationParams(
                       key: webViewKey,
                       initialUrlRequest: URLRequest(
-                        url: WebUri("https://inappwebview.dev/"),
+                        url: WebUri(
+                          "https://github.com/nosferatu500/flutter_inappwebview",
+                        ),
                       ),
                       initialSettings: settings,
                       pullToRefreshController: pullToRefreshController,

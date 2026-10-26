@@ -309,12 +309,6 @@ class UserContentController(@JvmField var webView: WebView?) : Disposable {
     return pluginScripts[pluginScript.injectionTime]!!.add(pluginScript)
   }
 
-  fun addPluginScripts(pluginScripts: List<PluginScript>) {
-    for (pluginScript in pluginScripts) {
-      addPluginScript(pluginScript)
-    }
-  }
-
   fun removePluginScript(pluginScript: PluginScript): Boolean {
     if (WebViewFeature.isFeatureSupported(WebViewFeature.DOCUMENT_START_SCRIPT)) {
       scriptHandlerMap[pluginScript]?.let {
@@ -370,38 +364,6 @@ class UserContentController(@JvmField var webView: WebView?) : Disposable {
     }
   }
 
-  fun containsPluginScript(pluginScript: PluginScript): Boolean =
-    getPluginScriptAsList().contains(pluginScript)
-
-  fun containsPluginScriptByGroupName(groupName: String?): Boolean {
-    for (pluginScript in getPluginScriptAsList()) {
-      if (Util.objEquals(groupName, pluginScript.groupName)) {
-        return true
-      }
-    }
-    return false
-  }
-
-  fun containsUserOnlyScript(userOnlyScript: UserScript): Boolean =
-    getUserOnlyScriptAsList().contains(userOnlyScript)
-
-  fun containsUserOnlyScriptByGroupName(groupName: String?): Boolean {
-    for (userOnlyScript in getUserOnlyScriptAsList()) {
-      if (Util.objEquals(groupName, userOnlyScript.groupName)) {
-        return true
-      }
-    }
-    return false
-  }
-
-  fun removePluginScriptsByGroupName(groupName: String?) {
-    for (pluginScript in getPluginScriptAsList()) {
-      if (Util.objEquals(groupName, pluginScript.groupName)) {
-        removePluginScript(pluginScript)
-      }
-    }
-  }
-
   fun removeUserOnlyScriptsByGroupName(groupName: String?) {
     for (userOnlyScript in getUserOnlyScriptAsList()) {
       if (Util.objEquals(groupName, userOnlyScript.groupName)) {
@@ -409,8 +371,6 @@ class UserContentController(@JvmField var webView: WebView?) : Disposable {
       }
     }
   }
-
-  fun getContentWorlds(): LinkedHashSet<ContentWorld> = LinkedHashSet(contentWorlds)
 
   override fun dispose() {
     if (WebViewFeature.isFeatureSupported(WebViewFeature.DOCUMENT_START_SCRIPT)) {

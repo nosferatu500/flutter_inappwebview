@@ -50,6 +50,11 @@ void requestFocus() {
     );
     expect(await hasFocus(), isTrue);
 
+    // Below API 28, View.clearFocus() hands focus straight back to the first focusable view, which
+    // is this WebView, so the second branch's no-focus precondition can't be set up (see
+    // clear_focus.dart). The first branch above has been checked.
+    if ((await androidSdkInt())! < 28) return;
+
     await controller.clearFocus();
     expect(await hasFocus(), isFalse, reason: 'precondition');
     expect(

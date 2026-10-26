@@ -141,8 +141,7 @@ void pendingJavaScriptResults() {
         ),
       );
       final pending = controller.callAsyncJavaScript(
-        functionBody:
-            'await new Promise(function(r) { setTimeout(r, 10000); }); return 7;',
+        functionBody: 'await new Promise(function(r) { setTimeout(r, 10000); }); return 7;',
       );
       await Future<void>.delayed(const Duration(milliseconds: 300));
       await controller.loadData(data: '<html><body>second</body></html>');
@@ -168,8 +167,7 @@ void pendingJavaScriptResults() {
       // the ordinary case; the next test leaves it out (§268, §270).
       await tester.pump();
       final pending = controller.callAsyncJavaScript(
-        functionBody:
-            'await new Promise(function(r) { setTimeout(r, 10000); }); return 7;',
+        functionBody: 'await new Promise(function(r) { setTimeout(r, 10000); }); return 7;',
       );
       await Future<void>.delayed(const Duration(milliseconds: 300));
       await tester.pumpWidget(const SizedBox());
@@ -194,8 +192,7 @@ void pendingJavaScriptResults() {
         ),
       );
       final pending = controller.callAsyncJavaScript(
-        functionBody:
-            'await new Promise(function(r) { setTimeout(r, 10000); }); return 7;',
+        functionBody: 'await new Promise(function(r) { setTimeout(r, 10000); }); return 7;',
       );
       await Future<void>.delayed(const Duration(milliseconds: 300));
       await tester.pumpWidget(const SizedBox());

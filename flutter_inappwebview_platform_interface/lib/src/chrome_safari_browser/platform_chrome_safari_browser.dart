@@ -28,16 +28,14 @@ class PlatformChromeSafariBrowserCreationParams {
 @SupportedPlatforms(
   platforms: [
     AndroidPlatform(
-      note:
-          """This class uses native [Chrome Custom Tabs](https://developer.android.com/reference/android/support/customtabs/package-summary).
+      note: """This class uses native [Chrome Custom Tabs](https://developer.android.com/reference/android/support/customtabs/package-summary).
 If you want to use the `ChromeSafariBrowser` class on Android 11+ you need to specify your app querying for
 `android.support.customtabs.action.CustomTabsService` in your `AndroidManifest.xml`
 (you can read more about it here: https://developers.google.com/web/android/custom-tabs/best-practices#applications_targeting_android_11_api_level_30_or_above).""",
       name: 'Android Chrome Custom Tabs',
     ),
     IOSPlatform(
-      note:
-          'This class uses native [SFSafariViewController](https://developer.apple.com/documentation/safariservices/sfsafariviewcontroller)',
+      note: 'This class uses native [SFSafariViewController](https://developer.apple.com/documentation/safariservices/sfsafariviewcontroller)',
       name: 'iOS SFSafariViewController',
     ),
   ],
@@ -180,8 +178,7 @@ abstract class PlatformChromeSafariBrowser extends PlatformInterface
     platforms: [
       AndroidPlatform(
         apiName: 'CustomTabsSession.mayLaunchUrl',
-        apiUrl:
-            'https://developer.android.com/reference/androidx/browser/customtabs/CustomTabsSession#mayLaunchUrl(android.net.Uri,android.os.Bundle,java.util.List%3Candroid.os.Bundle%3E)',
+        apiUrl: 'https://developer.android.com/reference/androidx/browser/customtabs/CustomTabsSession#mayLaunchUrl(android.net.Uri,android.os.Bundle,java.util.List%3Candroid.os.Bundle%3E)',
       ),
     ],
   )
@@ -212,8 +209,7 @@ abstract class PlatformChromeSafariBrowser extends PlatformInterface
     platforms: [
       AndroidPlatform(
         apiName: 'CustomTabsSession.validateRelationship',
-        apiUrl:
-            'https://developer.android.com/reference/androidx/browser/customtabs/CustomTabsSession#validateRelationship(int,android.net.Uri,android.os.Bundle)',
+        apiUrl: 'https://developer.android.com/reference/androidx/browser/customtabs/CustomTabsSession#validateRelationship(int,android.net.Uri,android.os.Bundle)',
       ),
     ],
   )
@@ -247,8 +243,7 @@ abstract class PlatformChromeSafariBrowser extends PlatformInterface
     platforms: [
       AndroidPlatform(
         apiName: 'CustomTabsSession.setActionButton',
-        apiUrl:
-            'https://developer.android.com/reference/androidx/browser/customtabs/CustomTabsIntent.Builder#setActionButton(android.graphics.Bitmap,%20java.lang.String,%20android.app.PendingIntent,%20boolean)',
+        apiUrl: 'https://developer.android.com/reference/androidx/browser/customtabs/CustomTabsIntent.Builder#setActionButton(android.graphics.Bitmap,%20java.lang.String,%20android.app.PendingIntent,%20boolean)',
         note: 'Not available in a Trusted Web Activity.',
       ),
     ],
@@ -268,8 +263,7 @@ abstract class PlatformChromeSafariBrowser extends PlatformInterface
     platforms: [
       AndroidPlatform(
         apiName: 'CustomTabsSession.setActionButton',
-        apiUrl:
-            'https://developer.android.com/reference/androidx/browser/customtabs/CustomTabsIntent.Builder#setActionButton(android.graphics.Bitmap,%20java.lang.String,%20android.app.PendingIntent,%20boolean)',
+        apiUrl: 'https://developer.android.com/reference/androidx/browser/customtabs/CustomTabsIntent.Builder#setActionButton(android.graphics.Bitmap,%20java.lang.String,%20android.app.PendingIntent,%20boolean)',
         note: 'Not available in a Trusted Web Activity.',
       ),
     ],
@@ -292,8 +286,7 @@ abstract class PlatformChromeSafariBrowser extends PlatformInterface
     platforms: [
       AndroidPlatform(
         apiName: 'CustomTabsIntent.Builder.setSecondaryToolbarViews',
-        apiUrl:
-            'https://developer.android.com/reference/androidx/browser/customtabs/CustomTabsIntent.Builder#setSecondaryToolbarViews(android.widget.RemoteViews,int[],android.app.PendingIntent)',
+        apiUrl: 'https://developer.android.com/reference/androidx/browser/customtabs/CustomTabsIntent.Builder#setSecondaryToolbarViews(android.widget.RemoteViews,int[],android.app.PendingIntent)',
         note: 'Not available in a Trusted Web Activity.',
       ),
     ],
@@ -315,8 +308,7 @@ abstract class PlatformChromeSafariBrowser extends PlatformInterface
     platforms: [
       AndroidPlatform(
         apiName: 'CustomTabsIntent.Builder.setSecondaryToolbarViews',
-        apiUrl:
-            'https://developer.android.com/reference/androidx/browser/customtabs/CustomTabsIntent.Builder#setSecondaryToolbarViews(android.widget.RemoteViews,int[],android.app.PendingIntent)',
+        apiUrl: 'https://developer.android.com/reference/androidx/browser/customtabs/CustomTabsIntent.Builder#setSecondaryToolbarViews(android.widget.RemoteViews,int[],android.app.PendingIntent)',
         note: 'Not available in a Trusted Web Activity.',
       ),
     ],
@@ -385,8 +377,7 @@ abstract class PlatformChromeSafariBrowser extends PlatformInterface
     platforms: [
       AndroidPlatform(
         apiName: 'CustomTabsSession.requestPostMessageChannel',
-        apiUrl:
-            'https://developer.android.com/reference/androidx/browser/customtabs/CustomTabsSession#requestPostMessageChannel(android.net.Uri,android.net.Uri,android.os.Bundle)',
+        apiUrl: 'https://developer.android.com/reference/androidx/browser/customtabs/CustomTabsSession#requestPostMessageChannel(android.net.Uri,android.net.Uri,android.os.Bundle)',
       ),
     ],
   )
@@ -414,8 +405,7 @@ abstract class PlatformChromeSafariBrowser extends PlatformInterface
     platforms: [
       AndroidPlatform(
         apiName: 'CustomTabsSession.postMessage',
-        apiUrl:
-            'https://developer.android.com/reference/androidx/browser/customtabs/CustomTabsSession#postMessage(java.lang.String,android.os.Bundle)',
+        apiUrl: 'https://developer.android.com/reference/androidx/browser/customtabs/CustomTabsSession#postMessage(java.lang.String,android.os.Bundle)',
       ),
     ],
   )
@@ -439,8 +429,7 @@ abstract class PlatformChromeSafariBrowser extends PlatformInterface
     platforms: [
       AndroidPlatform(
         apiName: 'CustomTabsSession.isEngagementSignalsApiAvailable',
-        apiUrl:
-            'https://developer.android.com/reference/androidx/browser/customtabs/CustomTabsSession#isEngagementSignalsApiAvailable(android.os.Bundle)',
+        apiUrl: 'https://developer.android.com/reference/androidx/browser/customtabs/CustomTabsSession#isEngagementSignalsApiAvailable(android.os.Bundle)',
       ),
     ],
   )
@@ -509,8 +498,7 @@ abstract class PlatformChromeSafariBrowser extends PlatformInterface
     platforms: [
       AndroidPlatform(
         apiName: 'CustomTabsClient.getPackageName',
-        apiUrl:
-            'https://developer.android.com/reference/androidx/browser/customtabs/CustomTabsClient#getPackageName(android.content.Context,java.util.List%3Cjava.lang.String%3E,boolean)',
+        apiUrl: 'https://developer.android.com/reference/androidx/browser/customtabs/CustomTabsClient#getPackageName(android.content.Context,java.util.List%3Cjava.lang.String%3E,boolean)',
       ),
     ],
   )
@@ -533,8 +521,7 @@ abstract class PlatformChromeSafariBrowser extends PlatformInterface
     platforms: [
       IOSPlatform(
         apiName: 'SFSafariViewController.DataStore.clearWebsiteData',
-        apiUrl:
-            'https://developer.apple.com/documentation/safariservices/sfsafariviewcontroller/datastore/3981117-clearwebsitedata',
+        apiUrl: 'https://developer.apple.com/documentation/safariservices/sfsafariviewcontroller/datastore/3981117-clearwebsitedata',
         available: '16.0',
       ),
     ],
@@ -568,8 +555,7 @@ abstract class PlatformChromeSafariBrowser extends PlatformInterface
     platforms: [
       IOSPlatform(
         apiName: 'SFSafariViewController.prewarmConnections',
-        apiUrl:
-            'https://developer.apple.com/documentation/safariservices/sfsafariviewcontroller/3752133-prewarmconnections',
+        apiUrl: 'https://developer.apple.com/documentation/safariservices/sfsafariviewcontroller/3752133-prewarmconnections',
         available: '15.0',
       ),
     ],
@@ -589,8 +575,7 @@ abstract class PlatformChromeSafariBrowser extends PlatformInterface
     platforms: [
       IOSPlatform(
         apiName: 'SFSafariViewController.PrewarmingToken.invalidate',
-        apiUrl:
-            'https://developer.apple.com/documentation/safariservices/sfsafariviewcontroller/prewarmingtoken/invalidate()',
+        apiUrl: 'https://developer.apple.com/documentation/safariservices/sfsafariviewcontroller/prewarmingtoken/invalidate()',
         available: '15.0',
       ),
     ],
@@ -672,8 +657,7 @@ abstract class PlatformChromeSafariBrowserEvents {
       AndroidPlatform(),
       IOSPlatform(
         apiName: 'SFSafariViewControllerDelegate.safariViewController',
-        apiUrl:
-            'https://developer.apple.com/documentation/safariservices/sfsafariviewcontrollerdelegate/1621215-safariviewcontroller',
+        apiUrl: 'https://developer.apple.com/documentation/safariservices/sfsafariviewcontrollerdelegate/1621215-safariviewcontroller',
       ),
     ],
   )
@@ -690,8 +674,7 @@ abstract class PlatformChromeSafariBrowserEvents {
     platforms: [
       IOSPlatform(
         apiName: 'SFSafariViewControllerDelegate.safariViewController',
-        apiUrl:
-            'https://developer.apple.com/documentation/safariservices/sfsafariviewcontrollerdelegate/2923545-safariviewcontroller',
+        apiUrl: 'https://developer.apple.com/documentation/safariservices/sfsafariviewcontrollerdelegate/2923545-safariviewcontroller',
       ),
     ],
   )
@@ -706,8 +689,7 @@ abstract class PlatformChromeSafariBrowserEvents {
     platforms: [
       AndroidPlatform(
         apiName: 'CustomTabsCallback.onNavigationEvent',
-        apiUrl:
-            'https://developer.android.com/reference/androidx/browser/customtabs/CustomTabsCallback#onNavigationEvent(int,android.os.Bundle)',
+        apiUrl: 'https://developer.android.com/reference/androidx/browser/customtabs/CustomTabsCallback#onNavigationEvent(int,android.os.Bundle)',
       ),
     ],
   )
@@ -728,8 +710,7 @@ abstract class PlatformChromeSafariBrowserEvents {
     platforms: [
       AndroidPlatform(
         apiName: 'CustomTabsCallback.onRelationshipValidationResult',
-        apiUrl:
-            'https://developer.android.com/reference/androidx/browser/customtabs/CustomTabsCallback#onRelationshipValidationResult(int,android.net.Uri,boolean,android.os.Bundle)',
+        apiUrl: 'https://developer.android.com/reference/androidx/browser/customtabs/CustomTabsCallback#onRelationshipValidationResult(int,android.net.Uri,boolean,android.os.Bundle)',
       ),
     ],
   )
@@ -747,10 +728,8 @@ abstract class PlatformChromeSafariBrowserEvents {
   @SupportedPlatforms(
     platforms: [
       IOSPlatform(
-        apiName:
-            'SFSafariViewControllerDelegate.safariViewControllerWillOpenInBrowser',
-        apiUrl:
-            'https://developer.apple.com/documentation/safariservices/sfsafariviewcontrollerdelegate/3650426-safariviewcontrollerwillopeninbr',
+        apiName: 'SFSafariViewControllerDelegate.safariViewControllerWillOpenInBrowser',
+        apiUrl: 'https://developer.apple.com/documentation/safariservices/sfsafariviewcontrollerdelegate/3650426-safariviewcontrollerwillopeninbr',
         available: '14.0',
       ),
     ],
@@ -767,8 +746,7 @@ abstract class PlatformChromeSafariBrowserEvents {
     platforms: [
       AndroidPlatform(
         apiName: 'CustomTabsCallback.onMessageChannelReady',
-        apiUrl:
-            'https://developer.android.com/reference/androidx/browser/customtabs/CustomTabsCallback#onMessageChannelReady(android.os.Bundle)',
+        apiUrl: 'https://developer.android.com/reference/androidx/browser/customtabs/CustomTabsCallback#onMessageChannelReady(android.os.Bundle)',
       ),
     ],
   )
@@ -785,8 +763,7 @@ abstract class PlatformChromeSafariBrowserEvents {
     platforms: [
       AndroidPlatform(
         apiName: 'CustomTabsCallback.onPostMessage',
-        apiUrl:
-            'https://developer.android.com/reference/androidx/browser/customtabs/CustomTabsCallback#onPostMessage(java.lang.String,android.os.Bundle)',
+        apiUrl: 'https://developer.android.com/reference/androidx/browser/customtabs/CustomTabsCallback#onPostMessage(java.lang.String,android.os.Bundle)',
       ),
     ],
   )
@@ -806,8 +783,7 @@ abstract class PlatformChromeSafariBrowserEvents {
     platforms: [
       AndroidPlatform(
         apiName: 'EngagementSignalsCallback.onVerticalScrollEvent',
-        apiUrl:
-            'https://developer.android.com/reference/androidx/browser/customtabs/EngagementSignalsCallback#onVerticalScrollEvent(boolean,android.os.Bundle)',
+        apiUrl: 'https://developer.android.com/reference/androidx/browser/customtabs/EngagementSignalsCallback#onVerticalScrollEvent(boolean,android.os.Bundle)',
       ),
     ],
   )
@@ -831,8 +807,7 @@ abstract class PlatformChromeSafariBrowserEvents {
       AndroidPlatform(
         apiName:
             'EngagementSignalsCallback.onGreatestScrollPercentageIncreased',
-        apiUrl:
-            'https://developer.android.com/reference/androidx/browser/customtabs/EngagementSignalsCallback#onGreatestScrollPercentageIncreased(int,android.os.Bundle)',
+        apiUrl: 'https://developer.android.com/reference/androidx/browser/customtabs/EngagementSignalsCallback#onGreatestScrollPercentageIncreased(int,android.os.Bundle)',
       ),
     ],
   )
@@ -852,8 +827,7 @@ abstract class PlatformChromeSafariBrowserEvents {
     platforms: [
       AndroidPlatform(
         apiName: 'EngagementSignalsCallback.onSessionEnded',
-        apiUrl:
-            'https://developer.android.com/reference/androidx/browser/customtabs/EngagementSignalsCallback#onSessionEnded(boolean,android.os.Bundle)',
+        apiUrl: 'https://developer.android.com/reference/androidx/browser/customtabs/EngagementSignalsCallback#onSessionEnded(boolean,android.os.Bundle)',
       ),
     ],
   )

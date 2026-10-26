@@ -59,8 +59,7 @@ class PlatformGeolocationPermissionsCreationParams {
   platforms: [
     AndroidPlatform(
       apiName: 'GeolocationPermissions',
-      apiUrl:
-          'https://developer.android.com/reference/android/webkit/GeolocationPermissions',
+      apiUrl: 'https://developer.android.com/reference/android/webkit/GeolocationPermissions',
     ),
   ],
 )
@@ -134,8 +133,7 @@ abstract class PlatformGeolocationPermissions extends PlatformInterface {
     platforms: [
       AndroidPlatform(
         apiName: 'GeolocationPermissions.allow',
-        apiUrl:
-            'https://developer.android.com/reference/android/webkit/GeolocationPermissions#allow(java.lang.String)',
+        apiUrl: 'https://developer.android.com/reference/android/webkit/GeolocationPermissions#allow(java.lang.String)',
       ),
     ],
   )
@@ -164,8 +162,7 @@ abstract class PlatformGeolocationPermissions extends PlatformInterface {
     platforms: [
       AndroidPlatform(
         apiName: 'GeolocationPermissions.clear',
-        apiUrl:
-            'https://developer.android.com/reference/android/webkit/GeolocationPermissions#clear(java.lang.String)',
+        apiUrl: 'https://developer.android.com/reference/android/webkit/GeolocationPermissions#clear(java.lang.String)',
       ),
     ],
   )
@@ -191,8 +188,7 @@ abstract class PlatformGeolocationPermissions extends PlatformInterface {
     platforms: [
       AndroidPlatform(
         apiName: 'GeolocationPermissions.clearAll',
-        apiUrl:
-            'https://developer.android.com/reference/android/webkit/GeolocationPermissions#clearAll()',
+        apiUrl: 'https://developer.android.com/reference/android/webkit/GeolocationPermissions#clearAll()',
       ),
     ],
   )
@@ -220,8 +216,7 @@ abstract class PlatformGeolocationPermissions extends PlatformInterface {
     platforms: [
       AndroidPlatform(
         apiName: 'GeolocationPermissions.getAllowed',
-        apiUrl:
-            'https://developer.android.com/reference/android/webkit/GeolocationPermissions#getAllowed(java.lang.String,%20android.webkit.ValueCallback%3Cjava.lang.Boolean%3E)',
+        apiUrl: 'https://developer.android.com/reference/android/webkit/GeolocationPermissions#getAllowed(java.lang.String,%20android.webkit.ValueCallback%3Cjava.lang.Boolean%3E)',
       ),
     ],
   )
@@ -254,8 +249,7 @@ abstract class PlatformGeolocationPermissions extends PlatformInterface {
     platforms: [
       AndroidPlatform(
         apiName: 'GeolocationPermissions.getOrigins',
-        apiUrl:
-            'https://developer.android.com/reference/android/webkit/GeolocationPermissions#getOrigins(android.webkit.ValueCallback%3Cjava.util.Set%3Cjava.lang.String%3E%3E)',
+        apiUrl: 'https://developer.android.com/reference/android/webkit/GeolocationPermissions#getOrigins(android.webkit.ValueCallback%3Cjava.util.Set%3Cjava.lang.String%3E%3E)',
       ),
     ],
   )

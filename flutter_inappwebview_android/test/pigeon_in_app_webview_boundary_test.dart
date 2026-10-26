@@ -95,19 +95,25 @@ void main() {
 
     tearDown(() => clearAll('inappwebview_7'));
 
-    test('the getters map each answer back, each from its own method', () async {
-      // Every value is different, so an answer read from the wrong channel fails.
-      expect(await c.getUrl(), WebUri('https://example.com/url'));
-      expect(await c.getTitle(), 'the-title');
-      expect(await c.getProgress(), 42);
-      expect(await c.getOriginalUrl(), WebUri('https://example.com/original'));
-      expect(await c.canGoBack(), isTrue);
-      expect(await c.canGoForward(), isFalse);
-      expect(await c.isLoading(), isTrue);
-      expect(await c.prerenderUrl(WebUri('https://example.com/p')), isTrue);
-      expect(sent['prerenderUrl'], ['https://example.com/p']);
-      expect(await c.getContentHeight(), 1234);
-    });
+    test(
+      'the getters map each answer back, each from its own method',
+      () async {
+        // Every value is different, so an answer read from the wrong channel fails.
+        expect(await c.getUrl(), WebUri('https://example.com/url'));
+        expect(await c.getTitle(), 'the-title');
+        expect(await c.getProgress(), 42);
+        expect(
+          await c.getOriginalUrl(),
+          WebUri('https://example.com/original'),
+        );
+        expect(await c.canGoBack(), isTrue);
+        expect(await c.canGoForward(), isFalse);
+        expect(await c.isLoading(), isTrue);
+        expect(await c.prerenderUrl(WebUri('https://example.com/p')), isTrue);
+        expect(sent['prerenderUrl'], ['https://example.com/p']);
+        expect(await c.getContentHeight(), 1234);
+      },
+    );
 
     test('the argument-taking methods send their arguments in order', () async {
       await c.postUrl(
@@ -141,23 +147,20 @@ void main() {
       expect(sent['canGoBackOrForward'], [3]);
     });
 
-    test(
-      'loadData defaults both URLs to about:blank, and sends no allowingReadAccessTo',
-      () async {
-        await c.loadData(
-          data: 'x',
-          allowingReadAccessTo: WebUri('file:///ignored'),
-        );
-        // `allowingReadAccessTo` is iOS's; the Android side never read it (§207).
-        expect(sent['loadData'], [
-          'x',
-          'text/html',
-          'utf8',
-          'about:blank',
-          'about:blank',
-        ]);
-      },
-    );
+    test('loadData defaults both URLs to about:blank, and sends no allowingReadAccessTo', () async {
+      await c.loadData(
+        data: 'x',
+        allowingReadAccessTo: WebUri('file:///ignored'),
+      );
+      // `allowingReadAccessTo` is iOS's; the Android side never read it (§207).
+      expect(sent['loadData'], [
+        'x',
+        'text/html',
+        'utf8',
+        'about:blank',
+        'about:blank',
+      ]);
+    });
 
     test('the no-argument commands each reach their own method', () async {
       await c.reload();
@@ -208,27 +211,24 @@ void main() {
       },
     );
 
-    test(
-      'getContentHeight and getContentWidth fall back to JavaScript when the platform answers 0',
-      () async {
-        // WebView reports the script's result as JSON text, which the controller decodes.
-        stubAll('inappwebview_7', {
-          'getContentHeight': 0,
-          'getContentWidth': 0,
-          'evaluateJavascript': '987',
-        });
-        expect(await c.getContentHeight(), 987);
-        expect(sent['evaluateJavascript'], [
-          'document.documentElement.scrollHeight;',
-          null,
-        ]);
-        expect(await c.getContentWidth(), 987);
-        expect(sent['evaluateJavascript'], [
-          'document.documentElement.scrollWidth;',
-          null,
-        ]);
-      },
-    );
+    test('getContentHeight and getContentWidth fall back to JavaScript when the platform answers 0', () async {
+      // WebView reports the script's result as JSON text, which the controller decodes.
+      stubAll('inappwebview_7', {
+        'getContentHeight': 0,
+        'getContentWidth': 0,
+        'evaluateJavascript': '987',
+      });
+      expect(await c.getContentHeight(), 987);
+      expect(sent['evaluateJavascript'], [
+        'document.documentElement.scrollHeight;',
+        null,
+      ]);
+      expect(await c.getContentWidth(), 987);
+      expect(sent['evaluateJavascript'], [
+        'document.documentElement.scrollWidth;',
+        null,
+      ]);
+    });
 
     // The device can't see this half: its JavaScript fallback answers the same width (rule 27, as
     // getContentHeight's K6 in §207). Only here does "the platform answered" show.
@@ -241,88 +241,79 @@ void main() {
       },
     );
 
-    test(
-      'evaluateJavascript sends the source and content world, and decodes JSON answers',
-      () async {
-        stubAll('inappwebview_7', {
-          'evaluateJavascript': '[1, "a", {"b": true}]',
-        });
-        expect(
-          await c.evaluateJavascript(
-            source: 'the-source',
-            contentWorld: ContentWorld.world(name: 'the-world'),
-          ),
-          [
-            1,
-            'a',
-            {'b': true},
-          ],
-        );
-        expect(sent['evaluateJavascript'], [
-          'the-source',
-          {'name': 'the-world'},
-        ]);
+    test('evaluateJavascript sends the source and content world, and decodes JSON answers', () async {
+      stubAll('inappwebview_7', {
+        'evaluateJavascript': '[1, "a", {"b": true}]',
+      });
+      expect(
+        await c.evaluateJavascript(
+          source: 'the-source',
+          contentWorld: ContentWorld.world(name: 'the-world'),
+        ),
+        [
+          1,
+          'a',
+          {'b': true},
+        ],
+      );
+      expect(sent['evaluateJavascript'], [
+        'the-source',
+        {'name': 'the-world'},
+      ]);
 
-        // Not JSON: returned as the text itself. No content world: sent as null.
-        stubAll('inappwebview_7', {'evaluateJavascript': 'not json'});
-        expect(await c.evaluateJavascript(source: 'plain'), 'not json');
-        expect(sent['evaluateJavascript'], ['plain', null]);
-      },
-    );
+      // Not JSON: returned as the text itself. No content world: sent as null.
+      stubAll('inappwebview_7', {'evaluateJavascript': 'not json'});
+      expect(await c.evaluateJavascript(source: 'plain'), 'not json');
+      expect(sent['evaluateJavascript'], ['plain', null]);
+    });
 
-    test(
-      'callAsyncJavaScript sends body, arguments and content world, and decodes value and error',
-      () async {
-        stubAll('inappwebview_7', {
-          'callAsyncJavaScript': '{"value": 49, "error": "the-error"}',
-        });
-        final result = await c.callAsyncJavaScript(
-          functionBody: 'return x;',
-          arguments: {
-            'x': 49,
-            'nested': {
-              'n': [1, 2],
-            },
+    test('callAsyncJavaScript sends body, arguments and content world, and decodes value and error', () async {
+      stubAll('inappwebview_7', {
+        'callAsyncJavaScript': '{"value": 49, "error": "the-error"}',
+      });
+      final result = await c.callAsyncJavaScript(
+        functionBody: 'return x;',
+        arguments: {
+          'x': 49,
+          'nested': {
+            'n': [1, 2],
           },
-          contentWorld: ContentWorld.PAGE,
-        );
-        expect(result?.value, 49);
-        expect(result?.error, 'the-error');
-        expect(sent['callAsyncJavaScript'], [
-          'return x;',
-          {
-            'x': 49,
-            'nested': {
-              'n': [1, 2],
-            },
+        },
+        contentWorld: ContentWorld.PAGE,
+      );
+      expect(result?.value, 49);
+      expect(result?.error, 'the-error');
+      expect(sent['callAsyncJavaScript'], [
+        'return x;',
+        {
+          'x': 49,
+          'nested': {
+            'n': [1, 2],
           },
-          {'name': 'page'},
-        ]);
-      },
-    );
+        },
+        {'name': 'page'},
+      ]);
+    });
 
-    test(
-      'takeScreenshot sends ScreenshotConfiguration.toMap() and returns the bytes',
-      () async {
-        stubAll('inappwebview_7', {
-          'takeScreenshot': Uint8List.fromList([9, 8, 7]),
-        });
-        final configuration = ScreenshotConfiguration(
-          rect: InAppWebViewRect(x: 1, y: 2, width: 3, height: 4),
-          snapshotWidth: 5,
-          compressFormat: CompressFormat.JPEG,
-          quality: 6,
-        );
-        expect(
-          await c.takeScreenshot(screenshotConfiguration: configuration),
-          Uint8List.fromList([9, 8, 7]),
-        );
-        expect(sent['takeScreenshot'], [configuration.toMap()]);
+    test('takeScreenshot sends ScreenshotConfiguration.toMap() and returns the bytes', () async {
+      stubAll('inappwebview_7', {
+        'takeScreenshot': Uint8List.fromList([9, 8, 7]),
+      });
+      final configuration = ScreenshotConfiguration(
+        rect: InAppWebViewRect(x: 1, y: 2, width: 3, height: 4),
+        snapshotWidth: 5,
+        compressFormat: CompressFormat.JPEG,
+        quality: 6,
+      );
+      expect(
+        await c.takeScreenshot(screenshotConfiguration: configuration),
+        Uint8List.fromList([9, 8, 7]),
+      );
+      expect(sent['takeScreenshot'], [configuration.toMap()]);
 
-        await c.takeScreenshot();
-        expect(sent['takeScreenshot'], [null]);
-      },
-    );
+      await c.takeScreenshot();
+      expect(sent['takeScreenshot'], [null]);
+    });
 
     test(
       'the other W2 methods map each answer back, each from its own method',
@@ -389,102 +380,97 @@ void main() {
 
     // W3 (§212).
 
-    test(
-      'the W3 argument-taking methods send their arguments in order, maps as toMap()',
-      () async {
-        // No print job: printCurrentPage answers a nullable job id, not the default `true`.
-        stubAll('inappwebview_7', {'printCurrentPage': null});
-        final request = URLRequest(
-          url: WebUri('https://example.com/load'),
-          method: 'GET',
-          headers: {'X-A': 'a'},
-        );
-        await c.loadUrl(
-          urlRequest: request,
-          allowingReadAccessTo: WebUri('file:///ignored'),
-        );
-        // `allowingReadAccessTo` is iOS's; the Android side never read it (§212).
-        expect(sent['loadUrl'], [request.toMap()]);
+    test('the W3 argument-taking methods send their arguments in order, maps as toMap()', () async {
+      // No print job: printCurrentPage answers a nullable job id, not the default `true`.
+      stubAll('inappwebview_7', {'printCurrentPage': null});
+      final request = URLRequest(
+        url: WebUri('https://example.com/load'),
+        method: 'GET',
+        headers: {'X-A': 'a'},
+      );
+      await c.loadUrl(
+        urlRequest: request,
+        allowingReadAccessTo: WebUri('file:///ignored'),
+      );
+      // `allowingReadAccessTo` is iOS's; the Android side never read it (§212).
+      expect(sent['loadUrl'], [request.toMap()]);
 
-        final scriptAttributes = ScriptHtmlTagAttributes(id: 'the-script');
-        await c.injectJavascriptFileFromUrl(
-          urlFile: WebUri('https://example.com/a.js'),
-          scriptHtmlTagAttributes: scriptAttributes,
-        );
-        expect(sent['injectJavascriptFileFromUrl'], [
-          'https://example.com/a.js',
-          scriptAttributes.toMap(),
-        ]);
+      final scriptAttributes = ScriptHtmlTagAttributes(id: 'the-script');
+      await c.injectJavascriptFileFromUrl(
+        urlFile: WebUri('https://example.com/a.js'),
+        scriptHtmlTagAttributes: scriptAttributes,
+      );
+      expect(sent['injectJavascriptFileFromUrl'], [
+        'https://example.com/a.js',
+        scriptAttributes.toMap(),
+      ]);
 
-        final cssAttributes = CSSLinkHtmlTagAttributes(id: 'the-css');
-        await c.injectCSSFileFromUrl(
-          urlFile: WebUri('https://example.com/a.css'),
-          cssLinkHtmlTagAttributes: cssAttributes,
-        );
-        expect(sent['injectCSSFileFromUrl'], [
-          'https://example.com/a.css',
-          cssAttributes.toMap(),
-        ]);
+      final cssAttributes = CSSLinkHtmlTagAttributes(id: 'the-css');
+      await c.injectCSSFileFromUrl(
+        urlFile: WebUri('https://example.com/a.css'),
+        cssLinkHtmlTagAttributes: cssAttributes,
+      );
+      expect(sent['injectCSSFileFromUrl'], [
+        'https://example.com/a.css',
+        cssAttributes.toMap(),
+      ]);
 
-        await c.injectCSSCode(source: 'body{}');
-        expect(sent['injectCSSCode'], ['body{}']);
+      await c.injectCSSCode(source: 'body{}');
+      expect(sent['injectCSSCode'], ['body{}']);
 
-        final settings = InAppWebViewSettings(minimumFontSize: 13);
-        await c.setSettings(settings: settings);
-        expect(sent['setSettings'], [settings.toMap()]);
+      final settings = InAppWebViewSettings(minimumFontSize: 13);
+      await c.setSettings(settings: settings);
+      expect(sent['setSettings'], [settings.toMap()]);
 
-        // Distinct x and y, and a different pair for each method.
-        await c.scrollTo(x: 3, y: 4, animated: true);
-        expect(sent['scrollTo'], [3, 4, true]);
-        await c.scrollBy(x: 5, y: 6);
-        expect(sent['scrollBy'], [5, 6, false]);
-        await c.flingScroll(velocityX: 7, velocityY: 8);
-        expect(sent['flingScroll'], [7, 8]);
+      // Distinct x and y, and a different pair for each method.
+      await c.scrollTo(x: 3, y: 4, animated: true);
+      expect(sent['scrollTo'], [3, 4, true]);
+      await c.scrollBy(x: 5, y: 6);
+      expect(sent['scrollBy'], [5, 6, false]);
+      await c.flingScroll(velocityX: 7, velocityY: 8);
+      expect(sent['flingScroll'], [7, 8]);
 
-        final printSettings = PrintJobSettings(jobName: 'the-job');
-        await c.printCurrentPage(settings: printSettings);
-        expect(sent['printCurrentPage'], [printSettings.toMap()]);
+      final printSettings = PrintJobSettings(jobName: 'the-job');
+      await c.printCurrentPage(settings: printSettings);
+      expect(sent['printCurrentPage'], [printSettings.toMap()]);
 
-        // `animated` is iOS's; the Android side never read it (§212).
-        await c.zoomBy(zoomFactor: 2.5, animated: true);
-        expect(sent['zoomBy'], [2.5]);
+      // `animated` is iOS's; the Android side never read it (§212).
+      await c.zoomBy(zoomFactor: 2.5, animated: true);
+      expect(sent['zoomBy'], [2.5]);
 
-        final rect = InAppWebViewRect(x: 1, y: 2, width: 3, height: 4);
-        await c.requestFocus(
-          direction: FocusDirection.DOWN,
-          previouslyFocusedRect: rect,
-        );
-        expect(sent['requestFocus'], [
-          FocusDirection.DOWN.toNativeValue(),
-          rect.toMap(),
-        ]);
+      final rect = InAppWebViewRect(x: 1, y: 2, width: 3, height: 4);
+      await c.requestFocus(
+        direction: FocusDirection.DOWN,
+        previouslyFocusedRect: rect,
+      );
+      expect(sent['requestFocus'], [
+        FocusDirection.DOWN.toNativeValue(),
+        rect.toMap(),
+      ]);
 
-        final menu = ContextMenu(
-          menuItems: [ContextMenuItem(id: 9, title: 'x')],
-        );
-        await c.setContextMenu(menu);
-        expect(sent['setContextMenu'], [menu.toMap()]);
+      final menu = ContextMenu(menuItems: [ContextMenuItem(id: 9, title: 'x')]);
+      await c.setContextMenu(menu);
+      expect(sent['setContextMenu'], [menu.toMap()]);
 
-        await c.pageDown(bottom: true);
-        expect(sent['pageDown'], [true]);
-        await c.pageUp(top: false);
-        expect(sent['pageUp'], [false]);
+      await c.pageDown(bottom: true);
+      expect(sent['pageDown'], [true]);
+      await c.pageUp(top: false);
+      expect(sent['pageUp'], [false]);
 
-        await c.restoreState(Uint8List.fromList([4, 2]));
-        expect(sent['restoreState'], [
-          Uint8List.fromList([4, 2]),
-        ]);
+      await c.restoreState(Uint8List.fromList([4, 2]));
+      expect(sent['restoreState'], [
+        Uint8List.fromList([4, 2]),
+      ]);
 
-        await c.postWebMessage(
-          message: WebMessage(data: 'the-message'),
-          targetOrigin: WebUri('https://example.com'),
-        );
-        expect(sent['postWebMessage'], [
-          WebMessage(data: 'the-message').toMap(),
-          'https://example.com',
-        ]);
-      },
-    );
+      await c.postWebMessage(
+        message: WebMessage(data: 'the-message'),
+        targetOrigin: WebUri('https://example.com'),
+      );
+      expect(sent['postWebMessage'], [
+        WebMessage(data: 'the-message').toMap(),
+        'https://example.com',
+      ]);
+    });
 
     test(
       'the user-script methods send the script, and removeUserScript its index',

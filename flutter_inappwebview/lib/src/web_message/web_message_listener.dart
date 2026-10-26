@@ -63,24 +63,24 @@ class WebMessageListener {
     platform: platform,
   );
 
-  ///{@macro nosferatu500_inappwebview_platform_interface.PlatformWebMessageListener.jsObjectName}
+  ///{@macro nosferatu500_inappwebview_platform_interface.PlatformWebMessageListenerCreationParams.jsObjectName}
   ///
-  ///{@macro nosferatu500_inappwebview_platform_interface.PlatformWebMessageListener.jsObjectName.supported_platforms}
+  ///{@macro nosferatu500_inappwebview_platform_interface.PlatformWebMessageListenerCreationParams.jsObjectName.supported_platforms}
   String get jsObjectName => platform.jsObjectName;
 
-  ///{@macro nosferatu500_inappwebview_platform_interface.PlatformWebMessageListener.allowedOriginRules}
+  ///{@macro nosferatu500_inappwebview_platform_interface.PlatformWebMessageListenerCreationParams.allowedOriginRules}
   ///
-  ///{@macro nosferatu500_inappwebview_platform_interface.PlatformWebMessageListener.allowedOriginRules.supported_platforms}
+  ///{@macro nosferatu500_inappwebview_platform_interface.PlatformWebMessageListenerCreationParams.allowedOriginRules.supported_platforms}
   Set<String>? get allowedOriginRules => platform.allowedOriginRules;
 
-  ///{@macro nosferatu500_inappwebview_platform_interface.PlatformWebMessageListener.contentWorld}
+  ///{@macro nosferatu500_inappwebview_platform_interface.PlatformWebMessageListenerCreationParams.contentWorld}
   ///
-  ///{@macro nosferatu500_inappwebview_platform_interface.PlatformWebMessageListener.contentWorld.supported_platforms}
+  ///{@macro nosferatu500_inappwebview_platform_interface.PlatformWebMessageListenerCreationParams.contentWorld.supported_platforms}
   ContentWorld? get contentWorld => platform.contentWorld;
 
-  ///{@macro nosferatu500_inappwebview_platform_interface.PlatformWebMessageListener.onPostMessage}
+  ///{@macro nosferatu500_inappwebview_platform_interface.PlatformWebMessageListenerCreationParams.onPostMessage}
   ///
-  ///{@macro nosferatu500_inappwebview_platform_interface.PlatformWebMessageListener.onPostMessage.supported_platforms}
+  ///{@macro nosferatu500_inappwebview_platform_interface.PlatformWebMessageListenerCreationParams.onPostMessage.supported_platforms}
   OnPostMessageCallback? get onPostMessage => platform.onPostMessage;
 
   ///{@macro nosferatu500_inappwebview_platform_interface.PlatformWebMessageListener.dispose}
@@ -97,8 +97,6 @@ class WebMessageListener {
 }
 
 ///{@macro nosferatu500_inappwebview_platform_interface.PlatformJavaScriptReplyProxy}
-///
-///{@macro nosferatu500_inappwebview_platform_interface.PlatformJavaScriptReplyProxy.supported_platforms}
 class JavaScriptReplyProxy {
   ///{@macro nosferatu500_inappwebview_platform_interface.PlatformJavaScriptReplyProxy}
   JavaScriptReplyProxy({required PlatformWebMessageListener webMessageListener})
@@ -123,8 +121,6 @@ class JavaScriptReplyProxy {
   final PlatformJavaScriptReplyProxy platform;
 
   ///{@macro nosferatu500_inappwebview_platform_interface.PlatformJavaScriptReplyProxy.postMessage}
-  ///
-  ///{@macro nosferatu500_inappwebview_platform_interface.PlatformJavaScriptReplyProxy.postMessage.supported_platforms}
   Future<void> postMessage(WebMessage message) => platform.postMessage(message);
 
   @override

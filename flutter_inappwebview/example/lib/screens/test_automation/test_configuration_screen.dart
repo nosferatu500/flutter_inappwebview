@@ -1,7 +1,8 @@
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 import 'package:nosferatu500_inappwebview/nosferatu500_inappwebview.dart';
+
 import '../../models/test_configuration.dart';
 import '../../utils/constants.dart';
 import '../../widgets/common/app_drawer.dart';
@@ -46,13 +47,8 @@ class _TestConfigurationScreenState extends State<TestConfigurationScreen>
           builder: (context, manager, child) => Scaffold(
             appBar: AppBar(
               title: const Text('Test Configuration'),
-              backgroundColor: Colors.blue,
-              foregroundColor: Colors.white,
               bottom: TabBar(
                 controller: _tabController,
-                indicatorColor: Colors.white,
-                labelColor: Colors.white,
-                unselectedLabelColor: Colors.white70,
                 isScrollable: isNarrow,
                 tabs: const [
                   Tab(icon: Icon(Icons.edit_note), text: 'Custom Steps'),

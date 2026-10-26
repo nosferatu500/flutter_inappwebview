@@ -27,9 +27,9 @@ class PrintJobController {
   /// Implementation of [PlatformPrintJobController] for the current platform.
   final PlatformPrintJobController platform;
 
-  ///{@macro nosferatu500_inappwebview_platform_interface.PlatformPrintJobController.id}
+  ///{@macro nosferatu500_inappwebview_platform_interface.PlatformPrintJobControllerCreationParams.id}
   ///
-  ///{@macro nosferatu500_inappwebview_platform_interface.PlatformPrintJobController.id.supported_platforms}
+  ///{@macro nosferatu500_inappwebview_platform_interface.PlatformPrintJobControllerCreationParams.id.supported_platforms}
   String get id => platform.id;
 
   ///{@macro nosferatu500_inappwebview_platform_interface.PlatformPrintJobController.onComplete}

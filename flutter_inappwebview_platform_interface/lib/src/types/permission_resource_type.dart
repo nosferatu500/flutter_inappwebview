@@ -17,15 +17,13 @@ class PermissionResourceType_ {
     platforms: [
       EnumAndroidPlatform(
         apiName: 'PermissionRequest.RESOURCE_AUDIO_CAPTURE',
-        apiUrl:
-            'https://developer.android.com/reference/android/webkit/PermissionRequest#RESOURCE_AUDIO_CAPTURE',
+        apiUrl: 'https://developer.android.com/reference/android/webkit/PermissionRequest#RESOURCE_AUDIO_CAPTURE',
         value: 'android.webkit.resource.AUDIO_CAPTURE',
       ),
       EnumIOSPlatform(
         available: "15.0",
         apiName: 'WKMediaCaptureType.microphone',
-        apiUrl:
-            'https://developer.apple.com/documentation/webkit/wkmediacapturetype/microphone',
+        apiUrl: 'https://developer.apple.com/documentation/webkit/wkmediacapturetype/microphone',
         value: 1,
       ),
     ],
@@ -39,8 +37,7 @@ class PermissionResourceType_ {
     platforms: [
       EnumAndroidPlatform(
         apiName: 'PermissionRequest.RESOURCE_MIDI_SYSEX',
-        apiUrl:
-            'https://developer.android.com/reference/android/webkit/PermissionRequest#RESOURCE_MIDI_SYSEX',
+        apiUrl: 'https://developer.android.com/reference/android/webkit/PermissionRequest#RESOURCE_MIDI_SYSEX',
         value: 'android.webkit.resource.MIDI_SYSEX',
       ),
     ],
@@ -52,8 +49,7 @@ class PermissionResourceType_ {
     platforms: [
       EnumAndroidPlatform(
         apiName: 'PermissionRequest.RESOURCE_PROTECTED_MEDIA_ID',
-        apiUrl:
-            'https://developer.android.com/reference/android/webkit/PermissionRequest#RESOURCE_PROTECTED_MEDIA_ID',
+        apiUrl: 'https://developer.android.com/reference/android/webkit/PermissionRequest#RESOURCE_PROTECTED_MEDIA_ID',
         value: 'android.webkit.resource.PROTECTED_MEDIA_ID',
       ),
     ],
@@ -67,15 +63,13 @@ class PermissionResourceType_ {
     platforms: [
       EnumAndroidPlatform(
         apiName: 'PermissionRequest.RESOURCE_VIDEO_CAPTURE',
-        apiUrl:
-            'https://developer.android.com/reference/android/webkit/PermissionRequest#RESOURCE_VIDEO_CAPTURE',
+        apiUrl: 'https://developer.android.com/reference/android/webkit/PermissionRequest#RESOURCE_VIDEO_CAPTURE',
         value: 'android.webkit.resource.VIDEO_CAPTURE',
       ),
       EnumIOSPlatform(
         available: "15.0",
         apiName: 'WKMediaCaptureType.camera',
-        apiUrl:
-            'https://developer.apple.com/documentation/webkit/wkmediacapturetype/camera',
+        apiUrl: 'https://developer.apple.com/documentation/webkit/wkmediacapturetype/camera',
         value: 0,
       ),
     ],
@@ -88,8 +82,7 @@ class PermissionResourceType_ {
       EnumIOSPlatform(
         available: "15.0",
         apiName: 'WKMediaCaptureType.cameraAndMicrophone',
-        apiUrl:
-            'https://developer.apple.com/documentation/webkit/wkmediacapturetype/cameraandmicrophone',
+        apiUrl: 'https://developer.apple.com/documentation/webkit/wkmediacapturetype/cameraandmicrophone',
         value: 2,
       ),
     ],

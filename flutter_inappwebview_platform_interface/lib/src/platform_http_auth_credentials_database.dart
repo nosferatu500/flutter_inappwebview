@@ -1,4 +1,5 @@
 import 'dart:async';
+
 import 'package:flutter/foundation.dart';
 import 'package:nosferatu500_inappwebview_internal_annotations/nosferatu500_inappwebview_internal_annotations.dart';
 import 'package:plugin_platform_interface/plugin_platform_interface.dart';
@@ -39,12 +40,10 @@ class PlatformHttpAuthCredentialDatabaseCreationParams {
 @SupportedPlatforms(
   platforms: [
     AndroidPlatform(
-      note:
-          'It has a custom implementation using `android.database.sqlite.SQLiteDatabase` because [WebViewDatabase](https://developer.android.com/reference/android/webkit/WebViewDatabase) doesn\'t offer the same functionalities as iOS/macOS `URLCredentialStorage`.',
+      note: 'It has a custom implementation using `android.database.sqlite.SQLiteDatabase` because [WebViewDatabase](https://developer.android.com/reference/android/webkit/WebViewDatabase) doesn\'t offer the same functionalities as iOS/macOS `URLCredentialStorage`.',
     ),
     IOSPlatform(
-      note:
-          'It is implemented using the [URLCredentialStorage](https://developer.apple.com/documentation/foundation/urlcredentialstorage) class.',
+      note: 'It is implemented using the [URLCredentialStorage](https://developer.apple.com/documentation/foundation/urlcredentialstorage) class.',
     ),
   ],
 )
@@ -110,8 +109,7 @@ abstract class PlatformHttpAuthCredentialDatabase extends PlatformInterface {
       AndroidPlatform(),
       IOSPlatform(
         apiName: 'URLCredentialStorage.allCredentials',
-        apiUrl:
-            'https://developer.apple.com/documentation/foundation/urlcredentialstorage/1413859-allcredentials',
+        apiUrl: 'https://developer.apple.com/documentation/foundation/urlcredentialstorage/1413859-allcredentials',
       ),
     ],
   )
@@ -145,8 +143,7 @@ abstract class PlatformHttpAuthCredentialDatabase extends PlatformInterface {
       AndroidPlatform(),
       IOSPlatform(
         apiName: 'URLCredentialStorage.set',
-        apiUrl:
-            'https://developer.apple.com/documentation/foundation/urlcredentialstorage/1407227-set',
+        apiUrl: 'https://developer.apple.com/documentation/foundation/urlcredentialstorage/1407227-set',
       ),
     ],
   )
@@ -169,8 +166,7 @@ abstract class PlatformHttpAuthCredentialDatabase extends PlatformInterface {
       AndroidPlatform(),
       IOSPlatform(
         apiName: 'URLCredentialStorage.remove',
-        apiUrl:
-            'https://developer.apple.com/documentation/foundation/urlcredentialstorage/1408664-remove',
+        apiUrl: 'https://developer.apple.com/documentation/foundation/urlcredentialstorage/1408664-remove',
       ),
     ],
   )

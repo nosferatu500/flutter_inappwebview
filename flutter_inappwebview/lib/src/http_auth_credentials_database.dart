@@ -84,16 +84,12 @@ class HttpAuthCredentialDatabase {
   Future<void> clearAllAuthCredentials() => platform.clearAllAuthCredentials();
 
   ///{@macro nosferatu500_inappwebview_platform_interface.PlatformHttpAuthCredentialDatabaseCreationParams.isClassSupported}
-  ///
-  ///{@macro nosferatu500_inappwebview_platform_interface.PlatformHttpAuthCredentialDatabaseCreationParams.isClassSupported.supported_platforms}
   static bool isClassSupported({TargetPlatform? platform}) =>
       PlatformHttpAuthCredentialDatabase.static().isClassSupported(
         platform: platform,
       );
 
   ///{@macro nosferatu500_inappwebview_platform_interface.PlatformHttpAuthCredentialDatabase.isMethodSupported}
-  ///
-  ///{@macro nosferatu500_inappwebview_platform_interface.PlatformHttpAuthCredentialDatabase.isMethodSupported.supported_platforms}
   static bool isMethodSupported(
     PlatformHttpAuthCredentialDatabaseMethod method, {
     TargetPlatform? platform,

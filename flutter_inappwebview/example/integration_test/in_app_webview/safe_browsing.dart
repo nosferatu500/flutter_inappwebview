@@ -11,6 +11,17 @@ void safeBrowsing() {
     // twice, each followed by an UNSAFE_RESOURCE error, and the page has no title. PROCEED loads
     // the match page itself, titled "Safe Browsing", with no error.
     skippableTestWidgets('onSafeBrowsingHit', (WidgetTester tester) async {
+      // The framework calls onSafeBrowsingHit from API 27; below that only the androidx client
+      // can deliver it, when the WebView provides SAFE_BROWSING_HIT.
+      final sdkInt = await androidSdkInt();
+      if (sdkInt != null &&
+          sdkInt < 27 &&
+          !await WebViewFeature.isFeatureSupported(
+            WebViewFeature.SAFE_BROWSING_HIT,
+          )) {
+        markTestSkipped('onSafeBrowsingHit needs API 27 or SAFE_BROWSING_HIT');
+        return;
+      }
       final Completer<String> pageLoaded = Completer<String>();
       final Completer<InAppWebViewController> controllerCompleter =
           Completer<InAppWebViewController>();
@@ -59,7 +70,16 @@ void safeBrowsing() {
       }
     });
 
+    // Both answer null / false without their feature (framework API 27, or the WebView's androidx
+    // support), which is reachable since minSdk 26.
     skippableTest('getSafeBrowsingPrivacyPolicyUrl', () async {
+      if (defaultTargetPlatform == TargetPlatform.android &&
+          !await WebViewFeature.isFeatureSupported(
+            WebViewFeature.SAFE_BROWSING_PRIVACY_POLICY_URL,
+          )) {
+        markTestSkipped('SAFE_BROWSING_PRIVACY_POLICY_URL unsupported');
+        return;
+      }
       expect(
         await InAppWebViewController.getSafeBrowsingPrivacyPolicyUrl(),
         isNotNull,
@@ -67,6 +87,13 @@ void safeBrowsing() {
     });
 
     skippableTest('setSafeBrowsingAllowlist', () async {
+      if (defaultTargetPlatform == TargetPlatform.android &&
+          !await WebViewFeature.isFeatureSupported(
+            WebViewFeature.SAFE_BROWSING_ALLOWLIST,
+          )) {
+        markTestSkipped('SAFE_BROWSING_ALLOWLIST unsupported');
+        return;
+      }
       expect(
         await InAppWebViewController.setSafeBrowsingAllowlist(
           hosts: ["flutter.dev", "github.com"],

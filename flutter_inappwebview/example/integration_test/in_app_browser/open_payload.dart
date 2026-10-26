@@ -195,22 +195,26 @@ void openPayload() {
     skip: shouldSkip,
   );
 
-  skippableTest('openWithSystemBrowser reports a URL no app can open', () async {
-    // The success path starts another app over the test, so only the error path is tested here.
-    // It is also the part a migration changes: the error used to be `result.error`.
-    await expectLater(
-      InAppBrowser.openWithSystemBrowser(
-        url: WebUri('nonexistent-payload-scheme://x'),
-      ),
-      throwsA(
-        isA<PlatformException>()
-            .having((e) => e.code, 'code', 'InAppBrowserManager')
-            .having(
-              (e) => e.message,
-              'message',
-              'nonexistent-payload-scheme://x cannot be opened!',
-            ),
-      ),
-    );
-  }, skip: shouldSkip);
+  skippableTest(
+    'openWithSystemBrowser reports a URL no app can open',
+    () async {
+      // The success path starts another app over the test, so only the error path is tested here.
+      // It is also the part a migration changes: the error used to be `result.error`.
+      await expectLater(
+        InAppBrowser.openWithSystemBrowser(
+          url: WebUri('nonexistent-payload-scheme://x'),
+        ),
+        throwsA(
+          isA<PlatformException>()
+              .having((e) => e.code, 'code', 'InAppBrowserManager')
+              .having(
+                (e) => e.message,
+                'message',
+                'nonexistent-payload-scheme://x cannot be opened!',
+              ),
+        ),
+      );
+    },
+    skip: shouldSkip,
+  );
 }

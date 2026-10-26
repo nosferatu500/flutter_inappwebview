@@ -2059,6 +2059,46 @@ public class InAppWebView: WKWebView, UIScrollViewDelegate, WKUIDelegate,
         }
     }
     
+    /// Answers a page's geolocation request with `onGeolocationPermissionsShowPrompt` (iOS 27).
+    ///
+    /// `allow` maps to `.grant` or `.deny`. `retain` has no counterpart here: WebKit asks again per
+    /// request. No answer from Dart (no handler, `null`, an error, or the callback released unanswered)
+    /// is `.prompt`, WebKit's own handling.
+    @available(iOS 27.0, *)
+    public func webView(_ webView: WKWebView,
+                        requestGeolocationPermissionFor origin: WKSecurityOrigin,
+                        initiatedByFrame frame: WKFrameInfo,
+                        decisionHandler: @escaping @MainActor @Sendable (WKPermissionDecision) -> Void) {
+        let origin = "\(origin.protocol)://\(origin.host)\(origin.port != 0 ? ":" + String(origin.port) : "")"
+
+        var decisionHandlerCalled = false
+        let callback = WebViewChannelDelegate.GeolocationPermissionsShowPromptCallback()
+        callback.nonNullSuccess = { (response: [String: Any?]) in
+            guard let allow = response["allow"] as? Bool else {
+                return true
+            }
+            decisionHandlerCalled = true
+            decisionHandler(allow ? .grant : .deny)
+            return false
+        }
+        callback.defaultBehaviour = { (response: [String: Any?]?) in
+            if !decisionHandlerCalled {
+                decisionHandlerCalled = true
+                decisionHandler(.prompt)
+            }
+        }
+        callback.error = { [weak callback] (code: String, message: String?, details: Any?) in
+            print(code + ", " + (message ?? ""))
+            callback?.defaultBehaviour(nil)
+        }
+
+        if let channelDelegate = channelDelegate {
+            channelDelegate.onGeolocationPermissionsShowPrompt(origin: origin, callback: callback)
+        } else {
+            callback.defaultBehaviour(nil)
+        }
+    }
+
     /// Hides the open-panel selector unless `useOnShowFileChooser` is set.
     ///
     /// This override is the whole mechanism behind the setting, and it exists because
@@ -2217,6 +2257,13 @@ public class InAppWebView: WKWebView, UIScrollViewDelegate, WKUIDelegate,
                 rawValue: settings?.securityRestrictionMode ?? 0
             ) {
                 preferences.securityRestrictionMode = mode
+            }
+        }
+        // Same live-object reasoning, but `if let`, like `lockdownModeEnabled`: assigning `NO` is not a
+        // no-op (it turns `navigator.globalPrivacyControl` from `undefined` into `false`, §351).
+        if #available(iOS 27.0, *) {
+            if let globalPrivacyControlEnabled = settings?.globalPrivacyControlEnabled {
+                preferences.globalPrivacyControlEnabled = globalPrivacyControlEnabled
             }
         }
         self.webView(webView, decidePolicyFor: navigationAction, decisionHandler: {(navigationActionPolicy) -> Void in

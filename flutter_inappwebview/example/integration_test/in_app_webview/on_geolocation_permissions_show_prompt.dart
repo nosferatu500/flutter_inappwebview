@@ -153,4 +153,88 @@ void onGeolocationPermissionsShowPrompt() {
     );
     expect(await permissions.getOrigins(), ['https://example.com/']);
   }, skip: shouldSkip);
+
+  // iOS 27: `WKUIDelegate.webView(_:requestGeolocationPermissionFor:initiatedByFrame:decisionHandler:)`
+  // (§352). Measured first on an iPhone 17 (iOS 27.0.1) in a normal app: the event fires once per page,
+  // with the origin without a trailing slash; `allow: false` reaches the page as PERMISSION_DENIED in
+  // about 10 ms; `allow: true` grants the position; a `null` answer gives WebKit's own website prompt,
+  // which is also what a plugin that doesn't implement the method gets. That last case needs a tap, so
+  // it isn't tested here.
+  //
+  // 🚨 **WebKit holds a geolocation request while the page isn't on screen**: polling with
+  // `Future.delayed` left the request pending for 12 s with no event, on the simulator and on the device;
+  // pumping frames while polling delivered it in 422 ms. So this test pumps.
+  //
+  // `allow: true` is read as "not PERMISSION_DENIED": whether a position follows depends on the
+  // simulator's or device's location authorization and fix, which the test doesn't control.
+  final iosShouldSkip =
+      !InAppWebView.isPropertySupported(
+        PlatformWebViewCreationParamsProperty
+            .onGeolocationPermissionsShowPrompt,
+      ) ||
+      defaultTargetPlatform != TargetPlatform.iOS;
+  for (final allow in [false, true]) {
+    skippableTestWidgets(
+      'onGeolocationPermissionsShowPrompt on iOS 27: allow $allow reaches the page',
+      (WidgetTester tester) async {
+        if ((_iosMajorVersion() ?? 0) < 27) {
+          markTestSkipped('the geolocation permission delegate needs iOS 27');
+          return;
+        }
+        final controllerCompleter = Completer<InAppWebViewController>();
+        final pageLoaded = Completer<void>();
+        final origins = <String>[];
+
+        await tester.pumpWidget(
+          Directionality(
+            textDirection: TextDirection.ltr,
+            child: InAppWebView(
+              key: GlobalKey(),
+              initialData: InAppWebViewInitialData(
+                data:
+                    '<!DOCTYPE html><html><body>geo<script>var geo = "pending";</script>'
+                    '</body></html>',
+                baseUrl: WebUri('https://example.com/'),
+              ),
+              onWebViewCreated: controllerCompleter.complete,
+              onLoadStop: (controller, url) {
+                if (!pageLoaded.isCompleted) pageLoaded.complete();
+              },
+              onGeolocationPermissionsShowPrompt: (controller, origin) async {
+                origins.add(origin);
+                return GeolocationPermissionShowPromptResponse(
+                  origin: origin,
+                  allow: allow,
+                );
+              },
+            ),
+          ),
+        );
+        final controller = await controllerCompleter.future;
+        await pageLoaded.future;
+
+        await controller.evaluateJavascript(
+          source:
+              'navigator.geolocation.getCurrentPosition('
+              'function() { geo = "granted"; },'
+              'function(e) { geo = "denied " + e.code; }, {timeout: 8000});',
+        );
+        String? geo;
+        for (var i = 0; i < 150; i++) {
+          geo = await controller.evaluateJavascript(source: 'geo');
+          if (geo != 'pending') break;
+          await tester.pump(const Duration(milliseconds: 100));
+        }
+
+        expect(origins, ['https://example.com']);
+        expect(geo, isNot('pending'));
+        if (allow) {
+          expect(geo, isNot('denied 1'), reason: 'the allow was not used');
+        } else {
+          expect(geo, 'denied 1');
+        }
+      },
+      skip: iosShouldSkip,
+    );
+  }
 }

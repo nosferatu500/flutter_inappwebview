@@ -153,6 +153,26 @@ public class InAppWebViewSettings: ISettings<InAppWebView> {
     /// that distinction decides between this and the `_`-prefixed `NSNumber` shim.
     var securityRestrictionMode = 0
 
+    /// `WKWebpagePreferences.globalPrivacyControlEnabled`, or `nil` to leave WebKit untouched.
+    ///
+    /// Optional, with the `_`-prefixed `NSNumber` shim, like `lockdownModeEnabled`, although WebKit
+    /// documents the default as `NO`: assigning `NO` is observable. Measured on iOS 27.0 (§351): with
+    /// nothing assigned, pages see `navigator.globalPrivacyControl` as `undefined`; after assigning `NO`
+    /// they see `false`. So a caller who never set it gets nothing assigned.
+    public var _globalPrivacyControlEnabled: NSNumber?
+    public var globalPrivacyControlEnabled: Bool? {
+        get {
+            return _globalPrivacyControlEnabled?.boolValue
+        }
+        set {
+            if let newValue = newValue {
+                _globalPrivacyControlEnabled = NSNumber.init(value: newValue)
+            } else {
+                _globalPrivacyControlEnabled = nil
+            }
+        }
+    }
+
     public var _writingToolsBehavior: NSNumber?
     public var writingToolsBehavior: Int? {
         get {

@@ -6,39 +6,19 @@ part of 'platform_http_auth_credentials_database.dart';
 // SupportedPlatformsGenerator
 // **************************************************************************
 
+///{@template nosferatu500_inappwebview_platform_interface.PlatformHttpAuthCredentialDatabaseCreationParams.supported_platforms}
+///
+///**Officially Supported Platforms/Implementations**:
+///- Android WebView
+///- iOS WKWebView
+///
+///Use the [PlatformHttpAuthCredentialDatabaseCreationParams.isClassSupported] method to check if this class is supported at runtime.
+///{@endtemplate}
+// Carries the template above for dartdoc; hidden from every export, so not API (§350).
+abstract final class PlatformHttpAuthCredentialDatabaseCreationParamsSupportedPlatforms {}
+
 extension _PlatformHttpAuthCredentialDatabaseCreationParamsClassSupported
     on PlatformHttpAuthCredentialDatabaseCreationParams {
-  ///{@template nosferatu500_inappwebview_platform_interface.PlatformHttpAuthCredentialDatabaseCreationParams.supported_platforms}
-  ///
-  ///**Officially Supported Platforms/Implementations**:
-  ///- Android WebView
-  ///- iOS WKWebView
-  ///
-  ///Use the [PlatformHttpAuthCredentialDatabaseCreationParams.isClassSupported] method to check if this class is supported at runtime.
-  ///{@endtemplate}
-  static bool isClassSupported({TargetPlatform? platform}) {
-    return ((kIsWeb && platform != null) || !kIsWeb) &&
-        [
-          TargetPlatform.android,
-          TargetPlatform.iOS,
-        ].contains(platform ?? defaultTargetPlatform);
-  }
-}
-
-extension _PlatformHttpAuthCredentialDatabaseClassSupported
-    on PlatformHttpAuthCredentialDatabase {
-  ///{@template nosferatu500_inappwebview_platform_interface.PlatformHttpAuthCredentialDatabase.supported_platforms}
-  ///
-  ///**Officially Supported Platforms/Implementations**:
-  ///- Android WebView:
-  ///    - It has a custom implementation using `android.database.sqlite.SQLiteDatabase` because [WebViewDatabase](https://developer.android.com/reference/android/webkit/WebViewDatabase) doesn't offer the same functionalities as iOS/macOS `URLCredentialStorage`.
-  ///- iOS WKWebView:
-  ///    - It is implemented using the [URLCredentialStorage](https://developer.apple.com/documentation/foundation/urlcredentialstorage) class.
-  ///
-  ///Use the [PlatformHttpAuthCredentialDatabase.isClassSupported] method to check if this class is supported at runtime.
-  ///{@endtemplate}
-  // Unused: [PlatformHttpAuthCredentialDatabase.isClassSupported] answers through its creation params. Kept for the doc template above.
-  // ignore: unused_element
   static bool isClassSupported({TargetPlatform? platform}) {
     return ((kIsWeb && platform != null) || !kIsWeb) &&
         [
@@ -49,6 +29,17 @@ extension _PlatformHttpAuthCredentialDatabaseClassSupported
 }
 
 ///List of [PlatformHttpAuthCredentialDatabase]'s methods that can be used to check if they are supported or not by the current platform.
+///
+///{@template nosferatu500_inappwebview_platform_interface.PlatformHttpAuthCredentialDatabase.supported_platforms}
+///
+///**Officially Supported Platforms/Implementations**:
+///- Android WebView:
+///    - It has a custom implementation using `android.database.sqlite.SQLiteDatabase` because [WebViewDatabase](https://developer.android.com/reference/android/webkit/WebViewDatabase) doesn't offer the same functionalities as iOS/macOS `URLCredentialStorage`.
+///- iOS WKWebView:
+///    - It is implemented using the [URLCredentialStorage](https://developer.apple.com/documentation/foundation/urlcredentialstorage) class.
+///
+///Use the [PlatformHttpAuthCredentialDatabase.isClassSupported] method to check if this class is supported at runtime.
+///{@endtemplate}
 enum PlatformHttpAuthCredentialDatabaseMethod {
   ///Can be used to check if the [PlatformHttpAuthCredentialDatabase.clearAllAuthCredentials] method is supported at runtime.
   ///
@@ -83,7 +74,7 @@ enum PlatformHttpAuthCredentialDatabaseMethod {
   ///- iOS WKWebView
   ///
   ///**Parameters - Officially Supported Platforms/Implementations**:
-  ///- [protectionSpace]: all platforms
+  ///- `protectionSpace`: all platforms
   ///
   ///Use the [PlatformHttpAuthCredentialDatabase.isMethodSupported] method to check if this method is supported at runtime.
   ///{@endtemplate}
@@ -98,8 +89,8 @@ enum PlatformHttpAuthCredentialDatabaseMethod {
   ///- iOS WKWebView ([Official API - URLCredentialStorage.remove](https://developer.apple.com/documentation/foundation/urlcredentialstorage/1408664-remove))
   ///
   ///**Parameters - Officially Supported Platforms/Implementations**:
-  ///- [protectionSpace]: all platforms
-  ///- [credential]: all platforms
+  ///- `protectionSpace`: all platforms
+  ///- `credential`: all platforms
   ///
   ///Use the [PlatformHttpAuthCredentialDatabase.isMethodSupported] method to check if this method is supported at runtime.
   ///{@endtemplate}
@@ -114,7 +105,7 @@ enum PlatformHttpAuthCredentialDatabaseMethod {
   ///- iOS WKWebView
   ///
   ///**Parameters - Officially Supported Platforms/Implementations**:
-  ///- [protectionSpace]: all platforms
+  ///- `protectionSpace`: all platforms
   ///
   ///Use the [PlatformHttpAuthCredentialDatabase.isMethodSupported] method to check if this method is supported at runtime.
   ///{@endtemplate}
@@ -129,8 +120,8 @@ enum PlatformHttpAuthCredentialDatabaseMethod {
   ///- iOS WKWebView ([Official API - URLCredentialStorage.set](https://developer.apple.com/documentation/foundation/urlcredentialstorage/1407227-set))
   ///
   ///**Parameters - Officially Supported Platforms/Implementations**:
-  ///- [protectionSpace]: all platforms
-  ///- [credential]: all platforms
+  ///- `protectionSpace`: all platforms
+  ///- `credential`: all platforms
   ///
   ///Use the [PlatformHttpAuthCredentialDatabase.isMethodSupported] method to check if this method is supported at runtime.
   ///{@endtemplate}

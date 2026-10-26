@@ -116,8 +116,7 @@ void serviceWorkerIncludeCookies() {
     expect(
       await ServiceWorkerController.getIncludeCookiesOnShouldInterceptRequestEnabled(),
       isFalse,
-      reason:
-          'a write scoped to a named profile changed the default profile instead',
+      reason: 'a write scoped to a named profile changed the default profile instead',
     );
   }, skip: shouldSkip);
 }

@@ -8,14 +8,6 @@ part of 'platform_pull_to_refresh_controller.dart';
 
 extension _PlatformPullToRefreshControllerCreationParamsClassSupported
     on PlatformPullToRefreshControllerCreationParams {
-  ///{@template nosferatu500_inappwebview_platform_interface.PlatformPullToRefreshControllerCreationParams.supported_platforms}
-  ///
-  ///**Officially Supported Platforms/Implementations**:
-  ///- Android WebView
-  ///- iOS WKWebView
-  ///
-  ///Use the [PlatformPullToRefreshControllerCreationParams.isClassSupported] method to check if this class is supported at runtime.
-  ///{@endtemplate}
   static bool isClassSupported({TargetPlatform? platform}) {
     return ((kIsWeb && platform != null) || !kIsWeb) &&
         [
@@ -26,6 +18,15 @@ extension _PlatformPullToRefreshControllerCreationParamsClassSupported
 }
 
 ///List of [PlatformPullToRefreshControllerCreationParams]'s properties that can be used to check i they are supported or not by the current platform.
+///
+///{@template nosferatu500_inappwebview_platform_interface.PlatformPullToRefreshControllerCreationParams.supported_platforms}
+///
+///**Officially Supported Platforms/Implementations**:
+///- Android WebView
+///- iOS WKWebView
+///
+///Use the [PlatformPullToRefreshControllerCreationParams.isClassSupported] method to check if this class is supported at runtime.
+///{@endtemplate}
 enum PlatformPullToRefreshControllerCreationParamsProperty {
   ///Can be used to check if the [PlatformPullToRefreshControllerCreationParams.onRefresh] property is supported at runtime.
   ///
@@ -77,15 +78,6 @@ extension _PlatformPullToRefreshControllerCreationParamsPropertySupported
 
 extension _PlatformPullToRefreshControllerClassSupported
     on PlatformPullToRefreshController {
-  ///{@template nosferatu500_inappwebview_platform_interface.PlatformPullToRefreshController.supported_platforms}
-  ///
-  ///**Officially Supported Platforms/Implementations**:
-  ///- Android WebView:
-  ///    - **NOTE**: to be able to use the "pull-to-refresh" feature, [InAppWebViewSettings.useHybridComposition] must be `true`.
-  ///- iOS WKWebView
-  ///
-  ///Use the [PlatformPullToRefreshController.isClassSupported] method to check if this class is supported at runtime.
-  ///{@endtemplate}
   static bool isClassSupported({TargetPlatform? platform}) {
     return ((kIsWeb && platform != null) || !kIsWeb) &&
         [
@@ -96,6 +88,16 @@ extension _PlatformPullToRefreshControllerClassSupported
 }
 
 ///List of [PlatformPullToRefreshController]'s methods that can be used to check if they are supported or not by the current platform.
+///
+///{@template nosferatu500_inappwebview_platform_interface.PlatformPullToRefreshController.supported_platforms}
+///
+///**Officially Supported Platforms/Implementations**:
+///- Android WebView:
+///    - **NOTE**: to be able to use the "pull-to-refresh" feature, [InAppWebViewSettings.useHybridComposition] must be `true`.
+///- iOS WKWebView
+///
+///Use the [PlatformPullToRefreshController.isClassSupported] method to check if this class is supported at runtime.
+///{@endtemplate}
 enum PlatformPullToRefreshControllerMethod {
   ///Can be used to check if the [PlatformPullToRefreshController.beginRefreshing] method is supported at runtime.
   ///
@@ -118,7 +120,7 @@ enum PlatformPullToRefreshControllerMethod {
   ///- iOS WKWebView
   ///
   ///**Parameters - Officially Supported Platforms/Implementations**:
-  ///- [isKeepAlive]: all platforms
+  ///- `isKeepAlive`: all platforms
   ///
   ///Use the [PlatformPullToRefreshController.isMethodSupported] method to check if this method is supported at runtime.
   ///{@endtemplate}
@@ -180,7 +182,7 @@ enum PlatformPullToRefreshControllerMethod {
   ///- iOS WKWebView ([Official API - UIView.backgroundColor](https://developer.apple.com/documentation/uikit/uiview/1622591-backgroundcolor))
   ///
   ///**Parameters - Officially Supported Platforms/Implementations**:
-  ///- [color]: all platforms
+  ///- `color`: all platforms
   ///
   ///Use the [PlatformPullToRefreshController.isMethodSupported] method to check if this method is supported at runtime.
   ///{@endtemplate}
@@ -195,7 +197,7 @@ enum PlatformPullToRefreshControllerMethod {
   ///- iOS WKWebView ([Official API - UIRefreshControl.tintColor](https://developer.apple.com/documentation/uikit/uirefreshcontrol/1624847-tintcolor))
   ///
   ///**Parameters - Officially Supported Platforms/Implementations**:
-  ///- [color]: all platforms
+  ///- `color`: all platforms
   ///
   ///Use the [PlatformPullToRefreshController.isMethodSupported] method to check if this method is supported at runtime.
   ///{@endtemplate}
@@ -209,7 +211,7 @@ enum PlatformPullToRefreshControllerMethod {
   ///- Android WebView ([Official API - SwipeRefreshLayout.setDistanceToTriggerSync](https://developer.android.com/reference/androidx/swiperefreshlayout/widget/SwipeRefreshLayout#setDistanceToTriggerSync(int)))
   ///
   ///**Parameters - Officially Supported Platforms/Implementations**:
-  ///- [distanceToTriggerSync]: all platforms
+  ///- `distanceToTriggerSync`: all platforms
   ///
   ///Use the [PlatformPullToRefreshController.isMethodSupported] method to check if this method is supported at runtime.
   ///{@endtemplate}
@@ -224,7 +226,7 @@ enum PlatformPullToRefreshControllerMethod {
   ///- iOS WKWebView ([Official API - UIScrollView.refreshControl](https://developer.apple.com/documentation/uikit/uiscrollview/2127691-refreshcontrol))
   ///
   ///**Parameters - Officially Supported Platforms/Implementations**:
-  ///- [enabled]: all platforms
+  ///- `enabled`: all platforms
   ///
   ///Use the [PlatformPullToRefreshController.isMethodSupported] method to check if this method is supported at runtime.
   ///{@endtemplate}
@@ -238,7 +240,7 @@ enum PlatformPullToRefreshControllerMethod {
   ///- Android WebView ([Official API - SwipeRefreshLayout.setSize](https://developer.android.com/reference/androidx/swiperefreshlayout/widget/SwipeRefreshLayout#setSize(int)))
   ///
   ///**Parameters - Officially Supported Platforms/Implementations**:
-  ///- [size]: all platforms
+  ///- `size`: all platforms
   ///
   ///Use the [PlatformPullToRefreshController.isMethodSupported] method to check if this method is supported at runtime.
   ///{@endtemplate}
@@ -252,7 +254,7 @@ enum PlatformPullToRefreshControllerMethod {
   ///- Android WebView ([Official API - SwipeRefreshLayout.setSlingshotDistance](https://developer.android.com/reference/androidx/swiperefreshlayout/widget/SwipeRefreshLayout#setSlingshotDistance(int)))
   ///
   ///**Parameters - Officially Supported Platforms/Implementations**:
-  ///- [slingshotDistance]: all platforms
+  ///- `slingshotDistance`: all platforms
   ///
   ///Use the [PlatformPullToRefreshController.isMethodSupported] method to check if this method is supported at runtime.
   ///{@endtemplate}
@@ -266,7 +268,7 @@ enum PlatformPullToRefreshControllerMethod {
   ///- iOS WKWebView ([Official API - UIRefreshControl.attributedTitle](https://developer.apple.com/documentation/uikit/uirefreshcontrol/1624845-attributedtitle))
   ///
   ///**Parameters - Officially Supported Platforms/Implementations**:
-  ///- [attributedTitle]: all platforms
+  ///- `attributedTitle`: all platforms
   ///
   ///Use the [PlatformPullToRefreshController.isMethodSupported] method to check if this method is supported at runtime.
   ///{@endtemplate}
@@ -300,9 +302,8 @@ extension _PlatformPullToRefreshControllerMethodSupported
             ].contains(platform ?? defaultTargetPlatform);
       case PlatformPullToRefreshControllerMethod.getDefaultSlingshotDistance:
         return ((kIsWeb && platform != null) || !kIsWeb) &&
-            [
-              TargetPlatform.android,
-            ].contains(platform ?? defaultTargetPlatform);
+            [TargetPlatform.android]
+                .contains(platform ?? defaultTargetPlatform);
       case PlatformPullToRefreshControllerMethod.isEnabled:
         return ((kIsWeb && platform != null) || !kIsWeb) &&
             [
@@ -329,9 +330,8 @@ extension _PlatformPullToRefreshControllerMethodSupported
             ].contains(platform ?? defaultTargetPlatform);
       case PlatformPullToRefreshControllerMethod.setDistanceToTriggerSync:
         return ((kIsWeb && platform != null) || !kIsWeb) &&
-            [
-              TargetPlatform.android,
-            ].contains(platform ?? defaultTargetPlatform);
+            [TargetPlatform.android]
+                .contains(platform ?? defaultTargetPlatform);
       case PlatformPullToRefreshControllerMethod.setEnabled:
         return ((kIsWeb && platform != null) || !kIsWeb) &&
             [
@@ -340,14 +340,12 @@ extension _PlatformPullToRefreshControllerMethodSupported
             ].contains(platform ?? defaultTargetPlatform);
       case PlatformPullToRefreshControllerMethod.setIndicatorSize:
         return ((kIsWeb && platform != null) || !kIsWeb) &&
-            [
-              TargetPlatform.android,
-            ].contains(platform ?? defaultTargetPlatform);
+            [TargetPlatform.android]
+                .contains(platform ?? defaultTargetPlatform);
       case PlatformPullToRefreshControllerMethod.setSlingshotDistance:
         return ((kIsWeb && platform != null) || !kIsWeb) &&
-            [
-              TargetPlatform.android,
-            ].contains(platform ?? defaultTargetPlatform);
+            [TargetPlatform.android]
+                .contains(platform ?? defaultTargetPlatform);
       case PlatformPullToRefreshControllerMethod.setStyledTitle:
         return ((kIsWeb && platform != null) || !kIsWeb) &&
             [TargetPlatform.iOS].contains(platform ?? defaultTargetPlatform);

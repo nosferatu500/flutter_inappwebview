@@ -6,7 +6,7 @@ final TEST_CROSS_PLATFORM_URL_2 = WebUri('https://www.bing.com/');
 final TEST_URL_1 = WebUri('https://github.com/flutter');
 final TEST_URL_2 = WebUri('https://www.google.com/');
 final TEST_URL_3 = WebUri(
-  'https://github.com/pichillilorenzo/flutter_inappwebview',
+  'https://github.com/nosferatu500/flutter_inappwebview',
 );
 final TEST_URL_4 = WebUri('https://www.youtube.com/');
 final TEST_URL_EXAMPLE = WebUri('https://www.example.com/');
