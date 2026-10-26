@@ -2,8 +2,6 @@
 
 # Flutter InAppWebView Plugin
 
-![InAppWebView-logo](https://user-images.githubusercontent.com/5956938/195422744-bdcfed16-73f0-4bc9-94ab-ecf10771a1c4.png)
-
 [![nosferatu500_inappwebview version](https://img.shields.io/pub/v/nosferatu500_inappwebview?include_prereleases)](https://pub.dev/packages/nosferatu500_inappwebview)
 [![Pub Points](https://img.shields.io/pub/points/nosferatu500_inappwebview)](https://pub.dev/packages/nosferatu500_inappwebview/score)
 [![Pub Popularity](https://img.shields.io/pub/popularity/nosferatu500_inappwebview)](https://pub.dev/packages/nosferatu500_inappwebview/score)
